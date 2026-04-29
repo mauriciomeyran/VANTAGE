@@ -1,0 +1,142 @@
+import os
+from dotenv import load_dotenv
+from notion_client import Client
+
+def txt(prop):
+    if not prop: return ""
+    t = prop.get("type")
+    if t == "rich_text" and prop.get("rich_text"): 
+        return prop["rich_text"][0]["plain_text"]
+    if t == "select" and prop.get("select"): 
+        return prop["select"]["name"]
+    if t == "title" and prop.get("title"): 
+        return prop["title"][0]["plain_text"]
+    return ""
+
+def gate(fetch, vm_scope, role_class):
+    if fetch == "Accesible" and (vm_scope == "Alto" or role_class == "Pivote"):
+        return "CREATE"
+    return "BLOCKED"
+
+def gate_logic_with_protection(current_action, status, gate_decision, fetch):
+    """
+    Determine next action with complete manual intent protection.
+    """
+    # Actions that Python can assign automatically (basic automation)
+    AUTO_ACTIONS = {"Re-check", "Reparar URL", "Verificar JD", "Archivar"}
+    
+    # If current action exists and is NOT an auto-action → it was manual
+    if current_action and current_action not in AUTO_ACTIONS:
+        # Respect manual human intent - return current action unchanged
+        return current_action
+    
+    # Terminal states that should never be overwritten
+    TERMINAL_ACTIONS = {"Archivar", "Expirada"}
+    
+    # Check if current action is already a terminal state
+    if current_action in TERMINAL_ACTIONS:
+        # Terminal state protection: respect manual human intent
+        return current_action
+    
+    # APPLIED override (if gate_decision is APPLIED)
+    if gate_decision == "APPLIED":
+        if status == "Postulado": 
+            return "Follow-up"
+        elif status == "En proceso": 
+            return "Interview prep"
+        elif status == "Negociando": 
+            return "Follow-up"
+        elif status == "Sin respuesta": 
+            return "Follow-up"
+    
+    # CREATE logic
+    elif gate_decision == "CREATE":
+        return "Re-check"
+    
+    # BLOCKED logic
+    elif gate_decision == "BLOCKED":
+        if fetch == "Bloqueado":
+            return "Reparar URL"
+        elif fetch == "Parcial":
+            return "Verificar JD"
+        else:
+            return "Archivar"
+    
+    # Default fallback
+    return "Archivar"
+
+if __name__ == "__main__":
+    load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
+    client = Client(auth=os.environ["NOTION_TOKEN"])
+    ds_id = "4e542b37-6e52-4418-89b7-a0eeb3138307"
+
+    items = client.data_sources.query(data_source_id=ds_id)["results"]
+    
+    manual_protected = 0
+    terminal_protected = 0
+    updated = 0
+    skipped = 0
+    
+    for item in items:
+        props = item["properties"]
+        
+        # Get current values
+        current_action = txt(props.get("Next_Action"))
+        status = txt(props.get("Status"))
+        fetch = txt(props.get("Fetch"))
+        vm_scope = txt(props.get("VM_Scope"))
+        role_class = txt(props.get("Role_Class"))
+        source_type = txt(props.get("Source_Type"))
+        
+        # Skip non-Vacante entries for gate logic
+        if source_type != "Vacante":
+            gate_decision = "CREATE"  # Bypass for Inbound/Referencia/Networking
+        else:
+            gate_decision = gate(fetch, vm_scope, role_class)
+        
+        # Calculate new action with protection
+        new_action = gate_logic_with_protection(current_action, status, gate_decision, fetch)
+        
+        # Actions that Python can assign automatically
+        AUTO_ACTIONS = {"Re-check", "Reparar URL", "Verificar JD", "Archivar"}
+        
+        # PROTECTION 1: Manual actions (not in AUTO_ACTIONS)
+        if current_action and current_action not in AUTO_ACTIONS:
+            manual_protected += 1
+            print(f"🛡️  [{item['id'][:8]}] PROTEGIDO (Manual): '{current_action}' → NO SE MODIFICA")
+            continue
+        
+        # PROTECTION 2: Terminal states (extra safety)
+        if current_action in {"Archivar", "Expirada"}:
+            terminal_protected += 1
+            print(f"🛡️  [{item['id'][:8]}] PROTEGIDO (Terminal): '{current_action}' → NO SE MODIFICA")
+            continue
+        
+        # Only update if action actually changed
+        if new_action == current_action:
+            skipped += 1
+            continue
+        
+        # Prepare update for Notion
+        update = {
+            "Gate_Decision": {"select": {"name": gate_decision}},
+            "Next_Action": {"select": {"name": new_action}}
+        }
+        
+        try:
+            client.pages.update(page_id=item["id"], properties=update)
+            updated += 1
+            print(f"✅ [{item['id'][:8]}] {gate_decision}: '{current_action}' → '{new_action}'")
+        except Exception as e:
+            print(f"❌ [{item['id'][:8]}] Error: {e}")
+    
+    print(f"\n📊 RESUMEN:")
+    print(f"  ✅ Actualizados: {updated}")
+    print(f"  ⏭️  Saltados (sin cambios): {skipped}")
+    print(f"  🛡️  Protegidos (manuales): {manual_protected}")
+    print(f"  🛡️  Protegidos (terminales): {terminal_protected}")
+    print(f"  📋 Total procesados: {len(items)}")
+    print(f"\n💡 REGLAS DE PROTECCIÓN:")
+    print(f"   • Python PUEDE asignar: Re-check, Reparar URL, Verificar JD, Archivar")
+    print(f"   • Python NO sobrescribe: Follow-up, Interview prep, Expirada, etc.")
+    print(f"   • Decisiones manuales SIEMPRE tienen prioridad sobre automatización")

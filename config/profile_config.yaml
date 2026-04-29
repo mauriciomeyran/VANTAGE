@@ -1,0 +1,49 @@
+profile:
+  current_company: "L'Or\xE9al Luxe M\xE9xico"
+  current_role: VM & Brand Execution Coordinator
+  experience_level: Mid-level
+  last_updated: '2026-04-18T11:17:43.160653'
+  target_seniority: Senior Coordinator / Manager
+scoring:
+  pivot_keywords:
+  - training
+  - experience
+  - producer
+  - account
+  - project
+  - commercial
+  - manager
+  score_weights:
+    Alto_Pivote: 6
+    Alto_VM: 8
+    Bajo_Pivote: 3
+    Bajo_VM: 5
+    default: 2
+  vm_keywords:
+  - visual merchandising
+  - visual
+  - vm
+  - brand environment
+  - "est\xE1ndares visuales"
+search_focus:
+  executive_priority: Regional_LATAM
+  geographic_scope: CDMX_LATAM_Remote
+  weekly_priority: VM_roles_core
+target_companies:
+  tier_1_luxury:
+  - LVMH
+  - Richemont
+  - Kering
+  - "Herm\xE8s"
+  - Chanel
+  tier_2_premium:
+  - "Est\xE9e Lauder"
+  - Swarovski
+  - Hugo Boss
+  - Pandora
+  tier_3_scale:
+  - Nike
+  - Adidas
+  - Apple
+  - Zara
+  - Liverpool
