@@ -1,0 +1,263 @@
+{
+  "aliases": {
+    "giorgio armani beauty": {
+      "marca": "Armani",
+      "holding": "L'Oréal",
+      "hard_block": true
+    },
+    "armani beauty": {
+      "marca": "Armani",
+      "holding": "L'Oréal",
+      "hard_block": true
+    },
+    "armani": {
+      "marca": "Armani",
+      "holding": "L'Oréal",
+      "hard_block": true
+    },
+    "dior": {
+      "marca": "Dior",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "christian dior": {
+      "marca": "Dior",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "lv": {
+      "marca": "Louis Vuitton",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "louis vuitton": {
+      "marca": "Louis Vuitton",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "givenchy": {
+      "marca": "Givenchy",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "gucci": {
+      "marca": "Gucci",
+      "holding": "Kering",
+      "hard_block": false
+    },
+    "saint laurent": {
+      "marca": "Saint Laurent",
+      "holding": "Kering",
+      "hard_block": false
+    },
+    "ysl": {
+      "marca": "Saint Laurent",
+      "holding": "Kering",
+      "hard_block": false
+    },
+    "dolce gabbana": {
+      "marca": "Dolce & Gabbana",
+      "holding": "Independent",
+      "hard_block": false
+    },
+    "dolce & gabbana": {
+      "marca": "Dolce & Gabbana",
+      "holding": "Independent",
+      "hard_block": false
+    },
+    "d&g": {
+      "marca": "Dolce & Gabbana",
+      "holding": "Independent",
+      "hard_block": false
+    },
+    "nike": {
+      "marca": "Nike",
+      "holding": "Nike Inc.",
+      "hard_block": false
+    },
+    "adidas": {
+      "marca": "Adidas",
+      "holding": "Adidas AG",
+      "hard_block": false
+    },
+    "zara": {
+      "marca": "Zara",
+      "holding": "Inditex",
+      "hard_block": false
+    },
+    "inditex": {
+      "marca": "Inditex",
+      "holding": "Inditex",
+      "hard_block": false
+    },
+    "h&m": {
+      "marca": "H&M",
+      "holding": "H&M Group",
+      "hard_block": false
+    },
+    "chanel": {
+      "marca": "Chanel",
+      "holding": "Independent",
+      "hard_block": false
+    },
+    "prada": {
+      "marca": "Prada",
+      "holding": "Prada Group",
+      "hard_block": false
+    },
+    "miu miu": {
+      "marca": "Miu Miu",
+      "holding": "Prada Group",
+      "hard_block": false
+    },
+    "burberry": {
+      "marca": "Burberry",
+      "holding": "Independent",
+      "hard_block": false
+    },
+    "versace": {
+      "marca": "Versace",
+      "holding": "Capri Holdings",
+      "hard_block": false
+    },
+    "michael kors": {
+      "marca": "Michael Kors",
+      "holding": "Capri Holdings",
+      "hard_block": false
+    },
+    "jimmy choo": {
+      "marca": "Jimmy Choo",
+      "holding": "Capri Holdings",
+      "hard_block": false
+    },
+    "coach": {
+      "marca": "Coach",
+      "holding": "Tapestry",
+      "hard_block": false
+    },
+    "kate spade": {
+      "marca": "Kate Spade",
+      "holding": "Tapestry",
+      "hard_block": false
+    },
+    "bottega veneta": {
+      "marca": "Bottega Veneta",
+      "holding": "Kering",
+      "hard_block": false
+    },
+    "balenciaga": {
+      "marca": "Balenciaga",
+      "holding": "Kering",
+      "hard_block": false
+    },
+    "alexander mcqueen": {
+      "marca": "Alexander McQueen",
+      "holding": "Kering",
+      "hard_block": false
+    },
+    "lululemon": {
+      "marca": "Lululemon",
+      "holding": "Lululemon Athletica",
+      "hard_block": false
+    },
+    "confidencial": {
+      "marca": "CONFIDENCIAL",
+      "holding": "Genérico",
+      "hard_block": false
+    },
+    "grupo encanto": {
+      "marca": "Grupo Encanto",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "multicont": {
+      "marca": "Multicont",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "yello marketing group sapi de cv": {
+      "marca": "YELLO Marketing Group",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "marketstrat": {
+      "marca": "Marketstrat",
+      "holding": "Genérico",
+      "hard_block": false
+    },
+    "yello marketing group": {
+      "marca": "YELLO Marketing Group",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "yello": {
+      "marca": "YELLO Marketing Group",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "encanto": {
+      "marca": "Grupo Encanto",
+      "holding": "Independiente",
+      "hard_block": false
+    }
+  },
+  "holding_map": {
+    "lvmh": [
+      "Dior",
+      "Louis Vuitton",
+      "Givenchy",
+      "Bulgari",
+      "Celine",
+      "Loewe",
+      "Marc Jacobs",
+      "Fendi"
+    ],
+    "kering": [
+      "Gucci",
+      "Saint Laurent",
+      "Bottega Veneta",
+      "Balenciaga",
+      "Alexander McQueen",
+      "Brioni"
+    ],
+    "inditex": [
+      "Zara",
+      "Massimo Dutti",
+      "Pull&Bear",
+      "Bershka",
+      "Stradivarius",
+      "Oysho"
+    ],
+    "capri holdings": [
+      "Versace",
+      "Michael Kors",
+      "Jimmy Choo"
+    ],
+    "tapestry": [
+      "Coach",
+      "Kate Spade",
+      "Stuart Weitzman"
+    ],
+    "prada group": [
+      "Prada",
+      "Miu Miu",
+      "Church's"
+    ],
+    "h&m group": [
+      "H&M",
+      "COS",
+      "& Other Stories",
+      "Arket",
+      "Monki"
+    ],
+    "nike inc.": [
+      "Nike",
+      "Jordan",
+      "Converse"
+    ],
+    "adidas ag": [
+      "Adidas",
+      "Reebok"
+    ]
+  }
+}
