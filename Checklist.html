@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V-CHECKLIST · Vantage Weekly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem;    --space-10: 2.5rem;
+  --space-12: 3rem;   --space-16: 4rem;
+
+  --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem;
+  --radius-xl: 1rem;     --radius-full: 9999px;
+
+  --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root, [data-theme="light"] {
+  --color-bg: #f7f6f2;
+  --color-surface: #f9f8f5;
+  --color-surface-2: #fbfbf9;
+  --color-surface-offset: #f3f0ec;
+  --color-surface-dynamic: #e6e4df;
+  --color-divider: #dcd9d5;
+  --color-border: #d4d1ca;
+  --color-text: #28251d;
+  --color-text-muted: #7a7974;
+  --color-text-faint: #bab9b4;
+  --color-text-inverse: #f9f8f4;
+  --shadow-sm: 0 1px 2px oklch(0.2 0.01 80 / 0.06);
+  --shadow-md: 0 4px 12px oklch(0.2 0.01 80 / 0.08);
+  --shadow-lg: 0 12px 32px oklch(0.2 0.01 80 / 0.12);
+}
+
+[data-theme="dark"] {
+  --color-bg: #0e0e0c;
+  --color-surface: #141412;
+  --color-surface-2: #181816;
+  --color-surface-offset: #1c1c1a;
+  --color-surface-dynamic: #242420;
+  --color-divider: #1e1e1c;
+  --color-border: #2a2a28;
+  --color-text: #cdccca;
+  --color-text-muted: #797876;
+  --color-text-faint: #4a4948;
+  --color-text-inverse: #0e0e0c;
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.3);
+  --shadow-md: 0 4px 12px oklch(0 0 0 / 0.4);
+  --shadow-lg: 0 12px 32px oklch(0 0 0 / 0.5);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--space-16);
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  min-height: 100dvh;
+  line-height: 1.6;
+}
+
+/* HEADER */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-divider);
+  padding: var(--space-3) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.logo-title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  line-height: 1.1;
+}
+
+.logo-subtitle {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  line-height: 1.2;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.btn-reset {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+  letter-spacing: 0.05em;
+}
+
+.btn-reset:hover {
+  border-color: var(--color-text-muted);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  color: var(--color-text-muted);
+  background: transparent;
+  transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+/* PROGRESS BAR */
+.progress-bar-container {
+  height: 2px;
+  background: var(--color-divider);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #01696f, #006494);
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+/* MAIN LAYOUT */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6) var(--space-16);
+}
+
+/* DAY TABS */
+.day-tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.day-tab {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-mono);
+  text-decoration: none;
+}
+
+.day-tab:hover {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+/* DAY SECTION */
+.day-section {
+  margin-bottom: var(--space-10);
+  scroll-margin-top: 80px;
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.day-label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  color: var(--color-text-inverse);
+}
+
+.day-count {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  margin-left: auto;
+}
+
+.day-progress-text {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--color-text-faint);
+}
+
+/* TASK ROWS */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.task-row {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.task-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  transition: width 0.3s ease;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  opacity: 0.12;
+}
+
+.task-row:hover {
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.task-row.done {
+  background: var(--color-surface-offset);
+  border-color: var(--color-divider);
+}
+
+.task-row.done::before {
+  width: 4px;
+}
+
+.task-row.done .task-text {
+  text-decoration: line-through;
+  color: var(--color-text-faint);
+}
+
+.task-row.done .task-num {
+  color: var(--color-text-faint);
+}
+
+/* CHECKBOX */
+.task-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all var(--transition);
+  background: transparent;
+}
+
+.task-row:hover .task-checkbox {
+  border-color: var(--color-text-muted);
+}
+
+.task-row.done .task-checkbox {
+  border-color: transparent;
+}
+
+.task-checkbox svg {
+  display: none;
+  width: 12px;
+  height: 12px;
+}
+
+.task-row.done .task-checkbox svg {
+  display: block;
+}
+
+/* TASK CONTENT */
+.task-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.task-num {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.task-text {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  line-height: 1.5;
+  transition: color var(--transition);
+}
+
+.task-cmd {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-surface-offset);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-divider);
+  display: inline-block;
+  margin-top: var(--space-1);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .task-cmd {
+  background: var(--color-bg);
+  border-color: var(--color-divider);
+}
+
+/* SUMMARY STATS */
+.summary-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-xl);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+}
+
+.stat-value {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1;
+  color: var(--color-text);
+}
+
+.stat-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+/* MINI PROGRESS */
+.mini-progress {
+  width: 100%;
+  height: 3px;
+  background: var(--color-divider);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-top: var(--space-2);
+}
+
+.mini-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+/* SCROLL TO TOP */
+.scroll-top {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scroll-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.scroll-top:hover {
+  color: var(--color-text);
+  background: var(--color-surface-2);
+}
+
+@media (max-width: 640px) {
+  .header { padding: var(--space-3) var(--space-4); }
+  .main { padding: var(--space-6) var(--space-4) var(--space-12); }
+  .task-row { grid-template-columns: 28px 1fr; }
+  .day-tabs { gap: var(--space-1); }
+  .summary-bar { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+</style>
+</head>
+<body>
+
+<div class="progress-bar-container">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<header class="header">
+  <div class="logo">
+    <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Vantage logo">
+      <rect width="32" height="32" rx="8" fill="#01696f"/>
+      <path d="M8 10 L16 22 L24 10" stroke="#cedcd8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="16" cy="22" r="2" fill="#cedcd8"/>
+    </svg>
+    <div class="logo-text">
+      <span class="logo-title">V-Checklist</span>
+      <span class="logo-subtitle">Vantage · Weekly Protocol</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-reset" onclick="resetAll()">↺ Reset semana</button>
+    <button class="theme-toggle" data-theme-toggle aria-label="Cambiar tema">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- SUMMARY -->
+  <div class="summary-bar">
+    <div class="stat-item">
+      <span class="stat-value" id="totalDone">0</span>
+      <span class="stat-label">Completadas</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value" id="totalTasks">31</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value" id="totalPct">0%</span>
+      <span class="stat-label">Progreso</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value" id="daysActive">0/5</span>
+      <span class="stat-label">Días activos</span>
+    </div>
+  </div>
+
+  <!-- DAY TABS -->
+  <nav class="day-tabs" aria-label="Días de la semana">
+    <a class="day-tab" href="#lunes" style="--day-color:#01696f">LUN</a>
+    <a class="day-tab" href="#martes" style="--day-color:#006494">MAR</a>
+    <a class="day-tab" href="#miercoles" style="--day-color:#437a22">MIÉ</a>
+    <a class="day-tab" href="#jueves" style="--day-color:#7a39bb">JUE</a>
+    <a class="day-tab" href="#viernes" style="--day-color:#d19900">VIE</a>
+  </nav>
+
+  <!-- LUNES -->
+  <section class="day-section" id="lunes">
+    <div class="day-header">
+      <span class="day-label" style="background:#01696f;">LUNES</span>
+      <span class="day-progress-text" id="lunes-progress">0 / 17</span>
+      <span class="day-count">17 tareas</span>
+    </div>
+    <div class="mini-progress">
+      <div class="mini-progress-fill" id="lunes-bar" style="width:0%;background:#01696f;"></div>
+    </div>
+    <br>
+    <div class="task-list" id="lunes-tasks">
+      <div class="task-row" id="lunes-1" onclick="toggleTask('lunes-1', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-1', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#01</span>
+          <span class="task-text">Solicitar a Perplexity los Prompts de L1 concatenados y fechados.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-2" onclick="toggleTask('lunes-2', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-2', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#02</span>
+          <span class="task-text">Ejecutar búsquedas L1 en Comet.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-3" onclick="toggleTask('lunes-3', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-3', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#03</span>
+          <span class="task-text">Compilar JSONs de L1.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-4" onclick="toggleTask('lunes-4', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-4', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#04</span>
+          <span class="task-text">Solicitar a Perplexity los Prompts de L2 concatenados y fechados.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-5" onclick="toggleTask('lunes-5', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-5', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#05</span>
+          <span class="task-text">Ejecutar búsqueda L2 en cada motor de búsqueda.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-6" onclick="toggleTask('lunes-6', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-6', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#06</span>
+          <span class="task-text">Compilar JSONs de L2.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-7" onclick="toggleTask('lunes-7', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-7', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#07</span>
+          <span class="task-text">Regresar a Perplexity Desktop: Usar el Prompt E + 3 JSONs de L1 + 3 JSONs de L2 para Consolidación &amp; Dedup.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-8" onclick="toggleTask('lunes-8', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-8', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#08</span>
+          <span class="task-text">Perplexity aplica Dedup con clave [Brand + Title + Location], jerarquiza L1 &gt; L2 y entrega un Plain Array consolidado.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-9" onclick="toggleTask('lunes-9', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-9', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#09</span>
+          <span class="task-text">Guardar el Plain Array consolidado.</span>
+          <code class="task-cmd">~/Documents/04-VANTAGE_CV/Feeds/YYYY-MM-DD_consolidated.json</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-10" onclick="toggleTask('lunes-10', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-10', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#10</span>
+          <span class="task-text">En Terminal ejecuta.</span>
+          <code class="task-cmd">vl1feed YYYY-MM-DD_consolidated.json</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-11" onclick="toggleTask('lunes-11', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-11', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#11</span>
+          <span class="task-text">Revisar DRY RUN: validar Brand, Title y URL, duplicadas aparecen como SKIP, para revisión como REVIEW_NEEDED.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-12" onclick="toggleTask('lunes-12', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-12', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#12</span>
+          <span class="task-text">Confirmar escritura en Notion presionando la tecla</span>
+          <code class="task-cmd">s</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-13" onclick="toggleTask('lunes-13', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-13', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#13</span>
+          <span class="task-text">Ejecutar pipeline principal (sin argumentos) para calcular propiedades Class B (Score y Gate).</span>
+          <code class="task-cmd">vl1</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-14" onclick="toggleTask('lunes-14', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-14', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#14</span>
+          <span class="task-text">Verificar en Notion el cálculo de propiedades Class B (Score y Gate).</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-15" onclick="toggleTask('lunes-15', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-15', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#15</span>
+          <span class="task-text">Abrir vista Ready-to-Apply en Notion y confirmar vacantes con Score ≥ 60 disponibles para el ciclo de aplicación.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-16" onclick="toggleTask('lunes-16', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-16', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#16</span>
+          <span class="task-text">Ejecutar para procesar backlog de L3</span>
+          <code class="task-cmd">vl3</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-17" onclick="toggleTask('lunes-17', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-17', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#17</span>
+          <span class="task-text">Ejecutar pipeline principal (sin argumentos) para revelar vacantes de L3</span>
+          <code class="task-cmd">vl1</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARTES -->
+  <section class="day-section" id="martes">
+    <div class="day-header">
+      <span class="day-label" style="background:#a83232;">MARTES</span>
+      <span class="day-progress-text" id="martes-progress">0 / 3</span>
+      <span class="day-count">3 tareas</span>
+    </div>
+    <div class="mini-progress">
+      <div class="mini-progress-fill" id="martes-bar" style="width:0%;background:#a83232;"></div>
+    </div>
+    <br>
+    <div class="task-list" id="martes-tasks">
+      <div class="task-row" id="martes-1" onclick="toggleTask('martes-1', 'martes', '#a83232')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('martes-1', 'martes', '#a83232');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#01</span>
+          <span class="task-text">Revisar vacantes con status REVIEW_NEEDED en el Tracker: corregir URL o alias directamente en Notion, cambiar Status → Target y ejecutar</span>
+          <code class="task-cmd">vl1</code>
+        </div>
+      </div>
+      <div class="task-row" id="martes-2" onclick="toggleTask('martes-2', 'martes', '#a83232')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('martes-2', 'martes', '#a83232');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#02</span>
+          <span class="task-text">Revisar vacantes con Gate = BLOCKED recuperables: ejecutar para abrir el Dashboard (Proponer Patch → Validar → Aceptar) para corregir campos Class A y re-validar.</span>
+          <code class="task-cmd">vd</code>
+        </div>
+      </div>
+      <div class="task-row" id="martes-3" onclick="toggleTask('martes-3', 'martes', '#a83232')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('martes-3', 'martes', '#a83232');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#03</span>
+          <span class="task-text">Ejecutar tras correcciones para actualizar Scores y Gates.</span>
+          <code class="task-cmd">vl1</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MIÉRCOLES -->
+  <section class="day-section" id="miercoles">
+    <div class="day-header">
+      <span class="day-label" style="background:#437a22;">MIÉRCOLES</span>
+      <span class="day-progress-text" id="miercoles-progress">0 / 8</span>
+      <span class="day-count">8 tareas</span>
+    </div>
+    <div class="mini-progress">
+      <div class="mini-progress-fill" id="miercoles-bar" style="width:0%;background:#437a22;"></div>
+    </div>
+    <br>
+    <div class="task-list" id="miercoles-tasks">
+      <div class="task-row" id="miercoles-1" onclick="toggleTask('miercoles-1', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-1', 'miercoles', '#437a22');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#01</span>
+          <span class="task-text">Identificar vacante prioritaria en vista Ready-to-Apply (Score ≥ 60).</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="miercoles-2" onclick="toggleTask('miercoles-2', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-2', 'miercoles', '#437a22');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#02</span>
+          <span class="task-text">Abrir sesión de Claude y ejecutar. La sesión termina con el Handoff.</span>
+          <code class="task-cmd">CV-A + URL de la vacante</code>
+        </div>
+      </div>
+      <div class="task-row" id="miercoles-3" onclick="toggleTask('miercoles-3', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-3', 'miercoles', '#437a22');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#03</span>
+          <span class="task-text">Abrir sesión nueva de Claude y ejecutar.</span>
+          <code class="task-cmd">CV-B + Handoff</code>
+        </div>
+      </div>
+      <div class="task-row" id="miercoles-4" onclick="toggleTask('miercoles-4', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-4', 'miercoles', '#437a22');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#04</span>
+          <span class="task-text">Recibir output en formato Canon Markdown (con Figma Tags)</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="miercoles-5" onclick="toggleTask('miercoles-5', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-5', 'miercoles', '#437a22');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#05</span>
+          <span class="task-text">Documentar output en Notion.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="miercoles-6" onclick="toggleTask('miercoles-6', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-6', 'miercoles', '#437a22');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#06</span>
+          <span class="task-text">Actualizar documento de Figma y exportar PDF</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+      <div class="task-row" id="miercoles-7" onclick="toggleTask('miercoles-7', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-7', 'miercoles', '#437a22');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#07</span>
+          <span class="task-text">Ejecutar — Claude entrega go/no-go con checklist de 6 ítems.</span>
+          <code class="task-cmd">QA + PDF</code>
+        </div>
+      </div>
+      <div class="task-row" id="miercoles-8" onclick="toggleTask('miercoles-8', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-8', 'miercoles', '#437a22');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#08</span>
+          <span class="task-text">Si QA aprueba: cambiar Status → Postulado en Notion y ejecutar para que Python asigne Gate_Decision = APPLIED y la vacante salga de Ready-to-Apply.</span>
+          <code class="task-cmd">vl1</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JUEVES -->
+  <section class="day-section" id="jueves">
+    <div class="day-header">
+      <span class="day-label" style="background:#7a39bb;">JUEVES</span>
+      <span class="day-progress-text" id="jueves-progress">0 / 1</span>
+      <span class="day-count">1 tareas</span>
+    </div>
+    <div class="mini-progress">
+      <div class="mini-progress-fill" id="jueves-bar" style="width:0%;background:#7a39bb;"></div>
+    </div>
+    <br>
+    <div class="task-list" id="jueves-tasks">
+      <div class="task-row" id="jueves-1" onclick="toggleTask('jueves-1', 'jueves', '#7a39bb')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('jueves-1', 'jueves', '#7a39bb');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#01</span>
+          <span class="task-text">Solo si hay nuevas vacantes que procesar — 10 minutos máximo. Ejecutar para actualizar Scores y Gates.</span>
+          <code class="task-cmd">vl1</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIERNES -->
+  <section class="day-section" id="viernes">
+    <div class="day-header">
+      <span class="day-label" style="background:#d19900;">VIERNES</span>
+      <span class="day-progress-text" id="viernes-progress">0 / 2</span>
+      <span class="day-count">2 tareas</span>
+    </div>
+    <div class="mini-progress">
+      <div class="mini-progress-fill" id="viernes-bar" style="width:0%;background:#d19900;"></div>
+    </div>
+    <br>
+    <div class="task-list" id="viernes-tasks">
+      <div class="task-row" id="viernes-1" onclick="toggleTask('viernes-1', 'viernes', '#d19900')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('viernes-1', 'viernes', '#d19900');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#01</span>
+          <span class="task-text">Ejecutar.</span>
+          <code class="task-cmd">vl1</code>
+        </div>
+      </div>
+      <div class="task-row" id="viernes-2" onclick="toggleTask('viernes-2', 'viernes', '#d19900')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('viernes-2', 'viernes', '#d19900');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#02</span>
+          <span class="task-text">Revisar efectividad por fuente: si career pages producen menos de 5 resultados relevantes en la semana, ajustar Prompt A — no el threshold de Score.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+
+<script>
+const STATE_KEY = 'vchecklist_v1';
+const DAYS = ['lunes','martes','miercoles','jueves','viernes'];
+const DAY_COUNTS = {lunes:17,martes:3,miercoles:8,jueves:1,viernes:2};
+const TOTAL = 31;
+
+let state = {};
+
+function saveState() {
+  try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const s = localStorage.getItem(STATE_KEY);
+    if (s) state = JSON.parse(s);
+  } catch(e) {}
+}
+
+function toggleTask(taskId, dayId, color) {
+  const row = document.getElementById(taskId);
+  if (!row) return;
+  const isDone = row.classList.toggle('done');
+  row.setAttribute('aria-checked', isDone ? 'true' : 'false');
+
+  const checkbox = row.querySelector('.task-checkbox');
+  if (isDone) {
+    checkbox.style.background = color;
+    checkbox.style.borderColor = color;
+    row.style.setProperty('--done-color', color);
+    row.querySelector('::before');
+    row.style.borderLeftColor = color;
+  } else {
+    checkbox.style.background = '';
+    checkbox.style.borderColor = '';
+    row.style.borderLeftColor = '';
+  }
+
+  if (!state[dayId]) state[dayId] = {};
+  state[dayId][taskId] = isDone;
+  saveState();
+  updateStats();
+}
+
+function updateStats() {
+  let totalDone = 0;
+  let daysActive = 0;
+
+  DAYS.forEach(dayId => {
+    const rows = document.querySelectorAll(`#${dayId}-tasks .task-row`);
+    let dayDone = 0;
+    rows.forEach(r => { if (r.classList.contains('done')) dayDone++; });
+
+    const total = rows.length;
+    const pct = total > 0 ? (dayDone / total * 100) : 0;
+
+    const bar = document.getElementById(`${dayId}-bar`);
+    const prog = document.getElementById(`${dayId}-progress`);
+    if (bar) bar.style.width = pct + '%';
+    if (prog) prog.textContent = dayDone + ' / ' + total;
+
+    totalDone += dayDone;
+    if (dayDone > 0) daysActive++;
+  });
+
+  const pct = Math.round(totalDone / TOTAL * 100);
+
+  document.getElementById('totalDone').textContent = totalDone;
+  document.getElementById('totalPct').textContent = pct + '%';
+  document.getElementById('daysActive').textContent = daysActive + '/5';
+
+  // Update progress bar
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function applyState() {
+  Object.keys(state).forEach(dayId => {
+    Object.keys(state[dayId]).forEach(taskId => {
+      if (state[dayId][taskId]) {
+        const row = document.getElementById(taskId);
+        if (row) {
+          row.classList.add('done');
+          row.setAttribute('aria-checked', 'true');
+        }
+      }
+    });
+  });
+}
+
+function resetAll() {
+  if (!confirm('¿Resetear el checklist completo? Esta acción no se puede deshacer.')) return;
+  state = {};
+  saveState();
+  document.querySelectorAll('.task-row').forEach(r => {
+    r.classList.remove('done');
+    r.setAttribute('aria-checked', 'false');
+    const cb = r.querySelector('.task-checkbox');
+    if (cb) { cb.style.background = ''; cb.style.borderColor = ''; }
+  });
+  updateStats();
+}
+
+// Theme toggle
+(function() {
+  const toggle = document.querySelector('[data-theme-toggle]');
+  const html = document.documentElement;
+  let theme = 'dark';
+  html.setAttribute('data-theme', theme);
+
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', theme);
+      toggle.innerHTML = theme === 'dark'
+        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+    });
+  }
+})();
+
+// Scroll to top visibility
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTop');
+  if (window.scrollY > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+}, { passive: true });
+
+// Apply color to done checkboxes after state restore
+function applyCheckboxColors() {
+  const colorMap = {
+    lunes: '#01696f',
+    martes: '#006494',
+    miercoles: '#437a22',
+    jueves: '#7a39bb',
+    viernes: '#d19900'
+  };
+
+  DAYS.forEach(dayId => {
+    const color = colorMap[dayId];
+    document.querySelectorAll(`#${dayId}-tasks .task-row.done`).forEach(row => {
+      const cb = row.querySelector('.task-checkbox');
+      if (cb) {
+        cb.style.background = color;
+        cb.style.borderColor = color;
+      }
+    });
+  });
+}
+
+// Init
+loadState();
+applyState();
+applyCheckboxColors();
+updateStats();
+</script>
+</body>
+</html>

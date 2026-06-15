@@ -1,0 +1,124 @@
+#!/bin/bash
+
+# VANTAGE Pipeline v5.1 — Refactorizado
+# Ubicación canónica: ~/Documents/04-VANTAGE_CV/Pipeline/
+# Uso: vantage_pipeline.sh [status|analytics|batch|recovery|profile]
+
+VANTAGE_DIR=~/Documents/04-VANTAGE_CV/Pipeline/vantage_notion_audit
+
+# ---------- Función central ----------
+run_module() {
+    local script="$1"
+    local label="$2"
+
+    if [ ! -d "$VANTAGE_DIR" ]; then
+        echo "❌ Error: $VANTAGE_DIR no encontrado"
+        exit 1
+    fi
+
+    cd "$VANTAGE_DIR" || exit 1
+
+    if [ ! -d ".venv" ]; then
+        echo "❌ Error: Virtual environment no encontrado en $VANTAGE_DIR/.venv"
+        echo "💡 Ejecuta: python3 -m venv .venv && pip install notion-client python-dotenv requests pyyaml beautifulsoup4"
+        exit 1
+    fi
+
+    source .venv/bin/activate
+
+    if [ ! -f "scripts/$script" ]; then
+        echo "❌ Error: scripts/$script no encontrado"
+        exit 1
+    fi
+
+    echo "$label"
+    echo ""
+    python3 "scripts/$script"
+    local exit_code=$?
+
+    if [ $exit_code -eq 0 ]; then
+        echo ""
+        echo "✅ Completado: $script"
+    else
+        echo ""
+        echo "❌ Falló: $script — revisar errores arriba"
+        exit $exit_code
+    fi
+}
+
+# ---------- Router de comandos ----------
+case "$1" in
+    status)
+        echo "📊 Generando reporte de status..."
+        run_module "status_report.py" "📊 Status Report"
+        ;;
+    analytics)
+        echo "📊 Generando análisis de fuentes..."
+        run_module "source_analytics.py" "📊 Source Analytics"
+        ;;
+    batch)
+        echo "🔄 Ejecutando operaciones batch..."
+        run_module "batch_operations.py" "🔄 Batch Operations"
+        ;;
+    recovery)
+        echo "🔧 Verificando estado del sistema..."
+        run_module "pipeline_recovery.py" "🔧 Pipeline Recovery"
+        ;;
+    profile)
+        echo "🔄 Gestionando evolución de perfil..."
+        run_module "profile_evolution.py" "🔄 Profile Evolution"
+        ;;
+    "")
+        # Pipeline normal
+        echo "🚀 Iniciando VANTAGE Pipeline v5.1..."
+        echo "=================================="
+
+        if [ ! -d "$VANTAGE_DIR" ]; then
+            echo "❌ Error: $VANTAGE_DIR no encontrado"
+            exit 1
+        fi
+
+        cd "$VANTAGE_DIR" || exit 1
+
+        if [ ! -d ".venv" ]; then
+            echo "❌ Error: Virtual environment no encontrado"
+            echo "💡 Ejecuta: python3 -m venv .venv && pip install notion-client python-dotenv requests pyyaml beautifulsoup4"
+            exit 1
+        fi
+
+        echo "🔧 Activando virtual environment..."
+        source .venv/bin/activate
+
+        if [ ! -f ".env" ]; then
+            echo "❌ Error: .env no encontrado en $VANTAGE_DIR"
+            echo "💡 Crea .env con NOTION_TOKEN y NOTION_DB_OPPORTUNITIES"
+            exit 1
+        fi
+
+        if [ ! -f "scripts/run_pipeline.py" ]; then
+            echo "❌ Error: scripts/run_pipeline.py no encontrado"
+            exit 1
+        fi
+
+        echo "📊 Ejecutando pipeline..."
+        echo ""
+        python3 scripts/run_pipeline.py
+
+        if [ $? -eq 0 ]; then
+            echo ""
+            echo "✅ Pipeline completado exitosamente"
+            echo "👉 Próximo paso: Revisar Vista 'Pipeline Activo' en Notion"
+            echo "=================================="
+        else
+            echo ""
+            echo "❌ Pipeline falló. Revisar errores arriba."
+            echo "💡 Verificar .env y permisos de Notion"
+            exit 1
+        fi
+        ;;
+    *)
+        echo "❌ Comando desconocido: $1"
+        echo "Uso: vantage_pipeline.sh [status|analytics|batch|recovery|profile]"
+        exit 1
+        ;;
+esac

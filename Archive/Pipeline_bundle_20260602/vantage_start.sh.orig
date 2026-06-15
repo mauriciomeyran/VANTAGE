@@ -1,0 +1,28 @@
+#!/bin/bash
+cd "/Users/mauriciomeyran/Documents/04-JHS_CV/Pipeline/vantage_notion_audit"
+source venv/bin/activate
+
+# Mata instancia previa si existe
+pkill -f rt1_server.py 2>/dev/null
+
+# Levanta servidor en background
+python3 scripts/rt1_server.py &
+SERVER_PID=$!
+echo "✅ Servidor iniciado (PID $SERVER_PID)"
+
+# Espera a que levante (max 10s)
+for i in {1..10}; do
+    sleep 1
+    python3 -c "import requests; requests.get('http://127.0.0.1:8000/health')" 2>/dev/null && break
+done
+
+# Smoke test
+python3 scripts/smoke_rt1.py
+SMOKE=$?
+
+if [ $SMOKE -eq 0 ]; then
+    echo "✅ Smoke test OK — abriendo dashboard..."
+    open "rt1_dashboard.html"
+else
+    echo "❌ Smoke test falló — revisa el servidor"
+fi
