@@ -1,0 +1,186 @@
+{
+  "name": "JHS V2 — Gmail .Jobs → Groq → Notion",
+  "flow": [
+    {
+      "id": 1,
+      "module": "google-email:triggerWatchNewEmails",
+      "version": 4,
+      "parameters": {
+        "q": "label:.Jobs newer_than:1d",
+        "limit": 10,
+        "format": "full",
+        "markSeen": true,
+        "filterType": "gmailSearch",
+        "__IMTCONN__": 8953029
+      },
+      "metadata": {
+        "designer": { "x": 0, "y": 0 },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": { "label": "My Gmail connection" }
+          }
+        }
+      },
+      "mapper": {}
+    },
+    {
+      "id": 2,
+      "module": "http:ActionSendData",
+      "version": 3,
+      "parameters": { "showConfig": true },
+      "mapper": {
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "method": "POST",
+        "headers": [
+          { "name": "Authorization", "value": "Bearer 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" },
+          { "name": "Content-Type", "value": "application/json" }
+        ],
+        "bodyType": "raw",
+        "contentType": "application/json",
+        "body": "{ \"model\": \"llama-3.1-8b-instant\", \"temperature\": 0.1, \"max_tokens\": 2000, \"response_format\": { \"type\": \"json_object\" }, \"messages\": [ { \"role\": \"system\", \"content\": \"Eres un extractor de vacantes de empleo. Tu única función es analizar emails de alertas de empleo y extraer las vacantes en formato JSON.\\n\\nREGLAS:\\n- Responde ÚNICAMENTE con JSON válido, sin markdown ni texto adicional.\\n- Extrae TODAS las vacantes mencionadas en el email.\\n- Si el email contiene una sola vacante, el array jobs tendrá un solo elemento.\\n- Si no hay vacantes, devuelve jobs como array vacío.\\n- Para la fuente (raw_source), detecta el dominio del remitente: indeed.com→Indeed, occ.com.mx→OCC, linkedin.com→LinkedIn, computrabajo.com→Computrabajo, bumeran.com→Bumeran, si no reconoces→Other.\\n- El campo url debe ser la URL directa a la vacante, no un link de tracking.\\n- Si la URL es de tracking/redirect (contiene utm_, clk, trk, etc.), igual inclúyela — se normalizará después.\\n- El campo jd_snippet es un resumen de máximo 200 caracteres del puesto si hay descripción disponible, sino cadena vacía.\\n\\nESQUEMA DE RESPUESTA OBLIGATORIO:\\n{ \\\"raw_source\\\": \\\"Indeed|OCC|LinkedIn|Computrabajo|Bumeran|Other\\\", \\\"jobs\\\": [ { \\\"title\\\": \\\"título del puesto\\\", \\\"company\\\": \\\"nombre de la empresa\\\", \\\"url\\\": \\\"https://...\\\", \\\"job_id\\\": \\\"id único si está disponible, sino cadena vacía\\\", \\\"jd_snippet\\\": \\\"descripción breve del puesto\\\" } ] }\" }, { \"role\": \"user\", \"content\": \"Asunto: {{1.subject}}\\nDe: {{1.fromEmail}}\\nContenido:\\n{{replace(replace(replace(left(1.snippet; 3000); \\\"\\\\\\\"\\\"; \\\"'\\\"); \\\"\\\\\\\\\\\"; \\\"\\\\\\\\\\\\\\\\\\\"); \\\"\\\\n\\\"; \\\"\\\\\\\\n\\\")}}\" } ] }",
+        "parseResponse": true,
+        "timeout": 30
+      },
+      "metadata": {
+        "designer": { "x": 300, "y": 0 }
+      }
+    },
+    {
+      "id": 3,
+      "module": "json:ParseJSON",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "json": "{{2.data.choices[].message.content}}"
+      },
+      "metadata": {
+        "designer": { "x": 600, "y": 0 }
+      }
+    },
+    {
+      "id": 4,
+      "module": "util:ArrayIterator",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "array": "{{3.jobs}}"
+      },
+      "metadata": {
+        "designer": { "x": 900, "y": 0 }
+      }
+    },
+    {
+      "id": 5,
+      "module": "notion:searchObjects1",
+      "version": 1,
+      "parameters": {
+        "__IMTCONN__": 8954474
+      },
+      "mapper": {
+        "object": "page",
+        "dataSource": "4e542b37-6e52-4418-89b7-a0eeb3138307",
+        "filters": {
+          "operator": "and",
+          "conditions": [
+            {
+              "field": "Rol",
+              "condition": "title",
+              "title": {
+                "condition": "equals",
+                "string": "{{4.title}}"
+              }
+            },
+            {
+              "field": "Marca",
+              "condition": "text",
+              "text": {
+                "condition": "equals",
+                "string": "{{4.company}}"
+              }
+            }
+          ]
+        }
+      },
+      "metadata": {
+        "designer": { "x": 1200, "y": 0 },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": { "label": "make (Notion Internal)" }
+          }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "filter": {
+        "name": "No duplicado",
+        "conditions": [
+          [
+            {
+              "a": "{{length(5.results)}}",
+              "b": "0",
+              "o": "number:equal"
+            }
+          ]
+        ]
+      },
+      "module": "notion:createDataSourceItem",
+      "version": 1,
+      "parameters": {
+        "__IMTCONN__": 8954474
+      },
+      "mapper": {
+        "select": "map",
+        "data_source": "4e542b37-6e52-4418-89b7-a0eeb3138307",
+        "fields": [
+          { "key": "Rol",         "type": "title",  "value": "{{4.title}}" },
+          { "key": "Marca",       "type": "text",   "value": "{{4.company}}" },
+          { "key": "URL",         "type": "url",    "value": "{{4.url}}" },
+          { "key": "JD",          "type": "text",   "value": "{{4.jd_snippet}}" },
+          { "key": "JOB_ID",      "type": "text",   "value": "{{4.job_id}}" },
+          { "key": "Raw Source",  "type": "select", "value": "{{3.raw_source}}" },
+          { "key": "Raw Email Subject", "type": "text", "value": "{{1.subject}}" },
+          { "key": "Source_Type ", "type": "select", "value": "Vacante" },
+          { "key": "Status",      "type": "select", "value": "Nueva" },
+          { "key": "Fuente",      "type": "select", "value": "Agregador" },
+          {
+            "key": "Imported At",
+            "type": "date",
+            "date": {
+              "start": "{{formatDate(now; \"YYYY-MM-DDTHH:mm:ssZ\")}}",
+              "includeTime": true
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "designer": { "x": 1500, "y": 0 },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": { "label": "make (Notion Internal)" }
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "instant": false,
+    "version": 1,
+    "designer": { "orphans": [] },
+    "scenario": {
+      "dlq": false,
+      "dataloss": false,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "roundtrips": 1,
+      "sequential": false,
+      "confidential": false,
+      "freshVariables": false,
+      "autoCommitTriggerLast": true
+    }
+  },
+  "scheduling": {
+    "type": "indefinitely",
+    "interval": 3600
+  }
+}

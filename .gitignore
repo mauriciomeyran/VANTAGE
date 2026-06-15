@@ -4,3 +4,7 @@ config/layer_1.env
 __pycache__/
 *.pyc
 .DS_Store
+scripts/notion_cache.json
+scripts/notion_metrics.json
+*.bak
+scripts/retro_clean_l3_dryrun.json
