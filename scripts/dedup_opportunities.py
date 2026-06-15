@@ -43,10 +43,10 @@ def are_duplicates(job1, job2, company_threshold=0.85, role_threshold=0.7):
 if __name__ == "__main__":
     load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
     client = Client(auth=os.environ["NOTION_TOKEN"])
-    ds_id = "4e542b37-6e52-4418-89b7-a0eeb3138307"
+    ds_id = "596938befc42836baea7814a1491bd47"
 
     print("Obteniendo todas las oportunidades...")
-    all_results = client.data_sources.query(data_source_id=ds_id)["results"]
+    all_results = client.databases.query(database_id=ds_id)["results"]
     print(f"✅ {len(all_results)} entradas obtenidas")
 
     jobs = []

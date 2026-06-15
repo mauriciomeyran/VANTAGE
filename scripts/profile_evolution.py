@@ -159,7 +159,7 @@ def update_profile_progression():
     
     save_config(config)
     print("\n✅ Configuración guardada")
-    print("💡 Para aplicar cambios: edita manualmente scripts/run_pipeline.py con los nuevos valores")
+    print("💡 Para aplicar cambios: edita manualmente scripts/layer_1_run.py con los nuevos valores")
 
 def generate_config_summary():
     """Generate summary of current configuration for system sync"""
@@ -167,7 +167,7 @@ def generate_config_summary():
     
     print("\n📋 RESUMEN PARA SINCRONIZACIÓN:")
     print("=" * 50)
-    print("# Actualizar en scripts/run_pipeline.py:")
+    print("# Actualizar en scripts/layer_1_run.py:")
     print()
     print("vm_terms = [")
     for keyword in config["scoring"]["vm_keywords"]:

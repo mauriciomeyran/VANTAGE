@@ -1,0 +1,63 @@
+{
+  "version": "2.0",
+  "generated_at": "2026-06-14T00:00:00Z",
+  "status": "DESIGN_ONLY — Resolver Layer no implementado. Este archivo documenta el contrato de resolución y el índice de fuentes; no ejecuta resolución en vivo.",
+
+  "data_sources": {
+    "VANTAGE_TRACKER": {
+      "database_id": "596938befc42836baea7814a1491bd47",
+      "data_source_id": "442938be-fc42-828f-b72e-076818d65a5b",
+      "title_property": "Rol",
+      "id_strategy": "hash_or_url",
+      "entity_prefix": "TRACKER",
+      "ownership": "Class A/B mixto — ver Kernel ownership-001"
+    },
+    "ARCHIVO_TRACKER": {
+      "database_id": "4ec34e1b528648c9afbdd57c6eb76053",
+      "data_source_id": "674696fd-94b6-464a-ac1f-64b0cc917e15",
+      "title_property": "Rol",
+      "id_strategy": "hash_or_url",
+      "entity_prefix": "ARCHIVO",
+      "ownership": "snapshot reducido, sin Status activo completo"
+    },
+    "ARCHIVO_DRY_RUN": {
+      "database_id": "37d938befc42804a94a1c355a9b89363",
+      "data_source_id": "37d938be-fc42-8022-9191-000bf6cdac7b",
+      "title_property": "Nombre",
+      "id_strategy": "url_only",
+      "entity_prefix": "DRYRUN",
+      "ownership": "schema mínimo (Nombre + Etiquetas)"
+    },
+    "BUG_TRACKER": {
+      "database_id": "36e938befc4281bd9e1fdc360b3b45f5",
+      "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",
+      "title_property": "Bug",
+      "id_strategy": "url_only",
+      "entity_prefix": "BUG",
+      "ownership": "Componente mapea a pseudo-nodos layer:L1/L2/L3"
+    }
+  },
+
+  "known_pitfalls": {
+    "VANTAGE_TRACKER": ["Source_Type tiene espacio final ('Source_Type ')"],
+    "ARCHIVO_TRACKER": [
+      "Source_Type sin espacio final (distinto de VANTAGE_TRACKER)",
+      "hash frecuentemente vacío en filas legacy",
+      "Status le faltan opciones 'Blocked' y 'Nueva' vs VANTAGE_TRACKER"
+    ],
+    "ARCHIVO_DRY_RUN": ["Etiquetas multi_select sin opciones definidas; relaciones dependen de contenido de página, no de properties"],
+    "general": [
+      "databases/{id}/query roto para DBs multi-source migradas — usar data_sources/{id}/query",
+      "notion-fetch trunca páginas largas / no resuelve bien column layouts"
+    ]
+  },
+
+  "resolution_contract": {
+    "input": "entity_id (formato PREFIX:H_xxxx o PREFIX:U_xxxx) o canonical_id",
+    "lookup_path": "entity_index_v2.entities[entity_id].page_url",
+    "live_resolution": "notion-fetch(page_url) → estado actual (NO IMPLEMENTADO)",
+    "fallback_on_miss": "reportar entity_id como 'unresolvable', no inferir estado"
+  },
+
+  "future_resolver_notes": "Cuando se implemente, Resolver Layer consume este archivo solo para obtener data_source_id + page_url; no requiere cambios de schema en entity_index_v2, graph_v2 ni backlinks_v2."
+}

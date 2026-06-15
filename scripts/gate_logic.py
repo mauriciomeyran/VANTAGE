@@ -44,6 +44,8 @@ def gate_logic(entry):
     
     # CREATE logic
     elif gate_decision == "CREATE":
+        if status == "Postulado":
+            return "Follow-up"
         return "Re-check"
     
     # BLOCKED logic with terminal state protection
@@ -113,6 +115,12 @@ if __name__ == "__main__":
         new_action = gate_logic(entry)
         
         # Contar resultados
+        # Warning: Status=Postulado pero Gate_Decision no es APPLIED
+        if status == "Postulado" and gate_decision != "APPLIED":
+            print(f"⚠️  DESAJUSTE | {rol} @ {marca}")
+            print(f"   Status=Postulado pero Gate_Decision={gate_decision} — actualizar manualmente en Notion")
+            print()
+
         if current_action in {"Archivar", "Expirada"}:
             terminal_protected += 1
             print(f"🛡️  PROTEGIDO | {rol} @ {marca}")

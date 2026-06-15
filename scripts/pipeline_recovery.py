@@ -143,7 +143,7 @@ def main():
     # Clear checkpoint on manual verification
     clear_checkpoint()
     print("\n💡 Para pipeline con recovery automático:")
-    print("  ~/jhs_pipeline.sh  (con checkpoints internos)")
+    print("  ~/vantage_pipeline.sh  → LAYER_1/wrappers/layer_1_wrapper.sh")
 
 if __name__ == "__main__":
     main()
