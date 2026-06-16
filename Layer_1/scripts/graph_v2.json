@@ -9,10 +9,6 @@
     {"from": "ARCHIVO:H_301938f2d15ec8ea", "to": "TRACKER:H_301938f2d15ec8ea", "type": "archived_from"},
     {"from": "ARCHIVO:H_7919f1635387d4f1", "to": "TRACKER:H_7919f1635387d4f1", "type": "archived_from"},
     {"from": "ARCHIVO:H_d4dd8f0524314112", "to": "TRACKER:H_d4dd8f0524314112", "type": "archived_from"},
-    {"from": "ARCHIVO:H_8c722ea63c6a37f0", "to": "TRACKER:H_8c722ea63c6a37f0", "type": "archived_from"},
-    {"from": "ARCHIVO:H_5f3e2d1a8c9b7e4f", "to": "TRACKER:H_5f3e2d1a8c9b7e4f", "type": "archived_from"},
-    {"from": "ARCHIVO:H_b7a6c5d4e3f8a912", "to": "TRACKER:H_b7a6c5d4e3f8a912", "type": "archived_from"},
-    {"from": "ARCHIVO:H_c8d9e0f1a2b3c4d5", "to": "TRACKER:H_c8d9e0f1a2b3c4d5", "type": "archived_from"},
-    {"from": "ARCHIVO:H_e1f2a3b4c5d6e7f8", "to": "TRACKER:H_e1f2a3b4c5d6e7f8", "type": "archived_from"}
+    {"from": "ARCHIVO:H_8c722ea63c6a37f0", "to": "TRACKER:H_8c722ea63c6a37f0", "type": "archived_from"}
   ]
 }
