@@ -22,8 +22,8 @@ try:
 except ImportError:
     _GRAPH_AVAILABLE = False
 
-_BUG_TRACKER_DB_ID = "36e938be-fc42-81bd-9e1f-dc360b3b45f5"
-_ARCHIVO_TRACKER_DB_ID = "4ec34e1b-5286-48c9-afbd-d57c6eb76053"
+_BUG_TRACKER_DS_ID = "36e938be-fc42-81f8-8c6f-000b6769ba03"
+_ARCHIVO_TRACKER_DS_ID = "674696fd-94b6-464a-ac1f-64b0cc917e15"
 
 ARCHIVED_STATUSES = {"Expirada"}
 ALREADY_ACTIONED_STATUSES = {"Postulado", "En proceso"}
@@ -47,8 +47,8 @@ def _iterate_contexts(entities: List[Dict[str, Any]]):
             yield entity_id, None, str(exc)
 
 
-def _notion_db_query(db_id: str, body: Optional[Dict] = None) -> List[Dict]:
-    url = f"https://api.notion.com/v1/databases/{db_id}/query"
+def _notion_db_query(data_source_id: str, body: Optional[Dict] = None) -> List[Dict]:
+    url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
     headers = {
         "Authorization": f"Bearer {_get_token()}",
         "Notion-Version": NOTION_VERSION,
@@ -190,7 +190,7 @@ def _handle_compare(entity_id_a: str, entity_id_b: str) -> Dict[str, Any]:
 
 def _handle_show_archived_history() -> Dict[str, Any]:
     try:
-        pages = _notion_db_query(_ARCHIVO_TRACKER_DB_ID)
+        pages = _notion_db_query(_ARCHIVO_TRACKER_DS_ID)
     except Exception as exc:
         return {"intent": "show_archived_history", "error": str(exc)}
 
@@ -223,7 +223,7 @@ def _handle_show_archived_history() -> Dict[str, Any]:
 
 def _handle_show_bugs() -> Dict[str, Any]:
     try:
-        pages = _notion_db_query(_BUG_TRACKER_DB_ID)
+        pages = _notion_db_query(_BUG_TRACKER_DS_ID)
     except Exception as exc:
         return {"intent": "show_bugs", "error": str(exc)}
 
