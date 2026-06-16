@@ -1,7 +1,7 @@
 {
   "version": "2.0",
   "generated_at": "2026-06-14T00:00:00Z",
-  "status": "DESIGN_ONLY — Resolver Layer no implementado. Este archivo documenta el contrato de resolución y el índice de fuentes; no ejecuta resolución en vivo.",
+  "status": "LIVE — Resolver Layer operativo desde 2026-06-15. Este archivo documenta el contrato de resolución y el índice de fuentes; ejecuta resolución en vivo vía resolver_layer_v1.py.",
 
   "data_sources": {
     "VANTAGE_TRACKER": {
@@ -55,7 +55,7 @@
   "resolution_contract": {
     "input": "entity_id (formato PREFIX:H_xxxx o PREFIX:U_xxxx) o canonical_id",
     "lookup_path": "entity_index_v2.entities[entity_id].page_url",
-    "live_resolution": "notion-fetch(page_url) → estado actual (NO IMPLEMENTADO)",
+    "live_resolution": "notion-fetch(page_url) → estado actual (IMPLEMENTADO — resolver_layer_v1.py, live desde 2026-06-15)",
     "fallback_on_miss": "reportar entity_id como 'unresolvable', no inferir estado"
   },
 
