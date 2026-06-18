@@ -27,7 +27,7 @@ set +a
 cd "$DASHBOARD_DIR" || exit 1
 source "$LAYER_1_DIR/.venv/bin/activate"
 
-export PYTHONPATH="$DASHBOARD_DIR/scripts:$LAYER_1_DIR/scripts${PYTHONPATH:+:$PYTHONPATH}"
+export PYTHONPATH="$DASHBOARD_DIR/scripts${PYTHONPATH:+:$PYTHONPATH}"
 
 pkill -f dashboard_server.py 2>/dev/null
 
