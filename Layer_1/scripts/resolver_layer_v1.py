@@ -43,7 +43,14 @@ def _source_config(registry: Dict[str, Any], source_db: str) -> Dict[str, Any]:
     raise ResolverError("not_found", f"no registry mapping for {source_db}")
 
 
-def _query_notion(data_source_id: str, page_id: str) -> Dict[str, Any]:
+def _query_notion(data_source_id: str) -> list[Dict[str, Any]]:
+    """Pagina data_sources/{id}/query completo — fix RID-02.
+
+    Antes solo se tomaba el primer batch; con 384+ entidades en
+    ARCHIVO_TRACKER, entidades fuera de la primera página devolvian
+    not_found silenciosamente. Ahora se acumulan todos los resultados,
+    respetando el throttle global de notion_client en cada request.
+    """
     token = os.environ.get("NOTION_API_KEY") or os.environ.get("NOTION_TOKEN")
     if not token:
         raise ResolverError("notion_error", "missing notion api token")
@@ -51,17 +58,29 @@ def _query_notion(data_source_id: str, page_id: str) -> Dict[str, Any]:
         import requests
     except Exception as exc:
         raise ResolverError("notion_error", f"requests unavailable: {exc}")
+
+    from notion_client import _throttle
+
     url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
     headers = {
         "Authorization": f"Bearer {token}",
         "Notion-Version": os.environ.get("NOTION_VERSION", "2025-09-03"),
         "Content-Type": "application/json",
     }
+
+    all_results: list[Dict[str, Any]] = []
     payload: Dict[str, Any] = {}
-    resp = requests.post(url, headers=headers, json=payload, timeout=30)
-    if resp.status_code >= 400:
-        raise ResolverError("notion_error", resp.text)
-    return resp.json()
+    while True:
+        _throttle()
+        resp = requests.post(url, headers=headers, json=payload, timeout=30)
+        if resp.status_code >= 400:
+            raise ResolverError("notion_error", resp.text)
+        data = resp.json()
+        all_results.extend(data.get("results", []))
+        if not data.get("has_more"):
+            break
+        payload = {**payload, "start_cursor": data["next_cursor"]}
+    return all_results
 
 
 def resolve_entity(payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -76,8 +95,7 @@ def resolve_entity(payload: Dict[str, Any]) -> Dict[str, Any]:
     data_source_id = cfg["data_source_id"]
     page_id = row.get("page_id")
     page_url = row.get("page_url")
-    query_result = _query_notion(data_source_id, page_id)
-    results = query_result.get("results", [])
+    results = _query_notion(data_source_id)
     match = next((item for item in results if item.get("id") == page_id), None)
     if match is None:
         raise ResolverError("not_found", key)

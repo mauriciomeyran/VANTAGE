@@ -147,11 +147,14 @@ def _handle_find_candidates() -> Dict[str, Any]:
         gate = ctx["metadata"].get("Gate_Decision")
         match = ctx["metadata"].get("Match")
 
+        score = ctx["metadata"].get("Score") or 0
+
         if (
             _is_active(status)
             and status not in ALREADY_ACTIONED_STATUSES
             and gate != "BLOCKED"
             and match in ("Alto", "Medio")
+            and score >= 60
         ):
             matched.append({
                 "entity_id": entity_id,

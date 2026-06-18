@@ -48,6 +48,30 @@ MONTH_NAMES = [
 # Jerarquía de dedup cross-layer (v8.0): L1 > L2 > L3
 DEDUP_PRIORITY = {"L1": 1, "L2": 2, "L3": 3}
 
+# Hard Blocks (SP §6) — backstop independiente de alias_map.json.
+# El mecanismo de resolve_alias()/hard_block sigue activo; esto cubre los
+# 3 casos críticos aunque alias_map.json no tenga el flag bien curado.
+HARD_BLOCKED_BRANDS = {
+    "l'oréal", "loreal", "l'oreal",
+    "levi's", "levis", "dockers",
+    "el palacio de hierro", "palacio de hierro",
+}
+
+
+def _normalize_brand_text(value: str) -> str:
+    if not value:
+        return ""
+    return value.strip().lower().replace("’", "'").replace("‘", "'")
+
+
+def is_hard_blocked_brand(value: str) -> str | None:
+    """Devuelve el término bloqueado que hizo match, o None si no aplica."""
+    normalized = _normalize_brand_text(value)
+    for blocked in HARD_BLOCKED_BRANDS:
+        if blocked in normalized:
+            return blocked
+    return None
+
 GENERATED_JOB_ID_RE = re.compile(
     r"^(?:gen[_-]?|auto[_-]?|tmp[_-]?|unknown|n/?a|none|null|)$",
     re.IGNORECASE,
@@ -566,6 +590,17 @@ def process_record(
     record = normalize_record_fields(raw)
     hash_key = compute_dedup_hash(record)
     brand_raw = record.get("brand_raw", "")
+
+    blocked_match = is_hard_blocked_brand(brand_raw)
+    if blocked_match:
+        print(f"  ⚠️  HARD_BLOCK: {brand_raw}")
+        return ProcessedRecord(
+            record=record,
+            hash_key=hash_key,
+            disposition="BLOCKED",
+            notes=f"HARD_BLOCK: {brand_raw}",
+            brand=brand_raw,
+        )
 
     marca, holding, hard_block = resolve_alias(brand_raw, alias_data)
     if hard_block is True:

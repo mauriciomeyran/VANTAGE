@@ -544,6 +544,18 @@ def create_notion_page(job, email_meta):
 # ──────────────────────────────────────────
 # MAIN
 # ──────────────────────────────────────────
+import json as _json, pathlib as _pl, datetime as _dt
+
+def _write_heartbeat(total_created: int, total_failed: int):
+    path = _pl.Path.home() / ".vantage" / "l3_heartbeat.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "last_run": _dt.datetime.utcnow().isoformat() + "Z",
+        "total_created": total_created,
+        "total_failed": total_failed
+    }
+    path.write_text(_json.dumps(payload, indent=2))
+
 def main():
     print("\n🚀 VANTAGE L3 Pipeline arrancando...")
     print(f"   Groq: {GROQ_MODEL} · pausa mín {GROQ_MIN_DELAY}s · máx {MAX_EMAILS_RUN} correos/ejecución\n")
@@ -553,7 +565,10 @@ def main():
     emails, total_inbox = fetch_unread_emails(mail)
     if not emails:
         print("✅ No hay correos nuevos en .Jobs")
-        mail.logout()
+        _write_heartbeat(total_created, total_failed)
+    print("
+💾 Heartbeat → ~/.vantage/l3_heartbeat.json")
+    mail.logout()
         return
 
     total_created = 0
