@@ -79,10 +79,14 @@ def query(value: str) -> Dict[str, Any]:
 
 def status() -> Dict[str, Any]:
     """Healthcheck del runtime: tamaño del index + metrics de Notion."""
-    from query_layer import load_index
+    from query_layer import load_index, ENTITY_INDEX_PATH
     index = load_index()
     entities = index.get("entities", [])
-    return {
+
+    index_mtime = os.path.getmtime(ENTITY_INDEX_PATH)
+    index_age_hours = round((time.time() - index_mtime) / 3600, 1)
+
+    result = {
         "runtime": "VANTAGE",
         "phases": "1-8",
         "entity_index": {
@@ -90,7 +94,12 @@ def status() -> Dict[str, Any]:
             "metrics": index.get("metrics", {}),
         },
         "notion_client_metrics": get_metrics(),
+        "index_age_hours": index_age_hours,
+        "index_path": str(ENTITY_INDEX_PATH),
     }
+    if index_age_hours > 24:
+        result["warning"] = "entity_index_stale"
+    return result
 
 
 
