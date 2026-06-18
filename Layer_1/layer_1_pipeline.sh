@@ -92,9 +92,15 @@ case "$1" in
             echo "❌ Error: scripts/feed_processor.py no encontrado"
             exit 1
         fi
-        echo "📥 Procesando feed: feeds/$FEED_FILE (Layer ${3:-1})"
+        # Soporte para ruta absoluta o relativa
+        if [[ "$FEED_FILE" = /* ]]; then
+            FEED_PATH="$FEED_FILE"
+        else
+            FEED_PATH="feeds/$FEED_FILE"
+        fi
+        echo "📥 Procesando feed: $FEED_PATH (Layer ${3:-1})"
         echo ""
-        python3 scripts/feed_processor.py --file "feeds/$FEED_FILE" --layer "${3:-1}"
+        python3 scripts/feed_processor.py --file "$FEED_PATH" --layer "${3:-1}"
         exit_code=$?
         if [ $exit_code -eq 0 ]; then
             echo ""

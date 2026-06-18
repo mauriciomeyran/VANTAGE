@@ -11,6 +11,6 @@ DATABASE_ID = os.environ['NOTION_DB_OPPORTUNITIES']
 
 DB_PATH = os.path.join(ROOT_DIR, 'dashboard_instances.db')
 
-HOST = '127.0.0.1'
+HOST = '0.0.0.0'
 PORT = 8000
 DEBUG = False

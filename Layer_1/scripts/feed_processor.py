@@ -21,7 +21,21 @@ from pathlib import Path
 from typing import Any
 
 from dotenv import load_dotenv
-from notion_client import Client
+
+# feed_processor necesita Client del SDK de PyPI (notion-client),
+# no del wrapper local notion_client.py que vive en el mismo directorio.
+# Mismo patrón que vantage.py sync() — excluimos scripts/ del path temporalmente.
+import sys as _sys, importlib.util as _ilu
+_scripts_dir = str(Path(__file__).resolve().parent)
+_saved_path = _sys.path[:]
+_saved_nc   = _sys.modules.pop("notion_client", None)
+_sys.path   = [p for p in _sys.path if p not in (_scripts_dir, ".", "")]
+try:
+    from notion_client import Client
+finally:
+    _sys.path = _saved_path
+    if _saved_nc is not None:
+        _sys.modules["notion_client"] = _saved_nc
 
 _SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(_SCRIPTS_DIR) not in sys.path:

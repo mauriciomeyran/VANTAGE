@@ -36,7 +36,7 @@ GROQ_MODEL     = os.environ.get("GROQ_MODEL", "llama-3.1-8b-instant")
 GROQ_MIN_DELAY = float(os.environ.get("GROQ_MIN_DELAY_SEC", "12"))
 GROQ_MAX_RETRY = int(os.environ.get("GROQ_MAX_RETRIES", "8"))
 GROQ_BODY_MAX  = int(os.environ.get("GROQ_BODY_MAX_CHARS", "3500"))
-MAX_EMAILS_RUN = int(os.environ.get("GROQ_MAX_EMAILS_PER_RUN", "5"))
+MAX_EMAILS_RUN = int(os.environ.get("GROQ_MAX_EMAILS_PER_RUN", "10"))
 
 NOTION_TOKEN   = os.environ["NOTION_TOKEN"]
 NOTION_DB_ID   = os.environ["NOTION_DB_ID"]
@@ -63,7 +63,10 @@ EXCLUDED_SENDERS = [
 SKIP_SUBJECT_RE = re.compile(
     r"agradecimiento|gracias por (tu|su)|postulaciones pendientes|"
     r"confirmaci[oó]n de (registro|cuenta)|newsletter|unsubscribe|"
-    r"verifica(r)? tu (correo|email)|bienvenid[oa] a",
+    r"verifica(r)? tu (correo|email)|bienvenid[oa] a|"
+    r"nuevas? (ofertas?|oportunidades?)|empleos? recomendados?|"
+    r"alerta de empleo|ofertas? que (podr[ií]an|pueden) interesarte|"
+    r"tienes \d+ (nuevas?|ofertas?)|postulaci[oó]n recibida",
     re.IGNORECASE,
 )
 
@@ -160,8 +163,25 @@ def fetch_unread_emails(mail):
 GROQ_PROMPT = """Eres un extractor de vacantes de empleo especializado en Visual Merchandising y retail.
 Del siguiente texto de correo electrónico, extrae ÚNICAMENTE vacantes relevantes para un profesional de Visual Merchandising.
 
-Roles RELEVANTES (incluir): Visual Merchandiser, VM Coordinator, VM Manager, VM Director, Brand Environment, Escaparatista, Retail Design, Store Planner, Display Coordinator, Trade Marketing Visual, y roles similares en retail/moda/lujo.
-Roles IRRELEVANTES (ignorar completamente): contadores, asistentes virtuales, logística, ventas, marketing digital, TI, recursos humanos, y cualquier rol sin componente visual/retail.
+Roles RELEVANTES (incluir): Visual Merchandiser, VM Coordinator, VM Manager, VM Director, Brand Environment, Escaparatista, Retail Design, Store Planner, Display Coordinator, Trade Marketing Visual, y roles similares en retail/moda/lujo con componente visual explícito.
+
+Roles IRRELEVANTES (ignorar completamente — NO incluir aunque aparezcan en el mismo correo):
+- Ventas, cajero/a, asesor de ventas, ejecutivo de ventas, promotor
+- Marketing digital, influencer marketing, social media, growth, performance
+- Logística, almacén, distribución, supply chain
+- Recursos humanos, reclutamiento, talent acquisition
+- Contabilidad, finanzas, administración
+- TI, desarrollo de software, soporte técnico
+- Event planner, coordinador de eventos, producción de eventos
+- Diseño gráfico sin componente retail/VM explícito
+- Intern/practicante en áreas no-VM
+- Supervisor operativo de sucursal, gerente de tienda sin scope VM
+- Cualquier rol cuyo título no contenga palabras como: visual, merchandising, display, brand environment, retail design, store design, escaparate, vitrina, planograma
+
+MARCAS BLOQUEADAS (ignorar todas sus vacantes, sin excepción):
+- El Palacio de Hierro (cualquier variante: Palacio de Hierro, palacio, PHierro)
+- L'Oréal (todas sus divisiones: Lancôme, Giorgio Armani Beauty, YSL Beauty, Kiehl's, etc.)
+- Levi's, Dockers
 
 Para cada vacante relevante devuelve un objeto JSON con estos campos exactos:
 - rol: título ESPECÍFICO del puesto TAL COMO APARECE en el texto del correo
@@ -190,6 +210,7 @@ REGLAS CRÍTICAS — léelas antes de responder:
 4. Si el correo es un digest sin URLs directas por vacante (solo links genéricos/homepage), devuelve {"vacantes":[]}.
 5. NO repitas la misma vacante.
 6. Máximo 20 vacantes por correo.
+7. Ante la duda sobre si un rol es relevante → NO incluirlo. Es mejor perder una vacante marginal que contaminar el tracker.
 
 Responde ÚNICAMENTE con un objeto JSON válido (sin markdown):
 {"vacantes":[{"rol":"VM Coordinator - Zara Polanco","marca":"Zara","url":"https://www.linkedin.com/jobs/view/4414059078","holding":"Inditex"}]}
@@ -429,6 +450,41 @@ def dedupe_jobs(jobs):
     return unique, dropped
 
 
+# ──────────────────────────────────────────
+# FILTRO VM — validación post-Groq por título
+# ──────────────────────────────────────────
+_VM_KEYWORDS = re.compile(
+    r"visual merch|merchandis|display|escaparat|vitrina|planograma|"
+    r"brand environment|store design|retail design|store planner|"
+    r"vm coord|vm manager|vm director|visual coord|visual manager|"
+    r"trade marketing visual|montaje.*mobiliario|mobiliario.*montaje",
+    re.IGNORECASE,
+)
+
+_HARD_BLOCK_BRANDS = re.compile(
+    r"palacio de hierro|palaciodehierro|l.?or.?al|loreal|levi.?s|dockers",
+    re.IGNORECASE,
+)
+
+
+def is_vm_relevant(job: dict) -> tuple[bool, str]:
+    """
+    Devuelve (True, "") si la vacante pasa el filtro VM.
+    Devuelve (False, motivo) si debe descartarse.
+    Segunda línea de defensa post-Groq: Python nunca falla.
+    """
+    rol = job.get("rol", "")
+    marca = job.get("marca", "")
+
+    if _HARD_BLOCK_BRANDS.search(marca):
+        return False, f"HARD_BLOCK_BRAND: {marca}"
+
+    if not _VM_KEYWORDS.search(rol):
+        return False, f"NO_VM_KEYWORD: {rol}"
+
+    return True, ""
+
+
 def normalize_text(s: str) -> str:
     """Lowercase, quita acentos y caracteres no-alfanuméricos."""
     s = unicodedata.normalize("NFKD", (s or "").lower())
@@ -565,10 +621,9 @@ def main():
     emails, total_inbox = fetch_unread_emails(mail)
     if not emails:
         print("✅ No hay correos nuevos en .Jobs")
-        _write_heartbeat(total_created, total_failed)
-    print("
-💾 Heartbeat → ~/.vantage/l3_heartbeat.json")
-    mail.logout()
+        _write_heartbeat(0, 0)
+        print("💾 Heartbeat → ~/.vantage/l3_heartbeat.json")
+        mail.logout()
         return
 
     total_created = 0
@@ -611,9 +666,17 @@ def main():
             print(f"  🔍 {len(jobs)} vacante(s) a importar")
 
         skipped_notion = 0
+        skipped_vm = 0
         for job in jobs:
             rol, marca, url = job["rol"], job["marca"], job["url"]
             label = f"{rol}" + (f" @ {marca}" if marca else f" · {url[:40]}")
+
+            relevant, reason = is_vm_relevant(job)
+            if not relevant:
+                print(f"  🚧 Filtrado post-Groq ({reason}): {label}")
+                skipped_vm += 1
+                continue
+
             if already_exists(rol, marca, url):
                 skipped_notion += 1
                 continue
@@ -625,6 +688,8 @@ def main():
                 print(f"  ❌ Error en Notion para '{label}': {result[:100]}")
                 total_failed += 1
 
+        if skipped_vm:
+            print(f"  🚧 {skipped_vm} filtrada(s) por no ser VM (post-Groq)")
         if skipped_notion:
             print(f"  ⏭️  {skipped_notion} ya existían en Notion")
 
