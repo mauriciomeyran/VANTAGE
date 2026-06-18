@@ -539,7 +539,7 @@ body {
       <span class="stat-label">Completadas</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value" id="totalTasks">31</span>
+      <span class="stat-value" id="totalTasks">32</span>
       <span class="stat-label">Total</span>
     </div>
     <div class="stat-item">
@@ -566,7 +566,7 @@ body {
     <div class="day-header">
       <span class="day-label" style="background:#01696f;">LUNES</span>
       <span class="day-progress-text" id="lunes-progress">0 / 17</span>
-      <span class="day-count">17 tareas</span>
+      <span class="day-count">18 tareas</span>
     </div>
     <div class="mini-progress">
       <div class="mini-progress-fill" id="lunes-bar" style="width:0%;background:#01696f;"></div>
@@ -775,6 +775,18 @@ body {
           <span class="task-num">#17</span>
           <span class="task-text">Ejecutar pipeline principal (sin argumentos) para revelar vacantes de L3</span>
           <code class="task-cmd">vl1</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-18" onclick="toggleTask('lunes-18', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-18', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#18</span>
+          <span class="task-text">Sincronizar repositorio git — commitea y pushea todos los cambios del ciclo a origin/main.</span>
+          <code class="task-cmd">vgit</code>
         </div>
       </div>
     </div>
@@ -1019,8 +1031,8 @@ body {
 <script>
 const STATE_KEY = 'vchecklist_v1';
 const DAYS = ['lunes','martes','miercoles','jueves','viernes'];
-const DAY_COUNTS = {lunes:17,martes:3,miercoles:8,jueves:1,viernes:2};
-const TOTAL = 31;
+const DAY_COUNTS = {lunes:18,martes:3,miercoles:8,jueves:1,viernes:2};
+const TOTAL = 32;
 
 let state = {};
 
