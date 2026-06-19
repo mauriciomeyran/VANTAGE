@@ -454,7 +454,7 @@ def dedupe_jobs(jobs):
 # FILTRO VM — validación post-Groq por título
 # ──────────────────────────────────────────
 _VM_KEYWORDS = re.compile(
-    r"visual merch|merchandis|display|escaparat|vitrina|planograma|"
+    r"visual merch|merchandis|display|escaparat|vitrina|planograma|exhibicion|"
     r"brand environment|store design|retail design|store planner|"
     r"vm coord|vm manager|vm director|visual coord|visual manager|"
     r"trade marketing visual|montaje.*mobiliario|mobiliario.*montaje",
