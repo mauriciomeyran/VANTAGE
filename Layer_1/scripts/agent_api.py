@@ -12,9 +12,9 @@ except ImportError:
 
 try:
     from context_layer import assemble_context
-    from notion_client import ResolverError, _get_token, NOTION_VERSION
+    from notion_utils import ResolverError, _get_token, NOTION_VERSION
 except ImportError:
-    raise RuntimeError("context_layer.py / notion_client.py no encontrados en la misma carpeta.")
+    raise RuntimeError("context_layer.py / notion_utils.py no encontrados en la misma carpeta.")
 
 try:
     from graph_layer import get_archived_from, get_backlinks, graph_stats

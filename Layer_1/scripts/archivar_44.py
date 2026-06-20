@@ -17,7 +17,7 @@ import os
 import sys
 import time
 
-# Fix: notion_client.py local tapa el paquete instalado
+# Fix: notion_utils.py local tapa el paquete instalado
 _venv_site = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     ".venv", "lib"
@@ -29,7 +29,7 @@ for _entry in os.listdir(_venv_site):
         break
 
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 # ── Config ────────────────────────────────────────────────────────────────────
 load_dotenv()

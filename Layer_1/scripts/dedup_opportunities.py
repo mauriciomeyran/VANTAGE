@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 from difflib import SequenceMatcher
 from collections import defaultdict
 

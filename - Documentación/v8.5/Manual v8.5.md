@@ -7,23 +7,22 @@ Page ID: 372938be-fc42-8050-9a67-e40857d7806e
 Fecha de actualización: 17 de junio de 2026
 Tipo: Página
 
-<aside>
-
-> ID: 372938be-fc42-8050-9a67-e40857d7806:audience-scope-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:audience-scope-001
 
 # DECLARACIÓN DE AUDIENCIA Y ALCANCE
 
-**Audiencia**: **E**scrito para el **operador humano**.  
+**Audiencia**: **E**scrito para el **operador humano**.
 
-**Alcance**: Describe configuración inicial, ciclo operativo semanal, comandos y flujos de uso. Leer el Kernel no es prerrequisito para operar el sistema.  
+**Alcance**: Describe configuración inicial, ciclo operativo semanal, comandos y flujos de uso. Leer el Kernel no es prerrequisito para operar el sistema.
 
 **Regla de separación:** El Manual responde *cómo*. El Kernel responde *por qué*. Nunca se mezclan.
 
-</aside>
+---
+
+## CONTENIDO
 
 | **SECCIÓN** | **CONTENIDO** | **PORCIÓN** |
-| --- | --- | --- |
+|---|---|---|
 | 1 | OBJETIVO DE VANTAGE | CONTEXTO |
 | 2 | COMO FUNCIONA | CONTEXTO |
 | 3 | SETUP | OPERACIÓN |
@@ -38,8 +37,9 @@ Tipo: Página
 | 12 | REGLAS DE ORO | REFERENCIA |
 | 13 | FILOSOFÍA DE FALLO | REFERENCIA |
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-objetivo-001
-> 
+---
+
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-objetivo-001
 
 ## 1. OBJETIVO DE VANTAGE
 
@@ -56,11 +56,11 @@ Una búsqueda laboral sin estructura produce cuatro fallas operativas concretas:
 
 VANTAGE convierte la búsqueda laboral en un pipeline con contratos de procesamiento definidos.
 
-**Filtra antes de evaluar:** Links muertos → Score 0, Status Expirada. Roles sin componente visual → Gate BLOCKED. Empresas en lista negra → rechazadas en discovery.  
+**Filtra antes de evaluar:** Links muertos → Score 0, Status Expirada. Roles sin componente visual → Gate BLOCKED. Empresas en lista negra → rechazadas en discovery.
 
-**Verifica antes de creer:** Cada URL pasa URL_GATE antes de cualquier cálculo de fit. Si el link no funciona, la vacante no entra al pipeline activo.  
+**Verifica antes de creer:** Cada URL pasa URL_GATE antes de cualquier cálculo de fit. Si el link no funciona, la vacante no entra al pipeline activo.
 
-**Centraliza en un solo lugar:** Notion es la fuente única de verdad — vacantes, aplicaciones, scores, seguimiento.  
+**Centraliza en un solo lugar:** Notion es la fuente única de verdad — vacantes, aplicaciones, scores, seguimiento.
 
 **Calcula con lógica determinista:** Score 0–100 calculado por Python. La decisión de postulación se toma con datos, no con estimaciones.
 
@@ -72,8 +72,8 @@ Evidencia de posicionamiento (Positioning Modes N1–N4) verificada:
 | --- | --- | --- |
 | KPI01 | +43% tráfico | Aéropostale · red de 17 tiendas · 2017–2018 |
 | KPI02 | +18% conversión | Aéropostale · red de 17 tiendas · 2017–2018 |
-| KPI03 | -74% costos de campaña | Levi’s/Dockers · campañas nacionales México |
-| KPI04 | -33% tiempo de actualización de floorsets | Levi’s/Dockers · manuales Zoning & Mapping |
+| KPI03 | -74% costos de campaña | Levi's/Dockers · campañas nacionales México |
+| KPI04 | -33% tiempo de actualización de floorsets | Levi's/Dockers · manuales Zoning & Mapping |
 | KPI05 | 100% cobertura POP | 270+ POS · LATAM · contingencia COVID-19 |
 
 ### Lo que el Sistema No Hace
@@ -85,21 +85,19 @@ Evidencia de posicionamiento (Positioning Modes N1–N4) verificada:
 
 ### Para Quién Es Este Sistema
 
-Perfil: Profesional senior (10+ años) en Visual Merchandising, Brand Environment, Store Design, Retail Experience. Geografía: CDMX / LATAM. Sectores target: Lujo (LVMH, Kering, Richemont), retail premium (Nike, Apple, Inditex), cool DNA (Gentle Monster, Ben & Frank), agencias de experiencia.  
+Perfil: Profesional senior (10+ años) en Visual Merchandising, Brand Environment, Store Design, Retail Experience. Geografía: CDMX / LATAM. Sectores target: Lujo (LVMH, Kering, Richemont), retail premium (Nike, Apple, Inditex), cool DNA (Gentle Monster, Ben & Frank), agencias de experiencia.
 
 > Las empresas excluidas permanentemente (Hard Blocks) están documentadas en §6 — Gestión de Datos.
-> 
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-funcionamiento-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-funcionamiento-001
+
+---
 
 ## 2. CÓMO FUNCIONA
 
 ### Flujo General del Pipeline
 
 El pipeline opera ecuencialmente. Cada paso tiene un responsable y un output definido.
-
-!GPT.png
 
 ### División del Trabajo
 
@@ -115,11 +113,12 @@ El pipeline opera ecuencialmente. Cada paso tiene un responsable y un output def
 
 El sistema aplica dos capas de exclusión para garantizar la calidad de la señal:
 
-- **Hard Blocks (Permanentes):** Empresas o roles que nunca entrarán al sistema (ej. L’Oréal, Levi’s). Se filtran en el origen y no son recuperables. Ver §6.
+- **Hard Blocks (Permanentes):** Empresas o roles que nunca entrarán al sistema (ej. L'Oréal, Levi's). Se filtran en el origen y no son recuperables. Ver §6.
 - **Soft Blocks (Contextuales):** Vacantes bloqueadas por inconsistencias en datos Class A (URL rota, JD parcial) o score insuficiente. Son **recuperables** mediante el Dashboard (RT-1) corrigiendo el input.
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-setup-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-setup-001
+
+---
 
 ## 3. SETUP
 
@@ -196,24 +195,25 @@ Si falla: verifica que `~/vantage_notion_audit/.env` existe y contiene tu token 
 
 ### Paso 5 — Verificar VANTAGE Runtime
 
-El Runtime es el motor de lectura del sistema. Antes de operar, se debe verificar que el Entity Index esté cargado:  
+El Runtime es el motor de lectura del sistema. Antes de operar, se debe verificar que el Entity Index esté cargado:
 
 ```bash
 python vantage.py status
 ```
 
-**Resultado esperado:** `Status: READY` (4,200+ blocks indexed).  
+**Resultado esperado:** `Status: READY` (4,200+ blocks indexed).
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-flujo-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-flujo-001
+
+---
 
 ## 4. FLUJO PUNTA A PUNTA
 
 ### LUNES
 
-El lunes es el ciclo de búsqueda activa completo. Se dispara manualmente y cubre las dos capas de búsqueda humana.  
+El lunes es el ciclo de búsqueda activa completo. Se dispara manualmente y cubre las dos capas de búsqueda humana.
 
-El ciclo comienza con los prompts de búsqueda, los cuales no se copian de versiones anteriores — se ensamblan bajo demanda a través de Perplexity Desktop: cada prompt combina dos capas: el Prompt Base (perfil, reglas de exclusión, etc.) + el Prompt Wrapper que contiene la fecha del día `TODAY'S DATE`, el modo de búsqueda, etc.)  
+El ciclo comienza con los prompts de búsqueda, los cuales no se copian de versiones anteriores — se ensamblan bajo demanda a través de Perplexity Desktop: cada prompt combina dos capas: el Prompt Base (perfil, reglas de exclusión, etc.) + el Prompt Wrapper que contiene la fecha del día `TODAY'S DATE`, el modo de búsqueda, etc.)
 
 - [ ]  Abre Perplexity Desktop y dale la instrucción
 
@@ -223,16 +223,15 @@ El ciclo comienza con los prompts de búsqueda, los cuales no se copian de versi
 
 Puedes pedir uno o varios en el mismo mensaje; Perplexity lee *Prompt Bases* y *Prompt Wrappers* desde PROMPT LIBRARY vía MCP a Notion, los concatena en un bloque de instrucciones y fecha automáticamente, y devuelve un bloque por wrapper listo para ejecutar.
 
-**Por qué importa la fecha:** `TODAY'S DATE` define la ventana de búsqueda activa (14 días preferente, hasta 21 con match fuerte). Un prompt con fecha incorrecta produce resultados fuera de ventana o advertencias innecesarias en todos los ítems.  
+**Por qué importa la fecha:** `TODAY'S DATE` define la ventana de búsqueda activa (14 días preferente, hasta 21 con match fuerte). Un prompt con fecha incorrecta produce resultados fuera de ventana o advertencias innecesarias en todos los ítems.
 
 ---
 
-> **Nota sobre Score 0:** Si el URL_GATE detecta un link roto o inaccesible, la vacante recibe automáticamente Score 0 y Status “Archivar”. Ver §6 para lógica de descarte.
-> 
+> **Nota sobre Score 0:** Si el URL_GATE detecta un link roto o inaccesible, la vacante recibe automáticamente Score 0 y Status "Archivar". Ver §6 para lógica de descarte.
 
-### ∆ L1 — ACTIVE RECON
+### ∆ L1 — ACTIVE RECON
 
-Los Prompts de L1 siempre necesitarán ser concatenados usando el Prompt de alguno de los siguientes Wrappers: Career Sites (Tier 1 → LVMH, Kering, Richemont; Tier 2 → Nike, Apple, Inditex; Tier 3 → cool DNA, agencias de experiencia), LinkedIn o Job Boards (OCC, CompuTrabajo, Indeed, Bumeran). Algunas de las opciones con las que solicitarlos a Perplexity:
+Los Prompts de L1 siempre necesitarán ser concatenados usando el Prompt de alguno de los siguientes Wrappers: Career Sites (Tier 1 → LVMH, Kering, Richemont; Tier 2 → Nike, Apple, Inditex; Tier 3 → cool DNA, agencias de experiencia), LinkedIn o Job Boards (OCC, CompuTrabajo, Indeed, Bumeran). Algunas de las opciones con las que solicitarlos a Perplexity:
 
 ```
 "Entrégame los prompts de L1"
@@ -243,13 +242,13 @@ Los Prompts de L1 siempre necesitarán ser concatenados usando el Prompt de algu
 
 - [ ]  En Comet Desktop usando Perplexity con el control del navegador activado ejecutarás cada bloque en una pestaña diferente.
 - [ ]  Cada ejecución produce un JSON independiente.
-- [ ]  Compila los JSONs; los usarás en el paso 3.
+- [ ]  Compila los JSONs; los usarás en el paso 3.
 
 ---
 
-### ∆ L2 — STRATEGIC SEARCH
+### ∆ L2 — STRATEGIC SEARCH
 
-Regresa a Perplexity Desktop y solicita en esta ocasión los prompts de L2: Prompt A, Prompt B o Prompt C.  
+Regresa a Perplexity Desktop y solicita en esta ocasión los prompts de L2: Prompt A, Prompt B o Prompt C.
 
 En el caso del Prompt A siempre necesitará ser concatenado con alguno de los siguientes Wrappers: Gemini, Grok o [you.com](http://you.com). Los Prompts B y C pueden de manera independiente. Algunas de las opciones con las que solicitarlos a Perplexity:
 
@@ -268,12 +267,12 @@ En el caso del Prompt A siempre necesitará ser concatenado con alguno de los si
 
 ---
 
-### ∆ PERPLEXITY: CONSOLIDATION & DEDUP (L0)
+### ∆ PERPLEXITY: CONSOLIDATION & DEDUP (L0)
 
 En preparación para entrar al Pipeline es necesario consolidar la información recopilada.
 
 - [ ]  Regresarás a Perplexity Desktop y usando como base el Prompt E pegarás los JSONs de L1 + L2.
-- [ ]  Perplexity aplicará dedup con clave compuesta `brand+title+location` siguiendo una jerarquía L1 > L2: de las vacantes duplicadas persistirán las instancias de L1, tomando de L2 la información que pueda complementar sus propiedades para Class A.
+- [ ]  Perplexity aplicará dedup con clave compuesta `brand+title+location` siguiendo una jerarquía L1 > L2: de las vacantes duplicadas persistirán las instancias de L1, tomando de L2 la información que pueda complementar sus propiedades para Class A.
 - [ ]  Perplexity entregará como respuesta un **Plain Array consolidado** (JSON plano sin capas anidadas), listo para Python.
 - [ ]  Guardarás el resultado en:
 
@@ -281,12 +280,11 @@ En preparación para entrar al Pipeline es necesario consolidar la información 
 ~/Documents/04-VANTAGE_CV/Layer_1/Feeds/YYYY-MM-DD_consolidated.json
 ```
 
-> ⚠️ `vantage_merge.py` DEPRECATED. Paso correcto: JSONs L1+L2 → Perplexity (Prompt E) → Plain Array → `feed_processor.py`. Jerarquía dedup L1 > L2 — ver [377938be-fc42-805e-a408-c9ae518d4fe7:cv-pipeline-001].
-> 
+> ⚠️ `vantage_merge.py` DEPRECATED. Paso correcto: JSONs L1+L2 → Perplexity (Prompt E) → Plain Array → `feed_processor.py`. Jerarquía dedup L1 > L2 — ver [377938be-fc42-805e-a408-c9ae518d4fe7:cv-pipeline-001].
 
-**L3 — PASSIVE INTAKE**  
+**L3 — PASSIVE INTAKE**
 
-L3 lee los correos no leídos de Gmail que tengan asignado el label `.Jobs.`, extrae vacantes con Groq y las escribe directamente en el Tracker. El ciclo es autónomo y corre en background vía launchd tres veces al día (08:00 · 14:00 · 21:00).  
+L3 lee los correos no leídos de Gmail que tengan asignado el label `.Jobs.`, extrae vacantes con Groq y las escribe directamente en el Tracker. El ciclo es autónomo y corre en background vía launchd tres veces al día (08:00 · 14:00 · 21:00).
 
 - [ ]  Ejecutarás manualmente **si** el equipo estuvo apagado en los horarios indicados o necesitas procesar backlog de Gmail antes del siguiente ciclo automático.
 - [ ]  Ejecutarás la app `LAYER 3.app` desde `/Applications` o usando Terminal ingresando alguno de los siguientes comandos:
@@ -295,18 +293,18 @@ L3 lee los correos no leídos de Gmail que tengan asignado el label `.Jobs.`, ex
 vl3
 ```
 
-Para este momento, los siguientes filtros ya habrán sido aplicados sin consumir cuota:  
+Para este momento, los siguientes filtros ya habrán sido aplicados sin consumir cuota:
 
-- Hard‑blocked (L’Oréal · Levi’s/Dockers · El Palacio de Hierro)
+- Hard‑blocked (L'Oréal · Levi's/Dockers · El Palacio de Hierro)
 - Asuntos de agradecimiento
 - Newsletters
 - Confirmaciones de cuenta
 
-**Límites por ejecución:** procesa máximo 5 correos por run (configurable en `GROQ_MAX_EMAILS_PER_RUN`). Si hay backlog, el script reporta cuántos quedan.  
+**Límites por ejecución:** procesa máximo 5 correos por run (configurable en `GROQ_MAX_EMAILS_PER_RUN`). Si hay backlog, el script reporta cuántos quedan.
 
-- [ ]  Si L3 falla: verifica que `LAYER_3/config/layer_3.env` existe y contiene las credenciales de Gmail, Groq y Notion. El venv hereda de `LAYER_1/.venv` — si Layer 1 funciona, L3 tiene el entorno listo.
+- [ ]  Si L3 falla: verifica que `LAYER_3/config/layer_3.env` existe y contiene las credenciales de Gmail, Groq y Notion. El venv hereda de `LAYER_1/.venv` — si Layer 1 funciona, L3 tiene el entorno listo.
 
-### ∆ PIPELINE
+### ∆ PIPELINE
 
 Abre la Terminal y procesa el JSON consolidado de L1+L2:
 
@@ -314,25 +312,25 @@ Abre la Terminal y procesa el JSON consolidado de L1+L2:
 ~/vantage_pipeline.sh feed ~/Documents/04-VANTAGE_CV/Feeds/YYYY-MM-DD_consolidated.json
 ```
 
-**¿Qué ocurre aquí?**  
+**¿Qué ocurre aquí?**
 
-El script `vantage_pipeline.sh` actúa como wrapper: activa el entorno virtual (`.venv`), valida la estructura y dispara `feed_processor.py` para normalizar campos, aplicar dedup cross‑layer (ventana 30 días) y presentarte el **DRY RUN** antes de escribir en Notion.
+El script `vantage_pipeline.sh` actúa como wrapper: activa el entorno virtual (`.venv`), valida la estructura y dispara `feed_processor.py` para normalizar campos, aplicar dedup cross‑layer (ventana 30 días) y presentarte el **DRY RUN** antes de escribir en Notion.
 
 ### APROBAR ESCRITURA
 
 - [ ]  Revisa el DRY RUN en terminal.
-- [ ]  El output muestra una las propiedades Class A de cada instancia a crear.
+- [ ]  El output muestra una las propiedades Class A de cada instancia a crear.
 - [ ]  Las entradas duplicadas aparecen como `SKIP.`
 - [ ]  Las que requieren revisión aparecen como `REVIEW_NEEDED`.
 
-Confirma con `y` (yes) para escribir en Notion. Cualquier otra tecla cancela sin escribir.  
+Confirma con `y` (yes) para escribir en Notion. Cualquier otra tecla cancela sin escribir.
 
 Los registros con status `REVIEW_NEEDED` que se escriben en Notion, los resuelves en el Dashboard.
 
 ### PROCESAR CON PYTHON
 
-- [ ]  Para este punto las propiedades Class A de cada instancia nueva se habrán poblado por L1, L2 o L3.
-- [ ]  Para poblar las propiedades Class B de todas las instancias pendientes en el Tracker, ejecutarás la app `LAYER 1.app` desde `/Applications` o usando Terminal:
+- [ ]  Para este punto las propiedades Class A de cada instancia nueva se habrán poblado por L1, L2 o L3.
+- [ ]  Para poblar las propiedades Class B de todas las instancias pendientes en el Tracker, ejecutarás la app `LAYER 1.app` desde `/Applications` o usando Terminal:
 
 ```bash
 ~/vantage_pipeline.sh
@@ -340,15 +338,24 @@ Los registros con status `REVIEW_NEEDED` que se escriben en Notion, los resuelve
 
 ### READY‑TO‑APPLY
 
-Abre la vista Ready-to-Apply en Notion. Vacantes con Score ≥ 60 están listas para *CV Optimization* en preparación para tu postulación.
+Abre la vista Ready-to-Apply en Notion. Vacantes con Score ≥ 60 están listas para *CV Optimization* en preparación para tu postulación.
+
+**∆ L4 — VERSION CONTROL & INFRASTRUCTURE**
+
+L4 sincroniza el repositorio git del sistema automáticamente en background. No requiere intervención manual en el ciclo semanal normal.
+
+- **Automático:** launchd corre `vgit` a las 09:00 · 15:00 · 21:00. Si hay cambios en el repo, hace commit con timestamp + push a `origin/main`. Sin cambios → silencio total.
+- **Manual:** ejecutar `vgit` desde Terminal en cualquier momento para forzar un sync inmediato.
+- **Verificar último run:** `cat /tmp/vantage_l4_gitsync.log`
+- **Archivos:** `Layer_4/scripts/git_sync.py` · `Layer_4/wrappers/git_sync_wrapper.sh` · `~/Library/LaunchAgents/com.vantage.gitsync.plist`
 
 ### MARTES
 
 #### Qué Hacer Cuando Gate = BLOCKED
 
-Si el bloqueo es por un campo Class A corregible, usa RT‑1 (`rt1_dashboard.html`): Proponer Patch → Validar → Aceptar. No uses RT‑1 para forzar un CREATE en vacantes que no cumplen score — úsalo solo para corregir datos erróneos.  
+Si el bloqueo es por un campo Class A corregible, usa RT‑1 (`rt1_dashboard.html`): Proponer Patch → Validar → Aceptar. No uses RT‑1 para forzar un CREATE en vacantes que no cumplen score — úsalo solo para corregir datos erróneos.
 
-**Dashboard & Solve Conflicts**  
+**Dashboard & Solve Conflicts**
 
 Resuelve los registros pendientes del ciclo del lunes: `REVIEW_NEEDED` · `BLOCKED` recuperables · NADs overdue.
 
@@ -362,28 +369,28 @@ Ejecuta en terminal:
 vd
 ```
 
-El wrapper `dashboard_start.sh` arranca el servidor Flask en `http://127.0.0.1:8000`, ejecuta un smoke test automático y abre `dashboard.html` en el navegador. Output esperado en terminal: `SMOKE PASSED — abriendo dashboard`. Si el smoke falla, emite notificación sonora de error (Basso) y no abre la UI.  
+El wrapper `dashboard_start.sh` arranca el servidor Flask en `http://127.0.0.1:8000`, ejecuta un smoke test automático y abre `dashboard.html` en el navegador. Output esperado en terminal: `SMOKE PASSED — abriendo dashboard`. Si el smoke falla, emite notificación sonora de error (Basso) y no abre la UI.
 
 ---
 
 #### Partes del Dashboard
 
-**Sidebar (columna izquierda):** estado de la instancia activa — `instance_id`, payload actual de la vacante (campos Class A como aparecen en Notion), capabilities disponibles en el estado actual (`can_patch` · `can_validate` · `can_accept` · `can_archive`) y Audit Log en tiempo real con cada evento registrado.  
+**Sidebar (columna izquierda):** estado de la instancia activa — `instance_id`, payload actual de la vacante (campos Class A como aparecen en Notion), capabilities disponibles en el estado actual (`can_patch` · `can_validate` · `can_accept` · `can_archive`) y Audit Log en tiempo real con cada evento registrado.
 
-**Panel principal (área derecha):** cuatro secciones — Selector de vacante (dropdown con todas las vacantes en `Gate = BLOCKED`, botón Crear instancia), máquina de estados FSM (visualiza el estado actual: `BLOCKED → PATCHED → RETURNED_TO_CREATE`), panel de patch (formulario con campos Class A editables: `URL · JD · Source_Type · Prioridad`), y área de resultado de validación (PASS verde o FAIL rojo con motivo).  
+**Panel principal (área derecha):** cuatro secciones — Selector de vacante (dropdown con todas las vacantes en `Gate = BLOCKED`, botón Crear instancia), máquina de estados FSM (visualiza el estado actual: `BLOCKED → PATCHED → RETURNED_TO_CREATE`), panel de patch (formulario con campos Class A editables: `URL · JD · Source_Type · Prioridad`), y área de resultado de validación (PASS verde o FAIL rojo con motivo).
 
-**Botones:** Crear instancia · Proponer Patch · Validar · Aceptar Patch · Archivar · Sincronizar.  
+**Botones:** Crear instancia · Proponer Patch · Validar · Aceptar Patch · Archivar · Sincronizar.
 
 ---
 
 ### Secuencia — vacante BLOCKED recuperable
 
-1. Selecciona la vacante del dropdown (muestra Marca · Rol · Score · VM_Scope).  
-2. **Crear instancia** — abre una instancia RT‑1 en estado `BLOCKED` y carga el payload desde Notion. Audit Log registra `domain.instance.created`.  
-3. Edita los campos incorrectos en el panel de patch — solo Class A (`URL · JD · Source_Type · Prioridad`). Los campos Class B no son editables.  
-4. **Proponer Patch** — almacena la corrección. Audit Log registra `domain.patch.proposed`.  
-5. **Validar** — el backend ejecuta `run_pipeline.py` con el patch y verifica si el resultado sería `CREATE`. Si pasa: estado → `PATCHED`, resultado verde. Si falla: estado permanece `BLOCKED`, resultado rojo con motivo.  
-6. **Aceptar Patch** — escribe los campos Class A corregidos en Notion. Estado → `RETURNED_TO_CREATE`. Audit Log registra `domain.patch.accepted`.  
+1. Selecciona la vacante del dropdown (muestra Marca · Rol · Score · VM_Scope).
+2. **Crear instancia** — abre una instancia RT‑1 en estado `BLOCKED` y carga el payload desde Notion. Audit Log registra `domain.instance.created`.
+3. Edita los campos incorrectos en el panel de patch — solo Class A (`URL · JD · Source_Type · Prioridad`). Los campos Class B no son editables.
+4. **Proponer Patch** — almacena la corrección. Audit Log registra `domain.patch.proposed`.
+5. **Validar** — el backend ejecuta `run_pipeline.py` con el patch y verifica si el resultado sería `CREATE`. Si pasa: estado → `PATCHED`, resultado verde. Si falla: estado permanece `BLOCKED`, resultado rojo con motivo.
+6. **Aceptar Patch** — escribe los campos Class A corregidos en Notion. Estado → `RETURNED_TO_CREATE`. Audit Log registra `domain.patch.accepted`.
 7. Corre el pipeline para que Python recalcule:
 
 ```bash
@@ -392,33 +399,32 @@ El wrapper `dashboard_start.sh` arranca el servidor Flask en `http://127.0.0.1:8
 
 ### Secuencia — vacante no recuperable
 
-Usa el botón **Archivar**. El Dashboard escribe `Next_Action = Archivar` en Notion y cierra la instancia en estado `FAILED`. No pasa por el pipeline.  
+Usa el botón **Archivar**. El Dashboard escribe `Next_Action = Archivar` en Notion y cierra la instancia en estado `FAILED`. No pasa por el pipeline.
 
 ### REVIEW_NEEDED — resolución directa
 
-Las entradas con este status son escritas en Notion por `feed_processor.py` cuando no pudieron procesarse completamente: la URL era parcial o ambigua, la marca no resolvía contra el alias map, o el sistema detectó un semi‑duplicate cross‑layer que requiere revisión humana. Mientras el status permanezca en `REVIEW_NEEDED`, sus campos Class B (`Score`, `Gate_Decision`, `VM_Scope`, `Role_Class`) quedan **bloqueados** — Python no los calcula.  
+Las entradas con este status son escritas en Notion por `feed_processor.py` cuando no pudieron procesarse completamente: la URL era parcial o ambigua, la marca no resolvía contra el alias map, o el sistema detectó un semi‑duplicate cross‑layer que requiere revisión humana. Mientras el status permanezca en `REVIEW_NEEDED`, sus campos Class B (`Score`, `Gate_Decision`, `VM_Scope`, `Role_Class`) quedan **bloqueados** — Python no los calcula.
 
-**Contrato de resolución — 4 pasos obligatorios:**  
+**Contrato de resolución — 4 pasos obligatorios:**
 
-1. Abre la entrada en Notion e identifica el problema indicado en el campo `Notas` (ej. “URL parcial”, “alias no resuelto: Nike México”, “semi‑duplicate”).  
-2. Corrige el campo problemático directamente en Notion: reemplaza la URL parcial con la URL completa, o ajusta el nombre de la marca al valor que exista en el alias map.  
-3. Cambia `Status` → **`Target`**. Este es el **único valor** que Python reconoce como señal de resolución. Cualquier otro valor (incluyendo dejar `REVIEW_NEEDED`) mantiene el bloqueo en el siguiente run.  
+1. Abre la entrada en Notion e identifica el problema indicado en el campo `Notas` (ej. "URL parcial", "alias no resuelto: Nike México", "semi‑duplicate").
+2. Corrige el campo problemático directamente en Notion: reemplaza la URL parcial con la URL completa, o ajusta el nombre de la marca al valor que exista en el alias map.
+3. Cambia `Status` → **`Target`**. Este es el **único valor** que Python reconoce como señal de resolución. Cualquier otro valor (incluyendo dejar `REVIEW_NEEDED`) mantiene el bloqueo en el siguiente run.
 4. Corre el pipeline:
 
 ```bash
 ~/vantage_pipeline.sh
 ```
 
-Python detecta `Status = Target` en entradas que tenían `Gate` vacío o `REVIEW_NEEDED` y procesa sus campos Class B normalmente — calcula Score, Gate_Decision y el resto.  
+Python detecta `Status = Target` en entradas que tenían `Gate` vacío o `REVIEW_NEEDED` y procesa sus campos Class B normalmente — calcula Score, Gate_Decision y el resto.
 
 > **Por qué `Target` y no otro valor:** `Target` es el estado operativo estándar de una vacante en espera de procesamiento. Usarlo como señal de resolución mantiene el contrato de estados consistente — no requiere un valor nuevo ni lógica adicional en Python.
-> 
 
-Estas entradas no pasan por RT‑1. RT‑1 es para vacantes con `Gate = BLOCKED` que ya tienen campos Class B calculados y necesitan corrección de inputs Class A.
+Estas entradas no pasan por RT‑1. RT‑1 es para vacantes con `Gate = BLOCKED` que ya tienen campos Class B calculados y necesitan corrección de inputs Class A.
 
 ### MIÉRCOLES — CV Optimization
 
-Optimización de CV para vacantes priorizadas en Ready-to-Apply. Claude opera activamente en este ciclo — es el único día donde el AI Component tiene rol principal. L3 sigue corriendo en sus horarios habituales.  
+Optimización de CV para vacantes priorizadas en Ready-to-Apply. Claude opera activamente en este ciclo — es el único día donde el AI Component tiene rol principal. L3 sigue corriendo en sus horarios habituales.
 
 ### Cómo llegan las vacantes a Claude
 
@@ -428,15 +434,15 @@ Abre Ready-to-Apply en Notion y elige la vacante a trabajar. Copia la URL del ca
 CV-A [URL de la vacante]
 ```
 
-o pega el texto del JD directamente. Claude no accede al Tracker de forma autónoma — el trigger debe ser explícito.  
+o pega el texto del JD directamente. Claude no accede al Tracker de forma autónoma — el trigger debe ser explícito.
 
 ### CV-A / CV‑B — Por Qué Son Sesiones Separadas
 
-CV‑A es análisis: qué keywords posicionar, qué gaps cubrir, qué tono de marca adoptar. CV‑B es producción: el documento final. En una sesión única, el contexto de análisis contamina la voz del CV. La separación es una restricción de calidad, no de conveniencia.  
+CV‑A es análisis: qué keywords posicionar, qué gaps cubrir, qué tono de marca adoptar. CV‑B es producción: el documento final. En una sesión única, el contexto de análisis contamina la voz del CV. La separación es una restricción de calidad, no de conveniencia.
 
 ### Sesión 1 — CV‑A (análisis estratégico)
 
-Claude extrae los 6 keywords de posicionamiento del JD, identifica los gaps entre los requisitos del rol y [377938be-fc42-8089-93f2-f52dbd2dec6c], determina el Positioning Mode aplicable ([377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-001]: N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution · N4 Commercial VM & Field Leadership) y define el tono de marca del CV.  
+Claude extrae los 6 keywords de posicionamiento del JD, identifica los gaps entre los requisitos del rol y [377938be-fc42-8089-93f2-f52dbd2dec6c], determina el Positioning Mode aplicable ([377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-001]: N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution · N4 Commercial VM & Field Leadership) y define el tono de marca del CV.
 
 Output de la sesión — el HANDOFF, 5 campos obligatorios:
 
@@ -450,7 +456,7 @@ Output de la sesión — el HANDOFF, 5 campos obligatorios:
 }
 ```
 
-La sesión termina aquí. No se escribe ningún CV en CV‑A.  
+La sesión termina aquí. No se escribe ningún CV en CV‑A.
 
 ### HANDOFF — Contrato de Transferencia
 
@@ -468,9 +474,9 @@ CV‑B no inicia con un HANDOFF incompleto. Si cualquier campo está ausente, el
 
 ### Sesión 2 — CV‑B (producción del CV)
 
-**PROTOCOL UPDATE - SKELETON‑FIRST:**  
+**PROTOCOL UPDATE - SKELETON‑FIRST:**
 
-CV‑B ya no tiene permiso creativo sobre la estructura. El proceso es de **inyección en slots**.  
+CV‑B ya no tiene permiso creativo sobre la estructura. El proceso es de **inyección en slots**.
 
 - Usar **Golden Skeleton** (Smart Bamboo FINAL) como base.
 - Vaciar info del Canon en slots existentes sin alterar IDs.
@@ -481,25 +487,25 @@ Abre una sesión nueva de Claude. Pega el HANDOFF completo y dispara:
 CV-B [pega el HANDOFF]
 ```
 
-Claude verifica los 5 campos, cruza el HANDOFF contra [377938be-fc42-8089-93f2-f52dbd2dec6c] para validar que bullets y KPIs sean derivados canónicos (no inventados), aplica el Positioning Mode definido en CV‑A y genera el CV bajo [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-001].  
+Claude verifica los 5 campos, cruza el HANDOFF contra [377938be-fc42-8089-93f2-f52dbd2dec6c] para validar que bullets y KPIs sean derivados canónicos (no inventados), aplica el Positioning Mode definido en CV‑A y genera el CV bajo [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-001].
 
-El output tiene **tres partes obligatorias y secuenciales**:  
+El output tiene **tres partes obligatorias y secuenciales**:
 
-1. **Markdown con Figma tags** — Claude entrega el archivo `.md` completo en la misma sesión. Cada slot va encabezado por su tag (`###### figma_text_id`). El operador lo revisa y autoriza antes de cualquier escritura en Notion.  
-2. **Autorización explícita del operador** — Claude espera confirmación antes de continuar. Sin autorización, no escribe nada en Notion.  
+1. **Markdown con Figma tags** — Claude entrega el archivo `.md` completo en la misma sesión. Cada slot va encabezado por su tag (`###### figma_text_id`). El operador lo revisa y autoriza antes de cualquier escritura en Notion.
+2. **Autorización explícita del operador** — Claude espera confirmación antes de continuar. Sin autorización, no escribe nada en Notion.
 
 ### Documentar la URL del Markdown
 
-**Regla de orden:** El Markdown nunca se escribe en Notion si el operador no ha autorizado explícitamente. El orden cronológico de experiencia es invariante: C01 → C02 → C03 → C04 → C05. No se reordena por vacante ni por Positioning Mode.  
+**Regla de orden:** El Markdown nunca se escribe en Notion si el operador no ha autorizado explícitamente. El orden cronológico de experiencia es invariante: C01 → C02 → C03 → C04 → C05. No se reordena por vacante ni por Positioning Mode.
 
-**Escritura en Notion (dos destinos):**  
+**Escritura en Notion (dos destinos):**
 
 - Página en `DERIVED OUTPUTS · ARCHIVE` del Career Canon — con footer de Positioning Mode activo y fecha.
 - Bloque `# MARKDOWN CANON ALIGNED` en la página de la vacante en el Tracker — el Markdown completo con Figma tags, dentro de un bloque de código `plain text`.
 
 ### Qué hace el usuario con el output
 
-Copia el contenido del `.md` con Figma tags. Abre `CANON_MARKDOWN.md` en tu editor (o directo en Figma vía plugin). Reemplaza los slots variables con los valores entregados por Claude. Exporta el CV a PDF desde Figma.  
+Copia el contenido del `.md` con Figma tags. Abre `CANON_MARKDOWN.md` en tu editor (o directo en Figma vía plugin). Reemplaza los slots variables con los valores entregados por Claude. Exporta el CV a PDF desde Figma.
 
 ### Sesión 3 — QA (validación antes de aplicar)
 
@@ -507,7 +513,7 @@ Copia el contenido del `.md` con Figma tags. Abre `CANON_MARKDOWN.md` en tu edit
 QA [adjunta el PDF exportado]
 ```
 
-Claude revisa formato y completitud con checklist de 6 ítems y entrega go/no‑go. QA no evalúa fit — evalúa que el documento esté correcto como entregable.  
+Claude revisa formato y completitud con checklist de 6 ítems y entrega go/no‑go. QA no evalúa fit — evalúa que el documento esté correcto como entregable.
 
 ### Cierre del ciclo de postulación
 
@@ -517,7 +523,7 @@ Si QA aprueba, cambia Status a `Postulado` en Notion y corre:
 ~/vantage_pipeline.sh
 ```
 
-Python detecta el Status y asigna `Gate_Decision = APPLIED`. La vacante sale de Ready‑to‑Apply automáticamente.  
+Python detecta el Status y asigna `Gate_Decision = APPLIED`. La vacante sale de Ready‑to‑Apply automáticamente.
 
 ### JUEVES — Segunda Pasada (Condicional)
 
@@ -528,7 +534,6 @@ Ejecuta solo si hay nuevas vacantes que procesar — 10 minutos máximo:
 ```
 
 > Script: `~/vantage_pipeline.sh`
-> 
 
 ### VIERNES — Analytics
 
@@ -536,12 +541,13 @@ Ejecuta solo si hay nuevas vacantes que procesar — 10 minutos máximo:
 ~/vantage_pipeline.sh analytics
 ```
 
-Output: efectividad por fuente, tasa de links muertos por tipo de URL, ratio career pages vs. aggregators.  
+Output: efectividad por fuente, tasa de links muertos por tipo de URL, ratio career pages vs. aggregators.
 
-**Acción concreta:** si career pages producen menos de 5 resultados relevantes en la semana, ajusta el Prompt A — no el threshold de Score.  
+**Acción concreta:** si career pages producen menos de 5 resultados relevantes en la semana, ajusta el Prompt A — no el threshold de Score.
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-vantage-runtime-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-vantage-runtime-001
+
+---
 
 ## 5. VANTAGE RUNTIME (Consulta Operativa)
 
@@ -609,8 +615,9 @@ Usar cuando el sistema no ha sido operado por más de 5 días.
 | context <entity_id> | Propiedades + bloques de la página Notion | PREFIX:H_xxxx | {entity, status, metadata, content} |
 | query "<valor>" | Busca por entity_id, hash, o texto libre (fallback) | string | {query, match_type, count, results} |
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-tracker-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-tracker-001
+
+---
 
 ## 6. TRACKER
 
@@ -624,13 +631,16 @@ Usar cuando el sistema no ha sido operado por más de 5 días.
 
 ### Empresas Excluidas Permanentemente (Hard Blocks)
 
-- L’Oréal (todas las divisiones)
-- Levi Strauss & Co. (Levi’s, Dockers)
+- L'Oréal (todas las divisiones)
+- Levi Strauss & Co. (Levi's, Dockers)
 - El Palacio de Hierro
 - Roles store-level sin gestión estratégica.
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-troubleshooting-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-troubleshooting-001
+
+---
+
+---
 
 ## 7. TROUBLESHOOTING
 
@@ -647,22 +657,25 @@ Usar cuando el sistema no ha sido operado por más de 5 días.
 | Ready-to-Apply vacío por >3 días | Sin oportunidades válidas esta semana | Ajustar Prompt A — no el threshold de Score |
 | Score siempre 0 | URL_GATE filtró links muertos o bloqueados | Correcto. No reparar manualmente |
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-prompts-wrappers-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-prompts-wrappers-001
+
+---
 
 ## 8. PROMPTS & WRAPPERS
 
-Se consultan vía MCP desde la **PROMPT LIBRARY** en Notion.  
+Se consultan vía MCP desde la **PROMPT LIBRARY** en Notion.
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-cheatsheets-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-cheatsheets-001
+
+---
 
 ## 9. CHEAT SHEETS
 
-Consulte las tablas de comandos para Claude, Terminal y Scripts en la sección completa.  
+Consulte las tablas de comandos para Claude, Terminal y Scripts en la sección completa.
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-healthcheck-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-healthcheck-001
+
+---
 
 ## 10. HEALTH CHECK
 
@@ -677,9 +690,9 @@ Consulte las tablas de comandos para Claude, Terminal y Scripts en la sección c
 
 ### Red Flags — Ajustar Inputs, No Sistema
 
-- Ready-to-Apply vacío por más de 3 días → ajustar Prompt A (ver §8 — Prompts de Discovery), no el threshold
-- Career pages con éxito < 50% → revisar fuentes de discovery
-- Pipeline runtime > 5 min → archivar entradas inactivas
+- Ready-to-Apply vacío por más de 3 días → ajustar Prompt A (ver §8 — Prompts de Discovery), no el threshold
+- Career pages con éxito < 50% → revisar fuentes de discovery
+- Pipeline runtime > 5 min → archivar entradas inactivas
 
 ### 10.1 Mantenimiento del Entity Index
 
@@ -691,23 +704,25 @@ python3 vantage.py sync
 
 ### 10.2 Gobernanza del Registry
 
-La resolución de entidades depende de `resolver_registry_v2.json`. Este archivo no debe editarse manualmente sin verificar colisiones de hash.  
+La resolución de entidades depende de `resolver_registry_v2.json`. Este archivo no debe editarse manualmente sin verificar colisiones de hash.
 
 ### 10.3 Mantenimiento de Datos (Deduplicación)
 
-`cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_duplicates.py` (alias: `vdedup`)  
+`cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_duplicates.py` (alias: `vdedup`)
 
-`cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/dedup_opportunities.py` (alias: `vopport`)  
+`cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/dedup_opportunities.py` (alias: `vopport`)
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-changelog-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-changelog-001
+
+---
 
 ## 11. CHANGELOG
 
 v8.4 · Post-Audit + Documentation Renewal · 2026-06-17: Integración transversa de VANTAGE Runtime. Refactorización de Manual. Troubleshooting expandido. Cold Start añadido. Comandos sync corregidos.
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-reglas-de-oro-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-reglas-de-oro-001
+
+---
 
 ## 12. REGLAS DE ORO PARA OPERADORES
 
@@ -715,21 +730,22 @@ Base: [377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-000] a [377938be-fc42-8
 
 | Regla | Qué significa para ti | Ejemplo práctico |
 | --- | --- | --- |
-| No evaluación subjetiva de fit | Claude no te dirá “esta vacante no te conviene”. Solo extrae keywords/gaps en CV‑A | Si pides opinión sobre si aplicar, Claude reformula hacia datos estructurados, no juicio |
-| Campos Class B se ignoran/remueven | No pidas a Claude que llene Score, Gate_Decision, VM_Scope, etc. | Si pegas un JSON con `Score: 85`, Claude lo descarta al escribir Class A |
-| Sin comentarios sobre volumen/calidad | Claude no dirá “tienes pocas vacantes esta semana” | Un FEED vacío se reporta como estado, no como problema |
+| No evaluación subjetiva de fit | Claude no te dirá "esta vacante no te conviene". Solo extrae keywords/gaps en CV‑A | Si pides opinión sobre si aplicar, Claude reformula hacia datos estructurados, no juicio |
+| Campos Class B se ignoran/remueven | No pidas a Claude que llene Score, Gate_Decision, VM_Scope, etc. | Si pegas un JSON con `Score: 85`, Claude lo descarta al escribir Class A |
+| Sin comentarios sobre volumen/calidad | Claude no dirá "tienes pocas vacantes esta semana" | Un FEED vacío se reporta como estado, no como problema |
 | Sin inferencia de datos faltantes | Si falta un campo crítico (ej. URL), Claude pregunta — no inventa | HANDOFF incompleto → Claude solicita el campo exacto faltante |
-| SYNC = tabla pura, máximo 12 líneas | No esperes resumen ejecutivo de SYNC | SYNC entrega filas Tracker, sin “te recomiendo priorizar X” |
+| SYNC = tabla pura, máximo 12 líneas | No esperes resumen ejecutivo de SYNC | SYNC entrega filas Tracker, sin "te recomiendo priorizar X" |
 | Kernel prevalece sobre memoria de sesión | Si algo en el chat contradice el Kernel, gana el Kernel | Una instrucción antigua que ya no está en el Kernel no se aplica |
 
-> ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-fallo-001
-> 
+ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-fallo-001
+
+---
 
 ## 13. FILOSOFÍA DE FALLO PARA OPERADORES
 
 Base: [377938be-fc42-805e-a408-c9ae518d4fe7:fallo-001].
 
-Un “fallo” del sistema (URL muerta, Score = 0, Gate = BLOCKED, Ready-to-Apply vacío, JSON vacío en FEED) **no es un bug** — es el filtro operando correctamente. No intentes “arreglar” estos resultados manualmente ni le pidas a Claude que los fuerce.
+Un "fallo" del sistema (URL muerta, Score = 0, Gate = BLOCKED, Ready-to-Apply vacío, JSON vacío en FEED) **no es un bug** — es el filtro operando correctamente. No intentes "arreglar" estos resultados manualmente ni le pidas a Claude que los fuerce.
 
 Qué hacer en su lugar:
 
@@ -740,12 +756,3 @@ Qué hacer en su lugar:
 - JSON vacío en FEED → búsqueda sin resultados relevantes. No amplíes criterios sin análisis.
 
 Ante cualquiera de estos, el sistema reporta el estado y espera tu instrucción dentro del flujo normal del pipeline.
-
-**∆ L4 — VERSION CONTROL & INFRASTRUCTURE**
-
-L4 sincroniza el repositorio git del sistema automáticamente en background. No requiere intervención manual en el ciclo semanal normal.
-
-- **Automático:** launchd corre `vgit` a las 09:00 · 15:00 · 21:00. Si hay cambios en el repo, hace commit con timestamp + push a `origin/main`. Sin cambios → silencio total.
-- **Manual:** ejecutar `vgit` desde Terminal en cualquier momento para forzar un sync inmediato.
-- **Verificar último run:** `cat /tmp/vantage_l4_gitsync.log`
-- **Archivos:** `Layer_4/scripts/git_sync.py` · `Layer_4/wrappers/git_sync_wrapper.sh` · `~/Library/LaunchAgents/com.vantage.gitsync.plist`

@@ -9,7 +9,7 @@ Actualizado para notion-client 3.1.0:
 import os
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 
 def txt(prop):

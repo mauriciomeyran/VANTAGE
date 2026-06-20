@@ -7,7 +7,7 @@ import time
 
 import httpx
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 DATABASE_ID = "596938befc42836baea7814a1491bd47"
 ARCHIVO_TRACKER_DB_ID = "4ec34e1b-5286-48c9-afbd-d57c6eb76053"

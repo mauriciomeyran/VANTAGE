@@ -49,7 +49,7 @@ def _query_notion(data_source_id: str) -> list[Dict[str, Any]]:
     Antes solo se tomaba el primer batch; con 384+ entidades en
     ARCHIVO_TRACKER, entidades fuera de la primera página devolvian
     not_found silenciosamente. Ahora se acumulan todos los resultados,
-    respetando el throttle global de notion_client en cada request.
+    respetando el throttle global de notion_utils en cada request.
     """
     token = os.environ.get("NOTION_API_KEY") or os.environ.get("NOTION_TOKEN")
     if not token:
@@ -59,7 +59,7 @@ def _query_notion(data_source_id: str) -> list[Dict[str, Any]]:
     except Exception as exc:
         raise ResolverError("notion_error", f"requests unavailable: {exc}")
 
-    from notion_client import _throttle
+    from notion_utils import _throttle
 
     url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
     headers = {

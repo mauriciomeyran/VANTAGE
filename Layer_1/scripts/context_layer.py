@@ -12,9 +12,9 @@ except ImportError:
     find_entity = None
 
 try:
-    from notion_client import notion_get, ResolverError
+    from notion_utils import notion_get, ResolverError
 except ImportError:
-    raise RuntimeError("notion_client.py no encontrado en la misma carpeta.")
+    raise RuntimeError("notion_utils.py no encontrado en la misma carpeta.")
 
 
 # --- normalización de propiedades de Notion -> valores planos ---------------

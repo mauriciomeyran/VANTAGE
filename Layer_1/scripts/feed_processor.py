@@ -23,19 +23,19 @@ from typing import Any
 from dotenv import load_dotenv
 
 # feed_processor necesita Client del SDK de PyPI (notion-client),
-# no del wrapper local notion_client.py que vive en el mismo directorio.
+# no del wrapper local notion_utils.py que vive en el mismo directorio.
 # Mismo patrón que vantage.py sync() — excluimos scripts/ del path temporalmente.
 import sys as _sys, importlib.util as _ilu
 _scripts_dir = str(Path(__file__).resolve().parent)
 _saved_path = _sys.path[:]
-_saved_nc   = _sys.modules.pop("notion_client", None)
+_saved_nc   = _sys.modules.pop("notion_utils", None)
 _sys.path   = [p for p in _sys.path if p not in (_scripts_dir, ".", "")]
 try:
     from notion_client import Client
 finally:
     _sys.path = _saved_path
     if _saved_nc is not None:
-        _sys.modules["notion_client"] = _saved_nc
+        _sys.modules["notion_utils"] = _saved_nc
 
 _SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(_SCRIPTS_DIR) not in sys.path:
@@ -283,8 +283,8 @@ class NotionSchema:
     properties: dict[str, dict]
 
     @classmethod
-    def load(cls, notion_client: Client) -> NotionSchema:
-        ds = notion_client.databases.retrieve(database_id=NOTION_DB_ID)
+    def load(cls, notion_utils: Client) -> NotionSchema:
+        ds = notion_utils.databases.retrieve(database_id=NOTION_DB_ID)
         return cls(properties=ds.get("properties", {}))
 
     def _pick(self, *candidates: str) -> str | None:
@@ -381,7 +381,7 @@ class NotionSchema:
 # Notion query helper (notion-client 3.x)
 # ──────────────────────────────────────────
 def query_notion_db(
-    notion_client: Client,
+    notion_utils: Client,
     *,
     filter_body: dict | None = None,
     schema: NotionSchema | None = None,
@@ -407,7 +407,7 @@ def query_notion_db(
             print(f"  ⚠️  query_notion_db: MAX_PAGES ({MAX_PAGES}) alcanzado — abortando paginación")
             break
         try:
-            response = notion_client.databases.query(database_id=NOTION_DB_ID, **kwargs)
+            response = notion_utils.databases.query(database_id=NOTION_DB_ID, **kwargs)
         except Exception as exc:
             if schema and "property" in str(exc):
                 return []
@@ -440,7 +440,7 @@ def _get_existing_layer(page: dict, schema: NotionSchema) -> str | None:
 def _upgrade_layer_if_needed(
     existing_page: dict,
     incoming_layer: str,
-    notion_client: Client,
+    notion_utils: Client,
     schema: NotionSchema,
 ) -> None:
     """Si el registro entrante tiene mayor prioridad (menor número), actualiza el layer en Notion."""
@@ -452,7 +452,7 @@ def _upgrade_layer_if_needed(
     if incoming_priority < existing_priority:
         page_id = existing_page["id"]
         try:
-            notion_client.pages.update(
+            notion_utils.pages.update(
                 page_id=page_id,
                 properties={schema.layer_prop: {"select": {"name": incoming_layer}}},
             )
@@ -463,7 +463,7 @@ def _upgrade_layer_if_needed(
 
 def dedup_cross_layer(
     record: dict,
-    notion_client: Client,
+    notion_utils: Client,
     schema: NotionSchema,
     window_days: int = 30,
 ) -> bool:
@@ -476,20 +476,20 @@ def dedup_cross_layer(
             filt = {"property": schema.hash_prop, "rich_text": {"equals": hash_key}}
         else:
             filt = schema.text_filter(schema.hash_prop, hash_key)
-        existing = query_notion_db(notion_client, filter_body=filt, schema=schema)
+        existing = query_notion_db(notion_utils, filter_body=filt, schema=schema)
         if existing:
-            _upgrade_layer_if_needed(existing[0], incoming_layer, notion_client, schema)
+            _upgrade_layer_if_needed(existing[0], incoming_layer, notion_utils, schema)
             return True
 
     apply_url = record.get("apply_url") or ""
     if apply_url.startswith("http"):
         url_matches = query_notion_db(
-            notion_client,
+            notion_utils,
             filter_body={"property": schema.url_prop, "url": {"equals": apply_url}},
             schema=schema,
         )
         if url_matches:
-            _upgrade_layer_if_needed(url_matches[0], incoming_layer, notion_client, schema)
+            _upgrade_layer_if_needed(url_matches[0], incoming_layer, notion_utils, schema)
             return True
 
     brand = record.get("brand") or record.get("brand_raw") or ""
@@ -499,7 +499,7 @@ def dedup_cross_layer(
 
     time_filter = {"past_month": {}} if window_days >= 28 else {"past_week": {}}
     recent = query_notion_db(
-        notion_client,
+        notion_utils,
         filter_body={
             "and": [
                 {"timestamp": "created_time", "created_time": time_filter},
@@ -510,7 +510,7 @@ def dedup_cross_layer(
         schema=schema,
     )
     if recent:
-        _upgrade_layer_if_needed(recent[0], incoming_layer, notion_client, schema)
+        _upgrade_layer_if_needed(recent[0], incoming_layer, notion_utils, schema)
         return True
     return False
 
@@ -577,7 +577,7 @@ class ProcessedRecord:
 
 def process_record(
     raw: dict,
-    notion_client: Client,
+    notion_utils: Client,
     schema: NotionSchema,
     alias_data: dict,
 ) -> ProcessedRecord:
@@ -657,7 +657,7 @@ def process_record(
             brand="",
         )
 
-    if dedup_cross_layer(record, notion_client, schema):
+    if dedup_cross_layer(record, notion_utils, schema):
         return ProcessedRecord(
             record=record,
             hash_key=hash_key,
@@ -811,7 +811,7 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
 
 
 def write_to_notion(
-    notion_client: Client,
+    notion_utils: Client,
     processed: list[ProcessedRecord],
     schema: NotionSchema,
 ) -> tuple[int, int]:
@@ -823,7 +823,7 @@ def write_to_notion(
         if p.disposition not in ("CLEAN", "REVIEW_NEEDED"):
             continue
         try:
-            notion_client.pages.create(
+            notion_utils.pages.create(
                 parent={"database_id": NOTION_DB_ID},
                 properties=build_notion_properties(p, schema),
             )
@@ -843,13 +843,13 @@ def _month_page_title(d: date) -> str:
     return f"{d.strftime('%Y-%m')} {MONTH_NAMES[d.month - 1]}"
 
 
-def _find_child_page(notion_client: Client, parent_id: str, title: str) -> dict | None:
+def _find_child_page(notion_utils: Client, parent_id: str, title: str) -> dict | None:
     cursor = None
     while True:
         kwargs: dict[str, Any] = {"page_size": 100}
         if cursor:
             kwargs["start_cursor"] = cursor
-        resp = notion_client.blocks.children.list(block_id=parent_id, **kwargs)
+        resp = notion_utils.blocks.children.list(block_id=parent_id, **kwargs)
         for block in resp.get("results", []):
             if block.get("type") != "child_page":
                 continue
@@ -900,7 +900,7 @@ def _markdown_to_blocks(markdown: str) -> list[dict]:
 
 
 def archive_dryrun_notion(
-    notion_client: Client,
+    notion_utils: Client,
     dryrun_path: Path,
     layer_cli: int,
 ) -> str | None:
@@ -908,9 +908,9 @@ def archive_dryrun_notion(
     month_title = _month_page_title(today)
     dryrun_title = f"DRY RUN · {today.isoformat()} · Layer L{layer_cli}"
 
-    month_page = _find_child_page(notion_client, NOTION_ARCHIVE_PAGE_ID, month_title)
+    month_page = _find_child_page(notion_utils, NOTION_ARCHIVE_PAGE_ID, month_title)
     if not month_page:
-        created = notion_client.pages.create(
+        created = notion_utils.pages.create(
             parent={"database_id": NOTION_ARCHIVE_PAGE_ID},
             properties={"title": {"title": [{"text": {"content": month_title}}]}},
         )
@@ -922,7 +922,7 @@ def archive_dryrun_notion(
     markdown = dryrun_path.read_text(encoding="utf-8")
     blocks = _markdown_to_blocks(markdown)
 
-    page = notion_client.pages.create(
+    page = notion_utils.pages.create(
         parent={"page_id": month_page_id},
         properties={"title": {"title": [{"text": {"content": dryrun_title}}]}},
         children=blocks[:100],
@@ -990,13 +990,13 @@ def main() -> None:
     print(f"   Registros en envelope: {len(records)}")
 
     alias_data = load_alias_map()
-    notion_client = Client(auth=NOTION_TOKEN)
-    schema = NotionSchema.load(notion_client)
+    notion_utils = Client(auth=NOTION_TOKEN)
+    schema = NotionSchema.load(notion_utils)
     print(f"   Notion schema: {len(schema.properties)} propiedades"
           f" (hash→{schema.hash_prop or 'Notas'}, layer→{schema.layer_prop or 'Notas'})")
     schema.warn_missing_class_a()
 
-    processed = [process_record(r, notion_client, schema, alias_data) for r in records]
+    processed = [process_record(r, notion_utils, schema, alias_data) for r in records]
 
     print_dryrun_summary(processed, args.layer)
     dryrun_path = write_dryrun_file(processed, args.layer)
@@ -1009,15 +1009,15 @@ def main() -> None:
     if confirm != "s":
         print("⏹️  Escritura abortada por el operador.")
         print("\n📦 Archivando DRY RUN en Notion...")
-        archive_dryrun_notion(notion_client, dryrun_path, args.layer)
+        archive_dryrun_notion(notion_utils, dryrun_path, args.layer)
         sys.exit(0)
 
     print(f"\n📝 Escribiendo {n_write} registros en Notion...")
-    written, failed = write_to_notion(notion_client, processed, schema)
+    written, failed = write_to_notion(notion_utils, processed, schema)
     print(f"\n✅ Escritos: {written}  |  ❌ Fallidos: {failed}")
 
     print("\n📦 Archivando DRY RUN en Notion...")
-    archive_dryrun_notion(notion_client, dryrun_path, args.layer)
+    archive_dryrun_notion(notion_utils, dryrun_path, args.layer)
 
 
 if __name__ == "__main__":
