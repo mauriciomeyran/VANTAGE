@@ -17,7 +17,7 @@ for _entry in os.listdir(_venv_site):
 
 from dotenv import load_dotenv
 
-from notion_client import Client
+from notion_utils import Client
 
 load_dotenv()
 

@@ -7,7 +7,7 @@ Uso: python3 scripts/batch_operations.py
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 def txt(prop):
     if not prop: return ""

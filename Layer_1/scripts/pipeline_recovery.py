@@ -8,7 +8,7 @@ import json
 import time
 from datetime import datetime
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 def save_checkpoint(step, data):
     """Save pipeline checkpoint"""

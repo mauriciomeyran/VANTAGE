@@ -9,7 +9,7 @@ Sistema operativo documental completo:
   + Query Layer  (Phase 4)
   + Context Layer (Phase 5)
   + Agent API    (Phase 6)
-  + notion_client hardening (Phase 7)
+  + notion_utils hardening (Phase 7)
 
 Entrypoint único. Uso:
 
@@ -47,7 +47,7 @@ from query_layer import (
 )
 from context_layer import assemble_context
 from agent_api import ask as _ask
-from notion_client import get_metrics, clear_cache, reset_metrics, ResolverError
+from notion_utils import get_metrics, clear_cache, reset_metrics, ResolverError
 
 
 # --- API unificada ----------------------------------------------------------------
@@ -84,7 +84,7 @@ def status() -> Dict[str, Any]:
             "total_entities": len(entities),
             "metrics": index.get("metrics", {}),
         },
-        "notion_client_metrics": get_metrics(),
+        "notion_utils_metrics": get_metrics(),
     }
 
 

@@ -1,7 +1,7 @@
 import os
 import json
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
 notion = Client(auth=os.environ["NOTION_TOKEN"])

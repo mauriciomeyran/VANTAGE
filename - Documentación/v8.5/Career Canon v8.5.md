@@ -1,16 +1,13 @@
 # V | CAREER CANON
 
-Versión: 8,4
+Versión: 8,5
 Status: Active
 URL: https://app.notion.com/p/V-CAREER-CANON-377938befc42808993f2f52dbd2dec6c?source=copy_link
 Page ID: 377938be-fc42-8089-93f2-f52dbd2dec6c
 Fecha de actualización: 13 de junio de 2026
 Tipo: Página
 
-<aside>
-
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:audience-scope-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:audience-scope-001
 
 # DECLARACIÓN DE AUDIENCIA Y ALCANCE
 
@@ -22,21 +19,24 @@ Tipo: Página
 Conserva: A, B, D, H, I, J, K, L
 Elimina: C, E, F, G, M, N
 
-</aside>
+---
 
-| SECCIÓN | CONTENIDO | PORCIÓN |
+## CONTENIDO
+
+| **SECCIÓN** | **CONTENIDO** | **PORCIÓN** |
 | --- | --- | --- |
-| A | PROFESSIONAL PROFILE  |  |
-| B | SKILLS CANON |  |
-| D | EXPERIENCE RECORDS |  |
-| H | ACHIEVEMENT LIBRARY |  |
-| I | CORE KPIs  |  |
-| J | CANONICAL FACTS |  |
-| K | POSITIONING MODES  |  |
-| L | OUTPUT CONTRACT |  |
+| A | PROFESSIONAL PROFILE | CONTEXTO |
+| B | SKILLS CANON | CONTEXTO |
+| D | EXPERIENCE RECORDS | OPERACIÓN |
+| H | ACHIEVEMENT LIBRARY | REFERENCIA |
+| I | CORE KPIs | REFERENCIA |
+| J | CANONICAL FACTS | REFERENCIA |
+| K | POSITIONING MODES | OPERACIÓN |
+| L | OUTPUT CONTRACT | GOBERNANZA |
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-profile-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-profile-001
+
+---
 
 ## A. PROFESSIONAL PROFILE
 
@@ -50,8 +50,7 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-skills-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-skills-001
 
 ## B. SKILLS CANON
 
@@ -65,15 +64,13 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-001
 
 ## D. EXPERIENCE RECORDS
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c01
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c01
 
-### C01 · L’Oréal Luxe México · Feb 2025 – Mar 2026
+### C01 · L'Oréal Luxe México · Feb 2025 – Mar 2026
 
 **Coordinador de Visual Merchandising & Brand Execution – División de Lujo** · [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-008] — Valentino / Giorgio Armani / Ralph Lauren
 
@@ -88,15 +85,14 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 ### EN
 
 - Lead the VM strategy for Valentino, Giorgio Armani, and Ralph Lauren (fragrances), ensuring brand consistency across high-traffic and luxury channels.
-- Manage the division’s national budget (CAPEX/OPEX), optimizing investment in POP materials, displays, and window fixtures for launches and seasonal campaigns.
-- Coordinate local and international vendors for production, importation, and installation of materials, overseeing finish quality and compliance with the division’s technical specifications.
+- Manage the division's national budget (CAPEX/OPEX), optimizing investment in POP materials, displays, and window fixtures for launches and seasonal campaigns.
+- Coordinate local and international vendors for production, importation, and installation of materials, overseeing finish quality and compliance with the division's technical specifications.
 - Coordinated the national rollout of key NPI campaigns in 2025 (Born in Roma, Stronger With You), managing production and installation with external agencies within the assigned budget.
 - Collaborate with Marketing and Trade Marketing to align the commercial calendar with visual execution, acting as brand ambassador at key accounts.
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c02
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c02
 
 ### C02 · Bisonte Experiential Marketing · 2022 – 2023
 
@@ -110,16 +106,15 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 
 ### EN
 
-- Led the visual and technical implementation for the Adidas Brand Center Madero (Flagship Store) opening, meeting the brand’s highest global standards.
+- Led the visual and technical implementation for the Adidas Brand Center Madero (Flagship Store) opening, meeting the brand's highest global standards.
 - Supervised production and logistics for Store Design materials on a project rescued 3 months before opening, achieving on-time delivery with 17 minor punch list observations — none blocking the opening or compromising the consumer experience. [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-003] · [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-004]
 - Coordinated specialized vendors to ensure quality in finishes and furniture, safeguarding architectural and visual design integrity.
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c03
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c03
 
-### C03 · Levi Strauss & Co. (Dockers) · 2018 – 2021
+### C03 · Levi Strauss & Co. (Dockers) · 2018 – 2021
 
 **Senior Brand Environment Coordinator – LATAM** · [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-005] — 270+ POS / 6 países
 
@@ -139,8 +134,7 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c04
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c04
 
 ### C04 · Aéropostale México · 2017 – 2018
 
@@ -160,8 +154,7 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c05
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c05
 
 ### C05 · El Palacio de Hierro (ALDO Group) · 2012 – 2017 [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-002]
 
@@ -172,19 +165,18 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 - Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas y remodelaciones críticas.
 - Supervisé la implementación de campañas globales, adaptando los lineamientos de la casa matriz en Canadá para el mercado mexicano.
 - Desarrollé programas de capacitación para el personal de piso, elevando el estándar de mantenimiento visual y ejecución de lanzamientos.
-- Durante los últimos 3 años del rol, gestioné una coordinadora Jr. con reporte directo.
+- Durante los últimos 3 años del rol, gestioné una coordinadora Jr. con reporte directo.
 
 ### EN
 
 - Coordinated visual and marketing execution for 17 retail stores and 12 wholesale corners, leading critical openings and remodels.
-- Supervised the implementation of global campaigns, adapting Canadian headquarters’ guidelines for the Mexican market.
+- Supervised the implementation of global campaigns, adapting Canadian headquarters' guidelines for the Mexican market.
 - Developed training programs for floor staff, elevating the standard of visual maintenance and launch execution.
-- During the last 3 years of the role, directly managed one Jr. Brand Coordinator.
+- During the last 3 years of the role, directly managed one Jr. Brand Coordinator.
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-achievements-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-achievements-001
 
 ## H. ACHIEVEMENT LIBRARY
 
@@ -201,17 +193,15 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 | +18% conversión en red de 17 tiendas | C04 | KPI02 |
 | Construcción área de VM desde cero · 21 reportes directos | C04 | CF06 |
 | Coordinación de 17 tiendas retail + 12 corners wholesale | C05 | — |
-| Liderazgo de coordinadora Jr. con reporte directo (últimos 3 años en rol) | C05 | — |
+| Liderazgo de coordinadora Jr. con reporte directo (últimos 3 años en rol) | C05 | — |
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpis-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpis-001
 
 ## I. CORE KPIs
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-001
 
 ### KPI01 · Traffic +43%
 
@@ -219,8 +209,7 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 | --- | --- |
 | C04 | Aéropostale · red de 17 tiendas · 2017–2018 |
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-002
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-002
 
 ### KPI02 · Conversion +18%
 
@@ -228,26 +217,23 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 | --- | --- |
 | C04 | Aéropostale · red de 17 tiendas · 2017–2018 |
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-003
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-003
 
 ### KPI03 · Campaign Cost Reduction -74%
 
 | Compañía | Contexto |
 | --- | --- |
-| C03 | Levi’s/Dockers · campañas nacionales México |
+| C03 | Levi's/Dockers · campañas nacionales México |
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-004
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-004 
 
 ### KPI04 · Floorset Time Reduction -33%
 
 | Compañía | Contexto |
 | --- | --- |
-| C03 | Levi’s/Dockers · manuales Zoning & Mapping |
+| C03 | Levi's/Dockers · manuales Zoning & Mapping |
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-005
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-005 
 
 ### KPI05 · POP Coverage 100%
 
@@ -255,17 +241,15 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 | --- | --- |
 | C03 | 270+ POS · LATAM · contingencia COVID-19 |
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-006
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-006
 
 ### KPI06 · Rebranding Coverage 100%
 
 | Compañía | Contexto |
 | --- | --- |
-| C03 | Levi’s/Dockers · red nacional México · en tiempo y presupuesto ✅ Resolved |
+| C03 | Levi's/Dockers · red nacional México · en tiempo y presupuesto ✅ Resolved |
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-007
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-007
 
 ### KPI07 · Adidas Punch List Count (17)
 
@@ -273,8 +257,7 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 | --- | --- |
 | C02 | Adidas Brand Center Madero · CF03 · CF04 |
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-008
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-008
 
 ### KPI08 · Years Experience (10+ Canonical)
 
@@ -284,83 +267,71 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-facts-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-facts-001
 
 ## J. CANONICAL FACTS
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-001
 
 ### CF01
 
 ALDO Certification Year = 2014
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-002
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-002
 
 ### CF02
 
 ALDO Employment Period = 2012–2017
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-003
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-003
 
 ### CF03
 
 Adidas Punch List = 17 Minor Observations
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-004
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-004
 
 ### CF04
 
 Adidas Punch List Severity = Non-Blocking
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-005
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-005
 
 ### CF05
 
-Levi’s Coverage = 270+ POS / 6 LATAM Countries
+Levi's Coverage = 270+ POS / 6 LATAM Countries
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-006
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-006
 
 ### CF06
 
 Aéropostale Team = 21 Direct Reports
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-007
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-007
 
 ### CF07
 
 Aéropostale Network = 17 Stores
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-008
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-008
 
 ### CF08
 
-L’Oréal Brands = Valentino / Giorgio Armani / Ralph Lauren
+L'Oréal Brands = Valentino / Giorgio Armani / Ralph Lauren
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-001
 
 ### UF01
 
-L’Oréal End Date = March 2026
+L'Oréal End Date = March 2026
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-002
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-002
 
 ### UF02
 
 Canonical Email = mauricio.meyran@icloud.com
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-003
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-003
 
 ### UF03
 
@@ -368,34 +339,29 @@ Certifications Canon = ALDO Group (2014) + AutoCAD & SketchUp Essentials (2024) 
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-001
 
 ## K. POSITIONING MODES
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n1
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n1
 
 ### N1 · Luxury Brand Execution
 
 Ancla canónica: C01 · 3 marcas lujo · CAPEX/OPEX · NPI
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n2
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n2
 
 ### N2 · Store Design & Flagship Execution
 
 Ancla canónica: C02 · Adidas Brand Center · KPI07 · blueprints
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n3
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n3
 
 ### N3 · Regional Brand Execution & Rollout
 
 Ancla canónica: C03 · 270+ POS · 6 países · KPI03–06 · CF05
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n4
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n4 
 
 ### N4 · Commercial VM & Field Leadership
 
@@ -403,8 +369,7 @@ Ancla canónica: C04/C05 · +43% tráfico · +18% conversión · 21 reportes
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-001
 
 ## L. OUTPUT CONTRACT
 
@@ -412,13 +377,12 @@ Ancla canónica: C04/C05 · +43% tráfico · +18% conversión · 21 reportes
 
 1. **IMMUTABILITY OF IDs:** Los `###### figma_text_id` son llaves primarias. Está terminantemente prohibido alterarlas, omitirlas o inventar nuevas.
 2. **SLOT INTEGRITY:** No se permiten fusiones ni divisiones de bloques. Si el Skeleton tiene 4 bullets para una experiencia, el output DEBE tener 4 bloques, incluso si uno queda vacío.
-3. **NULL-FILL RULE:** Si el Canon Career no tiene información suficiente para un slot específico del Skeleton, el slot debe mantenerse con su ID original y el texto “[PENDING DATA]” o quedar vacío, pero NUNCA eliminarse.
+3. **NULL-FILL RULE:** Si el Canon Career no tiene información suficiente para un slot específico del Skeleton, el slot debe mantenerse con su ID original y el texto "[PENDING DATA]" o quedar vacío, pero NUNCA eliminarse.
 4. **MARKDOWN ESCAPING:** Mantener el uso de `\(` y `\)` para compatibilidad con el plugin de Figma si se detecta en el Skeleton original.
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-skeleton-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-skeleton-001
 
 ### GOLDEN SKELETON (REFERENCE)
 
@@ -446,15 +410,15 @@ Miguel Hidalgo, CDMX  |  +52 1 56 4383 8125  |  [mauricio.meyran@icloud.com](mai
 
 ###### [figma_text_id](2043:51)
 
-Estratega de Visual Merchandising con más de 10 años especializándome en la traducción de lineamientos globales de lujo a ejecuciones impecables y culturalmente relevantes en 6 países de Latinoamérica y 270+ puntos de venta \(boutiques monomarca, wholesale, flagships y outlets.
+Estratega de Visual Merchandising con más de 10 años especializándome en la traducción de lineamientos globales de lujo a ejecuciones impecables y culturalmente relevantes en 6 países de Latinoamérica y 270+ puntos de venta \(boutiques monomarca, wholesale, flagships y outlets.
 
 ###### [figma_text_id](2043:52)
 
-Experto en coordinar redes mixtas de retail \(propias, franquicias, corners en departamentales de prestigio\) bajo estándares corporativos internacionales, gestionando presupuestos CAPEX/OPEX, proveedores locales e internacionales, y equipos distribuidos geográficamente.
+Experto en coordinar redes mixtas de retail \(propias, franquicias, corners en departamentales de prestigio\) bajo estándares corporativos internacionales, gestionando presupuestos CAPEX/OPEX, proveedores locales e internacionales, y equipos distribuidos geográficamente.
 
 ###### [figma_text_id](2046:2)
 
-Con formación en Artes Visuales y experiencia técnica en planos, especificaciones de mobiliario y coordinación con Store Planning, actúo como enlace natural entre HQ creativo, operaciones de campo y objetivos comerciales. Historial cuantificado: +43% tráfico, +18% conversión, −74% costos operativos sin comprometer calidad de marca.
+Con formación en Artes Visuales y experiencia técnica en planos, especificaciones de mobiliario y coordinación con Store Planning, actúo como enlace natural entre HQ creativo, operaciones de campo y objetivos comerciales. Historial cuantificado: +43% tráfico, +18% conversión, −74% costos operativos sin comprometer calidad de marca.
 
 ###### [figma_text_id](2043:54)
 
@@ -474,11 +438,11 @@ Con formación en Artes Visuales y experiencia técnica en planos, especificaci
 
 ###### [figma_text_id](2043:59)
 
-**Stack Técnico**: Adobe Creative Cloud \(Illustrator, Photoshop, InDesign\), AutoCAD, SketchUp, planos técnicos, especificaciones de mobiliario, IWD, Keynote, IA Generativa \(moodboards, visualizaciones, reportes\).
+**Stack Técnico**: Adobe Creative Cloud \(Illustrator, Photoshop, InDesign\), AutoCAD, SketchUp, planos técnicos, especificaciones de mobiliario, IWD, Keynote, IA Generativa \(moodboards, visualizaciones, reportes\).
 
 ###### [figma_text_id](2043:60)
 
-**Idiomas**: Español \(Nativo\) | Inglés Avanzado \(coordinación corporativa internacional con HQ\).
+**Idiomas**: Español \(Nativo\) | Inglés Avanzado \(coordinación corporativa internacional con HQ\).
 
 ###### [figma_text_id](2043:62)
 
@@ -494,19 +458,19 @@ Con formación en Artes Visuales y experiencia técnica en planos, especificaci
 
 ###### [figma_text_id](2043:67)
 
-Lideré la estrategia de Visual Merchandising y storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren \(fragancias de lujo\), garantizando que cada exhibición reflejara los estándares de sofisticación y coherencia de marca bajo lineamientos globales de HQ.
+Lideré la estrategia de Visual Merchandising y storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren \(fragancias de lujo\), garantizando que cada exhibición reflejara los estándares de sofisticación y coherencia de marca bajo lineamientos globales de HQ.
 
 ###### [figma_text_id](2043:68)
 
-Coordiné proveedores locales e internacionales para la producción, importación e instalación de materiales POP, displays y mobiliario de vitrinas, supervisando calidad de acabados, mantenimiento y cumplimiento de especificaciones técnicas de la división.
+Coordiné proveedores locales e internacionales para la producción, importación e instalación de materiales POP, displays y mobiliario de vitrinas, supervisando calidad de acabados, mantenimiento y cumplimiento de especificaciones técnicas de la división.
 
 ###### [figma_text_id](2043:69)
 
-Ejecuté el despliegue nacional de campañas NPI clave 2025 \(Born in Roma, Stronger With You\), coordinando producción y montaje en tiempo y forma con agencias externas bajo presupuesto asignado.
+Ejecuté el despliegue nacional de campañas NPI clave 2025 \(Born in Roma, Stronger With You\), coordinando producción y montaje en tiempo y forma con agencias externas bajo presupuesto asignado.
 
 ###### [figma_text_id](2043:70)
 
-Actué como embajador de marca y referente de estándares visuales en cuentas clave, colaborando transversalmente con Marketing, Trade Marketing y Operaciones para alinear calendario comercial con ejecución en piso de venta.
+Actué como embajador de marca y referente de estándares visuales en cuentas clave, colaborando transversalmente con Marketing, Trade Marketing y Operaciones para alinear calendario comercial con ejecución en piso de venta.
 
 ###### [figma_text_id](2043:73)
 
@@ -518,15 +482,15 @@ Actué como embajador de marca y referente de estándares visuales en cuentas 
 
 ###### [figma_text_id](2043:76)
 
-Lideré la implementación visual y técnica para la apertura del Adidas Brand Center Madero \(Flagship Store CDMX\), coordinando proveedores locales bajo estándares globales de Store Design de la marca — entrega sin observaciones bloqueantes para apertura.
+Lideré la implementación visual y técnica para la apertura del Adidas Brand Center Madero \(Flagship Store CDMX\), coordinando proveedores locales bajo estándares globales de Store Design de la marca — entrega sin observaciones bloqueantes para apertura.
 
 ###### [figma_text_id](2043:77)
 
-Supervisé zoning, floorplanning y disposición de experiencias por categoría, validando planogramas con el equipo corporativo internacional y garantizando integridad visual desde el día uno de operaciones.
+Supervisé zoning, floorplanning y disposición de experiencias por categoría, validando planogramas con el equipo corporativo internacional y garantizando integridad visual desde el día uno de operaciones.
 
 ###### [figma_text_id](2043:78)
 
-Gestioné la cadena de suministro de materiales de Store Design, asegurando disponibilidad, calidad y cumplimiento de especificaciones técnicas en mobiliario, iluminación, props y señalización para todos los espacios del flagship.
+Gestioné la cadena de suministro de materiales de Store Design, asegurando disponibilidad, calidad y cumplimiento de especificaciones técnicas en mobiliario, iluminación, props y señalización para todos los espacios del flagship.
 
 ###### [figma_text_id](2043:24)
 
@@ -538,23 +502,23 @@ Gestioné la cadena de suministro de materiales de Store Design, asegurando dis
 
 ###### [figma_text_id](2043:27)
 
-Gestioné la estrategia visual para 6 países en LATAM \(México, Perú, Chile, Colombia, Ecuador, Panamá\) y 270+ puntos de venta \(boutiques propias, comisionadas, franquicias y corners wholesale\), asegurando estandarización regional de la marca y reportando mejores prácticas de mercado al equipo de Trade Marketing corporativo.
+Gestioné la estrategia visual para 6 países en LATAM \(México, Perú, Chile, Colombia, Ecuador, Panamá\) y 270+ puntos de venta \(boutiques propias, comisionadas, franquicias y corners wholesale\), asegurando estandarización regional de la marca y reportando mejores prácticas de mercado al equipo de Trade Marketing corporativo.
 
 ###### [figma_text_id](2048:4)
 
-Lideré un equipo de 3 coordinadoras nacionales \(México, Perú, Chile\) con reporte directo, más 3 colaboradores de línea punteada en otros mercados, actuando como enlace para la región Americas.
+Lideré un equipo de 3 coordinadoras nacionales \(México, Perú, Chile\) con reporte directo, más 3 colaboradores de línea punteada en otros mercados, actuando como enlace para la región Americas.
 
 ###### [figma_text_id](2043:28)
 
-Diseñé una estrategia de producción local que generó un ahorro del −74% en costos de campañas visuales nacionales, sin comprometer los estándares globales de exhibición en todas las categorías de producto.
+Diseñé una estrategia de producción local que generó un ahorro del −74% en costos de campañas visuales nacionales, sin comprometer los estándares globales de exhibición en todas las categorías de producto.
 
 ###### [figma_text_id](2043:29)
 
-Reduje en −33% el tiempo de actualización de floorsets mediante manuales digitales de Zoning &amp; Mapping, planogramas por categoría y herramientas de field teams para red propia y franquicias.
+Reduje en −33% el tiempo de actualización de floorsets mediante manuales digitales de Zoning &amp; Mapping, planogramas por categoría y herramientas de field teams para red propia y franquicias.
 
 ###### [figma_text_id](2048:6)
 
- Coordiné la importación y distribución de displays estacionales, mobiliario y props desde proveedores en EE.UU. y Asia, gestionando logística internacional, desaduanamiento y entregas regionales bajo presupuesto CAPEX/OPEX asignado.
+ Coordiné la importación y distribución de displays estacionales, mobiliario y props desde proveedores en EE.UU. y Asia, gestionando logística internacional, desaduanamiento y entregas regionales bajo presupuesto CAPEX/OPEX asignado.
 
 ###### [figma_text_id](2043:98)
 
@@ -566,15 +530,15 @@ Reduje en −33% el tiempo de actualización de floorsets mediante manuales di
 
 ###### [figma_text_id](2043:101)
 
-Construí el área de VM desde cero, gestionando 4 supervisores de zona y 17 subgerentes de VM \(21 reportes directos\); implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional.
+Construí el área de VM desde cero, gestionando 4 supervisores de zona y 17 subgerentes de VM \(21 reportes directos\); implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional.
 
 ###### [figma_text_id](2043:102)
 
-Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales.
+Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales.
 
 ###### [figma_text_id](2049:10)
 
-Estandaricé los planogramas de categorías clave \(Denim &amp; Lifestyle\), generando retroalimentación sistemática a dirección sobre desempeño visual, oportunidades de mejora y best practices de piso de venta.
+Estandaricé los planogramas de categorías clave \(Denim &amp; Lifestyle\), generando retroalimentación sistemática a dirección sobre desempeño visual, oportunidades de mejora y best practices de piso de venta.
 
 ###### [figma_text_id](2043:107)
 
@@ -586,19 +550,19 @@ Estandaricé los planogramas de categorías clave \(Denim &amp; Lifestyle\), g
 
 ###### [figma_text_id](2043:110)
 
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y actualizaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Montreal, Canadá.
+Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y actualizaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Montreal, Canadá.
 
 ###### [figma_text_id](2043:111)
 
-Realicé visitas regulares de auditoría visual a tienda, evaluando mantenimiento, iluminación, props y mobiliario; documenté hallazgos y mejores prácticas para retroalimentación al equipo regional y a HQ internacional.
+Realicé visitas regulares de auditoría visual a tienda, evaluando mantenimiento, iluminación, props y mobiliario; documenté hallazgos y mejores prácticas para retroalimentación al equipo regional y a HQ internacional.
 
 ###### [figma_text_id](2043:112)
 
-Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos 3 años del rol lideré una coordinadora Jr. con reporte directo.
+Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos 3 años del rol lideré una coordinadora Jr. con reporte directo.
 
 ###### [figma_text_id](2049:12)
 
-Asistí al Store Operations Leaders Orientation en las oficinas corporativas de ALDO Group en Montreal \(_2014_\), programa intensivo de formación en VM, Sales y Operations para líderes de mercado clave.
+Asistí al Store Operations Leaders Orientation en las oficinas corporativas de ALDO Group en Montreal \(_2014_\), programa intensivo de formación en VM, Sales y Operations para líderes de mercado clave.
 
 ###### [figma_text_id](2043:115)
 
@@ -606,13 +570,13 @@ Asistí al Store Operations Leaders Orientation en las oficinas corporativas d
 
 ###### [figma_text_id](2043:117)
 
-**Licenciatura en Artes Visuales** _2008 - 2012
-Escuela Nacional de Artes Plásticas, UNAM_
+**Licenciatura en Artes Visuales** _2008 - 2012_
+_Escuela Nacional de Artes Plásticas, UNAM_
 
 ###### [figma_text_id](2043:118)
 
-**Diplomado en Museos y Exposiciones** _2014
-Facultad de Artes y Diseño, UNAM_
+**Diplomado en Museos y Exposiciones** _2014_
+_Facultad de Artes y Diseño, UNAM_
 
 ###### [figma_text_id](2043:120)
 
@@ -620,12 +584,12 @@ Facultad de Artes y Diseño, UNAM_
 
 ###### [figma_text_id](2043:122)
 
-AutoCAD y SketchUp Essentials _2024
+AutoCAD y SketchUp Essentials _2024_
 _LinkedIn Learning_
 
 ###### [figma_text_id](2043:123)
 
-Store Operations Leaders Orientation \(VM, Sales &amp; Ops\) _2014
+Store Operations Leaders Orientation \(VM, Sales &amp; Ops\) _2014_
 _ALDO Group, Montréal, Canadá_
 
 ```
@@ -637,8 +601,7 @@ _ALDO Group, Montréal, Canadá_
 > Formato base obligatorio para todos los Derived Outputs generados desde el Career Canon. Aplica ES + EN.
 > 
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-tagregistry-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-tagregistry-001
 
 ### Tag Registry
 
@@ -646,16 +609,16 @@ _ALDO Group, Montréal, Canadá_
 | --- | --- | --- | --- |
 | `2040:46` | Nombre | **LOCKED** | Identidad canónica (Invariable) |
 | `2040:47` | Tagline + contacto | **Variable** | Ajustable por modo (Ej. Luxury Specialist) |
-| `2031:22` | Header Perfil | **LOCKED** | Texto: “PERFIL PROFESIONAL” |
+| `2031:22` | Header Perfil | **LOCKED** | Texto: "PERFIL PROFESIONAL" |
 | `2031:24` | Perfil párrafo 1 | **Variable** | Gancho narrativo según vacante |
 | `2031:25` | Perfil párrafo 2 | **Variable** | Hard skills + Soft skills integradas |
-| `2031:27` | Header Habilidades | **LOCKED** | Texto: “HABILIDADES CLAVE” |
+| `2031:27` | Header Habilidades | **LOCKED** | Texto: "HABILIDADES CLAVE" |
 | `2031:29` | Skill 1 — Estrategia | **Variable** | Optimización por Modo de Posicionamiento |
 | `2031:30` | Skill 2 — Operativa | **Variable** | Optimización por Modo de Posicionamiento |
 | `2031:31` | Skill 3 — Liderazgo | **Variable** | Optimización por Modo de Posicionamiento |
 | `2031:32` | Skill 4 — Stack Técnico | **LOCKED** | Figma, Adobe CC, Office, Notion |
 | `2031:33` | Skill 5 — Idiomas | **LOCKED** | Español (N), Inglés (C1), Italiano (A2) |
-| `2031:35` | Header Experiencia | **LOCKED** | Texto: “EXPERIENCIA PROFESIONAL” |
+| `2031:35` | Header Experiencia | **LOCKED** | Texto: "EXPERIENCIA PROFESIONAL" |
 | `2031:37` | **C01** Empresa | **LOCKED** | Nombre de la compañía |
 | `2031:38` | **C01** Rol + período | **Variable** | Ajuste de título según JD |
 | `2031:39` | **C01** Bullet 1 | **Variable** | KPI / Logro Principal |
@@ -683,10 +646,10 @@ _ALDO Group, Montréal, Canadá_
 | `2032:195` | **C05** Bullet 2 | **Variable** | KPI / Logro Secundario |
 | `2032:196` | **C05** Bullet 3 | **Variable** | Responsabilidad Clave |
 | `2032:197` | **C05** Bullet 4 | **Variable** | Null-Fill si el Canon tiene <4 |
-| `2032:199` | Header Formación | **LOCKED** | Texto: “FORMACIÓN ACADÉMICA” |
+| `2032:199` | Header Formación | **LOCKED** | Texto: "FORMACIÓN ACADÉMICA" |
 | `2032:201` | ED01 | **LOCKED** | Licenciatura Artes Visuales (UNAM) |
 | `2032:202` | ED02 | **LOCKED** | Diplomado Museografía |
-| `2032:204` | Header Certs | **LOCKED** | Texto: “CERTIFICACIONES & OTROS” |
+| `2032:204` | Header Certs | **LOCKED** | Texto: "CERTIFICACIONES & OTROS" |
 | `2032:207` | CERT01 | **LOCKED** | Certificación IA / UX / Otros |
 | `2032:206` | CERT02 | **LOCKED** | Certificación IA / UX / Otros |
 
@@ -737,8 +700,7 @@ Los slots **Variable por modo** se derivan del Positioning Mode activo (sección
 
 ---
 
-> ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-coverage-gate-001
-> 
+ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-coverage-gate-001
 
 ## GATE DE COBERTURA FUNCIONAL — EJECUTADO
 
@@ -747,10 +709,10 @@ Los slots **Variable por modo** se derivan del Positioning Mode activo (sección
 | Verificación | Resultado | Sección |
 | --- | --- | --- |
 | ¿KPI01 (+43% tráfico) está presente con su contexto C04? | **SÍ** | Sección I — CORE KPIs (KPI01: Traffic +43% · C04 · Aéropostale · red de 17 tiendas · 2017–2018) |
-| ¿KPI03 (-74% costos) está presente con su contexto C03? | **SÍ** | Sección I — CORE KPIs (KPI03: Campaign Cost Reduction -74% · C03 · Levi’s/Dockers · campañas nacionales México) |
+| ¿KPI03 (-74% costos) está presente con su contexto C03? | **SÍ** | Sección I — CORE KPIs (KPI03: Campaign Cost Reduction -74% · C03 · Levi's/Dockers · campañas nacionales México) |
 | ¿Los 4 Positioning Modes N1-N4 están presentes con sus anclas canónicas? | **SÍ** | Sección K — POSITIONING MODES (N1: C01 · N2: C02+KPI07 · N3: C03+KPI03-06+CF05 · N4: C04/C05+KPI01/KPI02) |
-| ¿CF08 (L’Oréal Brands = Valentino/Giorgio Armani/Ralph Lauren) está presente? | **SÍ** | Sección J — CANONICAL FACTS (CF08) |
-| ¿UF01 (L’Oréal End Date = March 2026) está presente? | **SÍ** | Sección J — CANONICAL FACTS (UF01) |
+| ¿CF08 (L'Oréal Brands = Valentino/Giorgio Armani/Ralph Lauren) está presente? | **SÍ** | Sección J — CANONICAL FACTS (CF08) |
+| ¿UF01 (L'Oréal End Date = March 2026) está presente? | **SÍ** | Sección J — CANONICAL FACTS (UF01) |
 
 ### CV-B coverage:
 

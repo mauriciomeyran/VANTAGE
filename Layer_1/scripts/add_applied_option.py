@@ -5,7 +5,7 @@ Agregar opción APPLIED a Gate_Decision automáticamente
 
 import os
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 def main():
     load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)

@@ -7,7 +7,7 @@ Uso: python3 scripts/source_analytics.py
 import os
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 from collections import defaultdict
 
 def txt(prop):

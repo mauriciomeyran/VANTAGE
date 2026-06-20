@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any
 
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 # ── paths ──────────────────────────────────────────────────────────────────────
 _SCRIPTS_DIR = Path(__file__).resolve().parent

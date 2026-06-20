@@ -6,7 +6,7 @@ No modifica nada. Corre con: python3 diagnose_db.py
 
 import os
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 DATABASE_ID = "596938befc42836baea7814a1491bd47"
 MAX_PAGES = 15  # 15 x 100 = 1500, de sobra para detectar el patrón

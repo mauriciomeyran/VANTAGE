@@ -10,7 +10,7 @@ for entry in os.listdir(venv_site):
         break
 
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 load_dotenv()
 NOTION_TOKEN = os.environ.get("NOTION_TOKEN") or os.environ.get("NOTION_API_KEY")

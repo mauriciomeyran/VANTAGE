@@ -9,7 +9,7 @@ Sistema operativo documental completo:
   + Query Layer  (Phase 4)
   + Context Layer (Phase 5)
   + Agent API    (Phase 6)
-  + notion_client hardening (Phase 7)
+  + notion_utils hardening (Phase 7)
 
 Entrypoint único. Uso:
 
@@ -52,7 +52,7 @@ from query_layer import (
 )
 from context_layer import assemble_context
 from agent_api import ask as _ask
-from notion_client import get_metrics, clear_cache, reset_metrics, ResolverError
+from notion_utils import get_metrics, clear_cache, reset_metrics, ResolverError
 
 
 # --- API unificada ----------------------------------------------------------------
@@ -93,7 +93,7 @@ def status() -> Dict[str, Any]:
             "total_entities": len(entities),
             "metrics": index.get("metrics", {}),
         },
-        "notion_client_metrics": get_metrics(),
+        "notion_utils_metrics": get_metrics(),
         "index_age_hours": index_age_hours,
         "index_path": str(ENTITY_INDEX_PATH),
     }
@@ -113,14 +113,14 @@ def sync() -> dict:
 
     _scripts_dir = str(Path(__file__).resolve().parent)
 
-    # Lazy import con sys.path limpio para evitar que notion_client.py local
+    # Lazy import con sys.path limpio para evitar que notion_utils.py local
     # tape al SDK notion-client de PyPI que usa generate_entity_index_v2
     _gen_path = Path(__file__).resolve().parent / "generate_entity_index_v2.py"
     try:
         import importlib.util as _ilu
         _scripts_dir = str(Path(__file__).resolve().parent)
         _saved_path  = sys.path[:]
-        _saved_nc    = sys.modules.pop("notion_client", None)
+        _saved_nc    = sys.modules.pop("notion_utils", None)
         sys.path     = [p for p in sys.path if p not in (_scripts_dir, ".", "")]
         try:
             _spec = _ilu.spec_from_file_location("generate_entity_index_v2", _gen_path)
@@ -129,7 +129,7 @@ def sync() -> dict:
         finally:
             sys.path = _saved_path
             if _saved_nc is not None:
-                sys.modules["notion_client"] = _saved_nc
+                sys.modules["notion_utils"] = _saved_nc
     except Exception as exc:
         return {"status": "error", "error": f"No se pudo cargar generate_entity_index_v2: {exc}", "index_preserved": True}
 
@@ -191,7 +191,7 @@ def sync() -> dict:
         "elapsed_seconds":       elapsed,
         "index_path":            str(index_path),
         "entity_index":          status_result["entity_index"],
-        "notion_client_metrics": status_result["notion_client_metrics"],
+        "notion_utils_metrics": status_result["notion_utils_metrics"],
     }
 
 __all__ = [

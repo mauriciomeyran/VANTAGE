@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 _SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(_SCRIPTS_DIR) not in sys.path:

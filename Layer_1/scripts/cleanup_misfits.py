@@ -6,7 +6,7 @@ import os
 import sys
 
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 _SCRIPTS = os.path.dirname(os.path.abspath(__file__))
 if _SCRIPTS not in sys.path:

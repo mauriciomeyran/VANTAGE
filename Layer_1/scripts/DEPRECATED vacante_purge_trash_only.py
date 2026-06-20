@@ -13,7 +13,7 @@ import time
 
 import httpx
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 DATA_SOURCE_ID = "442938be-fc42-828f-b72e-076818d65a5b"
 NOTION_VERSION = "2025-09-03"

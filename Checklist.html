@@ -539,7 +539,7 @@ body {
       <span class="stat-label">Completadas</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value" id="totalTasks">32</span>
+      <span class="stat-value" id="totalTasks">34</span>
       <span class="stat-label">Total</span>
     </div>
     <div class="stat-item">
@@ -565,8 +565,8 @@ body {
   <section class="day-section" id="lunes">
     <div class="day-header">
       <span class="day-label" style="background:#01696f;">LUNES</span>
-      <span class="day-progress-text" id="lunes-progress">0 / 17</span>
-      <span class="day-count">18 tareas</span>
+      <span class="day-progress-text" id="lunes-progress">0 / 20</span>
+      <span class="day-count">20 tareas</span>
     </div>
     <div class="mini-progress">
       <div class="mini-progress-fill" id="lunes-bar" style="width:0%;background:#01696f;"></div>
@@ -581,8 +581,8 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#01</span>
-          <span class="task-text">Solicitar a Perplexity los Prompts de L1 concatenados y fechados.</span>
-          <code class="task-cmd">N/A</code>
+          <span class="task-text">Verificar estado del Runtime y edad del índice.</span>
+          <code class="task-cmd">cd ~/Documents/04-Vantage_CV/Layer_1/scripts &amp;&amp; python3 vantage.py status</code>
         </div>
       </div>
       <div class="task-row" id="lunes-2" onclick="toggleTask('lunes-2', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-2', 'lunes', '#01696f');}">
@@ -593,11 +593,11 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#02</span>
-          <span class="task-text">Ejecutar búsquedas L1 en Comet.</span>
-          <code class="task-cmd">N/A</code>
+          <span class="task-text">Si index_age_hours &gt; 24 — regenerar índice.</span>
+          <code class="task-cmd">python3 vantage.py sync</code>
         </div>
       </div>
-      <div class="task-row" id="lunes-3" onclick="toggleTask('lunes-3', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-3', 'lunes', '#01696f');}">
+            <div class="task-row" id="lunes-3" onclick="toggleTask('lunes-3', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-3', 'lunes', '#01696f');}">
         <div class="task-checkbox" style="">
           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="2,6 5,9 10,3"/>
@@ -605,7 +605,7 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#03</span>
-          <span class="task-text">Compilar JSONs de L1.</span>
+          <span class="task-text">Solicitar a Perplexity los Prompts de L1 concatenados y fechados.</span>
           <code class="task-cmd">N/A</code>
         </div>
       </div>
@@ -617,7 +617,7 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#04</span>
-          <span class="task-text">Solicitar a Perplexity los Prompts de L2 concatenados y fechados.</span>
+          <span class="task-text">Ejecutar búsquedas L1 en Comet.</span>
           <code class="task-cmd">N/A</code>
         </div>
       </div>
@@ -629,7 +629,7 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#05</span>
-          <span class="task-text">Ejecutar búsqueda L2 en cada motor de búsqueda.</span>
+          <span class="task-text">Compilar JSONs de L1.</span>
           <code class="task-cmd">N/A</code>
         </div>
       </div>
@@ -641,7 +641,7 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#06</span>
-          <span class="task-text">Compilar JSONs de L2.</span>
+          <span class="task-text">Solicitar a Perplexity los Prompts de L2 concatenados y fechados.</span>
           <code class="task-cmd">N/A</code>
         </div>
       </div>
@@ -653,7 +653,7 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#07</span>
-          <span class="task-text">Regresar a Perplexity Desktop: Usar el Prompt E + 3 JSONs de L1 + 3 JSONs de L2 para Consolidación &amp; Dedup.</span>
+          <span class="task-text">Ejecutar búsqueda L2 en cada motor de búsqueda.</span>
           <code class="task-cmd">N/A</code>
         </div>
       </div>
@@ -665,7 +665,7 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#08</span>
-          <span class="task-text">Perplexity aplica Dedup con clave [Brand + Title + Location], jerarquiza L1 &gt; L2 y entrega un Plain Array consolidado.</span>
+          <span class="task-text">Compilar JSONs de L2.</span>
           <code class="task-cmd">N/A</code>
         </div>
       </div>
@@ -677,8 +677,8 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#09</span>
-          <span class="task-text">Guardar el Plain Array consolidado.</span>
-          <code class="task-cmd">~/Documents/04-VANTAGE_CV/Feeds/YYYY-MM-DD_consolidated.json</code>
+          <span class="task-text">Regresar a Perplexity Desktop: Usar el Prompt E + 3 JSONs de L1 + 3 JSONs de L2 para Consolidación &amp; Dedup.</span>
+          <code class="task-cmd">N/A</code>
         </div>
       </div>
       <div class="task-row" id="lunes-10" onclick="toggleTask('lunes-10', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-10', 'lunes', '#01696f');}">
@@ -689,8 +689,8 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#10</span>
-          <span class="task-text">En Terminal ejecuta.</span>
-          <code class="task-cmd">vl1feed YYYY-MM-DD_consolidated.json</code>
+          <span class="task-text">Perplexity aplica Dedup con clave [Brand + Title + Location], jerarquiza L1 &gt; L2 y entrega un Plain Array consolidado.</span>
+          <code class="task-cmd">N/A</code>
         </div>
       </div>
       <div class="task-row" id="lunes-11" onclick="toggleTask('lunes-11', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-11', 'lunes', '#01696f');}">
@@ -701,8 +701,8 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#11</span>
-          <span class="task-text">Revisar DRY RUN: validar Brand, Title y URL, duplicadas aparecen como SKIP, para revisión como REVIEW_NEEDED.</span>
-          <code class="task-cmd">N/A</code>
+          <span class="task-text">Guardar el Plain Array consolidado.</span>
+          <code class="task-cmd">~/Documents/04-VANTAGE_CV/Feeds/YYYY-MM-DD_consolidated.json</code>
         </div>
       </div>
       <div class="task-row" id="lunes-12" onclick="toggleTask('lunes-12', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-12', 'lunes', '#01696f');}">
@@ -713,8 +713,8 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#12</span>
-          <span class="task-text">Confirmar escritura en Notion presionando la tecla</span>
-          <code class="task-cmd">s</code>
+          <span class="task-text">En Terminal ejecuta.</span>
+          <code class="task-cmd">vl1feed YYYY-MM-DD_consolidated.json</code>
         </div>
       </div>
       <div class="task-row" id="lunes-13" onclick="toggleTask('lunes-13', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-13', 'lunes', '#01696f');}">
@@ -725,8 +725,8 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#13</span>
-          <span class="task-text">Ejecutar pipeline principal (sin argumentos) para calcular propiedades Class B (Score y Gate).</span>
-          <code class="task-cmd">vl1</code>
+          <span class="task-text">Revisar DRY RUN: validar Brand, Title y URL, duplicadas aparecen como SKIP, para revisión como REVIEW_NEEDED.</span>
+          <code class="task-cmd">N/A</code>
         </div>
       </div>
       <div class="task-row" id="lunes-14" onclick="toggleTask('lunes-14', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-14', 'lunes', '#01696f');}">
@@ -737,8 +737,8 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#14</span>
-          <span class="task-text">Verificar en Notion el cálculo de propiedades Class B (Score y Gate).</span>
-          <code class="task-cmd">N/A</code>
+          <span class="task-text">Confirmar escritura en Notion presionando la tecla</span>
+          <code class="task-cmd">s</code>
         </div>
       </div>
       <div class="task-row" id="lunes-15" onclick="toggleTask('lunes-15', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-15', 'lunes', '#01696f');}">
@@ -749,8 +749,8 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#15</span>
-          <span class="task-text">Abrir vista Ready-to-Apply en Notion y confirmar vacantes con Score ≥ 60 disponibles para el ciclo de aplicación.</span>
-          <code class="task-cmd">N/A</code>
+          <span class="task-text">Ejecutar pipeline principal (sin argumentos) para calcular propiedades Class B (Score y Gate).</span>
+          <code class="task-cmd">vl1</code>
         </div>
       </div>
       <div class="task-row" id="lunes-16" onclick="toggleTask('lunes-16', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-16', 'lunes', '#01696f');}">
@@ -761,8 +761,8 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#16</span>
-          <span class="task-text">Ejecutar para procesar backlog de L3</span>
-          <code class="task-cmd">vl3</code>
+          <span class="task-text">Verificar en Notion el cálculo de propiedades Class B (Score y Gate).</span>
+          <code class="task-cmd">N/A</code>
         </div>
       </div>
       <div class="task-row" id="lunes-17" onclick="toggleTask('lunes-17', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-17', 'lunes', '#01696f');}">
@@ -773,8 +773,8 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#17</span>
-          <span class="task-text">Ejecutar pipeline principal (sin argumentos) para revelar vacantes de L3</span>
-          <code class="task-cmd">vl1</code>
+          <span class="task-text">Abrir vista Ready-to-Apply en Notion y confirmar vacantes con Score ≥ 60 disponibles para el ciclo de aplicación.</span>
+          <code class="task-cmd">N/A</code>
         </div>
       </div>
       <div class="task-row" id="lunes-18" onclick="toggleTask('lunes-18', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-18', 'lunes', '#01696f');}">
@@ -785,6 +785,30 @@ body {
         </div>
         <div class="task-content">
           <span class="task-num">#18</span>
+          <span class="task-text">Ejecutar para procesar backlog de L3</span>
+          <code class="task-cmd">vl3</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-19" onclick="toggleTask('lunes-19', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-19', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#19</span>
+          <span class="task-text">Ejecutar pipeline principal (sin argumentos) para revelar vacantes de L3</span>
+          <code class="task-cmd">vl1</code>
+        </div>
+      </div>
+      <div class="task-row" id="lunes-20" onclick="toggleTask('lunes-20', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-20', 'lunes', '#01696f');}">
+        <div class="task-checkbox" style="">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#20</span>
           <span class="task-text">Sincronizar repositorio git — commitea y pushea todos los cambios del ciclo a origin/main.</span>
           <code class="task-cmd">vgit</code>
         </div>
@@ -811,7 +835,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#01</span>
+          <span class="task-num">#03</span>
           <span class="task-text">Revisar vacantes con status REVIEW_NEEDED en el Tracker: corregir URL o alias directamente en Notion, cambiar Status → Target y ejecutar</span>
           <code class="task-cmd">vl1</code>
         </div>
@@ -823,7 +847,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#02</span>
+          <span class="task-num">#04</span>
           <span class="task-text">Revisar vacantes con Gate = BLOCKED recuperables: ejecutar para abrir el Dashboard (Proponer Patch → Validar → Aceptar) para corregir campos Class A y re-validar.</span>
           <code class="task-cmd">vd</code>
         </div>
@@ -835,7 +859,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#03</span>
+          <span class="task-num">#05</span>
           <span class="task-text">Ejecutar tras correcciones para actualizar Scores y Gates.</span>
           <code class="task-cmd">vl1</code>
         </div>
@@ -862,7 +886,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#01</span>
+          <span class="task-num">#03</span>
           <span class="task-text">Identificar vacante prioritaria en vista Ready-to-Apply (Score ≥ 60).</span>
           <code class="task-cmd">N/A</code>
         </div>
@@ -874,7 +898,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#02</span>
+          <span class="task-num">#04</span>
           <span class="task-text">Abrir sesión de Claude y ejecutar. La sesión termina con el Handoff.</span>
           <code class="task-cmd">CV-A + URL de la vacante</code>
         </div>
@@ -886,7 +910,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#03</span>
+          <span class="task-num">#05</span>
           <span class="task-text">Abrir sesión nueva de Claude y ejecutar.</span>
           <code class="task-cmd">CV-B + Handoff</code>
         </div>
@@ -898,7 +922,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#04</span>
+          <span class="task-num">#06</span>
           <span class="task-text">Recibir output en formato Canon Markdown (con Figma Tags)</span>
           <code class="task-cmd">N/A</code>
         </div>
@@ -910,7 +934,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#05</span>
+          <span class="task-num">#07</span>
           <span class="task-text">Documentar output en Notion.</span>
           <code class="task-cmd">N/A</code>
         </div>
@@ -922,7 +946,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#06</span>
+          <span class="task-num">#08</span>
           <span class="task-text">Actualizar documento de Figma y exportar PDF</span>
           <code class="task-cmd">N/A</code>
         </div>
@@ -934,7 +958,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#07</span>
+          <span class="task-num">#09</span>
           <span class="task-text">Ejecutar — Claude entrega go/no-go con checklist de 6 ítems.</span>
           <code class="task-cmd">QA + PDF</code>
         </div>
@@ -946,7 +970,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#08</span>
+          <span class="task-num">#10</span>
           <span class="task-text">Si QA aprueba: cambiar Status → Postulado en Notion y ejecutar para que Python asigne Gate_Decision = APPLIED y la vacante salga de Ready-to-Apply.</span>
           <code class="task-cmd">vl1</code>
         </div>
@@ -973,7 +997,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#01</span>
+          <span class="task-num">#03</span>
           <span class="task-text">Solo si hay nuevas vacantes que procesar — 10 minutos máximo. Ejecutar para actualizar Scores y Gates.</span>
           <code class="task-cmd">vl1</code>
         </div>
@@ -1000,7 +1024,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#01</span>
+          <span class="task-num">#03</span>
           <span class="task-text">Ejecutar.</span>
           <code class="task-cmd">vl1</code>
         </div>
@@ -1012,7 +1036,7 @@ body {
           </svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#02</span>
+          <span class="task-num">#04</span>
           <span class="task-text">Revisar efectividad por fuente: si career pages producen menos de 5 resultados relevantes en la semana, ajustar Prompt A — no el threshold de Score.</span>
           <code class="task-cmd">N/A</code>
         </div>
@@ -1031,8 +1055,8 @@ body {
 <script>
 const STATE_KEY = 'vchecklist_v1';
 const DAYS = ['lunes','martes','miercoles','jueves','viernes'];
-const DAY_COUNTS = {lunes:18,martes:3,miercoles:8,jueves:1,viernes:2};
-const TOTAL = 32;
+const DAY_COUNTS = {lunes:20,martes:3,miercoles:8,jueves:1,viernes:2};
+const TOTAL = 34;
 
 let state = {};
 

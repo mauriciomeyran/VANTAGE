@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os, argparse
 from dotenv import load_dotenv
-from notion_client import Client
+from notion_utils import Client
 
 TRACKER_DS_ID = "442938be-fc42-828f-b72e-076818d65a5b"
 ARCHIVO_DB_ID = "4ec34e1b528648c9afbdd57c6eb76053"
