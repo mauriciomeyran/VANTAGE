@@ -1,4 +1,4 @@
-# V | MANUAL
+# V | MANUAL|
 
 Versión: 8,5
 Status: Active
@@ -7,9 +7,11 @@ Page ID: 372938be-fc42-8050-9a67-e40857d7806e
 Fecha de actualización: 17 de junio de 2026
 Tipo: Página
 
+<aside>
+
 ID: 372938be-fc42-8050-9a67-e40857d7806e:audience-scope-001
 
-# DECLARACIÓN DE AUDIENCIA Y ALCANCE
+## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 
 **Audiencia**: **E**scrito para el **operador humano**.
 
@@ -17,12 +19,12 @@ ID: 372938be-fc42-8050-9a67-e40857d7806e:audience-scope-001
 
 **Regla de separación:** El Manual responde *cómo*. El Kernel responde *por qué*. Nunca se mezclan.
 
----
+</aside>
 
 ## CONTENIDO
 
 | **SECCIÓN** | **CONTENIDO** | **PORCIÓN** |
-|---|---|---|
+| --- | --- | --- |
 | 1 | OBJETIVO DE VANTAGE | CONTEXTO |
 | 2 | COMO FUNCIONA | CONTEXTO |
 | 3 | SETUP | OPERACIÓN |
@@ -37,9 +39,9 @@ ID: 372938be-fc42-8050-9a67-e40857d7806e:audience-scope-001
 | 12 | REGLAS DE ORO | REFERENCIA |
 | 13 | FILOSOFÍA DE FALLO | REFERENCIA |
 
----
-
 ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-objetivo-001
+
+![GPT.png](V%20MANUAL/GPT.png)
 
 ## 1. OBJETIVO DE VANTAGE
 
@@ -88,12 +90,9 @@ Evidencia de posicionamiento (Positioning Modes N1–N4) verificada:
 Perfil: Profesional senior (10+ años) en Visual Merchandising, Brand Environment, Store Design, Retail Experience. Geografía: CDMX / LATAM. Sectores target: Lujo (LVMH, Kering, Richemont), retail premium (Nike, Apple, Inditex), cool DNA (Gentle Monster, Ben & Frank), agencias de experiencia.
 
 > Las empresas excluidas permanentemente (Hard Blocks) están documentadas en §6 — Gestión de Datos.
+> 
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-funcionamiento-001
-
----
-
-## 2. CÓMO FUNCIONA
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-funcionamiento-001] 2. CÓMO FUNCIONA
 
 ### Flujo General del Pipeline
 
@@ -116,11 +115,7 @@ El sistema aplica dos capas de exclusión para garantizar la calidad de la seña
 - **Hard Blocks (Permanentes):** Empresas o roles que nunca entrarán al sistema (ej. L'Oréal, Levi's). Se filtran en el origen y no son recuperables. Ver §6.
 - **Soft Blocks (Contextuales):** Vacantes bloqueadas por inconsistencias en datos Class A (URL rota, JD parcial) o score insuficiente. Son **recuperables** mediante el Dashboard (RT-1) corrigiendo el input.
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-setup-001
-
----
-
-## 3. SETUP
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-setup-001] 3. SETUP
 
 ### Prerrequisitos
 
@@ -129,7 +124,7 @@ ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-setup-001
 - Acceso a Claude
 - Cuenta de Perplexity con modo Deep Research activo
 - Acceso a Gemini con modo Deep Research o Search activo
-- Acceso a [You.com](http://You.com) con modo Research o Agent activo
+- Acceso a [You.com](http://you.com/) con modo Research o Agent activo
 - Acceso a Grok con modo DeepSearch o Think activo
 
 ### Paso 1 — Verificar Notion
@@ -203,11 +198,33 @@ python vantage.py status
 
 **Resultado esperado:** `Status: READY` (4,200+ blocks indexed).
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-flujo-001
+---
 
 ---
 
-## 4. FLUJO PUNTA A PUNTA
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-flujo-001] 4. FLUJO PUNTA A PUNTA
+
+### [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-vchecklist-001] CHECKLIST INTERACTIVO
+
+El **V-Checklist** (`V-CHECKLIST · Vantage Weekly`) es la interfaz operativa del ciclo semanal descrito en §4. Es un archivo HTML autocontenido con progreso persistente (localStorage), modo claro/oscuro y navegación por día.
+
+**Resumen de tareas por día:**
+
+| Día | Tareas | Foco |
+| --- | --- | --- |
+| Lunes | 20 | Búsqueda L1+L2, Perplexity Dedup, Feed Pipeline, Score/Gate, L3 backlog, git sync |
+| Martes | 3 | Resolver REVIEW_NEEDED, Dashboard BLOCKED, re-run pipeline |
+| Miércoles | 8 | CV-A → CV-B → QA → Figma → Postulado |
+| Jueves | 1 | Segunda pasada pipeline (condicional) |
+| Viernes | 2 | Pipeline + revisión de efectividad por fuente |
+| Total | 34 | tareas/semana |
+
+**Ubicación:** archivo local `Checklist.html` (abre en navegador).
+
+[Checklist.html](V%20MANUAL/Checklist.html)
+
+**Reset:** botón "↺ Reset semana" en el header para iniciar un nuevo ciclo. 
+El progreso NO persiste entre sesiones distintas del navegador si se limpia el localStorage.
 
 ### LUNES
 
@@ -218,7 +235,41 @@ El ciclo comienza con los prompts de búsqueda, los cuales no se copian de versi
 - [ ]  Abre Perplexity Desktop y dale la instrucción
 
 ```
-"Entrégame el prompt de [...]"
+Lee PROMPT LIBRARY vía MCP. https://dub.sh/app.notion
+
+Recupera:
+
+- BASE SPEC L1
+- Wrapper Career Sites
+- Wrapper LinkedIn
+- Wrapper Aggregators
+
+Concatena cada wrapper con BASE SPEC.
+
+Sustituye TODAY'S DATE por la fecha actual.
+
+Entrega los tres prompts completos listos para ejecutar.
+
+No expliques el proceso.
+No describas la arquitectura.
+Entrega únicamente los prompts finales.
+
+Recupera:
+
+- BASE SPEC L2
+- Wrapper Gemini
+- Wrapper Grok
+- Wrapper you.com
+
+Concatena cada wrapper con BASE SPEC.
+
+Sustituye TODAY'S DATE por la fecha actual.
+
+Entrega los tres prompts completos listos para ejecutar.
+
+No expliques el proceso.
+No describas la arquitectura.
+Entrega únicamente los prompts finales.
 ```
 
 Puedes pedir uno o varios en el mismo mensaje; Perplexity lee *Prompt Bases* y *Prompt Wrappers* desde PROMPT LIBRARY vía MCP a Notion, los concatena en un bloque de instrucciones y fecha automáticamente, y devuelve un bloque por wrapper listo para ejecutar.
@@ -228,6 +279,7 @@ Puedes pedir uno o varios en el mismo mensaje; Perplexity lee *Prompt Bases* y *
 ---
 
 > **Nota sobre Score 0:** Si el URL_GATE detecta un link roto o inaccesible, la vacante recibe automáticamente Score 0 y Status "Archivar". Ver §6 para lógica de descarte.
+> 
 
 ### ∆ L1 — ACTIVE RECON
 
@@ -250,7 +302,7 @@ Los Prompts de L1 siempre necesitarán ser concatenados usando el Prompt de algu
 
 Regresa a Perplexity Desktop y solicita en esta ocasión los prompts de L2: Prompt A, Prompt B o Prompt C.
 
-En el caso del Prompt A siempre necesitará ser concatenado con alguno de los siguientes Wrappers: Gemini, Grok o [you.com](http://you.com). Los Prompts B y C pueden de manera independiente. Algunas de las opciones con las que solicitarlos a Perplexity:
+En el caso del Prompt A siempre necesitará ser concatenado con alguno de los siguientes Wrappers: Gemini, Grok o [you.com](http://you.com/). Los Prompts B y C pueden de manera independiente. Algunas de las opciones con las que solicitarlos a Perplexity:
 
 ```
 "Entrégame el prompt de Gemini"
@@ -267,7 +319,7 @@ En el caso del Prompt A siempre necesitará ser concatenado con alguno de los si
 
 ---
 
-### ∆ PERPLEXITY: CONSOLIDATION & DEDUP (L0)
+### ∆ PERPLEXITY: CONSOLIDATION & DEDUP
 
 En preparación para entrar al Pipeline es necesario consolidar la información recopilada.
 
@@ -281,8 +333,9 @@ En preparación para entrar al Pipeline es necesario consolidar la información 
 ```
 
 > ⚠️ `vantage_merge.py` DEPRECATED. Paso correcto: JSONs L1+L2 → Perplexity (Prompt E) → Plain Array → `feed_processor.py`. Jerarquía dedup L1 > L2 — ver [377938be-fc42-805e-a408-c9ae518d4fe7:cv-pipeline-001].
+> 
 
-**L3 — PASSIVE INTAKE**
+### **L3 — PASSIVE INTAKE**
 
 L3 lee los correos no leídos de Gmail que tengan asignado el label `.Jobs.`, extrae vacantes con Groq y las escribe directamente en el Tracker. El ciclo es autónomo y corre en background vía launchd tres veces al día (08:00 · 14:00 · 21:00).
 
@@ -340,7 +393,7 @@ Los registros con status `REVIEW_NEEDED` que se escriben en Notion, los resuelve
 
 Abre la vista Ready-to-Apply en Notion. Vacantes con Score ≥ 60 están listas para *CV Optimization* en preparación para tu postulación.
 
-**∆ L4 — VERSION CONTROL & INFRASTRUCTURE**
+### **∆ L4 — VERSION CONTROL & INFRASTRUCTURE**
 
 L4 sincroniza el repositorio git del sistema automáticamente en background. No requiere intervención manual en el ciclo semanal normal.
 
@@ -349,9 +402,11 @@ L4 sincroniza el repositorio git del sistema automáticamente en background. No 
 - **Verificar último run:** `cat /tmp/vantage_l4_gitsync.log`
 - **Archivos:** `Layer_4/scripts/git_sync.py` · `Layer_4/wrappers/git_sync_wrapper.sh` · `~/Library/LaunchAgents/com.vantage.gitsync.plist`
 
+---
+
 ### MARTES
 
-#### Qué Hacer Cuando Gate = BLOCKED
+### Qué Hacer Cuando Gate = BLOCKED
 
 Si el bloqueo es por un campo Class A corregible, usa RT‑1 (`rt1_dashboard.html`): Proponer Patch → Validar → Aceptar. No uses RT‑1 para forzar un CREATE en vacantes que no cumplen score — úsalo solo para corregir datos erróneos.
 
@@ -359,9 +414,7 @@ Si el bloqueo es por un campo Class A corregible, usa RT‑1 (`rt1_dashboard.htm
 
 Resuelve los registros pendientes del ciclo del lunes: `REVIEW_NEEDED` · `BLOCKED` recuperables · NADs overdue.
 
----
-
-#### Abrir el Dashboard
+### Abrir el Dashboard
 
 Ejecuta en terminal:
 
@@ -373,7 +426,7 @@ El wrapper `dashboard_start.sh` arranca el servidor Flask en `http://127.0.0.1:8
 
 ---
 
-#### Partes del Dashboard
+### Partes del Dashboard
 
 **Sidebar (columna izquierda):** estado de la instancia activa — `instance_id`, payload actual de la vacante (campos Class A como aparecen en Notion), capabilities disponibles en el estado actual (`can_patch` · `can_validate` · `can_accept` · `can_archive`) y Audit Log en tiempo real con cada evento registrado.
 
@@ -419,6 +472,7 @@ Las entradas con este status son escritas en Notion por `feed_processor.py` cuan
 Python detecta `Status = Target` en entradas que tenían `Gate` vacío o `REVIEW_NEEDED` y procesa sus campos Class B normalmente — calcula Score, Gate_Decision y el resto.
 
 > **Por qué `Target` y no otro valor:** `Target` es el estado operativo estándar de una vacante en espera de procesamiento. Usarlo como señal de resolución mantiene el contrato de estados consistente — no requiere un valor nuevo ni lógica adicional en Python.
+> 
 
 Estas entradas no pasan por RT‑1. RT‑1 es para vacantes con `Gate = BLOCKED` que ya tienen campos Class B calculados y necesitan corrección de inputs Class A.
 
@@ -534,6 +588,7 @@ Ejecuta solo si hay nuevas vacantes que procesar — 10 minutos máximo:
 ```
 
 > Script: `~/vantage_pipeline.sh`
+> 
 
 ### VIERNES — Analytics
 
@@ -545,11 +600,7 @@ Output: efectividad por fuente, tasa de links muertos por tipo de URL, ratio car
 
 **Acción concreta:** si career pages producen menos de 5 resultados relevantes en la semana, ajusta el Prompt A — no el threshold de Score.
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-vantage-runtime-001
-
----
-
-## 5. VANTAGE RUNTIME (Consulta Operativa)
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-vantage-runtime-001] 5. VANTAGE RUNTIME (Consulta Operativa)
 
 ### 5.1 ¿Qué es el Runtime?
 
@@ -615,11 +666,7 @@ Usar cuando el sistema no ha sido operado por más de 5 días.
 | context <entity_id> | Propiedades + bloques de la página Notion | PREFIX:H_xxxx | {entity, status, metadata, content} |
 | query "<valor>" | Busca por entity_id, hash, o texto libre (fallback) | string | {query, match_type, count, results} |
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-tracker-001
-
----
-
-## 6. TRACKER
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-tracker-001] 6. TRACKER
 
 ### Gate Decisions
 
@@ -629,6 +676,46 @@ ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-tracker-001
 | **BLOCKED** | No cumple criterios mínimos — filtrada | RT-1 (si es corregible) |
 | **REVIEW_NEEDED** | Alias no resuelve o URL parcial. | Operador |
 
+### Comandos de Mantenimiento del Tracker
+
+Estos comandos operan sobre el estado del Tracker y están disponibles como subcomandos de `vl1`. Cada uno tiene un alcance preciso y un modo de operación por defecto.
+
+**`vl1 status`**
+
+Genera un reporte de estado del Tracker en tiempo real: distribución por Gate_Decision, conteo de entradas activas (CREATE + APPLIED), entradas BLOCKED, aplicaciones de los últimos 7 días y NADs vencidas. Es el punto de partida del ciclo semanal — corre antes de cualquier otra operación para tener visibilidad del estado actual.
+
+**`vl1 analytics`**
+
+Analiza la efectividad de las fuentes de discovery: qué canales producen más entradas CREATE, qué ratio de URLs funcionales tienen, cuál es el score promedio por fuente, y qué método de búsqueda (SEARCH-WEEK, SEARCH-EXEC, Manual) tiene mayor tasa de éxito. Corre los viernes como parte del cierre semanal.
+
+**`vl1 batch`**
+
+Modo de operación por defecto: **read-only**. Muestra la distribución por Status y el conteo de entradas que serían afectadas por la operación batch configurada en el script. Para ejecutar escritura, pasar el flag `--execute` explícitamente:
+
+```bash
+vl1 batch --execute
+```
+
+Sin `--execute`, el comando nunca escribe en Notion. Esta protección es permanente — no se puede desactivar sin modificar el flag.
+
+**`vl1 recovery`**
+
+Verifica la consistencia de los datos en el Tracker: detecta entradas sin Score, sin VM_Scope o sin Gate_Decision. También gestiona checkpoints del pipeline — si un run anterior falló a mitad, recovery carga el último checkpoint y permite retomar desde el paso fallido. Corre cuando el pipeline reporta inconsistencias o tras un fallo inesperado.
+
+**`vl1 profile`**
+
+Gestiona la configuración del perfil activo del sistema: keywords VM y de pivote, pesos de scoring, empresas target por tier y foco geográfico. Permite actualizar el perfil sin editar código — los cambios se persisten en `config/profile_config.yaml`. Opción 7 ("Salir sin cambios") es el exit seguro; cualquier cambio guardado requiere propagación manual a `layer_1_run.py`.
+
+**`vl1 backfill`**
+
+Backfill de campos Class A faltantes en entradas existentes: `layer`, `hash` y `Prioridad`. Opera con preview obligatorio antes de escribir — muestra exactamente qué entradas serán modificadas y por qué razón se infirió el layer. Acepta `--dry-run` para preview sin confirmación:
+
+```bash
+vl1 backfill --dry-run
+```
+
+Sin `--dry-run`, solicita confirmación explícita (`s`) antes de cualquier escritura.
+
 ### Empresas Excluidas Permanentemente (Hard Blocks)
 
 - L'Oréal (todas las divisiones)
@@ -636,13 +723,7 @@ ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-tracker-001
 - El Palacio de Hierro
 - Roles store-level sin gestión estratégica.
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-troubleshooting-001
-
----
-
----
-
-## 7. TROUBLESHOOTING
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-troubleshooting-001] 7. TROUBLESHOOTING
 
 | Síntoma | Diagnóstico | Acción |
 | --- | --- | --- |
@@ -653,31 +734,28 @@ ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-troubleshooting-001
 | `resolve` devuelve `not_found` para entidad que sí existe | Bug paginación RID-02 — Archivo Tracker >100 páginas | Issue conocido. Workaround: usar `context` directamente |
 | Vacante nueva no aparece en `find_candidates` | Entity index stale | `python3 vantage.py sync` |
 | Entrada `REVIEW_NEEDED` permanece sin procesar | Status no cambiado a `Target` | Corregir campo en Notion → `Status: Target` → correr pipeline |
-| `vantage_pipeline.sh` no procesa una entrada | Entrada no cumple criterios mínimos | Revisar campo `Notas`; usar RT-1 si `Gate = BLOCKED` |
+| `vl1 batch` cambia Status masivamente sin querer | Entrada no cumple criterios mínimos | Revisar campo `Notas`; usar RT-1 si `Gate = BLOCKED` |
 | Ready-to-Apply vacío por >3 días | Sin oportunidades válidas esta semana | Ajustar Prompt A — no el threshold de Score |
-| Score siempre 0 | URL_GATE filtró links muertos o bloqueados | Correcto. No reparar manualmente |
+| `vl1 batch` cambia Status masivamente | Script corrió sin flag `--execute` | Agregar `--execute` para escribir: `vl1 batch --execute`. Sin el flag es read-only.
+Score siempre 0 | URL_GATE filtró links muertos o bloqueados | Correcto. No reparar manualmente |
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-prompts-wrappers-001
-
----
-
-## 8. PROMPTS & WRAPPERS
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-prompts-wrappers-001] 8. PROMPTS & WRAPPERS
 
 Se consultan vía MCP desde la **PROMPT LIBRARY** en Notion.
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-cheatsheets-001
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-cheatsheets-001] 9. CHEAT SHEETS
 
----
+### Cómo la IA lee el KERNEL y el CAREER CANON (Lazy Load)
 
-## 9. CHEAT SHEETS
+La extracción de reglas y contratos lógicos (Lazy Load) opera con la siguiente prioridad:
 
-Consulte las tablas de comandos para Claude, Terminal y Scripts en la sección completa.
+**Prioridad A — Terminal (canónico):** `lazy_loader.py` ejecuta Server-Side Lazy Load. Parsea bloques hijos de la Notion API y devuelve únicamente el payload del ID solicitado. Consumo: ~150 tokens por llamada.
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-healthcheck-001
+**Prioridad B — MCP Notion:** Reservado exclusivamente para escrituras (`APROBAR_WRITE`) y modificaciones estructurales de páginas. No se usa para lectura de reglas o contratos.
 
----
+Consulte las tablas de comandos para Terminal y Scripts en la sección completa.
 
-## 10. HEALTH CHECK
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-healthcheck-001] 10. HEALTH CHECK
 
 | **Indicador** | **Valor saludable** |
 | --- | --- |
@@ -712,19 +790,13 @@ La resolución de entidades depende de `resolver_registry_v2.json`. Este archivo
 
 `cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/dedup_opportunities.py` (alias: `vopport`)
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-changelog-001
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-changelog-001] 11. CHANGELOG
 
----
-
-## 11. CHANGELOG
+v8.5.2 · 2026-06-21: Rewrite `notion_utils.py` (Client + namespaces). `NOTION_VERSION` corregida a `2022-06-28`. DB IDs corregidos en 4 scripts. `pyyaml` instalado. `layer_1_pipeline.sh` fix argumento `backfill`. `batch_operations.py` protegido con flag `--execute`.
 
 v8.4 · Post-Audit + Documentation Renewal · 2026-06-17: Integración transversa de VANTAGE Runtime. Refactorización de Manual. Troubleshooting expandido. Cold Start añadido. Comandos sync corregidos.
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-reglas-de-oro-001
-
----
-
-## 12. REGLAS DE ORO PARA OPERADORES
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-reglas-de-oro-001] 12. REGLAS DE ORO PARA OPERADORES
 
 Base: [377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-000] a [377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-005].
 
@@ -737,11 +809,7 @@ Base: [377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-000] a [377938be-fc42-8
 | SYNC = tabla pura, máximo 12 líneas | No esperes resumen ejecutivo de SYNC | SYNC entrega filas Tracker, sin "te recomiendo priorizar X" |
 | Kernel prevalece sobre memoria de sesión | Si algo en el chat contradice el Kernel, gana el Kernel | Una instrucción antigua que ya no está en el Kernel no se aplica |
 
-ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-fallo-001
-
----
-
-## 13. FILOSOFÍA DE FALLO PARA OPERADORES
+## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-fallo-001] 13. FILOSOFÍA DE FALLO PARA OPERADORES
 
 Base: [377938be-fc42-805e-a408-c9ae518d4fe7:fallo-001].
 
@@ -756,3 +824,5 @@ Qué hacer en su lugar:
 - JSON vacío en FEED → búsqueda sin resultados relevantes. No amplíes criterios sin análisis.
 
 Ante cualquiera de estos, el sistema reporta el estado y espera tu instrucción dentro del flujo normal del pipeline.
+
+[Checklist](V%20MANUAL/Checklist%20385938befc42800aaaf2fd0b2e6753e8.md)

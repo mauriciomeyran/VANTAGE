@@ -7,21 +7,33 @@ Page ID: 377938be-fc42-8089-93f2-f52dbd2dec6c
 Fecha de actualización: 13 de junio de 2026
 Tipo: Página
 
+# V | CAREER CANON
+
+Versión: 8,5
+Status: Active
+URL: [https://app.notion.com/p/V-CAREER-CANON-377938befc42808993f2f52dbd2dec6c?source=copy_link](V%20CAREER%20CANON%20377938befc42808993f2f52dbd2dec6c.md)
+Page ID: 377938be-fc42-8089-93f2-f52dbd2dec6c
+Fecha de actualización: 13 de junio de 2026
+Tipo: Página
+
+<aside>
+
+<aside>
+
 ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:audience-scope-001
 
-# DECLARACIÓN DE AUDIENCIA Y ALCANCE
+## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 
 **Audiencia**: Sistemas AI de VANTAGE.
 
 **Alcance**: Fuente canónica del perfil profesional del operador.
 
-**Runtime Length:** Generado desde [CAREER CANON (DEPRECATED)](https://app.notion.com/p/CAREER-CANON-DEPRECATED-37d938befc42800388cfcff6558901d4?pvs=21)
+**Runtime Length:** Generado desde [CAREER CANON (DEPRECATED)](V%20ARCHIVEROS/ARCHIVO%20VANTAGE/CAREER%20CANON%20(DEPRECATED)%2037d938befc42800388cfcff6558901d4.md)
 Conserva: A, B, D, H, I, J, K, L
 Elimina: C, E, F, G, M, N
+**v8.5 · 2026-06-20:** IDs de sección fusionados con encabezados `## [ID: ...]` (patrón Lazy Load). Bloques huérfanos eliminados. Secciones `canon-profile-001`, `canon-skills-001`, `canon-experience-001` (C01–C05), `canon-achievements-001`, `canon-kpis-001` (KPI01–KPI08), `canon-facts-001` (CF01–CF08, UF01–UF03), `canon-positioning-001` (N1–N4), `canon-output-contract-001` y `canon-coverage-gate-001` migradas a formato fusionado. Un `read_block` vía MCP retorna encabezado + payload completo en una sola llamada.
 
----
-
-## CONTENIDO
+</aside>
 
 | **SECCIÓN** | **CONTENIDO** | **PORCIÓN** |
 | --- | --- | --- |
@@ -34,11 +46,7 @@ Elimina: C, E, F, G, M, N
 | K | POSITIONING MODES | OPERACIÓN |
 | L | OUTPUT CONTRACT | GOBERNANZA |
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-profile-001
-
----
-
-## A. PROFESSIONAL PROFILE
+## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-profile-001] A. PROFESSIONAL PROFILE
 
 ### ES
 
@@ -50,9 +58,7 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-skills-001
-
-## B. SKILLS CANON
+## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-skills-001] B. SKILLS CANON
 
 | Categoría | ES | EN |
 | --- | --- | --- |
@@ -64,13 +70,9 @@ ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-skills-001
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-001
+## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-001] D. EXPERIENCE RECORDS
 
-## D. EXPERIENCE RECORDS
-
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c01
-
-### C01 · L'Oréal Luxe México · Feb 2025 – Mar 2026
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c01] C01 · L'Oréal Luxe México · Feb 2025 – Mar 2026
 
 **Coordinador de Visual Merchandising & Brand Execution – División de Lujo** · [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-008] — Valentino / Giorgio Armani / Ralph Lauren
 
@@ -92,9 +94,7 @@ ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c01
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c02
-
-### C02 · Bisonte Experiential Marketing · 2022 – 2023
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c02] C02 · Bisonte Experiential Marketing · 2022 – 2023
 
 **Coordinador de Brand Environment y Store Design** · [P01: Adidas Brand Center Madero]
 
@@ -112,9 +112,7 @@ ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c02
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c03
-
-### C03 · Levi Strauss & Co. (Dockers) · 2018 – 2021
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c03] C03 · Levi Strauss & Co. (Dockers) · 2018 – 2021
 
 **Senior Brand Environment Coordinator – LATAM** · [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-005] — 270+ POS / 6 países
 
@@ -134,9 +132,7 @@ ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c03
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c04
-
-### C04 · Aéropostale México · 2017 – 2018
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c04] C04 · Aéropostale México · 2017 – 2018
 
 **Gerente de Visual Merchandising** · [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-006] — 21 reportes directos · [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-007] — 17 tiendas
 
@@ -154,9 +150,7 @@ ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c04
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c05
-
-### C05 · El Palacio de Hierro (ALDO Group) · 2012 – 2017 [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-002]
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c05] C05 · El Palacio de Hierro (ALDO Group) · 2012 – 2017 [377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-002]
 
 **Coordinador de Visual Merchandising & Marketing**
 
@@ -176,9 +170,7 @@ ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c05
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-achievements-001
-
-## H. ACHIEVEMENT LIBRARY
+## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-achievements-001] H. ACHIEVEMENT LIBRARY
 
 | Achievement | Compañía | KPI Ref |
 | --- | --- | --- |
@@ -197,69 +189,51 @@ ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-achievements-001
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpis-001
+## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpis-001] I. CORE KPIs
 
-## I. CORE KPIs
-
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-001
-
-### KPI01 · Traffic +43%
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-001] KPI01 · Traffic +43%
 
 | Compañía | Contexto |
 | --- | --- |
 | C04 | Aéropostale · red de 17 tiendas · 2017–2018 |
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-002
-
-### KPI02 · Conversion +18%
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-002] KPI02 · Conversion +18%
 
 | Compañía | Contexto |
 | --- | --- |
 | C04 | Aéropostale · red de 17 tiendas · 2017–2018 |
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-003
-
-### KPI03 · Campaign Cost Reduction -74%
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-003] KPI03 · Campaign Cost Reduction -74%
 
 | Compañía | Contexto |
 | --- | --- |
 | C03 | Levi's/Dockers · campañas nacionales México |
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-004 
-
-### KPI04 · Floorset Time Reduction -33%
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-004] KPI04 · Floorset Time Reduction -33%
 
 | Compañía | Contexto |
 | --- | --- |
 | C03 | Levi's/Dockers · manuales Zoning & Mapping |
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-005 
-
-### KPI05 · POP Coverage 100%
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-005] KPI05 · POP Coverage 100%
 
 | Compañía | Contexto |
 | --- | --- |
 | C03 | 270+ POS · LATAM · contingencia COVID-19 |
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-006
-
-### KPI06 · Rebranding Coverage 100%
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-006] KPI06 · Rebranding Coverage 100%
 
 | Compañía | Contexto |
 | --- | --- |
 | C03 | Levi's/Dockers · red nacional México · en tiempo y presupuesto ✅ Resolved |
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-007
-
-### KPI07 · Adidas Punch List Count (17)
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-007] KPI07 · Adidas Punch List Count (17)
 
 | Compañía | Contexto |
 | --- | --- |
 | C02 | Adidas Brand Center Madero · CF03 · CF04 |
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-008
-
-### KPI08 · Years Experience (10+ Canonical)
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-008] KPI08 · Years Experience (10+ Canonical)
 
 | Compañía | Contexto |
 | --- | --- |
@@ -267,111 +241,75 @@ ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-008
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-facts-001
+## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-facts-001] J. CANONICAL FACTS
 
-## J. CANONICAL FACTS
-
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-001
-
-### CF01
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-001] CF01
 
 ALDO Certification Year = 2014
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-002
-
-### CF02
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-002] CF02
 
 ALDO Employment Period = 2012–2017
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-003
-
-### CF03
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-003] CF03
 
 Adidas Punch List = 17 Minor Observations
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-004
-
-### CF04
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-004] CF04
 
 Adidas Punch List Severity = Non-Blocking
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-005
-
-### CF05
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-005] CF05
 
 Levi's Coverage = 270+ POS / 6 LATAM Countries
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-006
-
-### CF06
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-006] CF06
 
 Aéropostale Team = 21 Direct Reports
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-007
-
-### CF07
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-007] CF07
 
 Aéropostale Network = 17 Stores
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-008
-
-### CF08
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-fact-008] CF08
 
 L'Oréal Brands = Valentino / Giorgio Armani / Ralph Lauren
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-001
-
-### UF01
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-001] UF01
 
 L'Oréal End Date = March 2026
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-002
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-002] UF02
 
-### UF02
+Canonical Email = [mauricio.meyran@icloud.com](mailto:mauricio.meyran@icloud.com)
 
-Canonical Email = mauricio.meyran@icloud.com
-
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-003
-
-### UF03
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-uf-003] UF03
 
 Certifications Canon = ALDO Group (2014) + AutoCAD & SketchUp Essentials (2024) ONLY. No additional certs valid.
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-001
+## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-001] K. POSITIONING MODES
 
-## K. POSITIONING MODES
-
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n1
-
-### N1 · Luxury Brand Execution
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n1] N1 · Luxury Brand Execution
 
 Ancla canónica: C01 · 3 marcas lujo · CAPEX/OPEX · NPI
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n2
-
-### N2 · Store Design & Flagship Execution
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n2] N2 · Store Design & Flagship Execution
 
 Ancla canónica: C02 · Adidas Brand Center · KPI07 · blueprints
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n3
-
-### N3 · Regional Brand Execution & Rollout
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n3] N3 · Regional Brand Execution & Rollout
 
 Ancla canónica: C03 · 270+ POS · 6 países · KPI03–06 · CF05
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n4 
-
-### N4 · Commercial VM & Field Leadership
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-positioning-n4] N4 · Commercial VM & Field Leadership
 
 Ancla canónica: C04/C05 · +43% tráfico · +18% conversión · 21 reportes
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-001
-
-## L. OUTPUT CONTRACT
+## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-001] L. OUTPUT CONTRACT
 
 ### FIGMA SYNC PROTOCOL (STRICT)
 
@@ -382,9 +320,7 @@ ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-001
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-skeleton-001
-
-### GOLDEN SKELETON (REFERENCE)
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-skeleton-001] GOLDEN SKELETON (REFERENCE)
 
 Use this exact sequence of IDs for any Figma-destined output:
 
@@ -401,8 +337,8 @@ Use this exact sequence of IDs for any Figma-destined output:
 ###### [figma_text_id](2043:47)
 
 **Regional Visual Merchandising Leader · Luxury Retail &amp; LATAM Execution**
-Miguel Hidalgo, CDMX  |  +52 1 56 4383 8125  |  [mauricio.meyran@icloud.com](mailto:mauricio.meyran@icloud.com)
-[LinkedIn](https://www.linkedin.com/in/mauriciomeyran)  |  [Portafolio](https://mmeyranesp.myportfolio.com/)
+Miguel Hidalgo, CDMX  |  +52 1 56 4383 8125  |  [mauricio.meyran@icloud.com](<mailto:mauricio.meyran@icloud.com>)
+[LinkedIn](<https://www.linkedin.com/in/mauriciomeyran>)  |  [Portafolio](<https://mmeyranesp.myportfolio.com/>)
 
 ###### [figma_text_id](2043:49)
 
@@ -591,7 +527,6 @@ _LinkedIn Learning_
 
 Store Operations Leaders Orientation \(VM, Sales &amp; Ops\) _2014_
 _ALDO Group, Montréal, Canadá_
-
 ```
 
 ---
@@ -601,57 +536,58 @@ _ALDO Group, Montréal, Canadá_
 > Formato base obligatorio para todos los Derived Outputs generados desde el Career Canon. Aplica ES + EN.
 > 
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-tagregistry-001
-
-### Tag Registry
+### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-tagregistry-001] Tag Registry
 
 | Tag | Slot | Tipo | Regla de Inyección |
 | --- | --- | --- | --- |
-| `2040:46` | Nombre | **LOCKED** | Identidad canónica (Invariable) |
-| `2040:47` | Tagline + contacto | **Variable** | Ajustable por modo (Ej. Luxury Specialist) |
-| `2031:22` | Header Perfil | **LOCKED** | Texto: "PERFIL PROFESIONAL" |
-| `2031:24` | Perfil párrafo 1 | **Variable** | Gancho narrativo según vacante |
-| `2031:25` | Perfil párrafo 2 | **Variable** | Hard skills + Soft skills integradas |
-| `2031:27` | Header Habilidades | **LOCKED** | Texto: "HABILIDADES CLAVE" |
-| `2031:29` | Skill 1 — Estrategia | **Variable** | Optimización por Modo de Posicionamiento |
-| `2031:30` | Skill 2 — Operativa | **Variable** | Optimización por Modo de Posicionamiento |
-| `2031:31` | Skill 3 — Liderazgo | **Variable** | Optimización por Modo de Posicionamiento |
-| `2031:32` | Skill 4 — Stack Técnico | **LOCKED** | Figma, Adobe CC, Office, Notion |
-| `2031:33` | Skill 5 — Idiomas | **LOCKED** | Español (N), Inglés (C1), Italiano (A2) |
-| `2031:35` | Header Experiencia | **LOCKED** | Texto: "EXPERIENCIA PROFESIONAL" |
-| `2031:37` | **C01** Empresa | **LOCKED** | Nombre de la compañía |
-| `2031:38` | **C01** Rol + período | **Variable** | Ajuste de título según JD |
-| `2031:39` | **C01** Bullet 1 | **Variable** | KPI / Logro Principal |
-| `2031:40` | **C01** Bullet 2 | **Variable** | KPI / Logro Secundario |
-| `2031:41` | **C01** Bullet 3 | **Variable** | Responsabilidad Clave |
-| `2031:42` | **C01** Bullet 4 | **Variable** | Null-Fill si el Canon tiene <4 |
-| `2032:167` | **C02** Empresa | **LOCKED** | Nombre de la compañía |
-| `2032:168` | **C02** Rol + período | **Variable** | Ajuste de título según JD |
-| `2032:170` | **C02** Bullet 1 | **Variable** | KPI / Logro Principal |
-| `2032:171` | **C02** Bullet 2 | **Variable** | KPI / Logro Secundario |
-| `2032:172` | **C02** Bullet 3 | **Variable** | Responsabilidad Clave |
-| `2032:174` | **C03** Empresa | **LOCKED** | Nombre de la compañía |
-| `2032:175` | **C03** Rol + período | **Variable** | Ajuste de título según JD |
-| `2032:177` | **C03** Bullet 1 | **Variable** | KPI / Logro Principal |
-| `2032:178` | **C03** Bullet 2 | **Variable** | KPI / Logro Secundario |
-| `2032:179` | **C03** Bullet 3 | **Variable** | Responsabilidad Clave |
-| `2032:181` | **C04** Empresa | **LOCKED** | Nombre de la compañía |
-| `2032:182` | **C04** Rol + período | **Variable** | Ajuste de título según JD |
-| `2032:184` | **C04** Bullet 1 | **Variable** | KPI / Logro Principal |
-| `2032:185` | **C04** Bullet 2 | **Variable** | KPI / Logro Secundario |
-| `2032:186` | **C04** Bullet 3 | **Variable** | Responsabilidad Clave |
-| `2032:191` | **C05** Empresa | **LOCKED** | Nombre de la compañía |
-| `2032:192` | **C05** Rol + período | **Variable** | Ajuste de título según JD |
-| `2032:194` | **C05** Bullet 1 | **Variable** | KPI / Logro Principal |
-| `2032:195` | **C05** Bullet 2 | **Variable** | KPI / Logro Secundario |
-| `2032:196` | **C05** Bullet 3 | **Variable** | Responsabilidad Clave |
-| `2032:197` | **C05** Bullet 4 | **Variable** | Null-Fill si el Canon tiene <4 |
-| `2032:199` | Header Formación | **LOCKED** | Texto: "FORMACIÓN ACADÉMICA" |
-| `2032:201` | ED01 | **LOCKED** | Licenciatura Artes Visuales (UNAM) |
-| `2032:202` | ED02 | **LOCKED** | Diplomado Museografía |
-| `2032:204` | Header Certs | **LOCKED** | Texto: "CERTIFICACIONES & OTROS" |
-| `2032:207` | CERT01 | **LOCKED** | Certificación IA / UX / Otros |
-| `2032:206` | CERT02 | **LOCKED** | Certificación IA / UX / Otros |
+| `2043:46` | Nombre | **LOCKED** | Identidad canónica (Invariable) |
+| `2043:47` | Tagline + contacto | **Variable** | Ajustable por modo (Ej. Luxury Specialist) |
+| `2043:49` | Header Perfil | **LOCKED** | Texto: "PERFIL PROFESIONAL" |
+| `2043:51` | Perfil párrafo 1 | **Variable** | Gancho narrativo según vacante |
+| `2043:52` | Perfil párrafo 2 | **Variable** | Hard skills + Soft skills integradas |
+| `2046:2` | Perfil párrafo 3 | **Variable** | Cierre cuantificado de perfil |
+| `2043:54` | Header Habilidades | **LOCKED** | Texto: "HABILIDADES CLAVE" |
+| `2043:56` | Skill 1 — Estrategia Visual | **Variable** | Optimización por Modo de Posicionamiento |
+| `2043:57` | Skill 2 — Operaciones | **Variable** | Optimización por Modo de Posicionamiento |
+| `2043:58` | Skill 3 — Gestión Regional | **Variable** | Optimización por Modo de Posicionamiento |
+| `2043:59` | Skill 4 — Stack Técnico | **LOCKED** | Adobe CC, AutoCAD, SketchUp, IWD, IA Gen |
+| `2043:60` | Skill 5 — Idiomas | **LOCKED** | Español (N), Inglés Avanzado Corporativo |
+| `2043:62` | Header Experiencia | **LOCKED** | Texto: "EXPERIENCIA PROFESIONAL" |
+| `2043:64` | **C01** Empresa | **LOCKED** | Nombre de la compañía |
+| `2043:65` | **C01** Rol + período | **Variable** | Ajuste de título según JD |
+| `2043:67` | **C01** Bullet 1 | **Variable** | KPI / Logro Principal |
+| `2043:68` | **C01** Bullet 2 | **Variable** | KPI / Logro Secundario |
+| `2043:69` | **C01** Bullet 3 | **Variable** | Responsabilidad Clave |
+| `2043:70` | **C01** Bullet 4 | **Variable** | Null-Fill si Canon tiene <4 |
+| `2043:73` | **C02** Empresa | **LOCKED** | Nombre de la compañía |
+| `2043:74` | **C02** Rol + período | **Variable** | Ajuste de título según JD |
+| `2043:76` | **C02** Bullet 1 | **Variable** | KPI / Logro Principal |
+| `2043:77` | **C02** Bullet 2 | **Variable** | KPI / Logro Secundario |
+| `2043:78` | **C02** Bullet 3 | **Variable** | Responsabilidad Clave |
+| `2043:24` | **C03** Empresa | **LOCKED** | Nombre de la compañía |
+| `2043:25` | **C03** Rol + período | **Variable** | Ajuste de título según JD |
+| `2043:27` | **C03** Bullet 1 | **Variable** | KPI / Logro Principal |
+| `2048:4` | **C03** Bullet 2 | **Variable** | KPI / Logro Secundario |
+| `2043:28` | **C03** Bullet 3 | **Variable** | Responsabilidad Clave |
+| `2043:29` | **C03** Bullet 4 | **Variable** | Responsabilidad Clave |
+| `2048:6` | **C03** Bullet 5 | **Variable** | Null-Fill si Canon tiene <5 |
+| `2043:98` | **C04** Empresa | **LOCKED** | Nombre de la compañía |
+| `2043:99` | **C04** Rol + período | **Variable** | Ajuste de título según JD |
+| `2043:101` | **C04** Bullet 1 | **Variable** | KPI / Logro Principal |
+| `2043:102` | **C04** Bullet 2 | **Variable** | KPI / Logro Secundario |
+| `2049:10` | **C04** Bullet 3 | **Variable** | Responsabilidad Clave |
+| `2043:107` | **C05** Empresa | **LOCKED** | Nombre de la compañía |
+| `2043:108` | **C05** Rol + período | **Variable** | Ajuste de título según JD |
+| `2043:110` | **C05** Bullet 1 | **Variable** | KPI / Logro Principal |
+| `2043:111` | **C05** Bullet 2 | **Variable** | KPI / Logro Secundario |
+| `2043:112` | **C05** Bullet 3 | **Variable** | Responsabilidad Clave |
+| `2049:12` | **C05** Bullet 4 | **Variable** | Null-Fill si Canon tiene <4 |
+| `2043:115` | Header Formación | **LOCKED** | Texto: "FORMACIÓN ACADÉMICA" |
+| `2043:117` | ED01 | **LOCKED** | Licenciatura Artes Visuales (UNAM) |
+| `2043:118` | ED02 | **LOCKED** | Diplomado Museografía |
+| `2043:120` | Header Certs | **LOCKED** | Texto: "CURSOS Y CERTIFICACIONES" |
+| `2043:122` | CERT01 | **LOCKED** | AutoCAD & SketchUp Essentials (2024) |
+| `2043:123` | CERT02 | **LOCKED** | Store Ops Leaders Orientation (2014) |
 
 ---
 
@@ -682,8 +618,8 @@ El output de Notion **no reemplaza** al .md con tags. Ambos son obligatorios.
 
 | Idioma | URL |
 | --- | --- |
-| ES | mmeyranesp.myportfolio.com |
-| EN | mmeyraneng.myportfolio.com |
+| ES | [mmeyranesp.myportfolio.com](http://mmeyranesp.myportfolio.com/) |
+| EN | [mmeyraneng.myportfolio.com](http://mmeyraneng.myportfolio.com/) |
 
 ---
 
@@ -700,9 +636,7 @@ Los slots **Variable por modo** se derivan del Positioning Mode activo (sección
 
 ---
 
-ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-coverage-gate-001
-
-## GATE DE COBERTURA FUNCIONAL — EJECUTADO
+## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-coverage-gate-001] GATE DE COBERTURA FUNCIONAL — EJECUTADO
 
 ### CV-A coverage:
 
@@ -719,11 +653,11 @@ ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-coverage-gate-001
 | Verificación | Resultado | Sección |
 | --- | --- | --- |
 | ¿El GOLDEN SKELETON con todos sus figma_text_id está presente? | **SÍ** | Sección L — OUTPUT CONTRACT · GOLDEN SKELETON (bloque de código completo, C01–C05 + formación + certs) |
-| ¿El Tag Registry completo (2040:46 a 2032:206) está presente? | **SÍ** | Sección L — OUTPUT CONTRACT · Tag Registry (45 entradas, de 2040:46 a 2032:206) |
+| ¿El Tag Registry completo (2043:46 a 2043:123) está presente? | **SÍ** | Sección L — OUTPUT CONTRACT · Tag Registry (48 entradas, validando familia 2043 (con inyecciones 2046, 2048 y 2049) |
 | ¿Los Experience Records C01-C05 en ES y EN están presentes? | **SÍ** | Sección D — EXPERIENCE RECORDS (C01–C05 con versiones ES y EN íntegras) |
 | ¿La regla COUNT(figma_text_id)_SKELETON == COUNT(figma_text_id)_OUTPUT está presente? | **SÍ** | Sección L — OUTPUT CONTRACT · FIGMA SYNC PROTOCOL (Reglas 2: SLOT INTEGRITY y 3: NULL-FILL RULE establecen la invariante de conteo) |
 | ¿Las Reglas de Serialización están presentes? | **SÍ** | Sección L — OUTPUT CONTRACT · Reglas de Serialización (7 reglas completas) |
-| ¿Los Portfolio URLs (ES/EN) están presentes? | **SÍ** | Sección L — OUTPUT CONTRACT · Portfolio por Idioma (mmeyranesp.myportfolio.com / mmeyraneng.myportfolio.com) |
+| ¿Los Portfolio URLs (ES/EN) están presentes? | **SÍ** | Sección L — OUTPUT CONTRACT · Portfolio por Idioma ([mmeyranesp.myportfolio.com](http://mmeyranesp.myportfolio.com/) / [mmeyraneng.myportfolio.com](http://mmeyraneng.myportfolio.com/)) |
 
 ### CANON-UPDATE coverage:
 
