@@ -1,11 +1,14 @@
 # graph_layer.py
 import json
+import os
 from collections import defaultdict
 
+_DIR = os.path.dirname(os.path.abspath(__file__))
+
 def _load_graph_data():
-    with open('graph_v2.json', 'r', encoding='utf-8') as f:
+    with open(os.path.join(_DIR, 'graph_v2.json'), 'r', encoding='utf-8') as f:
         graph_data = json.load(f)
-    with open('backlinks_v2.json', 'r', encoding='utf-8') as f:
+    with open(os.path.join(_DIR, 'backlinks_v2.json'), 'r', encoding='utf-8') as f:
         backlinks_data = json.load(f)
     return graph_data, backlinks_data
 

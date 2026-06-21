@@ -22,13 +22,14 @@ from pathlib import Path
 from typing import Any
 
 from dotenv import load_dotenv
-from notion_utils import Client
 
 # ── paths ──────────────────────────────────────────────────────────────────────
 _SCRIPTS_DIR = Path(__file__).resolve().parent
 _LAYER_1_ROOT = _SCRIPTS_DIR.parent
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
+
+from notion_utils import Client
 
 load_dotenv(_LAYER_1_ROOT / ".env", override=True)
 
@@ -38,8 +39,8 @@ NOTION_TOKEN = os.environ["NOTION_TOKEN"]
 # Data Source IDs (COL) — los mismos que backfill_hash.py v1.3 usó para
 # actualizar 292 registros exitosamente. NO son database IDs.
 DB_IDS = {
-    "vantage": "442938be-fc42-828f-b72e-076818d65a5b",  # VANTAGE TRACKER (data source / COL)
-    "archivo": "674696fd-94b6-464a-ac1f-64b0cc917e15",  # ARCHIVO TRACKER (data source / COL)
+    "vantage": "596938be-fc42-836b-aea7-814a1491bd47",  # VANTAGE TRACKER (DB)
+    "archivo": "4ec34e1b-5286-48c9-afbd-d57c6eb76053",  # ARCHIVO TRACKER (DB)
 }
 
 # Mapeo de label/entity_type para el índice de salida
