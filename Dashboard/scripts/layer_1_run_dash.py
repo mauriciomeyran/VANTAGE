@@ -25,8 +25,6 @@ import requests
 import httpx
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
-import pathlib
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / ".venv" / "lib" / "python3.14" / "site-packages"))
 from notion_client import Client
 from difflib import SequenceMatcher
 
