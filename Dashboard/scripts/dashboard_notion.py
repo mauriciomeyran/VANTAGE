@@ -95,7 +95,7 @@ def write_patch_to_notion(page_id: str, patch: dict):
 
         elif field_type == 'rich_text':
             properties[notion_field] = {
-                'rich_text': [{'text': {'content': str(value)}}]
+                'rich_text': [{'text': {'content': str(value)[:2000]}}]
             }
 
         elif field_type == 'url':
@@ -118,4 +118,7 @@ def write_patch_to_notion(page_id: str, patch: dict):
         return {'success': True, 'error': None}
 
     except Exception as e:
+        import traceback
+        print(f'[NOTION_WRITE_ERROR] {str(e)}')
+        print(traceback.format_exc())
         return {'success': False, 'error': str(e)}

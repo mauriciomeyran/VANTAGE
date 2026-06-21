@@ -183,7 +183,7 @@ MARCAS BLOQUEADAS (ignorar todas sus vacantes, sin excepción):
 - L'Oréal (todas sus divisiones: Lancôme, Giorgio Armani Beauty, YSL Beauty, Kiehl's, etc.)
 - Levi's, Dockers
 
-Para cada vacante relevante devuelve un objeto JSON con estos campos exactos:
+Para cada vacante relevante devuelve un objeto json con estos campos exactos:
 - rol: título ESPECÍFICO del puesto TAL COMO APARECE en el texto del correo
 - marca: empresa que publica TAL COMO APARECE en el texto (obligatorio)
 - url: URL COMPLETA que aparezca LITERALMENTE en el correo, copiada carácter por carácter (obligatorio)
@@ -212,7 +212,7 @@ REGLAS CRÍTICAS — léelas antes de responder:
 6. Máximo 20 vacantes por correo.
 7. Ante la duda sobre si un rol es relevante → NO incluirlo. Es mejor perder una vacante marginal que contaminar el tracker.
 
-Responde ÚNICAMENTE con un objeto JSON válido (sin markdown):
+Responde ÚNICAMENTE con un objeto json válido (sin markdown):
 {"vacantes":[{"rol":"VM Coordinator - Zara Polanco","marca":"Zara","url":"https://www.linkedin.com/jobs/view/4414059078","holding":"Inditex"}]}
 
 Si no hay vacantes con URL real: {"vacantes":[]}
@@ -248,7 +248,7 @@ def extract_jobs_with_groq(email_body, retries=None):
         "model": GROQ_MODEL,
         "messages": [
             {"role": "system", "content": GROQ_PROMPT},
-            {"role": "user",   "content": email_body},
+            {"role": "user",   "content": email_body + "\n\nResponde en formato json."},
         ],
         "temperature": 0.0,
         "max_tokens": 2500,
@@ -271,6 +271,7 @@ def extract_jobs_with_groq(email_body, retries=None):
             print(f"  ⏳ Groq rate limit ({attempt + 1}/{retries}), esperando {wait:.0f}s...")
             time.sleep(wait)
             continue
+        if resp.status_code != 200: print(f"  🔴 Groq raw error: {resp.text}")
         resp.raise_for_status()
         break
     else:
