@@ -84,7 +84,7 @@ def verify_data_consistency():
     try:
         load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
         client = Client(auth=os.environ["NOTION_TOKEN"])
-        ds_id = "4e542b37-6e52-4418-89b7-a0eeb3138307"
+        ds_id = "596938be-fc42-836b-aea7-814a1491bd47"
         
         print("🔍 Verificando consistencia de datos...")
         
