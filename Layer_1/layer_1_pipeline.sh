@@ -73,7 +73,7 @@ case "$1" in
         fi
         cd "$LAYER_1_DIR" || exit 1
         source .venv/bin/activate
-        python3 scripts/backfill_class_a.py "$@"
+        python3 scripts/backfill_class_a.py "${@:2}"
         exit $?
         ;;
     feed)

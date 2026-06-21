@@ -54,7 +54,7 @@ def query_database(client, database_id):
 def main():
     load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
     client = Client(auth=os.environ["NOTION_TOKEN"])
-    ds_id = "442938be-fc42-828f-b72e-076818d65a5b"
+    ds_id = "596938be-fc42-836b-aea7-814a1491bd47"
 
     print("📊 VANTAGE STATUS REPORT")
     print(f"🗓️  {datetime.now().strftime('%Y-%m-%d %H:%M')}")

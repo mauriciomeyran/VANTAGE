@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent
 CACHE_PATH = BASE_DIR / "notion_cache.json"
 METRICS_PATH = BASE_DIR / "notion_metrics.json"
 
-NOTION_VERSION = os.environ.get("NOTION_VERSION", "2025-09-03")
+NOTION_VERSION = os.environ.get("NOTION_VERSION", "2022-06-28")
 
 # --- rate limiting ------------------------------------------------------------
 # Notion API: ~3 req/s. Espaciamos llamadas reales (no cacheadas) a este ritmo.
@@ -222,7 +222,7 @@ def notion_get(path: str, use_cache: bool = True) -> Dict[str, Any]:
                 _metrics["errors_by_status"].get(str(resp.status_code), 0) + 1
             )
             _save_metrics()
-            time.sleep(2 ** attempt)  # backoff exponencial: 2s, 4s, 8s...
+            time.sleep(2 ** attempt)
             continue
 
         if resp.status_code >= 400:
@@ -244,6 +244,212 @@ def notion_get(path: str, use_cache: bool = True) -> Dict[str, Any]:
     raise ResolverError("notion_error", f"max retries exceeded for {path}: {last_exc}")
 
 
+def _notion_post(path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    """POST a un path de la API de Notion con retry y metrics."""
+    import requests
+
+    url = f"https://api.notion.com{path}"
+    last_exc: Optional[Exception] = None
+
+    for attempt in range(1, MAX_RETRIES + 1):
+        _throttle()
+        start = time.time()
+        try:
+            resp = requests.post(url, headers=_headers(), json=payload, timeout=30)
+        except requests.RequestException as exc:
+            last_exc = exc
+            logger.warning("request error (attempt %d/%d) %s: %s", attempt, MAX_RETRIES, path, exc)
+            _metrics["retries"] += 1
+            _save_metrics()
+            time.sleep(2 ** attempt)
+            continue
+
+        elapsed = time.time() - start
+        _metrics["requests_total"] += 1
+
+        if resp.status_code == 401:
+            logger.error("401 unauthorized  %s  (%.2fs)", path, elapsed)
+            _metrics["errors_by_status"]["401"] = _metrics["errors_by_status"].get("401", 0) + 1
+            _save_metrics()
+            raise ResolverError("notion_error", resp.text)
+
+        if resp.status_code in RETRYABLE_STATUSES and attempt < MAX_RETRIES:
+            logger.warning(
+                "%d retryable  %s  (%.2fs)  attempt %d/%d",
+                resp.status_code, path, elapsed, attempt, MAX_RETRIES,
+            )
+            _metrics["retries"] += 1
+            _metrics["errors_by_status"][str(resp.status_code)] = (
+                _metrics["errors_by_status"].get(str(resp.status_code), 0) + 1
+            )
+            _save_metrics()
+            time.sleep(2 ** attempt)
+            continue
+
+        if resp.status_code >= 400:
+            logger.error("%d error  %s  (%.2fs)", resp.status_code, path, elapsed)
+            _metrics["errors_by_status"][str(resp.status_code)] = (
+                _metrics["errors_by_status"].get(str(resp.status_code), 0) + 1
+            )
+            _save_metrics()
+            raise ResolverError("notion_error", resp.text)
+
+        logger.debug("200 OK  %s  (%.2fs)", path, elapsed)
+        _save_metrics()
+        return resp.json()
+
+    _save_metrics()
+    raise ResolverError("notion_error", f"max retries exceeded for {path}: {last_exc}")
+
+
+def _notion_patch(path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    """PATCH a un path de la API de Notion con retry y metrics."""
+    import requests
+
+    url = f"https://api.notion.com{path}"
+    last_exc: Optional[Exception] = None
+
+    for attempt in range(1, MAX_RETRIES + 1):
+        _throttle()
+        start = time.time()
+        try:
+            resp = requests.patch(url, headers=_headers(), json=payload, timeout=30)
+        except requests.RequestException as exc:
+            last_exc = exc
+            logger.warning("request error (attempt %d/%d) %s: %s", attempt, MAX_RETRIES, path, exc)
+            _metrics["retries"] += 1
+            _save_metrics()
+            time.sleep(2 ** attempt)
+            continue
+
+        elapsed = time.time() - start
+        _metrics["requests_total"] += 1
+
+        if resp.status_code == 401:
+            logger.error("401 unauthorized  %s  (%.2fs)", path, elapsed)
+            _metrics["errors_by_status"]["401"] = _metrics["errors_by_status"].get("401", 0) + 1
+            _save_metrics()
+            raise ResolverError("notion_error", resp.text)
+
+        if resp.status_code in RETRYABLE_STATUSES and attempt < MAX_RETRIES:
+            logger.warning(
+                "%d retryable  %s  (%.2fs)  attempt %d/%d",
+                resp.status_code, path, elapsed, attempt, MAX_RETRIES,
+            )
+            _metrics["retries"] += 1
+            _metrics["errors_by_status"][str(resp.status_code)] = (
+                _metrics["errors_by_status"].get(str(resp.status_code), 0) + 1
+            )
+            _save_metrics()
+            time.sleep(2 ** attempt)
+            continue
+
+        if resp.status_code >= 400:
+            logger.error("%d error  %s  (%.2fs)", resp.status_code, path, elapsed)
+            _metrics["errors_by_status"][str(resp.status_code)] = (
+                _metrics["errors_by_status"].get(str(resp.status_code), 0) + 1
+            )
+            _save_metrics()
+            raise ResolverError("notion_error", resp.text)
+
+        logger.debug("200 OK  %s  (%.2fs)", path, elapsed)
+        _save_metrics()
+        return resp.json()
+
+    _save_metrics()
+    raise ResolverError("notion_error", f"max retries exceeded for {path}: {last_exc}")
+
+
+# --- Client namespaces -----------------------------------------------------------
+
+class _DataSources:
+    """
+    Emula client.data_sources de notion-client 3.x.
+    data_source_id es equivalente a database_id — Notion mantiene compatibilidad de IDs.
+    """
+
+    def query(
+        self,
+        data_source_id: str,
+        start_cursor: Optional[str] = None,
+        page_size: int = 100,
+        **kwargs: Any,
+    ) -> Dict[str, Any]:
+        payload: Dict[str, Any] = {"page_size": page_size}
+        if start_cursor:
+            payload["start_cursor"] = start_cursor
+        payload.update(kwargs)
+        return _notion_post(f"/v1/databases/{data_source_id}/query", payload)
+
+
+class _Pages:
+    """Emula client.pages de notion-client."""
+
+    def retrieve(self, page_id: str) -> Dict[str, Any]:
+        return notion_get(f"/v1/pages/{page_id}", use_cache=False)
+
+    def update(self, page_id: str, properties: Dict[str, Any]) -> Dict[str, Any]:
+        return _notion_patch(f"/v1/pages/{page_id}", {"properties": properties})
+
+    def create(self, parent: Dict[str, Any], properties: Dict[str, Any], **kwargs: Any) -> Dict[str, Any]:
+        payload: Dict[str, Any] = {"parent": parent, "properties": properties}
+        payload.update(kwargs)
+        return _notion_post("/v1/pages", payload)
+
+
+class _Databases:
+    """Emula client.databases de notion-client."""
+
+    def retrieve(self, database_id: str) -> Dict[str, Any]:
+        return notion_get(f"/v1/databases/{database_id}", use_cache=True)
+
+    def query(
+        self,
+        database_id: str,
+        start_cursor: Optional[str] = None,
+        page_size: int = 100,
+        **kwargs: Any,
+    ) -> Dict[str, Any]:
+        payload: Dict[str, Any] = {"page_size": page_size}
+        if start_cursor:
+            payload["start_cursor"] = start_cursor
+        payload.update(kwargs)
+        return _notion_post(f"/v1/databases/{database_id}/query", payload)
+
+
+# --- Client ----------------------------------------------------------------------
+
+class Client:
+    """
+    Drop-in replacement para notion-client 3.x.
+    Implementa los namespaces usados por los scripts de Vantage:
+      - client.data_sources.query(data_source_id=..., **kwargs)
+      - client.pages.update(page_id=..., properties=...)
+      - client.pages.retrieve(page_id=...)
+      - client.pages.create(parent=..., properties=...)
+      - client.databases.retrieve(database_id=...)
+      - client.databases.query(database_id=..., **kwargs)
+    """
+
+    def __init__(self, auth: Optional[str] = None, token: Optional[str] = None):
+        resolved = auth or token
+        if resolved:
+            os.environ["NOTION_TOKEN"] = resolved
+
+        self.data_sources = _DataSources()
+        self.pages = _Pages()
+        self.databases = _Databases()
+
+    def get_metrics(self) -> Dict[str, Any]:
+        return get_metrics()
+
+    def clear_cache(self) -> None:
+        clear_cache()
+
+    def reset_metrics(self) -> None:
+        reset_metrics()
+
+
 if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == "metrics":
@@ -255,4 +461,4 @@ if __name__ == "__main__":
         reset_metrics()
         print("metrics reiniciados")
     else:
-        print("uso: python3 notion_client.py [metrics|clear-cache|reset-metrics]")
+        print("uso: python3 notion_utils.py [metrics|clear-cache|reset-metrics]")
