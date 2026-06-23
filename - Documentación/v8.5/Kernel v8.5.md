@@ -389,7 +389,8 @@ El literal `###### figma_text_id` no autoriza inventar, omitir, fusionar ni divi
 
 - El componente AI no tiene permiso para "decidir" la estructura visual. Su única tarea es el mapping de información del Career Canon hacia un Skeleton predefinido en ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-skeleton-001
 - **Invarianza Estructural:** Cualquier optimización de CV debe ser una copia exacta del Skeleton en cuanto a número de headers y IDs, sustituyendo únicamente el contenido textual (payload).
-- **Auditoría de Estructura:** Antes de presentar el resultado final, validar: `COUNT(figma_text_id)_SKELETON == COUNT(figma_text_id)_OUTPUT`. Si los números no coinciden, abortar y re-mapear.
+- - **Auditoría de Estructura:** Antes de presentar el resultado final, validar: `COUNT(figma_text_id)_SKELETON == COUNT(figma_text_id)_OUTPUT`. Si los números no coinciden, abortar y re-mapear.
+- **Auditoría de Secuencia:** La auditoría de estructura no es suficiente si el count es correcto pero el orden está alterado. Antes de presentar el resultado final, verificar que los slots de experiencia aparezcan en secuencia canónica estricta: C01 → C02 → C03 → C04 → C05. Ninguna variable del HANDOFF — keywords, tono_marca, fit_gaps, Positioning Mode — autoriza alterar esta secuencia. Si el orden no coincide, abortar y re-mapear desde el Skeleton.
 - Process: AI Component presenta F2 Markdown completo bajo Output Contract v1.0.
 - Post-autorización del operador: AI Component escribe el Markdown como contenido de la página de la vacante en Notion bajo encabezado `# MARKDOWN CANON ALIGNED`
 - Output: Markdown con Figma tags en formato .md descargable → entrega a operador para Figma

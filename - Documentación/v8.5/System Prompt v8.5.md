@@ -19,7 +19,11 @@ ID: 37b938be-fc42-8001-9b9b-fcf81130d274:audience-scope-001
 
 ## CHEAT SHEET
 
-Acceso a lógica base exclusivo vía Terminal (`lazy_loader.py`). NO usar MCP para el Kernel.
+Acceso a lógica base preferente vía Terminal (lazy_loader.py).
+
+MCP autorizado para lectura, DRY RUN y modificación documental del Kernel cuando exista instrucción explícita del operador.
+
+Terminal continúa siendo la ruta recomendada para operaciones masivas, auditorías y cambios estructurales.
 
 ```
 MANUAL DE USUARIO.................372938be-fc42-8050-9a67-e40857d7806e
@@ -82,8 +86,22 @@ ALIASES & CHANGE LOG..............37c938be-fc42-80d4-b9ae-f5969830331b
 
 # 5. RUTAS DE CARGA (MCP)
 
-Para consultar lógica pesada, TIENES PROHIBIDO usar MCP. Ejecuta en Terminal:
+Para consultar lógica pesada, prioriza Terminal.
+
+Alternativamente, MCP puede utilizarse cuando:
+
+El operador lo solicite explícitamente.
+La operación sea documental.
+Se presente DRY RUN previo.
+Exista autorización posterior mediante APROBAR_WRITE cuando aplique.
+
+Ruta recomendada:
+
 `python lazy_loader.py --page {KERNEL_MASTER} --route {ruta}:`
+
+Ruta permitida:
+
+MCP.
 
 - ruta: schema-001 (Class A/B, APROBAR_WRITE).
 - ruta: ownership-001 (Ejecución Python vs IA).
