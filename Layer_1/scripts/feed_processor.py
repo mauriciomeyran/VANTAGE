@@ -811,6 +811,12 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
 
 
 def write_to_notion(
+# ── GAP-03 · ALCANCE DE COBERTURA ──────────────────────────────────────────
+# Este guard opera SOLO en el pipeline Python (feed_processor.py).
+# Escritura directa vía MCP (notion-create-pages / notion-update-page) no
+# tiene guard equivalente — puede escribir campos Class B sin bloqueo.
+# Implementar class_b_guard.py como módulo compartido (FX-1 open).
+# ── fin nota ────────────────────────────────────────────────────────────────
     notion_utils: Client,
     processed: list[ProcessedRecord],
     schema: NotionSchema,
@@ -948,6 +954,16 @@ def main() -> None:
             "El array debe contener un solo item. Para lotes, usa FEED sin --fast."
         ),
     )
+    parser.add_argument(
+        "--interactive",
+        action="store_true",
+        default=False,
+        help=(
+            "Modo INTERACTIVO: revisión granular por vacante antes de escribir en Notion. "
+            "Cada item muestra su disposición y solicita [S]í / [O]mitir / [Q]uit. "
+            "⚠️  Items ya escritos NO se revierten si el operador elige Quit."
+        ),
+    )
     args = parser.parse_args()
 
     feed_path = Path(args.file)
@@ -1005,17 +1021,94 @@ def main() -> None:
     to_write = [p for p in processed if p.disposition in ("CLEAN", "REVIEW_NEEDED")]
     n_write = len(to_write)
 
-    confirm = input(f"¿Aprobar escritura de {n_write} vacantes en Notion? [s/N]: ").strip().lower()
-    if confirm != "s":
-        print("⏹️  Escritura abortada por el operador.")
-        print("\n📦 Archivando DRY RUN en Notion...")
-        archive_dryrun_notion(notion_utils, dryrun_path, args.layer)
-        sys.exit(0)
+    # ── MODO INTERACTIVO ────────────────────────────────────────────────────────
+    if args.interactive:
+        print(f"\n🎛️  MODO INTERACTIVO — {n_write} vacante(s) para revisar")
+        print("   ⚠️  Items ya escritos NO se revierten si eliges Quit.\n")
 
-    print(f"\n📝 Escribiendo {n_write} registros en Notion...")
-    written, failed = write_to_notion(notion_utils, processed, schema)
-    print(f"\n✅ Escritos: {written}  |  ❌ Fallidos: {failed}")
+        approved: list[ProcessedRecord] = []
+        skipped = 0
+        aborted_at: int | None = None
 
+        log_lines = [
+            f"# BATCH LOG · {date.today().isoformat()} · Layer L{args.layer}",
+            f"# Total candidatos: {n_write}",
+            "",
+        ]
+
+        for i, p in enumerate(to_write, 1):
+            rec = p.record
+            print(f"┌─ [{i}/{n_write}] {p.disposition}")
+            print(f"│  Marca : {p.brand}")
+            print(f"│  Rol   : {rec.get('title', '')[:60]}")
+            print(f"│  URL   : {rec.get('apply_url', '')[:80]}")
+            print(f"│  Notas : {p.notes or '—'}")
+            print(f"│  Hash  : {p.hash_key[:8]}")
+            action = input("└─ Acción [S]í / [O]mitir / [Q]uit : ").strip().upper()
+
+            if action == "S":
+                approved.append(p)
+                log_lines.append(
+                    f"- {date.today().isoformat()} | {p.brand} | "
+                    f"{rec.get('title', '')[:50]} | {p.disposition} | APROBADO"
+                )
+                print(f"  ✔ Aprobado\n")
+            elif action == "Q":
+                aborted_at = i
+                log_lines.append(
+                    f"- {date.today().isoformat()} | QUIT en item {i}/{n_write} "
+                    f"| {len(approved)} ya aprobados antes del corte"
+                )
+                print(
+                    f"\n⏹️  QUIT — {len(approved)} aprobada(s) antes del corte. "
+                    f"{n_write - i} vacante(s) sin revisar."
+                )
+                break
+            else:  # O u otro input
+                skipped += 1
+                log_lines.append(
+                    f"- {date.today().isoformat()} | {p.brand} | "
+                    f"{rec.get('title', '')[:50]} | OMITIDO"
+                )
+                print(f"  ↷ Omitido\n")
+
+        # Resumen de sesión interactiva
+        log_lines += [
+            "",
+            f"# Resumen",
+            f"# Aprobados : {len(approved)}",
+            f"# Omitidos  : {skipped}",
+            f"# Quit en   : item {aborted_at}" if aborted_at else "# Completado: sí",
+        ]
+
+        log_path = _LAYER_1_ROOT / "feeds" / f"{date.today().isoformat()}_batch_log.md"
+        log_path.write_text("\n".join(log_lines), encoding="utf-8")
+        print(f"\n📋 Log guardado: {log_path}")
+
+        if not approved:
+            print("⏹️  Ninguna vacante aprobada. Escritura abortada.")
+            print("\n📦 Archivando DRY RUN en Notion...")
+            archive_dryrun_notion(notion_utils, dryrun_path, args.layer)
+            sys.exit(0)
+
+        print(f"\n📝 Escribiendo {len(approved)} registro(s) aprobado(s) en Notion...")
+        written, failed = write_to_notion(notion_utils, approved, schema)
+        print(f"\n✅ Escritos: {written}  |  ❌ Fallidos: {failed}  |  Omitidos: {skipped}")
+
+    # ── MODO ESTÁNDAR (comportamiento original intacto) ─────────────────────────
+    else:
+        confirm = input(f"¿Aprobar escritura de {n_write} vacantes en Notion? [s/N]: ").strip().lower()
+        if confirm != "s":
+            print("⏹️  Escritura abortada por el operador.")
+            print("\n📦 Archivando DRY RUN en Notion...")
+            archive_dryrun_notion(notion_utils, dryrun_path, args.layer)
+            sys.exit(0)
+
+        print(f"\n📝 Escribiendo {n_write} registros en Notion...")
+        written, failed = write_to_notion(notion_utils, processed, schema)
+        print(f"\n✅ Escritos: {written}  |  ❌ Fallidos: {failed}")
+
+    # ── Archivo DRY RUN (ambos modos) ───────────────────────────────────────────
     print("\n📦 Archivando DRY RUN en Notion...")
     archive_dryrun_notion(notion_utils, dryrun_path, args.layer)
 
