@@ -1,4 +1,5 @@
 import os
+import httpx
 from dotenv import load_dotenv
 from notion_utils import Client
 
@@ -78,12 +79,54 @@ def next_action_from_gate(gate_decision, status, fetch, current_action):
     # Default
     return "Archivar"
 
+NOTION_VERSION = "2025-09-03"
+NOTION_API_BASE = "https://api.notion.com/v1"
+PAGE_SIZE = 100
+MAX_EXPECTED_RESULTS = 500
+
+
+def query_all_items(token, data_source_id):
+    """Pagina data_sources/{id}/query hasta obtener todos los registros."""
+    results = []
+    cursor = None
+    page = 0
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Notion-Version": NOTION_VERSION,
+        "Content-Type": "application/json",
+    }
+    url = f"{NOTION_API_BASE}/data_sources/{data_source_id}/query"
+    with httpx.Client(timeout=30) as http_client:
+        while True:
+            page += 1
+            body = {
+                "page_size": PAGE_SIZE,
+                "sorts": [{"timestamp": "created_time", "direction": "ascending"}],
+            }
+            if cursor:
+                body["start_cursor"] = cursor
+            resp = http_client.post(url, headers=headers, json=body)
+            resp.raise_for_status()
+            data = resp.json()
+            batch = data.get("results", [])
+            results.extend(batch)
+            print(f"[query] página={page} batch={len(batch)} acumulados={len(results)} has_more={data.get('has_more')}")
+            if len(results) > MAX_EXPECTED_RESULTS:
+                raise RuntimeError(f"[ABORT] {len(results)} registros > límite {MAX_EXPECTED_RESULTS}")
+            if not data.get("has_more"):
+                break
+            cursor = data.get("next_cursor")
+    print(f"[query] Total: {len(results)}")
+    return results
+
+
 if __name__ == "__main__":
     load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
-    client = Client(auth=os.environ["NOTION_TOKEN"])
+    token = os.environ["NOTION_TOKEN"]
+    client = Client(auth=token)
     ds_id = "442938be-fc42-828f-b72e-076818d65a5b"
 
-    items = client.data_sources.query(data_source_id=ds_id)["results"]
+    items = query_all_items(token, ds_id)
     
     manual_protected = 0
     terminal_protected = 0
