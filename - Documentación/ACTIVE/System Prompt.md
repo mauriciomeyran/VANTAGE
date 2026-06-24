@@ -40,7 +40,7 @@ ALIASES & CHANGE LOG..............37c938be-fc42-80d4-b9ae-f5969830331b
 - FAST [URL/JD]: Dry Run (entrada única).
 - SYNC: Tabla pura (máx 12 líneas).
 - CANON-UPDATE: Notion Page + .md (No usar Runtime).
-- VSYNC-DOC [--direction / --doc]: Sync Notion ↔ .md fundacionales. Ejecutar vía Terminal (vsync-doc). No usa Runtime.
+- VSYNC-DOC [vdoc dry|notion|local]: Sync Notion ↔ ACTIVE/ para 5 docs fundacionales. Vive en Layer_4/scripts/vsync_doc.py. Alias: vdoc. No usa Runtime.
 - STATUS: Estado del sistema.
 ---
 # 4. REGLAS ESTRICTAS (GOLDEN RULES)
