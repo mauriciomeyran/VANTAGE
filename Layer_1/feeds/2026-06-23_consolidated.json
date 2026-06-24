@@ -14,7 +14,7 @@
     "source_query": "D",
     "fetch_status": "direct_apply",
     "visual_signal": true,
-    "innovation_dna": "false",
+    "innovation_dna": false,
     "notes": "Verified on official Inditex ATS. Date unverified."
   },
   {
@@ -178,7 +178,7 @@
     "visual_signal": true,
     "innovation_dna": false,
     "notes": "URL genérica de listado, no específica de vacante."
-  }
+  },
   {
     "job_id": "GAIA-VM-20260620",
     "title": "Visual merchandising",

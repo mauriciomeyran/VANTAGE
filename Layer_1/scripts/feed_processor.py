@@ -787,8 +787,8 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
     if apply_url.startswith("http"):
         props[schema.url_prop] = {"url": apply_url}
 
-    if "Source_Type " in schema.properties:
-        props["Source_Type "] = schema.select_value("Vacante")
+    if "Source_Type" in schema.properties:
+        props["Source_Type"] = schema.select_value("Vacante")
 
     # Prioridad default para entradas nuevas (Class A — §8 Kernel)
     # Default 4 alineado con FAST defaults §14. El operador ajusta manualmente en Notion.
