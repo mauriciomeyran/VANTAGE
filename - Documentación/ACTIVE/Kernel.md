@@ -49,6 +49,12 @@ Alias: vgit · Corre en background a las 09:00 · 15:00 · 21:00
 Repo: github.com/mauriciomeyran/jhs-pipeline
 Reutiliza .venv de Layer_1
 ```
+vsync_doc.py — Sync bidireccional Notion ↔ ACTIVE/ para los 5 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Cheat Sheet).
+Alias: vdoc · Flags: dry | notion | local
+Flujo vdoc notion: lee Notion (safe_list vía httpx, 3 reintentos) → escribe ACTIVE/{doc}.md → auto-commit GitHub al terminar.
+Dependencias: httpx · notion-client 3.x · .venv de Layer_1 · git_sync.py · Vive en: Layer_4/scripts/vsync_doc.py
+Convención ACTIVE/: Los 5 .md fundacionales viven en .../ACTIVE/ — agnóstico de versión. Al pasar a v8.7: copiar archivos a ACTIVE/, cero cambios de código. Nombres canónicos: Kernel.md · System_Prompt.md · Career_Canon.md · Manual.md · Cheat_Sheet.md. Reemplaza los paths versionados anteriores (.../v8.5/Kernel v8.5.md).
+> Nota técnica: notion-client 3.x tiene un bug silencioso en blocks.children.list() que retorna None en lugar de lanzar excepción con campos null. vsync_doc.py lo mitiga con safe_list() — wrapper httpx directo con 3 reintentos.
 ### Jerarquía de Dedup
 L1 > L2 > L3. En conflicto cross-layer, prevalece la entrada de la capa de mayor jerarquía.
 Perplexity aplica esta jerarquía en el paso de Consolidation & Dedup del lunes, antes de entregar el Plain Array a feed_processor.py. L3 no pasa por este paso — entra directamente a feed_processor.py desde mail_pipeline.py.
@@ -71,6 +77,7 @@ Class A — Human-Primary
 AI Component escribe en triggers CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_processor.py escribe en ciclo FEED L1/L3:
 Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NAD · layer · hash
 > Nota sobre JD: En el trigger CV-A, el AI Component cruza los keywords extraídos del JD contra el Career Canon activo antes de generar el HANDOFF. Discrepancias entre el JD y el Canon se reportan en fit_gaps — no se resuelven inventando experiencia ni contradiciendo el Canon.
+> Nota sobre JD en FEED (L1/L2): jd es campo requerido en el ITEM SCHEMA de Prompt A. feed_processor.py lo mapea a JD (Class A) y lo escribe truncado a 2000 chars. Si el motor no extrajo el JD (fetch_status ≠ direct_apply), el campo llega null y Python no puede usar el texto para Visual Signal detection — la entrada puede requerir verificación manual.
 Class B — System-Primary
 Python escribe; ningún otro componente toca:
 Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente
@@ -103,6 +110,7 @@ source_name (occ/indeed/linkedin/etc.) → NO escribir. Fuente es Class B — Py
 apply_url → URL (si apply_url es null, usar url del item)
 brand → Marca · title → Rol · holding → Holding (null → "Investigar")
 fetch_status "partial_link" / "needs_verification" → documentar en Notas como señal de advertencia
+jd → JD (texto completo; truncado a 2000 chars en escritura Notion vía rich_text_value)
 visual_signal / innovation_dna — NO escribir en Tracker. Python detecta Visual Signal en JD. Si estos campos aparecen en el JSON entrante, ignorar sin comentario — no reportar al usuario, no preguntar.
 ### Entry Template
 — Campos Class A Requeridos al Momento de Creación

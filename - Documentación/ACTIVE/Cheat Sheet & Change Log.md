@@ -4,9 +4,19 @@
 ### Layer 1 — Active Recon
 ### Layer 1 — Dedup & Oportunidades
 ### Layer 3 & Dashboard
-### Layer 4 — Version Control
+### Layer 4 — Version Control & Documental
 ### Runtime CLI (vantage.py)
 ## [ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_001] 2. CHANGELOG
+## v8.5.4 — VANTAGE · 2026-06-23
+> ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_v8.5.4
+- [FIX] Campo jd agregado al pipeline L1/L2 — bug resuelto en consolidación — jd estaba ausente del ITEM SCHEMA de Prompt A y de la capa de escritura de feed_processor.py, impidiendo que el texto del JD llegara al Tracker. Tres patches quirúrgicos aplicados: (1) Prompt A — "jd": "string or null" agregado al ITEM SCHEMA como último campo, con instrucción de poblar cuando fetch_status = direct_apply; (2) feed_processor.py — jd_prop agregado a NotionSchema; JD escrito en build_notion_properties() via rich_text_value(rec["jd"][:2000]); (3) Kernel §4 — mapeo jd → JD documentado en tabla de vocabulario; nota operativa sobre comportamiento cuando el campo llega null (fetch_status ≠ direct_apply). Wrappers L1/L2 heredan el contrato de Prompt A sin cambios individuales.
+## v8.6 — VANTAGE · 2026-06-23
+> ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_v8.6
+- [ARCH] Normalización de capa documental — cierre formal de auditoría externa (3 agentes independientes). Todos los pendientes resueltos en sesión 2026-06-22.
+- [ARCH] Convención ACTIVE/ establecida — paths versionados (.../v8.5/) reemplazados por directorio agnóstico de versión. Al pasar a v8.7: copiar archivos a ACTIVE/, cero cambios de código.
+- [NEW] vsync_doc.py migrado a Layer_4/scripts/ — alias vdoc [dry|notion|local]. Sync bidireccional Notion ↔ ACTIVE/ para los 5 docs fundacionales + auto-commit GitHub al terminar vdoc notion.
+- [FIX] Bugs resueltos en vsync_doc.py: layer_1.env token con \n embebido · _rich_text() con None · _block_to_md() en callout con icon: null · safe_list() reemplaza blocks.children.list() (bug silencioso de notion-client 3.x).
+- [ARCH] Sistema normalizado a v8.6 en todos los documentos fundacionales.
 ## v8.5.3 — VANTAGE · 2026-06-23
 > ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_v8.5.3
 - [NEW] vsync_doc.py — Sync bidireccional Notion ↔ .md (BUG-005 cerrado) — Script independiente en Layer_1/scripts/. Sincroniza 5 páginas fundacionales (KERNEL · SYSTEM PROMPT · CAREER CANON · MANUAL · CHEAT SHEET) contra sus .md locales en - Documentación/v8.5/. Flags: --direction {notion|local|auto} (auto: gana timestamp más reciente; notion: default pre-sesión; local: para edits offline) · --dry-run (inspección sin escritura) · --doc {key} (sync quirúrgico por documento). Output --json disponible para integración futura con vstatus. Alias: vsync-doc. Bug Tracker: 388938be-fc42-8198-a954-db353d22a1cc.

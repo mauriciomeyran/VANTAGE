@@ -85,9 +85,15 @@ El Runtime es el motor de lectura del sistema. Antes de operar, se debe verifica
 python vantage.py status
 ```
 Resultado esperado: Status: READY (4,200+ blocks indexed).
+### Paso 6 — Verificar Sync Documental (vsync_doc)
+```bash
+cd ~/Documents/04-VANTAGE_CV/Layer_4/scripts
+source ../../Layer_1/.venv/bin/activate
+python vsync_doc.py --dry-run
+```
+Output esperado: 5 documentos listados con diff por documento, sin errores.
+Si falla: verificar que layer_1.env exista y que el token no tenga \n embebido.
 ---
----
-## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-flujo-001] 4. FLUJO PUNTA A PUNTA
 ### [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-vchecklist-001] CHECKLIST INTERACTIVO
 El V-Checklist (V-CHECKLIST · Vantage Weekly) es la interfaz operativa del ciclo semanal descrito en §4. Es un archivo HTML autocontenido con progreso persistente (localStorage), modo claro/oscuro y navegación por día.
 Resumen de tareas por día:
