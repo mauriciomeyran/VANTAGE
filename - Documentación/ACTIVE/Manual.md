@@ -454,7 +454,6 @@ Qué hacer en su lugar:
 - Ready-to-Apply vacío → no hay oportunidades válidas esta semana. No fuerces CREATE.
 - JSON vacío en FEED → búsqueda sin resultados relevantes. No amplíes criterios sin análisis.
 Ante cualquiera de estos, el sistema reporta el estado y espera tu instrucción dentro del flujo normal del pipeline.
-[Checklist]
 ---
 ## SLA de Latencia Post-Ingesta
 > Nota: El SLA "< 45 minutos" cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh — no tiene SLA fijo salvo ejecución manual explícita de layer_1_run.py.
