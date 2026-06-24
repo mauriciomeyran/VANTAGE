@@ -26,7 +26,13 @@ import httpx
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import pathlib
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / ".venv" / "lib" / "python3.14" / "site-packages"))
+
+# Try to set up venv path, but allow fallback to system packages
+script_dir = pathlib.Path(__file__).resolve().parent
+venv_path = script_dir.parent / ".venv" / "lib" / "python3.14" / "site-packages"
+if venv_path.exists():
+    sys.path.insert(0, str(venv_path))
+
 from notion_client import Client
 from difflib import SequenceMatcher
 
@@ -383,6 +389,28 @@ def get_match_level_v6(score):
     else:
         return "Bajo"  # Revisar
 
+def score_to_prioridad(score):
+    """
+    Mapea Score (0-100) a Prioridad (1-8) para compatibilidad con Notion schema.
+    Prioridad es un campo select con valores 1-8.
+    """
+    if score >= 90:
+        return "8"
+    elif score >= 80:
+        return "7"
+    elif score >= 70:
+        return "6"
+    elif score >= 60:
+        return "5"
+    elif score >= 50:
+        return "4"
+    elif score >= 40:
+        return "3"
+    elif score >= 30:
+        return "2"
+    else:
+        return "1"
+
 def gate(fetch, vm_scope, role_class, source_type, rol="", marca=""):
     from profile_fit import has_vm_title_signal, is_role_excluded, resolve_alias_flags
 
@@ -486,7 +514,23 @@ def main():
     print("VANTAGE Pipeline Runner v7.5")
     print("=" * 60)
 
-    load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
+    # Find .env file in project root
+    script_dir = pathlib.Path(__file__).resolve().parent
+    project_root = script_dir.parent
+    env_file = project_root / ".env"
+    
+    if not env_file.exists():
+        # Try alternate location
+        env_file = project_root.parent / ".env"
+    
+    load_dotenv(dotenv_path=env_file, override=True)
+    
+    if "NOTION_TOKEN" not in os.environ:
+        print(f"❌ ERROR: NOTION_TOKEN not found in environment")
+        print(f"   Looking for .env at: {env_file}")
+        print(f"   .env exists: {env_file.exists()}")
+        sys.exit(1)
+    
     client = Client(auth=os.environ["NOTION_TOKEN"])
     ds_id = "596938befc42836baea7814a1491bd47"
 
@@ -503,7 +547,7 @@ def main():
     for item in items:
         props = item["properties"]
         url = txt(props.get("URL"))
-        source_type = txt(props.get("Source_Type ")) or "Vacante"   # trailing space
+        source_type = txt(props.get("Source_Type ")) or "Vacante"
         status = txt(props.get("Status"))
         current_fetch = txt(props.get("Fetch"))
         jd_text = txt(props.get("JD"))
@@ -571,7 +615,7 @@ def main():
     for item in items:
         props = item["properties"]
         url = txt(props.get("URL"))
-        source_type = txt(props.get("Source_Type ")) or ""   # trailing space
+        source_type = txt(props.get("Source_Type")) or ""
         if not url:
             continue
         # Fuente aplica a Vacante e Inbound (cualquier tipo con URL) — fix v7.5
@@ -698,7 +742,7 @@ def main():
                 properties={
                     "Status": {"select": {"name": "Expirada"}},
                     "Gate_Decision": {"select": {"name": "BLOCKED"}},
-                    "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
+                    "Next_Action": {"select": {"name": "Archivar"}},
                 },
             )
             misfit_updates += 1
@@ -723,7 +767,7 @@ def main():
         props = item["properties"]
         url = txt(props.get("URL"))
         current_fetch = txt(props.get("Fetch"))
-        source_type = txt(props.get("Source_Type ")) or "Vacante"   # trailing space
+        source_type = txt(props.get("Source_Type ")) or "Vacante"
         last_seen = txt(props.get("Last_Seen_Active"))
         status = txt(props.get("Status"))
         jd_text = txt(props.get("JD")) or ""
@@ -799,7 +843,7 @@ def main():
         fetch = txt(props.get("Fetch"))
         vm_scope = txt(props.get("VM_Scope"))
         role_class = txt(props.get("Role_Class"))
-        source_type = txt(props.get("Source_Type ")) or "Vacante"   # trailing space
+        source_type = txt(props.get("Source_Type ")) or "Vacante"
         status = txt(props.get("Status"))
         current_gate = txt(props.get("Gate_Decision"))
         current_action = txt(props.get("Next_Action"))
@@ -845,7 +889,7 @@ def main():
 
         update = {
             "Gate_Decision": {"select": {"name": decision}},
-            "Next_Action": {"rich_text": [{"text": {"content": next_action}}]}
+            "Next_Action": {"select": {"name": next_action}}
         }
 
         try:

@@ -81,7 +81,7 @@ def next_action_from_gate(gate_decision, status, fetch, current_action):
 if __name__ == "__main__":
     load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
     client = Client(auth=os.environ["NOTION_TOKEN"])
-    ds_id = "4e542b37-6e52-4418-89b7-a0eeb3138307"
+    ds_id = "442938be-fc42-828f-b72e-076818d65a5b"
 
     items = client.data_sources.query(data_source_id=ds_id)["results"]
     
@@ -99,7 +99,7 @@ if __name__ == "__main__":
         fetch = txt(props.get("Fetch"))
         vm_scope = txt(props.get("VM_Scope"))
         role_class = txt(props.get("Role_Class"))
-        source_type = txt(props.get("Source_Type"))
+        source_type = txt(props.get("Source_Type "))
         
         # TERMINAL STATE PROTECTION - CHECK FIRST
         if current_action in {"Archivar", "Expirada"}:
@@ -128,7 +128,7 @@ if __name__ == "__main__":
         # Prepare update for Notion
         update = {
             "Gate_Decision": {"select": {"name": gate_decision}},
-            "Next_Action": {"select": {"name": new_action}}
+            "Next_Action": {"rich_text": [{"text": {"content": new_action}}]}
         }
         
         try:

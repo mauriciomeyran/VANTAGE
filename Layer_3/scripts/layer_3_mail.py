@@ -4,6 +4,7 @@ VANTAGE L3 Pipeline — Gmail (.Jobs) → Groq → Notion VANTAGE TRACKER
 Extrae vacantes de correos y las ingresa individualmente al tracker.
 """
 
+import hashlib
 import imaplib
 import email
 import json
@@ -389,6 +390,19 @@ def canonicalize_url(url: str) -> tuple[str, str]:
 
 
 
+def _compute_l3_hash(rol: str, marca: str, url: str) -> str:
+    """Hash compatible con feed_processor.compute_dedup_hash para entradas L3.
+    Prioriza URL canónica (career_page branch); fallback a agg:brand|title|."""
+    url = (url or "").strip()
+    if url.startswith("http"):
+        key = f"url:{url}"
+    else:
+        brand = (marca or "").strip().lower()
+        title = (rol or "").strip().lower()
+        key = f"agg:{brand}|{title}|"
+    return hashlib.sha256(key.encode("utf-8")).hexdigest()
+
+
 def normalize_holding(raw):
     if not raw:
         return "Investigar"
@@ -565,7 +579,7 @@ def create_notion_page(job, email_meta):
         "layer": {
             "select": {"name": "L3"}
         },
-        "Source_Type ": {
+        "Source_Type": {
             "select": {"name": "Vacante"}
         },
         "Holding": {
@@ -573,6 +587,11 @@ def create_notion_page(job, email_meta):
         },
         "Fuente": {
             "rich_text": [{"text": {"content": fuente[:200]}}]
+        },
+        "hash": {
+            "rich_text": [{"text": {"content": _compute_l3_hash(
+                job.get("rol", ""), job.get("marca", ""), job.get("url", "")
+            )}}]
         },
     }
 

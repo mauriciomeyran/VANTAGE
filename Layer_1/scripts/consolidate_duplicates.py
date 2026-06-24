@@ -333,7 +333,7 @@ def _move_to_archivo(client, job):
         props["Gate_Decision"] = {"select": {"name": job["Gate_Decision"]}}
     if job.get("Role_Class"):
         props["Role_Class"] = {"select": {"name": job["Role_Class"]}}
-    # NOTA: ARCHIVO_TRACKER_DB no tiene la propiedad "Source_Type " — se omite.
+    # NOTA: ARCHIVO_TRACKER_DB no tiene la propiedad "Source_Type" — se omite.
     with_retry(
         client.pages.create,
         parent={"database_id": ARCHIVO_TRACKER_DB_ID},

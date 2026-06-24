@@ -1,3 +1,18 @@
+# DEPRECATED — superseded by layer_1_run.py v6.4 (0-100 scale scoring system).
+# Do not run. This file is kept for reference only.
+# Use layer_1_run.py calculate_score_v6() for all scoring operations.
+#
+# Legacy scoring system (2-8 scale) has been replaced by v6.4 (0-100 scale).
+# The mapping from Score (0-100) to Prioridad (1-8) is now:
+#   Score 90-100 → Prioridad 8
+#   Score 80-89  → Prioridad 7
+#   Score 70-79  → Prioridad 6
+#   Score 60-69  → Prioridad 5
+#   Score 50-59  → Prioridad 4
+#   Score 40-49  → Prioridad 3
+#   Score 30-39  → Prioridad 2
+#   Score 0-29   → Prioridad 1
+
 import os
 import re
 from dotenv import load_dotenv
