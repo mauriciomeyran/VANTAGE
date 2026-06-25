@@ -477,3 +477,53 @@ Sin cambios esta sesión. Documentación original válida.
 ---
 
 **Audit actualizado — 2026-06-24**
+
+---
+
+## Session Log — 2026-06-24 (cierre de sesión)
+
+**Estado al cierre:** VANTAGE v8.6. Pipeline limpio. `vdoc run` + `vdoc notion` ejecutados por el operador — sin desfases.
+
+**Fix aplicado en esta sesión:**
+- **Fix F — `assign_next_action.py`:** Paginación completa implementada. Reemplazado `client.data_sources.query(...)['results']` (techo silencioso de 100) por `query_all_items()` con loop httpx idéntico al de `consolidate_duplicates.py`. Import `httpx` añadido. `token` extraído antes del client para pasarlo a la función. `MAX_EXPECTED_RESULTS=500`.
+
+**Pendiente único activo:** RESUELTO. No quedan pendientes abiertos en el pipeline.
+
+---
+
+## Handoff — Próxima sesión
+
+### Contexto
+VANTAGE v8.6. Todos los fixes A–F aplicados y documentados. Pipeline estable.
+
+### Tarea inmediata al abrir sesión
+**Validar Fix F en producción** — primer run real de `assign_next_action.py` post-fix.
+
+### Instrucciones paso a paso
+
+1. **Abrir Claude Desktop con Filesystem MCP activo.**
+
+2. **Inyectar contexto** — pegar este bloque al inicio de la sesión:
+   > "VANTAGE v8.6. Fix F aplicado el 2026-06-24: `assign_next_action.py` ahora pagina con `query_all_items()`. Tarea: validar run real. Protocolo: dry run antes de cualquier escritura, diff → APROBAR → ejecutar."
+
+3. **Dry run de validación** (desde el directorio del script):
+   ```bash
+   cd ~/Documents/04-Vantage_CV/Layer_1/scripts
+   python assign_next_action.py --dry-run
+   ```
+   *(Nota: el script no tiene flag `--dry-run` nativo — si no existe, agregar antes del run real o revisar output manual. Alternativa: comentar temporalmente el bloque `client.pages.update` y correr normalmente.)*
+
+4. **Verificar en output** que aparezcan líneas `[query] página=X` — confirma que la paginación activó. Si el tracker tiene >100 entradas activas, debe verse `página=2` o más.
+
+5. **Revisar lógica** — el resumen final debe mostrar conteos coherentes con el número de entradas en Notion. Comparar `📋 Total procesados` contra el conteo visible en la DB.
+
+6. **Si todo OK:** ejecutar run real sin comentar el update. Confirmar en Notion que `Next_Action` y `Gate_Decision` se asignaron correctamente en entradas de páginas 2+.
+
+7. **Actualizar este AUDIT** con resultado del run (OK / anomalía encontrada).
+
+### Si hay anomalía
+- Error `[ABORT]`: el tracker superó 500 entradas — ajustar `MAX_EXPECTED_RESULTS` o investigar escritura concurrente.
+- `Next_Action` no cambia en ninguna entrada: verificar que `.env` tiene `NOTION_TOKEN` válido y que `httpx` está instalado (`pip install httpx`).
+- Error de import: `pip install httpx` en el entorno donde corre el pipeline.
+
+### No abrir temas fuera de la validación del Fix F sin consultar.
