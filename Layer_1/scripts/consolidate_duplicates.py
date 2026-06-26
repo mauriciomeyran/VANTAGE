@@ -158,10 +158,26 @@ def url_dedup_key(url):
     return None
 
 
+def _strip_accents(text: str) -> str:
+    import unicodedata
+    return "".join(
+        c for c in unicodedata.normalize("NFD", text)
+        if unicodedata.category(c) != "Mn"
+    )
+
+
 def norm_brand(brand):
     brand = (brand or "").lower().strip()
-    for suffix in (" group", " ag", " mx", " s.a.", " sapi de cv", " we are "):
-        brand = brand.replace(suffix, "")
+    brand = _strip_accents(brand)
+    # Sufijos legales mexicanos e internacionales — orden: más largo primero
+    legal_suffixes = [
+        " s.a. de c.v.", " sa de cv", " sapi de cv", " s de rl de cv",
+        " s.a.", " sa", " de cv", " group", " grupo", " ag", " mx",
+        " mexico", " mexico", " we are", " inc", " corp", " ltd",
+    ]
+    for suffix in legal_suffixes:
+        if brand.endswith(suffix):
+            brand = brand[: -len(suffix)].strip()
     return " ".join(brand.split())
 
 
