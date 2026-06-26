@@ -122,7 +122,7 @@ def normalize_envelope(json_data: dict, layer_cli: int) -> list[dict]:
     # Arrays de un solo origen (solo L1 ó solo L2 ó solo L3) son válidos sin flag.
     if isinstance(json_data, dict) and not json_data.get("consolidated_by_l0"):
         layers_in_payload: set[str] = set()
-        items_to_check = json_data.get("listings") or []
+        items_to_check = json_data.get("listings") or json_data.get("consolidated_results") or []
         if not items_to_check and isinstance(json_data.get("results_by_source"), dict):
             for bucket in json_data["results_by_source"].values():
                 if isinstance(bucket, list):
@@ -157,11 +157,14 @@ def normalize_envelope(json_data: dict, layer_cli: int) -> list[dict]:
                         records.append(value)
     elif "listings" in json_data and isinstance(json_data["listings"], list):
         records = list(json_data["listings"])
+    elif "consolidated_results" in json_data and isinstance(json_data["consolidated_results"], list):
+        records = list(json_data["consolidated_results"])
     elif isinstance(json_data, list):
         records = list(json_data)
     else:
         raise ValueError(
-            'Envelope no reconocido: se esperaba "results_by_source", "listings" o una lista.'
+            ('Envelope no reconocido: se esperaba "results_by_source", '
+            '"listings", "consolidated_results" o una lista.')
         )
 
     for record in records:
