@@ -80,7 +80,7 @@ Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NA
 > Nota sobre JD en FEED (L1/L2): jd es campo requerido en el ITEM SCHEMA de Prompt A. feed_processor.py lo mapea a JD (Class A) y lo escribe truncado a 2000 chars. Si el motor no extrajo el JD (fetch_status ≠ direct_apply), el campo llega null y Python no puede usar el texto para Visual Signal detection — la entrada puede requerir verificación manual.
 Class B — System-Primary
 Python escribe; ningún otro componente toca:
-Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente
+Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente · JD_Quality · Dedup_Flag
 ### 4.2 Restricción del Sistema
 Si el JSON entrante incluye campos Class B con valores ("score": 75, "gate_decision": "CREATE"), se ignoran sin excepción. Python los calculará en el siguiente run de ~/vantage_pipeline.sh. Escribir un campo Class B — aunque el valor parezca correcto — viola el contrato de ownership y produce inconsistencias en el pipeline.
 ### 4.3 Fuente como Campo Especial
@@ -146,7 +146,9 @@ Source_Type ∈ {Inbound, Referencia, Networking}
 → Razón: Un contacto humano verificado tiene mayor señal que cualquier algorito
 ```
 ### Lógica Estándar
-Solo aplica si no hay Bypass activo:
+Solo aplica si no hay Bypass activo. Implementado en layer_1_run.py → gate():
+> EXPIRED y REVIEW_NEEDED no son outputs de gate() — son estados operativos asignados por otros pasos del pipeline (URL_GATE y feed_processor.py respectivamente).
+> Score NO es condición de Gate_Decision. Score determina únicamente el campo Match: Muy Alto ≥80 · Alto ≥60 · Medio ≥40 · Bajo <40
 ### Resolución de REVIEW_NEEDED
 > ⚠️ ALCANCE DE GAP-03: El guard GAP-03 protege el pipeline Python (feed_processor.py → process_record()).
 > Escritura directa vía MCP (notion-create-pages / notion-update-page) y flujos
@@ -395,7 +397,7 @@ Alternativa operativa: Escribe la vacante con FEED o FAST → ~/vantage_pipeline
 ```
 ---
 ### [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-002] Regla #2 — No Calcular ni Estimar Campos Class B
-Campos protegidos: Score · VM_Scope · Role_Class · Match · Gate_Decision · Next_Action · Fetch · Fuente
+Campos protegidos: Score · VM_Scope · Role_Class · Match · Gate_Decision · Next_Action · Fetch · Fuente · JD_Quality · Dedup_Flag
 Si el JSON entrante incluye valores en estos campos, se ignoran. Si el usuario solicita una estimación de score o gate, se rechaza. Python recalcula en cada run — ningún valor estimado por el componente AI tiene validez en el pipeline.
 Solicitudes que activan esta regla:
 - "¿Qué score crees que tendría esta vacante?"
