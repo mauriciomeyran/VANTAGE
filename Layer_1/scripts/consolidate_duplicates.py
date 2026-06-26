@@ -268,6 +268,16 @@ def merge_notes(primary_notes, secondary_notes):
     return (primary_notes + separator + secondary_notes).strip()
 
 
+def is_cross_layer_group(group):
+    """Retorna True si el grupo contiene entradas de layers distintos."""
+    layers = {job.get("layer") for job in group if job.get("layer")}
+    return len(layers) > 1
+
+
+def layers_in_group(group):
+    return sorted({job.get("layer", "?") for job in group})
+
+
 def find_duplicate_groups(jobs, aggressive=False):
     uf = UnionFind(len(jobs))
     by_url = defaultdict(list)
@@ -365,6 +375,21 @@ def consolidate(client, duplicate_groups, dry_run=False):
             if not best_url and secondary.get("URL"):
                 best_url = secondary["URL"]
 
+        # DT-03: Dedup_Flag cross-layer
+        cross_layer = is_cross_layer_group(group)
+        if not dry_run and cross_layer:
+            flag_ids = [primary["id"]] + [s["id"] for s in secondaries]
+            for fid in flag_ids:
+                try:
+                    with_retry(
+                        client.pages.update,
+                        fid,
+                        properties={"Dedup_Flag": {"select": {"name": "Posible duplicado"}}}
+                    )
+                except Exception as exc:
+                    print(f"  WARNING: Error escribiendo Dedup_Flag en {fid[:8]}: {exc}")
+            print(f"  ⚠️  Dedup_Flag=Posible duplicado → {len(flag_ids)} entradas (cross-layer: {layers_in_group(group)})")
+
         if dry_run:
             continue
 
@@ -430,7 +455,7 @@ def main():
             "layer": get_plain_text(props.get("layer")),
             "Gate_Decision": get_plain_text(props.get("Gate_Decision")),
             "Role_Class": get_plain_text(props.get("Role_Class")),
-            "Source_Type": get_plain_text(props.get("Source_Type ")),
+            "Source_Type": get_plain_text(props.get("Source_Type")),
         })
 
     mode = "agresivo (marca+rol)" if args.aggressive else "URL/hash + marca+rol sin URL"
