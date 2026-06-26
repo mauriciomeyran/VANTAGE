@@ -742,7 +742,7 @@ def main():
                 properties={
                     "Status": {"select": {"name": "Expirada"}},
                     "Gate_Decision": {"select": {"name": "BLOCKED"}},
-                    "Next_Action": {"select": {"name": "Archivar"}},
+                    "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
                 },
             )
             misfit_updates += 1
@@ -889,7 +889,7 @@ def main():
 
         update = {
             "Gate_Decision": {"select": {"name": decision}},
-            "Next_Action": {"select": {"name": next_action}}
+            "Next_Action": {"rich_text": [{"text": {"content": next_action}}]}
         }
 
         try:
