@@ -582,7 +582,7 @@ body {
         <div class="task-content">
           <span class="task-num">#01</span>
           <span class="task-text">Verificar estado del Runtime y edad del índice.</span>
-          <code class="task-cmd">source ~/Documents/04-Vantage_CV/Layer_1/.venv/bin/activate && python vantage.py status</code>
+          <code class="task-cmd">source ~/Documents/04-Vantage_CV/Layer_1/.venv/bin/activate && cd ~/Documents/04-Vantage_CV/Layer_1 && python scripts/vantage.py status</code>
         </div>
       </div>
       <div class="task-row" id="lunes-2" onclick="toggleTask('lunes-2', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-2', 'lunes', '#01696f');}">
@@ -594,7 +594,7 @@ body {
         <div class="task-content">
           <span class="task-num">#02</span>
           <span class="task-text">Si index_age_hours &gt; 24 — regenerar índice.</span>
-          <code class="task-cmd">python3 vantage.py sync</code>
+          <code class="task-cmd">cd ~/Documents/04-Vantage_CV/Layer_1/scripts && python3 vantage.py sync</code>
         </div>
       </div>
             <div class="task-row" id="lunes-3" onclick="toggleTask('lunes-3', 'lunes', '#01696f')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('lunes-3', 'lunes', '#01696f');}">
