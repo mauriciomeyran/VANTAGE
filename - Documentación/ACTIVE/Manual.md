@@ -321,7 +321,14 @@ Escritura en Notion (dos destinos):
 - Página en DERIVED OUTPUTS · ARCHIVE del Career Canon — con footer de Positioning Mode activo y fecha.
 - Bloque # MARKDOWN CANON ALIGNED en la página de la vacante en el Tracker — el Markdown completo con Figma tags, dentro de un bloque de código plain text.
 ### Qué hace el usuario con el output
-Copia el contenido del .md con Figma tags. Abre CANON_MARKDOWN.md en tu editor (o directo en Figma vía plugin). Reemplaza los slots variables con los valores entregados por Claude. Exporta el CV a PDF desde Figma.
+Con el .md autorizado en mano, el flujo hacia Figma es directo — el plugin hace el trabajo pesado:
+1. Abre Figma Desktop y el archivo del CV.
+1. Plugins → Development → VANTAGE CV Sync.
+1. Copia el contenido completo del .md de CV-B y pégalo en el área de texto del plugin.
+1. Haz clic en Inyectar a Nodos Nativos.
+1. Verifica la notificación: VANTAGE Sync: X nodos actualizados vía Registry V2 (ID crudo).
+1. Revisa el lienzo visualmente y exporta: frame del CV → Export → PDF.
+Si el plugin reporta Keys sin resolver, ver §5.5. Para instalar el plugin por primera vez, ver §5.5.
 ### Sesión 3 — QA (validación antes de aplicar)
 ```plain text
 QA [adjunta el PDF exportado]
@@ -392,15 +399,18 @@ Usar cuando el sistema no ha sido operado por más de 5 días.
       # Confirmar que la lista refleja el estado actual de Notion
 ```
 ### 5.5 Figma Sync — Uso Operativo
-Figma Sync es el paso final del flujo CV-B: una vez que el operador autoriza el Markdown generado, el plugin inyecta el contenido directamente en los nodos de texto del lienzo Figma sin intervención manual nodo por nodo.
-Cuándo se usa: después de que el operador aprueba el output CV-B y tiene el archivo .md con figma_text_id en mano.
+El .md que entrega CV-B no es un borrador para editar a mano — es el payload del plugin. Cada bloque ###### [figma_text_id](ID) es una instrucción de inyección: el plugin lee el ID, localiza el nodo en el lienzo y reemplaza su texto de forma atómica. No hay transcripción manual.
+Cuándo se usa: después de que autorizas el output de CV-B y tienes el archivo .md en mano.
 Flujo de uso:
-1. Abrir el archivo Figma del CV.
-1. Ejecutar el plugin VANTAGE CV Sync (Menú → Plugins → Development → VANTAGE CV Sync).
-1. Pegar el contenido del .md de CV-B en el área de texto del plugin (acepta también JSON por KEY semántica).
-1. Hacer clic en Inyectar a Nodos Nativos.
-1. Verificar la notificación: VANTAGE Sync: X nodos actualizados vía Registry V2 (ID crudo).
-Si la notificación reporta Keys sin resolver, revisar que los figma_text_id del .md coincidan con los IDs en registry_seed.json. Si el lienzo fue modificado, regenerar el registry.
+1. Abre Figma Desktop (no la versión web — el plugin requiere desktop) y el archivo del CV.
+1. Plugins → Development → VANTAGE CV Sync.
+1. Copia el contenido completo del .md de CV-B y pégalo en el área de texto del plugin.
+1. Haz clic en Inyectar a Nodos Nativos.
+1. Verifica la notificación: VANTAGE Sync: X nodos actualizados vía Registry V2 (ID crudo).
+1. Revisa el lienzo visualmente. Exporta: selecciona el frame del CV → Export → PDF.
+Si algo falla:
+Instalación del plugin (una sola vez):
+Figma Desktop → Plugins → Development → Import plugin from manifest... → navega a ~/Documents/04-Vantage_CV/Figma Sync/ → selecciona manifest.json. El plugin queda disponible permanentemente.
 El plugin no modifica Notion ni el Tracker. Opera exclusivamente sobre el lienzo Figma activo.
 ### Gate Decisions
 ### Comandos de Mantenimiento del Tracker
@@ -455,6 +465,7 @@ La resolución de entidades depende de resolver_registry_v2.json. Este archivo n
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_duplicates.py (alias: vdedup)
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/dedup_opportunities.py (alias: vopport)
 ## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-changelog-001] 11. CHANGELOG
+v8.7.1 · 2026-06-27: Gap documental Figma Injection cerrado. Manual §4 Miércoles ("Qué hace el usuario con el output") reescrito — eliminada referencia a CANON_MARKDOWN.md, flujo de 6 pasos con plugin. §5.5 expandida con tabla de errores comunes e instrucciones de instalación del plugin.
 v8.7 · 2026-06-27: Figma Sync integrado como CV Output Layer. registry_seed.json establecido como SSOT de nodos Figma. code.js refactorizado a Registry V2 (resolución O(1) por ID crudo, resolver dual KEY/ID). Manual §3 y §5.5 actualizados.
 v8.5.3 · 2026-06-23: vsync_doc.py creado — sync bidireccional Notion ↔ .md para 5 páginas fundacionales. BUG-005 cerrado.
 v8.5.2 · 2026-06-21: Rewrite notion_utils.py (Client + namespaces). NOTION_VERSION corregida a 2022-06-28. DB IDs corregidos en 4 scripts. pyyaml instalado. layer_1_pipeline.sh fix argumento backfill. batch_operations.py protegido con flag --execute.
