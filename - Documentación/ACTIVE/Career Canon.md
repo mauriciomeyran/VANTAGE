@@ -396,6 +396,7 @@ ALDO Group, Montréal, Canadá_
 ---
 ### Figma Tag Schema
 > Formato base obligatorio para todos los Derived Outputs generados desde el Career Canon. Aplica ES + EN.
+> SSOT de IDs de nodos: registry_seed.json en 04-Vantage_CV/Figma Sync/ es la fuente única de verdad para los IDs numéricos de nodo Figma. Si hay discrepancia entre un figma_text_id en un output CV-B y el registry, el registry gana. Ante cualquier cambio en la estructura del lienzo Figma, actualizar registry_seed.json antes de generar nuevos CV-B.
 ### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-output-contract-tagregistry-001] Tag Registry
 ---
 ### Formato de Entrega Obligatorio

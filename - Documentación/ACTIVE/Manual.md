@@ -391,7 +391,17 @@ Usar cuando el sistema no ha sido operado por más de 5 días.
       python3 vantage.py ask "find candidates"
       # Confirmar que la lista refleja el estado actual de Notion
 ```
-## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-tracker-001] 6. TRACKER
+### 5.5 Figma Sync — Uso Operativo
+Figma Sync es el paso final del flujo CV-B: una vez que el operador autoriza el Markdown generado, el plugin inyecta el contenido directamente en los nodos de texto del lienzo Figma sin intervención manual nodo por nodo.
+Cuándo se usa: después de que el operador aprueba el output CV-B y tiene el archivo .md con figma_text_id en mano.
+Flujo de uso:
+1. Abrir el archivo Figma del CV.
+1. Ejecutar el plugin VANTAGE CV Sync (Menú → Plugins → Development → VANTAGE CV Sync).
+1. Pegar el contenido del .md de CV-B en el área de texto del plugin (acepta también JSON por KEY semántica).
+1. Hacer clic en Inyectar a Nodos Nativos.
+1. Verificar la notificación: VANTAGE Sync: X nodos actualizados vía Registry V2 (ID crudo).
+Si la notificación reporta Keys sin resolver, revisar que los figma_text_id del .md coincidan con los IDs en registry_seed.json. Si el lienzo fue modificado, regenerar el registry.
+El plugin no modifica Notion ni el Tracker. Opera exclusivamente sobre el lienzo Figma activo.
 ### Gate Decisions
 ### Comandos de Mantenimiento del Tracker
 Estos comandos operan sobre el estado del Tracker y están disponibles como subcomandos de vl1. Cada uno tiene un alcance preciso y un modo de operación por defecto.
@@ -445,6 +455,7 @@ La resolución de entidades depende de resolver_registry_v2.json. Este archivo n
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_duplicates.py (alias: vdedup)
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/dedup_opportunities.py (alias: vopport)
 ## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-changelog-001] 11. CHANGELOG
+v8.7 · 2026-06-27: Figma Sync integrado como CV Output Layer. registry_seed.json establecido como SSOT de nodos Figma. code.js refactorizado a Registry V2 (resolución O(1) por ID crudo, resolver dual KEY/ID). Manual §3 y §5.5 actualizados.
 v8.5.3 · 2026-06-23: vsync_doc.py creado — sync bidireccional Notion ↔ .md para 5 páginas fundacionales. BUG-005 cerrado.
 v8.5.2 · 2026-06-21: Rewrite notion_utils.py (Client + namespaces). NOTION_VERSION corregida a 2022-06-28. DB IDs corregidos en 4 scripts. pyyaml instalado. layer_1_pipeline.sh fix argumento backfill. batch_operations.py protegido con flag --execute.
 v8.4 · Post-Audit + Documentation Renewal · 2026-06-17: Integración transversa de VANTAGE Runtime. Refactorización de Manual. Troubleshooting expandido. Cold Start añadido. Comandos sync corregidos.

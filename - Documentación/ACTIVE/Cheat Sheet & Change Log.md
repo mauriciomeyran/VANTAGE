@@ -7,8 +7,15 @@
 ### lazy_loader.py — Ruta Canónica
 cd ~/Documents/04-Vantage_CV/Layer_1/scripts && source ../.venv/bin/activate && python lazy_loader.py --page {PAGE_ID} --route {ruta}
 ### Layer 4 — Version Control & Documental
+### Figma Sync — CV Output Layer
+04-Vantage_CV/Figma Sync/ — Plugin Figma para inyección de payloads CV-B al lienzo.
 ### Runtime CLI (vantage.py)
 ## [ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_001] 2. CHANGELOG
+## v8.7 — VANTAGE · 2026-06-27
+> ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_v8.7
+- [ARCH] Figma Sync integrado como CV Output Layer — Carpeta Figma Sync/ establecida al mismo nivel jerárquico que L1–L4 dentro de 04-Vantage_CV/. Contiene los 4 componentes del plugin Figma: manifest.json · code.js · ui.html · registry_seed.json. No es capa de búsqueda ni de infraestructura de datos — es la capa de materialización del CV en Figma.
+- [NEW] registry_seed.json — SSOT de nodos Figma — JSON canónico que mapea tokens semánticos (ej. HEADER_NAME, EXP_L_OR_AL_LUXE_M_XICO_BULLET_1) a IDs crudos de nodo Figma (ej. "2:4"). 52 tokens mapeados cubriendo header, perfil, habilidades, experiencia C01–C05, formación y certificaciones. Fuente única de verdad para toda operación de inyección sobre el lienzo.
+- [REFACTOR] code.js — Registry V2 / Resolver Layer V1 — Motor del plugin refactorizado. Deprecado: findAll() con búsqueda O(n) por nombre de capa [VANTAGE] KEY_NAME. Activo: getNodeById(rawId) con resolución O(1). Resolver dual: KEY semántica → REGISTRY → ID crudo; ID crudo directo (flujo Markdown figma_text_id) → uso directo sin lookup. Notify actualizado para confirmar modo Registry V2 y reportar keys sin resolver.
 ## v8.5.4 — VANTAGE · 2026-06-23
 > ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_v8.5.4
 - [FIX] Campo jd agregado al pipeline L1/L2 — bug resuelto en consolidación — jd estaba ausente del ITEM SCHEMA de Prompt A y de la capa de escritura de feed_processor.py, impidiendo que el texto del JD llegara al Tracker. Tres patches quirúrgicos aplicados: (1) Prompt A — "jd": "string or null" agregado al ITEM SCHEMA como último campo, con instrucción de poblar cuando fetch_status = direct_apply; (2) feed_processor.py — jd_prop agregado a NotionSchema; JD escrito en build_notion_properties() via rich_text_value(rec["jd"][:2000]); (3) Kernel §4 — mapeo jd → JD documentado en tabla de vocabulario; nota operativa sobre comportamiento cuando el campo llega null (fetch_status ≠ direct_apply). Wrappers L1/L2 heredan el contrato de Prompt A sin cambios individuales.

@@ -21,6 +21,7 @@ ARCHIVO DRY RUN (COL).............37d938be-fc42-8022-9191-000bf6cdac7b
 BUG TRACKER (DB)..................36e938be-fc42-81bd-9e1f-dc360b3b45f5
 BUG TRACKER (COL).................36e938be-fc42-81f8-8c6f-000b6769ba03
 ALIASES & CHANGE LOG..............37c938be-fc42-80d4-b9ae-f5969830331b
+FIGMA SYNC........................04-Vantage_CV/Figma Sync/
 ```
 # 1. SCOPE Y ECONOMÍA DE CONTEXTO
 - Runtime: L0 (Lectura estricta). Cero escritura directa.
@@ -68,4 +69,4 @@ MCP.
 - ruta: gate-decision-001 (Bypass, BLOCKED).
 - ruta: regla-de-oro-000 (Comportamiento).
 - ruta: fallo-001 (Protocolo de error).
-- ruta: status-001 (Estado del sistema).
+- ruta: figma-sync-001 (Registry V2, SSOT registry_seed.json, resolución dual KEY→ID / ID directo).
