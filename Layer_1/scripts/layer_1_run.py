@@ -615,7 +615,7 @@ def main():
     for item in items:
         props = item["properties"]
         url = txt(props.get("URL"))
-        source_type = txt(props.get("Source_Type")) or ""
+        source_type = txt(props.get("Source_Type ")) or ""
         if not url:
             continue
         # Fuente aplica a Vacante e Inbound (cualquier tipo con URL) — fix v7.5
@@ -635,6 +635,28 @@ def main():
     else:
         print("OK Todas las fuentes ya estaban correctas")
 
+
+    # --- Auto-asignación Source_Type vacío ---
+    source_updates = 0
+    for item in items:
+        props = item["properties"]
+        url = txt(props.get("URL"))
+        if not url:
+            continue
+        st = (props.get("Source_Type ", {}).get("select") or {}).get("name", "")
+        if not st:
+            try:
+                client.pages.update(
+                    page_id=item["id"],
+                    properties={"Source_Type ": {"select": {"name": "Vacante"}}}
+                )
+                source_updates += 1
+            except Exception as e:
+                print(f"WARNING: Error asignando Source_Type {item['id'][:8]}: {e}")
+    if source_updates > 0:
+        print(f"OK Source_Type=Vacante asignado en {source_updates} registros")
+    else:
+        print("OK Source_Type: Sin cambios")
     # ==================== PASO 1: SCORING v6.4 ====================
     print("\nPaso 1: Scoring deterministico v6.4...")
     items = query_all_items(client, ds_id)

@@ -92,7 +92,7 @@ if __name__ == "__main__":
         vm_scope = txt(props.get("VM_Scope"))
         role_class = txt(props.get("Role_Class"))
         status = txt(props.get("Status"))
-        source_type = txt(props.get("Source_Type"))
+        source_type = txt(props.get("Source_Type "))
         current_action = txt(props.get("Next_Action"))
         
         # Crear entry para gate_logic

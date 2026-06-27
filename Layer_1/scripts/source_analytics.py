@@ -89,7 +89,7 @@ def main():
         fetch = txt(props.get("Fetch"))
         score = props.get("Score", {}).get("number") or 0
         status = txt(props.get("Status"))
-        source_type = txt(props.get("Source_Type"))
+        source_type = txt(props.get("Source_Type "))
         notas = txt(props.get("Notas"))
         
         # Classify source

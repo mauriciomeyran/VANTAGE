@@ -82,60 +82,6 @@
       "source_db": "VANTAGE_TRACKER"
     },
     {
-      "entity_id": "TRACKER:H_a66fe2ef8564ca32",
-      "canonical_id": "a66fe2ef8564ca32e39f25888dca877dd99437c90cb8adde606dbefdf47b46bf",
-      "page_id": "38b938be-fc42-811f-ace9-f055f21492ac",
-      "page_url": "https://app.notion.com/p/Retail-Instore-Visual-Merchandiser-Antenas-38b938befc42811face9f055f21492ac",
-      "hash": "a66fe2ef8564ca32e39f25888dca877dd99437c90cb8adde606dbefdf47b46bf",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_78d3bb3fbd200e77",
-      "canonical_id": "78d3bb3fbd200e7747ccb9600a25692544d3e49af87bb26d42cd7e9ea466cd29",
-      "page_id": "38b938be-fc42-810a-8573-fc9d9eb2ac70",
-      "page_url": "https://app.notion.com/p/Lead-Account-Marketing-Innovaculto-LATAM-38b938befc42810a8573fc9d9eb2ac70",
-      "hash": "78d3bb3fbd200e7747ccb9600a25692544d3e49af87bb26d42cd7e9ea466cd29",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_e1641d92569a27a3",
-      "canonical_id": "e1641d92569a27a3798444712a7e6f5b09e4be0197fe8501337e582a6e832ff0",
-      "page_id": "38b938be-fc42-8134-a198-e7af2a826890",
-      "page_url": "https://app.notion.com/p/Shopper-Experience-Ego-38b938befc428134a198e7af2a826890",
-      "hash": "e1641d92569a27a3798444712a7e6f5b09e4be0197fe8501337e582a6e832ff0",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_e3b0c7f7627c9a11",
-      "canonical_id": "e3b0c7f7627c9a1125abecadb7a50e0efa7ccb6b860648861ddeb2645fdd5048",
-      "page_id": "38b938be-fc42-815c-b991-dbad1d7dc8d0",
-      "page_url": "https://app.notion.com/p/Makeup-Brand-Manager-38b938befc42815cb991dbad1d7dc8d0",
-      "hash": "e3b0c7f7627c9a1125abecadb7a50e0efa7ccb6b860648861ddeb2645fdd5048",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_7ceec48598ce2672",
-      "canonical_id": "7ceec48598ce2672ba7feeff52b6a4d5cff95749330f3aa5d20dea3ad37b16b4",
-      "page_id": "38b938be-fc42-8156-a8f5-d476768ea9db",
-      "page_url": "https://app.notion.com/p/Area-Visual-Merchandising-38b938befc428156a8f5d476768ea9db",
-      "hash": "7ceec48598ce2672ba7feeff52b6a4d5cff95749330f3aa5d20dea3ad37b16b4",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_b3db5f0770eca25a",
-      "canonical_id": "b3db5f0770eca25ac11c1202ad97ebf4222f7038885b19b160e9afa47a93fba4",
-      "page_id": "38b938be-fc42-8197-a77e-d8b757f9ed12",
-      "page_url": "https://app.notion.com/p/Massimo-Dutti-Visual-Merchandising-Interlomas-Samara-38b938befc428197a77ed8b757f9ed12",
-      "hash": "b3db5f0770eca25ac11c1202ad97ebf4222f7038885b19b160e9afa47a93fba4",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
       "entity_id": "TRACKER:H_f5c6ee36f4ac8164",
       "canonical_id": "f5c6ee36f4ac8164c0191239ae8d5735c8fbbb4d0061a5d847f960096d5351c1",
       "page_id": "385938be-fc42-81bb-a84f-cee8d1f37ca5",
@@ -5321,10 +5267,10 @@
     }
   ],
   "metrics": {
-    "total_entities": 591,
-    "tracker_entities": 26,
+    "total_entities": 585,
+    "tracker_entities": 20,
     "archive_entities": 565,
-    "hash_coverage": 89.51,
+    "hash_coverage": 89.4,
     "orphan_candidates": 62
   }
 }
