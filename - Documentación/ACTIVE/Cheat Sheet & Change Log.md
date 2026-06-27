@@ -4,6 +4,8 @@
 ### Layer 1 — Active Recon
 ### Layer 1 — Dedup & Oportunidades
 ### Layer 3 & Dashboard
+### lazy_loader.py — Ruta Canónica
+cd ~/Documents/04-Vantage_CV/Layer_1/scripts && source ../.venv/bin/activate && python lazy_loader.py --page {PAGE_ID} --route {ruta}
 ### Layer 4 — Version Control & Documental
 ### Runtime CLI (vantage.py)
 ## [ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_001] 2. CHANGELOG
