@@ -65,6 +65,23 @@ Las capas tienen peso arquitectónico igual pero frecuencia de ejecución asimé
 Esta asimetría de cadencia no implica jerarquía. Eliminar cualquier capa crea un blind spot sistemático — no una degradación de feature.
 ### Punto de Convergencia Único
 Las tres capas de búsqueda escriben a Notion. Notion es el único estado compartido. vantage-pipeline lee de Notion — no de los outputs de capa directamente.
+### Figma Sync — CV Output Layer
+Tipo: Capa de Materialización de CV (WriteOnly sobre lienzo Figma)
+Propósito: Recibe el payload CV-B aprobado por el operador e inyecta el contenido directamente en los nodos de texto del lienzo Figma, resolviendo cada token semántico a su ID crudo de nodo vía registry_seed.json.
+```plain text
+CV-B (Markdown + figma_text_id) → ui.html (payload) → code.js (Registry V2)
+→ figma.getNodeById(rawId) → node.characters = item.text → Lienzo Figma
+```
+Stack:
+- manifest.json — Configuración del plugin (main: code.js, ui: ui.html, editorType: figma)
+- code.js — Motor. Registry V2 / Resolver Layer V1. Resolución O(1): getNodeById(REGISTRY[key] || key). Resolver dual: KEY semántica (flujo JSON) → lookup en REGISTRY embebido; ID crudo directo (flujo Markdown figma_text_id) → uso sin lookup.
+- ui.html — Interfaz de intercambio de payloads. Acepta JSON por KEY semántica o Markdown con bloques ###### [figma_text_id](ID). Motor de extraccion de boldRanges incluido.
+- registry_seed.json — SSOT del mapeo token → ID. Ver §4.7.
+Invariantes:
+- Figma Sync no escribe en Notion ni en el Tracker
+- Figma Sync no es capa de búsqueda ni de infraestructura de datos
+- registry_seed.json no se edita manualmente sin regenerar desde el lienzo Figma
+- El prefijo [VANTAGE] KEY_NAME en capas del canvas es para auditoría visual humana — no es el mecanismo de resolución del plugin
 ---
 ## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:ownership-001] 3. OWNERSHIP POR CONTENIDO
 ### Regla de Arquitectura
@@ -96,6 +113,11 @@ Para que una entidad se considere resuelta con éxito, el Runtime ejecuta:
 1. Registry Mapping: Mapeo de DB a data_source_id.
 1. Notion Query: Petición HTTP contra el endpoint de Notion.
 1. Validation: Verificación de integridad del resultado.
+### 4.7 registry_seed.json — SSOT de Nodos Figma
+registry_seed.json no es un campo Class A ni Class B del Tracker. Es el esquema de IDs de nodos del lienzo Figma, propiedad de la Figma Sync Layer.
+Ownership: Figma Sync — ni AI Component ni Python lo leen ni escriben durante el pipeline de vacantes.
+Contrato de modificación: Solo se actualiza cuando cambia la estructura del lienzo Figma (nuevos nodos, reordenamiento de frames). El proceso correcto es: exportar IDs actualizados desde Figma → reemplazar registry_seed.json → verificar cobertura de tokens → vgit.
+Ruta canónica: 04-Vantage_CV/Figma Sync/registry_seed.json
 ### 4.6 APROBAR_WRITE : Alcance
 APROBAR_WRITE autoriza escritura de campos Class A únicamente. No aprueba, valida ni activa ningún campo Class B. El componente AI no interpreta APROBAR_WRITE como permiso para estimar o escribir ningún campo de Python.
 Variantes aceptadas:
