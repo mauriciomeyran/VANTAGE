@@ -156,3 +156,5 @@ cd ~/Documents/04-Vantage_CV/Layer_1/scripts && source ../.venv/bin/activate && 
 ## v4.x — JHS
 - Sistema manual Claude-only
 - Sin pipeline Python; procesamiento y evaluación en sesión de chat
+---
+ESTADO: v8.7 | ACTUALIZADO: 2026-06-27

@@ -70,3 +70,5 @@ MCP.
 - ruta: regla-de-oro-000 (Comportamiento).
 - ruta: fallo-001 (Protocolo de error).
 - ruta: figma-sync-001 (Registry V2, SSOT registry_seed.json, resolución dual KEY→ID / ID directo).
+---
+ESTADO: v8.7 | ACTUALIZADO: 2026-06-27
