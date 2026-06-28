@@ -25,7 +25,7 @@
         try {
           const parsedData = {};
           const duplicateIds = [];
-          const blockRegex = /######\s+\[figma_text_id\]\(([^)]+)\)[\r\n]+([\s\S]*?)(?=######\s+\[figma_text_id\]|\s*$)/g;
+          const blockRegex = /######\s+\[figma_text_id\]\(([^)]+)\)\s*([\s\S]*?)(?=######\s+\[figma_text_id\]|\s*$)/g;
           let match;
 
           while ((match = blockRegex.exec(rawText)) !== null) {
