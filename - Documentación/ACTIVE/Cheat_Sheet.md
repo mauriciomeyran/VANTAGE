@@ -1,6 +1,6 @@
 # V | CHEAT SHEET & CHANGE LOG
 
-# ## [ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Aliases_001] 0. CHEAT SHEET
+## [ID:37c938be-fc42-80d4-b9ae-f5969830331b:Aliases_001] 0. CHEAT SHEET
 ### Layer 1 — Active Recon
 ### Layer 1 — Dedup & Oportunidades
 ### Layer 3 & Dashboard
@@ -10,10 +10,18 @@ cd ~/Documents/04-Vantage_CV/Layer_1/scripts && source ../.venv/bin/activate && 
 ### Figma Sync — CV Output Layer
 04-Vantage_CV/Figma Sync/ — Plugin Figma para inyección de payloads CV-B al lienzo.
 ### Runtime CLI (vantage.py)
-## [ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_001] 2. CHANGELOG
-## v8.7.1 — VANTAGE · 2026-06-28
-> ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_v8.7.1
-- [PATCH] Auditoría editorial v8.7 — 4 documentos fundacionales corregidos — 16 hallazgos aplicados vía scripts de patch atómicos (patch_kernel.py · patch_manual.py · patch_career_canon.py · patch_cheat_sheet.py). Kernel: GAP-03 duplicado eliminado, §4.6/§4.7 reordenados, 17 headers [ID: UUID] normalizados a [ID:UUID], lista §4.5 numeración corregida. Manual: 4 prefijos KERNEL-* corregidos a MANUAL-* en ÍNDICE, IDs RUNTIME-* con notas de resolución, stubs §4 CICLO SEMANAL y §6 GESTIÓN DE DATOS insertados, header SLA con ID asignado. Career Canon: título duplicado eliminado, versión 8,5→8.7, fecha normalizada a ISO 8601, tag <aside> HTML eliminado, §B SKILLS CANON y §H ACHIEVEMENT LIBRARY marcadas [PENDING DATA]. Cheat Sheet: header # ## crítico corregido a ##, stub §1 ALIASES & COMANDOS RÁPIDOS insertado con tabla canónica, header CHANGELOG normalizado.
+## [ID:37c938be-fc42-80d4-b9ae-f5969830331b:Aliases_detail_001] 1. ALIASES & COMANDOS RÁPIDOS
+> Aliases canónicos del sistema. Referencia operativa completa en §0 arriba.
+
+| Alias | Comando completo | Descripción |
+|-------|-----------------|-------------|
+| vgit  | python Layer_4/scripts/git_sync.py | Sync git manual |
+| vdoc  | python Layer_4/scripts/vsync_doc.py | Sync Notion ↔ ACTIVE/ |
+| vl1   | ~/vantage_pipeline.sh | Pipeline principal |
+| vl3   | Layer_3/wrappers/layer_3_mail.sh | L3 mail manual |
+| vd    | dashboard_start.sh | Arranca Dashboard RT-1 |
+
+## [ID:37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_001] 2. CHANGELOG
 ## v8.7 — VANTAGE · 2026-06-27
 > ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_v8.7
 - [ARCH] Figma Sync integrado como CV Output Layer — Carpeta Figma Sync/ establecida al mismo nivel jerárquico que L1–L4 dentro de 04-Vantage_CV/. Contiene los 4 componentes del plugin Figma: manifest.json · code.js · ui.html · registry_seed.json. No es capa de búsqueda ni de infraestructura de datos — es la capa de materialización del CV en Figma.
