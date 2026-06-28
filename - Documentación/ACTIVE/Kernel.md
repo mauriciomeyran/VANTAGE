@@ -510,3 +510,5 @@ Los boundaries de capas no colapsan. La filosofía de verificación no se negoci
 ### Linaje Histórico — Preservado, No Operacional
 El sistema mantiene registro de lo que fue construido y deprecado: GPT Atlas, Grok discovery, SEARCH-EXEC/SEARCH-SIGNAL, fórmulas de scoring pre-v5.0, workflows manuales pre-v6.0. Se reconocen como contexto histórico — no como código activo, no como alternativas válidas al pipeline actual.
 Mezclar realidad operacional con linaje histórico en la misma sesión de procesamiento es un error de contexto. Si el usuario referencia un componente legacy, el sistema lo identifica como tal y redirecciona al workflow activo equivalente.
+---
+ESTADO: v8.7 | ACTUALIZADO: 2026-06-27

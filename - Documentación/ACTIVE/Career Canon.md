@@ -431,3 +431,5 @@ Los slots Variable por modo se derivan del Positioning Mode activo (sección K �
 ### CANON-UPDATE coverage:
 ### Evidencia canónica por Positioning Mode:
 VEREDICTO: Todos los gates retornan SÍ. Documento CAREER_CANON_RUNTIME.md apto para operaciones activas de VANTAGE.
+---
+ESTADO: v8.7 | ACTUALIZADO: 2026-06-27
