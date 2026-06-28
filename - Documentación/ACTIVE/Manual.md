@@ -2,8 +2,29 @@
 
 > ID: 372938be-fc42-8050-9a67-e40857d7806e:audience-scope-001
 ## CONTENIDO
+# ÍNDICE ESTRATÉGICO DE OPERACIÓN
+0.0 PROTOCOLO & KERNEL [L4]
+0.1 [ID:KERNEL-AUDIENCE-001] Guía de Estilo y Protocolo IA
+0.2 [ID:KERNEL-PURPOSE-001] Filosofía de Interacción y Kernel
+1.0 ARQUITECTURA DEL SISTEMA [L4]
+1.1 [ID:KERNEL-ARCHITECTURE-001] Estructura de Capas (L0-L4)
+1.2 [ID:KERNEL-OWNERSHIP-001] Ownership: Class A vs. Class B
+2.0 VANTAGE RUNTIME [L0]
+2.1 [ID:RUNTIME-COMMANDS-001] Comandos de Consola y Agent API
+2.2 [ID:RUNTIME-RESOLVER-001] Resolver: Capa de Contexto Técnico
+3.0 OPERACIÓN & WORKFLOW [L1-L3]
+3.1 [ID:MANUAL-SETUP-001] Setup Inicial y Prerrequisitos
+3.2 [ID:MANUAL-VCHECKLIST-001] Ciclo Semanal: Checklist de Control
+3.3 [ID:MANUAL-RECON-001] Recon & Search: Estrategias de Búsqueda
+4.0 GOBERNANZA DE DATOS
+4.1 [ID:SCHEMA-CONTRACT-001] Schemas y Contratos de Información
+4.2 [ID:GATE-LOGIC-001] Gate Decisions: Protocolos de Bypass
+5.0 SALUD & MANTENIMIENTO
+5.1 [ID:HEALTH-CHECK-001] Mantenimiento de Memoria y Salud
+5.2 [ID:REGISTRY-GOV-001] Registro de Cambios y Gobernanza
+5.3 [ID:MANUAL-FALLO-001] Troubleshooting y Protocolos de Fallo
 ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-objetivo-001
-## 1. OBJETIVO DE VANTAGE
+## [ID:MANUAL-OBJETIVO-001] 1. OBJETIVO DE VANTAGE
 ### El Problema que Resuelve
 Una búsqueda laboral sin estructura produce cuatro fallas operativas concretas:
 - Oportunidades de alta señal desaparecen antes de ser procesadas
@@ -26,7 +47,7 @@ Evidencia de posicionamiento (Positioning Modes N1–N4) verificada:
 ### Para Quién Es Este Sistema
 Perfil: Profesional senior (10+ años) en Visual Merchandising, Brand Environment, Store Design, Retail Experience. Geografía: CDMX / LATAM. Sectores target: Lujo (LVMH, Kering, Richemont), retail premium (Nike, Apple, Inditex), cool DNA (Gentle Monster, Ben & Frank), agencias de experiencia.
 > Las empresas excluidas permanentemente (Hard Blocks) están documentadas en §6 — Gestión de Datos.
-## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-funcionamiento-001] 2. CÓMO FUNCIONA
+## [ID:MANUAL-FUNCIONAMIENTO-001] 2. CÓMO FUNCIONA
 ### Flujo General del Pipeline
 El pipeline opera ecuencialmente. Cada paso tiene un responsable y un output definido.
 ### División del Trabajo
@@ -34,7 +55,7 @@ El pipeline opera ecuencialmente. Cada paso tiene un responsable y un output def
 El sistema aplica dos capas de exclusión para garantizar la calidad de la señal:
 - Hard Blocks (Permanentes): Empresas o roles que nunca entrarán al sistema (ej. L'Oréal, Levi's). Se filtran en el origen y no son recuperables. Ver §6.
 - Soft Blocks (Contextuales): Vacantes bloqueadas por inconsistencias en datos Class A (URL rota, JD parcial) o score insuficiente. Son recuperables mediante el Dashboard (RT-1) corrigiendo el input.
-## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-setup-001] 3. SETUP
+## [ID:MANUAL-SETUP-001] 3. SETUP
 ### Prerrequisitos
 - Cuenta de Notion con base de datos VANTAGE TRACKER activa
 - Python 3.8+ instalado en Mac
@@ -94,7 +115,7 @@ python vsync_doc.py --dry-run
 Output esperado: 5 documentos listados con diff por documento, sin errores.
 Si falla: verificar que layer_1.env exista y que el token no tenga \n embebido.
 ---
-### [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-vchecklist-001] CHECKLIST INTERACTIVO
+### [ID:MANUAL-VCHECKLIST-001] CHECKLIST INTERACTIVO
 El V-Checklist (V-CHECKLIST · Vantage Weekly) es la interfaz operativa del ciclo semanal descrito en §4. Es un archivo HTML autocontenido con progreso persistente (localStorage), modo claro/oscuro y navegación por día.
 Resumen de tareas por día:
 Ubicación: archivo local Checklist.html (abre en navegador).
@@ -305,7 +326,7 @@ CV‑B no inicia con un HANDOFF incompleto. Si cualquier campo está ausente, el
 ### Sesión 2 — CV‑B (producción del CV)
 PROTOCOL UPDATE - SKELETON‑FIRST:
 CV‑B ya no tiene permiso creativo sobre la estructura. El proceso es de inyección en slots.
-- Usar Golden Skeleton (Smart Bamboo FINAL) como base.
+- Usar Golden Skeleton  como base.
 - Vaciar info del Canon en slots existentes sin alterar IDs.
 Abre una sesión nueva de Claude. Pega el HANDOFF completo y dispara:
 ```plain text
@@ -319,7 +340,7 @@ El output tiene tres partes obligatorias y secuenciales:
 Regla de orden: El Markdown nunca se escribe en Notion si el operador no ha autorizado explícitamente. El orden cronológico de experiencia es invariante: C01 → C02 → C03 → C04 → C05. No se reordena por vacante ni por Positioning Mode.
 Escritura en Notion (dos destinos):
 - Página en DERIVED OUTPUTS · ARCHIVE del Career Canon — con footer de Positioning Mode activo y fecha.
-- Bloque # MARKDOWN CANON ALIGNED en la página de la vacante en el Tracker — el Markdown completo con Figma tags, dentro de un bloque de código plain text.
+- Bloque # MARKDOWN CANON ALIGNED en la página de la vacante en el Tracker — el Markdown completo con Figma tags, dentro de un bloque de código markdown.
 ### Qué hace el usuario con el output
 Con el .md autorizado en mano, el flujo hacia Figma es directo — el plugin hace el trabajo pesado:
 1. Abre Figma Desktop y el archivo del CV.
@@ -440,16 +461,16 @@ Sin --dry-run, solicita confirmación explícita (s) antes de cualquier escritur
 - Levi Strauss & Co. (Levi's, Dockers)
 - El Palacio de Hierro
 - Roles store-level sin gestión estratégica.
-## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-troubleshooting-001] 7. TROUBLESHOOTING
-## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-prompts-wrappers-001] 8. PROMPTS & WRAPPERS
+## [ID:MANUAL-TROUBLESHOOTING-001] 7. TROUBLESHOOTING
+## [ID:MANUAL-PROMPTS-WRAPPERS-001] 8. PROMPTS & WRAPPERS
 Se consultan vía MCP desde la PROMPT LIBRARY en Notion.
-## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-cheatsheets-001] 9. CHEAT SHEETS
+## [ID:MANUAL-CHEATSHEETS-001] 9. CHEAT SHEETS
 ### Cómo la IA lee el KERNEL y el CAREER CANON (Lazy Load)
 La extracción de reglas y contratos lógicos (Lazy Load) opera con la siguiente prioridad:
 Prioridad A — Terminal (canónico): lazy_loader.py ejecuta Server-Side Lazy Load. Parsea bloques hijos de la Notion API y devuelve únicamente el payload del ID solicitado. Consumo: ~150 tokens por llamada.
 Prioridad B — MCP Notion: Reservado exclusivamente para escrituras (APROBAR_WRITE) y modificaciones estructurales de páginas. No se usa para lectura de reglas o contratos.
 Consulte las tablas de comandos para Terminal y Scripts en la sección completa.
-## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-healthcheck-001] 10. HEALTH CHECK
+## [ID:MANUAL-HEALTHCHECK-001] 10. HEALTH CHECK
 ### Red Flags — Ajustar Inputs, No Sistema
 - Ready-to-Apply vacío por más de 3 días → ajustar Prompt A (ver §8 — Prompts de Discovery), no el threshold
 - Career pages con éxito < 50% → revisar fuentes de discovery
@@ -464,15 +485,15 @@ La resolución de entidades depende de resolver_registry_v2.json. Este archivo n
 ### 10.3 Mantenimiento de Datos (Deduplicación)
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_duplicates.py (alias: vdedup)
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/dedup_opportunities.py (alias: vopport)
-## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-changelog-001] 11. CHANGELOG
+## [ID:MANUAL-CHANGELOG-001] 11. CHANGELOG
 v8.7.1 · 2026-06-27: Gap documental Figma Injection cerrado. Manual §4 Miércoles ("Qué hace el usuario con el output") reescrito — eliminada referencia a CANON_MARKDOWN.md, flujo de 6 pasos con plugin. §5.5 expandida con tabla de errores comunes e instrucciones de instalación del plugin.
 v8.7 · 2026-06-27: Figma Sync integrado como CV Output Layer. registry_seed.json establecido como SSOT de nodos Figma. code.js refactorizado a Registry V2 (resolución O(1) por ID crudo, resolver dual KEY/ID). Manual §3 y §5.5 actualizados.
 v8.5.3 · 2026-06-23: vsync_doc.py creado — sync bidireccional Notion ↔ .md para 5 páginas fundacionales. BUG-005 cerrado.
 v8.5.2 · 2026-06-21: Rewrite notion_utils.py (Client + namespaces). NOTION_VERSION corregida a 2022-06-28. DB IDs corregidos en 4 scripts. pyyaml instalado. layer_1_pipeline.sh fix argumento backfill. batch_operations.py protegido con flag --execute.
 v8.4 · Post-Audit + Documentation Renewal · 2026-06-17: Integración transversa de VANTAGE Runtime. Refactorización de Manual. Troubleshooting expandido. Cold Start añadido. Comandos sync corregidos.
-## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-reglas-de-oro-001] 12. REGLAS DE ORO PARA OPERADORES
+## [ID:MANUAL-REGLAS-DE-ORO-001] 12. REGLAS DE ORO PARA OPERADORES
 Base: [377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-000] a [377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-005].
-## [ID: 372938be-fc42-8050-9a67-e40857d7806e:manual-fallo-001] 13. FILOSOFÍA DE FALLO PARA OPERADORES
+## [ID:MANUAL-FALLO-001] 13. FILOSOFÍA DE FALLO PARA OPERADORES
 Base: [377938be-fc42-805e-a408-c9ae518d4fe7:fallo-001].
 Un "fallo" del sistema (URL muerta, Score = 0, Gate = BLOCKED, Ready-to-Apply vacío, JSON vacío en FEED) no es un bug — es el filtro operando correctamente. No intentes "arreglar" estos resultados manualmente ni le pidas a Claude que los fuerce.
 Qué hacer en su lugar:
