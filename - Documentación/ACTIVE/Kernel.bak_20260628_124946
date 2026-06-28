@@ -2,7 +2,7 @@
 
 > ID: 377938be-fc42-805e-a408-c9ae518d4fe7:audience-scope-001
 ## CONTENIDO
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:purpose-001] 1. PROPÓSITO DEL SISTEMA
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:purpose-001] 1. PROPÓSITO DEL SISTEMA
 VANTAGE resuelve un problema de ingeniería de atención: en una búsqueda laboral sin estructura, las oportunidades de alta señal desaparecen antes de ser procesadas, mientras el tiempo se consume en vacantes de baja calidad.
 La solución no es buscar más — es verificar antes de evaluar, y evaluar antes de escribir.
 ### Invariantes del Sistema
@@ -13,7 +13,7 @@ La solución no es buscar más — es verificar antes de evaluar, y evaluar ante
 ### Qué Significa Esto para el Sistema AI
 El componente AI es el procesador textual del pipeline: deduplica, normaliza, genera DRY RUN, escribe Class A en Notion, produce CVs. Evaluación de calidad estratégica de inputs y cálculo de campos Class B no son operaciones de este componente (ver [377938be-fc42-805e-a408-c9ae518d4fe7:ownership-001] — tabla de ownership y [377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-000] — Reglas de Oro). Si una tarea no está en la tabla de triggers ([377938be-fc42-805e-a408-c9ae518d4fe7:triggers-001]), no se ejecuta.
 ---
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:architecture-001] 2. ARQUITECTURA DE CUATRO CAPAS
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:architecture-001] 2. ARQUITECTURA DE CUATRO CAPAS
 El pipeline opera a través de cuatro capas no intercambiables, soportadas por un núcleo de observabilidad persistente.
 ### L0 — VANTAGE Runtime
 Tipo: Capa de Observabilidad y Abstracción de Datos (ReadOnly)
@@ -83,11 +83,11 @@ Invariantes:
 - registry_seed.json no se edita manualmente sin regenerar desde el lienzo Figma
 - El prefijo [VANTAGE] KEY_NAME en capas del canvas es para auditoría visual humana — no es el mecanismo de resolución del plugin
 ---
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:ownership-001] 3. OWNERSHIP POR CONTENIDO
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:ownership-001] 3. OWNERSHIP POR CONTENIDO
 ### Regla de Arquitectura
 Si una tarea no está asignada al componente, el componente no la ejecuta. Esta regla no tiene excepciones no documentadas. Las excepciones válidas están listadas en [377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-000] y [377938be-fc42-805e-a408-c9ae518d4fe7:fallo-001]. Si el sistema recibe una solicitud que corresponde a Python (score, gate, visual signal), rechaza con el template de Regla de Oro correspondiente.
 ---
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:schema-001] 4. SCHEMA DE DATOS
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:schema-001] 4. SCHEMA DE DATOS
 ### 4.1 Class A vs Class B
 El schema define ownership. Cada campo pertenece a exactamente un componente. No hay campos compartidos ni campos de escritura dual.
 Class A — Human-Primary
@@ -110,9 +110,14 @@ Prefixes válidos: TRACKER, ARCHIVO, DRYRUN, BUG.
 ### 4.5 Contrato de Resolución: 4 Pasos
 Para que una entidad se considere resuelta con éxito, el Runtime ejecuta:
 1. Lookup: Localización en entity_index_v2.json.
-2. Registry Mapping: Mapeo de DB a data_source_id.
-3. Notion Query: Petición HTTP contra el endpoint de Notion.
-4. Validation: Verificación de integridad del resultado.
+1. Registry Mapping: Mapeo de DB a data_source_id.
+1. Notion Query: Petición HTTP contra el endpoint de Notion.
+1. Validation: Verificación de integridad del resultado.
+### 4.7 registry_seed.json — SSOT de Nodos Figma
+registry_seed.json no es un campo Class A ni Class B del Tracker. Es el esquema de IDs de nodos del lienzo Figma, propiedad de la Figma Sync Layer.
+Ownership: Figma Sync — ni AI Component ni Python lo leen ni escriben durante el pipeline de vacantes.
+Contrato de modificación: Solo se actualiza cuando cambia la estructura del lienzo Figma (nuevos nodos, reordenamiento de frames). El proceso correcto es: exportar IDs actualizados desde Figma → reemplazar registry_seed.json → verificar cobertura de tokens → vgit.
+Ruta canónica: 04-Vantage_CV/Figma Sync/registry_seed.json
 ### 4.6 APROBAR_WRITE : Alcance
 APROBAR_WRITE autoriza escritura de campos Class A únicamente. No aprueba, valida ni activa ningún campo Class B. El componente AI no interpreta APROBAR_WRITE como permiso para estimar o escribir ningún campo de Python.
 Variantes aceptadas:
@@ -153,13 +158,8 @@ Toda entrada en proceso contiene los siguientes bloques en orden:
 1. ## ACTION ITEMS {toggle} — Responsable: tarea — Due: fecha
 1. ## RIESGOS / OPEN QUESTIONS {toggle}
 Entradas en Status=Target o en proceso sin entrevista confirmada: la página puede estar vacía o contener solo notas de contexto. El template de entrevista se agrega cuando se confirma primera ronda.
----### 4.7 registry_seed.json — SSOT de Nodos Figma
-registry_seed.json no es un campo Class A ni Class B del Tracker. Es el esquema de IDs de nodos del lienzo Figma, propiedad de la Figma Sync Layer.
-Ownership: Figma Sync — ni AI Component ni Python lo leen ni escriben durante el pipeline de vacantes.
-Contrato de modificación: Solo se actualiza cuando cambia la estructura del lienzo Figma (nuevos nodos, reordenamiento de frames). El proceso correcto es: exportar IDs actualizados desde Figma → reemplazar registry_seed.json → verificar cobertura de tokens → vgit.
-Ruta canónica: 04-Vantage_CV/Figma Sync/registry_seed.json
-
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:gate-decision-001] 5. GATE DECISION
+---
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:gate-decision-001] 5. GATE DECISION
 ### Lógica de Bypass (precede a toda lógica estándar)
 ```plain text
 Source_Type ∈ {Inbound, Referencia, Networking}
@@ -172,6 +172,11 @@ Solo aplica si no hay Bypass activo. Implementado en layer_1_run.py → gate():
 > EXPIRED y REVIEW_NEEDED no son outputs de gate() — son estados operativos asignados por otros pasos del pipeline (URL_GATE y feed_processor.py respectivamente).
 > Score NO es condición de Gate_Decision. Score determina únicamente el campo Match: Muy Alto ≥80 · Alto ≥60 · Medio ≥40 · Bajo <40
 ### Resolución de REVIEW_NEEDED
+> ⚠️ ALCANCE DE GAP-03: El guard GAP-03 protege el pipeline Python (feed_processor.py → process_record()).
+> Escritura directa vía MCP (notion-create-pages / notion-update-page) y flujos
+> HANDOFF → CV-B no tienen guard equivalente — esos puntos de entrada pueden escribir
+> campos Class B sin bloqueo. Estado: gap documentado, pendiente implementación de
+> class_b_guard.py (FX-1 open).
 > ⚠️ ALCANCE DE GAP-03: El guard GAP-03 protege el pipeline Python (feed_processor.py → process_record()).
 > Escritura directa vía MCP (notion-create-pages / notion-update-page) y flujos
 > HANDOFF → CV-B no tienen guard equivalente — esos puntos de entrada pueden escribir
@@ -193,7 +198,7 @@ Un gate que puede sobreescribirse manualmente no es un gate — es una sugerenci
 ### Flujo de Recuperación BLOCKED
 Gate = BLOCKED no es estado terminal. RT-1 permite corregir campos Class A (URL, JD, Source) y re-validar con Python. Si el fix produce CREATE, el patch se escribe en Notion. RT-1 no sobreescribe el gate; corrige el input para que Python cambie su decisión.
 ---
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:vantage-runtime-001] 6. VANTAGE RUNTIME (Observabilidad)
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:vantage-runtime-001] 6. VANTAGE RUNTIME (Observabilidad)
 ### 6.1 Componentes y Estado Verificado (al 2026-06-16)
 ### 6.2 Pitfalls Operativos y Gobernanza
 - RID-02 — Resolver Pagination (Abierto): El Resolver no pagina data_sources/query. En Archivo Tracker (384+ entidades), entidades fuera de la primera página pueden devolver not_found incorrectamente. Workaround: usar context directamente o verificar en Notion si resolve retorna not_found inesperado.
@@ -204,7 +209,7 @@ Gate = BLOCKED no es estado terminal. RT-1 permite corregir campos Class A (URL,
 Comando sync (implementado v8.4):
 vantage.py sync regenera entity_index_v2.json desde Notion en vivo. Atomic write (.tmp → os.replace). Preserva index anterior si falla. Invalida cache con force_reload=True post-sync.
 ---
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:cv-pipeline-001] 7. CV PIPELINE
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:cv-pipeline-001] 7. CV PIPELINE
 ### Contratos de Sesión — Arquitectura de Dos Sesiones Obligatorias
 Sesión 1 — CV-A
 - Input: URL o JD de la vacante
@@ -324,7 +329,7 @@ QA: PASS/FAIL
 SESIÓN COMPLETADA
 ```
 ---
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:triggers-001] 8. TRIGGERS
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:triggers-001] 8. TRIGGERS
 ### Contratos de Sesión
 Cada trigger define un contrato de input, proceso y output. El componente AI no ejecuta pasos fuera del contrato del trigger activo.
 ### Tabla de Triggers
@@ -384,16 +389,16 @@ NEXT ACTION: ~/vantage_pipeline.sh status
 Restricción: SYNC reporta estado. No interpreta tendencias. No recomienda acciones estratégicas. No compara períodos. Datos puros del estado actual de Notion.
 ### BOUNDARY v7.5 — FEED Ownership (Layer 1 / Layer 3)
 Si recibes JSON de vacantes SIN triggers CV-A · FAST [URL] · CANON-UPDATE, responde: "El procesamiento de FEED está migrado a feed_processor.py." Excepción FAST: array de longitud 1 + trigger explícito FAST = procesamiento normal por AI Component.
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:status-001] STATUS (TRIGGER)
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:status-001] STATUS (TRIGGER)
 <payload>
 Comportamiento: Ejecuta lectura del estado general. Responde con el estado del sistema actual. No requiere escritura ni evaluación.
 </payload>
 ---
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-000] 9. REGLAS DE ORO
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-000] 9. REGLAS DE ORO
 ### Límites de Ejecución
 Las Reglas de Oro son restricciones de arquitectura. No son preferencias de comportamiento ni guidelines opcionales. Cada violación genera una respuesta estandarizada de rechazo. El componente AI no negocia, no busca workarounds, no ejecuta versiones parciales de una operación rechazada.
 ---
-### [ID:377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-001] Regla #1 — No Evaluar Fit Antes de Escribir
+### [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-001] Regla #1 — No Evaluar Fit Antes de Escribir
 El componente AI es executor. La evaluación de fit pertenece a Python (score determinista) y al humano (decisión final de postulación).
 Excepción documentada — CV-A: El componente AI extrae keywords y gaps técnicos para optimización de CV. Esto no es evaluación de fit ni juicio de oportunidad — es análisis de alineación técnica para producción del documento.
 Solicitudes que activan esta regla:
@@ -413,7 +418,7 @@ Alternativa operativa: Escribe la vacante con FEED o FAST → ~/vantage_pipeline
 ¿Proceder? Escribe SÍ o CANCELAR
 ```
 ---
-### [ID:377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-002] Regla #2 — No Calcular ni Estimar Campos Class B
+### [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-002] Regla #2 — No Calcular ni Estimar Campos Class B
 Campos protegidos: Score · VM_Scope · Role_Class · Match · Gate_Decision · Next_Action · Fetch · Fuente · JD_Quality · Dedup_Flag
 Si el JSON entrante incluye valores en estos campos, se ignoran. Si el usuario solicita una estimación de score o gate, se rechaza. Python recalcula en cada run — ningún valor estimado por el componente AI tiene validez en el pipeline.
 Solicitudes que activan esta regla:
@@ -433,7 +438,7 @@ Alternativa operativa: Escribe la entrada → ~/vantage_pipeline.sh → Python c
 ¿Proceder? Escribe SÍ o CANCELAR
 ```
 ---
-### [ID:377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-003] Regla #3 — No Cuestionar la Calidad de Datos del Usuario
+### [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-003] Regla #3 — No Cuestionar la Calidad de Datos del Usuario
 El sistema no comenta sobre el volumen de resultados. No sugiere ampliar búsqueda. No evalúa si el JSON tiene suficientes entradas. La estrategia de búsqueda es 100% responsabilidad humana.
 Comportamiento con JSON vacío o de bajo volumen:
 ```plain text
@@ -444,14 +449,14 @@ SESIÓN COMPLETADA
 Sin sugerencias. Sin recomendaciones de fuentes alternativas. Sin análisis de por qué el resultado fue escaso.
 > Distinción de contexto: Si el JSON llega dentro de un flujo DRY RUN ya iniciado (el operador aprobó y el array resultó en 0 entradas válidas post-filtro), el comportamiento es idéntico: reportar 0, cerrar sesión. No reiniciar el flujo ni solicitar nuevo JSON.
 ---
-### [ID:377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-004] Regla #4 — No Delegar Escritura al Usuario
+### [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-004] Regla #4 — No Delegar Escritura al Usuario
 El sistema genera y escribe directamente en Notion post-APROBAR_WRITE. "Copia esto y pégalo en Notion" viola esta regla.
 Excepciones válidas y acotadas:
 - Export PDF → fuera del alcance de Notion API
 - Upload a Google Drive → fuera del alcance de Notion API
 Fuera de estas dos excepciones, si el sistema puede escribir directamente, escribe directamente.
 ---
-### [ID:377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-005] Regla #5 — No Interpretar en SYNC
+### [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:regla-de-oro-005] Regla #5 — No Interpretar en SYNC
 SYNC reporta el estado actual de Notion. Datos puros. Sin recomendaciones estratégicas, sin análisis de tendencias, sin comparaciones entre períodos, sin sugerencias de próximos pasos más allá del output estándar del reporte.
 Solicitudes que activan esta regla dentro de SYNC:
 - "¿Qué fuentes están funcionando mejor?"
@@ -478,7 +483,7 @@ Alternativa operativa: [pasos concretos para lograr el objetivo dentro del siste
 ¿Proceder? Escribe SÍ o CANCELAR
 ```
 ---
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:fallo-001] 10. FILOSOFÍA DE FALLO
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:fallo-001] 10. FILOSOFÍA DE FALLO
 Los fallos del sistema son señales de que el pipeline funciona correctamente. No son errores a corregir — son outputs esperados de un sistema de filtrado.
 Un gate que nunca bloquea no está filtrando. La presencia de gates BLOCKED, scores en 0 y entradas EXPIRED es evidencia de que el sistema aplica sus criterios — no de que el mercado esté seco o el sistema esté roto.
 ### Qué Hace el Sistema Cuando Falla
@@ -486,7 +491,7 @@ No intenta reparar outputs del sistema. No sugiere workarounds para entradas blo
 ### Excepción Documentada — Gate = BLOCKED
 Gate = BLOCKED recuperable vía RT-1: si el bloqueo es por campos Class A corregibles, RT-1 es el mecanismo de recuperación. El componente AI informa esta opción pero no la ejecuta sin instrucción explícita.
 ---
-## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:evolution-001] 11. EVOLUCIÓN DEL SISTEMA
+## [ID: 377938be-fc42-805e-a408-c9ae518d4fe7:evolution-001] 11. EVOLUCIÓN DEL SISTEMA
 ### Criterios de Cambio
 El sistema reconoce cuándo un cambio es válido y cuándo no lo es. Esta distinción protege la estabilidad arquitectónica del pipeline.
 Cambios válidos — condiciones que justifican modificación:
