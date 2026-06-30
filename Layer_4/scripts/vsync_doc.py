@@ -117,8 +117,12 @@ def _make_code_blocks(lang, content):
             "rich_text": [{"type":"text","text":{"content": content}}]
         }}]
     # Contenido demasiado largo — dividir en párrafos con fence visual
+    # FIX: reservar espacio para el prefijo antes de cortar (evita overflow del límite 2000)
     blocks = []
-    chunks = [content[i:i+NOTION_TEXT_LIMIT] for i in range(0, len(content), NOTION_TEXT_LIMIT)]
+    n_chunks_estimate = (len(content) // NOTION_TEXT_LIMIT) + 2
+    prefix_max_len = len(f"[code:{lang or 'plain'}:{n_chunks_estimate}/{n_chunks_estimate}]\n")
+    safe_limit = NOTION_TEXT_LIMIT - prefix_max_len
+    chunks = [content[i:i+safe_limit] for i in range(0, len(content), safe_limit)]
     for idx, chunk in enumerate(chunks):
         prefix = f"[code:{lang or 'plain'}:{idx+1}/{len(chunks)}]\n" if len(chunks) > 1 else ""
         blocks.append({"object":"block","type":"paragraph","paragraph":{
