@@ -13,6 +13,38 @@ Estratega de Visual Merchandising & Brand Execution con más de 10 años de tray
 Visual Merchandising & Brand Execution strategist with over 10 years of experience in luxury, fashion, and high-performance retail. Expert in translating global brand guidelines into high-impact local executions, leading LATAM regional strategies, and managing national CAPEX/OPEX budgets. Specialist in visual storytelling, new product introductions (NPI), and field team enablement, with a proven track record of optimizing commercial KPIs (+43% traffic) and operational efficiency (-74% costs). Highly analytical and technical profile, focused on elevating consumer experience and brand coherence across own stores, franchises, and wholesale channels.
 ---
 ## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-skills-001] B. SKILLS CANON
+<table header-row="true">
+<tr>
+<td>Categoría</td>
+<td>ES</td>
+<td>EN</td>
+</tr>
+<tr>
+<td>Estrategia Visual</td>
+<td>Planeación estacional, Consumer-centric storytelling, Zoning & Mapping tools, manuales de ejecución regional</td>
+<td>Seasonal planning, Consumer-centric storytelling, Zoning & Mapping tools, regional execution manuals</td>
+</tr>
+<tr>
+<td>Operaciones & Finanzas</td>
+<td>Control de presupuesto CAPEX/OPEX, negociación con proveedores, aperturas de Flagship Stores, remodelaciones y rollouts</td>
+<td>CAPEX/OPEX budget control, vendor negotiation, Flagship Store openings, remodeling, and rollouts</td>
+</tr>
+<tr>
+<td>Liderazgo & Training</td>
+<td>Gestión de equipos directos e indirectos, coaching de alto desempeño, estandarización de procesos operativos y auditorías de campo</td>
+<td>Direct and indirect team management, high-performance coaching, operational process standardization, and field audits</td>
+</tr>
+<tr>
+<td>Stack Técnico</td>
+<td>Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, IA Generativa (ChatGPT, Perplexity, Claude)</td>
+<td>Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, Generative AI (ChatGPT, Perplexity, Claude)</td>
+</tr>
+<tr>
+<td>Idiomas</td>
+<td>Español (Nativo) · Inglés (Profesional Corporativo / Fluidez regional)</td>
+<td>Spanish (Native) · English (Corporate Professional / Regional Fluency)</td>
+</tr>
+</table>
 ---
 ## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-001] D. EXPERIENCE RECORDS
 ### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-experience-c01] C01 · L'Oréal Luxe México · Feb 2025 – Mar 2026
@@ -79,6 +111,73 @@ Coordinador de Visual Merchandising & Marketing
 - During the last 3 years of the role, directly managed one Jr. Brand Coordinator.
 ---
 ## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-achievements-001] H. ACHIEVEMENT LIBRARY
+<table header-row="true">
+<tr>
+<td>Achievement</td>
+<td>Compañía</td>
+<td>KPI Ref</td>
+</tr>
+<tr>
+<td>Despliegue nacional campañas NPI 2025 (Born in Roma, Stronger With You)</td>
+<td>C01</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Gestión presupuesto CAPEX/OPEX nacional para 3 marcas simultáneas</td>
+<td>C01</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Apertura Adidas Brand Center Madero en fecha · 17 observaciones menores · ninguna bloqueante</td>
+<td>C02</td>
+<td>KPI07</td>
+</tr>
+<tr>
+<td>Reducción 74% costos campañas visuales nacionales</td>
+<td>C03</td>
+<td>KPI03</td>
+</tr>
+<tr>
+<td>Reducción 33% tiempo de actualización de floorsets</td>
+<td>C03</td>
+<td>KPI04</td>
+</tr>
+<tr>
+<td>100% cobertura POP en 270+ POS durante COVID-19</td>
+<td>C03</td>
+<td>KPI05</td>
+</tr>
+<tr>
+<td>Supervisión estrategia visual en 6 países LATAM</td>
+<td>C03</td>
+<td>CF05</td>
+</tr>
+<tr>
+<td>+43% tráfico en red de 17 tiendas</td>
+<td>C04</td>
+<td>KPI01</td>
+</tr>
+<tr>
+<td>+18% conversión en red de 17 tiendas</td>
+<td>C04</td>
+<td>KPI02</td>
+</tr>
+<tr>
+<td>Construcción área de VM desde cero · 21 reportes directos</td>
+<td>C04</td>
+<td>CF06</td>
+</tr>
+<tr>
+<td>Coordinación de 17 tiendas retail + 12 corners wholesale</td>
+<td>C05</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Liderazgo de coordinadora Jr. con reporte directo (últimos 3 años en rol)</td>
+<td>C05</td>
+<td>—</td>
+</tr>
+</table>
 ---
 ## [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpis-001] I. CORE KPIs
 ### [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c:canon-kpi-001] KPI01 · Traffic +43%
