@@ -118,6 +118,9 @@ Si falla: verificar que layer_1.env exista y que el token no tenga \n embebido.
 ## [ID:MANUAL-CICLO-001] 4. CICLO SEMANAL
 > Contenido: V-Checklist y flujos de operación diaria. Ver §3 Setup para prerrequisitos.
 
+## [ID:MANUAL-CICLO-001] 4. CICLO SEMANAL
+> Contenido: V-Checklist y flujos de operación diaria. Ver §3 Setup para prerrequisitos.
+
 ### [ID:MANUAL-VCHECKLIST-001] CHECKLIST INTERACTIVO
 El V-Checklist (V-CHECKLIST · Vantage Weekly) es la interfaz operativa del ciclo semanal descrito en §4. Es un archivo HTML autocontenido con progreso persistente (localStorage), modo claro/oscuro y navegación por día.
 Resumen de tareas por día:

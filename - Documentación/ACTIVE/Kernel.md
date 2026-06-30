@@ -1,5 +1,7 @@
 # V | KERNEL
 
+# V | KERNEL
+
 > ID: 377938be-fc42-805e-a408-c9ae518d4fe7:audience-scope-001
 ## CONTENIDO
 ## [ID:377938be-fc42-805e-a408-c9ae518d4fe7:purpose-001] 1. PROPÓSITO DEL SISTEMA

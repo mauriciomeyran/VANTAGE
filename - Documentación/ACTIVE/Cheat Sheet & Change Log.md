@@ -11,6 +11,17 @@ cd ~/Documents/04-Vantage_CV/Layer_1/scripts && source ../.venv/bin/activate && 
 04-Vantage_CV/Figma Sync/ — Plugin Figma para inyección de payloads CV-B al lienzo.
 ### Runtime CLI (vantage.py)
 ## [ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_001] 2. CHANGELOG
+## v8.7.3 — VANTAGE · 2026-06-30
+> ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_v8.7.3
+- [FIX] vdoc [doc] (atajos kernel/manual/etc) sobreescribía local sin comparar fecha — Los 5 atajos por documento (kernel, system_prompt, career_canon, manual, cheat_sheet) en vdoc.py tenían --direction hardcoded a "notion", ignorando la lógica de comparación de timestamps (mtime local vs last_edited_time Notion) que sí existe en vsync_doc.py --direction auto. Resultado: ediciones locales hechas entre syncs se perdían si se corría el atajo en vez de vdoc auto explícito. Fix: vdoc.py línea 49 cambiada de --direction notion a --direction auto. Componente: Python. Bug Tracker: 38f938be-fc42-818f-b76e-cf083642e617.
+## v8.7.2 — VANTAGE · 2026-06-28
+> ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_v8.7.2
+
+- **[DOC] Source_Type trailing space — `source_analytics.py` y `gate_logic.py`** — Ambos scripts leían `props.get("Source_Type")` sin trailing space; el campo real en Notion es `"Source_Type "`. Fix aplicado Jun 26. Bug Tracker: 38b938be-fc42-817f-9ae0-f28dc7e268f9.
+- **[DOC] Fuente no asignada en Paso 0.5 — Source_Type sin trailing space** — `layer_1_run.py` línea ~618. Fix aplicado Jun 26. Bug Tracker: 38b938be-fc42-81a7-9593-f6ea8af18da2.
+- **[DOC] Source_Type vacío — backfill 9 registros** — 9 registros corregidos vía script puntual. Bug Tracker: 38b938be-fc42-8117-9d3f-cb2903f49415.
+- **[DOC] Next_Action type mismatch — rich_text en `layer_1_run.py`** — Fix 2 correcto: revertido a rich_text. Líneas: 591, 745, 892. Bug Tracker: 38b938be-fc42-81fa-b1be-e60f909107fc.
+- **[MAINT] Scripts one-shot deprecados en Script Library** — patch_kernel.py, patch_manual.py, patch_career_canon.py, patch_cheat_sheet.py, fx4_legacy_check.py marcados como Deprecado / Archivar.
 ## v8.7.1 — VANTAGE · 2026-06-28
 > ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_v8.7.1
 - [PATCH] Auditoría editorial v8.7 — 4 documentos fundacionales corregidos — 16 hallazgos aplicados vía scripts de patch atómicos (patch_kernel.py · patch_manual.py · patch_career_canon.py · patch_cheat_sheet.py). Kernel: GAP-03 duplicado eliminado, §4.6/§4.7 reordenados, 17 headers [ID: UUID] normalizados a [ID:UUID], lista §4.5 numeración corregida. Manual: 4 prefijos KERNEL-* corregidos a MANUAL-* en ÍNDICE, IDs RUNTIME-* con notas de resolución, stubs §4 CICLO SEMANAL y §6 GESTIÓN DE DATOS insertados, header SLA con ID asignado. Career Canon: título duplicado eliminado, versión 8,5→8.7, fecha normalizada a ISO 8601, tag <aside> HTML eliminado, §B SKILLS CANON y §H ACHIEVEMENT LIBRARY marcadas [PENDING DATA]. Cheat Sheet: header # ## crítico corregido a ##, stub §1 ALIASES & COMANDOS RÁPIDOS insertado con tabla canónica, header CHANGELOG normalizado.
@@ -161,3 +172,10 @@ cd ~/Documents/04-Vantage_CV/Layer_1/scripts && source ../.venv/bin/activate && 
 - Sin pipeline Python; procesamiento y evaluación en sesión de chat
 ---
 ESTADO: v8.7 | ACTUALIZADO: 2026-06-27
+## v8.7.2 — VANTAGE · 2026-06-30
+> ID: 37c938be-fc42-80d4-b9ae-f5969830331b:Change_Log_v8.7.2
+- **[DOC] Source_Type trailing space — `source_analytics.py` y `gate_logic.py`** — Ambos scripts leían `props.get("Source_Type")` sin trailing space; el campo real en Notion es `"Source_Type "`. Fix aplicado Jun 26: trailing space agregado en ambos scripts. Componente: Layer 1. Bug Tracker: 38b938be-fc42-817f-9ae0-f28dc7e268f9.
+- **[DOC] Fuente no asignada en Paso 0.5 — Source_Type sin trailing space** — `layer_1_run.py` línea ~618 leía `Source_Type` sin trailing space; condición nunca se cumplía y `Fuente` quedaba vacío en todos los registros. Fix aplicado Jun 26: `props.get("Source_Type")` → `props.get("Source_Type ")`. Componente: Layer 1. Bug Tracker: 38b938be-fc42-81a7-9593-f6ea8af18da2.
+- **[DOC] Source_Type vacío — backfill 9 registros** — 9 registros ingresados por L1 con `Source_Type` vacío corregidos vía script puntual (query → filtrar URL sin Source_Type → PATCH Notion con valor `Vacante`). Pendiente evaluar auto-asignación en ingesta. Componente: Layer 1. Bug Tracker: 38b938be-fc42-8117-9d3f-cb2903f49415.
+- **[DOC] Next_Action type mismatch — rich_text en `layer_1_run.py`** — `layer_1_run.py` escribía `Next_Action` como select; el TRACKER lo define como rich_text. Fix 1 incorrecto (convirtió a select); Fix 2 correcto: revertido a `{"rich_text": [{"text": {"content": valor}}]}`. Líneas afectadas: 591, 745, 892. Componente: Layer 1. Bug Tracker: 38b938be-fc42-81fa-b1be-e60f909107fc.
+- **[MAINT] Scripts one-shot deprecados en Script Library** — `patch_kernel.py`, `patch_manual.py`, `patch_career_canon.py`, `patch_cheat_sheet.py`, `fx4_legacy_check.py` marcados como `Deprecado / Archivar`. Ya ejecutados en v8.7.1; no deben re-ejecutarse.

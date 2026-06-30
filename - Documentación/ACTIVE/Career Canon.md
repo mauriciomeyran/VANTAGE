@@ -1,4 +1,6 @@
 # V | CAREER CANON
+
+# V | CAREER CANON
 Versión: 8.7
 Status: Active
 URL: https://app.notion.com/p/V-CAREER-CANON-377938befc42808993f2f52dbd2dec6c?source=copy_link
@@ -241,7 +243,7 @@ Use this exact sequence of IDs for any Figma-destined output
 - ID Header Sample: ###### figma_text_id
 - Key Slots: 2055:9 (Name), 2055:10 (Headline), 2043:51 (Profile), 2043:56-60 (Skills), 2043:64+ (Experience).
 - Rule: If the skeleton changes in Figma, this record must be updated before the next CV-B run.
-```plain text
+[code:plain text:1/4]
 
 ###### [figma_text_id](2:4)
 
@@ -302,7 +304,9 @@ LinkedIn | [Portafolio](mailto:mauricio.meyran@icloud.com)
 
 ###### [figma_text_id](2:18)
 
-• **Liderazgo de Equipos:** Supervisión, capacitación y mentoría de equipos internos de visual merchandising y fuerzas de ventas.
+• **Liderazgo de Equipos:** Supervisión, capacitación y mentoría de equipos internos de visual merchandising y fuerzas de ventas
+[code:plain text:2/4]
+.
 
 
 ###### [figma_text_id](2:20)
@@ -377,7 +381,9 @@ LinkedIn | [Portafolio](mailto:mauricio.meyran@icloud.com)
 
 ###### [figma_text_id](2:42)
 
-• **Supervisé la consistencia visual** de la marca en la región latinoamericana, adaptando los playbooks globales de VM a las realidades de espacio de mercados locales.
+• **Supervisé la consi
+[code:plain text:3/4]
+stencia visual** de la marca en la región latinoamericana, adaptando los playbooks globales de VM a las realidades de espacio de mercados locales.
 
 
 ###### [figma_text_id](2:43)
@@ -437,7 +443,9 @@ LinkedIn | [Portafolio](mailto:mauricio.meyran@icloud.com)
 
 ###### [figma_text_id](2:57)
 
-• **Gestioné la imagen visual de ALDO** dentro de la cadena de almacenes de El Palacio de Hierro, cumpliendo con los estándares internacionales del grupo canadiense.
+• **Gestioné la imagen visual de ALDO** dentro de la cadena de almacenes de El Palacio de Hierro, cumpliendo con los estándares internacionales del grupo canadi
+[code:plain text:4/4]
+ense.
 
 
 ###### [figma_text_id](2:58)
@@ -489,7 +497,6 @@ Store Operations Leaders Orientation \(VM, Sales &amp; Ops\) | _2014_
 ALDO Group, Montréal, Canadá
 
 
-```
 ---
 ### Figma Tag Schema
 > Formato base obligatorio para todos los Derived Outputs generados desde el Career Canon. Aplica ES + EN.
