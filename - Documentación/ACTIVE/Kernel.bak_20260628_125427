@@ -153,8 +153,7 @@ Toda entrada en proceso contiene los siguientes bloques en orden:
 1. ## ACTION ITEMS {toggle} — Responsable: tarea — Due: fecha
 1. ## RIESGOS / OPEN QUESTIONS {toggle}
 Entradas en Status=Target o en proceso sin entrevista confirmada: la página puede estar vacía o contener solo notas de contexto. El template de entrevista se agrega cuando se confirma primera ronda.
----
-### 4.7 registry_seed.json — SSOT de Nodos Figma
+---### 4.7 registry_seed.json — SSOT de Nodos Figma
 registry_seed.json no es un campo Class A ni Class B del Tracker. Es el esquema de IDs de nodos del lienzo Figma, propiedad de la Figma Sync Layer.
 Ownership: Figma Sync — ni AI Component ni Python lo leen ni escriben durante el pipeline de vacantes.
 Contrato de modificación: Solo se actualiza cuando cambia la estructura del lienzo Figma (nuevos nodos, reordenamiento de frames). El proceso correcto es: exportar IDs actualizados desde Figma → reemplazar registry_seed.json → verificar cobertura de tokens → vgit.

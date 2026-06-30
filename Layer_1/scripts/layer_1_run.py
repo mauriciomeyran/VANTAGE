@@ -58,6 +58,7 @@ VANTAGE_NOTION_API_BASE = "https://api.notion.com/v1"
 VANTAGE_MAX_EXPECTED_RESULTS = 250
 
 
+_QUERY_ALL_ITEMS_CALLS = 0
 def query_all_items(client, ds_id=None):
     """
     Pagina todos los registros vía data_sources/{id}/query (API 2025-09-03).
@@ -76,6 +77,9 @@ def query_all_items(client, ds_id=None):
     }
     url = f"{VANTAGE_NOTION_API_BASE}/data_sources/{VANTAGE_DATA_SOURCE_ID}/query"
 
+    global _QUERY_ALL_ITEMS_CALLS
+    _QUERY_ALL_ITEMS_CALLS += 1
+    print(f"  [DEBUG] query_all_items call #{_QUERY_ALL_ITEMS_CALLS}")
     all_results = []
     cursor = None
 
