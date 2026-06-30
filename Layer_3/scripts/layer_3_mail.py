@@ -579,7 +579,7 @@ def create_notion_page(job, email_meta):
         "layer": {
             "select": {"name": "L3"}
         },
-        "Source_Type": {
+        "Source_Type ": {
             "select": {"name": "Vacante"}
         },
         "Holding": {

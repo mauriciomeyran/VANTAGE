@@ -10,8 +10,8 @@
 1.1 [ID:MANUAL-ARCHITECTURE-001] Estructura de Capas (L0-L4)
 1.2 [ID:MANUAL-OWNERSHIP-001] Ownership: Class A vs. Class B
 2.0 VANTAGE RUNTIME [L0]
-2.1 [ID:RUNTIME-COMMANDS-001] Comandos de Consola y Agent API → resuelve a [ID:372938be-fc42-8050-9a67-e40857d7806e:manual-vantage-runtime-001] §5.2 → resuelve a [ID:372938be-fc42-8050-9a67-e40857d7806e:manual-vantage-runtime-001] §5.2
-2.2 [ID:RUNTIME-RESOLVER-001] Resolver: Capa de Contexto Técnico → resuelve a [ID:372938be-fc42-8050-9a67-e40857d7806e:manual-vantage-runtime-001] §5.3 → resuelve a [ID:372938be-fc42-8050-9a67-e40857d7806e:manual-vantage-runtime-001] §5.3
+2.1 [ID:RUNTIME-COMMANDS-001] Comandos de Consola y Agent API → resuelve a [ID:372938be-fc42-8050-9a67-e40857d7806e:manual-vantage-runtime-001] §5.2
+2.2 [ID:RUNTIME-RESOLVER-001] Resolver: Capa de Contexto Técnico → resuelve a [ID:372938be-fc42-8050-9a67-e40857d7806e:manual-vantage-runtime-001] §5.3
 3.0 OPERACIÓN & WORKFLOW [L1-L3]
 3.1 [ID:MANUAL-SETUP-001] Setup Inicial y Prerrequisitos
 3.2 [ID:MANUAL-VCHECKLIST-001] Ciclo Semanal: Checklist de Control
@@ -115,9 +115,6 @@ python vsync_doc.py --dry-run
 Output esperado: 5 documentos listados con diff por documento, sin errores.
 Si falla: verificar que layer_1.env exista y que el token no tenga \n embebido.
 ---
-## [ID:MANUAL-CICLO-001] 4. CICLO SEMANAL
-> Contenido: V-Checklist y flujos de operación diaria. Ver §3 Setup para prerrequisitos.
-
 ## [ID:MANUAL-CICLO-001] 4. CICLO SEMANAL
 > Contenido: V-Checklist y flujos de operación diaria. Ver §3 Setup para prerrequisitos.
 

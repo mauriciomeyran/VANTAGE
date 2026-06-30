@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """
-vsync_doc.py — VANTAGE v8.5.2 (LAYER 4)
+vsync_doc.py — VANTAGE v8.5.4 (LAYER 4)
 - BASE_DIR = .../ACTIVE (version-agnostic)
 - Usa .venv de Layer_1
 - Fetch con httpx (fix NoneType)
 - Incluye Cheat Sheet
+- FIX: direction local/auto ahora funcional (push_local_to_notion conectado)
+- FIX: auto_commit() movido dentro de main() y llamado al finalizar
+- FIX: bloques code > 2000 chars truncados en chunks de párrafo (Notion API limit)
 """
 
 import sys, os, argparse, time
@@ -47,6 +50,8 @@ DOCS = {
     "manual":        {"notion_id": "372938be-fc42-8050-9a67-e40857d7806e", "local_file": BASE_DIR / "Manual.md", "label": "MANUAL DE USUARIO"},
     "cheat_sheet":   {"notion_id": "37c938be-fc42-80d4-b9ae-f5969830331b", "local_file": BASE_DIR / "Cheat Sheet & Change Log.md", "label": "CHEAT SHEET"},
 }
+
+NOTION_TEXT_LIMIT = 1990  # margen de seguridad bajo el límite de 2000
 
 def _rich_text(rt):
     if not rt: return ""
@@ -104,7 +109,31 @@ def fetch_notion_as_md(pid):
     print(f"     {total} bloques")
     return "".join(lines), ts
 
+def _make_code_blocks(lang, content):
+    """Divide bloques code largos en chunks de párrafo si superan el límite."""
+    if len(content) <= NOTION_TEXT_LIMIT:
+        return [{"object":"block","type":"code","code":{
+            "language": lang or "plain text",
+            "rich_text": [{"type":"text","text":{"content": content}}]
+        }}]
+    # Contenido demasiado largo — dividir en párrafos con fence visual
+    blocks = []
+    chunks = [content[i:i+NOTION_TEXT_LIMIT] for i in range(0, len(content), NOTION_TEXT_LIMIT)]
+    for idx, chunk in enumerate(chunks):
+        prefix = f"[code:{lang or 'plain'}:{idx+1}/{len(chunks)}]\n" if len(chunks) > 1 else ""
+        blocks.append({"object":"block","type":"paragraph","paragraph":{
+            "rich_text": [{"type":"text","text":{"content": prefix + chunk}}]
+        }})
+    return blocks
+
+def _make_text_block(block_type, key, content):
+    """Crea un bloque de texto truncando si supera el límite."""
+    return {"object":"block","type":block_type, block_type:{
+        "rich_text": [{"type":"text","text":{"content": content[:NOTION_TEXT_LIMIT]}}]
+    }}
+
 def push_local_to_notion(pid, path):
+    # Eliminar bloques existentes
     cur=None
     while True:
         d = safe_list(pid, cur)
@@ -114,7 +143,7 @@ def push_local_to_notion(pid, path):
             except: pass
         if not d.get("has_more"): break
         cur = d.get("next_cursor")
-    
+
     lines = path.read_text(encoding="utf-8").splitlines()
     blocks=[]; i=0
     while i < len(lines):
@@ -123,65 +152,95 @@ def push_local_to_notion(pid, path):
             lang = l[3:].strip(); i+=1; code=[]
             while i < len(lines) and not lines[i].startswith("```"):
                 code.append(lines[i]); i+=1
-            blocks.append({"object":"block","type":"code","code":{"language":lang or "plain text","rich_text":[{"type":"text","text":{"content":"\n".join(code)}}]}})
+            blocks.extend(_make_code_blocks(lang, "\n".join(code)))
         elif l.startswith("### "):
-            blocks.append({"object":"block","type":"heading_3","heading_3":{"rich_text":[{"type":"text","text":{"content":l[4:]}}]}})
+            blocks.append(_make_text_block("heading_3", "heading_3", l[4:]))
         elif l.startswith("## "):
-            blocks.append({"object":"block","type":"heading_2","heading_2":{"rich_text":[{"type":"text","text":{"content":l[3:]}}]}})
+            blocks.append(_make_text_block("heading_2", "heading_2", l[3:]))
         elif l.startswith("# "):
-            blocks.append({"object":"block","type":"heading_1","heading_1":{"rich_text":[{"type":"text","text":{"content":l[2:]}}]}})
+            blocks.append(_make_text_block("heading_1", "heading_1", l[2:]))
         elif l.startswith("- [x] ") or l.startswith("- [X] "):
-            blocks.append({"object":"block","type":"to_do","to_do":{"checked":True,"rich_text":[{"type":"text","text":{"content":l[6:]}}]}})
+            blocks.append({"object":"block","type":"to_do","to_do":{
+                "checked":True,"rich_text":[{"type":"text","text":{"content":l[6:NOTION_TEXT_LIMIT+6]}}]}})
         elif l.startswith("- [ ] "):
-            blocks.append({"object":"block","type":"to_do","to_do":{"checked":False,"rich_text":[{"type":"text","text":{"content":l[6:]}}]}})
+            blocks.append({"object":"block","type":"to_do","to_do":{
+                "checked":False,"rich_text":[{"type":"text","text":{"content":l[6:NOTION_TEXT_LIMIT+6]}}]}})
         elif l.startswith("- "):
-            blocks.append({"object":"block","type":"bulleted_list_item","bulleted_list_item":{"rich_text":[{"type":"text","text":{"content":l[2:]}}]}})
+            blocks.append(_make_text_block("bulleted_list_item", "bulleted_list_item", l[2:]))
         elif l.startswith("> "):
-            blocks.append({"object":"block","type":"quote","quote":{"rich_text":[{"type":"text","text":{"content":l[2:]}}]}})
+            blocks.append(_make_text_block("quote", "quote", l[2:]))
         elif l.startswith("---"):
             blocks.append({"object":"block","type":"divider","divider":{}})
         elif l.strip():
-            blocks.append({"object":"block","type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":l}}]}})
+            blocks.append(_make_text_block("paragraph", "paragraph", l))
         else:
             blocks.append({"object":"block","type":"paragraph","paragraph":{"rich_text":[]}})
         i+=1
     for j in range(0, len(blocks), 100):
         notion.blocks.children.append(block_id=pid, children=blocks[j:j+100])
 
-def main():
-    p = argparse.ArgumentParser(); p.add_argument("--direction", choices=["notion","local","auto"], default="auto")
-    p.add_argument("--dry-run", action="store_true"); p.add_argument("--doc", choices=list(DOCS.keys()))
-    args = p.parse_args()
-    targets = {args.doc: DOCS[args.doc]} if args.doc else DOCS
-    print(f"\nvsync_doc v8.5.2 L4 → ACTIVE  [{args.direction.upper()}]{' DRY' if args.dry_run else ''}\n")
-    for k,d in targets.items():
-        md, ts = fetch_notion_as_md(d["notion_id"])
-        if md is None: print(f"  ✗ {d['label']:<30} ERROR"); continue
-        local = d["local_file"]
-        if args.direction == "notion" and not args.dry_run:
-            local.parent.mkdir(parents=True, exist_ok=True)
-            local.write_text(md, encoding="utf-8")
-        print(f"  ✓ {d['label']:<30} notion→local")
-
-if __name__ == "__main__": main()
-
-# ── Auto-commit integrado ────────────────────────────────────────────────────
 def auto_commit(dry_run=False):
     """Llama a git_sync.py si hay cambios en ACTIVE."""
     import subprocess
-    gs = _PROJECT / "Layer_4/scripts/git_sync.py"
+    gs = _PROJECT / "Layer_4" / "scripts" / "git_sync.py"
     if not gs.exists():
         return
-    args = [sys.executable, str(gs)]
+    cmd = [sys.executable, str(gs)]
     if dry_run:
-        args.append("--dry-run")
+        cmd.append("--dry-run")
     try:
-        result = subprocess.run(args, capture_output=True, text=True, cwd=str(_PROJECT))
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(_PROJECT))
         if result.returncode == 0:
             print(f"  📦 {result.stdout.strip()}")
         elif "No hay cambios" in result.stdout:
-            pass  # silencio limpio
+            pass
         else:
             print(f"  ⚠️ git: {result.stderr.strip() or result.stdout.strip()}")
     except Exception as e:
         print(f"  ⚠️ git_sync falló: {e}")
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("--direction", choices=["notion","local","auto"], default="auto")
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--doc", choices=list(DOCS.keys()))
+    args = p.parse_args()
+    targets = {args.doc: DOCS[args.doc]} if args.doc else DOCS
+
+    print(f"\nvsync_doc v8.5.4 L4 → ACTIVE  [{args.direction.upper()}]{' DRY' if args.dry_run else ''}\n")
+
+    for k, d in targets.items():
+        md, ts = fetch_notion_as_md(d["notion_id"])
+        if md is None:
+            print(f"  ✗ {d['label']:<30} ERROR")
+            continue
+        local = d["local_file"]
+
+        if args.direction == "notion":
+            if not args.dry_run:
+                local.parent.mkdir(parents=True, exist_ok=True)
+                local.write_text(md, encoding="utf-8")
+            print(f"  ✓ {d['label']:<30} notion→local")
+
+        elif args.direction == "local":
+            if not args.dry_run:
+                push_local_to_notion(d["notion_id"], local)
+            print(f"  ✓ {d['label']:<30} local→notion")
+
+        else:  # auto — gana el más reciente
+            local_ts = datetime.fromtimestamp(local.stat().st_mtime, tz=timezone.utc) if local.exists() else None
+            if local_ts and local_ts > ts:
+                if not args.dry_run:
+                    push_local_to_notion(d["notion_id"], local)
+                print(f"  ✓ {d['label']:<30} local→notion (auto)")
+            else:
+                if not args.dry_run:
+                    local.parent.mkdir(parents=True, exist_ok=True)
+                    local.write_text(md, encoding="utf-8")
+                print(f"  ✓ {d['label']:<30} notion→local (auto)")
+
+    if not args.dry_run:
+        auto_commit(dry_run=False)
+
+if __name__ == "__main__":
+    main()
