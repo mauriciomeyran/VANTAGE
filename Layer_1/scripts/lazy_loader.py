@@ -11,9 +11,9 @@ def fetch_lazy_section(page_id: str, route_id: str) -> str:
     """
     Realiza un fetch quirúrgico a Notion. Devuelve SOLO el contenido 
     de una sección específica, ignorando el resto del documento.
+    Soporta esquema post-normalización: KERNEL:CLAVE
     """
     api_key = os.getenv("NOTION_API_KEY")
-    # A veces el token se llama NOTION_TOKEN en lugar de NOTION_API_KEY. Verificamos ambos por si acaso.
     if not api_key:
         api_key = os.getenv("NOTION_TOKEN")
         
@@ -52,20 +52,26 @@ def fetch_lazy_section(page_id: str, route_id: str) -> str:
                 rich_text = block[block_type].get("rich_text", [])
                 text_content = "".join([rt.get("plain_text", "") for rt in rich_text])
             
-            # 1. Detectar el inicio
-            if route_id in text_content and ("heading" in block_type):
+            # 1. Detectar el inicio (soporta KERNEL:CLAVE y headers antiguos)
+            if (route_id in text_content or f"KERNEL:{route_id}" in text_content.replace("`", "")) and ("heading" in block_type):
                 capturing = True
+                just_started = True
                 captured_blocks.append(f"## {text_content}")
                 continue
             
-            # 2. Capturar el Payload y detectar el final
+            # 2. Capturar el Payload y detectar el final (mejorado para KERNEL: y headers)
             if capturing:
-                # Si leemos un ID nuevo o la etiqueta de cierre, nos detenemos ANTES de guardarlo
-                if "</payload>" in text_content or ("[ID:" in text_content and "heading" in block_type and route_id not in text_content):
+                if "</payload>" in text_content:
                     capturing = False
                     break
-                    
+                if "heading" in block_type and route_id not in text_content and "KERNEL:" not in text_content:
+                    if just_started:
+                        just_started = False
+                    else:
+                        capturing = False
+                        break
                 captured_blocks.append(text_content)
+                just_started = False
 
         if not capturing and len(captured_blocks) > 0:
             break
@@ -80,10 +86,12 @@ def fetch_lazy_section(page_id: str, route_id: str) -> str:
     return clean_text
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="VANTAGE Lazy Loader")
-    parser.add_argument("--page", required=True, help="ID de la página de Notion")
-    parser.add_argument("--route", required=True, help="Ruta o ID embebido a buscar")
+    parser = argparse.ArgumentParser(description="VANTAGE Lazy Loader (Post-Normalización KERNEL:)")
+    parser.add_argument("--page", required=True, help="ID de la página de Notion (ej: KERNEL_MASTER o UUID)")
+    parser.add_argument("--route", required=True, help="Ruta KERNEL:CLAVE (ej: KERNEL:TRIGGERS) o ID legacy")
     args = parser.parse_args()
 
-    result = fetch_lazy_section(args.page, args.route)
+    # Soporte para rutas KERNEL: limpias
+    clean_route = args.route.replace("KERNEL:", "").strip()
+    result = fetch_lazy_section(args.page, clean_route)
     print(result)
