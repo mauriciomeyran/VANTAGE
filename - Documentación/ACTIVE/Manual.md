@@ -1,5 +1,6 @@
 # V | MANUAL
 
+> 
 ## 1. OBJETIVO DE VANTAGE · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-OBJETIVO-001
 ### El Problema que Resuelve
 Una búsqueda laboral sin estructura produce cuatro fallas operativas concretas:

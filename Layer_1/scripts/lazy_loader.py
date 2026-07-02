@@ -1,11 +1,40 @@
 import os
 import requests
 import argparse
+import time
 from dotenv import load_dotenv
 
 # Apuntamos exactamente a tu archivo de configuración en Layer_1/config/layer_1.env
 env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config', 'layer_1.env')
 load_dotenv(env_path)
+
+def fetch_block_children_recursive(block_id: str, headers: dict, depth: int = 0) -> list:
+    """Recursivamente obtiene texto de bloques hijos (sub-bullets, etc)."""
+    lines = []
+    url = f"https://api.notion.com/v1/blocks/{block_id}/children"
+    next_cursor = None
+    has_more = True
+    while has_more:
+        params = {"page_size": 100}
+        if next_cursor:
+            params["start_cursor"] = next_cursor
+        resp = requests.get(url, headers=headers, params=params)
+        if resp.status_code != 200:
+            break
+        data = resp.json()
+        for child in data.get("results", []):
+            ctype = child["type"]
+            if ctype in ["paragraph", "heading_1", "heading_2", "heading_3", "bulleted_list_item", "numbered_list_item", "code", "quote"]:
+                rich_text = child[ctype].get("rich_text", [])
+                text = "".join([rt.get("plain_text", "") for rt in rich_text])
+                prefix = "  " * (depth + 1) + "- "
+                lines.append(f"{prefix}{text}")
+            if child.get("has_children"):
+                lines.extend(fetch_block_children_recursive(child["id"], headers, depth + 1))
+        has_more = data.get("has_more", False)
+        next_cursor = data.get("next_cursor")
+    return lines
+
 
 def fetch_lazy_section(page_id: str, route_id: str) -> str:
     """
@@ -71,6 +100,8 @@ def fetch_lazy_section(page_id: str, route_id: str) -> str:
                         capturing = False
                         break
                 captured_blocks.append(text_content)
+                if block.get("has_children"):
+                    captured_blocks.extend(fetch_block_children_recursive(block["id"], headers))
                 just_started = False
 
         if not capturing and len(captured_blocks) > 0:
