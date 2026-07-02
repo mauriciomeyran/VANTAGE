@@ -7,7 +7,7 @@
 Acceso a lógica base preferente vía Terminal (lazy_loader.py).
 MCP autorizado para lectura, DRY RUN y modificación documental del Kernel cuando exista instrucción explícita del operador.
 Terminal continúa siendo la ruta recomendada para operaciones masivas, auditorías y cambios estructurales.
----
+```plain text
 MANUAL DE USUARIO.................372938be-fc42-8050-9a67-e40857d7806e
 TECHNICAL KERNEL..................377938be-fc42-805e-a408-c9ae518d4fe7
 CAREER CANON......................377938be-fc42-8089-93f2-f52dbd2dec6c
@@ -20,11 +20,12 @@ ARCHIVO VANTAGE (DB)..............377938be-fc42-8092-9b52-f61e7bab3284
 ARCHIVO VANTAGE (COL).............377938be-fc42-8041-bbea-000b24b6bf2b
 ARCHIVO DRY RUN (DB)..............37d938be-fc42-804a-94a1-c355a9b89363
 ARCHIVO DRY RUN (COL).............37d938be-fc42-8022-9191-000bf6cdac7b
-BUG TRACKER (DB)..................36e938be-fc42-81bd-9e1f-dc360b3b45f5
-BUG TRACKER (COL).................36e938be-fc42-81f8-8c6f-000b6769ba03
-ALIASES...........................37c938be-fc42-80d4-b9ae-f5969830331b
-CHANGE LOG........................390938be-fc42-80e7-b429-d7d730339353
+BUG TRACKER (DB)...................36e938be-fc42-81bd-9e1f-dc360b3b45f5
+BUG TRACKER (COL)..................36e938be-fc42-81f8-8c6f-000b6769ba03
+ALIASES & CHANGE LOG..............37c938be-fc42-80d4-b9ae-f5969830331b
 FIGMA SYNC........................04-Vantage_CV/Figma Sync/
+```
+---
 ## ID: KERNEL:SCOPE
 # 2. SCOPE Y ECONOMÍA DE CONTEXTO
 - Acceso a lógica base preferente vía Terminal (lazy_loader.py).
@@ -49,7 +50,7 @@ FIGMA SYNC........................04-Vantage_CV/Figma Sync/
 - FAST [URL/JD]: Dry Run (entrada única manual — única vía FEED autorizada para Claude).
 - SYNC [REPORT]: Tabla pura (máx 12 líneas). Reporta Target, Postulado, En proceso, Rechazado, NADs y Timestamp. No usa Runtime.
 - CANON-UPDATE: Notion Page + .md (No usar Runtime).
-- VSYNC-DOC [vdoc dry|notion|local]: Sync Notion → ACTIVE/ para 6 docs fundacionales (Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log). Vive en Layer_4/scripts/vsync_doc.py. Alias: vdoc. No usa Runtime.
+- VSYNC-DOC [vdoc dry|notion|local]: Sync Notion → ACTIVE/ para 5 docs fundacionales. Vive en Layer_4/scripts/vsync_doc.py. Alias: vdoc. No usa Runtime.
 - STATUS [SYSTEM]: Estado del sistema actual. Lectura estricta sin evaluación ni escritura.
 ---
 ## ID: KERNEL:CV-GOLDEN-RULES
