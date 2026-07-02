@@ -1,6 +1,6 @@
 # V | CAREER CANON
 
-> [!note]
+## Índice del Career Canon
 > ## CAREER_CANON:AUDIENCE-SCOPE
 > DECLARACIÓN DE AUDIENCIA Y ALCANCE
 > - Audiencia: Sistemas Agente de IA + Operador Humano (Mauricio Meyrán).
