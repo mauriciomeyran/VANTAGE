@@ -10,7 +10,12 @@ Uso:
     vdoc local      # local → Notion + commit (FORZADO — pide confirmación)
     vdoc auto       # auto-detecta dirección (gana el más reciente)
     vdoc dry        # preview sin escribir ni commitear
-    vdoc kernel     # solo un documento (auto)
+    vdoc kernel     # solo Kernel (auto)
+    vdoc system_prompt   # solo System Prompt (auto)
+    vdoc career_canon    # solo Career Canon (auto)
+    vdoc manual          # solo Manual (auto)
+    vdoc aliases         # solo Aliases (auto)
+    vdoc change_log      # solo Change Log (auto)
 """
 
 import subprocess, sys
@@ -48,7 +53,14 @@ def main():
         vsync_args += ["--dry-run"]
         run(vsync_args, "vsync_doc (preview)")
         return
-    elif cmd in ("kernel","system_prompt","career_canon","manual"):
+    elif cmd in (
+        "kernel",
+        "system_prompt",
+        "career_canon",
+        "manual",
+        "aliases",
+        "change_log",
+    ):
         vsync_args += ["--direction", "auto", "--doc", cmd]
     else:
         print(f"Comando no reconocido: {cmd}")

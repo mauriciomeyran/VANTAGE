@@ -84,12 +84,10 @@ def _block_to_md(block):
         row = "| " + " | ".join(cells) + " |\n"
 
         parent = block.get("_parent_table", {})
-
-        # Escribir una única línea separadora tras la primera fila.
-        # Si Notion indica has_column_header=True, respetamos esa semántica.
-        # Si la propiedad no existe (o la API no la devuelve), usamos la
-        # primera fila como encabezado para producir Markdown válido.
-        if not parent.get("_header_written"):
+        if (
+            parent.get("has_column_header")
+            and not parent.get("_header_written")
+        ):
             parent["_header_written"] = True
             sep = "| " + " | ".join(["---"] * len(cells)) + " |\n"
             return row + sep
