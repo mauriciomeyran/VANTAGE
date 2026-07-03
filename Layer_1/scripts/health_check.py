@@ -32,6 +32,22 @@ DOCS_FUNDACIONALES = {
 
 ACTIVE_DIR = Path("/Users/mauriciomeyran/Documents/04-Vantage_CV/- Documentación/ACTIVE")
 
+# Trackers — Reactivo (Bug) vs Proactivo (Task). Ver KERNEL:SCHEMA en System Prompt.
+TRACKERS = {
+    "BUG": {
+        "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5",  # COL
+        "title_prop": "Bug",
+        "status_prop": "Status",
+        "open_statuses": ["Abierto", "En revisión"],
+    },
+    "TASK": {
+        "database_id": "d2a65ca16a35465dbcffb0d82dddd549",  # COL
+        "title_prop": "Task",
+        "status_prop": "Status",
+        "open_statuses": ["Pendiente", "En progreso"],
+    },
+}
+
 RESET = "\033[0m"
 GREEN = "\033[92m"
 RED = "\033[91m"
@@ -145,6 +161,67 @@ def check_docs_sync():
     return True
 
 
+def check_pending_tickets():
+    """
+    Lista tickets abiertos en BUG TRACKER y TASKS TRACKER.
+    Informativo — nunca marca el health check como fallido,
+    solo avisa para que no tengas que abrir Notion a revisar.
+    """
+    token = os.environ.get("NOTION_TOKEN")
+    if not token:
+        warn("Tickets — NOTION_TOKEN no configurado, skip")
+        return True
+    try:
+        import sys as _sys
+        import glob as _glob
+        venv_root = Path(__file__).parent / ".venv" / "lib"
+        matches = _glob.glob(str(venv_root / "python3.*" / "site-packages"))
+        if matches and matches[0] not in _sys.path:
+            _sys.path.insert(0, matches[0])
+        from notion_client import Client
+
+        client = Client(auth=token)
+        total_open = 0
+
+        for label, cfg in TRACKERS.items():
+            try:
+                resp = client.databases.query(
+                    database_id=cfg["database_id"],
+                    filter={
+                        "or": [
+                            {"property": cfg["status_prop"], "select": {"equals": s}}
+                            for s in cfg["open_statuses"]
+                        ]
+                    },
+                )
+                results = resp.get("results", [])
+                total_open += len(results)
+                if results:
+                    warn(f"{label} — {len(results)} ticket(s) abierto(s):")
+                    for page in results:
+                        props = page.get("properties", {})
+                        title_prop = props.get(cfg["title_prop"], {})
+                        title_parts = title_prop.get("title", [])
+                        title = title_parts[0]["plain_text"] if title_parts else "(sin título)"
+                        status = props.get(cfg["status_prop"], {}).get("select", {})
+                        status_name = status.get("name", "?") if status else "?"
+                        print(f"    · [{status_name}] {title}")
+                else:
+                    ok(f"{label} — sin tickets abiertos")
+            except Exception as e:
+                fail(f"{label} — error al consultar: {e}")
+
+        if total_open == 0:
+            ok("Sin pendientes en trackers")
+        return True  # informativo, no bloquea el health check
+    except ImportError:
+        fail("Tickets — notion_client no instalado en .venv")
+        return True
+    except Exception as e:
+        fail(f"Tickets — error de conexión: {e}")
+        return True
+
+
 # ── Runner ────────────────────────────────────────────────
 
 def main():
@@ -154,6 +231,7 @@ def main():
         ("git", check_git),
         ("notion", check_notion_reachable),
         ("docs_sync", check_docs_sync),
+        ("pending_tickets", check_pending_tickets),
     ]
 
     results = {}
