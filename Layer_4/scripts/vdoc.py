@@ -48,7 +48,7 @@ def main():
         vsync_args += ["--dry-run"]
         run(vsync_args, "vsync_doc (preview)")
         return
-    elif cmd in ("kernel","system_prompt","career_canon","manual","cheat_sheet"):
+    elif cmd in ("kernel","system_prompt","career_canon","manual"):
         vsync_args += ["--direction", "auto", "--doc", cmd]
     else:
         print(f"Comando no reconocido: {cmd}")

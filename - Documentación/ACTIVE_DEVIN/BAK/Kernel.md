@@ -61,12 +61,12 @@ Auto‑commit + push a origin/main cuando hay cambios en el repo
 Alias: vgit · Corre en background a las 09:00 · 15:00 · 21:00 
 Repo: github.com/mauriciomeyran/jhs-pipeline 
 Reutiliza .venv de Layer_1 
-vsync_doc.py — Sync bidireccional Notion → ACTIVE/ para los 6 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log). 
+vsync_doc.py — Sync bidireccional Notion → ACTIVE/ para los 5 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Cheat Sheet). 
 ```
 Alias: vdoc · Flags: dry | notion | local 
 Flujo vdoc notion: lee Notion (safe_list vía httpx, 3 reintentos) → escribe ACTIVE/{doc}.md → auto‑commit GitHub al terminar. 
 Dependencias: httpx · notion-client 3.x · .venv de Layer_1 · git_sync.py · Vive en: Layer_4/scripts/vsync_doc.py 
-Convención ACTIVE/: Los 6 .md fundacionales viven en .../ACTIVE/ — agnóstico de versión. Al pasar a v8.7: copiar archivos a ACTIVE/, cero cambios de código. Nombres canónicos: Kernel.md · System_Prompt.md · Career_Canon.md · Manual.md · Aliases.md · Change_Log.md. Reemplaza los paths versionados anteriores (.../v8.5/Kernel v8.5.md). 
+Convención ACTIVE/: Los 5 .md fundacionales viven en .../ACTIVE/ — agnóstico de versión. Al pasar a v8.7: copiar archivos a ACTIVE/, cero cambios de código. Nombres canónicos: Kernel.md · System_Prompt.md · Career_Canon.md · Manual.md · Cheat_Sheet.md. Reemplaza los paths versionados anteriores (.../v8.5/Kernel v8.5.md). 
 Nota técnica: notion-client 3.x tiene un bug silencioso en blocks.children.list() que retorna None en lugar de lanzar excepción con campos null. vsync_doc.py lo mitiga con safe_list() — wrapper httpx directo con 3 reintentos. 
 Jerarquía de Dedup 
 L1 > L2 > L3. En conflicto cross‑layer, prevalece la entrada de la capa de mayor jerarquía. 
