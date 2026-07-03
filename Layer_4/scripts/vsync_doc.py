@@ -122,6 +122,7 @@ def _export_children(block_id, lines, parent_table=None):
 
             if b.get("type") == "table":
                 current_parent = dict(b.get("table", {}))
+                print(f"[DEBUG] TABLE: {current_parent}")
                 current_parent["_header_written"] = False
 
             if b.get("type") == "table_row" and current_parent is not None:
