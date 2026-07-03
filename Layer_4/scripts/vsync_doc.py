@@ -75,6 +75,24 @@ def _block_to_md(block):
         icon = b.get("icon") or {}
         emoji = icon.get("emoji","") if isinstance(icon, dict) else ""
         return f"> {emoji+' ' if emoji else ''}{rt}\n"
+
+    if bt == "table":
+        return ""
+
+    if bt == "table_row":
+        cells = ["".join(t.get("plain_text","") for t in c) for c in b.get("cells", [])]
+        row = "| " + " | ".join(cells) + " |\n"
+
+        parent = block.get("_parent_table", {})
+        if (
+            parent.get("has_column_header")
+            and not parent.get("_header_written")
+        ):
+            parent["_header_written"] = True
+            sep = "| " + " | ".join(["---"] * len(cells)) + " |\n"
+            return row + sep
+
+        return row
     if bt == "toggle": return f"**{rt}**\n"
     return ""
 
@@ -91,6 +109,39 @@ def safe_list(block_id, cursor=None):
         time.sleep(1.5*(i+1))
     return None
 
+def _export_children(block_id, lines, parent_table=None):
+    cur = None
+    while True:
+        data = safe_list(block_id, cur)
+        if data is None:
+            return
+
+        for b in data.get("results", []):
+
+            current_parent = parent_table
+
+            if b.get("type") == "table":
+                current_parent = dict(b.get("table", {}))
+                current_parent["_header_written"] = False
+
+            if b.get("type") == "table_row" and current_parent is not None:
+                b["_parent_table"] = current_parent
+
+            lines.append(_block_to_md(b))
+
+            if b.get("has_children"):
+                _export_children(
+                    b["id"],
+                    lines,
+                    current_parent
+                )
+
+        if not data.get("has_more"):
+            break
+
+        cur = data.get("next_cursor")
+
+
 def fetch_notion_as_md(pid):
     meta = notion.pages.retrieve(pid)
     ts = datetime.fromisoformat(meta["last_edited_time"].replace("Z","+00:00"))
@@ -105,6 +156,8 @@ def fetch_notion_as_md(pid):
         if data is None: return None, ts
         for b in data.get("results",[]):
             lines.append(_block_to_md(b)); total+=1
+            if b.get("has_children"):
+                _export_children(b["id"], lines)
         if not data.get("has_more"): break
         cur = data.get("next_cursor")
     print(f"     {total} bloques")
