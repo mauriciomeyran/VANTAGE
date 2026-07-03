@@ -1,5 +1,7 @@
 # V | ALIASES
 
+# V | ALIASES
+
 | # | Sección | Tipo | Propósito |
 | --- | --- | --- | --- |
 | 1 | Layer 1 — Active Recon | OPERACIÓN | Pipeline principal |
