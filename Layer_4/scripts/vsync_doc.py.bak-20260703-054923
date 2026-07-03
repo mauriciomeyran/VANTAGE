@@ -191,53 +191,6 @@ def _make_text_block(block_type, key, content):
         "rich_text": [{"type":"text","text":{"content": content[:NOTION_TEXT_LIMIT]}}]
     }}
 
-def _try_parse_table(lines, i):
-    """
-    Detecta un bloque de tabla Markdown a partir de la línea i.
-    Retorna (table_block, next_i) o (None, i) si no es tabla.
-    """
-    if not (lines[i].strip().startswith("|") and lines[i].strip().endswith("|")):
-        return None, i
-    if i + 1 >= len(lines):
-        return None, i
-    sep = lines[i+1].strip()
-    if not (sep.startswith("|") and set(sep.replace("|","").replace(" ","").replace(":","")) <= {"-"}):
-        return None, i
-
-    def _split_row(line):
-        return [c.strip() for c in line.strip().strip("|").split("|")]
-
-    header_cells = _split_row(lines[i])
-    width = len(header_cells)
-    rows = [header_cells]
-
-    j = i + 2
-    while j < len(lines):
-        l = lines[j].strip()
-        if not (l.startswith("|") and l.endswith("|")):
-            break
-        rows.append(_split_row(l))
-        j += 1
-
-    table_rows = []
-    for row in rows:
-        cells = row[:width] + [""] * max(0, width - len(row))
-        table_rows.append({
-            "object": "block", "type": "table_row",
-            "table_row": {"cells": [[{"type":"text","text":{"content": c[:NOTION_TEXT_LIMIT]}}] for c in cells]}
-        })
-
-    table_block = {
-        "object": "block", "type": "table",
-        "table": {
-            "table_width": width,
-            "has_column_header": True,
-            "has_row_header": False,
-            "children": table_rows
-        }
-    }
-    return table_block, j
-
 def push_local_to_notion(pid, path):
     # Eliminar bloques existentes
     cur=None
@@ -254,11 +207,6 @@ def push_local_to_notion(pid, path):
     blocks=[]; i=0
     while i < len(lines):
         l = lines[i]
-        table_block, next_i = _try_parse_table(lines, i)
-        if table_block is not None:
-            blocks.append(table_block)
-            i = next_i
-            continue
         if l.startswith("```"):
             lang = l[3:].strip(); i+=1; code=[]
             while i < len(lines) and not lines[i].startswith("```"):
