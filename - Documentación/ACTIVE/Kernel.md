@@ -164,6 +164,23 @@ Toda entrada en proceso contiene los siguientes bloques en orden:
 ## RIESGOS / OPEN QUESTIONS {toggle}
 Entradas en Status=Target o en proceso sin entrevista confirmada: la página puede estar vacía o contener solo notas de contexto. El template de entrevista se agrega cuando se confirma primera ronda. 
 ---
+## KERNEL:TRACKER-SCHEMA
+### KERNEL:TRACKER-SCHEMA-001 — Alcance
+- Reactivo (algo roto) → Bug Tracker
+- Proactivo (trabajo/decisión pendiente) → Tasks Tracker
+| Tracker | DB ID | COL ID |
+| --- | --- | --- |
+| Bug Tracker | 36e938be-fc42-81f8-8c6f-000b6769ba03 | 36e938be-fc42-81bd-9e1f-dc360b3b45f5 |
+| Tasks Tracker | d2a65ca1-6a35-465d-bcff-b0d82dddd549 | — |
+### KERNEL:TRACKER-SCHEMA-002 — Niveles de Prioridad
+Aplica a Bug Tracker y Tasks Tracker con la misma escala.
+| Nivel | Criterio |
+| --- | --- |
+| CRÍTICO | El flujo punta a punta no puede completarse |
+| ALTO | El flujo se completa forzando el sistema (workaround requerido) |
+| MEDIO | Sin resolución en la semana, el flujo punta a punta se verá comprometido |
+| BAJO | No bloquea operación — nice-to-have |
+---
 ## KERNEL:OWNERSHIP  Ownership
 ### KERNEL:OWNERSHIP-001 — AI Component
 - Responsabilidades del componente de IA (ej: validación de triggers, generación de HANDOFF). 
