@@ -157,7 +157,6 @@ def check_docs_sync():
         return False
 
     ok("5 docs fundacionales presentes en ACTIVE/")
-    warn("nota: diff de contenido real pendiente (bug vsync_doc.py sin resolver)")
     return True
 
 
