@@ -311,10 +311,52 @@ def check_system_version():
         return True
 
 
+INDEX_STALE_THRESHOLD_HOURS = 24
+VANTAGE_RUNTIME_SCRIPT = SCRIPTS_DIR / "vantage.py"
+
+
+def _run_vantage_sync():
+    """
+    Dispara `python3 vantage.py sync` para refrescar el Entity Index.
+    Housekeeping de rutina, no remediación de un fallo del sistema
+    (ver KERNEL:FAIL-PHILOSOPHY — un índice stale no es un fallo,
+    es mantenimiento esperado). Best-effort: nunca propaga excepción.
+    """
+    if not VANTAGE_RUNTIME_SCRIPT.exists():
+        fail(f"index — {VANTAGE_RUNTIME_SCRIPT.name} no encontrado en {SCRIPTS_DIR}, auto-sync omitido")
+        return False
+    try:
+        result = subprocess.run(
+            ["python3", "vantage.py", "sync"],
+            capture_output=True, text=True, timeout=120,
+            cwd=str(SCRIPTS_DIR)
+        )
+        if result.returncode != 0:
+            fail(f"index — auto-sync falló: {result.stderr.strip()[:200]}")
+            return False
+        last_line = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else "sin output"
+        ok(f"index — auto-sync ejecutado ({last_line})")
+        return True
+    except subprocess.TimeoutExpired:
+        fail("index — auto-sync timeout (>120s)")
+        return False
+    except Exception as e:
+        fail(f"index — auto-sync error: {e}")
+        return False
+
+
 def check_index_age():
-    """Muestra antigüedad de los índices del runtime."""
+    """
+    Muestra antigüedad de los índices del runtime.
+    Si algún índice cruza INDEX_STALE_THRESHOLD_HOURS, dispara sync
+    automático vía `vantage.py sync` — condicional, no en cada corrida.
+    Si el auto-sync falla, se reporta y NO se reintenta (Golden Rules:
+    reportar el estado, esperar instrucción — esto sí es un fallo real).
+    """
     now = time.time()
     all_ok = True
+    stale_detected = False
+
     for name in INDEX_FILES:
         path = SCRIPTS_DIR / name
         if not path.exists():
@@ -322,10 +364,17 @@ def check_index_age():
             all_ok = False
         else:
             age_hours = (now - path.stat().st_mtime) / 3600
-            if age_hours > 24:
-                warn(f"index — {name}: {age_hours:.0f}h sin actualizar")
+            if age_hours > INDEX_STALE_THRESHOLD_HOURS:
+                warn(f"index — {name}: {age_hours:.0f}h sin actualizar (umbral: {INDEX_STALE_THRESHOLD_HOURS}h)")
+                stale_detected = True
             else:
                 ok(f"index — {name}: actualizado hace {age_hours:.1f}h")
+
+    if stale_detected:
+        warn("index — umbral cruzado, disparando auto-sync...")
+        synced = _run_vantage_sync()
+        all_ok = all_ok and synced
+
     return all_ok
 
 
