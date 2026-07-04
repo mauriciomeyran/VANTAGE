@@ -539,7 +539,7 @@ body {
       <span class="stat-label">Completadas</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value" id="totalTasks">35</span>
+      <span class="stat-value" id="totalTasks">45</span>
       <span class="stat-label">Total</span>
     </div>
     <div class="stat-item">
@@ -883,110 +883,231 @@ body {
   <section class="day-section" id="miercoles">
     <div class="day-header">
       <span class="day-label" style="background:#437a22;">MIÉRCOLES</span>
-      <span class="day-progress-text" id="miercoles-progress">0 / 8</span>
-      <span class="day-count">8 tareas</span>
+      <span class="day-progress-text" id="miercoles-progress">0 / 18</span>
+      <span class="day-count">18 tareas</span>
     </div>
     <div class="mini-progress">
       <div class="mini-progress-fill" id="miercoles-bar" style="width:0%;background:#437a22;"></div>
     </div>
     <br>
     <div class="task-list" id="miercoles-tasks">
+
+      <!-- ── SELECCIÓN DE VACANTE ── -->
       <div class="task-row" id="miercoles-1" onclick="toggleTask('miercoles-1', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-1', 'miercoles', '#437a22');}">
-        <div class="task-checkbox" style="">
-          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#03</span>
-          <span class="task-text">Identificar vacante prioritaria en vista Ready-to-Apply (Score ≥ 60).</span>
-          <code class="task-cmd">N/A</code>
+          <span class="task-num">#01 · Selección</span>
+          <span class="task-text">Identificar vacante prioritaria en vista Ready-to-Apply (Score ≥ 60). Copiar URL del campo URL o el texto del JD.</span>
+          <code class="task-cmd">Notion → Ready-to-Apply</code>
         </div>
       </div>
+
+      <!-- ── CV-A ── -->
       <div class="task-row" id="miercoles-2" onclick="toggleTask('miercoles-2', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-2', 'miercoles', '#437a22');}">
-        <div class="task-checkbox" style="">
-          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#04</span>
-          <span class="task-text">Abrir sesión de Claude y ejecutar. La sesión termina con el Handoff.</span>
-          <code class="task-cmd">CV-A + URL de la vacante</code>
+          <span class="task-num">#02 · CV-A</span>
+          <span class="task-text">Abrir sesión de Claude y disparar CV-A. Claude extrae keywords, identifica gaps y determina Positioning Mode. La sesión termina con el HANDOFF.</span>
+          <code class="task-cmd">CV-A [URL de la vacante]</code>
         </div>
       </div>
+
+      <!-- ── HANDOFF: VERIFICACIÓN PREVIA ── -->
       <div class="task-row" id="miercoles-3" onclick="toggleTask('miercoles-3', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-3', 'miercoles', '#437a22');}">
-        <div class="task-checkbox" style="">
-          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#05</span>
-          <span class="task-text">Abrir sesión nueva de Claude y ejecutar.</span>
-          <code class="task-cmd">CV-B + Handoff</code>
+          <span class="task-num">#03 · HANDOFF check</span>
+          <span class="task-text">Verificar manualmente que el HANDOFF contiene los 5 campos antes de abrir CV-B. Si falta alguno — completar primero. HANDOFF incompleto bloquea CV-B sin excepción.</span>
+          <code class="task-cmd">empresa · rol · JD_keywords_top6 (6 items) · fit_gaps · tono_marca</code>
         </div>
       </div>
+
+      <!-- ── CV-B: APERTURA ── -->
       <div class="task-row" id="miercoles-4" onclick="toggleTask('miercoles-4', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-4', 'miercoles', '#437a22');}">
-        <div class="task-checkbox" style="">
-          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#06</span>
-          <span class="task-text">Recibir output en formato Canon Markdown (con Figma Tags)</span>
-          <code class="task-cmd">N/A</code>
+          <span class="task-num">#04 · CV-B apertura</span>
+          <span class="task-text">Abrir sesión NUEVA de Claude (separada de CV-A). Pegar el HANDOFF completo y disparar el trigger.</span>
+          <code class="task-cmd">CV-B [HANDOFF]</code>
         </div>
       </div>
+
+      <!-- ── CV-B: VALIDACIÓN AUTOMÁTICA ── -->
       <div class="task-row" id="miercoles-5" onclick="toggleTask('miercoles-5', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-5', 'miercoles', '#437a22');}">
-        <div class="task-checkbox" style="">
-          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#07</span>
-          <span class="task-text">Documentar output en Notion.</span>
-          <code class="task-cmd">N/A</code>
+          <span class="task-num">#05 · Validación Claude</span>
+          <span class="task-text">Claude verifica los 5 campos del HANDOFF y carga el Career Canon para validar que bullets y KPIs sean derivados canónicos. Si falta algún campo → solicita antes de continuar, no inventa valores.</span>
+          <code class="task-cmd">automático</code>
         </div>
       </div>
+
+      <!-- ── CV-B: POSITIONING MODE ── -->
       <div class="task-row" id="miercoles-6" onclick="toggleTask('miercoles-6', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-6', 'miercoles', '#437a22');}">
-        <div class="task-checkbox" style="">
-          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#08</span>
-          <span class="task-text">Actualizar documento de Figma y exportar PDF</span>
+          <span class="task-num">#06 · Positioning Mode</span>
+          <span class="task-text">Claude determina el Positioning Mode del HANDOFF (N1 Luxury Brand Execution · N2 Store Design &amp; Flagship · N3 Regional Brand Execution · N4 Commercial VM &amp; Field Leadership). En empate → regla de desempate. Si persiste → escala a decisión humana antes de continuar. No mezcla bullets de dos modos.</span>
+          <code class="task-cmd">automático</code>
+        </div>
+      </div>
+
+      <!-- ── CV-B: SKELETON + AUDITORÍA ── -->
+      <div class="task-row" id="miercoles-7" onclick="toggleTask('miercoles-7', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-7', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#07 · Skeleton + auditoría</span>
+          <span class="task-text">Claude inyecta contenido en slots del Golden Skeleton (estructura inmutable). Audita: COUNT(figma_text_id) Skeleton == COUNT output, y secuencia estricta C01→C02→C03→C04→C05. Si no coincide → aborta y re-mapea.</span>
+          <code class="task-cmd">automático</code>
+        </div>
+      </div>
+
+      <!-- ── CV-B: REVISIÓN DEL F2 ── -->
+      <div class="task-row" id="miercoles-8" onclick="toggleTask('miercoles-8', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-8', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#08 · Revisión F2 Markdown</span>
+          <span class="task-text">Revisar el F2 Markdown entregado en sesión: contenido, voz, alineación con Positioning Mode y slots correctamente mapeados. Claude no escribe nada en Notion aún. Si algo no cuadra → solicitar ajuste antes de autorizar.</span>
           <code class="task-cmd">N/A</code>
         </div>
       </div>
-      <div class="task-row" id="miercoles-7" onclick="toggleTask('miercoles-7', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-7', 'miercoles', '#437a22');}">
-        <div class="task-checkbox" style="">
-          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
+
+      <!-- ── CV-B: AUTORIZACIÓN ── -->
+      <div class="task-row" id="miercoles-9" onclick="toggleTask('miercoles-9', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-9', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#09</span>
-          <span class="task-text">Ejecutar — Claude entrega go/no-go con checklist de 6 ítems.</span>
-          <code class="task-cmd">QA + PDF</code>
+          <span class="task-num">#09 · Autorización</span>
+          <span class="task-text">Emitir token de autorización explícita para que Claude proceda a escribir en Notion. Tokens eliminados (RAI-03): Ok · Go · YES · yes (pueden producir escritura no intencionada en conversación).</span>
+          <code class="task-cmd">APROBAR_WRITE  ·  SÍ  ·  sí  ·  YEP  ·  yep</code>
         </div>
       </div>
-      <div class="task-row" id="miercoles-8" onclick="toggleTask('miercoles-8', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-8', 'miercoles', '#437a22');}">
-        <div class="task-checkbox" style="">
-          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
+
+      <!-- ── NOTION: DESTINO 1 ── -->
+      <div class="task-row" id="miercoles-10" onclick="toggleTask('miercoles-10', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-10', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
         </div>
         <div class="task-content">
-          <span class="task-num">#10</span>
-          <span class="task-text">Si QA aprueba: cambiar Status → Postulado en Notion y ejecutar para que Python asigne Gate_Decision = APPLIED y la vacante salga de Ready-to-Apply.</span>
+          <span class="task-num">#10 · Notion destino 1</span>
+          <span class="task-text">Claude escribe el Markdown con Figma Tags en DERIVED OUTPUTS · ARCHIVE del Career Canon, con footer: Positioning Mode activo y fecha.</span>
+          <code class="task-cmd">automático tras autorización</code>
+        </div>
+      </div>
+
+      <!-- ── NOTION: DESTINO 2 ── -->
+      <div class="task-row" id="miercoles-11" onclick="toggleTask('miercoles-11', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-11', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#11 · Notion destino 2</span>
+          <span class="task-text">Claude escribe el bloque # MARKDOWN CANON ALIGNED en la página de la vacante en VANTAGE TRACKER, dentro de un bloque de código plain text. Verificar que ambos destinos se hayan escrito (Career Canon + Tracker).</span>
+          <code class="task-cmd">automático tras autorización</code>
+        </div>
+      </div>
+
+      <!-- ── .MD DESCARGABLE ── -->
+      <div class="task-row" id="miercoles-12" onclick="toggleTask('miercoles-12', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-12', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#12 · Descargar .md</span>
+          <span class="task-text">Descargar el archivo .md entregable (formato idéntico al bloque de Notion, con todos los figma_text_id en línea propia). Es el entregable de trabajo para el plugin de Figma.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+
+      <!-- ── FIGMA SYNC: ABRIR PLUGIN ── -->
+      <div class="task-row" id="miercoles-13" onclick="toggleTask('miercoles-13', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-13', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#13 · Figma: abrir plugin</span>
+          <span class="task-text">Abrir archivo Figma del CV. Ejecutar plugin VANTAGE CV Sync. Pegar el contenido del .md en el área de texto del plugin (acepta también JSON por KEY semántica).</span>
+          <code class="task-cmd">Menú → Plugins → Development → VANTAGE CV Sync</code>
+        </div>
+      </div>
+
+      <!-- ── FIGMA SYNC: INYECTAR ── -->
+      <div class="task-row" id="miercoles-14" onclick="toggleTask('miercoles-14', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-14', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#14 · Figma: inyectar nodos</span>
+          <span class="task-text">Click en "Inyectar a Nodos Nativos". Verificar notificación: "VANTAGE Sync: X nodos actualizados vía Registry V2 (ID crudo)". Si reporta Keys sin resolver → revisar que figma_text_id del .md coincidan con registry_seed.json.</span>
+          <code class="task-cmd">Inyectar a Nodos Nativos</code>
+        </div>
+      </div>
+
+      <!-- ── FIGMA: EXPORTAR PDF ── -->
+      <div class="task-row" id="miercoles-15" onclick="toggleTask('miercoles-15', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-15', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#15 · Figma: exportar PDF</span>
+          <span class="task-text">Exportar el CV a PDF desde Figma. El PDF resultante es el entregable para QA.</span>
+          <code class="task-cmd">N/A</code>
+        </div>
+      </div>
+
+      <!-- ── QA ── -->
+      <div class="task-row" id="miercoles-16" onclick="toggleTask('miercoles-16', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-16', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#16 · QA</span>
+          <span class="task-text">Abrir sesión nueva de Claude. Adjuntar el PDF exportado y ejecutar. Claude evalúa checklist de 6 ítems (formato y completitud — no fit): identidad y contacto · estructura de secciones · orden de experiencia · completitud de contenido · integridad visual · consistencia de exportación.</span>
+          <code class="task-cmd">QA [adjuntar PDF]</code>
+        </div>
+      </div>
+
+      <!-- ── QA: NO-GO ── -->
+      <div class="task-row" id="miercoles-17" onclick="toggleTask('miercoles-17', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-17', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#17 · QA NO-GO (condicional)</span>
+          <span class="task-text">Si QA = NO-GO (cualquier ítem en FAIL): corregir en Figma, re-exportar PDF y repetir desde #16. Marcar cuando se haya resuelto o confirmado GO.</span>
+          <code class="task-cmd">Solo si aplica</code>
+        </div>
+      </div>
+
+      <!-- ── CIERRE ── -->
+      <div class="task-row" id="miercoles-18" onclick="toggleTask('miercoles-18', 'miercoles', '#437a22')" role="checkbox" aria-checked="false" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask('miercoles-18', 'miercoles', '#437a22');}">
+        <div class="task-checkbox">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="task-content">
+          <span class="task-num">#18 · Cierre y postulación</span>
+          <span class="task-text">Si QA = GO: cambiar Status → Postulado en Notion y ejecutar. Python detecta Status = Postulado, asigna Gate_Decision = APPLIED (Class B — solo Python lo escribe) y la vacante sale de Ready-to-Apply automáticamente.</span>
           <code class="task-cmd">vl1</code>
         </div>
       </div>
+
     </div>
   </section>
 
@@ -1067,8 +1188,8 @@ body {
 <script>
 const STATE_KEY = 'vchecklist_v1';
 const DAYS = ['lunes','martes','miercoles','jueves','viernes'];
-const DAY_COUNTS = {lunes:21,martes:3,miercoles:8,jueves:1,viernes:2};
-const TOTAL = 35;
+const DAY_COUNTS = {lunes:21,martes:3,miercoles:18,jueves:1,viernes:2};
+const TOTAL = 45;
 
 let state = {};
 

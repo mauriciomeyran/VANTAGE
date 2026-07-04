@@ -161,11 +161,20 @@ def check_docs_sync():
     return True
 
 
+PRIORITY_ORDER = ["CRÍTICO", "ALTO", "MEDIO", "BAJO"]
+PRIORITY_COLOR = {
+    "CRÍTICO": "\033[91m",   # rojo
+    "ALTO":    "\033[93m",   # amarillo
+    "MEDIO":   "\033[94m",   # azul
+    "BAJO":    "\033[37m",   # gris
+}
+
+
 def check_pending_tickets():
     """
-    Lista tickets abiertos en BUG TRACKER y TASKS TRACKER.
-    Informativo — nunca marca el health check como fallido,
-    solo avisa para que no tengas que abrir Notion a revisar.
+    Lista tickets abiertos en BUG TRACKER y TASKS TRACKER,
+    agrupados por prioridad (CRÍTICO → ALTO → MEDIO → BAJO → Sin Prioridad).
+    Informativo — nunca marca el health check como fallido.
     """
     token = os.environ.get("NOTION_TOKEN")
     if not token:
@@ -196,24 +205,56 @@ def check_pending_tickets():
                 )
                 results = resp.get("results", [])
                 total_open += len(results)
-                if results:
-                    warn(f"{label} — {len(results)} ticket(s) abierto(s):")
-                    for page in results:
-                        props = page.get("properties", {})
-                        title_prop = props.get(cfg["title_prop"], {})
-                        title_parts = title_prop.get("title", [])
-                        title = title_parts[0]["plain_text"] if title_parts else "(sin título)"
-                        status = props.get(cfg["status_prop"], {}).get("select", {})
-                        status_name = status.get("name", "?") if status else "?"
-                        print(f"    · [{status_name}] {title}")
-                else:
+
+                if not results:
                     ok(f"{label} — sin tickets abiertos")
+                    continue
+
+                # Agrupar por prioridad
+                groups = {p: [] for p in PRIORITY_ORDER}
+                groups["Sin Prioridad"] = []
+
+                for page in results:
+                    props = page.get("properties", {})
+                    title_prop = props.get(cfg["title_prop"], {})
+                    title_parts = title_prop.get("title", [])
+                    title = title_parts[0]["plain_text"] if title_parts else "(sin título)"
+                    prioridad = props.get("Prioridad", {}).get("select", {})
+                    prioridad_name = prioridad.get("name", "") if prioridad else ""
+                    bucket = prioridad_name if prioridad_name in PRIORITY_ORDER else "Sin Prioridad"
+                    groups[bucket].append(title)
+
+                # Resumen en una línea
+                resumen = []
+                for p in PRIORITY_ORDER:
+                    if groups[p]:
+                        color = PRIORITY_COLOR.get(p, "")
+                        resumen.append(f"{color}{p}: {len(groups[p])}{RESET}")
+                if groups["Sin Prioridad"]:
+                    resumen.append(f"Sin Prioridad: {len(groups['Sin Prioridad'])}")
+
+                warn(f"{label} — {len(results)} abierto(s)  [{' · '.join(resumen)}]")
+
+                # Detalle: solo CRÍTICO y ALTO se listan explícitamente
+                for p in ["CRÍTICO", "ALTO"]:
+                    for title in groups[p]:
+                        color = PRIORITY_COLOR[p]
+                        print(f"    {color}▲ [{p}]{RESET} {title}")
+
+                # MEDIO y BAJO: solo conteo
+                for p in ["MEDIO", "BAJO"]:
+                    if groups[p]:
+                        print(f"    · {p}: {len(groups[p])} ticket(s) — ver Notion")
+
+                if groups["Sin Prioridad"]:
+                    print(f"    · Sin Prioridad: {len(groups['Sin Prioridad'])} ticket(s) — requieren clasificación")
+
             except Exception as e:
                 fail(f"{label} — error al consultar: {e}")
 
         if total_open == 0:
             ok("Sin pendientes en trackers")
-        return True  # informativo, no bloquea el health check
+        return True
     except ImportError:
         fail("Tickets — notion_client no instalado en .venv")
         return True
