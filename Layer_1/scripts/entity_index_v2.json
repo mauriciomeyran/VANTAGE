@@ -1,6 +1,51 @@
 {
   "entities": [
     {
+      "entity_id": "TRACKER:H_bc9ca2c8039b6f62",
+      "canonical_id": "bc9ca2c8039b6f628df38ea0e81677e3e7d5d4a41f0eb000a0128f4ce004b60d",
+      "page_id": "38f938be-fc42-8134-ab58-dacfb57124cf",
+      "page_url": "https://app.notion.com/p/Coordinador-de-Exhibiciones-38f938befc428134ab58dacfb57124cf",
+      "hash": "bc9ca2c8039b6f628df38ea0e81677e3e7d5d4a41f0eb000a0128f4ce004b60d",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_d8e65c7b0f83537f",
+      "canonical_id": "d8e65c7b0f83537f366b8d6de964285df7b9e3d244000fad4a7c93da70a7a0c5",
+      "page_id": "38f938be-fc42-81f8-9fb5-c7857312b8e7",
+      "page_url": "https://app.notion.com/p/Supervisor-de-Visual-Merchandising-38f938befc4281f89fb5c7857312b8e7",
+      "hash": "d8e65c7b0f83537f366b8d6de964285df7b9e3d244000fad4a7c93da70a7a0c5",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_ae89fbf45c844cdc",
+      "canonical_id": "ae89fbf45c844cdc042e02646b4e08379851d3134daa35dca0f26a1bb3225114",
+      "page_id": "38f938be-fc42-8152-9c3b-c50076920858",
+      "page_url": "https://app.notion.com/p/Visual-Merchandising-Manager-38f938befc4281529c3bc50076920858",
+      "hash": "ae89fbf45c844cdc042e02646b4e08379851d3134daa35dca0f26a1bb3225114",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_4d52bf016a4ae8e0",
+      "canonical_id": "4d52bf016a4ae8e0d7099f2ac56f15ef0ba58b518fc1c5f4f6e6c71b2f880563",
+      "page_id": "38f938be-fc42-81b9-8cdd-c1550269ce29",
+      "page_url": "https://app.notion.com/p/ANALISTA-DE-EXHIBICION-RETAIL-38f938befc4281b98cddc1550269ce29",
+      "hash": "4d52bf016a4ae8e0d7099f2ac56f15ef0ba58b518fc1c5f4f6e6c71b2f880563",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_f94dbfb4b9d9b268",
+      "canonical_id": "f94dbfb4b9d9b268714b86aff8ee1ec2d7e61c336a7b519e8ff6e536f371cbd3",
+      "page_id": "38f938be-fc42-8192-93b2-c65bd4ff2076",
+      "page_url": "https://app.notion.com/p/Auxiliar-De-Visual-Merchandising-Presentaci-n-De-Productos-38f938befc42819293b2c65bd4ff2076",
+      "hash": "f94dbfb4b9d9b268714b86aff8ee1ec2d7e61c336a7b519e8ff6e536f371cbd3",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
       "entity_id": "TRACKER:H_5e3e0d218d61274f",
       "canonical_id": "5e3e0d218d61274f8ccbd6d230ca9265b2414fbfa2dc06fc22c6cccf5663053c",
       "page_id": "38d938be-fc42-81a9-a677-d983c56eda3b",
@@ -5312,10 +5357,10 @@
     }
   ],
   "metrics": {
-    "total_entities": 590,
-    "tracker_entities": 16,
+    "total_entities": 595,
+    "tracker_entities": 21,
     "archive_entities": 574,
-    "hash_coverage": 88.98,
+    "hash_coverage": 89.08,
     "orphan_candidates": 65
   }
 }

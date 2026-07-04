@@ -315,6 +315,38 @@ INDEX_STALE_THRESHOLD_HOURS = 24
 VANTAGE_RUNTIME_SCRIPT = SCRIPTS_DIR / "vantage.py"
 
 
+def _summarize_sync_output(stdout):
+    """
+    Extrae un resumen legible del stdout de `vantage.py sync`.
+    Intenta parsear JSON (busca el último objeto {...} en el output);
+    si falla, cae a la última línea de texto no vacía.
+    """
+    text = stdout.strip()
+    if not text:
+        return "sin output"
+
+    import json as _json
+    import re as _re
+
+    # Busca el último bloque {...} en el stdout (tolerante a logs previos)
+    matches = _re.findall(r"\{.*\}", text, flags=_re.DOTALL)
+    if matches:
+        try:
+            data = _json.loads(matches[-1])
+            status = data.get("status", "ok")
+            before = data.get("entities_before")
+            after = data.get("entities_after")
+            if before is not None and after is not None:
+                return f"status: {status}, entities: {before} → {after}"
+            return f"status: {status}"
+        except (ValueError, _json.JSONDecodeError):
+            pass
+
+    # Fallback: última línea no vacía del stdout
+    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    return lines[-1] if lines else "sin output"
+
+
 def _run_vantage_sync():
     """
     Dispara `python3 vantage.py sync` para refrescar el Entity Index.
@@ -334,8 +366,8 @@ def _run_vantage_sync():
         if result.returncode != 0:
             fail(f"index — auto-sync falló: {result.stderr.strip()[:200]}")
             return False
-        last_line = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else "sin output"
-        ok(f"index — auto-sync ejecutado ({last_line})")
+        summary = _summarize_sync_output(result.stdout)
+        ok(f"index — auto-sync ejecutado ({summary})")
         return True
     except subprocess.TimeoutExpired:
         fail("index — auto-sync timeout (>120s)")
