@@ -28,6 +28,7 @@ DOCS_FUNDACIONALES = {
     "V-SYSTEM-PROMPT": ("37b938be-fc42-8001-9b9b-fcf81130d274", "System Prompt.md"),
     "V-KERNEL": ("377938be-fc42-805e-a408-c9ae518d4fe7", "Kernel.md"),
     "V-MANUAL": ("372938be-fc42-8050-9a67-e40857d7806e", "Manual.md"),
+        "V-CAREER-CANON":  ("377938be-fc42-8089-93f2-f52dbd2dec6c", "Career Canon.md"),
 }
 
 ACTIVE_DIR = Path("/Users/mauriciomeyran/Documents/04-Vantage_CV/- Documentación/ACTIVE")
