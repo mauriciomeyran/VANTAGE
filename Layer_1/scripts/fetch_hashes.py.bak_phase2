@@ -13,7 +13,6 @@ from pathlib import Path
 
 import httpx
 from dotenv import load_dotenv
-from generate_entity_index_v2 import RESOLVER_REGISTRY_PATH, _load_entity_prefixes, generate_entity_id
 
 _ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(_ROOT / ".env", override=True)
@@ -81,15 +80,8 @@ def main():
     lookup = {e["page_id"]: e for e in idx["entities"]}
     print(f"Index cargado: {len(lookup)} entidades")
 
-    entity_prefixes = _load_entity_prefixes(RESOLVER_REGISTRY_PATH)
-
     patched = 0
     for source_name, ds_id in DATA_SOURCES.items():
-        normalized_source = source_name.upper().replace(" ", "_")
-        if normalized_source not in entity_prefixes:
-            raise KeyError(f"Missing entity_prefix in resolver_registry_v2.json for {source_name}")
-        entity_prefix = entity_prefixes[normalized_source]
-
         print(f"\n[{source_name}] Consultando data source {ds_id[:8]}...")
         pages = query_all(ds_id)
         print(f"  {len(pages)} páginas obtenidas")
@@ -98,14 +90,14 @@ def main():
             h = extract_hash(page.get("properties", {}))
             if h and pid in lookup:
                 e = lookup[pid]
-                e["entity_id"] = generate_entity_id(entity_prefix, pid, h)
+                e["entity_id"]    = f"TRACKER:H_{h[:16]}"
                 e["canonical_id"] = h
-                e["hash"] = h
+                e["hash"]         = h
                 patched += 1
 
     entities = list(lookup.values())
-    total = len(entities)
-    has_hash = sum(1 for e in entities if e.get("hash"))
+    total    = len(entities)
+    has_hash = sum(1 for e in entities if not e["entity_id"].startswith("TRACKER:U_"))
     orphans  = total - has_hash
     hash_cov = round(has_hash / total, 4) if total else 0
 

@@ -36,7 +36,6 @@ load_dotenv(_LAYER_1_ROOT / ".env", override=True)
 
 # ── config ─────────────────────────────────────────────────────────────────────
 NOTION_TOKEN = os.environ["NOTION_TOKEN"]
-RESOLVER_REGISTRY_PATH = _SCRIPTS_DIR / "resolver_registry_v2.json"
 
 # Data Source IDs (COL) — los mismos que backfill_hash.py v1.3 usó para
 # actualizar 292 registros exitosamente. NO son database IDs.
@@ -113,22 +112,6 @@ def get_hash(page: dict) -> str:
     return _plain_text(props[HASH_FIELD])
 
 
-def _load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def _load_entity_prefixes(registry_path: Path) -> dict[str, str]:
-    registry = _load_json(registry_path)
-    prefixes: dict[str, str] = {}
-    for source_name, cfg in registry.get("data_sources", {}).items():
-        prefix = str(cfg.get("entity_prefix", "")).strip()
-        if not prefix:
-            continue
-        normalized = source_name.upper().replace(" ", "_")
-        prefixes[normalized] = prefix
-    return prefixes
-
-
 def iter_all_pages(client: Client, data_source_id: str) -> list[dict]:
     """Misma lógica de paginación que iter_pages_without_hash, pero sin filtrar por hash."""
     all_pages: list[dict] = []
@@ -171,25 +154,16 @@ def iter_all_pages(client: Client, data_source_id: str) -> list[dict]:
 
 
 # ── entity index ─────────────────────────────────────────────────────────────
-def generate_entity_id(entity_prefix: str, page_id: str, hash_value: str) -> str:
+def generate_entity_id(page_id: str, hash_value: str) -> str:
     if hash_value:
-        return f"{entity_prefix}:H_{hash_value[:16]}"
-    return f"{entity_prefix}:U_{page_id.replace('-', '')}"
+        return f"TRACKER:H_{hash_value[:16]}"
+    return f"TRACKER:U_{page_id.replace('-', '')}"
 
 
 def build_entities(
-    client: Client,
-    label: str,
-    data_source_id: str,
-    limit: int | None,
-    entity_prefixes: dict[str, str],
+    client: Client, label: str, data_source_id: str, limit: int | None
 ) -> list[dict]:
     meta = DB_META[label]
-    source_db = meta["source_db"]
-    normalized_source = source_db.upper().replace(" ", "_")
-    if normalized_source not in entity_prefixes:
-        raise KeyError(f"Missing entity_prefix in resolver_registry_v2.json for {source_db}")
-    entity_prefix = entity_prefixes[normalized_source]
     print(f"\n{'─' * 60}")
     print(f"  Data Source: {meta['source_db']} ({data_source_id[:8]}…)")
 
@@ -206,7 +180,7 @@ def build_entities(
         hash_value = get_hash(page)
 
         entities.append({
-            "entity_id": generate_entity_id(entity_prefix, page_id, hash_value),
+            "entity_id": generate_entity_id(page_id, hash_value),
             "canonical_id": hash_value if hash_value else page_id,
             "page_id": page_id,
             "page_url": page_url,
@@ -356,11 +330,9 @@ def main() -> None:
     endpoint = "data_sources.query (SDK)" if hasattr(client, "data_sources") else "request() manual a data_sources/*/query"
     print(f"   Endpoint de consulta: {endpoint}")
 
-    entity_prefixes = _load_entity_prefixes(RESOLVER_REGISTRY_PATH)
-
     all_entities: list[dict] = []
     for label, data_source_id in DB_IDS.items():
-        all_entities.extend(build_entities(client, label, data_source_id, args.limit, entity_prefixes))
+        all_entities.extend(build_entities(client, label, data_source_id, args.limit))
 
     total = len(all_entities)
     tracker_count = sum(1 for e in all_entities if e["entity_type"] == "tracker")

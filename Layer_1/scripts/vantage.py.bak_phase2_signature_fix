@@ -157,11 +157,9 @@ def sync() -> dict:
         client = gen.make_client(token)
 
         # Step 1: Generate entity index
-        entity_prefixes = gen._load_entity_prefixes(gen.RESOLVER_REGISTRY_PATH)
-
         all_entities = []
         for label, ds_id in gen.DB_IDS.items():
-            all_entities.extend(gen.build_entities(client, label, ds_id, limit=None, entity_prefixes=entity_prefixes))
+            all_entities.extend(gen.build_entities(client, label, ds_id, limit=None))
 
         total         = len(all_entities)
         tracker_count = sum(1 for e in all_entities if e["entity_type"] == "tracker")
