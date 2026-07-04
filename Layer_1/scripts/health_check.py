@@ -156,7 +156,7 @@ def check_docs_sync():
         fail(f"docs sync — faltan localmente: {', '.join(missing)}")
         return False
 
-    ok("5 docs fundacionales presentes en ACTIVE/")
+    ok(f"{len(DOCS_FUNDACIONALES)} docs fundacionales presentes en ACTIVE/")
     return True
 
 
