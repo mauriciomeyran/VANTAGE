@@ -122,7 +122,6 @@ def _export_children(block_id, lines, parent_table=None):
 
             if b.get("type") == "table":
                 current_parent = dict(b.get("table", {}))
-                print(f"[DEBUG] TABLE: {current_parent}")
                 current_parent["_header_written"] = False
 
             if b.get("type") == "table_row" and current_parent is not None:
@@ -156,9 +155,13 @@ def fetch_notion_as_md(pid):
         data = safe_list(pid, cur)
         if data is None: return None, ts
         for b in data.get("results",[]):
+            current_parent = None
+            if b.get("type") == "table":
+                current_parent = dict(b.get("table", {}))
+                current_parent["_header_written"] = False
             lines.append(_block_to_md(b)); total+=1
             if b.get("has_children"):
-                _export_children(b["id"], lines)
+                _export_children(b["id"], lines, current_parent)
         if not data.get("has_more"): break
         cur = data.get("next_cursor")
     print(f"     {total} bloques")

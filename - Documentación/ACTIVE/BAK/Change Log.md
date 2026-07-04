@@ -1,59 +1,9 @@
 # V | CHANGELOG
 
-# V | CHANGELOG
-
 Change_Log_001
-### v8.7.8 — VANTAGE · 2026-07-03
-Change_Log_v8.7.8
-- [GOV] System Prompt — Hardening de límites de interpretación (experimental) — Se reforzó el System Prompt para separar explícitamente contrato operativo, implementación interna, navegación lógica del Kernel y límites de interpretación del modelo. Motivo: se observaron inferencias arquitectónicas espontáneas no solicitadas (auditorías del Kernel, rutas lógicas interpretadas como estructura física) sin evidencia obtenida vía mecanismos oficiales de consulta. Sin evidencia de corrupción real en Source of Truth, Terminal, MCP o lazy_loader.py. Validación pendiente — requiere observar comportamiento en próximas sesiones/cuentas antes de confirmar cierre. Bug Tracker: 392938be-fc42-8111-bc97-f2a53f8b09d1.
-### v8.7.7 — VANTAGE · 2026-07-03
-Change_Log_v8.7.7
-- [FIX] V-ALIASES — Corrupción de tablas Markdown restaurada — Página V | ALIASES presentaba 7 tablas fragmentadas en bloques de 1 fila (separador | --- | repetido por fila en lugar de único por tabla), causando renderizado roto en Notion. Reconstruida vía replace_content con las 7 tablas consolidadas como bloques únicos (header-row + N filas). Verificado post-write: 7 <table> nativas correctas.
-- [BUG] Layer 4 — push_local_to_notion() no parsea tablas Markdown — Causa raíz identificada: el parser de vsync_doc.py (roundtrip local→notion) carece de rama elif l.startswith("|"); cualquier línea de tabla cae en el branch genérico de paragraph, destruyendo la estructura tabular al hacer push. No es la causa de la corrupción de V-ALIASES (esa se originó en escritura MCP directa fuera de este script), pero representa riesgo activo en cualquier vdoc local/vdoc auto futuro sobre documentos con tablas. Bug Tracker: 392938be-fc42-810c-b6e6-fc381e6af9b5.
-- [PATCH] vsync_doc.py — _try_parse_table() agregado — Nueva función detecta bloques |...| consecutivos con separador válido y los reconstruye como bloque table nativo (table_width, has_column_header, table_row children), en lugar de fragmentarlos en párrafos. Verificado: fetch post-parche sano (17 bloques, --doc aliases --direction notion --dry-run sin errores). Pendiente: roundtrip real --direction local para confirmar cierre. Riesgo conocido no resuelto: tablas >100 filas podrían exceder el límite de children por request de la API de Notion. Backup pre-parche: vsync_doc.py.bak-{timestamp}.
-### v8.7.6 — VANTAGE · 2026-07-03
-Change_Log_v8.7.6
-- [GOV] Normalización Terminológica L0 — Auditoría de Gobernanza y Mitigación de Drift Documental — Sesión de refinamiento estructural sobre la suite documental de VANTAGE. Objetivo: Eliminación de ambigüedades terminológicas y corrección de desajustes entre índices y cuerpo documental sin alterar lógica operativa ni especificaciones técnicas.
-- V-MASTER-INDEX (Nuevo): Creación de página centralizadora de gobernanza. Impacto: Mapeo de los 6 documentos fundacionales y red de conectores bajo esquema KERNEL:.
-- V-SYSTEM PROMPT (37b938be-fc42-8001-9b9b-fcf81130d274):
-- Índice ligero integrado en cabecera (apunta a V-MASTER-INDEX).
-- Normalización absoluta de IDs (KERNEL:CLAVE).
-- Corrección transversal: "siete documentos" → "6 documentos fundacionales".
-- V-KERNEL (377938be-fc42-805e-a408-c9ae518d4fe7):
-- Índice reajustado a 10 capítulos reales (mitigación de secciones huérfanas como KERNEL:EVOLUTION).
-- Normalización L0: "AI Component" / "componente AI" → "componente de IA" (homogéneo en KERNEL:ARCHITECTURE y KERNEL:OWNERSHIP).
-- Remoción de referencia de acoplamiento directo "Claude" → "componente de IA" en KERNEL:CV-PIPELINE.
-- V-MANUAL (372938be-fc42-8050-9a67-e40857d7806e):
-- Índice expandido de 11 a 14 secciones (añadidas: §12 REGLAS DE ORO, §13 FILOSOFÍA DE FALLO, §14 SLA DE LATENCIA).
-- Normalización L0: "componente AI" → "componente de IA" + estandarización de "VANTAGE Runtime".
-- Homologación tipográfica: disparadores del pipeline en mayúsculas (CV-A, CV-B, Handoff).
-- V-CAREER CANON (377938be-fc42-8089-93f2-f52dbd2dec6c):
-- Índice sincronizado con esqueleto real.
-- Normalización L0: "componente AI" → "componente de IA" + capitalización de términos clave (Career Canon, Handoff, CV-B).
-- Homologación de "Visual Merchandising" como rol/título conceptual.
-- Unificación de referencias a Figma Sync y Registry en OUTPUT CONTRACT.
-- V-ALIASES & CHANGE LOG (37c938be-fc42-80d4-b9ae-f5969830331b):
-- Índice ajustado para explicitar bloque de Lazy Loader.
-- Normalización L0: formateo inline de lazy_loader.py + capitalización de "Kernel" como nombre propio.
-- Auditoría visual: listado explícito de aliases activos (vload, vtrig, etc.).
-- Criterios de aceptación verificados:
-| Criterio | Estado | Observaciones |
-| --- | --- | --- |
-| Disipación de ambigüedades | ✅ Validado | Vocabulario alineado al System Prompt. |
-| Coherencia estructural de índices | ✅ Validado | Eliminados gaps de secciones huérfanas. |
-| Cero impacto funcional | ✅ Validado | Variables de entorno, flags y código intactos. |
-| Control de Drift Documental | ✅ Validado | Preparado para escalamiento sin colisiones. |
-### v8.7.5 — VANTAGE · 2026-07-03
-Contexto: Estabilización post-Evento de Mutilación y alineación SSOT.
+### v8.7.5 — VANTAGE · 2026-07-02
 Change_Log_v8.7.5
----
-- [FIX] Layer 4 Hardening — Exportación estructural Notion → ACTIVE (vsync_doc.py) — Corregido el recorrido recursivo de bloques hijos durante la exportación documental. Se agregó soporte para exportación de bloques table y table_row, preservando la estructura de los documentos fundacionales (Technical Kernel, System Prompt, Career Canon, Manual, Aliases y Change Log) durante la sincronización Notion → ACTIVE. Causa raíz: el exportador no procesaba correctamente bloques hijos de tipo tabla, provocando pérdida estructural en los archivos Markdown generados desde Notion.
-- [FIX] Wrapper documental (vdoc.py) — Ampliado el soporte de sincronización quirúrgica incorporando los documentos aliases y change_log, alineando el wrapper con las capacidades existentes de vsync_doc.py. Actualizada la ayuda (--help) para reflejar los nuevos comandos soportados.
-- [AUDIT] Layer 4 Hardening — Auditoría técnica concluida. Se descartó corrupción documental causada por Devin, Git, lazy_loader.py o vdoc.py. La causa raíz quedó localizada exclusivamente en el proceso de exportación Notion → Markdown de vsync_doc.py. Layer 4 se considera estabilizado y operativo.
----
-- [PLAN] Governance Hardening v8.6.0 — Definido el plan de fortalecimiento de gobernanza documental compuesto por quince iniciativas (GH-001 a GH-015), orientadas a formalizar contratos documentales, normalizar terminología, reforzar la definición de responsabilidades, consolidar la autoridad editorial de Notion como SSOT y eliminar ambigüedades detectadas durante la auditoría técnica. Esta versión únicamente establece el plan de trabajo; no introduce cambios arquitectónicos ni funcionales.
----
-- [DOC] Cierre de auditoría documental — Finalizada la validación de integridad de los documentos fundacionales. Se confirmó la preservación de la estructura documental durante la sincronización Notion → ACTIVE tras la corrección del exportador. Los ajustes editoriales identificados pasan al proyecto independiente Governance Hardening v8.6.0 y no bloquean la operación normal del sistema.
+- [DOC] Cheat Sheet resuelto — nunca fue página Notion independiente (confirmado vía censo cruzado + fetch de patch_cheat_sheet.py). KERNEL:CHEAT-SHEET renombrado a KERNEL:CEDULA-DIGITAL en System Prompt. Referencia muerta a cheat_sheet eliminada de vdoc.py (línea 51). Kernel actualizado: conteo de docs fundacionales corregido a 6 (Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log); Cheat_Sheet.md retirado de convención ACTIVE/. Change Log histórico (v8.5.3, v8.7.1, v8.7.2, v8.7.3) preservado como registro de sincronización previa.
 ### v8.7.4 — VANTAGE · 2026-07-01
 Change_Log_v8.7.4
 - [AUDIT] Auditoría editorial v8.7.4 — Bloque 1 + Bloque 3 aplicados vía MCP directo (autorización operador, override Golden Rule Terminal-first). Correcciones de referencias cruzadas rotas en Kernel, Manual, Aliases, Career Canon (sin creación de contenido nuevo). Detalle completo: Bug Tracker.
@@ -101,7 +51,7 @@ Change_Log_v8.5.1
 - v8.5.1 (Patch OA-01): Migración de MCP Client-Side Lazy Load a Server-Side Lazy Load vía Terminal (lazy_loader.py). Reducción drástica de Input Tokens al aislar payloads de IDs embebidos desde Python antes de inyectarlos al contexto del LLM.
 ### v8.5 — VANTAGE · 2026-06-20
 Change_Log_v8.5
-- [ARCH] Patrón "Thin Client, Thick Server" & MCP Lazy Loading — Cobertura completa (SP + KERNEL + CAREER CANON + MANUAL) — Refactorización arquitectónica mayor en dos capas. Capa 1 — Cirugía de bloques en V | KERNEL: fusión estructural de identificadores de anclaje. Antes: párrafo con ID + bloque heading_2 separado (API retornaba 2 objetos; bloques huérfanos). Después: ## [ID: {KERNEL_MASTER}:{ruta}] TÍTULO — ID y encabezado como un solo objeto. Un read_block extrae el encabezado + todos sus hijos en una sola llamada limpia. Gap de resolución en Notion API eliminado. Capa 2 — Compresión del System Prompt (Enrutador MCP): SP despojado de texto descriptivo y convertido en modelo imperativo estructurado. Directiva Economía de Contexto implementada (respuestas ultra-concisas, solo carga útil). Patrón Lazy Loading centralizado: SP ya no almacena flujos completos; posee un índice de enrutamiento que construye cadenas de búsqueda exactas ([ID: {KERNEL_MASTER}:{ruta}]) para cargar módulos específicos (schema-001, cv-pipeline-001) únicamente cuando el trigger activo lo requiere. Impacto operativo: ~50% reducción del footprint del SP (token-efficiency). Zero hallucination por carga quirúrgica de solo la regla necesaria. KERNEL en Notion escala infinitamente sin añadir tokens al prompt base. Career Canon (377938be-fc42-8089-93f2-f52dbd2dec6c): misma cirugía de bloques aplicada. Todos los IDs de anclaje de secciones (:canon-profile-001, :canon-skills-001, :canon-experience-001, :canon-achievements-001, :canon-kpis-001, :canon-facts-001, :canon-positioning-001, :canon-output-contract-001, :canon-coverage-gate-001, y los IDs de experiencias C01–C05, KPI01–KPI08, CF01–UF03, positioning N1–N4) fusionados con sus encabezados. Un read_block sobre cualquier sección del Canon ahora retorna el bloque completo con su payload en una sola llamada, habilitando la carga diferida del perfil completo del operador sin cargar el documento entero al contexto. Manual de Usuario (372938be-
+- [ARCH] Patrón "Thin Client, Thick Server" & MCP Lazy Loading — Cobertura completa (SP + KERNEL + CAREER CANON + MANUAL) — Refactorización arquitectónica mayor en dos capas. Capa 1 — Cirugía de bloques en V | KERNEL: fusión estructural de identificadores de anclaje. Antes: párrafo con ID + bloque heading_2 separado (API retornaba 2 objetos; bloques huérfanos). Después: ## [ID: {KERNEL_MASTER}:{ruta}] TÍTULO — ID y encabezado como un solo objeto. Un read_block extrae el encabezado + todos sus hijos en una sola llamada limpia. Gap de resolución en Notion API eliminado. Capa 2 — Compresión del System Prompt (Enrutador MCP): SP despojado de texto descriptivo y convertido en modelo imperativo estructurado. Directiva Economía de Contexto implementada (respuestas ultra-concisas, solo carga útil). Patrón Lazy Loading centralizado: SP ya no almacena flujos completos; posee un índice de enrutamiento que construye cadenas de búsqueda exactas ([ID: {KERNEL_MASTER}:{ruta}]) para cargar módulos específicos (schema-001, cv-pipeline-001) únicamente cuando el trigger activo lo requiere. Impacto operativo: ~50% reducción del footprint del SP (token-efficiency). Zero hallucination por carga quirúrgica de solo la regla necesaria. KERNEL en Notion escala infinitamente sin añadir tokens al prompt base. Career Canon (377938be-fc42-8089-93f2-f52dbd2dec6c): misma cirugía de bloques aplicada. Todos los IDs de anclaje de secciones (:canon-profile-001, :canon-skills-001, :canon-experience-001, :canon-achievements-001, :canon-kpis-001, :canon-facts-001, :canon-positioning-001, :canon-output-contract-001, :canon-coverage-gate-001, y los IDs de experiencias C01–C05, KPI01–KPI08, CF01–UF03, positioning N1–N4) fusionados con sus encabezados. Un read_block sobre cualquier sección del Canon ahora retorna el bloque completo con su payload en una sola llamada, habilitando la carga diferida del perfil completo del operador sin cargar el documento entero al contexto. Manual de Usuario (372938be-fc42-8050-9a67-e40857d7806e): misma cirugía aplicada a todas las secciones operativas (audience-scope-001, manual-objetivo-001, manual-funcionamiento-001, manual-setup-001, manual-flujo-001, manual-vchecklist-001, manual-vantage-runtime-001, manual-tracker-001, manual-troubleshooting-001, manual-prompts-wrappers-001, manual-cheatsheets-001, manual-healthcheck-001, manual-changelog-001, manual-reglas-de-oro-001, manual-fallo-001). El Manual puede ahora servirse por sección quirúrgica bajo demanda del agente sin cargar el documento completo. Componentes afectados (cobertura total): System Prompt (SP) · V | KERNEL · V | CAREER CANON · V | MANUAL · Notion MCP.
 - L4 — Version Control & Infrastructure — Nueva capa documental. git_sync.py + git_sync_wrapper.sh + com.vantage.gitsync.plist instalados en Layer_4/scripts/ y Layer_4/wrappers/. Detecta cambios en el repo, hace add -A + commit con timestamp + push a origin/main. Atomic: sin cambios → silencio total. Con cambios → notificación Hero. Error → notificación Basso. launchd corre a las 09:00, 15:00, 21:00. Alias: vgit. Reutiliza .venv de Layer_1. Repo: github.com/mauriciomeyran/jhs-pipeline.
 - Nomenclatura de capas actualizada — L1 Active Recon · L2 Strategic Search · L3 Passive Intake · L4 Version Control & Infrastructure. L4 no es una capa de búsqueda — es infraestructura documental del sistema. — _write_heartbeat(total_created, total_failed) agregada en layer_3_mail.py. Escribe ~/.vantage/l3_heartbeat.json al final de cada run con campos last_run (ISO-8601 UTC), total_created, total_failed. Directorio ~/.vantage/ se crea automáticamente. Imports con alias privados (_json, _pl, _dt) para evitar colisiones. Bug Tracker: 382938be-fc42-81b3-98c1-e513eab798fc.
 - M-06 cerrado — find_candidates pre-filter — _handle_find_candidates() en agent_api.py (~l.150) ahora incluye score >= 60 como condición de filtro. Elimina el riesgo de que el endpoint devuelva entidades por debajo del umbral Gate=CREATE. Umbral alineado con Kernel §5. Bug Tracker: 382938be-fc42-810c-9e94-eaa6f416a68f.
@@ -216,5 +166,4 @@ Change_Log_v8.2
 - Sistema manual Claude-only
 - Sin pipeline Python; procesamiento y evaluación en sesión de chat
 ---
-ESTADO: v8.7.8 | ACTUALIZADO: 2026-07-03
----
+ESTADO: v8.7.4 | ACTUALIZADO: 2026-07-01

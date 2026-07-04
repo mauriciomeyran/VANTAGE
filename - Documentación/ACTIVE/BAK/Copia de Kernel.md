@@ -2,23 +2,7 @@
 
 
 > 
-## KERNEL:AUDIENCE-SCOPE
-DECLARACIÓN DE AUDIENCIA Y ALCANCE
-- Audiencia: Sistemas Agente de IA.
-- Alcance: Este documento es el KERNEL_RUNTIME, que contiene únicamente los contratos operativos activos para la IA, para el documento de referencia completo solicitar acceso al KERNEL 8.0
 ---
-| # | Sección | Tipo | Propósito |
-| --- | --- | --- | --- |
-| 1 | PURPOSE | CONTEXTO | Propósito del sistema |
-| 2 | ARCHITECTURE | ARQUITECTURA | Diseño de cuatro capas |
-| 3 | SCHEMA | ESQUEMA | Class A vs Class B |
-| 4 | OWNERSHIP | ARQUITECTURA | Responsabilidades AI vs Python |
-| 5 | TRIGGERS | OPERACIÓN | Contratos detallados |
-| 6 | GATE-DECISION | REGLAS | Lógica de gates |
-| 7 | CV-GOLDEN-RULES | REGLAS | Reglas de oro CV |
-| 8 | CV-PIPELINE | OPERACIÓN | Flujo CV-A → CV-B |
-| 9 | CANON-UPDATE | OPERACIÓN | Actualización del Canon |
-| 10 | FAIL-PHILOSOPHY | FILOSOFÍA | Filosofía de fallo |
 ## KERNEL:PURPOSE
 1. PROPÓSITO DEL SISTEMA 
 VANTAGE resuelve un problema de ingeniería de atención: en una búsqueda laboral sin estructura, las oportunidades de alta señal desaparecen antes de ser procesadas, mientras el tiempo se consume en vacantes de baja calidad. 
@@ -77,12 +61,12 @@ Auto‑commit + push a origin/main cuando hay cambios en el repo
 Alias: vgit · Corre en background a las 09:00 · 15:00 · 21:00 
 Repo: github.com/mauriciomeyran/jhs-pipeline 
 Reutiliza .venv de Layer_1 
-vsync_doc.py — Sync bidireccional Notion → ACTIVE/ para los 6 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log).
+vsync_doc.py — Sync bidireccional Notion → ACTIVE/ para los 6 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log). 
 ```
-Alias: vdoc · Flags: dry | notion | local
+Alias: vdoc · Flags: dry | notion | local 
 Flujo vdoc notion: lee Notion (safe_list vía httpx, 3 reintentos) → escribe ACTIVE/{doc}.md → auto‑commit GitHub al terminar. 
 Dependencias: httpx · notion-client 3.x · .venv de Layer_1 · git_sync.py · Vive en: Layer_4/scripts/vsync_doc.py 
-Convención ACTIVE/: Los 6 .md fundacionales viven en …/ACTIVE/ — agnóstico de versión. Al pasar a v8.7: copiar archivos a ACTIVE/, cero cambios de código. Nombres canónicos: Kernel.md · System_Prompt.md · Career_Canon.md · Manual.md · Aliases.md · Change_Log.md. Reemplaza los paths versionados anteriores (…/v8.5/Kernel v8.5.md).
+Convención ACTIVE/: Los 6 .md fundacionales viven en .../ACTIVE/ — agnóstico de versión. Al pasar a v8.7: copiar archivos a ACTIVE/, cero cambios de código. Nombres canónicos: Kernel.md · System_Prompt.md · Career_Canon.md · Manual.md · Aliases.md · Change_Log.md. Reemplaza los paths versionados anteriores (.../v8.5/Kernel v8.5.md). 
 Nota técnica: notion-client 3.x tiene un bug silencioso en blocks.children.list() que retorna None en lugar de lanzar excepción con campos null. vsync_doc.py lo mitiga con safe_list() — wrapper httpx directo con 3 reintentos. 
 Jerarquía de Dedup 
 L1 > L2 > L3. En conflicto cross‑layer, prevalece la entrada de la capa de mayor jerarquía. 
@@ -153,15 +137,10 @@ Poblados post-proceso: Interview ✓ · Interview_Date · Files · URL Markdown
 Toda entrada en proceso contiene los siguientes bloques en orden:
 1. [PDF adjunto en campo Files] — cuando aplique
 1. 
-# ENTREVISTA [N] — por cada ronda
 1. 
-## PREP {toggle}
 1. 
-## NOTAS {toggle}
 1. 
-## ACTION ITEMS {toggle} — Responsable: tarea — Due: fecha
 1. 
-## RIESGOS / OPEN QUESTIONS {toggle}
 Entradas en Status=Target o en proceso sin entrevista confirmada: la página puede estar vacía o contener solo notas de contexto. El template de entrevista se agrega cuando se confirma primera ronda. 
 ---
 ## KERNEL:OWNERSHIP  Ownership
@@ -424,8 +403,6 @@ El flujo obligatorio de CANON‑UPDATE es:
 1. Esperar autorización explícita del operador. 
 1. Solo tras APROBAR_WRITE, producir los dos outputs obligatorios. 
 1. Outputs obligatorios: CANON‑UPDATE siempre produce dos outputs 
-1. Página Notion 
-1. Archivo .md 
 Restricciones 
 - CANON‑UPDATE no evalúa fit. 
 - CANON‑UPDATE no calcula score. 

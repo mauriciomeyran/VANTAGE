@@ -1,24 +1,6 @@
 # V | MANUAL
 
 > 
-## 
-| # | Sección | Tipo | Propósito |
-| --- | --- | --- | --- |
-| 1 | OBJETIVO DE VANTAGE | CONTEXTO | Propósito, problema resuelto y diferenciadores |
-| 2 | CÓMO FUNCIONA | CONTEXTO | Arquitectura general y responsabilidades |
-| 3 | SETUP | OPERACIÓN | Instalación y configuración inicial |
-| 4 | FLUJO PUNTA A PUNTA | OPERACIÓN | Ciclo semanal completo |
-| 5 | VANTAGE RUNTIME | OPERACIÓN | Comandos de consulta y observabilidad |
-| 6 | GESTIÓN DE DATOS | OPERACIÓN | Blocks, deduplicación y reglas |
-| 7 | TROUBLESHOOTING | REFERENCIA | Problemas comunes y soluciones |
-| 8 | PROMPTS & WRAPPERS | REFERENCIA | Biblioteca de prompts |
-| 9 | CHEAT SHEETS | REFERENCIA | Resúmenes rápidos |
-| 10 | HEALTH CHECK | REFERENCIA | Checklist de mantenimiento |
-| 11 | CHANGELOG | REFERENCIA | Historial de versiones |
-| 12
- | REGLAS DE ORO PARA OPERADORES     | REFERENCIA | Reglas operativas derivadas del Kernel |
-| 13 | FILOSOFÍA DE FALLO PARA OPERADORES         | REFERENCIA | Cómo interpretar fallos del sistema |
-| 14 | SLA DE LATENCIA POST-INGESTA       | REFERENCIA | Alcance del SLA post-ingesta |
 ## 1. OBJETIVO DE VANTAGE · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-OBJETIVO-001
 ### El Problema que Resuelve
 Una búsqueda laboral sin estructura produce cuatro fallas operativas concretas:
@@ -107,7 +89,7 @@ cd ~/Documents/04-VANTAGE_CV/Layer_4/scripts
 source ../../Layer_1/.venv/bin/activate
 python vsync_doc.py --dry-run
 ```
-Output esperado: 6 documentos listados con diff por documento, sin errores.
+Output esperado: 5 documentos listados con diff por documento, sin errores.
 Si falla: verificar que layer_1.env exista y que el token no tenga n embebido.
 ## 4. FLUJO PUNTA A PUNTA · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-FLUJO-001
 Contenido: V-Checklist y flujos de operación diaria. Ver §3 Setup para prerrequisitos.
@@ -426,25 +408,11 @@ El plugin no modifica Notion ni el Tracker. Opera exclusivamente sobre el lienzo
 ### Comandos de Mantenimiento del Tracker
 Estos comandos operan sobre el estado del Tracker y están disponibles como subcomandos de vl1. Cada uno tiene un alcance preciso y un modo de operación por defecto.
 - vl1 status
-Genera un reporte de estado del Tracker en tiempo real: distribución por Gate_Decision, conteo de entradas activas (CREATE + APPLIED), entradas BLOCKED, aplicaciones de los últimos 7 días y NADs vencidas. Es el punto de partida del ciclo semanal — corre antes de cualquier otra operación para tener visibilidad del estado actual.
 - vl1 analytics
-Analiza la efectividad de las fuentes de discovery: qué canales producen más entradas CREATE, qué ratio de URLs funcionales tienen, cuál es el score promedio por fuente, y qué método de búsqueda (SEARCH‑WEEK, SEARCH‑EXEC, Manual) tiene mayor tasa de éxito. Corre los viernes como parte del cierre semanal.
 - vl1 batch
-Modo de operación por defecto: read‑only. Muestra la distribución por Status y el conteo de entradas que serían afectadas por la operación batch configurada en el script. Para ejecutar escritura, pasar el flag --execute explícitamente:
-```bash
-vl1 batch --execute
-```
-Sin --execute, el comando nunca escribe en Notion. Esta protección es permanente — no se puede desactivar sin modificar el flag.
 - vl1 recovery
-Verifica la consistencia de los datos en el Tracker: detecta entradas sin Score, sin VM_Scope o sin Gate_Decision. También gestiona checkpoints del pipeline — si un run anterior falló a mitad, recovery carga el último checkpoint y permite retomar desde el paso fallado. Corre cuando el pipeline reporta inconsistencias o tras un fallo inesperado.
 - vl1 profile
-Gestiona la configuración del perfil activo del sistema: keywords VM y de pivote, pesos de scoring, empresas target por tier y foco geográfico. Permite actualizar el perfil sin editar código — los cambios se persisten en config/profile_config.yaml. Opción 7 ("Salir sin cambios") es el exit seguro; cualquier cambio guardado requiere propagación manual a layer_1_run.py.
 - vl1 backfill
-Backfill de campos Class A faltantes en entradas existentes: layer, hash y Prioridad. Opera con preview obligatorio antes de escribir — muestra exactamente qué entradas serán modificadas y por qué razón se infirió el layer. Acepta --dry-run para preview sin confirmación:
-```bash
-vl1 backfill --dry-run
-```
-Sin --dry-run, solicita confirmación explícita (s) antes de cualquier escritura.
 ### Empresas Excluidas Permanentemente (Hard Blocks)
 - L'Oréal (todas las divisiones)
 - Levi Strauss & Co. (Levi's, Dockers)
