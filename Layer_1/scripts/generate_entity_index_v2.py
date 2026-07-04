@@ -18,6 +18,7 @@ import argparse
 import json
 import os
 import sys
+from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -191,10 +192,136 @@ def build_entities(
     return entities
 
 
+# ── graph builder ───────────────────────────────────────────────────────────────
+def build_graph(entities: list[dict]) -> dict:
+    """
+    Builds graph_v2.json from entity index.
+    
+    Only implements archived_from relationships:
+    - ARCHIVO:H_<hash> → TRACKER:H_<hash> when both entities share the same hash
+    
+    Deterministic: edges are generated solely from hash matching in entity metadata.
+    No fabricated edges, no inferred relationships.
+    """
+    # Group entities by hash (first 16 chars, matching entity_id format)
+    hash_to_entities = defaultdict(list)
+    for entity in entities:
+        if entity.get("hash"):
+            hash_prefix = entity["hash"][:16]
+            hash_to_entities[hash_prefix].append(entity)
+    
+    # Build edges for archived_from relationships
+    edges = []
+    for hash_prefix, entity_list in hash_to_entities.items():
+        # Need at least one ARCHIVO and one TRACKER with this hash
+        archive_entities = [e for e in entity_list if e["entity_type"] == "archive"]
+        tracker_entities = [e for e in entity_list if e["entity_type"] == "tracker"]
+        
+        if not archive_entities or not tracker_entities:
+            continue
+        
+        # Create edges: ARCHIVO → TRACKER for each pair with matching hash
+        for archive_ent in archive_entities:
+            for tracker_ent in tracker_entities:
+                edges.append({
+                    "from": archive_ent["entity_id"],
+                    "to": tracker_ent["entity_id"],
+                    "type": "archived_from"
+                })
+    
+    return {
+        "version": "2.0",
+        "edges": edges
+    }
+
+
+def build_backlinks(graph: dict) -> dict:
+    """
+    Builds backlinks_v2.json as inverse representation of graph edges.
+    
+    For every edge (from → to), creates a backlink entry for 'to' pointing to 'from'.
+    No independent logic - purely derived from graph.
+    """
+    backlinks = defaultdict(list)
+    
+    for edge in graph.get("edges", []):
+        to_entity = edge["to"]
+        from_entity = edge["from"]
+        edge_type = edge["type"]
+        
+        backlinks[to_entity].append({
+            "from": from_entity,
+            "type": edge_type
+        })
+    
+    # Convert defaultdict to regular dict
+    return {
+        "version": "2.0",
+        "backlinks": dict(backlinks)
+    }
+
+
+def validate_graph_artifacts(
+    entities: list[dict], 
+    graph: dict, 
+    backlinks: dict
+) -> tuple[bool, list[str]]:
+    """
+    Validates graph artifacts against entity index.
+    
+    Checks:
+    1. No orphan entity_ids in graph edges (all nodes must exist in entity index)
+    2. Backlinks exactly match graph (inverse relationship)
+    3. Graph structure is valid
+    
+    Returns:
+        (is_valid, list of error messages)
+    """
+    errors = []
+    entity_ids = {e["entity_id"] for e in entities}
+    
+    # Check 1: No orphan entity_ids in graph edges
+    for edge in graph.get("edges", []):
+        from_id = edge["from"]
+        to_id = edge["to"]
+        
+        if from_id not in entity_ids:
+            errors.append(f"Orphan 'from' node in graph: {from_id}")
+        if to_id not in entity_ids:
+            errors.append(f"Orphan 'to' node in graph: {to_id}")
+    
+    # Check 2: Backlinks exactly match graph (inverse relationship)
+    # Rebuild backlinks from graph to verify
+    expected_backlinks = defaultdict(list)
+    for edge in graph.get("edges", []):
+        expected_backlinks[edge["to"]].append({
+            "from": edge["from"],
+            "type": edge["type"]
+        })
+    
+    actual_backlinks = backlinks.get("backlinks", {})
+    
+    # Compare
+    for entity_id in set(list(expected_backlinks.keys()) + list(actual_backlinks.keys())):
+        expected = sorted(expected_backlinks.get(entity_id, []), key=lambda x: x["from"])
+        actual = sorted(actual_backlinks.get(entity_id, []), key=lambda x: x["from"])
+        
+        if expected != actual:
+            errors.append(f"Backlinks mismatch for {entity_id}: expected {len(expected)}, got {len(actual)}")
+    
+    # Check 3: No orphan entity_ids in backlinks
+    for entity_id in actual_backlinks.keys():
+        if entity_id not in entity_ids:
+            errors.append(f"Orphan entity_id in backlinks: {entity_id}")
+    
+    return (len(errors) == 0, errors)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="VANTAGE Entity Index Generator v2")
     parser.add_argument("--limit", type=int, default=None)
-    parser.add_argument("--out", type=Path, default=_LAYER_1_ROOT / "output" / "entity_index_v2.json")
+    parser.add_argument("--out", type=Path, default=_SCRIPTS_DIR / "entity_index_v2.json")
+    parser.add_argument("--skip-graph", action="store_true", help="Skip graph generation (entity index only)")
     args = parser.parse_args()
 
     print("🔧 VANTAGE Entity Index Generator v2")
@@ -221,19 +348,70 @@ def main() -> None:
         "orphan_candidates": orphan_count,
     }
 
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    with open(args.out, "w", encoding="utf-8") as f:
-        json.dump({"entities": all_entities, "metrics": metrics}, f, indent=2, ensure_ascii=False)
+    # Write entity index with atomic pattern
+    entity_index = {"entities": all_entities, "metrics": metrics}
+    entity_index_path = args.out
+    entity_index_tmp = entity_index_path.with_suffix(".json.tmp")
+    
+    entity_index_tmp.parent.mkdir(parents=True, exist_ok=True)
+    with open(entity_index_tmp, "w", encoding="utf-8") as f:
+        json.dump(entity_index, f, indent=2, ensure_ascii=False)
+    os.replace(entity_index_tmp, entity_index_path)
 
     print(f"\n{'═' * 60}")
-    print(f"  RESUMEN FINAL")
+    print(f"  ENTITY INDEX")
     print(f"  Total entidades   : {metrics['total_entities']}")
     print(f"  Tracker           : {metrics['tracker_entities']}")
     print(f"  Archivo           : {metrics['archive_entities']}")
     print(f"  Hash coverage     : {metrics['hash_coverage']}%")
     print(f"  Orphan candidates : {metrics['orphan_candidates']}")
+    print(f"  Archivo generado  : {entity_index_path}")
+
+    # Build graph artifacts unless explicitly skipped
+    if not args.skip_graph:
+        print(f"\n{'═' * 60}")
+        print(f"  GRAPH BUILDER")
+        
+        # Build graph
+        graph = build_graph(all_entities)
+        graph_path = _SCRIPTS_DIR / "graph_v2.json"
+        graph_tmp = graph_path.with_suffix(".json.tmp")
+        
+        with open(graph_tmp, "w", encoding="utf-8") as f:
+            json.dump(graph, f, indent=2, ensure_ascii=False)
+        
+        # Build backlinks
+        backlinks = build_backlinks(graph)
+        backlinks_path = _SCRIPTS_DIR / "backlinks_v2.json"
+        backlinks_tmp = backlinks_path.with_suffix(".json.tmp")
+        
+        with open(backlinks_tmp, "w", encoding="utf-8") as f:
+            json.dump(backlinks, f, indent=2, ensure_ascii=False)
+        
+        # Validate before replacing
+        is_valid, errors = validate_graph_artifacts(all_entities, graph, backlinks)
+        
+        if not is_valid:
+            # Clean up temp files on validation failure
+            graph_tmp.unlink(missing_ok=True)
+            backlinks_tmp.unlink(missing_ok=True)
+            print(f"\n❌ VALIDATION FAILED:")
+            for error in errors:
+                print(f"   - {error}")
+            raise RuntimeError("Graph validation failed - artifacts not updated")
+        
+        # Atomic replace
+        os.replace(graph_tmp, graph_path)
+        os.replace(backlinks_tmp, backlinks_path)
+        
+        print(f"  Edges generadas  : {len(graph['edges'])}")
+        print(f"  Backlinks generadas: {len(backlinks['backlinks'])}")
+        print(f"  Archivo graph    : {graph_path}")
+        print(f"  Archivo backlinks : {backlinks_path}")
+        print(f"  Validación       : ✅ PASSED")
+    
     print(f"{'═' * 60}")
-    print(f"\n✅ Archivo generado: {args.out}")
+    print(f"\n✅ Runtime Build completado")
 
 
 if __name__ == "__main__":

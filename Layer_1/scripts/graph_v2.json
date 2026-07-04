@@ -1,14 +1,10 @@
 {
   "version": "2.0",
   "edges": [
-    {"from": "ARCHIVO:H_db0c65fcd89427c3", "to": "TRACKER:H_db0c65fcd89427c3", "type": "archived_from"},
-    {"from": "ARCHIVO:H_1a0b9898f0c2c478", "to": "TRACKER:H_1a0b9898f0c2c478", "type": "archived_from"},
-    {"from": "ARCHIVO:H_df5a4b4d65f8552f", "to": "TRACKER:H_df5a4b4d65f8552f", "type": "archived_from"},
-    {"from": "ARCHIVO:H_e0fc416629280243", "to": "TRACKER:H_e0fc416629280243", "type": "archived_from"},
-    {"from": "ARCHIVO:H_93a9bae7f01e656e", "to": "TRACKER:H_93a9bae7f01e656e", "type": "archived_from"},
-    {"from": "ARCHIVO:H_301938f2d15ec8ea", "to": "TRACKER:H_301938f2d15ec8ea", "type": "archived_from"},
-    {"from": "ARCHIVO:H_7919f1635387d4f1", "to": "TRACKER:H_7919f1635387d4f1", "type": "archived_from"},
-    {"from": "ARCHIVO:H_d4dd8f0524314112", "to": "TRACKER:H_d4dd8f0524314112", "type": "archived_from"},
-    {"from": "ARCHIVO:H_8c722ea63c6a37f0", "to": "TRACKER:H_8c722ea63c6a37f0", "type": "archived_from"}
+    {
+      "from": "TRACKER:H_0cf33076cfa2418d",
+      "to": "TRACKER:H_0cf33076cfa2418d",
+      "type": "archived_from"
+    }
   ]
 }

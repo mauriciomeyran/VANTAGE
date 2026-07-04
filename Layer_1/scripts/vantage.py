@@ -105,23 +105,26 @@ def status() -> Dict[str, Any]:
 
 def sync() -> dict:
     """
-    Regenera entity_index_v2.json consultando Notion via generate_entity_index_v2.
-    Atomic write (.tmp -> os.replace). Preserva indice anterior si falla.
-    NO toca graph_v2.json ni backlinks_v2.json.
+    Regenera Runtime Build completo:
+    1. entity_index_v2.json (consultando Notion via generate_entity_index_v2)
+    2. graph_v2.json (relaciones archived_from derivadas de entity index)
+    3. backlinks_v2.json (representación inversa de graph)
+    
+    Atomic write (.tmp -> os.replace). Preserva artefactos anteriores si falla.
     """
     import importlib
 
-    _scripts_dir = str(Path(__file__).resolve().parent)
+    _scripts_dir = Path(__file__).resolve().parent
 
     # Lazy import con sys.path limpio para evitar que notion_utils.py local
     # tape al SDK notion-client de PyPI que usa generate_entity_index_v2
     _gen_path = Path(__file__).resolve().parent / "generate_entity_index_v2.py"
     try:
         import importlib.util as _ilu
-        _scripts_dir = str(Path(__file__).resolve().parent)
+        _scripts_dir_str = str(_scripts_dir)
         _saved_path  = sys.path[:]
         _saved_nc    = sys.modules.pop("notion_utils", None)
-        sys.path     = [p for p in sys.path if p not in (_scripts_dir, ".", "")]
+        sys.path     = [p for p in sys.path if p not in (_scripts_dir_str, ".", "")]
         try:
             _spec = _ilu.spec_from_file_location("generate_entity_index_v2", _gen_path)
             gen   = _ilu.module_from_spec(_spec)
@@ -131,12 +134,17 @@ def sync() -> dict:
             if _saved_nc is not None:
                 sys.modules["notion_utils"] = _saved_nc
     except Exception as exc:
-        return {"status": "error", "error": f"No se pudo cargar generate_entity_index_v2: {exc}", "index_preserved": True}
+        return {"status": "error", "error": f"No se pudo cargar generate_entity_index_v2: {exc}", "artifacts_preserved": True}
 
     from query_layer import ENTITY_INDEX_PATH, load_index
 
     index_path = Path(ENTITY_INDEX_PATH)
-    tmp_path   = index_path.with_suffix(".json.tmp")
+    graph_path = _scripts_dir / "graph_v2.json"
+    backlinks_path = _scripts_dir / "backlinks_v2.json"
+    
+    index_tmp = index_path.with_suffix(".json.tmp")
+    graph_tmp = graph_path.with_suffix(".json.tmp")
+    backlinks_tmp = backlinks_path.with_suffix(".json.tmp")
 
     try:
         entities_before = len(load_index().get("entities", []))
@@ -148,6 +156,7 @@ def sync() -> dict:
         token  = os.environ["NOTION_TOKEN"]
         client = gen.make_client(token)
 
+        # Step 1: Generate entity index
         all_entities = []
         for label, ds_id in gen.DB_IDS.items():
             all_entities.extend(gen.build_entities(client, label, ds_id, limit=None))
@@ -169,27 +178,61 @@ def sync() -> dict:
             },
         }
 
-        tmp_path.write_text(json.dumps(new_index, indent=2, ensure_ascii=False), encoding="utf-8")
-        os.replace(tmp_path, index_path)
+        # Step 2: Build graph
+        graph = gen.build_graph(all_entities)
+        
+        # Step 3: Build backlinks
+        backlinks = gen.build_backlinks(graph)
+        
+        # Step 4: Validate artifacts
+        is_valid, errors = gen.validate_graph_artifacts(all_entities, graph, backlinks)
+        
+        if not is_valid:
+            return {
+                "status": "error",
+                "error": f"Graph validation failed: {'; '.join(errors)}",
+                "artifacts_preserved": True
+            }
+        
+        # Step 5: Atomic write all artifacts
+        index_tmp.write_text(json.dumps(new_index, indent=2, ensure_ascii=False), encoding="utf-8")
+        graph_tmp.write_text(json.dumps(graph, indent=2, ensure_ascii=False), encoding="utf-8")
+        backlinks_tmp.write_text(json.dumps(backlinks, indent=2, ensure_ascii=False), encoding="utf-8")
+        
+        os.replace(index_tmp, index_path)
+        os.replace(graph_tmp, graph_path)
+        os.replace(backlinks_tmp, backlinks_path)
 
     except Exception as exc:
-        if tmp_path.exists():
-            try:
-                tmp_path.unlink()
-            except Exception:
-                pass
-        return {"status": "error", "error": str(exc), "index_preserved": True}
+        # Clean up temp files on failure
+        index_tmp.unlink(missing_ok=True)
+        graph_tmp.unlink(missing_ok=True)
+        backlinks_tmp.unlink(missing_ok=True)
+        return {"status": "error", "error": str(exc), "artifacts_preserved": True}
 
     elapsed = round(time.monotonic() - t_start, 3)
     load_index(force_reload=True)
+    
+    # Reload graph_layer to pick up new graph artifacts
+    try:
+        import importlib
+        import graph_layer
+        importlib.reload(graph_layer)
+    except Exception:
+        pass
+    
     status_result = status()
 
     return {
         "status":                "ok",
         "entities_before":       entities_before,
         "entities_after":        status_result["entity_index"]["total_entities"],
+        "graph_edges":           len(graph["edges"]),
+        "backlinks_count":       len(backlinks["backlinks"]),
         "elapsed_seconds":       elapsed,
         "index_path":            str(index_path),
+        "graph_path":            str(graph_path),
+        "backlinks_path":        str(backlinks_path),
         "entity_index":          status_result["entity_index"],
         "notion_utils_metrics": status_result["notion_utils_metrics"],
     }
