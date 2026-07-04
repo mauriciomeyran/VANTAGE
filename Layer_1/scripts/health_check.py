@@ -14,7 +14,9 @@ Exit codes:
 import os
 import sys
 import subprocess
+import time
 from pathlib import Path
+from datetime import datetime, timezone
 
 # ── Config ────────────────────────────────────────────────
 REQUIRED_ENV_VARS = [
@@ -28,10 +30,18 @@ DOCS_FUNDACIONALES = {
     "V-SYSTEM-PROMPT": ("37b938be-fc42-8001-9b9b-fcf81130d274", "System Prompt.md"),
     "V-KERNEL": ("377938be-fc42-805e-a408-c9ae518d4fe7", "Kernel.md"),
     "V-MANUAL": ("372938be-fc42-8050-9a67-e40857d7806e", "Manual.md"),
-        "V-CAREER-CANON":  ("377938be-fc42-8089-93f2-f52dbd2dec6c", "Career Canon.md"),
 }
 
 ACTIVE_DIR = Path("/Users/mauriciomeyran/Documents/04-Vantage_CV/- Documentación/ACTIVE")
+SCRIPTS_DIR = Path("/Users/mauriciomeyran/Documents/04-Vantage_CV/Layer_1/scripts")
+REPO_ROOT   = Path("/Users/mauriciomeyran/Documents/04-Vantage_CV")
+
+INDEX_FILES = [
+    "graph_v2.json",
+    "entity_index_v2.json",
+]
+
+CHANGELOG_PAGE_ID = "390938be-fc42-80e7-b429-d7d730339353"
 
 # Trackers — Reactivo (Bug) vs Proactivo (Task). Ver KERNEL:SCHEMA en System Prompt.
 TRACKERS = {
@@ -263,15 +273,123 @@ def check_pending_tickets():
         return True
 
 
+def check_system_version():
+    """Fetchea versión del sistema desde la propiedad Versión de V-CHANGELOG."""
+    token = os.environ.get("NOTION_TOKEN")
+    if not token:
+        warn("versión — NOTION_TOKEN no configurado, skip")
+        return True
+    try:
+        import glob as _glob
+        venv_root = Path(__file__).parent / ".venv" / "lib"
+        matches = _glob.glob(str(venv_root / "python3.*" / "site-packages"))
+        if matches and matches[0] not in sys.path:
+            sys.path.insert(0, matches[0])
+        from notion_client import Client
+        client = Client(auth=token)
+        meta = client.pages.retrieve(page_id=CHANGELOG_PAGE_ID)
+        version = ""
+        for prop in meta.get("properties", {}).values():
+            if prop.get("type") == "rich_text":
+                parts = prop.get("rich_text", [])
+                if parts:
+                    version = parts[0].get("plain_text", "")
+                    break
+        # propiedad "Versión" directa
+        version_prop = meta.get("properties", {}).get("Versión", {})
+        if version_prop.get("type") == "rich_text":
+            parts = version_prop.get("rich_text", [])
+            version = parts[0].get("plain_text", "") if parts else ""
+        if version:
+            ok(f"Sistema v{version}")
+        else:
+            warn("versión — no encontrada en V-CHANGELOG")
+        return True
+    except Exception as e:
+        warn(f"versión — error: {e}")
+        return True
+
+
+def check_index_age():
+    """Muestra antigüedad de los índices del runtime."""
+    now = time.time()
+    all_ok = True
+    for name in INDEX_FILES:
+        path = SCRIPTS_DIR / name
+        if not path.exists():
+            warn(f"index — {name} no encontrado")
+            all_ok = False
+        else:
+            age_hours = (now - path.stat().st_mtime) / 3600
+            if age_hours > 24:
+                warn(f"index — {name}: {age_hours:.0f}h sin actualizar")
+            else:
+                ok(f"index — {name}: actualizado hace {age_hours:.1f}h")
+    return all_ok
+
+
+def check_vgit_last():
+    """Muestra timestamp del último commit en el repo."""
+    try:
+        result = subprocess.run(
+            ["git", "log", "-1", "--format=%ci"],
+            capture_output=True, text=True, timeout=10,
+            cwd=str(REPO_ROOT)
+        )
+        if result.returncode != 0 or not result.stdout.strip():
+            warn("vgit — no se pudo leer último commit")
+            return True
+        last = result.stdout.strip()
+        ok(f"vgit — último commit: {last}")
+        return True
+    except Exception as e:
+        warn(f"vgit — error: {e}")
+        return True
+
+
+def check_vdoc_last():
+    """Muestra el doc más recientemente sincronizado en ACTIVE/."""
+    if not ACTIVE_DIR.exists():
+        warn("vdoc — carpeta ACTIVE/ no existe")
+        return True
+    now = datetime.now(tz=timezone.utc)
+    latest_file = None
+    latest_mtime = None
+    for _, filename in DOCS_FUNDACIONALES.values():
+        path = ACTIVE_DIR / filename
+        if path.exists():
+            mtime = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc)
+            if latest_mtime is None or mtime > latest_mtime:
+                latest_mtime = mtime
+                latest_file = filename
+    if latest_mtime:
+        delta = now - latest_mtime
+        hours = delta.total_seconds() / 3600
+        if hours < 1:
+            age_str = f"hace {int(delta.total_seconds() / 60)}min"
+        elif hours < 24:
+            age_str = f"hace {hours:.1f}h"
+        else:
+            age_str = f"hace {int(hours / 24)}d"
+        ok(f"vdoc — último sync: {latest_file} ({age_str})")
+    else:
+        warn("vdoc — sin docs en ACTIVE/")
+    return True
+
+
 # ── Runner ────────────────────────────────────────────────
 
 def main():
     print("VANTAGE Health Check\n" + "-" * 30)
     checks = [
+        ("version", check_system_version),
         ("env", check_env),
         ("git", check_git),
+        ("vgit", check_vgit_last),
         ("notion", check_notion_reachable),
         ("docs_sync", check_docs_sync),
+        ("vdoc", check_vdoc_last),
+        ("index_age", check_index_age),
         ("pending_tickets", check_pending_tickets),
     ]
 
