@@ -31,6 +31,7 @@ if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
 from notion_utils import Client
+from runtime_identity import load_prefix_map, generate_entity_id
 
 load_dotenv(_LAYER_1_ROOT / ".env", override=True)
 
@@ -117,16 +118,7 @@ def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _load_entity_prefixes(registry_path: Path) -> dict[str, str]:
-    registry = _load_json(registry_path)
-    prefixes: dict[str, str] = {}
-    for source_name, cfg in registry.get("data_sources", {}).items():
-        prefix = str(cfg.get("entity_prefix", "")).strip()
-        if not prefix:
-            continue
-        normalized = source_name.upper().replace(" ", "_")
-        prefixes[normalized] = prefix
-    return prefixes
+# _load_entity_prefixes() migrada a runtime_identity.load_prefix_map() — DT-014
 
 
 def iter_all_pages(client: Client, data_source_id: str) -> list[dict]:
@@ -171,11 +163,7 @@ def iter_all_pages(client: Client, data_source_id: str) -> list[dict]:
 
 
 # ── entity index ─────────────────────────────────────────────────────────────
-def generate_entity_id(entity_prefix: str, page_id: str, hash_value: str) -> str:
-    if hash_value:
-        return f"{entity_prefix}:H_{hash_value[:16]}"
-    return f"{entity_prefix}:U_{page_id.replace('-', '')}"
-
+# generate_entity_id() migrada a runtime_identity — DT-014
 
 def build_entities(
     client: Client,
@@ -356,7 +344,7 @@ def main() -> None:
     endpoint = "data_sources.query (SDK)" if hasattr(client, "data_sources") else "request() manual a data_sources/*/query"
     print(f"   Endpoint de consulta: {endpoint}")
 
-    entity_prefixes = _load_entity_prefixes(RESOLVER_REGISTRY_PATH)
+    entity_prefixes = load_prefix_map(RESOLVER_REGISTRY_PATH)
 
     all_entities: list[dict] = []
     for label, data_source_id in DB_IDS.items():
