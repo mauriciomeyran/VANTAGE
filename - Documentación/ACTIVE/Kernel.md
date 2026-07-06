@@ -19,6 +19,8 @@ DECLARACIÓN DE AUDIENCIA Y ALCANCE
 | 8 | CV-PIPELINE | OPERACIÓN | Flujo CV-A → CV-B |
 | 9 | CANON-UPDATE | OPERACIÓN | Actualización del Canon |
 | 10 | FAIL-PHILOSOPHY | FILOSOFÍA | Filosofía de fallo |
+| 11 | DOC-CONTRACT | REGLAS | Contrato de IDs de Documento |
+| 12 | NORM | OPERACIÓN | Normalización Documental (Legacy IDs) |
 ## KERNEL:PURPOSE
 1. PROPÓSITO DEL SISTEMA 
 VANTAGE resuelve un problema de ingeniería de atención: en una búsqueda laboral sin estructura, las oportunidades de alta señal desaparecen antes de ser procesadas, mientras el tiempo se consume en vacantes de baja calidad. 
@@ -40,9 +42,20 @@ El pipeline opera a través de cuatro capas no intercambiables, soportadas por u
 L0 — VANTAGE Runtime 
 ```
 Tipo: Capa de Observabilidad y Abstracción de Datos (ReadOnly) 
-Propósito: Provee la verdad técnica sobre Notion. Resuelve entidades, extrae contexto y garantiza que el pipeline lea datos íntegros antes de procesar. 
+Propósito: Provee la verdad técnica sobre Notion. Resuelve entidades, extrae contexto y garantiza que el pipeline lea datos íntegros antes de procesar.
+Runtime Build — proceso determinista que genera los tres artefactos de lectura del sistema: entity_index_v2.json (índice de entidades con namespaces canónicos), graph_v2.json (grafo de relaciones entre entidades) y backlinks_v2.json (índice inverso de referencias). El Build consume resolver_registry_v2.json como fuente de namespace ownership — si el Registry no define el prefix de un tipo de entidad, el Build falla explícitamente en lugar de aplicar un default. graph_layer.py es el componente responsable de construir graph_v2.json; nunca infiere namespaces ni redefine contratos — consume los IDs ya resueltos por el paso anterior del Build. 
 ```plain text
 Notion (Source) → Runtime (Index + Resolver) → API Response → Pipeline (L1/L2/L3/CV) 
+```
+### KERNEL:ARCHITECTURE-L0-BOOTSTRAP
+```plain text
+L0-Bootstrap — Dynamic Governance Layer
+```
+Tipo: Capa de Sincronización de Sesión (Fetch-on-Start)
+Propósito: Elimina el drift de versiones entre la UI estática del agente y el repositorio dinámico de Notion.
+Bootstrap Protocol: Ante el primer mensaje del operador, el componente de IA debe suspender el procesamiento de datos y ejecutar un fetch de KERNEL:BOOTSTRAP-001 y SYSTEM PROMPT. El resultado de este fetch sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, el sistema debe reportar "MODO DEGRADADO" y no proceder con triggers operativos.
+```plain text
+Sesión Iniciada → AI Fetch (Bootstrap IDs) → Sincronización de Verdad Operativa → Notificación Operador → Procesamiento Petición
 ```
 ### KERNEL:ARCHITECTURE-L1
 ```plain text
@@ -125,6 +138,8 @@ El Runtime utiliza un formato de ID determinista para evitar colisiones y facili
 - PREFIX:H_<hash16>: Hash corto (16 hex chars).
 - PREFIX:U_<UUID>: Formato alternativo.
 Prefixes válidos: TRACKER, ARCHIVO, DRYRUN, BUG.
+Namespace Ownership Contract (enforced desde v2.4.0):
+resolver_registry_v2.json es el único punto de verdad para entity_prefix por tipo de entidad. entity_prefix se carga en runtime — nunca hardcodeado en ningún componente. graph_layer.py consume namespaces desde el Registry; nunca los infiere ni los redeclara. Múltiples page_id pueden resolver al mismo entity_id — esto no es una colisión, es dedup histórico válido. Self-loops en graph_v2.json son síntoma de colisión de namespace, no comportamiento esperado del grafo.
 ### KERNEL:SCHEMA-005 — Contrato de Resolución: 4 Pasos
 Para que una entidad se considere resuelta con éxito, el Runtime ejecuta:
 1. Lookup: Localización en entity_index_v2.json.
@@ -136,6 +151,13 @@ APROBAR_WRITE autoriza escritura de campos Class A únicamente. No aprueba, vali
 Variantes aceptadas: APROBAR_WRITE · APROBAR · SÍ · sí · YEP · yep
 > ⚠️ ELIMINADOS (RAI-03): Ok · Go · YES · yes — ocurren naturalmente en conversación y pueden producir escritura no intencionada.
 Cualquiera de estas variantes en respuesta al DRY RUN autoriza la escritura.
+### KERNEL:SCHEMA-007 — Acceptance Audit
+El Acceptance Audit es la validación formal que certifica que un release cumple los contratos arquitectónicos antes de ser considerado completo. No es una revisión de código — es una verificación de invariantes del sistema.
+Resultados posibles:
+- PASS — todos los invariantes cumplidos, sin hallazgos pendientes.
+- PASS WITH ARCHITECTURAL FINDING — el sistema opera correctamente; existe una condición de calidad de datos o deuda técnica identificada y registrada, no bloqueante.
+- FAIL — uno o más invariantes violados; el release no procede.
+Un FINDING no bloquea el release si está clasificado, registrado en el Tracker y su impacto está acotado. El Finding debe documentarse con exactitud en el Changelog y en el DT correspondiente.
 ### Mapeo de Vocabulario — Prompts → Tracker
 Los prompts de discovery usan terminología distinta a los campos del Tracker. El AI Component aplica este mapeo durante FEED antes de escribir en Notion:
 source_type "career_page" → Source_Type: Career Page Oficial
@@ -181,7 +203,23 @@ Aplica a Bug Tracker y Tasks Tracker con la misma escala.
 | MEDIO | Sin resolución en la semana, el flujo punta a punta se verá comprometido |
 | BAJO | No bloquea operación — nice-to-have |
 ---
-## KERNEL:OWNERSHIP  Ownership
+## KERNEL:HEALTH-CHECK
+Propósito: contrato operativo de health_check.py — script de arranque del sistema, invocado vía alias start.
+Naturaleza: lectura estricta por defecto. Única excepción autorizada a escritura: auto-sync condicional del Entity Index (ver abajo). Ninguna otra sección del script escribe en Notion, git, ni archivos locales.
+Checks ejecutados (orden fijo): version → env → git → vgit → notion → docs_sync → vdoc → index_age → pending_tickets.
+### KERNEL:HEALTH-CHECK-001 — Entity Index Auto-Sync
+- Umbral: INDEX_STALE_THRESHOLD_HOURS = 24.
+- Archivos monitoreados: graph_v2.json, entity_index_v2.json (INDEX_FILES, en SCRIPTS_DIR).
+- Condición de disparo: al menos un archivo supera el umbral.
+- Acción: subprocess a python3 vantage.py sync, cwd = SCRIPTS_DIR, timeout 120s.
+- Frecuencia: máximo una vez por corrida de health_check.py, solo si se cruzó el umbral — no re-sincroniza índices ya frescos.
+- Clasificación: housekeeping de rutina, NO remediación de fallo — ver KERNEL:FAIL-PHILOSOPHY. Un índice stale no es un fallo del sistema; es mantenimiento esperado de una estructura de lectura.
+- Manejo de error: si el sync falla (returncode ≠ 0, timeout, o vantage.py no encontrado), el check reporta fail() y el script NO reintenta ni repara — a partir de ahí aplica KERNEL:FAIL-PHILOSOPHY estándar (reportar, esperar instrucción).
+Justificación de la excepción: las Golden Rules de "no reparar automáticamente" (KERNEL:CV-GOLDEN-RULES) aplican a discrepancias de negocio en el pipeline (Score, Gate_Decision, URLs, JD). El Entity Index es infraestructura de lectura del Runtime, no un dato de negocio — su staleness no es un "fallo" en el sentido del contrato de Fallos, es equivalente en naturaleza al sync automático ya existente de L4 (git, vía launchd) y L3 (Gmail, vía launchd): mantenimiento programado, no decisión que requiera al operador.
+### KERNEL:HEALTH-CHECK-002 — Reporte de Tickets
+Agrupación por campo Prioridad (CRÍTICO/ALTO/MEDIO/BAJO/Sin Prioridad) sobre Bug Tracker y Task Tracker. Detalle explícito (título) solo para CRÍTICO y ALTO; MEDIO/BAJO/Sin Prioridad solo cuentan. Clasificación Reactivo→Bug / Proactivo→Task ya definida en KERNEL:TRACKER-SCHEMA.
+---
+## KERNEL:OWNERSHIP
 ### KERNEL:OWNERSHIP-001 — AI Component
 - Responsabilidades del componente de IA (ej: validación de triggers, generación de HANDOFF). 
 - No modifica campos Class B. 
@@ -391,8 +429,8 @@ El Markdown no se escribe en Notion si el operador no ha autorizado explícitame
 - El Skeleton incluido en esta sección define la estructura visual, el orden de bloques y la secuencia obligatoria de contenido para CV‑B. 
 - Los IDs numéricos exactos, tipos de slot, reglas de inyección y condición LOCKED/Variable viven en CAREER_CANON:OUTPUT-CONTRACT §L — Output Contract. 
 ### Reglas operativas
-- KERNEL:PIPELINE Define la arquitectura de ejecución de CV‑B. 
-- CAREER_CANON:OUTPUT-CONTRACT Define el contrato exacto de Figma. 
+- KERNEL:CV-PIPELINE Define la arquitectura de ejecución de CV‑B. 
+- CANON:OUTPUT-CONTRACT-001 Define el contrato exacto de Figma. 
 - CV‑B debe usar ambos al mismo tiempo. 
 - El output final debe preservar un bloque ###### figma_text_id por cada slot del Skeleton/Tag Registry. 
 - El orden del output debe coincidir con el Skeleton. 
@@ -476,8 +514,43 @@ No intenta reparar outputs del sistema. No sugiere workarounds para entradas blo
 Excepción Documentada — Gate = BLOCKED 
 Gate = BLOCKED recuperable vía RT‑1: si el bloqueo es por campos Class A corregibles, RT‑1 es el mecanismo de recuperación. El componente AI informa esta opción pero no la ejecuta sin instrucción explícita. 
 ---
+## KERNEL:SCOPE
+### Scope y Economía de Contexto
+- Acceso a lógica base preferente vía Terminal (lazy_loader.py).
+- MCP autorizado para lectura, DRY RUN y modificación documental del Kernel cuando exista instrucción explícita del operador.
+- Terminal continúa siendo la ruta recomendada para operaciones masivas, auditorías y cambios estructurales. Runtime: L0 (Lectura estricta). Cero escritura directa.
+- Jerarquía: L1 > L2 > L3. Claude consolida, NO extrae.
+- FEED: única vía manual de Claude es FAST. Toda ingesta de L1, L2 y L3 se realiza metódicamente vía Python (layer_1_run.py, layer_3_mail.py, feed_processor.py). Ante JSON o FEED sin trigger FAST explícito: "El procesamiento de FEED está migrado a Python; usa FAST si requieres entrada manual."
+- Triaje de ejecución: Antes de usar herramientas, aplicar: 1. Requerimientos, 2. Triaje de costos (A: Terminal, B: MCP, C: Upload), 3. Confirmación. Priorizar Opción A.
+---
+## KERNEL:DATA-FLOW
+### Flujo de Datos y Escritura
+- Pipeline: Kernel → DRY RUN → APROBAR_WRITE → Notion Write.
+- Pre-validación: Cruzar esquema contra KERNEL:SCHEMA antes de cualquier escritura.
+---
+## KERNEL:ROUTING
+### Rutas de Carga (MCP)
+Para consultar lógica pesada, prioriza Terminal. Alternativamente, MCP puede utilizarse cuando:
+- El operador lo solicite explícitamente.
+- La operación sea documental.
+- Se presente DRY RUN previo.
+- Exista autorización posterior mediante APROBAR_WRITE cuando aplique.
+Ruta recomendada: python lazy_loader.py --page {KERNEL_MASTER} --route {ruta}
+Ruta permitida: MCP.
+- ruta: KERNEL:SCHEMA
+- ruta: KERNEL:OWNERSHIP
+- ruta: KERNEL:TRIGGERS
+- ruta: KERNEL:CV-PIPELINE
+- ruta: KERNEL:GATE-DECISION
+- ruta: KERNEL:CV-GOLDEN-RULES
+- ruta: KERNEL:FAIL-PHILOSOPHY
+---
 ## KERNEL:EVOLUTION
 1. EVOLUCIÓN DEL SISTEMA 
+### Deuda Técnica Registrada
+| ID | Descripción | Prioridad | Estado |
+| --- | --- | --- | --- |
+| DT-014 | Extract Runtime Identity Contract — encapsular lógica de entity_prefix en módulo explícito con contrato propio. generate_entity_id() actualmente carga desde resolver_registry_v2.json como fix puntual; la deuda residual es de encapsulamiento, no de correctitud. Registrado en release v2.4.0. | MEDIO | Abierto |
 Criterios de Cambio 
 El sistema reconoce cuándo un cambio es válido y cuándo no. Esta distinción protege la estabilidad arquitectónica del pipeline. 
 Cambios válidos — condiciones que justifican modificación: 
@@ -496,4 +569,30 @@ Los boundaries de capas no colapsan. La filosofía de verificación no se negoci
 Linaje Histórico — Preservado, No Operacional 
 El sistema mantiene registro de lo que fue construido y deprecado: GPT Atlas, Grok discovery, SEARCH‑EXEC/SEARCH‑SIGNAL, fórmulas de scoring pre‑v5.0, workflows manuales pre‑v6.0. Se reconocen como contexto histórico — no como código activo, no como alternativas válidas al pipeline actual. 
 Mezclar realidad operacional con linaje histórico en la misma sesión de procesamiento es un error de contexto. Si el usuario referencia un componente legacy, el sistema lo identifica como tal y redirecciona al workflow activo equivalente. 
-## ESTADO: v8.7.4 | ACTUALIZADO: 2026-07-01
+## KERNEL:NORM
+Contrato de Normalización de IDs:
+- Esquema: [PREFIX]:[KEY] (ej: KERNEL:TRIGGERS).
+- Alcance: Todos los documentos fundacionales (MANUAL, CAREER CANON, KERNEL, SYSTEM PROMPT).
+- Excepciones: IDs de Notion (UUIDs) en metadatos o URLs.
+- Gobernanza: Cambios requieren APROBAR_WRITE + entrada en Changelog. §Reglas de Migración. Ejecutable vía AI Component bajo autorización explícita del operador. -->
+Normalización documental de IDs legacy hacia el esquema [PREFIX]:[KEY]. Ver KERNEL:DOC-CONTRACT para contrato completo y listado de 26 ocurrencias (DT-015).
+## ESTADO: v8.9.2 | ACTUALIZADO: 2026-07-05
+---
+## KERNEL:DOC-CONTRACT
+1. CANONICAL DOCUMENT ID CONTRACT (DOC:CLAVE)
+Este contrato estandariza la referencia cruzada entre componentes del sistema y capas documentales, eliminando la dependencia de UUIDs en prompts y lógica de negocio.
+### Invariantes del Contrato
+- Formato Único: [PREFIX]:[KEY] (ej. MANUAL:SETUP).
+- Prefix Ownership: Cada prefijo mapea a una única página canónica en Notion.
+- SSOT: resolver_registry_v2.json es la autoridad única para resolver Prefijos a UUIDs.
+- Resolución Determinista: El Resolver (v1.py) garantiza resolución O(1) inyectando el ID crudo al componente solicitante.
+### Prefijos Autorizados (v8.9.0)
+| Prefijo | Documento Destino | Mapeo Registry |  |
+| --- | --- | --- | --- |
+| KERNEL | V | KERNEL | registry["KERNEL"] |
+| MANUAL | V | MANUAL | registry["MANUAL"] |
+| CANON | V | CAREER CANON | registry["CANON"] |
+| TRACKER | V | TRACKER | registry["TRACKER"] |
+### Reglas de Migración
+Toda referencia a páginas del sistema que actualmente use UUIDs hardcodeados o anclas planas debe migrar a este esquema. lazy_loader.py es el componente encargado de aplicar este contrato en tiempo de ejecución. EXCEPCIÓN DE MIGRACIÓN (DT-015): Se autoriza al AI Component a ejecutar la normalización documental (search-and-replace) vía MCP sobre las 26 ocurrencias identificadas, bajo el trigger NORM [DOC:CLAVE].
+

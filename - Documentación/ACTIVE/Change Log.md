@@ -1,8 +1,106 @@
 # V | CHANGELOG
 
+---
+### v8.9.7 — 2026-07-05
+[ARCH] Bootstrap Layer — VANTAGE Bootloader v1.0 desplegado en UI de Claude — Estrategia de deploy del System Prompt migrada de copy-paste manual a bootstrap dinámico de una sola vez. STATIC BOOTLOADER v1.0 instalado en Settings → Project Instructions de Claude. Ante el primer mensaje de cada sesión, el agente hace fetch automático de SYSTEM PROMPT (37b938be) e ID CENSUS (394938be) antes de procesar cualquier petición del operador. El contenido de Notion sobreescribe cualquier instrucción estática previa (anti-drift de versiones). Confirmación de sincronización: "VANTAGE v[X]: SISTEMA SINCRONIZADO". Si el bootstrap falla: MODO DEGRADADO — no se procesan triggers operativos. Documentado en: KERNEL:ARCHITECTURE-L0-BOOTSTRAP (contrato técnico completo) · MANUAL §3 Paso 3 (instrucciones operativas para el operador) · System Prompt: KERNEL:BOOTSTRAP-001 referenciado en Cédula Digital.
+---
+### v8.9.6 — 2026-07-05
+[FIX] SYSTEM PROMPT §5 — KERNEL:CV-GOLDEN-RULES DEF duplicada eliminada — Colisión real detectada via generate_census.py (DEF duplicada entre System Prompt y Kernel). Contenido de reglas retirado del SP; sección reducida a enrutador puro: → Ver KERNEL:CV-GOLDEN-RULES en Technical Kernel. Kernel permanece como única DEF autorizada. Colisiones reales del sistema: 71 (falsos positivos) → 1 (real) → 0.
+---
+### v8.9.5 — 2026-07-05
+Enriquecimiento de V-ID-CENSUS
+- Generado script Python generate_census_hyperlinks.py que produce tabla completa con IDs como hipervínculos directos a cada sección.
+- Output: Markdown listo para pegar en Notion (IDs clicables + links directos).
+- Actualizado V-ID-CENSUS con la tabla enriquecida.
+- Integración ligera al Master Index.
+Beneficio: Navegación directa desde el Census a cualquier sección de los documentos fundacionales.
+### v8.9.4 — 2026-07-05
+[DT-015] Normalización de IDs legacy a esquema [PREFIX]:[KEY] — CIERRE
+- Fecha: 2026-07-05
+- Alcance: MANUAL (BLOQUE 1), CAREER CANON (BLOQUE 2), KERNEL (BLOQUE 3).
+- Resultados:
+- BLOQUE 1 (MANUAL): Validación de coherencia con KERNEL:DOC-CONTRACT (PASS). Líneas sueltas (manual-healthcheck-001, manual-sla-001) y UUIDs legacy (390938be-fc42-81c1-9fc7-d0763295cd04) no localizados. Versión: 8.8.1.
+- BLOQUE 2 (CAREER CANON): Migración de prefijos (CAREER_CANON:AUDIENCE-SCOPE → CANON:AUDIENCE-SCOPE, TRACKER:ARCHIVO_VANTAGE → CANON:ARCHIVO-VANTAGE). Anclaje de IDs huérfanos en §L (CANON:FIGMA-TAG-SCHEMA, CANON:POSITIONING-MODE, CANON:TAG-REGISTRY). Versión: 8.7.5.
+- BLOQUE 3 (KERNEL): Reemplazo de stub KERNEL:NORM por sección operativa. Versión: 8.9.2.
+- Notas:
+- Todas las entradas individuales ya registradas en el Changelog.
+- Versión final del sistema: v8.9.4.
+### v8.9.3 — 2026-07-05
+[DT-015] Normalización de IDs legacy a esquema [PREFIX]:[KEY]
+- Fecha: 2026-07-05
+- Alcance: KERNEL (BLOQUE 3).
+- Cambios:
+- Reemplazo de stub KERNEL:NORM por sección operativa real:
+- Esquema: [PREFIX]:[KEY].
+- Alcance: Todos los documentos fundacionales.
+- Excepciones: UUIDs en metadatos/URLs.
+- Gobernanza: APROBAR_WRITE + entrada en Changelog.
+- Notas: 
+- La sección ahora es ejecutable y alineada con KERNEL:DOC-CONTRACT.
+- Versión actualizada: 8.9.2.
+[DT-015] Normalización de IDs legacy a esquema [PREFIX]:[KEY]
+- Fecha: 2026-07-05
+- Alcance: MANUAL (BLOQUE 1).
+- Acciones:
+- Validación de coherencia con KERNEL:DOC-CONTRACT: PASS.
+- Búsqueda de líneas sueltas (manual-healthcheck-001, manual-sla-001): No encontradas.
+- Búsqueda de UUIDs legacy (390938be-fc42-81c1-9fc7-d0763295cd04): No localizados.
+- Resultado: El MANUAL ya cumple con el esquema canónico. Sin cambios requeridos.
+- Notas: 
+- Los IDs 390938be-fc42-81c1-9fc7-d0763295cd04 podrían haber sido eliminados en versiones previas o nunca existieron en el documento.
+[DT-015] Normalización de IDs legacy a esquema [PREFIX]:[KEY]
+- Fecha: 2026-07-05
+- Alcance: CAREER CANON (BLOQUE 2).
+- Cambios:
+- Migración de prefijos: CAREER_CANON:AUDIENCE-SCOPE → CANON:AUDIENCE-SCOPE, TRACKER:ARCHIVO_VANTAGE → CANON:ARCHIVO-VANTAGE.
+- Anclaje de IDs huérfanos en §L:
+- Figma Tag Schema → CANON:FIGMA-TAG-SCHEMA.
+- Activación por Positioning Mode → CANON:POSITIONING-MODE.
+- Tag Registry → CANON:TAG-REGISTRY (conversión a heading ##).
+- Second pass: 26 ocurrencias revisadas (sin cambios adicionales requeridos).
+- Notas: 
+- Las referencias CF01–CF08, KPI01–KPI08, UF01–UF03 y N1–N4 ya cumplen con el esquema canónico.
+- Versión actualizada: 8.7.5.
+### v8.9.2 — VANTAGE · 2026-07-05
+- [AUDIT] Graph Topology Audit — 3 documentos fundacionales auditados (KERNEL, SYSTEM PROMPT, MANUAL) — Auditoría topológica completa sobre el grafo de IDs de la suite documental. Producidos tres tiers de output: Master Index Dataset (inventario completo de IDs), Diagnóstico de Integridad (enlaces rotos, stubs válidos, redundancias) y Plan de Refactorización (bloqueantes priorizados). Hallazgos: 8 enlaces rotos, 6 IDs redundantes, 10 headings con UUID-prefijo violando DOC-CONTRACT, 2 referencias UUID raw en texto narrativo, 2 kebabs mal formados en Namespace A.
+- [FIX] KERNEL — KERNEL:NORM stub creado — Sección KERNEL:NORM inexistente a pesar de estar listada en el TOC como §12. Creada con stub explícito y referencia a KERNEL:DOC-CONTRACT (DT-015). Enlace roto resuelto.
+- [FIX] KERNEL §8 — KERNEL:PIPELINE → KERNEL:CV-PIPELINE — Typo en §Reglas operativas de CV-PIPELINE que producía referencia rota. Corregido a ID canónico.
+- [FIX] KERNEL §8 — CAREER_CANON:OUTPUT-CONTRACT → CANON:OUTPUT-CONTRACT-001 — Prefijo no autorizado (CAREER_CANON) reemplazado por prefijo canónico (CANON) con ID completo. Alineado con KERNEL:DOC-CONTRACT.
+- [ARCH] KERNEL — Secciones KERNEL:SCOPE, KERNEL:DATA-FLOW, KERNEL:ROUTING creadas — Las tres secciones existían únicamente en el System Prompt con prefijo KERNEL: pero sin contraparte real en el KERNEL. Migradas al KERNEL con contenido íntegro extraído del SP. SP actualizado a enrutador puro con referencias → Ver KERNEL:CLAVE. Decisión arquitectónica: Opción B (contenido vive en KERNEL, SP enruta).
+- [FIX] MANUAL §5–§14 — Migración UUID-prefijo → MANUAL:CLAVE — 10 headings de secciones §5 a §14 usaban el UUID de la página como prefijo de ID (372938be-...:MANUAL-CLAVE), violando KERNEL:DOC-CONTRACT. Migrados al esquema canónico MANUAL:CLAVE. Contribuye al cierre de DT-015.
+- [FIX] MANUAL §4 — Referencias UUID raw eliminadas (×2) — Dos referencias [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c] en texto narrativo de CV-A y CV-B reemplazadas por CANON:EXPERIENCE-001 y CANON:OUTPUT-CONTRACT-001 respectivamente.
+- [FIX] MANUAL §4 — Kebabs mal formados corregidos (×2) — canon-positioning-001 y canon-output-contract-001 (Namespace B en contexto de Namespace A) corregidos a CANON:POSITIONING-001 y CANON:OUTPUT-CONTRACT-001.
+- [MAINT] MANUAL §8–§13 — IDs kebab redundantes eliminados (×6) — Líneas sueltas manual-prompts-wrappers-001, manual-cheatsheets-001, manual-healthcheck-001, manual-reglas-de-oro-001, manual-fallo-001, manual-sla-001 eliminadas. Duplicaban el ID ya presente en el heading de cada sección sin aportar navegación.
+- Pendiente: DT-015 — 26 ocurrencias de IDs legacy restantes. Ejecutable vía trigger NORM [DOC:CLAVE] bajo autorización del operador.
+### v8.9.1 — VANTAGE · 2026-07-05
+- [REFACTOR] runtime_identity.py — Extract Runtime Identity Contract (DT-014 cerrado) — Módulo nuevo en Layer_1/scripts/. Encapsula el contrato de entity_prefix que vivía inline en generate_entity_index_v2.py. Exporta cuatro funciones con contrato explícito: load_prefix_map(registry_path) (carga mapa completo source_db → prefix desde resolver_registry_v2.json), get_entity_prefix(source_db, registry_path) (prefijo canónico; falla explícita si no está registrado — invariante v2.4.0/v8.8.0), get_authorized_prefixes(registry_path) (frozenset consumible por lazy_loader), generate_entity_id(entity_prefix, page_id, hash_value) (formato canónico PREFIX:H_xxx / PREFIX:U_xxx). SSOT: resolver_registry_v2.json — ningún componente hardcodea prefijos.
+- [PATCH] generate_entity_index_v2.py — Consume runtime_identity — _load_entity_prefixes() y generate_entity_id() inline eliminadas. Reemplazadas por from runtime_identity import load_prefix_map, generate_entity_id. Cero cambios de comportamiento — únicamente eliminación de duplicación.
+- [PATCH] lazy_loader.py v2 — AUTHORIZED_PREFIXES descentralizada — Constante hardcodeada eliminada. Reemplazada por _get_authorized_prefixes() que carga desde resolver_registry_v2.json vía runtime_identity.get_authorized_prefixes(). Fallback estático (frozenset({"KERNEL", "MANUAL", "CANON", "TRACKER"})) activo si el módulo no está disponible (compatibilidad en entornos sin Runtime Build completo).
+### v8.9.0 — VANTAGE · 2026-07-04
+Change_Log_v8.9.0
+- [ARCH] Canonical Document ID Contract (DOC:CLAVE) formalizado — Unificación de todas las referencias de identidad bajo el formato estricto [PREFIX]:[KEY] (ej. KERNEL:ARCHITECTURE). Este contrato elimina la dependencia de UUIDs hardcodeados en prompts y anchors de texto plano ("flat-anchors"), permitiendo una resolución O(1) vía resolver_registry_v2.json. Invariantes: Prefijos en mayúsculas, Keys en Kebab-case, prohibición de IDs numéricos/UUIDs en capa de aplicación.
+- [DOC] V-KERNEL §11 — Inyección de Contrato de Identidad — Inserción de la especificación técnica completa en el Kernel. Define: (1) Formato Canónico, (2) Registro de Prefijos Autorizados (KERNEL, MANUAL, CANON, TRACKER), (3) Protocolo de Resolución. El Índice Maestro del Kernel fue actualizado para incluir esta sección.
+- [DEBT] DT-015: Plan de Migración de IDs Legacy — Identificación y mapeo de 26 ocurrencias de IDs antiguos para migración masiva. La ejecución queda vinculada a la resolución de DT-014 (Refactor de entity_prefix en módulo explícito).
+- [AUDIT] Integrity Audit: PASS WITH FINDINGS (C1/M1) — Auditoría de sincronización post-actualización. Kernel y Manual preservan integridad estructural. Se confirman "gaps" de contenido (tablas vacías) en Career Canon (§B Skills y §H Achievements) derivados del bug de roundtrip de vsync_doc.py. No compromete el Kernel ni el Runtime actual.
+### v8.8.0 — VANTAGE · 2026-07-04
+Change_Log_v8.8.0
+- [FIX] generate_entity_index_v2.py — Runtime Contract Migration: entity_id Namespace — generate_entity_id() tenía prefijo TRACKER hardcodeado. Todas las entidades recibían el mismo namespace sin consultar resolver_registry_v2.json, produciendo IDs idénticos entre entidades ARCHIVO y TRACKER en colisión de hash. graph_layer.py expresaba esas colisiones correctamente como self-loops en graph_v2.json. Fix: entity_prefix ahora se carga desde resolver_registry_v2.json en runtime. Self-loops eliminados.
+- [ARCH] Architectural Invariants formalizados — resolver_registry_v2.json pasa de fuente declarada a fuente enforced como único punto de verdad para namespace ownership. Contratos explicitados: entity_id = identidad canónica · page_id = página física Notion · múltiples page_id pueden resolver al mismo entity_id · graph_layer.py nunca infiere namespaces · Runtime Build consume el Registry sin redefinir el contrato.
+- [GOV] Artifact Migration — El contrato público del Runtime no cambió. Entidades ARCHIVO ahora generan ARCHIVO:H_xxx en artefactos generados (antes TRACKER:H_xxx por defecto de implementación). Registros Notion (page_id) no afectados. La migración ocurre únicamente al ejecutar Runtime Build — un pull del repositorio por sí solo no modifica ningún artefacto generado.
+- [DEBT] DT-014 registrado — Extract Runtime Identity Contract: encapsular lógica de entity_prefix en módulo explícito. Prioridad: MEDIO. Fuera de scope de este release.
+- Acceptance Audit: PASS WITH ARCHITECTURAL FINDING — FINDING: entity_id duplicados en scope ARCHIVO — mismo canonical_id, múltiples page_id históricos, no colisiones criptográficas, Resolver Layer y Query Layer no afectados. Clasificado como condición de calidad de datos históricos. No bloquea release.
+- Git: commit 372e72f · tag v2.4.0 · rama main
 # V | CHANGELOG
 
 Change_Log_001
+### v8.7.9 — VANTAGE · 2026-07-04
+Change_Log_v8.7.9
+- [FEAT] health_check.py — Entity Index auto-sync condicional — Si graph_v2.json o entity_index_v2.json superan 24h sin actualizar (INDEX_STALE_THRESHOLD_HOURS), el script dispara python3 vantage.py sync automáticamente — una vez por corrida, solo si se cruza el umbral. Clasificado como housekeeping de rutina, no remediación de fallo (ver KERNEL:FAIL-PHILOSOPHY): un índice stale no es un fallo del sistema, es mantenimiento esperado de infraestructura de lectura, equivalente en naturaleza al sync automático ya existente de L3 (Gmail) y L4 (git) vía launchd. Si el auto-sync falla (returncode ≠ 0, timeout, o vantage.py no encontrado), el script reporta y NO reintenta — a partir de ahí aplica Golden Rules estándar.
+- [FIX] health_check.py — output de auto-sync ilegíble corregido — El reporte del resultado del sync mostraba fragmentos crudos de JSON (ej. })) en vez de un resumen legible. Agregada _summarize_sync_output(): parsea el stdout de vantage.py sync buscando el último bloque {...} válido y extrae status/entities_before/entities_after; si no hay JSON parseable, cae a la última línea de texto no vacía. Verificado con 3 casos de prueba (JSON válido, texto plano, stdout vacío).
+- [DOC] Nueva sección KERNEL:HEALTH-CHECK — Documenta el contrato completo de health_check.py: los 9 checks ejecutados en orden fijo, la única excepción de escritura autorizada (auto-sync de Entity Index) con su justificación explícita frente a Golden Rules, y el criterio de agrupación de tickets por prioridad.
+- [DOC] Manual §10.1 reescrita — De "Mantenimiento del Entity Index" (3 líneas) a sección human-facing completa: qué es y cómo correr health_check.py, qué lee en cada uno de sus 9 checks, índices monitoreados, comportamiento del auto-sync, cómo interpretar el output (✓/!/✗), y qué hacer si el auto-sync falla. §5.3 y §7 (Troubleshooting) actualizados para reflejar que el monitoreo de staleness del índice ya no requiere acción manual del operador en el flujo normal — el comando manual vantage.py sync queda como fallback documentado.
+- [GOV] Governance — Versionado del Changelog — Identificado que la propiedad Versión de la página V-CHANGELOG no se actualizaba en cada entrada nueva, quedando desalineada con el ESTADO reportado en el cuerpo del documento (propiedad mostraba 8.7.6 mientras el cuerpo ya reflejaba v8.7.8). Corregido en esta sesión: propiedad Versión actualizada a 8.7.9. Nota agregada al System Prompt (KERNEL:AUDIENCE-SCOPE / §1) para que toda actualización futura del Changelog incluya la actualización de la propiedad Versión como paso obligatorio del mismo write — los números de versión en los demás documentos fundacionales deben ser reflejo del Changelog, no texto fijo mantenido por separado.
+- [BUG] push_local_to_notion() destruye tablas — confirmado Resuelto en Bug Tracker en sesión anterior; verificado sin reapertura.
 ### v8.7.8 — VANTAGE · 2026-07-03
 Change_Log_v8.7.8
 - [GOV] System Prompt — Hardening de límites de interpretación (experimental) — Se reforzó el System Prompt para separar explícitamente contrato operativo, implementación interna, navegación lógica del Kernel y límites de interpretación del modelo. Motivo: se observaron inferencias arquitectónicas espontáneas no solicitadas (auditorías del Kernel, rutas lógicas interpretadas como estructura física) sin evidencia obtenida vía mecanismos oficiales de consulta. Sin evidencia de corrupción real en Source of Truth, Terminal, MCP o lazy_loader.py. Validación pendiente — requiere observar comportamiento en próximas sesiones/cuentas antes de confirmar cierre. Bug Tracker: 392938be-fc42-8111-bc97-f2a53f8b09d1.
@@ -216,5 +314,5 @@ Change_Log_v8.2
 - Sistema manual Claude-only
 - Sin pipeline Python; procesamiento y evaluación en sesión de chat
 ---
-ESTADO: v8.7.8 | ACTUALIZADO: 2026-07-03
+ESTADO: v8.9.6 | ACTUALIZADO: 2026-07-05
 ---

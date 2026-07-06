@@ -1,7 +1,6 @@
 # V | MANUAL
 
-> 
-## 
+> ##
 | # | Sección | Tipo | Propósito |
 | --- | --- | --- | --- |
 | 1 | OBJETIVO DE VANTAGE | CONTEXTO | Propósito, problema resuelto y diferenciadores |
@@ -19,7 +18,7 @@
  | REGLAS DE ORO PARA OPERADORES     | REFERENCIA | Reglas operativas derivadas del Kernel |
 | 13 | FILOSOFÍA DE FALLO PARA OPERADORES         | REFERENCIA | Cómo interpretar fallos del sistema |
 | 14 | SLA DE LATENCIA POST-INGESTA       | REFERENCIA | Alcance del SLA post-ingesta |
-## 1. OBJETIVO DE VANTAGE · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-OBJETIVO-001
+## 1. OBJETIVO DE VANTAGE · ID: MANUAL:OBJETIVO-001
 ### El Problema que Resuelve
 Una búsqueda laboral sin estructura produce cuatro fallas operativas concretas:
 - Oportunidades de alta señal desaparecen antes de ser procesadas
@@ -42,7 +41,7 @@ Evidencia de posicionamiento (Positioning Modes N1–N4) verificada:
 ### Para Quién Es Este Sistema
 Perfil: Profesional senior (10+ años) en Visual Merchandising, Brand Environment, Store Design, Retail Experience. Geografía: CDMX / LATAM. Sectores target: Lujo (LVMH, Kering, Richemont), retail premium (Nike, Apple, Inditex), cool DNA (Gentle Monster, Ben & Frank), agencias de experiencia.
 > Las empresas excluidas permanentemente (Hard Blocks) están documentadas en §6 — Gestión de Datos.
-## 2. CÓMO FUNCIONA · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-FUNCIONAMIENTO-001
+## 2. CÓMO FUNCIONA · ID: MANUAL:FUNCIONAMIENTO-001
 ### Flujo General del Pipeline
 El pipeline opera secuencialmente. Cada paso tiene un responsable y un output definido.
 ### División del Trabajo
@@ -50,7 +49,13 @@ El pipeline opera secuencialmente. Cada paso tiene un responsable y un output de
 El sistema aplica dos capas de exclusión para garantizar la calidad de la señal:
 - Hard Blocks (Permanentes): Empresas o roles que nunca entrarán al sistema (ej. L'Oréal, Levi's). Se filtran en el origen y no son recuperables. Ver §6.
 - Soft Blocks (Contextuales): Vacantes bloqueadas por inconsistencias en datos Class A (URL rota, JD parcial) o score insuficiente. Son recuperables mediante el Dashboard (RT-1) corrigiendo el input.
-## 3. SETUP · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-SETUP-001
+## 3. SETUP · ID: MANUAL:SETUP-001
+### Paso 3 — Configuración de Claude (Bootstrap)
+Ya no es necesario realizar copy-paste manual del System Prompt maestro en cada actualización. 
+1. Copia el STATIC BOOTLOADER v1.0 (disponible en la Cédula Digital) y pégalo en Settings → Project → Project Instructions en la UI de Claude.
+1. Inicia un nuevo chat. El Agente Vantage realizará un fetch automático de la gobernanza activa desde Notion.
+1. Confirma que el Agente responde con "VANTAGE v8.9.4: SISTEMA SINCRONIZADO" antes de enviar peticiones.
+Nota: Este setup es de una sola vez por proyecto.
 ### Prerrequisitos
 - Cuenta de Notion con base de datos VANTAGE TRACKER activa
 - Python 3.8+ instalado en Mac
@@ -109,9 +114,9 @@ python vsync_doc.py --dry-run
 ```
 Output esperado: 6 documentos listados con diff por documento, sin errores.
 Si falla: verificar que layer_1.env exista y que el token no tenga n embebido.
-## 4. FLUJO PUNTA A PUNTA · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-FLUJO-001
+## 4. FLUJO PUNTA A PUNTA · ID: MANUAL:FLUJO-001
 Contenido: V-Checklist y flujos de operación diaria. Ver §3 Setup para prerrequisitos.
-### ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-VCHECKLIST-001
+### ID: MANUAL:VCHECKLIST-001
 CHECKLIST INTERACTIVO
 El V-Checklist (V-CHECKLIST · Vantage Weekly) es la interfaz operativa del ciclo semanal descrito en §4. Es un archivo HTML autocontenido con progreso persistente (localStorage), modo claro/oscuro y navegación por día.
 Resumen de tareas por día:
@@ -296,7 +301,7 @@ o pega el texto del JD directamente. Claude no accede al Tracker de forma autón
 CV‑A / CV‑B — Por Qué Son Sesiones Separadas
 CV‑A es análisis: qué keywords posicionar, qué gaps cubrir, qué tono de marca adoptar. CV‑B es producción: el documento final. En una sesión única, el contexto de análisis contamina la voz del CV. La separación es una restricción de calidad, no de conveniencia.
 Sesión 1 — CV‑A (análisis estratégico)
-Claude extrae los 6 keywords de posicionamiento del JD, identifica los gaps entre los requisitos del rol y [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c], determina el Positioning Mode aplicable (canon-positioning-001: N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution · N4 Commercial VM & Field Leadership) y define el tono de marca del CV.
+Claude extrae los 6 keywords de posicionamiento del JD, identifica los gaps entre los requisitos del rol y CANON:EXPERIENCE-001, determina el Positioning Mode aplicable (CANON:POSITIONING-001: N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution · N4 Commercial VM & Field Leadership) y define el tono de marca del CV.
 Output de la sesión — el HANDOFF, 5 campos obligatorios:
 ```json
 
@@ -330,7 +335,7 @@ Abre una sesión nueva de Claude. Pega el HANDOFF completo y dispara:
 ```plain text
 CV-B [pega el HANDOFF]
 ```
-Claude verifica los 5 campos, cruza el HANDOFF contra [ID: 377938be-fc42-8089-93f2-f52dbd2dec6c] para validar que bullets y KPIs sean derivados canónicos (no inventados), aplica el Positioning Mode definido en CV‑A y genera el CV bajo canon-output-contract-001.
+Claude verifica los 5 campos, cruza el HANDOFF contra CANON:OUTPUT-CONTRACT-001 para validar que bullets y KPIs sean derivados canónicos (no inventados), aplica el Positioning Mode definido en CV‑A y genera el CV bajo CANON:OUTPUT-CONTRACT-001.
 El output tiene tres partes obligatorias y secuenciales:
 Markdown con Figma tags — Claude entrega el archivo .md completo en la misma sesión. Cada slot va encabezado por su tag (###### figma_text_id). El operador lo revisa y autoriza antes de cualquier escritura en Notion.
 Autorización explícita del operador — Claude espera confirmación antes de continuar. Sin autorización, no escribe nada.
@@ -371,7 +376,7 @@ VIERNES — Analytics
 ```
 Output: efectividad por fuente, tasa de links muertos por tipo de URL, ratio career pages vs. aggregators.
 Acción concreta: si career pages producen menos de 5 resultados relevantes en la semana, ajusta el Prompt A — no el threshold de Score.
-## 5. VANTAGE RUNTIME (Consulta Operativa) · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-VANTAGE-RUNTIME-001
+## 5. VANTAGE RUNTIME (Consulta Operativa) · ID: MANUAL:VANTAGE-RUNTIME-001
 5.1 ¿Qué es el Runtime?
 Es la herramienta de observabilidad del sistema. Permite interrogar a Notion y extraer contexto semántico sin salir de la terminal.
 5.2 Comandos Principales
@@ -382,7 +387,15 @@ Después de resolver entradas REVIEW_NEEDED en el Tracker
 Si status muestra "warning": "entity_index_stale" (index > 24h)
 Si status muestra orphan_candidates > 0 de forma persistente
 No es necesario para cambios de Status, Score, Gate_Decision en páginas individuales — esos se leen en vivo vía resolve/context.
-5.4 ARRANQUE FRÍO — Checklist de Reactivación
+5.4 Runtime Build — Cuándo y Para Qué
+El Runtime Build regenera los tres artefactos de lectura del sistema: entity_index_v2.json, graph_v2.json y backlinks_v2.json. Se corre desde Layer_1/scripts/ con el venv activo.
+Cuándo correrlo:
+- Después de cualquier migración de namespaces o cambio en resolver_registry_v2.json
+- Si graph_v2.json muestra self-loops inesperados (síntoma de colisión de namespace)
+- Si entity_index_v2.json contiene IDs con prefix incorrecto
+- Como parte del cierre formal de un release que afecte la capa de Runtime
+El Build es determinísta: el mismo Registry + el mismo estado de Notion producen los mismos artefactos. Si el resultado varía entre runs sin cambios en los inputs, es una señal de problema en el Registry — no en el Build.
+5.5 ARRANQUE FRÍO — Checklist de Reactivación
 Usar cuando el sistema no ha sido operado por más de 5 días.
 ```plain text
 
@@ -450,11 +463,11 @@ Sin --dry-run, solicita confirmación explícita (s) antes de cualquier escritur
 - Levi Strauss & Co. (Levi's, Dockers)
 - El Palacio de Hierro
 - Roles store‑level sin gestión estratégica.
-## 6. GESTIÓN DE DATOS · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-GESTION-DATOS-001
+## 6. GESTIÓN DE DATOS · ID: MANUAL:GESTION-DATOS-001
 > Hard Blocks permanentes: L'Oréal (todas las divisiones) · Levi Strauss & Co. (Levi's, Dockers) · El Palacio de Hierro · Roles store‑level sin gestión estratégica.
 > Soft Blocks: recuperables vía RT‑1 (Dashboard, Martes §4).
 > Dedup: ventana 30 días, clave brand+title+location, jerarquía L1>L2>L3.
-## 7. TROUBLESHOOTING · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-TROUBLESHOOTING-001
+## 7. TROUBLESHOOTING · ID: MANUAL:TROUBLESHOOTING-001
 ### Problemas Comunes y Soluciones
 Pipeline no corre:
 - Verificar .env en ~/vantage_notion_audit/
@@ -462,8 +475,9 @@ Pipeline no corre:
 - Verificar entorno Python activo: source Layer_1/.venv/bin/activate && python --version
 - Confirmar permisos de ejecución: ls -la ~/vantage_pipeline.sh (debe tener x)
 Entity Index desactualizado:
-- Síntoma: vantage.py status muestra index_age_hours > 24 o warning entity_index_stale
-- Solución: python vantage.py sync
+- Desde v8.7.6: health_check.py detecta índices >24h y dispara vantage.py sync automáticamente en cada corrida de start — no requiere acción manual en el flujo normal.
+- Síntoma de que el auto-sync falló: health_check.py reporta ✗ index — auto-sync falló o auto-sync timeout en vez del ✓ esperado.
+- Solución manual (solo si el auto-sync falló): python vantage.py sync desde Layer_1/scripts
 - Verificar resultado: vantage.py status debe mostrar entities_after >= entities_before
 - Si persiste: verificar token Notion y conectividad a internet
 L3 no procesa correos:
@@ -515,43 +529,63 @@ Gate = BLOCKED recuperable pero RT-1 no lo detecta:
 - Reglas de Oro: KERNEL:CV-GOLDEN-RULES
 - Schema de datos: pendiente (ver Bug Tracker 390938be-fc42-81c1-9fc7-d0763295cd04)
 - Gate Decisions: pendiente (ver Bug Tracker 390938be-fc42-81c1-9fc7-d0763295cd04)
-## 8. PROMPTS & WRAPPERS · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-PROMPTS-WRAPPERS-001
-manual-prompts-wrappers-001
+## 8. PROMPTS & WRAPPERS · ID: MANUAL:PROMPTS-WRAPPERS-001
 Se consultan vía MCP desde la PROMPT LIBRARY en Notion.
-## 9. CHEAT SHEETS · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-CHEATSHEETS-001
-manual-cheatsheets-001
+## 9. CHEAT SHEETS · ID: MANUAL:CHEATSHEETS-001
 ### Cómo la IA lee el KERNEL y el CAREER CANON (Lazy Load)
 La extracción de reglas y contratos lógicos (Lazy Load) opera con la siguiente prioridad:
 Prioridad A — Terminal (canónico): lazy_loader.py ejecuta Server‑Side Lazy Load. Parsea bloques hijos de la Notion API y devuelve únicamente el payload del ID solicitado. Consumo: ~150 tokens por llamada.
 Prioridad B — MCP Notion: Reservado exclusivamente para escrituras (APROBAR_WRITE) y modificaciones estructurales de páginas. No se usa para lectura de reglas o contratos.
 Consulte las tablas de comandos para Terminal y Scripts en la sección completa.
-## 10. HEALTH CHECK · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-HEALTHCHECK-001
+## 10. HEALTH CHECK · ID: MANUAL:HEALTHCHECK-001
 manual-healthcheck-001
 ### Red Flags — Ajustar Inputs, No Sistema
 - Ready-to-Apply vacío por más de 3 días → ajustar Prompt A (ver §8 — Prompts de Discovery), no el threshold
 - Career pages con éxito < 50% → revisar fuentes de discovery
 - Pipeline runtime > 5 min → archivar entradas inactivas
-El Runtime requiere que el índice esté sincronizado con Notion. Si has realizado cambios masivos en el Tracker o el Canon, regenera el índice:
+Qué es: script de arranque, lectura estricta (cero escritura salvo la excepción documentada abajo). Corre automáticamente al invocar el alias start (activa venv + carga env + ejecuta el script). También puede correrse manualmente:
+```bash
+cd Layer_1/scripts && python3 health_check.py
+```
+Qué lee, en este orden:
+1. Versión del sistema — propiedad Versión de V-CHANGELOG vía Notion.
+1. Entorno (.env) — verifica que NOTION_TOKEN y demás vars requeridas existan.
+1. Git — git status --porcelain; reporta si hay archivos sin commitear.
+1. Último commit (vgit) — git log -1 para timestamp de referencia.
+1. Notion reachable — fetch mínimo a V-SYSTEM-PROMPT para confirmar conectividad y token válido.
+1. Docs fundacionales — confirma que los 6 documentos existen localmente en ACTIVE/.
+1. Último vdoc sync — cuál de los 6 docs locales tiene el mtime más reciente, y hace cuánto.
+1. Antigüedad de índices (index_age) — ver detalle abajo. Única sección con capacidad de escritura (auto-sync condicional).
+1. Tickets pendientes — Bug Tracker y Task Tracker, agrupados por prioridad.
+Índices monitoreados: graph_v2.json y entity_index_v2.json, ambos en Layer_1/scripts/.
+Comportamiento del auto-sync (desde v8.7.9):
+Si algún índice supera 24 horas sin actualizarse, health_check.py dispara automáticamente python3 vantage.py sync (housekeeping de rutina — no requiere aprobación del operador, no es remediación de un fallo, ver KERNEL:FAIL-PHILOSOPHY). El sync se dispara una sola vez por corrida, solo si al menos un índice cruzó el umbral — no re-sincroniza índices ya frescos, y no corre si todos están dentro del umbral.
+Cómo leer el output:
+- ✓ verde — check pasó.
+- ! amarillo — advertencia, no bloquea (ej. índice stale antes del auto-sync, tickets pendientes).
+- ✗ rojo — fallo real, contribuye al exit code final.
+- Línea final Sistema OK (exit 0) vs. Sistema con issues: [lista] (exit 1).
+Si el auto-sync falla: aparece ✗ index — auto-sync falló o auto-sync timeout. Esto sí es un fallo real (Golden Rules) — el script no reintenta. Acción manual:
+```bash
+python3 vantage.py sync
+```
+desde Layer_1/scripts, y verificar con vantage.py status que entities_after >= entities_before.
+Tickets pendientes: se listan explícitamente solo CRÍTICO y ALTO; MEDIO/BAJO/Sin Prioridad aparecen solo como conteo — ver Notion para detalle.
+Sync manual sigue disponible para forzar fuera de umbral, o si has realizado cambios masivos en el Tracker o el Canon y no quieres esperar a la siguiente corrida de start:
 ```bash
 python3 vantage.py sync
 ```
 La resolución de entidades depende de resolver_registry_v2.json. Este archivo no debe editarse manualmente sin verificar colisiones de hash.
+Desde v2.4.0 (Runtime Contract Migration), resolver_registry_v2.json es la fuente enforced — no solo declarada — de namespace ownership. Cada tipo de entidad tiene su entity_prefix definido aquí; ningún componente del sistema puede hardcodear ni inferir un prefix. Una edición manual que asigne un prefix incorrecto producirá colisiones de namespace en el siguiente Runtime Build, lo que se manifestará como self-loops en graph_v2.json. Antes de editar: verificar el prefix activo por tipo de entidad y correr Runtime Build para confirmar que no hay colisiones.
 ```bash
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_duplicates.py (alias: vdedup)
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/dedup_opportunities.py (alias: vopport)
 ```
-## 11. CHANGELOG · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-CHANGELOG-001
-manual-changelog-001
-v8.7.1 · 2026-06-27: Gap documental Figma Injection cerrado. Manual §4 Miércoles ("Qué hace el usuario con el output") reescrito — eliminada referencia a CANON_MARKDOWN.md, flujo de 6 pasos con plugin. §5.5 expandida con tabla de errores comunes e instrucciones de instalación del plugin.
-v8.7 · 2026-06-27: Figma Sync integrado como CV Output Layer. registry_seed.json establecido como SSOT de nodos Figma. code.js refactorizado a Registry V2 (resolución O(1) por ID crudo, resolver dual KEY/ID). Manual §3 y §5.5 actualizados.
-v8.5.3 · 2026-06-23: vsync_doc.py creado — sync bidireccional Notion → .md para 5 páginas fundacionales. BUG-005 cerrado.
-v8.5.2 · 2026-06-21: Rewrite notion_utils.py (Client + namespaces). NOTION_VERSION corregida a 2022-06-28. DB IDs corregidos en 4 scripts. pyyaml instalado. layer_1_pipeline.sh fix argumento backfill. batch_operations.py protegido con flag --execute.
-v8.4 · Post‑Audit + Documentation Renewal · 2026-06-17: Integración transversa de VANTAGE Runtime. Refactorización de Manual. Troubleshooting expandido. Cold Start añadido. Comandos sync corregidos.
-## 12. REGLAS DE ORO PARA OPERADORES · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-REGLAS-DE-ORO-001
-manual-reglas-de-oro-001
+## 11. CHANGELOG · ID: MANUAL:CHANGELOG-001
+Registro canónico de cambios: V-CHANGELOG 390938be-fc42-80e7-b429-d7d730339353
+## 12. REGLAS DE ORO PARA OPERADORES · ID: MANUAL:REGLAS-DE-ORO-001
 Base: KERNEL:CV-GOLDEN-RULES.
-## 13. FILOSOFÍA DE FALLO PARA OPERADORES · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-FALLO-001
-manual-fallo-001
+## 13. FILOSOFÍA DE FALLO PARA OPERADORES · ID: MANUAL:FALLO-001
 Base: KERNEL:FAIL-PHILOSOPHY.
 Un "fallo" del sistema (URL muerta, Score = 0, Gate = BLOCKED, Ready-to-Apply vacío, JSON vacío en FEED) no es un bug — es el filtro operando correctamente. No intentes "arreglar" estos resultados manualmente ni le pidas a Claude que los fuerce.
 Qué hacer en su lugar:
@@ -562,7 +596,32 @@ Qué hacer en su lugar:
 - JSON vacío en FEED → búsqueda sin resultados relevantes. No amplíes criterios sin análisis.
 Ante cualquiera de estos, el sistema reporta el estado y espera tu instrucción dentro del flujo normal del pipeline.
 ---
-## 14. SLA DE LATENCIA POST-INGESTA · ID: 372938be-fc42-8050-9a67-e40857d7806e:MANUAL-SLA-001
+## 14. SLA DE LATENCIA POST-INGESTA · ID: MANUAL:SLA-001
 manual-sla-001
 > Nota: El SLA "< 45 minutos" cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh — no tiene SLA fijo salvo ejecución manual explícita de layer_1_run.py.
-## ESTADO: v8.7.4 | ACTUALIZADO: 2026-07-01
+## ESTADO: v8.8.0 | ACTUALIZADO: 2026-07-04
+---
+### [DT-015] Normalización de IDs legacy a esquema [PREFIX]:[KEY]
+- Fecha: 2026-07-05
+- Alcance: MANUAL (BLOQUE 1).
+- Acciones:
+- Validación de coherencia con KERNEL:DOC-CONTRACT: PASS.
+- Búsqueda de líneas sueltas (manual-healthcheck-001, manual-sla-001): No encontradas.
+- Búsqueda de UUIDs legacy (390938be-fc42-81c1-9fc7-d0763295cd04): No localizados.
+- Resultado: El MANUAL ya cumple con el esquema canónico. Sin cambios requeridos.
+- Notas: 
+- Los IDs 390938be-fc42-81c1-9fc7-d0763295cd04 podrían haber sido eliminados en versiones previas o nunca existieron en el documento.
+---
+### [DT-015] Normalización de IDs legacy a esquema [PREFIX]:[KEY]
+- Fecha: 2026-07-05
+- Alcance: CAREER CANON (BLOQUE 2).
+- Cambios:
+- Migración de prefijos: CAREER_CANON:AUDIENCE-SCOPE → CANON:AUDIENCE-SCOPE, TRACKER:ARCHIVO_VANTAGE → CANON:ARCHIVO-VANTAGE.
+- Anclaje de IDs huérfanos en §L:
+- Figma Tag Schema → CANON:FIGMA-TAG-SCHEMA.
+- Activación por Positioning Mode → CANON:POSITIONING-MODE.
+- Tag Registry → CANON:TAG-REGISTRY (conversión a heading ##).
+- Second pass: 26 ocurrencias revisadas (sin cambios adicionales requeridos).
+- Notas: 
+- Las referencias CF01–CF08, KPI01–KPI08, UF01–UF03 y N1–N4 ya cumplen con el esquema canónico.
+- Versión actualizada: 8.7.5.
