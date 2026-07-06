@@ -1,6 +1,63 @@
-GPT.png
-.DS_Store
-**/.DS_Store
+# Environment files
+*.env
+*.env.*
+*.key
+*.secret
+*.pem
+Layer_1/config/layer_1.env
+Layer_3/config/layer_2.env
 Layer_3/config/layer_3.env
 Dashboard/config/dashboard.env
+
+# Cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+*.cache
+
+# Backup files
+*.bak
+*.bak-*
+*_backup.*
+*.old
+*.orig
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
+*.swo
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# Node modules
 **/node_modules/
+
+# Imagen GPT
+GPT.png
