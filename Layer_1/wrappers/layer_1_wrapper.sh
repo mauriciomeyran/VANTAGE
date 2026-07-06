@@ -14,8 +14,9 @@ notify_error() {
     osascript -e "display notification \"$2\" with title \"$1\" sound name \"Basso\""
 }
 
-ROOT="${LAYER_1_DIR:-$HOME/Documents/04-VANTAGE_CV/LAYER_1}"
-FEEDS_DIR="$HOME/Documents/04-VANTAGE_CV/Feeds"
+VANTAGE_ROOT="$HOME/Documents/04-Vantage_CV"
+ROOT="${LAYER_1_DIR:-$VANTAGE_ROOT/Layer_1}"
+FEEDS_DIR="$VANTAGE_ROOT/Layer_1/feeds"
 
 # Si no se pasan argumentos, detectar el feed más reciente
 if [ $# -eq 0 ]; then

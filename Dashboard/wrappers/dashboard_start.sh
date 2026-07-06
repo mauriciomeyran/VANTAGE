@@ -13,8 +13,9 @@ notify_error() {
     osascript -e "display notification \"$2\" with title \"$1\" sound name \"Basso\""
 }
 
-LAYER_1_DIR="$HOME/Documents/04-VANTAGE_CV/LAYER_1"
-DASHBOARD_DIR="$HOME/Documents/04-VANTAGE_CV/DASHBOARD"
+VANTAGE_ROOT="$HOME/Documents/04-Vantage_CV"
+LAYER_1_DIR="$VANTAGE_ROOT/Layer_1"
+DASHBOARD_DIR="$VANTAGE_ROOT/Dashboard"
 
 # Notificar: En progreso
 notify "Dashboard" "Iniciando servidor..."

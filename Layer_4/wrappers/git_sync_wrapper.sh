@@ -14,8 +14,9 @@ notify_error() {
     osascript -e "display notification \"$2\" with title \"$1\" sound name \"Basso\""
 }
 
-SCRIPT="$HOME/Documents/04-VANTAGE_CV/Layer_4/scripts/git_sync.py"
-VENV="$HOME/Documents/04-VANTAGE_CV/Layer_1/.venv/bin/python3"
+VANTAGE_ROOT="$HOME/Documents/04-Vantage_CV"
+SCRIPT="$VANTAGE_ROOT/Layer_4/scripts/git_sync.py"
+VENV="$VANTAGE_ROOT/Layer_1/.venv/bin/python3"
 
 notify "VANTAGE L4" "Sincronizando repositorio..."
 
