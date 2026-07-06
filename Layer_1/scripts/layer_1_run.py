@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
 """
-VANTAGE Pipeline Runner v7.5
+VANTAGE Pipeline Runner v8.0
 Pipeline principal sobre el tracker Notion (territorio Claude: CV, CANON-UPDATE, FAST).
 
 Pasos:
-  0   URL Gate pre-scoring (agregadores aceptados; JD >100 chars bypass)
-  0.5 Asignación de Fuente (Career Page Oficial / Agregador)
-  1   Scoring determinístico v6.4 (Score, Match, VM_Scope, Role_Class)
-  2+  Gate decisions, status, patrones de rechazo
+  0   URL Gate pre-scoring (agregadores aceptados; JD >100 chars bypass) + escritura de Fetch
+  1   Scoring determinístico v6.4 (Score, VM_Scope, Role_Class)
+  1.5 Limpieza por fit de perfil y exclusiones
+  3   Gate Logic (Gate_Decision, Next_Action) — única fuente de verdad
+  4   Análisis de patrones de rechazo
 
-Cambios v7.5:
-  - Fuente: aplica a Vacante e Inbound (cualquier registro con URL)
-  - Score: siempre escribe cuando el campo está vacío (None)
-  - Paginación: query completa del data source (>100 registros)
+Cambios v8.0:
+  - ELIMINADOS: Match, Prioridad, Fuente (props redundantes)
+  - ELIMINADO: PASO 0.5 (asignación de Fuente)
+  - ELIMINADO: PASO 2 (URL re-check) — Fetch se consolida en PASO 0
+  - Gate_Decision y Next_Action: escritura única en PASO 3
+  - Status: escritura única en PASO 0 (expiradas) y PASO 1.5 (misfits)
+  - ~40% menos llamadas a API de Notion por run
   - Class A (layer, hash, dedup cross-layer): feed_processor.py
 
 Uso: python3 scripts/layer_1_run.py
@@ -35,6 +39,14 @@ if venv_path.exists():
 
 from notion_client import Client
 from difflib import SequenceMatcher
+
+# ── Dry-run mode ─────────────────────────────────────────────────────────────
+DRY_RUN = "--dry-run" in sys.argv
+
+if DRY_RUN:
+    print("\n" + "="*60)
+    print("DRY RUN MODE — No se escribirán cambios a Notion")
+    print("="*60 + "\n")
 
 # ---------- Utilidades ----------
 def txt(prop):
@@ -133,11 +145,7 @@ def is_agregador(url):
             return True
     return False
 
-def determine_fuente(url):
-    """Retorna la categoría de fuente según el dominio"""
-    if is_agregador(url):
-        return "Agregador"
-    return "Career Page Oficial"
+
 
 # ---------- Validación de URL ----------
 def validate_url_pre_ingestion(url, jd_text=""):
@@ -243,30 +251,7 @@ def validate_url_pre_ingestion(url, jd_text=""):
     except Exception as e:
         return False, f"ERROR: {str(e)[:30]}"
 
-def check_url(url):
-    """Versión mejorada con headers anti-bot y fallback a GET para sitios problemáticos"""
-    try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        }
 
-        # Sitios que bloquean HEAD o devuelven 403/timeout
-        problematic = ['dior.com', 'swarovski', 'workable.com', 'nike.com',
-                       'richemont.com', 'coppel.com', 'occ.com.mx']
-        use_get = any(p in url.lower() for p in problematic)
-
-        if use_get:
-            r = requests.get(url, allow_redirects=True, timeout=10, headers=headers)
-        else:
-            r = requests.head(url, allow_redirects=True, timeout=8, headers=headers)
-
-        if 200 <= r.status_code < 400:
-            return "Accesible"
-        else:
-            return "Bloqueado"
-    except:
-        return "Bloqueado"
 
 def get_vm_scope(role_title):
     if not role_title or len(role_title.strip()) < 3:
@@ -382,38 +367,7 @@ def calculate_score_v6(entry):
 
     return min(score, 100)
 
-def get_match_level_v6(score):
-    """Nuevos niveles basados en score 0-100"""
-    if score >= 80:
-        return "Muy Alto"  # Aplicar HOY
-    elif score >= 60:
-        return "Alto"  # Ready-to-Apply
-    elif score >= 40:
-        return "Medio"  # Considerar
-    else:
-        return "Bajo"  # Revisar
 
-def score_to_prioridad(score):
-    """
-    Mapea Score (0-100) a Prioridad (1-8) para compatibilidad con Notion schema.
-    Prioridad es un campo select con valores 1-8.
-    """
-    if score >= 90:
-        return "8"
-    elif score >= 80:
-        return "7"
-    elif score >= 70:
-        return "6"
-    elif score >= 60:
-        return "5"
-    elif score >= 50:
-        return "4"
-    elif score >= 40:
-        return "3"
-    elif score >= 30:
-        return "2"
-    else:
-        return "1"
 
 def gate(fetch, vm_scope, role_class, source_type, rol="", marca=""):
     from profile_fit import has_vm_title_signal, is_role_excluded, resolve_alias_flags
@@ -446,18 +400,7 @@ def get_application_next_action(status):
     else:
         return "Re-check"
 
-def check_if_expired(url, last_seen, current_fetch):
-    if current_fetch != "Bloqueado":
-        return False
-    if last_seen:
-        try:
-            last_seen_dt = datetime.strptime(last_seen, "%Y-%m-%d").date()
-            days_since = (datetime.now().date() - last_seen_dt).days
-            if days_since > 2:
-                return True
-        except:
-            pass
-    return False
+
 
 def analyze_outcome_patterns():
     try:
@@ -515,7 +458,7 @@ def analyze_outcome_patterns():
         return None
 
 def main():
-    print("VANTAGE Pipeline Runner v7.5")
+    print("VANTAGE Pipeline Runner v8.0")
     print("=" * 60)
 
     # Find .env file in project root
@@ -538,8 +481,80 @@ def main():
     client = Client(auth=os.environ["NOTION_TOKEN"])
     ds_id = "596938befc42836baea7814a1491bd47"
 
-    # ==================== PASO 0: URL GATE PRE-SCORING ====================
-    print("\nPaso 0: URL Gate (pre-scoring) - PRIORIDAD ABSOLUTA AL JD...")
+    # ==================== FASE 1: CLASIFICACIÓN (VM_Scope, Role_Class, Source_Type) ====================
+    print("\nFase 1: Clasificacion (VM_Scope, Role_Class, Source_Type)...")
+    items = query_all_items(client, ds_id)
+    scoring_updates = 0
+    scoring_changes = []
+    ready_to_apply = 0
+
+    # Auto-asignación Source_Type vacío
+    source_updates = 0
+    for item in items:
+        props = item["properties"]
+        url = txt(props.get("URL"))
+        if not url:
+            continue
+        st = (props.get("Source_Type ", {}).get("select") or {}).get("name", "")
+        if not st:
+            if not DRY_RUN:
+                try:
+                    client.pages.update(
+                        page_id=item["id"],
+                        properties={"Source_Type ": {"select": {"name": "Vacante"}}}
+                    )
+                    source_updates += 1
+                except Exception as e:
+                    print(f"WARNING: Error asignando Source_Type {item['id'][:8]}: {e}")
+            else:
+                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría Source_Type -> Vacante")
+                source_updates += 1
+    if source_updates > 0:
+        print(f"OK Source_Type=Vacante asignado en {source_updates} registros")
+    else:
+        print("OK Source_Type: Sin cambios")
+
+    # Clasificación VM_Scope + Role_Class (sin Score aún — depende de FASE 3)
+    clasificacion_updates = 0
+    for item in items:
+        props = item["properties"]
+        rol = txt(props.get("Rol"))
+        current_vm_scope = txt(props.get("VM_Scope"))
+        current_role_class = txt(props.get("Role_Class"))
+        new_vm_scope = get_vm_scope(rol)
+        new_role_class = get_role_class(rol)
+
+        update_props = {}
+        changes = []
+        if current_vm_scope != new_vm_scope:
+            update_props["VM_Scope"] = {"rich_text": [{"text": {"content": new_vm_scope}}]}
+            changes.append(f"VM_Scope: {current_vm_scope}->{new_vm_scope}")
+        if current_role_class != new_role_class:
+            update_props["Role_Class"] = {"select": {"name": new_role_class}}
+            changes.append(f"Role_Class: {current_role_class}->{new_role_class}")
+
+        if update_props:
+            if not DRY_RUN:
+                try:
+                    client.pages.update(page_id=item["id"], properties=update_props)
+                    clasificacion_updates += 1
+                    empresa = txt(props.get("Marca")) or "Sin empresa"
+                    scoring_changes.extend([f"[{item['id'][:8]}] {empresa}: {c}" for c in changes])
+                except Exception as e:
+                    print(f"X Error clasificacion {item['id'][:8]}: {e}")
+            else:
+                clasificacion_updates += 1
+                empresa = txt(props.get("Marca")) or "Sin empresa"
+                scoring_changes.extend([f"[{item['id'][:8]}] {empresa}: {c}" for c in changes])
+                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría {list(update_props.keys())}")
+
+    if clasificacion_updates > 0:
+        print(f"OK Clasificacion: {clasificacion_updates} registros actualizados")
+    else:
+        print("OK Clasificacion: Sin cambios")
+
+    # ==================== FASE 2: VALIDACIÓN (URL Gate + Fetch) ====================
+    print("\nFase 2: Validacion URL Gate...")
     items = query_all_items(client, ds_id)
     url_gate_updates = 0
     url_gate_rejects = 0
@@ -556,26 +571,19 @@ def main():
         current_fetch = txt(props.get("Fetch"))
         jd_text = txt(props.get("JD"))
 
-        # BUGFIX #1: BYPASS precede a URL_GATE
+        # Bypass — Gate_Decision se asigna en FASE 4
         if source_type in BYPASS_TYPES:
-            try:
-                client.pages.update(
-                    page_id=item["id"],
-                    properties={"Gate_Decision": {"select": {"name": "CREATE"}}}
-                )
-                bypass_count += 1
-            except Exception as e:
-                print(f"WARNING: Error bypass {item['id'][:8]}: {e}")
-            continue   # salta todo el Paso 0
+            bypass_count += 1
+            continue
 
-        # Solo aplicar gate a vacantes nuevas/activas
+        # Solo Vacantes activas con URL
         if source_type != "Vacante" or not url:
             continue
 
         if status in ["Expirada", "Rechazado", "Archivar", "Contratado"]:
             continue
 
-        # URL GATE - JD TIENE PRIORIDAD ABSOLUTA
+        # JD tiene prioridad absoluta
         is_valid, reason = validate_url_pre_ingestion(url, jd_text)
 
         if not is_valid:
@@ -584,20 +592,19 @@ def main():
             rol = txt(props.get("Rol")) or "Sin rol"
             print(f"X [{item['id'][:8]}] {empresa} - {rol[:30]}...")
             print(f"   URL Gate fallo: {reason}")
-
-            # Marcar como Expirada inmediatamente
-            try:
-                client.pages.update(
-                    page_id=item["id"],
-                    properties={
-                        "Fetch": {"rich_text": [{"text": {"content": "Bloqueado"}}]},
-                        "Status": {"select": {"name": "Expirada"}},
-                        "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
-                        "Gate_Decision": {"select": {"name": "BLOCKED"}}
-                    }
-                )
-            except Exception as e:
-                print(f"WARNING: Error actualizando {item['id'][:8]}: {e}")
+            if not DRY_RUN:
+                try:
+                    client.pages.update(
+                        page_id=item["id"],
+                        properties={
+                            "Fetch": {"rich_text": [{"text": {"content": "Bloqueado"}}]},
+                            "Status": {"select": {"name": "Expirada"}},
+                        }
+                    )
+                except Exception as e:
+                    print(f"WARNING: Error actualizando {item['id'][:8]}: {e}")
+            else:
+                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Fetch', 'Status'] -> Bloqueado / Expirada")
         else:
             url_gate_updates += 1
             if reason == "JD_ALREADY_EXISTS":
@@ -611,62 +618,11 @@ def main():
     if whitelist_bypass_count > 0:
         print(f"   -> {whitelist_bypass_count} bypass por whitelist/SPA")
     if bypass_count > 0:
-        print(f"   -> {bypass_count} entradas BYPASS protegidas (CREATE automático)")
+        print(f"   -> {bypass_count} entradas BYPASS protegidas (Gate en Fase 4)")
 
-    # ==================== PASO 0.5: ASIGNACIÓN DE FUENTE ====================
-    print("\nPaso 0.5: Asignando campo 'Fuente'...")
-    fuente_updates = 0
-    for item in items:
-        props = item["properties"]
-        url = txt(props.get("URL"))
-        source_type = txt(props.get("Source_Type ")) or ""
-        if not url:
-            continue
-        # Fuente aplica a Vacante e Inbound (cualquier tipo con URL) — fix v7.5
-        current_fuente = txt(props.get("Fuente"))
-        nueva_fuente = determine_fuente(url)
-        if current_fuente != nueva_fuente:
-            try:
-                client.pages.update(
-                    page_id=item["id"],
-                    properties={"Fuente": {"rich_text": [{"text": {"content": nueva_fuente}}]}}
-                )
-                fuente_updates += 1
-            except Exception as e:
-                print(f"WARNING: Error actualizando Fuente {item['id'][:8]}: {e}")
-    if fuente_updates > 0:
-        print(f"OK Fuente asignada/actualizada en {fuente_updates} registros")
-    else:
-        print("OK Todas las fuentes ya estaban correctas")
-
-
-    # --- Auto-asignación Source_Type vacío ---
-    source_updates = 0
-    for item in items:
-        props = item["properties"]
-        url = txt(props.get("URL"))
-        if not url:
-            continue
-        st = (props.get("Source_Type ", {}).get("select") or {}).get("name", "")
-        if not st:
-            try:
-                client.pages.update(
-                    page_id=item["id"],
-                    properties={"Source_Type ": {"select": {"name": "Vacante"}}}
-                )
-                source_updates += 1
-            except Exception as e:
-                print(f"WARNING: Error asignando Source_Type {item['id'][:8]}: {e}")
-    if source_updates > 0:
-        print(f"OK Source_Type=Vacante asignado en {source_updates} registros")
-    else:
-        print("OK Source_Type: Sin cambios")
-    # ==================== PASO 1: SCORING v6.4 ====================
-    print("\nPaso 1: Scoring deterministico v6.4...")
+    # ==================== FASE 3: SCORING v6.4 ====================
+    print("\nFase 3: Scoring deterministico v6.4...")
     items = query_all_items(client, ds_id)
-    scoring_updates = 0
-    scoring_changes = []
-    ready_to_apply = 0
 
     for item in items:
         props = item["properties"]
@@ -674,76 +630,44 @@ def main():
         marca = txt(props.get("Marca"))
         jd = txt(props.get("JD"))
         contacto = txt(props.get("Contacto"))
-
-        current_vm_scope = txt(props.get("VM_Scope"))
         current_score = props.get("Score", {}).get("number")
-        current_role_class = txt(props.get("Role_Class"))
-        current_match = txt(props.get("Match"))
 
-        new_vm_scope = get_vm_scope(rol)
-        new_role_class = get_role_class(rol)
-
-        # Calcular score v6.4
-        entry_data = {
-            "title": rol,
-            "company": marca,
-            "jd": jd,
-            "contact": contacto
-        }
+        entry_data = {"title": rol, "company": marca, "jd": jd, "contact": contacto}
         new_score = calculate_score_v6(entry_data)
-        new_match = get_match_level_v6(new_score)
 
-        # Contar ready-to-apply (>=60)
         if new_score >= 60:
             ready_to_apply += 1
 
-        needs_update = False
-        update_props = {}
-        changes = []
-
-        if current_vm_scope != new_vm_scope:
-            update_props["VM_Scope"] = {"rich_text": [{"text": {"content": new_vm_scope}}]}
-            changes.append(f"VM_Scope: {current_vm_scope}->{new_vm_scope}")
-            needs_update = True
-
-        if current_score != new_score or current_score is None:  # fix v7.5
-            update_props["Score"] = {"number": new_score}
-            changes.append(f"Score: {current_score}->{new_score}")
-            needs_update = True
-
-        if current_role_class != new_role_class:
-            update_props["Role_Class"] = {"select": {"name": new_role_class}}
-            changes.append(f"Role_Class: {current_role_class}->{new_role_class}")
-            needs_update = True
-
-        if current_match != new_match:
-            update_props["Match"] = {"select": {"name": new_match}}
-            changes.append(f"Match: {current_match}->{new_match}")
-            needs_update = True
-
-        if needs_update:
-            try:
-                client.pages.update(page_id=item["id"], properties=update_props)
+        if current_score != new_score or current_score is None:
+            if not DRY_RUN:
+                try:
+                    client.pages.update(
+                        page_id=item["id"],
+                        properties={"Score": {"number": new_score}}
+                    )
+                    scoring_updates += 1
+                    empresa = marca or "Sin empresa"
+                    scoring_changes.append(f"[{item['id'][:8]}] {empresa}: Score {current_score}->{new_score}")
+                except Exception as e:
+                    print(f"X Error scoring {item['id'][:8]}: {e}")
+            else:
                 scoring_updates += 1
-                if changes:
-                    empresa = txt(props.get("Marca")) or "Sin empresa"
-                    scoring_changes.append(f"[{item['id'][:8]}] {empresa}: {', '.join(changes)}")
-            except Exception as e:
-                print(f"X Error scoring {item['id'][:8]}: {e}")
+                empresa = marca or "Sin empresa"
+                scoring_changes.append(f"[{item['id'][:8]}] {empresa}: Score {current_score}->{new_score}")
+                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Score'] -> {new_score}")
 
-    if scoring_changes:
-        print(f"OK Scoring v6.4: {len(scoring_changes)} cambios")
+    if scoring_updates > 0:
+        print(f"OK Scoring v6.4: {scoring_updates} cambios")
         for change in scoring_changes[:5]:
             print(f"  -> {change}")
         if len(scoring_changes) > 5:
             print(f"  -> ... y {len(scoring_changes)-5} cambios mas")
     else:
-        print("OK Scoring: Sin cambios (todas las entradas ya actualizadas)")
-
+        print("OK Scoring: Sin cambios")
     print(f"Ready-to-Apply (>=60 puntos): {ready_to_apply}")
 
-    # ==================== PASO 1.5: LIMPIEZA POR FIT / EXCLUSIONES ====================
-    print("\nPaso 1.5: Limpieza por fit de perfil y exclusiones...")
+    # ==================== FASE 3.5: LIMPIEZA POR FIT / EXCLUSIONES ====================
+    print("\nFase 3.5: Limpieza por fit de perfil y exclusiones...")
     from profile_fit import profile_misfit_reasons, should_auto_cleanup
 
     misfit_updates = 0
@@ -762,98 +686,28 @@ def main():
         )
         if not should_auto_cleanup(status, reasons):
             continue
-        try:
-            client.pages.update(
-                page_id=item["id"],
-                properties={
-                    "Status": {"select": {"name": "Expirada"}},
-                    "Gate_Decision": {"select": {"name": "BLOCKED"}},
-                    "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
-                },
-            )
+        if not DRY_RUN:
+            try:
+                client.pages.update(
+                    page_id=item["id"],
+                    properties={"Status": {"select": {"name": "Expirada"}}},
+                )
+                misfit_updates += 1
+                print(f"  X [{item['id'][:8]}] {marca[:20]} | {rol[:35]} -> Expirada ({reasons[0]})")
+            except Exception as e:
+                print(f"WARNING: Error limpiando {item['id'][:8]}: {e}")
+        else:
             misfit_updates += 1
-            print(f"  X [{item['id'][:8]}] {marca[:20]} | {rol[:35]} -> Expirada ({reasons[0]})")
-        except Exception as e:
-            print(f"WARNING: Error limpiando {item['id'][:8]}: {e}")
+            print(f"  [DRY-RUN] {item['id'][:8]}: actualizaría ['Status'] -> Expirada ({reasons[0]})")
     if misfit_updates:
         print(f"OK {misfit_updates} vacantes fuera de perfil marcadas Expirada")
     else:
         print("OK Sin vacantes fuera de perfil")
 
-    # ==================== PASO 2: URL RE-CHECK (solo para válidos) ====================
-    print("\nPaso 2: URL re-check (solo validos)...")
-    items = query_all_items(client, ds_id)
-    url_updates = 0
-    url_changes = []
-    expired_suggestions = []
-    skipped_recheck = 0
-    jd_protected = 0
 
-    for item in items:
-        props = item["properties"]
-        url = txt(props.get("URL"))
-        current_fetch = txt(props.get("Fetch"))
-        source_type = txt(props.get("Source_Type ")) or "Vacante"
-        last_seen = txt(props.get("Last_Seen_Active"))
-        status = txt(props.get("Status"))
-        jd_text = txt(props.get("JD")) or ""
 
-        if source_type != "Vacante" or not url:
-            continue
-
-        # Saltar si ya está marcado como expirado/rechazado
-        if status in ["Expirada", "Rechazado", "Archivar"]:
-            continue
-
-        # FIX DEFINITIVO 1: No re-checkear si tiene JD > 100 y ya está Accesible
-        if current_fetch == "Accesible" and len(jd_text) > 100:
-            jd_protected += 1
-            continue
-
-        # FIX DEFINITIVO 2: No re-checkear dominios problemáticos conocidos
-        problematic_domains = ['nike.com', 'workable.com', 'dior.com', 'swarovski',
-                               'richemont.com', 'coppel.com', 'occ.com.mx']
-        if any(domain in url.lower() for domain in problematic_domains) and current_fetch == "Accesible":
-            skipped_recheck += 1
-            continue
-
-        new_fetch = check_url(url)
-
-        if new_fetch != current_fetch:
-            try:
-                client.pages.update(
-                    page_id=item["id"],
-                    properties={"Fetch": {"rich_text": [{"text": {"content": new_fetch}}]}}
-                )
-                url_updates += 1
-                empresa = txt(props.get("Marca")) or "Sin empresa"
-                url_changes.append(f"[{item['id'][:8]}] {empresa}: {current_fetch}->{new_fetch}")
-
-                if check_if_expired(url, last_seen, new_fetch) and status not in ["Expirada", "Rechazado"]:
-                    expired_suggestions.append(f"[{item['id'][:8]}] {empresa}: Considerar cambiar Status a 'Expirada'")
-
-            except Exception as e:
-                print(f"X Error updating URL {item['id'][:8]}: {e}")
-
-    if url_changes:
-        print(f"OK URL check: {len(url_changes)} cambios de estado")
-        for change in url_changes:
-            print(f"  -> {change}")
-    else:
-        print("OK URL check: Sin cambios (todos los URLs mantienen su estado)")
-
-    if skipped_recheck > 0:
-        print(f"   -> {skipped_recheck} dominios problematicos protegidos")
-    if jd_protected > 0:
-        print(f"   -> {jd_protected} vacantes con JD protegidas de re-check")
-
-    if expired_suggestions:
-        print("\nSugerencias de expiracion:")
-        for suggestion in expired_suggestions:
-            print(f"  -> {suggestion}")
-
-    # ==================== PASO 3: GATE LOGIC (con protección) ====================
-    print("\nPaso 3: Gate logic y Next Actions...")
+    # ==================== FASE 4: GATE LOGIC (Gate_Decision, Next_Action) ====================
+    print("\nFase 4: Gate logic y Next Actions...")
     items = query_all_items(client, ds_id)
     gate_updates = 0
     gate_changes = []
@@ -918,14 +772,21 @@ def main():
             "Next_Action": {"rich_text": [{"text": {"content": next_action}}]}
         }
 
-        try:
-            client.pages.update(page_id=item["id"], properties=update)
+        if not DRY_RUN:
+            try:
+                client.pages.update(page_id=item["id"], properties=update)
+                gate_updates += 1
+                if changes:
+                    empresa = txt(props.get("Marca")) or "Sin empresa"
+                    gate_changes.append(f"[{item['id'][:8]}] {empresa}: {', '.join(changes)}")
+            except Exception as e:
+                print(f"X Error gate {item['id'][:8]}: {e}")
+        else:
             gate_updates += 1
             if changes:
                 empresa = txt(props.get("Marca")) or "Sin empresa"
                 gate_changes.append(f"[{item['id'][:8]}] {empresa}: {', '.join(changes)}")
-        except Exception as e:
-            print(f"X Error gate {item['id'][:8]}: {e}")
+            print(f"[DRY-RUN] {item['id'][:8]}: actualizaría {list(update.keys())}")
 
     if gate_changes:
         print(f"OK Gate: {len(gate_changes)} cambios de decision")
@@ -938,8 +799,8 @@ def main():
 
     print(f"Acciones protegidas: {protected_count}")
 
-    # ==================== PASO 4: ANÁLISIS DE PATRONES ====================
-    print("\nPaso 4: Analisis de patrones...")
+    # ==================== FASE 5: ANÁLISIS DE PATRONES ====================
+    print("\nFase 5: Analisis de patrones...")
     patterns = analyze_outcome_patterns()
     if patterns:
         rejection_patterns = patterns["rejection_patterns"]
@@ -965,10 +826,9 @@ def main():
                 print(f"    {company}: {rate:.0f}% rechazo ({total} aplicaciones)")
 
     print("\n" + "=" * 60)
-    print("RESUMEN FINAL v7.5:")
+    print("RESUMEN FINAL v8.0:")
     print(f"  URL Gate: {url_gate_rejects} links muertos eliminados")
     print(f"  JD Bypass: {jd_bypass_count} vacantes con JD existente")
-    print(f"  Fuente actualizada: {fuente_updates} registros")
     print(f"  READY-TO-APPLY (>=60): {ready_to_apply}")
     print(f"  CREATE (Pipeline Activo): {create_count}")
     print(f"  APPLIED (En proceso): {applied_count}")
@@ -976,21 +836,18 @@ def main():
     print(f"  PROTEGIDAS: {protected_count}")
     print(f"  Total procesado: {len(items)}")
 
-    if scoring_changes or url_changes or gate_changes:
+    if scoring_changes or gate_changes:
         print("\nCAMBIOS REALIZADOS:")
         print(f"  Scoring v6.4: {len(scoring_changes)} cambios")
-        print(f"  URLs: {len(url_changes)} cambios")
         print(f"  Gates: {len(gate_changes)} cambios")
     else:
         print("\nESTADO ESTABLE: Sin cambios necesarios")
 
-    print("\nPROXIMOS PASOS (v7.5):")
-    print("  1. Inbound con Fuente vacío: Paso 0.5 los completa si tienen URL")
-    print("  2. Score vacío: Paso 1 los rellena automáticamente")
-    print("  3. Filtra en Notion por 'Score >= 60' (Ready-to-Apply)")
-    print("  4. Prioriza Match 'Muy Alto' > 'Alto'")
-    print("  5. Ingresos L1/L3 nuevos: feed_processor.py (Class A: layer, hash)")
-    print("  6. Aplica maximo 5/semana (calidad > cantidad)")
+    print("\nPROXIMOS PASOS (v8.0):")
+    print("  1. Score vacío: Fase 3 los rellena automáticamente")
+    print("  2. Filtra en Notion por 'Score >= 60' (Ready-to-Apply)")
+    print("  3. Ingresos L1/L3 nuevos: feed_processor.py (Class A: layer, hash)")
+    print("  4. Aplica maximo 5/semana (calidad > cantidad)")
 
 if __name__ == "__main__":
     try:
