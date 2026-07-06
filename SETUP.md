@@ -36,7 +36,7 @@
 │   ├── dashboard.html         # Dashboard UI
 │   └── config/                # Configuration files
 ├── Archive/                    # Repository archives
-└── - Documentación/           # Documentation folders
+└── Documentación/              # Documentation folders
 ```
 
 ## Environment Variables

@@ -33,9 +33,9 @@ DOCS_FUNDACIONALES = {
     "V-CAREER-CANON":  ("377938be-fc42-8089-93f2-f52dbd2dec6c", "Career Canon.md"),
 }
 
-ACTIVE_DIR = Path("/Users/mauriciomeyran/Documents/04-Vantage_CV/- Documentación/ACTIVE")
-SCRIPTS_DIR = Path("/Users/mauriciomeyran/Documents/04-Vantage_CV/Layer_1/scripts")
-REPO_ROOT   = Path("/Users/mauriciomeyran/Documents/04-Vantage_CV")
+ACTIVE_DIR = Path(__file__).resolve().parent.parent.parent / "Documentación" / "ACTIVE"
+SCRIPTS_DIR = Path(__file__).resolve().parent
+REPO_ROOT   = Path(__file__).resolve().parent.parent.parent
 
 INDEX_FILES = [
     "graph_v2.json",

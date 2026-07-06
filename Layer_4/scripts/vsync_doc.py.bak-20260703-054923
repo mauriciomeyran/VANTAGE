@@ -41,7 +41,7 @@ notion = Client(auth=TOKEN, timeout_ms=60000)
 HTTP = httpx.Client(timeout=60.0)
 HEADERS = {"Authorization": f"Bearer {TOKEN}", "Notion-Version": "2022-06-28"}
 
-BASE_DIR = _PROJECT / "- Documentación" / "ACTIVE"
+BASE_DIR = _PROJECT / "Documentación" / "ACTIVE"
 
 DOCS = {
     "kernel":        {"notion_id": "377938be-fc42-805e-a408-c9ae518d4fe7", "local_file": BASE_DIR / "Kernel.md", "label": "TECHNICAL KERNEL"},
