@@ -139,8 +139,8 @@ def sync() -> dict:
     from query_layer import ENTITY_INDEX_PATH, load_index
 
     index_path = Path(ENTITY_INDEX_PATH)
-    graph_path = _scripts_dir / "graph_v2.json"
-    backlinks_path = _scripts_dir / "backlinks_v2.json"
+    graph_path = _scripts_dir.parent / "data" / "graph_v2.json"
+    backlinks_path = _scripts_dir.parent / "data" / "backlinks_v2.json"
     
     index_tmp = index_path.with_suffix(".json.tmp")
     graph_tmp = graph_path.with_suffix(".json.tmp")

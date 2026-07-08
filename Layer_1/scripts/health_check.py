@@ -35,6 +35,7 @@ DOCS_FUNDACIONALES = {
 
 ACTIVE_DIR = Path(__file__).resolve().parent.parent.parent / "Documentación" / "ACTIVE"
 SCRIPTS_DIR = Path(__file__).resolve().parent
+DATA_DIR   = Path(__file__).resolve().parent.parent / "data"
 REPO_ROOT   = Path(__file__).resolve().parent.parent.parent
 
 INDEX_FILES = [
@@ -390,7 +391,7 @@ def check_index_age():
     stale_detected = False
 
     for name in INDEX_FILES:
-        path = SCRIPTS_DIR / name
+        path = DATA_DIR / name
         if not path.exists():
             warn(f"index — {name} no encontrado")
             all_ok = False
