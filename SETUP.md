@@ -11,31 +11,35 @@
 ## Repository Structure
 
 ```
-04-Vantage_CV/
+VANTAGE/
 ├── Layer_1/                    # Main pipeline layer
-│   ├── scripts/               # Python pipeline scripts
+│   ├── scripts/               # Core Python pipeline scripts (27 scripts)
 │   ├── wrappers/              # Shell wrapper scripts
 │   ├── config/                # Configuration files
 │   ├── feeds/                 # Feed JSON files
-│   ├── archive/               # Archived scripts and backups
+│   ├── data/                  # Data files (entity_index, backlinks, etc.)
+│   ├── cache/                 # Cache files (notion_cache.json, etc.)
 │   ├── .venv/                 # Python virtual environment
 │   ├── .env → config/layer_1.env  # Environment variables (symlink)
 │   └── requirements.txt       # Python dependencies
 ├── Layer_2/                    # Mail processing layer (placeholder)
 ├── Layer_3/                    # LinkedIn/mail integration layer
-│   ├── scripts/               # Layer 3 scripts
+│   ├── scripts/               # Layer 3 scripts (1 script)
 │   ├── LAYER3.app             # Automator application
 │   └── config/                # Configuration files
 ├── Layer_4/                    # Git sync layer
-│   ├── scripts/               # Git sync scripts
+│   ├── scripts/               # Git sync scripts (4 scripts)
 │   ├── wrappers/              # Shell wrapper scripts
 │   └── com.vantage.gitsync.plist  # LaunchAgent configuration
 ├── Dashboard/                  # Web dashboard
-│   ├── scripts/               # Dashboard server and routes
+│   ├── scripts/               # Dashboard server and routes (9 scripts)
 │   ├── wrappers/              # Shell wrapper scripts
 │   ├── dashboard.html         # Dashboard UI
 │   └── config/                # Configuration files
 ├── Archive/                    # Repository archives
+│   ├── Legacy_Scripts/        # Archived legacy scripts (29 scripts)
+│   ├── Tests/                 # Archived test scripts (2 scripts)
+│   └── Pipeline/              # Previous pipeline versions
 └── Documentación/              # Documentation folders
 ```
 
@@ -205,11 +209,27 @@ Location: `Dashboard/dashboard.db` and `Dashboard/dashboard_instances.db`
 - Layer_1/layer_1_routine.md - Operational routine guide
 - [OPERATOR TO FILL]: Additional documentation references
 
+## Script Cleanup (2026-07-07)
+
+### Cleanup Summary
+- **Eliminated**: 4 obsolete scripts (backups, duplicates, one-shot audit scripts)
+- **Archived**: 29 legacy scripts to `Archive/Legacy_Scripts/`
+- **Archived**: 2 test scripts to `Archive/Tests/`
+- **Organized**: JSON data files moved to `Layer_1/data/` and `Layer_1/cache/`
+- **Result**: Reduced from 79 to 27 core scripts (66% reduction)
+
+### Current Script Distribution
+- **Layer_1/scripts**: 27 core pipeline scripts
+- **Layer_3/scripts**: 1 mail processing script
+- **Layer_4/scripts**: 4 git sync scripts
+- **Dashboard/scripts**: 9 dashboard scripts
+- **Total Core Scripts**: 41 scripts
+
 ## Repository Root Variable
 
 All shell scripts use the standardized root variable:
 ```bash
-VANTAGE_ROOT="$HOME/Documents/04-Vantage_CV"
+VANTAGE_ROOT="$HOME/Documents/03 Projects/VANTAGE"
 ```
 
 This ensures consistent path references across all layers and wrappers.

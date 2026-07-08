@@ -47,13 +47,13 @@ CHANGELOG_PAGE_ID = "390938be-fc42-80e7-b429-d7d730339353"
 # Trackers — Reactivo (Bug) vs Proactivo (Task). Ver KERNEL:SCHEMA en System Prompt.
 TRACKERS = {
     "BUG": {
-        "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5",  # COL
+        "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",  # COL
         "title_prop": "Bug",
         "status_prop": "Status",
         "open_statuses": ["Abierto", "En revisión"],
     },
     "TASK": {
-        "database_id": "d2a65ca16a35465dbcffb0d82dddd549",  # COL
+        "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",  # COL
         "title_prop": "Task",
         "status_prop": "Status",
         "open_statuses": ["Pendiente", "En progreso"],
@@ -205,8 +205,8 @@ def check_pending_tickets():
 
         for label, cfg in TRACKERS.items():
             try:
-                resp = client.databases.query(
-                    database_id=cfg["database_id"],
+                resp = client.data_sources.query(
+                    data_source_id=cfg["data_source_id"],
                     filter={
                         "or": [
                             {"property": cfg["status_prop"], "select": {"equals": s}}

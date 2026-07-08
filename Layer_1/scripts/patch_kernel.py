@@ -71,7 +71,7 @@ BLOCK_47 = (
     "Figma (nuevos nodos, reordenamiento de frames). El proceso correcto es: exportar IDs "
     "actualizados desde Figma → reemplazar registry_seed.json → verificar cobertura de "
     "tokens → vgit.\n"
-    "Ruta canónica: 04-Vantage_CV/Figma Sync/registry_seed.json\n"
+    "Ruta canónica: VANTAGE/Figma Sync/registry_seed.json\n"
 )
 
 # Encontrar el bloque §4.6 hasta el separador ---

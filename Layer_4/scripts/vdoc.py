@@ -21,7 +21,7 @@ Uso:
 import subprocess, sys
 from pathlib import Path
 
-PROJECT = Path.home() / "Documents/04-Vantage_CV"
+PROJECT = Path.home() / "Documents/03 Projects/VANTAGE"
 VSYNC = PROJECT / "Layer_4/scripts/vsync_doc.py"
 VGIT  = PROJECT / "Layer_4/scripts/git_sync.py"
 

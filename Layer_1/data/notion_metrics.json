@@ -1,0 +1,10 @@
+{
+  "requests_total": 346,
+  "cache_hits": 12,
+  "cache_misses": 163,
+  "retries": 0,
+  "errors_by_status": {
+    "400": 1,
+    "404": 3
+  }
+}

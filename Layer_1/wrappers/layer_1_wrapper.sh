@@ -14,7 +14,7 @@ notify_error() {
     osascript -e "display notification \"$2\" with title \"$1\" sound name \"Basso\""
 }
 
-VANTAGE_ROOT="$HOME/Documents/04-Vantage_CV"
+VANTAGE_ROOT="$HOME/Documents/03 Projects/VANTAGE"
 ROOT="${LAYER_1_DIR:-$VANTAGE_ROOT/Layer_1}"
 FEEDS_DIR="$VANTAGE_ROOT/Layer_1/feeds"
 

@@ -14,7 +14,7 @@ notify_error() {
     osascript -e "display notification \"$2\" with title \"$1\" sound name \"Basso\""
 }
 
-VANTAGE_ROOT="$HOME/Documents/04-Vantage_CV"
+VANTAGE_ROOT="$HOME/Documents/03 Projects/VANTAGE"
 SCRIPT="$VANTAGE_ROOT/Layer_4/scripts/git_sync.py"
 VENV="$VANTAGE_ROOT/Layer_1/.venv/bin/python3"
 

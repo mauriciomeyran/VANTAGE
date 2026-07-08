@@ -34,7 +34,7 @@ TASKS TRACKER (DB)................d2a65ca1-6a35-465d-bcff-b0d82dddd549
 TASKS TRACKER (COL)...............aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8
 ALIASES...........................37c938be-fc42-80d4-b9ae-f5969830331b
 CHANGE LOG........................390938be-fc42-80e7-b429-d7d730339353
-FIGMA SYNC........................04-Vantage_CV/Figma Sync/
+FIGMA SYNC........................VANTAGE/Figma Sync/
 ## ID: KERNEL:SCOPE
 # 2. SCOPE Y ECONOMÍA DE CONTEXTO
 → Ver KERNEL:SCOPE

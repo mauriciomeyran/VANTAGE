@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 
 # ── Paths L4 → L1 ────────────────────────────────────────────────────────────
 _SCRIPT_DIR = Path(__file__).resolve()
-_PROJECT = _SCRIPT_DIR.parents[2]  # 04-Vantage_CV
+_PROJECT = _SCRIPT_DIR.parents[2]  # VANTAGE
 _L1 = _PROJECT / "Layer_1"
 
 # usa venv de L1
