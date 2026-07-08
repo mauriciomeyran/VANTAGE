@@ -1,0 +1,482 @@
+{
+  "consolidated_results": [
+    {
+      "job_id": "ZEGNA-VM-LATAM-270880336",
+      "brand": "Zegna",
+      "title": "Visual Merchandiser LATAM",
+      "location": "Polanco, Ciudad de Mexico, CDMX",
+      "holding": "Ermenegildo Zegna Group",
+      "posted_date": "2026-07-03",
+      "industry_tier": "luxury",
+      "seniority_level": "Lead / Specialist",
+      "apply_url": "https://careers.zegnagroup.com/jobs/job-details?JobID=270880336",
+      "normalize_apply_url": "https://careers.zegnagroup.com/jobs/job-details?jobid=270880336",
+      "source_name": "Zegna Careers",
+      "source_type": "career_page",
+      "fetch_status": "success",
+      "jd": "As Visual Merchandiser LATAM, based in Polanco, Mexico City, you will bring your unique strengths to the LATAM Visual Merchandising Department... (excerpt preserved).",
+      "notes": null,
+      "visual_signal": true,
+      "innovation_dna": true,
+      "reroute_candidates": [],
+      "source_records": [
+        {
+          "layer": "L1",
+          "origin": "career_pages (career_sites wrapper)",
+          "raw": "career_pages entry from JSONs-2.json (ZEGNA-VM-LATAM-270880336)"
+        },
+        {
+          "layer": "L2",
+          "origin": "indeed (aggregator)",
+          "raw": "indeed aggregator entry indeed-01afe8235e1f7cb5"
+        },
+        {
+          "layer": "L2",
+          "origin": "linkedin",
+          "raw": "linkedin entry 4436905367 (partial_link)"
+        }
+      ]
+    },
+    {
+      "job_id": "LULULEMON-VM-SPECIALIST-58164",
+      "brand": "lululemon",
+      "title": "Visual Merchandising Specialist, Mexico",
+      "location": "Mexico (CDMX focus, multi-store)",
+      "holding": null,
+      "posted_date": null,
+      "industry_tier": "sportswear",
+      "seniority_level": "Specialist / Lead",
+      "apply_url": "https://careers.lululemon.com/careers/JobDetail/Visual-Merchandising-Specialist-Mexico/58164",
+      "normalize_apply_url": "https://careers.lululemon.com/careers/jobdetail/visual-merchandising-specialist-mexico/58164",
+      "source_name": "lululemon Careers",
+      "source_type": "career_page",
+      "fetch_status": "success",
+      "jd": "The Visual Merchandising Specialist, Mexico is responsible for leading and delivering VM execution, planning, and training across all Mexico stores.",
+      "notes": "JD partial access; focuses on VM execution across Mexico stores. On-site/hybrid likely in CDMX hub.",
+      "visual_signal": true,
+      "innovation_dna": false,
+      "reroute_candidates": [],
+      "source_records": [
+        {
+          "layer": "L1",
+          "origin": "career_pages (career_sites wrapper)",
+          "raw": "career_pages entry from JSONs-2.json (LULULEMON-VM-SPECIALIST-58164)"
+        }
+      ]
+    },
+    {
+      "job_id": "JR124797",
+      "brand": "Richemont",
+      "title": "Visual Merchandising Coordinator",
+      "location": "Mexico, Mexico",
+      "holding": "Richemont",
+      "posted_date": null,
+      "industry_tier": "luxury",
+      "seniority_level": "Coordinator",
+      "apply_url": "https://careers.richemont.com/en/jobs/jr124797/visual-merchandising-coordinator/",
+      "normalize_apply_url": "https://careers.richemont.com/en/jobs/jr124797/visual-merchandising-coordinator",
+      "source_name": "careers.richemont.com",
+      "source_type": "career_page",
+      "fetch_status": "direct_apply",
+      "jd": "Support the implementation of visual merchandising strategy in boutiques and points of sales (6 boutiques/32 points of sale). Excellence in Visual Merchandising implementation. Training and coaching VM Ambassadors.",
+      "notes": "Location string is 'Mexico, Mexico' — CDMX inferred from operational context. Explicit posted_date not visible.",
+      "visual_signal": true,
+      "innovation_dna": false,
+      "reroute_candidates": [],
+      "source_records": [
+        {
+          "layer": "L1",
+          "origin": "career_pages (career_sites wrapper)",
+          "raw": "career_pages entry from JSONs-2.json (JR124797)"
+        }
+      ]
+    },
+    {
+      "job_id": "R-74673",
+      "brand": "Nike",
+      "title": "Manager, Visual Merchandising Nike Direct LATAM",
+      "location": "Mexico City, Mexico",
+      "holding": "Nike, Inc.",
+      "posted_date": null,
+      "industry_tier": "sportswear",
+      "seniority_level": "Manager",
+      "apply_url": "https://careers.nike.com/manager-visual-merchandising-nike-direct-latam/job/R-74673",
+      "normalize_apply_url": "https://careers.nike.com/manager-visual-merchandising-nike-direct-latam/job/r-74673",
+      "source_name": "careers.nike.com",
+      "source_type": "career_page",
+      "fetch_status": "direct_apply",
+      "jd": "We're searching for a Visual Merchandising Lead who lives and breathes retail... (partial JD preserved).",
+      "notes": "JD is partial; full content may require authenticated session. Explicit posted_date not visible.",
+      "visual_signal": true,
+      "innovation_dna": false,
+      "reroute_candidates": [],
+      "source_records": [
+        {
+          "layer": "L1",
+          "origin": "career_pages (career_sites wrapper)",
+          "raw": "career_pages entry from JSONs-2.json (R-74673)"
+        }
+      ]
+    },
+    {
+      "job_id": "R-71093",
+      "brand": "Nike",
+      "title": "In Store Visual Men",
+      "location": "Ciudad de México, Ciudad de Mexico",
+      "holding": "Nike, Inc.",
+      "posted_date": null,
+      "industry_tier": "sportswear",
+      "seniority_level": "Lead",
+      "apply_url": "https://careers.nike.com/in-store-visual-men-nike-mexico-city/job/R-71093",
+      "normalize_apply_url": "https://careers.nike.com/in-store-visual-men-nike-mexico-city/job/r-71093",
+      "source_name": "careers.nike.com",
+      "source_type": "career_page",
+      "fetch_status": "direct_apply",
+      "jd": "Esta persona será la responsable de liderar y ejecutar la estrategia de mercadeo visual para el producto de Performance...",
+      "notes": "JD is partial; full content may require authenticated session.",
+      "visual_signal": true,
+      "innovation_dna": false,
+      "reroute_candidates": [],
+      "source_records": [
+        {
+          "layer": "L1",
+          "origin": "career_pages (career_sites wrapper)",
+          "raw": "career_pages entry from JSONs-2.json (R-71093)"
+        }
+      ]
+    },
+    {
+      "job_id": "R-60135",
+      "brand": "Nike",
+      "title": "Visual Merchandising Specialist II LATAM",
+      "location": "Mexico City, Mexico",
+      "holding": "Nike, Inc.",
+      "posted_date": null,
+      "industry_tier": "sportswear",
+      "seniority_level": "Senior Coordinator",
+      "apply_url": "https://careers.nike.com/visual-merchandising-specialist-ii-latam/job/R-60135",
+      "normalize_apply_url": "https://careers.nike.com/visual-merchandising-specialist-ii-latam/job/r-60135",
+      "source_name": "careers.nike.com",
+      "source_type": "career_page",
+      "fetch_status": "direct_apply",
+      "jd": "As the Visual Merchandising Specialist II for Latam, you will be responsible for assisting with the development of driving the concept visual merchandising strategy...",
+      "notes": "JD is partial; 'Specialist II' seniority mapping inferred.",
+      "visual_signal": true,
+      "innovation_dna": false,
+      "reroute_candidates": [],
+      "source_records": [
+        {
+          "layer": "L1",
+          "origin": "career_pages (career_sites wrapper)",
+          "raw": "career_pages entry from JSONs-2.json (R-60135)"
+        }
+      ]
+    },
+    {
+      "job_id": "indeed-94804842d8b45a9c",
+      "brand": "ENCANTO MEXICO SA DE CV",
+      "title": "Supervisor de Visual Merchandising",
+      "location": "Colonia Lomas de Chapultepec, Ciudad de México",
+      "holding": null,
+      "posted_date": null,
+      "industry_tier": "home_decor_retail",
+      "seniority_level": "Supervisor",
+      "apply_url": "https://mx.indeed.com/viewjob?jk=94804842d8b45a9c",
+      "normalize_apply_url": "https://mx.indeed.com/viewjob?jk=94804842d8b45a9c",
+      "source_name": "Indeed México",
+      "source_type": "aggregator",
+      "fetch_status": "direct_apply",
+      "jd": "Seeking a Visual Merchandising Supervisor with a creative and commercial focus to transform display spaces...",
+      "notes": "Industry not in primary target sectors; included due to explicit VM signal.",
+      "visual_signal": true,
+      "innovation_dna": false,
+      "reroute_candidates": [],
+      "source_records": [
+        {
+          "layer": "L2",
+          "origin": "indeed (aggregator)",
+          "raw": "indeed entry indeed-94804842d8b45a9c"
+        }
+      ]
+    },
+    {
+      "job_id": "indeed-cf3ca0540af5d305",
+      "brand": "GILSA",
+      "title": "Coordinador de Exhibiciones",
+      "location": "Benito Juárez, Ciudad de México",
+      "holding": null,
+      "posted_date": null,
+      "industry_tier": "premium_retail",
+      "seniority_level": "Coordinador",
+      "apply_url": "https://mx.indeed.com/viewjob?jk=cf3ca0540af5e1f7cb5",
+      "normalize_apply_url": "https://mx.indeed.com/viewjob?jk=cf3ca0540af5d305",
+      "source_name": "Indeed México",
+      "source_type": "aggregator",
+      "fetch_status": "direct_apply",
+      "jd": "Coordinador de Visual Merchandising y Trade Marketing...",
+      "notes": "Sueldo reported in source. Included for VM signal.",
+      "visual_signal": true,
+      "innovation_dna": false,
+      "reroute_candidates": [],
+      "source_records": [
+        {
+          "layer": "L2",
+          "origin": "indeed (aggregator)",
+          "raw": "indeed entry indeed-cf3ca0540af5d305"
+        }
+      ]
+    },
+    {
+      "job_id": "indeed-d407bb736724d6f5",
+      "brand": "SOHO MODA S.A DE C.V",
+      "title": "VISUAL MERCHANDISING FASHION CDMX.",
+      "location": "Ciudad de México",
+      "holding": null,
+      "posted_date": null,
+      "industry_tier": "fashion",
+      "seniority_level": "Visual Merchandising (2+ años exp required)",
+      "apply_url": "https://mx.indeed.com/viewjob?jk=d407bb736724d6f5",
+      "normalize_apply_url": "https://mx.indeed.com/viewjob?jk=d407bb736724d6f5",
+      "source_name": "Indeed México",
+      "source_type": "aggregator",
+      "fetch_status": "direct_apply",
+      "jd": "Funciones: Crear espacios e imágenes consistentes con los valores de la marca, diseñar ambientes, optimizar presentación de producto...",
+      "notes": "Salary reported in source.",
+      "visual_signal": true,
+      "innovation_dna": false,
+      "reroute_candidates": [],
+      "source_records": [
+        {
+          "layer": "L2",
+          "origin": "indeed (aggregator)",
+          "raw": "indeed entry indeed-d407bb736724d6f5"
+        }
+      ]
+    },
+    {
+      "job_id": "indeed-dc2f85f4fe4f954a",
+      "brand": "PROMOTWIST SC",
+      "title": "Visual Merchandiser",
+      "location": "Miguel Hidalgo, Ciudad de México",
+      "holding": null,
+      "posted_date": null,
+      "industry_tier": "fashion_retail_execution",
+      "seniority_level": "Visual Merchandiser",
+      "apply_url": "https://mx.indeed.com/viewjob?jk=dc2f85f4fe4f954a",
+      "normalize_apply_url": "https://mx.indeed.com/viewjob?jk=dc2f85f4fe4f954a",
+      "source_name": "Indeed México",
+      "source_type": "aggregator",
+      "fetch_status": "direct_apply",
+      "jd": "Gestión de ambientación de sucursales con material POP, levantamiento de propuestas, coordinación logística y ejecución de campañas.",
+      "notes": "Agency role; execution-focused.",
+      "visual_signal": true,
+      "innovation_dna": false,
+      "reroute_candidates": [],
+      "source_records": [
+        {
+          "layer": "L2",
+          "origin": "indeed (aggregator)",
+          "raw": "indeed entry indeed-dc2f85f4fe4f954a"
+        }
+      ]
+    }
+  ],
+  "reroute_candidates_history": [
+    {
+      "title": "Senior Manager, Retail Brand Marketing",
+      "brand": "Arc'teryx",
+      "url_detectada": "https://jobs.lever.co/arcteryx.com/047ab83a-24e1-448d-bc81-c3b9fcbb5d62",
+      "wrapper_destino_sugerido": "careersites-canada",
+      "confidence": "high",
+      "motivo": "Posting is based in North Vancouver, Canada (hybrid/remote Canada). Does not meet CDMX location requirement. JD contains explicit visual merchandising signals."
+    },
+    {
+      "title": "Creative & Visual Strategist",
+      "brand": "TRENDSĒTERA",
+      "url_detectada": "https://www.linkedin.com/jobs/search/?currentJobId=4435247180&f_TPR=r1209600&keywords=Visual%20Merchandising&location=Mexico%20City%2C%20Mexico",
+      "wrapper_destino_sugerido": "careersites",
+      "confidence": "medium",
+      "motivo": "Rol de art direction y branding para agencias; not VM retail"
+    },
+    {
+      "title": "Coordinador de estrategia e identidad de marca",
+      "brand": "Empresa Confidencial",
+      "url_detectada": "https://www.linkedin.com/jobs/search/?currentJobId=4435462936&f_TPR=r1209600&keywords=Visual%20Merchandising&location=Mexico%20City%2C%20Mexico",
+      "wrapper_destino_sugerido": "careersites",
+      "confidence": "medium",
+      "motivo": "Branding role, not explicit VM"
+    },
+    {
+      "title": "Retail Operations Coordinator",
+      "brand": "Cartier",
+      "url_detectada": "https://www.linkedin.com/jobs/search/?currentJobId=4417868076&f_TPR=r1209600&keywords=Visual%20Merchandising&location=Mexico%20City%2C%20Mexico",
+      "wrapper_destino_sugerido": "careersites",
+      "confidence": "medium",
+      "motivo": "Operations role without VM signal"
+    },
+    {
+      "title": "Coordinador de Diseño Conceptual / Interiorismo Retail",
+      "brand": "El Puerto de Liverpool",
+      "url_detectada": "https://www.linkedin.com/jobs/search/?f_TPR=r1209600&keywords=L%C3%ADder%20Visual%20luxury%20fashion%20beauty&location=Mexico%20City%2C%20Mexico",
+      "wrapper_destino_sugerido": null,
+      "confidence": "high",
+      "motivo": "Empresa bloqueada (El Puerto de Liverpool). Title relevant but excluded"
+    }
+  ],
+  "conflict_log": [
+    {
+      "key": "Zegna|apply_url",
+      "winner": "L1",
+      "loser": "L2",
+      "reason": "priority_rule"
+    },
+    {
+      "key": "Zegna|posted_date",
+      "winner": "L1",
+      "loser": "L2",
+      "reason": "better_evidence"
+    },
+    {
+      "key": "Visual Merchandiser LATAM (Zegna)|source_name",
+      "winner": "L1",
+      "loser": "L2",
+      "reason": "priority_rule"
+    }
+  ],
+  "pipeline_metrics": {
+    "input_items": 0,
+    "output_items": 15,
+    "duplicates_removed": 2,
+    "reroute_total": 5,
+    "warnings_total": 11,
+    "merge_statistics": {
+      "l1_kept": 9,
+      "l2_kept": 6,
+      "l1_enriched_by_l2": 2,
+      "conflicts_resolved": 3
+    }
+  },
+  "processing_log": [
+    {
+      "step": "input_validation",
+      "status": "ok",
+      "detail": "Attached file parsed; multiple wrapper fragments present; six expected JSON wrappers partially present across file; L3 entries excluded where present."
+    },
+    {
+      "step": "dedup",
+      "status": "ok",
+      "detail": "Normalized apply_url used to detect duplicates across career pages, aggregators, and LinkedIn; duplicates collapsed (Zegna duplicate across L1 career_page, L2 indeed, L2 linkedin)."
+    },
+    {
+      "step": "merge",
+      "status": "ok",
+      "detail": "Applied priority L1 > L2; when L1 lacked non-conflicting fields (holding, posted_date, notes, jd) permitted enrichment from L2."
+    },
+    {
+      "step": "conflict_resolution",
+      "status": "ok",
+      "detail": "Conflicts logged with reasons (priority_rule, better_evidence). apply_url canonicalization exception applied for Zegna where L1 canonical used."
+    },
+    {
+      "step": "output",
+      "status": "ok",
+      "detail": "Produced consolidated_results array and metrics per orchestration rules."
+    }
+  ],
+  "retry_required": false,
+  "fallback_wrapper": null,
+  "recoverable": true,
+  "data_quality_warnings": [
+    {
+      "code": "DQW-001",
+      "severity": "medium",
+      "cause": "Missing posted_date on multiple career pages and aggregator entries.",
+      "impact": "Temporal compliance (≤21 days) cannot be confirmed for some items.",
+      "message": "posted_date is null for several items (LULULEMON-..., JR124797, R-74673, R-71093, R-60135 and multiple Indeed entries).",
+      "recommendation": "Retrieve explicit posted_date via authenticated ATS sessions or re-run wrappers with expanded extraction for posted_date."
+    },
+    {
+      "code": "DQW-002",
+      "severity": "medium",
+      "cause": "Workday and several ATS inaccessible during extraction (maintenance/DNS errors).",
+      "impact": "Potential vacancies from affected tenants are missing from consolidated results.",
+      "message": "Workday global maintenance and DNS errors prevented access to multiple career pages (e.g., Swarovski, Coty, Dior).",
+      "recommendation": "Retry extraction after ATS availability window; consider alternative tenant URLs or LinkedIn fallback."
+    },
+    {
+      "code": "DQW-003",
+      "severity": "medium",
+      "cause": "Location strings ambiguous ('Mexico, Mexico' vs explicit CDMX).",
+      "impact": "CDMX location compliance uncertain for some entries (Richemont JR124797).",
+      "message": "Some postings use broad location strings requiring manual verification to confirm CDMX base.",
+      "recommendation": "Verify location on target ATS or via recruiter contact before applying."
+    },
+    {
+      "code": "DQW-004",
+      "severity": "low",
+      "cause": "Partial JD content due to authenticated career sites (Nike partial JDs).",
+      "impact": "Signal extraction (visual_signal, innovation_dna) may be incomplete.",
+      "message": "Nike career pages returned partial JD snippets requiring authenticated access for full job text.",
+      "recommendation": "Access full JD with authenticated session to re-evaluate signals."
+    },
+    {
+      "code": "DQW-005",
+      "severity": "low",
+      "cause": "Aggregator entries sometimes lack employer holding field.",
+      "impact": "Holding may be null for aggregator-only records.",
+      "message": "Several Indeed entries have holding=null while career page L1 would provide holding if available.",
+      "recommendation": "Enrich aggregator records from matching career pages when available."
+    },
+    {
+      "code": "DQW-006",
+      "severity": "medium",
+      "cause": "Normalization of apply_url removed query params and trailing slashes; some aggregator canonical links may still differ.",
+      "impact": "Potential false negatives/positives in dedup if canonical job_id absent.",
+      "message": "apply_url normalization applied; where L1 URL generic (query-based) L2 canonical with job_id considered better evidence but none detected except Zegna.",
+      "recommendation": "Where possible prefer URLs containing explicit job identifiers; record provenance in source_records."
+    },
+    {
+      "code": "DQW-007",
+      "severity": "medium",
+      "cause": "Not all six expected JSON wrapper inputs were present as discrete top-level files in the attachment.",
+      "impact": "Processing continued with available inputs; some wrappers may be missing leading to reduced coverage.",
+      "message": "Input contained merged wrapper outputs across a single file; exact six separate JSON wrappers not found.",
+      "recommendation": "Provide the six expected wrapper JSONs separately for full orchestration run."
+    },
+    {
+      "code": "DQW-008",
+      "severity": "low",
+      "cause": "Some L2 entries suggested reroute candidates; these were consolidated into reroute_candidates_history without modification.",
+      "impact": "Reroute candidates preserved for downstream routing.",
+      "message": "Reroute candidate objects unified into reroute_candidates_history unchanged.",
+      "recommendation": "No action required; downstream router should consume reroute_candidates_history."
+    },
+    {
+      "code": "DQW-009",
+      "severity": "medium",
+      "cause": "LinkedIn posted_date inferred from relative timestamp.",
+      "impact": "posted_date may have ±1 day deviation for LinkedIn-derived dates.",
+      "message": "LinkedIn item Zegna posted_date inferred as 2026-07-04 from '4 days ago'.",
+      "recommendation": "Confirm exact date via ATS or hirer if strict temporal compliance required."
+    },
+    {
+      "code": "DQW-010",
+      "severity": "high",
+      "cause": "Multiple career sites (Workday tenants) returned HTTP/DNS errors causing incomplete coverage.",
+      "impact": "High probability of missing active VM vacancies from affected tenants.",
+      "message": "Critical career sites inaccessible during extraction (Workday maintenance, DNS errors).",
+      "recommendation": "Re-run extraction after resolving ATS availability; mark this run as partial."
+    },
+    {
+      "code": "DQW-011",
+      "severity": "low",
+      "cause": "Some source_records preserved raw wrapper provenance strings for auditability.",
+      "impact": "No impact; aids traceability.",
+      "message": "source_records include layer and origin for each consolidated item.",
+      "recommendation": "Maintain provenance in downstream systems."
+    }
+  ]
+}
+
+Fuentes
+[1] JSONs-2.json https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/120988133/a1b855ab-4010-42f0-b95f-e05ecd08bd17/JSONs-2.json?AWSAccessKeyId=ASIA2F3EMEYE6QPWWOA6&Signature=fVF4VjA3xYludQPinviwurpTOgs%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEML%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIDHjseG1Ows%2F8tht%2FXgp6GaWxFgqEUgqLeGurLK57ezDAiEA%2BWXmkygCD1TOxiR6XewEFHoP4MHA%2BV36cGqoH%2FA2BS4q%2FAQIiv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARABGgw2OTk3NTMzMDk3MDUiDMxTTZDE6UPZZ4aj2SrQBHqhW6AnKQun9hF%2FNvgQ7vzLWz16EPOYXnAaSW4i67ergdmW8PFD%2F%2BhYbW%2FVB5AbZPc%2F2M%2F77GGwnXbhnlyhh0QIov2itgTLCdu1sbwqBY4KvLICSgVN9IHZBHoPtoGvUS2YFx501oFm%2BseaIdUwu9jgB182cOQXpLLE9%2FTVgU1caGzzQb9MvDs5Z1A4%2BoAizLBNmIptLs3kHOOqTYnmVfpC2Z%2FhBV6RxZr3PbknRIa0fIIOdR7g0negPpF45kJjEljAhbmSUygUeZZyqR8c3wRSr4sq3M4xvmspXWl%2Fs5xudiKvl5yCQyMSh%2B%2BU1pV107JaWXe3ct%2BbQB638sRhxSX7lzrNdlrahn2xnzuD2i1EUmHthP9hgUbHj0HfxCwO5AQcOz8vs%2BanjxVPDrOvpBRROZKKjvWgF8%2FTSxvln88A8xScT7XB%2FxFQOo5l6A8x%2BdsofeaJTEPvqWpj7VdbShGyRa23NjvrGOMYFttV%2FTh0ByrR0mM2bqnBijVOdtLQVBDeGfbIqXgPGoPluPLkND4dRqwAlK5y8eN1ijlW5N9WzYEK3csQzgMQCU%2Fs4IrLpCrbD6n%2BNKUQCbpZJuRIQHZf1wQnjb0Dstru9s4Wh4eijzM0oRBpKS6dojTbRQaRVFUXgqvFtCPAv2by2D4uIL826a4XrD42mOCiG3m8WfRaQ3SlNEbmiBleBUGprvtv5vju%2FoQtJ%2FJu72vWyfQqdt9z37MhsXuVOFM%2BHW3wSRTpWL9ClyZ8TFWCCo4bSWZxtMJcB68PqDeDGWJtN8Wpda8w7Iq60gY6mAEgytOQp2OH3BfBvRUPl%2BmraOJa5YFE2dwTfN89%2BS1K7LNzauxek%2BdYTH7etqF3JPuctkB2beW58Icb8WjAYEhcZyffEei6RurwWK0W2KBaayZL37aozJvOP%2BS%2FsHLwLNrXBBtI1K6oX6ebg1uLV954barSw8j7Z7Nz2jtSAsxNugHlxO5M98i0A6lOKmo8iZCiOo0jYSyN2g%3D%3D&Expires=1783534399
