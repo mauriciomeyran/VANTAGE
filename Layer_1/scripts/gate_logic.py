@@ -71,7 +71,7 @@ def evaluate_gate(fetch, vm_scope, role_class):
 if __name__ == "__main__":
     load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
     client = Client(auth=os.environ["NOTION_TOKEN"])
-    ds_id = "4e542b37-6e52-4418-89b7-a0eeb3138307"
+    ds_id = "442938be-fc42-828f-b72e-076818d65a5b"
 
     print("Evaluando Gate Logic con Protección de Estados Terminales...")
     print("=" * 60)
