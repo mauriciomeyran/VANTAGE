@@ -287,7 +287,7 @@ class NotionSchema:
 
     @classmethod
     def load(cls, notion_utils: Client) -> NotionSchema:
-        ds = notion_utils.databases.retrieve(database_id=NOTION_DB_ID)
+        ds = notion_utils.request(path="data_sources/442938befc42828fb72e076818d65a5b", method="GET", body=None)
         return cls(properties=ds.get("properties", {}))
 
     def _pick(self, *candidates: str) -> str | None:
@@ -410,7 +410,7 @@ def query_notion_db(
             print(f"  ⚠️  query_notion_db: MAX_PAGES ({MAX_PAGES}) alcanzado — abortando paginación")
             break
         try:
-            response = notion_utils.databases.query(database_id=NOTION_DB_ID, **kwargs)
+            response = notion_utils.request(path="data_sources/442938befc42828fb72e076818d65a5b/query", method="POST", body=kwargs)
         except Exception as exc:
             if schema and "property" in str(exc):
                 return []
