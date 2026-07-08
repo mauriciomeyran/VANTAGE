@@ -1,5 +1,24 @@
 # V | CHANGELOG
 
+---
+### v9.0.2 — 2026-07-08
+[AUDIT] KERNEL:CONSISTENCY — Auditoría de consistencia sobre ID CENSUS (394938be) y secciones SCHEMA / GATE-DECISION / STATUS / FIGMA-SYNC del Kernel (377938be).
+- KERNEL:GATE-DECISION-002 → reclasificado de ✅ Ok a ⚠️ Stub. Contenido real es únicamente "Solo aplica si no hay Bypass activo"; no describe la lógica estándar que promete el heading. Pendiente: redactar contenido operativo completo.
+- KERNEL:STATUS → añadido al ID CENSUS como ✅ Ok (alias-referencia). Contenido vive en KERNEL:TRIGGER-009 (§5.9). ID registrado con enrute explícito.
+- KERNEL:FIGMA-SYNC → añadido al ID CENSUS como ✅ Ok (alias-referencia). Contenido vive en KERNEL:ARCHITECTURE-L4 (§2 L4). ID registrado con enrute explícito.
+- Totales actualizados: KERNEL: 58 Ok / 2 Stubs (KERNEL:NORM, KERNEL:GATE-DECISION-002). Total sistema: 115 Ok / 2 Stubs.
+- Versión: v9.0.1 → v9.0.2.
+---
+### [DT-015] Normalización de IDs legacy a esquema [PREFIX]:[KEY] — CIERRE
+- Fecha: 2026-07-05
+- Alcance: MANUAL (BLOQUE 1), CAREER CANON (BLOQUE 2), KERNEL (BLOQUE 3).
+- Resultados:
+- BLOQUE 1 (MANUAL): Validación de coherencia con KERNEL:DOC-CONTRACT (PASS). Líneas sueltas (manual-healthcheck-001, manual-sla-001) y UUIDs legacy (390938be-fc42-81c1-9fc7-d0763295cd04) no localizados. Versión: 8.8.1.
+- BLOQUE 2 (CAREER CANON): Migración de prefijos (CAREER_CANON:AUDIENCE-SCOPE → CANON:AUDIENCE-SCOPE, TRACKER:ARCHIVO_VANTAGE → CANON:ARCHIVO-VANTAGE). Anclaje de IDs huérfanos en §L (CANON:FIGMA-TAG-SCHEMA, CANON:POSITIONING-MODE, CANON:TAG-REGISTRY). Versión: 8.7.6.
+- BLOQUE 3 (KERNEL): Reemplazo de stub KERNEL:NORM por sección operativa. Versión: 8.9.2.
+- Notas: 
+- Todas las entradas individuales ya registradas en el Changelog.
+- Versión final del sistema: v8.9.4.
 ### v9.0.1 — 2026-07-08
 [MAJOR] Implementación Completa del Plan de Trabajo Audit V2 — 20/24 ítems cerrados (83%). Bloque 1 (Arquitectura): GROQ API key rotada y migrada a variables de entorno en Make.com, data_source_id VANTAGE_TRACKER unificado a canónico (442938be-fc42-828f-b72e-076818d65a5b), Source_Type espacio final consolidado (Opción A), feedback loop implementado (feedback_loop.py + campo Outcome). Bloque 2 (Fixes): .gitignore fortalecido (patrones *.env, *.key, *.secret), scoring_deterministic.py movido a archive/deprecated_scripts/, archivos .bak eliminados de git, Layer 2 eliminado (sin propósito definido), gate_logic consolidado como módulo canónico. Bloque 3 (Confiabilidad): notion_backup.py implementado (cron diario 3am), sync entity_index_v2.json automatizado (cron cada 12h), check_layer3_heartbeat integrado en health_check.py, logging framework estandarizado, idempotencia en feed_processor.py, manejo de errores layer_3_mail.py con retry+backoff. Commit: 5cec93a. Bloque 4 (Tests): 42/42 tests pasando en layer_1_run.py, backoff Notion cubierto (notion_utils.py), GROQ budget alerts N/A (tier gratuito), paginación emails cubierta (MAX_EMAILS_RUN=10). Tasks #16 (suite unitarios) y #17 (tests integración) pospuestas en Tasks Tracker. Bloque 5 (Crecimiento): tracking de outcomes implementado, análisis efectividad gate logic en espera (~15 outcomes), ajuste scoring en espera de datos históricos, Dashboard UX completamente rediseñado (métricas agregadas, pipeline strip L1→RT-1→Notion→Mail, CTA unificado, preview diff, detección de duplicados, prioridad sugerida automática, score reason, mail L3 placeholder). Documentación: VANTAGE_PLAN_TRABAJO_REPORTE.md.
 ---
@@ -360,5 +379,5 @@ Change_Log_v8.2
 - Sistema manual Claude-only
 - Sin pipeline Python; procesamiento y evaluación en sesión de chat
 ---
-ESTADO: v9.0.1 | ACTUALIZADO: 2026-07-08
+ESTADO: v9.0.2 | ACTUALIZADO: 2026-07-08
 ---

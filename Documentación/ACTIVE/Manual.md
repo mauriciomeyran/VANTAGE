@@ -599,7 +599,7 @@ Ante cualquiera de estos, el sistema reporta el estado y espera tu instrucción 
 ## 14. SLA DE LATENCIA POST-INGESTA · ID: MANUAL:SLA-001
 manual-sla-001
 > Nota: El SLA "< 45 minutos" cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh — no tiene SLA fijo salvo ejecución manual explícita de layer_1_run.py.
-## ESTADO: v8.8.0 | ACTUALIZADO: 2026-07-04
+## ESTADO: v9.0.1 | ACTUALIZADO: 2026-07-08
 ---
 ### [DT-015] Normalización de IDs legacy a esquema [PREFIX]:[KEY]
 - Fecha: 2026-07-05

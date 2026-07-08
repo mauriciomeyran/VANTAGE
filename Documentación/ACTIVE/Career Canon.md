@@ -243,4 +243,4 @@ Los slots Variable por modo se derivan del Positioning Mode activo (sección K �
 - 2043:51 / 2043:52 párrafos de perfil 1–2
 - 2043:56 / 2043:57 / 2043:58 skills 1–3
 - Bullets C01–C05 priorizados según el modo activado
-## ESTADO: v8.7.6 | ACTUALIZADO: 2026-07-05
+## ESTADO: v9.0.1 | ACTUALIZADO: 2026-07-08

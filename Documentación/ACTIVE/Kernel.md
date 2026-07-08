@@ -576,7 +576,7 @@ Contrato de Normalización de IDs:
 - Excepciones: IDs de Notion (UUIDs) en metadatos o URLs.
 - Gobernanza: Cambios requieren APROBAR_WRITE + entrada en Changelog. §Reglas de Migración. Ejecutable vía AI Component bajo autorización explícita del operador. -->
 Normalización documental de IDs legacy hacia el esquema [PREFIX]:[KEY]. Ver KERNEL:DOC-CONTRACT para contrato completo y listado de 26 ocurrencias (DT-015).
-## ESTADO: v8.9.2 | ACTUALIZADO: 2026-07-05
+## ESTADO: v9.0.1 | ACTUALIZADO: 2026-07-08
 ---
 ## KERNEL:DOC-CONTRACT
 1. CANONICAL DOCUMENT ID CONTRACT (DOC:CLAVE)
