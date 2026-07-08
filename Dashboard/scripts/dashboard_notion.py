@@ -39,8 +39,8 @@ def fetch_notion_page(page_id: str) -> dict:
 def query_blocked_vacancies():
     client = get_notion_client()
 
-    return client.databases.query(
-        database_id=DATABASE_ID,
+    return client.data_sources.query(
+        data_source_id=DATABASE_ID,
         filter={
             'and': [
                 {

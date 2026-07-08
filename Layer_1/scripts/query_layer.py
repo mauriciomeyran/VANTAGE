@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent / "data"
 ENTITY_INDEX_PATH = BASE_DIR / "entity_index_v2.json"
 
 # resolver_layer_v1 vive en otra carpeta (Layer_1/scripts) en tu setup real.

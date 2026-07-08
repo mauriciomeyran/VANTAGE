@@ -3,9 +3,7 @@ from layer_1_run import (
     calculate_score_v6,
     get_vm_scope,
     get_role_class,
-    get_match_level_v6,
     gate,
-    determine_fuente,
 )
 
 
@@ -48,8 +46,7 @@ def run_python_validation(current_payload: dict, patch: dict):
     score      = calculate_score_v6(entry_data)
     vm_scope   = get_vm_scope(rol)
     role_class = get_role_class(rol)
-    match      = get_match_level_v6(score)
-    fuente     = determine_fuente(url) if url else 'Career Page Oficial'
+    fuente     = merged.get('fuente', '') or 'Career Page Oficial'
 
     gate_decision = gate(
         fetch_status,
@@ -83,7 +80,6 @@ def run_python_validation(current_payload: dict, patch: dict):
         'score': score,
         'vm_scope': vm_scope,
         'role_class': role_class,
-        'match': match,
         'fetch_status': fetch_status,
         'fuente': fuente,
         'block_reason': block_reason,

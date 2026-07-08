@@ -3,7 +3,7 @@ import json
 import os
 from collections import defaultdict
 
-_DIR = os.path.dirname(os.path.abspath(__file__))
+_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data")
 
 def _load_graph_data():
     with open(os.path.join(_DIR, 'graph_v2.json'), 'r', encoding='utf-8') as f:

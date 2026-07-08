@@ -13,8 +13,8 @@ notify_error() {
     osascript -e "display notification \"$2\" with title \"$1\" sound name \"Basso\""
 }
 
-LAYER_1_DIR="$HOME/Documents/04-VANTAGE_CV/LAYER_1"
-LAYER_3_DIR="$HOME/Documents/04-VANTAGE_CV/LAYER_3"
+LAYER_1_DIR="$HOME/Documents/03 Projects/VANTAGE/Layer_1"
+LAYER_3_DIR="$HOME/Documents/03 Projects/VANTAGE/Layer_3"
 
 # Notificar: En progreso
 notify "LAYER 3" "Iniciando procesamiento de mail..."
