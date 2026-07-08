@@ -11,7 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent
 CACHE_PATH = BASE_DIR / "notion_cache.json"
 METRICS_PATH = BASE_DIR / "notion_metrics.json"
 
-NOTION_VERSION = os.environ.get("NOTION_VERSION", "2022-06-28")
+def _notion_version() -> str:
+    # Leído en cada llamada (no al importar el módulo) para no quedar fijado
+    # a un valor stale si NOTION_VERSION se carga vía dotenv después del import.
+    return os.environ.get("NOTION_VERSION", "2022-06-28")
 
 # --- rate limiting ------------------------------------------------------------
 # Notion API: ~3 req/s. Espaciamos llamadas reales (no cacheadas) a este ritmo.
@@ -58,7 +61,7 @@ def _get_token() -> str:
 def _headers() -> Dict[str, str]:
     return {
         "Authorization": f"Bearer {_get_token()}",
-        "Notion-Version": NOTION_VERSION,
+        "Notion-Version": _notion_version(),
         "Content-Type": "application/json",
     }
 
@@ -365,7 +368,8 @@ def _notion_patch(path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
 class _DataSources:
     """
     Emula client.data_sources de notion-client 3.x.
-    data_source_id es equivalente a database_id — Notion mantiene compatibilidad de IDs.
+    Usa el endpoint nativo de data sources (modelo multi-source de Notion).
+    Requiere NOTION_VERSION >= 2025-09-03 en el entorno.
     """
 
     def query(
@@ -379,7 +383,7 @@ class _DataSources:
         if start_cursor:
             payload["start_cursor"] = start_cursor
         payload.update(kwargs)
-        return _notion_post(f"/v1/databases/{data_source_id}/query", payload)
+        return _notion_post(f"/v1/data_sources/{data_source_id}/query", payload)
 
 
 class _Pages:
