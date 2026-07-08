@@ -33,7 +33,7 @@
 | vl3 | Mail pipeline (layer_3_mail.py) |
 | vd | Dashboard RT-1 (dashboard_start.sh) |
 ### lazy_loader.py — Ruta Canónica
-cd ~/Documents/03\ Projects/VANTAGE/Layer_1/scripts && source ../.venv/bin/activate && python lazy_loader.py --page {PAGE_ID} --route {ruta}
+cd ~/Documents/04-Vantage_CV/Layer_1/scripts && source ../.venv/bin/activate && python lazy_loader.py --page {PAGE_ID} --route {ruta}
 ### Layer 4 — Version Control & Documental
 | Alias | Descripción |
 | --- | --- |

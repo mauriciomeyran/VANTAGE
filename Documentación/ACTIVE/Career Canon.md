@@ -222,7 +222,7 @@ LinkedIn | Portafolio
 ```
 ### Figma Tag Schema · ID: CANON:FIGMA-TAG-SCHEMA
 > Formato base obligatorio para todos los Derived Outputs generados desde el Career Canon. Aplica ES + EN.
-> SSOT de IDs de nodos: registry_seed.json en VANTAGE/Figma Sync/ es la fuente única de verdad para los IDs numéricos de nodo Figma. Si hay discrepancia entre un figma_text_id en un output CV-B y el registry, el registry gana. Ante cualquier cambio en la estructura del lienzo Figma, actualizar registry_seed.json antes de generar nuevos CV-B.
+> SSOT de IDs de nodos: registry_seed.json en 04-Vantage_CV/Figma Sync/ es la fuente única de verdad para los IDs numéricos de nodo Figma. Si hay discrepancia entre un figma_text_id en un output CV-B y el registry, el registry gana. Ante cualquier cambio en la estructura del lienzo Figma, actualizar registry_seed.json antes de generar nuevos CV-B.
 ## Tag Registry · ID: CANON:TAG-REGISTRY
 CANON:OUTPUT-CONTRACT-TAGREGISTRY-001
 ### Formato de Entrega Obligatorio

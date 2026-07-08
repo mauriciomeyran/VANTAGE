@@ -433,7 +433,7 @@ Usar cuando el sistema no ha sido operado por más de 5 días.
 ```
 ### 5.5 Figma Sync — Uso Operativo
 Ver flujo completo de inyección en §4 (Miércoles — "Qué hace el usuario con el output"). Instalación del plugin (una sola vez):
-Figma Desktop → Plugins → Development → Import plugin from manifest... → navega a ~/Documents/03\ Projects/VANTAGE/Figma Sync/ → selecciona manifest.json. El plugin queda disponible permanentemente.
+Figma Desktop → Plugins → Development → Import plugin from manifest... → navega a ~/Documents/04-Vantage_CV/Figma Sync/ → selecciona manifest.json. El plugin queda disponible permanentemente.
 El plugin no modifica Notion ni el Tracker. Opera exclusivamente sobre el lienzo Figma activo.
 ### Gate Decisions
 ### Comandos de Mantenimiento del Tracker

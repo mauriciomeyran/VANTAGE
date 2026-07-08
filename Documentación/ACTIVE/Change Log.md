@@ -1,5 +1,51 @@
 # V | CHANGELOG
 
+### v9.0.1 — 2026-07-08
+[MAJOR] Implementación Completa del Plan de Trabajo Audit V2 — 20/24 ítems cerrados (83%). Bloque 1 (Arquitectura): GROQ API key rotada y migrada a variables de entorno en Make.com, data_source_id VANTAGE_TRACKER unificado a canónico (442938be-fc42-828f-b72e-076818d65a5b), Source_Type espacio final consolidado (Opción A), feedback loop implementado (feedback_loop.py + campo Outcome). Bloque 2 (Fixes): .gitignore fortalecido (patrones *.env, *.key, *.secret), scoring_deterministic.py movido a archive/deprecated_scripts/, archivos .bak eliminados de git, Layer 2 eliminado (sin propósito definido), gate_logic consolidado como módulo canónico. Bloque 3 (Confiabilidad): notion_backup.py implementado (cron diario 3am), sync entity_index_v2.json automatizado (cron cada 12h), check_layer3_heartbeat integrado en health_check.py, logging framework estandarizado, idempotencia en feed_processor.py, manejo de errores layer_3_mail.py con retry+backoff. Commit: 5cec93a. Bloque 4 (Tests): 42/42 tests pasando en layer_1_run.py, backoff Notion cubierto (notion_utils.py), GROQ budget alerts N/A (tier gratuito), paginación emails cubierta (MAX_EMAILS_RUN=10). Tasks #16 (suite unitarios) y #17 (tests integración) pospuestas en Tasks Tracker. Bloque 5 (Crecimiento): tracking de outcomes implementado, análisis efectividad gate logic en espera (~15 outcomes), ajuste scoring en espera de datos históricos, Dashboard UX completamente rediseñado (métricas agregadas, pipeline strip L1→RT-1→Notion→Mail, CTA unificado, preview diff, detección de duplicados, prioridad sugerida automática, score reason, mail L3 placeholder). Documentación: VANTAGE_PLAN_TRABAJO_REPORTE.md.
+---
+---
+### v9.0.0 — VANTAGE · 2026-07-06
+[REFACTOR] layer_1_run.py — Saneamiento y Optimización de Propiedades del Tracker (Plan completo ejecutado)
+— Ejecución del plan de trabajo completo sobre el pipeline Layer 1. Bloques 1–5 completados en sesión. Staging aprobado. Producción ejecutada sin incidentes.
+- [DECISIÓN] Props eliminadas del schema: Match, Prioridad, Fuente — redundantes sin valor operativo. Decisión #1–3.
+- [DECISIÓN] Fetch consolidado en FASE 2 — PASO 2 (URL re-check) eliminado. Fetch es responsabilidad única de la validación de ingesta. Decisión #4.
+- [REFACTOR] Funciones eliminadas: get_match_level_v6(), score_to_prioridad(), determine_fuente(), check_url(), check_if_expired(). Tareas #5–8.
+- [FIX] Gate_Decision y Next_Action: escritura consolidada en FASE 4 (única fuente de verdad). Removidas de PASO 0 bypass y PASO 1.5 misfits. Tareas #9, #11.
+- [FIX] Status: FASE 2 (rejects URL Gate) y FASE 3.5 (misfits) son escrituras legítimas no solapadas. No había sobrescritura real post-eliminación de PASO 2. Tarea #10.
+- [ARCH] Pipeline reordenado — Nuevo orden lógico de dependencias: FASE 1 (Clasificación: VM_Scope, Role_Class, Source_Type) → FASE 2 (Validación: URL Gate + Fetch) → FASE 3 (Scoring) → FASE 3.5 (Fit/Misfits) → FASE 4 (Gate Logic) → FASE 5 (Patrones). Tarea #13.
+- [TEST] Suite de regresión creada — test_layer1.py en Layer_1/scripts/. 42 casos: scoring v6.4 (8), get_vm_scope (4), get_role_class (5), gate() (8), application status/next_action (9), referencias huérfanas (8). 42/42 passed. Tareas #16, #17, #19.
+- Staging (dry-run → producción): 21 registros procesados · 5 llamadas API query (una por fase) · Gates dry→prod: 5→2 (correcto: 3 marcados Expirada en FASE 3.5 antes de llegar a FASE 4) · Ready-to-Apply post-run: 11.
+- Reducción: 1,004 → 824 líneas · ~40% menos writes a API de Notion por run.
+- Versión script: v7.5 → v8.0.
+---
+### v8.9.9 — VANTAGE · 2026-07-06
+[ARCH] Revisión de Referencias en Notion — Carpeta "- Documentación" → "Documentación"
+— Auditoría exhaustiva de las 6 páginas fundacionales (System Prompt, Manual, Kernel, Career Canon, Change Log, Aliases) para validar coherencia con el renombrado de la carpeta. Objetivo: Garantizar que ninguna referencia operativa apunte al nombre antiguo y que los paths absolutos/relativos estén actualizados.
+- System Prompt (37b938be-fc42-8001-9b9b-fcf81130d274):
+✅ Sin referencias a - Documentación. Paths relativos validados (ej: 04-Vantage_CV/Figma Sync/).
+- Manual (372938be-fc42-8050-9a67-e40857d7806e):
+✅ Sin referencias a - Documentación. Paths absolutos (ej: ~/Documents/04-VANTAGE_CV/...) no incluyen el nombre antiguo.
+- Kernel (377938be-fc42-805e-a408-c9ae518d4fe7):
+✅ Sin referencias a - Documentación. Paths relativos (ej: Layer_4/scripts/vsync_doc.py) validados.
+- Career Canon (377938be-fc42-8089-93f2-f52dbd2dec6c):
+✅ Sin referencias a - Documentación. Paths relativos (ej: 04-Vantage_CV/Figma Sync/) validados.
+- Change Log (390938be-fc42-80e7-b429-d7d730339353):
+⚠️ Referencia histórica no modificada (v8.9.8): "Carpeta "- Documentación" renombrada a "Documentación"". Justificación: Parte del registro de cambios; no afecta operación.
+- Aliases (37c938be-fc42-80d4-b9ae-f5969830331b):
+✅ Sin referencias a - Documentación. Paths absolutos (ej: ~/Documents/04-Vantage_CV/...) validados.
+- Herramientas actualizadas:
+✅ health_check.py (paths relativos desde __file__).
+✅ vsync_doc.py (referencia a "Documentación").
+✅ SETUP.md (estructura de carpetas actualizada).
+- Criterios de aceptación:
+| Criterio | Estado | Observaciones |
+| --- | --- | --- |
+| Cero referencias operativas al nombre antiguo | ✅ Validado | Todas las páginas revisadas. |
+| Paths absolutos/relativos actualizados | ✅ Validado | Scripts y docs alineados. |
+| Coherencia con KERNEL:DOC-CONTRACT | ✅ Validado | Sin violaciones a IDs canónicos. |
+---
+### v8.9.8 — 2026-07-05
+[ARCH] Normalización de paths de documentación — Carpeta "- Documentación" renombrada a "Documentación" — Eliminación de guión y espacio en nombre de carpeta para mejorar escalabilidad y experiencia de desarrollo. Scripts Python actualizados para usar paths relativos en lugar de hardcodeados absolutos. health_check.py migrado a path relativo desde __file__ vs path absoluto hardcodeado. vsync_doc.py actualizado para referenciar "Documentación" en lugar de "- Documentación". SETUP.md actualizado para reflejar nueva estructura. Cambios validados: health_check.py ✓ (6 docs fundacionales accesibles), vsync_doc.py ✓ (help funcional). Assessment completo en ASSESSMENT_RENOMBRAR_DOCUMENTACION.md. Impacto: paths más limpios, mejor portabilidad, paths absolutos eliminados de código.
 ---
 ### v8.9.7 — 2026-07-05
 [ARCH] Bootstrap Layer — VANTAGE Bootloader v1.0 desplegado en UI de Claude — Estrategia de deploy del System Prompt migrada de copy-paste manual a bootstrap dinámico de una sola vez. STATIC BOOTLOADER v1.0 instalado en Settings → Project Instructions de Claude. Ante el primer mensaje de cada sesión, el agente hace fetch automático de SYSTEM PROMPT (37b938be) e ID CENSUS (394938be) antes de procesar cualquier petición del operador. El contenido de Notion sobreescribe cualquier instrucción estática previa (anti-drift de versiones). Confirmación de sincronización: "VANTAGE v[X]: SISTEMA SINCRONIZADO". Si el bootstrap falla: MODO DEGRADADO — no se procesan triggers operativos. Documentado en: KERNEL:ARCHITECTURE-L0-BOOTSTRAP (contrato técnico completo) · MANUAL §3 Paso 3 (instrucciones operativas para el operador) · System Prompt: KERNEL:BOOTSTRAP-001 referenciado en Cédula Digital.
@@ -170,7 +216,7 @@ Change_Log_v8.7.1
 - [PATCH] Auditoría editorial v8.7 — 4 documentos fundacionales corregidos — 16 hallazgos aplicados vía scripts de patch atómicos (patch_kernel.py · patch_manual.py · patch_career_canon.py · patch_cheat_sheet.py). Kernel: GAP-03 duplicado eliminado, §4.6/§4.7 reordenados, 17 headers [ID: UUID] normalizados a [ID:UUID], lista §4.5 numeración corregida. Manual: 4 prefijos KERNEL-* corregidos a MANUAL-* en ÍNDICE, IDs RUNTIME-* con notas de resolución, stubs §4 CICLO SEMANAL y §6 GESTIÓN DE DATOS insertados, header SLA con ID asignado. Career Canon: título duplicado eliminado, versión 8,5→8.7, fecha normalizada a ISO 8601, tag <aside> HTML eliminado, §B SKILLS CANON y §H ACHIEVEMENT LIBRARY marcadas [PENDING DATA]. Cheat Sheet: header # ## crítico corregido a ##, stub §1 ALIASES & COMANDOS RÁPIDOS insertado con tabla canónica, header CHANGELOG normalizado.
 ### v8.7 — VANTAGE · 2026-06-27
 Change_Log_v8.7
-- [ARCH] Figma Sync integrado como CV Output Layer — Carpeta Figma Sync/ establecida al mismo nivel jerárquico que L1–L4 dentro de VANTAGE/. Contiene los 4 componentes del plugin Figma: manifest.json · code.js · ui.html · registry_seed.json. No es capa de búsqueda ni de infraestructura de datos — es la capa de materialización del CV en Figma.
+- [ARCH] Figma Sync integrado como CV Output Layer — Carpeta Figma Sync/ establecida al mismo nivel jerárquico que L1–L4 dentro de 04-Vantage_CV/. Contiene los 4 componentes del plugin Figma: manifest.json · code.js · ui.html · registry_seed.json. No es capa de búsqueda ni de infraestructura de datos — es la capa de materialización del CV en Figma.
 - [NEW] registry_seed.json — SSOT de nodos Figma — JSON canónico que mapea tokens semánticos (ej. HEADER_NAME, EXP_L_OR_AL_LUXE_M_XICO_BULLET_1) a IDs crudos de nodo Figma (ej. "2:4"). 52 tokens mapeados cubriendo header, perfil, habilidades, experiencia C01–C05, formación y certificaciones. Fuente única de verdad para toda operación de inyección sobre el lienzo.
 - [REFACTOR] code.js — Registry V2 / Resolver Layer V1 — Motor del plugin refactorizado. Deprecado: findAll() con búsqueda O(n) por nombre de capa [VANTAGE] KEY_NAME. Activo: getNodeById(rawId) con resolución O(1). Resolver dual: KEY semántica → REGISTRY → ID crudo; ID crudo directo (flujo Markdown figma_text_id) → uso directo sin lookup. Notify actualizado para confirmar modo Registry V2 y reportar keys sin resolver.
 ### v8.5.4 — VANTAGE · 2026-06-23
@@ -314,5 +360,5 @@ Change_Log_v8.2
 - Sistema manual Claude-only
 - Sin pipeline Python; procesamiento y evaluación en sesión de chat
 ---
-ESTADO: v8.9.6 | ACTUALIZADO: 2026-07-05
+ESTADO: v9.0.1 | ACTUALIZADO: 2026-07-08
 ---
