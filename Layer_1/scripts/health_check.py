@@ -15,6 +15,7 @@ import os
 import sys
 import subprocess
 import time
+import json
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -460,6 +461,65 @@ def check_vdoc_last():
     return True
 
 
+L3_HEARTBEAT_PATH    = Path.home() / ".vantage" / "l3_heartbeat.json"
+L3_STALE_THRESHOLD_H = 48
+
+
+def check_layer3_heartbeat():
+    """Verifica que Layer 3 haya corrido recientemente."""
+    if not L3_HEARTBEAT_PATH.exists():
+        warn("layer3 — heartbeat no encontrado (\u00bfL3 nunca ha corrido?)")
+        return True
+    try:
+        data = json.loads(L3_HEARTBEAT_PATH.read_text())
+        last_run_str = data.get("last_run", "")
+        if not last_run_str:
+            warn("layer3 — heartbeat sin campo last_run")
+            return True
+        last_run = datetime.fromisoformat(last_run_str.replace("Z", "+00:00"))
+        now      = datetime.now(tz=timezone.utc)
+        age_h    = (now - last_run).total_seconds() / 3600
+        created  = data.get("total_created", "?")
+        failed   = data.get("total_failed", "?")
+        if age_h > L3_STALE_THRESHOLD_H:
+            warn(f"layer3 — {age_h:.0f}h sin correr (umbral: {L3_STALE_THRESHOLD_H}h) | created={created} failed={failed}")
+        else:
+            ok(f"layer3 — {age_h:.1f}h | created={created} failed={failed}")
+    except Exception as e:
+        warn(f"layer3 — error leyendo heartbeat: {e}")
+    return True
+
+
+
+L3_HEARTBEAT_PATH    = Path.home() / ".vantage" / "l3_heartbeat.json"
+L3_STALE_THRESHOLD_H = 48
+
+
+def check_layer3_heartbeat():
+    """Verifica que Layer 3 haya corrido recientemente."""
+    if not L3_HEARTBEAT_PATH.exists():
+        warn("layer3 — heartbeat no encontrado (¿L3 nunca ha corrido?)")
+        return True
+    try:
+        data = json.loads(L3_HEARTBEAT_PATH.read_text())
+        last_run_str = data.get("last_run", "")
+        if not last_run_str:
+            warn("layer3 — heartbeat sin campo last_run")
+            return True
+        last_run = datetime.fromisoformat(last_run_str.replace("Z", "+00:00"))
+        now      = datetime.now(tz=timezone.utc)
+        age_h    = (now - last_run).total_seconds() / 3600
+        created  = data.get("total_created", "?")
+        failed   = data.get("total_failed", "?")
+        if age_h > L3_STALE_THRESHOLD_H:
+            warn(f"layer3 — {age_h:.0f}h sin correr (umbral: {L3_STALE_THRESHOLD_H}h) | created={created} failed={failed}")
+        else:
+            ok(f"layer3 — {age_h:.1f}h | created={created} failed={failed}")
+    except Exception as e:
+        warn(f"layer3 — error leyendo heartbeat: {e}")
+    return True
+
+
 # ── Runner ────────────────────────────────────────────────
 
 def main():
@@ -473,6 +533,7 @@ def main():
         ("docs_sync", check_docs_sync),
         ("vdoc", check_vdoc_last),
         ("index_age", check_index_age),
+        ("layer3", check_layer3_heartbeat),
         ("pending_tickets", check_pending_tickets),
     ]
 
