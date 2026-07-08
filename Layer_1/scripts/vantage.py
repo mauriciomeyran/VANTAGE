@@ -157,7 +157,7 @@ def sync() -> dict:
         client = gen.make_client(token)
 
         # Step 1: Generate entity index
-        entity_prefixes = gen._load_entity_prefixes(gen.RESOLVER_REGISTRY_PATH)
+        entity_prefixes = gen.load_prefix_map(gen.RESOLVER_REGISTRY_PATH)
 
         all_entities = []
         for label, ds_id in gen.DB_IDS.items():

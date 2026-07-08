@@ -37,7 +37,7 @@ load_dotenv(_LAYER_1_ROOT / ".env", override=True)
 
 # ── config ─────────────────────────────────────────────────────────────────────
 NOTION_TOKEN = os.environ["NOTION_TOKEN"]
-RESOLVER_REGISTRY_PATH = _SCRIPTS_DIR / "resolver_registry_v2.json"
+RESOLVER_REGISTRY_PATH = _SCRIPTS_DIR.parent / "data" / "resolver_registry_v2.json"
 
 # Data Source IDs (COL) — los mismos que backfill_hash.py v1.3 usó para
 # actualizar 292 registros exitosamente. NO son database IDs.
