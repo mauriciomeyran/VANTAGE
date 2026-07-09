@@ -490,35 +490,36 @@ def check_layer3_heartbeat():
     return True
 
 
+CENSUS_OUTPUT_PATH     = Path(__file__).resolve().parent / "V_ID_CENSUS_PRODUCTION.md"
+CENSUS_STALE_THRESHOLD_H = 24 * 7   # 7 días — el Census cambia con cierre de tickets, no con cada sync
 
-L3_HEARTBEAT_PATH    = Path.home() / ".vantage" / "l3_heartbeat.json"
-L3_STALE_THRESHOLD_H = 48
 
-
-def check_layer3_heartbeat():
-    """Verifica que Layer 3 haya corrido recientemente."""
-    if not L3_HEARTBEAT_PATH.exists():
-        warn("layer3 — heartbeat no encontrado (¿L3 nunca ha corrido?)")
+def check_census_age():
+    """
+    Chequeo informativo de antigüedad del V-ID-CENSUS (KERNEL:CENSUS-SYNC).
+    NO auto-regenera: generate_census.py pega directo a la API de Notion
+    con paginación y rate-limit real — puede tardar minutos, lo cual rompe
+    el contrato de health_check.py como lectura estricta y rápida.
+    Solo reporta estado; nunca marca el health check como fallido —
+    el gate real vive en el cierre de tickets (Regla 1 de KERNEL:CENSUS-SYNC),
+    no en el arranque de sesión.
+    """
+    if not CENSUS_OUTPUT_PATH.exists():
+        warn("census — V_ID_CENSUS_PRODUCTION.md no encontrado (¿nunca se ha generado?)")
         return True
-    try:
-        data = json.loads(L3_HEARTBEAT_PATH.read_text())
-        last_run_str = data.get("last_run", "")
-        if not last_run_str:
-            warn("layer3 — heartbeat sin campo last_run")
-            return True
-        last_run = datetime.fromisoformat(last_run_str.replace("Z", "+00:00"))
-        now      = datetime.now(tz=timezone.utc)
-        age_h    = (now - last_run).total_seconds() / 3600
-        created  = data.get("total_created", "?")
-        failed   = data.get("total_failed", "?")
-        if age_h > L3_STALE_THRESHOLD_H:
-            warn(f"layer3 — {age_h:.0f}h sin correr (umbral: {L3_STALE_THRESHOLD_H}h) | created={created} failed={failed}")
-        else:
-            ok(f"layer3 — {age_h:.1f}h | created={created} failed={failed}")
-    except Exception as e:
-        warn(f"layer3 — error leyendo heartbeat: {e}")
-    return True
 
+    age_h = (time.time() - CENSUS_OUTPUT_PATH.stat().st_mtime) / 3600
+
+    if age_h > CENSUS_STALE_THRESHOLD_H:
+        warn(
+            f"census — {age_h/24:.1f}d sin regenerar "
+            f"(umbral: {CENSUS_STALE_THRESHOLD_H/24:.0f}d) — "
+            f"correr generate_census.py si cerraste tickets con cambio de estado de ID"
+        )
+    else:
+        ok(f"census — actualizado hace {age_h/24:.1f}d")
+
+    return True   # informativo, nunca bloquea arranque
 
 # ── Runner ────────────────────────────────────────────────
 
@@ -534,6 +535,7 @@ def main():
         ("vdoc", check_vdoc_last),
         ("index_age", check_index_age),
         ("layer3", check_layer3_heartbeat),
+        ("census_age", check_census_age),
         ("pending_tickets", check_pending_tickets),
     ]
 

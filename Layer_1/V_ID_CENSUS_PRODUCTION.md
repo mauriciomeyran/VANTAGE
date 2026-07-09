@@ -2,11 +2,7 @@
 
 | ID |
 |---|
-### KERNEL
-
-| ID |
-|---|
-| [`KERNEL:BOOTSTRAP-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#392938befc428106a641ee9d3f1774f2 ) |
+| [`KERNEL:BOOTSTRAP-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#397938befc42803aac52d03a7f065d95 ) |
 | [`KERNEL:PURPOSE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc428092832afe05fdb89d41 ) |
 | [`KERNEL:ARCHITECTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc42805a9ffdf58bdf9bd3d3 ) |
 | [`KERNEL:ARCHITECTURE-L0`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc428021a67cd8f623a260ed ) |
@@ -67,14 +63,14 @@
 
 | ID |
 |---|
-| [`KERNEL:CEDULA-DIGITAL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#392938befc4281ab901cdd58f926cac2 ) |
+| [`KERNEL:CEDULA-DIGITAL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#397938befc4280b0905dc5e813101203 ) |
 | [`KERNEL:SCOPE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#67afca95762d4653b293a974914621ed ) |
 | [`KERNEL:DATA-FLOW`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#566d7e5fa90649c7bc50ab2f8bda889d ) |
 | [`KERNEL:TRIGGERS`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc428054ae17fc50400e93ff ) |
 | [`KERNEL:CV-GOLDEN-RULES`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc4280759a93d3d853687fde ) |
 | [`KERNEL:SCHEMA`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#18f11d28e98c4eafbbc4c7291cbd242c ) |
 | [`KERNEL:ROUTING`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#14c5215b570b45ad9b4bf8b2266e6e6e ) |
-| [`KERNEL:ID-CONNECTORS-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#392938befc4281b889f1f20def085572 ) |
+| [`KERNEL:ID-CONNECTORS-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#397938befc4280f6b00bfb70d6618a7b ) |
 
 ### MANUAL
 
@@ -116,3 +112,18 @@
 | [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc4280b599ebc830f85da2e8 ) |
 | [`CANON:OUTPUT-CONTRACT-SKELETON-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#390938befc4280cbb45acfbad92a0f16 ) |
 | [`CANON:OUTPUT-CONTRACT-TAGREGISTRY-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#390938befc428084b7c7d1336f18df44 ) |
+
+### IDs Huérfanos (fuera de CENSUS_SPEC)
+
+| ID | Documento | Link |
+|---|---|---|
+| `CANON:FIGMA-TAG-SCHEMA` | Career Canon | [link]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#390938befc428096b607cc22bd9ebb30 ) |
+| `CANON:POSITIONING-MODE` | Career Canon | [link]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#390938befc428006a223edfae55f96ca ) |
+| `CANON:TAG-REGISTRY` | Career Canon | [link]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#390938befc4280f08482ce6ae1b0c430 ) |
+| `KERNEL:ARCHITECTURE-L0-BOOTSTRAP` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#77a0227bc8514d25a28d6d118176662f ) |
+| `KERNEL:AUDIENCE-SCOPE` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc4280b58035d9581a04262f ) |
+| `KERNEL:CENSUS-SYNC` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f1adf5716419431b94509efa3d9e0c83 ) |
+| `KERNEL:CONSISTENCY` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#397938befc428098b93cd6ade3ca9bc9 ) |
+| `KERNEL:NAMING-CONVENTION` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#42d259d722484711be267d6df4d94e67 ) |
+| `KERNEL:NOMBRE-SECCION` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#397938befc4280af8b9fc593d29ec95f ) |
+| `KERNEL:SYNC-RULE` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#397938befc4280b3bca1d44d039638eb ) |
