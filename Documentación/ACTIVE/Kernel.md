@@ -15,12 +15,14 @@ DECLARACIÓN DE AUDIENCIA Y ALCANCE
 | 4 | OWNERSHIP | ARQUITECTURA | Responsabilidades AI vs Python |
 | 5 | TRIGGERS | OPERACIÓN | Contratos detallados |
 | 6 | GATE-DECISION | REGLAS | Lógica de gates |
-| 7 | CV-GOLDEN-RULES | REGLAS | Reglas de oro CV |
-| 8 | CV-PIPELINE | OPERACIÓN | Flujo CV-A → CV-B |
-| 9 | CANON-UPDATE | OPERACIÓN | Actualización del Canon |
-| 10 | FAIL-PHILOSOPHY | FILOSOFÍA | Filosofía de fallo |
-| 11 | DOC-CONTRACT | REGLAS | Contrato de IDs de Documento |
-| 12 | NORM | OPERACIÓN | Normalización Documental (Legacy IDs) |
+| 7 | NAMING-CONVENTION | REGLAS | Convención de nombres de outputs |
+| 8 | CV-GOLDEN-RULES | REGLAS | Reglas de oro CV |
+| 9 | CV-PIPELINE | OPERACIÓN | Flujo CV-A → CV-B |
+| 10 | CANON-UPDATE | OPERACIÓN | Actualización del Canon |
+| 11 | FAIL-PHILOSOPHY | FILOSOFÍA | Filosofía de fallo |
+| 12 | DOC-CONTRACT | REGLAS | Contrato de IDs de Documento |
+| 13 | NORM | OPERACIÓN | Normalización Documental (Legacy IDs) |
+| 14 | CENSUS-SYNC | OPERACIÓN | Sincronización obligatoria del ID Census |
 ## KERNEL:PURPOSE
 1. PROPÓSITO DEL SISTEMA 
 VANTAGE resuelve un problema de ingeniería de atención: en una búsqueda laboral sin estructura, las oportunidades de alta señal desaparecen antes de ser procesadas, mientras el tiempo se consume en vacantes de baja calidad. 
@@ -300,7 +302,15 @@ Source_Type ∈ {Inbound, Referencia, Networking}
 → Razón: Un contacto humano verificado tiene mayor señal que cualquier algoritmo
 ```
 ### KERNEL:GATE-DECISION-002 — Lógica Estándar
-Solo aplica si no hay Bypass activo.
+Solo aplica si no hay Bypass activo (ver KERNEL:GATE-DECISION-001).
+Orden de evaluación (secuencial, no paralelo):
+1. URL_GATE — primer filtro, precede a cualquier cálculo de fit. Si el link está muerto o inaccesible → Score = 0, Status = Expirada. Sin excepciones.
+1. Score (0–100) — calculado por Python sobre VM_Scope, Role_Class y match de keywords VM en el JD.
+1. Gate_Decision se deriva del Score:
+- Score ≥ 60 → CREATE (Ready-to-Apply)
+- Score 40–59 → Para Revisar (zona gris, no bloqueado, requiere juicio humano)
+- Score < 40 o VM_Scope = Off-Target → BLOCKED / Archivar
+Nota: estos thresholds no son constantes editables en esta sección — viven en profile_config.yaml (pesos de scoring) y en el código de gate_logic. Esta sección documenta el contrato de orden y las reglas de decisión, no los valores numéricos exactos de scoring interno (Class B, propiedad de Python).
 ### KERNEL:GATE-DECISION-003 — Resolución de REVIEW_NEEDED
 > ⚠️ ALCANCE DE GAP-03: El guard GAP-03 protege el pipeline Python (feed_processor.py → process_record()). Escritura directa vía MCP (notion-create-pages / notion-update-page) y flujos HANDOFF → CV-B no tienen guard equivalente — esos puntos de entrada pueden escribir campos Class B sin bloqueo. Estado: gap documentado, pendiente implementación de class_b_guard.py (FX-1 open).
 Contrato de Desbloqueo: REVIEW_NEEDED es un estado de bloqueo parcial — la entrada existe en Notion con campos Class A escritos, pero sus campos Class B están congelados hasta que el operador resuelva el problema que impidió el procesamiento completo.
@@ -317,6 +327,30 @@ EXPIRED (gate decision, campo Class B) ≠ Expirada (operational status, campo C
 Un gate que puede sobreescribirse manualmente no es un gate — es una sugerencia. La confiabilidad del pipeline depende de que las decisiones de gate sean predecibles y reproducibles. Si el gate bloquea, el input de búsqueda necesita ajuste — no el gate.
 ### KERNEL:GATE-DECISION-005 — Flujo de Recuperación BLOCKED
 Gate = BLOCKED no es estado terminal. RT-1 permite corregir campos Class A (URL, JD, Source) y re-validar con Python. Si el fix produce CREATE, el patch se escribe en Notion. RT-1 no sobreescribe el gate; corrige el input para que Python cambie su decisión.
+---
+## KERNEL:NAMING-CONVENTION — Convención de Nombres de Outputs
+Todo archivo generado por el sistema para una vacante específica comparte el mismo stem — solo la extensión distingue el tipo de documento (.md, .pdf, .fig).
+Formato del stem:
+```plain text
+{Año}_{Nombre}_{Apellido}_{Marca_normalizada}_{Vacante_normalizada}
+```
+Reglas de normalización (aplican a Marca y Vacante):
+- Cada espacio natural del texto original se reemplaza por guión bajo (_) — incluye espacios entre palabras del mismo campo (ej. "VM Coordinator" → VM_Coordinator).
+- Sin acentos ni caracteres especiales (é→e, ñ→n, & → "y").
+- Sin símbolos de puntuación (—, /, :, comas, paréntesis).
+- Guión bajo como único separador en todo el stem — no se mezcla con CamelCase.
+Ejemplo:
+Vacante: Gucci — VM Coordinator, LATAM (2026)
+Stem resultante: 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM
+Archivos de la misma vacante:
+```plain text
+2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM.md   (CV-B, Figma tags)
+2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM.pdf  (export QA)
+2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM.fig  (si aplica, archivo Figma)
+```
+Aplica a: CV-B (.md), export QA (.pdf), archivo Figma (.fig) y cualquier output futuro relacionado a una vacante específica. El stem se fija en el momento de generar el primer entregable (CV-B) y se reutiliza sin variación en todos los outputs derivados subsecuentes de esa misma vacante — el naming no es una decisión de KERNEL:CV-PIPELINE post-generación, es un contrato que antecede al primer archivo escrito.
+No aplica a: DRY RUN archivado (convención propia, ver KERNEL:ARCHITECTURE-L4 — "Archivo DRY RUN archivado mensualmente"), ni a artefactos de sistema (logs, backups, entity_index).
+Relación con CANON:OUTPUT-CONTRACT-001: son contratos distintos y complementarios. Output Contract gobierna la estructura interna del contenido (slots, figma_text_id, reglas de serialización). Esta sección gobierna el nombre físico del archivo en disco. Ninguno reemplaza al otro.
 ---
 ## KERNEL:CV-GOLDEN-RULES
 1. GOLDEN RULES 
@@ -577,6 +611,21 @@ Contrato de Normalización de IDs:
 - Gobernanza: Cambios requieren APROBAR_WRITE + entrada en Changelog. §Reglas de Migración. Ejecutable vía AI Component bajo autorización explícita del operador. -->
 Normalización documental de IDs legacy hacia el esquema [PREFIX]:[KEY]. Ver KERNEL:DOC-CONTRACT para contrato completo y listado de 26 ocurrencias (DT-015).
 ## ESTADO: v9.0.1 | ACTUALIZADO: 2026-07-08
+---
+## KERNEL:CENSUS-SYNC — Sincronización Obligatoria del ID Census
+El V-ID-CENSUS es un documento derivado — su fuente de verdad son los IDs reales escritos en los documentos fundacionales (Kernel, Manual, Career Canon, System Prompt), no al revés. El Census no reemplaza esos documentos ni los precede; los audita.
+Problema que resuelve: sin un gate explícito, un cambio de estado de un ID (⚠️ Stub → ✅ Ok) o la creación de un ID nuevo puede quedar reflejado en el documento fuente pero no en el Census, generando drift silencioso entre lo que el sistema documenta y lo que el Census reporta.
+Regla 1 — Gate de cierre de ticket:
+Ningún ticket en Bug Tracker o Tasks Tracker que implique cambio de estado de un ID (Stub→Ok, creación de ID nuevo, deprecación de ID existente) se marca Done sin que el Census haya sido regenerado y reflejado ese cambio. Si el re-run de generate_census.py no puede ejecutarse en el momento (ej. sin acceso a Terminal), el ticket permanece en estado Blocked-Census — no se da por cerrado en falso.
+Regla 2 — Alta de IDs nuevos en el spec + deeplink automático:
+generate_census.py debe operar en dos modos: (a) resolución de IDs ya conocidos en CENSUS_SPEC, y (b) detección de IDs presentes en los documentos fuente que NO están en CENSUS_SPEC ("IDs huérfanos"). Todo ID huérfano detectado se reporta explícitamente al operador antes de cerrar el ticket asociado — no se ignora silenciosamente. Para todo ID resuelto (conocido u orfano recién agregado), el script genera vía API el deeplink correspondiente al bloque exacto en Notion — la navegación desde el Census hacia la porción publicada en el TOC del documento fuente debe ser precisa, no aproximada al documento completo.
+Regla 3 — Disparo atado a Changelog:
+Toda entrada nueva en V-CHANGELOG que documente cierre de tickets con cambio de estado de ID debe ir precedida, en la misma sesión, por el re-run de Census. El Census se actualiza antes de que Changelog registre el batch — no después, no como tarea suelta.
+Regla 4 — Presentación automática de DRY RUN de cierre:
+Ninguna sesión que haya involucrado cambios (constructivos, correctivos o destructivos) a la documentación o a bases de datos puede cerrarse sin que el AI Component presente, en automático y sin esperar solicitud del operador, un resumen DRY RUN de todo lo modificado en la sesión — incluyendo estado de Census, Changelog pendiente/escrito, y versión. Esta presentación es un reporte de cierre, no un nuevo write: no reabre aprobaciones ya otorgadas, solo consolida y expone lo que quedó pendiente o completado.
+Regla 5 — Chequeo informativo en arranque:
+health_check.py reporta la antigüedad del V-ID-CENSUS en cada corrida (umbral 7 días), como advertencia amarilla si está desactualizado. Este chequeo es puramente informativo — no bloquea el arranque de sesión ni auto-ejecuta generate_census.py (el script pega a la API de Notion con rate-limit real, incompatible con el contrato de lectura estricta y rápida de health_check.py). El gate real de obligatoriedad sigue viviendo en el cierre de tickets (Regla 1), no en el arranque.
+No aplica a: tickets que no modifican estado de ningún ID (ej. fixes de redacción, correcciones de trailing space en propiedades Notion).
 ---
 ## KERNEL:DOC-CONTRACT
 1. CANONICAL DOCUMENT ID CONTRACT (DOC:CLAVE)

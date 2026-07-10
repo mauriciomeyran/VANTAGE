@@ -109,7 +109,14 @@ def safe_list(block_id, cursor=None):
         time.sleep(1.5*(i+1))
     return None
 
-def _export_children(block_id, lines, parent_table=None):
+def _export_children(block_id, lines, parent_table=None, depth=0, seen=None):
+    if seen is None:
+        seen = set()
+    if depth > 15 or block_id in seen:
+        print(f"       ⚠️ skip depth={depth} block={block_id[:8]} (limit/loop guard)")
+        return
+    seen.add(block_id)
+
     cur = None
     while True:
         data = safe_list(block_id, cur)
@@ -133,7 +140,9 @@ def _export_children(block_id, lines, parent_table=None):
                 _export_children(
                     b["id"],
                     lines,
-                    current_parent
+                    current_parent,
+                    depth + 1,
+                    seen
                 )
 
         if not data.get("has_more"):
@@ -160,6 +169,8 @@ def fetch_notion_as_md(pid):
                 current_parent = dict(b.get("table", {}))
                 current_parent["_header_written"] = False
             lines.append(_block_to_md(b)); total+=1
+            if total % 20 == 0:
+                print(f"       ...{total} bloques nivel-0", end="\r")
             if b.get("has_children"):
                 _export_children(b["id"], lines, current_parent)
         if not data.get("has_more"): break

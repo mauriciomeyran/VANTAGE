@@ -25,6 +25,18 @@ Toda sesión comienza recuperando los siguientes documentos mediante Notion MCP:
 Estados posibles:
 - Ambos disponibles → Operación normal.
 - Alguno no disponible después del reintento → MODO DEGRADADO.
+### Verificación de Versión (fundacionales) — Regla de Versión Única
+Como parte de la sincronización, recuperar la propiedad "Versión" de los siguientes seis documentos fundacionales:
+- MANUAL DE USUARIO
+- TECHNICAL KERNEL
+- CAREER CANON
+- SYSTEM PROMPT
+- ID CENSUS
+- CHANGE LOG
+Referencia de versión vigente: la propiedad "Versión" del CHANGE LOG (conforme a KERNEL:CEDULA-DIGITAL) es SIEMPRE la referencia oficial — nunca un valor fijo en este documento.
+Regla canónica: todos los documentos fundacionales deben tener EXACTAMENTE la misma versión que el CHANGE LOG. Ningún documento puede estar adelantado o atrasado, ni por un solo punto de versión.
+- Si las seis versiones coinciden → continuar normalmente, sin reportar nada.
+- Si existe CUALQUIER discrepancia respecto al CHANGE LOG → reportar de inmediato al operador, listando documento(s) y versión(es) detectada(s), y ESPERAR confirmación antes de continuar con la solicitud (conforme a KERNEL:CONSISTENCY). No proceder con escrituras ni operaciones estructurales mientras exista discrepancia sin resolver.
 ---
 ## ID: KERNEL:CEDULA-DIGITAL
 # 1. CÉDULA DIGITAL
@@ -92,6 +104,15 @@ Las definiciones de campos, tipos y reglas de validación se consideran la refer
 ---
 ## ID: KERNEL:ROUTING
 Consultar KERNEL:ROUTING en el Technical Kernel.
+Nota operativa — Notion SQL:
+notion-query-data-sources (SQL directo) está bloqueado en el plan actual de este workspace. Para queries a databases, usar directamente notion-fetch con la data_source_url (formato collection://...) o notion-search. No intentar SQL como primer paso — ir directo al fallback.
+Nota operativa — Extracción completa de filas de un DB:
+Ninguna ruta MCP disponible en este plan trae el 100% de las filas de una base de datos (SQL bloqueado, fetch solo da schema, search es semántico/parcial, bash_tool sin red a Notion API). Para auditorías exhaustivas (ej. duplicados), la ruta correcta es Terminal local (layer_1_run.py u otro script con NOTION_TOKEN), no MCP. No reintentar las cuatro rutas MCP en cada sesión — ir directo a recomendar Terminal.
+Nota operativa — MCP vs Terminal (routing por caso de uso):
+- Lectura estructural / páginas / bloques: MCP (notion-fetch) — funciona sin restricción de plan.
+- Queries a databases (filas completas, filtros, SQL): query_data_sources y query_database_view requieren Business plan + Notion AI — BLOQUEADAS en plan actual. No intentar.
+- Workarounds disponibles: (1) Terminal local con NOTION_TOKEN del layer_1.env; (2) Export CSV desde Notion → análisis en chat.
+- Regla: No ciclar por las cuatro rutas MCP en cada sesión. Si el objetivo es leer filas de un DB → ir directo a Terminal o CSV.
 ---
 ## ID: KERNEL:ID-CONNECTORS-001
 Los identificadores siguen el esquema:
