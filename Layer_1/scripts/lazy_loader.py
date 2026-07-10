@@ -1,8 +1,18 @@
 """
-lazy_loader.py — VANTAGE Lazy Loader v2
+lazy_loader.py — VANTAGE Lazy Loader v2.1
 Fetch quirúrgico de secciones del Kernel (y documentos fundacionales) por ruta DOC:CLAVE.
 
-Cambios respecto a v1:
+Cambios respecto a v2.0:
+  - _get_authorized_prefixes() ahora lee la sección `document_registry` de
+    resolver_registry_v2.json (namespace de prefijos documentales) en vez de
+    reutilizar runtime_identity.get_authorized_prefixes() (que sirve a un
+    contrato distinto: entity_prefix de filas de tracker — TRACKER/ARCHIVO/
+    DRYRUN/BUG). Ver KERNEL:DOC-CONTRACT + Change Log v9.0.5.
+  - Cierra el pendiente registrado en Change Log v9.0.4: rutas SP:*, ALIASES:*
+    y CHANGELOG:* ahora resuelven como prefijos autorizados en vez de caer a
+    modo legacy.
+
+Cambios respecto a v1 (heredados):
   - Soporte multi-prefijo: KERNEL, MANUAL, CANON, TRACKER (contrato v8.9.0)
   - Strip genérico de prefijo antes de matching (no solo KERNEL:)
   - Matcher de inicio: busca PREFIX:CLAVE O solo CLAVE en texto del heading
@@ -13,6 +23,7 @@ Cambios respecto a v1:
 """
 
 import os
+import json
 import time
 import requests
 import argparse
@@ -20,18 +31,35 @@ from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Contrato de prefijos autorizados — cargado desde resolver_registry_v2.json
-# via runtime_identity (DT-014). No hardcodeado.
+# sección `document_registry` (namespace independiente de `data_sources`).
 # ---------------------------------------------------------------------------
-_REGISTRY_DEFAULT_PATH = Path(__file__).resolve().parent / "resolver_registry_v2.json"
+_REGISTRY_DEFAULT_PATH = Path(__file__).resolve().parent.parent / "data" / "resolver_registry_v2.json"
 _authorized_prefixes_cache: frozenset[str] | None = None
+
+# Fallback estático — usado solo si el Registry no existe, está malformado,
+# o carece de la sección `document_registry` (compatibilidad en entornos sin
+# el Registry actualizado a v9.0.5).
+_STATIC_FALLBACK_PREFIXES = frozenset({"KERNEL", "MANUAL", "CANON", "TRACKER"})
 
 
 def _get_authorized_prefixes(registry_path: Path | None = None) -> frozenset[str]:
     """
-    Devuelve el conjunto de prefijos autorizados.
-    Carga desde resolver_registry_v2.json vía runtime_identity si está disponible.
-    Fallback a conjunto estático si el módulo o el Registry no son accesibles
-    (compatibilidad en entornos sin Runtime Build completo).
+    Devuelve el conjunto de prefijos documentales autorizados.
+
+    Lee la sección `document_registry` de resolver_registry_v2.json — SSOT
+    para prefijos de navegación documental (KERNEL, MANUAL, CANON, TRACKER,
+    SP, ALIASES, CHANGELOG), conforme a KERNEL:DOC-CONTRACT.
+
+    Nota de arquitectura: esta función NO consume runtime_identity.py.
+    Ese módulo resuelve `entity_prefix` para IDs de fila de tracker
+    (TRACKER:H_xxx, BUG:U_xxx) — un contrato distinto y no relacionado con
+    la autorización de prefijos de ruta documental que usa este loader.
+    Ver KERNEL:SCHEMA-004 (Entity Format) vs KERNEL:DOC-CONTRACT (Doc IDs).
+
+    Claves que empiezan con "_" (ej. "_comment") se ignoran — no son prefijos.
+
+    Fallback a `_STATIC_FALLBACK_PREFIXES` si el Registry no existe, está
+    malformado, o no tiene la sección `document_registry`.
     """
     global _authorized_prefixes_cache
     if _authorized_prefixes_cache is not None:
@@ -39,11 +67,20 @@ def _get_authorized_prefixes(registry_path: Path | None = None) -> frozenset[str
 
     path = registry_path or _REGISTRY_DEFAULT_PATH
     try:
-        from runtime_identity import get_authorized_prefixes
-        _authorized_prefixes_cache = get_authorized_prefixes(path)
-    except Exception:
-        # Fallback estático — prefijos del contrato v8.9.0
-        _authorized_prefixes_cache = frozenset({"KERNEL", "MANUAL", "CANON", "TRACKER"})
+        registry = json.loads(path.read_text(encoding="utf-8"))
+        doc_registry = registry.get("document_registry")
+        if not doc_registry:
+            raise KeyError("[lazy_loader] 'document_registry' ausente o vacío en Registry")
+        prefixes = {k for k in doc_registry.keys() if not k.startswith("_")}
+        if not prefixes:
+            raise ValueError("[lazy_loader] 'document_registry' no contiene prefijos válidos")
+        _authorized_prefixes_cache = frozenset(prefixes)
+    except FileNotFoundError:
+        print(f"[WARN] Registry no encontrado en {path}. Usando fallback estático.")
+        _authorized_prefixes_cache = _STATIC_FALLBACK_PREFIXES
+    except (json.JSONDecodeError, KeyError, ValueError) as exc:
+        print(f"[WARN] {exc}. Usando fallback estático.")
+        _authorized_prefixes_cache = _STATIC_FALLBACK_PREFIXES
 
     return _authorized_prefixes_cache
 
@@ -86,8 +123,8 @@ def _parse_route(route: str, registry_path: Path | None = None) -> tuple[str, st
     Parsea 'PREFIX:CLAVE' → (PREFIX, CLAVE).
     Si no hay prefijo reconocido, retorna ("", route) para compatibilidad legacy.
     Emite warning si el prefijo no está en el Registry.
-    Los prefijos autorizados se cargan desde resolver_registry_v2.json vía
-    runtime_identity — no hardcodeados (DT-014).
+    Los prefijos autorizados se cargan desde resolver_registry_v2.json —
+    sección `document_registry` — no hardcodeados (DT-014 / KERNEL:DOC-CONTRACT).
     """
     if ":" in route:
         prefix, clave = route.split(":", 1)
@@ -292,7 +329,7 @@ if __name__ == "__main__":
     load_dotenv(env_path)
 
     parser = argparse.ArgumentParser(
-        description="VANTAGE Lazy Loader v2 — fetch quirúrgico por ruta DOC:CLAVE"
+        description="VANTAGE Lazy Loader v2.1 — fetch quirúrgico por ruta DOC:CLAVE"
     )
     parser.add_argument(
         "--page",
@@ -302,7 +339,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--route",
         required=True,
-        help="Ruta canónica: PREFIX:CLAVE (ej. KERNEL:SCHEMA, MANUAL:TRIGGERS). "
+        help="Ruta canónica: PREFIX:CLAVE (ej. KERNEL:SCHEMA, SP:SYNC-RULE). "
              "También acepta rutas legacy sin prefijo.",
     )
     args = parser.parse_args()

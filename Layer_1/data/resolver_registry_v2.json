@@ -38,6 +38,17 @@
     }
   },
 
+  "document_registry": {
+    "_comment": "SSOT para prefijos documentales (KERNEL:DOC-CONTRACT). Namespace separado de data_sources — este mapea PREFIX -> UUID de página fundacional, no entity_prefix de filas de tracker. Consumido por lazy_loader.py._get_authorized_prefixes(). Agregado v9.0.5 — cierra el pendiente registrado en Change Log v9.0.4.",
+    "KERNEL":    "377938be-fc42-805e-a408-c9ae518d4fe7",
+    "MANUAL":    "372938be-fc42-8050-9a67-e40857d7806e",
+    "CANON":     "377938be-fc42-8089-93f2-f52dbd2dec6c",
+    "TRACKER":   "596938be-fc42-836b-aea7-814a1491bd47",
+    "SP":        "37b938be-fc42-8001-9b9b-fcf81130d274",
+    "ALIASES":   "37c938be-fc42-80d4-b9ae-f5969830331b",
+    "CHANGELOG": "390938be-fc42-80e7-b429-d7d730339353"
+  },
+
   "known_pitfalls": {
     "VANTAGE_TRACKER": ["Source_Type tiene espacio final ('Source_Type ')"],
     "ARCHIVO_TRACKER": [
@@ -59,5 +70,5 @@
     "fallback_on_miss": "reportar entity_id como 'unresolvable', no inferir estado"
   },
 
-  "future_resolver_notes": "Cuando se implemente, Resolver Layer consume este archivo solo para obtener data_source_id + page_url; no requiere cambios de schema en entity_index_v2, graph_v2 ni backlinks_v2."
+  "future_resolver_notes": "Cuando se implemente, Resolver Layer consume este archivo solo para obtener data_source_id + page_url; no requiere cambios de schema en entity_index_v2, graph_v2 ni backlinks_v2. document_registry es un namespace independiente, de solo lectura para lazy_loader.py — no participa en la resolución de entity_id de Runtime Build."
 }

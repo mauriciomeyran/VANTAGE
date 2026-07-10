@@ -12,7 +12,7 @@ except ImportError:
 
 try:
     from context_layer import assemble_context
-    from notion_utils import ResolverError, _get_token, NOTION_VERSION
+    from notion_utils import ResolverError, _get_token, _notion_version
 except ImportError:
     raise RuntimeError("context_layer.py / notion_utils.py no encontrados en la misma carpeta.")
 
@@ -51,7 +51,7 @@ def _notion_db_query(data_source_id: str, body: Optional[Dict] = None) -> List[D
     url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
     headers = {
         "Authorization": f"Bearer {_get_token()}",
-        "Notion-Version": NOTION_VERSION,
+        "Notion-Version": _notion_version(),
         "Content-Type": "application/json",
     }
 
