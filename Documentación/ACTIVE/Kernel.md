@@ -642,6 +642,9 @@ Este contrato estandariza la referencia cruzada entre componentes del sistema y 
 | MANUAL | V | MANUAL | registry["MANUAL"] |
 | CANON | V | CAREER CANON | registry["CANON"] |
 | TRACKER | V | TRACKER | registry["TRACKER"] |
+| SP | V | SYSTEM PROMPT | registry["SP"] |
+| ALIASES | V | ALIASES | registry["ALIASES"] |
+| CHANGELOG | V | CHANGE LOG | registry["CHANGELOG"] |
 ### Reglas de Migración
 Toda referencia a páginas del sistema que actualmente use UUIDs hardcodeados o anclas planas debe migrar a este esquema. lazy_loader.py es el componente encargado de aplicar este contrato en tiempo de ejecución. EXCEPCIÓN DE MIGRACIÓN (DT-015): Se autoriza al AI Component a ejecutar la normalización documental (search-and-replace) vía MCP sobre las 26 ocurrencias identificadas, bajo el trigger NORM [DOC:CLAVE].
 

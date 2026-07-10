@@ -1,5 +1,21 @@
 # V | CHANGELOG
 
+### v9.0.4 — 2026-07-09
+[ARCH] KERNEL:DOC-CONTRACT — Extensión de Prefijos Autorizados (KERNEL, MANUAL, CANON, TRACKER → +SP, ALIASES, CHANGELOG) + normalización de self-references en System Prompt.
+- Contexto: La tabla de Prefijos Autorizados en KERNEL:DOC-CONTRACT solo cubría 4 de los 6 documentos fundacionales de vdoc/vsync_doc.py. System Prompt, Aliases y Change Log carecían de prefijo propio, forzando el uso incorrecto de KERNEL: para self-references dentro de esos documentos — violación de la regla de Prefix Ownership ("cada prefijo mapea a una única página canónica").
+- Cambio 1 — KERNEL:DOC-CONTRACT: Tabla de Prefijos Autorizados expandida de 4 a 7 filas. Agregados: SP → V | SYSTEM PROMPT, ALIASES → V | ALIASES, CHANGELOG → V | CHANGE LOG.
+- Cambio 2 — Normalización System Prompt (7 self-references corregidas): Audit + corrección ejecutados en dos fases (audit delegado a Mistral bajo contrato de sesión con gates idénticos a AI Component; escritura y verificación ejecutadas por AI Component). Headers KERNEL:BOOTSTRAP-001, KERNEL:SYNC-RULE, KERNEL:CEDULA-DIGITAL, KERNEL:TRIGGERS, KERNEL:SCHEMA, KERNEL:ID-CONNECTORS-001, KERNEL:CONSISTENCY → renombrados a prefijo SP:. Incluye 2 menciones inline corregidas dentro del cuerpo de SP:SYNC-RULE. Excluidos correctamente (redirects reales al Kernel, sin cambio): KERNEL:SCOPE, KERNEL:DATA-FLOW, KERNEL:CV-GOLDEN-RULES, KERNEL:ROUTING.
+- Cambio 3 — generate_census.py (Layer_1/scripts/): VALID_PREFIXES no incluía SP:/ALIASES:/CHANGELOG:, causando que el extractor de IDs ignorara silenciosamente cualquier token con esos prefijos (ni siquiera se reportaban como huérfanos). Corregido: los 3 prefijos agregados a VALID_PREFIXES. CENSUS_SPEC actualizado — 2 entradas legacy (KERNEL:CEDULA-DIGITAL, KERNEL:ID-CONNECTORS-001) y 2 adicionales detectadas en la misma revisión (KERNEL:TRIGGERS, KERNEL:SCHEMA dentro de la sección System Prompt del spec) migradas a SP:; 3 IDs faltantes del spec (SP:BOOTSTRAP-001, SP:SYNC-RULE, SP:CONSISTENCY) dados de alta. V-ID-CENSUS regenerado por primera vez en producción: 98/98 IDs resueltos, 0 sin link.
+- Huérfanos confirmados (alta pendiente, fuera de alcance de esta sesión): CANON:FIGMA-TAG-SCHEMA, CANON:POSITIONING-MODE, CANON:TAG-REGISTRY, KERNEL:ARCHITECTURE-L0-BOOTSTRAP, KERNEL:AUDIENCE-SCOPE, KERNEL:CENSUS-SYNC, KERNEL:NAMING-CONVENTION — existen en documentos fuente, no están en CENSUS_SPEC. Mismo tratamiento que el precedente ya documentado para KERNEL:NAMING-CONVENTION (sesión 2026-07-08): huérfano intencional, alta formal pendiente como tarea separada. SP:NOMBRE-SECCION confirmado como ruido (placeholder de ejemplo en SP:ID-CONNECTORS-001, no un ID real) — no se agrega al spec.
+- Pendiente registrado — fuera de alcance de esta sesión: resolver_registry_v2.json aún no incluye las keys SP, ALIASES, CHANGELOG — el Resolver en runtime no podrá resolver estos prefijos hasta que se actualice. El Kernel ya declara el contrato; el código aún no lo ejecuta.
+- Versión: v9.0.3 → v9.0.4.
+---
+### v9.0.3 — 2026-07-08
+[MAINT] KERNEL:ROUTING — Nota operativa MCP vs Terminal añadida al V-SYSTEM-PROMPT.
+- Contexto: Las herramientas MCP query_data_sources (SQL) y query_database_view están bloqueadas en el plan actual (requieren Business plan + Notion AI). En sesiones previas se reintentaban las cuatro rutas MCP antes de llegar al workaround, generando ciclos de descubrimiento redundantes.
+- Cambio: Añadida nota "Nota operativa — MCP vs Terminal (routing por caso de uso)" en KERNEL:ROUTING del V-SYSTEM-PROMPT (37b938be). Define explícitamente: (1) notion-fetch funciona sin restricción; (2) query tools bloqueadas — no intentar; (3) workarounds: Terminal local con NOTION_TOKEN del layer_1.env o Export CSV desde Notion.
+- Objetivo: Eliminar ciclos de redescubrimiento en arranque de sesión. El agente lee la restricción en el sync inicial y va directo al workaround correcto.
+- Versión: v9.0.2 → v9.0.3.
 ---
 ### v9.0.2 — 2026-07-08
 [AUDIT] KERNEL:CONSISTENCY — Auditoría de consistencia sobre ID CENSUS (394938be) y secciones SCHEMA / GATE-DECISION / STATUS / FIGMA-SYNC del Kernel (377938be).

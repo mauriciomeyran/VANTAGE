@@ -436,6 +436,14 @@ Ver flujo completo de inyección en §4 (Miércoles — "Qué hace el usuario co
 Figma Desktop → Plugins → Development → Import plugin from manifest... → navega a ~/Documents/04-Vantage_CV/Figma Sync/ → selecciona manifest.json. El plugin queda disponible permanentemente.
 El plugin no modifica Notion ni el Tracker. Opera exclusivamente sobre el lienzo Figma activo.
 ### Gate Decisions
+El sistema evalúa cada vacante en tres pasos, en orden:
+1. Link check — si la URL no carga, la vacante se archiva automáticamente con Score 0.
+1. Score (0–100) — calculado por Python según qué tan bien encaja el rol.
+1. Dónde aterriza, según el Score:
+- 60 o más → Ready-to-Apply (tu bandeja de trabajo diaria)
+- 40–59 → Para Revisar (zona gris, decides tú)
+- Menos de 40 → Archivar
+Excepción: si la vacante llegó por contacto directo (Inbound, Referencia o Networking), se salta este proceso completo y entra directo como CREATE — un contacto humano pesa más que el algoritmo.
 ### Comandos de Mantenimiento del Tracker
 Estos comandos operan sobre el estado del Tracker y están disponibles como subcomandos de vl1. Cada uno tiene un alcance preciso y un modo de operación por defecto.
 - vl1 status
@@ -527,8 +535,8 @@ Gate = BLOCKED recuperable pero RT-1 no lo detecta:
 ### Referencias a documentación adicional:
 - Filosofía de fallo: KERNEL:FAIL-PHILOSOPHY
 - Reglas de Oro: KERNEL:CV-GOLDEN-RULES
-- Schema de datos: pendiente (ver Bug Tracker 390938be-fc42-81c1-9fc7-d0763295cd04)
-- Gate Decisions: pendiente (ver Bug Tracker 390938be-fc42-81c1-9fc7-d0763295cd04)
+- Schema de datos: KERNEL:SCHEMA
+- Gate Decisions: KERNEL:GATE-DECISION
 ## 8. PROMPTS & WRAPPERS · ID: MANUAL:PROMPTS-WRAPPERS-001
 Se consultan vía MCP desde la PROMPT LIBRARY en Notion.
 ## 9. CHEAT SHEETS · ID: MANUAL:CHEATSHEETS-001
@@ -581,6 +589,21 @@ Desde v2.4.0 (Runtime Contract Migration), resolver_registry_v2.json es la fuent
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_duplicates.py (alias: vdedup)
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/dedup_opportunities.py (alias: vopport)
 ```
+Qué es: el V-ID-CENSUS es tu mapa de navegación — te dice en qué documento y en qué bloque exacto vive cada ID del sistema, con link directo. Pero es un mapa, no el territorio: si el Kernel cambia y el Census no se actualiza, el mapa miente.
+Cuándo se regenera (obligatorio, no opcional):
+- Antes de marcar cualquier ticket como cerrado, si ese ticket cambió el estado de un ID (de pendiente a resuelto, o creó uno nuevo).
+- Si no tienes Terminal a la mano en ese momento, el ticket se queda en "Blocked-Census" — no se cierra en falso, se marca como bloqueado hasta que puedas correr el script.
+Cómo corre:
+```bash
+source ~/Documents/04-Vantage_CV/Layer_1/.venv/bin/activate
+cd ~/Documents/04-Vantage_CV/Layer_1/scripts
+python3 generate_census.py
+```
+El script ahora también detecta IDs que existen en los documentos pero no en su lista de seguimiento ("huérfanos") y te los señala — ya no se cuelan en silencio. Y para cada ID resuelto genera el link exacto al bloque en Notion, no solo al documento.
+Orden con Changelog: primero Census actualizado, después la entrada de Changelog. Nunca al revés.
+Al cerrar sesión: si hubo cambios a documentación o bases de datos, se te presenta automáticamente un resumen de lo que quedó hecho vs. pendiente — sin que tengas que pedirlo.
+Aviso en arranque: health_check.py (alias start) reporta la antigüedad del Census en cada corrida — ! census — Nd sin regenerar si pasó el umbral de 7 días. Es solo un recordatorio visual, no dispara nada automáticamente; sigue siendo tu responsabilidad correr generate_census.py cuando cierres un ticket que cambió estado de un ID.
+Base: KERNEL:CENSUS-SYNC.
 ## 11. CHANGELOG · ID: MANUAL:CHANGELOG-001
 Registro canónico de cambios: V-CHANGELOG 390938be-fc42-80e7-b429-d7d730339353
 ## 12. REGLAS DE ORO PARA OPERADORES · ID: MANUAL:REGLAS-DE-ORO-001
