@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VANTAGE — Pipeline Dashboard</title>
+<style>
+  :root {
+    --bg: #0e0e0f; --bg2: #141415; --bg3: #1a1a1c; --bg4: #222224;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+    --text: #e8e8e4; --text2: #9a9994; --text3: #5a5955;
+    --accent: #4f8ef7; --accent-dim: rgba(79,142,247,0.12);
+    --green: #3ecf8e; --green-dim: rgba(62,207,142,0.12);
+    --amber: #f4a942; --amber-dim: rgba(244,169,66,0.12);
+    --red: #f05252; --red-dim: rgba(240,82,82,0.12);
+    --purple: #a78bfa; --purple-dim: rgba(167,139,250,0.12);
+    --mono: 'SF Mono','Fira Code','Cascadia Code',monospace;
+    --sans: -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    --radius: 6px; --radius-lg: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans);
+         font-size: 13px; line-height: 1.5; min-height: 100vh; }
+
+  .app { display: flex; height: 100vh; overflow: hidden; }
+  .sidebar { width: 280px; flex-shrink: 0; background: var(--bg2);
+             border-right: 1px solid var(--border); display: flex;
+             flex-direction: column; overflow: hidden; }
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  .topbar { padding: 12px 16px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
+            background: var(--bg2); flex-shrink: 0; }
+  .topbar-title { font-size: 13px; font-weight: 600; color: var(--text);
+                  letter-spacing: -.01em; }
+  .topbar-sep { flex: 1; }
+
+  .cert { font-size: 10px; font-family: var(--mono); padding: 3px 8px;
+          border-radius: 99px; border: 1px solid var(--border2);
+          color: var(--text3); transition: all .3s; }
+  .cert.ok { border-color: var(--green); color: var(--green);
+             background: var(--green-dim); }
+
+  .state-badge { font-size: 11px; font-weight: 600; font-family: var(--mono);
+                 padding: 3px 10px; border-radius: 99px; transition: all .25s; }
+  .s-BLOCKED          { background:var(--amber-dim);color:var(--amber);
+                        border:1px solid rgba(244,169,66,.3); }
+  .s-PATCHED          { background:var(--accent-dim);color:var(--accent);
+                        border:1px solid rgba(79,142,247,.3); }
+  .s-IN_REVIEW        { background:var(--purple-dim);color:var(--purple);
+                        border:1px solid rgba(167,139,250,.3); }
+  .s-RETURNED_TO_CREATE { background:var(--green-dim);color:var(--green);
+                          border:1px solid rgba(62,207,142,.3); }
+  .s-VERSION_CONFLICT { background:var(--red-dim);color:var(--red);
+                        border:1px solid rgba(240,82,82,.3); }
+  .s-FAILED           { background:var(--red-dim);color:var(--red);
+                        border:1px solid rgba(240,82,82,.3); }
+
+  /* ── Sidebar ── */
+  .sidebar-section { padding:12px 14px 8px; border-bottom:1px solid var(--border); }
+  .section-label { font-size:10px; font-weight:600; color:var(--text3);
+                   letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; }
+
+  /* Siguiente acción — zona prominente */
+  .next-action-box { padding:14px; background:var(--accent-dim);
+                     border-bottom:1px solid rgba(79,142,247,.2); }
+  .next-action-label { font-size:10px; font-weight:600; color:var(--accent);
+                       letter-spacing:.08em; text-transform:uppercase;
+                       margin-bottom:5px; }
+  .next-action-text { font-size:12px; color:var(--text); line-height:1.4; }
+
+  /* Snapshot de vacante */
+  .snapshot-box { padding:12px 14px; border-bottom:1px solid var(--border); }
+  .snapshot-row { display:flex; justify-content:space-between;
+                  align-items:baseline; margin-bottom:4px; }
+  .snapshot-empresa { font-size:13px; font-weight:600; color:var(--text); }
+  .snapshot-score { font-family:var(--mono); font-size:12px; font-weight:700; }
+  .snapshot-score.high { color:var(--green); }
+  .snapshot-score.mid  { color:var(--amber); }
+  .snapshot-score.low  { color:var(--text3); }
+  .snapshot-rol { font-size:11px; color:var(--text2); margin-bottom:6px; }
+  .snapshot-meta { display:flex; gap:8px; flex-wrap:wrap; }
+  .snapshot-tag { font-size:10px; font-family:var(--mono); padding:2px 7px;
+                  border-radius:99px; background:var(--bg3);
+                  border:1px solid var(--border2); color:var(--text3); }
+
+  /* Panel técnico colapsable */
+  .tech-panel { border-bottom:1px solid var(--border); }
+  .tech-toggle { width:100%; padding:10px 14px; background:none; border:none;
+                 color:var(--text3); font-size:10px; font-weight:600;
+                 letter-spacing:.08em; text-transform:uppercase; cursor:pointer;
+                 display:flex; align-items:center; justify-content:space-between;
+                 font-family:var(--sans); }
+  .tech-toggle:hover { color:var(--text2); background:var(--bg3); }
+  .tech-toggle-arrow { transition:transform .2s; }
+  .tech-toggle.open .tech-toggle-arrow { transform:rotate(180deg); }
+  .tech-content { display:none; padding:0 14px 10px; }
+  .tech-content.open { display:block; }
+
+  .kv { display:grid; grid-template-columns:auto 1fr; gap:3px 10px; }
+  .kv-k { color:var(--text3); font-family:var(--mono); font-size:11px;
+          white-space:nowrap; }
+  .kv-v { color:var(--text); font-family:var(--mono); font-size:11px;
+          word-break:break-all; }
+  .kv-v.muted  { color:var(--text3); }
+  .kv-v.ok     { color:var(--green); }
+  .kv-v.warn   { color:var(--amber); }
+  .kv-v.danger { color:var(--red); }
+  .kv-v.info   { color:var(--accent); }
+
+  .cap-row { display:flex; align-items:center; gap:7px; margin-bottom:5px; }
+  .cap-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .cap-dot.on  { background:var(--green); box-shadow:0 0 6px var(--green); }
+  .cap-dot.off { background:var(--text3); }
+  .cap-name  { color:var(--text2); font-family:var(--mono); font-size:11px; flex:1; }
+  .cap-val-t { color:var(--green); font-size:11px; font-family:var(--mono); }
+  .cap-val-f { color:var(--text3); font-size:11px; font-family:var(--mono); }
+
+  .payload-box { font-family:var(--mono); font-size:10px; color:var(--text2);
+                 background:var(--bg3); border:1px solid var(--border);
+                 border-radius:var(--radius); padding:7px 9px; white-space:pre;
+                 overflow-x:auto; line-height:1.6; margin-top:8px; }
+
+  .audit-scroll { flex:1; overflow-y:auto; padding:0; }
+  .audit-scroll::-webkit-scrollbar { width:4px; }
+  .audit-scroll::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+  .audit-entry { display:flex; gap:10px; padding:7px 14px;
+                 border-bottom:1px solid var(--border); transition:background .1s;
+                 align-items:flex-start; }
+  .audit-entry:first-child { background:rgba(79,142,247,.06); }
+  .audit-entry:hover { background:var(--bg3); }
+  .audit-seq { font-family:var(--mono); font-size:10px; color:var(--text3);
+               padding-top:1px; min-width:20px; }
+  .audit-dot-col { display:flex; flex-direction:column; align-items:center;
+                   padding-top:4px; }
+  .audit-dot { width:7px; height:7px; border-radius:50%;
+               border:1.5px solid var(--text3); background:var(--bg); flex-shrink:0; }
+  .audit-dot.domain { border-color:var(--accent); }
+  .audit-dot.domain.latest { background:var(--accent); box-shadow:0 0 6px var(--accent); }
+  .audit-dot.system { border-color:var(--text2); }
+  .audit-dot.err    { border-color:var(--red); background:var(--red); }
+  .audit-info { flex:1; min-width:0; }
+  .audit-type { font-family:var(--mono); font-size:10px; line-height:1.4;
+                word-break:break-all; }
+  .audit-ns   { color:var(--text3); }
+  .audit-name { color:var(--text); }
+  .audit-ts   { font-family:var(--mono); font-size:10px; color:var(--text3); margin-top:1px; }
+
+  .main-scroll { flex:1; overflow-y:auto; padding:20px 24px; }
+  .main-scroll::-webkit-scrollbar { width:4px; }
+  .main-scroll::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+  /* ── Selector de vacante ── */
+  .selector-wrap { background:var(--bg2); border:1px solid var(--border);
+                   border-radius:var(--radius-lg); padding:18px; margin-bottom:16px; }
+  .selector-title { font-size:12px; font-weight:600; color:var(--text);
+                    margin-bottom:4px; }
+  .selector-subtitle { font-size:11px; color:var(--text3); margin-bottom:12px; }
+  .selector-row { display:flex; gap:8px; align-items:stretch; }
+  .vacancy-select { flex:1; font-family:var(--mono); font-size:11px;
+                    background:var(--bg3); border:1px solid var(--border2);
+                    border-radius:var(--radius); color:var(--text);
+                    padding:6px 10px; outline:none; }
+  .vacancy-select:focus { border-color:var(--accent); }
+
+  /* Recuperación técnica colapsable */
+  .recovery-toggle { margin-top:10px; }
+  .recovery-toggle summary { font-size:10px; color:var(--text3); cursor:pointer;
+                             font-family:var(--mono); list-style:none;
+                             display:flex; align-items:center; gap:4px; }
+  .recovery-toggle summary:hover { color:var(--text2); }
+  .recovery-toggle summary::before { content:'▸'; font-size:9px; }
+  .recovery-toggle[open] summary::before { content:'▾'; }
+  .recovery-content { margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;
+                      align-items:center; }
+
+  /* ── Block reason ── */
+  .block-reason { background:var(--amber-dim); border:1px solid rgba(244,169,66,.3);
+                  border-radius:var(--radius); padding:10px 14px; margin-bottom:16px;
+                  display:none; }
+  .block-reason.visible { display:block; }
+  .block-reason-title { font-size:10px; font-weight:600; color:var(--amber);
+                        letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px; }
+  .block-reason-text { font-family:var(--mono); font-size:11px; color:var(--amber); }
+
+  /* ── Patch panel ── */
+  .patch-wrap { background:var(--bg2); border:1px solid var(--border);
+                border-radius:var(--radius-lg); padding:18px; margin-bottom:16px; }
+  .patch-title { font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px; }
+  .patch-subtitle { font-size:11px; color:var(--text3); margin-bottom:14px; }
+  .patch-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+  .patch-field { display:flex; flex-direction:column; gap:4px; }
+  .patch-label { font-size:10px; color:var(--text3); letter-spacing:.04em; }
+  .patch-input { font-family:var(--mono); font-size:11px; background:var(--bg3);
+                 border:1px solid var(--border2); border-radius:var(--radius);
+                 color:var(--text); padding:6px 10px; outline:none;
+                 transition:border-color .15s; }
+  .patch-input:focus { border-color:var(--accent); }
+  .patch-input::placeholder { color:var(--text3); }
+  .patch-textarea { font-family:var(--mono); font-size:11px; background:var(--bg3);
+                    border:1px solid var(--border2); border-radius:var(--radius);
+                    color:var(--text); padding:6px 10px; outline:none;
+                    resize:vertical; min-height:80px; transition:border-color .15s; }
+  .patch-textarea:focus { border-color:var(--accent); }
+
+  /* ── Validation result ── */
+  .validation-result { font-family:var(--mono); font-size:11px; padding:10px 14px;
+                       border-radius:var(--radius); margin-top:10px; display:none; }
+  .validation-result.ok   { display:block; background:var(--green-dim);
+                             color:var(--green); border:1px solid rgba(62,207,142,.3); }
+  .validation-result.fail { display:block; background:var(--red-dim); color:var(--red);
+                             border:1px solid rgba(240,82,82,.3); }
+
+  /* ── Controls ── */
+  .controls { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;
+              padding-top:14px; border-top:1px solid var(--border); }
+  .ctrl-btn { font-size:12px; padding:6px 14px; border-radius:var(--radius);
+              border:1px solid var(--border2); background:var(--bg3);
+              color:var(--text2); cursor:pointer; transition:all .1s;
+              display:flex; align-items:center; gap:6px; position:relative; }
+  .ctrl-btn:hover:not(:disabled) { background:var(--bg4); color:var(--text);
+                    border-color:rgba(255,255,255,.18); }
+  .ctrl-btn:disabled { opacity:.4; cursor:not-allowed; }
+  .ctrl-btn.primary { border-color:rgba(79,142,247,.4); color:var(--accent); }
+  .ctrl-btn.primary:hover:not(:disabled) { background:var(--accent-dim); border-color:var(--accent); }
+  .ctrl-btn.success { border-color:rgba(62,207,142,.4); color:var(--green); }
+  .ctrl-btn.success:hover:not(:disabled) { background:var(--green-dim); border-color:var(--green); }
+  .ctrl-btn.danger { border-color:rgba(240,82,82,.4); color:var(--red); }
+  .ctrl-btn.danger:hover:not(:disabled) { background:var(--red-dim); border-color:var(--red); }
+
+  /* Tooltip en botones disabled */
+  .ctrl-btn[data-tip]:disabled::after {
+    content: attr(data-tip);
+    position:absolute; bottom:calc(100% + 6px); left:50%;
+    transform:translateX(-50%);
+    background:var(--bg4); border:1px solid var(--border2);
+    color:var(--text2); font-size:10px; font-family:var(--sans);
+    padding:4px 8px; border-radius:var(--radius);
+    white-space:nowrap; pointer-events:none;
+    opacity:0; transition:opacity .15s;
+  }
+  .ctrl-btn[data-tip]:disabled:hover::after { opacity:1; }
+
+  /* ── Spinner ── */
+  .spinner { display:inline-block; width:10px; height:10px;
+             border:2px solid var(--border2); border-top-color:var(--accent);
+             border-radius:50%; animation:spin .6s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  .err-toast { position:fixed; bottom:20px; right:20px; background:var(--bg3);
+               border:1px solid rgba(240,82,82,.4); border-radius:var(--radius);
+               color:var(--red); font-family:var(--mono); font-size:11px;
+               padding:10px 14px; z-index:999; opacity:0; transform:translateY(6px);
+               transition:all .2s; pointer-events:none; max-width:340px; }
+  .err-toast.show { opacity:1; transform:translateY(0); }
+  .ok-toast { position:fixed; bottom:20px; right:20px; background:var(--bg3);
+              border:1px solid rgba(62,207,142,.4); border-radius:var(--radius);
+              color:var(--green); font-family:var(--mono); font-size:11px;
+              padding:10px 14px; z-index:998; opacity:0; transform:translateY(6px);
+              transition:all .2s; pointer-events:none; max-width:340px; }
+  .ok-toast.show { opacity:1; transform:translateY(0); }
+
+  /* ── Métricas agregadas ── */
+  .metrics-bar { display:flex; gap:0; border-bottom:1px solid var(--border);
+                 background:var(--bg2); flex-shrink:0; overflow-x:auto; }
+  .metric-cell { flex:1; min-width:80px; padding:10px 14px; border-right:1px solid var(--border);
+                 display:flex; flex-direction:column; gap:2px; }
+  .metric-cell:last-child { border-right:none; }
+  .metric-val { font-family:var(--mono); font-size:18px; font-weight:700;
+                color:var(--text); line-height:1; }
+  .metric-val.accent { color:var(--accent); }
+  .metric-val.green  { color:var(--green);  }
+  .metric-val.amber  { color:var(--amber);  }
+  .metric-val.red    { color:var(--red);    }
+  .metric-val.muted  { color:var(--text3);  }
+  .metric-label { font-size:10px; color:var(--text3); letter-spacing:.04em; }
+
+  /* ── Pipeline strip ── */
+  .pipeline-strip { background:var(--bg2); border:1px solid var(--border);
+                    border-radius:var(--radius-lg); padding:14px 18px;
+                    margin-bottom:16px; }
+  .pipeline-strip-title { font-size:10px; font-weight:600; color:var(--text3);
+                          letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; }
+  .pipeline-nodes { display:flex; align-items:center; gap:0; }
+  .pipeline-node  { display:flex; flex-direction:column; align-items:center; gap:4px;
+                    flex:1; }
+  .pipeline-connector { width:24px; height:1px; background:var(--border2);
+                        flex-shrink:0; margin-bottom:16px; }
+  .pnode-dot  { width:28px; height:28px; border-radius:50%; border:2px solid var(--border2);
+                background:var(--bg3); display:flex; align-items:center;
+                justify-content:center; font-size:11px; transition:all .2s; }
+  .pnode-dot.done    { border-color:var(--green); background:var(--green-dim);  color:var(--green); }
+  .pnode-dot.active  { border-color:var(--accent); background:var(--accent-dim); color:var(--accent); }
+  .pnode-dot.warn    { border-color:var(--amber); background:var(--amber-dim);  color:var(--amber); }
+  .pnode-dot.err     { border-color:var(--red);   background:var(--red-dim);    color:var(--red);   }
+  .pnode-dot.pending { border-color:var(--border2); color:var(--text3); }
+  .pnode-label { font-size:10px; color:var(--text3); text-align:center; font-family:var(--mono); }
+  .pnode-status{ font-size:9px;  color:var(--text3); text-align:center; margin-top:1px; }
+  .pnode-status.done   { color:var(--green); }
+  .pnode-status.active { color:var(--accent); }
+  .pnode-status.warn   { color:var(--amber); }
+  .pnode-status.err    { color:var(--red); }
+
+  /* ── Score reason ── */
+  .score-reason { background:var(--bg3); border:1px solid var(--border);
+                  border-radius:var(--radius); padding:8px 12px;
+                  margin-bottom:12px; display:none; }
+  .score-reason.visible { display:block; }
+  .score-reason-title { font-size:10px; color:var(--text3); letter-spacing:.06em;
+                        text-transform:uppercase; margin-bottom:4px; }
+  .score-reason-text  { font-size:11px; color:var(--text2); line-height:1.5; }
+
+  /* ── Duplicate warning ── */
+  .dup-warning { background:var(--amber-dim); border:1px solid rgba(244,169,66,.3);
+                 border-radius:var(--radius); padding:10px 14px; margin-bottom:12px;
+                 display:none; }
+  .dup-warning.visible { display:block; }
+  .dup-warning-title { font-size:10px; font-weight:600; color:var(--amber);
+                       letter-spacing:.06em; text-transform:uppercase; margin-bottom:5px; }
+  .dup-warning-body  { font-size:11px; color:var(--amber); line-height:1.5; }
+  .dup-actions { display:flex; gap:6px; margin-top:8px; }
+  .dup-btn { font-size:10px; padding:3px 9px; border-radius:var(--radius);
+             border:1px solid rgba(244,169,66,.4); background:none;
+             color:var(--amber); cursor:pointer; font-family:var(--sans); }
+  .dup-btn:hover { background:var(--amber-dim); }
+
+  /* ── Preview diff ── */
+  .preview-wrap { background:var(--bg2); border:1px solid var(--border);
+                  border-radius:var(--radius-lg); padding:18px;
+                  margin-bottom:16px; display:none; }
+  .preview-wrap.visible { display:block; }
+  .preview-title { font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px; }
+  .preview-subtitle { font-size:11px; color:var(--text3); margin-bottom:12px; }
+  .diff-table { width:100%; border-collapse:collapse; font-family:var(--mono); font-size:11px; }
+  .diff-table th { text-align:left; font-size:10px; color:var(--text3);
+                   letter-spacing:.06em; text-transform:uppercase;
+                   padding:4px 8px; border-bottom:1px solid var(--border); }
+  .diff-table td { padding:5px 8px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .diff-field { color:var(--text3); }
+  .diff-old   { color:var(--text3); text-decoration:line-through; word-break:break-all; }
+  .diff-new   { color:var(--green); word-break:break-all; }
+  .diff-unchanged { color:var(--text2); }
+  .diff-row.changed { background:rgba(62,207,142,.04); }
+
+  /* ── CTA unificado ── */
+  .cta-unified { display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+                 margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
+  .ctrl-btn.cta-primary { font-size:13px; padding:8px 18px;
+                          border-color:rgba(79,142,247,.5); color:var(--accent);
+                          font-weight:600; }
+  .ctrl-btn.cta-primary:hover:not(:disabled) { background:var(--accent-dim); border-color:var(--accent); }
+  .cta-sep { width:1px; height:24px; background:var(--border2); margin:0 4px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="sidebar">
+
+    <div class="next-action-box">
+      <div class="next-action-label">Siguiente acción</div>
+      <div class="next-action-text" id="next-action-text">
+        Selecciona una vacante para empezar
+      </div>
+    </div>
+
+    <div class="snapshot-box" id="snapshot-box" style="display:none">
+      <div class="snapshot-row">
+        <div class="snapshot-empresa" id="snap-empresa">—</div>
+        <div class="snapshot-score" id="snap-score">—</div>
+      </div>
+      <div class="snapshot-rol" id="snap-rol">—</div>
+      <div class="snapshot-meta" id="snap-meta"></div>
+    </div>
+
+    <div class="tech-panel">
+      <button class="tech-toggle" id="tech-toggle" onclick="toggleTechPanel()">
+        <span>Detalles técnicos</span>
+        <span class="tech-toggle-arrow">▾</span>
+      </button>
+      <div class="tech-content" id="tech-content">
+        <div class="kv" id="kv-instance" style="margin-bottom:8px">
+          <span class="kv-k">instance_id</span>
+          <span class="kv-v muted">— sin instancia —</span>
+        </div>
+        <div style="font-size:10px;color:var(--text3);letter-spacing:.06em;
+                    text-transform:uppercase;margin:8px 0 4px">Capacidades</div>
+        <div id="caps">
+          <div class="cap-row"><div class="cap-dot off"></div>
+            <span class="cap-name">can_patch</span><span class="cap-val-f">false</span></div>
+          <div class="cap-row"><div class="cap-dot off"></div>
+            <span class="cap-name">can_validate</span><span class="cap-val-f">false</span></div>
+          <div class="cap-row"><div class="cap-dot off"></div>
+            <span class="cap-name">can_accept</span><span class="cap-val-f">false</span></div>
+          <div class="cap-row"><div class="cap-dot off"></div>
+            <span class="cap-name">can_archive</span><span class="cap-val-f">false</span></div>
+        </div>
+        <div style="font-size:10px;color:var(--text3);letter-spacing:.06em;
+                    text-transform:uppercase;margin:8px 0 4px">Datos actuales</div>
+        <div class="payload-box" id="payload-box">— cargar vacante —</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section" style="border-bottom:none;padding-bottom:4px;">
+      <div class="section-label">Historial</div>
+    </div>
+    <div class="audit-scroll" id="audit-scroll">
+      <div style="padding:12px 14px;font-size:11px;color:var(--text3)">
+        Aún no hay actividad para esta vacante
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">VANTAGE — Pipeline Dashboard</div>
+      <div class="topbar-sep"></div>
+      <span id="backend-status" class="cert">BACKEND ···</span>
+      <span class="state-badge s-BLOCKED" id="state-badge">—</span>
+    </div>
+
+    <div class="metrics-bar" id="metrics-bar">
+      <div class="metric-cell">
+        <div class="metric-val accent" id="m-pending">—</div>
+        <div class="metric-label">Pendientes</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-val green" id="m-ready">—</div>
+        <div class="metric-label">Listas para Notion</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-val amber" id="m-conflict">—</div>
+        <div class="metric-label">Con conflicto</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-val green" id="m-score70">—</div>
+        <div class="metric-label">Score 70+</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-val muted" id="m-avg">—</div>
+        <div class="metric-label">Score promedio</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-val accent" id="m-new48">—</div>
+        <div class="metric-label">Nuevas 48h</div>
+      </div>
+    </div>
+
+    <div class="main-scroll">
+
+      <div class="selector-wrap">
+        <div class="selector-title">Empezar revisión</div>
+        <div class="selector-subtitle">Vacantes pendientes de completar</div>
+        <div class="selector-row">
+          <select class="vacancy-select" id="vacancy-select">
+            <option value="">— cargando vacantes… —</option>
+          </select>
+          <button class="ctrl-btn primary" onclick="createInstance()">
+            Iniciar revisión
+          </button>
+          <button class="ctrl-btn" title="Actualizar lista" onclick="loadBlockedVacancies()">↻</button>
+        </div>
+        <details class="recovery-toggle">
+          <summary>Recuperación / Debug</summary>
+          <div class="recovery-content">
+            <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">
+              cargar instancia existente:
+            </span>
+            <input id="existing-id" class="patch-input"
+                   style="width:180px;font-size:10px;"
+                   placeholder="inst_xxxxxxxx" type="text">
+            <button class="ctrl-btn" onclick="loadExistingInstance()"
+                    style="font-size:11px;padding:4px 10px;">
+              Cargar
+            </button>
+          </div>
+        </details>
+      </div>
+
+      <!-- Pipeline strip -->
+      <div class="pipeline-strip" id="pipeline-strip" style="display:none">
+        <div class="pipeline-strip-title">Estado en el pipeline</div>
+        <div class="pipeline-nodes">
+          <div class="pipeline-node" id="pnode-l1">
+            <div class="pnode-dot pending" id="pnode-l1-dot">L1</div>
+            <div class="pnode-label">Origen</div>
+            <div class="pnode-status" id="pnode-l1-status">—</div>
+          </div>
+          <div class="pipeline-connector"></div>
+          <div class="pipeline-node" id="pnode-rt1">
+            <div class="pnode-dot pending" id="pnode-rt1-dot">RT</div>
+            <div class="pnode-label">Revisión</div>
+            <div class="pnode-status" id="pnode-rt1-status">—</div>
+          </div>
+          <div class="pipeline-connector"></div>
+          <div class="pipeline-node" id="pnode-notion">
+            <div class="pnode-dot pending" id="pnode-notion-dot">N</div>
+            <div class="pnode-label">Notion</div>
+            <div class="pnode-status" id="pnode-notion-status">—</div>
+          </div>
+          <div class="pipeline-connector"></div>
+          <div class="pipeline-node" id="pnode-mail">
+            <div class="pnode-dot pending" id="pnode-mail-dot">✉</div>
+            <div class="pnode-label">Mail L3</div>
+            <div class="pnode-status" id="pnode-mail-status">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Score reason -->
+      <div class="score-reason" id="score-reason">
+        <div class="score-reason-title">Por qué este score</div>
+        <div class="score-reason-text" id="score-reason-text">—</div>
+      </div>
+
+      <!-- Duplicate warning -->
+      <div class="dup-warning" id="dup-warning">
+        <div class="dup-warning-title">⚠ Posible duplicado</div>
+        <div class="dup-warning-body" id="dup-warning-body">—</div>
+        <div class="dup-actions">
+          <button class="dup-btn" onclick="dismissDupWarning()">Ignorar</button>
+          <button class="dup-btn" onclick="syncInstance()">Sincronizar con Notion</button>
+        </div>
+      </div>
+
+      <div class="block-reason" id="block-reason">
+        <div class="block-reason-title">⚠ Por qué está bloqueada</div>
+        <div class="block-reason-text" id="block-reason-text">—</div>
+      </div>
+
+      <div class="patch-wrap">
+        <div class="patch-title">Completar datos de la vacante</div>
+        <div class="patch-subtitle">Revisa y corrige los campos antes de guardar en Notion</div>
+        <div class="patch-grid">
+          <div class="patch-field">
+            <label class="patch-label">Rol</label>
+            <input class="patch-input" id="p-rol" placeholder="Visual Merchandising Manager">
+          </div>
+          <div class="patch-field">
+            <label class="patch-label">Empresa</label>
+            <input class="patch-input" id="p-marca" placeholder="Nike">
+          </div>
+          <div class="patch-field" style="grid-column:1/-1">
+            <label class="patch-label">URL de la vacante</label>
+            <input class="patch-input" id="p-url"
+                   placeholder="https://jobs.nike.com/job/...">
+          </div>
+          <div class="patch-field">
+            <label class="patch-label">Origen</label>
+            <select class="patch-input" id="p-source-type">
+              <option value="">— sin cambio —</option>
+              <option value="Vacante">Vacante</option>
+              <option value="Inbound">Inbound</option>
+              <option value="Referencia">Referencia</option>
+              <option value="Networking">Networking</option>
+            </select>
+          </div>
+          <div class="patch-field">
+            <label class="patch-label">Prioridad</label>
+            <select class="patch-input" id="p-prioridad">
+              <option value="">— sin cambio —</option>
+              <option value="1">1 — Alta</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4 — Baja</option>
+            </select>
+          </div>
+          <div class="patch-field" style="grid-column:1/-1">
+            <label class="patch-label">Descripción del puesto (JD)</label>
+            <textarea class="patch-textarea" id="p-jd"
+                      placeholder="Pega aquí el texto de la descripción del puesto…"></textarea>
+          </div>
+        </div>
+
+        <div class="validation-result" id="validation-result"></div>
+
+        <div class="cta-unified">
+          <button class="ctrl-btn cta-primary" id="btn-cta"
+                  onclick="handleCTA()" disabled
+                  data-tip="Selecciona una vacante primero">
+            Completar y validar
+          </button>
+          <button class="ctrl-btn success" id="btn-accept"
+                  onclick="acceptPatch()" disabled
+                  data-tip="La validación debe pasar primero">
+            Guardar en Notion
+          </button>
+          <div class="cta-sep"></div>
+          <button class="ctrl-btn" id="btn-preview"
+                  onclick="togglePreview()" disabled
+                  data-tip="Propón cambios para ver el diff">
+            Ver cambios
+          </button>
+          <button class="ctrl-btn" id="btn-sync"
+                  onclick="syncInstance()" disabled
+                  data-tip="Carga una vacante para sincronizar">
+            Actualizar desde Notion
+          </button>
+          <button class="ctrl-btn danger" id="btn-archive"
+                  onclick="archiveInstance()" disabled
+                  data-tip="Carga una vacante para archivar">
+            Archivar vacante
+          </button>
+        </div>
+      </div>
+
+      <!-- Preview diff -->
+      <div class="preview-wrap" id="preview-wrap">
+        <div class="preview-title">Vista previa — cambios a guardar en Notion</div>
+        <div class="preview-subtitle">Antes → después por campo. Solo se muestran campos con cambios.</div>
+        <table class="diff-table">
+          <thead>
+            <tr>
+              <th>Campo</th>
+              <th>Valor actual</th>
+              <th>Nuevo valor</th>
+            </tr>
+          </thead>
+          <tbody id="diff-body">
+            <tr><td colspan="3" style="color:var(--text3);padding:10px 8px">
+              Sugiere cambios primero para ver el diff
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div></div></div><div class="err-toast" id="err-toast"></div>
+<div class="ok-toast"  id="ok-toast"></div>
+
+<script>
+const BACKEND = 'http://127.0.0.1:8000';
+let currentInstance = null;
+
+// ── Siguiente acción ──────────────────────────────────────────────────────────
+const NEXT_ACTIONS = {
+  no_instance:       'Selecciona una vacante para empezar',
+  has_instance:      'Revisa y completa los datos de la vacante',
+  patch_ready:       'Valida los cambios con Python',
+  patched:           'Listo para guardar en Notion — haz clic en ③',
+  returned:          'Vacante guardada ✓ — corre el pipeline para reprocesar',
+  version_conflict:  'Conflicto de versión detectado — sincroniza desde Notion',
+  failed:            'Error en el proceso — revisa el historial',
+};
+
+const setNextAction = key => {
+  document.getElementById('next-action-text').textContent =
+    NEXT_ACTIONS[key] || key;
+};
+
+// ── Snapshot de vacante ───────────────────────────────────────────────────────
+const renderSnapshot = (payload, state) => {
+  const box = document.getElementById('snapshot-box');
+  if (!payload || !payload.marca) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+
+  document.getElementById('snap-empresa').textContent = payload.marca || '—';
+  document.getElementById('snap-rol').textContent = payload.rol || '—';
+
+  const score = payload.score ?? null;
+  const scoreEl = document.getElementById('snap-score');
+  if (score !== null) {
+    scoreEl.textContent = `Score ${score}`;
+    scoreEl.className = 'snapshot-score ' +
+      (score >= 70 ? 'high' : score >= 40 ? 'mid' : 'low');
+  } else {
+    scoreEl.textContent = '—';
+    scoreEl.className = 'snapshot-score';
+  }
+
+  const tags = [];
+  if (payload.source_type) tags.push(payload.source_type);
+  if (payload.gate)        tags.push(payload.gate);
+  if (state)               tags.push(state);
+  document.getElementById('snap-meta').innerHTML =
+    tags.map(t => `<span class="snapshot-tag">${t}</span>`).join('');
+};
+
+// ── Panel técnico toggle ──────────────────────────────────────────────────────
+const toggleTechPanel = () => {
+  const toggle  = document.getElementById('tech-toggle');
+  const content = document.getElementById('tech-content');
+  toggle.classList.toggle('open');
+  content.classList.toggle('open');
+};
+
+// ── API helpers ───────────────────────────────────────────────────────────────
+const api = async (method, path, body = null) => {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(`${BACKEND}${path}`, opts);
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+  return data;
+};
+
+const checkBackend = async () => {
+  const el = document.getElementById('backend-status');
+  try {
+    await api('GET', '/health');
+    el.textContent = 'BACKEND OK';
+    el.className = 'cert ok';
+  } catch {
+    el.textContent = 'BACKEND OFFLINE';
+    el.className = 'cert';
+    showToast('Backend offline. Corre: python3 scripts/dashboard_server.py', 'err');
+  }
+};
+
+const loadBlockedVacancies = async () => {
+  const sel = document.getElementById('vacancy-select');
+  sel.innerHTML = '<option value="">— cargando… —</option>';
+  try {
+    const data = await api('GET', '/blocked-vacancies');
+    _allVacancies = data.vacancies || [];
+    renderMetrics(_allVacancies);
+    sel.innerHTML = '<option value="">— seleccionar vacante pendiente —</option>';
+    if (!data.vacancies.length) {
+      sel.innerHTML = '<option value="">— sin vacantes pendientes —</option>';
+      return;
+    }
+    for (const v of data.vacancies) {
+      const opt = document.createElement('option');
+      opt.value = v.notion_page_id;
+      const tag = v.has_active_rt1 ? ' [en revisión]' : '';
+      opt.textContent =
+        `${v.marca || '—'} · ${v.rol || '—'} · Score:${v.score ?? '?'}${tag}`;
+      if (v.has_active_rt1) opt.style.color = 'var(--text3)';
+      sel.appendChild(opt);
+    }
+  } catch(e) {
+    sel.innerHTML = '<option value="">— error cargando vacantes —</option>';
+    showToast(e.message, 'err');
+  }
+};
+
+const createInstance = async () => {
+  const notion_page_id = document.getElementById('vacancy-select').value;
+  if (!notion_page_id) { showToast('Selecciona una vacante primero', 'err'); return; }
+  try {
+    const data = await api('POST', '/instances', { notion_page_id });
+    currentInstance = data;
+    populatePatchFields(data.payload);
+    renderInstance(data);
+    _dupDismissed = false;
+    checkDuplicates(data);
+    renderScoreReason(data.payload || {});
+    renderPipelineStrip(data);
+    // Sugerir prioridad si no tiene
+    const sugP = suggestPriority(data.payload || {});
+    const prioEl = document.getElementById('p-prioridad');
+    if (sugP && (!data.payload?.prioridad)) prioEl.value = sugP;
+    setCTAMode('propose');
+    document.getElementById('btn-cta').disabled = false;
+    document.getElementById('btn-cta').removeAttribute('data-tip');
+    showToast('Revisión iniciada', 'ok');
+  } catch(e) {
+    if (e.message.includes('INSTANCE_ALREADY_ACTIVE')) {
+      const parts = e.message.match(/inst_\w+/);
+      showToast(`Ya hay una revisión activa: ${parts?.[0] || ''}. Cárgala en Recuperación.`, 'err');
+    } else {
+      showToast(e.message, 'err');
+    }
+  }
+};
+
+const loadExistingInstance = async () => {
+  const id = document.getElementById('existing-id').value.trim();
+  if (!id) { showToast('Escribe un instance_id', 'err'); return; }
+  try {
+    const data = await api('GET', `/instances/${id}`);
+    currentInstance = data;
+    populatePatchFields(data.payload);
+    renderInstance(data);
+  } catch(e) {
+    showToast(e.message, 'err');
+  }
+};
+
+const populatePatchFields = payload => {
+  document.getElementById('p-rol').value   = payload.rol || '';
+  document.getElementById('p-marca').value = payload.marca || '';
+  document.getElementById('p-url').value   = payload.url || '';
+  document.getElementById('p-jd').value    = payload.jd || '';
+  const st = document.getElementById('p-source-type');
+  if (payload.source_type) st.value = payload.source_type;
+};
+
+const proposePatch = async () => {
+  if (!currentInstance) return;
+  const patch = buildPatch();
+  if (!Object.keys(patch).length) {
+    showToast('Modifica al menos un campo antes de sugerir cambios', 'err');
+    return;
+  }
+  try {
+    const data = await api('POST',
+      `/instances/${currentInstance.instance_id}/patch`, { patch });
+    currentInstance.proposed_patch = patch;
+    currentInstance.event_sequence = data.sequence;
+    renderInstance(currentInstance);
+    setCTAMode('validate');
+    document.getElementById('btn-preview').disabled = false;
+    document.getElementById('btn-preview').removeAttribute('data-tip');
+    if (_previewVisible) renderDiff(currentInstance.payload || {}, patch);
+    setNextAction('patch_ready');
+    showToast('Cambios listos — ahora valida', 'ok');
+  } catch(e) { showToast(e.message, 'err'); }
+};
+
+const validatePatch = async () => {
+  if (!currentInstance) return;
+  setBtnLoading('btn-cta', true);
+  try {
+    const data = await api('POST',
+      `/instances/${currentInstance.instance_id}/validate`);
+    const el = document.getElementById('validation-result');
+    const v  = data.validation;
+
+    if (data.state === 'PATCHED') {
+      el.className = 'validation-result ok';
+      el.textContent =
+        `✓ Validación OK — Gate: ${v.gate_decision} · Score: ${v.score} · ` +
+        `VM_Scope: ${v.vm_scope} · Role_Class: ${v.role_class} · Match: ${v.match}`;
+      document.getElementById('btn-accept').disabled = false;
+      document.getElementById('btn-accept').removeAttribute('data-tip');
+      currentInstance.state = 'PATCHED';
+      setCTAMode('done');
+      setNextAction('patched');
+    } else {
+      el.className = 'validation-result fail';
+      el.textContent =
+        `✗ Validación falló — ${v.block_reason} · URL: ${v.url_reason} · ` +
+        `Score: ${v.score} · VM_Scope: ${v.vm_scope} · Role_Class: ${v.role_class}`;
+      currentInstance.state = 'BLOCKED';
+      setCTAMode('propose');
+      setNextAction('has_instance');
+    }
+    el.style.display = 'block';
+    const fresh = await api('GET', `/instances/${currentInstance.instance_id}`);
+    currentInstance = fresh;
+    renderInstance(fresh);
+    renderPipelineStrip(fresh);
+  } catch(e) { showToast(e.message, 'err'); }
+  finally { setBtnLoading('btn-cta', false); }
+};
+
+const acceptPatch = async () => {
+  if (!currentInstance) return;
+  setBtnLoading('btn-accept', true);
+  try {
+    await api('POST', `/instances/${currentInstance.instance_id}/accept`);
+    currentInstance.state = 'RETURNED_TO_CREATE';
+    const fresh = await api('GET', `/instances/${currentInstance.instance_id}`);
+    currentInstance = fresh;
+    renderInstance(fresh);
+    renderPipelineStrip(fresh);
+    setCTAMode('done');
+    document.getElementById('btn-accept').disabled = true;
+    document.getElementById('btn-preview').disabled = true;
+    setNextAction('returned');
+    loadBlockedVacancies(); // refrescar métricas
+    showToast('✓ Guardado en Notion. Corre el pipeline para reprocesar.', 'ok');
+  } catch(e) { showToast(e.message, 'err'); }
+  finally { setBtnLoading('btn-accept', false); }
+};
+
+const syncInstance = async () => {
+  if (!currentInstance) return;
+  try {
+    const data = await api('POST',
+      `/instances/${currentInstance.instance_id}/sync`);
+    const fresh = await api('GET', `/instances/${currentInstance.instance_id}`);
+    currentInstance = fresh;
+    populatePatchFields(data.payload);
+    renderInstance(fresh);
+    renderPipelineStrip(fresh);
+    renderScoreReason(data.payload || {});
+    _dupDismissed = false;
+    checkDuplicates(fresh);
+    showToast('Datos actualizados desde Notion.', 'ok');
+  } catch(e) { showToast(e.message, 'err'); }
+};
+
+const archiveInstance = async () => {
+  if (!currentInstance) return;
+  if (!confirm(`¿Archivar "${currentInstance.payload?.marca} — ${currentInstance.payload?.rol}"?\nEsta acción marca la vacante como Archivar en Notion.`)) return;
+  try {
+    await api('POST', `/instances/${currentInstance.instance_id}/archive`);
+    const fresh = await api('GET', `/instances/${currentInstance.instance_id}`);
+    currentInstance = fresh;
+    renderInstance(fresh);
+    disableAllButtons();
+    showToast('Vacante archivada en Notion.', 'ok');
+  } catch(e) { showToast(e.message, 'err'); }
+};
+
+const buildPatch = () => {
+  const patch = {};
+  const current = currentInstance?.payload || {};
+  const rol    = document.getElementById('p-rol').value.trim();
+  const marca  = document.getElementById('p-marca').value.trim();
+  const url    = document.getElementById('p-url').value.trim();
+  const jd     = document.getElementById('p-jd').value.trim();
+  const source = document.getElementById('p-source-type').value;
+  const prio   = document.getElementById('p-prioridad').value;
+  if (rol   && rol   !== current.rol)           patch.rol         = rol;
+  if (marca && marca !== current.marca)         patch.marca       = marca;
+  if (url   && url   !== current.url)           patch.url         = url;
+  if (jd    && jd    !== current.jd)            patch.jd          = jd;
+  if (source && source !== current.source_type) patch.source_type = source;
+  if (prio  && prio  !== String(current.prioridad)) patch.prioridad = prio;
+  return patch;
+};
+
+const ALL_STATES = ['BLOCKED','PATCHED','RETURNED_TO_CREATE','VERSION_CONFLICT','FAILED'];
+
+const STATE_TO_NEXT = {
+  BLOCKED:            'has_instance',
+  PATCHED:            'patched',
+  RETURNED_TO_CREATE: 'returned',
+  VERSION_CONFLICT:   'version_conflict',
+  FAILED:             'failed',
+};
+
+const renderInstance = inst => {
+  const state = inst.state || inst.status || 'BLOCKED';
+
+  document.getElementById('state-badge').textContent = state;
+  document.getElementById('state-badge').className   = `state-badge s-${state}`;
+
+  const payload = inst.payload || {};
+  renderSnapshot(payload, state);
+  setNextAction(STATE_TO_NEXT[state] || 'has_instance');
+
+  const br = inst.block_reason || payload.block_reason;
+  const brEl = document.getElementById('block-reason');
+  if (br && state === 'BLOCKED') {
+    brEl.classList.add('visible');
+    document.getElementById('block-reason-text').textContent = br;
+  } else {
+    brEl.classList.remove('visible');
+  }
+
+  // Sidebar técnico
+  document.getElementById('kv-instance').innerHTML = `
+    <span class="kv-k">instance_id</span>
+    <span class="kv-v info">${inst.instance_id}</span>
+    <span class="kv-k">version_id</span>
+    <span class="kv-v">${inst.version_id}</span>
+    <span class="kv-k">sequence</span>
+    <span class="kv-v">${inst.event_sequence}</span>
+    <span class="kv-k">notion_id</span>
+    <span class="kv-v muted" style="font-size:9px">${inst.notion_page_id}</span>
+    <span class="kv-k">estado</span>
+    <span class="kv-v ${state==='RETURNED_TO_CREATE'?'ok':state==='FAILED'?'danger':'warn'}">
+      ${state}
+    </span>
+  `;
+
+  document.getElementById('payload-box').textContent =
+    `empresa: ${payload.marca || '—'}\n` +
+    `rol:     ${payload.rol   || '—'}\n` +
+    `url:     ${(payload.url  || '—').slice(0,40)}\n` +
+    `score:   ${payload.score ?? '?'}\n` +
+    `gate:    ${payload.gate  || '—'}\n` +
+    (inst.proposed_patch 
+      ? `\ncambios propuestos:\n  ${JSON.stringify(inst.proposed_patch, null, 2).slice(0, 200)}` 
+      : '');
+
+  const caps = {
+    can_patch:    state === 'BLOCKED',
+    can_validate: state === 'BLOCKED' && !!inst.proposed_patch,
+    can_accept:   state === 'PATCHED',
+    can_archive:  state !== 'RETURNED_TO_CREATE',
+  };
+  document.getElementById('caps').innerHTML = Object.entries(caps).map(([k,v]) => `
+    <div class="cap-row">
+      <div class="cap-dot ${v ? 'on' : 'off'}"></div>
+      <span class="cap-name">${k}</span>
+      <span class="${v ? 'cap-val-t' : 'cap-val-f'}">${v}</span>
+    </div>
+  `).join('');
+
+  const ctaBtn = document.getElementById('btn-cta');
+  ctaBtn.disabled = !caps.can_patch && _ctaMode !== 'validate';
+  if (caps.can_patch || _ctaMode === 'validate') ctaBtn.removeAttribute('data-tip');
+  document.getElementById('btn-accept').disabled   = !caps.can_accept;
+  document.getElementById('btn-archive').disabled  = !caps.can_archive;
+  document.getElementById('btn-sync').disabled     = false;
+  document.getElementById('btn-sync').removeAttribute('data-tip');
+
+  // Historial
+  const log = inst.audit_log || [];
+  if (!log.length) {
+    document.getElementById('audit-scroll').innerHTML =
+      '<div style="padding:12px 14px;font-size:11px;color:var(--text3)">Aún no hay actividad para esta vacante</div>';
+  } else {
+    document.getElementById('audit-scroll').innerHTML = [...log].reverse()
+      .map((e, i) => {
+        const isDomain = e.event_type.startsWith('domain.');
+        const isErr    = e.event_type.includes('conflict') || e.event_type.includes('archived');
+        const cls = isErr ? 'err' : (isDomain ? 'domain' : 'system');
+        const [ns, ...rest] = e.event_type.split('.');
+        return `
+        <div class="audit-entry">
+          <span class="audit-seq">${e.sequence}</span>
+          <div class="audit-dot-col">
+            <div class="audit-dot ${cls}${i===0?' latest':''}"></div>
+          </div>
+          <div class="audit-info">
+            <div class="audit-type">
+              <span class="audit-ns">${ns}.</span>
+              <span class="audit-name">${rest.join('.')}</span>
+            </div>
+            <div class="audit-ts">ts:${e.timestamp}</div>
+          </div>
+        </div>`;
+      }).join('');
+  }
+};
+
+const disableAllButtons = () => {
+  ['btn-cta','btn-accept','btn-archive','btn-sync','btn-preview']
+    .forEach(id => document.getElementById(id).disabled = true);
+};
+
+const btnOrigText = {};
+const setBtnLoading = (id, loading) => {
+  const btn = document.getElementById(id);
+  if (loading) {
+    btnOrigText[id] = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner"></span>';
+    btn.disabled = true;
+  } else {
+    btn.innerHTML = btnOrigText[id] || btn.innerHTML;
+    btn.disabled = false;
+  }
+};
+
+let toastTimer;
+const showToast = (msg, type = 'err') => {
+  const id = type === 'ok' ? 'ok-toast' : 'err-toast';
+  const other = type === 'ok' ? 'err-toast' : 'ok-toast';
+  document.getElementById(other).classList.remove('show');
+  const t = document.getElementById(id);
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+};
+
+// ── Métricas agregadas ────────────────────────────────────────────────────────
+const renderMetrics = (vacancies) => {
+  const all     = vacancies || [];
+  const pending  = all.filter(v => !v.has_active_rt1).length;
+  const ready    = all.filter(v => v.state === 'PATCHED').length;
+  const conflict = all.filter(v => v.state === 'VERSION_CONFLICT').length;
+  const s70      = all.filter(v => (v.score ?? 0) >= 70).length;
+  const scores   = all.map(v => v.score).filter(s => s != null);
+  const avg      = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : null;
+
+  // 48h: usar detected_at o created_time si el backend lo expone
+  const cutoff = Date.now() - 48*60*60*1000;
+  const new48  = all.filter(v => {
+    const ts = v.detected_at || v.created_time;
+    return ts && new Date(ts).getTime() > cutoff;
+  }).length;
+
+  document.getElementById('m-pending').textContent  = pending;
+  document.getElementById('m-ready').textContent    = ready;
+  document.getElementById('m-conflict').textContent = conflict;
+  document.getElementById('m-score70').textContent  = s70;
+  document.getElementById('m-avg').textContent      = avg !== null ? avg : '—';
+  document.getElementById('m-new48').textContent    = new48 > 0 ? new48 : '—';
+};
+
+// ── Pipeline strip ─────────────────────────────────────────────────────────────
+const renderPipelineStrip = (inst) => {
+  const strip = document.getElementById('pipeline-strip');
+  if (!inst) { strip.style.display = 'none'; return; }
+  strip.style.display = 'block';
+
+  const payload = inst.payload || {};
+  const state   = inst.state || 'BLOCKED';
+
+  // L1 — origen
+  const srcType = payload.source_type || payload.Source_Type;
+  setNode('l1', srcType ? 'done' : 'pending',
+          srcType ? srcType : '—');
+
+  // RT-1 — revisión actual
+  const rtClass = state === 'RETURNED_TO_CREATE' ? 'done'
+                : state === 'PATCHED'            ? 'active'
+                : state === 'VERSION_CONFLICT'   ? 'err'
+                : state === 'FAILED'             ? 'err'
+                : 'active';
+  const rtLabel = state === 'RETURNED_TO_CREATE' ? 'completada'
+                : state === 'PATCHED'            ? 'validada'
+                : state === 'VERSION_CONFLICT'   ? 'conflicto'
+                : state === 'FAILED'             ? 'error'
+                : 'en curso';
+  setNode('rt1', rtClass, rtLabel);
+
+  // Notion — si ya fue aceptado (RETURNED_TO_CREATE = ya se escribió)
+  const notionSynced = state === 'RETURNED_TO_CREATE';
+  setNode('notion',
+          notionSynced ? 'done' : 'pending',
+          notionSynced ? 'sincronizado' : '—');
+
+  // Mail L3 — depende de campo futuro del backend
+  const mailStatus = payload.mail_status || payload.layer3_status || null;
+  const mailClass  = !mailStatus           ? 'pending'
+                   : mailStatus === 'sent' ? 'done'
+                   : mailStatus === 'replied' ? 'done'
+                   : 'active';
+  setNode('mail', mailClass, mailStatus || '—');
+};
+
+const setNode = (id, cls, statusText) => {
+  const dot    = document.getElementById(`pnode-${id}-dot`);
+  const status = document.getElementById(`pnode-${id}-status`);
+  dot.className    = `pnode-dot ${cls}`;
+  status.textContent = statusText;
+  status.className   = `pnode-status ${cls}`;
+};
+
+// ── Score reason ───────────────────────────────────────────────────────────────
+const renderScoreReason = (payload) => {
+  const el   = document.getElementById('score-reason');
+  const text = document.getElementById('score-reason-text');
+  const reason = payload.score_reason || payload.score_explanation || null;
+  if (reason) {
+    text.textContent = reason;
+    el.classList.add('visible');
+  } else {
+    el.classList.remove('visible');
+  }
+};
+
+// ── Duplicate detection ────────────────────────────────────────────────────────
+let _allVacancies = [];
+let _dupDismissed = false;
+
+const checkDuplicates = (inst) => {
+  const el = document.getElementById('dup-warning');
+  if (_dupDismissed || !inst) { el.classList.remove('visible'); return; }
+
+  const payload = inst.payload || {};
+  const marca   = (payload.marca  || '').toLowerCase().trim();
+  const rol     = (payload.rol    || '').toLowerCase().trim();
+  const url     = (payload.url    || '').toLowerCase().trim();
+
+  const matches = _allVacancies.filter(v => {
+    if (v.notion_page_id === inst.notion_page_id) return false;
+    const vm = (v.marca || '').toLowerCase().trim();
+    const vr = (v.rol   || '').toLowerCase().trim();
+    const vu = (v.url   || '').toLowerCase().trim();
+    // URL exacta, o misma empresa+rol similar
+    if (url && vu && url === vu) return true;
+    if (marca && vm === marca && rol && vr.includes(rol.slice(0,8))) return true;
+    return false;
+  });
+
+  if (matches.length) {
+    const names = matches.map(v => `${v.marca} — ${v.rol}`).join('; ');
+    document.getElementById('dup-warning-body').textContent =
+      `Posible entrada duplicada: ${names}. Verifica antes de guardar en Notion.`;
+    el.classList.add('visible');
+  } else {
+    el.classList.remove('visible');
+  }
+};
+
+const dismissDupWarning = () => {
+  _dupDismissed = true;
+  document.getElementById('dup-warning').classList.remove('visible');
+};
+
+// ── Prioridad sugerida ─────────────────────────────────────────────────────────
+const suggestPriority = (payload) => {
+  if (!payload) return null;
+  const score = payload.score ?? 0;
+  const src   = (payload.source_type || '').toLowerCase();
+  let p = 3;
+  if (score >= 80)                        p = 1;
+  else if (score >= 60)                   p = 2;
+  else if (score >= 40)                   p = 3;
+  else                                    p = 4;
+  if (src === 'inbound' || src === 'referencia') p = Math.max(1, p - 1);
+  return String(p);
+};
+
+// ── CTA unificado ─────────────────────────────────────────────────────────────
+// Estados del CTA: 'propose' | 'validate' | 'done'
+let _ctaMode = 'propose';
+
+const setCTAMode = (mode) => {
+  _ctaMode = mode;
+  const btn = document.getElementById('btn-cta');
+  if (mode === 'propose') {
+    btn.textContent = 'Sugerir cambios';
+    btn.className   = 'ctrl-btn cta-primary';
+  } else if (mode === 'validate') {
+    btn.textContent = 'Validar con Python';
+    btn.className   = 'ctrl-btn cta-primary';
+  } else {
+    btn.textContent = '✓ Completado';
+    btn.disabled    = true;
+    btn.className   = 'ctrl-btn';
+  }
+};
+
+const handleCTA = async () => {
+  if (_ctaMode === 'propose')   await proposePatch();
+  else if (_ctaMode === 'validate') await validatePatch();
+};
+
+// ── Preview diff ───────────────────────────────────────────────────────────────
+let _previewVisible = false;
+
+const renderDiff = (current, patch) => {
+  const LABELS = {
+    rol: 'Rol', marca: 'Empresa', url: 'URL', jd: 'JD',
+    source_type: 'Origen', prioridad: 'Prioridad',
+  };
+  const tbody = document.getElementById('diff-body');
+  if (!patch || !Object.keys(patch).length) {
+    tbody.innerHTML = '<tr><td colspan="3" style="color:var(--text3);padding:10px 8px">Sin cambios propuestos todavía</td></tr>';
+    return;
+  }
+  const rows = Object.entries(patch).map(([k, newVal]) => {
+    const oldVal = current[k] ?? '—';
+    const label  = LABELS[k] || k;
+    const oldTrunc = String(oldVal).slice(0, 120);
+    const newTrunc = String(newVal).slice(0, 120);
+    return `<tr class="diff-row changed">
+      <td class="diff-field">${label}</td>
+      <td class="diff-old">${oldTrunc || '—'}</td>
+      <td class="diff-new">${newTrunc}</td>
+    </tr>`;
+  }).join('');
+  tbody.innerHTML = rows;
+};
+
+const togglePreview = () => {
+  const wrap = document.getElementById('preview-wrap');
+  _previewVisible = !_previewVisible;
+  wrap.classList.toggle('visible', _previewVisible);
+  document.getElementById('btn-preview').textContent =
+    _previewVisible ? 'Ocultar diff' : 'Ver cambios';
+  if (_previewVisible && currentInstance) {
+    renderDiff(currentInstance.payload || {}, currentInstance.proposed_patch || {});
+  }
+};
+
+checkBackend();
+loadBlockedVacancies();
+setNextAction('no_instance');
+</script>
+</body>
+</html>
