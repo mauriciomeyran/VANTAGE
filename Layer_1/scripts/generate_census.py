@@ -57,9 +57,11 @@ CENSUS_SPEC = [
         "name": "KERNEL",
         "rows": [
             {"id": "KERNEL:BOOTSTRAP-001"},
+            {"id": "KERNEL:AUDIENCE-SCOPE"},
             {"id": "KERNEL:PURPOSE"},
             {"id": "KERNEL:ARCHITECTURE"},
             {"id": "KERNEL:ARCHITECTURE-L0"},
+            {"id": "KERNEL:ARCHITECTURE-L0-BOOTSTRAP"},
             {"id": "KERNEL:ARCHITECTURE-L1"},
             {"id": "KERNEL:ARCHITECTURE-L2"},
             {"id": "KERNEL:ARCHITECTURE-L3"},
@@ -98,6 +100,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:GATE-DECISION-003"},
             {"id": "KERNEL:GATE-DECISION-004"},
             {"id": "KERNEL:GATE-DECISION-005"},
+            {"id": "KERNEL:NAMING-CONVENTION"},
             {"id": "KERNEL:CV-GOLDEN-RULES"},
             {"id": "KERNEL:CV-GOLDEN-RULES-001"},
             {"id": "KERNEL:CV-GOLDEN-RULES-002"},
@@ -113,10 +116,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:EVOLUTION"},
             {"id": "KERNEL:DOC-CONTRACT"},
             {"id": "KERNEL:NORM"},
-            # KERNEL:NAMING-CONVENTION pendiente de alta formal en el spec —
-            # ver nota de sesión 2026-07-08: sección escrita en el Kernel pero
-            # aún no agregada aquí. Hasta que se agregue, generate_census.py
-            # la reportará como huérfana (comportamiento correcto e intencional).
+            {"id": "KERNEL:CENSUS-SYNC"},
         ],
     },
     {
@@ -204,6 +204,9 @@ CENSUS_SPEC = [
             {"id": "CANON:OUTPUT-CONTRACT-001"},
             {"id": "CANON:OUTPUT-CONTRACT-SKELETON-001"},
             {"id": "CANON:OUTPUT-CONTRACT-TAGREGISTRY-001"},
+            {"id": "CANON:FIGMA-TAG-SCHEMA"},
+            {"id": "CANON:POSITIONING-MODE"},
+            {"id": "CANON:TAG-REGISTRY"},
         ],
     },
 ]

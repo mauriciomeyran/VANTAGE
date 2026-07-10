@@ -3,7 +3,7 @@
 # VANTAGE LAYER_1 — Pipeline Notion (core) v7.5
 # Uso: layer_1_pipeline.sh [status|analytics|batch|recovery|profile|feed|backfill]
 
-LAYER_1_DIR="${LAYER_1_DIR:-$HOME/Documents/04-VANTAGE_CV/LAYER_1}"
+LAYER_1_DIR="${LAYER_1_DIR:-$HOME/Documents/03 Projects/VANTAGE/Layer_1}"
 
 run_module() {
     local script="$1"

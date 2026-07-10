@@ -382,7 +382,7 @@ def get_match_level_v6(score):
         return "Bajo"  # Revisar
 
 def gate(fetch, vm_scope, role_class, source_type, rol="", marca=""):
-    import sys, os; sys.path.insert(0, os.path.expanduser("~/Documents/04-Vantage_CV/Layer_1/scripts"))
+    import sys, os; sys.path.insert(0, os.path.expanduser("~/Documents/03 Projects/VANTAGE/Layer_1/scripts"))
     from profile_fit import has_vm_title_signal, is_role_excluded, resolve_alias_flags
 
     if is_role_excluded(rol) or resolve_alias_flags(marca)[0]:
@@ -673,7 +673,7 @@ def main():
 
     # ==================== PASO 1.5: LIMPIEZA POR FIT / EXCLUSIONES ====================
     print("\nPaso 1.5: Limpieza por fit de perfil y exclusiones...")
-    import sys, os; sys.path.insert(0, os.path.expanduser("~/Documents/04-Vantage_CV/Layer_1/scripts"))
+    import sys, os; sys.path.insert(0, os.path.expanduser("~/Documents/03 Projects/VANTAGE/Layer_1/scripts"))
     from profile_fit import profile_misfit_reasons, should_auto_cleanup
 
     misfit_updates = 0
