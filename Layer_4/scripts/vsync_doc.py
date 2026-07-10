@@ -335,33 +335,46 @@ def main():
     print(f"\nvsync_doc v8.5.4 L4 → ACTIVE  [{args.direction.upper()}]{' DRY' if args.dry_run else ''}\n")
 
     for k, d in targets.items():
+        local = d["local_file"]
+
+        # ── DRY RUN: solo metadata (pages.retrieve), sin fetch recursivo de bloques ──
+        if args.dry_run:
+            meta = notion.pages.retrieve(d["notion_id"])
+            ts = datetime.fromisoformat(meta["last_edited_time"].replace("Z","+00:00"))
+            local_ts = datetime.fromtimestamp(local.stat().st_mtime, tz=timezone.utc) if local.exists() else None
+
+            if args.direction == "notion":
+                print(f"  · {d['label']:<30} [DRY] notion→local (sin cambios aplicados)")
+            elif args.direction == "local":
+                print(f"  · {d['label']:<30} [DRY] local→notion (sin cambios aplicados)")
+            else:
+                winner = "local→notion" if (local_ts and local_ts > ts) else "notion→local"
+                print(f"  · {d['label']:<30} [DRY] {winner} (auto, sin cambios aplicados)")
+            continue
+
+        # ── RUN REAL: aquí sí se justifica el fetch completo y recursivo ──
         md, ts = fetch_notion_as_md(d["notion_id"])
         if md is None:
             print(f"  ✗ {d['label']:<30} ERROR")
             continue
-        local = d["local_file"]
 
         if args.direction == "notion":
-            if not args.dry_run:
-                local.parent.mkdir(parents=True, exist_ok=True)
-                local.write_text(md, encoding="utf-8")
+            local.parent.mkdir(parents=True, exist_ok=True)
+            local.write_text(md, encoding="utf-8")
             print(f"  ✓ {d['label']:<30} notion→local")
 
         elif args.direction == "local":
-            if not args.dry_run:
-                push_local_to_notion(d["notion_id"], local)
+            push_local_to_notion(d["notion_id"], local)
             print(f"  ✓ {d['label']:<30} local→notion")
 
         else:  # auto — gana el más reciente
             local_ts = datetime.fromtimestamp(local.stat().st_mtime, tz=timezone.utc) if local.exists() else None
             if local_ts and local_ts > ts:
-                if not args.dry_run:
-                    push_local_to_notion(d["notion_id"], local)
+                push_local_to_notion(d["notion_id"], local)
                 print(f"  ✓ {d['label']:<30} local→notion (auto)")
             else:
-                if not args.dry_run:
-                    local.parent.mkdir(parents=True, exist_ok=True)
-                    local.write_text(md, encoding="utf-8")
+                local.parent.mkdir(parents=True, exist_ok=True)
+                local.write_text(md, encoding="utf-8")
                 print(f"  ✓ {d['label']:<30} notion→local (auto)")
 
     if not args.dry_run:

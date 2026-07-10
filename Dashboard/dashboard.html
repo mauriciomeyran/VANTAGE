@@ -1,26 +1,44 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VANTAGE — Pipeline Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0e0e0f; --bg2: #141415; --bg3: #1a1a1c; --bg4: #222224;
-    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
-    --text: #e8e8e4; --text2: #9a9994; --text3: #5a5955;
-    --accent: #4f8ef7; --accent-dim: rgba(79,142,247,0.12);
-    --green: #3ecf8e; --green-dim: rgba(62,207,142,0.12);
-    --amber: #f4a942; --amber-dim: rgba(244,169,66,0.12);
-    --red: #f05252; --red-dim: rgba(240,82,82,0.12);
-    --purple: #a78bfa; --purple-dim: rgba(167,139,250,0.12);
-    --mono: 'SF Mono','Fira Code','Cascadia Code',monospace;
-    --sans: -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
-    --radius: 6px; --radius-lg: 10px;
+    /* Semantic status accents — shared across themes (same as V-Checklist) */
+    --accent: #006494; --accent-dim: rgba(0,100,148,0.12);
+    --green: #437a22; --green-dim: rgba(67,122,34,0.12);
+    --amber: #d19900; --amber-dim: rgba(209,153,0,0.12);
+    --red: #c23b3b; --red-dim: rgba(194,59,59,0.12);
+    --purple: #7a39bb; --purple-dim: rgba(122,57,187,0.12);
+
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --radius: 8px; --radius-lg: 12px;
   }
+
+  /* ── Notion-style palette (light) ── */
+  [data-theme="light"] {
+    --bg: #f7f6f2; --bg2: #f9f8f5; --bg3: #f3f0ec; --bg4: #e6e4df;
+    --border: #dcd9d5; --border2: #d4d1ca;
+    --text: #28251d; --text2: #7a7974; --text3: #bab9b4;
+  }
+
+  /* ── Notion-style palette (dark) ── */
+  [data-theme="dark"] {
+    --bg: #0e0e0c; --bg2: #141412; --bg3: #181816; --bg4: #242420;
+    --border: #1e1e1c; --border2: #2a2a28;
+    --text: #cdccca; --text2: #797876; --text3: #4a4948;
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: var(--sans);
-         font-size: 13px; line-height: 1.5; min-height: 100vh; }
+         font-size: 13px; line-height: 1.5; min-height: 100vh;
+         transition: background .2s ease, color .2s ease; }
 
   .app { display: flex; height: 100vh; overflow: hidden; }
   .sidebar { width: 280px; flex-shrink: 0; background: var(--bg2);
@@ -35,6 +53,12 @@
                   letter-spacing: -.01em; }
   .topbar-sep { flex: 1; }
 
+  .theme-toggle { width:28px; height:28px; display:flex; align-items:center;
+                  justify-content:center; border-radius:var(--radius);
+                  border:1px solid var(--border2); cursor:pointer;
+                  color:var(--text3); background:transparent; transition:all .15s; }
+  .theme-toggle:hover { color:var(--text); background:var(--bg3); }
+
   .cert { font-size: 10px; font-family: var(--mono); padding: 3px 8px;
           border-radius: 99px; border: 1px solid var(--border2);
           color: var(--text3); transition: all .3s; }
@@ -44,17 +68,17 @@
   .state-badge { font-size: 11px; font-weight: 600; font-family: var(--mono);
                  padding: 3px 10px; border-radius: 99px; transition: all .25s; }
   .s-BLOCKED          { background:var(--amber-dim);color:var(--amber);
-                        border:1px solid rgba(244,169,66,.3); }
+                        border:1px solid rgba(209,153,0,.3); }
   .s-PATCHED          { background:var(--accent-dim);color:var(--accent);
-                        border:1px solid rgba(79,142,247,.3); }
+                        border:1px solid rgba(0,100,148,.3); }
   .s-IN_REVIEW        { background:var(--purple-dim);color:var(--purple);
-                        border:1px solid rgba(167,139,250,.3); }
+                        border:1px solid rgba(122,57,187,.3); }
   .s-RETURNED_TO_CREATE { background:var(--green-dim);color:var(--green);
-                          border:1px solid rgba(62,207,142,.3); }
+                          border:1px solid rgba(67,122,34,.3); }
   .s-VERSION_CONFLICT { background:var(--red-dim);color:var(--red);
-                        border:1px solid rgba(240,82,82,.3); }
+                        border:1px solid rgba(194,59,59,.3); }
   .s-FAILED           { background:var(--red-dim);color:var(--red);
-                        border:1px solid rgba(240,82,82,.3); }
+                        border:1px solid rgba(194,59,59,.3); }
 
   /* ── Sidebar ── */
   .sidebar-section { padding:12px 14px 8px; border-bottom:1px solid var(--border); }
@@ -63,7 +87,7 @@
 
   /* Siguiente acción — zona prominente */
   .next-action-box { padding:14px; background:var(--accent-dim);
-                     border-bottom:1px solid rgba(79,142,247,.2); }
+                     border-bottom:1px solid rgba(0,100,148,.2); }
   .next-action-label { font-size:10px; font-weight:600; color:var(--accent);
                        letter-spacing:.08em; text-transform:uppercase;
                        margin-bottom:5px; }
@@ -128,7 +152,7 @@
   .audit-entry { display:flex; gap:10px; padding:7px 14px;
                  border-bottom:1px solid var(--border); transition:background .1s;
                  align-items:flex-start; }
-  .audit-entry:first-child { background:rgba(79,142,247,.06); }
+  .audit-entry:first-child { background:rgba(0,100,148,.06); }
   .audit-entry:hover { background:var(--bg3); }
   .audit-seq { font-family:var(--mono); font-size:10px; color:var(--text3);
                padding-top:1px; min-width:20px; }
@@ -176,7 +200,7 @@
                       align-items:center; }
 
   /* ── Block reason ── */
-  .block-reason { background:var(--amber-dim); border:1px solid rgba(244,169,66,.3);
+  .block-reason { background:var(--amber-dim); border:1px solid rgba(209,153,0,.3);
                   border-radius:var(--radius); padding:10px 14px; margin-bottom:16px;
                   display:none; }
   .block-reason.visible { display:block; }
@@ -208,9 +232,9 @@
   .validation-result { font-family:var(--mono); font-size:11px; padding:10px 14px;
                        border-radius:var(--radius); margin-top:10px; display:none; }
   .validation-result.ok   { display:block; background:var(--green-dim);
-                             color:var(--green); border:1px solid rgba(62,207,142,.3); }
+                             color:var(--green); border:1px solid rgba(67,122,34,.3); }
   .validation-result.fail { display:block; background:var(--red-dim); color:var(--red);
-                             border:1px solid rgba(240,82,82,.3); }
+                             border:1px solid rgba(194,59,59,.3); }
 
   /* ── Controls ── */
   .controls { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;
@@ -220,13 +244,13 @@
               color:var(--text2); cursor:pointer; transition:all .1s;
               display:flex; align-items:center; gap:6px; position:relative; }
   .ctrl-btn:hover:not(:disabled) { background:var(--bg4); color:var(--text);
-                    border-color:rgba(255,255,255,.18); }
+                    border-color:var(--text3); }
   .ctrl-btn:disabled { opacity:.4; cursor:not-allowed; }
-  .ctrl-btn.primary { border-color:rgba(79,142,247,.4); color:var(--accent); }
+  .ctrl-btn.primary { border-color:rgba(0,100,148,.4); color:var(--accent); }
   .ctrl-btn.primary:hover:not(:disabled) { background:var(--accent-dim); border-color:var(--accent); }
-  .ctrl-btn.success { border-color:rgba(62,207,142,.4); color:var(--green); }
+  .ctrl-btn.success { border-color:rgba(67,122,34,.4); color:var(--green); }
   .ctrl-btn.success:hover:not(:disabled) { background:var(--green-dim); border-color:var(--green); }
-  .ctrl-btn.danger { border-color:rgba(240,82,82,.4); color:var(--red); }
+  .ctrl-btn.danger { border-color:rgba(194,59,59,.4); color:var(--red); }
   .ctrl-btn.danger:hover:not(:disabled) { background:var(--red-dim); border-color:var(--red); }
 
   /* Tooltip en botones disabled */
@@ -249,13 +273,13 @@
   @keyframes spin { to { transform:rotate(360deg); } }
 
   .err-toast { position:fixed; bottom:20px; right:20px; background:var(--bg3);
-               border:1px solid rgba(240,82,82,.4); border-radius:var(--radius);
+               border:1px solid rgba(194,59,59,.4); border-radius:var(--radius);
                color:var(--red); font-family:var(--mono); font-size:11px;
                padding:10px 14px; z-index:999; opacity:0; transform:translateY(6px);
                transition:all .2s; pointer-events:none; max-width:340px; }
   .err-toast.show { opacity:1; transform:translateY(0); }
   .ok-toast { position:fixed; bottom:20px; right:20px; background:var(--bg3);
-              border:1px solid rgba(62,207,142,.4); border-radius:var(--radius);
+              border:1px solid rgba(67,122,34,.4); border-radius:var(--radius);
               color:var(--green); font-family:var(--mono); font-size:11px;
               padding:10px 14px; z-index:998; opacity:0; transform:translateY(6px);
               transition:all .2s; pointer-events:none; max-width:340px; }
@@ -312,7 +336,7 @@
   .score-reason-text  { font-size:11px; color:var(--text2); line-height:1.5; }
 
   /* ── Duplicate warning ── */
-  .dup-warning { background:var(--amber-dim); border:1px solid rgba(244,169,66,.3);
+  .dup-warning { background:var(--amber-dim); border:1px solid rgba(209,153,0,.3);
                  border-radius:var(--radius); padding:10px 14px; margin-bottom:12px;
                  display:none; }
   .dup-warning.visible { display:block; }
@@ -321,7 +345,7 @@
   .dup-warning-body  { font-size:11px; color:var(--amber); line-height:1.5; }
   .dup-actions { display:flex; gap:6px; margin-top:8px; }
   .dup-btn { font-size:10px; padding:3px 9px; border-radius:var(--radius);
-             border:1px solid rgba(244,169,66,.4); background:none;
+             border:1px solid rgba(209,153,0,.4); background:none;
              color:var(--amber); cursor:pointer; font-family:var(--sans); }
   .dup-btn:hover { background:var(--amber-dim); }
 
@@ -341,13 +365,13 @@
   .diff-old   { color:var(--text3); text-decoration:line-through; word-break:break-all; }
   .diff-new   { color:var(--green); word-break:break-all; }
   .diff-unchanged { color:var(--text2); }
-  .diff-row.changed { background:rgba(62,207,142,.04); }
+  .diff-row.changed { background:rgba(67,122,34,.04); }
 
   /* ── CTA unificado ── */
   .cta-unified { display:flex; gap:8px; align-items:center; flex-wrap:wrap;
                  margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
   .ctrl-btn.cta-primary { font-size:13px; padding:8px 18px;
-                          border-color:rgba(79,142,247,.5); color:var(--accent);
+                          border-color:rgba(0,100,148,.5); color:var(--accent);
                           font-weight:600; }
   .ctrl-btn.cta-primary:hover:not(:disabled) { background:var(--accent-dim); border-color:var(--accent); }
   .cta-sep { width:1px; height:24px; background:var(--border2); margin:0 4px; }
@@ -418,6 +442,11 @@
       <div class="topbar-sep"></div>
       <span id="backend-status" class="cert">BACKEND ···</span>
       <span class="state-badge s-BLOCKED" id="state-badge">—</span>
+      <button class="theme-toggle" data-theme-toggle aria-label="Cambiar tema">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
     </div>
 
     <div class="metrics-bar" id="metrics-bar">
@@ -1257,6 +1286,24 @@ const togglePreview = () => {
 checkBackend();
 loadBlockedVacancies();
 setNextAction('no_instance');
+
+// ── Theme toggle (paridad con V-Checklist) ─────────────────────────────────────
+(function() {
+  const toggle = document.querySelector('[data-theme-toggle]');
+  const html = document.documentElement;
+  let theme = 'dark';
+  html.setAttribute('data-theme', theme);
+
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', theme);
+      toggle.innerHTML = theme === 'dark'
+        ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+        : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+    });
+  }
+})();
 </script>
 </body>
 </html>
