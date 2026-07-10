@@ -28,7 +28,7 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:")
+VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:")
 
 DOCUMENTS = {
     "System Prompt": "37b938be-fc42-8001-9b9b-fcf81130d274",
@@ -122,14 +122,17 @@ CENSUS_SPEC = [
     {
         "name": "SYSTEM PROMPT",
         "rows": [
-            {"id": "KERNEL:CEDULA-DIGITAL"},
+            {"id": "SP:CEDULA-DIGITAL"},
             {"id": "KERNEL:SCOPE"},
             {"id": "KERNEL:DATA-FLOW"},
-            {"id": "KERNEL:TRIGGERS"},
+            {"id": "SP:TRIGGERS"},
             {"id": "KERNEL:CV-GOLDEN-RULES"},
-            {"id": "KERNEL:SCHEMA"},
+            {"id": "SP:SCHEMA"},
             {"id": "KERNEL:ROUTING"},
-            {"id": "KERNEL:ID-CONNECTORS-001"},
+            {"id": "SP:ID-CONNECTORS-001"},
+            {"id": "SP:BOOTSTRAP-001"},
+            {"id": "SP:SYNC-RULE"},
+            {"id": "SP:CONSISTENCY"},
         ],
     },
     {
