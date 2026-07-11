@@ -87,7 +87,19 @@ def _serialize_instance(row, conn):
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
+import os
+from flask import send_from_directory
+
+
 def register_routes(app):
+
+    @app.route('/<path:filename>')
+    def serve_static(filename):
+        dashboard_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), '..')
+        )
+        return send_from_directory(dashboard_dir, filename)
+
 
     # ── /health ───────────────────────────────────────────────────────────────
     @app.route('/health', methods=['GET'])

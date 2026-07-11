@@ -48,7 +48,7 @@ SMOKE=$?
 if [ $SMOKE -eq 0 ]; then
     notify_success "Dashboard" "Servidor listo, abriendo dashboard..."
     echo "✅ Smoke test OK — abriendo dashboard..."
-    open "$DASHBOARD_DIR/dashboard.html"
+    open "http://127.0.0.1:8000/dashboard.html"
 else
     notify_error "Dashboard" "Smoke test falló"
     echo "❌ Smoke test falló — revisa el servidor"
