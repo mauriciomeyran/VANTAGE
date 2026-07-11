@@ -388,6 +388,9 @@ def evaluate_application_status(status):
     application_statuses = ["Postulado", "En proceso", "Negociando", "Sin respuesta"]
     return status in application_statuses
 
+def evaluate_rejection_status(status):
+    return status == "Rechazado"
+
 def get_application_next_action(status):
     if status == "Postulado":
         return "Follow-up"
@@ -715,6 +718,7 @@ def main():
     applied_count = 0
     blocked_count = 0
     protected_count = 0
+    rejected_status_count = 0
 
     for item in items:
         props = item["properties"]
@@ -733,11 +737,15 @@ def main():
             protected_count += 1
             continue
 
-        # Saltar si está expirada/rechazada
-        if status in ["Expirada", "Rechazado", "Archivar"]:
+        # Saltar si está expirada/archivada
+        if status in ["Expirada", "Archivar"]:
             continue
 
-        if evaluate_application_status(status):
+        if evaluate_rejection_status(status):
+            decision = "REJECTED"
+            next_action = "Ninguna"
+            rejected_status_count += 1
+        elif evaluate_application_status(status):
             decision = "APPLIED"
             next_action = get_application_next_action(status)
             applied_count += 1
@@ -832,6 +840,7 @@ def main():
     print(f"  READY-TO-APPLY (>=60): {ready_to_apply}")
     print(f"  CREATE (Pipeline Activo): {create_count}")
     print(f"  APPLIED (En proceso): {applied_count}")
+    print(f"  REJECTED: {rejected_status_count}")
     print(f"  BLOCKED: {blocked_count}")
     print(f"  PROTEGIDAS: {protected_count}")
     print(f"  Total procesado: {len(items)}")
