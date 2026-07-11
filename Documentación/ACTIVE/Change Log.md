@@ -1,5 +1,38 @@
 # V | CHANGELOG
 
+# V | CHANGELOG
+
+### v9.1.6 — 2026-07-11
+[FIX][DOC] Cierre de 2 bugs Dashboard (Bug Tracker) + reestructura MANUAL §4 (Checklist + Dashboard reubicados por momento real de uso en el flujo).
+- Bug cerrado: VANTAGE TRACKER Status le faltaba el valor "Repetida" para clasificación manual de duplicados en revisión. Agregado al schema (documentado previamente en KERNEL:SCHEMA-001, v9.1.4). Archivado en Archivo Bug Tracker.
+- Bug cerrado: dashboard.html tenía BACKEND hardcodeado a http://127.0.0.1:8000, rompiendo acceso remoto vía Tailscale (iPad). Fix: BACKEND = window.location.origin (l.635) — el fetch en l.694 hereda el cambio vía template literal sin tocar más código. Verificado en el archivo real subido por el operador. Archivado en Archivo Bug Tracker.
+- MANUAL §4 (FLUJO PUNTA A PUNTA) reestructurado por momento real de uso, no por adyacencia temática:
+- Checklist reubicado al inicio de §4 (antes de LUNES) — se presenta como acompañante de todo el ciclo semanal, consultado durante todas las actividades atómicas, no como anexo del Dashboard.
+- Dashboard reubicado al final de MARTES (antes de MIÉRCOLES) — es herramienta de recuperación; su momento real de uso es justo antes de CV Optimization, no un bloque genérico sin ubicación en el flujo.
+- Corrección de contenido: dashboard.html es una sola herramienta de recuperación (pantalla única, sin pestañas ni vistas separadas de "pipeline general"), no dos dashboards distintos como el MANUAL sugería erróneamente. Verificado contra el archivo fuente real (dashboard.html actualizado 2026-07-10 por el operador) — confirmado: un solo <select> de vacantes BLOCKED, Sidebar + FSM + botones RT-1 en una única pantalla, más un pipeline-strip visual (L1→RT-1→Notion→Mail) como indicador de estado, no como vista alterna.
+- ID MANUAL:DASHBOARD-CHECKLIST-001 retirado. El bloque único se dividió en dos IDs por su nueva ubicación real: MANUAL:VCHECKLIST-001 (ya existía) y MANUAL:DASHBOARD-001 (nuevo).
+- Fila §15 del Índice corregida — ya no promete una sección independiente al final del documento; marcada como reservada, apuntando a las nuevas ubicaciones dentro de §4.
+- CENSUS_SPEC (Layer_1/scripts/generate_census.py, local): entrada MANUAL:DASHBOARD-CHECKLIST-001 actualizada a MANUAL:DASHBOARD-001 (mismo mecanismo de alta usado en KERNEL:CENSUS-SYNC Regla 2, aplicado aquí como reemplazo en vez de alta neta). Re-run confirmado por el operador: 108/108 IDs en spec resueltos, 0 sin link, 0 huérfanos reales — la única mención restante de MANUAL:DASHBOARD-CHECKLIST-001 vive como texto plano (no ID trackeado) dentro de esta misma entrada de Changelog, no genera falso huérfano en el próximo run.
+- Versión: v9.1.5 → v9.1.6.
+---
+### v9.1.5 — 2026-07-10
+[GOV] Cierre de pendiente histórico — V-ID-CENSUS sincronizado con contenido real + alta formal de KERNEL:GATE-DECISION-006.
+- Alta en CENSUS_SPEC (Layer_1/scripts/generate_census.py): KERNEL:GATE-DECISION-006 (huérfano detectado en sesión anterior, documentaba el contrato REJECTED desde v9.1.3 sin alta formal).
+- Re-run generate_census.py: 108/108 IDs resueltos, 0 sin link, 0 huérfanos.
+- V-ID-CENSUS (394938be) reemplazado en Notion — contenido pasa de snapshot v9.0.5 (124 IDs, desactualizado) a snapshot real 108 IDs / 4 documentos (Kernel · System Prompt · Manual · Career Canon) con deeplinks verificados.
+- Versión: v9.1.4 → v9.1.5.
+---
+### v9.1.4 — 2026-07-10
+[FIX][GOV] Normalización de versión de 6 fundacionales a v9.1.3 + limpieza de Bug Tracker (5 cierres, 3 altas) + fix de migración data_sources.
+- Normalización de versión: SYSTEM PROMPT (v9.1.2→v9.1.3), ID CENSUS (v9.0.6→v9.1.3), MANUAL/KERNEL/CANON/ALIASES alineados a v9.1.3 (referencia = Change Log).
+- Bug Tracker — cierre de 5 tickets obsoletos/ya resueltos (verificados en vivo, no solo por changelog): Gate_Decision REJECTED, Footers redundantes, Prioridad sin lógica (campo obsoleto), CV-A/CV-B idioma, query_data_sources Enterprise wall (reclasificado: no es bug, limitante de plan Notion).
+- Bug Tracker — alta de 3 tickets nuevos: suite de tests incompleta, feedback loop (~15 outcomes pendientes), migración data_sources.query() incompleta.
+- FIX — notion_utils.py: método DataSources.retrieve() agregado (gap desde v8.5.2, nunca implementado). auditschema.py migrado a patrón correcto (databases.retrieve → resolver data_source_id → data_sources.retrieve). Verificado: 34 propiedades resueltas.
+- DOC — KERNEL:SCHEMA-001: agregada enumeración de valores operativos del campo Status (incluye "Repetida", nuevo valor de select para clasificación manual de duplicados en revisión). Sin cambio de código en layer_1_run.py — Status es Class A, asignación manual del operador.
+- CORRECCIÓN DE REGISTRO: memoria previa indicaba que el campo Fuente fue eliminado del schema en v9.0.0 — falso. Confirmado en vivo (audit_schema.py): Fuente, Fetch y VM_Scope siguen como rich_text. Solo Prioridad y Match fueron eliminados. El bug "Campos Fuente/Fetch/VM_Scope → select" sigue 100% vigente, no parcialmente obsoleto.
+- Pendiente fuera de esta entrada: V-ID-CENSUS (394938be) sigue con contenido desactualizado (snapshot v9.0.5) pese a versión ya normalizada — requiere generate_census.py en Terminal.
+- Versión: v9.1.3 → v9.1.4.
+---
 ### v9.1.3 — 2026-07-10
 [FEAT][DOC] Gate_Decision — nuevo valor REJECTED (post-aplicación) + evaluate_rejection_status() en layer_1_run.py.
 - Contexto: Status="Rechazado" existía como señal Class A pero la Fase 4 (Gate Logic) lo saltaba por completo (junto con Expirada/Archivar), dejando Gate_Decision congelado sin reflejar el rechazo.
@@ -174,7 +207,7 @@
 - Aliases (37c938be-fc42-80d4-b9ae-f5969830331b):
 ✅ Sin referencias a - Documentación. Paths absolutos (ej: ~/Documents/04-Vantage_CV/...) validados.
 - Herramientas actualizadas:
-✅ health_check.py (paths relativos desde __file__).
+✅ health_check.py (paths relativos desde file).
 ✅ vsync_doc.py (referencia a "Documentación").
 ✅ SETUP.md (estructura de carpetas actualizada).
 - Criterios de aceptación:
@@ -185,7 +218,7 @@
 | Coherencia con KERNEL:DOC-CONTRACT | ✅ Validado | Sin violaciones a IDs canónicos. |
 ---
 ### v8.9.8 — 2026-07-05
-[ARCH] Normalización de paths de documentación — Carpeta "- Documentación" renombrada a "Documentación" — Eliminación de guión y espacio en nombre de carpeta para mejorar escalabilidad y experiencia de desarrollo. Scripts Python actualizados para usar paths relativos en lugar de hardcodeados absolutos. health_check.py migrado a path relativo desde __file__ vs path absoluto hardcodeado. vsync_doc.py actualizado para referenciar "Documentación" en lugar de "- Documentación". SETUP.md actualizado para reflejar nueva estructura. Cambios validados: health_check.py ✓ (6 docs fundacionales accesibles), vsync_doc.py ✓ (help funcional). Assessment completo en ASSESSMENT_RENOMBRAR_DOCUMENTACION.md. Impacto: paths más limpios, mejor portabilidad, paths absolutos eliminados de código.
+[ARCH] Normalización de paths de documentación — Carpeta "- Documentación" renombrada a "Documentación" — Eliminación de guión y espacio en nombre de carpeta para mejorar escalabilidad y experiencia de desarrollo. Scripts Python actualizados para usar paths relativos en lugar de hardcodeados absolutos. health_check.py migrado a path relativo desde file vs path absoluto hardcodeado. vsync_doc.py actualizado para referenciar "Documentación" en lugar de "- Documentación". SETUP.md actualizado para reflejar nueva estructura. Cambios validados: health_check.py ✓ (6 docs fundacionales accesibles), vsync_doc.py ✓ (help funcional). Assessment completo en ASSESSMENT_RENOMBRAR_DOCUMENTACION.md. Impacto: paths más limpios, mejor portabilidad, paths absolutos eliminados de código.
 ---
 ### v8.9.7 — 2026-07-05
 [ARCH] Bootstrap Layer — VANTAGE Bootloader v1.0 desplegado en UI de Claude — Estrategia de deploy del System Prompt migrada de copy-paste manual a bootstrap dinámico de una sola vez. STATIC BOOTLOADER v1.0 instalado en Settings → Project Instructions de Claude. Ante el primer mensaje de cada sesión, el agente hace fetch automático de SYSTEM PROMPT (37b938be) e ID CENSUS (394938be) antes de procesar cualquier petición del operador. El contenido de Notion sobreescribe cualquier instrucción estática previa (anti-drift de versiones). Confirmación de sincronización: "VANTAGE v[X]: SISTEMA SINCRONIZADO". Si el bootstrap falla: MODO DEGRADADO — no se procesan triggers operativos. Documentado en: KERNEL:ARCHITECTURE-L0-BOOTSTRAP (contrato técnico completo) · MANUAL §3 Paso 3 (instrucciones operativas para el operador) · System Prompt: KERNEL:BOOTSTRAP-001 referenciado en Cédula Digital.

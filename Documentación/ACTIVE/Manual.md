@@ -17,10 +17,10 @@
 | 10 | HEALTH CHECK | REFERENCIA | Checklist de mantenimiento |
 | 11 | CHANGELOG | REFERENCIA | Historial de versiones |
 | 12
- | REGLAS DE ORO PARA OPERADORES     | REFERENCIA | Reglas operativas derivadas del Kernel |
+| REGLAS DE ORO PARA OPERADORES     | REFERENCIA | Reglas operativas derivadas del Kernel |
 | 13 | FILOSOFÍA DE FALLO PARA OPERADORES         | REFERENCIA | Cómo interpretar fallos del sistema |
 | 14 | SLA DE LATENCIA POST-INGESTA       | REFERENCIA | Alcance del SLA post-ingesta |
-| 15 | DASHBOARD Y CHECKLIST | OPERACIÓN | Navegación y operación de Dashboard/Checklist (§4) |
+| 15 | (reservado — Dashboard y Checklist ahora integrados en §4, ver MANUAL:VCHECKLIST-001 y MANUAL:DASHBOARD-001) | — | — |
 ## 1. OBJETIVO DE VANTAGE · ID: MANUAL:OBJETIVO-001
 ### El Problema que Resuelve
 Una búsqueda laboral sin estructura produce cuatro fallas operativas concretas:
@@ -119,38 +119,18 @@ Output esperado: 6 documentos listados con diff por documento, sin errores.
 Si falla: verificar que layer_1.env exista y que el token no tenga n embebido.
 ## 4. FLUJO PUNTA A PUNTA · ID: MANUAL:FLUJO-001
 Contenido: V-Checklist y flujos de operación diaria. Ver §3 Setup para prerrequisitos.
-### ID: MANUAL:VCHECKLIST-001
-CHECKLIST INTERACTIVO
-El V-Checklist (V-CHECKLIST · Vantage Weekly) es la interfaz operativa del ciclo semanal descrito en §4. Es un archivo HTML autocontenido con progreso persistente (localStorage), modo claro/oscuro y navegación por día.
+### El Checklist — tu acompañante durante todo el ciclo · ID: MANUAL:VCHECKLIST-001
+El V-Checklist (V-CHECKLIST · Vantage Weekly) es la interfaz operativa de todo el ciclo semanal que empieza aquí abajo. Es un archivo HTML autocontenido con progreso persistente (localStorage), modo claro/oscuro y navegación por día. Ábrelo una vez al iniciar la semana y consúltalo a lo largo de las actividades de cada día — no es una herramienta puntual de un solo momento, es tu mapa de avance de lunes a viernes.
 Resumen de tareas por día:
 Ubicación: archivo local Checklist.html (abre en navegador).
 Reset: botón "⟓ Reset semana" en el header para iniciar un nuevo ciclo.
 El progreso NO persiste entre sesiones distintas del navegador si se limpia el localStorage.
-## Dashboard y Checklist — cómo navegarlos y operarlos · ID: MANUAL:DASHBOARD-CHECKLIST-001
-### Dónde viven los archivos
-Todo vive en Dashboard/ (no en HTMLs/ — esa carpeta fue un intento paralelo descartado, archivado en Dashboard/archive/ si decides conservarlo como evidencia):
-- dashboard.html — vacantes, pipeline, Notion sync.
-- Checklist.html — checklist semanal personal, sin backend.
-- vantage-tokens.css — colores y superficies compartidos por ambos.
-- vantage-theme.js — toggle de tema compartido.
-- scripts/dashboard_server.py — backend real, puerto :8000.
-### Cómo levantar el dashboard operativo
-1. Abre terminal en Dashboard/scripts/.
-1. Corre python3 dashboard_server.py (revisa dashboard.env si necesitas variables).
-1. Abre dashboard.html en el navegador. El indicador "BACKEND OK/OFFLINE" en la esquina superior confirma la conexión.
-1. Si dice OFFLINE: verifica que el server siga corriendo en esa terminal, puerto 8000 libre.
-### Cómo usar el Checklist
-- Abre Checklist.html directamente — no necesita backend ni servidor corriendo.
-- El progreso se guarda solo en el navegador (localStorage) — si limpias caché del navegador o cambias de máquina, el progreso semanal se pierde. No hay backup automático.
-- Botón "Reset" pide confirmación antes de borrar todo el checklist de la semana.
+### Dónde viven los archivos compartidos
+Dashboard.html, Checklist.html, vantage-tokens.css y vantage-theme.js viven todos en Dashboard/ (no en HTMLs/ — esa carpeta fue un intento paralelo descartado, archivado en Dashboard/archive/ si decides conservarlo como evidencia). vantage-tokens.css define colores y superficies compartidos por ambos HTML; vantage-theme.js es el toggle de tema compartido, con persistencia y sincronía cross-tab.
 ### Tema claro/oscuro
-- El botón de tema (ícono sol/luna, arriba a la derecha en ambos) ahora persiste tu elección y se sincroniza automáticamente si tienes ambos HTML abiertos en pestañas distintas del mismo navegador — cambias el tema en uno, el otro se actualiza sin recargar.
-- Antes del parche de 2026-07-10, el tema no se guardaba y siempre reiniciaba en oscuro.
+El botón de tema (ícono sol/luna, arriba a la derecha en ambos) persiste tu elección y se sincroniza automáticamente si tienes ambos HTML abiertos en pestañas distintas del mismo navegador — cambias el tema en uno, el otro se actualiza sin recargar. Antes del parche de 2026-07-10, el tema no se guardaba y siempre reiniciaba en oscuro.
 ### Qué NO hacer
-- No copies/pegues código de un HTML al otro para "igualar" un color o componente — edita vantage-tokens.css o vantage-theme.js, que ambos ya leen. Editar directo en el HTML reintroduce el mismo drift que se corrigió.
-- No confundas Dashboard/scripts/dashboard_server.py (real, con DB y Notion) con ningún otro dashboard_server.py que puedas encontrar archivado — solo hay un backend operativo válido, el de Dashboard/scripts/.
-### Si algo se ve distinto entre los dos HTML
-Es señal de que alguien editó un color o estilo directo en el <style> inline de uno de los dos archivos en vez de en vantage-tokens.css. Revisa ahí primero.
+No copies/pegues código de un HTML al otro para "igualar" un color o componente — edita vantage-tokens.css o vantage-theme.js, que ambos ya leen. Editar directo en el HTML reintroduce el mismo drift que se corrigió. Si algo se ve distinto entre los dos HTML, es señal de que alguien editó un color o estilo directo en el <style> inline de uno de los dos archivos en vez de en vantage-tokens.css. Revisa ahí primero.
 ---
 LUNES
 El lunes es el ciclo de búsqueda activa completo. Se dispara manualmente y cubre las dos capas de búsqueda humana.
@@ -299,22 +279,24 @@ Archivos: Layer_4/scripts/vsync_doc.py (motor de sync) · Layer_4/scripts/vdoc.p
 Ver también §7 — Troubleshooting, entrada "vsync_doc.py falla con error blocks.children.list() returned None".
 MARTES
 Qué Hacer Cuando Gate = BLOCKED
-Si el bloqueo es por un campo Class A corregible, usa RT‑1 (rt1_dashboard.html): Proponer Patch → Validar → Aceptar. No uses RT‑1 para forzar un CREATE en vacantes que no cumplen score — úsalo solo para corregir datos erróneos.
-Dashboard & Solve Conflicts
-Resuelve los registros pendientes del ciclo del lunes: REVIEW_NEEDED · BLOCKED recuperables · NADs overdue.
+Si el bloqueo es por un campo Class A corregible, usa el Dashboard: Proponer Patch → Validar → Aceptar. No uses el Dashboard para forzar un CREATE en vacantes que no cumplen score — úsalo solo para corregir datos erróneos.
+### Dashboard — recuperación antes de CV Optimization · ID: MANUAL:DASHBOARD-001
+Antes de avanzar al miércoles, este es el momento de resolver lo que quedó bloqueado: REVIEW_NEEDED · BLOCKED recuperables · NADs overdue. Las vacantes que recuperes aquí son las que estarán disponibles en Ready-to-Apply para trabajar mañana.
+Es una sola herramienta (dashboard.html + dashboard_server.py :8000), no hay pestañas ni vistas separadas. La pantalla es un panel de recuperación de vacantes bloqueadas, con una tira de estado del pipeline (L1 → RT-1 → Notion → Mail) como indicador visual — no una vista de navegación distinta.
+Archivos: Dashboard/dashboard.html · Dashboard/scripts/dashboard_server.py.
 Abrir el Dashboard
 Ejecuta en terminal:
 ```bash
 vd
 ```
-El wrapper dashboard_start.sh arranca el servidor Flask en http://127.0.0.1:8000, ejecuta un smoke test automático y abre dashboard.html en el navegador. Output esperado en terminal: SMOKE PASSED — abriendo dashboard. Si el smoke falla, emite notificación sonora de error (Basso) y no abre la UI.
+El wrapper dashboard_start.sh arranca el servidor Flask en http://127.0.0.1:8000 (accesible también vía Tailscale desde otros dispositivos), ejecuta un smoke test automático y abre dashboard.html en el navegador. Output esperado en terminal: SMOKE PASSED — abriendo dashboard. Si el smoke falla, emite notificación sonora de error (Basso) y no abre la UI. El indicador "BACKEND OK/OFFLINE" en la esquina superior confirma la conexión en vivo.
 Partes del Dashboard
 Sidebar (columna izquierda): estado de la instancia activa — instance_id, payload actual de la vacante (campos Class A como aparecen en Notion), capabilities disponibles en el estado actual (can_patch · can_validate · can_accept · can_archive) y Audit Log en tiempo real con cada evento registrado.
 Panel principal (área derecha): cuatro secciones — Selector de vacante (dropdown con todas las vacantes en Gate = BLOCKED, botón Crear instancia), máquina de estados FSM (visualiza el estado actual: BLOCKED → PATCHED → RETURNED_TO_CREATE), panel de patch (formulario con campos Class A editables: URL · JD · Source_Type · Prioridad), y área de resultado de validación (PASS verde o FAIL rojo con motivo).
 Botones: Crear instancia · Proponer Patch · Validar · Aceptar Patch · Archivar · Sincronizar.
 Secuencia — vacante BLOCKED recuperable
 Selecciona la vacante del dropdown (muestra Marca · Rol · Score · VM_Scope).
-Crear instancia — abre una instancia RT‑1 en estado BLOCKED y carga el payload desde Notion. Audit Log registra domain.instance.created.
+Crear instancia — abre una instancia en estado BLOCKED y carga el payload desde Notion. Audit Log registra domain.instance.created.
 Edita los campos incorrectos en el panel de patch — solo Class A (URL · JD · Source_Type · Prioridad). Los campos Class B no son editables.
 Proponer Patch — almacena la corrección. Audit Log registra domain.patch.proposed.
 Validar — el backend ejecuta run_pipeline.py con el patch y verifica si el resultado sería CREATE. Si pasa: estado → PATCHED, resultado verde. Si falla: estado permanece BLOCKED, resultado rojo con motivo.
