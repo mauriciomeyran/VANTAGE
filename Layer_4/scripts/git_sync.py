@@ -7,7 +7,7 @@ Sin cambios: no hace nada, no emite ruido.
 Con cambios: commit con timestamp + push a origin/main.
 
 Capa: L4 — Version Control & Infrastructure
-Ruta canónica: ~/Documents/04-VANTAGE_CV/Layer_4/scripts/git_sync.py
+Ruta canónica: ~/Documents/03 Projects/VANTAGE/Layer_4/scripts/git_sync.py
 
 Uso:
     python3 git_sync.py              # corre sync real
@@ -32,9 +32,15 @@ def run(cmd: list[str], cwd: Path = REPO_ROOT) -> tuple[int, str, str]:
     return result.returncode, result.stdout.strip(), result.stderr.strip()
 
 
+class GitError(Exception):
+    pass
+
+
 def has_changes() -> bool:
-    code, out, _ = run(["git", "status", "--porcelain"])
-    return code == 0 and bool(out)
+    code, out, err = run(["git", "status", "--porcelain"])
+    if code != 0:
+        raise GitError(err or "git status falló (¿repo inexistente o corrupto?)")
+    return bool(out)
 
 
 def get_changed_files() -> list[str]:
@@ -43,7 +49,11 @@ def get_changed_files() -> list[str]:
 
 
 def sync(dry_run: bool = False) -> dict:
-    if not has_changes():
+    try:
+        changed_flag = has_changes()
+    except GitError as e:
+        return {"status": "error", "step": "git status", "error": str(e)}
+    if not changed_flag:
         return {"status": "clean", "message": "No hay cambios — nada que commitear."}
 
     changed = get_changed_files()

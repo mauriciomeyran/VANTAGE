@@ -67,6 +67,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:ARCHITECTURE-L3"},
             # typo histórico + forma correcta como lookup_ids para máxima cobertura
             {"id": "KERNEL:ARHITECTURE-L4", "lookup_ids": ["KERNEL:ARHITECTURE-L4", "KERNEL:ARCHITECTURE-L4"]},
+            {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH"},
             {"id": "KERNEL:SCHEMA"},
             {"id": "KERNEL:SCHEMA-001"},
             {"id": "KERNEL:SCHEMA-002"},
@@ -143,6 +144,7 @@ CENSUS_SPEC = [
             {"id": "MANUAL:SETUP-001"},
             {"id": "MANUAL:FLUJO-001"},
             {"id": "MANUAL:VCHECKLIST-001"},
+            {"id": "MANUAL:DASHBOARD-CHECKLIST-001"},
             {"id": "MANUAL:VANTAGE-RUNTIME-001"},
             {"id": "MANUAL:GESTION-DATOS-001"},
             {"id": "MANUAL:TROUBLESHOOTING-001"},

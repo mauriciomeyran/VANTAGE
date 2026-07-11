@@ -7,34 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="vantage-tokens.css">
 <style>
-  :root {
-    /* Semantic status accents — shared across themes (same as V-Checklist) */
-    --accent: #006494; --accent-dim: rgba(0,100,148,0.12);
-    --green: #437a22; --green-dim: rgba(67,122,34,0.12);
-    --amber: #d19900; --amber-dim: rgba(209,153,0,0.12);
-    --red: #c23b3b; --red-dim: rgba(194,59,59,0.12);
-    --purple: #7a39bb; --purple-dim: rgba(122,57,187,0.12);
-
-    --mono: 'JetBrains Mono', monospace;
-    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    --radius: 8px; --radius-lg: 12px;
-  }
-
-  /* ── Notion-style palette (light) ── */
-  [data-theme="light"] {
-    --bg: #f7f6f2; --bg2: #f9f8f5; --bg3: #f3f0ec; --bg4: #e6e4df;
-    --border: #dcd9d5; --border2: #d4d1ca;
-    --text: #28251d; --text2: #7a7974; --text3: #bab9b4;
-  }
-
-  /* ── Notion-style palette (dark) ── */
-  [data-theme="dark"] {
-    --bg: #0e0e0c; --bg2: #141412; --bg3: #181816; --bg4: #242420;
-    --border: #1e1e1c; --border2: #2a2a28;
-    --text: #cdccca; --text2: #797876; --text3: #4a4948;
-  }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: var(--sans);
          font-size: 13px; line-height: 1.5; min-height: 100vh;
@@ -1286,24 +1260,7 @@ const togglePreview = () => {
 checkBackend();
 loadBlockedVacancies();
 setNextAction('no_instance');
-
-// ── Theme toggle (paridad con V-Checklist) ─────────────────────────────────────
-(function() {
-  const toggle = document.querySelector('[data-theme-toggle]');
-  const html = document.documentElement;
-  let theme = 'dark';
-  html.setAttribute('data-theme', theme);
-
-  if (toggle) {
-    toggle.addEventListener('click', () => {
-      theme = theme === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', theme);
-      toggle.innerHTML = theme === 'dark'
-        ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
-        : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
-    });
-  }
-})();
 </script>
+<script src="vantage-theme.js"></script>
 </body>
 </html>

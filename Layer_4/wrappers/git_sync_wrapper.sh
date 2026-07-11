@@ -1,6 +1,6 @@
 #!/bin/bash
 # git_sync_wrapper.sh — VANTAGE L4 wrapper
-# Ruta canónica: ~/Documents/04-VANTAGE_CV/Layer_4/wrappers/git_sync_wrapper.sh
+# Ruta canónica: ~/Documents/03 Projects/VANTAGE/Layer_4/wrappers/git_sync_wrapper.sh
 
 notify() {
     osascript -e "display notification \"$2\" with title \"$1\""
@@ -23,9 +23,18 @@ notify "VANTAGE L4" "Sincronizando repositorio..."
 OUTPUT=$("$VENV" "$SCRIPT" "$@" 2>&1)
 EXIT_CODE=$?
 
+# Log persistente — referenciado en MANUAL §4 (L4): cat /tmp/vantage_l4_gitsync.log
+{
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] exit=$EXIT_CODE"
+    echo "$OUTPUT"
+    echo "---"
+} >> /tmp/vantage_l4_gitsync.log
+
 if [ $EXIT_CODE -eq 0 ]; then
     if echo "$OUTPUT" | grep -q "Sync OK"; then
         notify_success "VANTAGE L4" "✅ $OUTPUT"
+    elif echo "$OUTPUT" | grep -q "DRY RUN"; then
+        notify "VANTAGE L4" "🔍 $OUTPUT"
     else
         notify_success "VANTAGE L4" "✅ Repositorio al día — sin cambios"
     fi

@@ -39,7 +39,7 @@ import httpx
 
 notion = Client(auth=TOKEN, timeout_ms=60000)
 HTTP = httpx.Client(timeout=60.0)
-HEADERS = {"Authorization": f"Bearer {TOKEN}", "Notion-Version": "2022-06-28"}
+HEADERS = {"Authorization": f"Bearer {TOKEN}", "Notion-Version": "2025-09-03"}
 
 BASE_DIR = _PROJECT / "Documentación" / "ACTIVE"
 
@@ -339,7 +339,11 @@ def main():
 
         # ── DRY RUN: solo metadata (pages.retrieve), sin fetch recursivo de bloques ──
         if args.dry_run:
-            meta = notion.pages.retrieve(d["notion_id"])
+            try:
+                meta = notion.pages.retrieve(d["notion_id"])
+            except Exception as e:
+                print(f"  ✗ {d['label']:<30} [DRY] ERROR — {e}")
+                continue
             ts = datetime.fromisoformat(meta["last_edited_time"].replace("Z","+00:00"))
             local_ts = datetime.fromtimestamp(local.stat().st_mtime, tz=timezone.utc) if local.exists() else None
 
@@ -364,12 +368,18 @@ def main():
             print(f"  ✓ {d['label']:<30} notion→local")
 
         elif args.direction == "local":
+            if not local.exists():
+                print(f"  ✗ {d['label']:<30} ERROR — local file no existe: {local}")
+                continue
             push_local_to_notion(d["notion_id"], local)
             print(f"  ✓ {d['label']:<30} local→notion")
 
         else:  # auto — gana el más reciente
             local_ts = datetime.fromtimestamp(local.stat().st_mtime, tz=timezone.utc) if local.exists() else None
             if local_ts and local_ts > ts:
+                if not local.exists():
+                    print(f"  ✗ {d['label']:<30} ERROR — local file no existe: {local}")
+                    continue
                 push_local_to_notion(d["notion_id"], local)
                 print(f"  ✓ {d['label']:<30} local→notion (auto)")
             else:

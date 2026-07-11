@@ -1,0 +1,43 @@
+/*
+  VANTAGE — vantage-tokens.css
+  SSOT de tokens visuales compartidos entre dashboard.html y Checklist.html.
+  Alcance: SOLO variables de color, tipografía y radios. No incluye
+  componentes, layout ni lógica. Si algo no es una variable, no va aquí.
+*/
+
+:root {
+  /* Semantic status accents — usados por ambos archivos */
+  --accent: #006494;   --accent-dim: rgba(0,100,148,0.12);
+  --green:  #437a22;   --green-dim:  rgba(67,122,34,0.12);
+  --amber:  #d19900;   --amber-dim:  rgba(209,153,0,0.12);
+  --red:    #c23b3b;   --red-dim:    rgba(194,59,59,0.12);
+  --purple: #7a39bb;   --purple-dim: rgba(122,57,187,0.12);
+  --teal:   #01696f;   /* color de "lunes" en Checklist — antes solo hardcodeado */
+
+  /* Día de la semana → color de estado (una sola fuente, ya no 4 copias) */
+  --day-lunes:     var(--teal);
+  --day-martes:    var(--accent);
+  --day-miercoles: var(--green);
+  --day-jueves:    var(--purple);
+  --day-viernes:   var(--amber);
+
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+
+/* ── Notion-style palette (light) ── */
+[data-theme="light"] {
+  --bg: #f7f6f2; --bg2: #f9f8f5; --bg3: #f3f0ec; --bg4: #e6e4df;
+  --border: #dcd9d5; --border2: #d4d1ca;
+  --text: #28251d; --text2: #7a7974; --text3: #bab9b4;
+}
+
+/* ── Notion-style palette (dark) ── */
+[data-theme="dark"] {
+  --bg: #0e0e0c; --bg2: #141412; --bg3: #181816; --bg4: #242420;
+  --border: #1e1e1c; --border2: #2a2a28;
+  --text: #cdccca; --text2: #797876; --text3: #4a4948;
+}

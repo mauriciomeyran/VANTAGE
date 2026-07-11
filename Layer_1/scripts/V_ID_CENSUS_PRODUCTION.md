@@ -12,6 +12,7 @@
 | [`KERNEL:ARCHITECTURE-L2`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc42809eb14ae660a737b340 ) |
 | [`KERNEL:ARCHITECTURE-L3`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc42803e908fd35da1687232 ) |
 | [`KERNEL:ARHITECTURE-L4`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc4280ea8e66e10f918b2a87 ) |
+| [`KERNEL:DASHBOARD-CHECKLIST-ARCH`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#95c9ff780cf14fdc90e48d357dd9249a ) |
 | [`KERNEL:SCHEMA`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#18f11d28e98c4eafbbc4c7291cbd242c ) |
 | [`KERNEL:SCHEMA-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b59e5ca152fb4860a2c0fb2b9552b43e ) |
 | [`KERNEL:SCHEMA-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#2e271d6eec554c7584d2e176ca5c2294 ) |
@@ -88,6 +89,7 @@
 | [`MANUAL:SETUP-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#390938befc428086a975fbc29dcf20ac ) |
 | [`MANUAL:FLUJO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#390938befc4280938133c4efb988dd71 ) |
 | [`MANUAL:VCHECKLIST-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#390938befc42809ab136d43d5aecf3be ) |
+| [`MANUAL:DASHBOARD-CHECKLIST-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#d5092e7959a8433cb9842e426f27d901 ) |
 | [`MANUAL:VANTAGE-RUNTIME-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#390938befc4280ec89c5c0a3a49e910a ) |
 | [`MANUAL:GESTION-DATOS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#390938befc428056ad49f50d5fc68753 ) |
 | [`MANUAL:TROUBLESHOOTING-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#390938befc4280bdb1cff16c11e377d0 ) |
@@ -125,6 +127,4 @@
 
 ### IDs Huérfanos (fuera de CENSUS_SPEC)
 
-| ID | Documento | Link |
-|---|---|---|
-| `KERNEL:NOMBRE-SECCION` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#397938befc4280af8b9fc593d29ec95f ) |
+_Ninguno detectado en esta corrida._
