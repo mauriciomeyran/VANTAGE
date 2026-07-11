@@ -8,7 +8,9 @@ notion = Client(auth=os.environ["NOTION_TOKEN"])
 db_id = os.environ["NOTION_DB_OPPORTUNITIES"]
 
 print("Obteniendo schema de la base de datos...")
-result = notion.databases.retrieve(database_id=db_id)
+db = notion.databases.retrieve(database_id=db_id)
+data_source_id = db["data_sources"][0]["id"]
+result = notion.data_sources.retrieve(data_source_id=data_source_id)
 
 # Guardar schema completo
 with open("out/schema_full.json", "w") as f:

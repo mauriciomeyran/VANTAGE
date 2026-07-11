@@ -385,6 +385,9 @@ class _DataSources:
         payload.update(kwargs)
         return _notion_post(f"/v1/data_sources/{data_source_id}/query", payload)
 
+    def retrieve(self, data_source_id: str) -> Dict[str, Any]:
+        return notion_get(f"/v1/data_sources/{data_source_id}", use_cache=True)
+
 
 class _Pages:
     """Emula client.pages de notion-client."""
@@ -399,6 +402,7 @@ class _Pages:
         payload: Dict[str, Any] = {"parent": parent, "properties": properties}
         payload.update(kwargs)
         return _notion_post("/v1/pages", payload)
+
 
 
 class _Databases:

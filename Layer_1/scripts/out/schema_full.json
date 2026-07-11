@@ -1,0 +1,574 @@
+{
+  "object": "data_source",
+  "id": "442938be-fc42-828f-b72e-076818d65a5b",
+  "cover": null,
+  "icon": {
+    "type": "emoji",
+    "emoji": "\ud83d\udcca"
+  },
+  "created_time": "2026-05-23T16:05:00.000Z",
+  "created_by": {
+    "object": "user",
+    "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+  },
+  "last_edited_by": {
+    "object": "user",
+    "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+  },
+  "last_edited_time": "2026-07-11T02:44:00.000Z",
+  "title": [
+    {
+      "type": "text",
+      "text": {
+        "content": "TRACKER",
+        "link": null
+      },
+      "annotations": {
+        "bold": false,
+        "italic": false,
+        "strikethrough": false,
+        "underline": false,
+        "code": false,
+        "color": "default"
+      },
+      "plain_text": "TRACKER",
+      "href": null
+    }
+  ],
+  "description": [],
+  "is_inline": true,
+  "properties": {
+    "Optimizar": {
+      "id": "%3Cc%7Bk",
+      "name": "Optimizar",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Outcome": {
+      "id": "%3CphY",
+      "name": "Outcome",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "r:cs",
+            "name": "Contratado",
+            "color": "brown",
+            "description": null
+          },
+          {
+            "id": "Z{wS",
+            "name": "Rechazado",
+            "color": "gray",
+            "description": null
+          },
+          {
+            "id": "s^OH",
+            "name": "Entrevista",
+            "color": "orange",
+            "description": null
+          },
+          {
+            "id": "Ws\\m",
+            "name": "Sin respuesta",
+            "color": "blue",
+            "description": null
+          }
+        ]
+      }
+    },
+    "hash": {
+      "id": "C%3D%7BV",
+      "name": "hash",
+      "description": "SHA-256 dedup hash \u2014 generado por feed_processor.py",
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Archivar": {
+      "id": "DMeJ",
+      "name": "Archivar",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Postular": {
+      "id": "Ebcs",
+      "name": "Postular",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "URL": {
+      "id": "FDhg",
+      "name": "URL",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "JD": {
+      "id": "HRHl",
+      "name": "JD",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Files": {
+      "id": "IM%7CF",
+      "name": "Files",
+      "description": null,
+      "type": "files",
+      "files": {}
+    },
+    "Positioning_Mode": {
+      "id": "KYFQ",
+      "name": "Positioning_Mode",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "68f4263f-45e2-48ae-82bd-dbf0bbe0804c",
+            "name": "N1 \u00b7 Luxury Brand Execution",
+            "color": "blue",
+            "description": null
+          },
+          {
+            "id": "c1dc7666-b655-43f5-847a-b015d27058de",
+            "name": "N2 \u00b7 Store Design & Flagship Execution",
+            "color": "purple",
+            "description": null
+          },
+          {
+            "id": "76a9b12e-d5e0-4ae4-b5d1-0247c13c6c90",
+            "name": "N3 \u00b7 Regional Brand Execution & Rollout",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "68efb4ba-d6b7-4cc0-b676-74085d18e550",
+            "name": "N4 \u00b7 Commercial VM & Field Leadership",
+            "color": "orange",
+            "description": null
+          }
+        ]
+      }
+    },
+    "VM_Scope": {
+      "id": "LB%3BN",
+      "name": "VM_Scope",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Contacto": {
+      "id": "MMZ%5B",
+      "name": "Contacto",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Source_Type ": {
+      "id": "M%5DJM",
+      "name": "Source_Type ",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "2dceabe6-8a71-4e70-840a-3d0bfb6351db",
+            "name": "Inbound",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "adc83101-a89d-457c-b5bb-b1d64b351f2c",
+            "name": "Networking",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "4edd6406-7f6c-44f2-92fd-897fc6e5d5ee",
+            "name": "Referencia",
+            "color": "purple",
+            "description": null
+          },
+          {
+            "id": "6a55a07d-a31a-49ca-afa5-de6cf0c91c25",
+            "name": "Vacante",
+            "color": "blue",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Holding": {
+      "id": "NyJP",
+      "name": "Holding",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Interview_Date": {
+      "id": "N%7Cfb",
+      "name": "Interview_Date",
+      "description": null,
+      "type": "date",
+      "date": {}
+    },
+    "Next_Action": {
+      "id": "QX%5E~",
+      "name": "Next_Action",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Role_Class": {
+      "id": "TX%7BP",
+      "name": "Role_Class",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "7e2d65e2-550a-431c-816f-6ac9d70d2fb7",
+            "name": "VM",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "13b4c3ba-276c-4434-ac69-44e428819b46",
+            "name": "Pivote",
+            "color": "blue",
+            "description": null
+          },
+          {
+            "id": "056b4f22-26ac-43d4-8485-ea0346e30369",
+            "name": "Otro",
+            "color": "gray",
+            "description": null
+          }
+        ]
+      }
+    },
+    "NAD": {
+      "id": "TbbW",
+      "name": "NAD",
+      "description": "Next Action Date \u2014 fecha l\u00edmite o seguimiento. Class A.",
+      "type": "date",
+      "date": {}
+    },
+    "Fetch": {
+      "id": "U%5EU%5C",
+      "name": "Fetch",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Dedup_Flag": {
+      "id": "U%7Bnt",
+      "name": "Dedup_Flag",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "t[p@",
+            "name": "Posible duplicado",
+            "color": "red",
+            "description": null
+          }
+        ]
+      }
+    },
+    "layer": {
+      "id": "W%3B%3CN",
+      "name": "layer",
+      "description": "Origen del registro: Layer 1 / Layer 2 / Layer 3",
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "7fb7b5fa-db9b-49dc-83d6-f73cff920a2a",
+            "name": "L1",
+            "color": "blue",
+            "description": null
+          },
+          {
+            "id": "9c4c23bd-f176-4fd8-b6a5-4fcb6ff47e5e",
+            "name": "L2",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "7022a783-3f5e-4068-9ab8-02dbb1b2a530",
+            "name": "L3",
+            "color": "purple",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Marca": {
+      "id": "Xfia",
+      "name": "Marca",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Rej Date": {
+      "id": "Y%3Bi%7D",
+      "name": "Rej Date",
+      "description": null,
+      "type": "date",
+      "date": {}
+    },
+    "JOB_ID": {
+      "id": "YQnh",
+      "name": "JOB_ID",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Fecha de creaci\u00f3n": {
+      "id": "Z~B%3A",
+      "name": "Fecha de creaci\u00f3n",
+      "description": null,
+      "type": "created_time",
+      "created_time": {}
+    },
+    "Score": {
+      "id": "dqh%5D",
+      "name": "Score",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
+    "Interview": {
+      "id": "fOPZ",
+      "name": "Interview",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "JD_Quality": {
+      "id": "fY%40j",
+      "name": "JD_Quality",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "a^_<",
+            "name": "Sin JD",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "GC[i",
+            "name": "Snippet",
+            "color": "purple",
+            "description": null
+          },
+          {
+            "id": "GI~_",
+            "name": "JD Completo",
+            "color": "yellow",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Fuente": {
+      "id": "fzQD",
+      "name": "Fuente",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Gate_Decision": {
+      "id": "hb%3F%3A",
+      "name": "Gate_Decision",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "UQTT",
+            "name": "REJECTED",
+            "color": "blue",
+            "description": null
+          },
+          {
+            "id": "cb612b3a-1004-4609-a10d-f56c1257d321",
+            "name": "CREATE",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "bf9f3c5c-bf89-44b4-9caa-d97eef380474",
+            "name": "BLOCKED",
+            "color": "gray",
+            "description": null
+          },
+          {
+            "id": "7e0df7ff-b9fc-4365-b45f-72f5c9f7e815",
+            "name": "APPLIED",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "8b59ae85-2982-4adf-944a-c1f575a8a208",
+            "name": "EXPIRED",
+            "color": "red",
+            "description": null
+          },
+          {
+            "id": "43ef8634-0076-4d94-b019-58a5ede5cf9a",
+            "name": "REVIEW_NEEDED",
+            "color": "orange",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Notas": {
+      "id": "jR%40D",
+      "name": "Notas",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "URL Notion": {
+      "id": "p%7D%60R",
+      "name": "URL Notion",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Apply Date": {
+      "id": "xqhy",
+      "name": "Apply Date",
+      "description": null,
+      "type": "date",
+      "date": {}
+    },
+    "Status": {
+      "id": "%7Caa%7D",
+      "name": "Status",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "TOsQ",
+            "name": "Repetida",
+            "color": "pink",
+            "description": null
+          },
+          {
+            "id": "0ab96137-677a-4316-aa7f-ed1b394aef6d",
+            "name": "Target",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "76d60b23-da5a-42f6-9f92-07eb2e953fd5",
+            "name": "REVIEW_NEEDED",
+            "color": "orange",
+            "description": null
+          },
+          {
+            "id": "c0b4b43c-fc4e-49dd-bb9e-2084215065c2",
+            "name": "Postulado",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "9752d6c2-3162-445b-9304-a95eb73f0729",
+            "name": "En proceso",
+            "color": "orange",
+            "description": null
+          },
+          {
+            "id": "1a64a224-75ec-4966-84d2-fa358877d69b",
+            "name": "Sin respuesta",
+            "color": "default",
+            "description": null
+          },
+          {
+            "id": "4da4c3b8-528b-41d2-8e6e-e77c54fb0f3d",
+            "name": "Expirada",
+            "color": "default",
+            "description": null
+          },
+          {
+            "id": "44071111-14b4-4abc-94f5-2827a61e7f5c",
+            "name": "Exploratorio",
+            "color": "default",
+            "description": null
+          },
+          {
+            "id": "326000c4-9d22-495b-8876-c7460a9265c1",
+            "name": "Negociando",
+            "color": "default",
+            "description": null
+          },
+          {
+            "id": "633da73d-0ddb-4de0-87c9-6e90d8ae2af9",
+            "name": "Retirado",
+            "color": "default",
+            "description": null
+          },
+          {
+            "id": "a7a928d0-c5b1-4772-8cb1-84f2d11553d8",
+            "name": "Rechazado",
+            "color": "default",
+            "description": null
+          },
+          {
+            "id": "37372eb4-6907-4bdb-8ffd-78257c5ced8e",
+            "name": "Blocked",
+            "color": "gray",
+            "description": null
+          },
+          {
+            "id": "c5edda12-c55f-4c2e-b45e-57558d7d6cb3",
+            "name": "Nueva",
+            "color": "orange",
+            "description": null
+          },
+          {
+            "id": "0528e173-d288-4b3c-a98d-9482a5a03a6d",
+            "name": "Archivar",
+            "color": "brown",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Rol": {
+      "id": "title",
+      "name": "Rol",
+      "description": null,
+      "type": "title",
+      "title": {}
+    }
+  },
+  "parent": {
+    "type": "database_id",
+    "database_id": "596938be-fc42-836b-aea7-814a1491bd47"
+  },
+  "database_parent": {
+    "type": "page_id",
+    "page_id": "36e938be-fc42-81d6-bf40-dfe7dee782a5"
+  },
+  "url": "https://app.notion.com/p/596938befc42836baea7814a1491bd47",
+  "public_url": null,
+  "in_trash": false,
+  "archived": false,
+  "request_id": "83ab27ae-1f8d-47c5-80e2-2ebd35610459"
+}
