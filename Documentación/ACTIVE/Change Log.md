@@ -309,9 +309,6 @@ Change_Log_v8.8.0
 - [DEBT] DT-014 registrado — Extract Runtime Identity Contract: encapsular lógica de entity_prefix en módulo explícito. Prioridad: MEDIO. Fuera de scope de este release.
 - Acceptance Audit: PASS WITH ARCHITECTURAL FINDING — FINDING: entity_id duplicados en scope ARCHIVO — mismo canonical_id, múltiples page_id históricos, no colisiones criptográficas, Resolver Layer y Query Layer no afectados. Clasificado como condición de calidad de datos históricos. No bloquea release.
 - Git: commit 372e72f · tag v2.4.0 · rama main
-# V | CHANGELOG
-
-Change_Log_001
 ### v8.7.9 — VANTAGE · 2026-07-04
 Change_Log_v8.7.9
 - [FEAT] health_check.py — Entity Index auto-sync condicional — Si graph_v2.json o entity_index_v2.json superan 24h sin actualizar (INDEX_STALE_THRESHOLD_HOURS), el script dispara python3 vantage.py sync automáticamente — una vez por corrida, solo si se cruza el umbral. Clasificado como housekeeping de rutina, no remediación de fallo (ver KERNEL:FAIL-PHILOSOPHY): un índice stale no es un fallo del sistema, es mantenimiento esperado de infraestructura de lectura, equivalente en naturaleza al sync automático ya existente de L3 (Gmail) y L4 (git) vía launchd. Si el auto-sync falla (returncode ≠ 0, timeout, o vantage.py no encontrado), el script reporta y NO reintenta — a partir de ahí aplica Golden Rules estándar.

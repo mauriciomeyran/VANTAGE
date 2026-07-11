@@ -2,8 +2,6 @@
 
 # V | CAREER CANON
 
-# V | CAREER CANON
-
 ## Índice del Career Canon
 | # | Sección | Tipo | Propósito |
 | --- | --- | --- | --- |
