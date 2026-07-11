@@ -341,6 +341,8 @@ EXPIRED (gate decision, campo Class B) ≠ Expirada (operational status, campo C
 Un gate que puede sobreescribirse manualmente no es un gate — es una sugerencia. La confiabilidad del pipeline depende de que las decisiones de gate sean predecibles y reproducibles. Si el gate bloquea, el input de búsqueda necesita ajuste — no el gate.
 ### KERNEL:GATE-DECISION-005 — Flujo de Recuperación BLOCKED
 Gate = BLOCKED no es estado terminal. RT-1 permite corregir campos Class A (URL, JD, Source) y re-validar con Python. Si el fix produce CREATE, el patch se escribe en Notion. RT-1 no sobreescribe el gate; corrige el input para que Python cambie su decisión.
+### KERNEL:GATE-DECISION-006 — REJECTED (Post-Aplicación)
+REJECTED es un valor Class B derivado de Status = "Rechazado" (Class A, asignado por el operador cuando la empresa rechaza la postulación). Mismo mecanismo que APPLIED: el operador escribe una señal Class A observable externamente; Python la traduce a Class B en el siguiente run de layer_1_run.py (evaluate_rejection_status(), análogo a evaluate_application_status()). El operador nunca escribe Gate_Decision directamente — esto no es excepción a KERNEL:GATE-DECISION-004. Registros con Next_Action ya poblado quedan protegidos (PROTECCIÓN TOTAL) y no reciben REJECTED retroactivamente sin limpieza manual del campo.
 ---
 ## KERNEL:NAMING-CONVENTION — Convención de Nombres de Outputs
 Todo archivo generado por el sistema para una vacante específica comparte el mismo stem — solo la extensión distingue el tipo de documento (.md, .pdf, .fig).

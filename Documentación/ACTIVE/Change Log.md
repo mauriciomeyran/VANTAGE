@@ -1,5 +1,14 @@
 # V | CHANGELOG
 
+### v9.1.3 — 2026-07-10
+[FEAT][DOC] Gate_Decision — nuevo valor REJECTED (post-aplicación) + evaluate_rejection_status() en layer_1_run.py.
+- Contexto: Status="Rechazado" existía como señal Class A pero la Fase 4 (Gate Logic) lo saltaba por completo (junto con Expirada/Archivar), dejando Gate_Decision congelado sin reflejar el rechazo.
+- Cambio 1 — Notion: opción REJECTED agregada al Select Gate_Decision (operador).
+- Cambio 2 — layer_1_run.py: nueva función evaluate_rejection_status(status), análoga a evaluate_application_status(). Status="Rechazado" removido del salto genérico de la línea 737 (ahora solo salta Expirada/Archivar); nueva rama antes de APPLIED asigna Gate_Decision="REJECTED", Next_Action="Ninguna". Contador rejected_status_count agregado al resumen final. Mismo mecanismo arquitectónico que APPLIED — Python sigue siendo el único que escribe Class B, disparado por señal Class A del operador.
+- Cambio 3 — KERNEL: nueva KERNEL:GATE-DECISION-006 documenta el contrato REJECTED, incluyendo el aviso de que registros con Next_Action ya poblado (PROTECCIÓN TOTAL) no reciben REJECTED retroactivamente sin limpieza manual.
+- Pendiente fuera de esta entrada: backfill opcional para rechazos históricos con Next_Action ya poblado (no ejecutado, requiere decisión del operador).
+- Versión: v9.1.2 → v9.1.3.
+---
 ### v9.1.2 — 2026-07-10
 [FIX][DOC][GOV] Documentación Dashboard/Checklist completada + alta formal en Census + normalización de versión.
 - Contexto: continuación del batch v9.1.1 (corrección de contenido ALIASES). Esta entrada cierra el trabajo pendiente identificado en esa sesión: la arquitectura Dashboard/Checklist tenía contenido escrito en el Kernel (KERNEL:DASHBOARD-CHECKLIST-ARCH, de una sesión anterior no documentada en su propio handoff) pero sin fila de TOC, sin contraparte en el Manual, y sin alta en CENSUS_SPEC — dos IDs huérfanos detectados por generate_census.py.
