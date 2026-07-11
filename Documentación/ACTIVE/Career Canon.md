@@ -5,13 +5,15 @@
 ## Índice del Career Canon
 | # | Sección | Tipo | Propósito |
 | --- | --- | --- | --- |
-| 1 | PURPOSE | CONTEXTO | Propósito y principios del Canon |
-| 2 | ARCHITECTURE | ARQUITECTURA | Estructura general del documento |
-| 3 | PROFESSIONAL PROFILE | CONTENIDO | Perfil profesional (ES/EN) |
+| 1 | AUDIENCE-SCOPE | CONTEXTO | Declaración de audiencia y alcance del Canon Runtime |
+| 2 | PROFESSIONAL PROFILE | CONTENIDO | Perfil profesional (ES/EN) |
+| 3 | SKILLS | CONTENIDO | Skills canónicas por categoría (ES/EN) |
 | 4 | EXPERIENCE | CONTENIDO | Experiencia cronológica (C01–C05) |
-| 5 | POSITIONING MODES | REGLAS | Modos de posicionamiento N1–N4 |
-| 6 | OUTPUT CONTRACT | ESQUEMA | Skeleton, Tag Registry y Figma |
-| 7 | CHANGELOG | REFERENCIA | Historial de actualizaciones |
+| 5 | ACHIEVEMENT LIBRARY | CONTENIDO | Logros mapeados a KPI/CF por empresa |
+| 6 | CORE KPIs | CONTENIDO | Indicadores canónicos (KPI01–KPI08) |
+| 7 | CANONICAL FACTS | CONTENIDO | Hechos canónicos (CF01–CF08, UF01–UF03) |
+| 8 | POSITIONING MODES | REGLAS | Modos de posicionamiento N1–N4 + regla de desempate |
+| 9 | OUTPUT CONTRACT | ESQUEMA | Skeleton, Tag Registry, Figma Sync Protocol |
 > ## CANON:AUDIENCE-SCOPE
 > DECLARACIÓN DE AUDIENCIA Y ALCANCE
 > - Audiencia: Sistemas Agente de IA + Operador Humano (Mauricio Meyrán).
@@ -245,4 +247,3 @@ Los slots Variable por modo se derivan del Positioning Mode activo (sección K �
 - 2043:51 / 2043:52 párrafos de perfil 1–2
 - 2043:56 / 2043:57 / 2043:58 skills 1–3
 - Bullets C01–C05 priorizados según el modo activado
-## ESTADO: v9.0.1 | ACTUALIZADO: 2026-07-08

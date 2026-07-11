@@ -35,7 +35,7 @@
 | vl3 | Mail pipeline (layer_3_mail.py) |
 | vd | Dashboard RT-1 (dashboard_start.sh) |
 ### lazy_loader.py — Ruta Canónica
-cd ~/Documents/04-Vantage_CV/Layer_1/scripts && source ../.venv/bin/activate && python lazy_loader.py --page {PAGE_ID} --route {ruta}
+cd ~/Documents/03 Projects/VANTAGE/Layer_1/scripts && source ../.venv/bin/activate && python lazy_loader.py --page {PAGE_ID} --route {ruta}
 ### Layer 4 — Version Control & Documental
 | Alias | Descripción |
 | --- | --- |
@@ -48,9 +48,10 @@ cd ~/Documents/04-Vantage_CV/Layer_1/scripts && source ../.venv/bin/activate && 
 | vdoc system_prompt | Sync quirúrgico System Prompt (auto) |
 | vdoc career_canon | Sync quirúrgico Career Canon (auto) |
 | vdoc manual | Sync quirúrgico Manual (auto) |
-| vdoc cheat_sheet | Sync quirúrgico Cheat Sheet (auto) |
+| vdoc aliases | Sync quirúrgico Aliases (auto) |
+| vdoc change_log | Sync quirúrgico Change Log (auto) |
 ### Figma Sync — CV Output Layer
-04-Vantage_CV/Figma Sync/ — Plugin Figma para inyección de payloads CV-B al lienzo.
+03 Projects/VANTAGE/Figma Sync/ — Plugin Figma para inyección de payloads CV-B al lienzo.
 | Archivo | Rol |
 | --- | --- |
 | manifest.json | Configuración nativa del plugin (entry: code.js, UI: ui.html) |

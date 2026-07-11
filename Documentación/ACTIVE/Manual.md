@@ -18,6 +18,7 @@
  | REGLAS DE ORO PARA OPERADORES     | REFERENCIA | Reglas operativas derivadas del Kernel |
 | 13 | FILOSOFÍA DE FALLO PARA OPERADORES         | REFERENCIA | Cómo interpretar fallos del sistema |
 | 14 | SLA DE LATENCIA POST-INGESTA       | REFERENCIA | Alcance del SLA post-ingesta |
+| 15 | DASHBOARD Y CHECKLIST | OPERACIÓN | Navegación y operación de Dashboard/Checklist (§4) |
 ## 1. OBJETIVO DE VANTAGE · ID: MANUAL:OBJETIVO-001
 ### El Problema que Resuelve
 Una búsqueda laboral sin estructura produce cuatro fallas operativas concretas:
@@ -73,7 +74,7 @@ Abre VANTAGE TRACKER y confirma que existen estas cuatro vistas:
 Si VANTAGE TRACKER no existe, configúralo antes de continuar.
 ### Paso 2 — Instalar Entorno Python
 ```bash
-cd ~/Documents/04-VANTAGE_CV/LAYER_1
+cd ~/Documents/03 Projects/VANTAGE/Layer_1
 source .venv/bin/activate
 # (el entorno ya existe; solo actívalo)
 ```
@@ -108,7 +109,7 @@ python vantage.py status
 Resultado esperado: Status: READY (4,200+ blocks indexed).
 ### Paso 6 — Verificar Sync Documental (vsync_doc)
 ```bash
-cd ~/Documents/04-VANTAGE_CV/Layer_4/scripts
+cd ~/Documents/03 Projects/VANTAGE/Layer_4/scripts
 source ../../Layer_1/.venv/bin/activate
 python vsync_doc.py --dry-run
 ```
@@ -123,6 +124,32 @@ Resumen de tareas por día:
 Ubicación: archivo local Checklist.html (abre en navegador).
 Reset: botón "⟓ Reset semana" en el header para iniciar un nuevo ciclo.
 El progreso NO persiste entre sesiones distintas del navegador si se limpia el localStorage.
+## Dashboard y Checklist — cómo navegarlos y operarlos · ID: MANUAL:DASHBOARD-CHECKLIST-001
+### Dónde viven los archivos
+Todo vive en Dashboard/ (no en HTMLs/ — esa carpeta fue un intento paralelo descartado, archivado en Dashboard/archive/ si decides conservarlo como evidencia):
+- dashboard.html — vacantes, pipeline, Notion sync.
+- Checklist.html — checklist semanal personal, sin backend.
+- vantage-tokens.css — colores y superficies compartidos por ambos.
+- vantage-theme.js — toggle de tema compartido.
+- scripts/dashboard_server.py — backend real, puerto :8000.
+### Cómo levantar el dashboard operativo
+1. Abre terminal en Dashboard/scripts/.
+1. Corre python3 dashboard_server.py (revisa dashboard.env si necesitas variables).
+1. Abre dashboard.html en el navegador. El indicador "BACKEND OK/OFFLINE" en la esquina superior confirma la conexión.
+1. Si dice OFFLINE: verifica que el server siga corriendo en esa terminal, puerto 8000 libre.
+### Cómo usar el Checklist
+- Abre Checklist.html directamente — no necesita backend ni servidor corriendo.
+- El progreso se guarda solo en el navegador (localStorage) — si limpias caché del navegador o cambias de máquina, el progreso semanal se pierde. No hay backup automático.
+- Botón "Reset" pide confirmación antes de borrar todo el checklist de la semana.
+### Tema claro/oscuro
+- El botón de tema (ícono sol/luna, arriba a la derecha en ambos) ahora persiste tu elección y se sincroniza automáticamente si tienes ambos HTML abiertos en pestañas distintas del mismo navegador — cambias el tema en uno, el otro se actualiza sin recargar.
+- Antes del parche de 2026-07-10, el tema no se guardaba y siempre reiniciaba en oscuro.
+### Qué NO hacer
+- No copies/pegues código de un HTML al otro para "igualar" un color o componente — edita vantage-tokens.css o vantage-theme.js, que ambos ya leen. Editar directo en el HTML reintroduce el mismo drift que se corrigió.
+- No confundas Dashboard/scripts/dashboard_server.py (real, con DB y Notion) con ningún otro dashboard_server.py que puedas encontrar archivado — solo hay un backend operativo válido, el de Dashboard/scripts/.
+### Si algo se ve distinto entre los dos HTML
+Es señal de que alguien editó un color o estilo directo en el <style> inline de uno de los dos archivos en vez de en vantage-tokens.css. Revisa ahí primero.
+---
 LUNES
 El lunes es el ciclo de búsqueda activa completo. Se dispara manualmente y cubre las dos capas de búsqueda humana.
 El ciclo comienza con los prompts de búsqueda, los cuales no se copian de versiones anteriores — se ensamblan bajo demanda a través de Perplexity Desktop: cada prompt combina dos capas: el Prompt Base (perfil, reglas de exclusión, etc.) + el Prompt Wrapper que contiene la fecha del día TODAY'S DATE, el modo de búsqueda, etc.)
@@ -203,7 +230,7 @@ Perplexity entregará como respuesta un Plain Array consolidado (JSON plano sin 
 Guardarás el resultado en:
 ```plain text
 
-~/Documents/04-VANTAGE_CV/Layer_1/Feeds/YYYY-MM-DD_consolidated.json
+~/Documents/03 Projects/VANTAGE/Layer_1/Feeds/YYYY-MM-DD_consolidated.json
 ```
 vantage_merge.py DEPRECATED.
 Nota: vantage_merge.py está deprecado. El flujo correcto es JSONs L1+L2 → Perplexity (Prompt E) → Plain Array → feed_processor.py. Jerarquía dedup L1 > L2 (ver KERNEL:CV-PIPELINE).
@@ -224,7 +251,7 @@ Si L3 falla: verifica que LAYER_3/config/layer_3.env existe y contiene las crede
 ∆ PIPELINE
 Abre la Terminal y procesa el JSON consolidado de L1+L2:
 ```bash
-~/vantage_pipeline.sh feed ~/Documents/04-VANTAGE_CV/Feeds/YYYY-MM-DD_consolidated.json
+~/vantage_pipeline.sh feed ~/Documents/03 Projects/VANTAGE/Feeds/YYYY-MM-DD_consolidated.json
 ```
 ¿Qué ocurre aquí?
 El script vantage_pipeline.sh actúa como wrapper: activa el entorno virtual (.venv), valida la estructura y dispara feed_processor.py para normalizar campos, aplicar dedup cross‑layer (ventana 30 días) y presentarte el DRY RUN antes de escribir en Notion.
@@ -244,11 +271,30 @@ Para poblar las propiedades Class B de todas las instancias pendientes en el Tra
 READY‑TO‑APPLY
 Abre la vista Ready-to-Apply en Notion. Vacantes con Score ≥ 60 están listas para CV Optimization en preparación para tu postulación.
 ∆ L4 — VERSION CONTROL & INFRASTRUCTURE
-L4 sincroniza el repositorio git del sistema automáticamente en background. No requiere intervención manual en el ciclo semanal normal.
-Automático: launchd corre vgit a las 09:00 · 15:00 · 21:00. Si hay cambios en el repo, hace commit con timestamp + push a origin/main. Sin cambios → silencio total.
-Manual: ejecutar vgit desde Terminal en cualquier momento para forzar un sync inmediato.
-Verificar último run: cat /tmp/vantage_l4_gitsync.log
+L4 mantiene dos cosas sincronizadas en background, sin intervención manual en el ciclo semanal normal: el repositorio git del sistema (vgit) y los 6 documentos fundacionales entre Notion y el disco local (vdoc). Son dos herramientas separadas que se combinan: vdoc mueve contenido documental Notion ↔ ACTIVE/, y al terminar dispara automáticamente un git_sync — por eso casi nunca necesitas correr vgit a mano después de un vdoc.
+vgit — Git Auto-Sync
+Automático: launchd corre vgit a las 09:00 · 15:00 · 21:00. Si hay cambios sin commitear en el repo, hace commit con timestamp + push a origin/main. Sin cambios → silencio total, no notifica nada.
+Manual: ejecutar vgit desde Terminal en cualquier momento para forzar un sync inmediato — útil si hiciste cambios locales fuera del ciclo automático y no quieres esperar al siguiente horario.
+Verificar último run: cat /tmp/vantage_l4_gitsync.log — cada corrida (automática o manual) queda registrada ahí con timestamp, exit code y el output completo del sync, así puedes auditar qué pasó sin depender de las notificaciones del sistema.
+Si el repo no existe o está corrupto, vgit ya no lo confunde con "sin cambios" — reporta el error explícitamente y la notificación del wrapper se ve roja (❌), no verde.
 Archivos: Layer_4/scripts/git_sync.py · Layer_4/wrappers/git_sync_wrapper.sh · ~/Library/LaunchAgents/com.vantage.gitsync.plist
+vdoc — Document Layer Sync
+Sincroniza los 6 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log) entre Notion y ACTIVE/ en disco, y al terminar encadena un git_sync automático para que el commit quede reflejado en GitHub sin un paso adicional.
+Tres direcciones posibles:
+- vdoc auto — compara la fecha de modificación de cada documento (local vs. Notion) y sincroniza en el sentido que corresponda, documento por documento. Es el modo por defecto y el más seguro para uso diario: nunca sobreescribe algo más reciente con algo más viejo.
+- vdoc notion — fuerza Notion → local para los 6 documentos, sin comparar fechas. Úsalo solo si sabes que Notion tiene la versión correcta y quieres descartar cualquier cambio local.
+- vdoc local — fuerza local → Notion para los 6 documentos, sin comparar fechas. Úsalo solo si editaste los .md directamente en disco (offline) y quieres que Notion adopte esa versión.
+Como notion y local sobreescriben sin comparar fechas, ambos son operaciones FORZADAS: antes de ejecutar nada, vdoc te muestra automáticamente un preview (equivalente a --dry-run) de lo que va a hacer, y te pide confirmación explícita en terminal (s para continuar, cualquier otra tecla cancela). Si por alguna razón corres el comando sin una terminal interactiva disponible, el script no asume que confirmaste — cancela por seguridad y no escribe nada. vdoc auto nunca pide esta confirmación porque nunca sobreescribe algo más reciente.
+Modificador dry — se combina con cualquiera de los tres comandos anteriores y con cualquier documento específico, en cualquier orden, y siempre gana: nunca escribe en Notion, en disco ni hace commit, sin importar qué más hayas escrito en la misma línea.
+- vdoc dry — preview de auto (equivalente a vdoc auto dry)
+- vdoc notion dry — preview de lo que haría vdoc notion, sin ejecutar la escritura forzada
+- vdoc local dry — preview de lo que haría vdoc local
+- vdoc kernel dry — preview de solo Kernel en modo auto
+Recomendación operativa: corre siempre la variante dry primero cuando no estés seguro de qué dirección va a ganar — te cuesta segundos y evita sorpresas, especialmente antes de un notion o local forzado.
+Sync quirúrgico por documento — cualquiera de los 6 nombres puede pasarse solo o combinado con dirección/dry:
+vdoc kernel · vdoc system_prompt · vdoc career_canon · vdoc manual · vdoc aliases · vdoc change_log. Sin dirección explícita, cada uno corre en modo auto (gana el más reciente) solo para ese documento — los otros 5 no se tocan. Se puede combinar con notion/local (ej. vdoc notion kernel fuerza solo Kernel Notion→local) y con dry (ej. vdoc kernel dry).
+Archivos: Layer_4/scripts/vsync_doc.py (motor de sync) · Layer_4/scripts/vdoc.py (wrapper de comandos, el que invocas por alias) · reutiliza .venv de Layer_1.
+Ver también §7 — Troubleshooting, entrada "vsync_doc.py falla con error blocks.children.list() returned None".
 MARTES
 Qué Hacer Cuando Gate = BLOCKED
 Si el bloqueo es por un campo Class A corregible, usa RT‑1 (rt1_dashboard.html): Proponer Patch → Validar → Aceptar. No uses RT‑1 para forzar un CREATE en vacantes que no cumplen score — úsalo solo para corregir datos erróneos.
@@ -301,8 +347,8 @@ o pega el texto del JD directamente. Claude no accede al Tracker de forma autón
 CV‑A / CV‑B — Por Qué Son Sesiones Separadas
 CV‑A es análisis: qué keywords posicionar, qué gaps cubrir, qué tono de marca adoptar. CV‑B es producción: el documento final. En una sesión única, el contexto de análisis contamina la voz del CV. La separación es una restricción de calidad, no de conveniencia.
 Sesión 1 — CV‑A (análisis estratégico)
-Claude extrae los 6 keywords de posicionamiento del JD, identifica los gaps entre los requisitos del rol y CANON:EXPERIENCE-001, determina el Positioning Mode aplicable (CANON:POSITIONING-001: N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution · N4 Commercial VM & Field Leadership) y define el tono de marca del CV.
-Output de la sesión — el HANDOFF, 5 campos obligatorios:
+Claude extrae los 6 keywords de posicionamiento del JD, identifica los gaps entre los requisitos del rol y CANON:EXPERIENCE-001, determina el Positioning Mode aplicable (CANON:POSITIONING-001: N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution · N4 Commercial VM & Field Leadership), define el tono de marca del CV y detecta el idioma del JD (ES/EN) para el output.
+Output de la sesión — el HANDOFF, 6 campos obligatorios:
 ```json
 
 {
@@ -310,7 +356,8 @@ Output de la sesión — el HANDOFF, 5 campos obligatorios:
   "rol": "",
   "JD_keywords_top6": ["", "", "", "", "", ""],
   "fit_gaps": ["", ""],
-  "tono_marca": ""
+  "tono_marca": "",
+  "idioma": ""
 }
 ```
 La sesión termina aquí. No se escribe ningún CV en CV‑A.
@@ -323,7 +370,8 @@ CV‑B no inicia con un HANDOFF incompleto. Si cualquier campo está ausente, el
   "rol": "",
   "JD_keywords_top6": ["", "", "", "", "", ""],
   "fit_gaps": ["", ""],
-  "tono_marca": ""
+  "tono_marca": "",
+  "idioma": ""
 }
 ```
 Sesión 2 — CV‑B (producción del CV)
@@ -335,7 +383,7 @@ Abre una sesión nueva de Claude. Pega el HANDOFF completo y dispara:
 ```plain text
 CV-B [pega el HANDOFF]
 ```
-Claude verifica los 5 campos, cruza el HANDOFF contra CANON:OUTPUT-CONTRACT-001 para validar que bullets y KPIs sean derivados canónicos (no inventados), aplica el Positioning Mode definido en CV‑A y genera el CV bajo CANON:OUTPUT-CONTRACT-001.
+Claude verifica los 6 campos, cruza el HANDOFF contra CANON:OUTPUT-CONTRACT-001 para validar que bullets y KPIs sean derivados canónicos (no inventados), aplica el Positioning Mode definido en CV‑A, usa el campo idioma del HANDOFF para seleccionar la versión ES o EN de cada sección del Career Canon (no se generan CVs bilingües ni se mezclan idiomas dentro de un mismo output) y genera el CV bajo CANON:OUTPUT-CONTRACT-001.
 El output tiene tres partes obligatorias y secuenciales:
 Markdown con Figma tags — Claude entrega el archivo .md completo en la misma sesión. Cada slot va encabezado por su tag (###### figma_text_id). El operador lo revisa y autoriza antes de cualquier escritura en Notion.
 Autorización explícita del operador — Claude espera confirmación antes de continuar. Sin autorización, no escribe nada.
@@ -400,7 +448,7 @@ Usar cuando el sistema no ha sido operado por más de 5 días.
 ```plain text
 
 1. Verificar entorno
-      cd ~/Documents/04-VANTAGE_CV/LAYER_1/scripts
+      cd ~/Documents/03 Projects/VANTAGE/Layer_1/scripts
       source ../.venv/bin/activate
       python3 --version  # debe ser 3.8+
 
@@ -433,7 +481,7 @@ Usar cuando el sistema no ha sido operado por más de 5 días.
 ```
 ### 5.5 Figma Sync — Uso Operativo
 Ver flujo completo de inyección en §4 (Miércoles — "Qué hace el usuario con el output"). Instalación del plugin (una sola vez):
-Figma Desktop → Plugins → Development → Import plugin from manifest... → navega a ~/Documents/04-Vantage_CV/Figma Sync/ → selecciona manifest.json. El plugin queda disponible permanentemente.
+Figma Desktop → Plugins → Development → Import plugin from manifest... → navega a ~/Documents/03 Projects/VANTAGE/Figma Sync/ → selecciona manifest.json. El plugin queda disponible permanentemente.
 El plugin no modifica Notion ni el Tracker. Opera exclusivamente sobre el lienzo Figma activo.
 ### Gate Decisions
 El sistema evalúa cada vacante en tres pasos, en orden:
@@ -595,8 +643,8 @@ Cuándo se regenera (obligatorio, no opcional):
 - Si no tienes Terminal a la mano en ese momento, el ticket se queda en "Blocked-Census" — no se cierra en falso, se marca como bloqueado hasta que puedas correr el script.
 Cómo corre:
 ```bash
-source ~/Documents/04-Vantage_CV/Layer_1/.venv/bin/activate
-cd ~/Documents/04-Vantage_CV/Layer_1/scripts
+source ~/Documents/03 Projects/VANTAGE/Layer_1/.venv/bin/activate
+cd ~/Documents/03 Projects/VANTAGE/Layer_1/scripts
 python3 generate_census.py
 ```
 El script ahora también detecta IDs que existen en los documentos pero no en su lista de seguimiento ("huérfanos") y te los señala — ya no se cuelan en silencio. Y para cada ID resuelto genera el link exacto al bloque en Notion, no solo al documento.
@@ -622,7 +670,6 @@ Ante cualquiera de estos, el sistema reporta el estado y espera tu instrucción 
 ## 14. SLA DE LATENCIA POST-INGESTA · ID: MANUAL:SLA-001
 manual-sla-001
 > Nota: El SLA "< 45 minutos" cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh — no tiene SLA fijo salvo ejecución manual explícita de layer_1_run.py.
-## ESTADO: v9.0.1 | ACTUALIZADO: 2026-07-08
 ---
 ### [DT-015] Normalización de IDs legacy a esquema [PREFIX]:[KEY]
 - Fecha: 2026-07-05

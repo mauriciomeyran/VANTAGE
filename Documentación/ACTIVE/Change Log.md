@@ -1,5 +1,101 @@
 # V | CHANGELOG
 
+### v9.1.2 — 2026-07-10
+[FIX][DOC][GOV] Documentación Dashboard/Checklist completada + alta formal en Census + normalización de versión.
+- Contexto: continuación del batch v9.1.1 (corrección de contenido ALIASES). Esta entrada cierra el trabajo pendiente identificado en esa sesión: la arquitectura Dashboard/Checklist tenía contenido escrito en el Kernel (KERNEL:DASHBOARD-CHECKLIST-ARCH, de una sesión anterior no documentada en su propio handoff) pero sin fila de TOC, sin contraparte en el Manual, y sin alta en CENSUS_SPEC — dos IDs huérfanos detectados por generate_census.py.
+- Cambio 1 — MANUAL: nueva sección ## Dashboard y Checklist — cómo navegarlos y operarlos · ID: MANUAL:DASHBOARD-CHECKLIST-001 insertada en §4, antes del ciclo LUNES. Cubre dónde viven los archivos, cómo levantar el dashboard operativo, cómo usar el Checklist, comportamiento del toggle de tema (persistencia + sync cross-tab desde el parche de 2026-07-10), qué NO hacer (no editar <style>/<script> inline, editar vantage-tokens.css/vantage-theme.js), y cómo diagnosticar drift visual futuro.
+- Cambio 2 — TOC MANUAL: fila 15 agregada (DASHBOARD Y CHECKLIST).
+- Cambio 3 — TOC KERNEL: KERNEL:DASHBOARD-CHECKLIST-ARCH estaba indexado en una posición huérfana (fila 21, al final de la tabla) sin relación con su ubicación real en el body (inmediatamente después de ARCHITECTURE). Corregido: movido a fila 3, renumerado el resto de la tabla (filas 3–20 → 4–21) para preservar el orden narrativo real del documento.
+- Cambio 4 — generate_census.py (local, Layer_1/scripts/): altas formales de KERNEL:DASHBOARD-CHECKLIST-ARCH y MANUAL:DASHBOARD-CHECKLIST-001 en CENSUS_SPEC, conforme a KERNEL:CENSUS-SYNC Regla 2. Verificado con py_compile antes de entrega. Corrida de confirmación del operador: 107/107 IDs en spec, 107 resueltos, 0 sin link, 0 huérfanos (antes: 105 en spec, 2 huérfanos).
+- Census: regenerado y verificado antes de esta entrada (KERNEL:CENSUS-SYNC Regla 3) — 107/107, 0 huérfanos, confirmado por el operador vía output de terminal.
+- Pendiente fuera de esta entrada: la tabla V-ID-CENSUS en Notion (394938be) sigue mostrando el snapshot de v9.0.5 (122 IDs, conteo bajo un agrupamiento distinto al de CENSUS_SPEC) — no se actualizó en esta sesión; requiere trasladar las filas nuevas con sus deeplinks reales desde V_ID_CENSUS_PRODUCTION.md.
+- Versión: v9.1.1 → v9.1.2.
+---
+### v9.1.2 — 2026-07-10
+[DOC][GOV] Documentación Dashboard/Checklist (Manual + Kernel TOC) + alta de 2 IDs nuevos en Census — batch consolidado post-normalización v9.1.1.
+- Contexto: v9.1.0 había escrito contenido nuevo en Kernel (KERNEL:DASHBOARD-CHECKLIST-ARCH) sin actualizar su TOC ni el Manual correspondiente. Esta entrada cierra ese trabajo pendiente y corrige un hallazgo de posicionamiento en el TOC del Kernel.
+- Cambio 1 — MANUAL: nueva sección completa ## Dashboard y Checklist — cómo navegarlos y operarlos · ID: MANUAL:DASHBOARD-CHECKLIST-001 insertada en §4, antes del ciclo LUNES. Cubre ubicación de archivos, cómo levantar el dashboard operativo, uso del Checklist, comportamiento del toggle de tema (persistencia + sync cross-tab post-parche v9.1.0), qué NO hacer (editar HTML inline en vez de vantage-tokens.css/vantage-theme.js), y cómo diagnosticar drift visual futuro entre los dos HTML.
+- Cambio 2 — TOC del MANUAL: fila 15 agregada (DASHBOARD Y CHECKLIST).
+- Cambio 3 — TOC del KERNEL: hallazgo corregido — KERNEL:DASHBOARD-CHECKLIST-ARCH había quedado indexado como fila huérfana 21 (al final de la tabla), pese a que su contenido vive físicamente justo después de ARCHITECTURE. Renumerado: movido a fila 3, resto de filas 3–20 corridas a 4–21 (DOC-CONTRACT cierra en 21).
+- Cambio 4 — generate_census.py (local, Layer_1/scripts/): 2 entradas nuevas agregadas a CENSUS_SPEC — KERNEL:DASHBOARD-CHECKLIST-ARCH (tras ARCHITECTURE-L4) y MANUAL:DASHBOARD-CHECKLIST-001 (tras VCHECKLIST-001). Verificado con py_compile antes de sustitución en disco.
+- Verificación (KERNEL:CENSUS-SYNC Regla 3, precede a esta entrada): re-run de generate_census.py en producción — 107/107 IDs en spec resueltos, 0 sin link, 0 huérfanos. Corrida previa a este fix reportaba 2 huérfanos exactamente estos IDs.
+- Nota separada (no parte de este batch): corrección de contenido de ALIASES (tabla L4 + path Figma Sync) ya registrada en v9.1.1 — bug donde un write documentado en v9.0.9 nunca se había aplicado realmente.
+- Versión: v9.1.1 → v9.1.2. Los 6 documentos fundacionales normalizados a v9.1.2 en la misma operación (ver SP:SYNC-RULE — Regla de Versión Única).
+---
+### v9.1.1 — 2026-07-10
+[FIX][DOC] ALIASES — Contenido de tabla Layer 4 no reflejaba el write documentado en v9.0.9.
+- Contexto: v9.0.9 documentó la corrección de la tabla L4 en ALIASES (+vdoc aliases, +vdoc change_log, −vdoc cheat_sheet fantasma) como escrita. Verificación en sesión posterior (fetch en vivo) encontró que la propiedad Versión de ALIASES había avanzado a v9.1.0, pero el contenido real de la tabla seguía en el estado anterior a v9.0.9 — el write documentado nunca se aplicó o se perdió en un sync posterior no auditado.
+- Cambio 1 — Tabla Layer 4 — Version Control & Documental: fila vdoc cheat_sheet (alias fantasma) eliminada. Filas vdoc aliases y vdoc change_log agregadas.
+- Cambio 2 — Sección Figma Sync — CV Output Layer: referencia de ruta deprecada 04-Vantage_CV/Figma Sync/ corregida a 03 Projects/VANTAGE/Figma Sync/.
+- Verificación: fetch post-write confirma ambos cambios reflejados en el contenido en vivo de la página.
+- Lección operativa: una entrada de Changelog que documenta un write no es evidencia suficiente de que el write persistió — requiere verificación de contenido en vivo, no solo de la propiedad Versión, especialmente tras operaciones vdoc/vsync_doc forzadas entre sesiones.
+- Versión: v9.1.0 → v9.1.1.
+---
+### v9.1.0 — 2026-07-10
+[UX][DOC] Unificación visual dashboard.html ↔ Checklist.html + auditoría de cero fricción + parches de consolidación de tokens.
+- Contexto: El operador solicitó unificación estética entre dashboard.html y Checklist.html (Dashboard/), seguida de una auditoría de "cero fricción" (validación de renderizado de tema, fricción operativa, dead code, contrato de datos). La auditoría fue delegada externamente (Perplexity/Comet); un intento paralelo de generar un manifiesto de rearquitectura completa (SSOT en Python backend, checklist.json, endpoints nuevos) resultó en artefactos construidos sin inspección real de los archivos fuente — descartado en su totalidad sin registro individual de hallazgos, por decisión explícita del operador. Este entry documenta únicamente el trabajo válido: la unificación ya entregada + la auditoría real ejecutada por el AI Component contra el código fuente + los parches aplicados.
+- Auditoría real (matriz de validación, contra código fuente):
+- [Fail] Nomenclatura de tokens CSS divergente entre archivos (--bg/--bg2/--text3 en dashboard vs. --color-bg/--color-surface/--color-text-faint en Checklist) — mismos valores hex, cero mecanismo compartido.
+- [Fail] Colores de estado por día hardcodeados en Checklist.html en 4 formas distintas dentro del mismo archivo (atributo style inline ×5, argumento de onclick ×45, objeto colorMap en JS).
+- [Fail] Bug de color inconsistente detectado: "martes" usaba #a83232 en day-label/mini-progress-fill pero #006494 en el day-tab — mismo día, dos colores distintos, no reportado por la auditoría externa previa.
+- [Fail] Toggle de tema sin persistencia en localStorage en ambos archivos — siempre reiniciaba en dark al recargar, ignorando la última preferencia del usuario.
+- [Fail] Sin sincronía cross-tab de tema (ausencia de storage event listener) en ambos archivos.
+- [Fail] Sin contrato de datos entre Checklist (estado en localStorage['vchecklist_v1']) y Dashboard — cero código de lectura cruzada; visualmente unificados, operativamente inconexos.
+- [Warning] dashboard.html — cliente api() sin AbortController/timeout; si el backend cuelga sin responder, el fetch no aborta.
+- [OK] Persistencia de checklist (localStorage con try/catch), resetAll() con confirmación, cliente API del dashboard con manejo de error básico y feedback visible (BACKEND OK/OFFLINE).
+- Código muerto encontrado y eliminado: row.querySelector('::before') en toggleTask() — pseudo-elemento no seleccionable, no operativo.
+- Parches aplicados (quirúrgicos, sin tocar backend real ni Dashboard/scripts/):
+- Nuevo Dashboard/vantage-tokens.css — única fuente de los 5 colores de estado semántico + superficies light/dark, antes duplicados en ambos <style> inline.
+- Nuevo Dashboard/vantage-theme.js — componente único de toggle de tema con persistencia (localStorage) y sincronía cross-tab (storage listener), reemplaza los dos IIFE inline divergentes.
+- dashboard.html — bloque :root/[data-theme] duplicado eliminado, ahora referencia vantage-tokens.css; IIFE de tema reemplazado por <script src="vantage-theme.js">.
+- Checklist.html — variables --color-* remapeadas a las variables compartidas de vantage-tokens.css (capa de compatibilidad, sin reescribir ~200 referencias); los 5 colores de día consolidados en variables --day-*; toggleTask() ya no recibe color como argumento (lo resuelve internamente desde DAY_COLOR_MAP, única fuente); bug del color de "martes" corregido a #006494 consistente.
+- Fuera de alcance de esta entrada (correcto, no pendiente): backend real (Dashboard/scripts/dashboard_server.py, SQLite, Notion sync vía dashboard_notion.py) — sin cambios, sin relación con este trabajo. El manifiesto de rearquitectura descartado no generó deuda técnica porque nunca se integró a ningún archivo real.
+- Ubicación final de archivos: Dashboard/dashboard.html (reemplaza versión anterior — backup previo a sobrescritura responsabilidad del operador), Dashboard/Checklist.html (nuevo), Dashboard/vantage-tokens.css (nuevo), Dashboard/vantage-theme.js (nuevo).
+- Versión: v9.0.9 → v9.1.0.
+---
+### v9.0.9 — 2026-07-10
+[FIX][DOC] Hardening de Layer 4 (vdoc/vgit) — causa raíz del incidente "vdoc auto dry" resuelta + normalización documental completa.
+- Contexto: El operador reportó que vdoc auto dry no respetaba el modo preview y ejecutaba un sync real, colgándose en red hasta requerir Ctrl+C. Investigación end-to-end sobre los 4 componentes de Layer 4 (vsync_doc.py, git_sync.py, git_sync_wrapper.sh, vdoc.py) más cruce contra ALIASES, KERNEL y MANUAL.
+- Causa raíz identificada — vdoc.py: El parser original solo leía sys.argv[1] como comando único; "dry" en segunda posición (vdoc auto dry) se ignoraba silenciosamente y el sync corría real. Reescrito el parsing para que dry sea un modificador global, combinable en cualquier orden con notion/local/auto y con doc específico, y que siempre gane sobre cualquier otra combinación. Simuladas y verificadas las 12 combinaciones posibles. Además: input() de confirmación forzada ahora captura EOFError y falla seguro sin TTY interactivo (antes se colgaba/truena).
+- vsync_doc.py: Notion-Version hardcodeado en 2022-06-28 corregido a 2025-09-03 (estándar del sistema). Dry-run optimizado — antes hacía fetch recursivo completo de bloques incluso en preview (causa del cuelgue original); ahora usa solo pages.retrieve() (metadata) en modo dry. Try/except por documento en dry para que un notion_id inválido no tumbe el batch completo. Guards agregados contra local_file faltante en local→notion.
+- git_sync.py: has_changes() confundía "repo roto/inexistente" con "sin cambios" (falso negativo silencioso si git status fallaba). Nueva excepción GitError distingue ambos casos.
+- git_sync_wrapper.sh: notificación de dry-run corregida (antes reportaba "sin cambios" incorrectamente cuando sí había pendientes). Nuevo log persistente en /tmp/vantage_l4_gitsync.log — cierra un gap donde el MANUAL ya documentaba ese archivo pero ningún componente lo escribía.
+- ALIASES: tabla L4 corregida — agregados vdoc aliases y vdoc change_log (existían en DOCS pero no en la tabla), eliminado vdoc cheat_sheet (alias fantasma sin doc real asociado), wording de vdoc notion/local aclarado (la confirmación es conversacional/APROBAR_WRITE antes de invocar el comando, no un gate input() interno del script salvo la protección fail-safe de vdoc.py). Ruta lazy_loader.py corregida a 03 Projects/VANTAGE.
+- KERNEL (KERNEL:ARCHITECTURE-L4): flag auto faltante agregado a la lista de flags de vdoc. Nombres canónicos ACTIVE/ corregidos — documentaba guion bajo (System_Prompt.md) cuando el código real usa espacio (System Prompt.md); código tomado como fuente de verdad.
+- MANUAL: 7 ocurrencias de la ruta deprecada 04-VANTAGE_CV/04-Vantage_CV corregidas a 03 Projects/VANTAGE (§3 Setup, §4 Lunes/Pipeline, §5.5 Arranque Frío, §5.5 Figma Sync, §10.4 Census). §4 (L4) reescrita en extenso — la versión anterior resumía vgit/vdoc en 3 líneas planas sin explicar direcciones, modificador dry, confirmación forzada ni sync quirúrgico por documento; identificado por el operador como punto de fricción recurrente.
+- Versión: v9.0.8 → v9.0.9. Los 6 documentos fundacionales normalizados a v9.0.9 en la misma operación (ver SP:SYNC-RULE — Regla de Versión Única).
+---
+### v9.0.8 — 2026-07-10
+[VERIFY] Cierre de pendiente — SP:SYNC-RULE ya declara ALIASES correctamente.
+- Contexto: el handoff de la sesión anterior (v9.0.7) reportaba como pendiente que SP:SYNC-RULE seguía diciendo "ID CENSUS" en vez de "ALIASES" como 6to documento fundacional.
+- Verificación: fetch completo del System Prompt confirma que la sección "Verificación de Versión (fundacionales)" de SP:SYNC-RULE ya lista correctamente los 6 documentos: MANUAL DE USUARIO, TECHNICAL KERNEL, CAREER CANON, SYSTEM PROMPT, ALIASES, CHANGE LOG. La mención a "ID CENSUS" que persiste en el documento pertenece a la sección distinta "Sincronización Inicial" (los 2 documentos de bootstrap de sesión), no a la lista de fundacionales — no es el bug reportado.
+- Sin escritura de contenido requerida. Cierre por verificación, no por corrección.
+- Versión: v9.0.7 → v9.0.8.
+---
+### v9.0.7 — 2026-07-10
+[GOV] Cierre de pendiente histórico (7 huérfanos CENSUS_SPEC) + eliminación de footers de versión redundantes.
+- Cambio 1 — Cierre de huérfanos: los 7 IDs marcados como "alta pendiente" desde v9.0.4 (CANON:FIGMA-TAG-SCHEMA, CANON:POSITIONING-MODE, CANON:TAG-REGISTRY, KERNEL:ARCHITECTURE-L0-BOOTSTRAP, KERNEL:AUDIENCE-SCOPE, KERNEL:CENSUS-SYNC, KERNEL:NAMING-CONVENTION) se confirman resueltos de facto: el run de generate_census.py de esta sesión (2026-07-10) los reporta 105/105 en spec resueltos, sin marcarlos como huérfanos. No requirió intervención adicional en esta sesión — quedan formalmente cerrados por verificación, no por alta manual.
+- Cambio 2 — Footers de versión eliminados: el bloque "## ESTADO: vX.X.X | ACTUALIZADO: fecha" fue removido del body de KERNEL, MANUAL y CAREER CANON. Housekeeping de gobernanza — no cambia estado de ningún ID canónico. Motivo: redundancia con la propiedad Versión de Notion, que ya es la fuente oficial según SP:CEDULA-DIGITAL; mantener ambas sincronizadas manualmente generaba drift recurrente (evidenciado en v9.0.5, donde 3 documentos presentaban desalineación interna entre propiedad y footer). La propiedad Versión queda como única fuente visible de versión hacia adelante.
+- Versión: v9.0.6 → v9.0.7.
+---
+### v9.0.6 — 2026-07-10
+[MAINT] Regeneración de tablas TOC en KERNEL y CAREER CANON — corrección de drift entre índice declarado y body real.
+- Contexto: auditoría solicitada por el operador sobre si los IDs siguen el desarrollo lógico y narrativa progresiva de los documentos fundacionales. Se detectó drift en KERNEL y CAREER CANON; MANUAL auditado sin hallazgos (TOC y body ya coincidían 1:1).
+- Cambio 1 — KERNEL: tabla TOC expandida de 14 a 20 filas. Agregadas 6 secciones reales sin fila en el índice (TRACKER-SCHEMA, HEALTH-CHECK, SCOPE, DATA-FLOW, ROUTING, EVOLUTION). Reordenado el bloque final para reflejar el orden real de aparición en el body: DOC-CONTRACT pasa de #12 a #20 (última); NORM y CENSUS-SYNC se recorren a #18–19. Numeración 1–11 sin cambio. Contenido de las secciones no se tocó — solo la tabla índice.
+- Cambio 2 — CAREER CANON: tabla TOC reducida de 7 a 9 filas netas (cambio estructural, no solo numérico). Eliminadas 3 filas fantasma sin sección real correspondiente en el body (PURPOSE, ARCHITECTURE — cubiertas de facto por CANON:AUDIENCE-SCOPE fusionado; CHANGELOG — no tiene sección propia en este documento). Agregadas 4 secciones reales ausentes del índice (SKILLS, ACHIEVEMENT LIBRARY, CORE KPIs, CANONICAL FACTS). Nomenclatura de letras (A, B, D, H, I, J, K, L sin C/E/F/G) preservada sin cambio — intencional, corresponde a secciones deprecadas archivadas en CANON:ARCHIVO-VANTAGE.
+- Census: regenerado post-write (KERNEL:CENSUS-SYNC Regla 3, precede a esta entrada). 105/105 IDs en spec resueltos, 0 sin link. 1 huérfano detectado (KERNEL:NOMBRE-SECCION) — confirmado como notación ilustrativa de formato en System Prompt (SP:ID-CONNECTORS-001), no un ID real; ya expresado entre corchetes [KERNEL]:[NOMBRE-SECCION] en el documento fuente para evitar falsos positivos en futuros runs del generador.
+- Versión: v9.0.5 → v9.0.6.
+---
+### v9.0.5 — 2026-07-09
+[ARCH] resolver_registry_v2.json — Cierre de pendiente registrado en v9.0.4 (document_registry + fix de path en lazy_loader.py).
+- Contexto: v9.0.4 documentó que KERNEL:DOC-CONTRACT declaraba 7 prefijos autorizados (KERNEL, MANUAL, CANON, TRACKER, SP, ALIASES, CHANGELOG) pero resolver_registry_v2.json — el SSOT declarado para ese contrato — nunca implementó la sección correspondiente. lazy_loader.py caía silenciosamente al fallback estático de 4 prefijos, dejando SP/ALIASES/CHANGELOG sin resolver en producción.
+- Cambio 1 — resolver_registry_v2.json: nueva sección document_registry (namespace independiente de data_sources, que sigue siendo exclusivo para entity_prefix de filas de tracker vía runtime_identity.py). Mapea los 7 prefijos documentales a su UUID de página fundacional.
+- Cambio 2 — lazy_loader.py: _get_authorized_prefixes() reescrita para leer document_registry en vez de reutilizar runtime_identity.get_authorized_prefixes() (contrato distinto, no tocado). _REGISTRY_DEFAULT_PATH corregido de Layer_1/scripts/ a Layer_1/data/ — bug de path preexistente descubierto durante la verificación (el Registry real vive en data/, el loader asumía scripts/).
+- Verificación en producción: python3 lazy_loader.py --page 37b938befc4280019b9bfcf81130d274 --route SP:SYNC-RULE resuelve sin [WARN], contenido completo retornado. Confirmado por el operador.
+- Huérfanos confirmados en v9.0.4 (7, alta pendiente en CENSUS_SPEC): siguen fuera de alcance — no forman parte del cierre de este pendiente.
+- Hallazgo adicional (registrado, no resuelto en esta entrada): discrepancia de versión entre CHANGE LOG (fuente oficial) y los 6 documentos fundacionales — ninguno coincide al momento de este write; 3 documentos además tienen desalineación interna entre propiedad Versión y footer ESTADO del cuerpo. Normalización pendiente de confirmación del operador.
+- Versión: v9.0.4 → v9.0.5.
+---
 ### v9.0.4 — 2026-07-09
 [ARCH] KERNEL:DOC-CONTRACT — Extensión de Prefijos Autorizados (KERNEL, MANUAL, CANON, TRACKER → +SP, ALIASES, CHANGELOG) + normalización de self-references en System Prompt.
 - Contexto: La tabla de Prefijos Autorizados en KERNEL:DOC-CONTRACT solo cubría 4 de los 6 documentos fundacionales de vdoc/vsync_doc.py. System Prompt, Aliases y Change Log carecían de prefijo propio, forzando el uso incorrecto de KERNEL: para self-references dentro de esos documentos — violación de la regla de Prefix Ownership ("cada prefijo mapea a una única página canónica").
@@ -394,6 +490,4 @@ Change_Log_v8.2
 ## v4.x — JHS
 - Sistema manual Claude-only
 - Sin pipeline Python; procesamiento y evaluación en sesión de chat
----
-ESTADO: v9.0.2 | ACTUALIZADO: 2026-07-08
 ---

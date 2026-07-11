@@ -11,18 +11,25 @@ DECLARACIÓN DE AUDIENCIA Y ALCANCE
 | --- | --- | --- | --- |
 | 1 | PURPOSE | CONTEXTO | Propósito del sistema |
 | 2 | ARCHITECTURE | ARQUITECTURA | Diseño de cuatro capas |
-| 3 | SCHEMA | ESQUEMA | Class A vs Class B |
-| 4 | OWNERSHIP | ARQUITECTURA | Responsabilidades AI vs Python |
-| 5 | TRIGGERS | OPERACIÓN | Contratos detallados |
-| 6 | GATE-DECISION | REGLAS | Lógica de gates |
-| 7 | NAMING-CONVENTION | REGLAS | Convención de nombres de outputs |
-| 8 | CV-GOLDEN-RULES | REGLAS | Reglas de oro CV |
-| 9 | CV-PIPELINE | OPERACIÓN | Flujo CV-A → CV-B |
-| 10 | CANON-UPDATE | OPERACIÓN | Actualización del Canon |
-| 11 | FAIL-PHILOSOPHY | FILOSOFÍA | Filosofía de fallo |
-| 12 | DOC-CONTRACT | REGLAS | Contrato de IDs de Documento |
-| 13 | NORM | OPERACIÓN | Normalización Documental (Legacy IDs) |
-| 14 | CENSUS-SYNC | OPERACIÓN | Sincronización obligatoria del ID Census |
+| 3 | DASHBOARD-CHECKLIST-ARCH | ARQUITECTURA | Arquitectura Dashboard/Checklist — capas backend, standalone y visual compartida |
+| 4 | SCHEMA | ESQUEMA | Class A vs Class B |
+| 5 | TRACKER-SCHEMA | ESQUEMA | Alcance y niveles de prioridad — Bug/Tasks Tracker |
+| 6 | HEALTH-CHECK | OPERACIÓN | Contrato de health_check.py — checks y auto-sync de índice |
+| 7 | OWNERSHIP | ARQUITECTURA | Responsabilidades AI vs Python |
+| 8 | TRIGGERS | OPERACIÓN | Contratos detallados |
+| 9 | GATE-DECISION | REGLAS | Lógica de gates |
+| 10 | NAMING-CONVENTION | REGLAS | Convención de nombres de outputs |
+| 11 | CV-GOLDEN-RULES | REGLAS | Reglas de oro CV |
+| 12 | CV-PIPELINE | OPERACIÓN | Flujo CV-A → CV-B |
+| 13 | CANON-UPDATE | OPERACIÓN | Actualización del Canon |
+| 14 | FAIL-PHILOSOPHY | FILOSOFÍA | Filosofía de fallo |
+| 15 | SCOPE | OPERACIÓN | Scope y economía de contexto (Terminal vs MCP) |
+| 16 | DATA-FLOW | ARQUITECTURA | Flujo de datos y escritura |
+| 17 | ROUTING | OPERACIÓN | Rutas de carga MCP / lazy_loader |
+| 18 | EVOLUTION | FILOSOFÍA | Evolución del sistema, deuda técnica, criterios de cambio |
+| 19 | NORM | OPERACIÓN | Normalización Documental (Legacy IDs) |
+| 20 | CENSUS-SYNC | OPERACIÓN | Sincronización obligatoria del ID Census |
+| 21 | DOC-CONTRACT | REGLAS | Contrato de IDs de Documento |
 ## KERNEL:PURPOSE
 1. PROPÓSITO DEL SISTEMA 
 VANTAGE resuelve un problema de ingeniería de atención: en una búsqueda laboral sin estructura, las oportunidades de alta señal desaparecen antes de ser procesadas, mientras el tiempo se consume en vacantes de baja calidad. 
@@ -94,10 +101,10 @@ Repo: github.com/mauriciomeyran/jhs-pipeline
 Reutiliza .venv de Layer_1 
 vsync_doc.py — Sync bidireccional Notion → ACTIVE/ para los 6 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log).
 ```
-Alias: vdoc · Flags: dry | notion | local
+Alias: vdoc · Flags: dry | notion | local | auto
 Flujo vdoc notion: lee Notion (safe_list vía httpx, 3 reintentos) → escribe ACTIVE/{doc}.md → auto‑commit GitHub al terminar. 
 Dependencias: httpx · notion-client 3.x · .venv de Layer_1 · git_sync.py · Vive en: Layer_4/scripts/vsync_doc.py 
-Convención ACTIVE/: Los 6 .md fundacionales viven en …/ACTIVE/ — agnóstico de versión. Al pasar a v8.7: copiar archivos a ACTIVE/, cero cambios de código. Nombres canónicos: Kernel.md · System_Prompt.md · Career_Canon.md · Manual.md · Aliases.md · Change_Log.md. Reemplaza los paths versionados anteriores (…/v8.5/Kernel v8.5.md).
+Convención ACTIVE/: Los 6 .md fundacionales viven en …/ACTIVE/ — agnóstico de versión. Al pasar a v8.7: copiar archivos a ACTIVE/, cero cambios de código. Nombres canónicos: Kernel.md · System Prompt.md · Career Canon.md · Manual.md · Aliases.md · Change Log.md (con espacio, no guión bajo — coincide con BASE_DIR real en vsync_doc.py). Reemplaza los paths versionados anteriores (…/v8.5/Kernel v8.5.md).
 Nota técnica: notion-client 3.x tiene un bug silencioso en blocks.children.list() que retorna None en lugar de lanzar excepción con campos null. vsync_doc.py lo mitiga con safe_list() — wrapper httpx directo con 3 reintentos. 
 Jerarquía de Dedup 
 L1 > L2 > L3. En conflicto cross‑layer, prevalece la entrada de la capa de mayor jerarquía. 
@@ -124,6 +131,13 @@ Figma Sync no escribe en Notion ni en el Tracker
 Figma Sync no es capa de búsqueda ni de infraestructura de datos 
 registry_seed.json no se edita manualmente sin regenerar desde el lienzo Figma 
 El prefijo [VANTAGE] KEY_NAME en capas del canvas es para auditoría visual humana — no es el mecanismo de resolución del plugin
+---
+## KERNEL:DASHBOARD-CHECKLIST-ARCH
+Dashboard/ contiene dos capas independientes que comparten presentación visual pero no estado:
+1. Backend operativo real — Dashboard/scripts/dashboard_server.py + dashboard.db + dashboard_instances.db + dashboard_notion.py. Fuente de verdad del pipeline de vacantes (Gate_Decision, scoring, Notion sync). dashboard.html consume este backend vía fetch('http://127.0.0.1:8000{path}').
+1. Checklist operativo semanal — Dashboard/Checklist.html. Standalone, estado en localStorage['vchecklist_v1']. Sin backend, sin Notion, sin relación funcional con (1). Intencional: el checklist es una herramienta de tracking personal del operador, no parte del pipeline de vacantes.
+1. Capa visual compartida — Dashboard/vantage-tokens.css (tokens de color/superficie) + Dashboard/vantage-theme.js (toggle de tema con persistencia y sync cross-tab). Ambos archivos HTML la referencian. Es la única capa realmente compartida entre (1) y (2).
+Regla: cualquier cambio a un color de estado semántico o al comportamiento del toggle de tema se hace en vantage-tokens.css/vantage-theme.js, nunca en los <style>/<script> inline de cada HTML — evita el drift que motivó el parche de 2026-07-10 (ver Changelog v9.1.0).
 ---
 ## KERNEL:SCHEMA
 ### KERNEL:SCHEMA-001 — Class A vs Class B
@@ -441,10 +455,12 @@ Contrato de Transferencia entre Sesiones (JSON)
 "rol": "", 
 "JD_keywords_top6": ["", "", "", "", "", ""], 
 "fit_gaps": ["", ""], 
-"tono_marca": "" 
+"tono_marca": "", 
+"idioma": "" 
 } 
 </aside> 
 Si cualquier campo está ausente, se solicita. El sistema no inventa valores para campos faltantes. Un HANDOFF incompleto no avanza a CV‑B. 
+Regla de Idioma: CV‑A detecta el idioma del JD de origen (ES o EN) y lo declara en el campo idioma del HANDOFF. Si el JD mezcla ambos idiomas, prevalece el idioma predominante por volumen de texto. CV‑B usa este valor para seleccionar exclusivamente la versión ES o EN de cada sección del Career Canon (CANON:PROFILE-001, CANON:EXPERIENCE-001, etc.) — no se mezclan idiomas en un mismo CV‑B. Un HANDOFF sin campo idioma no avanza a CV‑B (mismo tratamiento que los demás campos obligatorios).
 Por Qué Son Dos Sesiones Separadas 
 CV‑A es análisis estratégico — qué posicionar y cómo. CV‑B es producción — el documento final. En una sesión única, el contexto de análisis contamina la voz del CV. La separación es una restricción de calidad, no de conveniencia. 
 Regla de Orden de Experiencia 
@@ -610,8 +626,6 @@ Contrato de Normalización de IDs:
 - Excepciones: IDs de Notion (UUIDs) en metadatos o URLs.
 - Gobernanza: Cambios requieren APROBAR_WRITE + entrada en Changelog. §Reglas de Migración. Ejecutable vía AI Component bajo autorización explícita del operador. -->
 Normalización documental de IDs legacy hacia el esquema [PREFIX]:[KEY]. Ver KERNEL:DOC-CONTRACT para contrato completo y listado de 26 ocurrencias (DT-015).
-## ESTADO: v9.0.1 | ACTUALIZADO: 2026-07-08
----
 ## KERNEL:CENSUS-SYNC — Sincronización Obligatoria del ID Census
 El V-ID-CENSUS es un documento derivado — su fuente de verdad son los IDs reales escritos en los documentos fundacionales (Kernel, Manual, Career Canon, System Prompt), no al revés. El Census no reemplaza esos documentos ni los precede; los audita.
 Problema que resuelve: sin un gate explícito, un cambio de estado de un ID (⚠️ Stub → ✅ Ok) o la creación de un ID nuevo puede quedar reflejado en el documento fuente pero no en el Census, generando drift silencioso entre lo que el sistema documenta y lo que el Census reporta.

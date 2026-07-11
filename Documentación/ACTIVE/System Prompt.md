@@ -31,7 +31,7 @@ Como parte de la sincronización, recuperar la propiedad "Versión" de los sigui
 - TECHNICAL KERNEL
 - CAREER CANON
 - SYSTEM PROMPT
-- ID CENSUS
+- ALIASES
 - CHANGE LOG
 Referencia de versión vigente: la propiedad "Versión" del CHANGE LOG (conforme a SP:CEDULA-DIGITAL) es SIEMPRE la referencia oficial — nunca un valor fijo en este documento.
 Regla canónica: todos los documentos fundacionales deben tener EXACTAMENTE la misma versión que el CHANGE LOG. Ningún documento puede estar adelantado o atrasado, ni por un solo punto de versión.
@@ -116,7 +116,7 @@ Nota operativa — MCP vs Terminal (routing por caso de uso):
 ---
 ## ID: SP:ID-CONNECTORS-001
 Los identificadores siguen el esquema:
-KERNEL:NOMBRE-SECCION
+[KERNEL]:[NOMBRE-SECCION]
 Este esquema permite resolver secciones específicas mediante lazy_loader.py sin depender directamente de UUIDs largos.
 La red completa de conectores y mapeos se documenta en el Technical Kernel.
 ---
