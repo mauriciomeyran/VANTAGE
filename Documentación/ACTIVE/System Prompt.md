@@ -1,5 +1,7 @@
 # V | SYSTEM PROMPT 
 
+# V | SYSTEM PROMPT 
+
 ## ID: SP:BOOTSTRAP-001
 # OPERATING SPECIFICATION
 Este documento constituye la especificación operativa vigente de VANTAGE.
