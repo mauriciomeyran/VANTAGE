@@ -259,8 +259,12 @@ def push_local_to_notion(pid, path):
         d = safe_list(pid, cur)
         if not d: break
         for b in d.get("results",[]):
-            try: notion.blocks.delete(b["id"])
-            except: pass
+            if b.get("archived"):
+                continue
+            try:
+                notion.blocks.delete(b["id"])
+            except Exception as e:
+                print(f"       ⚠️ no se pudo borrar bloque {b['id'][:8]}: {e}")
         if not d.get("has_more"): break
         cur = d.get("next_cursor")
 
