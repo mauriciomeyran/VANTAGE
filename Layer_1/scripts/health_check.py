@@ -130,7 +130,7 @@ def check_notion_reachable():
         import sys as _sys
         import glob as _glob
         # aseguro que cargue el SDK real, no el notion_client.py local que hace shadow
-        venv_root = Path(__file__).parent / ".venv" / "lib"
+        venv_root = Path(__file__).parent.parent / ".venv" / "lib"
         matches = _glob.glob(str(venv_root / "python3.*" / "site-packages"))
         if matches and matches[0] not in _sys.path:
             _sys.path.insert(0, matches[0])
@@ -196,7 +196,7 @@ def check_pending_tickets():
     try:
         import sys as _sys
         import glob as _glob
-        venv_root = Path(__file__).parent / ".venv" / "lib"
+        venv_root = Path(__file__).parent.parent / ".venv" / "lib"
         matches = _glob.glob(str(venv_root / "python3.*" / "site-packages"))
         if matches and matches[0] not in _sys.path:
             _sys.path.insert(0, matches[0])
@@ -284,7 +284,7 @@ def check_system_version():
         return True
     try:
         import glob as _glob
-        venv_root = Path(__file__).parent / ".venv" / "lib"
+        venv_root = Path(__file__).parent.parent / ".venv" / "lib"
         matches = _glob.glob(str(venv_root / "python3.*" / "site-packages"))
         if matches and matches[0] not in sys.path:
             sys.path.insert(0, matches[0])
