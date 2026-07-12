@@ -1,5 +1,7 @@
 # V | CHANGELOG
 
+# V | CHANGELOG
+
 ---
 ### [DT-016] Rename vl1 status → vl1 tracker
 - Fecha: 2026-07-12

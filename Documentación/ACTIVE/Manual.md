@@ -2,6 +2,8 @@
 
 # V | MANUAL
 
+# V | MANUAL
+
 > ##
 | # | Sección | Tipo | Propósito |
 | --- | --- | --- | --- |
