@@ -16,7 +16,7 @@
 | Alias | Descripción |
 | --- | --- |
 | vl1 | Run principal (→ layer_1_pipeline.sh) |
-| vl1 status | Estado del pipeline L1 |
+| vl1 tracker | Estado del pipeline L1 (Tracker en tiempo real) |
 | vl1 analytics | Métricas y analítica |
 | vl1 batch | Reporte batch (read-only). Pasar --execute para escribir. |
 | vl1 recovery | Recovery mode |

@@ -1,5 +1,16 @@
 # V | CHANGELOG
 
+---
+### [DT-016] Rename vl1 status → vl1 tracker
+- Fecha: 2026-07-12
+- Alcance: LAYER_1 (script core) + ALIASES + MANUAL.
+- Cambios:
+- layer_1_pipeline.sh: case "status)" renombrado a "tracker)". Comando "status" eliminado sin dejar alias — no retrocompatible por decisión explícita del operador (usuario único).
+- Label interno del reporte actualizado: "Status Report" → "Tracker Report".
+- ALIASES.md: fila "vl1 status" actualizada a "vl1 tracker".
+- MANUAL.md: todas las ocurrencias de "vl1 status" actualizadas a "vl1 tracker" (§4 y referencias cruzadas).
+- Notas: Cambio motivado por adopción — el operador nunca usó el nombre "status" de forma consistente. No afecta vantage.py status (runtime CLI, comando distinto sin relación).
+---
 # V | CHANGELOG
 
 ### v9.1.6 — 2026-07-11

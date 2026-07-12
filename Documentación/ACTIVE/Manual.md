@@ -93,7 +93,7 @@ chmod +x $DASHBOARD_DIR/wrappers/dashboard_start.sh
 ```
 ### Paso 4 — Test Inicial
 ```bash
-~/vantage_pipeline.sh status
+~/vantage_pipeline.sh tracker
 ```
 Output esperado:
 ```plain text
@@ -478,7 +478,7 @@ El sistema evalúa cada vacante en tres pasos, en orden:
 Excepción: si la vacante llegó por contacto directo (Inbound, Referencia o Networking), se salta este proceso completo y entra directo como CREATE — un contacto humano pesa más que el algoritmo.
 ### Comandos de Mantenimiento del Tracker
 Estos comandos operan sobre el estado del Tracker y están disponibles como subcomandos de vl1. Cada uno tiene un alcance preciso y un modo de operación por defecto.
-- vl1 status
+- vl1 tracker
 Genera un reporte de estado del Tracker en tiempo real: distribución por Gate_Decision, conteo de entradas activas (CREATE + APPLIED), entradas BLOCKED, aplicaciones de los últimos 7 días y NADs vencidas. Es el punto de partida del ciclo semanal — corre antes de cualquier otra operación para tener visibilidad del estado actual.
 - vl1 analytics
 Analiza la efectividad de las fuentes de discovery: qué canales producen más entradas CREATE, qué ratio de URLs funcionales tienen, cuál es el score promedio por fuente, y qué método de búsqueda (SEARCH‑WEEK, SEARCH‑EXEC, Manual) tiene mayor tasa de éxito. Corre los viernes como parte del cierre semanal.
