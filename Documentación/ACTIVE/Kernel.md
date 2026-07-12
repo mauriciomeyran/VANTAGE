@@ -1,9 +1,5 @@
 # V | KERNEL
 
-# V | KERNEL
-
-# V | KERNEL
-
 
 > 
 ## KERNEL:AUDIENCE-SCOPE
