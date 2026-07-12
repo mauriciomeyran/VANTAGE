@@ -3,6 +3,15 @@
 # V | CHANGELOG
 
 ---
+### v9.1.8 — 2026-07-12
+[FIX] Layer 4 — vsync_doc.py: push_local_to_notion() no filtraba bloques ya archivados antes de intentar borrarlos.
+- Contexto: vdoc auto (dirección local→notion) se colgaba indefinidamente en push_local_to_notion(), forzando al operador a interrumpir con Ctrl+C tras 20+ warnings repetidos de la API de Notion.
+- Causa raíz: el loop de borrado en push_local_to_notion() (línea ~261) iteraba sobre TODOS los bloques hijos devueltos por blocks/children, incluyendo aquellos que la propia respuesta de Notion ya reportaba como archived: true. Al intentar blocks.delete() sobre un bloque ya archivado, la API rechaza con "Can't edit block that is archived. You must unarchive the block before editing." El SDK notion_client reintenta automáticamente cada fallo (de ahí el volumen de warnings) y el except: pass original absorbía el error final sin reportarlo — el script no truena, solo se vuelve extremadamente lento, aparentando un colgado.
+- Fix aplicado: bloques con archived: true se omiten explícitamente antes del intento de delete(). Fallas reales de borrado ahora se loggean de forma visible (no se pudo borrar bloque {id}: {error}) en vez de tragarse en silencio.
+- Verificación: py_compile sin errores sobre el archivo corregido. Diff acotado a las 2 líneas del loop de borrado — sin cambios en el resto del archivo (fetch, parsing de Markdown, tablas, dry-run).
+- Reportado por el operador vía vdoc auto en Terminal (traceback con KeyboardInterrupt tras interrupción manual).
+- Versión: v9.1.7 → v9.1.8.
+---
 ### [DT-016] Rename vl1 status → vl1 tracker
 - Fecha: 2026-07-12
 - Alcance: LAYER_1 (script core) + ALIASES + MANUAL.
