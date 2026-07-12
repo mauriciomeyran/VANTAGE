@@ -1,7 +1,13 @@
 # V | CHANGELOG
 
 # V | CHANGELOG
-
+### v9.1.9 — 2026-07-12
+[GOV] Cierre de pendiente histórico — identificación retroactiva: "Cheat Sheet" = ALIASES (mismo Page ID), no entidad separada.
+- Contexto: memoria de sesión arrastraba "Cheat Sheet Page ID: no documentado, pendiente de localizar" como si fuera un documento distinto de ALIASES. Verificación cronológica sobre el propio Changelog resuelve el pendiente sin requerir escritura de datos nuevos.
+- Evidencia: v8.5.3 lista "Cheat Sheet" como uno de los 5 documentos fundacionales de esa era. v8.7.1 aplica patch editorial sobre esa misma página (37c938be-fc42-80d4-b9ae-f5969830331b), insertando el stub "§1 ALIASES & COMANDOS RÁPIDOS". v8.7.6 ya referencia la misma página como "V-ALIASES & CHANGE LOG" en la auditoría de normalización terminológica L0. El Page ID nunca cambió — el nombre del documento fue el que evolucionó de Cheat Sheet a Aliases.
+- Consistente con v9.0.9, donde el alias vdoc cheat_sheet fue eliminado por "alias fantasma sin doc real asociado" — misma causa raíz, ya corregida en código pero no cerrada en el registro conceptual hasta esta entrada.
+- Sin escritura de contenido nuevo en ningún documento fundacional — housekeeping de identificación, no gobernanza de IDs (KERNEL:CENSUS-SYNC Regla 1/3 no aplica).
+- Versión: v9.1.8 → v9.1.9.
 ---
 ### v9.1.8 — 2026-07-12
 [FIX] Layer 4 — vsync_doc.py: push_local_to_notion() no filtraba bloques ya archivados antes de intentar borrarlos.
