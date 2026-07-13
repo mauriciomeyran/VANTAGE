@@ -64,70 +64,71 @@
 | [`KERNEL:DOC-CONTRACT`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#a89e86d24998408c8f0b48ee330536d4 ) |
 | [`KERNEL:NORM`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#c21840cfd11a40c38ea2067fee03ac83 ) |
 | [`KERNEL:CENSUS-SYNC`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f1adf5716419431b94509efa3d9e0c83 ) |
+| [`KERNEL:SESSION-LEDGER`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#e7e15ea09ee743db81f240b7a9355ed9 ) |
 
 ### SYSTEM PROMPT
 
 | ID |
 |---|
-| [`SP:CEDULA-DIGITAL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281658125d912479e8136 ) |
+| [`SP:CEDULA-DIGITAL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42813ca3fde84a978517c0 ) |
 | [`KERNEL:SCOPE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#67afca95762d4653b293a974914621ed ) |
 | [`KERNEL:DATA-FLOW`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#566d7e5fa90649c7bc50ab2f8bda889d ) |
-| [`SP:TRIGGERS`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281728edbe618f8de4414 ) |
+| [`SP:TRIGGERS`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281e39643e90b1e5c8613 ) |
 | [`KERNEL:CV-GOLDEN-RULES`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc4280759a93d3d853687fde ) |
-| [`SP:SCHEMA`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42811f9945cc74e2f475c1 ) |
+| [`SP:SCHEMA`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f6a321f71d15c03e5d ) |
 | [`KERNEL:ROUTING`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#14c5215b570b45ad9b4bf8b2266e6e6e ) |
-| [`SP:ID-CONNECTORS-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281ffa86df9320cadfc0f ) |
-| [`SP:BOOTSTRAP-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42815d920aceddf63b3e0c ) |
-| [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281b182ebe7090f56fbf5 ) |
-| [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281108269dcee34ebf9d6 ) |
+| [`SP:ID-CONNECTORS-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42812ab19fe572be4eac94 ) |
+| [`SP:BOOTSTRAP-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281c68a05fd98ecfef859 ) |
+| [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd ) |
+| [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca ) |
 
 ### MANUAL
 
 | ID |
 |---|
-| [`MANUAL:OBJETIVO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc4281ac8d03dd9262295c0c ) |
-| [`MANUAL:FUNCIONAMIENTO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc428107b47adf022016bb53 ) |
-| [`MANUAL:SETUP-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc4281fe8d94e6cc999cce24 ) |
-| [`MANUAL:FLUJO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc42816bbab6e169f5911265 ) |
-| [`MANUAL:VCHECKLIST-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc42815290a6c45e649d2c05 ) |
-| [`MANUAL:DASHBOARD-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc4281d380edf9075c9643e2 ) |
-| [`MANUAL:VANTAGE-RUNTIME-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc4281e98d99f69cd466b5f5 ) |
-| [`MANUAL:GESTION-DATOS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc4281c1b9a2dca50b7702cb ) |
-| [`MANUAL:TROUBLESHOOTING-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc428199809ecfd728db64c6 ) |
-| [`MANUAL:PROMPTS-WRAPPERS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc4281438a2dc24441659848 ) |
-| [`MANUAL:CHEATSHEETS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc4281d2946fc764169f3c57 ) |
-| [`MANUAL:HEALTHCHECK-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc428110a912f8fae760b122 ) |
-| [`MANUAL:CHANGELOG-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc42817084c0cf7910bf5fed ) |
-| [`MANUAL:REGLAS-DE-ORO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc4281b7bfcbd63834c434e2 ) |
-| [`MANUAL:FALLO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc428141b1baef242d39aee9 ) |
-| [`MANUAL:SLA-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc42813f89f0eed12192ed91 ) |
+| [`MANUAL:OBJETIVO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281419fc4da4a9f72aee1 ) |
+| [`MANUAL:FUNCIONAMIENTO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc42812b9845da8653cef5fe ) |
+| [`MANUAL:SETUP-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc42812bad12d2be7f6f3581 ) |
+| [`MANUAL:FLUJO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc42816b8138d44cb912f379 ) |
+| [`MANUAL:VCHECKLIST-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281df90e6c8e49c31f8e5 ) |
+| [`MANUAL:DASHBOARD-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281918439c73a21b6cd44 ) |
+| [`MANUAL:VANTAGE-RUNTIME-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc428161a636ea4d765be576 ) |
+| [`MANUAL:GESTION-DATOS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281fe87c5c39ca0b256be ) |
+| [`MANUAL:TROUBLESHOOTING-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281a38486ce1fc676a057 ) |
+| [`MANUAL:PROMPTS-WRAPPERS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281f69e7ec115394eb5ca ) |
+| [`MANUAL:CHEATSHEETS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281bb8021f77aebada8cf ) |
+| [`MANUAL:HEALTHCHECK-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281cc9deefcd630ba9e81 ) |
+| [`MANUAL:CHANGELOG-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281a4b360e4c98ee39919 ) |
+| [`MANUAL:REGLAS-DE-ORO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc428125ad30fc0ed251114d ) |
+| [`MANUAL:FALLO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc42813ea9a6f4052eeda2e9 ) |
+| [`MANUAL:SLA-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc428114a06ee7e7a0c27548 ) |
 
 ### CAREER CANON
 
 | ID |
 |---|
-| [`CAREER_CANON:AUDIENCE-SCOPE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc4281398775e6193c915584 ) |
+| [`CAREER_CANON:AUDIENCE-SCOPE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc42814ea0dacf84f611c538 ) |
 | [`CANON:PROFILE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#23daad670796460b89f6b9b1c4c166df ) |
-| [`CANON:SKILLS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42813e8ae5d76205419d59 ) |
+| [`CANON:SKILLS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281e58a53c9554cb3693d ) |
 | [`CANON:EXPERIENCE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#23daad670796460b89f6b9b1c4c166df ) |
-| [`CANON:EXPERIENCE-C01 … C05`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428104ad36c485bb975e93 ) |
-| [`CANON:ACHIEVEMENTS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42814495eac33018456703 ) |
-| [`CANON:KPIS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281a990dce0af7be72e83 ) |
-| [`CANON:KPI-001 … KPI-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42813e84ebeba0f24936e0 ) |
-| [`CANON:FACTS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42816291eecffc91305d85 ) |
-| [`CANON:FACT-001 … FACT-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42811fbce4fc2c3f82a36a ) |
-| [`CANON:UF-001 … UF-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428124b808c61fe128ac92 ) |
-| [`CANON:POSITIONING-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39a938befc4281859428d5e10fc3f2af ) |
-| [`CANON:POSITIONING-N1 … N4`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428100a6eff2b31f84e6da ) |
+| [`CANON:EXPERIENCE-C01 … C05`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42812ea136fa5ec141d19e ) |
+| [`CANON:ACHIEVEMENTS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281fc9f88dc891c180b2a ) |
+| [`CANON:KPIS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42810ba9a1f0febedc739d ) |
+| [`CANON:KPI-001 … KPI-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281139ffde9f794c6c477 ) |
+| [`CANON:FACTS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281f49ca3f45975cfe4c7 ) |
+| [`CANON:FACT-001 … FACT-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281008d10f28565ea1639 ) |
+| [`CANON:UF-001 … UF-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42810cbb59cbecda3daa92 ) |
+| [`CANON:POSITIONING-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281598d14c6c29cc0a0e8 ) |
+| [`CANON:POSITIONING-N1 … N4`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42819fbf3acc9dc1e35529 ) |
 | [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc4280b599ebc830f85da2e8 ) |
-| [`CANON:OUTPUT-CONTRACT-SKELETON-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428167a13fd21fc2a3ac35 ) |
-| [`CANON:OUTPUT-CONTRACT-TAGREGISTRY-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281ba9312cf21cb5cda2b ) |
-| [`CANON:FIGMA-TAG-SCHEMA`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281a895ffd246f7646559 ) |
-| [`CANON:POSITIONING-MODE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42814aabe5ea9565b37a77 ) |
-| [`CANON:TAG-REGISTRY`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42814d8791d67337cda169 ) |
+| [`CANON:OUTPUT-CONTRACT-SKELETON-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110a5effba7515cd721 ) |
+| [`CANON:OUTPUT-CONTRACT-TAGREGISTRY-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42813d8f74c1e850590dab ) |
+| [`CANON:FIGMA-TAG-SCHEMA`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42817f90ace83dd96245a9 ) |
+| [`CANON:POSITIONING-MODE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428128b20dc6192e8b8757 ) |
+| [`CANON:TAG-REGISTRY`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281dbac5ae5ae1adf1e90 ) |
 
 ### IDs Huérfanos (fuera de CENSUS_SPEC)
 
 | ID | Documento | Link |
 |---|---|---|
-| `MANUAL:DASHBOARD-CHECKLIST-001` | Change Log | [link]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#39a938befc4281169df1f08596d04243 ) |
+| `MANUAL:DASHBOARD-CHECKLIST-001` | Change Log | [link]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#39b938befc428145ba17cfff57ddb9bc ) |

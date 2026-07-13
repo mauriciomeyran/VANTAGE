@@ -56,115 +56,116 @@ CENSUS_SPEC = [
     {
         "name": "KERNEL",
         "rows": [
-            {"id": "KERNEL:BOOTSTRAP-001"},
-            {"id": "KERNEL:AUDIENCE-SCOPE"},
-            {"id": "KERNEL:PURPOSE"},
-            {"id": "KERNEL:ARCHITECTURE"},
-            {"id": "KERNEL:ARCHITECTURE-L0"},
-            {"id": "KERNEL:ARCHITECTURE-L0-BOOTSTRAP"},
-            {"id": "KERNEL:ARCHITECTURE-L1"},
-            {"id": "KERNEL:ARCHITECTURE-L2"},
-            {"id": "KERNEL:ARCHITECTURE-L3"},
+            {"id": "KERNEL:BOOTSTRAP-001", "seccion": "§2 L0-B", "nombre": "Bootstrap"},
+            {"id": "KERNEL:AUDIENCE-SCOPE", "seccion": "(encabezado)", "nombre": "Declaración de Audiencia y Alcance"},
+            {"id": "KERNEL:PURPOSE", "seccion": "§1", "nombre": "Propósito del Sistema"},
+            {"id": "KERNEL:ARCHITECTURE", "seccion": "§2", "nombre": "Arquitectura de Cuatro Capas"},
+            {"id": "KERNEL:ARCHITECTURE-L0", "seccion": "§2.1", "nombre": "L0 — VANTAGE Runtime"},
+            {"id": "KERNEL:ARCHITECTURE-L0-BOOTSTRAP", "seccion": "§2.2", "nombre": "L0-Bootstrap — Dynamic Governance Layer"},
+            {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "§2.3", "nombre": "L1 — Active Recon"},
+            {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "§2.4", "nombre": "L2 — Strategic Search"},
+            {"id": "KERNEL:ARCHITECTURE-L3", "seccion": "§2.5", "nombre": "L3 — Passive Intake"},
             # typo histórico + forma correcta como lookup_ids para máxima cobertura
-            {"id": "KERNEL:ARHITECTURE-L4", "lookup_ids": ["KERNEL:ARHITECTURE-L4", "KERNEL:ARCHITECTURE-L4"]},
-            {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH"},
-            {"id": "KERNEL:SCHEMA"},
-            {"id": "KERNEL:SCHEMA-001"},
-            {"id": "KERNEL:SCHEMA-002"},
-            {"id": "KERNEL:SCHEMA-003"},
-            {"id": "KERNEL:SCHEMA-004"},
-            {"id": "KERNEL:SCHEMA-005"},
-            {"id": "KERNEL:SCHEMA-006"},
-            {"id": "KERNEL:SCHEMA-007"},
-            {"id": "KERNEL:TRACKER-SCHEMA"},
-            {"id": "KERNEL:TRACKER-SCHEMA-001"},
-            {"id": "KERNEL:TRACKER-SCHEMA-002"},
-            {"id": "KERNEL:HEALTH-CHECK"},
-            {"id": "KERNEL:HEALTH-CHECK-001"},
-            {"id": "KERNEL:HEALTH-CHECK-002"},
-            {"id": "KERNEL:OWNERSHIP"},
-            {"id": "KERNEL:OWNERSHIP-001"},
-            {"id": "KERNEL:OWNERSHIP-002"},
-            {"id": "KERNEL:TRIGGERS"},
-            {"id": "KERNEL:TRIGGER-001"},
-            {"id": "KERNEL:TRIGGER-002"},
-            {"id": "KERNEL:TRIGGER-003"},
-            {"id": "KERNEL:TRIGGER-004"},
-            {"id": "KERNEL:TRIGGER-005"},
-            {"id": "KERNEL:TRIGGER-006"},
-            {"id": "KERNEL:TRIGGER-007"},
-            {"id": "KERNEL:TRIGGER-008"},
-            {"id": "KERNEL:TRIGGER-009"},
-            {"id": "KERNEL:GATE-DECISION"},
-            {"id": "KERNEL:GATE-DECISION-001"},
-            {"id": "KERNEL:GATE-DECISION-002"},
-            {"id": "KERNEL:GATE-DECISION-003"},
-            {"id": "KERNEL:GATE-DECISION-004"},
-            {"id": "KERNEL:GATE-DECISION-005"},
-            {"id": "KERNEL:GATE-DECISION-006"},
-            {"id": "KERNEL:NAMING-CONVENTION"},
-            {"id": "KERNEL:CV-GOLDEN-RULES"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-001"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-002"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-003"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-004"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-005"},
-            {"id": "KERNEL:CV-PIPELINE"},
-            {"id": "KERNEL:CANON-UPDATE"},
-            {"id": "KERNEL:FAIL-PHILOSOPHY"},
-            {"id": "KERNEL:SCOPE"},
-            {"id": "KERNEL:DATA-FLOW"},
-            {"id": "KERNEL:ROUTING"},
-            {"id": "KERNEL:EVOLUTION"},
-            {"id": "KERNEL:DOC-CONTRACT"},
-            {"id": "KERNEL:NORM"},
-            {"id": "KERNEL:CENSUS-SYNC"},
+            {"id": "KERNEL:ARHITECTURE-L4", "lookup_ids": ["KERNEL:ARHITECTURE-L4", "KERNEL:ARCHITECTURE-L4"], "seccion": "§2.6", "nombre": "L4 — Version Control & Infrastructure"},
+            {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH", "seccion": "§3", "nombre": "Arquitectura Dashboard/Checklist"},
+            {"id": "KERNEL:SCHEMA", "seccion": "§4", "nombre": "Class A vs Class B (Schema)"},
+            {"id": "KERNEL:SCHEMA-001", "seccion": "§4.1", "nombre": "Class A vs Class B — definición de ownership"},
+            {"id": "KERNEL:SCHEMA-002", "seccion": "§4.2", "nombre": "Restricción del Sistema"},
+            {"id": "KERNEL:SCHEMA-003", "seccion": "§4.3", "nombre": "Fuente como Campo Especial"},
+            {"id": "KERNEL:SCHEMA-004", "seccion": "§4.4", "nombre": "Entity Format"},
+            {"id": "KERNEL:SCHEMA-005", "seccion": "§4.5", "nombre": "Contrato de Resolución: 4 Pasos"},
+            {"id": "KERNEL:SCHEMA-006", "seccion": "§4.6", "nombre": "APROBAR_WRITE: Alcance"},
+            {"id": "KERNEL:SCHEMA-007", "seccion": "§4.7", "nombre": "Acceptance Audit"},
+            {"id": "KERNEL:TRACKER-SCHEMA", "seccion": "§5", "nombre": "Alcance y niveles de prioridad — Bug/Tasks Tracker"},
+            {"id": "KERNEL:TRACKER-SCHEMA-001", "seccion": "§5.1", "nombre": "Alcance del Tracker"},
+            {"id": "KERNEL:TRACKER-SCHEMA-002", "seccion": "§5.2", "nombre": "Niveles de Prioridad"},
+            {"id": "KERNEL:HEALTH-CHECK", "seccion": "§6", "nombre": "Contrato de health_check.py"},
+            {"id": "KERNEL:HEALTH-CHECK-001", "seccion": "§6.1", "nombre": "Entity Index Auto-Sync"},
+            {"id": "KERNEL:HEALTH-CHECK-002", "seccion": "§6.2", "nombre": "Reporte de Tickets"},
+            {"id": "KERNEL:OWNERSHIP", "seccion": "§7", "nombre": "Responsabilidades AI vs Python"},
+            {"id": "KERNEL:OWNERSHIP-001", "seccion": "§7.1", "nombre": "AI Component"},
+            {"id": "KERNEL:OWNERSHIP-002", "seccion": "§7.2", "nombre": "Python Component"},
+            {"id": "KERNEL:TRIGGERS", "seccion": "§8", "nombre": "Contratos detallados de Triggers"},
+            {"id": "KERNEL:TRIGGER-001", "seccion": "§8.1", "nombre": "FEED — Procesamiento por Lotes"},
+            {"id": "KERNEL:TRIGGER-002", "seccion": "§8.2", "nombre": "VL1 — Comandos de mantenimiento del Tracker"},
+            {"id": "KERNEL:TRIGGER-003", "seccion": "§8.3", "nombre": "QA — Checklist Canónico de 6 ítems"},
+            {"id": "KERNEL:TRIGGER-004", "seccion": "§8.4", "nombre": "DRY RUN"},
+            {"id": "KERNEL:TRIGGER-005", "seccion": "§8.5", "nombre": "SYNC"},
+            {"id": "KERNEL:TRIGGER-006", "seccion": "§8.6", "nombre": "TOP 3 BY SCORE"},
+            {"id": "KERNEL:TRIGGER-007", "seccion": "§8.7", "nombre": "NEXT ACTION"},
+            {"id": "KERNEL:TRIGGER-008", "seccion": "§8.8", "nombre": "FEED (sin trigger CV-A)"},
+            {"id": "KERNEL:TRIGGER-009", "seccion": "§8.9", "nombre": "STATUS"},
+            {"id": "KERNEL:GATE-DECISION", "seccion": "§9", "nombre": "Lógica de gates"},
+            {"id": "KERNEL:GATE-DECISION-001", "seccion": "§9.1", "nombre": "Lógica de Bypass"},
+            {"id": "KERNEL:GATE-DECISION-002", "seccion": "§9.2", "nombre": "Lógica Estándar"},
+            {"id": "KERNEL:GATE-DECISION-003", "seccion": "§9.3", "nombre": "Resolución de REVIEW_NEEDED"},
+            {"id": "KERNEL:GATE-DECISION-004", "seccion": "§9.4", "nombre": "Por Qué los Gates Son Deterministas"},
+            {"id": "KERNEL:GATE-DECISION-005", "seccion": "§9.5", "nombre": "Flujo de Recuperación BLOCKED"},
+            {"id": "KERNEL:GATE-DECISION-006", "seccion": "§9.6", "nombre": "REJECTED (Post-Aplicación)"},
+            {"id": "KERNEL:NAMING-CONVENTION", "seccion": "§10", "nombre": "Convención de Nombres de Outputs"},
+            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "§11", "nombre": "Reglas de Oro CV"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "§11.1", "nombre": "No Evaluar Fit Antes de Escribir"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "§11.2", "nombre": "No Calcular ni Estimar Campos Class B"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-003", "seccion": "§11.3", "nombre": "No Cuestionar la Calidad de Datos del Usuario"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-004", "seccion": "§11.4", "nombre": "No Delegar Escritura al Usuario"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-005", "seccion": "§11.5", "nombre": "No Interpretar en SYNC"},
+            {"id": "KERNEL:CV-PIPELINE", "seccion": "§12", "nombre": "Flujo CV-A → CV-B"},
+            {"id": "KERNEL:CANON-UPDATE", "seccion": "§13", "nombre": "Actualización del Canon"},
+            {"id": "KERNEL:FAIL-PHILOSOPHY", "seccion": "§14", "nombre": "Filosofía de Fallo"},
+            {"id": "KERNEL:SCOPE", "seccion": "§15", "nombre": "Scope y economía de contexto (Terminal vs MCP)"},
+            {"id": "KERNEL:DATA-FLOW", "seccion": "§16", "nombre": "Flujo de Datos y Escritura"},
+            {"id": "KERNEL:ROUTING", "seccion": "§17", "nombre": "Rutas de carga MCP / lazy_loader"},
+            {"id": "KERNEL:EVOLUTION", "seccion": "§18", "nombre": "Evolución del sistema, deuda técnica, criterios de cambio"},
+            {"id": "KERNEL:DOC-CONTRACT", "seccion": "§22 (TOC dice §21)", "nombre": "Contrato de IDs de Documento"},
+            {"id": "KERNEL:NORM", "seccion": "§19", "nombre": "Normalización Documental (Legacy IDs)"},
+            {"id": "KERNEL:CENSUS-SYNC", "seccion": "§20", "nombre": "Sincronización obligatoria del ID Census"},
+            {"id": "KERNEL:SESSION-LEDGER", "seccion": "§21", "nombre": "Session Ledger — registro de apertura/cierre de sesión"},
         ],
     },
     {
         "name": "SYSTEM PROMPT",
         "rows": [
-            {"id": "SP:CEDULA-DIGITAL"},
-            {"id": "KERNEL:SCOPE"},
-            {"id": "KERNEL:DATA-FLOW"},
-            {"id": "SP:TRIGGERS"},
-            {"id": "KERNEL:CV-GOLDEN-RULES"},
-            {"id": "SP:SCHEMA"},
-            {"id": "KERNEL:ROUTING"},
-            {"id": "SP:ID-CONNECTORS-001"},
-            {"id": "SP:BOOTSTRAP-001"},
-            {"id": "SP:SYNC-RULE"},
-            {"id": "SP:CONSISTENCY"},
+            {"id": "SP:CEDULA-DIGITAL", "seccion": "§2", "nombre": "Cédula Digital — rutas de operación y UUIDs"},
+            {"id": "KERNEL:SCOPE", "seccion": "§3 (referencia)", "nombre": "[Referencia a KERNEL:SCOPE — no sección propia del SP]"},
+            {"id": "KERNEL:DATA-FLOW", "seccion": "§4 (referencia)", "nombre": "[Referencia a KERNEL:DATA-FLOW — no sección propia del SP]"},
+            {"id": "SP:TRIGGERS", "seccion": "§5", "nombre": "Triggers operativos de VANTAGE"},
+            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "§6 (referencia)", "nombre": "[Referencia a KERNEL:CV-GOLDEN-RULES — no sección propia del SP]"},
+            {"id": "SP:SCHEMA", "seccion": "§7", "nombre": "Schema — Trackers (Class A/B)"},
+            {"id": "KERNEL:ROUTING", "seccion": "§8 (referencia)", "nombre": "[Referencia a KERNEL:ROUTING — no sección propia del SP]"},
+            {"id": "SP:ID-CONNECTORS-001", "seccion": "§9", "nombre": "ID Connectors — esquema PREFIX:NOMBRE-SECCION"},
+            {"id": "SP:BOOTSTRAP-001", "seccion": "(encabezado)", "nombre": "Operating Specification — Bootstrap de Sesión"},
+            {"id": "SP:SYNC-RULE", "seccion": "§1", "nombre": "Sincronización Inicial y Verificación de Versión"},
+            {"id": "SP:CONSISTENCY", "seccion": "§10", "nombre": "Regla de Consistencia Documental"},
         ],
     },
     {
         "name": "MANUAL",
         "rows": [
-            {"id": "MANUAL:OBJETIVO-001"},
-            {"id": "MANUAL:FUNCIONAMIENTO-001"},
-            {"id": "MANUAL:SETUP-001"},
-            {"id": "MANUAL:FLUJO-001"},
-            {"id": "MANUAL:VCHECKLIST-001"},
-            {"id": "MANUAL:DASHBOARD-001"},
-            {"id": "MANUAL:VANTAGE-RUNTIME-001"},
-            {"id": "MANUAL:GESTION-DATOS-001"},
-            {"id": "MANUAL:TROUBLESHOOTING-001"},
-            {"id": "MANUAL:PROMPTS-WRAPPERS-001"},
-            {"id": "MANUAL:CHEATSHEETS-001"},
-            {"id": "MANUAL:HEALTHCHECK-001"},
-            {"id": "MANUAL:CHANGELOG-001"},
-            {"id": "MANUAL:REGLAS-DE-ORO-001"},
-            {"id": "MANUAL:FALLO-001"},
-            {"id": "MANUAL:SLA-001"},
+            {"id": "MANUAL:OBJETIVO-001", "seccion": "§1", "nombre": "Objetivo de VANTAGE"},
+            {"id": "MANUAL:FUNCIONAMIENTO-001", "seccion": "§2", "nombre": "Cómo Funciona"},
+            {"id": "MANUAL:SETUP-001", "seccion": "§3", "nombre": "Setup"},
+            {"id": "MANUAL:FLUJO-001", "seccion": "§4", "nombre": "Flujo Punta a Punta"},
+            {"id": "MANUAL:VCHECKLIST-001", "seccion": "§4.1", "nombre": "El Checklist — V-Checklist semanal"},
+            {"id": "MANUAL:DASHBOARD-001", "seccion": "§4.2", "nombre": "Dashboard — recuperación antes de CV Optimization"},
+            {"id": "MANUAL:VANTAGE-RUNTIME-001", "seccion": "§5", "nombre": "VANTAGE Runtime (Consulta Operativa)"},
+            {"id": "MANUAL:GESTION-DATOS-001", "seccion": "§6", "nombre": "Gestión de Datos"},
+            {"id": "MANUAL:TROUBLESHOOTING-001", "seccion": "§7", "nombre": "Troubleshooting"},
+            {"id": "MANUAL:PROMPTS-WRAPPERS-001", "seccion": "§8", "nombre": "Prompts & Wrappers"},
+            {"id": "MANUAL:CHEATSHEETS-001", "seccion": "§9", "nombre": "Cheat Sheets"},
+            {"id": "MANUAL:HEALTHCHECK-001", "seccion": "§10", "nombre": "Health Check"},
+            {"id": "MANUAL:CHANGELOG-001", "seccion": "§11", "nombre": "Changelog"},
+            {"id": "MANUAL:REGLAS-DE-ORO-001", "seccion": "§12", "nombre": "Reglas de Oro para Operadores"},
+            {"id": "MANUAL:FALLO-001", "seccion": "§13", "nombre": "Filosofía de Fallo para Operadores"},
+            {"id": "MANUAL:SLA-001", "seccion": "§14", "nombre": "SLA de Latencia Post-Ingesta"},
         ],
     },
     {
         "name": "CAREER CANON",
         "rows": [
-            {"id": "CAREER_CANON:AUDIENCE-SCOPE"},
-            {"id": "CANON:PROFILE-001"},
-            {"id": "CANON:SKILLS-001"},
-            {"id": "CANON:EXPERIENCE-001"},
+            {"id": "CAREER_CANON:AUDIENCE-SCOPE", "seccion": "(encabezado)", "nombre": "Declaración de Audiencia y Alcance del Canon Runtime"},
+            {"id": "CANON:PROFILE-001", "seccion": "§A", "nombre": "Professional Profile Canon"},
+            {"id": "CANON:SKILLS-001", "seccion": "§B", "nombre": "Skills Canon"},
+            {"id": "CANON:EXPERIENCE-001", "seccion": "§D", "nombre": "Experience Records"},
             {
                 "id": "CANON:EXPERIENCE-C01 … C05",
                 "lookup_ids": [
@@ -174,42 +175,52 @@ CENSUS_SPEC = [
                     "CANON:EXPERIENCE-C04",
                     "CANON:EXPERIENCE-C05",
                 ],
+                "seccion": "§D.1–D.5",
+                "nombre": "C01 L'Oréal Luxe · C02 Bisonte Experiential · C03 Levi Strauss (Dockers) · C04 Aéropostale · C05 El Palacio de Hierro (ALDO)",
             },
-            {"id": "CANON:ACHIEVEMENTS-001"},
-            {"id": "CANON:KPIS-001"},
+            {"id": "CANON:ACHIEVEMENTS-001", "seccion": "§H", "nombre": "Achievement Library"},
+            {"id": "CANON:KPIS-001", "seccion": "§I", "nombre": "Core KPIs"},
             {
                 "id": "CANON:KPI-001 … KPI-008",
                 "lookup_ids": [
                     "CANON:KPI-001", "CANON:KPI-002", "CANON:KPI-003", "CANON:KPI-004",
                     "CANON:KPI-005", "CANON:KPI-006", "CANON:KPI-007", "CANON:KPI-008",
                 ],
+                "seccion": "§I.1–I.8",
+                "nombre": "KPI01 Traffic +43% · KPI02 Conversion +18% · KPI03 Campaign Cost -74% · KPI04 Floorset Time -33% · KPI05 POP Coverage 100% · KPI06 Rebranding Coverage 100% · KPI07 Adidas Punch List (17) · KPI08 Years Experience (10+)",
             },
-            {"id": "CANON:FACTS-001"},
+            {"id": "CANON:FACTS-001", "seccion": "§J", "nombre": "Canonical Facts"},
             {
                 "id": "CANON:FACT-001 … FACT-008",
                 "lookup_ids": [
                     "CANON:FACT-001", "CANON:FACT-002", "CANON:FACT-003", "CANON:FACT-004",
                     "CANON:FACT-005", "CANON:FACT-006", "CANON:FACT-007", "CANON:FACT-008",
                 ],
+                "seccion": "§J.1–J.8",
+                "nombre": "CF01 ALDO Cert. Year 2014 · CF02 ALDO Periodo 2012–2017 · CF03 Adidas Punch List 17 · CF04 Adidas Punch List Non-Blocking · CF05 Levi's 270+ POS/6 países · CF06 Aéropostale 21 Direct Reports · CF07 Aéropostale 17 Stores · CF08 L'Oréal Marcas",
             },
             {
                 "id": "CANON:UF-001 … UF-003",
                 "lookup_ids": ["CANON:UF-001", "CANON:UF-002", "CANON:UF-003"],
+                "seccion": "§J.9–J.11",
+                "nombre": "UF01 L'Oréal End Date · UF02 Canonical Email · UF03 Certifications Canon",
             },
-            {"id": "CANON:POSITIONING-001"},
+            {"id": "CANON:POSITIONING-001", "seccion": "§K", "nombre": "Positioning Modes N1–N4"},
             {
                 "id": "CANON:POSITIONING-N1 … N4",
                 "lookup_ids": [
                     "CANON:POSITIONING-N1", "CANON:POSITIONING-N2",
                     "CANON:POSITIONING-N3", "CANON:POSITIONING-N4",
                 ],
+                "seccion": "§K.1–K.4",
+                "nombre": "N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution & Rollout · N4 Commercial VM & Field Leadership",
             },
-            {"id": "CANON:OUTPUT-CONTRACT-001"},
-            {"id": "CANON:OUTPUT-CONTRACT-SKELETON-001"},
-            {"id": "CANON:OUTPUT-CONTRACT-TAGREGISTRY-001"},
-            {"id": "CANON:FIGMA-TAG-SCHEMA"},
-            {"id": "CANON:POSITIONING-MODE"},
-            {"id": "CANON:TAG-REGISTRY"},
+            {"id": "CANON:OUTPUT-CONTRACT-001", "seccion": "§L", "nombre": "Output Contract"},
+            {"id": "CANON:OUTPUT-CONTRACT-SKELETON-001", "seccion": "§L.1", "nombre": "Golden Skeleton (Reference)"},
+            {"id": "CANON:OUTPUT-CONTRACT-TAGREGISTRY-001", "seccion": "§L.3", "nombre": "Tag Registry (doble ID junto con CANON:TAG-REGISTRY, ver nota)"},
+            {"id": "CANON:FIGMA-TAG-SCHEMA", "seccion": "§L.2", "nombre": "Figma Tag Schema"},
+            {"id": "CANON:POSITIONING-MODE", "seccion": "§L.3.1", "nombre": "Activación por Positioning Mode"},
+            {"id": "CANON:TAG-REGISTRY", "seccion": "§L.3", "nombre": "Tag Registry (doble ID junto con CANON:OUTPUT-CONTRACT-TAGREGISTRY-001, ver nota)"},
         ],
     },
 ]
@@ -394,6 +405,18 @@ def known_ids_from_spec() -> set:
     return known
 
 
+# IDs retirados formalmente (ver Change Log) que persisten como texto
+# narrativo/histórico dentro de la propia entrada de retiro. No son
+# definiciones activas — el heading/sección real ya no existe — pero el
+# extractor los marca is_def=True al toparse con el patrón `PREFIX:CLAVE`
+# dentro de esa entrada histórica. Confirmado ruido documentado (v9.2.0),
+# no requieren alta en CENSUS_SPEC ni acción recurrente.
+KNOWN_RETIRED_NOISE = {
+    "MANUAL:DASHBOARD-CHECKLIST-001",  # retirado v9.1.6, dividido en
+                                        # MANUAL:VCHECKLIST-001 + MANUAL:DASHBOARD-001
+}
+
+
 def find_orphan_ids(link_index: dict, known_ids: set) -> dict:
     """
     Detecta IDs encontrados en los documentos (con al menos un bloque de
@@ -402,12 +425,19 @@ def find_orphan_ids(link_index: dict, known_ids: set) -> dict:
     Solo se consideran definiciones, no menciones sueltas, para evitar
     falsos positivos de cross-references (ej. "ver KERNEL:X en el Kernel").
 
+    IDs retirados y documentados en KNOWN_RETIRED_NOISE se excluyen incluso
+    si el extractor los marca is_def=True, porque la "definición" detectada
+    es en realidad la narración histórica de su propio retiro (ver Change
+    Log), no una sección viva sin dar de alta.
+
     Devuelve: id_str -> mejor entry (doc, link) para reportarlo, ordenado
     por prefijo y nombre para lectura consistente.
     """
     orphans = {}
     for id_str, entries in link_index.items():
         if id_str in known_ids:
+            continue
+        if id_str in KNOWN_RETIRED_NOISE:
             continue
         def_entries = [e for e in entries if e["is_def"]]
         if not def_entries:
@@ -419,26 +449,41 @@ def find_orphan_ids(link_index: dict, known_ids: set) -> dict:
 # ─── RENDER ────────────────────────────────────────────────────────────────────
 
 def render_markdown(link_index: dict, orphans: dict) -> tuple:
+    """
+    Genera el Markdown en el formato "bonito" curado por el operador en
+    Notion: un subtítulo `##` por documento, tabla de 3 columnas
+    (ID · Sección · Nombre — sin columna de estatus), separador `---`
+    entre documentos. Este formato es una vista de auditoría/espejo del
+    CENSUS_SPEC; la fuente de verdad para lectura humana sigue siendo la
+    página de Notion (394938be), curada a mano por el operador.
+    """
     lines = []
     unresolved = []
 
-    for section in CENSUS_SPEC:
-        lines += [f"### {section['name']}", "", "| ID |", "|---|"]
+    for i, section in enumerate(CENSUS_SPEC):
+        if i > 0:
+            lines.append("---")
+            lines.append("")
+        lines += [f"## {section['name']}", "", "| ID | Sección | Nombre |", "|---|---|---|"]
         for row in section["rows"]:
             link = resolve_link(row, link_index)
             display_id = row["id"]
+            seccion = row.get("seccion", "")
+            nombre = row.get("nombre", "")
             if link:
                 cell = f"[`{display_id}`]( {link} )"
             else:
                 cell = f"`{display_id}`"
                 unresolved.append(display_id)
-            lines.append(f"| {cell} |")
+            lines.append(f"| {cell} | {seccion} | {nombre} |")
         lines.append("")
 
     # Sección de huérfanos — siempre se imprime, incluso vacía, para que
     # quede explícito en el artefacto que la detección corrió (Regla 2:
     # "no ignorar silenciosamente IDs nuevos").
-    lines += ["### IDs Huérfanos (fuera de CENSUS_SPEC)", ""]
+    lines.append("---")
+    lines.append("")
+    lines += ["## IDs Huérfanos (fuera de CENSUS_SPEC)", ""]
     if orphans:
         lines += ["| ID | Documento | Link |", "|---|---|---|"]
         for id_str, entry in orphans.items():
