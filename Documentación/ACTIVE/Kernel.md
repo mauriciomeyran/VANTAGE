@@ -628,7 +628,7 @@ Contrato de Normalización de IDs:
 - Alcance: Todos los documentos fundacionales (MANUAL, CAREER CANON, KERNEL, SYSTEM PROMPT).
 - Excepciones: IDs de Notion (UUIDs) en metadatos o URLs.
 - Gobernanza: Cambios requieren APROBAR_WRITE + entrada en Changelog. §Reglas de Migración. Ejecutable vía AI Component bajo autorización explícita del operador. -->
-Normalización documental de IDs legacy hacia el esquema [PREFIX]:[KEY]. Ver KERNEL:DOC-CONTRACT para contrato completo y listado de 26 ocurrencias (DT-015).
+Normalización documental de IDs legacy hacia el esquema [PREFIX]:[KEY]. Ver KERNEL:DOC-CONTRACT para contrato completo. DT-015 (26 ocurrencias) — CERRADO.
 ## KERNEL:CENSUS-SYNC — Sincronización Obligatoria del ID Census
 El V-ID-CENSUS es un documento derivado — su fuente de verdad son los IDs reales escritos en los documentos fundacionales (Kernel, Manual, Career Canon, System Prompt), no al revés. El Census no reemplaza esos documentos ni los precede; los audita.
 Problema que resuelve: sin un gate explícito, un cambio de estado de un ID (⚠️ Stub → ✅ Ok) o la creación de un ID nuevo puede quedar reflejado en el documento fuente pero no en el Census, generando drift silencioso entre lo que el sistema documenta y lo que el Census reporta.
@@ -643,6 +643,20 @@ Ninguna sesión que haya involucrado cambios (constructivos, correctivos o destr
 Regla 5 — Chequeo informativo en arranque:
 health_check.py reporta la antigüedad del V-ID-CENSUS en cada corrida (umbral 7 días), como advertencia amarilla si está desactualizado. Este chequeo es puramente informativo — no bloquea el arranque de sesión ni auto-ejecuta generate_census.py (el script pega a la API de Notion con rate-limit real, incompatible con el contrato de lectura estricta y rápida de health_check.py). El gate real de obligatoriedad sigue viviendo en el cierre de tickets (Regla 1), no en el arranque.
 No aplica a: tickets que no modifican estado de ningún ID (ej. fixes de redacción, correcciones de trailing space en propiedades Notion).
+---
+## KERNEL:SESSION-LEDGER
+Propósito: Registrar apertura y cierre de sesión para detectar terminación abrupta (crash, timeout, cierre de ventana) sin paso por Session Close Protocol.
+Naturaleza: excepción de escritura de housekeeping — mismo tratamiento arquitectónico que KERNEL:HEALTH-CHECK-001 (Entity Index Auto-Sync). No es dato de negocio del pipeline de vacantes; no requiere APROBAR_WRITE porque no toca campos Class A ni Class B del Tracker.
+Estructura: página Notion standalone con 4 propiedades:
+- session_id (texto, generado por la IA al inicio de sesión)
+- status (select: OPEN / CLOSED)
+- opened_at (timestamp)
+- pending_summary (texto libre — espejo del bloque COMPLETADO/PENDIENTE del último Session Close)
+Escritura autorizada en dos puntos únicamente:
+1. SKILL-OPEN, paso 0 — antes de Health Check: status → OPEN
+1. SKILL-CLOSE, paso 6 — antes de Close: status → CLOSED + pending_summary poblado
+Ningún otro trigger ni componente escribe en este documento. Python no lo toca — es propiedad exclusiva del AI Component como infraestructura de continuidad de sesión.
+Fuente de verdad de "pendientes": este documento reemplaza a la memoria conversacional o a Claude Memory como fuente primaria de Pending Items en el bootstrap (ver SKILL-OPEN §4 modificado).
 ---
 ## KERNEL:DOC-CONTRACT
 1. CANONICAL DOCUMENT ID CONTRACT (DOC:CLAVE)
@@ -663,5 +677,5 @@ Este contrato estandariza la referencia cruzada entre componentes del sistema y 
 | ALIASES | V | ALIASES | registry["ALIASES"] |
 | CHANGELOG | V | CHANGE LOG | registry["CHANGELOG"] |
 ### Reglas de Migración
-Toda referencia a páginas del sistema que actualmente use UUIDs hardcodeados o anclas planas debe migrar a este esquema. lazy_loader.py es el componente encargado de aplicar este contrato en tiempo de ejecución. EXCEPCIÓN DE MIGRACIÓN (DT-015): Se autoriza al AI Component a ejecutar la normalización documental (search-and-replace) vía MCP sobre las 26 ocurrencias identificadas, bajo el trigger NORM [DOC:CLAVE].
+Toda referencia a páginas del sistema que actualmente use UUIDs hardcodeados o anclas planas debe migrar a este esquema. lazy_loader.py es el componente encargado de aplicar este contrato en tiempo de ejecución. DT-015 — CERRADO: Normalización documental (26 ocurrencias) ejecutada vía trigger NORM [DOC:CLAVE]. 100% canónico.
 
