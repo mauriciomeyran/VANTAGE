@@ -1,5 +1,30 @@
 # V | CHANGELOG
 
+### [DT-018] Manual §16-19 — Reglas de Oro CV, Positioning Modes, Golden Skeleton, Schema Class A/B (referencia por ID) + alta de ARCHIVO TASK TRACKER en Cédula Digital
+- Fecha: 2026-07-14
+- Alcance: MANUAL (§16-19, nuevas), SYSTEM PROMPT (SP:CEDULA-DIGITAL), TASKS TRACKER / ARCHIVO TASK TRACKER.
+- Cambios:
+- MANUAL §16: índice de navegación hacia KERNEL:CV-GOLDEN-RULES (5 reglas + template de rechazo) — sin duplicar el contrato completo, solo tabla de qué activa cada regla.
+- MANUAL §17: criterio de selección Positioning Modes N1–N4 (CANON:POSITIONING-001), con ancla canónica y cuándo aplica cada modo + regla de desempate para JDs híbridos.
+- MANUAL §18: qué es y dónde vive el Golden Skeleton (CANON:OUTPUT-CONTRACT-SKELETON-001) — slots clave, SSOT registry_seed.json, regla de invariancia.
+- MANUAL §19: tabla de referencia Class A/B (KERNEL:SCHEMA-001) + nota de que los pesos de Score/VM_Scope viven en profile_config.yaml, no en el Manual.
+- Ningún ID canónico (MANUAL:, KERNEL:, CANON:*) fue creado ni cambió de estado — las 4 secciones son contenido de referencia nuevo, no redefinición. Census no requiere regeneración (KERNEL:CENSUS-SYNC Regla 1 no se dispara).
+- SP:CEDULA-DIGITAL: alta de ARCHIVO TASK TRACKER (DB c2698a3e-50c8-4d92-a2a1-756d9aaed2d2 / COL c470ead7-465b-4375-9469-c48534559657) — base de datos existente, no documentada previamente en la Cédula.
+- Tasks Tracker: 3 tickets ALTO (huecos de la reestructuración V-MANUAL v9.3.0 — DT-017) marcados Hecho y movidos a ARCHIVO TASK TRACKER.
+- Resultado: Manual con 4 secciones nuevas de referencia, 0 huérfanos, 0 huecos ALTO pendientes de la reestructuración anterior (quedan 2 MEDIO + 1 BAJO, ver Tasks Tracker).
+- Versión actualizada: 9.3.1.
+### [DT-017] Reestructuración narrativa de V-MANUAL (journey-based) + deprecación de §CHANGELOG duplicado
+- Fecha: 2026-07-14
+- Alcance: MANUAL (reordenamiento completo de §1–§17).
+- Cambios:
+- Contenido promovido desde V-MANUAL (PROPOSAL) (39d938be-fc42-8054-8b3a-ce1c87c85fc6), vía escritura manual del operador.
+- Reorganización siguiendo el journey real del operador: Objetivo → Cómo Funciona → Filosofía de Fallo (adelantada desde §13 a §3) → Setup → Arranque Frío → Ciclo de Sesión (MANUAL:SESSION-CYCLE-001, adelantado desde §5.6 a §6) → Checklist → Flujo Semanal → Runtime → Gestión de Datos → Health Check → Troubleshooting → Prompts & Wrappers → Cheat Sheets → Criterio de Calidad → Reglas de Oro → SLA.
+- Ningún ID (MANUAL:*) fue creado, retirado ni renumerado en su clave — solo reubicados en el documento. Census no requiere regeneración (sin cambio de estado de IDs).
+- DEPRECADO: sección Changelog duplicada dentro de V-MANUAL (antes §11, luego §18 en el proposal). El registro canónico de versiones vive únicamente en V-CHANGELOG — mantener una copia secundaria en el Manual generaba drift documental (precedente: confusión "Cheat Sheet" vs Aliases, v9.1.9). No se promovió al Manual restructurado.
+- Fusiones de contenido disperso sin ID propio: "Gate Decisions" (dentro de §2), "Antes de Lunes" (dentro de §6), comandos vl1 (dentro de §9.2) — ver tabla de mapeo completa en el proposal fuente.
+- Resultado: V-MANUAL reestructurado, mismo set de 16 IDs, 0 huérfanos nuevos.
+- Pendiente (fuera de esta entrada): 11 huecos detectados durante la reestructuración (referencias a Kernel/Career Canon no desarrolladas en el Manual) — ver Tasks Tracker.
+- Versión actualizada: 9.3.0.
 ### [DT-016] Integración de Session Lifecycle al Manual y Aliases
 - Fecha: 2026-07-14
 - Alcance: MANUAL (§4, §5.6, §9), ALIASES (nueva sección Session Lifecycle), V-ID-CENSUS.
