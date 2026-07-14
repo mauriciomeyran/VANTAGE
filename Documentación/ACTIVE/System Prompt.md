@@ -74,6 +74,8 @@ TASKS TRACKER (DB)................d2a65ca1-6a35-465d-bcff-b0d82dddd549
 TASKS TRACKER (COL)...............aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8
 ALIASES...........................37c938be-fc42-80d4-b9ae-f5969830331b
 CHANGE LOG........................390938be-fc42-80e7-b429-d7d730339353
+VERSION MANIFEST (DB).............02331706-d2f5-43d1-8166-ed53b690dbd7
+SESSION LEDGER (DB)................38324240-c686-47d0-8082-cee5e4409f88
 FIGMA SYNC........................04-Vantage_CV/Figma Sync/
 ---
 ## ID: KERNEL:SCOPE
@@ -128,3 +130,8 @@ Si durante la sesión se detectan discrepancias entre documentos, esquemas, prop
 1. Reportar la discrepancia al operador.
 1. Esperar confirmación antes de modificar documentación.
 1. Continuar normalmente cuando la discrepancia no impida la tarea solicitada.
+---
+## ID: SP:VERSION-CHECK-TOOL
+### Herramienta de Verificación de Versión de Bajo Costo
+Para la verificación de versión requerida en SP:SYNC-RULE (los 7 documentos: 6 fundacionales + Census), el operador puede correr verify_versions.py (Layer_1/scripts/, ver KERNEL:VERSION-CHECK-TOOL) en Terminal y pegar el output de 7 líneas en vez de que el AI Component ejecute 7 notion-fetch completos.
+Antes de hacer fetch completo de un documento fundacional solo para leer su propiedad Versión, preguntar primero al operador si puede correr el script y pegar el output.

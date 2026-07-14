@@ -328,6 +328,10 @@ Orden de evaluación (secuencial, no paralelo):
 Nota: estos thresholds no son constantes editables en esta sección — viven en profile_config.yaml (pesos de scoring) y en el código de gate_logic. Esta sección documenta el contrato de orden y las reglas de decisión, no los valores numéricos exactos de scoring interno (Class B, propiedad de Python).
 ### KERNEL:GATE-DECISION-003 — Resolución de REVIEW_NEEDED
 > ⚠️ ALCANCE DE GAP-03: El guard GAP-03 protege el pipeline Python (feed_processor.py → process_record()). Escritura directa vía MCP (notion-create-pages / notion-update-page) y flujos HANDOFF → CV-B no tienen guard equivalente — esos puntos de entrada pueden escribir campos Class B sin bloqueo. Estado: gap documentado, pendiente implementación de class_b_guard.py (FX-1 open).
+MITIGACIÓN INTERINA GAP-03 (vigente hasta cierre de FX-1 / class_b_guard.py):
+Toda llamada notion-update-page o notion-create-pages ejecutada por el AI Component debe declarar explícitamente, en el mismo DRY RUN previo a la escritura, la whitelist de campos Class A a escribir (ver KERNEL:SCHEMA-001).
+Cualquier campo fuera de esa whitelist presente en el payload de la llamada MCP se remueve automáticamente antes de ejecutar la escritura, y se reporta al operador — mismo tratamiento que KERNEL:SCHEMA-002 aplica al JSON de FEED.
+Esta mitigación es un guard de disciplina del AI Component (nivel prompt/proceso) — no es un guard de código. No reemplaza a class_b_guard.py; lo antecede mientras FX-1 permanece abierto.
 Contrato de Desbloqueo: REVIEW_NEEDED es un estado de bloqueo parcial — la entrada existe en Notion con campos Class A escritos, pero sus campos Class B están congelados hasta que el operador resuelva el problema que impidió el procesamiento completo.
 Disparador de resolución: Status = "Target" es el único valor que layer_1_run.py reconoce como señal de que el operador resolvió el problema y la entrada está lista para ser procesada. Cualquier otro valor de Status mantiene el bloqueo.
 Flujo de resolución — contrato formal:
@@ -679,3 +683,9 @@ Este contrato estandariza la referencia cruzada entre componentes del sistema y 
 ### Reglas de Migración
 Toda referencia a páginas del sistema que actualmente use UUIDs hardcodeados o anclas planas debe migrar a este esquema. lazy_loader.py es el componente encargado de aplicar este contrato en tiempo de ejecución. DT-015 — CERRADO: Normalización documental (26 ocurrencias) ejecutada vía trigger NORM [DOC:CLAVE]. 100% canónico.
 
+---
+## KERNEL:VERSION-CHECK-TOOL
+Propósito: ruta de bajo costo para verificar la propiedad Versión de los 7 documentos fundacionales (Kernel, Manual, Career Canon, System Prompt, Aliases, Changelog, Census) sin pagar el costo de un notion-fetch completo (body entero) por documento.
+Script: verify_versions.py, instalado en Layer_1/scripts/. Lee NOTION_TOKEN desde layer_1.env (mismo patrón que otros scripts del pipeline). Itera los 7 page_id fijos y llama pages.retrieve(page_id) por cada uno — solo trae la propiedad Versión, no el contenido de bloques. Output: tabla de 7 líneas documento | versión.
+Regla operativa: antes de que el AI Component ejecute notion-fetch completo sobre un documento fundacional únicamente para confirmar su versión (ej. SP:SYNC-RULE al inicio de sesión, verificación de write-back al cierre), preguntar primero al operador si puede correr verify_versions.py en Terminal y pegar el output de 7 líneas. notion-fetch completo queda reservado para cuando se necesite leer o editar contenido del documento — no solo confirmar versión.
+Relación con KERNEL:ROUTING: aplica el mismo principio de triaje de costos (Terminal > MCP) ya establecido ahí, específicamente para el caso de uso de verificación de versión.
