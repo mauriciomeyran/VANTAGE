@@ -15,4 +15,4 @@ VANTAGE: OPEN PROTOCOL
 5. SNAPSHOT: Bug/Tasks Tracker por Prioridad — detalle CRÍTICO/ALTO, conteo MEDIO/BAJO.
 6. READY: "VANTAGE READY" + versión. Algún paso falló -> "BOOTSTRAP INCOMPLETE", nada después.
 
-GUARDRAILS: Sin escrituras salvo Ledger (paso 0). Sin pasos inventados. Nunca `notion-query-data-sources`/`query_database_view` (bloqueado) — Terminal o fetch directo.
+GUARDRAILS: Sin escrituras salvo Ledger (paso 0). Sin pasos inventados. Nunca `notion-query-data-sources`/`query_database_view` (bloqueado) — Terminal o fetch directo. El PASS del paso 2 asume que el cierre de sesión anterior ejecutó `--sync` (ver vantage-session-close paso 4.5) — si esa garantía se rompe, este PASS puede ser un falso positivo contra manifest obsoleto.
