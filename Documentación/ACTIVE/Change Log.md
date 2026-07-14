@@ -1,5 +1,16 @@
 # V | CHANGELOG
 
+### [DT-016] Integración de Session Lifecycle al Manual y Aliases
+- Fecha: 2026-07-14
+- Alcance: MANUAL (§4, §5.6, §9), ALIASES (nueva sección Session Lifecycle), V-ID-CENSUS.
+- Cambios:
+- MANUAL §4: nueva introducción "Antes de Lunes — El Ciclo de la Sesión Misma", ancla el ciclo /vantage-session-open → /vantage-session-close antes del ciclo semanal.
+- MANUAL §5.6 (nuevo): MANUAL:SESSION-CYCLE-001 — detalle narrativo completo de apertura/cierre de sesión, con ejemplos de output y tabla de troubleshooting.
+- MANUAL §9: MANUAL:PATCH-QUALITY-001 — Criterio de Calidad para Parches Documentales (5 filtros: invisibilidad estructural, continuidad de voz, progresión narrativa, diff mínimo, coherencia transversal).
+- ALIASES: nueva sección "Session Lifecycle" — /vantage-session-open, /vantage-session-close, verify_versions.py --check.
+- V-ID-CENSUS: 4 IDs huérfanos incorporados al CENSUS_SPEC (KERNEL:VERSION-CHECK-TOOL, SP:VERSION-CHECK-TOOL, MANUAL:SESSION-CYCLE-001, MANUAL:PATCH-QUALITY-001).
+- Resultado: Census 109/109 resueltos, 0 huérfanos.
+- Versión actualizada: 9.2.9.
 ### v9.2.8 — 2026-07-14
 - V | SESSION LEDGER creada en Notion (38324240-c686-47d0-8082-cee5e4409f88), bajo V | ARCHIVEROS
 - VERSION MANIFEST y SESSION LEDGER registrados en SP:CEDULA-DIGITAL (write verificado)

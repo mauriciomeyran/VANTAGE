@@ -13,7 +13,8 @@
 | 5 | Layer 4 — Version Control | OPERACIÓN | Git y sync |
 | 6 | Figma Sync | OPERACIÓN | Plugin CV |
 | 7 | Runtime CLI | OPERACIÓN | Comandos vantage.py |
-| 8 | CHANGELOG | REFERENCIA | Historial |
+| 8 | Session Lifecycle | OPERACIÓN | Andamiaje de apertura/cierre de sesión |
+| 9 | CHANGELOG | REFERENCIA | Historial |
 ## Layer 1 — Active Recon
 | Alias | Descripción |
 | --- | --- |
@@ -69,3 +70,10 @@ cd ~/Documents/03 Projects/VANTAGE/Layer_1/scripts && source ../.venv/bin/activa
 | vantage.py context | vcontext | Context layer |
 | vantage.py query | vquery | Query layer |
 | vsync_doc.py | vdoc | Sync Notion → ACTIVE/ — ver tabla Layer 4 para flags |
+## Session Lifecycle
+Los comandos de esta sección no son parte del pipeline de vacantes — son el andamiaje que envuelve cada sesión de trabajo, sin importar qué vayas a hacer dentro de ella. Ver MANUAL:SESSION-CYCLE-001 para el detalle narrativo completo de qué hace cada uno y por qué.
+| Alias | Descripción |
+| --- | --- |
+| /vantage-session-open | Abre la sesión: crea fila OPEN en Session Ledger, corre version check de los 7 documentos fundacionales, lee último Changelog y pendientes heredados. Es lo primero que corres al empezar a trabajar. |
+| /vantage-session-close | Cierra la sesión: regenera Census si hubo cambios de ID, escribe Changelog + version bump, verifica consistencia, y marca la fila del Ledger como CLOSED. Es lo último que corres antes de cerrar la ventana. |
+| verify_versions.py --check | El script detrás del version check — corre standalone en Terminal si necesitas confirmar versión sin pasar por todo el ciclo de apertura. Lee solo la propiedad Versión de los 7 documentos, no su contenido — mucho más barato que un fetch completo. |

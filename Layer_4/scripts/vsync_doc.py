@@ -10,7 +10,7 @@ vsync_doc.py — VANTAGE v8.5.4 (LAYER 4)
 - FIX: bloques code > 2000 chars truncados en chunks de párrafo (Notion API limit)
 """
 
-import sys, os, argparse, time
+import sys, os, argparse, time, hashlib, json
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -53,6 +53,38 @@ DOCS = {
 }
 
 NOTION_TEXT_LIMIT = 1990  # margen de seguridad bajo el límite de 2000
+
+MANIFEST_PATH = BASE_DIR / ".vsync_manifest.json"
+
+def _hash(text: str) -> str:
+    return hashlib.sha256((text or "").strip().encode("utf-8")).hexdigest()
+
+def _load_manifest() -> dict:
+    if MANIFEST_PATH.exists():
+        try:
+            return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+    return {}
+
+def _save_manifest(manifest: dict):
+    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+
+def _decide(key, local_text, notion_text, manifest):
+    """Decide direccion via hash, no mtime. Retorna: 'local->notion' | 'notion->local' | 'noop' | 'conflict'"""
+    last = manifest.get(key)
+    lh, nh = _hash(local_text), _hash(notion_text)
+    if lh == nh:
+        return "noop"
+    if last is None:
+        # sin historial: no hay forma segura de decidir -> tratar como conflicto
+        return "conflict"
+    if lh == last and nh != last:
+        return "notion->local"
+    if nh == last and lh != last:
+        return "local->notion"
+    return "conflict"  # ambos lados cambiaron desde el ultimo sync
+
 
 def _rich_text(rt):
     if not rt: return ""
@@ -356,8 +388,17 @@ def main():
             elif args.direction == "local":
                 print(f"  · {d['label']:<30} [DRY] local→notion (sin cambios aplicados)")
             else:
-                winner = "local→notion" if (local_ts and local_ts > ts) else "notion→local"
-                print(f"  · {d['label']:<30} [DRY] {winner} (auto, sin cambios aplicados)")
+                manifest = _load_manifest()
+                local_text = local.read_text(encoding="utf-8") if local.exists() else ""
+                notion_text, _ts_unused = fetch_notion_as_md(d["notion_id"])
+                decision = _decide(k, local_text, notion_text or "", manifest)
+                label_map = {
+                    "local->notion": "local→notion",
+                    "notion->local": "notion→local",
+                    "noop": "sin cambios (hash igual)",
+                    "conflict": "⚠️ CONFLICT — ambos lados cambiaron, resolver manual",
+                }
+                print(f"  · {d['label']:<30} [DRY] {label_map[decision]} (auto, sin cambios aplicados)")
             continue
 
         # ── RUN REAL: aquí sí se justifica el fetch completo y recursivo ──
@@ -378,17 +419,28 @@ def main():
             push_local_to_notion(d["notion_id"], local)
             print(f"  ✓ {d['label']:<30} local→notion")
 
-        else:  # auto — gana el más reciente
-            local_ts = datetime.fromtimestamp(local.stat().st_mtime, tz=timezone.utc) if local.exists() else None
-            if local_ts and local_ts > ts:
+        else:  # auto — decide por hash de contenido vs manifest, no por mtime
+            manifest = _load_manifest()
+            local_text = local.read_text(encoding="utf-8") if local.exists() else ""
+            decision = _decide(k, local_text, md, manifest)
+
+            if decision == "noop":
+                print(f"  · {d['label']:<30} sin cambios (hash igual, auto)")
+            elif decision == "conflict":
+                print(f"  ⚠️ {d['label']:<30} CONFLICT — ambos lados cambiaron desde el último sync. SIN APLICAR. Resolver manual con --direction.")
+            elif decision == "local->notion":
                 if not local.exists():
                     print(f"  ✗ {d['label']:<30} ERROR — local file no existe: {local}")
                     continue
                 push_local_to_notion(d["notion_id"], local)
+                manifest[k] = _hash(local_text)
+                _save_manifest(manifest)
                 print(f"  ✓ {d['label']:<30} local→notion (auto)")
-            else:
+            else:  # notion->local
                 local.parent.mkdir(parents=True, exist_ok=True)
                 local.write_text(md, encoding="utf-8")
+                manifest[k] = _hash(md)
+                _save_manifest(manifest)
                 print(f"  ✓ {d['label']:<30} notion→local (auto)")
 
     if not args.dry_run:

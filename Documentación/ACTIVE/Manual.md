@@ -134,6 +134,12 @@ El botón de tema (ícono sol/luna, arriba a la derecha en ambos) persiste tu el
 ### Qué NO hacer
 No copies/pegues código de un HTML al otro para "igualar" un color o componente — edita vantage-tokens.css o vantage-theme.js, que ambos ya leen. Editar directo en el HTML reintroduce el mismo drift que se corrigió. Si algo se ve distinto entre los dos HTML, es señal de que alguien editó un color o estilo directo en el <style> inline de uno de los dos archivos en vez de en vantage-tokens.css. Revisa ahí primero.
 ---
+### Antes de Lunes — El Ciclo de la Sesión Misma
+El ciclo semanal que arranca abajo (Lunes → Viernes) asume que el sistema documental y el estado del pipeline están sanos al momento de empezar a trabajar. Esa suposición no es gratuita: cada vez que abres una conversación nueva con Claude para operar VANTAGE, esa conversación pasa primero por su propio ciclo de vida — independiente del ciclo semanal, y que existe precisamente para que nunca operes sobre un supuesto sin verificar.
+Piensa en esto como el equivalente a revisar que las luces del tablero no tengan ninguna advertencia antes de arrancar el coche: no es el viaje en sí, es la condición para que el viaje no te sorprenda a medio camino.
+Este ciclo de sesión se dispara con dos comandos — /vantage-session-open al inicio, /vantage-session-close al final — y hace tres cosas que ningún otro punto del sistema hace: deja un registro de que la sesión existió y en qué estado terminó (el Session Ledger), confirma que los 6 documentos fundacionales + el Census están todos en la misma versión (nunca uno adelantado y otro atrasado), y te recuerda, sin que tengas que preguntarlo, qué quedó pendiente de la sesión anterior.
+El detalle completo de qué hace cada paso — y qué significa cada resultado posible — está en §5.6. Aquí basta con saber que no necesitas invocarlo tú manualmente cada vez: si acabas de abrir Claude para trabajar en VANTAGE hoy, el primer paso siempre es este ciclo, antes de tocar Tracker, Dashboard o cualquier trigger de CV.
+---
 LUNES
 El lunes es el ciclo de búsqueda activa completo. Se dispara manualmente y cubre las dos capas de búsqueda humana.
 El ciclo comienza con los prompts de búsqueda, los cuales no se copian de versiones anteriores — se ensamblan bajo demanda a través de Perplexity Desktop: cada prompt combina dos capas: el Prompt Base (perfil, reglas de exclusión, etc.) + el Prompt Wrapper que contiene la fecha del día TODAY'S DATE, el modo de búsqueda, etc.)
@@ -465,6 +471,42 @@ Usar cuando el sistema no ha sido operado por más de 5 días.
       python3 vantage.py ask "find candidates"
       # Confirmar que la lista refleja el estado actual de Notion
 ```
+### 5.6 Ciclo de Sesión — Open/Close · ID: MANUAL:SESSION-CYCLE-001
+Antes de que este ciclo existiera, cada sesión de Claude arrancaba "en frío": el agente asumía que el corpus de Notion (Kernel, Manual, System Prompt, Career Canon, Aliases, Changelog) estaba en la versión que recordaba de la sesión anterior, y no había ningún mecanismo que confirmara si una sesión había terminado bien o si Claude simplemente dejó de responder a medio trabajo — un timeout, un cierre accidental de pestaña, un crash. El resultado era drift silencioso: un documento se actualizaba, otro no, y nadie se enteraba hasta que las contradicciones aparecían en producción (esto es, en parte, lo que motivó el Census — ver KERNEL:CENSUS-SYNC).
+El ciclo Open/Close resuelve esto tratando cada sesión como una transacción con inicio y fin explícitos, en vez de una conversación que simplemente "pasa".
+Al invocar este comando, ocurren cinco cosas en orden, y cada una tiene un propósito distinto:
+1. Se crea una fila nueva en el Session Ledger (KERNEL:SESSION-LEDGER) con status: OPEN y un session_id generado por Claude. Esta fila es la prueba de que la sesión existe — si el sistema llegara a fallar a media sesión sin que Claude ejecute el cierre formal, esta fila queda abierta indefinidamente y la próxima sesión lo detecta como señal de cierre abrupto.
+1. Se corre la verificación de versión de los 7 documentos fundacionales (Kernel, Manual, Career Canon, System Prompt, Aliases, Changelog, Census) — vía verify_versions.py --check en Terminal si tienes acceso, o fetch directo por MCP si no. Este es el paso que responde a la pregunta "¿están todos los documentos hablando de la misma versión del sistema, o alguno quedó atrás?" (KERNEL:VERSION-CHECK-TOOL). El output se ve así:
+```plain text
+=======================================================
+VANTAGE — MANIFEST CHECK (read-only)
+=======================================================
+  [v] V | ALIASES        9.2.8        [OK]
+  [v] V | SYSTEM PROMPT   9.2.8        [OK]
+  [v] V | KERNEL          9.2.8        [OK]
+  [v] V | MANUAL          9.2.8        [OK]
+  [v] V | SESSION LEDGER  9.2.8        [OK]
+  [v] V | ID CENSUS       9.2.8        [OK]
+-------------------------------------------------------
+PASS — all components at 9.2.8
+```
+Si algún documento aparece con una versión distinta a los demás, eso es drift real — no un error del script, sino evidencia de que un documento se editó sin propagar el bump de versión a los otros (ver SP:SYNC-RULE, Regla de Versión Única). En ese caso, la sesión reporta el drift explícitamente antes de continuar; no bloquea el trabajo salvo que el documento desincronizado sea justo el que vas a editar en esa sesión — en ese caso, primero se resuelve el drift.
+1. Se lee la última fila del Session Ledger — la de la sesión anterior — para confirmar que su status quedó en CLOSED. Si aparece OPEN, es la señal de que la sesión pasada terminó de forma abrupta (crash, timeout, cierre de ventana antes de correr /vantage-session-close). Esto no es catastrófico, pero sí amerita revisar manualmente si quedó algo a medio escribir en Notion antes de continuar.
+1. Se lee la última entrada de V-CHANGELOG — el resumen de qué se hizo en la sesión anterior, para tener contexto de continuidad sin tener que preguntarte "¿en qué me quedé?".
+1. Se reporta un snapshot de pendientes — tickets CRÍTICO y ALTO del Bug/Task Tracker, más cualquier pending_summary heredado del Ledger. Esto reemplaza la necesidad de que tú recuerdes o repitas manualmente qué quedó abierto — el sistema te lo entrega al arrancar.
+Al terminar estos cinco pasos, Claude confirma con un mensaje corto (VANTAGE: SISTEMA SINCRONIZADO o VANTAGE: MODO DEGRADADO si algo falló) y recién ahí queda listo para recibir instrucciones normales de trabajo.
+El cierre es la contraparte simétrica, y su función es dejar el sistema en un estado que la siguiente sesión pueda confiar ciegamente. Sigue el mismo orden que ya conoces de KERNEL:CENSUS-SYNC Regla 4, pero vale la pena verlo como secuencia completa:
+1. Inventario de cambios — qué se tocó en la sesión: documentos editados, entradas de Tracker modificadas, IDs creados o resueltos.
+1. Census regenerado — si algún ID cambió de estado (de pendiente a resuelto, o se creó uno nuevo), el Census se actualiza antes de escribir el Changelog. Nunca al revés — si el Census no puede regenerarse en ese momento (sin acceso a Terminal, por ejemplo), el ticket asociado se marca Blocked-Census en vez de darse por cerrado en falso.
+1. Entrada de Changelog + version bump — se documenta qué cambió y se sube la versión de los 6 documentos fundacionales según SP:SYNC-RULE.
+1. Verificación de consistencia — se corre nuevamente el chequeo de versión para confirmar que el bump se propagó correctamente a los 7 documentos.
+1. Resumen hecho/pendiente — se presenta automáticamente, sin que lo pidas, un resumen de qué se completó y qué quedó abierto (KERNEL:CENSUS-SYNC Regla 4).
+1. Cierre del Ledger — la fila abierta en el paso 1 de la apertura pasa a status: CLOSED, con el resumen de pendientes escrito en pending_summary — este es el campo que la próxima sesión leerá en su paso 4 de apertura.
+La sesión termina con el mensaje SESIÓN COMPLETADA → nuevo chat, que es tu señal de que es seguro cerrar la ventana o empezar una conversación nueva sin perder continuidad.
+- verify_versions.py no corre / Terminal no disponible → la apertura continúa con fetch directo vía MCP para los 7 documentos, más lento pero funcional. No es un bloqueo, es un downgrade de eficiencia.
+- El Ledger anterior quedó OPEN → revisa manualmente si algo quedó a medio escribir antes de seguir. El sistema te lo señala, pero la decisión de qué hacer con eso es tuya.
+- Drift de versión detectado y no es el documento que ibas a tocar hoy → se reporta, no bloquea. Puedes decidir resolverlo ahora o después.
+- Drift de versión detectado y SÍ es el documento que ibas a tocar → se resuelve el drift primero, antes de aplicar cualquier parche nuevo — de lo contrario terminarías escribiendo sobre una base que ya no coincide con lo que las otras piezas del sistema esperan.
 ### 5.5 Figma Sync — Uso Operativo
 Ver flujo completo de inyección en §4 (Miércoles — "Qué hace el usuario con el output"). Instalación del plugin (una sola vez):
 Figma Desktop → Plugins → Development → Import plugin from manifest... → navega a ~/Documents/03 Projects/VANTAGE/Figma Sync/ → selecciona manifest.json. El plugin queda disponible permanentemente.
@@ -579,6 +621,14 @@ La extracción de reglas y contratos lógicos (Lazy Load) opera con la siguiente
 Prioridad A — Terminal (canónico): lazy_loader.py ejecuta Server‑Side Lazy Load. Parsea bloques hijos de la Notion API y devuelve únicamente el payload del ID solicitado. Consumo: ~150 tokens por llamada.
 Prioridad B — MCP Notion: Reservado exclusivamente para escrituras (APROBAR_WRITE) y modificaciones estructurales de páginas. No se usa para lectura de reglas o contratos.
 Consulte las tablas de comandos para Terminal y Scripts en la sección completa.
+### Criterio de Calidad para Parches Documentales · ID: MANUAL:PATCH-QUALITY-001
+Todo parche a los 6 documentos fundacionales debe cumplir estos cinco criterios antes de aplicarse — si falla alguno, se reescribe antes de solicitar APROBAR_WRITE:
+1. Invisibilidad estructural — no crea secciones nuevas si el contenido cabe en una existente.
+1. Continuidad de voz — mismo registro y nivel técnico del bloque que lo rodea.
+1. Progresión narrativa intacta — el lector no debe notar un salto temático al leer de corrido.
+1. Diff mínimo — se edita solo el texto indispensable, nunca el bloque completo si un párrafo basta.
+1. Coherencia transversal — no puede contradecir ni duplicar una definición ya existente en Kernel, System Prompt, Career Canon o Aliases.
+Un parche que pasa estos cinco filtros no se distingue, seis meses después, del texto que rodeaba su punto de inserción original.
 ## 10. HEALTH CHECK · ID: MANUAL:HEALTHCHECK-001
 manual-healthcheck-001
 ### Red Flags — Ajustar Inputs, No Sistema
