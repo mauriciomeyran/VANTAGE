@@ -22,6 +22,10 @@ Before anything else, list internally:
 - Any ticket/bug state changes (open → resolved, new ticket logged)
 - Any ID state changes (a KERNEL/CANON/MANUAL section moved from Stub → Ok, or was newly created)
 
+For each Notion write listed above, before including it in "COMPLETADO ESTA
+SESIÓN" (step 5), re-fetch the page and confirm the written field matches
+the value sent.
+
 If nothing changed (pure read/consult session), skip to step 5 directly — no Census/Changelog work needed.
 
 ### 2. Census before Changelog — never the reverse
@@ -40,6 +44,20 @@ Per `KERNEL:CEDULA-DIGITAL`: any new entry in V-CHANGELOG must, in the same oper
 
 - Draft the Changelog entry (DRY RUN — show before/after, wait for APROBAR_WRITE per the standard gate).
 - Confirm the version bump target with the operator if it's not obvious (patch vs. minor).
+
+### 3.5 Write-Back Verification
+Immediately after writing the Changelog + version bump: re-fetch (read-only,
+no write) the `Versión` property of each of the 6 foundational documents and
+of the Changelog just written. Compare against the expected value.
+
+If any read value does not match what was just written:
+
+  FAIL — WRITE-BACK MISMATCH
+  [document] shows vX.X.X, expected vY.Y.Y.
+  Do not proceed to step 4 until resolved.
+
+This step is read-only — it does not automatically retry the write
+(`KERNEL:FAIL-PHILOSOPHY`: report, wait for instruction).
 
 ### 4. Version-consistency check (Regla de Versión Única)
 Per `KERNEL:SYNC-RULE`: after any version bump, the six foundational docs (MANUAL, TECHNICAL KERNEL, CAREER CANON, SYSTEM PROMPT, ID CENSUS, CHANGE LOG) must all carry the exact same version as the Changelog. If this session's changes leave any of them behind, flag it now — don't let it carry into the next session's sync as a silent discrepancy (that would trip `KERNEL:SYNC-RULE` at next bootstrap).
