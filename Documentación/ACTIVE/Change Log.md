@@ -1,6 +1,39 @@
 # V | CHANGELOG
 
-### [DT-018] Manual §16-19 — Reglas de Oro CV, Positioning Modes, Golden Skeleton, Schema Class A/B (referencia por ID) + alta de ARCHIVO TASK TRACKER en Cédula Digital
+### v9.3.4 Manual §6 — Fail-Fast, nota de versión en vdoc notion, purga de VERSION MANIFEST (Manual + Aliases)
+- Fecha: 2026-07-15
+- Alcance: MANUAL (§6 — "Qué hacer si algo no cuadra", §8.1 vdoc notion, §6 Cierre paso 3), ALIASES (Session Lifecycle, fila --sync).
+- Contexto: sesión anterior (inconclusa por límite de mensajes) auditó dos payloads de patches propuestos por un modelo colaborador externo contra el Manual real (fetch en vivo, no memoria). De 6 patches propuestos entre ambos payloads, 3 resultaron obsoletos o mal anclados (old_str inexistente en el documento real) y fueron descartados; 3 se aplicaron con old_str verificado.
+- Cambio 1 — MANUAL §6 "Qué hacer si algo no cuadra": reescrito a Fail-Fast explícito — "Terminal no está disponible → Operación detenida (Fail-Fast). No existe bypass automatizado vía MCP para este chequeo... con el fin de proteger la cuota de la API de Notion y evitar el desperdicio de tokens de contexto." Reemplaza redacción anterior que mencionaba el mismo principio con lenguaje menos directo. Write-back verificado por re-fetch (TCK-04).
+- Cambio 2 — MANUAL §8.1 (vdoc notion): añadida "Nota obligatoria de Versión" — exige correr verify_versions.py --sync antes de vdoc notion si la descarga ocurre inmediatamente después de un cierre de sesión con incremento de versión, para evitar que los archivos Markdown locales nazcan con metadata de versión desalineada del Changelog maestro.
+- Cambio 3 — MANUAL §6 Cierre paso 3: corregida la descripción de --sync, que decía inyectar la versión "directamente en el VERSION MANIFEST (DB)". Texto real del comportamiento del script: --sync ejecuta pages.retrieve + seis pages.patch secuenciales, una por documento fundacional restante, actualizando la propiedad "Versión" de cada página en Notion. La abstracción VERSION MANIFEST (DB) nunca reflejó el comportamiento real del script y quedó purgada de la prosa.
+- Cambio 4 — ALIASES, Session Lifecycle, fila --sync: misma corrección aplicada en esta sesión (v9.3.3 dejó esta fila desalineada respecto al Manual ya corregido — discrepancia detectada por SP:CONSISTENCY y resuelta hoy). Write-back verificado por re-fetch.
+- Hallazgo de proceso: durante la auditoría cruzada se confirmó que un modelo colaborador externo (sin acceso directo al Manual real, solo a un volcado de texto estático previo) generó 2 de los 3 patches de un primer payload y 2 de 3 de un segundo payload ancladas en texto ya obsoleto — no por alucinación, sino por trabajar sobre una versión desactualizada del documento (v9.3.1/anterior al rewrite de v9.3.2). Ningún patch se aplicó sin verificación de old_str contra el fetch en vivo.
+- Ningún ID canónico (MANUAL:, KERNEL:, SP:*) fue creado ni retirado — los 4 cambios son reescritura de contenido bajo IDs ya existentes. Census no requiere regeneración (KERNEL:CENSUS-SYNC Regla 1 no se dispara).
+- Resultado: MANUAL y ALIASES alineados entre sí y con el comportamiento real de verify_versions.py --sync. 0 discrepancias abiertas conocidas entre Manual/Aliases/script.
+- Versión actualizada: 9.3.4.
+### v9.3.3 Fix verify_versions.py + generate_census.py — discrepancia CENSUS resuelta, 4 huérfanos históricos incorporados
+- Fecha: 2026-07-15
+- Alcance: Layer_1/scripts/verify_versions.py, Layer_1/scripts/generate_census.py (ambos locales, no fundacionales — no disparan KERNEL:CENSUS-SYNC Regla 1 por sí mismos, ver Cambio 3).
+- Contexto: sesión anterior (handoff) dejó verify_versions.py con basura de texto, rutas y flag --bootstrap corregidos, pero el operador reportó al correrlo en Terminal que seguía fallando: ENV_PATH y REGISTRY_NAME no resolvían contra la estructura real de disco ni contra el schema real de resolver_registry_v2.json (namespace real: "document_registry", no "DOCUMENTS"/"SYSTEM" como asumía el script; CENSUS ausente por completo de ese archivo).
+- Cambio 1 — verify_versions.py: ENV_PATH corregido a Layer_1/config/layer_1.env; búsqueda de resolver_registry_v2.json extendida a Layer_1/data/; load_document_uuids() reescrito para leer del namespace real "document_registry"; CENSUS_FALLBACK_ID agregado como constante fija (394938be-fc42-81e6-a381-e3869e60d89d) ya que CENSUS no vive en el registro. Verificado en producción por el operador: --bootstrap, --check y --sync corridos limpio, CENSUS normalizado de v9.3.1 a v9.3.2.
+- Cambio 2 — generate_census.py: auditoría cruzada contra CENSUS_SPEC reveló que DT-016 (v9.2.9) documentó "4 IDs huérfanos incorporados al CENSUS_SPEC" (KERNEL:VERSION-CHECK-TOOL, SP:VERSION-CHECK-TOOL, MANUAL:SESSION-CYCLE-001, MANUAL:PATCH-QUALITY-001) pero el write real nunca se aplicó al script — un Changelog documentando un write que no persistió (mismo patrón que v9.1.1/v9.2.6). Los 4 IDs fueron dados de alta ahora, con verificación real vía re-run (112/112 resueltos, 0 huérfanos, 0 sin-link).
+- Cambio 3 — generate_census.py: MANUAL:CHANGELOG-001 retirado de CENSUS_SPEC (el operador eliminó esa sección del Manual — contenido redundante frente al Changelog centralizado). CAREER_CANON:AUDIENCE-SCOPE recibió lookup_ids alterno ["CANON:AUDIENCE-SCOPE"] — el heading real en Career Canon nunca tuvo el prefijo CAREER_CANON, causando "sin link" en cada corrida previa.
+- Página ID CENSUS (394938be): actualizada manualmente por el operador en Notion con el output fresco (112/112, 0 huérfanos) — no verificado vía fetch por instrucción explícita del operador.
+- Ningún ID canónico de MANUAL/KERNEL/SP fue creado ni retirado en esta entrada — los 4 altas y 1 baja son exclusivamente del namespace local CENSUS_SPEC (script), reflejando estado ya existente en los documentos reales.
+- Versión actualizada: 9.3.3.
+### v9.3.2 Optimización verify_versions.py — flags --bootstrap/--check/--sync, Terminal obligatorio en Session Cycle
+- Fecha: 2026-07-15
+- Alcance: MANUAL (MANUAL:SESSION-CYCLE-001, §6 — reescritura completa de Apertura y Cierre), KERNEL (KERNEL:VERSION-CHECK-TOOL — reescritura completa).
+- Contexto: el operador optimizó verify_versions.py (antes un solo modo de verificación) para operar con tres flags de responsabilidad exclusiva: --bootstrap (read-only, genera dump de contexto de apertura con última fila del Session Ledger + última entrada de Changelog + pendientes CRÍTICO/ALTO, reemplazando la lectura que antes hacía el AI Component vía MCP), --check (read-only, comportamiento ya documentado, tabla de 7 documentos), y --sync (único modo con escritura — inyecta la versión target del Changelog al VERSION MANIFEST DB 02331706-d2f5-43d1-8166-ed53b690dbd7, housekeeping exento de APROBAR_WRITE por el mismo tratamiento que KERNEL:HEALTH-CHECK-001 y KERNEL:SESSION-LEDGER).
+- Cambio 1 — MANUAL:SESSION-CYCLE-001: nueva subsección "Un cambio de fondo: el operador corre Terminal primero, Claude ya no improvisa la verificación", explicando el giro de diseño. Apertura reescrita a 5 pasos que incorporan --bootstrap + --check como payload de entrada al invocar /vantage-session-open (antes: Claude hacía fetch/lectura propia del Ledger y Changelog). Cierre reescrito a 4 pasos que incorporan --sync como paso obligatorio antes de invocar /vantage-session-close. Se elimina la rama de fallback "Terminal no disponible → fetch MCP directo" — Terminal pasa a ser requisito obligatorio, sin downgrade de eficiencia. Ejemplo de output de --check actualizado de versión hardcodeada (9.2.8, obsoleta) a formato genérico X.X.X para evitar que el ejemplo vuelva a quedar desactualizado.
+- Cambio 2 — KERNEL:VERSION-CHECK-TOOL: documentado el contrato completo de los tres flags (--bootstrap, --check, --sync), incluyendo el DB ID del VERSION MANIFEST como destino de escritura de --sync y su exención explícita de APROBAR_WRITE. Regla operativa actualizada: se retira la instrucción de "preguntar primero al operador si puede correr el script" — el contrato ahora asume Terminal como prerrequisito no negociable, sin rama de pregunta ni fallback.
+- Decisiones congeladas por el operador durante esta sesión (ver hilo): (1) --sync escribe en VERSION MANIFEST y está exento de APROBAR_WRITE por ser housekeeping automático de script local, análogo a Session Ledger/Health Check; (2) se elimina por completo la rama de fallback MCP directo cuando Terminal no está disponible — el pipeline no avanza sin Terminal; (3) el downgrade path "preguntar primero" queda derogado — el operador corre Terminal primero de forma incondicional e inyecta los resultados en el prompt de apertura/cierre.
+- Ningún ID canónico (MANUAL:, KERNEL:) fue creado, retirado ni cambió de estado — ambas secciones son reescritura de contenido bajo IDs ya existentes. Census no requiere regeneración (KERNEL:CENSUS-SYNC Regla 1 no se dispara).
+- Pendiente identificado, fuera de esta entrada: V | ALIASES (sección "Session Lifecycle") describe el flujo Open/Close en su forma anterior a esta optimización — no refleja --bootstrap/--sync ni el requisito de Terminal obligatorio. Requiere actualización de contenido en sesión futura (no bloquea esta entrada: Aliases recibe el bump de versión de esta sesión por SP:SYNC-RULE, pero su contenido queda desactualizado respecto al nuevo contrato).
+- Resultado: MANUAL y KERNEL alineados al nuevo contrato de verify_versions.py. 0 huerfanos, 0 IDs afectados.
+- Versión actualizada: 9.3.2.
+### v9.3.1 Manual §16-19 — Reglas de Oro CV, Positioning Modes, Golden Skeleton, Schema Class A/B (referencia por ID) + alta de ARCHIVO TASK TRACKER en Cédula Digital
 - Fecha: 2026-07-14
 - Alcance: MANUAL (§16-19, nuevas), SYSTEM PROMPT (SP:CEDULA-DIGITAL), TASKS TRACKER / ARCHIVO TASK TRACKER.
 - Cambios:
@@ -13,7 +46,7 @@
 - Tasks Tracker: 3 tickets ALTO (huecos de la reestructuración V-MANUAL v9.3.0 — DT-017) marcados Hecho y movidos a ARCHIVO TASK TRACKER.
 - Resultado: Manual con 4 secciones nuevas de referencia, 0 huérfanos, 0 huecos ALTO pendientes de la reestructuración anterior (quedan 2 MEDIO + 1 BAJO, ver Tasks Tracker).
 - Versión actualizada: 9.3.1.
-### [DT-017] Reestructuración narrativa de V-MANUAL (journey-based) + deprecación de §CHANGELOG duplicado
+### v9.3.0 Reestructuración narrativa de V-MANUAL (journey-based) + deprecación de §CHANGELOG duplicado
 - Fecha: 2026-07-14
 - Alcance: MANUAL (reordenamiento completo de §1–§17).
 - Cambios:
@@ -25,7 +58,7 @@
 - Resultado: V-MANUAL reestructurado, mismo set de 16 IDs, 0 huérfanos nuevos.
 - Pendiente (fuera de esta entrada): 11 huecos detectados durante la reestructuración (referencias a Kernel/Career Canon no desarrolladas en el Manual) — ver Tasks Tracker.
 - Versión actualizada: 9.3.0.
-### [DT-016] Integración de Session Lifecycle al Manual y Aliases
+### v9.2.9 Integración de Session Lifecycle al Manual y Aliases
 - Fecha: 2026-07-14
 - Alcance: MANUAL (§4, §5.6, §9), ALIASES (nueva sección Session Lifecycle), V-ID-CENSUS.
 - Cambios:
@@ -100,54 +133,5 @@ Guard, GAP-03).
 - Verificación: py_compile sin errores. Re-run del operador en producción (2026-07-13 01:59): 109/109 IDs en spec resueltos, 0 sin link, 0 huérfanos (antes: 1 huérfano constante).
 - Versión: v9.2.3 → v9.2.4. Los 6 documentos fundacionales normalizados a v9.2.4 en la misma operación (ver SP:SYNC-RULE — Regla de Versión Única).
 ---
-## v9.2.3 - 2026-07-13
-### AÑADIDO
-- TCK-01 (KERNEL:SESSION-LEDGER): Nueva infraestructura de persistencia en Notion para detectar cierres de sesión abruptos.
-- TCK-01 (SKILL-OPEN/CLOSE): Paso 0 (Check) y Paso 6 (Update) para gestión del Ledger.
-- TCK-02 (SKILL-OPEN): Paso 4.5 "Tracker Priority Snapshot" para visibilidad inmediata de tickets CRÍTICO/ALTO en el bootstrap.
-### MODIFICADO
-- TCK-03 (SKILL-OPEN): Paso 5 "Memory Consistency" ahora incluye validación de obsolescencia (Staleness Check) contra el Change Log.
-- SKILL-CLOSE: Renumeración de paso 6 a 7 (Close).
-### SEGURIDAD
-- Remediación de vulnerabilidad FO-03 (Continuidad Operativa) completada.
-### v9.2.2 — 2026-07-13
-[GOV] Cierre de Hallazgo 1 (v9.2.1) — DT-015 confirmado CERRADO por el operador, limpieza de referencias residuales en KERNEL:NORM y KERNEL:DOC-CONTRACT + Census actualizado.
-- Contexto: v9.2.1 dejó abierto un hallazgo de inconsistencia — la fila KERNEL:NORM en el Census mantenía marca ⚠️ Stub referenciando DT-015 como pendiente, mientras la columna resumen ya declaraba "N/A — cerrado en v9.1.6" para todo KERNEL. El propio texto vivo de KERNEL:NORM y KERNEL:DOC-CONTRACT seguía describiendo DT-015 como excepción de migración activa (26 ocurrencias, trigger NORM pendiente de ejecución).
-- Decisión del operador: DT-015 está 100% canónico y cerrado — la normalización ya fue ejecutada en sesiones previas (ver v8.9.3–v9.0.4, migración de prefijos completada por bloques en MANUAL/CANON/KERNEL).
-- Cambio 1 — KERNEL:NORM: referencia a "26 ocurrencias (DT-015)" pendiente reemplazada por "DT-015 (26 ocurrencias) — CERRADO".
-- Cambio 2 — KERNEL:DOC-CONTRACT, Reglas de Migración: cláusula "EXCEPCIÓN DE MIGRACIÓN (DT-015)" en presente/activo reescrita a "DT-015 — CERRADO", en pasado, reflejando ejecución ya completada.
-- Cambio 3 — V-ID-CENSUS (394938be): fila KERNEL:NORM — nota "§12-stub (nuevo v8.9.2)" retirada, queda "§12". Tabla RESUMEN: KERNEL 62→63 IDs OK, 2→1 Stubs; TOTAL 109→110 IDs OK, 2→1 Stubs.
-- Gate KERNEL:CENSUS-SYNC Regla 1/3 aplicado: Census regenerado (patch manual vía MCP, reflejando el cambio de estado del ID) antes de esta entrada de Changelog, conforme a Regla 3 (Census se actualiza antes de que el batch quede registrado).
-- Versión: v9.2.1 → v9.2.2. Los 6 documentos fundacionales normalizados a v9.2.2 en la misma operación (ver SP:SYNC-RULE — Regla de Versión Única).
----
-### v9.2.1 — 2026-07-12
-[GOV] V-ID-CENSUS (394938be) reconstruida post-corrupción vía subcontratación Mistral — verificación cruzada completada.
-- Contexto: la página había sido revertida por el operador a un snapshot sano anterior (v9.0.6, 124 IDs, formato de agrupamiento distinto) tras un incidente de corrupción/truncamiento de contenido ~2 días antes de esta sesión. Reconstruida vía subcontratación Mistral (contrato de sesión formal, gates idénticos, DRY RUN + APROBAR_WRITE) a paridad con V_ID_CENSUS_PRODUCTION.md real (109 IDs, 0 huérfanos reales).
-- Cambio 1 — Alta de KERNEL:GATE-DECISION-006 (huérfano desde v9.1.5, nunca reflejado en esta página).
-- Cambio 2 — Retiro de MANUAL:DASHBOARD-CHECKLIST-001 (obsoleto desde v9.1.6) + alta de MANUAL:DASHBOARD-001.
-- Cambio 3 — Nueva sección independiente ### SYSTEM PROMPT (11 IDs, antes fusionada dentro de la tabla KERNEL — no reflejaba la estructura real post-v9.0.4). Incluye SP:SYNC-RULE y SP:CONSISTENCY, resueltos por Claude contra el contenido real del System Prompt (no existía evidencia previa en la página vieja para estos 2 IDs).
-- Cambio 4 — Metadatos actualizados a v9.2.0 / 2026-07-12. Totales recalculados a 109 IDs / 109 resueltos.
-- Verificación cruzada (Claude, post-write de Mistral): write-back confirmado vía fetch directo — los 4 patches quedaron aplicados según lo especificado en el contrato de sesión.
-- Hallazgo 1 (no corregido en esta entrada, requiere decisión del operador): la fila KERNEL:NORM conserva su marca ⚠️ Stub — DT-015 pendiente, pero la columna resumen "Pendiente DT-015" de todos los documentos —incluyendo KERNEL— fue actualizada a "N/A — cerrado en v9.1.6" en el mismo batch. Inconsistencia interna: o el Stub de NORM debe re-evaluarse (¿stub por otra razón distinta a DT-015?), o la columna resumen no debería decir N/A para KERNEL mientras persista un Stub visible. Ninguna corrección aplicada — fuera del alcance del contrato de Mistral, señalado aquí para resolución explícita del operador.
-- Hallazgo 2 (aceptado, no revertido): las 5 filas de referencia/enrutador que vivían como KERNEL:SCOPE, KERNEL:DATA-FLOW, KERNEL:CV-GOLDEN-RULES, KERNEL:SCHEMA, KERNEL:ROUTING dentro de la tabla KERNEL fueron migradas por Mistral a la nueva sección SYSTEM PROMPT con prefijo SP:* (SP:SCOPE, SP:DATA-FLOW, etc.). Correcto según el contenido real del System Prompt (verificado por Claude vía fetch propio al inicio de esta sesión — son secciones locales de referencia dentro del SP, no redefiniciones), pero fue una decisión de renombrado de prefijo tomada por Mistral sin marcarla como pregunta abierta en su DRY RUN. Se acepta el resultado por ser correcto, pero se registra como desviación de proceso — Mistral debió señalar el cambio de prefijo explícitamente antes de ejecutar.
-- Versión: v9.2.0 → v9.2.1.
----
-### v9.2.0 — 2026-07-12
-[ARCH] KERNEL:SESSION-LEDGER — nueva infraestructura de continuidad de sesión (Sprint 0, remediación de auditoría de continuidad operativa).
-- Contexto: auditoría de continuidad (FASE 1-4) identificó FO-03 como vulnerabilidad crítica — el sistema no distingue "sesión cerrada limpiamente sin pendientes" de "sesión abortada sin registro" (crash, timeout, cierre de ventana). El Pending Items del bootstrap dependía 100% de memoria conversacional / Claude Memory, sin ancla persistente en Notion.
-- Cambio 1 — KERNEL: nueva sección KERNEL:SESSION-LEDGER (housekeeping, mismo tratamiento que KERNEL:HEALTH-CHECK-001). Documenta el contrato de la página standalone VANTAGE:SESSION-LEDGER (session_id, status, opened_at, pending_summary) y los dos únicos puntos de escritura autorizados: SKILL-OPEN paso 0, SKILL-CLOSE paso 6. No requiere APROBAR_WRITE — no toca Class A/B del Tracker.
-- Cambio 2 — Página Notion VANTAGE:SESSION-LEDGER creada (39c938be-fc42-8167-9606-decb9ead4eb9), standalone bajo PERSONAL HUB — no fundacional, fuera de SYNC-RULE.
-- Cambio 3 — CENSUS_SPEC (Layer_1/scripts/generate_census.py, local): alta de KERNEL:SESSION-LEDGER conforme a KERNEL:CENSUS-SYNC Regla 2. Verificado con py_compile antes de escritura.
-- Census: regenerado antes de esta entrada (KERNEL:CENSUS-SYNC Regla 3) — 109/109 IDs en spec resueltos, 0 sin link. 1 huérfano residual (MANUAL:DASHBOARD-CHECKLIST-001) confirmado como ruido documentado desde v9.1.6 — no requiere acción.
-- Pendiente fuera de esta entrada: patches de contenido a vantage-session-launch.md / vantage-session-close.md (Skills/, repo local) — paso 0 (Session Ledger Check), paso 4 modificado (Pending Items desde Ledger), paso 4.5 (Tracker Priority Snapshot), paso 5 modificado (Memory staleness), paso 6 (Session Ledger Update). No son documentos fundacionales, no requieren version bump ni entran a SYNC-RULE — aplicación pendiente de confirmación del operador en esta misma sesión.
-- Versión: v9.1.9 → v9.2.0. Los 6 documentos fundacionales normalizados a v9.2.0 en la misma operación (ver SP:SYNC-RULE — Regla de Versión Única).
----
-### v9.1.9 — 2026-07-12
-[GOV] Cierre de pendiente histórico — identificación retroactiva: "Cheat Sheet" = ALIASES (mismo Page ID), no entidad separada.
-- Contexto: memoria de sesión arrastraba "Cheat Sheet Page ID: no documentado, pendiente de localizar" como si fuera un documento distinto de ALIASES. Verificación cronológica sobre el propio Changelog resuelve el pendiente sin requerir escritura de datos nuevos.
-- Evidencia: v8.5.3 lista "Cheat Sheet" como uno de los 5 documentos fundacionales de esa era. v8.7.1 aplica patch editorial sobre esa misma página (37c938be-fc42-80d4-b9ae-f5969830331b), insertando el stub "§1 ALIASES & COMANDOS RÁPIDOS". v8.7.6 ya referencia la misma página como "V-ALIASES & CHANGE LOG" en la auditoría de normalización terminológica L0. El Page ID nunca cambió — el nombre del documento fue el que evolucionó de Cheat Sheet a Aliases.
-- Consistente con v9.0.9, donde el alias vdoc cheat_sheet fue eliminado por "alias fantasma sin doc real asociado" — misma causa raíz, ya corregida en código pero no cerrada en el registro conceptual hasta esta entrada.
-- Sin escritura de contenido nuevo en ningún documento fundacional — housekeeping de identificación, no gobernanza de IDs (KERNEL:CENSUS-SYNC Regla 1/3 no aplica).
-- Versión: v9.1.8 → v9.1.9.
----
----
+> El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
+

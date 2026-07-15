@@ -685,7 +685,16 @@ Toda referencia a páginas del sistema que actualmente use UUIDs hardcodeados o 
 
 ---
 ## KERNEL:VERSION-CHECK-TOOL
-Propósito: ruta de bajo costo para verificar la propiedad Versión de los 7 documentos fundacionales (Kernel, Manual, Career Canon, System Prompt, Aliases, Changelog, Census) sin pagar el costo de un notion-fetch completo (body entero) por documento.
-Script: verify_versions.py, instalado en Layer_1/scripts/. Lee NOTION_TOKEN desde layer_1.env (mismo patrón que otros scripts del pipeline). Itera los 7 page_id fijos y llama pages.retrieve(page_id) por cada uno — solo trae la propiedad Versión, no el contenido de bloques. Output: tabla de 7 líneas documento | versión.
-Regla operativa: antes de que el AI Component ejecute notion-fetch completo sobre un documento fundacional únicamente para confirmar su versión (ej. SP:SYNC-RULE al inicio de sesión, verificación de write-back al cierre), preguntar primero al operador si puede correr verify_versions.py en Terminal y pegar el output de 7 líneas. notion-fetch completo queda reservado para cuando se necesite leer o editar contenido del documento — no solo confirmar versión.
-Relación con KERNEL:ROUTING: aplica el mismo principio de triaje de costos (Terminal > MCP) ya establecido ahí, específicamente para el caso de uso de verificación de versión.
+Propósito: Ruta de bajo costo para verificar y sincronizar la propiedad Versión de los 7 documentos fundacionales (Kernel, Manual, Career Canon, System Prompt, Aliases, Changelog, Census) sin pagar el costo de token e infraestructura de un notion-fetch completo (body entero) por documentospan_1span_1.
+### Modos de Operación (verify_versions.py)
+1. Check Mode (Default): Itera los 7 page_id fijos y llama a pages.retrieve(page_id) para extraer únicamente el metadato de la propiedad Versiónspan_2span_2. Output: Tabla de 7 líneas (documento | versión)span_3span_3.
+1. Sync Mode (-sync): Sincronización determinista local. Lee de forma automática la nueva versión directamente de la página de Changelog en Notion (fuente de verdad escrita por el AI Component)span_4span_4 y ejecuta actualizaciones ligeras en lote (sequential patch updates de la propiedad "Versión") hacia los 6 documentos restantes en Notionspan_5span_5span_6span_6.
+### Reglas Operativas de Sincronización
+- Límite de Escritura del AI Component: Durante una actualización de versión, el componente de IA tiene estrictamente prohibido actualizar la propiedad Versión de manera individual en los documentos a través de múltiples llamadas de API. El AI Component no realiza escrituras redundantes.
+- Flujo Canónico de Sincronización:
+1. El AI Component redacta el borrador del Changelog y actualiza la versión únicamente en la página de Changelogspan_7span_7.
+1. El AI Component presenta el DRY RUN de cierre indicando que la versión maestro ha sido asentada en el Changelogspan_8span_8.
+1. El AI Component solicita explícitamente al operador ejecutar localmente python verify_versions.py --sync desde la terminal para propagar la versión en lote a los documentos restantes en Notion.
+1. Una vez propagada en Notion, el operador ejecuta el flujo estándar de vsync_doc.py (vdoc) en L4 para bajar los archivos actualizados al repositorio localspan_9span_9.
+### Relación de Costos y Rutas (KERNEL:ROUTING)
+Aplica el principio de triaje de costos (Terminal > MCP)span_10span_10. Toda validación y propagación de versión masiva se delega al script local para proteger la economía de contexto y evitar los límites de rate-limiting de la API de Notionspan_11span_11.
