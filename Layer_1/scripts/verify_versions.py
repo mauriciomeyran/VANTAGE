@@ -264,6 +264,7 @@ def main():
     parser = argparse.ArgumentParser(description="Verify and Sync document versions across Notion SSOT.")
     parser.add_argument("--sync", action="store_true", help="Sincroniza la versión de CHANGELOG hacia todos los documentos.")
     parser.add_argument("--bootstrap", action="store_true", help="Genera el dump de contexto de apertura de sesión (Ledger + Changelog + tickets prioritarios). Read-only.")
+    parser.add_argument("--check", action="store_true", help="Verifica la versión de los 7 documentos fundacionales (Check Mode). Read-only. Alias explícito del modo por default (sin flags) — existe para que el comando documentado en Manual/System Prompt/skills coincida literalmente con la interfaz real del script.")
     args = parser.parse_args()
 
     # 1. Inicialización de Entorno e Infraestructura
