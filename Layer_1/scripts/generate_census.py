@@ -120,6 +120,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:NORM", "seccion": "§19", "nombre": "Normalización Documental (Legacy IDs)"},
             {"id": "KERNEL:CENSUS-SYNC", "seccion": "§20", "nombre": "Sincronización obligatoria del ID Census"},
             {"id": "KERNEL:SESSION-LEDGER", "seccion": "§21", "nombre": "Session Ledger — registro de apertura/cierre de sesión"},
+            {"id": "KERNEL:VERSION-CHECK-TOOL", "seccion": "(anexo, post-§21)", "nombre": "Herramienta de bajo costo para verificar versión de los 7 documentos fundacionales (verify_versions.py)"},
         ],
     },
     {
@@ -136,6 +137,7 @@ CENSUS_SPEC = [
             {"id": "SP:BOOTSTRAP-001", "seccion": "(encabezado)", "nombre": "Operating Specification — Bootstrap de Sesión"},
             {"id": "SP:SYNC-RULE", "seccion": "§1", "nombre": "Sincronización Inicial y Verificación de Versión"},
             {"id": "SP:CONSISTENCY", "seccion": "§10", "nombre": "Regla de Consistencia Documental"},
+            {"id": "SP:VERSION-CHECK-TOOL", "seccion": "§11", "nombre": "Herramienta de Verificación de Versión de Bajo Costo"},
         ],
     },
     {
@@ -153,16 +155,17 @@ CENSUS_SPEC = [
             {"id": "MANUAL:PROMPTS-WRAPPERS-001", "seccion": "§8", "nombre": "Prompts & Wrappers"},
             {"id": "MANUAL:CHEATSHEETS-001", "seccion": "§9", "nombre": "Cheat Sheets"},
             {"id": "MANUAL:HEALTHCHECK-001", "seccion": "§10", "nombre": "Health Check"},
-            {"id": "MANUAL:CHANGELOG-001", "seccion": "§11", "nombre": "Changelog"},
             {"id": "MANUAL:REGLAS-DE-ORO-001", "seccion": "§12", "nombre": "Reglas de Oro para Operadores"},
             {"id": "MANUAL:FALLO-001", "seccion": "§13", "nombre": "Filosofía de Fallo para Operadores"},
             {"id": "MANUAL:SLA-001", "seccion": "§14", "nombre": "SLA de Latencia Post-Ingesta"},
+            {"id": "MANUAL:SESSION-CYCLE-001", "seccion": "§5.6", "nombre": "Ciclo de Sesión — Open/Close"},
+            {"id": "MANUAL:PATCH-QUALITY-001", "seccion": "§9", "nombre": "Criterio de Calidad para Parches Documentales"},
         ],
     },
     {
         "name": "CAREER CANON",
         "rows": [
-            {"id": "CAREER_CANON:AUDIENCE-SCOPE", "seccion": "(encabezado)", "nombre": "Declaración de Audiencia y Alcance del Canon Runtime"},
+            {"id": "CAREER_CANON:AUDIENCE-SCOPE", "lookup_ids": ["CAREER_CANON:AUDIENCE-SCOPE", "CANON:AUDIENCE-SCOPE"], "seccion": "(encabezado)", "nombre": "Declaración de Audiencia y Alcance del Canon Runtime"},
             {"id": "CANON:PROFILE-001", "seccion": "§A", "nombre": "Professional Profile Canon"},
             {"id": "CANON:SKILLS-001", "seccion": "§B", "nombre": "Skills Canon"},
             {"id": "CANON:EXPERIENCE-001", "seccion": "§D", "nombre": "Experience Records"},

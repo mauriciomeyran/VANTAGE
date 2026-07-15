@@ -65,6 +65,7 @@
 | [`KERNEL:NORM`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#c21840cfd11a40c38ea2067fee03ac83 ) | §19 | Normalización Documental (Legacy IDs) |
 | [`KERNEL:CENSUS-SYNC`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f1adf5716419431b94509efa3d9e0c83 ) | §20 | Sincronización obligatoria del ID Census |
 | [`KERNEL:SESSION-LEDGER`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#e7e15ea09ee743db81f240b7a9355ed9 ) | §21 | Session Ledger — registro de apertura/cierre de sesión |
+| [`KERNEL:VERSION-CHECK-TOOL`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42803aafd5c1af4fee5752 ) | (anexo, post-§21) | Herramienta de bajo costo para verificar versión de los 7 documentos fundacionales (verify_versions.py) |
 
 ---
 
@@ -83,6 +84,7 @@
 | [`SP:BOOTSTRAP-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281c68a05fd98ecfef859 ) | (encabezado) | Operating Specification — Bootstrap de Sesión |
 | [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd ) | §1 | Sincronización Inicial y Verificación de Versión |
 | [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca ) | §10 | Regla de Consistencia Documental |
+| [`SP:VERSION-CHECK-TOOL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#b84275d1780b498a94cdb554244df034 ) | §11 | Herramienta de Verificación de Versión de Bajo Costo |
 
 ---
 
@@ -90,22 +92,23 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`MANUAL:OBJETIVO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281419fc4da4a9f72aee1 ) | §1 | Objetivo de VANTAGE |
-| [`MANUAL:FUNCIONAMIENTO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc42812b9845da8653cef5fe ) | §2 | Cómo Funciona |
-| [`MANUAL:SETUP-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc42812bad12d2be7f6f3581 ) | §3 | Setup |
-| [`MANUAL:FLUJO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc42816b8138d44cb912f379 ) | §4 | Flujo Punta a Punta |
-| [`MANUAL:VCHECKLIST-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281df90e6c8e49c31f8e5 ) | §4.1 | El Checklist — V-Checklist semanal |
-| [`MANUAL:DASHBOARD-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281918439c73a21b6cd44 ) | §4.2 | Dashboard — recuperación antes de CV Optimization |
-| [`MANUAL:VANTAGE-RUNTIME-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc428161a636ea4d765be576 ) | §5 | VANTAGE Runtime (Consulta Operativa) |
-| [`MANUAL:GESTION-DATOS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281fe87c5c39ca0b256be ) | §6 | Gestión de Datos |
-| [`MANUAL:TROUBLESHOOTING-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281a38486ce1fc676a057 ) | §7 | Troubleshooting |
-| [`MANUAL:PROMPTS-WRAPPERS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281f69e7ec115394eb5ca ) | §8 | Prompts & Wrappers |
-| [`MANUAL:CHEATSHEETS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281bb8021f77aebada8cf ) | §9 | Cheat Sheets |
-| [`MANUAL:HEALTHCHECK-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281cc9deefcd630ba9e81 ) | §10 | Health Check |
-| [`MANUAL:CHANGELOG-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281a4b360e4c98ee39919 ) | §11 | Changelog |
-| [`MANUAL:REGLAS-DE-ORO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc428125ad30fc0ed251114d ) | §12 | Reglas de Oro para Operadores |
-| [`MANUAL:FALLO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc42813ea9a6f4052eeda2e9 ) | §13 | Filosofía de Fallo para Operadores |
-| [`MANUAL:SLA-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc428114a06ee7e7a0c27548 ) | §14 | SLA de Latencia Post-Ingesta |
+| [`MANUAL:OBJETIVO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc42803dbcebf1425c969871 ) | §1 | Objetivo de VANTAGE |
+| [`MANUAL:FUNCIONAMIENTO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc4280bbbe44e15673de53f1 ) | §2 | Cómo Funciona |
+| [`MANUAL:SETUP-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428083b0d2eae131ec3854 ) | §3 | Setup |
+| [`MANUAL:FLUJO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428005bc2edb8ec38fcf20 ) | §4 | Flujo Punta a Punta |
+| [`MANUAL:VCHECKLIST-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc4280ff8e9ec87ceb0b3468 ) | §4.1 | El Checklist — V-Checklist semanal |
+| [`MANUAL:DASHBOARD-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428013af17d536c665a3c4 ) | §4.2 | Dashboard — recuperación antes de CV Optimization |
+| [`MANUAL:VANTAGE-RUNTIME-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc4280ff8c1ed556864bcdd4 ) | §5 | VANTAGE Runtime (Consulta Operativa) |
+| [`MANUAL:GESTION-DATOS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428094afa0dd90d54e27e5 ) | §6 | Gestión de Datos |
+| [`MANUAL:TROUBLESHOOTING-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc4280f1b941ff06a6b8e0c6 ) | §7 | Troubleshooting |
+| [`MANUAL:PROMPTS-WRAPPERS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc4280d4a43cd7b6ec0ace17 ) | §8 | Prompts & Wrappers |
+| [`MANUAL:CHEATSHEETS-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc4280169578d883abe71b78 ) | §9 | Cheat Sheets |
+| [`MANUAL:HEALTHCHECK-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428049a4b1c89fec3b8225 ) | §10 | Health Check |
+| [`MANUAL:REGLAS-DE-ORO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc4280cd876bdfec6f2989b3 ) | §12 | Reglas de Oro para Operadores |
+| [`MANUAL:FALLO-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc4280d29606d557df03c39d ) | §13 | Filosofía de Fallo para Operadores |
+| [`MANUAL:SLA-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc4280caaea9eb250038df97 ) | §14 | SLA de Latencia Post-Ingesta |
+| [`MANUAL:SESSION-CYCLE-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428050b634dc6b147e3c16 ) | §5.6 | Ciclo de Sesión — Open/Close |
+| [`MANUAL:PATCH-QUALITY-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc42807d9133fa1477975b44 ) | §9 | Criterio de Calidad para Parches Documentales |
 
 ---
 
@@ -113,7 +116,7 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`CAREER_CANON:AUDIENCE-SCOPE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc42814ea0dacf84f611c538 ) | (encabezado) | Declaración de Audiencia y Alcance del Canon Runtime |
+| [`CAREER_CANON:AUDIENCE-SCOPE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281b7a81ac38caf12f7c9 ) | (encabezado) | Declaración de Audiencia y Alcance del Canon Runtime |
 | [`CANON:PROFILE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#23daad670796460b89f6b9b1c4c166df ) | §A | Professional Profile Canon |
 | [`CANON:SKILLS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281e58a53c9554cb3693d ) | §B | Skills Canon |
 | [`CANON:EXPERIENCE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#23daad670796460b89f6b9b1c4c166df ) | §D | Experience Records |
@@ -124,8 +127,8 @@
 | [`CANON:FACTS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281f49ca3f45975cfe4c7 ) | §J | Canonical Facts |
 | [`CANON:FACT-001 … FACT-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281008d10f28565ea1639 ) | §J.1–J.8 | CF01 ALDO Cert. Year 2014 · CF02 ALDO Periodo 2012–2017 · CF03 Adidas Punch List 17 · CF04 Adidas Punch List Non-Blocking · CF05 Levi's 270+ POS/6 países · CF06 Aéropostale 21 Direct Reports · CF07 Aéropostale 17 Stores · CF08 L'Oréal Marcas |
 | [`CANON:UF-001 … UF-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42810cbb59cbecda3daa92 ) | §J.9–J.11 | UF01 L'Oréal End Date · UF02 Canonical Email · UF03 Certifications Canon |
-| [`CANON:POSITIONING-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#39b938befc4281598d14c6c29cc0a0e8 ) | §K | Positioning Modes N1–N4 |
-| [`CANON:POSITIONING-N1 … N4`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42819fbf3acc9dc1e35529 ) | §K.1–K.4 | N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution & Rollout · N4 Commercial VM & Field Leadership |
+| [`CANON:POSITIONING-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#98ebdc668c6e40c6a758f0b3b6082735 ) | §K | Positioning Modes N1–N4 |
+| [`CANON:POSITIONING-N1 … N4`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#23630f08c3f44b0891d10f6f84cae51d ) | §K.1–K.4 | N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution & Rollout · N4 Commercial VM & Field Leadership |
 | [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc4280b599ebc830f85da2e8 ) | §L | Output Contract |
 | [`CANON:OUTPUT-CONTRACT-SKELETON-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110a5effba7515cd721 ) | §L.1 | Golden Skeleton (Reference) |
 | [`CANON:OUTPUT-CONTRACT-TAGREGISTRY-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42813d8f74c1e850590dab ) | §L.3 | Tag Registry (doble ID junto con CANON:TAG-REGISTRY, ver nota) |

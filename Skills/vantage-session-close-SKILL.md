@@ -4,18 +4,13 @@ description: Close VANTAGE (Inventory -> Census -> Changelog/Version -> Verify -
 ---
 VANTAGE: CLOSE PROTOCOL
 
-1. INVENTORY: Writes / cambios de ticket / cambios de estado de ID esta sesión. Nada cambió -> saltar a 6.
-2. CENSUS: Algún ID cambió estado -> regenerar (Terminal `generate_census.py`) ANTES del Changelog, orden estricto. Sin Terminal -> marcar ticket(s) `Blocked-Census`, decirlo explícitamente.
-3. CHANGELOG + VERSION: Draft entry (DRY RUN, antes/después) -> esperar `APROBAR_WRITE`. El bump actualiza `Versión` del CHANGE LOG en la misma escritura — referencia única. Confirmar patch vs minor si no es obvio.
-4. VERIFY: Operador corre `python3 scripts/verify_versions.py --check`, pega output. Expect `PASS — all components at v[nueva]`. Mismatch -> "FAIL — WRITE-BACK MISMATCH", STOP.
-   - Sin Terminal -> fallback: re-fetch de los 6 fundacionales, solo lectura, comparar.
-4.5 SYNC MANIFEST (obligatorio, no opcional): Inmediatamente después de que el paso 4 dé `PASS`, operador corre `python3 scripts/verify_versions.py --sync` y **pega el output**. Expect algo como `SYNCED — manifest updated to v[nueva]`. Este paso es el único que escribe el nuevo baseline a VERSION MANIFEST — sin él, el próximo `--check` seguirá comparando contra la versión anterior aunque CHANGE LOG ya haya avanzado. No saltar este paso aunque el `--check` haya dado PASS: PASS en el paso 4 confirma que los documentos coinciden entre sí, no que el manifest quedó actualizado.
-- **Gate**: sin output de `--sync` pegado en esta sesión de cierre, NO avanzar al paso 5/6 — permanecer en 4.5 y solicitarlo explícitamente.
-- No asumir que `--sync` corrió solo porque el operador dice "ya está" o "ya lo corrí antes" — exigir el output como evidencia en esta sesión, igual que en el paso 4. Una corrida en una sesión anterior no cuenta para el cierre actual.
-5. SUMMARY:
-COMPLETADO ESTA SESIÓN: [...]
-PENDIENTE: [item — por qué]
-6. LEDGER: Fila de `Session ID` actual (collection://8d736032-eef9-4e6e-a05a-df8b8079ebff) -> `Status: CLOSED`, `Closed At` [ahora], `Pending Summary`: [texto paso 5].
-7. TERMINATE: "SESIÓN COMPLETADA -> nuevo chat." Nada después.
+1. INVENTORY: El operador declara directamente si hubo cambios en la sesión[span_16](start_span)[span_16](end_span). Si el operador explícitamente indica que no hubo cambios, saltar directamente al paso 6[span_17](start_span)[span_17](end_span). Claude no debe escanear el historial del chat para intentar deducir cambios[span_18](start_span)[span_18](end_span).
+2. CENSUS: Si el operador declaró cambios de ID, se requiere el output de `generate_census.py` ejecutado localmente[span_19](start_span)[span_19](end_span). Sin este output, marcar ticket(s) como `Blocked-Census`[span_20](start_span)[span_20](end_span).
+3. CHANGELOG + VERSION: Generar borrador (draft) en texto plano[span_21](start_span)[span_21](end_span). Esperar confirmación `APROBAR_WRITE` del operador[span_22](start_span)[span_22](end_span).
+4. VERIFY: El operador ejecutará `python3 scripts/verify_versions.py --check` localmente y pegará el output[span_23](start_span)[span_23](end_span). Claude valida el string `PASS`[span_24](start_span)[span_24](end_span). Prohibido hacer llamadas MCP a los 6 documentos para verificar[span_25](start_span)[span_25](end_span).
+4.5 SYNC MANIFEST: **Gate absoluto**. El operador ejecutará `python3 scripts/verify_versions.py --sync` localmente y pegará el output[span_26](start_span)[span_26](end_span). Claude no avanza al paso 5 sin recibir este output de texto en la sesión actual[span_27](start_span)[span_27](end_span).
+5. SUMMARY: Sintetizar en máximo 2 líneas el trabajo crítico completado y los pendientes urgentes[span_28](start_span)[span_28](end_span).
+6. LEDGER: Actualizar la fila de `Session ID` correspondiente a esta sesión en la base de datos (collection://8d736032-eef9-4e6e-a05a-df8b8079ebff) -> `Status: CLOSED`, `Closed At` [ahora], `Pending Summary` [texto paso 5][span_29](start_span)[span_29](end_span).
+7. TERMINATE: "SESIÓN COMPLETADA -> nuevo chat.[span_30](start_span)"[span_30](end_span) No generar texto posterior[span_31](start_span)[span_31](end_span).
 
-GUARDRAILS: Census siempre antes que Changelog. Todo Changelog trae bump. No cerrar ticket con ID-change sin Census — Blocked-Census. No cerrar fila de Ledger ajena al session_id actual. Paso 4.5 (`--sync`) es obligatorio en todo cierre con bump de versión — su omisión es la causa raíz conocida de manifest desactualizado (ver incidente 2026-07-14: CHANGE LOG en 9.2.9, manifest congelado en 9.2.8 por --sync nunca ejecutado en el cierre previo). No cerrar fila de Ledger (paso 6) sin output de `--sync` confirmado en el paso 4.5 de esta misma sesión de cierre — "obligatorio" en 4.5 es un gate verificable, no una nota informativa.
+GUARDRAILS: Toda validación de integridad es externa (operador + scripts de Python locales)[span_32](start_span)[span_32](end_span). Claude actúa como el validador logístico del pipeline, no como el ejecutor del escaneo de archivos[span_33](start_span)[span_33](end_span).
