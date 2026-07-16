@@ -1,5 +1,21 @@
 # V | CHANGELOG
 
+### v9.4.2 — 2026-07-16
+Manual — Nuevos IDs de sección (§18–§21)
+- Alta de 4 IDs faltantes en MANUAL, detectados como huérfanos por generate_census.py tras la renumeración de secciones (§16→§18, §17→§19, §18→§20, §19→§21):
+- MANUAL:CV-GOLDEN-RULES-INDEX (§18)
+- MANUAL:POSITIONING-CRITERIA (§19)
+- MANUAL:GOLDEN-SKELETON-REF (§20)
+- MANUAL:SCHEMA-FIELD-REF (§21)
+- CENSUS_SPEC actualizado en generate_census.py (Layer_1/scripts/) — 116 IDs en spec, 0 huérfanos.
+- ID CENSUS regenerado y cargado manualmente a Notion.
+## v9.4.1 - 2026-07-16
+### Changed
+- Reestructuración de índices en documentos fundacionales (§16-§19 desplazados a §18-§21).
+- Normalización del mensaje de éxito en §4 Paso 3 (eliminación de hardcodeo de versión).
+- Corrección de referencias cruzadas en módulo de Troubleshooting (apuntando a §18).
+### Fixed
+- Eliminación de ambigüedad en mapeo de nodos tras migración de secciones.
 ### v9.4.0 Batch Quick Wins — GROQ key purgada del historial de git, schema Fuente/Fetch/VM_Scope a select, KERNEL:BOOTSTRAP-001 corregido, VERSION_EXEMPT cerrado como obsoleto
 - Fecha: 2026-07-16
 - Alcance: repositorio git (github.com/mauriciomeyran/VANTAGE), VANTAGE TRACKER (schema), KERNEL (KERNEL:ARCHITECTURE-L0-BOOTSTRAP), Bug Tracker (2 tickets), Tasks Tracker (2 tickets).

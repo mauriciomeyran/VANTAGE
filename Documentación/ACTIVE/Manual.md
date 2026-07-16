@@ -95,7 +95,7 @@ Verifica la instalación: python3 --version debe mostrar 3.8 o superior.
 Ya no es necesario realizar copy-paste manual del System Prompt maestro en cada actualización.
 1. Copia el STATIC BOOTLOADER v1.0 (disponible en la Cédula Digital) y pégalo en Settings → Project → Project Instructions en la UI de Claude.
 1. Inicia un nuevo chat. El Agente Vantage realizará un fetch automático de la gobernanza activa desde Notion.
-1. Confirma que el Agente responde con “VANTAGE v8.9.4: SISTEMA SINCRONIZADO” antes de enviar peticiones.
+1. Confirma que el Agente responde con “VANTAGE: SISTEMA SINCRONIZADO” (sin número de versión fijo — ver SP:BOOTSTRAP-001) antes de enviar peticiones.
 Nota: este setup de Claude es de una sola vez por proyecto — no se repite en cada sesión de trabajo. Lo que sí se repite en cada sesión es el Ciclo de Sesión completo, explicado en §6.
 ### Paso 4 — Verificar Archivos del Sistema y Permisos de Ejecución
 Confirma que los archivos del sistema existen en tu Mac en las rutas esperadas (Layer_1, Layer_3, Layer_4, Dashboard). Si reinstalas o mueves archivos, verifica permisos de ejecución:
@@ -630,7 +630,7 @@ Gate = BLOCKED recuperable pero el Dashboard no lo detecta:
 - Si aparece pero validación falla: revisar logs de run_pipeline.py en Dashboard.
 ### Referencias a documentación adicional
 - Filosofía de fallo: KERNEL:FAIL-PHILOSOPHY (ver también §3 de este Manual).
-- Reglas de Oro: KERNEL:CV-GOLDEN-RULES (ver también §16 de este Manual).
+- Reglas de Oro: KERNEL:CV-GOLDEN-RULES (ver también §18 de este Manual).
 - Schema de datos: KERNEL:SCHEMA.
 - Gate Decisions: KERNEL:GATE-DECISION (ver también §2 de este Manual).
 ---
@@ -658,7 +658,7 @@ Base: KERNEL:CV-GOLDEN-RULES.
 ---
 ## 17. SLA DE LATENCIA POST-INGESTA · ID: MANUAL:SLA-001
 > Nota: el SLA “< 45 minutos” cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh (ver §8.1, Lunes) — no tiene SLA fijo salvo ejecución manual explícita de layer_1_run.py.
-## 16. Reglas de Oro CV — Referencia Operativa
+## 18. Reglas de Oro CV — Referencia Operativa ID: MANUAL:CV-GOLDEN-RULES-INDEX
 Las Reglas de Oro (KERNEL:CV-GOLDEN-RULES) son restricciones de arquitectura, no preferencias. Viven íntegras en el Kernel — esta sección es un índice de navegación, no una copia.
 | ID | Regla | Qué bloquea |
 | --- | --- | --- |
@@ -669,7 +669,7 @@ Las Reglas de Oro (KERNEL:CV-GOLDEN-RULES) son restricciones de arquitectura, no
 | KERNEL:CV-GOLDEN-RULES-005 | No Interpretar en SYNC | SYNC reporta datos puros, sin análisis ni recomendaciones |
 Toda violación produce el Template Universal de Rechazo (ver Kernel): OPERACIÓN RECHAZADA → razón → alternativa operativa → confirmación SÍ/CANCELAR.
 Para el detalle completo de cada regla (ejemplos de solicitudes que la activan, redacción exacta de la respuesta estandarizada), consultar directamente KERNEL:CV-GOLDEN-RULES en el Kernel — fuente única, no se replica aquí para evitar drift entre documentos.
-## 17. Positioning Modes (N1–N4) — Criterio de Selección
+## 19. Positioning Modes (N1–N4) — Criterio de Selección ID: MANUAL:POSITIONING-CRITERIA
 CANON:POSITIONING-001 define 4 modos de posicionamiento para CV-B. Esta sección resuelve el gap operativo: con qué criterio elegir uno.
 | Modo | ID | Ancla canónica | Cuándo aplica |
 | --- | --- | --- | --- |
@@ -678,13 +678,13 @@ CANON:POSITIONING-001 define 4 modos de posicionamiento para CV-B. Esta sección
 | N3 | CANON:POSITIONING-N3 | C03 · 270+ POS · 6 países · KPI03–06 · CF05 | JD enfatiza rollout regional multi-país, estandarización, eficiencia operativa |
 | N4 | CANON:POSITIONING-N4 | C04/C05 · +43% tráfico · +18% conversión · 21 reportes | JD enfatiza liderazgo de campo comercial, KPIs de tráfico/conversión, gestión de equipos directos |
 Regla de desempate (JDs híbridos) — ver CANON:POSITIONING-001 para el texto completo: (1) más keywords mapeados al ancla, (2) empate → mayor seniority (N2>N1, N4>N3 con presupuesto regional explícito), (3) empate persistente → escalar a decisión humana vía fit_gaps.
-## 18. Golden Skeleton — Qué es y Dónde Vive
+## 20. Golden Skeleton — Qué es y Dónde Vive ID: MANUAL:GOLDEN-SKELETON-REF
 El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-SKELETON-001) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
 - SSOT de IDs de nodo Figma: registry_seed.json en 04-Vantage_CV/Figma Sync/.
 - Slots clave: 2055:9 (Nombre), 2055:10 (Tagline), 2043:51 (Perfil), 2043:56-60 (Skills), 2043:64+ (Experiencia).
 - Regla de invariancia: si el Skeleton cambia en Figma, registry_seed.json se actualiza antes del siguiente CV-B — nunca al revés.
 - Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en CANON:OUTPUT-CONTRACT-001 — no se replica aquí.
-## 19. Schema Class A/B — Referencia de Campos
+## 21. Schema Class A/B — Referencia de Campos ID: MANUAL:SCHEMA-FIELD-REF
 KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.
 Class A — Human-Primary (operador/feed_processor escriben):
 Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NAD · layer · hash
