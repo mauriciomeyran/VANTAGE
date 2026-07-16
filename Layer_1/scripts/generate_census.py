@@ -160,6 +160,10 @@ CENSUS_SPEC = [
             {"id": "MANUAL:SLA-001", "seccion": "§14", "nombre": "SLA de Latencia Post-Ingesta"},
             {"id": "MANUAL:SESSION-CYCLE-001", "seccion": "§5.6", "nombre": "Ciclo de Sesión — Open/Close"},
             {"id": "MANUAL:PATCH-QUALITY-001", "seccion": "§9", "nombre": "Criterio de Calidad para Parches Documentales"},
+            {"id": "MANUAL:CV-GOLDEN-RULES-INDEX", "seccion": "§18", "nombre": "Reglas de Oro CV — Referencia Operativa"},
+            {"id": "MANUAL:POSITIONING-CRITERIA", "seccion": "§19", "nombre": "Positioning Modes (N1–N4) — Criterio de Selección"},
+            {"id": "MANUAL:GOLDEN-SKELETON-REF", "seccion": "§20", "nombre": "Golden Skeleton — Qué es y Dónde Vive"},
+            {"id": "MANUAL:SCHEMA-FIELD-REF", "seccion": "§21", "nombre": "Schema Class A/B — Referencia de Campos"},
         ],
     },
     {
