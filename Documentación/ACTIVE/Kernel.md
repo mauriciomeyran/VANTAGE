@@ -74,7 +74,7 @@ Notion (Source) → Runtime (Index + Resolver) → API Response → Pipeline (L1
 L0-Bootstrap — Dynamic Governance Layer
 Tipo: Capa de Sincronización de Sesión (Fetch-on-Start)
 Propósito: Elimina el drift de versiones entre la UI estática del agente y el repositorio dinámico de Notion.
-Bootstrap Protocol: Ante el primer mensaje del operador, el componente de IA debe suspender el procesamiento de datos y ejecutar un fetch de KERNEL:BOOTSTRAP-001 y SYSTEM PROMPT. [Nota editorial de esta reestructuración: KERNEL:BOOTSTRAP-001 se cita aquí como el ID canónico a recuperar en el fetch, pero ninguna sección de este documento — ni en su versión original ni en esta reestructurada — define un bloque con ese ID exacto. Se documenta como hueco detectado al final de este Kernel.] El resultado de este fetch sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, el sistema debe reportar “MODO DEGRADADO” y no proceder con triggers operativos.
+Bootstrap Protocol: Ante el primer mensaje del operador, el componente de IA debe suspender el procesamiento de datos y ejecutar un fetch de SP:BOOTSTRAP-001 (System Prompt) y del ID CENSUS. El resultado de este fetch sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, el sistema debe reportar “MODO DEGRADADO” y no proceder con triggers operativos.
 ```plain text
 Sesión Iniciada → AI Fetch (Bootstrap IDs) → Sincronización de Verdad Operativa
 → Notificación Operador → Procesamiento Petición
