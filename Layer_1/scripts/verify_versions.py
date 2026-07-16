@@ -32,6 +32,32 @@ SESSION_LEDGER_DATA_SOURCE_ID = "8d736032-eef9-4e6e-a05a-df8b8079ebff"
 BUG_TRACKER_DB_ID = "36e938befc4281bd9e1fdc360b3b45f5"
 TASKS_TRACKER_DB_ID = "d2a65ca16a35465dbcffb0d82dddd549"
 
+# SCRIPT LIBRARY — inventario de scripts en Notion (propiedad título: "Script").
+# Mismo patrón que SESSION_LEDGER_DATA_SOURCE_ID: query directo vía httpx a
+# /v1/data_sources/{id}/query con Notion-Version 2025-09-03. No pasa por MCP,
+# por lo que NO aplica la restricción de plan Business/Notion AI que bloquea
+# query_data_sources/query_database_view a nivel de conector MCP.
+SCRIPT_LIBRARY_DATA_SOURCE_ID = "ea914544-338f-485e-ac1b-7f137a5c9cee"
+
+# Proyecto root real: Layer_1/scripts -> Layer_1 -> VANTAGE/
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
+
+# Directorios excluidos del escaneo de "scripts committeados" — código retirado,
+# de prueba, o de respaldo no cuenta como script en uso activo.
+EXCLUDED_DIR_NAMES = {
+    "archive", "archived", "tests", "test", "backup",
+    "one_offs", "deprecated_scripts", ".venv", "node_modules", ".git",
+}
+EXCLUDED_DIR_SUBSTRINGS = ("backup_", "discarded_")
+
+# Archivos con este prefijo se excluyen aunque vivan fuera de un directorio
+# excluido (ej. DEPRECATED_vacante_purge_trash_only.py).
+EXCLUDED_FILE_PREFIXES = ("DEPRECATED_",)
+
+# Solo estas carpetas de primer nivel se consideran "árbol activo" del sistema.
+# Fuera de esta lista (ej. "- Documentación/") no son scripts operativos.
+ACTIVE_TOP_LEVEL_DIRS = {"Layer_1", "Layer_3", "Layer_4", "Dashboard", "Raycast"}
+
 def load_env(env_path: Path) -> dict:
     """Carga variables de entorno manualmente para evitar dependencias externas."""
     env_vars = {}
@@ -222,6 +248,111 @@ def get_priority_tickets(client: httpx.Client, database_id: str, headers: dict, 
     except Exception as e:
         return [{"error": f"{label}: {str(e)}"}]
 
+def scan_committed_scripts(project_root: Path) -> list:
+    """Escanea el árbol activo del proyecto (Layer_1/3/4, Dashboard, Raycast) en
+    busca de .py/.sh, excluyendo archive/tests/backup/one_offs/deprecated y
+    archivos con prefijo DEPRECATED_. Devuelve lista de (nombre, ruta_relativa)
+    ordenada por nombre. No depende de git — escanea el filesystem local tal
+    como está, que es lo que realmente se ejecuta."""
+    found = []
+    for top in sorted(ACTIVE_TOP_LEVEL_DIRS):
+        top_path = project_root / top
+        if not top_path.exists():
+            continue
+        for path in top_path.rglob("*"):
+            if not path.is_file():
+                continue
+            if path.suffix not in (".py", ".sh"):
+                continue
+            if path.name.startswith(EXCLUDED_FILE_PREFIXES):
+                continue
+            rel = path.relative_to(project_root)
+            parts_lower = {p.lower() for p in rel.parts}
+            if parts_lower & EXCLUDED_DIR_NAMES:
+                continue
+            if any(sub in p.lower() for p in rel.parts for sub in EXCLUDED_DIR_SUBSTRINGS):
+                continue
+            found.append((path.name, str(rel)))
+    found.sort(key=lambda t: t[0])
+    return found
+
+def get_script_library_titles(client: httpx.Client, data_source_id: str, headers: dict) -> dict:
+    """Pagina completo el data source SCRIPT LIBRARY y devuelve
+    {titulo_script: estado} para cada fila. Un solo query_data_sources no
+    trae más de 100 filas — este loop sigue next_cursor hasta agotarlo."""
+    url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
+    query_headers = dict(headers)
+    query_headers["Notion-Version"] = "2025-09-03"
+    titles = {}
+    cursor = None
+    while True:
+        payload = {"page_size": 100}
+        if cursor:
+            payload["start_cursor"] = cursor
+        response = client.post(url, headers=query_headers, json=payload)
+        if response.status_code != 200:
+            print(f"[-] Error consultando SCRIPT LIBRARY: HTTP {response.status_code}: {response.text[:200]}", file=sys.stderr)
+            sys.exit(1)
+        data = response.json()
+        for row in data.get("results", []):
+            props = row.get("properties", {})
+            title_prop = props.get("Script", {})
+            texts = title_prop.get("title", [])
+            # BUGFIX: Notion parte el título en múltiples rich-text runs cuando
+            # detecta un link automático dentro del nombre (ej. "patch_cheat_sheet.py"
+            # -> runs ["patch_cheat_", "sheet.py"] porque autolinkea "sheet.py").
+            # Leer solo texts[0] truncaba el nombre en el primer run. Concatenar
+            # todos los runs reconstruye el filename completo.
+            name = "".join(t.get("plain_text", "") for t in texts) if texts else None
+            estado_prop = props.get("Estado", {})
+            estado = (estado_prop.get("select") or {}).get("name") if estado_prop else None
+            if name:
+                titles[name] = estado
+        if not data.get("has_more"):
+            break
+        cursor = data.get("next_cursor")
+    return titles
+
+def render_scripts_gap_report(client: httpx.Client, headers: dict) -> None:
+    """Cruza scripts committeados en disco (árbol activo) contra SCRIPT LIBRARY
+    en Notion. Read-only en ambos lados — no escribe ni crea filas
+    automáticamente, solo reporta para que el operador decida el alta."""
+    disk_scripts = scan_committed_scripts(PROJECT_ROOT)
+    library_titles = get_script_library_titles(client, SCRIPT_LIBRARY_DATA_SOURCE_ID, headers)
+
+    disk_names = {name for name, _ in disk_scripts}
+    missing = sorted(name for name in disk_names if name not in library_titles)
+    registered = sorted(name for name in disk_names if name in library_titles)
+    # Filas en Notion marcadas Activo cuyo nombre no aparece en el árbol activo de disco.
+    orphan_notion = sorted(
+        title for title, estado in library_titles.items()
+        if estado == "Activo" and title not in disk_names
+    )
+
+    print("[SCRIPT LIBRARY — GAP REPORT]")
+    print("-" * 60)
+    print(f"Scripts en árbol activo (disco): {len(disk_names)}")
+    print(f"Filas en SCRIPT LIBRARY (Notion): {len(library_titles)}")
+    print("-" * 60)
+    print(f"SIN REGISTRAR EN NOTION — {len(missing)} encontrados:")
+    if not missing:
+        print("  (ninguno)")
+    for name in missing:
+        rel = next(r for n, r in disk_scripts if n == name)
+        print(f"  [-] {name}  ({rel})")
+    print("-" * 60)
+    print(f"REGISTRADOS Y VIGENTES — {len(registered)} coinciden")
+    print("-" * 60)
+    print(f"EN NOTION COMO 'Activo' PERO NO EN DISCO (árbol activo) — {len(orphan_notion)} encontrados:")
+    print("  (revisar manualmente — puede ser mismatch de nombre, no ausencia real,")
+    print("   ej. título con sufijo aclaratorio distinto al filename real)")
+    if not orphan_notion:
+        print("  (ninguno)")
+    for name in orphan_notion:
+        print(f"  [?] {name}")
+    print("-" * 60)
+    print("[FIN SCRIPT LIBRARY — GAP REPORT]")
+
 def render_bootstrap_dump(client: httpx.Client, changelog_page_id: str, headers: dict) -> None:
     """Genera el bloque [DUMP INICIO SESIÓN VANTAGE] descrito en
     KERNEL:VERSION-CHECK-TOOL y MANUAL:SESSION-CYCLE-001 §Apertura paso 1:
@@ -265,6 +396,7 @@ def main():
     parser.add_argument("--sync", action="store_true", help="Sincroniza la versión de CHANGELOG hacia todos los documentos.")
     parser.add_argument("--bootstrap", action="store_true", help="Genera el dump de contexto de apertura de sesión (Ledger + Changelog + tickets prioritarios). Read-only.")
     parser.add_argument("--check", action="store_true", help="Verifica la versión de los 7 documentos fundacionales (Check Mode). Read-only. Alias explícito del modo por default (sin flags) — existe para que el comando documentado en Manual/System Prompt/skills coincida literalmente con la interfaz real del script.")
+    parser.add_argument("--scripts", action="store_true", help="Cruza los scripts .py/.sh del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SCRIPT LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     args = parser.parse_args()
 
     # 1. Inicialización de Entorno e Infraestructura
@@ -273,6 +405,15 @@ def main():
     if not token:
         print("[-] Error: NOTION_TOKEN no definido en layer_1.env", file=sys.stderr)
         sys.exit(1)
+
+    # --scripts no depende del registro de documentos fundacionales (resolver_registry_v2.json)
+    # — se resuelve y sale temprano para no exigir ese archivo si el operador solo quiere
+    # el gap report de scripts.
+    if args.scripts:
+        headers = get_notion_headers(token)
+        with httpx.Client(timeout=20.0) as client:
+            render_scripts_gap_report(client, headers)
+        return
 
     registry_path = find_registry_file(SCRIPT_DIR)
     uuids = load_document_uuids(registry_path)

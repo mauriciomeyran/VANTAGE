@@ -1,16 +1,16 @@
 ---
 name: vantage-session-open
-description: Bootstrap VANTAGE (Ledger -> Version Check -> Changelog -> Context).
+description: Abre/inicializa una sesión de VANTAGE siguiendo el protocolo formal de arranque (Ledger -> Health Check SP/Census -> Version Check -> Changelog -> Pending -> Snapshot -> Ready). Usa esta skill siempre que el operador indique que empieza una nueva sesión de VANTAGE, diga "abrir sesión", "open session", "arrancamos VANTAGE", "VANTAGE OPEN", "bootstrap", o pida el status/contexto inicial del sistema al inicio del chat. No la actives para operaciones dentro de una sesión ya abierta (CV, SYNC, escrituras) — solo para el arranque formal.
 ---
 VANTAGE: OPEN PROTOCOL
 
-0. LEDGER: Query SESSION LEDGER (collection://8d736032-eef9-4e6e-a05a-df8b8079ebff) (Fila más reciente)[span_3](start_span)[span_3](end_span). status != CLOSED -> WARN[span_4](start_span)[span_4](end_span). Crear fila: `Session ID` [generado], `Status: OPEN`, `Opened At` [ahora][span_5](start_span)[span_5](end_span). (1 sola llamada).
-1. HEALTH: Confirmar SYSTEM PROMPT + ID CENSUS fetched vía MCP[span_6](start_span)[span_6](end_span). Falla -> STOP, "VANTAGE: MODO DEGRADADO[span_7](start_span)"[span_7](end_span).
-2. VERSION: El operador ejecutará localmente `python3 scripts/verify_versions.py --check` y pegará el output en este chat[span_8](start_span)[span_8](end_span). 
-   - **Regla Estricta**: Claude tiene prohibido realizar fetch manual o individual de los componentes fundacionales mediante llamadas MCP de lectura[span_9](start_span)[span_9](end_span). Si el operador no ha pegado el output, Claude se detiene y lo solicita.
-3. LOG: Última entrada de V-CHANGELOG (1 solo fetch del bloque superior), resumen de 1 frase[span_10](start_span)[span_10](end_span).
-4. PENDING: Leer el campo `Pending Summary` de la fila del Ledger obtenida en el Paso 0[span_11](start_span)[span_11](end_span). No hacer queries adicionales.
-5. SNAPSHOT: El operador pegará el dump crítico generado mediante el flag `--bootstrap` local. Queda estrictamente prohibido que Claude intente buscar o leer tareas adicionales a través de la API[span_12](start_span)[span_12](end_span). Si no hay tareas críticas en el dump, reportar "SNAPSHOT: 0 TAREAS CRÍTICAS".
-6. READY: "VANTAGE READY" + versión[span_13](start_span)[span_13](end_span).
+**Regla Estricta (fuente: `verify_versions.py`, MANUAL:SESSION-CYCLE-001 §Apertura)**: Terminal es requisito obligatorio, no ruta preferente. Claude NO realiza fetch ni query MCP directo a Session Ledger, System Prompt, ID Census ni ningún documento fundacional para resolver este protocolo. Toda la información de arranque llega exclusivamente vía los dos outputs de terminal que el operador pega en el chat.
 
-GUARDRAILS: Cero recursividad. Claude no busca consistencia de archivos leyendo bases de datos completas[span_14](start_span)[span_14](end_span); valida basándose exclusivamente en el output de la terminal local provisto por el operador[span_15](start_span)[span_15](end_span).
+1. BOOTSTRAP: El operador ejecuta localmente `python3 scripts/verify_versions.py --bootstrap` y pega el bloque `[DUMP INICIO SESIÓN VANTAGE]` completo. Este dump contiene: última fila del Session Ledger (session_id, status, opened_at, pending_summary — con advertencia si status quedó `OPEN` por cierre abrupto), versión vigente del Changelog, y snapshot de tickets CRÍTICO/ALTO del Bug/Task Tracker.
+2. CHECK: El operador ejecuta localmente `python3 scripts/verify_versions.py --check` y pega la tabla de 7 documentos (Changelog, Kernel, Manual, Canon, SP, Aliases, Census) con su versión. Si algún output (bootstrap o check) falta o está incompleto, Claude se detiene y lo solicita — no improvisa el faltante ni lo reconstruye vía MCP.
+3. WRITE: Con ambos payloads en mano, Claude realiza una única escritura: crea la fila nueva en Session Ledger con `status: OPEN`, `session_id` generado por Claude y `opened_at` = ahora. Esta escritura es housekeeping de infraestructura de sesión — no requiere `APROBAR_WRITE`.
+4. VALIDATE: Si la tabla del `--check` muestra versión consistente en los 7 documentos → continuar. Si hay drift → reportarlo explícitamente antes de continuar (no bloquea salvo que el documento desincronizado sea el que se va a editar en esta sesión).
+5. PENDING: Reportar el `pending_summary` leído del dump de `--bootstrap` (paso 1) — sin queries adicionales.
+6. READY: Si status = "PASS" limpio, responder únicamente "VANTAGE: SISTEMA SINCRONIZADO" + versión detectada. Si el status del Ledger anterior quedó `OPEN` (posible cierre abrupto), señalarlo antes del READY.
+
+GUARDRAILS: Cero recursividad. Claude no busca consistencia de archivos leyendo bases de datos completas ni fetch individual de fundacionales; valida basándose exclusivamente en los dos outputs de terminal provistos por el operador.
