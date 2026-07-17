@@ -644,7 +644,23 @@ Escritura autorizada en dos puntos únicamente:
 Ningún otro trigger ni componente escribe en este documento. Python no lo toca — es propiedad exclusiva del AI Component como infraestructura de continuidad de sesión.
 Fuente de verdad de “pendientes”: este documento reemplaza a la memoria conversacional o a Claude Memory como fuente primaria de Pending Items en el bootstrap (ver SKILL-OPEN §4 modificado — flujo operativo completo documentado en el Manual, §6).
 ---
-## §22 — KERNEL:VERSION-CHECK-TOOL
+## §22 — KERNEL:DOCUMENTATION-TRANSVERSAL-001
+### Documentación Transversal — Contrato de Integridad Documental
+Con KERNEL:CENSUS-SYNC (§20) y KERNEL:SESSION-LEDGER (§21) ya estableciendo cómo se audita el Census y cómo se registra continuidad de sesión, esta sección cierra el clúster de gobernanza documental con el contrato que cubre el caso restante: un cambio de código, schema o flujo operativo que ocurrió pero no tiene contraparte en los documentos fundacionales.
+Propósito: Ningún cambio estructural del sistema — script nuevo, schema modificado, decisión de arquitectura resuelta en chat — queda sin ancla documental. La detección puede ser explícita (el operador solicita "documentación transversal" o "parche orgánico") o de recordatorio no-bloqueante (el AI Component identifica el gap en curso de otra tarea y lo señala sin detener el trabajo activo).
+Principio rector — nodo natural, no adendum: Todo contenido nuevo se integra en el punto del flujo de lectura donde el documento lo necesita, nunca apilado al final por conveniencia. Kernel: el orden de sección es orden de prioridad de lectura. Manual: narrativa progresiva — el parche encaja en la secuencia lógica del operador.
+Extiende, no redefine: Los criterios de calidad de todo parche documental viven en MANUAL:PATCH-QUALITY-001 — cinco filtros (invisibilidad estructural, continuidad de voz, progresión narrativa, diff mínimo, coherencia transversal). Este contrato los hereda; no declara un criterio paralelo.
+Protocolo (seis fases):
+1. Mapeo — identificar todos los documentos fundacionales que el cambio toca; fetch en vivo obligatorio de cada uno antes de proponer nodo(s) de inserción.
+1. DRY RUN del parche ya en su nodo autorizado — APROBAR_WRITE independiente del de la Fase 1.
+1. Inyección respetando jerarquía tipográfica y convención de voz del documento objetivo.
+1. Write-Back Verification — re-fetch de solo lectura post-escritura; un mismatch detiene la operación, una confirmación en chat de que "ya se escribió" nunca es evidencia suficiente por sí sola.
+1. Changelog + versión — única fuente de historial; nunca se escribe changelog dentro de un documento individual.
+1. Binary Gate de salida — Full Data Dump o Step-by-Step, a elección del operador.
+Disparo de KERNEL:CENSUS-SYNC Regla 1: Si el cambio da de alta, deprecia o cambia de estado un ID canónico, el Census se regenera antes de cerrar el ticket asociado — mismo gate que ya rige cualquier otro alta de ID.
+Gestión de pendientes: Un parche no aplicado de inmediato se registra en Tasks Tracker (d2a65ca1-6a35-465d-bcff-b0d82dddd549), no en el Tracker de vacantes.
+---
+## §23 — KERNEL:VERSION-CHECK-TOOL
 Propósito: Ruta de bajo costo para verificar y sincronizar la propiedad Versión de los 7 documentos fundacionales (Kernel, Manual, Career Canon, System Prompt, Aliases, Changelog, Census) sin pagar el costo de token e infraestructura de un notion-fetch completo (body entero) por documento.
 ### Modos de Operación (verify_versions.py)
 1. Check Mode (Default): Itera los 7 page_id fijos y llama a pages.retrieve(page_id) para extraer únicamente el metadato de la propiedad Versión. Output: Tabla de 7 líneas (documento | versión).

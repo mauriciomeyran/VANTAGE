@@ -18,13 +18,13 @@
 > DECLARACIÓN DE AUDIENCIA Y ALCANCE
 > - Audiencia: Sistemas Agente de IA + Operador Humano (Mauricio Meyrán).
 > - Alcance: Este documento es el CAREER_CANON_RUNTIME, que contiene la fuente de verdad profesional activa: perfil, skills, experiencias canónicas (C01–C05), KPIs validados, facts canónicos y Output Contract para producción de CV-B. Para el historial de versiones y secciones deprecadas (C/E/F/G), consultar el archivo histórico: CANON:ARCHIVO-VANTAGE.
-## A. PROFESSIONAL PROFILE CANON:PROFILE-001
+## CANON:PROFILE-001 — A. PROFESSIONAL PROFILE
 ### ES
 Estratega de Visual Merchandising & Brand Execution con más de 10 años de trayectoria en retail de lujo, moda y alto rendimiento. Especialista en traducir lineamientos globales en ejecuciones locales de alto impacto, liderando estrategias regionales en LATAM y gestionando presupuestos CAPEX/OPEX nacionales. Experto en storytelling visual, lanzamientos de producto (NPI) y habilitación de equipos de campo, con un historial probado en la optimización de KPIs comerciales (+43% tráfico) y eficiencia operativa (-74% costos). Perfil con alta capacidad analítica y técnica, enfocado en elevar la experiencia del consumidor y la coherencia de marca en redes propias, franquicias y wholesale.
 ### EN
 Visual Merchandising & Brand Execution strategist with over 10 years of experience in luxury, fashion, and high-performance retail. Expert in translating global brand guidelines into high-impact local executions, leading LATAM regional strategies, and managing national CAPEX/OPEX budgets. Specialist in visual storytelling, new product introductions (NPI), and field team enablement, with a proven track record of optimizing commercial KPIs (+43% traffic) and operational efficiency (-74% costs). Highly analytical and technical profile, focused on elevating consumer experience and brand coherence across own stores, franchises, and wholesale channels.
 ---
-## B. SKILLS CANON CANON:SKILLS-001
+## CANON:SKILLS-001 — B. SKILLS CANON
 | Categoría | ES | EN |
 | --- | --- | --- |
 | Estrategia Visual | Planeación estacional, Consumer-centric storytelling, Zoning & Mapping tools, manuales de ejecución regional | Seasonal planning, Consumer-centric storytelling, Zoning & Mapping tools, regional execution manuals |
@@ -33,7 +33,7 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 | Stack Técnico | Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, IA Generativa (ChatGPT, Perplexity, Claude) | Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, Generative AI (ChatGPT, Perplexity, Claude) |
 | Idiomas | Español (Nativo) · Inglés (Profesional Corporativo / Fluidez regional) | Spanish (Native) · English (Corporate Professional / Regional Fluency) |
 ---
-## D. EXPERIENCE RECORDS CANON:EXPERIENCE-001
+## CANON:EXPERIENCE-001 — D. EXPERIENCE RECORDS
 ### C01 • L'Oréal Luxe México • Feb 2025 – Mar 2026
 CANON:EXPERIENCE-C01
 Coordinador de Visual Merchandising & Brand Execution – División de Lujo • [CF08: Valentino / Giorgio Armani / Ralph Lauren] – Valentino / Giorgio Armani / Ralph Lauren
@@ -102,7 +102,7 @@ EN
 - Developed training programs for floor staff, elevating the standard of visual maintenance and launch execution.
 - During the last 3 years of the role, directly managed one Jr. Brand Coordinator.
 ---
-## H. ACHIEVEMENT LIBRARY CANON:ACHIEVEMENTS-001
+## CANON:ACHIEVEMENTS-001 — H. ACHIEVEMENT LIBRARY
 | Achievement | Compañía | KPI Ref |
 | --- | --- | --- |
 | Despliegue nacional campañas NPI 2025 (Born in Roma, Stronger With You) | C01 | – |
@@ -118,7 +118,7 @@ EN
 | Coordinación de 17 tiendas retail + 12 corners wholesale | C05 | – |
 | Liderazgo de coordinadora Jr. con reporte directo (últimos 3 años en rol) | C05 | – |
 ---
-## I. CORE KPIs CANON:KPIS-001
+## CANON:KPIS-001 — I. CORE KPIs
 ### KPI01 · Traffic +43%
 CANON:KPI-001
 ### KPI02 · Conversion +18%
@@ -136,7 +136,7 @@ CANON:KPI-007
 ### KPI08 · Years Experience (10+ Canonical)
 CANON:KPI-008
 ---
-## J. CANONICAL FACTS CANON:FACTS-001
+## CANON:FACTS-001 — J. CANONICAL FACTS
 ### CF01
 CANON:FACT-001
 ALDO Certification Year = 2014
@@ -171,7 +171,7 @@ Canonical Email = mauricio.meyran@icloud.com
 CANON:UF-003
 Certifications Canon = ALDO Group (2014) + AutoCAD & SketchUp Essentials (2024) ONLY. No additional certs valid.
 ---
-## K. POSITIONING MODES CANON:POSITIONING-001
+## CANON:POSITIONING-001 — K. POSITIONING MODES
 ### N1 · Luxury Brand Execution
 CANON:POSITIONING-N1
 Ancla canónica: C01 · 3 marcas lujo · CAPEX/OPEX · NPI
@@ -191,7 +191,7 @@ Cuando un JD activa criterios de dos o más Positioning Modes simultáneamente, 
 1. En empate persistente: declarar en fit_gaps del HANDOFF y escalar a decisión humana antes de proceder con CV-B.
 El Positioning Mode seleccionado se declara explícitamente en el HANDOFF. No se mezclan bullets de dos modos en un mismo CV-B.
 ---
-## L. OUTPUT CONTRACT CANON:OUTPUT-CONTRACT-001
+## CANON:OUTPUT-CONTRACT-001 — L. OUTPUT CONTRACT
 ### FIGMA SYNC PROTOCOL (STRICT)
 1. IMMUTABILITY OF IDs: Los ###### figma_text_id son llaves primarias. Está terminantemente prohibido alterararlas, omitirlas o inventar nuevas.
 1. SLOT INTEGRITY: No se permiten fusiones ni divisiones de bloques. Si el Skeleton tiene 4 bullets para una experiencia, el output DEBE tener 4 bloques, incluso si uno queda vacío.

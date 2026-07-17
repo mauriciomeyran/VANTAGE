@@ -84,6 +84,8 @@ VERSION MANIFEST (DB).............02331706-d2f5-43d1-8166-ed53b690dbd7
 SESSION LEDGER (DB)................38324240-c686-47d0-8082-cee5e4409f88
 FIGMA SYNC........................04-Vantage_CV/Figma Sync/
 ARCHIVO SCRIPT LIBRARY (DS)........39f938be-fc42-80ec-8f2e-000b16d736e2
+
+ARCHIVO BUG TRACKER (DB)………….→ 9ef938be-fc42-831b-a2d6-874bd22b7990
 ---
 ## ID: KERNEL:SCOPE
 Consultar KERNEL:SCOPE en el Technical Kernel.

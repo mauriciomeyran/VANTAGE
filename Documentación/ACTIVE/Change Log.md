@@ -1,5 +1,120 @@
 # V | CHANGELOG
 
+### v9.4.7 — 2026-07-16
+Alcance: Corrección de bugs en tooling local (generate_census.py, normalize_heading_ids.py — ambos en Layer_1/scripts/, no fundacionales) + cierre del pendiente de deeplink dejado abierto por v9.4.6.
+Cambios:
+- generate_census.py: corregido is_definition_block() — la condición de heading solo reconocía la nomenclatura "ID puro" (### PREFIX:KEY), no la nomenclatura real usada en TODOS los headings de sección top-level del Kernel (§N — PREFIX:KEY). Esto hacía que ninguna sección nueva pudiera detectarse como huérfana, sin importar cuántas veces se regenerara el Census. Agregado reconocimiento de ambas nomenclaturas vía regex §[\w.]+\s*[—-]\s*.
+- Re-run de generate_census.py en Terminal: 117/117 IDs resueltos, 0 huérfanos, 0 sin link — confirma que KERNEL:DOCUMENTATION-TRANSVERSAL-001 (alta documentada en v9.4.6) ya se detecta correctamente, con deeplink de bloque real, reemplazando el placeholder de página usado como honesto en la entrada anterior.
+- Census (394938be) regenerado y subido manualmente a Notion por el operador con el output fresco.
+- Ambos scripts: corregida ruta de resolución de layer_1.env tras el traslado de ambos archivos de Layer_1/ a Layer_1/scripts/. La fórmula inicial (script_dir.parent.parent) sobre-corrigió, apuntando a VANTAGE/config/ en vez de Layer_1/config/ (ubicación real, confirmada vía find). Corregida a script_dir.parent.
+- normalize_heading_ids.py (script nuevo, complemento de auditoría de generate_census.py): la primera versión usaba una heurística de clasificación de headings distinta e inconsistente con is_definition_block(), generando falsos positivos masivos (47 hallazgos, la mayoría patrones "ID: PREFIX:KEY" ya válidos y reconocidos por el Census). Corregido para usar exactamente la misma lógica de reconocimiento. Excluido explícitamente Change Log del barrido — sus headings narran historia y mencionan IDs de pasada, nunca los definen; normalizarlos arriesgaba corromper texto histórico (confirmado con un caso real de sugerencia de fix que mutilaba una entrada de v9.4.0).
+- normalize_heading_ids.py: agregado retry con backoff (5 intentos, 2–10s) y timeout ampliado (30s → 60s) en fetch_blocks_recursive() — la primera corrida contra el Kernel completo (documento más grande) truncaba con ReadTimeoutError sin reintentar.
+- Re-run de normalize_heading_ids.py (modo dry-run, sin escritura): 8 hallazgos reales, todos en Career Canon — mismo patrón en los 8 ("TÍTULO PREFIX:KEY", ID pegado al final sin separador): CANON:PROFILE-001, CANON:SKILLS-001, CANON:EXPERIENCE-001, CANON:ACHIEVEMENTS-001, CANON:KPIS-001, CANON:FACTS-001, CANON:POSITIONING-001, CANON:OUTPUT-CONTRACT-001. No aplicados aún.
+Pendiente (no ejecutado en esta sesión):
+- Aplicar (o corregir a mano) los 8 headings mal formados de Career Canon detectados por normalize_heading_ids.py. Impacto es cosmético/consistencia — estos 8 IDs ya resuelven bien vía fallback en el Census; además --apply reescribe rich_text plano y perdería cualquier anotación de estilo del heading original.
+- Cerrar el ticket de Tasks Tracker sobre el timeout de normalize_heading_ids.py (ya resuelto por esta entrada) — pendiente de marcarlo Hecho.
+IDs afectados: ninguno nuevo — KERNEL:DOCUMENTATION-TRANSVERSAL-001 ya fue dado de alta en v9.4.6; esta entrada resuelve su deeplink pendiente, no crea ni retira IDs.
+Versión actualizada: 9.4.7 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en su versión previa hasta que el operador corra verify_versions.py --sync.
+---
+### v9.4.6 — 2026-07-16
+Alcance: Alta de KERNEL:DOCUMENTATION-TRANSVERSAL-001 (Kernel §22) + cross-referencia en Manual §6 + fila nueva en Census. Cierra el pendiente dejado abierto por v9.4.5.
+Cambios:
+- KERNEL: nueva sección §22 — KERNEL:DOCUMENTATION-TRANSVERSAL-001, insertada entre KERNEL:SESSION-LEDGER (§21) y KERNEL:VERSION-CHECK-TOOL (renumerado de §22 a §23). Contrato de seis fases (Mapeo → DRY RUN → Inyección → Write-Back → Changelog/versión → Binary Gate), hereda los 5 filtros de MANUAL:PATCH-QUALITY-001 sin redefinirlos.
+- MANUAL §6 ("Qué hacer si algo no cuadra"): nuevo bullet cruzando al ID nuevo, distinguiendo el caso "cambio sin reflejo documental" del drift de versión ya cubierto en esa misma lista.
+- CENSUS: fila nueva bajo KERNEL para KERNEL:DOCUMENTATION-TRANSVERSAL-001 (§22); renumerada la fila de KERNEL:VERSION-CHECK-TOOL de "(anexo, post-§21)" a §23 para reflejar la inserción. Deeplink de bloque del ID nuevo queda pendiente de resolución exacta vía generate_census.py (Regla 2) — se registró con link a nivel de página como placeholder honesto, no aproximado como si fuera el anchor exacto.
+Write-Back Verification: re-fetch de Kernel, Manual y Census tras cada escritura — sin mismatch en ninguno de los tres.
+Disparo KERNEL:CENSUS-SYNC Regla 1: aplicado — alta de ID nuevo reflejada en Census en la misma sesión, antes de este Changelog.
+Pendiente (no ejecutado en esta sesión):
+- Re-run de generate_census.py en Terminal para resolver el deeplink de bloque exacto del ID nuevo (placeholder de página en uso mientras tanto).
+- Instalación del SKILL.md corregido en la ruta local real (pendiente heredado de v9.4.5).
+- Verificación de discrepancia entre esta sesión y el último Session Ledger cerrado (pendiente heredado de v9.4.5).
+IDs afectados: alta de KERNEL:DOCUMENTATION-TRANSVERSAL-001.
+### v9.4.5 — 2026-07-16
+Alcance: Revisión y refinamiento del skill vantage-documentacion-transversal (trabajo local, sin escritura a Notion en esta sesión).
+Cambios:
+- Corrección de cita KERNEL:PATCH-QUALITY-001 → MANUAL:PATCH-QUALITY-001 en el skill.
+- Reescritura del protocolo del skill: principio "nodo natural, no adendum"; gate de dos etapas (propuesta de nodo/IDs → autorización → DRY RUN de parches → APROBAR_WRITE → inyección → Write-Back → Changelog/versión → Binary Gate).
+- Evaluación y descarte de propuesta externa de "sistema dual de IDs" (no existe en SP:ID-CONNECTORS-001; confundía UUID de Census con el de Changelog).
+- Adopción parcial de checklist de validación pre-cierre y de gestión de parches pendientes vía Tasks Tracker (d2a65ca1-6a35-465d-bcff-b0d82dddd549).
+- Agregado ejemplo práctico único (auto-referencial): la propia creación de este skill como caso guía.
+Pendiente (no ejecutado en esta sesión):
+- Alta de KERNEL:DOCUMENTATION-TRANSVERSAL-001 en el Technical Kernel real (nodo junto a KERNEL:CENSUS-SYNC/KERNEL:SESSION-LEDGER).
+- Instalación del SKILL.md corregido en la ruta local real (/mnt/skills/user/).
+- Verificación de discrepancia entre esta sesión y el último Session Ledger cerrado.
+IDs afectados: ninguno en Notion todavía (pendiente KERNEL:DOCUMENTATION-TRANSVERSAL-001).
+[v9.4.4] — 2026-07-16
+Auditoría cruzada Bug Tracker / Tasks Tracker vs sus archivos.
+Confirmados y archivados: 3 bugs (verify_, vantage-session-close.md,
+Fuente/Fetch/VM_Scope) + 3 tasks (generate_ export, KERNEL:BOOTSTRAP-001,
+dup §16/§17 Manual). Detectado ID incorrecto en SP:CEDULA-DIGITAL para
+ARCHIVO BUG TRACKER (674696fd... apuntaba a ARCHIVO TRACKER/vacantes;
+ID correcto: 9ef938be-fc42-831b-a2d6-874bd22b7990). Pendiente:
+archivar (soft-delete) las 6 filas originales en trackers activos;
+corregir ID en SP:CEDULA-DIGITAL.
+### v9.4.3 — 2026-07-16
+Bug Fix #19 (Dedup) + Housekeeping Layer_2 + Tickets Infraestructura Git
+Dedup Strategy — Bug #19 (CRÍTICO)
+- Archivo: Layer_1/scripts/feed_processor.py
+- Línea: 232
+- Cambio: Agregado "jk" a tracking_prefixes en función normalize_url()
+- Justificación: URLs de Indeed rotan el parámetro jk en cada repost, generando hashes distintos para el mismo job
+- Impacto: Now filters volatile Indeed tracking parameters alongside standard tracking params (utm_, gclid, etc.)
+- Evidencia: Caso GILSA documentado en Notion (6 páginas para el mismo puesto con 3 jk distintos)
+- Testing: py_compile exitoso
+- Backward compatibility: No afecta URLs sin parámetro jk (filtro es inclusivo, no exclusivo)
+Architecture Documentation — Layer_2 Cleanup
+- Archivo: Layer_1/VANTAGE_ARCHITECTURE.md
+- Cambios:
+- Eliminada referencia a layer_2_mail.py del inventario de scripts
+- Actualizada tabla "Envelope Types por Layer" (solo L1 y L3)
+- Actualizado campo layer en Class A Schema (solo L1/L3)
+- Justificación: Layer_2 fue eliminado en v9.3.9 según Changelog
+- Impacto: Documentación ahora alineada con arquitectura actual
+- Cross-reference: Changelog v9.3.9 — "Layer_2 ha sido eliminado"
+Ticket #9 — Manual §16/§17 (Fantasma)
+- ID Ticket: 39e938befc42817dab02f90716f3548b
+- Estado: Cerrado como "Completado" con nota de obsolescencia
+- Diagnóstico: Problema resuelto en v9.4.1 (reestructuración de índices §16-§19→§18-§21)
+- Acción: Actualizado campo "Notas" con evidencia del Changelog
+- Cross-reference: Changelog v9.4.1 — "Reestructuración de índices en documentos fundacionales"
+Bug #43 — Rich-text Truncamiento (Verificado)
+- Archivo: Layer_1/scripts/verify_versions.py
+- Línea: 306
+- Estado: Verificado como resuelto en v9.3.7
+- Pattern: name = "".join(t.get("plain_text", "") for t in texts) if texts else None
+- Justificación: Concatena todos los rich-text runs para evitar truncamiento cuando Notion detecta links en títulos
+Bug #44 — Manifest Handling (Verificado)
+- Archivo: Layer_4/scripts/vsync_doc.py
+- Líneas: 62-68
+- Estado: Verificado como resuelto
+- Pattern: _load_manifest() retorna {} si archivo no existe (no lanza error)
+- Justificación: Evita falso CONFLICT cuando .vsync_manifest.json está ausente
+Bucket Plan Update
+- ID: 39f938befc4280e6a505f432b95755eb
+- Campo: "Notas"
+- Contenido: Resumen de sesión con items resueltos
+- Estado: Actualizado y verificado por re-fetch
+Git Infrastructure Tickets Created
+- Tickets #46-A y #46-B creados en Tasks Tracker (aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8)
+- #46-A: Git Infrastructure — Branch Protection, Feature Branches, PR Workflow (ALTO)
+- #46-B: Git Commit Quality — Commits Grandes, Mensajes Genéricos, Tags/Versionado (MEDIO)
+- Origen: Split híbrido del hallazgo #46 de auditoría Devin 2026-07-16
+- Estado: Creados y verificados por re-fetch tras incidente MCP
+Version Verification
+- Comando: python3 scripts/verify_versions.py --check
+- Resultado: Todos los documentos fundacionales en v9.4.2 ✓
+- Estado: Sistema sincronizado
+1. Layer_2 References — Eliminadas referencias obsoletas en documentación de arquitectura
+1. Ticket Fantasma — Eliminado ticket CRÍTICO que consumía atención innecesaria
+1. Dedup GILSA Case — Resuelto caso documentado de 6 páginas duplicadas para mismo puesto
+| Métrica | Valor |
+| --- | --- |
+| Líneas de código modificadas | 1 |
+| Documentos actualizados | 1 |
+| Tickets cerrados | 1 fantasma |
+| Tickets creados | 2 (infraestructura git) |
+| Bugs resueltos | 1 crítico |
+| Deuda técnica eliminada | 2 items |
 ### v9.4.2 — 2026-07-16
 Manual — Nuevos IDs de sección (§18–§21)
 - Alta de 4 IDs faltantes en MANUAL, detectados como huérfanos por generate_census.py tras la renumeración de secciones (§16→§18, §17→§19, §18→§20, §19→§21):
