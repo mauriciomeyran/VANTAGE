@@ -5,11 +5,12 @@
 | Script | Rol | Status |
 |---|---|---|
 | `layer_1_run.py` | PIPELINE PRINCIPAL v7.5 — tracker Notion (URL Gate, Fuente, Scoring, Gates) | Active |
-| `layer_2_mail.py` | Mail processor — PATRÓN DE REFERENCIA para .env y Notion write | Active |
 | `feed_processor.py` | FEED Layer 1 + Layer 3 — pipeline unificado | Pending (P1) |
 | `dedup_opportunities.py` | Dedup existente (intra-layer) | Active |
 | `gate_logic.py` | URL_GATE existente | Active |
 | `layer_1_pipeline.sh` | Shell dispatcher | Active |
+
+**Nota:** Layer_2 fue eliminado en v9.3.9 (Changelog). Referencias a `layer_2_mail.py` eliminadas — funcionalidad mail procesada en Layer_1.
 
 ---
 
@@ -18,10 +19,11 @@
 | Layer | Fuente | Envelope key | Estructura |
 |---|---|---|---|
 | L1 | you.com / Grok | `results_by_source` | Dict de buckets → flatten a lista plana |
-| L2 | Mail | N/A | Procesado por `layer_2_mail.py` |
 | L3 | LinkedIn | `listings` | Lista plana directa |
 
 **Regla:** `normalize_envelope()` detecta el envelope y entrega siempre `list[dict]` con campo `layer` inyectado.
+
+**Nota:** Layer_2 fue eliminado en v9.3.9. Envelope mail fue consolidado en Layer_1.
 
 ---
 
@@ -40,7 +42,7 @@
 
 | Campo | Tipo Notion | Valores | Descripción |
 |---|---|---|---|
-| `layer` | select | `L1` / `L2` / `L3` | Origen del registro |
+| `layer` | select | `L1` / `L3` | Origen del registro (Layer_2 eliminado en v9.3.9) |
 | `hash` | rich_text | string SHA-256 | Clave de dedup cross-layer |
 
 ---

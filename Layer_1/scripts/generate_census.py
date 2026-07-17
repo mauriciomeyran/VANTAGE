@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import time
 import requests
@@ -120,6 +121,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:NORM", "seccion": "§19", "nombre": "Normalización Documental (Legacy IDs)"},
             {"id": "KERNEL:CENSUS-SYNC", "seccion": "§20", "nombre": "Sincronización obligatoria del ID Census"},
             {"id": "KERNEL:SESSION-LEDGER", "seccion": "§21", "nombre": "Session Ledger — registro de apertura/cierre de sesión"},
+            {"id": "KERNEL:DOCUMENTATION-TRANSVERSAL-001", "seccion": "§22", "nombre": "Documentación Transversal — Contrato de Integridad Documental"},
             {"id": "KERNEL:VERSION-CHECK-TOOL", "seccion": "(anexo, post-§21)", "nombre": "Herramienta de bajo costo para verificar versión de los 7 documentos fundacionales (verify_versions.py)"},
         ],
     },
@@ -290,18 +292,35 @@ def extract_ids_from_rich_text(rich_text: list) -> list:
     return ids
 
 
+# Patrón canónico de encabezado de sección: "§N — PREFIX:KEY", "§N.M — PREFIX:KEY",
+# admite guión largo (—) o corto (-) como separador, y espacio opcional.
+# Ej: "§22 — KERNEL:DOCUMENTATION-TRANSVERSAL-001", "§2.6 - KERNEL:ARHITECTURE-L4"
+SECTION_HEADING_PREFIX_RE = re.compile(r"^§[\w.]+\s*[—-]\s*")
+
+
 def is_definition_block(plain: str, id_str: str, btype: str) -> bool:
     """
     Determina si el bloque ES la definición del ID (heading o texto que arranca
     con el ID), vs. una mención de pasada.
+
+    Reconoce DOS nomenclaturas válidas de heading, ambas presentes en los
+    documentos fundacionales:
+      (a) Heading = ID puro, ej. "### KERNEL:ARCHITECTURE-L0"
+      (b) Heading = "§N — ID" (sección numerada), ej. "## §22 — KERNEL:DOC-CONTRACT"
+    La versión anterior de esta función solo cubría (a); (b) es el formato de
+    TODOS los headings de sección de primer nivel del Kernel, lo que hacía que
+    ninguna sección nueva pudiera detectarse como huérfana (ver DT — Census
+    Sync, corrida 2026-07-16).
     """
     stripped = plain.strip("` \n")
+    heading_body = SECTION_HEADING_PREFIX_RE.sub("", stripped)
+    is_heading = btype in {"heading_1", "heading_2", "heading_3"}
     return (
         stripped == id_str
         or stripped == f"ID: {id_str}"
         or f"ID: {id_str}" in plain
-        or (btype in {"heading_1", "heading_2", "heading_3"}
-            and plain.lstrip("` ").startswith(id_str))
+        or (is_heading and plain.lstrip("` ").startswith(id_str))          # nomenclatura (a)
+        or (is_heading and heading_body.startswith(id_str))                # nomenclatura (b)
     )
 
 

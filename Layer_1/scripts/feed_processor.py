@@ -229,7 +229,7 @@ def normalize_url(url: str) -> str:
     if not parsed.scheme:
         parsed = urllib.parse.urlparse("https://" + url.strip())
     query_pairs = urllib.parse.parse_qsl(parsed.query, keep_blank_values=True)
-    tracking_prefixes = ("utm_", "gclid", "fbclid", "ref", "source", "clk", "trk")
+    tracking_prefixes = ("utm_", "gclid", "fbclid", "ref", "source", "clk", "trk", "jk")
     filtered = [
         (k, v) for k, v in query_pairs
         if not any(k.lower().startswith(p) or k.lower() == p for p in tracking_prefixes)
