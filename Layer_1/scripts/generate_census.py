@@ -57,11 +57,12 @@ CENSUS_SPEC = [
     {
         "name": "KERNEL",
         "rows": [
-            {"id": "KERNEL:BOOTSTRAP-001", "seccion": "§2 L0-B", "nombre": "Bootstrap"},
+            {"id": "KERNEL:ARCHITECTURE-L0-BOOTSTRAP", "seccion": "§3 L0-B", "nombre": "Bootstrap Protocol / Dynamic Governance Layer"},
             {"id": "KERNEL:AUDIENCE-SCOPE", "seccion": "(encabezado)", "nombre": "Declaración de Audiencia y Alcance"},
             {"id": "KERNEL:PURPOSE", "seccion": "§1", "nombre": "Propósito del Sistema"},
             {"id": "KERNEL:ARCHITECTURE", "seccion": "§2", "nombre": "Arquitectura de Cuatro Capas"},
             {"id": "KERNEL:ARCHITECTURE-L0", "seccion": "§2.1", "nombre": "L0 — VANTAGE Runtime"},
+            {"id": "KERNEL:SKILL-ANNOUNCE-CONVENTION", "seccion": "§2.1 (dentro de L0)", "nombre": "Convención de Anuncio de Skills (X-ING.../X-ED)"},
             {"id": "KERNEL:ARCHITECTURE-L0-BOOTSTRAP", "seccion": "§2.2", "nombre": "L0-Bootstrap — Dynamic Governance Layer"},
             {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "§2.3", "nombre": "L1 — Active Recon"},
             {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "§2.4", "nombre": "L2 — Strategic Search"},
@@ -103,6 +104,8 @@ CENSUS_SPEC = [
             {"id": "KERNEL:GATE-DECISION-004", "seccion": "§9.4", "nombre": "Por Qué los Gates Son Deterministas"},
             {"id": "KERNEL:GATE-DECISION-005", "seccion": "§9.5", "nombre": "Flujo de Recuperación BLOCKED"},
             {"id": "KERNEL:GATE-DECISION-006", "seccion": "§9.6", "nombre": "REJECTED (Post-Aplicación)"},
+            {"id": "KERNEL:GATE-DECISION-007", "seccion": "§9.7", "nombre": "Ejecución Automática de Archivado"},
+            {"id": "KERNEL:GATE-DECISION-008", "seccion": "§9.8", "nombre": "Capas de Evaluación de Gate: Técnica vs. Negocio"},
             {"id": "KERNEL:NAMING-CONVENTION", "seccion": "§10", "nombre": "Convención de Nombres de Outputs"},
             {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "§11", "nombre": "Reglas de Oro CV"},
             {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "§11.1", "nombre": "No Evaluar Fit Antes de Escribir"},

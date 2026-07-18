@@ -2,12 +2,13 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`KERNEL:BOOTSTRAP-001`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#39f938befc4280419019d336523c0a6f ) | §2 L0-B | Bootstrap |
+| [`KERNEL:ARCHITECTURE-L0-BOOTSTRAP`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#a152eaabc7fd444699fd23a5a0190757 ) | §3 L0-B | Bootstrap Protocol / Dynamic Governance Layer |
 | [`KERNEL:AUDIENCE-SCOPE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#390938befc4280b58035d9581a04262f ) | (encabezado) | Declaración de Audiencia y Alcance |
 | [`KERNEL:PURPOSE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f69905dfc6c82c5503 ) | §1 | Propósito del Sistema |
 | [`KERNEL:ARCHITECTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42818a8a61d5a0d71bcf2b ) | §2 | Arquitectura de Cuatro Capas |
 | [`KERNEL:ARCHITECTURE-L0`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428187b290da141856b8fe ) | §2.1 | L0 — VANTAGE Runtime |
-| [`KERNEL:ARCHITECTURE-L0-BOOTSTRAP`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281db9f8eee98d8f90185 ) | §2.2 | L0-Bootstrap — Dynamic Governance Layer |
+| [`KERNEL:SKILL-ANNOUNCE-CONVENTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281db9f8eee98d8f90185 ) | §2.1 (dentro de L0) | Convención de Anuncio de Skills (X-ING.../X-ED) |
+| [`KERNEL:ARCHITECTURE-L0-BOOTSTRAP`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#a152eaabc7fd444699fd23a5a0190757 ) | §2.2 | L0-Bootstrap — Dynamic Governance Layer |
 | [`KERNEL:ARCHITECTURE-L1`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281239ba0dbbe67a4bc1e ) | §2.3 | L1 — Active Recon |
 | [`KERNEL:ARCHITECTURE-L2`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f6a4e3cfaad30ff1e5 ) | §2.4 | L2 — Strategic Search |
 | [`KERNEL:ARCHITECTURE-L3`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281d6b2b4faa312b14210 ) | §2.5 | L3 — Passive Intake |
@@ -47,6 +48,8 @@
 | [`KERNEL:GATE-DECISION-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428189b370f75da76b8b6a ) | §9.4 | Por Qué los Gates Son Deterministas |
 | [`KERNEL:GATE-DECISION-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428113ac64f877a148e71e ) | §9.5 | Flujo de Recuperación BLOCKED |
 | [`KERNEL:GATE-DECISION-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281d1a8c9fd8e3acdfd96 ) | §9.6 | REJECTED (Post-Aplicación) |
+| [`KERNEL:GATE-DECISION-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#c63a7e403c1e40b1a544802a50a84bc2 ) | §9.7 | Ejecución Automática de Archivado |
+| [`KERNEL:GATE-DECISION-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#006e0b519639447590ad173aebc265c4 ) | §9.8 | Capas de Evaluación de Gate: Técnica vs. Negocio |
 | [`KERNEL:NAMING-CONVENTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281bbbe93d1e053bb8e42 ) | §10 | Convención de Nombres de Outputs |
 | [`KERNEL:CV-GOLDEN-RULES`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d ) | §11 | Reglas de Oro CV |
 | [`KERNEL:CV-GOLDEN-RULES-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281c0b026c8bcf4901816 ) | §11.1 | No Evaluar Fit Antes de Escribir |
@@ -65,6 +68,7 @@
 | [`KERNEL:NORM`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428147809de3602d40d326 ) | §19 | Normalización Documental (Legacy IDs) |
 | [`KERNEL:CENSUS-SYNC`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281599aa3f17926239597 ) | §20 | Sincronización obligatoria del ID Census |
 | [`KERNEL:SESSION-LEDGER`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816aa4e8c4daaebe11b1 ) | §21 | Session Ledger — registro de apertura/cierre de sesión |
+| [`KERNEL:DOCUMENTATION-TRANSVERSAL-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428142a984f97acbd800b4 ) | §22 | Documentación Transversal — Contrato de Integridad Documental |
 | [`KERNEL:VERSION-CHECK-TOOL`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#380a32a5525b4d5d8cd44516fb1b74d4 ) | (anexo, post-§21) | Herramienta de bajo costo para verificar versión de los 7 documentos fundacionales (verify_versions.py) |
 
 ---
@@ -121,9 +125,9 @@
 | ID | Sección | Nombre |
 |---|---|---|
 | [`CAREER_CANON:AUDIENCE-SCOPE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281b7a81ac38caf12f7c9 ) | (encabezado) | Declaración de Audiencia y Alcance del Canon Runtime |
-| [`CANON:PROFILE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428142979fc253c0d55b6f ) | §A | Professional Profile Canon |
+| [`CANON:PROFILE-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42819eada8c4c10a8513f4 ) | §A | Professional Profile Canon |
 | [`CANON:SKILLS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281e58a53c9554cb3693d ) | §B | Skills Canon |
-| [`CANON:EXPERIENCE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428142979fc253c0d55b6f ) | §D | Experience Records |
+| [`CANON:EXPERIENCE-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42812fbebcdcf9b4287266 ) | §D | Experience Records |
 | [`CANON:EXPERIENCE-C01 … C05`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42812ea136fa5ec141d19e ) | §D.1–D.5 | C01 L'Oréal Luxe · C02 Bisonte Experiential · C03 Levi Strauss (Dockers) · C04 Aéropostale · C05 El Palacio de Hierro (ALDO) |
 | [`CANON:ACHIEVEMENTS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281fc9f88dc891c180b2a ) | §H | Achievement Library |
 | [`CANON:KPIS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42810ba9a1f0febedc739d ) | §I | Core KPIs |
@@ -131,9 +135,9 @@
 | [`CANON:FACTS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281f49ca3f45975cfe4c7 ) | §J | Canonical Facts |
 | [`CANON:FACT-001 … FACT-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281008d10f28565ea1639 ) | §J.1–J.8 | CF01 ALDO Cert. Year 2014 · CF02 ALDO Periodo 2012–2017 · CF03 Adidas Punch List 17 · CF04 Adidas Punch List Non-Blocking · CF05 Levi's 270+ POS/6 países · CF06 Aéropostale 21 Direct Reports · CF07 Aéropostale 17 Stores · CF08 L'Oréal Marcas |
 | [`CANON:UF-001 … UF-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42810cbb59cbecda3daa92 ) | §J.9–J.11 | UF01 L'Oréal End Date · UF02 Canonical Email · UF03 Certifications Canon |
-| [`CANON:POSITIONING-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#98ebdc668c6e40c6a758f0b3b6082735 ) | §K | Positioning Modes N1–N4 |
+| [`CANON:POSITIONING-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42811ba92acf1dc1467702 ) | §K | Positioning Modes N1–N4 |
 | [`CANON:POSITIONING-N1 … N4`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#23630f08c3f44b0891d10f6f84cae51d ) | §K.1–K.4 | N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution & Rollout · N4 Commercial VM & Field Leadership |
-| [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281199264c2c3965c28a3 ) | §L | Output Contract |
+| [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42818190e0fbc29f4f8c5c ) | §L | Output Contract |
 | [`CANON:OUTPUT-CONTRACT-SKELETON-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110a5effba7515cd721 ) | §L.1 | Golden Skeleton (Reference) |
 | [`CANON:OUTPUT-CONTRACT-TAGREGISTRY-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42813d8f74c1e850590dab ) | §L.3 | Tag Registry (doble ID junto con CANON:TAG-REGISTRY, ver nota) |
 | [`CANON:FIGMA-TAG-SCHEMA`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42817f90ace83dd96245a9 ) | §L.2 | Figma Tag Schema |
@@ -144,6 +148,4 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-| ID | Documento | Link |
-|---|---|---|
-| `KERNEL:DOCUMENTATION-TRANSVERSAL-001` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428142a984f97acbd800b4 ) |
+_Ninguno detectado en esta corrida._

@@ -257,32 +257,6 @@ def composite_key(record: dict) -> str:
     return f"{brand}|{title}|{location}"
 
 
-def content_fingerprint(record: dict) -> str:
-    """
-    Genera fingerprint de contenido para deduplication cuando el jk de Indeed rota.
-    
-    Combina título normalizado + empresa + ubicación en un hash SHA-256.
-    Este fingerprint sirve como fallback cuando el jk parámetro cambia entre
-    reposts del mismo listing en Indeed.
-    
-    Caso de referencia: GILSA con 3 jk distintos para el mismo puesto.
-    """
-    # Normalizar título: remover acentos, lowercase, strip
-    title = (record.get("title") or "").strip().lower()
-    
-    # Normalizar empresa/brand
-    brand = (record.get("brand") or record.get("brand_raw") or "").strip().lower()
-    
-    # Normalizar ubicación
-    location = (record.get("location") or "").strip().lower()
-    
-    # Crear string de fingerprint
-    fingerprint_str = f"{brand}|{title}|{location}"
-    
-    # Retornar hash SHA-256
-    return sha256_hex(f"fingerprint:{fingerprint_str}")
-
-
 def compute_dedup_hash(record: dict) -> str:
     """Hash robusto cross-layer (SHA-256)."""
     fetch_status = record.get("fetch_status", "")
@@ -300,16 +274,6 @@ def compute_dedup_hash(record: dict) -> str:
         return sha256_hex(f"job_id:{job_id}")
 
     return sha256_hex(f"fallback:{composite_key(record)}")
-
-
-def compute_content_fingerprint_hash(record: dict) -> str:
-    """
-    Hash basado en fingerprint de contenido (título + empresa + ubicación).
-    
-    Se usa como fallback específico para casos donde el jk de Indeed rota
-    entre reposts del mismo listing, pero el contenido es idéntico.
-    """
-    return content_fingerprint(record)
 
 
 # ──────────────────────────────────────────
@@ -536,105 +500,21 @@ def dedup_cross_layer(
     if not brand or not title:
         return False
 
-    def _extract_title_text(row: dict, prop_name: str) -> str:
-        """Extrae el texto plano de una propiedad title/rich_text de una fila Notion ya devuelta."""
-        prop = row.get("properties", {}).get(prop_name, {})
-        ptype = prop.get("type")
-        texts = prop.get(ptype, []) if ptype in ("title", "rich_text") else []
-        return "".join(t.get("plain_text", "") for t in texts)
-
     time_filter = {"past_month": {}} if window_days >= 28 else {"past_week": {}}
-    candidates = query_notion_db(
+    recent = query_notion_db(
         notion_utils,
         filter_body={
             "and": [
                 {"timestamp": "created_time", "created_time": time_filter},
                 schema.text_filter(schema.brand_prop, brand),
+                schema.text_filter(schema.title_prop, title),
             ]
         },
         schema=schema,
     )
-    title_norm = title.strip().lower()
-    recent = [
-        row for row in candidates
-        if _extract_title_text(row, schema.title_prop).strip().lower() == title_norm
-    ]
     if recent:
         _upgrade_layer_if_needed(recent[0], incoming_layer, notion_utils, schema)
         return True
-    return False
-
-
-def dedup_by_content_fingerprint(
-    record: dict,
-    notion_utils: Client,
-    schema: NotionSchema,
-    window_days: int = 30,
-) -> bool:
-    """
-    Deduplication basado en fingerprint de contenido (título + empresa + ubicación).
-    
-    Fallback específico para casos donde el jk de Indeed rota entre reposts del mismo
-    listing pero el contenido es idéntico. Caso de referencia: GILSA con 3 jk distintos.
-    
-    Esta función NO depende del parámetro jk en absoluto, solo del contenido normalizado.
-    """
-    fingerprint_hash = compute_content_fingerprint_hash(record)
-    incoming_layer = record.get("layer", "L3")
-    
-    if schema.hash_prop:
-        hash_type = schema.properties[schema.hash_prop].get("type", "rich_text")
-        if hash_type == "rich_text":
-            filt = {"property": schema.hash_prop, "rich_text": {"equals": fingerprint_hash}}
-        else:
-            filt = schema.text_filter(schema.hash_prop, fingerprint_hash)
-        existing = query_notion_db(notion_utils, filter_body=filt, schema=schema)
-        if existing:
-            _upgrade_layer_if_needed(existing[0], incoming_layer, notion_utils, schema)
-            return True
-    
-    # Fallback: búsqueda por brand + title + location normalizados
-    brand = (record.get("brand") or record.get("brand_raw") or "").strip().lower()
-    title = (record.get("title") or "").strip().lower()
-    location = (record.get("location") or "").strip().lower()
-    
-    if not brand or not title:
-        return False
-    
-    def _extract_text_prop(row: dict, prop_name: str) -> str:
-        """Extrae texto plano de una propiedad Notion."""
-        prop = row.get("properties", {}).get(prop_name, {})
-        ptype = prop.get("type")
-        if ptype == "rich_text":
-            return "".join(t.get("plain_text", "") for t in prop.get("rich_text", []))
-        if ptype == "title":
-            return "".join(t.get("plain_text", "") for t in prop.get("title", []))
-        if ptype == "select":
-            return (prop.get("select") or {}).get("name", "")
-        return ""
-    
-    time_filter = {"past_month": {}} if window_days >= 28 else {"past_week": {}}
-    candidates = query_notion_db(
-        notion_utils,
-        filter_body={
-            "and": [
-                {"timestamp": "created_time", "created_time": time_filter},
-                schema.text_filter(schema.brand_prop, brand),
-            ]
-        },
-        schema=schema,
-    )
-    
-    # Comparar por fingerprint de contenido (brand + title + location)
-    for row in candidates:
-        existing_brand = _extract_text_prop(row, schema.brand_prop).strip().lower()
-        existing_title = _extract_text_prop(row, schema.title_prop).strip().lower()
-        existing_location = _extract_text_prop(row, schema.location_prop or "location", "").strip().lower() if schema.location_prop else ""
-        
-        if existing_brand == brand and existing_title == title and existing_location == location:
-            _upgrade_layer_if_needed(row, incoming_layer, notion_utils, schema)
-            return True
-    
     return False
 
 
@@ -786,17 +666,6 @@ def process_record(
             hash_key=hash_key,
             disposition="REVIEW_NEEDED",
             notes="semi-duplicate (dedup cross-layer)",
-            brand=record["brand"],
-            holding=holding or "",
-        )
-    
-    # Fallback: dedup por fingerprint de contenido para Indeed jk rotation
-    if dedup_by_content_fingerprint(record, notion_utils, schema):
-        return ProcessedRecord(
-            record=record,
-            hash_key=hash_key,
-            disposition="REVIEW_NEEDED",
-            notes="duplicate (content fingerprint - Indeed jk rotation)",
             brand=record["brand"],
             holding=holding or "",
         )
