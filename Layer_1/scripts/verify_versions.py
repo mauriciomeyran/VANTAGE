@@ -219,14 +219,35 @@ def get_last_ledger_row(client: httpx.Client, data_source_id: str, headers: dict
 
 def get_priority_tickets(client: httpx.Client, database_id: str, headers: dict, label: str) -> list:
     """Consulta un tracker (Bug o Tasks) y devuelve los tickets con Prioridad
-    CRÍTICO o ALTO, conforme a KERNEL:HEALTH-CHECK-002 (detalle explícito solo
-    para estas dos prioridades)."""
+    CRÍTICO o ALTO que además NO estén en un estado terminal, conforme a
+    KERNEL:HEALTH-CHECK-002 (detalle explícito solo para estas dos prioridades,
+    excluyendo tickets ya cerrados)."""
     url = f"https://api.notion.com/v1/databases/{database_id}/query"
+
+    # Status terminales por tracker (SP:SCHEMA — Bug Tracker vs Tasks Tracker
+    # no comparten las mismas opciones de select). Labels reales confirmados
+    # en main(): "Bug" y "Task" (singular).
+    closed_statuses_by_label = {
+        "Bug": ["Resuelto"],
+        "Task": ["Hecho", "Completado"],
+    }
+    closed_statuses = closed_statuses_by_label.get(label, [])
+
+    status_filters = [
+        {"property": "Status", "select": {"does_not_equal": s}}
+        for s in closed_statuses
+    ]
+
     payload = {
         "filter": {
-            "or": [
-                {"property": "Prioridad", "select": {"equals": "CRÍTICO"}},
-                {"property": "Prioridad", "select": {"equals": "ALTO"}}
+            "and": [
+                {
+                    "or": [
+                        {"property": "Prioridad", "select": {"equals": "CRÍTICO"}},
+                        {"property": "Prioridad", "select": {"equals": "ALTO"}}
+                    ]
+                },
+                *status_filters
             ]
         }
     }
