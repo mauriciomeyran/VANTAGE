@@ -466,6 +466,7 @@ Con esto se cierra el ciclo semanal. La siguiente vez que abras Claude para trab
 Ya viste varios de estos comandos en acción durante el flujo semanal (§8) — esta sección los reúne como catálogo de referencia completo, junto con el detalle de cuándo y por qué correr cada uno.
 ### 9.1 ¿Qué es el Runtime?
 Es la herramienta de observabilidad del sistema. Permite interrogar a Notion y extraer contexto semántico sin salir de la terminal.
+Version Check Tool (vversions) y Census (vcensus) —ya documentados como comandos en §9.2 y en uso durante el Ciclo de Sesión (§6)— pertenecen a esta misma capa: interrogan a Notion para darte visibilidad (versión documental, salud del Census), nunca escriben datos de negocio del pipeline de vacantes. Si alguna vez te preguntas por qué vversions vive junto a vantage.py status en vez de junto a vl1, es por esto: los dos son observación, no procesamiento de vacantes.
 ### 9.2 Comandos Principales — Mantenimiento del Tracker
 Estos comandos operan sobre el estado del Tracker y están disponibles como subcomandos de vl1. Cada uno tiene un alcance preciso y un modo de operación por defecto.
 - vl1 tracker — genera un reporte de estado del Tracker en tiempo real: distribución por Gate_Decision, conteo de entradas activas (CREATE + APPLIED), entradas BLOCKED, aplicaciones de los últimos 7 días y NADs vencidas. Es el punto de partida del ciclo semanal — corre antes de cualquier otra operación para tener visibilidad del estado actual (esto es lo que produce el output que viste en el Test Inicial de Setup, §4, Paso 5).
@@ -482,6 +483,8 @@ Sin --execute, el comando nunca escribe en Notion. Esta protección es permanent
 vl1 backfill --dry-run
 ```
 Sin --dry-run, solicita confirmación explícita (s) antes de cualquier escritura.
+vversions — alias corto de verify_versions.py, el motor de verificación y sincronización de versión de los 7 documentos fundacionales (KERNEL:VERSION-CHECK-TOOL). No es un comando del Tracker de vacantes como los vl1 * de arriba — es infraestructura documental, y su uso está integrado al Ciclo de Sesión completo en §6, no como comando suelto. Acepta tres flags: --bootstrap (dump de apertura), --check (lectura de versión, read-only) y --sync (única escritura, propagación en lote).
+vcensus — alias corto de generate_census.py. Regenera el V-ID-CENSUS y reporta IDs huérfanos detectados en los documentos fuente. Se corre en el paso 1 del Cierre de Sesión (§6) si algún ID cambió de estado durante la sesión — ver también §11, "El V-ID-Census", para el detalle completo de cuándo es obligatorio.
 ### 9.3 Cuándo correr sync
 Correr vantage.py sync después de:
 - Cualquier ciclo L1/L2 que haya escrito entradas nuevas en Notion.

@@ -70,14 +70,27 @@ Runtime Build — proceso determinista que genera los tres artefactos de lectura
 ```plain text
 Notion (Source) → Runtime (Index + Resolver) → API Response → Pipeline (L1/L2/L3/CV)
 ```
-### KERNEL:ARCHITECTURE-L0-BOOTSTRAP
+Version Check Tool y Census como parte de L0: verify_versions.py (alias vversions, ver KERNEL:VERSION-CHECK-TOOL) y generate_census.py (alias vcensus) son observabilidad ReadOnly sobre Notion — mismo tipo de operación que Runtime Build (Entity Index, Grafo, Backlinks), aplicada a un dato distinto: versión documental y salud del Census en vez de entidades del Tracker. Ambos pertenecen a L0 en la misma capa, no a una capa separada ni a infraestructura de sesión aparte.
+Diagrama ampliado:
+```plain text
+Notion (Source) → Version Check (7 docs) / Census (ID audit) → Reporte a operador
+```
+### KERNEL:SKILL-ANNOUNCE-CONVENTION
+Todo skill de VANTAGE (presente o futuro) declara el inicio y cierre de su protocolo con un verbo propio en gerundio/participio (X-ING... al abrir, X-ED/equivalente al cerrar), nunca con un mensaje genérico compartido entre skills ni con el lenguaje de cierre del Bootstrap universal (BOOTLOADED). Esto evita la confusión de alcance que originó el bug de Ledger huérfano (ver Changelog v9.5.0–v9.5.1).
+Regla de mantenimiento: si esta convención cambia, el mismo Changelog debe listar el Kernel y cada .skill afectado dentro del mismo alcance — un cambio que solo toque uno de los dos queda incompleto y debe reportarse como discrepancia (SP:CONSISTENCY).
+Implementación actual: vantage-session-open (SESSION-OPENING.../SESSION-OPENED), vantage-session-close (CLOSING SESSION.../SESSION CLOSED), vantage-documentacion-transversal (BEGINNING DOCUMENTATION.../DOCUMENTATION FINISHED), prompt-master (PROMPTING.../PROMPT FINISHED).
+---
+## KERNEL:ARCHITECTURE-L0-BOOTSTRAP
 L0-Bootstrap — Dynamic Governance Layer
 Tipo: Capa de Sincronización de Sesión (Fetch-on-Start)
 Propósito: Elimina el drift de versiones entre la UI estática del agente y el repositorio dinámico de Notion.
 Bootstrap Protocol: Ante el primer mensaje del operador, el componente de IA debe suspender el procesamiento de datos y ejecutar un fetch de SP:BOOTSTRAP-001 (System Prompt) y del ID CENSUS. El resultado de este fetch sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, el sistema debe reportar “MODO DEGRADADO” y no proceder con triggers operativos.
+Convención de estado (X-ING → X-ED): El Bootstrap declara su inicio con BOOTLOADING... y su cierre con BOOTLOADED: DOCUMENTOS CARGADOS — nunca con lenguaje que sugiera cierre de sesión formal. Esta misma convención rige cualquier skill que cargue contenido ([SKILL] LOADING... → [SKILL] LOADED), para que ningún mensaje de carga de contexto se confunda con el cierre de un protocolo distinto.
+Distinción de alcance — Bootstrap vs. Session Ledger: El Bootstrap corre en cada mensaje inicial de cualquier conversación del proyecto VANTAGE — es carga de contexto universal, no un registro de sesión formal. El Session Ledger (KERNEL:SESSION-LEDGER, §21) es opt-in: solo se escribe cuando el operador invoca explícitamente el skill vantage-session-open. No toda conversación del proyecto necesita una fila en el Ledger; el Bootstrap por sí solo nunca la crea.
 ```plain text
-Sesión Iniciada → AI Fetch (Bootstrap IDs) → Sincronización de Verdad Operativa
-→ Notificación Operador → Procesamiento Petición
+Sesión Iniciada → BOOTLOADING... → AI Fetch (Bootstrap IDs) → Sincronización de Verdad Operativa
+→ BOOTLOADED: DOCUMENTOS CARGADOS → Procesamiento Petición
+(Ledger: solo si el operador invoca vantage-session-open — ver KERNEL:SESSION-LEDGER)
 ```
 ### KERNEL:ARCHITECTURE-L1
 L1 — Active Recon
@@ -109,11 +122,11 @@ No es capa de búsqueda — es infraestructura documental del sistema.
 - Alias: vgit · Corre en background a las 09:00 · 15:00 · 21:00.
 - Repo: github.com/mauriciomeyran/jhs-pipeline.
 - Reutiliza .venv de Layer_1.
-vsync_doc.py — Sync bidireccional Notion → ACTIVE/ para los 6 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log).
+vsync_doc.py — Sync bidireccional Notion → ACTIVE/ para los 6 documentos fundacionales editables por el operador (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log). El ID Census es el séptimo fundacional (ver KERNEL:CENSUS-SYNC) pero, al ser derivado y regenerado por generate_census.py en vez de editado directamente, no pasa por este flujo de sync bidireccional — distinción de mecanismo de actualización, no de estatus fundacional.
 - Alias: vdoc · Flags: dry | notion | local | auto.
 - Flujo vdoc notion: lee Notion (safe_list vía httpx, 3 reintentos) → escribe ACTIVE/{doc}.md → auto-commit GitHub al terminar.
 - Dependencias: httpx · notion-client 3.x · .venv de Layer_1 · git_sync.py · Vive en: Layer_4/scripts/vsync_doc.py.
-Convención ACTIVE/: Los 6 .md fundacionales viven en …/ACTIVE/ — agnóstico de versión. Al pasar a v8.7: copiar archivos a ACTIVE/, cero cambios de código. Nombres canónicos: Kernel.md · System Prompt.md · Career Canon.md · Manual.md · Aliases.md · Change Log.md (con espacio, no guión bajo — coincide con BASE_DIR real en vsync_doc.py). Reemplaza los paths versionados anteriores (…/v8.5/Kernel v8.5.md).
+Convención ACTIVE/: Los 6 .md fundacionales editables viven en …/ACTIVE/ — agnóstico de versión. Al pasar a v8.7: copiar archivos a ACTIVE/, cero cambios de código. Nombres canónicos: Kernel.md · System Prompt.md · Career Canon.md · Manual.md · Aliases.md · Change Log.md (con espacio, no guión bajo — coincide con BASE_DIR real en vsync_doc.py). Reemplaza los paths versionados anteriores (…/v8.5/Kernel v8.5.md).
 Nota técnica: notion-client 3.x tiene un bug silencioso en blocks.children.list() que retorna None en lugar de lanzar excepción con campos null. vsync_doc.py lo mitiga con safe_list() — wrapper httpx directo con 3 reintentos.
 Jerarquía de Dedup: L1 > L2 > L3. En conflicto cross-layer, prevalece la entrada de la capa de mayor jerarquía.
 Perplexity aplica esta jerarquía en el paso de Consolidation & Dedup del lunes, antes de entregar el Plain Array a feed_processor.py. L3 no pasa por este paso — entra directamente a feed_processor.py desde mail_pipeline.py.
@@ -621,7 +634,7 @@ Estado actual: Normalización documental de IDs legacy hacia el esquema [PREFIX]
 ---
 ## §20 — KERNEL:CENSUS-SYNC
 ### Sincronización Obligatoria del ID Census
-El V-ID-CENSUS es un documento derivado — su fuente de verdad son los IDs reales escritos en los documentos fundacionales (Kernel, Manual, Career Canon, System Prompt), no al revés. El Census no reemplaza esos documentos ni los precede; los audita.
+El V-ID-CENSUS es el séptimo documento fundacional del sistema, sujeto a la misma Regla de Versión Única que los otros seis (SP:SYNC-RULE). A diferencia de los demás, su contenido es derivado — su fuente de verdad son los IDs reales escritos en los otros seis documentos fundacionales (Kernel, Manual, Career Canon, System Prompt, Aliases, Change Log), no al revés. El Census no reemplaza esos documentos ni los precede; los audita. Ser derivado en contenido no lo exime de la regla de versión única — una discrepancia de versión del Census bloquea igual que cualquier otro fundacional.
 Problema que resuelve: sin un gate explícito, un cambio de estado de un ID (⚠️ Stub → ✅ Ok) o la creación de un ID nuevo puede quedar reflejado en el documento fuente pero no en el Census, generando drift silencioso entre lo que el sistema documenta y lo que el Census reporta.
 Regla 1 — Gate de cierre de ticket: Ningún ticket en Bug Tracker o Tasks Tracker (KERNEL:TRACKER-SCHEMA) que implique cambio de estado de un ID (Stub→Ok, creación de ID nuevo, deprecación de ID existente) se marca Done sin que el Census haya sido regenerado y reflejado ese cambio. Si el re-run de generate_census.py no puede ejecutarse en el momento (ej. sin acceso a Terminal), el ticket permanece en estado Blocked-Census — no se da por cerrado en falso.
 Regla 2 — Alta de IDs nuevos en el spec + deeplink automático: generate_census.py debe operar en dos modos: (a) resolución de IDs ya conocidos en CENSUS_SPEC, y (b) detección de IDs presentes en los documentos fuente que NO están en CENSUS_SPEC (“IDs huérfanos”). Todo ID huérfano detectado se reporta explícitamente al operador antes de cerrar el ticket asociado — no se ignora silenciosamente. Para todo ID resuelto (conocido u orfano recién agregado), el script genera vía API el deeplink correspondiente al bloque exacto en Notion — la navegación desde el Census hacia la porción publicada en el TOC del documento fuente debe ser precisa, no aproximada al documento completo.
@@ -664,13 +677,15 @@ Gestión de pendientes: Un parche no aplicado de inmediato se registra en Tasks 
 Propósito: Ruta de bajo costo para verificar y sincronizar la propiedad Versión de los 7 documentos fundacionales (Kernel, Manual, Career Canon, System Prompt, Aliases, Changelog, Census) sin pagar el costo de token e infraestructura de un notion-fetch completo (body entero) por documento.
 ### Modos de Operación (verify_versions.py)
 1. Check Mode (Default): Itera los 7 page_id fijos y llama a pages.retrieve(page_id) para extraer únicamente el metadato de la propiedad Versión. Output: Tabla de 7 líneas (documento | versión).
-1. Sync Mode (-sync): Sincronización determinista local. Lee de forma automática la nueva versión directamente de la página de Changelog en Notion (fuente de verdad escrita por el AI Component) y ejecuta actualizaciones ligeras en lote (sequential patch updates de la propiedad “Versión”) hacia los 6 documentos restantes en Notion.
+1. Sync Mode (-sync): Sincronización determinista local. Lee de forma automática la nueva versión directamente de la página de Changelog en Notion (fuente de verdad escrita por el AI Component) y ejecuta actualizaciones ligeras en lote (sequential patch updates de la propiedad “Versión”) hacia los 6 documentos fundacionales restantes más ID CENSUS (7 patches en total) en Notion. Census no es una excepción de este flujo — recibe el mismo patch de propiedad Versión que los demás, aunque su contenido se regenere por separado vía generate_census.py.
+Alias de invocación: vversions es el nombre corto canónico de verify_versions.py en Terminal — acepta los tres flags arriba sin variación (vversions --bootstrap, vversions --check, vversions --sync). El script no tiene modo default sin flag; el flag es obligatorio en cada invocación.
 ### Reglas Operativas de Sincronización
 Límite de Escritura del AI Component: Durante una actualización de versión, el componente de IA tiene estrictamente prohibido actualizar la propiedad Versión de manera individual en los documentos a través de múltiples llamadas de API. El AI Component no realiza escrituras redundantes.
 Flujo Canónico de Sincronización:
 1. El AI Component redacta el borrador del Changelog y actualiza la versión únicamente en la página de Changelog.
 1. El AI Component presenta el DRY RUN de cierre indicando que la versión maestro ha sido asentada en el Changelog.
-1. El AI Component solicita explícitamente al operador ejecutar localmente python verify_versions.py --sync desde la terminal para propagar la versión en lote a los documentos restantes en Notion.
+1. El AI Component solicita explícitamente al operador ejecutar localmente python verify_versions.py --sync desde la terminal para propagar la versión en lote a los 6 documentos fundacionales restantes más ID CENSUS en Notion.
 1. Una vez propagada en Notion, el operador ejecuta el flujo estándar de vsync_doc.py (vdoc, ya definido en KERNEL:ARCHITECTURE-L4) en L4 para bajar los archivos actualizados al repositorio local.
 ### Relación de Costos y Rutas
 Aplica el principio de triaje de costos (Terminal > MCP) ya establecido en KERNEL:SCOPE/KERNEL:ROUTING (§15). Toda validación y propagación de versión masiva se delega al script local para proteger la economía de contexto y evitar los límites de rate-limiting de la API de Notion.
+Convención de nombres de alias (Terminal): v<dominio>[ <subcomando>] — subcomando posicional para scripts con modos mutuamente excluyentes (ej. vl1 tracker, vl1 batch); flags con guión para scripts con variaciones sobre un mismo motor (ej. vversions --sync). Un alias nunca coexiste en paralelo con un nombre casi-idéntico de un script renombrado o corregido — el alias viejo se retira del .zshrc al mismo tiempo que se declara el nuevo.

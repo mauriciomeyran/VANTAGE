@@ -1,5 +1,68 @@
 # V | CHANGELOG
 
+### v9.5.2 — 2026-07-18
+Alcance: KERNEL §3 (alta de KERNEL:SKILL-ANNOUNCE-CONVENTION), Tasks Tracker + ARCHIVO TASK TRACKER (cierre de ticket Ledger huérfano), Bug Tracker (registro de bug nuevo: --bootstrap sin filtro de Status).
+Cambios:
+- KERNEL: nuevo nodo KERNEL:SKILL-ANNOUNCE-CONVENTION en §3, verificado por re-fetch sin mismatch (sesión 2026-07-17-B).
+- Tasks Tracker: ticket "Revisar skill vantage-session-open — Ledger huérfano" cerrado (Status: Hecho), copia migrada a ARCHIVO TASK TRACKER (3a1938be-fc42-810d-ae99-f2666a61e565).
+- Archivado real (API archived:true) del ticket original (3a0938be-fc42-813c-92de-cb9e9c86e1da) sigue PENDIENTE — falló por token inválido (401), resolver NOTION_TOKEN contra Layer_1/config/layer_1.env antes de reintentar.
+- Bug Tracker (pendiente, no ejecutado en esta sesión): registrar bug "verify_versions.py --bootstrap no filtra Status resuelto/hecho" — detectado, no escrito aún.
+Write-Back Verification: pendiente de confirmar en esta misma sesión tras el write.
+IDs afectados: alta de KERNEL:SKILL-ANNOUNCE-CONVENTION.
+Pendiente (fuera de esta entrada): cerrar Ledger de SESSION-2026-07-17-B (en curso); resolver NOTION_TOKEN antes de reintentar archivado; registrar bug de --bootstrap sin filtro Status.
+Versión actualizada: 9.5.2 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.5.1 hasta que el operador corra verify_versions.py --sync.
+---
+### v9.5.1 — 2026-07-18
+Alcance: Skills locales (fuera de Notion, no fundacionales — no dispara KERNEL:CENSUS-SYNC): vantage-session-open, vantage-session-close, vantage-documentacion-transversal, prompt-master, tailored-resume-generator.
+Contexto: continuidad del trabajo de v9.5.0. Se detectó que el fix de convención de anuncio (X-ING → X-ED) diseñado y validado en la sesión de Notion previa (2026-07-18) nunca había persistido en el filesystem real del operador — los archivos montados seguían con artefactos de mojibake ([span_x]) y, en el caso de vantage-session-open/vantage-session-close, con un UUID de Session Ledger divergente (8d736032-eef9-4e6e-a05a-df8b8079ebff) del canónico (38324240-c686-47d0-8082-cee5e4409f88) — causa probable de que las filas del Ledger quedaran huérfanas sin cerrar.
+Cambios:
+- vantage-session-open: agregado paso 0 SESSION-OPENING... / cierre SESSION-OPENED: VANTAGE READY; UUID de Session Ledger corregido al canónico; artefactos de mojibake eliminados.
+- vantage-session-close: agregado paso 0 CLOSING SESSION... / cierre SESSION CLOSED -> nuevo chat.; mismo fix de UUID y mojibake.
+- vantage-documentacion-transversal: agregado anuncio BEGINNING DOCUMENTATION... / DOCUMENTATION FINISHED.
+- prompt-master: agregado anuncio PROMPTING... / PROMPT FINISHED, con nota explícita de que va fuera del bloque de prompt copiable.
+- tailored-resume-generator: sin cambios — ya traía el anuncio correcto.
+Incidente de proceso (honestidad estructural): en esta misma sesión, antes de leer el handoff completo de la sesión de Notion, Claude entregó una primera versión de estos skills con un fix incompleto (solo limpieza de mojibake) presentado como definitivo. Se generó un Contrato de Sesión documentando la falla y reglas de refuerzo (R1–R5) para prevenir recurrencia — no se escribe a Notion, vive como artefacto de sesión entregado al operador.
+Write-Back Verification: no aplica — cambios son locales, fuera de Notion.
+IDs afectados: ninguno. Census no requiere regeneración.
+Pendiente (fuera de esta entrada): dar de alta KERNEL:SKILL-ANNOUNCE-CONVENTION en el Kernel (nodo junto a KERNEL:ARCHITECTURE-L0-BOOTSTRAP) para formalizar la convención de anuncio como regla transversal — no ejecutado, pendiente de decisión del operador sobre alcance. Confirmar en sesión real que el operador subió los 5 .skill corregidos y que el ciclo open→close cierra la fila del Ledger sin quedar huérfana.
+Versión actualizada: 9.5.1 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.5.0 hasta que el operador corra verify_versions.py --sync.
+---
+### v9.5.0 — 2026-07-17
+Alcance: KERNEL:ARCHITECTURE-L0-BOOTSTRAP (§3) — convención de estado del Bootstrap y distinción de alcance frente al Session Ledger.
+Contexto: el operador identificó un patrón de riesgo de 5 sesiones consecutivas sin fila nueva en Session Ledger al invocar /vantage-session-open. Diagnosticado en esta sesión: el Bootstrap universal (Project Instructions, copy fuente en SP:BOOTSTRAP-001) cierra con "VANTAGE: SISTEMA SINCRONIZADO" — casi idéntico al cierre real del skill vantage-session-open ("VANTAGE READY") — lo que hacía que el bootstrap universal (que corre en cada mensaje inicial de cualquier conversación del proyecto) se autodeclarara "sesión sincronizada" sin que el operador ni el modelo distinguieran ese cierre de la apertura formal del skill, que es la única que escribe al Ledger.
+Cambios:
+- KERNEL:ARCHITECTURE-L0-BOOTSTRAP (§3): agregada convención de estado X-ING → X-ED — el Bootstrap declara BOOTLOADING... al inicio y BOOTLOADED: DOCUMENTOS CARGADOS al cierre, nunca lenguaje de cierre de sesión formal. Agregado párrafo explícito de distinción de alcance: el Bootstrap es carga de contexto universal (cada mensaje inicial), el Session Ledger (KERNEL:SESSION-LEDGER, §21) es opt-in exclusivo del skill vantage-session-open. Diagrama de flujo actualizado con ambos estados y nota de Ledger condicional.
+- SP:BOOTSTRAP-001 (System Prompt): copy operativo real corregido por el operador directamente en Project Instructions (fuera del alcance de escritura de este componente) — mismo cambio de convención de estado, mas la línea explícita de que el Bootstrap no escribe en Session Ledger.
+Write-Back Verification: re-fetch de Kernel tras la escritura — sin mismatch.
+IDs afectados: ninguno — ambos patches documentan contenido bajo IDs ya existentes (KERNEL:ARCHITECTURE-L0-BOOTSTRAP, SP:BOOTSTRAP-001). Census no requiere regeneración.
+Pendiente (fuera de esta entrada): Task Tracker — "Revisar skill vantage-session-open — no ha abierto fila en Session Ledger en 5 sesiones continuas" permanece abierto hasta que el operador confirme, en una sesión real con el nuevo copy activo, que la distinción BOOTLOADED vs SESSION-OPENED resuelve el patrón de confusión. No cerrar el ticket solo con este Changelog.
+Versión actualizada: 9.5.0 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en su versión previa hasta que el operador corra verify_versions.py --sync.
+---
+### v9.4.9 — 2026-07-17
+Alcance: Esquema base de Bug/Tasks Tracker en SP (SP:SCHEMA) + regla de no-inferencia sobre mecanismos del sistema (SP:CONSISTENCY) + narrativa L0 ampliada en Kernel (KERNEL:ARCHITECTURE-L0) y Manual (§9.1, MANUAL:VANTAGE-RUNTIME-001) para incluir Version Check Tool/Census como parte de la capa L0.
+Cambios:
+- SP:SCHEMA (§7): agregado bloque "Esquema base" para Bug Tracker y Tasks Tracker (campos, tipos, opciones de select) como referencia estática para creación directa de páginas vía notion-create-pages sin fetch previo del data source. Nota explícita: Notion es la fuente de verdad, este bloque es caché de lectura que debe actualizarse en la misma sesión si el schema real cambia.
+- SP:CONSISTENCY (§10): nuevo punto 5 — antes de escribir en un documento fundacional una afirmación sobre CÓMO funciona un mecanismo del sistema (skill, script, proceso), confirmar con el operador o la fuente real, nunca inferir por nombre o intención aparente. Originado por una corrección del operador en esta misma sesión: una primera redacción de SP:SCHEMA atribuyó erróneamente a vantage-documentacion-transversal un rol de monitoreo activo que el skill no tiene (es un skill de creación de contenido bajo demanda, no un proceso de vigilancia). Corregido en la misma sesión antes de este Changelog — no se registró como bug porque se resolvió de inmediato.
+- KERNEL:ARCHITECTURE-L0: agregado párrafo + línea de diagrama declarando que Version Check Tool (vversions) y Census (vcensus) pertenecen a L0 (observabilidad ReadOnly), ya confirmado por el operador en sesión previa pero nunca escrito en el Kernel.
+- MANUAL §9.1 (MANUAL:VANTAGE-RUNTIME-001): extendida la definición de Runtime con la misma pertenencia de vversions/vcensus a L0, sin duplicar el detalle operativo ya documentado en §9.2 y §6.
+- V | ALIASES: reescritura completa a las 8 familias (Session Cycle → L0 Runtime → L1/L2 → Pipeline → L3 → L4 → Dashboard → CV → Dedup), aprobada en sesión previa (chat 71ea0fc5) pero nunca escrita — confirmado por fetch al inicio de esta sesión que el documento seguía en su estructura anterior de 9 secciones. Ejecutada ahora junto con alta de alias nuevo vsource (source ~/.zshrc, familia L0 Runtime) solicitado por el operador.
+Write-Back Verification: re-fetch de SP y Kernel tras cada escritura — sin mismatch. Manual no re-verificado por fetch en esta entrada (patch aplicado vía update_content sin error reportado). ALIASES re-fetcheado post-escritura — 8 familias confirmadas, sin mismatch.
+IDs afectados: ninguno — los cuatro patches documentan contenido bajo IDs ya existentes (SP:SCHEMA, SP:CONSISTENCY, KERNEL:ARCHITECTURE-L0, MANUAL:VANTAGE-RUNTIME-001). Census no requiere regeneración.
+Pendiente (fuera de esta entrada): ninguno identificado — handoff de sesión anterior (chat 71ea0fc5) cerrado con esta entrada.
+Versión actualizada: 9.4.9 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en su versión previa hasta que el operador corra verify_versions.py --sync.
+---
+### v9.4.8 — 2026-07-17
+Alcance: Convención de nombres de alias de Terminal (Kernel §23, Manual §9.2, Aliases). Corrige drift entre alias reales en .zshrc (vversion, vcensus) y el contrato ya documentado en Kernel/Manual, y cierra el hueco de gramática que mezclaba subcomando posicional (vl1 tracker) con flags de guión (vversions --sync) sin regla explícita.
+Cambios:
+- Diagnosticado en Terminal (log del operador): vversion/vcensus existían como alias en .zshrc pero con comillas dobladas mal formadas (=''...'' en vez de '...'), causando ejecución silenciosa sin error ni output. Causa raíz identificada, fix entregado al operador para aplicar localmente (no fundacional — vive en .zshrc, fuera de Notion).
+- KERNEL §23 (KERNEL:VERSION-CHECK-TOOL): agregado párrafo "Alias de invocación" declarando vversions (plural) como nombre corto canónico de verify_versions.py, con los tres flags sin modo default. Agregada subsección "Convención de nombres de alias (Terminal)" al cierre de la sección: v<dominio>[ <subcomando>] — subcomando posicional para modos mutuamente excluyentes, flags con guión para variaciones sobre un mismo motor; un alias nunca coexiste con un nombre casi-idéntico de un script renombrado.
+- MANUAL §9.2 (MANUAL:VANTAGE-RUNTIME-001): catalogadas vversions y vcensus junto a los vl1 * ya documentados, con referencia cruzada a §6 (Ciclo de Sesión) y §11 (V-ID-Census) para no duplicar su contrato operativo completo.
+- ALIASES (V | ALIASES, sesión previa a este Changelog): agregadas filas vversions y vcensus a la tabla Session Lifecycle (antes ausentes pese a que verify_versions.py --bootstrap/--check/--sync ya estaba documentado ahí sin alias corto asociado); nota de convención de nombres al pie de la sección.
+Write-Back Verification: re-fetch de Kernel y Manual tras cada escritura — sin mismatch en ninguno de los dos.
+IDs afectados: ninguno — los tres patches documentan un alias y una convención de nombres ya vigentes en el contrato, no dan de alta, retiran ni cambian de estado ningún ID canónico. Census no requiere regeneración (KERNEL:CENSUS-SYNC Regla 1 no se dispara).
+Pendiente (fuera de esta entrada): aplicar el fix de comillas en .zshrc (local, operador) y retirar los alias huérfanos vpipeline/vpipeline-status propuestos en sesión previa y descartados por ser redundantes con vl1.
+Versión actualizada: 9.4.8 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en su versión previa hasta que el operador corra verify_versions.py --sync.
+---
 ### v9.4.7 — 2026-07-16
 Alcance: Corrección de bugs en tooling local (generate_census.py, normalize_heading_ids.py — ambos en Layer_1/scripts/, no fundacionales) + cierre del pendiente de deeplink dejado abierto por v9.4.6.
 Cambios:

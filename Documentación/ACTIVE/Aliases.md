@@ -1,82 +1,55 @@
 # V | ALIASES
 
 # V | ALIASES
-
-# V | ALIASES
-
-| # | Sección | Tipo | Propósito |
-| --- | --- | --- | --- |
-| 1 | Layer 1 — Active Recon | OPERACIÓN | Pipeline principal |
-| 2 | Layer 1 — Dedup | OPERACIÓN | Consolidación |
-| 3 | Layer 3 & Dashboard | OPERACIÓN | Mail y UI |
-| 4 | Lazy Loader (KERNEL Routes) | OPERACIÓN | Acceso rápido al Kernel |
-| 5 | Layer 4 — Version Control | OPERACIÓN | Git y sync |
-| 6 | Figma Sync | OPERACIÓN | Plugin CV |
-| 7 | Runtime CLI | OPERACIÓN | Comandos vantage.py |
-| 8 | Session Lifecycle | OPERACIÓN | Andamiaje de apertura/cierre de sesión |
-| 9 | CHANGELOG | REFERENCIA | Historial |
-## Layer 1 — Active Recon
-| Alias | Descripción |
-| --- | --- |
-| vl1 | Run principal (→ layer_1_pipeline.sh) |
-| vl1 tracker | Estado del pipeline L1 (Tracker en tiempo real) |
-| vl1 analytics | Métricas y analítica |
-| vl1 batch | Reporte batch (read-only). Pasar --execute para escribir. |
-| vl1 recovery | Recovery mode |
-| vl1 profile | Ver perfil activo |
-| vl1 feed | Ciclo FEED |
-| vl1 backfill | Backfill de entradas |
-### Layer 1 — Dedup & Oportunidades
-| Alias | Descripción |
-| --- | --- |
-| vdedup | Consolida duplicados (consolidate_duplicates.py) |
-| vopport | Dedup de oportunidades (dedup_opportunities.py) |
-### Layer 3 & Dashboard
-| Alias | Descripción |
-| --- | --- |
-| vl3 | Mail pipeline (layer_3_mail.py) |
-| vd | Dashboard RT-1 (dashboard_start.sh) |
-### lazy_loader.py — Ruta Canónica
-cd ~/Documents/03 Projects/VANTAGE/Layer_1/scripts && source ../.venv/bin/activate && python lazy_loader.py --page {PAGE_ID} --route {ruta}
-### Layer 4 — Version Control & Documental
-| Alias | Descripción |
-| --- | --- |
-| vgit | Git sync (git_sync_wrapper.sh) — runs auto 09/15/21h |
-| vdoc dry | Preview sync Notion → ACTIVE/ (sin escritura) — usar siempre primero |
-| vdoc notion | Notion → ACTIVE/{doc}.md + auto-commit GitHub — FORZADO, pide confirmación |
-| vdoc local | ACTIVE/ → Notion (para edits offline) — FORZADO, pide confirmación |
-| vdoc auto | Sync bidireccional — gana el más reciente (mtime local vs Notion) |
-| vdoc kernel | Sync quirúrgico Kernel (auto) |
-| vdoc system_prompt | Sync quirúrgico System Prompt (auto) |
-| vdoc career_canon | Sync quirúrgico Career Canon (auto) |
-| vdoc manual | Sync quirúrgico Manual (auto) |
-| vdoc aliases | Sync quirúrgico Aliases (auto) |
-| vdoc change_log | Sync quirúrgico Change Log (auto) |
-### Figma Sync — CV Output Layer
-03 Projects/VANTAGE/Figma Sync/ — Plugin Figma para inyección de payloads CV-B al lienzo.
-| Archivo | Rol |
-| --- | --- |
-| manifest.json | Configuración nativa del plugin (entry: code.js, UI: ui.html) |
-| code.js | Motor del plugin — Registry V2. Resolución O(1) por ID crudo vía REGISTRY embebido. |
-| ui.html | Interfaz — acepta payload JSON (KEY semántica) o Markdown con figma_text_id (ID crudo directo) |
-| registry_seed.json | SSOT de IDs de nodos Figma. No editar sin regenerar desde el lienzo. |
-### Runtime CLI (vantage.py)
-| Comando | Alias | Descripción |
+# 1 — Session Cycle
+| Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
-| vantage.py status | vstatus | Estado del sistema + index age |
-| vantage.py sync | vsync | Regenera entity_index_v2.json desde Notion |
-| vantage.py ask | vask | Query al agente |
-| vantage.py resolve | vresolve | Resolver entidad |
-| vantage.py context | vcontext | Context layer |
-| vantage.py query | vquery | Query layer |
-| vsync_doc.py | vdoc | Sync Notion → ACTIVE/ — ver tabla Layer 4 para flags |
-## Session Lifecycle
-Los comandos de esta sección no son parte del pipeline de vacantes — son el andamiaje que envuelve cada sesión de trabajo, sin importar qué vayas a hacer dentro de ella. Ver MANUAL:SESSION-CYCLE-001 para el detalle narrativo completo de qué hace cada uno y por qué.
-Desde la optimización de verify_versions.py, Terminal es un requisito obligatorio para este ciclo — no existe fallback a fetch MCP directo. El operador corre los flags correspondientes en Terminal primero y entrega los outputs ya resueltos a Claude como payload de entrada; Claude ya no reconstruye ninguno de esos resultados por su cuenta.
-| Alias | Descripción |
-| --- | --- |
-| /vantage-session-open | Abre la sesión: recibe como payload el dump de --bootstrap y la tabla de --check (ambos corridos antes en Terminal), procesa ambos, y realiza una sola escritura — crea fila OPEN en Session Ledger. Es lo primero que invocas al empezar a trabajar, después de correr Terminal. |
-| /vantage-session-close | Cierra la sesión: recibe como payload el PASS de --check y el SYNC COMPLETE de --sync (ambos corridos antes en Terminal, junto con generate_census.py si hubo cambio de ID), valida el gate de sincronización, presenta el resumen hecho/pendiente, y marca la fila del Ledger como CLOSED. Es lo último que invocas antes de cerrar la ventana. |
-| verify_versions.py --bootstrap | Read-only. Genera el bloque [DUMP INICIO SESIÓN VANTAGE]: última fila del Session Ledger, última entrada de Changelog, y snapshot de tickets CRÍTICO/ALTO. Se corre en Terminal antes de invocar /vantage-session-open y su output se pega junto con el de --check. |
-| verify_versions.py --check | Read-only. Lee solo la propiedad Versión de los 7 documentos fundacionales, no su contenido — mucho más barato que un fetch completo. Se usa tanto en apertura (junto a --bootstrap) como en cierre de sesión. |
-| verify_versions.py --sync | Único flag con escritura. Toma la versión target de la entrada de Changelog de la sesión, la lee vía pages.retrieve, y ejecuta seis peticiones pages.patch secuenciales — una por documento fundacional restante — actualizando directamente la propiedad "Versión" de cada página en Notion, sin pasar por Claude. Housekeeping, exento de APROBAR_WRITE. Se corre en Terminal como parte del cierre, antes de invocar /vantage-session-close. |
+| start | Arranca el sistema al inicio de cada sesión: activa el entorno, carga variables y corre el chequeo de salud. | Activa .venv, exporta config/layer_1.env, y ejecuta health_check.py, que revisa en orden versión, entorno, git, conectividad a Notion, sync documental y antigüedad de índices — auto-sincroniza el Entity Index si pasó más de 24h. |
+| vversions --bootstrap | Genera el paquete de contexto de apertura de sesión: última fila del Ledger, última entrada del Changelog, tickets críticos pendientes. | Lee pages.retrieve sobre la página del Session Ledger y el Changelog y arma el bloque [DUMP INICIO SESIÓN VANTAGE] — no escribe nada. |
+| vversions --check | Confirma que los 7 documentos fundacionales están en la misma versión antes de trabajar. | Itera los 7 page_id fijos y lee solo la propiedad Versión de cada uno vía pages.retrieve — no toca el contenido. |
+| vversions --sync | Propaga la versión ya escrita en el Changelog hacia los 6 documentos restantes. | Único flag con escritura: lee la versión target del Changelog y ejecuta 6 pages.patch secuenciales sobre la propiedad Versión — housekeeping, exento de APROBAR_WRITE. |
+# 2 — L0 · VANTAGE Runtime
+| Alias | Qué hace | Procedimiento interno |
+| --- | --- | --- |
+| vload | Motor base del Lazy Loader — consulta rutas específicas del Kernel sin fetch completo. | Activa .venv y corre lazy_loader.py --page {ID} --route {ruta}; parsea bloques hijos vía API y devuelve solo el payload pedido (~150 tokens). |
+| vtrig / vgolden / vcheat / vscope / vdataflow / vrouting | Atajos directos a secciones específicas del Kernel (Triggers, Golden Rules, Cheat Sheet, Scope, Data Flow, Routing) sin escribir la ruta a mano cada vez. | Cada uno es vload con --page y --route ya fijos al ID de esa sección. |
+| vstatus | Muestra el estado del Runtime: cuántas entidades tiene indexadas y qué tan viejo está el índice. | Corre vantage.py status — lectura pura contra entity_index_v2.json. |
+| vsync | Regenera el índice de entidades del Runtime desde Notion. | Corre vantage.py sync — reconstruye entity_index_v2.json, graph_v2.json, backlinks_v2.json. |
+| vask | Hace una pregunta en lenguaje natural al Runtime sobre el estado del Tracker. | Corre vantage.py ask "..." — resuelve contra el índice ya cargado. |
+| vresolve | Resuelve una entidad específica (ID o nombre) a su ficha completa. | Corre vantage.py resolve — 4 pasos: lookup en índice, mapeo a data source, query a Notion, validación. |
+| vcontext | Trae contexto extendido de una entidad (relaciones, backlinks). | Corre vantage.py context sobre graph_v2.json y backlinks_v2.json. |
+| vquery | Corre una consulta estructurada contra el índice. | Corre vantage.py query — filtra entity_index_v2.json por los parámetros dados. |
+| vversions (sin flag) | Punto de entrada al motor de verificación de versión — requiere flag explícito (--bootstrap/--check/--sync, ver familia 1). | — |
+| vcensus | Regenera el V-ID-CENSUS y reporta IDs huérfanos. | Corre generate_census.py — resuelve cada ID contra CENSUS_SPEC, detecta huérfanos no listados, y genera deeplink de bloque exacto vía API para cada uno. |
+| vsource | Recarga la configuración de shell tras editar .zshrc, sin abrir una terminal nueva. | source ~/.zshrc — housekeeping puro, no toca Notion ni el pipeline. |
+# 3 — L1/L2 · Discovery (Lunes)
+| Alias | Qué hace | Procedimiento interno |
+| --- | --- | --- |
+| vl1 | Corre el pipeline principal de Active Recon — procesa el JSON consolidado del día y lo escribe en el Tracker. | Invoca layer_1_pipeline.sh, que activa .venv y dispara feed_processor.py: normaliza campos, aplica dedup cross-layer, presenta DRY RUN antes de escribir. |
+| vl1status / vl1analytics / vl1batch / vl1recovery / vl1profile / vl1feed / vl1backfill | Atajos de un solo token a cada subcomando de vl1 (ver Manual §9.2 para el detalle de cada uno). | Cada uno equivale a vl1 <subcomando> — mismo contrato, solo evita el espacio. |
+| vl1app | Abre la app empaquetada de Layer 1 desde Finder/Spotlight en vez de Terminal. | open /Applications/Layer 1. |
+# 4 — L3 · Passive Intake
+| Alias | Qué hace | Procedimiento interno |
+| --- | --- | --- |
+| vl3 | Procesa manualmente el backlog de Gmail (.Jobs) si el ciclo automático no corrió. | Invoca layer_3_mail.sh — lee vía IMAP, extrae vacantes con Groq (máx. 5 correos/run), escribe Class A en el Tracker. |
+| vl3app | Abre la app empaquetada de Layer 3. | open /Applications/Layer 2 (nombre de carpeta heredado, corresponde a L3). |
+# 5 — L4 · Version Control & Documentación
+| Alias | Qué hace | Procedimiento interno |
+| --- | --- | --- |
+| vgit | Fuerza un sync inmediato del repo git fuera de su horario automático. | Invoca git_sync_wrapper.sh — commit con timestamp + push a origin/main si hay cambios sin commitear. |
+| vsync-doc | Invocación directa del motor de sync documental (uso interno/depuración). | Corre vsync_doc.py sin el wrapper de comandos — requiere pasar flags manualmente. |
+| vdoc | Sincroniza los 6 documentos fundacionales entre Notion y disco local. | Corre vdoc.py (wrapper de comandos) → invoca vsync_doc.py con la dirección y documento pedidos (auto/notion/local, dry, o nombre de documento específico — ver Manual §8.1 para la matriz completa). |
+# 6 — Dashboard (Martes — Recuperación)
+| Alias | Qué hace | Procedimiento interno |
+| --- | --- | --- |
+| vd | Abre el Dashboard de recuperación de vacantes bloqueadas. | Invoca dashboard_start.sh — arranca Flask en :8000, corre smoke test, abre dashboard.html en el navegador. |
+| vdapp | Abre la app empaquetada del Dashboard. | open /Applications/Dashboard. |
+# 7 — CV Pipeline (Miércoles)
+Sin alias de Terminal — CV-A, CV-B y QA se disparan directamente en el chat de Claude (ver Manual §8.3).
+# 8 — Dedup & Oportunidades
+| Alias | Qué hace | Procedimiento interno |
+| --- | --- | --- |
+| vdedup | Consolida entradas duplicadas detectadas en el Tracker. | Corre consolidate_duplicates.py sobre la clave compuesta brand+title+location. |
+| vopport | Limpia duplicados específicamente en oportunidades ya calificadas. | Corre dedup_opportunities.py. |
+---
+Figma Sync (plugin CV, 04-Vantage_CV/Figma Sync/) no tiene alias de Terminal propio — se opera desde Figma Desktop, ver Manual §8.3.
