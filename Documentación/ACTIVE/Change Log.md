@@ -1,6 +1,38 @@
 # V | CHANGELOG
 
 ---
+### v9.5.9 — Auto-Archive Security Patch + Canonización Documental (Bug Crítico, CERRADO) · 2026-07-19
+Tipo: [BUG] [SEC] [INFRA]
+Descripción:
+Implementación de parche de seguridad crítico en auto_archive.py para prevenir archivado accidental de registros con aplicaciones activas (Gate_Decision='APPLIED'). Adicionalmente, canonización de la documentación ACTIVE LOCAL como read-only para prevenir drift documental, estableciendo Notion como única fuente de verdad.
+Cambios:
+- auto_archive.py (Parche de Seguridad): Agregado check obligatorio Gate_Decision != 'APPLIED' en query_archive_candidates(). Si Gate_Decision == 'APPLIED', el registro se reporta como "PROTECTED_ACTIVE_APPLICATION" y NO se archiva bajo ninguna circunstancia. El dataclass ArchiveCandidate fue extendido para incluir el campo gate_decision.
+- feed_processor.py (Normalización Dedup_Flag): Implementada función _set_dedup_flag_if_needed() que asigna siempre el valor literal "Posible duplicado" al campo Dedup_Flag cuando se detecta duplicado por hash, URL o fingerprint. Esta función se integra en dedup_cross_layer() y dedup_by_content_fingerprint(), asegurando que los 34 registros zombis detectados en la auditoría v9.5.6 puedan ser procesados por el flujo automático.
+- auto_archive.py (Archivado Físico): Verificado y corregido para usar archived=True en la llamada a notion.pages.update(), garantizando archivado físico vía API de Notion (endpoint PATCH /v1/pages/{page_id}) en lugar de solo mover parent.
+- vsync_doc.py v8.5.5 (Canonización Documental): Eliminada opción --direction local para prevenir drift documental. Documentación ACTIVE LOCAL ahora es read-only, Notion es única fuente de verdad. Auto mode solo permite notion→local, local→notion deshabilitado. Agregado warning inicial sobre política read-only.
+- Documentación/ACTIVE/*.md (Bloqueo Físico): Aplicado chmod 444 a todos los archivos de documentación ACTIVE para prevenir edición directa local. Cambios deben hacerse en Notion, luego sincronizar hacia local.
+Contexto:
+- Consistencia con KERNEL:GATE-DECISION-007: El parche de seguridad mantiene consistencia con el mecanismo documentado, añadiendo protección cruzada contra APPLIED que no estaba explícita en el documento original.
+- Canonización Documental: Respuesta a problema de drift documental entre local y Notion. Ahora existe una única fuente de verdad (Notion) y la documentación local es solo una caché read-only.
+- Protección Total: Next_Action no se sobreescribe si ya está poblado (restricción mantenida).
+- Validación: DRY RUN ejecutado exitosamente — 2 candidatos identificados (Promotwist SC y Zegna), ambos con Gate_Decision='BLOCKED' (aprobados para archivado). 0 registros con Gate_Decision='APPLIED' en riesgo de archivado accidental.
+Criterios de aceptación:
+| # | Criterio | Estado |
+| --- | --- | --- |
+| 1 | Check Gate_Decision != 'APPLIED' implementado en query_archive_candidates() | ✅ |
+| 2 | Función _set_dedup_flag_if_needed() asigna "Posible duplicado" correctamente | ✅ |
+| 3 | Archivado físico usa archived=True en API de Notion | ✅ |
+| 4 | DRY RUN ejecutado sin errores, tabla de afectados generada | ✅ |
+| 5 | 0 registros con Gate_Decision='APPLIED' en riesgo de archivado | ✅ |
+| 6 | vsync_doc.py eliminó --direction local correctamente | ✅ |
+| 7 | Archivos Documentación/ACTIVE/*.md bloqueados con chmod 444 | ✅ |
+Archivos afectados:
+- Layer_1/scripts/auto_archive.py (parche de seguridad + archivado físico)
+- Layer_1/scripts/feed_processor.py (normalización Dedup_Flag)
+- Layer_4/scripts/vsync_doc.py (canonización documental v8.5.5)
+- Documentación/ACTIVE/*.md (bloqueo físico read-only)
+IDs afectados: ninguna alta/baja de ID canónico — parche de seguridad bajo código existente, sin cambios en schema de Notion.
+---
 ### v9.5.8 — KERNEL:SKILL-ANNOUNCE-CONVENTION (R-12b) · 2026-07-19
 Tipo: [DOC]
 Descripción:
