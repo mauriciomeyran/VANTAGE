@@ -500,6 +500,48 @@ def _upgrade_layer_if_needed(
             print(f"  ⚠️  Layer upgrade fallido para {page_id[:8]}: {exc}")
 
 
+def _set_dedup_flag_if_needed(
+    notion_utils: Client,
+    page: dict,
+    schema: NotionSchema,
+) -> None:
+    """
+    Asigna el valor literal 'Posible duplicado' al campo Dedup_Flag cuando se detecta un duplicado.
+    
+    Esta normalización es crítica para que los registros zombis detectados en la auditoría de v9.5.6
+    puedan ser procesados por el flujo automático de archivado.
+    """
+    # Buscar la propiedad Dedup_Flag en el schema
+    dedup_flag_prop = None
+    for prop_name, prop_def in schema.properties.items():
+        if prop_name == "Dedup_Flag":
+            dedup_flag_prop = prop_name
+            break
+    
+    if not dedup_flag_prop:
+        return
+    
+    page_id = page["id"]
+    props = page.get("properties", {})
+    current_dedup_flag = None
+    
+    # Extraer valor actual de Dedup_Flag
+    dedup_field = props.get(dedup_flag_prop, {})
+    if dedup_field.get("type") == "select":
+        current_dedup_flag = (dedup_field.get("select") or {}).get("name", "")
+    
+    # Solo actualizar si no tiene el valor correcto
+    if current_dedup_flag != "Posible duplicado":
+        try:
+            notion_utils.pages.update(
+                page_id=page_id,
+                properties={dedup_flag_prop: {"select": {"name": "Posible duplicado"}}}
+            )
+            print(f"  🏷️  Dedup_Flag asignado: 'Posible duplicado' ({page_id[:8]}...)")
+        except Exception as exc:
+            print(f"  ⚠️  Error asignando Dedup_Flag para {page_id[:8]}: {exc}")
+
+
 def dedup_cross_layer(
     record: dict,
     notion_utils: Client,
@@ -518,6 +560,7 @@ def dedup_cross_layer(
         existing = query_notion_db(notion_utils, filter_body=filt, schema=schema)
         if existing:
             _upgrade_layer_if_needed(existing[0], incoming_layer, notion_utils, schema)
+            _set_dedup_flag_if_needed(notion_utils, existing[0], schema)
             return True
 
     apply_url = record.get("apply_url") or ""
@@ -529,6 +572,7 @@ def dedup_cross_layer(
         )
         if url_matches:
             _upgrade_layer_if_needed(url_matches[0], incoming_layer, notion_utils, schema)
+            _set_dedup_flag_if_needed(notion_utils, url_matches[0], schema)
             return True
 
     brand = record.get("brand") or record.get("brand_raw") or ""
@@ -561,6 +605,7 @@ def dedup_cross_layer(
     ]
     if recent:
         _upgrade_layer_if_needed(recent[0], incoming_layer, notion_utils, schema)
+        _set_dedup_flag_if_needed(notion_utils, recent[0], schema)
         return True
     return False
 
@@ -591,6 +636,7 @@ def dedup_by_content_fingerprint(
         existing = query_notion_db(notion_utils, filter_body=filt, schema=schema)
         if existing:
             _upgrade_layer_if_needed(existing[0], incoming_layer, notion_utils, schema)
+            _set_dedup_flag_if_needed(notion_utils, existing[0], schema)
             return True
     
     # Fallback: búsqueda por brand + title + location normalizados
@@ -633,6 +679,7 @@ def dedup_by_content_fingerprint(
         
         if existing_brand == brand and existing_title == title and existing_location == location:
             _upgrade_layer_if_needed(row, incoming_layer, notion_utils, schema)
+            _set_dedup_flag_if_needed(notion_utils, row, schema)
             return True
     
     return False

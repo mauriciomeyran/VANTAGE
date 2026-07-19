@@ -55,6 +55,7 @@ class ArchiveCandidate:
     url: str
     next_action: str
     dedup_flag: str
+    gate_decision: str
     reason: str
 
 
@@ -111,8 +112,10 @@ def query_archive_candidates(
     Busca páginas en VANTAGE TRACKER con:
     - Next_Action='Archivar'
     - Dedup_Flag='Posible duplicado'
+    - Gate_Decision != 'APPLIED' (PROTECCIÓN ACTIVA)
     """
     candidates = []
+    protected_active = []
     
     # First, get the database schema to understand property names
     # VANTAGE uses data_sources API instead of standard databases API
@@ -125,9 +128,10 @@ def query_archive_candidates(
         print(f"❌ Error obteniendo schema de data_source: {exc}")
         return candidates
     
-    # Find property names for Next_Action and Dedup_Flag
+    # Find property names for Next_Action, Dedup_Flag and Gate_Decision
     next_action_prop = None
     dedup_flag_prop = None
+    gate_decision_prop = None
     
     print(f"🔍 Propiedades disponibles en DB: {list(properties.keys())[:10]}...")
     
@@ -137,6 +141,8 @@ def query_archive_candidates(
             next_action_prop = prop_name
         if prop_name == "Dedup_Flag":
             dedup_flag_prop = prop_name
+        if prop_name == "Gate_Decision":
+            gate_decision_prop = prop_name
     
     if not next_action_prop:
         print("⚠️  No se encontró propiedad Next_Action en la DB")
@@ -146,10 +152,15 @@ def query_archive_candidates(
         print("⚠️  No se encontró propiedad Dedup_Flag en la DB")
         return candidates
     
+    if not gate_decision_prop:
+        print("⚠️  No se encontró propiedad Gate_Decision en la DB")
+        return candidates
+    
     print(f"🔍 Buscando candidatos con {next_action_prop}='Archivar' y {dedup_flag_prop}='Posible duplicado'")
+    print(f"🔍 EXCLUYENDO registros con {gate_decision_prop}='APPLIED' (PROTECCIÓN ACTIVA)")
     
     # Query for pages matching the criteria
-    # Next_Action is rich_text, Dedup_Flag is select
+    # Next_Action is rich_text, Dedup_Flag is select, Gate_Decision is select
     filter_body = {
         "and": [
             {
@@ -159,6 +170,10 @@ def query_archive_candidates(
             {
                 "property": dedup_flag_prop,
                 "select": {"equals": "Posible duplicado"}
+            },
+            {
+                "property": gate_decision_prop,
+                "select": {"does_not_equal": "APPLIED"}
             }
         ]
     }
@@ -180,6 +195,23 @@ def query_archive_candidates(
             url = _extract_text_prop(page, "apply_url") or _extract_text_prop(page, "URL") or ""
             next_action = _extract_text_prop(page, next_action_prop)
             dedup_flag = _extract_text_prop(page, dedup_flag_prop)
+            gate_decision = _extract_text_prop(page, gate_decision_prop)
+            
+            # PROTECCIÓN ACTIVA: Si Gate_Decision == 'APPLIED', no archivar bajo ninguna circunstancia
+            if gate_decision == "APPLIED":
+                protected_active.append({
+                    "page_id": page_id,
+                    "title": title,
+                    "brand": brand,
+                    "url": url,
+                    "next_action": next_action,
+                    "dedup_flag": dedup_flag,
+                    "gate_decision": gate_decision
+                })
+                print(f"  🛡️  PROTEGIDO (APPLIED): {title[:50]} @ {brand}")
+                print(f"      Page ID: {page_id}")
+                print(f"      Gate_Decision: '{gate_decision}' - NO SE ARCHIVARÁ")
+                continue
             
             candidate = ArchiveCandidate(
                 page_id=page_id,
@@ -188,7 +220,8 @@ def query_archive_candidates(
                 url=url,
                 next_action=next_action,
                 dedup_flag=dedup_flag,
-                reason="Auto-archive: Next_Action=Archivar + Dedup_Flag=Posible duplicado"
+                gate_decision=gate_decision,
+                reason="Auto-archive: Next_Action=Archivar + Dedup_Flag=Posible duplicado + Gate_Decision!=APPLIED"
             )
             candidates.append(candidate)
             
@@ -197,9 +230,17 @@ def query_archive_candidates(
             print(f"      Page ID: {page_id}")
             print(f"      Next_Action: '{next_action}'")
             print(f"      Dedup_Flag: '{dedup_flag}'")
+            print(f"      Gate_Decision: '{gate_decision}'")
             
     except Exception as exc:
         print(f"❌ Error consultando candidatos: {exc}")
+    
+    # Reportar registros protegidos con aplicación activa
+    if protected_active:
+        print(f"\n🛡️  REGISTROS PROTEGIDOS (Gate_Decision=APPLIED): {len(protected_active)}")
+        print("   Estos registros NO serán archivados por tener aplicación activa:")
+        for protected in protected_active:
+            print(f"   - {protected['title'][:50]} @ {protected['brand']} (ID: {protected['page_id'][:8]}...)")
     
     return candidates
 
@@ -218,6 +259,7 @@ def archive_page(
         print(f"  [DRY RUN] Archivar: {candidate.title[:50]} @ {candidate.brand}")
         print(f"            URL: {candidate.url[:80]}")
         print(f"            Page ID: {candidate.page_id[:8]}...")
+        print(f"            Gate_Decision: {candidate.gate_decision}")
         return True
     
     # Implementación real de archivado
@@ -240,11 +282,12 @@ def archive_page(
     else:
         month_page_id = month_page["id"]
     
-    # 2. Mover la página al archivo (cambiar parent)
+    # 2. Mover la página al archivo (cambiar parent + archived: true)
     try:
         notion.pages.update(
             page_id=candidate.page_id,
             parent={"page_id": month_page_id},
+            archived=True,
         )
         print(f"  ✅ Archivado: {candidate.title[:50]} @ {candidate.brand}")
         return True
