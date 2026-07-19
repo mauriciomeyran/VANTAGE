@@ -32,7 +32,6 @@ Archivos afectados:
 - Layer_4/scripts/vsync_doc.py (canonización documental v8.5.5)
 - Documentación/ACTIVE/*.md (bloqueo físico read-only)
 IDs afectados: ninguna alta/baja de ID canónico — parche de seguridad bajo código existente, sin cambios en schema de Notion.
----
 ### v9.5.8 — KERNEL:SKILL-ANNOUNCE-CONVENTION (R-12b) · 2026-07-19
 Tipo: [DOC]
 Descripción:

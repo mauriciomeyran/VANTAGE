@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-vsync_doc.py — VANTAGE v8.5.5 (LAYER 4)
+vsync_doc.py — VANTAGE v8.5.6 (LAYER 4)
 - BASE_DIR = .../ACTIVE (version-agnostic)
 - Usa .venv de Layer_1
 - Fetch con httpx (fix NoneType)
@@ -10,9 +10,10 @@ vsync_doc.py — VANTAGE v8.5.5 (LAYER 4)
 - FIX: bloques code > 2000 chars truncados en chunks de párrafo (Notion API limit)
 - v8.5.5: REMOVED --direction local (ACTIVE LOCAL es read-only, Notion es única fuente de verdad)
 - v8.5.5: Auto mode ahora solo permite notion→local, local→notion deshabilitado
+- v8.5.6: FIX Permission handling — _make_writable() y _restore_permissions() para manejar archivos read-only
 """
 
-import sys, os, argparse, time, hashlib, json
+import sys, os, argparse, time, hashlib, json, stat
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -71,6 +72,27 @@ def _load_manifest() -> dict:
 
 def _save_manifest(manifest: dict):
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+
+def _make_writable(file_path: Path) -> int:
+    """Hace el archivo temporalmente writable y retorna los permisos originales."""
+    if not file_path.exists():
+        return 0o644  # Default permissions for new files
+    original_mode = file_path.stat().st_mode
+    try:
+        file_path.chmod(0o644)  # rw-r--r--
+        return original_mode
+    except Exception as e:
+        print(f"  ⚠️  No se pudo hacer writable {file_path.name}: {e}")
+        return original_mode
+
+def _restore_permissions(file_path: Path, original_mode: int):
+    """Restaura los permisos originales del archivo."""
+    if not file_path.exists():
+        return
+    try:
+        file_path.chmod(original_mode)
+    except Exception as e:
+        print(f"  ⚠️  No se pudo restaurar permisos de {file_path.name}: {e}")
 
 def _decide(key, local_text, notion_text, manifest):
     """Decide direccion via hash, no mtime. Retorna: 'local->notion' | 'notion->local' | 'noop' | 'conflict'"""
@@ -370,7 +392,7 @@ def main():
     args = p.parse_args()
     targets = {args.doc: DOCS[args.doc]} if args.doc else DOCS
 
-    print(f"\nvsync_doc v8.5.5 L4 → ACTIVE  [{args.direction.upper()}]{' DRY' if args.dry_run else ''}")
+    print(f"\nvsync_doc v8.5.6 L4 → ACTIVE  [{args.direction.upper()}]{' DRY' if args.dry_run else ''}")
     print("⚠️  DOCUMENTACIÓN ACTIVE LOCAL ES READ-ONLY — NOTION ES ÚNICA FUENTE DE VERDAD\n")
 
     for k, d in targets.items():
@@ -410,7 +432,9 @@ def main():
 
         if args.direction == "notion":
             local.parent.mkdir(parents=True, exist_ok=True)
+            original_mode = _make_writable(local)
             local.write_text(md, encoding="utf-8")
+            _restore_permissions(local, original_mode)
             print(f"  ✓ {d['label']:<30} notion→local")
 
         elif args.direction == "local":
@@ -434,7 +458,9 @@ def main():
                 continue
             else:  # notion->local
                 local.parent.mkdir(parents=True, exist_ok=True)
+                original_mode = _make_writable(local)
                 local.write_text(md, encoding="utf-8")
+                _restore_permissions(local, original_mode)
                 manifest[k] = _hash(md)
                 _save_manifest(manifest)
                 print(f"  ✓ {d['label']:<30} notion→local (auto)")
