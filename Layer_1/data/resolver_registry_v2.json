@@ -46,7 +46,8 @@
     "TRACKER":   "596938be-fc42-836b-aea7-814a1491bd47",
     "SP":        "37b938be-fc42-8001-9b9b-fcf81130d274",
     "ALIASES":   "37c938be-fc42-80d4-b9ae-f5969830331b",
-    "CHANGELOG": "390938be-fc42-80e7-b429-d7d730339353"
+    "CHANGELOG": "390938be-fc42-80e7-b429-d7d730339353",
+    "CHANGELOG_ARCHIVE": "39d938be-fc42-801c-94f6-f11bfe803633"
   },
 
   "known_pitfalls": {

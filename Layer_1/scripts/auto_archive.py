@@ -192,15 +192,11 @@ def query_archive_candidates(
             )
             candidates.append(candidate)
             
-            # Debug: mostrar detalles completos del candidato
-            print(f"  🔍 DEBUG - Candidato #{len(candidates)}:")
+            # Mostrar detalles del candidato
+            print(f"  📋 Candidato: {title[:50]} @ {brand}")
             print(f"      Page ID: {page_id}")
             print(f"      Next_Action: '{next_action}'")
             print(f"      Dedup_Flag: '{dedup_flag}'")
-            print(f"      Título: '{title}'")
-            print(f"      Marca: '{brand}'")
-            print(f"      Source_Type: '{_extract_text_prop(page, 'Source_Type ')}'")
-            print(f"      Status: '{_extract_text_prop(page, 'Status')}'")
             
     except Exception as exc:
         print(f"❌ Error consultando candidatos: {exc}")
