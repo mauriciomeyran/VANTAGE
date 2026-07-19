@@ -1,5 +1,53 @@
 # V | CHANGELOG
 
+---
+### v9.5.8 — KERNEL:SKILL-ANNOUNCE-CONVENTION · 2026-07-19
+Tipo: [DOC]
+Descripción:
+Actualización de la tabla "Implementación actual" en KERNEL:SKILL-ANNOUNCE-CONVENTION para incluir 5 nuevos skills:
+- vantage-create-bug-task (TICKETING.../TICKET CREADO o TICKETS CREADOS si es batch)
+- vantage-present-handoff (HANDING OFF.../HANDOFF ENTREGADO)
+- vantage-tidy-changelog (LOGGING CHANGES.../CHANGELOG ACTUALIZADO)
+- vantage-tidy-bug-task-tracker (SWEEPING TICKETS.../TICKETS AL DÍA)
+- vantage-tidy-opportunities-tracker (DEDUPING TRACKER.../TRACKER SINCRONIZADO)
+Contexto:
+- Regla de mantenimiento: Según KERNEL:SKILL-ANNOUNCE-CONVENTION, cualquier cambio en la convención debe listar el Kernel y cada .skill afectado en el mismo alcance.
+- Consistencia: Todos los skills siguen el formato X-ING.../X-ED (o equivalente), alineado con la filosofía de evitar ambigüedad de alcance (ver Changelog v9.5.0–v9.5.1).
+Criterios de aceptación:
+| # | Criterio | Estado |
+| --- | --- | --- |
+| 1 | Texto en KERNEL:SKILL-ANNOUNCE-CONVENTION actualizado con los 9 skills. | ✅ |
+| 2 | Mensajes de inicio/cierre de los nuevos skills coinciden con lo declarado en sus archivos .skill. | ⏳ Pendiente validación |
+| 3 | Entrada en Changelog registrada con formato canónico. | ⏳ Pendiente aplicación |
+Archivos afectados:
+- V | KERNEL (sección KERNEL:SKILL-ANNOUNCE-CONVENTION)
+- [V | CHANGELOG](https://app.notion.com/p/390938befc4280e7b429d7d730339353) (esta entrada)
+- Archivos .skill de los 5 nuevos skills (validación pendiente).
+### v9.5.7 — 2026-07-19
+Alcance: Cierre de Fase C de la auditoría de skills VANTAGE (R-06b, R-13, R-15, R-08b) + formalización de tag canónico en Kernel.
+Kernel: KERNEL:CENSUS-SYNC §20, Regla 1 — formalizado el tag literal [CENSUS-SYNC-R1] como referencia canónica que cualquier skill debe citar textualmente al referenciar esta obligación, en vez de paráfrasis libres por skill (cierra R-13).
+Infraestructura (Layer_1/, local): resolver_registry_v2.json — nueva entrada CHANGELOG_ARCHIVE en document_registry, resolviendo al UUID del Archivo Changelog. generate_census.py y normalize_heading_ids.py — VALID_PREFIXES extendida con CHANGELOG_ARCHIVE: en ambos scripts, cerrando el gap donde el Registry reconocía el alias pero el resto del pipeline lo hubiera rechazado como prefijo inválido (cierra R-06b).
+Skills (vantage-tidy-changelog, vantage-tidy-bug-task-tracker, vantage-tidy-opportunities-tracker, vantage-create-bug-task): migración de los 2 UUIDs hardcodeados del Changelog a notación CHANGELOG:/CHANGELOG_ARCHIVE: en vantage-tidy-changelog (R-06b); tag [CENSUS-SYNC-R1] citado en vez de string libre en vantage-create-bug-task y vantage-tidy-bug-task-tracker (R-13); referencias posicionales ("Skill N") reemplazadas por nombres reales de archivo en los 5 skills — incluye una corrección de contenido real: la obligación de Regla 1 de CENSUS-SYNC se atribuía incorrectamente a vantage-tidy-changelog en vez de vantage-create-bug-task (R-15); manejo explícito de fallo parcial en operaciones multi-paso (append+edición en vantage-tidy-changelog, crear-copia+marcar-original en vantage-tidy-opportunities-tracker) — estado intermedio documentado como recuperable, sin reintentar el paso ya exitoso (R-08b).
+Write-Back Verification: re-fetch de Kernel tras la escritura de §20 — sin mismatch, tag y línea de referencia cruzada confirmados verbatim.
+Census: regenerado en Terminal por el operador — 120/120 IDs resueltos, 0 huérfanos, 0 sin link.
+IDs afectados: ninguna alta de ID canónico nuevo — [CENSUS-SYNC-R1] es un tag de referencia cruzada dentro de Regla 1 existente, no un ID PREFIX:CLAVE nuevo del DOC-CONTRACT; el Census no lo indexa como entidad, comportamiento confirmado correcto en la regeneración de esta entrada.
+Discrepancia detectada (SP:CONSISTENCY): al inicio de esta sesión, SYSTEM PROMPT e ID CENSUS reportaban v9.5.5 vía notion-fetch, un paso atrás de la versión real del Changelog (v9.5.6, ya escrita en la entrada anterior a esta). Causa no diagnosticada en esta sesión — posible verify_versions.py --sync no corrido tras v9.5.6, o drift de caché de fetch. Pendiente investigar antes de asumir que el próximo --sync corrige automáticamente el origen del drift, no solo el síntoma.
+Pendiente (fuera de esta entrada): R-12b — actualizar KERNEL:SKILL-ANNOUNCE-CONVENTION §3 para incluir los 5 skills de housekeeping en la tabla "Implementación actual"; Fase D — patch a KERNEL:GATE-DECISION-003 punto 6 (DRY RUN debe reconstruirse, ya no vive en contexto activo); diagnóstico de la causa raíz del drift de versión SP/Census vs. Changelog señalado arriba.
+Versión actualizada: 9.5.7 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.5.5/v9.5.6 (discrepancia ya señalada arriba) hasta que el operador corra verify_versions.py --sync.
+---
+### v9.5.6 — 2026-07-18
+Alcance: Segunda vuelta de fixes técnicos ejecutados por Devin: Auto-Archivado (Bug Crítico, CERRADO), JD Null Audit (Bug Medio, causa raíz identificada, requiere task nuevo), Normalize URL (verificación de regresión, sin cambios).
+Contexto: Continuidad de v9.5.5. El operador dio el prompt final a Devin con 3 objetivos, corrigiéndolo previamente para usar la condición real de Gate (KERNEL:GATE-DECISION-007) en vez de una condición inventada, separar dry-run de execute con gate de aprobación explícita, y evitar reimplementar el fix de Normalize URL ya resuelto en v9.5.3.
+Cambios:
+- Auto-Archivado (Bug Tracker, CERRADO): Devin confirmó uso correcto de NOTION_TOKEN desde el entorno (auto_archive.py línea 39). Dry-run confirmó los mismos 2 candidatos ya validados en v9.5.4 (Promotwist SC y Zegna, mismos Page IDs), sin candidatos nuevos ni inesperados. Aprobación explícita del operador (APROBAR_WRITE) antes de execute. Ejecución real: página mensual 2026-07 JULY creada, ambos registros archivados sin errores.
+- JD Null Audit (Bug Medio, hallazgo estructural — NO cerrado): Devin descartó la ruta asumida en el prompt (Layer_2/wrappers/) y confirmó vía find que no existe un directorio de código Layer_2 separado — aclaración del operador: Layer 2 es una capa metodológica, no de código (búsquedas vía Perplexity+Comet en LinkedIn/Aggregators/Career Sites), y comparte el mismo núcleo operativo que Layer 1 (los scripts en Layer_1/scripts/). Esto es consistente con el schema real de Notion — tanto Bug Tracker como Tasks Tracker ya tenían "Layer 2" como opción de select en Componente antes de esta sesión, y el Tracker de vacantes tiene un campo layer con opciones L1/L2/L3. Causa raíz real: layer_1_run.py (validate_url_pre_ingestion()) y feed_processor.py (_first_nonempty()) solo consumen el campo JD ya vacío — el problema está en los prompts/flujos de discovery (A-Gemini, A-Grok, A-You.com para L1; Perplexity+Comet para L2), que no extraen el JD del HTML/resultado.
+- Normalize URL (verificación de regresión, sin cambios de código): confirmado que el fix de v9.5.3 sigue vigente en feed_processor.py línea 238 — implementación real es path = parsed.path.rstrip("/").lower() or "/" (más completa que la descripción original de v9.5.3, que solo mencionaba .lower(); se deja constancia aquí para que el registro histórico sea exacto). 7/7 tests de regresión pasan, verificado contra datos reales de Notion (Electrónica Confidencial, hashes idénticos), sin duplicados fantasma detectados.
+Task nuevo (Tasks Tracker): "Auditar scripts de discovery upstream (you.com/Grok/LinkedIn) — job_description llega NULL en algunos registros" (3a1938be-fc42-8172-bcbc-cd8e8cf2ec81), Componente: Layer 1, Next_Action: Definir, Prioridad: MEDIO, Status: Pendiente.
+Write-Back Verification: Task nuevo confirmado por respuesta de la API de creación, sin mismatch. No se tocó ningún documento fundacional en esta entrada más allá de este Changelog.
+IDs afectados: ninguno nuevo en los fundacionales — el hallazgo de Layer 2 como capa metodológica (no de código) queda documentado aquí pero no dispara alta en Kernel; queda como candidato a documentación transversal si el operador decide formalizarlo en KERNEL:ARCHITECTURE. Census no requiere regeneración.
+Pendiente (fuera de esta entrada): ejecutar el task nuevo de auditoría de discovery upstream; decisión del operador sobre si formalizar la distinción L1/L2 (metodología, mismo núcleo de código) en el Kernel vía vantage-documentacion-transversal; pendientes heredados de v9.5.4 (cross_tracker_match.py Caso 3, decisión sobre Dedup_Flag en SCHEMA-001).
+Versión actualizada: 9.5.6 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.5.5 hasta que el operador corra verify_versions.py --sync.
+---
 ### v9.5.5 — 2026-07-18
 Alcance: Fix de generate_census.py (Layer_1/scripts/, no fundacional) — alta en spec de 2 IDs huérfanos detectados en Kernel §9 y corrección de 1 ID mal declarado en spec (Bootstrap).
 Contexto: Continuidad de v9.5.4. El re-run de vcensus tras el alta de KERNEL:GATE-DECISION-007/-008 (documentada en v9.5.4) reportó ambos IDs como huérfanos — existían en el Kernel real pero no en CENSUS_SPEC del script, confirmando que la Regla 2 de KERNEL:CENSUS-SYNC seguía pendiente de cierre. En el mismo diagnóstico se detectó un segundo defecto no relacionado: CENSUS_SPEC declaraba KERNEL:BOOTSTRAP-001, un ID que nunca existió con ese nombre exacto en el Kernel — el ID real es KERNEL:ARCHITECTURE-L0-BOOTSTRAP (§3), verificado por fetch en vivo antes de tocar el script.

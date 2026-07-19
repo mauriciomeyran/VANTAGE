@@ -80,14 +80,15 @@ TASKS TRACKER (DB)................d2a65ca1-6a35-465d-bcff-b0d82dddd549
 TASKS TRACKER (COL)...............aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8
 ARCHIVO TASK TRACKER (DB).........c2698a3e-50c8-4d92-a2a1-756d9aaed2d2
 ARCHIVO TASK TRACKER (COL)........c470ead7-465b-4375-9469-c48534559657
+ARCHIVO BUG TRACKER (DB)..........38b938be-fc42-8047-b820-d98f74c9d78b
+ARCHIVO BUG TRACKER (COL).........9ef938be-fc42-831b-a2d6-874bd22b7990
+ARCHIVO CHANGELOG.................39d938be-fc42-801c-94f6-f11bfe803633
 ALIASES...........................37c938be-fc42-80d4-b9ae-f5969830331b
 CHANGE LOG........................390938be-fc42-80e7-b429-d7d730339353
 VERSION MANIFEST (DB).............02331706-d2f5-43d1-8166-ed53b690dbd7
 SESSION LEDGER (DB)................38324240-c686-47d0-8082-cee5e4409f88
 FIGMA SYNC........................04-Vantage_CV/Figma Sync/
 ARCHIVO SCRIPT LIBRARY (DS)........39f938be-fc42-80ec-8f2e-000b16d736e2
-
-ARCHIVO BUG TRACKER (DB)………….→ 9ef938be-fc42-831b-a2d6-874bd22b7990
 ---
 ## ID: KERNEL:SCOPE
 Consultar KERNEL:SCOPE en el Technical Kernel.
