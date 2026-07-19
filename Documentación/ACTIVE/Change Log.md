@@ -1,28 +1,31 @@
 # V | CHANGELOG
 
 ---
-### v9.5.8 — KERNEL:SKILL-ANNOUNCE-CONVENTION · 2026-07-19
+### v9.5.8 — KERNEL:SKILL-ANNOUNCE-CONVENTION (R-12b) · 2026-07-19
 Tipo: [DOC]
 Descripción:
-Actualización de la tabla "Implementación actual" en KERNEL:SKILL-ANNOUNCE-CONVENTION para incluir 5 nuevos skills:
-- vantage-create-bug-task (TICKETING.../TICKET CREADO o TICKETS CREADOS si es batch)
-- vantage-present-handoff (HANDING OFF.../HANDOFF ENTREGADO)
-- vantage-tidy-changelog (LOGGING CHANGES.../CHANGELOG ACTUALIZADO)
-- vantage-tidy-bug-task-tracker (SWEEPING TICKETS.../TICKETS AL DÍA)
-- vantage-tidy-opportunities-tracker (DEDUPING TRACKER.../TRACKER SINCRONIZADO)
+Actualización de la tabla "Implementación actual" en KERNEL:SKILL-ANNOUNCE-CONVENTION para incluir los 5 skills de housekeeping (R-12b, pendiente heredado de v9.5.7). Los verbos se tomaron por lectura directa de los 5 archivos .skill reales subidos por el operador en esta sesión — no de una sesión anterior que había escrito una primera versión de esta misma entrada con verbos incorrectos (no verificados contra los archivos reales, ver Incidente abajo):
+- vantage-create-bug-task (LOGGING TICKET.../TICKET LOGGED)
+- vantage-present-handoff (HANDING OFF.../HANDOFF DELIVERED)
+- vantage-tidy-changelog (TIDYING CHANGELOG.../CHANGELOG TIDIED)
+- vantage-tidy-bug-task-tracker (TIDYING TRACKER.../TRACKER TIDIED)
+- vantage-tidy-opportunities-tracker (TIDYING OPPORTUNITIES.../OPPORTUNITIES TIDIED)
+Incidente de proceso (honestidad estructural): una sesión anterior ya había escrito esta tabla con verbos distintos a los reales (TICKETING/TICKET CREADO, LOGGING CHANGES/CHANGELOG ACTUALIZADO, SWEEPING TICKETS/TICKETS AL DÍA, DEDUPING TRACKER/TRACKER SINCRONIZADO), afirmando haberlos tomado "verbatim de las últimas versiones aprobadas" sin haber hecho grep/lectura directa de los .skill.md antes de proponerlos. El error persistió sin detectarse porque la sesión nunca recibió confirmación explícita de APROBAR_WRITE en el hilo compartido revisado, y por separado circuló un DRY RUN incompleto (bloques BEFORE/AFTER vacíos) hacia un revisor externo (Mistral). Detectado y corregido en esta sesión mediante fetch en vivo del Kernel + lectura directa de los 5 .skill reales adjuntos al chat.
 Contexto:
 - Regla de mantenimiento: Según KERNEL:SKILL-ANNOUNCE-CONVENTION, cualquier cambio en la convención debe listar el Kernel y cada .skill afectado en el mismo alcance.
 - Consistencia: Todos los skills siguen el formato X-ING.../X-ED (o equivalente), alineado con la filosofía de evitar ambigüedad de alcance (ver Changelog v9.5.0–v9.5.1).
+Write-Back Verification: re-fetch de Kernel tras la escritura de corrección — sin mismatch, los 5 verbos confirmados verbatim contra los .skill reales.
 Criterios de aceptación:
 | # | Criterio | Estado |
 | --- | --- | --- |
 | 1 | Texto en KERNEL:SKILL-ANNOUNCE-CONVENTION actualizado con los 9 skills. | ✅ |
-| 2 | Mensajes de inicio/cierre de los nuevos skills coinciden con lo declarado en sus archivos .skill. | ⏳ Pendiente validación |
-| 3 | Entrada en Changelog registrada con formato canónico. | ⏳ Pendiente aplicación |
+| 2 | Mensajes de inicio/cierre de los nuevos skills coinciden con lo declarado en sus archivos .skill. | ✅ Verificado por lectura directa de los 5 .skill reales |
+| 3 | Entrada en Changelog registrada con formato canónico. | ✅ |
 Archivos afectados:
 - V | KERNEL (sección KERNEL:SKILL-ANNOUNCE-CONVENTION)
-- [V | CHANGELOG](https://app.notion.com/p/390938befc4280e7b429d7d730339353) (esta entrada)
-- Archivos .skill de los 5 nuevos skills (validación pendiente).
+- [V | CHANGELOG](https://app.notion.com/p/390938befc4280e7b429d7d730339353) (esta entrada, corregida)
+IDs afectados: ninguna alta/baja de ID canónico — corrección de contenido bajo KERNEL:SKILL-ANNOUNCE-CONVENTION, ya existente. Census no requiere regeneración.
+Pendiente (fuera de esta entrada): Fase D — patch a KERNEL:GATE-DECISION-003 punto 6 (DRY RUN debe reconstruirse); diagnóstico de la causa raíz del drift de versión SP/Census vs. Changelog señalado en v9.5.7 (sigue sin diagnosticar).
 ### v9.5.7 — 2026-07-19
 Alcance: Cierre de Fase C de la auditoría de skills VANTAGE (R-06b, R-13, R-15, R-08b) + formalización de tag canónico en Kernel.
 Kernel: KERNEL:CENSUS-SYNC §20, Regla 1 — formalizado el tag literal [CENSUS-SYNC-R1] como referencia canónica que cualquier skill debe citar textualmente al referenciar esta obligación, en vez de paráfrasis libres por skill (cierra R-13).
