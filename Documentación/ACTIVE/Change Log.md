@@ -1,13 +1,71 @@
 # V | CHANGELOG
 
+v9.6.6 — [2026-07-20] — ORQUESTACIÓN ESTRUCTURAL Y NAVEGACIÓN
+1. Integración Documental (Navigation Brief)
+- Alcance: Formalización del Navigation Brief (ID: 3a3938be-...) como 8vo documento fundacional del ecosistema VANTAGE.
+- Gobernanza: Inclusión en SP:SYNC-RULE y KERNEL:CENSUS-SYNC. El documento queda sujeto a la Regla de Versión Única (bloqueante ante discrepancias de versión).
+- Versión: Asignada v9.6.5 de forma sincronizada con el resto de la suite.
+2. Reingeniería del Master Index
+- Sustitución de S.S.O.T.: Eliminación del Bloque 3 (Census Embebido) por redundancia con V:ID-CENSUS.
+- Estandarización:
+- Bloque 1: Suite de 8 fundacionales, sincronizados contra SP:CEDULA-DIGITAL v9.6.5.
+- Bloque 2: Actualización de trackers (Archivo Task, Bug, Changelog, Manifest, Ledger) con IDs de base de datos validados.
+- Propósito: El documento queda consolidado exclusivamente como Índice de Descubrimiento de activos y rutas.
+3. Normalización del ID Census
+- Expansión: Registro de 11 nuevos identificadores (BRIEF:001 al BRIEF:011) para las secciones del Navigation Brief.
+- Integridad: Verificación final mediante generate_census.py (v3.0) con resultado: 131/131 IDs resueltos, 0 huérfanos, 0 colisiones.
+4. Actualizaciones del Sistema de Supervisión
+- Scripting: Modificación profunda en verify_versions.py (DOC_KEYS extendido a 8 documentos + fallback BRIEF_FALLBACK_ID).
+- VANTAGE HUB (Página Principal): Implementación de supervisión pasiva (v9.0.1). El sistema ahora reporta el status en -sync y -bootstrap sin disparar bloqueos (veredicto tolerante al formato de propiedad "Versión ").
+- Cross-Referencing: Inyección masiva de hipervínculos normalizados en Kernel, Manual y System Prompt (apply_hyperlinks.py).
+5. Auditoría de Cierre
+- Verificación: verify_versions.py --sync reportó PASS en todos los documentos.
+- Pending validation: Se da por resuelta la entrada del Changelog v9.6.3 ("Pending Validation") al completarse la integración aquí descrita.
+### v9.6.5 — Marcado manual de duplicado (Multicont, jk rotativo Indeed) · 2026-07-20
+Tipo: [NOTA]
+Alcance: VANTAGE Tracker — 1 registro (39a938befc428135ba15eb001d21125e, "Supervisor Visual Merchandising", Multicont).
+Contexto: vopport (dedup_opportunities.py) reportó 3 grupos de posibles duplicados. Verificación manual (fetch directo de URLs completas, no solo el prefijo visible en terminal) confirmó 1 caso real (Multicont, mismo Marca/Score/Fuente/Layer, creados con 2s de diferencia — patrón de rotación de jk de Indeed) y descartó los otros 2 (Link-Worldwide: roles/URLs distintas; Confidencial: los dos links pagead divergen en el payload de tracking tras el prefijo compartido, son anuncios distintos).
+Decisión operativa: por instrucción explícita del operador, Dedup_Flag="Posible duplicado" se escribió directamente sobre el registro duplicado (39a938be...d21125e) fuera del flujo Python estándar — normalmente este campo es Class B, Python-only (KERNEL:CV-GOLDEN-RULES-002), y vantage-tidy-opportunities-tracker tiene prohibido escribirlo. Se documenta aquí como excepción puntual, no como cambio de regla: la restricción Python-only sigue vigente para el flujo automático.
+Pendiente: el registro queda con Dedup_Flag + Next_Action=Archivar ya poblados — calza la condición compuesta de auto_archive.py, así que debería resolverse en el próximo ciclo de archivado automático o en la próxima corrida de vantage-tidy-opportunities-tracker.
+IDs afectados: ninguno en documentos fundacionales — cambio de datos en el Tracker únicamente. Census no requiere regeneración.
+Versión actualizada: 9.6.5 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.6.4 hasta que el operador corra verify_versions.py --sync.
+---
+### v9.6.4 — Sincronización Masiva de Hipervínculos y Corrección de ID Fantasma · 2026-07-20
+Tipo: [DOC] [FIX]
+Alcance: KERNEL, MANUAL, SYSTEM PROMPT.
+Contexto: Aplicación quirúrgica de 116 hipervínculos (mapeo ID -> URL#anchor) para resolver el drift de navegación entre documentos fundacionales. Corrección del ID fantasma CAREER_CANON:OUTPUT-CONTRACT por el ID real CANON:OUTPUT-CONTRACT-001 en el Kernel.
+Cambios:
+- KERNEL: Reemplazo de ID fantasma en todas las apariciones. Hipervínculos aplicados en §1, §2, §3 y §9.
+- MANUAL: Hipervínculos vinculados en §1, §2, §3 y §6.
+- SYSTEM PROMPT: Hipervínculos vinculados en SP:BOOTSTRAP-001, SP:SYNC-RULE y KERNEL:CV-GOLDEN-RULES.
+- Verificación: Post-write fetch confirma integridad de bloques y persistencia de links.
+IDs afectados: CANON:OUTPUT-CONTRACT-001 (normalizado), CAREER_CANON:OUTPUT-CONTRACT (deprecado/eliminado).
+Versión actualizada: v9.6.4 (Propagación iniciada).
 ### v9.6.3 — Brief de Navegación Documental
-Componentes 1-3 Completados
-- Adoptado Mapa Dependencias v2 (5 dominios + transversales).
-- Adoptado Contrato Profundidad Mínima Verificación (niveles 0-4 + invariantes).
-- Adoptado Inventario Referencias Cruzadas + Documento Maestro consolidado (verificado contra Notion Ledger + repo).
-- Enriquecimiento: Fetch live Session Ledger + Brief. Sin discrepancias.
-Estado: PASS. Sistema listo para propagación a ACTIVE/ y siguiente ticket ALTO.
-Referencias: Documento Maestro v1.2, Kernel §1-23, Manual §1-21.
+### 1. Datos del Registro
+- Fecha: 2026-07-20
+- Componente Modificado: Gobernanza documental y arquitectura de navegación (VANTAGE)
+- Artefacto Creado / Actualizado: Navigation & Retrieval Contract (Versión v2.0)
+- Tipo de Impacto: Normativo, Navegación y Runtime.
+### 2. Evaluación de Impacto (Impact Assessment)
+- ¿Qué documentos pueden verse afectados?
+- Kernel (en términos de alineación de contratos de integridad).
+- Manual (actualización de rutas de recuperación).
+- System Prompt (incorporación de la obligatoriedad de navegación previa).
+- ¿Qué contratos deben verificarse?
+- Contrato de profundidad mínima de verificación (L0–L4).
+- Matriz de dependencias cruzadas y obligatoriedad de Impact Assessment.
+- ¿Es necesaria una actualización documental? Sí, formalización del Navigation Brief v2.0 como fuente única para enrutar consultas y modificaciones estructurales.
+- ¿Debe regenerarse algún artefacto de Runtime? No aplica directamente a este cambio documental, salvo la validación posterior en el inventario de IDs si se cruzan referencias nuevas.
+- ¿Debe ejecutarse una validación adicional? Sí, verificación cruzada de que los dominios críticos (Housekeeping, Core Assets, Discovery, Gate Logic, CV Pipeline) respondan inequívocamente al árbol de decisión documentado.
+- ¿Se requiere sincronización (vsync_doc, vversions, vcensus)?vsync_docvversionsvcensus Pendiente de validación final en el siguiente ciclo de mantenimiento de infraestructura documental.
+### 3. Acción Correctiva Ejecutada
+1. Consolidación de los tres componentes estructurales faltantes (Mapa de dependencias por dominio, Contrato de profundidad de verificación y Matriz de referencias/dependencias).
+1. Establecimiento del Navigation Decision Tree para eliminar ambigüedades en la recuperación de información.
+1. Incorporación del Closure Gate (ninguna modificación estructural se marca como cerrada sin su respectiva evaluación de impacto).
+### 4. Estado Final de la Validación
+- Estado: Pending Validation (sujeto a la ejecución de la sincronización de versiones del sistema).
+- Acción siguiente: Integración del identificador canónico en el ID Census y actualización del Master Index en la siguiente sesión de mantenimiento operativo.
 ### v9.6.2 — Fusión Check+Sync en verify_versions.py: verificación real post-escritura · 2026-07-19
 Tipo: [DOC] [INFRA]
 Alcance: Layer_1/scripts/verify_versions.py (local) + KERNEL:VERSION-CHECK-TOOL §23.
@@ -265,3 +323,36 @@ IDs afectados: ninguno en Notion todavía (pendiente KERNEL:DOCUMENTATION-TRANSV
 ---
 > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
 
+---
+### v9.6.5 — Integración del Navigation Brief como Fundacional #8 y Actualización del Master Index
+Tipo: [DOC] [INFRA]
+Alcance: Integración completa del Navigation Brief como el 8vo documento fundacional en el ecosistema VANTAGE, actualización del Master Index y sincronización del ID Census.
+Contexto:
+El Navigation Brief (v2.0) fue formalizado como la Fuente Única de Verdad (SSOT) para la navegación documental en VANTAGE, resolviendo la necesidad de un contrato claro para enrutar consultas y modificaciones estructurales. Este cambio eleva el Brief a la categoría de documento fundacional, alineado con el Kernel, Manual, Career Canon, System Prompt, Aliases, Change Log y ID Census.
+Cambios Ejecutados:
+1. Navigation Brief:
+- Inyección de 14 IDs de sección (BRIEF:001 a BRIEF:011) para alinear con el contrato de navegación y facilitar referencias cruzadas.
+- Versión actualizada a v9.6.5 y marcada como Fundacional #8.
+1. V-ID-CENSUS:
+- Registro de las nuevas entradas del Navigation Brief en el census de IDs.
+- Adición de la referencia al Brief en la tabla de IDs Frecuentes por Namespace (11 IDs, BRIEF:001 a BRIEF:011).
+1. Kernel/Manual/System Prompt:
+- Actualización de cross-refs para reflejar el nuevo estatus del Brief como 8vo fundacional (previamente 7).
+- Adición de KERNEL:GATE-DECISION-006 (§9.6) en el Kernel, completando la lógica de gates.
+1. Master Index:
+- Sustitución completa de los Bloques 1, 2 y 3 para incluir el Navigation Brief como documento fundacional.
+- Eliminación del Bloque 3 redundante (Census Embebido) y reestructuración para evitar duplicación con el V-ID-CENSUS.
+- Actualización de métricas: 109 IDs normalizados, 0 stubs, 0 colisiones.
+Validación:
+- verify_versions.py --sync ejecutado: 7/7 documentos PASS, veredicto final PASS.
+- vcensus regenerado: 109/109 IDs resueltos, 0 huérfanos.
+- Re-fetch de Kernel, Manual, System Prompt y Master Index: sin mismatches, contenido actualizado verbatim.
+IDs Afectados:
+- Nuevos: BRIEF:001 a BRIEF:011 (Navigation Brief), KERNEL:GATE-DECISION-006 (Kernel §9.6).
+- Modificados: KERNEL:DOC-CONTRACT (actualización de cross-refs a 8 fundacionales).
+Pendientes Cerrados:
+- Integración del Navigation Brief como fundacional.
+- Sincronización del Master Index con el nuevo esquema (8 documentos).
+- Adición de KERNEL:GATE-DECISION-006 en el Kernel.
+Versión Actualizada: v9.6.5 (todos los documentos fundacionales sincronizados).
+Estado: Completado/Validado.
