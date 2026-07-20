@@ -1,6 +1,6 @@
 --- a/Kernel.md
 +++ b/Kernel.md
-@@ -40,20 +40,20 @@
+@@ -87,20 +87,20 @@
  VANTAGE resuelve un problema de ingeniería de atención: en una búsqueda laboral sin estructura, las oportunidades de alta señal desaparecen antes de ser procesadas, mientras el tiempo se consume en vacantes de baja calidad.
  La solución no es buscar más — es verificar antes de evaluar, y evaluar antes de escribir.
  ### Invariantes del Sistema
@@ -27,7 +27,7 @@
  ### Qué Hace el Sistema Cuando Falla
  No intenta reparar outputs del sistema. No sugiere workarounds para entradas bloqueadas. No escala urgencia. Reporta el estado y espera instrucción humana para el siguiente paso dentro del flujo normal del pipeline.
  ### Excepción Documentada — Gate = BLOCKED
-@@ -70,27 +70,27 @@
+@@ -117,27 +117,27 @@
  ```plain text
  Notion (Source) → Runtime (Index + Resolver) → API Response → Pipeline (L1/L2/L3/CV)
  ```
@@ -60,7 +60,7 @@
  ```
  ### KERNEL:ARCHITECTURE-L1
  L1 — Active Recon
-@@ -122,7 +122,7 @@
+@@ -169,7 +169,7 @@
  - Alias: vgit · Corre en background a las 09:00 · 15:00 · 21:00.
  - Repo: github.com/mauriciomeyran/jhs-pipeline.
  - Reutiliza .venv de Layer_1.
@@ -69,7 +69,7 @@
  - Alias: vdoc · Flags: dry | notion | local | auto.
  - Flujo vdoc notion: lee Notion (safe_list vía httpx, 3 reintentos) → escribe ACTIVE/{doc}.md → auto-commit GitHub al terminar.
  - Dependencias: httpx · notion-client 3.x · .venv de Layer_1 · git_sync.py · Vive en: Layer_4/scripts/vsync_doc.py.
-@@ -164,11 +164,11 @@
+@@ -211,11 +211,11 @@
  ---
  ## §5 — KERNEL:SCHEMA
  ### Aclaración terminológica antes de empezar
@@ -83,7 +83,7 @@
  Valores operativos del campo Status (asignación manual del operador, no calculados por Python): Target · Postulado · Rechazado · Expirada · Archivar · Repetida (duplicado detectado en revisión manual, distinto de descarte por otras razones).
  Nota sobre JD: En el trigger CV-A, el AI Component cruza los keywords extraídos del JD contra el Career Canon activo antes de generar el HANDOFF. Discrepancias entre el JD y el Canon se reportan en fit_gaps — no se resuelven inventando experiencia ni contradiciendo el Canon.
  Class B — System-Primary: Python escribe; ningún otro componente toca: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente.
-@@ -225,7 +225,7 @@
+@@ -272,7 +272,7 @@
  Entradas en Status=Target o en proceso sin entrevista confirmada: la página puede estar vacía o contener solo notas de contexto. El template de entrevista se agrega cuando se confirma primera ronda.
  ---
  ## §6 — KERNEL:TRACKER-SCHEMA
@@ -92,7 +92,7 @@
  ### KERNEL:TRACKER-SCHEMA-001 — Alcance
  - Reactivo (algo roto) → Bug Tracker
  - Proactivo (trabajo/decisión pendiente) → Tasks Tracker
-@@ -252,11 +252,11 @@
+@@ -299,11 +299,11 @@
  - Condición de disparo: al menos un archivo supera el umbral.
  - Acción: subprocess a python3 vantage.py sync, cwd = SCRIPTS_DIR, timeout 120s.
  - Frecuencia: máximo una vez por corrida de health_check.py, solo si se cruzó el umbral — no re-sincroniza índices ya frescos.
@@ -108,7 +108,7 @@
  ---
  ## §8 — KERNEL:OWNERSHIP
  ### KERNEL:OWNERSHIP-001 — AI Component
-@@ -276,7 +276,7 @@
+@@ -323,7 +323,7 @@
  → Razón: Un contacto humano verificado tiene mayor señal que cualquier algoritmo
  ```
  ### KERNEL:GATE-DECISION-002 — Lógica Estándar
@@ -117,7 +117,7 @@
  Orden de evaluación (secuencial, no paralelo):
  1. URL_GATE — primer filtro, precede a cualquier cálculo de fit. Si el link está muerto o inaccesible → Score = 0, Status = Expirada. Sin excepciones.
  1. Score (0–100) — calculado por Python sobre VM_Scope, Role_Class y match de keywords VM en el JD.
-@@ -287,7 +287,7 @@
+@@ -334,7 +334,7 @@
  Nota: estos thresholds no son constantes editables en esta sección — viven en profile_config.yaml (pesos de scoring) y en el código de gate_logic. Esta sección documenta el contrato de orden y las reglas de decisión, no los valores numéricos exactos de scoring interno (Class B, propiedad de Python).
  ### KERNEL:GATE-DECISION-003 — Resolución de REVIEW_NEEDED
  ⚠️ ALCANCE DE GAP-03: El guard GAP-03 protege el pipeline Python (feed_processor.py → process_record()). Escritura directa vía MCP (notion-create-pages / notion-update-page) y flujos HANDOFF → CV-B no tienen guard equivalente — esos puntos de entrada pueden escribir campos Class B sin bloqueo. Estado: gap documentado, pendiente implementación de class_b_guard.py (FX-1 open).
@@ -126,7 +126,7 @@
  Esta mitigación es un guard de disciplina del AI Component (nivel prompt/proceso) — no es un guard de código. No reemplaza a class_b_guard.py; lo antecede mientras FX-1 permanece abierto.
  Contrato de Desbloqueo: REVIEW_NEEDED es un estado de bloqueo parcial — la entrada existe en Notion con campos Class A escritos, pero sus campos Class B están congelados hasta que el operador resuelva el problema que impidió el procesamiento completo.
  Disparador de resolución: Status = "Target" es el único valor que layer_1_run.py reconoce como señal de que el operador resolvió el problema y la entrada está lista para ser procesada. Cualquier otro valor de Status mantiene el bloqueo.
-@@ -305,12 +305,12 @@
+@@ -352,12 +352,12 @@
  ### KERNEL:GATE-DECISION-005 — Flujo de Recuperación BLOCKED
  Gate = BLOCKED no es estado terminal. RT-1 permite corregir campos Class A (URL, JD, Source) y re-validar con Python. Si el fix produce CREATE, el patch se escribe en Notion. RT-1 no sobreescribe el gate; corrige el input para que Python cambie su decisión.
  ### KERNEL:GATE-DECISION-006 — REJECTED (Post-Aplicación)
@@ -142,7 +142,7 @@
  ### KERNEL:GATE-DECISION-008 — Capas de Evaluación de Gate: Técnica vs. Negocio
  gate() (layer_1_run.py) y gate_logic() (gate_logic.py) son dos capas intencionalmente distintas, no duplicación de lógica:
  - gate() — capa técnica de evaluación. Toma parámetros individuales (fetch, vm_scope, role_class, source_type, rol, marca) y decide CREATE vs BLOCKED según condiciones técnicas puras. No maneja estados terminales ni workflows de aplicación.
-@@ -347,7 +347,7 @@
+@@ -394,7 +394,7 @@
  Si cualquier ítem retorna FAIL, el resultado final es NO-GO.
  ### KERNEL:TRIGGER-004 — DRY RUN
  Campos Permitidos: Op · Empresa · Rol · URL · Source_Type · Prioridad · Status.
@@ -151,7 +151,7 @@
  ### KERNEL:TRIGGER-005 — SYNC
  Formato de Output (≤12 líneas, sin excepción):
  ```plain text
-@@ -458,7 +458,7 @@
+@@ -505,7 +505,7 @@
  }
  ```
  Si cualquier campo está ausente, se solicita. El sistema no inventa valores para campos faltantes. Un HANDOFF incompleto no avanza a CV-B.
@@ -160,12 +160,9 @@
  Por Qué Son Dos Sesiones Separadas: CV-A es análisis estratégico — qué posicionar y cómo. CV-B es producción — el documento final. En una sesión única, el contexto de análisis contamina la voz del CV. La separación es una restricción de calidad, no de conveniencia.
  Regla de Orden de Experiencia: El orden de la experiencia profesional en todos los Derived Outputs es siempre cronológico descendente (más reciente primero). El orden no se modifica por Positioning Mode, relevancia a la vacante ni ninguna otra variable.
  > Orden canónico obligatorio: C01 → C02 → C03 → C04 → C05
-@@ -468,18 +468,18 @@
- - Input: HANDOFF completo de CV-A + Career Canon activo (notion.so/377938be-fc42-8089-93f2-f52dbd2dec6c).
- - Validation: AI Component verifica los 5 campos del HANDOFF antes de proceder.
+@@ -517,8 +517,8 @@
  - Canon check: AI Component valida que empresa, rol canónico, bullets y KPIs sean derivados del Career Canon — no inventados ni contradictorios con él. Cualquier desviación se reporta antes de escribir.
--CANON:OUTPUT-CONTRACT-001 — Skeleton vs Tag Registry: El Skeleton define la estructura visual, el orden de bloques y la secuencia obligatoria de contenido para CV-B. Los IDs numéricos exactos, tipos de slot, reglas de inyección y condición LOCKED/Variable viven en CANON:OUTPUT-CONTRACT-001 — Output Contract. (Este contrato completo vive íntegramente en el documento Career Canon; el Kernel lo referencia pero no lo reproduce — ver Huecos Detectados al final de este documento.)
-+[CANON:OUTPUT-CONTRACT-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42818190e0fbc29f4f8c5c) — Skeleton vs Tag Registry: El Skeleton define la estructura visual, el orden de bloques y la secuencia obligatoria de contenido para CV-B. Los IDs numéricos exactos, tipos de slot, reglas de inyección y condición LOCKED/Variable viven en [CANON:OUTPUT-CONTRACT-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42818190e0fbc29f4f8c5c) — Output Contract. (Este contrato completo vive íntegramente en el documento Career Canon; el Kernel lo referencia pero no lo reproduce — ver Huecos Detectados al final de este documento.)
+ Nota de Fuente de Verdad — Skeleton vs Tag Registry: El Skeleton define la estructura visual, el orden de bloques y la secuencia obligatoria de contenido para CV-B. Los IDs numéricos exactos, tipos de slot, reglas de inyección y condición LOCKED/Variable viven en CAREER_CANON:OUTPUT-CONTRACT §L — Output Contract. (Este contrato completo vive íntegramente en el documento Career Canon; el Kernel lo referencia pero no lo reproduce — ver Huecos Detectados al final de este documento.)
  Reglas operativas:
 -- KERNEL:CV-PIPELINE define la arquitectura de ejecución de CV-B.
 -- CANON:OUTPUT-CONTRACT-001 define el contrato exacto de Figma.
@@ -174,17 +171,7 @@
  - CV-B debe usar ambos al mismo tiempo.
  - El output final debe preservar un bloque ###### figma_text_id por cada slot del Skeleton/Tag Registry.
  - El orden del output debe coincidir con el Skeleton.
- - El significado de cada slot debe coincidir con el Tag Registry.
- - Si hay discrepancia entre Skeleton y Tag Registry, se debe detener la ejecución y solicitar reconciliación antes de producir F2.
- - El literal ###### figma_text_id no autoriza inventar, omitir, fusionar ni dividir slots. Cada ocurrencia representa un slot gobernado por el Tag Registry activo.
--CANON:OUTPUT-CONTRACT-001 (L1 Logic)
--- El componente AI no tiene permiso para “decidir” la estructura visual. Su única tarea es el mapping de información del Career Canon hacia un Skeleton predefinido en CANON:OUTPUT-CONTRACT-001.
-+[CANON:OUTPUT-CONTRACT-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42818190e0fbc29f4f8c5c) (L1 Logic)
-+- El componente AI no tiene permiso para “decidir” la estructura visual. Su única tarea es el mapping de información del Career Canon hacia un Skeleton predefinido en [CANON:OUTPUT-CONTRACT-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42818190e0fbc29f4f8c5c).
- - Invarianza Estructural: Cualquier optimización de CV debe ser una copia exacta del Skeleton en cuanto a número de headers y IDs, sustituyendo únicamente el contenido textual (payload).
- - Auditoría de Estructura: Antes de presentar el resultado final, validar: COUNT(figma_text_id)_SKELETON == COUNT(figma_text_id)_OUTPUT. Si los números no coinciden, abortar y re-mapear.
- - Auditoría de Secuencia: La auditoría de estructura no es suficiente si el count es correcto pero el orden está alterado. Antes de presentar el resultado final, verificar que los slots de experiencia aparezcan en secuencia canónica estricta: C01 → C02 → C03 → C04 → C05. Ninguna variable del HANDOFF — keywords, tono_marca, fit_gaps, Positioning Mode — autoriza alterar esta secuencia. Si el orden no coincide, abortar y re-mapear desde el Skeleton.
-@@ -487,11 +487,11 @@
+@@ -534,11 +534,11 @@
  - Post-autorización del operador: AI Component escribe el Markdown como contenido de la página de la vacante en Notion bajo encabezado # MARKDOWN CANON ALIGNED.
  - Output: Markdown con Figma tags en formato .md descargable → entrega a operador para Figma.
  - Post-aplicación: Status = Postulado → ~/vantage_pipeline.sh → Python marca APPLIED.
@@ -198,7 +185,7 @@
  Formato del stem:
  ```plain text
  {Año}_{Nombre}_{Apellido}_{Marca_normalizada}_{Vacante_normalizada}
-@@ -508,9 +508,9 @@
+@@ -555,9 +555,9 @@
  - 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM.md (CV-B, Figma tags)
  - 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM.pdf (export QA)
  - 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM.fig (si aplica, archivo Figma)
@@ -211,7 +198,7 @@
  ---
  ## §14 — KERNEL:CANON-UPDATE
  ### CANON-UPDATE
-@@ -523,8 +523,8 @@
+@@ -570,8 +570,8 @@
  - “Actualizar el perfil profesional en español e inglés.”
  - “Modificar Tag Registry porque cambió el Skeleton de Figma.”
  Contexto requerido: Para ejecutar CANON-UPDATE, el AI Component debe cargar:
@@ -222,7 +209,7 @@
  > Si el cambio afecta secciones no incluidas en Runtime, como Education, Certifications, Major Projects, Derived Outputs Archive o Changelog, el AI Component debe solicitar acceso explícito al CAREER_CANON.md original antes de proceder.
  Validación previa: Antes de modificar cualquier contenido, el AI Component debe identificar:
  1. Qué sección o secciones del Career Canon serán afectadas.
-@@ -556,13 +556,13 @@
+@@ -603,13 +603,13 @@
  Compatibilidad downstream: CV-A: PASS/FAIL · CV-B: PASS/FAIL · QA: PASS/FAIL.
  ---
  ## §15 — KERNEL:SCOPE / KERNEL:ROUTING — Economía de Contexto y Rutas de Carga
@@ -239,7 +226,7 @@
  - Triaje de ejecución: Antes de usar herramientas, aplicar: 1. Requerimientos, 2. Triaje de costos (A: Terminal, B: MCP, C: Upload), 3. Confirmación. Priorizar Opción A.
  ### KERNEL:ROUTING — Mecanismo Técnico de las Rutas MCP
  El principio de arriba se traduce operativamente así: para consultar lógica pesada, prioriza Terminal. Alternativamente, MCP puede utilizarse cuando:
-@@ -572,19 +572,19 @@
+@@ -619,19 +619,19 @@
  - Exista autorización posterior mediante APROBAR_WRITE cuando aplique.
  Ruta recomendada: python lazy_loader.py --page {KERNEL_MASTER} --route {ruta}
  Ruta permitida: MCP.
@@ -268,7 +255,7 @@
  ---
  ## §17 — KERNEL:EVOLUTION
  ### Evolución del Sistema
-@@ -601,7 +601,7 @@
+@@ -648,7 +648,7 @@
  - Ineficiencia probada con datos: bottleneck documentado en pipeline runs.
  - Violación de boundary entre capas: orchestration haciendo intelligence, sistema calculando campos Class B de forma sistemática.
  Cambios inválidos — condiciones que NO justifican modificación:
@@ -277,7 +264,7 @@
  - Ready-to-Apply vacío → los inputs de búsqueda necesitan ajuste, no el threshold.
  - Un dead link apareció → comportamiento normal de mercado, no falla de sistema.
  - Frustración temporal → el sistema funciona; los inputs necesitan revisión.
-@@ -614,7 +614,7 @@
+@@ -661,7 +661,7 @@
  ---
  ## §18 — KERNEL:DOC-CONTRACT
  ### Canonical Document ID Contract (DOC:CLAVE)
@@ -286,7 +273,7 @@
  Invariantes del Contrato
  - Formato Único: [PREFIX]:[KEY] (ej. MANUAL:SETUP).
  - Prefix Ownership: Cada prefijo mapea a una única página canónica en Notion.
-@@ -635,29 +635,29 @@
+@@ -682,29 +682,29 @@
  ---
  ## §19 — KERNEL:NORM
  ### Normalización Documental de IDs Legacy
@@ -323,7 +310,7 @@
  Estructura: página Notion standalone con 4 propiedades:
  - session_id (texto, generado por la IA al inicio de sesión)
  - status (select: OPEN / CLOSED)
-@@ -671,10 +671,10 @@
+@@ -718,10 +718,10 @@
  ---
  ## §22 — KERNEL:DOCUMENTATION-TRANSVERSAL-001
  ### Documentación Transversal — Contrato de Integridad Documental
@@ -336,7 +323,7 @@
  Protocolo (seis fases):
  1. Mapeo — identificar todos los documentos fundacionales que el cambio toca; fetch en vivo obligatorio de cada uno antes de proponer nodo(s) de inserción.
  1. DRY RUN del parche ya en su nodo autorizado — APROBAR_WRITE independiente del de la Fase 1.
-@@ -682,7 +682,7 @@
+@@ -729,7 +729,7 @@
  1. Write-Back Verification — re-fetch de solo lectura post-escritura; un mismatch detiene la operación, una confirmación en chat de que "ya se escribió" nunca es evidencia suficiente por sí sola.
  1. Changelog + versión — única fuente de historial; nunca se escribe changelog dentro de un documento individual.
  1. Binary Gate de salida — Full Data Dump o Step-by-Step, a elección del operador.
@@ -345,7 +332,7 @@
  Gestión de pendientes: Un parche no aplicado de inmediato se registra en Tasks Tracker (d2a65ca1-6a35-465d-bcff-b0d82dddd549), no en el Tracker de vacantes.
  ---
  ## §23 — KERNEL:VERSION-CHECK-TOOL
-@@ -698,7 +698,7 @@
+@@ -745,7 +745,7 @@
  1. El AI Component redacta el borrador del Changelog y actualiza la versión únicamente en la página de Changelog.
  1. El AI Component presenta el DRY RUN de cierre indicando que la versión maestro ha sido asentada en el Changelog.
  1. El AI Component solicita explícitamente al operador ejecutar localmente python verify_versions.py --sync desde la terminal para propagar la versión en lote a los 6 documentos fundacionales restantes más ID CENSUS en Notion.
@@ -358,7 +345,7 @@
 
 --- a/Manual.md
 +++ b/Manual.md
-@@ -55,7 +55,7 @@
+@@ -125,7 +125,7 @@
  - Soft Blocks (Contextuales): vacantes bloqueadas por inconsistencias en datos Class A (URL rota, JD parcial) o por score insuficiente. A diferencia de los Hard Blocks, estas sí son recuperables — corrigiendo el dato erróneo a través del Dashboard (ver §8.2, Martes).
  ---
  ## 3. FILOSOFÍA DE FALLO PARA OPERADORES · ID: MANUAL:FALLO-001
@@ -367,7 +354,7 @@
  Antes de entrar a Setup y al ciclo operativo, es necesario internalizar esto, porque vas a encontrarlo constantemente desde el primer Lunes que operes el sistema:
  Un “fallo” del sistema no es un bug — es el filtro operando correctamente. Los siguientes resultados son señales normales de funcionamiento, no errores que debas reparar manualmente ni forzar a que Claude “arregle”:
  | Resultado que verás | Qué significa realmente | Qué NO hacer | Qué hacer en su lugar |
-@@ -95,7 +95,7 @@
+@@ -165,7 +165,7 @@
  Ya no es necesario realizar copy-paste manual del System Prompt maestro en cada actualización.
  1. Copia el STATIC BOOTLOADER v1.0 (disponible en la Cédula Digital) y pégalo en Settings → Project → Project Instructions en la UI de Claude.
  1. Inicia un nuevo chat. El Agente Vantage realizará un fetch automático de la gobernanza activa desde Notion.
@@ -376,7 +363,7 @@
  Nota: este setup de Claude es de una sola vez por proyecto — no se repite en cada sesión de trabajo. Lo que sí se repite en cada sesión es el Ciclo de Sesión completo, explicado en §6.
  ### Paso 4 — Verificar Archivos del Sistema y Permisos de Ejecución
  Confirma que los archivos del sistema existen en tu Mac en las rutas esperadas (Layer_1, Layer_3, Layer_4, Dashboard). Si reinstalas o mueves archivos, verifica permisos de ejecución:
-@@ -179,7 +179,7 @@
+@@ -249,7 +249,7 @@
  1. Te recuerda, sin que tengas que preguntarlo, qué quedó pendiente de la sesión anterior.
  No necesitas invocarlo tú manualmente cada vez que se te ocurra — pero sí necesitas recordar que es el primer paso obligatorio: si acabas de abrir Claude para trabajar en VANTAGE hoy, el primer paso siempre es este ciclo, antes de tocar Tracker, Dashboard o cualquier trigger de CV descrito en §8.
  ### Por qué existe esto
@@ -385,7 +372,7 @@
  El ciclo Open/Close resuelve esto tratando cada sesión como una transacción con inicio y fin explícitos, en vez de una conversación que simplemente “pasa”.
  ### Un cambio de fondo: el operador corre Terminal primero, Claude ya no improvisa la verificación
  Antes de entrar al detalle paso a paso, vale la pena explicar un giro importante en cómo funciona este ciclo desde la optimización de verify_versions.py: el script dejó de ser una herramienta de un solo modo (verificar versión) y ahora opera con tres flags — --bootstrap, --check y --sync — cada uno con una responsabilidad distinta y acotada. Este cambio no es cosmético: reordena quién hace qué entre tú y Claude.
-@@ -204,7 +204,7 @@
+@@ -274,7 +274,7 @@
  PASS — all components at X.X.X
  ```
  1. Abre un chat nuevo en Claude, pega ambos outputs — el dump del --bootstrap y la tabla del --check — e invoca /vantage-session-open. Claude ya no hace ningún fetch propio a Notion en este paso: los dos payloads que le entregaste son toda la información que necesita para arrancar. Si alguno de los dos outputs falta o está incompleto, Claude te lo señala y espera a que lo completes antes de continuar — no improvisa el faltante ni lo reconstruye por su cuenta vía MCP.
@@ -394,7 +381,7 @@
  1. Claude confirma el estado de la sesión. Si la tabla del --check mostró PASS limpio en los 7 documentos, responde VANTAGE: SISTEMA SINCRONIZADO y queda listo para recibir instrucciones normales de trabajo. Si detecta un drift de versión en el output que le pegaste, lo reporta explícitamente antes de continuar — recuerda que este es exactamente el mismo tratamiento que ya conocías: el drift no bloquea el trabajo salvo que el documento desincronizado sea justo el que vas a editar en esa sesión, en cuyo caso primero se resuelve el drift.
  Al terminar estos cinco pasos, recién ahí es seguro empezar con el Lunes de §8, o cualquier otro día del ciclo semanal que corresponda.
  ### Cierre — /vantage-session-close
-@@ -219,7 +219,7 @@
+@@ -289,7 +289,7 @@
  - El Ledger anterior quedó OPEN → esto lo verás reflejado directamente en el dump que genera --bootstrap. Revisa manualmente si algo quedó a medio escribir antes de seguir. El sistema te lo señala, pero la decisión de qué hacer con eso es tuya.
  - Drift de versión detectado y no es el documento que ibas a tocar hoy → se reporta, no bloquea. Puedes decidir resolverlo ahora o después.
  - Drift de versión detectado y SÍ es el documento que ibas a tocar → se resuelve el drift primero, antes de aplicar cualquier parche nuevo — de lo contrario terminarías escribiendo sobre una base que ya no coincide con lo que las otras piezas del sistema esperan.
@@ -403,7 +390,7 @@
  Con la sesión abierta y sincronizada, el siguiente paso natural es abrir tu mapa de la semana — el V-Checklist, explicado en §7.
  ---
  ## 7. EL CHECKLIST Y LAS INTERFACES COMPARTIDAS · ID: MANUAL:VCHECKLIST-001
-@@ -483,7 +483,7 @@
+@@ -553,7 +553,7 @@
  vl1 backfill --dry-run
  ```
  Sin --dry-run, solicita confirmación explícita (s) antes de cualquier escritura.
@@ -412,7 +399,7 @@
  vcensus — alias corto de generate_census.py. Regenera el V-ID-CENSUS y reporta IDs huérfanos detectados en los documentos fuente. Se corre en el paso 1 del Cierre de Sesión (§6) si algún ID cambió de estado durante la sesión — ver también §11, "El V-ID-Census", para el detalle completo de cuándo es obligatorio.
  ### 9.3 Cuándo correr sync
  Correr vantage.py sync después de:
-@@ -581,7 +581,7 @@
+@@ -651,7 +651,7 @@
  - vantage-tidy-opportunities-tracker — identifica duplicados y vacantes expiradas en el Tracker de vacantes para archivado, usando los mecanismos de fingerprint y protección de estado terminal ya implementados en feed_processor.py (ver §10 — Gestión de Datos). Requiere Dry Run + APROBAR_WRITE.
  - vantage-tidy-changelog — mantiene el Change Log con las últimas 10 entradas visibles, moviendo el exceso al Archivo Changelog histórico. Úsala cuando el Change Log activo supera 10 entradas o para housekeeping documental puntual.
  - vantage-present-handoff — genera el snapshot de contexto de sesión para continuidad en un chat nuevo. Es independiente y se puede invocar en cualquier momento; no requiere que la sesión esté cerrando (ver también §6 — Ciclo de Sesión, Cierre, donde vantage-session-close la invoca automáticamente como parte de su secuencia normal).
@@ -421,7 +408,7 @@
  ---
  ## 12. TROUBLESHOOTING · ID: MANUAL:TROUBLESHOOTING-001
  ### Problemas Comunes y Soluciones
-@@ -641,10 +641,10 @@
+@@ -711,10 +711,10 @@
  - Si no aparece: refrescar cache de Runtime (vantage.py sync).
  - Si aparece pero validación falla: revisar logs de run_pipeline.py en Dashboard.
  ### Referencias a documentación adicional
@@ -436,7 +423,7 @@
  ---
  ## 13. PROMPTS & WRAPPERS · ID: MANUAL:PROMPTS-WRAPPERS-001
  Se consultan vía MCP desde la PROMPT LIBRARY en Notion. Este es el catálogo que Perplexity Desktop lee cada Lunes (§8.1) para ensamblar los prompts de L1 y L2: los Prompt Bases (BASE SPEC L1, BASE SPEC L2) y los Wrappers correspondientes (Career Sites, LinkedIn, Aggregators, Gemini, Grok, you.com, Prompt A/B/C, Prompt E de consolidación).
-@@ -665,42 +665,42 @@
+@@ -735,42 +735,42 @@
  Un parche que pasa estos cinco filtros no se distingue, seis meses después, del texto que rodeaba su punto de inserción original.
  ---
  ## 16. REGLAS DE ORO PARA OPERADORES · ID: MANUAL:REGLAS-DE-ORO-001

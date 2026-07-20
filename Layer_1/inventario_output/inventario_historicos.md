@@ -9,15 +9,15 @@ Total: 2
 ## `KERNEL:BOOTSTRAP-001`
 
 Citado 2× en:
-- `Change Log.md` · L117 · sección: v9.5.5 — 2026-07-18
-- `Change Log.md` · L120 · sección: v9.5.5 — 2026-07-18
+- `Change Log.md` · L125 · sección: v9.5.5 — 2026-07-18
+- `Change Log.md` · L128 · sección: v9.5.5 — 2026-07-18
 
 ---
 
 ## `KERNEL:PATCH-QUALITY-001`
 
 Citado 1× en:
-- `Change Log.md` · L247 · sección: v9.4.5 — 2026-07-16
+- `Change Log.md` · L255 · sección: v9.4.5 — 2026-07-16
 
 ---
 

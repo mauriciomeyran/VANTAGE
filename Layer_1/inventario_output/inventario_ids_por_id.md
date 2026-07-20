@@ -1,7 +1,7 @@
 # Inventario de Referencias Cruzadas de IDs
 
-Total de IDs únicos: 141
-Total de ocurrencias: 393
+Total de IDs únicos: 142
+Total de ocurrencias: 391
 
 ---
 
@@ -13,7 +13,7 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L105 · sección: CANON:ACHIEVEMENTS-001 — H. ACHIEVEMENT LIBRARY
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L224
+- `Change Log.md` (1×): L232
 
 ---
 
@@ -49,8 +49,8 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L36 · sección: CANON:EXPERIENCE-001 — D. EXPERIENCE RECORDS
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L224
-- `Kernel.md` (1×): L461
+- `Change Log.md` (1×): L232
+- `Kernel.md` (1×): L508
 
 ---
 
@@ -218,7 +218,7 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L139 · sección: CANON:FACTS-001 — J. CANONICAL FACTS
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L224
+- `Change Log.md` (1×): L232
 
 ---
 
@@ -338,21 +338,21 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L121 · sección: CANON:KPIS-001 — I. CORE KPIs
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L224
+- `Change Log.md` (1×): L232
 
 ---
 
 ## `CANON:OUTPUT-CONTRACT-001`
 
-**Conteo total:** 9 (1 DEF, 8 REF)
+**Conteo total:** 5 (1 DEF, 4 REF)
 
 **DEF (dónde vive)**
 - `Career Canon.md` · L194 · sección: CANON:OUTPUT-CONTRACT-001 — L. OUTPUT CONTRACT
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L224
-- `Kernel.md` (6×): L471, L471, L474, L481, L482, L513
-- `Manual.md` (1×): L698
+- `Change Log.md` (1×): L232
+- `Kernel.md` (2×): L521, L560
+- `Manual.md` (1×): L768
 
 ---
 
@@ -364,7 +364,7 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L201 · sección: GOLDEN SKELETON (REFERENCE)
 
 **REF (desde dónde se cita)**
-- `Manual.md` (1×): L694
+- `Manual.md` (1×): L764
 
 ---
 
@@ -388,8 +388,8 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L174 · sección: CANON:POSITIONING-001 — K. POSITIONING MODES
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L224
-- `Manual.md` (2×): L685, L692
+- `Change Log.md` (1×): L232
+- `Manual.md` (2×): L755, L762
 
 ---
 
@@ -413,7 +413,7 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L176 · sección: N1 · Luxury Brand Execution
 
 **REF (desde dónde se cita)**
-- `Manual.md` (1×): L688
+- `Manual.md` (1×): L758
 
 ---
 
@@ -425,7 +425,7 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L179 · sección: N2 · Store Design & Flagship Execution
 
 **REF (desde dónde se cita)**
-- `Manual.md` (1×): L689
+- `Manual.md` (1×): L759
 
 ---
 
@@ -437,7 +437,7 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L182 · sección: N3 · Regional Brand Execution & Rollout
 
 **REF (desde dónde se cita)**
-- `Manual.md` (1×): L690
+- `Manual.md` (1×): L760
 
 ---
 
@@ -449,7 +449,7 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L185 · sección: N4 · Commercial VM & Field Leadership
 
 **REF (desde dónde se cita)**
-- `Manual.md` (1×): L691
+- `Manual.md` (1×): L761
 
 ---
 
@@ -461,8 +461,8 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L21 · sección: CANON:PROFILE-001 — A. PROFESSIONAL PROFILE
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L224
-- `Kernel.md` (1×): L461
+- `Change Log.md` (1×): L232
+- `Kernel.md` (1×): L508
 
 ---
 
@@ -474,7 +474,7 @@ Total de ocurrencias: 393
 - `Career Canon.md` · L27 · sección: CANON:SKILLS-001 — B. SKILLS CANON
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L224
+- `Change Log.md` (1×): L232
 
 ---
 
@@ -526,16 +526,28 @@ Total de ocurrencias: 393
 
 ---
 
+## `CAREER_CANON:OUTPUT-CONTRACT`
+
+**Conteo total:** 2 (0 DEF, 2 REF)
+
+**DEF (dónde vive)**
+- (ninguna — posible ID huérfano, ver inventario_huerfanos.md)
+
+**REF (desde dónde se cita)**
+- `Kernel.md` (2×): L518, L529
+
+---
+
 ## `KERNEL:ARCHITECTURE`
 
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L62 · sección: §3 — KERNEL:ARCHITECTURE
+- `Kernel.md` · L109 · sección: §3 — KERNEL:ARCHITECTURE
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L111
-- `Kernel.md` (1×): L167
+- `Change Log.md` (1×): L119
+- `Kernel.md` (1×): L214
 
 ---
 
@@ -544,10 +556,10 @@ Total de ocurrencias: 393
 **Conteo total:** 4 (1 DEF, 3 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L65 · sección: KERNEL:ARCHITECTURE-L0
+- `Kernel.md` · L112 · sección: KERNEL:ARCHITECTURE-L0
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (3×): L191, L195, L199
+- `Change Log.md` (3×): L199, L203, L207
 
 ---
 
@@ -556,10 +568,10 @@ Total de ocurrencias: 393
 **Conteo total:** 8 (1 DEF, 7 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L83 · sección: KERNEL:ARCHITECTURE-L0-BOOTSTRAP
+- `Kernel.md` · L130 · sección: KERNEL:ARCHITECTURE-L0-BOOTSTRAP
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (7×): L117, L120, L123, L176, L180, L183, L186
+- `Change Log.md` (7×): L125, L128, L131, L184, L188, L191, L194
 
 ---
 
@@ -568,7 +580,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L95 · sección: KERNEL:ARCHITECTURE-L1
+- `Kernel.md` · L142 · sección: KERNEL:ARCHITECTURE-L1
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -580,7 +592,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L102 · sección: KERNEL:ARCHITECTURE-L2
+- `Kernel.md` · L149 · sección: KERNEL:ARCHITECTURE-L2
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -592,7 +604,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L110 · sección: KERNEL:ARCHITECTURE-L3
+- `Kernel.md` · L157 · sección: KERNEL:ARCHITECTURE-L3
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -604,11 +616,11 @@ Total de ocurrencias: 393
 **Conteo total:** 7 (1 DEF, 6 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L117 · sección: KERNEL:ARCHITECTURE-L4
+- `Kernel.md` · L164 · sección: KERNEL:ARCHITECTURE-L4
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (2×): L145, L148
-- `Kernel.md` (4×): L490, L512, L564, L701
+- `Change Log.md` (2×): L153, L156
+- `Kernel.md` (4×): L537, L559, L611, L748
 
 ---
 
@@ -617,10 +629,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L5 · sección: KERNEL:AUDIENCE-SCOPE
+- `Kernel.md` · L4 · sección: KERNEL:AUDIENCE-SCOPE
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (1×): L33
+- `Kernel.md` (1×): L80
 
 ---
 
@@ -632,7 +644,7 @@ Total de ocurrencias: 393
 - (ninguna — posible ID huérfano, ver inventario_huerfanos.md)
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (2×): L117, L120
+- `Change Log.md` (2×): L125, L128
 
 ---
 
@@ -641,10 +653,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L515 · sección: §14 — KERNEL:CANON-UPDATE
+- `Kernel.md` · L562 · sección: §14 — KERNEL:CANON-UPDATE
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (1×): L171
+- `Kernel.md` (1×): L218
 
 ---
 
@@ -653,12 +665,12 @@ Total de ocurrencias: 393
 **Conteo total:** 21 (1 DEF, 20 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L646 · sección: §20 — KERNEL:CENSUS-SYNC
+- `Kernel.md` · L693 · sección: §20 — KERNEL:CENSUS-SYNC
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (15×): L19, L29, L92, L117, L120, L123, L136, L141, L145, L145, L148, L165, L211, L238, L253
-- `Kernel.md` (4×): L125, L617, L674, L685
-- `Manual.md` (1×): L182
+- `Change Log.md` (15×): L27, L37, L100, L125, L128, L131, L144, L149, L153, L153, L156, L173, L219, L246, L261
+- `Kernel.md` (4×): L172, L664, L721, L732
+- `Manual.md` (1×): L252
 
 ---
 
@@ -667,12 +679,12 @@ Total de ocurrencias: 393
 **Conteo total:** 11 (2 DEF, 9 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L380 · sección: §11 — KERNEL:CV-GOLDEN-RULES
+- `Kernel.md` · L427 · sección: §11 — KERNEL:CV-GOLDEN-RULES
 - `System Prompt.md` · L111 · sección: ID: KERNEL:CV-GOLDEN-RULES
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (4×): L49, L257, L527, L580
-- `Manual.md` (4×): L645, L668, L674, L683
+- `Kernel.md` (4×): L96, L304, L574, L627
+- `Manual.md` (4×): L715, L738, L744, L753
 - `System Prompt.md` (1×): L112
 
 ---
@@ -682,10 +694,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L383 · sección: KERNEL:CV-GOLDEN-RULES-001 — No Evaluar Fit Antes de Escribir
+- `Kernel.md` · L430 · sección: KERNEL:CV-GOLDEN-RULES-001 — No Evaluar Fit Antes de Escribir
 
 **REF (desde dónde se cita)**
-- `Manual.md` (1×): L677
+- `Manual.md` (1×): L747
 
 ---
 
@@ -694,11 +706,11 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L396 · sección: KERNEL:CV-GOLDEN-RULES-002 — No Calcular ni Estimar Campos Class B
+- `Kernel.md` · L443 · sección: KERNEL:CV-GOLDEN-RULES-002 — No Calcular ni Estimar Campos Class B
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L134
-- `Manual.md` (1×): L678
+- `Change Log.md` (1×): L142
+- `Manual.md` (1×): L748
 
 ---
 
@@ -707,10 +719,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L409 · sección: KERNEL:CV-GOLDEN-RULES-003 — No Cuestionar la Calidad de Datos del Usuario
+- `Kernel.md` · L456 · sección: KERNEL:CV-GOLDEN-RULES-003 — No Cuestionar la Calidad de Datos del Usuario
 
 **REF (desde dónde se cita)**
-- `Manual.md` (1×): L679
+- `Manual.md` (1×): L749
 
 ---
 
@@ -719,10 +731,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L418 · sección: KERNEL:CV-GOLDEN-RULES-004 — No Delegar Escritura al Usuario
+- `Kernel.md` · L465 · sección: KERNEL:CV-GOLDEN-RULES-004 — No Delegar Escritura al Usuario
 
 **REF (desde dónde se cita)**
-- `Manual.md` (1×): L680
+- `Manual.md` (1×): L750
 
 ---
 
@@ -731,10 +743,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L424 · sección: KERNEL:CV-GOLDEN-RULES-005 — No Interpretar en SYNC
+- `Kernel.md` · L471 · sección: KERNEL:CV-GOLDEN-RULES-005 — No Interpretar en SYNC
 
 **REF (desde dónde se cita)**
-- `Manual.md` (1×): L681
+- `Manual.md` (1×): L751
 
 ---
 
@@ -743,10 +755,10 @@ Total de ocurrencias: 393
 **Conteo total:** 7 (1 DEF, 6 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L441 · sección: §12 — KERNEL:CV-PIPELINE
+- `Kernel.md` · L488 · sección: §12 — KERNEL:CV-PIPELINE
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (6×): L171, L473, L494, L511, L526, L578
+- `Kernel.md` (6×): L218, L520, L541, L558, L573, L625
 
 ---
 
@@ -755,7 +767,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L158 · sección: §4 — KERNEL:DASHBOARD-CHECKLIST-ARCH
+- `Kernel.md` · L205 · sección: §4 — KERNEL:DASHBOARD-CHECKLIST-ARCH
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -767,11 +779,11 @@ Total de ocurrencias: 393
 **Conteo total:** 4 (2 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L583 · sección: §16 — KERNEL:DATA-FLOW
+- `Kernel.md` · L630 · sección: §16 — KERNEL:DATA-FLOW
 - `System Prompt.md` · L96 · sección: ID: KERNEL:DATA-FLOW
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (1×): L313
+- `Kernel.md` (1×): L360
 - `System Prompt.md` (1×): L97
 
 ---
@@ -781,10 +793,10 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L615 · sección: §18 — KERNEL:DOC-CONTRACT
+- `Kernel.md` · L662 · sección: §18 — KERNEL:DOC-CONTRACT
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (2×): L638, L644
+- `Kernel.md` (2×): L685, L691
 
 ---
 
@@ -793,11 +805,11 @@ Total de ocurrencias: 393
 **Conteo total:** 10 (1 DEF, 9 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L672 · sección: §22 — KERNEL:DOCUMENTATION-TRANSVERSAL-001
+- `Kernel.md` · L719 · sección: §22 — KERNEL:DOCUMENTATION-TRANSVERSAL-001
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (8×): L219, L228, L232, L234, L236, L243, L253, L256
-- `Manual.md` (1×): L222
+- `Change Log.md` (8×): L227, L236, L240, L242, L244, L251, L261, L264
+- `Manual.md` (1×): L292
 
 ---
 
@@ -806,10 +818,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L589 · sección: §17 — KERNEL:EVOLUTION
+- `Kernel.md` · L636 · sección: §17 — KERNEL:EVOLUTION
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (1×): L56
+- `Kernel.md` (1×): L103
 
 ---
 
@@ -818,11 +830,11 @@ Total de ocurrencias: 393
 **Conteo total:** 7 (1 DEF, 6 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L52 · sección: §2 — KERNEL:FAIL-PHILOSOPHY
+- `Kernel.md` · L99 · sección: §2 — KERNEL:FAIL-PHILOSOPHY
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (4×): L255, L256, L581, L604
-- `Manual.md` (2×): L58, L644
+- `Kernel.md` (4×): L302, L303, L628, L651
+- `Manual.md` (2×): L128, L714
 
 ---
 
@@ -831,12 +843,12 @@ Total de ocurrencias: 393
 **Conteo total:** 5 (1 DEF, 4 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L269 · sección: §9 — KERNEL:GATE-DECISION
+- `Kernel.md` · L316 · sección: §9 — KERNEL:GATE-DECISION
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L133
-- `Kernel.md` (2×): L56, L579
-- `Manual.md` (1×): L647
+- `Change Log.md` (1×): L141
+- `Kernel.md` (2×): L103, L626
+- `Manual.md` (1×): L717
 
 ---
 
@@ -845,10 +857,10 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L271 · sección: KERNEL:GATE-DECISION-001 — Lógica de Bypass (precede a toda lógica estándar)
+- `Kernel.md` · L318 · sección: KERNEL:GATE-DECISION-001 — Lógica de Bypass (precede a toda lógica estándar)
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (2×): L43, L279
+- `Kernel.md` (2×): L90, L326
 
 ---
 
@@ -857,10 +869,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L278 · sección: KERNEL:GATE-DECISION-002 — Lógica Estándar
+- `Kernel.md` · L325 · sección: KERNEL:GATE-DECISION-002 — Lógica Estándar
 
 **REF (desde dónde se cita)**
-- `Manual.md` (1×): L706
+- `Manual.md` (1×): L776
 
 ---
 
@@ -869,10 +881,10 @@ Total de ocurrencias: 393
 **Conteo total:** 7 (1 DEF, 6 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L288 · sección: KERNEL:GATE-DECISION-003 — Resolución de REVIEW_NEEDED
+- `Kernel.md` · L335 · sección: KERNEL:GATE-DECISION-003 — Resolución de REVIEW_NEEDED
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (6×): L19, L19, L19, L30, L89, L99
+- `Change Log.md` (6×): L27, L27, L27, L38, L97, L107
 
 ---
 
@@ -881,10 +893,10 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L303 · sección: KERNEL:GATE-DECISION-004 — Por Qué los Gates Son Deterministas
+- `Kernel.md` · L350 · sección: KERNEL:GATE-DECISION-004 — Por Qué los Gates Son Deterministas
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (2×): L308, L350
+- `Kernel.md` (2×): L355, L397
 
 ---
 
@@ -893,10 +905,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L305 · sección: KERNEL:GATE-DECISION-005 — Flujo de Recuperación BLOCKED
+- `Kernel.md` · L352 · sección: KERNEL:GATE-DECISION-005 — Flujo de Recuperación BLOCKED
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (1×): L45
+- `Kernel.md` (1×): L92
 
 ---
 
@@ -905,7 +917,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L307 · sección: KERNEL:GATE-DECISION-006 — REJECTED (Post-Aplicación)
+- `Kernel.md` · L354 · sección: KERNEL:GATE-DECISION-006 — REJECTED (Post-Aplicación)
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -917,10 +929,10 @@ Total de ocurrencias: 393
 **Conteo total:** 9 (1 DEF, 8 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L309 · sección: KERNEL:GATE-DECISION-007 — Ejecución Automática de Archivado
+- `Kernel.md` · L356 · sección: KERNEL:GATE-DECISION-007 — Ejecución Automática de Archivado
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (8×): L45, L104, L117, L119, L123, L128, L133, L136
+- `Change Log.md` (8×): L53, L112, L125, L127, L131, L136, L141, L144
 
 ---
 
@@ -929,10 +941,10 @@ Total de ocurrencias: 393
 **Conteo total:** 5 (1 DEF, 4 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L314 · sección: KERNEL:GATE-DECISION-008 — Capas de Evaluación de Gate: Técnica vs. Negocio
+- `Kernel.md` · L361 · sección: KERNEL:GATE-DECISION-008 — Capas de Evaluación de Gate: Técnica vs. Negocio
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (4×): L119, L128, L133, L136
+- `Change Log.md` (4×): L127, L136, L141, L144
 
 ---
 
@@ -941,10 +953,10 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L245 · sección: §7 — KERNEL:HEALTH-CHECK
+- `Kernel.md` · L292 · sección: §7 — KERNEL:HEALTH-CHECK
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (2×): L56, L655
+- `Kernel.md` (2×): L103, L702
 
 ---
 
@@ -953,11 +965,11 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L249 · sección: KERNEL:HEALTH-CHECK-001 — Entity Index Auto-Sync
+- `Kernel.md` · L296 · sección: KERNEL:HEALTH-CHECK-001 — Entity Index Auto-Sync
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (1×): L660
-- `Manual.md` (1×): L207
+- `Kernel.md` (1×): L707
+- `Manual.md` (1×): L277
 
 ---
 
@@ -966,7 +978,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L258 · sección: KERNEL:HEALTH-CHECK-002 — Reporte de Tickets
+- `Kernel.md` · L305 · sección: KERNEL:HEALTH-CHECK-002 — Reporte de Tickets
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -978,7 +990,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L492 · sección: §13 — KERNEL:NAMING-CONVENTION
+- `Kernel.md` · L539 · sección: §13 — KERNEL:NAMING-CONVENTION
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -990,10 +1002,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L636 · sección: §19 — KERNEL:NORM
+- `Kernel.md` · L683 · sección: §19 — KERNEL:NORM
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (1×): L617
+- `Kernel.md` (1×): L664
 
 ---
 
@@ -1002,10 +1014,10 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L261 · sección: §8 — KERNEL:OWNERSHIP
+- `Kernel.md` · L308 · sección: §8 — KERNEL:OWNERSHIP
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (2×): L49, L576
+- `Kernel.md` (2×): L96, L623
 
 ---
 
@@ -1014,7 +1026,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L262 · sección: KERNEL:OWNERSHIP-001 — AI Component
+- `Kernel.md` · L309 · sección: KERNEL:OWNERSHIP-001 — AI Component
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1026,7 +1038,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L265 · sección: KERNEL:OWNERSHIP-002 — Python Component
+- `Kernel.md` · L312 · sección: KERNEL:OWNERSHIP-002 — Python Component
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1041,7 +1053,7 @@ Total de ocurrencias: 393
 - (ninguna — posible ID huérfano, ver inventario_huerfanos.md)
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L247
+- `Change Log.md` (1×): L255
 
 ---
 
@@ -1050,7 +1062,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L38 · sección: §1 — KERNEL:PURPOSE
+- `Kernel.md` · L85 · sección: §1 — KERNEL:PURPOSE
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1062,11 +1074,11 @@ Total de ocurrencias: 393
 **Conteo total:** 6 (2 DEF, 4 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L567 · sección: KERNEL:ROUTING — Mecanismo Técnico de las Rutas MCP
+- `Kernel.md` · L614 · sección: KERNEL:ROUTING — Mecanismo Técnico de las Rutas MCP
 - `System Prompt.md` · L138 · sección: ID: KERNEL:ROUTING
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (3×): L558, L559, L703
+- `Kernel.md` (3×): L605, L606, L750
 - `System Prompt.md` (1×): L139
 
 ---
@@ -1076,11 +1088,11 @@ Total de ocurrencias: 393
 **Conteo total:** 6 (1 DEF, 5 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L165 · sección: §5 — KERNEL:SCHEMA
+- `Kernel.md` · L212 · sección: §5 — KERNEL:SCHEMA
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (4×): L48, L228, L575, L587
-- `Manual.md` (1×): L646
+- `Kernel.md` (4×): L95, L275, L622, L634
+- `Manual.md` (1×): L716
 
 ---
 
@@ -1089,12 +1101,12 @@ Total de ocurrencias: 393
 **Conteo total:** 6 (1 DEF, 5 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L168 · sección: KERNEL:SCHEMA-001 — Class A vs Class B
+- `Kernel.md` · L215 · sección: KERNEL:SCHEMA-001 — Class A vs Class B
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L134
-- `Kernel.md` (3×): L290, L310, L350
-- `Manual.md` (1×): L700
+- `Change Log.md` (1×): L142
+- `Kernel.md` (3×): L337, L357, L397
+- `Manual.md` (1×): L770
 
 ---
 
@@ -1103,10 +1115,10 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L175 · sección: KERNEL:SCHEMA-002 — Restricción del Sistema
+- `Kernel.md` · L222 · sección: KERNEL:SCHEMA-002 — Restricción del Sistema
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (2×): L290, L587
+- `Kernel.md` (2×): L337, L634
 
 ---
 
@@ -1115,10 +1127,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L177 · sección: KERNEL:SCHEMA-003 — Fuente como Campo Especial
+- `Kernel.md` · L224 · sección: KERNEL:SCHEMA-003 — Fuente como Campo Especial
 
 **REF (desde dónde se cita)**
-- `Manual.md` (1×): L705
+- `Manual.md` (1×): L775
 
 ---
 
@@ -1127,7 +1139,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L179 · sección: KERNEL:SCHEMA-004 — Entity Format
+- `Kernel.md` · L226 · sección: KERNEL:SCHEMA-004 — Entity Format
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1139,7 +1151,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L186 · sección: KERNEL:SCHEMA-005 — Contrato de Resolución: 4 Pasos
+- `Kernel.md` · L233 · sección: KERNEL:SCHEMA-005 — Contrato de Resolución: 4 Pasos
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1151,10 +1163,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L192 · sección: KERNEL:SCHEMA-006 — APROBAR_WRITE: Alcance
+- `Kernel.md` · L239 · sección: KERNEL:SCHEMA-006 — APROBAR_WRITE: Alcance
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (1×): L586
+- `Kernel.md` (1×): L633
 
 ---
 
@@ -1163,7 +1175,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L197 · sección: KERNEL:SCHEMA-007 — Acceptance Audit
+- `Kernel.md` · L244 · sección: KERNEL:SCHEMA-007 — Acceptance Audit
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1175,11 +1187,11 @@ Total de ocurrencias: 393
 **Conteo total:** 7 (2 DEF, 5 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L558 · sección: §15 — KERNEL:SCOPE / KERNEL:ROUTING — Economía de Contexto y Rutas de Carga
+- `Kernel.md` · L605 · sección: §15 — KERNEL:SCOPE / KERNEL:ROUTING — Economía de Contexto y Rutas de Carga
 - `System Prompt.md` · L93 · sección: ID: KERNEL:SCOPE
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (4×): L559, L560, L586, L703
+- `Kernel.md` (4×): L606, L607, L633, L750
 - `System Prompt.md` (1×): L94
 
 ---
@@ -1189,12 +1201,12 @@ Total de ocurrencias: 393
 **Conteo total:** 8 (1 DEF, 7 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L658 · sección: §21 — KERNEL:SESSION-LEDGER
+- `Kernel.md` · L705 · sección: §21 — KERNEL:SESSION-LEDGER
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (3×): L183, L234, L253
-- `Kernel.md` (3×): L89, L93, L674
-- `Manual.md` (1×): L207
+- `Change Log.md` (3×): L191, L242, L261
+- `Kernel.md` (3×): L136, L140, L721
+- `Manual.md` (1×): L277
 
 ---
 
@@ -1203,11 +1215,11 @@ Total de ocurrencias: 393
 **Conteo total:** 17 (1 DEF, 16 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L78 · sección: KERNEL:SKILL-ANNOUNCE-CONVENTION
+- `Kernel.md` · L125 · sección: KERNEL:SKILL-ANNOUNCE-CONVENTION
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (15×): L19, L19, L19, L23, L65, L68, L76, L82, L86, L88, L99, L153, L155, L160, L176
-- `Manual.md` (1×): L584
+- `Change Log.md` (15×): L27, L27, L27, L31, L73, L76, L84, L90, L94, L96, L107, L161, L163, L168, L184
+- `Manual.md` (1×): L654
 
 ---
 
@@ -1216,10 +1228,10 @@ Total de ocurrencias: 393
 **Conteo total:** 4 (1 DEF, 3 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L227 · sección: §6 — KERNEL:TRACKER-SCHEMA
+- `Kernel.md` · L274 · sección: §6 — KERNEL:TRACKER-SCHEMA
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (3×): L167, L259, L650
+- `Kernel.md` (3×): L214, L306, L697
 
 ---
 
@@ -1228,7 +1240,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L229 · sección: KERNEL:TRACKER-SCHEMA-001 — Alcance
+- `Kernel.md` · L276 · sección: KERNEL:TRACKER-SCHEMA-001 — Alcance
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1240,7 +1252,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L236 · sección: KERNEL:TRACKER-SCHEMA-002 — Niveles de Prioridad
+- `Kernel.md` · L283 · sección: KERNEL:TRACKER-SCHEMA-002 — Niveles de Prioridad
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1252,7 +1264,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L322 · sección: KERNEL:TRIGGER-001 — FEED
+- `Kernel.md` · L369 · sección: KERNEL:TRIGGER-001 — FEED
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1264,7 +1276,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L325 · sección: KERNEL:TRIGGER-002 — VL1
+- `Kernel.md` · L372 · sección: KERNEL:TRIGGER-002 — VL1
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1276,10 +1288,10 @@ Total de ocurrencias: 393
 **Conteo total:** 2 (1 DEF, 1 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L331 · sección: KERNEL:TRIGGER-003 — QA
+- `Kernel.md` · L378 · sección: KERNEL:TRIGGER-003 — QA
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (1×): L171
+- `Kernel.md` (1×): L218
 
 ---
 
@@ -1288,10 +1300,10 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L348 · sección: KERNEL:TRIGGER-004 — DRY RUN
+- `Kernel.md` · L395 · sección: KERNEL:TRIGGER-004 — DRY RUN
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (2×): L290, L586
+- `Kernel.md` (2×): L337, L633
 
 ---
 
@@ -1300,7 +1312,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L351 · sección: KERNEL:TRIGGER-005 — SYNC
+- `Kernel.md` · L398 · sección: KERNEL:TRIGGER-005 — SYNC
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1312,7 +1324,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L359 · sección: KERNEL:TRIGGER-006 — TOP 3 BY SCORE
+- `Kernel.md` · L406 · sección: KERNEL:TRIGGER-006 — TOP 3 BY SCORE
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1324,7 +1336,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L367 · sección: KERNEL:TRIGGER-007 — NEXT ACTION
+- `Kernel.md` · L414 · sección: KERNEL:TRIGGER-007 — NEXT ACTION
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1336,10 +1348,10 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L372 · sección: KERNEL:TRIGGER-008 — FEED (migración)
+- `Kernel.md` · L419 · sección: KERNEL:TRIGGER-008 — FEED (migración)
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (2×): L171, L565
+- `Kernel.md` (2×): L218, L612
 
 ---
 
@@ -1348,7 +1360,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L377 · sección: KERNEL:TRIGGER-009 — STATUS
+- `Kernel.md` · L424 · sección: KERNEL:TRIGGER-009 — STATUS
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1360,10 +1372,10 @@ Total de ocurrencias: 393
 **Conteo total:** 4 (1 DEF, 3 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L320 · sección: §10 — KERNEL:TRIGGERS
+- `Kernel.md` · L367 · sección: §10 — KERNEL:TRIGGERS
 
 **REF (desde dónde se cita)**
-- `Kernel.md` (3×): L50, L577, L640
+- `Kernel.md` (3×): L97, L624, L687
 
 ---
 
@@ -1372,12 +1384,12 @@ Total de ocurrencias: 393
 **Conteo total:** 11 (1 DEF, 10 REF)
 
 **DEF (dónde vive)**
-- `Kernel.md` · L688 · sección: §23 — KERNEL:VERSION-CHECK-TOOL
+- `Kernel.md` · L735 · sección: §23 — KERNEL:VERSION-CHECK-TOOL
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (7×): L5, L15, L145, L148, L207, L234, L236
-- `Kernel.md` (1×): L73
-- `Manual.md` (1×): L486
+- `Change Log.md` (7×): L13, L23, L153, L156, L215, L242, L244
+- `Kernel.md` (1×): L120
+- `Manual.md` (1×): L556
 - `System Prompt.md` (1×): L166
 
 ---
@@ -1387,7 +1399,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L652 · sección: 14. CHEAT SHEETS · ID: MANUAL:CHEATSHEETS-001
+- `Manual.md` · L722 · sección: 14. CHEAT SHEETS · ID: MANUAL:CHEATSHEETS-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1399,7 +1411,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L673 · sección: 18. Reglas de Oro CV — Referencia Operativa ID: MANUAL:CV-GOLDEN-RULES-INDEX
+- `Manual.md` · L743 · sección: 18. Reglas de Oro CV — Referencia Operativa ID: MANUAL:CV-GOLDEN-RULES-INDEX
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1411,7 +1423,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L350 · sección: 8.2 MARTES — Recuperación y Dashboard · ID: MANUAL:DASHBOARD-001
+- `Manual.md` · L420 · sección: 8.2 MARTES — Recuperación y Dashboard · ID: MANUAL:DASHBOARD-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1423,7 +1435,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L57 · sección: 3. FILOSOFÍA DE FALLO PARA OPERADORES · ID: MANUAL:FALLO-001
+- `Manual.md` · L127 · sección: 3. FILOSOFÍA DE FALLO PARA OPERADORES · ID: MANUAL:FALLO-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1435,7 +1447,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L243 · sección: 8. FLUJO SEMANAL DE OPERACIÓN · ID: MANUAL:FLUJO-001
+- `Manual.md` · L313 · sección: 8. FLUJO SEMANAL DE OPERACIÓN · ID: MANUAL:FLUJO-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1447,7 +1459,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L29 · sección: 2. CÓMO FUNCIONA · ID: MANUAL:FUNCIONAMIENTO-001
+- `Manual.md` · L99 · sección: 2. CÓMO FUNCIONA · ID: MANUAL:FUNCIONAMIENTO-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1459,7 +1471,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L510 · sección: 10. GESTIÓN DE DATOS · ID: MANUAL:GESTION-DATOS-001
+- `Manual.md` · L580 · sección: 10. GESTIÓN DE DATOS · ID: MANUAL:GESTION-DATOS-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1471,7 +1483,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L693 · sección: 20. Golden Skeleton — Qué es y Dónde Vive ID: MANUAL:GOLDEN-SKELETON-REF
+- `Manual.md` · L763 · sección: 20. Golden Skeleton — Qué es y Dónde Vive ID: MANUAL:GOLDEN-SKELETON-REF
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1483,10 +1495,10 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L525 · sección: 11. HEALTH CHECK · ID: MANUAL:HEALTHCHECK-001
+- `Manual.md` · L595 · sección: 11. HEALTH CHECK · ID: MANUAL:HEALTHCHECK-001
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (2×): L22, L29
+- `Change Log.md` (2×): L30, L37
 
 ---
 
@@ -1495,7 +1507,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L3 · sección: 1. OBJETIVO DE VANTAGE · ID: MANUAL:OBJETIVO-001
+- `Manual.md` · L73 · sección: 1. OBJETIVO DE VANTAGE · ID: MANUAL:OBJETIVO-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1507,11 +1519,11 @@ Total de ocurrencias: 393
 **Conteo total:** 5 (1 DEF, 4 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L658 · sección: 15. CRITERIO DE CALIDAD PARA PARCHES DOCUMENTALES · ID: MANUAL:PATCH-QUALITY-001
+- `Manual.md` · L728 · sección: 15. CRITERIO DE CALIDAD PARA PARCHES DOCUMENTALES · ID: MANUAL:PATCH-QUALITY-001
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (3×): L28, L234, L247
-- `Kernel.md` (1×): L677
+- `Change Log.md` (3×): L36, L242, L255
+- `Kernel.md` (1×): L724
 
 ---
 
@@ -1520,7 +1532,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L684 · sección: 19. Positioning Modes (N1–N4) — Criterio de Selección ID: MANUAL:POSITIONING-CRITERIA
+- `Manual.md` · L754 · sección: 19. Positioning Modes (N1–N4) — Criterio de Selección ID: MANUAL:POSITIONING-CRITERIA
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1532,7 +1544,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L649 · sección: 13. PROMPTS & WRAPPERS · ID: MANUAL:PROMPTS-WRAPPERS-001
+- `Manual.md` · L719 · sección: 13. PROMPTS & WRAPPERS · ID: MANUAL:PROMPTS-WRAPPERS-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1544,7 +1556,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L667 · sección: 16. REGLAS DE ORO PARA OPERADORES · ID: MANUAL:REGLAS-DE-ORO-001
+- `Manual.md` · L737 · sección: 16. REGLAS DE ORO PARA OPERADORES · ID: MANUAL:REGLAS-DE-ORO-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1556,7 +1568,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L699 · sección: 21. Schema Class A/B — Referencia de Campos ID: MANUAL:SCHEMA-FIELD-REF
+- `Manual.md` · L769 · sección: 21. Schema Class A/B — Referencia de Campos ID: MANUAL:SCHEMA-FIELD-REF
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1568,10 +1580,10 @@ Total de ocurrencias: 393
 **Conteo total:** 3 (1 DEF, 2 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L172 · sección: 6. CICLO DE SESIÓN — Open/Close · ID: MANUAL:SESSION-CYCLE-001
+- `Manual.md` · L242 · sección: 6. CICLO DE SESIÓN — Open/Close · ID: MANUAL:SESSION-CYCLE-001
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (2×): L22, L29
+- `Change Log.md` (2×): L30, L37
 
 ---
 
@@ -1580,7 +1592,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L70 · sección: 4. SETUP · ID: MANUAL:SETUP-001
+- `Manual.md` · L140 · sección: 4. SETUP · ID: MANUAL:SETUP-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1592,7 +1604,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L671 · sección: 17. SLA DE LATENCIA POST-INGESTA · ID: MANUAL:SLA-001
+- `Manual.md` · L741 · sección: 17. SLA DE LATENCIA POST-INGESTA · ID: MANUAL:SLA-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1604,7 +1616,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L586 · sección: 12. TROUBLESHOOTING · ID: MANUAL:TROUBLESHOOTING-001
+- `Manual.md` · L656 · sección: 12. TROUBLESHOOTING · ID: MANUAL:TROUBLESHOOTING-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1616,10 +1628,10 @@ Total de ocurrencias: 393
 **Conteo total:** 5 (1 DEF, 4 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L465 · sección: 9. VANTAGE RUNTIME (Consulta Operativa) · ID: MANUAL:VANTAGE-RUNTIME-001
+- `Manual.md` · L535 · sección: 9. VANTAGE RUNTIME (Consulta Operativa) · ID: MANUAL:VANTAGE-RUNTIME-001
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (4×): L191, L196, L199, L208
+- `Change Log.md` (4×): L199, L204, L207, L216
 
 ---
 
@@ -1628,7 +1640,7 @@ Total de ocurrencias: 393
 **Conteo total:** 1 (1 DEF, 0 REF)
 
 **DEF (dónde vive)**
-- `Manual.md` · L225 · sección: 7. EL CHECKLIST Y LAS INTERFACES COMPARTIDAS · ID: MANUAL:VCHECKLIST-001
+- `Manual.md` · L295 · sección: 7. EL CHECKLIST Y LAS INTERFACES COMPARTIDAS · ID: MANUAL:VCHECKLIST-001
 
 **REF (desde dónde se cita)**
 - (sin referencias — ID declarado pero no citado en ningún otro punto)
@@ -1643,9 +1655,9 @@ Total de ocurrencias: 393
 - `System Prompt.md` · L5 · sección: ID: SP:BOOTSTRAP-001
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (3×): L181, L184, L186
-- `Kernel.md` (1×): L87
-- `Manual.md` (1×): L98
+- `Change Log.md` (3×): L189, L192, L194
+- `Kernel.md` (1×): L134
+- `Manual.md` (1×): L168
 
 ---
 
@@ -1669,8 +1681,8 @@ Total de ocurrencias: 393
 - `System Prompt.md` · L156 · sección: ID: SP:CONSISTENCY
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (5×): L98, L134, L191, L194, L199
-- `Kernel.md` (1×): L80
+- `Change Log.md` (5×): L106, L142, L199, L202, L207
+- `Kernel.md` (1×): L127
 - `System Prompt.md` (1×): L47
 
 ---
@@ -1683,7 +1695,7 @@ Total de ocurrencias: 393
 - `System Prompt.md` · L150 · sección: ID: SP:ID-CONNECTORS-001
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L249
+- `Change Log.md` (1×): L257
 
 ---
 
@@ -1695,7 +1707,7 @@ Total de ocurrencias: 393
 - `System Prompt.md` · L114 · sección: ID: SP:SCHEMA
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (4×): L191, L193, L194, L199
+- `Change Log.md` (4×): L199, L201, L202, L207
 
 ---
 
@@ -1707,8 +1719,8 @@ Total de ocurrencias: 393
 - `System Prompt.md` · L27 · sección: ID: SP:SYNC-RULE
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (5×): L141, L145, L145, L145, L148
-- `Kernel.md` (1×): L648
+- `Change Log.md` (5×): L149, L153, L153, L153, L156
+- `Kernel.md` (1×): L695
 - `System Prompt.md` (3×): L10, L25, L166
 
 ---
@@ -1733,7 +1745,7 @@ Total de ocurrencias: 393
 - `System Prompt.md` · L164 · sección: ID: SP:VERSION-CHECK-TOOL
 
 **REF (desde dónde se cita)**
-- `Change Log.md` (1×): L145
+- `Change Log.md` (1×): L153
 
 ---
 
