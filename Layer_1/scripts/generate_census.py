@@ -29,7 +29,7 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVE:")
+VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVE:", "BRIEF:")
 
 DOCUMENTS = {
     "System Prompt": "37b938be-fc42-8001-9b9b-fcf81130d274",
@@ -38,6 +38,7 @@ DOCUMENTS = {
     "Career Canon":  "377938be-fc42-8089-93f2-f52dbd2dec6c",
     "Aliases":       "37c938be-fc42-80d4-b9ae-f5969830331b",
     "Change Log":    "390938be-fc42-80e7-b429-d7d730339353",
+    "Navigation Brief": "3a3938be-fc42-8008-9e90-ec435c01f50d",
 }
 
 # Prioridad de documento al resolver el "mejor" bloque para un ID
@@ -49,6 +50,7 @@ DOC_PRIORITY = {
     "Career Canon":  4,
     "Aliases":       5,
     "Change Log":    6,
+    "Navigation Brief": 7,
 }
 
 # ─── LISTADO CANÓNICO DE IDs (fuente: generate_census.py) ─────────────────────
@@ -233,6 +235,22 @@ CENSUS_SPEC = [
             {"id": "CANON:FIGMA-TAG-SCHEMA", "seccion": "§L.2", "nombre": "Figma Tag Schema"},
             {"id": "CANON:POSITIONING-MODE", "seccion": "§L.3.1", "nombre": "Activación por Positioning Mode"},
             {"id": "CANON:TAG-REGISTRY", "seccion": "§L.3", "nombre": "Tag Registry (doble ID junto con CANON:OUTPUT-CONTRACT-TAGREGISTRY-001, ver nota)"},
+        ],
+    },
+    {
+        "name": "NAVIGATION BRIEF",
+        "rows": [
+            {"id": "BRIEF:001", "seccion": "§0", "nombre": "Propósito y Alcance"},
+            {"id": "BRIEF:002", "seccion": "§1", "nombre": "Document Authority Matrix"},
+            {"id": "BRIEF:003", "seccion": "§2", "nombre": "Ecosistema Documental"},
+            {"id": "BRIEF:004", "seccion": "§3", "nombre": "Navigation Contracts"},
+            {"id": "BRIEF:005", "seccion": "§4", "nombre": "Domain Architecture"},
+            {"id": "BRIEF:006", "seccion": "§5", "nombre": "Verification Depth Contract"},
+            {"id": "BRIEF:007", "seccion": "§6", "nombre": "Cross-Document Dependencies"},
+            {"id": "BRIEF:008", "seccion": "§7", "nombre": "Maintenance Contract"},
+            {"id": "BRIEF:009", "seccion": "§8", "nombre": "Navigation Decision Tree"},
+            {"id": "BRIEF:010", "seccion": "§9", "nombre": "Principios de Navegación"},
+            {"id": "BRIEF:011", "seccion": "§10", "nombre": "Resultado Esperado"},
         ],
     },
 ]

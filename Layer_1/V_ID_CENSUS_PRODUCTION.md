@@ -86,7 +86,7 @@
 | [`KERNEL:ROUTING`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42811aa042c048ec085cbc ) | §8 (referencia) | [Referencia a KERNEL:ROUTING — no sección propia del SP] |
 | [`SP:ID-CONNECTORS-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42812ab19fe572be4eac94 ) | §9 | ID Connectors — esquema PREFIX:NOMBRE-SECCION |
 | [`SP:BOOTSTRAP-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281c68a05fd98ecfef859 ) | (encabezado) | Operating Specification — Bootstrap de Sesión |
-| [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd ) | §1 | Sincronización Inicial y Verificación de Versión |
+| [`SP:SYNC-RULE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281599a2ddbccb35a7c49 ) | §1 | Sincronización Inicial y Verificación de Versión |
 | [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca ) | §10 | Regla de Consistencia Documental |
 | [`SP:VERSION-CHECK-TOOL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#b84275d1780b498a94cdb554244df034 ) | §11 | Herramienta de Verificación de Versión de Bajo Costo |
 
@@ -143,6 +143,24 @@
 | [`CANON:FIGMA-TAG-SCHEMA`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42817f90ace83dd96245a9 ) | §L.2 | Figma Tag Schema |
 | [`CANON:POSITIONING-MODE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428128b20dc6192e8b8757 ) | §L.3.1 | Activación por Positioning Mode |
 | [`CANON:TAG-REGISTRY`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281dbac5ae5ae1adf1e90 ) | §L.3 | Tag Registry (doble ID junto con CANON:OUTPUT-CONTRACT-TAGREGISTRY-001, ver nota) |
+
+---
+
+## NAVIGATION BRIEF
+
+| ID | Sección | Nombre |
+|---|---|---|
+| [`BRIEF:001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#2affc7590d5b4bd7aee18c1feb0fbd49 ) | §0 | Propósito y Alcance |
+| [`BRIEF:002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#e0814336148545be82138e1e2bec8377 ) | §1 | Document Authority Matrix |
+| [`BRIEF:003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#66bc3ce59a264a2f95875f48f054fa8c ) | §2 | Ecosistema Documental |
+| [`BRIEF:004`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#e11fe011cec14f6a94815da4a19cbf7f ) | §3 | Navigation Contracts |
+| [`BRIEF:005`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#085a174d30574b4d8534b8fcd494b144 ) | §4 | Domain Architecture |
+| [`BRIEF:006`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#507484df430b445cbd0430aa0dfb5acb ) | §5 | Verification Depth Contract |
+| [`BRIEF:007`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#4c8ca8830f094f10a31d9a6f030fdf62 ) | §6 | Cross-Document Dependencies |
+| [`BRIEF:008`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#c5fb902ceab945d4bbd360b20914538f ) | §7 | Maintenance Contract |
+| [`BRIEF:009`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#10660a833ada4ff98ca800b1f0ce14ad ) | §8 | Navigation Decision Tree |
+| [`BRIEF:010`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#ee06e9a7be3f45e7878f9449322c72fc ) | §9 | Principios de Navegación |
+| [`BRIEF:011`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#9229062c295b4ba6bf5f41dd674a7f2c ) | §10 | Resultado Esperado |
 
 ---
 
