@@ -1,5 +1,35 @@
 # V | CHANGELOG
 
+### v9.6.2 — Fusión Check+Sync en verify_versions.py: verificación real post-escritura · 2026-07-19
+Tipo: [DOC] [INFRA]
+Alcance: Layer_1/scripts/verify_versions.py (local) + KERNEL:VERSION-CHECK-TOOL §23.
+Contexto: El operador señaló que pedir --check después de --sync en cada cierre de sesión era gasto de tokens redundante si lo único que importa es que el sync haya quedado bien. Auditoría del código real confirmó la causa raíz: --check nunca emitió un string PASS (grep vacío en el script real) pese a que la skill de cierre lo exigía — mismatch documentación↔implementación preexistente. Además, --sync reportaba OK/FALLÓ basado solo en el status code del PATCH, sin releer el valor escrito — verificación aparente, no real.
+Cambios:
+- verify_versions.py: --sync ahora relee cada documento tras escribirlo y compara contra la versión maestro del Changelog. Reporta veredicto PASS/FAIL por documento y un veredicto final único ([VEREDICTO FINAL] PASS/FAIL), con sys.exit(1) si algún documento falla.
+- verify_versions.py: flag --check eliminado del parser.
+- KERNEL §23: sección "Modos de Operación" reescrita para reflejar el modo único de verificación-en-escritura; "Alias de invocación" actualizado a los dos flags vigentes.
+- vantage-session-close/SKILL.md (local, fuera de Notion): Pasos 4 (--check) y 4.5 (--sync) fusionados en un único Paso 4, que exige el output de --sync y valida [VEREDICTO FINAL] PASS.
+- vantage-session-open/SKILL.md (local, fuera de Notion): eliminado el Paso 3 (VERSION), que invocaba el flag --check ya retirado del parser. Pasos LOG/PENDING/SNAPSHOT/READY renumerados de 3–6 a 3–6 consecutivos. Agregada nota explícita: la verificación de versión de los 7 fundacionales queda reservada exclusivamente al cierre de sesión (--sync, vantage-session-close Paso 4) — la apertura de sesión ya no verifica ni escribe versión.
+Validado en producción: el operador corrió vversions --sync tras el fix — 7/7 documentos PASS, veredicto final PASS (VANTAGE Tracker, 2026-07-19).
+Write-Back Verification: re-fetch de Kernel §23 tras la escritura — sin mismatch.
+IDs afectados: ninguna alta/baja de ID canónico — reescritura de contenido bajo KERNEL:VERSION-CHECK-TOOL, ID ya existente. Census no requiere regeneración.
+Pendiente (fuera de esta entrada): ninguno nuevo identificado en esta sesión.
+Versión actualizada: 9.6.2 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.6.1 hasta que el operador corra verify_versions.py --sync.
+---
+### v9.6.1 — Cierre Fase D: KERNEL:SKILL-ANNOUNCE-CONVENTION (ya resuelto) + Patch GATE-DECISION-003 punto 6 · 2026-07-20nTipo: [DOC]nAlcance: KERNEL:GATE-DECISION-003 punto 6 (reescritura de contenido bajo ID ya existente). KERNEL:SKILL-ANNOUNCE-CONVENTION — verificado sin cambios, ya estaba correcto desde v9.5.8.nContexto: Cierre de la Fase D, pendiente heredado desde Changelog v9.5.4/v9.5.7 ("patch a KERNEL:GATE-DECISION-003 punto 6, DRY RUN debe reconstruirse"), agrupado con R-12b bajo un solo ciclo de vantage-documentacion-transversal por tocar ambos el mismo documento fundacional.nR-12b (verificado, sin acción requerida): Al fetchear KERNEL:SKILL-ANNOUNCE-CONVENTION en vivo se confirmó que la tabla "Implementación actual" ya lista los 9 skills (incluyendo los 5 de housekeeping) desde v9.5.8. El reporte que motivó reabrir este ítem (vía Arena IA) describía un estado anterior a v9.5.8, ya superado. Se descarta de pendientes sin escritura.nPatch GATE-DECISION-003 punto 6 (ejecutado): La afirmación previa ("Gate_Decision=EXPIRED asignado por Python tras ≥2 runs con URL dead") se contrastó contra datos vivos y código real: 0/27 registros con Status=Expirada tienen Gate_Decision=EXPIRED poblado (VANTAGE Tracker CSV, 76 filas, 2026-07-19); no se encontró lógica de asignación en feed_processor.py, gate_logic.py, assign_next_action.py, auto_archive.py, profile_fit.py, ni en la porción inspeccionada de layer_1_run.py. El texto se corrigió: Status=Expirada (Class A) queda documentado como la señal operativa suficiente, asignada por operador, URL_GATE en 1er run, o el motor de misfit de perfil (profile_fit.py Fase 3.5). La regla "≥2 runs" se retira como afirmación de comportamiento actual y queda registrada como diseño no implementado, condicionado a rediseñar la protección terminal de Expirada.nWrite-Back Verification: pendiente — se ejecuta re-fetch de Kernel inmediatamente después de esta entrada, en la misma sesión.nIDs afectados: ninguno — reescritura de contenido bajo KERNEL:GATE-DECISION-003, ID ya existente. Census no requiere regeneración (KERNEL:CENSUS-SYNC Regla 1 no se dispara).nPendiente (fuera de esta entrada): ninguno nuevo — Fase D queda cerrada en su totalidad con esta entrada. Diagnóstico de causa raíz del drift de versión SP/Census (v9.5.7) sigue sin diagnosticar, no tocado aquí.nVersión actualizada: 9.6.1 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.6.0 hasta que el operador corra verify_versions.py --sync.nn---n
+### v9.6.0 — Documentación Transversal: Skills de Mantenimiento en Manual (Kernel ya cubierto) · 2026-07-19
+Tipo: [DOC]
+Alcance: Manual §11 (MANUAL:HEALTHCHECK-001) — nuevo sub-nodo "Skills de Mantenimiento del Tracker (VANTAGE)"; Manual §6 (MANUAL:SESSION-CYCLE-001, Cierre) — atribución de la skill vantage-present-handoff en el paso 4 del cierre.
+Contexto: Ejecutado vía vantage-documentacion-transversal tras detectar que las 5 skills instaladas en esta sesión (vantage-create-bug-task, vantage-present-handoff, vantage-tidy-bug-task-tracker, vantage-tidy-changelog, vantage-tidy-opportunities-tracker) ya estaban ancladas en KERNEL:SKILL-ANNOUNCE-CONVENTION (§3, desde v9.5.8) pero no tenían ninguna contraparte en el Manual — un operador leyendo el Manual de principio a fin no se enteraba de que existían ni cuándo usarlas.
+Cambios:
+- Manual §11: nuevo sub-nodo insertado justo después de "El V-ID-Census" y antes de §12 (Troubleshooting) — catálogo operativo de las 5 skills con su propósito y gate de Dry Run + APROBAR_WRITE cuando aplica.
+- Manual §6, Cierre — /vantage-session-close, paso 4: frase insertada atribuyendo el resumen automático de hecho/pendiente a la skill vantage-present-handoff, aclarando que es invocable de forma independiente fuera de un cierre formal.
+Write-Back Verification: re-fetch de Manual tras la escritura — ambos parches confirmados verbatim, sin mismatch.
+Validación contra MANUAL:PATCH-QUALITY-001: los 5 filtros pasan — invisibilidad estructural (sin H2 nuevo, solo H3 bajo sección existente), continuidad de voz, progresión narrativa, diff mínimo (Parche 2 es una sola inserción de frase), coherencia transversal (sin contradicción con Kernel/SP).
+IDs afectados: ninguna alta/baja de ID canónico — ambos parches son sub-contenido de secciones ya existentes (MANUAL:HEALTHCHECK-001, MANUAL:SESSION-CYCLE-001). Census no requiere regeneración (KERNEL:CENSUS-SYNC Regla 1 no se dispara).
+Pendiente (fuera de esta entrada): ninguno nuevo identificado en esta sesión — pendientes heredados de v9.5.9 (Fase D del patch a KERNEL:GATE-DECISION-003; diagnóstico de causa raíz del drift de versión SP/Census señalado en v9.5.7) siguen abiertos, no tocados aquí.
+Versión actualizada: 9.6.0 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.5.9 hasta que el operador corra verify_versions.py --sync.
+---
 ---
 ### v9.5.9 — Auto-Archive Security Patch + Canonización Documental (Bug Crítico, CERRADO) · 2026-07-19
 Tipo: [BUG] [SEC] [INFRA]
@@ -9,7 +39,7 @@ Cambios:
 - auto_archive.py (Parche de Seguridad): Agregado check obligatorio Gate_Decision != 'APPLIED' en query_archive_candidates(). Si Gate_Decision == 'APPLIED', el registro se reporta como "PROTECTED_ACTIVE_APPLICATION" y NO se archiva bajo ninguna circunstancia. El dataclass ArchiveCandidate fue extendido para incluir el campo gate_decision.
 - feed_processor.py (Normalización Dedup_Flag): Implementada función _set_dedup_flag_if_needed() que asigna siempre el valor literal "Posible duplicado" al campo Dedup_Flag cuando se detecta duplicado por hash, URL o fingerprint. Esta función se integra en dedup_cross_layer() y dedup_by_content_fingerprint(), asegurando que los 34 registros zombis detectados en la auditoría v9.5.6 puedan ser procesados por el flujo automático.
 - auto_archive.py (Archivado Físico): Verificado y corregido para usar archived=True en la llamada a notion.pages.update(), garantizando archivado físico vía API de Notion (endpoint PATCH /v1/pages/{page_id}) en lugar de solo mover parent.
-- vsync_doc.py v8.5.6 (Canonización Documental): Eliminada opción --direction local para prevenir drift documental. Documentación ACTIVE LOCAL ahora es read-only, Notion es única fuente de verdad. Auto mode solo permite notion→local, local→notion deshabilitado. Agregado warning inicial sobre política read-only. v8.5.6: FIX Permission handling — _make_writable() y _restore_permissions() para manejar archivos read-only temporalmente durante sync.
+- vsync_doc.py v8.5.5 (Canonización Documental): Eliminada opción --direction local para prevenir drift documental. Documentación ACTIVE LOCAL ahora es read-only, Notion es única fuente de verdad. Auto mode solo permite notion→local, local→notion deshabilitado. Agregado warning inicial sobre política read-only.
 - Documentación/ACTIVE/*.md (Bloqueo Físico): Aplicado chmod 444 a todos los archivos de documentación ACTIVE para prevenir edición directa local. Cambios deben hacerse en Notion, luego sincronizar hacia local.
 Contexto:
 - Consistencia con KERNEL:GATE-DECISION-007: El parche de seguridad mantiene consistencia con el mecanismo documentado, añadiendo protección cruzada contra APPLIED que no estaba explícita en el documento original.
@@ -29,7 +59,7 @@ Criterios de aceptación:
 Archivos afectados:
 - Layer_1/scripts/auto_archive.py (parche de seguridad + archivado físico)
 - Layer_1/scripts/feed_processor.py (normalización Dedup_Flag)
-- Layer_4/scripts/vsync_doc.py (canonización documental v8.5.6)
+- Layer_4/scripts/vsync_doc.py (canonización documental v8.5.5)
 - Documentación/ACTIVE/*.md (bloqueo físico read-only)
 IDs afectados: ninguna alta/baja de ID canónico — parche de seguridad bajo código existente, sin cambios en schema de Notion.
 ### v9.5.8 — KERNEL:SKILL-ANNOUNCE-CONVENTION (R-12b) · 2026-07-19
