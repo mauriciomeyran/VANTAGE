@@ -414,9 +414,8 @@ def render_bootstrap_dump(client: httpx.Client, changelog_page_id: str, headers:
 
 def main():
     parser = argparse.ArgumentParser(description="Verify and Sync document versions across Notion SSOT.")
-    parser.add_argument("--sync", action="store_true", help="Sincroniza la versión de CHANGELOG hacia todos los documentos.")
+    parser.add_argument("--sync", action="store_true", help="Sincroniza la versión de CHANGELOG hacia todos los documentos y verifica por relectura (veredicto PASS/FAIL real). Reemplaza al antiguo par --sync + --check.")
     parser.add_argument("--bootstrap", action="store_true", help="Genera el dump de contexto de apertura de sesión (Ledger + Changelog + tickets prioritarios). Read-only.")
-    parser.add_argument("--check", action="store_true", help="Verifica la versión de los 7 documentos fundacionales (Check Mode). Read-only. Alias explícito del modo por default (sin flags) — existe para que el comando documentado en Manual/System Prompt/skills coincida literalmente con la interfaz real del script.")
     parser.add_argument("--scripts", action="store_true", help="Cruza los scripts .py/.sh del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SCRIPT LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     args = parser.parse_args()
 
@@ -465,23 +464,40 @@ def main():
             results = []
             for doc in DOC_KEYS:
                 if doc == "CHANGELOG":
-                    results.append((doc, master_version, "SKIP (Maestro)"))
+                    results.append((doc, master_version, master_version, "PASS (Maestro)"))
                     continue
-                
+
                 page_id = uuids.get(doc)
                 if not page_id:
-                    results.append((doc, "N/A", "ERROR: ID no resuelto"))
+                    results.append((doc, "N/A", "N/A", "FAIL: ID no resuelto"))
                     continue
-                
-                success = update_page_version(client, page_id, master_version, headers)
-                status = "OK" if success else "FALLÓ"
-                results.append((doc, master_version, status))
-            
-            # Render del reporte de sincronización
-            print(f"{'DOCUMENTO':<15} | {'VERSIÓN':<12} | {'ESTADO':<15}")
-            print("-" * 60)
-            for doc, ver, status in results:
-                print(f"{doc:<15} | {ver:<12} | {status:<15}")
+
+                write_ok = update_page_version(client, page_id, master_version, headers)
+                if not write_ok:
+                    results.append((doc, master_version, "N/A", "FAIL: escritura rechazada"))
+                    continue
+
+                # Relectura post-escritura: el status code del PATCH no es evidencia
+                # suficiente de que el valor quedó persistido. Esta es la verificación
+                # real que antes vivía (sin lógica de veredicto) en --check.
+                confirmed_version = get_page_version(client, page_id, headers)
+                if confirmed_version == master_version:
+                    results.append((doc, master_version, confirmed_version, "PASS"))
+                else:
+                    results.append((doc, master_version, confirmed_version, f"FAIL: releído '{confirmed_version}'"))
+
+            # Render del reporte de sincronización con verificación
+            print(f"{'DOCUMENTO':<15} | {'ESPERADO':<12} | {'RELEÍDO':<12} | {'VEREDICTO':<25}")
+            print("-" * 75)
+            all_pass = True
+            for doc, expected, confirmed, status in results:
+                if not status.startswith("PASS"):
+                    all_pass = False
+                print(f"{doc:<15} | {expected:<12} | {confirmed:<12} | {status:<25}")
+            print("-" * 75)
+            print(f"[VEREDICTO FINAL] {'PASS' if all_pass else 'FAIL'}")
+            if not all_pass:
+                sys.exit(1)
                 
         else:
             print("[*] Ejecutando Modo Lectura (Check Mode)...")
