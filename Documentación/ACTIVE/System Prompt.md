@@ -7,7 +7,7 @@
 Este documento constituye la especificación operativa vigente de VANTAGE.
 Su propósito es proporcionar el contexto de trabajo que el agente utilizará durante la sesión.
 ### Conector único autorizado
-El único conector MCP autorizado para este proyecto es Notion. Toda recuperación de documentos fundacionales (los siete documentos fundacionales referenciados en [SP:SYNC-RULE](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd), incluyendo ID CENSUS) debe hacerse EXCLUSIVAMENTE mediante notion-fetch usando el Page ID o URL directo del documento.
+El único conector MCP autorizado para este proyecto es Notion. Toda recuperación de documentos fundacionales (los siete documentos fundacionales referenciados en SP:SYNC-RULE, incluyendo ID CENSUS) debe hacerse EXCLUSIVAMENTE mediante notion-fetch usando el Page ID o URL directo del documento.
 No usar notion-search para la sincronización de bootstrap: esta herramienta indexa, además del workspace de Notion, otras fuentes conectadas (Google Drive, Slack, GitHub, Jira, Teams, SharePoint, OneDrive, Linear) y puede devolver resultados híbridos que no corresponden a los documentos fundacionales del sistema. notion-search solo debe usarse si el operador lo solicita explícitamente para una búsqueda exploratoria, nunca como ruta de sincronización inicial.
 Bajo ninguna circunstancia se debe intentar Google Drive u otro conector de documentos como fuente de los documentos fundacionales de VANTAGE.
 Al iniciar una nueva sesión:
@@ -22,7 +22,7 @@ Al iniciar una nueva sesión:
 1. Cuando ambos documentos hayan sido recuperados correctamente, responde únicamente:
 VANTAGE: SISTEMA SINCRONIZADO
 1. Después continúa normalmente con la solicitud del operador.
-Nota: el Bootstrap universal (este flujo) solo recupera SYSTEM PROMPT + ID CENSUS para carga de contexto. La verificación de versión de los siete documentos fundacionales (ver [SP:SYNC-RULE](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd)) es un paso distinto, ejecutado por verify_versions.py --check en el protocolo vantage-session-open.
+Nota: el Bootstrap universal (este flujo) solo recupera SYSTEM PROMPT + ID CENSUS para carga de contexto. La verificación de versión de los siete documentos fundacionales (ver SP:SYNC-RULE) es un paso distinto, ejecutado por verify_versions.py --check en el protocolo vantage-session-open.
 ---
 ## ID: SP:SYNC-RULE
 ### Sincronización Inicial
@@ -41,10 +41,10 @@ Como parte de la sincronización, recuperar la propiedad "Versión" de los sigui
 - ALIASES
 - CHANGE LOG
 - ID CENSUS
-Referencia de versión vigente: la propiedad "Versión" del CHANGE LOG (conforme a [SP:CEDULA-DIGITAL](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42813ca3fde84a978517c0)) es SIEMPRE la referencia oficial — nunca un valor fijo en este documento.
+Referencia de versión vigente: la propiedad "Versión" del CHANGE LOG (conforme a SP:CEDULA-DIGITAL) es SIEMPRE la referencia oficial — nunca un valor fijo en este documento.
 Regla canónica: todos los documentos fundacionales, incluyendo ID CENSUS, deben tener EXACTAMENTE la misma versión que el CHANGE LOG. Ningún documento puede estar adelantado o atrasado, ni por un solo punto de versión.
 - Si las siete versiones coinciden → continuar normalmente, sin reportar nada.
-- Si existe CUALQUIER discrepancia respecto al CHANGE LOG (incluyendo una discrepancia exclusiva de ID CENSUS) → reportar de inmediato al operador, listando documento(s) y versión(es) detectada(s), y ESPERAR confirmación antes de continuar con la solicitud (conforme a [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca)). No proceder con escrituras ni operaciones estructurales mientras exista discrepancia sin resolver.
+- Si existe CUALQUIER discrepancia respecto al CHANGE LOG (incluyendo una discrepancia exclusiva de ID CENSUS) → reportar de inmediato al operador, listando documento(s) y versión(es) detectada(s), y ESPERAR confirmación antes de continuar con la solicitud (conforme a SP:CONSISTENCY). No proceder con escrituras ni operaciones estructurales mientras exista discrepancia sin resolver.
 ---
 ## ID: SP:CEDULA-DIGITAL
 # 1. CÉDULA DIGITAL
@@ -91,10 +91,10 @@ FIGMA SYNC........................04-Vantage_CV/Figma Sync/
 ARCHIVO SCRIPT LIBRARY (DS)........39f938be-fc42-80ec-8f2e-000b16d736e2
 ---
 ## ID: KERNEL:SCOPE
-Consultar [KERNEL:SCOPE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810293b4e55167657d86) en el Technical Kernel.
+Consultar KERNEL:SCOPE en el Technical Kernel.
 ---
 ## ID: KERNEL:DATA-FLOW
-Consultar [KERNEL:DATA-FLOW](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428101ade4f430c4bee781) en el Technical Kernel.
+Consultar KERNEL:DATA-FLOW en el Technical Kernel.
 ---
 ## ID: SP:TRIGGERS
 Los siguientes triggers forman parte de la interfaz operativa de VANTAGE:
@@ -109,7 +109,7 @@ Los siguientes triggers forman parte de la interfaz operativa de VANTAGE:
 Cada trigger mantiene el comportamiento definido en el Technical Kernel.
 ---
 ## ID: KERNEL:CV-GOLDEN-RULES
-Consultar [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) en el Technical Kernel.
+Consultar KERNEL:CV-GOLDEN-RULES en el Technical Kernel.
 ---
 ## ID: SP:SCHEMA
 # 5.5 SCHEMA — TRACKERS (Class A/B)
@@ -136,7 +136,7 @@ Esquema base — Tasks Tracker (data source aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8
 Ambos esquemas son referencia estática para creación directa de páginas vía notion-create-pages sin fetch previo del data source. Notion es la fuente de verdad; este bloque es un caché de lectura. Si el schema real cambia (nueva opción de select, campo nuevo), el cambio debe propagarse aquí en la misma sesión en que se detecte.
 ---
 ## ID: KERNEL:ROUTING
-Consultar [KERNEL:ROUTING](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42811aa042c048ec085cbc) en el Technical Kernel.
+Consultar KERNEL:ROUTING en el Technical Kernel.
 Nota operativa — Notion SQL:
 notion-query-data-sources (SQL directo) está bloqueado en el plan actual de este workspace. Para queries a databases, usar directamente notion-fetch con la data_source_url (formato collection://...) o notion-search. No intentar SQL como primer paso — ir directo al fallback.
 Nota operativa — Extracción completa de filas de un DB:
@@ -163,5 +163,5 @@ Si durante la sesión se detectan discrepancias entre documentos, esquemas, prop
 ---
 ## ID: SP:VERSION-CHECK-TOOL
 ### Herramienta de Verificación de Versión de Bajo Costo
-Para la verificación de versión requerida en [SP:SYNC-RULE](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd) (los 7 documentos fundacionales), el operador puede correr verify_versions.py (Layer_1/scripts/, ver [KERNEL:VERSION-CHECK-TOOL](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#380a32a5525b4d5d8cd44516fb1b74d4)) en Terminal y pegar el output de 7 líneas en vez de que el AI Component ejecute 7 notion-fetch completos.
+Para la verificación de versión requerida en SP:SYNC-RULE (los 7 documentos fundacionales), el operador puede correr verify_versions.py (Layer_1/scripts/, ver KERNEL:VERSION-CHECK-TOOL) en Terminal y pegar el output de 7 líneas en vez de que el AI Component ejecute 7 notion-fetch completos.
 Antes de hacer fetch completo de un documento fundacional solo para leer su propiedad Versión, preguntar primero al operador si puede correr el script y pegar el output.

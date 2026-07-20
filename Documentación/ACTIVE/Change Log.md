@@ -1,5 +1,13 @@
 # V | CHANGELOG
 
+### v9.6.3 — Brief de Navegación Documental
+Componentes 1-3 Completados
+- Adoptado Mapa Dependencias v2 (5 dominios + transversales).
+- Adoptado Contrato Profundidad Mínima Verificación (niveles 0-4 + invariantes).
+- Adoptado Inventario Referencias Cruzadas + Documento Maestro consolidado (verificado contra Notion Ledger + repo).
+- Enriquecimiento: Fetch live Session Ledger + Brief. Sin discrepancias.
+Estado: PASS. Sistema listo para propagación a ACTIVE/ y siguiente ticket ALTO.
+Referencias: Documento Maestro v1.2, Kernel §1-23, Manual §1-21.
 ### v9.6.2 — Fusión Check+Sync en verify_versions.py: verificación real post-escritura · 2026-07-19
 Tipo: [DOC] [INFRA]
 Alcance: Layer_1/scripts/verify_versions.py (local) + KERNEL:VERSION-CHECK-TOOL §23.
