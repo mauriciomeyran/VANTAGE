@@ -11,7 +11,7 @@
 Este documento constituye la especificación operativa vigente de VANTAGE.
 Su propósito es proporcionar el contexto de trabajo que el agente utilizará durante la sesión.
 ### Conector único autorizado
-El único conector MCP autorizado para este proyecto es Notion. Toda recuperación de documentos fundacionales (los siete documentos fundacionales referenciados en [[SP:SYNC-RULE](V | SYSTEM PROMPT )](V | SYSTEM PROMPT ), incluyendo ID CENSUS) debe hacerse EXCLUSIVAMENTE mediante notion-fetch usando el Page ID o URL directo del documento.
+El único conector MCP autorizado para este proyecto es Notion. Toda recuperación de documentos fundacionales (los nueve documentos fundacionales referenciados en [[SP:SYNC-RULE](V | SYSTEM PROMPT )](V | SYSTEM PROMPT ), incluyendo ID CENSUS) debe hacerse EXCLUSIVAMENTE mediante notion-fetch usando el Page ID o URL directo del documento.
 No usar notion-search para la sincronización de bootstrap: esta herramienta indexa, además del workspace de Notion, otras fuentes conectadas (Google Drive, Slack, GitHub, Jira, Teams, SharePoint, OneDrive, Linear) y puede devolver resultados híbridos que no corresponden a los documentos fundacionales del sistema. notion-search solo debe usarse si el operador lo solicita explícitamente para una búsqueda exploratoria, nunca como ruta de sincronización inicial.
 Bajo ninguna circunstancia se debe intentar Google Drive u otro conector de documentos como fuente de los documentos fundacionales de VANTAGE.
 Al iniciar una nueva sesión:
@@ -26,7 +26,7 @@ Al iniciar una nueva sesión:
 1. Cuando ambos documentos hayan sido recuperados correctamente, responde únicamente:
 VANTAGE: SISTEMA SINCRONIZADO
 1. Después continúa normalmente con la solicitud del operador.
-Nota: el Bootstrap universal (este flujo) solo recupera SYSTEM PROMPT + ID CENSUS para carga de contexto. La verificación de versión de los siete documentos fundacionales (ver [[SP:SYNC-RULE](V | SYSTEM PROMPT )](V | SYSTEM PROMPT )) es un paso distinto, ejecutado por verify_versions.py --check en el protocolo vantage-session-open.
+Nota: el Bootstrap universal (este flujo) solo recupera SYSTEM PROMPT + ID CENSUS para carga de contexto. La verificación de versión de los nueve documentos fundacionales (ver [[SP:SYNC-RULE](V | SYSTEM PROMPT )](V | SYSTEM PROMPT )) es un paso distinto, ejecutado por verify_versions.py --check en el protocolo vantage-session-open.
 ---
 ## ID: [[SP:SYNC-RULE](V | SYSTEM PROMPT )](V | SYSTEM PROMPT )
 ### Sincronización Inicial
@@ -37,7 +37,7 @@ Estados posibles:
 - Ambos disponibles → Operación normal.
 - Alguno no disponible después del reintento → MODO DEGRADADO.
 ### Verificación de Versión (fundacionales) — Regla de Versión Única
-Como parte de la sincronización, recuperar la propiedad "Versión" de los siguientes siete documentos fundacionales:
+Como parte de la sincronización, recuperar la propiedad "Versión" de los siguientes nueve documentos fundacionales:
 - MANUAL DE USUARIO
 - TECHNICAL KERNEL
 - CAREER CANON
@@ -45,9 +45,11 @@ Como parte de la sincronización, recuperar la propiedad "Versión" de los sigui
 - ALIASES
 - CHANGE LOG
 - ID CENSUS
+- NAVIGATION BRIEF
+- VANTAGE CENTRAL HUB
 Referencia de versión vigente: la propiedad "Versión" del CHANGE LOG (conforme a SP:CEDULA-DIGITAL) es SIEMPRE la referencia oficial — nunca un valor fijo en este documento.
 Regla canónica: todos los documentos fundacionales, incluyendo ID CENSUS, deben tener EXACTAMENTE la misma versión que el CHANGE LOG. Ningún documento puede estar adelantado o atrasado, ni por un solo punto de versión.
-- Si las siete versiones coinciden → continuar normalmente, sin reportar nada.
+- Si las nueve versiones coinciden → continuar normalmente, sin reportar nada.
 - Si existe CUALQUIER discrepancia respecto al CHANGE LOG (incluyendo una discrepancia exclusiva de ID CENSUS) → reportar de inmediato al operador, listando documento(s) y versión(es) detectada(s), y ESPERAR confirmación antes de continuar con la solicitud (conforme a SP:CONSISTENCY). No proceder con escrituras ni operaciones estructurales mientras exista discrepancia sin resolver.
 ---
 ## ID: SP:CEDULA-DIGITAL
@@ -89,6 +91,8 @@ ARCHIVO BUG TRACKER (COL).........9ef938be-fc42-831b-a2d6-874bd22b7990
 ARCHIVO CHANGELOG.................39d938be-fc42-801c-94f6-f11bfe803633
 ALIASES...........................37c938be-fc42-80d4-b9ae-f5969830331b
 CHANGE LOG........................390938be-fc42-80e7-b429-d7d730339353
+NAVIGATION BRIEF...................3a3938be-fc42-8008-9e90-ec435c01f50d
+VANTAGE CENTRAL HUB................36e938be-fc42-81d6-bf40-dfe7dee782a5
 VERSION MANIFEST (DB).............02331706-d2f5-43d1-8166-ed53b690dbd7
 SESSION LEDGER (DB)................38324240-c686-47d0-8082-cee5e4409f88
 FIGMA SYNC........................04-Vantage_CV/Figma Sync/
@@ -167,5 +171,5 @@ Si durante la sesión se detectan discrepancias entre documentos, esquemas, prop
 ---
 ## ID: SP:VERSION-CHECK-TOOL
 ### Herramienta de Verificación de Versión de Bajo Costo
-Para la verificación de versión requerida en [[SP:SYNC-RULE](V | SYSTEM PROMPT )](V | SYSTEM PROMPT ) (los 7 documentos fundacionales), el operador puede correr verify_versions.py (Layer_1/scripts/, ver KERNEL:VERSION-CHECK-TOOL) en Terminal y pegar el output de 7 líneas en vez de que el AI Component ejecute 7 notion-fetch completos.
+Para la verificación de versión requerida en [[SP:SYNC-RULE](V | SYSTEM PROMPT )](V | SYSTEM PROMPT ) (los 9 documentos fundacionales), el operador puede correr verify_versions.py (Layer_1/scripts/, ver KERNEL:VERSION-CHECK-TOOL) en Terminal y pegar el output de 9 líneas en vez de que el AI Component ejecute 7 notion-fetch completos.
 Antes de hacer fetch completo de un documento fundacional solo para leer su propiedad Versión, preguntar primero al operador si puede correr el script y pegar el output.

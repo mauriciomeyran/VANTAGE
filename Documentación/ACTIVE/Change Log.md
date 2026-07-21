@@ -1,24 +1,74 @@
 # V | CHANGELOG
 
+### v9.6.9 — Reconciliación de Conteo 8→9 (VANTAGE Central Hub) + Extracción de TOC vigente · 2026-07-20
+Tipo: [DOC]
+Alcance: KERNEL (KERNEL:CENSUS-SYNC §9, KERNEL:DOCUMENTATION-TRANSVERSAL-001 §13).
+Contexto: Auditoría del Kernel real detectó que la entrada v9.6.8 dejó KERNEL:CENSUS-SYNC a medio actualizar — ordinal "séptimo" sin corregir a "noveno" y lista de fuente de IDs con 7 nombres en vez de 8 (faltaba VANTAGE Central Hub). Además, KERNEL:DOCUMENTATION-TRANSVERSAL-001 tenía subsección narrativa para Navigation Brief pero ninguna equivalente para VANTAGE Central Hub, pese a que ambos son fundacionales desde el mismo lote de cambios.
+Cambios:
+- KERNEL:CENSUS-SYNC (§9): "séptimo... otros ocho... siete documentos" → "noveno... otros ocho... ocho documentos (agregando VANTAGE Central Hub)".
+- KERNEL:DOCUMENTATION-TRANSVERSAL-001 (§13): nueva subsección "VANTAGE Central Hub — Documento Fundacional de Entrada", paralela en estructura a la de Navigation Brief.
+- Extracción de TOC vigente del Kernel (§1–§15, con subsecciones) confirmada contra fetch en vivo — sin discrepancia frente a la tabla "TABLE OF CONTENT" embebida en el documento.
+- Se descartó reconciliar el documento externo "PARCHES INDIVIDUALES PARA KERNEL" (solo contemplaba 7→8 con Brief únicamente) — superado por este parche directo.
+Write-Back Verification: re-fetch de Kernel tras cada escritura — sin mismatch en ninguna de las dos.
+IDs afectados: ninguna alta/baja de KERNEL:ID canónico — corrección de conteo y nueva subsección narrativa bajo secciones ya existentes. KERNEL:CENSUS-SYNC Regla 1 no se dispara.
+Tickets logueados en esta sesión (Tasks Tracker):
+- ALTO — Modificar generate_census.py: 131 IDs en spec, 121 resueltos, 10 sin link (KERNEL:OWNERSHIP-001/002, KERNEL:TRIGGER-001/002/005/006/007/009, KERNEL:GATE-DECISION-004, KERNEL:NAMING-CONVENTION), 2 huérfanos (KERNEL:HEALTH-CHECK-001.1, KERNEL:HEALTH-CHECK-003). [CENSUS-SYNC-R1] anotado.
+- MEDIO — Desarrollar generate_id_inventory.py y apply_hyperlinks.py (porciones pendientes).
+- MEDIO — Generar script de normalización de formato ID/título de sección-subsección a través de la suite documental.
+Pendiente (fuera de esta entrada): los 3 tickets recién logueados; verify_versions.py real (Terminal) pendiente de extender a 9 documentos (heredado de v9.6.8); Manual §6 desalineado con --check eliminado (heredado, ticket ALTO ya logueado en v9.6.8).
+Versión actualizada: 9.6.9 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.6.6 hasta que el operador corra verify_versions.py --sync.
+---
+### v9.6.8 — Normalización de Conteo de Fundacionales: 7→9 (BRIEF + VANTAGE Central Hub) · 2026-07-20
+Tipo: [DOC]
+Alcance: KERNEL (KERNEL:DOC-CONTRACT §7, KERNEL:CENSUS-SYNC §9, KERNEL:VERSION-CHECK-TOOL §10 ×3, KERNEL:HEALTH-CHECK §11 ×2 nuevas subsecciones, KERNEL:DOCUMENTATION-TRANSVERSAL-001 §13); SYSTEM PROMPT (SP:BOOTSTRAP-001 ×2, SP:SYNC-RULE, SP:CEDULA-DIGITAL, SP:VERSION-CHECK-TOOL).
+Contexto: El operador confirmó en sesión que el conteo de documentos fundacionales pasa de 7 a 9, incorporando Navigation Brief (ya formalizado como 8vo en v9.6.5/v9.6.6) y VANTAGE Central Hub (página hub del workspace, versionable, con artáfactos de trabajo puntuales) como 9no. Se detectó y corrigió en la misma sesión un ID incorrecto para Navigation Brief circulando en un borrador externo (3a3938be-fc42-8089-93f2-f52dbd2dec6c, colisión de sufijo con Career Canon) — el ID real usado aquí es 3a3938be-fc42-8008-9e90-ec435c01f50d, confirmado por fetch directo del Census.
+Cambios:
+- KERNEL:DOC-CONTRACT (§7): tabla "Prefijos Autorizados" — agregadas filas BRIEF y VANTAGE.
+- KERNEL:CENSUS-SYNC (§9): "séptimo... otros seis" → "séptimo... otros ocho"; lista de fuente de IDs ampliada con Navigation Brief.
+- KERNEL:VERSION-CHECK-TOOL (§10): conteo 7→9 en Propósito, Output de Sync Mode (filas) y Flujo Canónico paso 3 (documentos restantes).
+- KERNEL:HEALTH-CHECK (§11): 2 subsecciones nuevas — KERNEL:HEALTH-CHECK-001.1 (Auto-Archive como Housekeeping, citando Changelog v9.5.9/v9.5.6/v9.5.4, mecanismo no re-verificado contra script en esta sesión) y KERNEL:HEALTH-CHECK-003 (Skills de Mantenimiento del Tracker, tabla de 5 skills).
+- KERNEL:DOCUMENTATION-TRANSVERSAL-001 (§13): nueva subsección Navigation Brief — Documento de Descubrimiento y Enrutamiento, con ID corregido.
+- SYSTEM PROMPT: 6 ediciones de conteo 7→9 en SP:BOOTSTRAP-001 (×2), SP:SYNC-RULE (lista + cierre), SP:CEDULA-DIGITAL (UUIDs de Brief y Vantage agregados) y SP:VERSION-CHECK-TOOL.
+Nota de honestidad estructural: un primer intento de escritura en KERNEL:HEALTH-CHECK-003 produjo una fila de tabla rota por un pipe (|) sin escapar en "V|CHANGELOG" — detectado en Write-Back Verification, no en el DRY RUN, y corregido en la misma sesión antes de este Changelog.
+Write-Back Verification: re-fetch de KERNEL tras cada tanda de escritura (incluida la corrección de la tabla) — sin mismatch en el estado final. SYSTEM PROMPT verificado en escritura previa de esta misma sesión.
+IDs afectados: ninguna alta/baja de KERNEL:ID canónico — son ediciones de conteo y contenido bajo secciones ya existentes; las 2 subsecciones nuevas de HEALTH-CHECK y la de Navigation Brief documentan mecanismos ya operativos (Changelog v9.5.9/v9.6.0/v9.6.6), no dan de alta identificadores nuevos del esquema PREFIX:KEY. KERNEL:CENSUS-SYNC Regla 1 no se dispara.
+Pendiente (fuera de esta entrada, tickets logueados en sesión): (1) Dedup_Flag citado en HEALTH-CHECK-001.1 no está en la enumeración Class B de KERNEL:SCHEMA-001 — pendiente conciliar contra esquema real; (2) Manual §6 (MANUAL:SESSION-CYCLE-001) describe verify_versions.py con 3 flags activos incluyendo --check, ya eliminado del Kernel en v9.6.2 — desalineación mayor, ticket ALTO logueado en Tasks Tracker; (3) verify_versions.py real (Terminal) pendiente de extenderse a 9 documentos — no verificado en esta sesión, solo documentado como pendiente.
+Versión actualizada: 9.6.8 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.6.6 hasta que el operador corra verify_versions.py --sync.
+---
+### v9.6.7 — Schema Consolidation: Bug Tracker ↔ Archivo Bug Tracker / Task Tracker ↔ Archivo Task Tracker · 2026-07-20
+Tipo: [INFRA] [SCHEMA]
+Alcance: Igualación de esquemas en cuatro databases Notion para garantizar integridad de datos en flujos de archivado automático (vantage-tidy-bug-task-tracker).
+Cambios Ejecutados:
+| Database | Acción | Propiedades |
+| BUG TRACKER | Agregar | Creado, Etiquetas, Fecha_Resolución, Solución |
+| ARCHIVO BUG TRACKER | Eliminar/Renombrar | ✗ Prioridad (number); Prioridad 1 → Prioridad; Nombre → Bug |
+| TASK TRACKER | Agregar | Fecha_Cierre, Creado |
+| ARCHIVO TASK TRACKER | Consolidar Status | 3 valores [Pendiente, En progreso, Hecho] |
+IDs Afectados: Ninguno en documentos fundacionales — cambios de schema en data sources Notion únicamente
+(collection://36e938be..., collection://9ef938be..., collection://aaaaef55..., collection://c470ead7...)
+Impacto en Pipeline: vantage-tidy-bug-task-tracker ahora opera sobre esquemas idénticos activo↔archivo, 
+eliminando riesgo de truncamiento o pérdida de datos en migración.
+Versión Actualizada: v9.6.7 (solo CHANGELOG). Resto de fundacionales en v9.6.6 hasta versions --sync.
+---
 v9.6.6 — [2026-07-20] — ORQUESTACIÓN ESTRUCTURAL Y NAVEGACIÓN
 1. Integración Documental (Navigation Brief)
 - Alcance: Formalización del Navigation Brief (ID: 3a3938be-...) como 8vo documento fundacional del ecosistema VANTAGE.
 - Gobernanza: Inclusión en SP:SYNC-RULE y KERNEL:CENSUS-SYNC. El documento queda sujeto a la Regla de Versión Única (bloqueante ante discrepancias de versión).
 - Versión: Asignada v9.6.5 de forma sincronizada con el resto de la suite.
-2. Reingeniería del Master Index
+1. Reingeniería del Master Index
 - Sustitución de S.S.O.T.: Eliminación del Bloque 3 (Census Embebido) por redundancia con V:ID-CENSUS.
 - Estandarización:
 - Bloque 1: Suite de 8 fundacionales, sincronizados contra SP:CEDULA-DIGITAL v9.6.5.
 - Bloque 2: Actualización de trackers (Archivo Task, Bug, Changelog, Manifest, Ledger) con IDs de base de datos validados.
 - Propósito: El documento queda consolidado exclusivamente como Índice de Descubrimiento de activos y rutas.
-3. Normalización del ID Census
+1. Normalización del ID Census
 - Expansión: Registro de 11 nuevos identificadores (BRIEF:001 al BRIEF:011) para las secciones del Navigation Brief.
 - Integridad: Verificación final mediante generate_census.py (v3.0) con resultado: 131/131 IDs resueltos, 0 huérfanos, 0 colisiones.
-4. Actualizaciones del Sistema de Supervisión
+1. Actualizaciones del Sistema de Supervisión
 - Scripting: Modificación profunda en verify_versions.py (DOC_KEYS extendido a 8 documentos + fallback BRIEF_FALLBACK_ID).
 - VANTAGE HUB (Página Principal): Implementación de supervisión pasiva (v9.0.1). El sistema ahora reporta el status en -sync y -bootstrap sin disparar bloqueos (veredicto tolerante al formato de propiedad "Versión ").
 - Cross-Referencing: Inyección masiva de hipervínculos normalizados en Kernel, Manual y System Prompt (apply_hyperlinks.py).
-5. Auditoría de Cierre
+1. Auditoría de Cierre
 - Verificación: verify_versions.py --sync reportó PASS en todos los documentos.
 - Pending validation: Se da por resuelta la entrada del Changelog v9.6.3 ("Pending Validation") al completarse la integración aquí descrita.
 ### v9.6.5 — Marcado manual de duplicado (Multicont, jk rotativo Indeed) · 2026-07-20
