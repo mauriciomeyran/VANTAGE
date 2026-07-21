@@ -17,6 +17,10 @@ Los argumentos son independientes de orden y combinables:
     vdoc notion kernel          # solo Kernel, forzado notion→local (pide confirmación)
     vdoc system_prompt   |  vdoc career_canon  |  vdoc manual
     vdoc aliases          |  vdoc change_log
+    vdoc Navigation_Brief |  vdoc VANTAGE
+
+Nota: ID Census no es un doc soportado aquí — se genera vía generate-census
+y se sube directo a Notion, no vive en ACTIVE/ ni se respalda por este flujo.
 
 Nota: 'dry' es un modificador — se puede combinar con cualquier comando de
 arriba y SIEMPRE gana: nunca escribe en Notion, local ni GitHub sin importar
@@ -30,7 +34,10 @@ PROJECT = Path.home() / "Documents/03 Projects/VANTAGE"
 VSYNC = PROJECT / "Layer_4/scripts/vsync_doc.py"
 VGIT  = PROJECT / "Layer_4/scripts/git_sync.py"
 
-DOCS = {"kernel", "system_prompt", "career_canon", "manual", "aliases", "change_log"}
+# Nota (CENSUS-SYNC-R1): ID Census queda fuera de este set a propósito — se
+# genera vía generate-census y se sube directo a Notion; no tiene contraparte
+# en ACTIVE/ ni tiene sentido respaldarlo por este flujo.
+DOCS = {"kernel", "system_prompt", "career_canon", "manual", "aliases", "change_log", "Navigation_Brief", "VANTAGE"}
 DIRECTIONS = {"notion", "local", "auto"}
 
 def run(cmd, label=""):

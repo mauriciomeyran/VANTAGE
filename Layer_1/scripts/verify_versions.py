@@ -16,27 +16,21 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 ENV_PATH = SCRIPT_DIR.parent / "config" / "layer_1.env"
 REGISTRY_NAME = "resolver_registry_v2.json"
 
-# Nombres canónicos de los 8 documentos fundacionales (Navigation Brief agregado
-# como 8vo fundacional — ver SP:SYNC-RULE / KERNEL:CENSUS-SYNC v9.6.5+)
-DOC_KEYS = ["CHANGELOG", "KERNEL", "MANUAL", "CANON", "SP", "ALIASES", "CENSUS", "BRIEF"]
+# Nombres canónicos de los 9 puntos de supervisión (8 fundacionales + VANTAGE hub).
+# VANTAGE (página principal) se integró en modo idéntico a los demás — NO es
+# supervisión pasiva: participa en --sync y en el check de lectura con el
+# mismo veredicto PASS/FAIL que el resto.
+DOC_KEYS = ["CHANGELOG", "KERNEL", "MANUAL", "CANON", "SP", "ALIASES", "CENSUS", "BRIEF", "VANTAGE"]
 
-# CENSUS no vive en resolver_registry_v2.json (namespace "document_registry" solo
-# cubre KERNEL/MANUAL/CANON/TRACKER/SP/ALIASES/CHANGELOG) — se declara aquí como
-# fallback fijo hasta que el registro lo incorpore.
+# CENSUS no vive en resolver_registry_v2.json: no tiene prefijo propio en
+# KERNEL:DOC-CONTRACT (sus IDs internos usan KERNEL:/SP:/MANUAL:/CANON:/BRIEF:),
+# por lo que se declara aquí como fallback fijo.
+# BRIEF y VANTAGE SÍ viven ya en document_registry (incorporados vía
+# CENSUS-SYNC-R1, conteo de fundamentales 7→9) — los fallbacks de abajo solo
+# se usan como red de seguridad si el registro llegara a perder la clave.
 CENSUS_FALLBACK_ID = "394938be-fc42-81e6-a381-e3869e60d89d"
-
-# BRIEF (Navigation Brief) tampoco vive en resolver_registry_v2.json — mismo
-# patrón de fallback fijo que CENSUS, hasta que el registro lo incorpore.
 BRIEF_FALLBACK_ID = "3a3938be-fc42-8008-9e90-ec435c01f50d"
-
-# VANTAGE (página principal / hub) — NO es fundacional documental (sin contenido
-# normativo, es el dashboard). Entra a supervisión PASIVA: se reporta su versión
-# en --sync y --bootstrap, pero nunca se sobrescribe con la versión maestro y
-# nunca participa del [VEREDICTO FINAL] PASS/FAIL. Nota de schema: su propiedad
-# real en Notion es "Versión " (con espacio final) — distinta de "Versión" en
-# los 8 fundacionales. get_page_version ya prueba "Versión"/"Version"; para este
-# hub se agrega el chequeo con espacio final en report_vantage_hub_status().
-VANTAGE_HUB_PAGE_ID = "36e938be-fc42-81d6-bf40-dfe7dee782a5"
+VANTAGE_FALLBACK_ID = "36e938be-fc42-81d6-bf40-dfe7dee782a5"
 
 # Infraestructura de sesión — no son documentos fundacionales, no participan de SP:SYNC-RULE
 # SESSION LEDGER es una DATABASE (no una página standalone) — corregido tras
@@ -119,7 +113,12 @@ def load_document_uuids(registry_path: Path) -> dict:
             uuids[key] = CENSUS_FALLBACK_ID.replace("-", "")
             continue
         if key == "BRIEF":
-            uuids[key] = BRIEF_FALLBACK_ID.replace("-", "")
+            val = doc_registry.get(key)
+            uuids[key] = val.replace("-", "") if val else BRIEF_FALLBACK_ID.replace("-", "")
+            continue
+        if key == "VANTAGE":
+            val = doc_registry.get(key)
+            uuids[key] = val.replace("-", "") if val else VANTAGE_FALLBACK_ID.replace("-", "")
             continue
         val = doc_registry.get(key)
         if val:
@@ -145,8 +144,10 @@ def get_page_version(client: httpx.Client, page_id: str, headers: dict) -> str:
             return f"Error HTTP {response.status_code}"
         
         properties = response.json().get("properties", {})
-        # Buscar propiedad "Versión" o "Version"
-        prop = properties.get("Versión") or properties.get("Version")
+        # Buscar propiedad "Versión", "Version", o "Versión " (con espacio final —
+        # variante real detectada en VANTAGE página principal, schema inconsistente
+        # respecto a los 8 fundacionales).
+        prop = properties.get("Versión") or properties.get("Version") or properties.get("Versión ")
         if not prop:
             return "Sin Propiedad"
         
@@ -163,12 +164,13 @@ def get_page_version(client: httpx.Client, page_id: str, headers: dict) -> str:
     except Exception as e:
         return f"Error: {str(e)}"
 
-def update_page_version(client: httpx.Client, page_id: str, version: str, headers: dict) -> bool:
-    """Actualiza de forma determinista la propiedad 'Versión' de la página."""
+def update_page_version(client: httpx.Client, page_id: str, version: str, headers: dict, prop_name: str = "Versión") -> bool:
+    """Actualiza de forma determinista la propiedad de versión de la página.
+    prop_name permite variantes de schema (ej. 'Versión ' con espacio final en VANTAGE)."""
     url = f"https://api.notion.com/v1/pages/{page_id}"
     payload = {
         "properties": {
-            "Versión": {
+            prop_name: {
                 "rich_text": [
                     {
                         "type": "text",
@@ -185,48 +187,6 @@ def update_page_version(client: httpx.Client, page_id: str, version: str, header
         return response.status_code == 200
     except Exception:
         return False
-
-def get_vantage_hub_version(client: httpx.Client, page_id: str, headers: dict) -> str:
-    """Lee la versión del VANTAGE Hub (página principal). A diferencia de
-    get_page_version(), tolera el nombre de propiedad real detectado en Notion:
-    'Versión ' con espacio final (inconsistencia de schema pendiente de
-    estandarizar — ver KERNEL/Changelog). Prueba 'Versión ', luego 'Versión',
-    luego 'Version', en ese orden."""
-    url = f"https://api.notion.com/v1/pages/{page_id}"
-    try:
-        response = client.get(url, headers=headers)
-        if response.status_code != 200:
-            return f"Error HTTP {response.status_code}"
-
-        properties = response.json().get("properties", {})
-        prop = properties.get("Versión ") or properties.get("Versión") or properties.get("Version")
-        if not prop:
-            return "Sin Propiedad"
-
-        p_type = prop.get("type")
-        if p_type == "rich_text":
-            texts = prop.get("rich_text", [])
-            return texts[0].get("plain_text", "N/A") if texts else "N/A"
-        elif p_type == "select":
-            return prop.get("select", {}).get("name", "N/A")
-        elif p_type == "title":
-            texts = prop.get("title", [])
-            return texts[0].get("plain_text", "N/A") if texts else "N/A"
-        return "Tipo no Soportado"
-    except Exception as e:
-        return f"Error: {str(e)}"
-
-
-def report_vantage_hub_status(client: httpx.Client, master_version: str, headers: dict) -> None:
-    """Supervisión PASIVA del VANTAGE Hub: solo reporta, nunca escribe ni
-    bloquea el [VEREDICTO FINAL]. Se imprime por separado del bloque de los
-    8 fundacionales para no confundirlo con la Regla de Versión Única."""
-    hub_version = get_vantage_hub_version(client, VANTAGE_HUB_PAGE_ID, headers)
-    print("-" * 75)
-    print("[SUPERVISIÓN PASIVA — no bloqueante, no participa del veredicto]")
-    marker = "OK — igualado" if hub_version == master_version else "⚠️ DESFASADO"
-    print(f"{'VANTAGE (Hub)':<15} | {'Maestro: ' + master_version:<20} | {'Detectado: ' + hub_version:<20} | {marker}")
-
 
 def get_last_ledger_row(client: httpx.Client, data_source_id: str, headers: dict) -> dict:
     """Consulta la data source SESSION LEDGER (database real, no página standalone)
@@ -459,10 +419,6 @@ def render_bootstrap_dump(client: httpx.Client, changelog_page_id: str, headers:
     print("-" * 60)
     print(f"CHANGELOG — versión vigente: {changelog_version}")
     print("-" * 60)
-    hub_version = get_vantage_hub_version(client, VANTAGE_HUB_PAGE_ID, headers)
-    hub_marker = "OK" if hub_version == changelog_version else "⚠️ DESFASADO (supervisión pasiva, no bloquea)"
-    print(f"VANTAGE (Hub) — versión detectada: {hub_version}  [{hub_marker}]")
-    print("-" * 60)
     print(f"TICKETS PENDIENTES (CRÍTICO/ALTO) — {len(all_tickets)} encontrados:")
     if not all_tickets:
         print("  (ninguno)")
@@ -535,7 +491,8 @@ def main():
                     results.append((doc, "N/A", "N/A", "FAIL: ID no resuelto"))
                     continue
 
-                write_ok = update_page_version(client, page_id, master_version, headers)
+                prop_name = "Versión " if doc == "VANTAGE" else "Versión"
+                write_ok = update_page_version(client, page_id, master_version, headers, prop_name=prop_name)
                 if not write_ok:
                     results.append((doc, master_version, "N/A", "FAIL: escritura rechazada"))
                     continue
@@ -559,11 +516,6 @@ def main():
                 print(f"{doc:<15} | {expected:<12} | {confirmed:<12} | {status:<25}")
             print("-" * 75)
             print(f"[VEREDICTO FINAL] {'PASS' if all_pass else 'FAIL'}")
-
-            # VANTAGE Hub — supervisión pasiva. Se reporta SIEMPRE, incluso si
-            # los 8 fundacionales fallaron, pero nunca afecta all_pass/exit code.
-            report_vantage_hub_status(client, master_version, headers)
-
             if not all_pass:
                 sys.exit(1)
                 

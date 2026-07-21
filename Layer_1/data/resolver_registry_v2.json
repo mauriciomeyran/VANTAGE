@@ -39,7 +39,7 @@
   },
 
   "document_registry": {
-    "_comment": "SSOT para prefijos documentales (KERNEL:DOC-CONTRACT). Namespace separado de data_sources — este mapea PREFIX -> UUID de página fundacional, no entity_prefix de filas de tracker. Consumido por lazy_loader.py._get_authorized_prefixes(). Agregado v9.0.5 — cierra el pendiente registrado en Change Log v9.0.4.",
+    "_comment": "SSOT para prefijos documentales (KERNEL:DOC-CONTRACT). Namespace separado de data_sources — este mapea PREFIX -> UUID de página fundacional, no entity_prefix de filas de tracker. Consumido por lazy_loader.py._get_authorized_prefixes(). Agregado v9.0.5 — cierra el pendiente registrado en Change Log v9.0.4. Actualizado (CENSUS-SYNC-R1): conteo de fundamentales pasa de 7→9 — se incorporan BRIEF y VANTAGE, previamente cubiertos solo por fallback fijo en verify_versions.py. CENSUS permanece fuera de este namespace: no tiene prefijo propio en KERNEL:DOC-CONTRACT (sus IDs internos usan KERNEL:/SP:/MANUAL:/CANON:/BRIEF:), por lo que verify_versions.py sigue resolviéndolo vía CENSUS_FALLBACK_ID.",
     "KERNEL":    "377938be-fc42-805e-a408-c9ae518d4fe7",
     "MANUAL":    "372938be-fc42-8050-9a67-e40857d7806e",
     "CANON":     "377938be-fc42-8089-93f2-f52dbd2dec6c",
@@ -47,7 +47,9 @@
     "SP":        "37b938be-fc42-8001-9b9b-fcf81130d274",
     "ALIASES":   "37c938be-fc42-80d4-b9ae-f5969830331b",
     "CHANGELOG": "390938be-fc42-80e7-b429-d7d730339353",
-    "CHANGELOG_ARCHIVE": "39d938be-fc42-801c-94f6-f11bfe803633"
+    "CHANGELOG_ARCHIVE": "39d938be-fc42-801c-94f6-f11bfe803633",
+    "BRIEF":     "3a3938be-fc42-8008-9e90-ec435c01f50d",
+    "VANTAGE":   "36e938be-fc42-81d6-bf40-dfe7dee782a5"
   },
 
   "known_pitfalls": {
