@@ -41,8 +41,10 @@ La solución no es buscar más — es verificar antes de evaluar, y evaluar ante
 1. Strategy es responsabilidad humana; processing es responsabilidad del sistema.
 ### Qué Significa Esto para el Sistema AI
 El componente AI es el procesador textual del pipeline: deduplica, normaliza, genera DRY RUN (el preview de escritura que se presenta al operador antes de cualquier cambio en Notion), escribe Class A en Notion (los campos que describen la vacante tal como fue capturada — Rol, Marca, URL, Status, etc.; el contrato completo de qué es Class A y qué es su contraparte Class B vive en KERNEL:SCHEMA, más adelante en este documento), y produce CVs.
-Evaluación de calidad estratégica de inputs y cálculo de campos Class B no son operaciones de este componente. Esa división de trabajo — qué corresponde al componente AI y qué corresponde exclusivamente a Python — se define con precisión en KERNEL:OWNERSHIP. Las restricciones específicas que impiden al AI Component evaluar fit, estimar scores o interpretar resultados fuera de su contrato están codificadas como reglas de arquitectura, no como preferencias, en KERNEL:CV-GOLDEN-RULES.
-Si una tarea no está en la tabla de triggers — el catálogo de contratos de input/proceso/output que define qué puede ejecutar el componente AI y bajo qué condiciones, desarrollado en KERNEL:TRIGGERS — no se ejecuta.
+Evaluación de calidad estratégica de inputs y cálculo de campos Class B no son operaciones de este componente. Esa división de trabajo — qué corresponde al componente AI y qué corresponde
+exclusivamente a Python — se define con precisión en KERNEL:OWNERSHIP (§4). Las restricciones específicas que impiden al AI Component evaluar fit, estimar scores o interpretar resultados fuera de su contrato están codificadas como reglas de arquitectura, no como preferencias, en KERNEL:CV-GOLDEN-RULES.
+
+Si una tarea no está en la tabla de triggers — el catálogo de contratos de input/proceso/output que define qué puede ejecutar el componente AI y bajo qué condiciones, desarrollado en KERNEL:TRIGGERS  (§6)— no se ejecuta.
 ---
 ## §2 — KERNEL:FAIL-PHILOSOPHY
 Filosofía de Fallo
@@ -190,16 +192,78 @@ Invariantes:
 1. registry_seed.json no se edita manualmente sin regenerar desde el lienzo Figma.
 1. El prefijo [VANTAGE] KEY_NAME en capas del canvas es para auditoría visual humana — no es el mecanismo de resolución del plugin.
 ---
-## §4 — KERNEL:SCHEMA
+### §4 — KERNEL:OWNERSHIP
+División de Responsabilidades AI/Python
+Con las cuatro capas de búsqueda ya establecidas (§4.1 a §4.7) — cada una escribiendo a Notion como punto de convergencia único — esta sección define quién escribe qué dentro de ese flujo compartido.
+El pipeline opera mediante dos componentes con responsabilidades estrictamente separadas. Esta división no es una preferencia de diseño — es un contrato arquitectónico que garantiza que la evaluación de calidad estratégica (fit, oportunidad, conveniencia de aplicar) permanezca separada del procesamiento textual automático.
+---
+Responsabilidades del componente de IA:
+El componente AI es el procesador textual del pipeline. Su alcance se limita estrictamente a:
+- Validación de triggers — Confirmar que la petición del operador corresponde a un trigger existente en KERNEL:TRIGGERS (§6, desarrollado en la siguiente sección).
+- Generación de HANDOFF — Producir el artefacto de transferencia entre sesiones CV-A y CV-B (análisis estratégico → producción de documento). El HANDOFF es un JSON de 5 campos exactos que transfiere keywords, gaps de fit, tono de marca e idioma entre las dos sesiones del pipeline de CV.
+- Deduplicación textual — Normalización de títulos, marcas y URLs para detección de duplicados evidentes antes de escritura.
+- Normalización de contenido — Aplicación de convenciones de capitalización, limpieza de caracteres especiales, mapeo de vocabulario (Prompts → Tracker) según KERNEL:SCHEMA-008.
+- Generación de DRY RUN — Producción del preview de campos a escribir (KERNEL:TRIGGER-004) antes de cualquier operación de escritura en Notion.
+- Escritura de campos Class A en Notion — Población de campos que describen la vacante tal como fue capturada: Rol, Marca, URL, Status, Source_Type, Prioridad, Holding, JD, NAD, layer, hash. El contrato completo de qué campos son Class A se define en KERNEL:SCHEMA-001 (§L0-005).
+- Producción de CVs — Ejecución del pipeline CV-A → CV-B, generando el Markdown con Figma tags según CANON:OUTPUT-CONTRACT-001.
+Restricciones arquitectónicas (no negociables):
+- NO modifica campos Class B — Score, Gate_Decision, VM_Scope, Role_Class, Match, Next_Action, Fetch, Fuente son propiedad exclusiva de Python. Si el JSON entrante incluye valores en estos campos, se ignoran sin excepción (KERNEL:SCHEMA-002).
+- NO evalúa fit estratégico de vacantes — "¿Es buena esta vacante para mí?" no es una operación válida del AI Component. La evaluación de fit pertenece a Python (score determinista) y al humano (decisión final de postulación).
+- NO calcula scores ni estima gate decisions — Cualquier solicitud de "¿Qué score crees que tendría?" o "¿Pasaría el gate?" se rechaza con respuesta estandarizada (KERNEL:CV-GOLDEN-RULES-002, §11 en L2).
+- NO ejecuta triggers fuera de la tabla de KERNEL:TRIGGERS — Si una tarea no está en la tabla de triggers (§L0-006), no se ejecuta. No hay excepciones, no hay "intentos razonables" fuera del contrato.
+Gobernanza de restricciones:
+Las restricciones específicas que impiden al AI Component evaluar fit, estimar scores o interpretar resultados fuera de su contrato están codificadas como reglas de arquitectura (no como preferencias de comportamiento) en KERNEL:CV-GOLDEN-RULES (§11, L2). Cada violación genera una respuesta estandarizada de rechazo. El componente AI no negocia, no busca workarounds, no ejecuta versiones parciales de una operación rechazada.
+---
+Responsabilidades del componente Python:
+El componente Python es el motor de lógica de negocio y escritura autónoma. Su alcance incluye:
+- Escritura en Notion — Único componente con permiso de escritura autónoma en Notion. El AI Component escribe Class A únicamente post-APROBAR_WRITE; Python escribe Class B sin intervención humana.
+- Procesamiento de FEED — Ejecución de los flujos de ingesta de L1, L2 y L3:
+- feed_processor.py — Motor principal de procesamiento de JSON entrante desde capas de búsqueda.
+- layer_1_run.py — Orquestador del pipeline completo: URL_GATE → Score → Gate_Decision → VM_Scope → Role_Class.
+- layer_3_mail.py — Procesador de ingesta pasiva desde Gmail (.Jobs label) vía IMAP + Groq.
+- Cálculo de campos Class B — Python calcula y escribe los siguientes campos en cada run de ~/vantage_pipeline.sh:
+- Score (0–100) — Algoritmo determinista sobre VM_Scope, Role_Class y match de keywords VM en el JD. Los pesos exactos y thresholds viven en profile_config.yaml (Layer_1/config/), no en este documento.
+- Gate_Decision — Derivado del Score:
+- Score ≥ 60 → CREATE (Ready-to-Apply)
+- Score 40–59 → Para Revisar (zona gris, requiere juicio humano)
+- Score < 40 o VM_Scope = Off-Target → BLOCKED / Archivar
+- VM_Scope — On-Target / Off-Target, clasificación de alineación con Visual Merchandising.
+- Role_Class — Clasificación del rol según taxonomía interna.
+- Match — Lista de keywords VM detectados en el JD.
+- Next_Action — Workflow siguiente según gate_logic() (Postulado, En proceso, Archivar, etc.).
+- Fetch — Status de extracción del JD (completo, parcial, fallido).
+- Fuente — Origen normalizado del lead (calculado del URL, no del source_name del JSON entrante).
+- Ejecución de lógica de gates — Dos capas intencionalmente distintas (KERNEL:GATE-DECISION-008, §9 en L2):
+- gate() (layer_1_run.py) — Capa técnica de evaluación. Toma parámetros individuales (fetch, vm_scope, role_class, source_type, rol, marca) y decide CREATE vs BLOCKED según condiciones técnicas puras.
+- gate_logic() (gate_logic.py) — Capa de negocio/workflow. Toma el entry completo, protege estados terminales (Archivar, Expirada) y mapea decisiones de gate a acciones específicas de workflow.
+- Deduplicación avanzada — Tres métodos complementarios:
+- Por hash — Detección de duplicados exactos (mismo Rol + Marca + Holding).
+- Por URL normalizada — Detección cross-portal (mismo link, distinta fuente).
+- Por fingerprint de contenido — Detección de jk rotativo (Indeed) y republicaciones con distinta capitalización de título.
+Contrato de scoring:
+Los thresholds numéricos exactos de scoring (60/40) y los pesos de VM_Scope, Role_Class y match de keywords viven en profile_config.yaml (Layer_1/config/), no en este documento. Esta sección documenta el contrato de orden y las reglas de decisión. Los valores numéricos exactos son configuración interna de Python, no contrato de L0.
+Para auditar o modificar pesos de scoring: consultar profile_config.yaml directamente. Cambios requieren validación con dataset histórico antes de aplicarse a producción.
+Invariante crítico:
+Python recalcula campos Class B en cada run de ~/vantage_pipeline.sh. Ningún valor estimado por el AI Component tiene validez en el pipeline — Python sobreescribe sin excepciones, sin considerar valores previos escritos por otros componentes.
+Excepción documentada — Bypass:
+Cuando Source_Type ∈ {Inbound, Referencia, Networking} (contacto humano directo), Gate_Decision: CREATE se asigna automáticamente, bypassing URL_GATE, Score threshold y Visual Signal detection. Razón: un contacto humano verificado tiene mayor señal que cualquier algoritmo. Ver KERNEL:GATE-DECISION-001 (§9.1, L2) para lógica completa del Bypass.
+---
+Conexión con la siguiente sección:
+Con la división de responsabilidades AI/Python ya establecida — quién puede escribir qué, bajo qué condiciones, y con qué restricciones — la siguiente sección (§L0-005 KERNEL:SCHEMA) define el modelo de datos completo: qué campos existen en el Tracker de vacantes, cuáles son Class A (AI/Python), cuáles son Class B (Python-only), y qué valores operativos puede tomar cada uno.
+---
+## §5 — KERNEL:SCHEMA
 Modelo de Datos y Ownership
 ### Aclaración terminológica antes de empezar
 Antes de definir los campos, vale la pena fijar un término que se usa constantemente a partir de aquí: “el Tracker”, sin calificativo, se refiere siempre a la base de datos principal de Notion donde las capas L1, L2 y L3 (ya descritas en KERNEL:ARCHITECTURE) escriben cada vacante — el mismo destino que en los diagramas de arquitectura aparece como “Notion (Class A)”. Esta es una base de datos distinta del Bug Tracker y del Tasks Tracker, que se documentan más adelante en KERNEL:TRACKER-SCHEMA y sirven para gestionar tickets de trabajo interno del propio sistema, no vacantes. Si en algún punto de este documento aparece la palabra “Tracker” sin ese calificativo, se refiere siempre al Tracker de vacantes descrito aquí.
 ---
 ### KERNEL:SCHEMA-001
 — Class A vs Class B
+Con la división de responsabilidades AI/Python ya establecida en KERNEL:OWNERSHIP (§L0-004.8), esta sección define el ownership de cada campo del Tracker de vacantes.
+El schema define ownership. Cada campo pertenece a exactamente un componente.
+No hay campos compartidos ni campos de escritura dual.
 El schema define ownership. Cada campo pertenece a exactamente un componente. No hay campos compartidos ni campos de escritura dual.
-AI Component escribe en triggers CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_processor.py escribe en ciclo FEED L1/L3: Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NAD · layer · hash.
-(Glosario rápido de los triggers mencionados arriba, cada uno desarrollado en detalle más adelante en este Kernel: CV-A y CV-B son las dos sesiones del pipeline de generación de CV — análisis y producción respectivamente, ver KERNEL:CV-PIPELINE; QA es la validación de formato del CV exportado, ver KERNEL:TRIGGER-003; FAST es la vía de ingesta manual de una sola vacante, ver KERNEL:TRIGGER-008; CANON-UPDATE actualiza el Career Canon, ver KERNEL:CANON-UPDATE.)
+AI Component escribe en triggers CV-A · CV-B · QA · FAST · CANON-UPDATE (ver KERNEL:TRIGGERS, §L0-006 para contratos completos); feed_processor.py escribe en ciclo FEED L1/L3: Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NAD · layer · hash.
+(Glosario rápido de los triggers mencionados arriba, cada uno con contrato completo en §L0-006: CV-A y CV-B son las dos sesiones del pipeline de generación de CV — análisis y producción respectivamente, ver KERNEL:CV-PIPELINE (§12, L2); QA es la validación de formato del CV exportado, ver KERNEL:TRIGGER-003; FAST es la vía de ingesta manual de una sola vacante, ver KERNEL:TRIGGER-008; CANON-UPDATE actualiza el Career Canon, ver KERNEL:CANON-UPDATE (§14, L2).)
 Valores operativos del campo Status (asignación manual del operador, no calculados por Python): Target · Postulado · Rechazado · Expirada · Archivar · Repetida (duplicado detectado en revisión manual, distinto de descarte por otras razones).
 Nota sobre JD: En el trigger CV-A, el AI Component cruza los keywords extraídos del JD contra el Career Canon activo antes de generar el HANDOFF. Discrepancias entre el JD y el Canon se reportan en fit_gaps — no se resuelven inventando experiencia ni contradiciendo el Canon.
 Python escribe; ningún otro componente toca: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente.
@@ -266,9 +330,427 @@ Toda entrada en proceso contiene los siguientes bloques en orden:
 - RIESGOS / OPEN QUESTIONS {toggle}
 Entradas en Status=Target o en proceso sin entrevista confirmada: la página puede estar vacía o contener solo notas de contexto. El template de entrevista se agrega cuando se confirma primera ronda.
 ---
-## §5 — KERNEL:DASHBOARD-CHECKLIST-ARCH
+---
+
+§6 — KERNEL:TRIGGERS
+**Contratos de Ejecución del AI Component**
+
+Con el modelo de datos ya establecido (§L0-005) — incluyendo la distinción Class A (AI/Python) vs Class B (Python-only) y el ownership de cada campo — esta sección define los **contratos operativos** que el AI Component puede ejecutar.
+
+Cada trigger define un contrato de input, proceso y output. El componente AI **no ejecuta pasos fuera del contrato del trigger activo** (KERNEL:OWNERSHIP-001). Si una tarea no está en esta tabla, no se ejecuta. No hay excepciones, no hay "intentos razonables" fuera del contrato.
+
+---
+
+### KERNEL:TRIGGER-001 — FEED
+**Procesamiento por Lotes**
+
+FEED con más de 10 vacantes se divide en lotes de 10. El procesamiento es secuencial con header de lote. `feed_processor.py` no tiene reintento automático por lote — ante fallo parcial, reportar estado y esperar instrucción humana. No hay rollback automático de lotes previos completados.
+
+**Origen:** Changelog v6.2.1 — promovido a contrato activo v8.5.1.
+
+**Input esperado:**
+
+- Array JSON de vacantes
+- Cada item debe contener al mínimo: `brand`, `title`, `url` (o `apply_url` si `url` es null), `source_type`
+- Campos opcionales: `holding`, `job_description`, `source_name`, `fetch_status`
+
+**Proceso:**
+
+1. **Validación de longitud:** Si length > 10 → dividir en lotes de 10
+2. **Header de lote:** Reportar `[LOTE N/M] — X vacantes`
+3. **Mapeo de vocabulario:** Aplicar KERNEL:SCHEMA-008 (Prompts → Tracker):
+   - `source_type "career_page"` → `Source_Type: Career Page Oficial`
+   - `source_type "job_board"` → `Source_Type: Agregador`
+   - `source_name` → NO escribir (Fuente es Class B, Python lo calcula)
+   - `apply_url` → `URL` (si `apply_url` es null, usar `url` del item)
+   - `brand` → `Marca`
+   - `title` → `Rol`
+   - `holding` → `Holding` (null → "Investigar")
+4. **Detección de señales de advertencia:** Si `fetch_status ∈ {"partial_link", "needs_verification"}` → documentar en campo Notas como señal de advertencia visual
+5. **Filtrado de campos prohibidos:** Si el JSON incluye `visual_signal`, `innovation_dna`, `score`, `gate_decision` → ignorar sin comentario, no reportar al usuario, no preguntar
+6. **Escritura secuencial:** Procesar lote actual completo antes de avanzar al siguiente
+
+**Output:**
+
+- N páginas nuevas en Notion (campos Class A poblados, Class B vacíos)
+- Reporte por lote: `[LOTE N/M COMPLETADO] — X/10 escritas, Y fallidas`
+- Si hay fallas: detalle de qué items fallaron y por qué (URL inválida, campo requerido ausente, etc.)
+
+**Restricciones:**
+
+- NO escribir campos Class B aunque vengan en el JSON
+- NO intentar reparar URLs rotas o campos mal formados — reportar y esperar instrucción
+- NO procesar lote N+1 si lote N falló — reportar estado y pausar
+
+**Modo de fallo:**
+
+Ante fallo parcial (ej. 7/10 escritas, 3 fallidas por URL inválida):
+[LOTE 2/3] — 7/10 escritas correctamente
+FALLIDAS (3):
+- Item 4: URL inválida (formato no reconocido)
+- Item 7: Campo 'brand' ausente (requerido)
+- Item 9: Duplicado exacto detectado (hash coincide con registro existente)
+¿Proceder con LOTE 3/3 o pausar para corrección?
+
+Esperar instrucción explícita del operador. NO continuar automáticamente.
+
+---
+
+### KERNEL:TRIGGER-002 — VL1
+**Comandos de Mantenimiento del Tracker**
+
+Los comandos VL1 son wrappers de mantenimiento del Tracker (de vacantes). **No son triggers del AI Component** — son comandos Python autónomos. Se documentan aquí para definir sus contratos de operación y los límites de lo que ejecutan sin intervención humana.
+
+**Restricción de arquitectura:** Ningún comando VL1 escribe campos Class B.
+
+#### VL1 backfill
+
+**Propósito:** Escribir campos `layer`, `hash` y `Prioridad` — todos campos Class A — en registros que los tienen vacíos (backfill de datos históricos).
+
+**Input:** Ninguno (opera sobre toda la base)
+
+**Proceso:**
+- Query de registros con `layer` vacío o `hash` vacío o `Prioridad` vacía
+- Cálculo de valores:
+  - `layer` → derivado de `Source_Type`
+  - `hash` → MD5 de `Rol + Marca + Holding`
+  - `Prioridad` → valor por defecto según regla de negocio
+- Escritura batch
+
+**Output:** Reporte de N registros actualizados
+
+**Restricción:** Solo escribe Class A. NO toca Score, Gate_Decision, VM_Scope.
+
+#### VL1 batch
+
+**Propósito:** Modificar campo `Status` (Class A) en batch según query del operador.
+
+**Input:**
+- Query (filtro de registros a modificar)
+- Nuevo valor de Status
+- Flag `-execute` (obligatorio para escritura real)
+
+**Proceso:**
+1. Query de registros que cumplen filtro
+2. **Sin `-execute`:** Reporte de N registros afectados (DRY RUN permanente)
+3. **Con `-execute`:** Escritura batch del nuevo Status
+
+**Output:**
+- Modo DRY RUN: `N registros serían modificados (Status → [nuevo_valor]). Agregar -execute para confirmar.`
+- Modo EXECUTE: `N registros modificados correctamente.`
+
+**Guardia de escritura CRÍTICA:**
+
+La ausencia del flag `-execute` hace el comando **permanentemente read-only**. El script **NO debe usar `input()` interactivo** como mecanismo de protección — `input()` falla en contextos no-TTY y puede producir escritura no intencionada. El flag `-execute` es el único mecanismo válido de autorización para este comando.
+
+**Restricción:** Solo puede modificar `Status` (Class A). NO puede escribir Score, Gate_Decision ni ningún otro campo Class B.
+
+---
+
+### KERNEL:TRIGGER-003 — QA
+**Validación de Formato de CV Exportado**
+
+QA valida formato y completitud del CV exportado. **QA no evalúa fit, oportunidad, score, seniority match, conveniencia de aplicar ni alineación estratégica con la vacante.** Su función se limita estrictamente a verificación de formato del documento exportado.
+
+**Checklist Canónico de 6 ítems (obligatorio):**
+
+1. **Identidad y contacto** — Nombre completo, email, teléfono, LinkedIn presentes y legibles
+2. **Estructura de secciones** — Orden correcto: Profile → Experience → Skills → Achievements → KPIs → Facts → Positioning
+3. **Orden de experiencia** — Cronológico descendente obligatorio (C01 → C02 → C03 → C04 → C05), sin inversiones
+4. **Completitud de contenido** — Todos los slots del Skeleton poblados (sin slots vacíos visibles en el PDF)
+5. **Integridad visual y legibilidad** — Sin overlaps de texto, fuentes renderizadas correctamente, márgenes respetados
+6. **Consistencia de exportación** — Markdown con Figma tags coincide exactamente con el PDF exportado (sin pérdida de negritas, viñetas o saltos de línea)
+
+**Input esperado:**
+
+- Path al archivo PDF exportado
+- (Opcional) Path al Markdown con Figma tags usado para generar el PDF
+
+**Proceso:**
+
+1. Abrir PDF y validar cada uno de los 6 ítems del checklist
+2. Para cada ítem: asignar PASS o FAIL
+3. Si algún ítem es FAIL: documentar en nota breve qué falló específicamente
+
+**Output obligatorio:**
+GO / NO-GO (Checklist):
+1. Identidad y contacto — PASS/FAIL — [nota breve si FAIL]
+1. Estructura de secciones — PASS/FAIL — [nota breve si FAIL]
+1. Orden de experiencia — PASS/FAIL — [nota breve si FAIL]
+1. Completitud de contenido — PASS/FAIL — [nota breve si FAIL]
+1. Integridad visual y legibilidad — PASS/FAIL — [nota breve si FAIL]
+1. Consistencia de exportación — PASS/FAIL — [nota breve si FAIL]
+VEREDICTO FINAL: GO / NO-GO
+
+Si **cualquier ítem retorna FAIL**, el resultado final es **NO-GO**.
+
+**Restricciones:**
+
+- NO evaluar "¿Este CV es suficientemente bueno para esta vacante?"
+- NO evaluar "¿El seniority presentado coincide con el rol target?"
+- NO evaluar "¿La experiencia es convincente?"
+
+Esas evaluaciones pertenecen al operador humano, no a QA. QA es validación de formato únicamente.
+
+---
+
+### KERNEL:TRIGGER-004 — DRY RUN
+**Preview Obligatorio de Escritura**
+
+DRY RUN es el preview de campos a escribir que precede a toda operación de escritura en Notion. No es opcional. No hay escritura sin DRY RUN previo.
+
+**Campos Permitidos (Class A únicamente):**
+
+- Op (número de operación, ej. "Op 1/3")
+- Empresa (Marca)
+- Rol
+- URL
+- Source_Type (Career Page Oficial, Agregador, Inbound, Referencia, Networking)
+- Prioridad (ALTA, MEDIA, BAJA)
+- Status (Target, Postulado, Rechazado, Expirada, Archivar, Repetida)
+
+**Campos Prohibidos (Class B — nunca aparecen en DRY RUN):**
+
+- Visual Signal
+- Innovation DNA
+- Score Estimado
+- Gate_Decision
+- Decisión CREATE/BLOCKED
+
+Estos últimos dos (Gate_Decision y decisión CREATE/BLOCKED) son campos Class B ya definidos en KERNEL:SCHEMA-001 y su prohibición aquí es consistente con KERNEL:GATE-DECISION-004 (§9.4, L2): **el AI Component nunca produce ni sugiere un valor de gate**, ni siquiera en modo preview.
+
+**Formato de Output:**
+DRY RUN — N operaciones
+Op 1/3
+Empresa: [Marca]
+Rol: [Título del rol]
+URL: [URL completa]
+Source_Type: [Career Page Oficial / Agregador / etc.]
+Prioridad: [ALTA/MEDIA/BAJA]
+Status: Target
+---
+Op 2/3
+[...]
+---
+Op 3/3
+[...]
+===
+Total: N vacantes listas para escribir.
+¿Proceder? Responde APROBAR_WRITE para confirmar.
+
+**Validación Pre-Escritura:**
+
+Antes de generar el DRY RUN, validar contra KERNEL:SCHEMA-002:
+
+- Si el JSON entrante incluye campos Class B con valores (`"score": 75`, `"gate_decision": "CREATE"`), se **ignoran** sin excepción.
+- El DRY RUN **nunca** muestra campos Class B, aunque vengan en el input.
+
+**Autorización de Escritura:**
+
+Solo tras recibir una de las variantes válidas de APROBAR_WRITE (KERNEL:SCHEMA-006):
+
+- APROBAR_WRITE
+- APROBAR
+- SÍ
+- sí
+- YEP
+- yep
+
+**⚠️ ELIMINADOS (RAI-03):** Ok · Go · YES · yes — ocurren naturalmente en conversación y pueden producir escritura no intencionada.
+
+Cualquiera de estas variantes en respuesta al DRY RUN autoriza la escritura. Cualquier otra respuesta cancela la operación.
+
+---
+
+### KERNEL:TRIGGER-005 — SYNC
+**Reporte de Estado del Tracker**
+
+SYNC reporta el estado actual de Notion. **Datos puros.** Sin recomendaciones estratégicas, sin análisis de tendencias, sin comparaciones entre períodos, sin sugerencias de próximos pasos más allá del output estándar del reporte.
+
+**Input esperado:**
+
+Ninguno (comando sin parámetros)
+
+**Proceso:**
+
+Query a Notion:
+```python
+# Pseudo-código
+counts = {
+  "Target": count(Status == "Target"),
+  "Postulado": count(Status == "Postulado"),
+  "En proceso": count(Status == "En proceso"),
+  "Rechazado": count(Status == "Rechazado"),
+  "Total": count(all)
+}
+
+nads_overdue = count(NAD < today AND Status IN ["Target", "En proceso"])
+last_write = max(Created_Time)
+Output (formato fijo, ≤12 líneas, sin excepción):
+```plain text
+SYNC REPORT — [FECHA]
+
+Target: X | Postulado: X | En proceso: X | Rechazado: X | Total: X
+
+NADs OVERDUE: X
+
+LAST WRITE: [timestamp]
+```
+Restricciones:
+SYNC NO interpreta. Ejemplos de solicitudes que violan esta regla:
+- ❌ "¿Qué fuentes están funcionando mejor?"
+- ❌ "¿Debería ajustar mis targets?"
+- ❌ "¿Cuál es la tendencia de mis scores este mes?"
+Respuesta estandarizada ante violación (KERNEL:CV-GOLDEN-RULES-005):
+```plain text
+OPERACIÓN RECHAZADA — Violación Regla de Oro #5
+
+SYNC reporta datos puros. Análisis e interpretaciones fuera del alcance de este trigger.
+
+Alternativa operativa: Cierra SYNC → abre nueva sesión → solicita análisis con los datos del reporte
+
+¿Proceder con SYNC estándar? Escribe SÍ o CANCELAR
+```
+---
+### KERNEL:TRIGGER-006 — TOP 3 BY SCORE
+Reporte de Vacantes con Mayor Score
+Query de las 3 vacantes con mayor Score (campo Class B, calculado por Python) en el Tracker.
+Input esperado:
+Ninguno (comando sin parámetros)
+Proceso:
+Query a Notion:
+```python
+top_3 = query(
+  filter={"Status": {"does_not_equal": "Rechazado"}},
+  sorts=[{"property": "Score", "direction": "descending"}],
+  page_size=3
+)
+```
+Output (formato tabla):
+```plain text
+TOP 3 BY SCORE
+
+Marca | Rol | Score
+------|-----|------
+[Marca 1] | [Rol 1] | [Score 1]
+[Marca 2] | [Rol 2] | [Score 2]
+[Marca 3] | [Rol 3] | [Score 3]
+```
+Campos Permitidos en Output:
+- Marca (brand)
+- Rol (title)
+- Score (campo Class B)
+- (Opcional) URL — si el operador lo solicita explícitamente
+Restricciones:
+- NO incluir evaluación de "¿Cuál deberías aplicar primero?"
+- NO incluir análisis de "Por qué estas tienen el score más alto"
+- Solo reportar los datos. La interpretación corresponde al operador.
+---
+### KERNEL:TRIGGER-007 — NEXT ACTION
+Reporte de Next_Action del Sistema
+Ejecuta ~/vantage_pipeline.sh status y reporta el estado.
+Input esperado:
+Ninguno (comando sin parámetros)
+Proceso:
+Ejecutar:
+```bash
+~/vantage_pipeline.sh status
+```
+Output:
+El output exacto del script, sin interpretación ni resumen.
+Ejemplo:
+```plain text
+PIPELINE STATUS
+
+Ready-to-Apply: 5
+Para Revisar: 12
+Blocked: 23
+
+Último run: 2026-07-20 14:32:15
+```
+Restricciones:
+- SYNC reporta estado. No interpreta tendencias.
+- No recomienda acciones estratégicas.
+- No compara períodos.
+- Datos puros del estado actual de Notion.
+---
+### KERNEL:TRIGGER-008 — FEED (migración)
+Excepción: Procesamiento Manual de Vacante Única
+Si recibes JSON de vacantes SIN triggers CV-A · FAST [URL] · CANON-UPDATE, responde:
+```plain text
+El procesamiento de FEED está migrado a feed_processor.py.
+```
+Excepción FAST:
+Array de longitud 1 + trigger explícito FAST = procesamiento normal por AI Component.
+Input esperado:
+```plain text
+FAST
+
+{
+  "brand": "Gucci",
+  "title": "VM Coordinator",
+  "url": "https://...",
+  "source_type": "career_page"
+}
+```
+Proceso:
+Idéntico a KERNEL:TRIGGER-001 (FEED), pero sin división en lotes (solo 1 vacante).
+Output:
+```plain text
+[FAST COMPLETADO]
+1 vacante escrita en Notion.
+
+Marca: Gucci
+Rol: VM Coordinator
+URL: https://...
+Status: Target (por defecto)
+
+Siguiente paso: ~/vantage_pipeline.sh para calcular Score y Gate_Decision.
+```
+Restricciones:
+- Solo procesa 1 vacante por invocación
+- Requiere trigger explícito FAST en el mensaje del operador
+- Si el array tiene length > 1 → rechazar y sugerir FEED estándar
+---
+### KERNEL:TRIGGER-009 — STATUS
+Lectura del Estado General del Sistema
+Ejecuta lectura del estado general. Responde con el estado del sistema actual. No requiere escritura ni evaluación.
+Input esperado:
+Ninguno (comando sin parámetros)
+Proceso:
+Reporte de:
+- Status de health_check.py (último run)
+- Versión actual de los documentos fundacionales (según verify_versions.py)
+- Tickets prioritarios abiertos (CRÍTICO/ALTO en Bug Tracker y Tasks Tracker)
+Output (formato libre, pero estructurado):
+```plain text
+SYSTEM STATUS — [timestamp]
+
+Health Check: PASS (último run: [timestamp])
+Versión: v9.6.6 (7/7 documentos sincronizados)
+
+Tickets Abiertos:
+- CRÍTICO: 0
+- ALTO: 2
+  - [ID] [Título del ticket 1]
+  - [ID] [Título del ticket 2]
+- MEDIO: 5
+- BAJO: 3
+
+Entity Index: Actualizado (hace 3h)
+Census: Actualizado (hace 12h) — ⚠️ Supera umbral de 7 días recomendado
+```
+Restricciones:
+- Solo lectura
+- No ejecuta acciones correctivas
+- No interpreta si el sistema está "sano" o "degradado" — reporta datos, el operador interpreta
+---
+Conexión con la siguiente sección:
+Con los contratos de triggers ya establecidos — qué puede ejecutar el AI Component, bajo qué formato de input, qué output produce, y qué restricciones no puede violar — la siguiente sección (§L0-007 KERNEL:DASHBOARD-CHECKLIST-ARCH) describe la capa de presentación que opera sobre los datos que estos triggers producen: el Dashboard operativo (backend real de Gate_Decision, scoring, Notion sync) y el Checklist semanal (standalone, estado en localStorage).
+---
+## §7 — KERNEL:DASHBOARD-CHECKLIST-ARCH
 Arquitectura Dashboard/Checklist
-Con las cuatro capas de búsqueda/infraestructura ya establecidas, esta sección describe una capa de presentación adicional que opera sobre los datos que esas capas producen: el Dashboard operativo y el Checklist semanal.
+Con las cuatro capas de búsqueda/infraestructura ya establecidas (§L0-004.1 a L0-004.7), los contratos de OWNERSHIP que definen quién escribe qué (§L0-004.8), el modelo de datos completo (§L0-005 SCHEMA), y los triggers que operan sobre ese modelo (§L0-006 TRIGGERS), esta sección describe una capa de presentación adicional que opera sobre los datos que esas capas producen: el Dashboard operativo y el Checklist semanal.
 Dashboard/ contiene dos capas independientes que comparten presentación visual pero no estado:
 1. Backend operativo real — Dashboard/scripts/dashboard_server.py + dashboard.db + dashboard_instances.db + dashboard_notion.py. Fuente de verdad del pipeline de vacantes (Gate_Decision, scoring, Notion sync). dashboard.html consume este backend vía fetch(‘http://127.0.0.1:8000{path}’).
 1. Checklist operativo semanal — Dashboard/Checklist.html. Standalone, estado en localStorage[‘vchecklist_v1’]. Sin backend, sin Notion, sin relación funcional con (1). Intencional: el checklist es una herramienta de tracking personal del operador, no parte del pipeline de vacantes.
@@ -277,7 +759,7 @@ Regla:
 cualquier cambio a un color de estado semántico o al comportamiento del toggle de tema se hace en vantage-tokens.css/vantage-theme.js, nunca en los
 ---
 ---
-## §6 — KERNEL:TRACKER-SCHEMA
+## §8 — KERNEL:TRACKER-SCHEMA
 Bug Tracker y Tasks Tracker
 Distinto del Tracker de vacantes descrito en KERNEL:SCHEMA — esta sección define el Bug Tracker y el Tasks Tracker, las dos bases de datos donde el sistema (y el operador) registran trabajo interno del propio VANTAGE: bugs, deuda técnica y tareas pendientes. Ninguno de los dos almacena vacantes ni usa los campos Class A/B recién definidos.
 ### KERNEL:TRACKER-SCHEMA-001
@@ -299,7 +781,7 @@ Aplica a Bug Tracker y Tasks Tracker con la misma escala.
 | MEDIO | Sin resolución en la semana, el flujo punta a punta se verá comprometido |
 | BAJO | No bloquea operación — nice-to-have |
 ---
-## §7 — KERNEL:DOC-CONTRACT
+## §9 — KERNEL:DOC-CONTRACT
 Canonical Document ID Contract (DOC:CLAVE)
 Este contrato estandariza la referencia cruzada entre componentes del sistema y capas documentales, eliminando la dependencia de UUIDs en prompts y lógica de negocio. Se presenta aquí, antes de KERNEL:NORM y KERNEL:CENSUS-SYNC, porque ambas secciones dependen de este contrato como su fuente de verdad — en el orden original del documento, NORM citaba este contrato antes de que estuviera definido.
 ### Invariantes del Contrato
@@ -480,7 +962,7 @@ El Navigation Brief es la Fuente Única de Verdad (SSOT) para la navegación doc
 No reemplaza los documentos fundacionales — los complementa como índice de descubrimiento que mapea dominios críticos (Housekeeping, Core Assets, Discovery, Gate Logic, CV Pipeline) a sus ubicaciones canónicas en el Kernel, Manual y System Prompt.
 - SP:SYNC-RULE: El Navigation Brief queda sujeto a la Regla de Versión Única. Discrepancias de versión bloquean igual que cualquier otro fundacional.
 - KERNEL:CENSUS-SYNC: Los 11 IDs del Brief (BRIEF:001 a BRIEF:011) están registrados en el V-ID-CENSUS y sujetos a las 5 reglas de sincronización.
-- verify_versions.py: Debe incluir el Brief en la verificación de los 9 fundacionales — pendiente de confirmar contra el código real, no asumido en esta sesión.
+- verify_versions.py: Incluye el Brief en la verificación de los 9 fundacionales (confirmado v9.6.9).
 | ID | Sección | Propósito |
 | --- | --- | --- |
 | BRIEF:001 a BRIEF:011 | Secciones del Navigation Brief | Mapeo de dominios críticos a rutas canónicas |
@@ -506,7 +988,7 @@ Estas dos secciones del Kernel original cubrían, de forma parcialmente redundan
 - Terminal continúa siendo la ruta recomendada para operaciones masivas, auditorías y cambios estructurales
 - Runtime: L0 (Lectura estricta). Cero escritura directa.
 - Jerarquía: L1 > L2 > L3 (ya establecida en KERNEL:ARCHITECTURE-L4). Claude consolida, NO extrae.
-- FEED: única vía manual de Claude es FAST (KERNEL:TRIGGER-008). Toda ingesta de L1, L2 y L3 se realiza metódicamente vía Python (layer_1_run.py, layer_3_mail.py, feed_processor.py). Ante JSON o FEED sin trigger FAST explícito: "El procesamiento de FEED está migrado a Python; usa FAST si requieres entrada manual."
+- lFEED:** única vía manual de Claude es FAST (KERNEL:TRIGGER-008, §L0-006). Toda ingesta de L1, L2 y L3 se realiza metódicamente vía Python (layer_1_run.py, layer_3_mail.py, feed_processor.py). Ante JSON o FEED sin trigger FAST explícito: "El procesamiento de FEED está migrado a Python; usa FAST si requieres  entrada manual.
 - Triaje de ejecución: Antes de usar herramientas, aplicar: 1. Requerimientos, 2. Triaje de costos (A: Terminal, B: MCP, C: Upload), 3. Confirmación. Priorizar Opción A.
 ### KERNEL:ROUTING
 — Mecanismo Técnico de las Rutas MCP
@@ -528,7 +1010,27 @@ Rutas válidas:
 ---
 ## §15 — KERNEL:DATA-FLOW
 Flujo de Datos y Escritura
-Con la economía de contexto ya resuelta (§L0-015), esta sección describe la secuencia obligatoria por la que pasa cualquier escritura del sistema, de principio a fin: Kernel → DRY RUN → APROBAR_WRITE → Notion Write.
-Desglosado: el componente AI consulta el Kernel (vía Terminal, según la ruta preferente de KERNEL:SCOPE) para confirmar el contrato del trigger activo; produce un DRY RUN — el preview de campos a escribir, ya definido formalmente en KERNEL:TRIGGER-004 — para que el operador lo revise; espera una de las variantes válidas de APROBAR_WRITE (KERNEL:SCHEMA-006); y solo entonces ejecuta la escritura real en Notion.
+Con la economía de contexto ya resuelta (§15), esta sección describe la secuencia obligatoria por la que pasa cualquier escritura del sistema, de principio a fin: Kernel → DRY RUN → APROBAR_WRITE → Notion Write.
+Desglosado: el componente AI consulta el Kernel (vía Terminal, según la ruta preferente de KERNEL:SCOPE, §L0-016) para confirmar el contrato del trigger activo; produce un DRY RUN — el preview de campos a escribir, ya definido formalmente en KERNEL:TRIGGER-004 (§6) — para que el operador lo revise; espera una de las variantes válidas de APROBAR_WRITE (KERNEL:SCHEMA-006, §5); y solo entonces ejecuta la escritura real en Notion.
 Ningún paso de esta cadena puede saltarse: escribir sin DRY RUN previo, o sin APROBAR_WRITE explícito, viola el contrato aunque el contenido a escribir sea correcto.
 Pre-validación: Cruzar esquema contra KERNEL:SCHEMA antes de cualquier escritura — es decir, confirmar que cada campo en el payload de escritura es Class A y no Class B, exactamente como exige KERNEL:SCHEMA-002.
+
+```markdown
+### Tabla de Cross-References Actualizadas (Resumen)
+
+| Referencia | Ubicación | Cambio |
+|------------|-----------|--------|
+| KERNEL:OWNERSHIP | §L0-002 (PURPOSE) | Agregar "(§L0-004.8)" |
+| KERNEL:TRIGGERS | §L0-002 (PURPOSE) | Agregar "(§L0-006)" |
+| KERNEL:OWNERSHIP | §L0-005 (SCHEMA-001 inicio) | Agregar conexión narrativa + "(§L0-004.8)" |
+| KERNEL:TRIGGERS | §L0-005 (SCHEMA-001 Class A) | Agregar "(§L0-006)" |
+| KERNEL:TRIGGER-003, 008 | §L0-005 (SCHEMA-001 glosario) | Agregar números de sección |
+| KERNEL:CV-PIPELINE, CANON-UPDATE | §L0-005 (SCHEMA-001 glosario) | Agregar "(§12, L2)" y "(§14, L2)" |
+| Conexión narrativa completa | §L0-007 (DASHBOARD, inicio) | Agregar párrafo de conexión con secciones previas |
+| KERNEL:TRIGGER-008 | §L0-016 (SCOPE/ROUTING) | Agregar "(§L0-006)" |
+| KERNEL:SCOPE | §L0-017 (DATA-FLOW) | Agregar "(§L0-016)" |
+| KERNEL:TRIGGER-004 | §L0-017 (DATA-FLOW) | Agregar "(§L0-006)" |
+| KERNEL:SCHEMA-006 | §L0-017 (DATA-FLOW) | Agregar "(§L0-005)" |
+
+```
+
