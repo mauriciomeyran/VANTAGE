@@ -45,12 +45,12 @@
 | [`KERNEL:GATE-DECISION-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a3938befc428029b8b4cb353e2a4a23 ) | §9.1 | Lógica de Bypass |
 | [`KERNEL:GATE-DECISION-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#5d6e0311385e4504b149cb15717caec4 ) | §9.2 | Lógica Estándar |
 | [`KERNEL:GATE-DECISION-003`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#095ee39768ec446492183b3298cfea80 ) | §9.3 | Resolución de REVIEW_NEEDED |
-| `KERNEL:GATE-DECISION-004` | §9.4 | Por Qué los Gates Son Deterministas |
+| [`KERNEL:GATE-DECISION-004`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#515778b7bac04043a0fa39a1dc1b82a9 ) | §9.4 | Por Qué los Gates Son Deterministas |
 | [`KERNEL:GATE-DECISION-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a3938befc4280ca9f22c605b58eb59c ) | §9.5 | Flujo de Recuperación BLOCKED |
 | [`KERNEL:GATE-DECISION-006`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#38dc6c4118394369ab212cd5b151dc53 ) | §9.6 | REJECTED (Post-Aplicación) |
 | [`KERNEL:GATE-DECISION-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#998ae6eb52944ce58653bb3acfee1d2c ) | §9.7 | Ejecución Automática de Archivado |
 | [`KERNEL:GATE-DECISION-008`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#7489358c001b4c48b595f684ee289d49 ) | §9.8 | Capas de Evaluación de Gate: Técnica vs. Negocio |
-| `KERNEL:NAMING-CONVENTION` | §10 | Convención de Nombres de Outputs |
+| [`KERNEL:NAMING-CONVENTION`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#515778b7bac04043a0fa39a1dc1b82a9 ) | §10 | Convención de Nombres de Outputs |
 | [`KERNEL:CV-GOLDEN-RULES`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a3938befc4280a4b445e82fc613735a ) | §11 | Reglas de Oro CV |
 | [`KERNEL:CV-GOLDEN-RULES-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#c5d93e0a9248464db078b59dffd5a8bd ) | §11.1 | No Evaluar Fit Antes de Escribir |
 | [`KERNEL:CV-GOLDEN-RULES-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#4c582888285c40289e78ecc0027155a6 ) | §11.2 | No Calcular ni Estimar Campos Class B |
