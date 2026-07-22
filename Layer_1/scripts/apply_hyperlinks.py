@@ -273,7 +273,13 @@ def already_linked(line: str, start: int, end: int) -> bool:
         if re.fullmatch(r'`?', between) and after.startswith(']'):
             close = line.find(')', end)
             open_paren = line.find('(', end)
-            if open_paren != -1 and open_paren < close and 'notion.com' in line[open_paren:close]:
+            # Antes exigíamos 'notion.com' en el destino, pero eso fallaba
+            # con links rotos/legacy que apuntan a texto plano ("V | KERNEL")
+            # o a dominios distintos ("notion.so" en vez de "notion.com").
+            # Si el ID ya está sentado dentro de [ID](lo-que-sea), no se
+            # vuelve a envolver -- el destino roto se corrige aparte, nunca
+            # apilando un link nuevo encima de uno existente.
+            if open_paren != -1 and open_paren < close:
                 return True
     return False
 

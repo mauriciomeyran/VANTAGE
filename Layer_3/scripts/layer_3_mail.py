@@ -98,21 +98,33 @@ def _decode_subject(msg):
         return str(raw_subject[0]) if raw_subject else ""
 
 
+def _decode_part(part):
+    """Decodifica un part usando su charset real declarado; fallback a utf-8
+    solo si el part no declara charset. errors=\'replace\' preserva la
+    estructura del texto (URLs incluidas) en vez de descartar bytes."""
+    payload = part.get_payload(decode=True)
+    if not payload:
+        return ""
+    charset = part.get_content_charset() or "utf-8"
+    try:
+        return payload.decode(charset, errors="replace")
+    except (LookupError, UnicodeDecodeError):
+        return payload.decode("utf-8", errors="replace")
+
+
 def _extract_body(msg):
     body = ""
     if msg.is_multipart():
         for part in msg.walk():
             if part.get_content_type() == "text/plain":
-                body = part.get_payload(decode=True).decode("utf-8", errors="ignore")
+                body = _decode_part(part)
                 break
             if part.get_content_type() == "text/html" and not body:
-                html = part.get_payload(decode=True).decode("utf-8", errors="ignore")
+                html = _decode_part(part)
                 body = re.sub(r"<[^>]+>", " ", html)
                 body = re.sub(r"\s+", " ", body).strip()
     else:
-        payload = msg.get_payload(decode=True)
-        if payload:
-            body = payload.decode("utf-8", errors="ignore")
+        body = _decode_part(msg)
     return body[:GROQ_BODY_MAX]
 
 
@@ -325,6 +337,14 @@ VALID_HOLDINGS = [
 VALID_RAW_SOURCES = [
     "Indeed","OCC","LinkedIn","Computrabajo","Bumeran","Puma","Swarovski","Other"
 ]
+
+# Opciones REALES del select "Fuente" en el VANTAGE TRACKER (Notion).
+# No confundir con VALID_RAW_SOURCES: ese es el vocabulario interno de
+# detección por remitente; este es el contrato exacto que Notion acepta.
+# Cualquier raw_source detectado que no esté aquí colapsa a "Other".
+NOTION_FUENTE_OPTIONS = {
+    "Agregador", "Career Page Oficial", "Indeed", "Other", "Computrabajo", "LinkedIn"
+}
 
 # ──────────────────────────────────────────
 # CANONICALIZACIÓN DE URLs (Fix B)
@@ -564,7 +584,12 @@ def already_exists(rol, marca, url=""):
 
 def create_notion_page(job, email_meta):
     holding = normalize_holding(job.get("holding", ""))
-    fuente = email_meta["raw_source"] if email_meta["raw_source"] in VALID_RAW_SOURCES else "Other"
+    raw_source = email_meta["raw_source"] if email_meta["raw_source"] in VALID_RAW_SOURCES else "Other"
+    # Segundo clamp: raw_source puede ser válido internamente (VALID_RAW_SOURCES)
+    # pero no existir como opción real del select en Notion (ej. OCC, Bumeran,
+    # Puma, Swarovski no están dados de alta ahí). Sin este paso, Notion
+    # rechaza la escritura con "option does not exist".
+    fuente = raw_source if raw_source in NOTION_FUENTE_OPTIONS else "Other"
 
     properties = {
         "Rol": {
@@ -586,7 +611,7 @@ def create_notion_page(job, email_meta):
             "rich_text": [{"text": {"content": holding[:200]}}]
         },
         "Fuente": {
-            "rich_text": [{"text": {"content": fuente[:200]}}]
+            "select": {"name": fuente}
         },
         "hash": {
             "rich_text": [{"text": {"content": _compute_l3_hash(

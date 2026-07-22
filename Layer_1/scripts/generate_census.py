@@ -59,48 +59,42 @@ CENSUS_SPEC = [
     {
         "name": "KERNEL",
         "rows": [
-            {"id": "KERNEL:ARCHITECTURE-L0-BOOTSTRAP", "seccion": "§3 L0-B", "nombre": "Bootstrap Protocol / Dynamic Governance Layer"},
             {"id": "KERNEL:AUDIENCE-SCOPE", "seccion": "(encabezado)", "nombre": "Declaración de Audiencia y Alcance"},
             {"id": "KERNEL:PURPOSE", "seccion": "§1", "nombre": "Propósito del Sistema"},
-            {"id": "KERNEL:ARCHITECTURE", "seccion": "§2", "nombre": "Arquitectura de Cuatro Capas"},
-            {"id": "KERNEL:ARCHITECTURE-L0", "seccion": "§2.1", "nombre": "L0 — VANTAGE Runtime"},
-            {"id": "KERNEL:SKILL-ANNOUNCE-CONVENTION", "seccion": "§2.1 (dentro de L0)", "nombre": "Convención de Anuncio de Skills (X-ING.../X-ED)"},
-            {"id": "KERNEL:ARCHITECTURE-L0-BOOTSTRAP", "seccion": "§2.2", "nombre": "L0-Bootstrap — Dynamic Governance Layer"},
-            {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "§2.3", "nombre": "L1 — Active Recon"},
-            {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "§2.4", "nombre": "L2 — Strategic Search"},
-            {"id": "KERNEL:ARCHITECTURE-L3", "seccion": "§2.5", "nombre": "L3 — Passive Intake"},
-            # typo histórico + forma correcta como lookup_ids para máxima cobertura
-            {"id": "KERNEL:ARHITECTURE-L4", "lookup_ids": ["KERNEL:ARHITECTURE-L4", "KERNEL:ARCHITECTURE-L4"], "seccion": "§2.6", "nombre": "L4 — Version Control & Infrastructure"},
-            {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH", "seccion": "§3", "nombre": "Arquitectura Dashboard/Checklist"},
-            {"id": "KERNEL:SCHEMA", "seccion": "§4", "nombre": "Class A vs Class B (Schema)"},
-            {"id": "KERNEL:SCHEMA-001", "seccion": "§4.1", "nombre": "Class A vs Class B — definición de ownership"},
-            {"id": "KERNEL:SCHEMA-002", "seccion": "§4.2", "nombre": "Restricción del Sistema"},
-            {"id": "KERNEL:SCHEMA-003", "seccion": "§4.3", "nombre": "Fuente como Campo Especial"},
-            {"id": "KERNEL:SCHEMA-004", "seccion": "§4.4", "nombre": "Entity Format"},
-            {"id": "KERNEL:SCHEMA-005", "seccion": "§4.5", "nombre": "Contrato de Resolución: 4 Pasos"},
-            {"id": "KERNEL:SCHEMA-006", "seccion": "§4.6", "nombre": "APROBAR_WRITE: Alcance"},
-            {"id": "KERNEL:SCHEMA-007", "seccion": "§4.7", "nombre": "Acceptance Audit"},
-            {"id": "KERNEL:TRACKER-SCHEMA", "seccion": "§5", "nombre": "Alcance y niveles de prioridad — Bug/Tasks Tracker"},
-            {"id": "KERNEL:TRACKER-SCHEMA-001", "seccion": "§5.1", "nombre": "Alcance del Tracker"},
-            {"id": "KERNEL:TRACKER-SCHEMA-002", "seccion": "§5.2", "nombre": "Niveles de Prioridad"},
-            {"id": "KERNEL:HEALTH-CHECK", "seccion": "§6", "nombre": "Contrato de health_check.py"},
-            {"id": "KERNEL:HEALTH-CHECK-001", "seccion": "§6.1", "nombre": "Entity Index Auto-Sync"},
-            {"id": "KERNEL:HEALTH-CHECK-002", "seccion": "§6.2", "nombre": "Reporte de Tickets"},
-            {"id": "KERNEL:OWNERSHIP", "seccion": "§7", "nombre": "Responsabilidades AI vs Python"},
-            {"id": "KERNEL:OWNERSHIP-001", "seccion": "§7.1", "nombre": "AI Component"},
-            {"id": "KERNEL:OWNERSHIP-002", "seccion": "§7.2", "nombre": "Python Component"},
-            {"id": "KERNEL:TRIGGERS", "seccion": "§8", "nombre": "Contratos detallados de Triggers"},
-            {"id": "KERNEL:TRIGGER-001", "seccion": "§8.1", "nombre": "FEED — Procesamiento por Lotes"},
-            {"id": "KERNEL:TRIGGER-002", "seccion": "§8.2", "nombre": "VL1 — Comandos de mantenimiento del Tracker"},
-            {"id": "KERNEL:TRIGGER-003", "seccion": "§8.3", "nombre": "QA — Checklist Canónico de 6 ítems"},
-            {"id": "KERNEL:TRIGGER-004", "seccion": "§8.4", "nombre": "DRY RUN"},
-            {"id": "KERNEL:TRIGGER-005", "seccion": "§8.5", "nombre": "SYNC"},
-            {"id": "KERNEL:TRIGGER-006", "seccion": "§8.6", "nombre": "TOP 3 BY SCORE"},
-            {"id": "KERNEL:TRIGGER-007", "seccion": "§8.7", "nombre": "NEXT ACTION"},
-            {"id": "KERNEL:TRIGGER-008", "seccion": "§8.8", "nombre": "FEED (sin trigger CV-A)"},
-            {"id": "KERNEL:TRIGGER-009", "seccion": "§8.9", "nombre": "STATUS"},
+            {"id": "KERNEL:FAIL-PHILOSOPHY", "seccion": "§2", "nombre": "Filosofía de Fallo"},
+            {"id": "KERNEL:DOCUMENTATION", "seccion": "§3", "nombre": "Documentación (L0)"},
+            {"id": "KERNEL:DOCUMENTATION-001", "seccion": "§3.1", "nombre": "Canonical Document ID Contract"},
+            {"id": "KERNEL:DOCUMENTATION-002", "seccion": "§3.2", "nombre": "Normalización Documental de IDs Legacy"},
+            {"id": "KERNEL:DOCUMENTATION-003", "seccion": "§3.3", "nombre": "L0 — VANTAGE Runtime"},
+            {"id": "KERNEL:DOCUMENTATION-004", "seccion": "§3.4", "nombre": "L0-Bootstrap — Dynamic Governance Layer"},
+            {"id": "KERNEL:DOCUMENTATION-005", "seccion": "§3.5", "nombre": "Convención de Anuncio de Skills"},
+            {"id": "KERNEL:DOCUMENTATION-006", "seccion": "§3.6", "nombre": "Contrato de health_check.py"},
+            {"id": "KERNEL:DOCUMENTATION-007", "seccion": "§3.7", "nombre": "Version-Check Tool (verify_versions.py)"},
+            {"id": "KERNEL:DOCUMENTATION-008", "seccion": "§3.8", "nombre": "Sincronización Obligatoria del ID Census"},
+            {"id": "KERNEL:DOCUMENTATION-009", "seccion": "§3.9", "nombre": "Registro de Continuidad de Sesión"},
+            {"id": "KERNEL:DOCUMENTATION-010", "seccion": "§3.10", "nombre": "Documentación Transversal"},
+            {"id": "KERNEL:ARCHITECTURE", "seccion": "§4", "nombre": "Arquitectura de Cuatro Capas"},
+            {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "§4", "nombre": "L1 — Active Recon"},
+            {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "§4", "nombre": "L2 — Strategic Search"},
+            {"id": "KERNEL:ARCHITECTURE-L3", "seccion": "§4", "nombre": "L3 — Passive Intake"},
+            {"id": "KERNEL:ARHITECTURE-L4", "lookup_ids": ["KERNEL:ARHITECTURE-L4", "KERNEL:ARCHITECTURE-L4"], "seccion": "§4", "nombre": "L4 — Version Control & Infrastructure"},
+            {"id": "KERNEL:OWNERSHIP", "seccion": "§5", "nombre": "Responsabilidades AI vs Python"},
+            {"id": "KERNEL:OWNERSHIP-001", "seccion": "§5.1", "nombre": "AI Component"},
+            {"id": "KERNEL:OWNERSHIP-002", "seccion": "§5.2", "nombre": "Python Component"},
+            {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH", "seccion": "§6", "nombre": "Arquitectura Dashboard/Checklist"},
+            {"id": "KERNEL:SCHEMA", "seccion": "§7", "nombre": "Class A vs Class B (Schema)"},
+            {"id": "KERNEL:SCHEMA-001", "seccion": "§7.1", "nombre": "Class A vs Class B — definición de ownership"},
+            {"id": "KERNEL:SCHEMA-002", "seccion": "§7.2", "nombre": "Restricción del Sistema"},
+            {"id": "KERNEL:SCHEMA-003", "seccion": "§7.3", "nombre": "Fuente como Campo Especial"},
+            {"id": "KERNEL:SCHEMA-004", "seccion": "§7.4", "nombre": "Entity Format"},
+            {"id": "KERNEL:SCHEMA-005", "seccion": "§7.5", "nombre": "Contrato de Resolución: 4 Pasos"},
+            {"id": "KERNEL:SCHEMA-006", "seccion": "§7.6", "nombre": "APROBAR_WRITE: Alcance"},
+            {"id": "KERNEL:SCHEMA-007", "seccion": "§7.7", "nombre": "Acceptance Audit"},
+            {"id": "KERNEL:TRACKER-SCHEMA", "seccion": "§8", "nombre": "Alcance y niveles de prioridad — Bug/Tasks Tracker"},
+            {"id": "KERNEL:TRACKER-SCHEMA-001", "seccion": "§8.1", "nombre": "Alcance del Tracker"},
+            {"id": "KERNEL:TRACKER-SCHEMA-002", "seccion": "§8.2", "nombre": "Niveles de Prioridad"},
             {"id": "KERNEL:GATE-DECISION", "seccion": "§9", "nombre": "Lógica de gates"},
-            {"id": "KERNEL:GATE-DECISION-001", "seccion": "§9.1", "nombre": "Lógica de Bypass"},
+            {"id": "KERNEL:GATE-DECISION-001", "seccion": "§9.1", "nombre": "Bypass"},
             {"id": "KERNEL:GATE-DECISION-002", "seccion": "§9.2", "nombre": "Lógica Estándar"},
             {"id": "KERNEL:GATE-DECISION-003", "seccion": "§9.3", "nombre": "Resolución de REVIEW_NEEDED"},
             {"id": "KERNEL:GATE-DECISION-004", "seccion": "§9.4", "nombre": "Por Qué los Gates Son Deterministas"},
@@ -108,26 +102,29 @@ CENSUS_SPEC = [
             {"id": "KERNEL:GATE-DECISION-006", "seccion": "§9.6", "nombre": "REJECTED (Post-Aplicación)"},
             {"id": "KERNEL:GATE-DECISION-007", "seccion": "§9.7", "nombre": "Ejecución Automática de Archivado"},
             {"id": "KERNEL:GATE-DECISION-008", "seccion": "§9.8", "nombre": "Capas de Evaluación de Gate: Técnica vs. Negocio"},
-            {"id": "KERNEL:NAMING-CONVENTION", "seccion": "§10", "nombre": "Convención de Nombres de Outputs"},
-            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "§11", "nombre": "Reglas de Oro CV"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "§11.1", "nombre": "No Evaluar Fit Antes de Escribir"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "§11.2", "nombre": "No Calcular ni Estimar Campos Class B"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-003", "seccion": "§11.3", "nombre": "No Cuestionar la Calidad de Datos del Usuario"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-004", "seccion": "§11.4", "nombre": "No Delegar Escritura al Usuario"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-005", "seccion": "§11.5", "nombre": "No Interpretar en SYNC"},
+            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "§10", "nombre": "Reglas de Oro CV"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "§10.1", "nombre": "No Evaluar Fit Antes de Escribir"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "§10.2", "nombre": "No Calcular ni Estimar Campos Class B"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-003", "seccion": "§10.3", "nombre": "No Cuestionar la Calidad de Datos del Usuario"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-004", "seccion": "§10.4", "nombre": "No Delegar Escritura al Usuario"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-005", "seccion": "§10.5", "nombre": "No Interpretar en SYNC"},
+            {"id": "KERNEL:TRIGGERS", "seccion": "§11", "nombre": "Contratos detallados de Triggers"},
+            {"id": "KERNEL:TRIGGER-001", "seccion": "§11.1", "nombre": "FEED — Procesamiento por Lotes"},
+            {"id": "KERNEL:TRIGGER-002", "seccion": "§11.2", "nombre": "VL1 — Comandos de mantenimiento del Tracker"},
+            {"id": "KERNEL:TRIGGER-003", "seccion": "§11.3", "nombre": "QA — Checklist Canónico de 6 ítems"},
+            {"id": "KERNEL:TRIGGER-004", "seccion": "§11.4", "nombre": "DRY RUN"},
+            {"id": "KERNEL:TRIGGER-005", "seccion": "§11.5", "nombre": "SYNC"},
+            {"id": "KERNEL:TRIGGER-006", "seccion": "§11.6", "nombre": "TOP 3 BY SCORE"},
+            {"id": "KERNEL:TRIGGER-007", "seccion": "§11.7", "nombre": "NEXT ACTION"},
+            {"id": "KERNEL:TRIGGER-008", "seccion": "§11.8", "nombre": "FEED (sin trigger CV-A)"},
+            {"id": "KERNEL:TRIGGER-009", "seccion": "§11.9", "nombre": "STATUS"},
             {"id": "KERNEL:CV-PIPELINE", "seccion": "§12", "nombre": "Flujo CV-A → CV-B"},
             {"id": "KERNEL:CANON-UPDATE", "seccion": "§13", "nombre": "Actualización del Canon"},
-            {"id": "KERNEL:FAIL-PHILOSOPHY", "seccion": "§14", "nombre": "Filosofía de Fallo"},
+            {"id": "KERNEL:NAMING-CONVENTION", "seccion": "§14", "nombre": "Convención de Nombres de Outputs"},
             {"id": "KERNEL:SCOPE", "seccion": "§15", "nombre": "Scope y economía de contexto (Terminal vs MCP)"},
+            {"id": "KERNEL:ROUTING", "seccion": "§15", "nombre": "Rutas de carga MCP / lazy_loader"},
             {"id": "KERNEL:DATA-FLOW", "seccion": "§16", "nombre": "Flujo de Datos y Escritura"},
-            {"id": "KERNEL:ROUTING", "seccion": "§17", "nombre": "Rutas de carga MCP / lazy_loader"},
-            {"id": "KERNEL:EVOLUTION", "seccion": "§18", "nombre": "Evolución del sistema, deuda técnica, criterios de cambio"},
-            {"id": "KERNEL:DOC-CONTRACT", "seccion": "§22 (TOC dice §21)", "nombre": "Contrato de IDs de Documento"},
-            {"id": "KERNEL:NORM", "seccion": "§19", "nombre": "Normalización Documental (Legacy IDs)"},
-            {"id": "KERNEL:CENSUS-SYNC", "seccion": "§20", "nombre": "Sincronización obligatoria del ID Census"},
-            {"id": "KERNEL:SESSION-LEDGER", "seccion": "§21", "nombre": "Session Ledger — registro de apertura/cierre de sesión"},
-            {"id": "KERNEL:DOCUMENTATION-TRANSVERSAL-001", "seccion": "§22", "nombre": "Documentación Transversal — Contrato de Integridad Documental"},
-            {"id": "KERNEL:VERSION-CHECK-TOOL", "seccion": "(anexo, post-§21)", "nombre": "Herramienta de bajo costo para verificar versión de los 7 documentos fundacionales (verify_versions.py)"},
+            {"id": "KERNEL:EVOLUTION", "seccion": "§17", "nombre": "Evolución del sistema, deuda técnica, criterios de cambio"},
         ],
     },
     {
@@ -257,8 +254,36 @@ CENSUS_SPEC = [
 
 # ─── CAPA DE RED (engine de generator.py con rate-limit de generate_census.py) ─
 
+class FetchIncompleteError(Exception):
+    """
+    Señala que fetch_blocks() no pudo completar la paginación de un bloque
+    después de agotar los reintentos. Antes de este fix, un error transitorio
+    (5xx, timeout disfrazado de status_code, etc.) en CUALQUIER página después
+    de la primera hacía `break` silencioso: el documento se indexaba solo
+    parcialmente, sin aviso, y los IDs que vivían más adelante en el
+    documento quedaban "sin link" sin ninguna pista de por qué (ver DT:
+    10 IDs sin link en Kernel — GATE-DECISION-004, TRIGGERS, OWNERSHIP,
+    NAMING-CONVENTION, todos ubicados después del bloque ~100-200 de 310).
+    """
+    pass
+
+
+MAX_RETRIES_PER_PAGE = 3
+RETRY_BACKOFF_SECONDS = 2  # se multiplica por el intento: 2s, 4s, 6s
+
+
 def fetch_blocks(block_id: str) -> list:
-    """Obtiene todos los bloques de un nivel con paginación y manejo de rate-limit."""
+    """
+    Obtiene todos los bloques de un nivel con paginación, manejo de
+    rate-limit (429) y reintento con backoff ante CUALQUIER otro error
+    transitorio (antes solo se reintentaba 429; cualquier otro status_code
+    hacía `break` silencioso a media paginación).
+
+    Si tras MAX_RETRIES_PER_PAGE intentos una página sigue fallando, esta
+    función ya NO trunca en silencio: levanta FetchIncompleteError para que
+    el caller sepa explícitamente que el documento quedó incompleto, en vez
+    de reportar simplemente más IDs "sin link" sin explicar la causa.
+    """
     blocks = []
     url = f"https://api.notion.com/v1/blocks/{block_id}/children"
     cursor = None
@@ -268,20 +293,40 @@ def fetch_blocks(block_id: str) -> list:
         if cursor:
             params["start_cursor"] = cursor
 
-        r = requests.get(url, headers=HEADERS, params=params)
+        last_error = None
+        for attempt in range(1, MAX_RETRIES_PER_PAGE + 1):
+            r = requests.get(url, headers=HEADERS, params=params)
 
-        if r.status_code == 429:
-            wait = int(r.headers.get("Retry-After", 2))
-            print(f"  [429] Rate limit. Esperando {wait}s...")
-            time.sleep(wait)
-            continue
+            if r.status_code == 429:
+                wait = int(r.headers.get("Retry-After", 2))
+                print(f"  [429] Rate limit. Esperando {wait}s... (intento {attempt}/{MAX_RETRIES_PER_PAGE})")
+                time.sleep(wait)
+                last_error = f"429 tras {attempt} intentos"
+                continue
 
-        if r.status_code != 200:
-            print(f"  [ERROR {r.status_code}] bloque {block_id}: {r.text[:120]}")
+            if r.status_code != 200:
+                wait = RETRY_BACKOFF_SECONDS * attempt
+                print(
+                    f"  [ERROR {r.status_code}] bloque {block_id} "
+                    f"(intento {attempt}/{MAX_RETRIES_PER_PAGE}): {r.text[:120]} "
+                    f"— reintentando en {wait}s..."
+                )
+                time.sleep(wait)
+                last_error = f"{r.status_code}: {r.text[:200]}"
+                continue
+
+            # status 200 — página OK, sale del loop de reintento
+            data = r.json()
+            blocks.extend(data.get("results", []))
+            last_error = None
             break
 
-        data = r.json()
-        blocks.extend(data.get("results", []))
+        if last_error is not None:
+            raise FetchIncompleteError(
+                f"No se pudo obtener una página completa de {block_id} "
+                f"tras {MAX_RETRIES_PER_PAGE} intentos. Último error: {last_error}. "
+                f"Bloques indexados antes del fallo: {len(blocks)}."
+            )
 
         if not data.get("has_more"):
             break
@@ -291,7 +336,12 @@ def fetch_blocks(block_id: str) -> list:
 
 
 def fetch_blocks_recursive(block_id: str) -> list:
-    """Barre recursivamente todos los bloques hijos (engine de generator.py)."""
+    """
+    Barre recursivamente todos los bloques hijos (engine de generator.py).
+    Deja propagar FetchIncompleteError tal cual — no la captura aquí — para
+    que build_link_index() sepa exactamente qué documento y qué bloque
+    quedaron incompletos, en vez de perder ese contexto.
+    """
     result = []
     for block in fetch_blocks(block_id):
         result.append(block)
@@ -385,16 +435,34 @@ def extract_ids_from_block(block: dict) -> list:
 
 # ─── CONSTRUCCIÓN DEL ÍNDICE ───────────────────────────────────────────────────
 
-def build_link_index() -> dict:
+def build_link_index() -> tuple:
     """
     Barre todos los documentos y construye un índice:
       id_str -> list of { doc, link, is_def }
+
+    Si un documento falla la indexación (FetchIncompleteError tras agotar
+    reintentos), NO aborta toda la corrida — se salta ese documento,
+    lo registra en `incomplete_docs`, y continúa con el resto. Antes de
+    este fix, un fallo de red a media paginación producía un índice
+    parcial SIN ningún aviso; ahora el fallo es explícito y se reporta
+    al final junto con el resto del census.
+
+    Devuelve: (link_index, incomplete_docs) — incomplete_docs es una lista
+    de dicts {doc, error} para los documentos que no pudieron indexarse
+    completo.
     """
     link_index = {}
+    incomplete_docs = []
 
     for doc_name, page_id in DOCUMENTS.items():
         print(f"Indexando: {doc_name}...")
-        blocks = fetch_blocks_recursive(page_id)
+        try:
+            blocks = fetch_blocks_recursive(page_id)
+        except FetchIncompleteError as e:
+            print(f"  [INCOMPLETO] {doc_name}: {e}")
+            incomplete_docs.append({"doc": doc_name, "error": str(e)})
+            continue
+
         page_id_clean = page_id.replace("-", "")
 
         for block in blocks:
@@ -408,7 +476,7 @@ def build_link_index() -> dict:
                     "is_def": is_def,
                 })
 
-    return link_index
+    return link_index, incomplete_docs
 
 
 def pick_best_link(entries: list) -> dict | None:
@@ -543,12 +611,51 @@ def render_markdown(link_index: dict, orphans: dict) -> tuple:
 
 # ─── ENTRY POINT ──────────────────────────────────────────────────────────────
 
+def print_debug_ids(link_index: dict, ids_to_debug: list) -> None:
+    """
+    Modo de diagnóstico puntual: para cada ID solicitado, imprime TODAS
+    las entradas crudas encontradas en link_index (documento, is_def,
+    link) sin pasar por pick_best_link ni por resolve_link. Esto permite
+    ver exactamente qué candidatos existen (o la ausencia total) para un
+    ID específico, en vez de inferir la causa por comparación indirecta
+    con otros IDs que sí resolvieron.
+    """
+    print("\n" + "#" * 52)
+    print("  DEBUG-ID: candidatos crudos en link_index")
+    print("#" * 52)
+    for id_str in ids_to_debug:
+        entries = link_index.get(id_str)
+        print(f"\n  {id_str}:")
+        if not entries:
+            print("    (sin ninguna entrada — el ID nunca fue extraído de ningún bloque)")
+            continue
+        for e in entries:
+            print(f"    - doc={e['doc']!r} is_def={e['is_def']} link={e['link']}")
+    print("\n" + "#" * 52)
+
+
 if __name__ == "__main__":
+    import sys
+
+    debug_ids = []
+    if "--debug-id" in sys.argv:
+        idx = sys.argv.index("--debug-id")
+        debug_ids = sys.argv[idx + 1:]
+        if not debug_ids:
+            print("[ERROR] --debug-id requiere al menos un ID después, ej.:")
+            print("  python3 generate_census.py --debug-id KERNEL:GATE-DECISION-001 KERNEL:GATE-DECISION-004")
+            sys.exit(1)
+
     print(f"\nV-ID-CENSUS Generator v3.0")
     print(f"Generado: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("=" * 52)
 
-    link_index = build_link_index()
+    link_index, incomplete_docs = build_link_index()
+
+    if debug_ids:
+        print_debug_ids(link_index, debug_ids)
+        sys.exit(0)  # modo debug: no genera el census completo, solo diagnostica
+
     known_ids = known_ids_from_spec()
     orphans = find_orphan_ids(link_index, known_ids)
     md, unresolved = render_markdown(link_index, orphans)
@@ -572,4 +679,17 @@ if __name__ == "__main__":
         for uid, entry in orphans.items():
             print(f"    - {uid}  ({entry['doc']})")
     print("=" * 52)
+
+    if incomplete_docs:
+        print("\n" + "!" * 52)
+        print("  ⚠️  ADVERTENCIA: CENSUS INCOMPLETO")
+        print("  Los siguientes documentos NO se indexaron completos")
+        print("  (fallo de red persistente tras reintentos). Los IDs 'sin")
+        print("  link' de arriba pueden deberse a ESTO, no a un problema")
+        print("  real de esos IDs. Re-correr vcensus antes de confiar en")
+        print("  el resultado de 'sin resolver' para estos documentos.")
+        for entry in incomplete_docs:
+            print(f"    - {entry['doc']}: {entry['error']}")
+        print("!" * 52)
+
     print(f"\nExportado a: {output.resolve()}")
