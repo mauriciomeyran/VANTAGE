@@ -347,7 +347,7 @@ def main():
                          help="Ruta raíz con los .md (ej. Documentación/ACTIVE).")
     parser.add_argument("--apply", action="store_true",
                          help="Escribe los cambios. Sin esta flag: solo DRY RUN.")
-    parser.add_argument("--diff-out", default=Path("dry_run_hyperlinks.diff"), type=Path,
+    parser.add_argument("--diff-out", default=Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/data/dry_run_hyperlinks.diff"), type=Path,
                          help="Archivo donde guardar el diff del DRY RUN.")
     args = parser.parse_args()
 

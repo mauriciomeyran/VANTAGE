@@ -452,7 +452,7 @@ def main():
     )
     parser.add_argument(
         "--out",
-        default=Path("./out"),
+        default=Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/data"),
         type=Path,
         help="Carpeta de salida (default: ./out).",
     )
