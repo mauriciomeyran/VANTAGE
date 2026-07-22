@@ -660,7 +660,7 @@ if __name__ == "__main__":
     orphans = find_orphan_ids(link_index, known_ids)
     md, unresolved = render_markdown(link_index, orphans)
 
-    output = Path("V_ID_CENSUS_PRODUCTION.md")
+    output = Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/data/V_ID_CENSUS_PRODUCTION.md")
     output.write_text(md, encoding="utf-8")
 
     total = sum(len(s["rows"]) for s in CENSUS_SPEC)

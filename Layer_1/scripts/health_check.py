@@ -490,7 +490,7 @@ def check_layer3_heartbeat():
     return True
 
 
-CENSUS_OUTPUT_PATH     = Path(__file__).resolve().parent / "V_ID_CENSUS_PRODUCTION.md"
+CENSUS_OUTPUT_PATH     = Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/data/V_ID_CENSUS_PRODUCTION.md")
 CENSUS_STALE_THRESHOLD_H = 24 * 7   # 7 días — el Census cambia con cierre de tickets, no con cada sync
 
 
