@@ -1,5 +1,51 @@
 # V | CHANGELOG
 
+### v9.7.2 — Cierre de Huecos L0: Referencia Cruzada SCHEMA-004/005 → §3.3 + Alta de Dedup_Flag en Class B (SCHEMA-001) · 2026-07-22
+Tipo: [DOC]
+Alcance: Kernel §7 (KERNEL:SCHEMA-004, KERNEL:SCHEMA-005, KERNEL:SCHEMA-001).
+Contexto: Cierre de los dos huecos L0 identificados en la revisión post-v9.7.0: (1) KERNEL:SCHEMA-004/-005 documentaban el contrato de Entity Format y el flujo de resolución sin ninguna referencia hacia KERNEL:DOCUMENTATION-003 (§3.3, L0 Runtime), pese a ser la contraparte de datos del mismo mecanismo; (2) Dedup_Flag figuraba como campo Class B protegido en KERNEL:CV-GOLDEN-RULES (§10) desde v9.5.4, pero nunca se había añadido a la enumeración canónica de Class B en KERNEL:SCHEMA-001 (§7) — inconsistencia señalada por SP:CONSISTENCY y arrastrada sin resolución desde v9.5.4/v9.6.8.
+Cambios:
+- KERNEL:SCHEMA-004 (§7): agregada línea de referencia cruzada hacia §3.3 (KERNEL:DOCUMENTATION-003 — L0 Runtime). Sin fusión ni reestructuración — decisión explícita del operador de mantener ambos IDs separados.
+- KERNEL:SCHEMA-005 (§7): misma referencia cruzada agregada, aclarando que el Contrato de Resolución de 4 Pasos es la contraparte de datos del Runtime Build descrito en §3.3.
+- KERNEL:SCHEMA-001 (§7): Dedup_Flag agregado a la enumeración Class B — System-Primary, alineando el schema con lo que KERNEL:CV-GOLDEN-RULES ya declaraba como campo protegido.
+Write-Back Verification: no ejecutado en esta entrada — escritura autorizada explícitamente por el operador sin DRY RUN/APROBAR_WRITE previo ni re-fetch de confirmación posterior.
+IDs afectados: ninguna alta/baja de ID canónico — ambos parches son adiciones de contenido bajo IDs ya existentes (KERNEL:SCHEMA-001, -004, -005). Census no requiere regeneración (KERNEL:CENSUS-SYNC Regla 1 no se dispara).
+Pendiente (fuera de esta entrada): ninguno nuevo — los dos huecos L0 abiertos desde la revisión post-v9.7.0 quedan cerrados con esta entrada. El punto sobre la etiqueta "v8.9.0" en la tabla de Prefijos Autorizados sigue sin confirmarse contra el documento real (no encontrado en fetch en vivo, ver v9.7.1).
+Versión actualizada: 9.7.2 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.7.0 hasta que el operador corra verify_versions.py --sync.
+---
+### v9.7.1 — Fix DB ID/COL ID de Bug Tracker en skill vantage-create-bug-task (drift no propagado desde v9.7.0) · 2026-07-22
+Tipo: [FIX]
+Alcance: vantage-create-bug-task/SKILL.md (local, fuera de Notion — no fundacional).
+Contexto: Al revisar los pendientes derivados de la refactorización del Kernel (v9.7.0), se detectó que la corrección de DB ID/COL ID de Bug Tracker aplicada en KERNEL:TRACKER-SCHEMA-001 no se había propagado al skill que consume esos IDs directamente — el skill seguía con el par heredado (invertido) que el propio Kernel ya señalaba como incorrecto.
+Cambios:
+- vantage-create-bug-task/SKILL.md: corregido el par Bug Tracker de DB ID 36e938be-fc42-81f8-8c6f-000b6769ba03 / COL ID 36e938be-fc42-81bd-9e1f-dc360b3b45f5 (invertido) a DB ID 36e938be-fc42-81bd-9e1f-dc360b3b45f5 / COL ID 36e938be-fc42-81f8-8c6f-000b6769ba03, alineado con Kernel §8 (KERNEL:TRACKER-SCHEMA-001, v9.7.0). Tasks Tracker no requirió cambio.
+- Nota de corrección agregada al propio skill documentando el origen del drift (refactor de Kernel v9.7.0 no propagado en el mismo ciclo).
+Write-Back Verification: no aplica a Notion — cambio local, verificado por re-lectura directa del archivo tras la edición.
+IDs afectados: ninguno en documentos fundacionales — corrección de referencia a un ID ya existente en el Kernel (KERNEL:TRACKER-SCHEMA-001), sin alta/baja de ID canónico. Census no requiere regeneración.
+Pendiente (fuera de esta entrada): de la revisión de pendientes post-v9.7.0 quedan abiertos — fragmentación KERNEL:SCHEMA-004/-005 (sin referencia cruzada hacia §3.3) y ubicación canónica de Dedup_Flag (ausente de la lista Class B en KERNEL:SCHEMA-001 §7, pese a estar listado como campo protegido en KERNEL:CV-GOLDEN-RULES §10). El punto sobre una etiqueta de versión "v8.9.0" en la tabla de Prefijos Autorizados no se pudo confirmar contra el documento real — no encontrado en fetch en vivo.
+Versión actualizada: 9.7.1 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.7.0 hasta que el operador corra verify_versions.py --sync.
+---
+### v9.7.0 — Refactor Estructural Completo del Kernel (Renumeración §1–§17, Limpieza de Residuos, Corrección DB/COL ID) · 2026-07-22
+Tipo: [DOC] [FIX]
+Alcance: V | KERNEL completo — TOC, headers §1–§17, KERNEL:TRIGGERS (§11), KERNEL:DATA-FLOW (§16), KERNEL:TRACKER-SCHEMA-001 (§8).
+Contexto: Auditoría en sesión detectó numeración §N duplicada y desordenada (dos secciones en §8, dos en §9), un bloque de nota de trabajo interna pegado al final de DATA-FLOW, residuos de exportación (
+, backslashes de escape, <empty-block/>) concentrados en TRIGGERS, y DB ID/COL ID de Bug Tracker invertidos en TRACKER-SCHEMA-001. Se intentó delegar la ejecución a Devin/Mistral vía Arena; ambos intentos fueron auditados y rechazados por fabricar old_str (formato de TOC inexistente, placeholders descriptivos en vez de valores reales, entrega final = concatenación sin cambios de los .md de trabajo). El operador ejecutó manualmente la versión final producida por Claude directamente en Notion.
+Cambios:
+- Renumeración completa: TOC y headers unificados en secuencia §1–§17 (incluye KERNEL:DOCUMENTATION como §3 con sub-IDs §3.1–§3.10, y KERNEL:GATE-DECISION como §9 con sub-IDs §9.1–§9.8). Elimina la duplicidad previa (§8/§9 repetidos) y la desalineación TOC↔cuerpo.
+- Agrupación en 4 clústeres narrativos (metadato de TOC, no reordena contenido): I. FUNDAMENTO (§1–§6, incluye Dashboard/Checklist), II. DATOS, ESQUEMAS Y REGLAS (§7–§10), III. EJECUCIÓN (§11–§14), IV. INFRAESTRUCTURA DE CONTEXTO (§15–§17).
+- Reordenamiento §12/§13: CANON-UPDATE antes de NAMING-CONVENTION (dependencia: Naming define el nombre de outputs que Canon-Update alimenta).
+- Limpieza de residuos de exportación en TRIGGERS (§11): 
+ → saltos de línea Markdown, backslashes de escape (\*\*, \-\-, \[\]) normalizados, <empty-block/> sueltos eliminados.
+- Eliminación de bloque de cross-references huérfano al final de DATA-FLOW (§16) — nota de trabajo interna de una sesión de edición previa, sin ID canónico ni función de contrato; el Kernel no documenta su propio proceso de edición.
+- Corrección DB ID/COL ID en KERNEL:TRACKER-SCHEMA-001 (§8): Bug Tracker tenía DB ID y COL ID invertidos. Valor corregido — DB ID: 36e938be-fc42-81bd-9e1f-dc360b3b45f5 · COL ID: 36e938be-fc42-81f8-8c6f-000b6769ba03. Tasks Tracker no requirió cambio.
+Write-Back Verification: re-fetch en vivo del Kernel post-escritura (esta sesión) — TOC y cuerpo coinciden §1–§17 sin discrepancia; 
+/backslash/<empty-block/> no detectados fuera del patrón Tipo:
+Propósito: ya estándar en el resto del documento; bloque de cross-references confirmado ausente; DB ID/COL ID de Bug Tracker confirmados en el orden corregido.
+IDs afectados: ninguna alta/baja de KERNEL:ID canónico — renumeración §N es posicional, no cambia namespace ni claves PREFIX:KEY. KERNEL:CENSUS-SYNC Regla 1 no se dispara. KERNEL:GATE-DECISION-006 (§9.6) ya estaba incorporado desde v9.6.5 — confirmado presente y correctamente indexado en esta renumeración.
+Nota de honestidad estructural: el clúster I. FUNDAMENTO incluye KERNEL:DASHBOARD-CHECKLIST-ARCH (§6), que en la propuesta de clústeres original de esta sesión se había asignado a III. EJECUCIÓN. La versión final aplicada en Notion la ubica en Fundamento — confirmar con el operador si fue una decisión deliberada de la sesión o si amerita ticket de reconciliación.
+Pendiente (fuera de esta entrada): decidir si el hallazgo de honestidad estructural anterior requiere corrección o si se documenta como decisión final.
+Versión actualizada: 9.7.0 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.6.6 hasta que el operador corra verify_versions.py --sync.
+---
 ### v9.6.9 — Reconciliación de Conteo 8→9 (VANTAGE Central Hub) + Extracción de TOC vigente · 2026-07-20
 Tipo: [DOC]
 Alcance: KERNEL (KERNEL:CENSUS-SYNC §9, KERNEL:DOCUMENTATION-TRANSVERSAL-001 §13).
