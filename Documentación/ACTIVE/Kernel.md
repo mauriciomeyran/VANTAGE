@@ -202,8 +202,9 @@ Trigger: automático (continuo)
 Gmail (.Jobs label) → layer_3_mail.py (IMAP + Groq) → Notion (Class A poblado, Class B vacío) → vantage-pipeline
 ```
 ### KERNEL:ARCHITECTURE-L4 — Version Control & Infrastructure
-No es capa de búsqueda — infraestructura documental. Auto-commit + push cuando hay cambios en el repo. Alias: vgit · 09:00/15:00/21:00. Repo: github.com/mauriciomeyran/jhs-pipeline.
+No es capa de búsqueda — infraestructura documental. Auto-commit + push cuando hay cambios en el repo. Alias: vgit · 09:00/15:00/21:00. Repo: github.com/mauriciomeyran/VANTAGE.
 vsync_doc.py — sync bidireccional Notion → ACTIVE/ para los 6 fundacionales editables (Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log). Alias: vdoc · Flags: dry | notion | local | auto.
+Skills Distribution — Single Source of Truth: /skills/ en la raíz del repo es la fuente canónica de los .skill files de VANTAGE (actualmente 12) + index.json + index.html. GitHub Pages sirve esta ruta desde main en https://mauriciomeyran.github.io/VANTAGE/skills/. git_sync.py (el mismo motor detrás del alias vgit) detecta nuevos .skill en /skills/, regenera index.json y ejecuta commit + push en la misma corrida — no requiere paso manual adicional. Consumidores: Claude Desktop vía MCP filesystem local (@modelcontextprotocol/server-filesystem apuntando a /skills/); Devin Desktop vía devin mcp add vantage-skills -- npx markdown-mcp-resource@latest <URL> contra el espejo de GitHub Pages. /skills/ local es la fuente primaria; GitHub Pages es espejo — ambos LLMs leen en última instancia de la misma raíz canónica.
 Jerarquía de Dedup: L1 > L2 > L3. Perplexity aplica esta jerarquía en Consolidation & Dedup; L3 entra directo a feed_processor.py.
 Punto de Convergencia Único: las tres capas de búsqueda escriben a Notion. vantage-pipeline lee de Notion, no de outputs de capa directamente.
 ### Figma Sync — CV Output Layer

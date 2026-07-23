@@ -405,6 +405,7 @@ Manual: ejecutar vgit desde Terminal en cualquier momento para forzar un sync in
 Verificar último run: cat /tmp/vantage_l4_gitsync.log — cada corrida (automática o manual) queda registrada ahí con timestamp, exit code y el output completo del sync, así puedes auditar qué pasó sin depender de las notificaciones del sistema.
 Si el repo no existe o está corrupto, vgit ya no lo confunde con “sin cambios” — reporta el error explícitamente y la notificación del wrapper se ve roja (❌), no verde.
 Archivos: Layer_4/scripts/git_sync.py · Layer_4/wrappers/git_sync_wrapper.sh · ~/Library/LaunchAgents/com.vantage.gitsync.plist
+Extensión reciente — Skills Distribution: vgit/git_sync.py además detecta cambios en /skills/ (archivos .skill nuevos o modificados) y, como parte del mismo commit+push, regenera index.json. No es un flujo separado de mantenimiento — es el mismo mecanismo de auto-sync ya descrito arriba, extendido a un directorio adicional. Esto es lo que permite que Claude Desktop (MCP filesystem local sobre /skills/) y Devin Desktop (vía GitHub Pages en main) lean siempre la misma versión sin paso de sincronización manual entre ambos consumidores.
 vdoc — Document Layer Sync
 Sincroniza los 6 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log) entre Notion y ACTIVE/ en disco, y al terminar encadena un git_sync automático para que el commit quede reflejado en GitHub sin un paso adicional.
 Tres direcciones posibles:
