@@ -9,8 +9,8 @@
 ## TABLE OF CONTENTS
 ```plain text
 ─── I. FUNDAMENTO
-  §1   [KERNEL:PURPOSE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f69905dfc6c82c5503)
-  §2   [KERNEL:FAIL-PHILOSOPHY](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428121bb10efedac1b4b99)
+  §1   KERNEL:PURPOSE
+  §2   KERNEL:FAIL-PHILOSOPHY
   §3   KERNEL:DOCUMENTATION (L0)
           §3.1   DOCUMENTATION-001 - Contract
           §3.2   DOCUMENTATION-002 - Norm
@@ -23,14 +23,14 @@
           §3.9   DOCUMENTATION-009 - Session Ledger
           §3.10  DOCUMENTATION-010 - Documentation Transversal
 
-  §4   [KERNEL:ARCHITECTURE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42818a8a61d5a0d71bcf2b) (L1, L2, L3, L4, Figma Sync)
-  §5   [KERNEL:OWNERSHIP](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42814385dbe5005b04496c)
-  §6   [KERNEL:DASHBOARD-CHECKLIST-ARCH](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816ead88efa4b9a4e05f)
+  §4   KERNEL:ARCHITECTURE (L1, L2, L3, L4, Figma Sync)
+  §5   KERNEL:OWNERSHIP
+  §6   KERNEL:DASHBOARD-CHECKLIST-ARCH
 
 ─── II. DATOS, ESQUEMAS Y REGLAS
-  §7   [KERNEL:SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42812dbc97e075758ba0ee)
-  §8   [KERNEL:TRACKER-SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281c2ba8aca2a41ff358b)
-  §9   [KERNEL:GATE-DECISION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810d9f3af9b12751d7e1)
+  §7   KERNEL:SCHEMA
+  §8   KERNEL:TRACKER-SCHEMA
+  §9   KERNEL:GATE-DECISION
           §9.1  GATE-DECISION-001 — Bypass
           §9.2  GATE-DECISION-002 — Lógica Estándar
           §9.3  GATE-DECISION-003 — REVIEW_NEEDED
@@ -39,18 +39,19 @@
           §9.6  GATE-DECISION-006 — REJECTED
           §9.7  GATE-DECISION-007 — Archivado Automático
           §9.8  GATE-DECISION-008 — Capas Técnica vs. Negocio
-  §10   [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d)
+          §9.9  GATE-DECISION-009 — Escalamiento de Pendientes a Tickets
+  §10   KERNEL:CV-GOLDEN-RULES
 
 ─── III. EJECUCIÓN
-  §11  [KERNEL:TRIGGERS](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f297c7d591f3c132f4)
-  §12  [KERNEL:CV-PIPELINE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428190b72cf74c14c31a4a)
-  §13  [KERNEL:CANON-UPDATE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42817db23de75a46a964ac)
-  §14  [KERNEL:NAMING-CONVENTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281bbbe93d1e053bb8e42)
+  §11  KERNEL:TRIGGERS
+  §12  KERNEL:CV-PIPELINE
+  §13  KERNEL:CANON-UPDATE
+  §14  KERNEL:NAMING-CONVENTION
 
 ─── IV. INFRAESTRUCTURA DE CONTEXTO
-  §15  [KERNEL:SCOPE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810293b4e55167657d86) / [KERNEL:ROUTING](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42811aa042c048ec085cbc)
-  §16  [KERNEL:DATA-FLOW](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428101ade4f430c4bee781)
-  §17  [KERNEL:EVOLUTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816d813af068ac1d81be)
+  §15  KERNEL:SCOPE / KERNEL:ROUTING
+  §16  KERNEL:DATA-FLOW
+  §17  KERNEL:EVOLUTION
 ```
 ---
 # I. FUNDAMENTO
@@ -118,7 +119,7 @@ Notion (Source) → Version Check (9 docs) / Census (ID audit) → Reporte a ope
 ### L0-Bootstrap — Dynamic Governance Layer
 Tipo: Capa de Sincronización de Sesión (Fetch-on-Start)
 Propósito: Elimina el drift de versiones entre la UI estática del agente y el repositorio dinámico de Notion.
-Bootstrap Protocol: ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de [SP:BOOTSTRAP-001](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281c68a05fd98ecfef859) y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
+Bootstrap Protocol: ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de SP:BOOTSTRAP-001 y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
 Convención de estado (X-ING → X-ED): el Bootstrap declara inicio con BOOTLOADING... y cierre con BOOTLOADED: DOCUMENTOS CARGADOS.
 Distinción de alcance — Bootstrap vs. Session Ledger: el Bootstrap corre en cada mensaje inicial de cualquier conversación del proyecto — carga de contexto universal, no registro de sesión formal. El Session Ledger (§3.9) es opt-in: solo se escribe cuando el operador invoca vantage-session-open.
 ```plain text
@@ -163,7 +164,7 @@ El V-ID-CENSUS es el noveno documento fundacional, derivado — su fuente de ver
 - Regla 5: health_check.py reporta antigüedad del Census (umbral 7 días) como advertencia informativa, no bloqueante.
 ---
 ### §3.9 — KERNEL:DOCUMENTATION-009
-### Registro de Continuidad de Sesión
+### Session Ledger
 Naturaleza: excepción de escritura de housekeeping — no requiere APROBAR_WRITE.
 Estructura: database Notion (data_source_id 8d736032-eef9-4e6e-a05a-df8b8079ebff) con session_id, status (OPEN/CLOSED), opened_at, pending_summary.
 Escritura autorizada: solo SKILL-OPEN paso 0 (→ OPEN) y SKILL-CLOSE paso 6 (→ CLOSED + pending_summary).
@@ -279,23 +280,56 @@ Distinto del Tracker de vacantes (§7) — bases de datos de trabajo interno del
 ---
 ## §9 — KERNEL:GATE-DECISION
 Con Class A/B (§7) y OWNERSHIP (§5) ya definidos, esta sección describe la lógica que decide, para cada vacante, si avanza, se bloquea o se descarta.
-### §9.1 — GATE-DECISION-001 — Bypass
+### §9.1 — KERNEL:GATE-DECISION-001 — Bypass
 Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE automático. Bypasses: URL_GATE + Score threshold + Visual Signal detection.
-### §9.2 — GATE-DECISION-002 — Lógica Estándar
+### §9.2 — KERNEL:GATE-DECISION-002 — Lógica Estándar
 Orden: URL_GATE (link muerto → Score=0, Status=Expirada) → Score (0–100) → Gate_Decision (≥60 CREATE · 40–59 Para Revisar · <40 BLOCKED/Archivar).
-### §9.3 — GATE-DECISION-003 — Resolución de REVIEW_NEEDED
+### §9.3 — KERNEL:GATE-DECISION-003 — Resolución de REVIEW_NEEDED
 Gap GAP-03 documentado: escritura directa vía MCP no tiene guard equivalente al de feed_processor.py. Mitigación interina: whitelist de campos Class A en DRY RUN. Disparador de resolución: Status = "Target".
-### §9.4 — GATE-DECISION-004 — Por Qué los Gates Son Deterministas
+### §9.4 — KERNEL:GATE-DECISION-004 — Por Qué los Gates Son Deterministas
 Un gate que puede sobreescribirse manualmente no es un gate — es una sugerencia.
-### §9.5 — GATE-DECISION-005 — Flujo de Recuperación BLOCKED
+### §9.5 — KERNEL:GATE-DECISION-005 — Flujo de Recuperación BLOCKED
 RT-1 permite corregir campos Class A y re-validar con Python. RT-1 no sobreescribe el gate.
-### §9.6 — GATE-DECISION-006 — REJECTED (Post-Aplicación)
+### §9.6 — KERNEL:GATE-DECISION-006 — REJECTED (Post-Aplicación)
 REJECTED es Class B derivado de Status = "Rechazado" (Class A). Python traduce vía evaluate_rejection_status(). El operador nunca escribe Gate_Decision directamente.
 > [Corrección aplicada] Este ID ya existía en el cuerpo del Kernel pero faltaba en la TOC — agregado como sub-ítem de §9.
-### §9.7 — GATE-DECISION-007 — Ejecución Automática de Archivado
+### §9.7 — KERNEL:GATE-DECISION-007 — Ejecución Automática de Archivado
 Next_Action='Archivar' Y Dedup_Flag='Posible duplicado' (ambos Class B) → archivado automático vía auto_archive.py. Dry-run obligatorio antes de execute.
-### §9.8 — GATE-DECISION-008 — Capas Técnica vs. Negocio
+### §9.8 — KERNEL:GATE-DECISION-008 — Capas de Evaluación de Gate: Técnica vs. Negocio
 gate() (capa técnica, CREATE/BLOCKED puro) vs. gate_logic() (capa de negocio/workflow, protege estados terminales).
+---
+### §9.9 — KERNEL:GATE-DECISION-009 — Escalamiento de Pendientes a Tickets
+Regla de escalamiento (3 niveles):
+- Condición: Pendiente con esfuerzo estimado bajo (referencia orientativa: <5 iteraciones) y sin evidencia de bloqueo.
+- Acción: Se mantiene registrado en Handoff y/o pending_summary del Ledger. Ver Manual §6 para el detalle operativo de cómo y cuándo se registra este campo dentro del ciclo de sesión.
+- Resultado: No dispara ticket.
+---
+- Condición: Pendiente con esfuerzo estimado alto (referencia orientativa: ≥5 iteraciones) pero sin evidencia confirmada de bloqueo o degradación operativa.
+- Acción:
+- Claude sugiere la creación de ticket (Bug o Task Tracker, según corresponda).
+- Espera APROBAR_WRITE explícito del operador.
+- Si el operador no confirma, el pendiente permanece en Nivel 1 (Handoff/Ledger).
+- No se re-intenta la sugerencia en la misma sesión salvo que el operador la reactive.
+---
+- Condición: El carácter bloqueante o degradante está confirmado por una fuente dura:
+- Dump de Terminal (--bootstrap/--sync).
+- Ledger.
+- Changelog.
+- Declaración directa del operador en la sesión.
+- Acción:
+- Se dispara automáticamente la skill vantage-create-bug-task sin esperar confirmación.
+- Restricción crítica:
+- Inferencias de Claude (ej: "parece bloqueante") nunca califican para Nivel 3.
+- Si Claude sospecha bloqueo pero no tiene fuente dura, el caso baja a Nivel 2 (sugerencia + confirmación).
+- Prohibido por SP:CONSISTENCY §5: Automatismos basados en inferencias no confirmadas.
+---
+Resolución de los 3 puntos de fricción identificados:
+| Punto | Solución |
+| --- | --- |
+| Umbral de iteraciones | Criterio orientativo para Nivel 1 vs Nivel 2. Nunca criterio único para Nivel 3. El único criterio duro para Nivel 3 es: "bloqueante/degradante confirmado por fuente dura". |
+| Re-evaluación Nivel 2 → Nivel 3 | Si durante la sesión aparece evidencia dura de que un pendiente Nivel 2 es bloqueante/degradante, Claude re-clasifica explícitamente a Nivel 3, lo declara al operador ("Reclasifico X de Nivel 2 a Nivel 3 por [evidencia]" ) y dispara el ticket automático. |
+| Choque con SP:CONSISTENCY §5 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
+Referencia cruzada Manual: Ver Manual §6 — Ciclo de Sesión para la implementación práctica de este escalamiento dentro del flujo operador (dónde se declara un Nivel 2, qué cuenta como fuente dura para Nivel 3, y cómo se refleja en el cierre de sesión).
 ---
 ## §10 — KERNEL:CV-GOLDEN-RULES
 Golden Rules — Límites de Ejecución
@@ -399,7 +433,7 @@ Reglas de normalización: espacios → guión bajo; sin acentos ni caracteres es
 Ejemplo: "Gucci — VM Coordinator, LATAM (2026)" → 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM
 Aplica a: CV-B (.md), export QA (.pdf), archivo Figma (.fig) y cualquier output futuro de una vacante específica. El stem se fija al generar el primer entregable y se reutiliza sin variación.
 No aplica a: DRY RUN archivado, artefactos de sistema (logs, backups, entity_index).
-Relación con [CANON:OUTPUT-CONTRACT-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42818190e0fbc29f4f8c5c): contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
+Relación con CANON:OUTPUT-CONTRACT-001: contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
 ---
 ---
 # IV. INFRAESTRUCTURA DE CONTEXTO
