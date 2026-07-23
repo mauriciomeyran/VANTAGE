@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VANTAGE Skills - MCP Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        .skill-list {
+            list-style: none;
+            padding: 0;
+        }
+        .skill-list li {
+            background: #f5f5f5;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .skill-list a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .skill-list a:hover {
+            text-decoration: underline;
+        }
+        .mcp-config {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>VANTAGE Skills - MCP Documentation</h1>
+    
+    <p>Este directorio contiene las skills de VANTAGE accesibles vía MCP (Model Context Protocol).</p>
+    
+    <h2>Configuración MCP</h2>
+    
+    <div class="mcp-config">
+        <h3>Devin CLI:</h3>
+        <code>devin mcp add vantage-skills -- npx markdown-mcp-resource@latest https://mauriciomeyran.github.io/VANTAGE/skills/index.json</code>
+        
+        <h3>Otros clientes MCP:</h3>
+        <code>npx markdown-mcp-resource@latest https://mauriciomeyran.github.io/VANTAGE/skills/index.json</code>
+    </div>
+    
+    <h2>Skills Disponibles</h2>
+    
+    <ul class="skill-list">
+        <li><a href="skills/prompt-master.md">prompt-master</a> - Genera prompts optimizados para herramientas de IA</li>
+        <li><a href="skills/tailored-resume-generator.md">tailored-resume-generator</a> - Genera currículums personalizados según descripciones de trabajo</li>
+        <li><a href="skills/vantage-create-bug-task.md">vantage-create-bug-task</a> - Crea tickets en Bug Tracker o Task Tracker de VANTAGE</li>
+        <li><a href="skills/vantage-documentacion-transversal-implementacion.md">vantage-documentacion-transversal-implementacion</a> - Implementa documentación transversal</li>
+        <li><a href="skills/vantage-documentacion-transversal-propuesta.md">vantage-documentacion-transversal-propuesta</a> - Genera propuestas de documentación transversal</li>
+        <li><a href="skills/vantage-documentacion-transversal.md">vantage-documentacion-transversal</a> - Mantiene documentación transversal en documentos fundacionales</li>
+        <li><a href="skills/vantage-present-handoff.md">vantage-present-handoff</a> - Genera snapshot de contexto de sesión para continuidad</li>
+        <li><a href="skills/vantage-session-close.md">vantage-session-close</a> - Protocolo de cierre de sesión VANTAGE</li>
+        <li><a href="skills/vantage-session-open.md">vantage-session-open</a> - Protocolo de apertura de sesión VANTAGE</li>
+        <li><a href="skills/vantage-tidy-bug-task-tracker.md">vantage-tidy-bug-task-tracker</a> - Marca tickets para archivado en Bug/Task Tracker</li>
+        <li><a href="skills/vantage-tidy-changelog.md">vantage-tidy-changelog</a> - Mantiene el Change Log con las últimas 10 entradas</li>
+        <li><a href="skills/vantage-tidy-opportunities-tracker.md">vantage-tidy-opportunities-tracker</a> - Identifica duplicados y vacantes expiradas en VANTAGE Tracker</li>
+    </ul>
+</body>
+</html>
