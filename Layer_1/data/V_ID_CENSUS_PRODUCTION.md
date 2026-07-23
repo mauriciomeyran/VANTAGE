@@ -45,6 +45,7 @@
 | [`KERNEL:GATE-DECISION-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a5938befc4280d8b3e8c5b3cad0ca29 ) | §9.6 | REJECTED (Post-Aplicación) |
 | [`KERNEL:GATE-DECISION-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a5938befc428085a0dbe3dec4284f39 ) | §9.7 | Ejecución Automática de Archivado |
 | [`KERNEL:GATE-DECISION-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a5938befc4280c6b0d6e027089457c2 ) | §9.8 | Capas de Evaluación de Gate: Técnica vs. Negocio |
+| [`KERNEL:GATE-DECISION-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#6d9f3bb91a504db1b07fa400e8669c42 ) | §9.9 | Escalamiento de Pendientes a Tickets |
 | [`KERNEL:CV-GOLDEN-RULES`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a5938befc42801b8c3cc3c96fa70187 ) | §10 | Reglas de Oro CV |
 | [`KERNEL:CV-GOLDEN-RULES-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#c5d93e0a9248464db078b59dffd5a8bd ) | §10.1 | No Evaluar Fit Antes de Escribir |
 | [`KERNEL:CV-GOLDEN-RULES-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#4c582888285c40289e78ecc0027155a6 ) | §10.2 | No Calcular ni Estimar Campos Class B |

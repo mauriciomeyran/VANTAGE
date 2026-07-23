@@ -1,0 +1,1756 @@
+[
+  {
+    "object": "page",
+    "id": "3a5938be-fc42-814f-b92b-dfb95169bb13",
+    "created_time": "2026-07-22T23:55:00.000Z",
+    "last_edited_time": "2026-07-22T23:55:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",
+      "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Mantener": {
+        "id": "%3C%3CcS",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Solución": {
+        "id": "%3Cq%3Bo",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Fecha_Resolución": {
+        "id": "%3Fs%3FP",
+        "type": "date",
+        "date": null
+      },
+      "Creado": {
+        "id": "DSBI",
+        "type": "created_time",
+        "created_time": "2026-07-22T23:55:00.000Z"
+      },
+      "Notas": {
+        "id": "JHIJ",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Patrón recurrente confirmado en Ledger (SESSION-2026-07-19-A, SESSION-20260722-F ambas OPEN sin cierre a través de múltiples fechas). Escalado Nivel 3 (KERNEL:GATE-DECISION-009) por evidencia dura del propio Ledger, no inferencia. Investigar si vantage-session-close no se ejecuta consistentemente o si el operador cierra fuera de flujo.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Patrón recurrente confirmado en Ledger (SESSION-2026-07-19-A, SESSION-20260722-F ambas OPEN sin cierre a través de múltiples fechas). Escalado Nivel 3 (KERNEL:GATE-DECISION-009) por evidencia dura del propio Ledger, no inferencia. Investigar si vantage-session-close no se ejecuta consistentemente o si el operador cierra fuera de flujo.",
+            "href": null
+          }
+        ]
+      },
+      "Archivar": {
+        "id": "TOTP",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Detección": {
+        "id": "UIYK",
+        "type": "date",
+        "date": {
+          "start": "2026-07-22",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Etiquetas": {
+        "id": "choA",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Componente": {
+        "id": "dGZn",
+        "type": "select",
+        "select": {
+          "id": "350b3e11-0a34-4597-b0bd-830f6daff026",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Prioridad": {
+        "id": "hihn",
+        "type": "select",
+        "select": {
+          "id": "YnqZ",
+          "name": "ALTO",
+          "color": "orange"
+        }
+      },
+      "Status": {
+        "id": "oToy",
+        "type": "select",
+        "select": {
+          "id": "a7fa0cb0-b9ca-4807-b5cc-024f0053ffce",
+          "name": "Abierto",
+          "color": "red"
+        }
+      },
+      "Next_Action": {
+        "id": "%7DM_%40",
+        "type": "select",
+        "select": {
+          "id": "af4daf81-63a6-40aa-bef5-49434f3418b2",
+          "name": "Auditoría",
+          "color": "orange"
+        }
+      },
+      "Bug": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Sesiones huérfanas recurrentes sin cierre en Session Ledger",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Sesiones huérfanas recurrentes sin cierre en Session Ledger",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Sesiones-hu-rfanas-recurrentes-sin-cierre-en-Session-Ledger-3a5938befc42814fb92bdfb95169bb13",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a5938be-fc42-81ef-b268-ff186307f6b3",
+    "created_time": "2026-07-22T23:55:00.000Z",
+    "last_edited_time": "2026-07-22T23:55:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",
+      "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Mantener": {
+        "id": "%3C%3CcS",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Solución": {
+        "id": "%3Cq%3Bo",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Fecha_Resolución": {
+        "id": "%3Fs%3FP",
+        "type": "date",
+        "date": null
+      },
+      "Creado": {
+        "id": "DSBI",
+        "type": "created_time",
+        "created_time": "2026-07-22T23:55:00.000Z"
+      },
+      "Notas": {
+        "id": "JHIJ",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Comportamiento confirmado (no hipótesis) en Handoff consolidado 2026-07-22 (SESSION-D+E), declarado como de mayor impacto acumulado entre los Dedup Cases abiertos. Escalado Nivel 3 por evidencia dura declarada explícitamente. Ticket independiente de \"Dedup Cases 3/4b/5\" genérico ya existente en backlog.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Comportamiento confirmado (no hipótesis) en Handoff consolidado 2026-07-22 (SESSION-D+E), declarado como de mayor impacto acumulado entre los Dedup Cases abiertos. Escalado Nivel 3 por evidencia dura declarada explícitamente. Ticket independiente de \"Dedup Cases 3/4b/5\" genérico ya existente en backlog.",
+            "href": null
+          }
+        ]
+      },
+      "Archivar": {
+        "id": "TOTP",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Detección": {
+        "id": "UIYK",
+        "type": "date",
+        "date": {
+          "start": "2026-07-22",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Etiquetas": {
+        "id": "choA",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Componente": {
+        "id": "dGZn",
+        "type": "select",
+        "select": {
+          "id": "00b8fdfb-1cd1-4215-92e0-fc1650707ecb",
+          "name": "Python",
+          "color": "blue"
+        }
+      },
+      "Prioridad": {
+        "id": "hihn",
+        "type": "select",
+        "select": {
+          "id": "YnqZ",
+          "name": "ALTO",
+          "color": "orange"
+        }
+      },
+      "Status": {
+        "id": "oToy",
+        "type": "select",
+        "select": {
+          "id": "a7fa0cb0-b9ca-4807-b5cc-024f0053ffce",
+          "name": "Abierto",
+          "color": "red"
+        }
+      },
+      "Next_Action": {
+        "id": "%7DM_%40",
+        "type": "select",
+        "select": {
+          "id": "cb037604-2af5-4fca-b93f-715d76fcf90a",
+          "name": "Patch",
+          "color": "red"
+        }
+      },
+      "Bug": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Dedup Caso 5 — Next_Action=Archivar no se ejecuta automáticamente",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Dedup Caso 5 — Next_Action=Archivar no se ejecuta automáticamente",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Dedup-Caso-5-Next_Action-Archivar-no-se-ejecuta-autom-ticamente-3a5938befc4281efb268ff186307f6b3",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a5938be-fc42-8185-b1cb-ff0003a82b3e",
+    "created_time": "2026-07-22T00:39:00.000Z",
+    "last_edited_time": "2026-07-22T00:39:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",
+      "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Mantener": {
+        "id": "%3C%3CcS",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Solución": {
+        "id": "%3Cq%3Bo",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Fecha_Resolución": {
+        "id": "%3Fs%3FP",
+        "type": "date",
+        "date": null
+      },
+      "Creado": {
+        "id": "DSBI",
+        "type": "created_time",
+        "created_time": "2026-07-22T00:39:00.000Z"
+      },
+      "Notas": {
+        "id": "JHIJ",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "En verify_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "En verify_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "versions.py",
+              "link": {
+                "url": "http://versions.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "versions.py",
+            "href": "http://versions.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": ", la página VANTAGE Central Hub usa el nombre de propiedad \"Versión \" (con espacio final) mientras los otros 8 documentos fundacionales usan \"Versión\" sin espacio (línea 494: prop_name = \"Versión \" if doc == \"VANTAGE\" else \"Versión\"; comentario línea 149: 'schema inconsistente respecto a los 8 fundacionales'). Actualmente resuelto solo como workaround silencioso en código, sin ancla documental en ningún Kernel. Riesgo: si se corrige el schema de Notion sin actualizar el código, o viceversa, --sync fallará silenciosamente para VANTAGE. Detectado 2026-07-21 en auditoría de verify_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": ", la página VANTAGE Central Hub usa el nombre de propiedad \"Versión \" (con espacio final) mientras los otros 8 documentos fundacionales usan \"Versión\" sin espacio (línea 494: prop_name = \"Versión \" if doc == \"VANTAGE\" else \"Versión\"; comentario línea 149: 'schema inconsistente respecto a los 8 fundacionales'). Actualmente resuelto solo como workaround silencioso en código, sin ancla documental en ningún Kernel. Riesgo: si se corrige el schema de Notion sin actualizar el código, o viceversa, --sync fallará silenciosamente para VANTAGE. Detectado 2026-07-21 en auditoría de verify_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "versions.py",
+              "link": {
+                "url": "http://versions.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "versions.py",
+            "href": "http://versions.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " durante refactor L0.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " durante refactor L0.",
+            "href": null
+          }
+        ]
+      },
+      "Archivar": {
+        "id": "TOTP",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Detección": {
+        "id": "UIYK",
+        "type": "date",
+        "date": null
+      },
+      "Etiquetas": {
+        "id": "choA",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Componente": {
+        "id": "dGZn",
+        "type": "select",
+        "select": {
+          "id": "29d8b8e5-ed3d-4153-91fe-a114e5a65925",
+          "name": "Layer 1",
+          "color": "gray"
+        }
+      },
+      "Prioridad": {
+        "id": "hihn",
+        "type": "select",
+        "select": {
+          "id": "i[`w",
+          "name": "BAJO",
+          "color": "green"
+        }
+      },
+      "Status": {
+        "id": "oToy",
+        "type": "select",
+        "select": {
+          "id": "a7fa0cb0-b9ca-4807-b5cc-024f0053ffce",
+          "name": "Abierto",
+          "color": "red"
+        }
+      },
+      "Next_Action": {
+        "id": "%7DM_%40",
+        "type": "select",
+        "select": {
+          "id": "f0da0434-25ed-4ae8-8284-6289c922cfb0",
+          "name": "Documentar",
+          "color": "blue"
+        }
+      },
+      "Bug": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "VANTAGE usa propiedad de versión \"Versión \" (con espacio) — inconsistente con el resto de fundacionales",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "VANTAGE usa propiedad de versión \"Versión \" (con espacio) — inconsistente con el resto de fundacionales",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/VANTAGE-usa-propiedad-de-versi-n-Versi-n-con-espacio-inconsistente-con-el-resto-de-fundaciona-3a5938befc428185b1cbff0003a82b3e",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a5938be-fc42-81a3-90a1-cbcadccfcc90",
+    "created_time": "2026-07-22T00:39:00.000Z",
+    "last_edited_time": "2026-07-22T00:39:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",
+      "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Mantener": {
+        "id": "%3C%3CcS",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Solución": {
+        "id": "%3Cq%3Bo",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Fecha_Resolución": {
+        "id": "%3Fs%3FP",
+        "type": "date",
+        "date": null
+      },
+      "Creado": {
+        "id": "DSBI",
+        "type": "created_time",
+        "created_time": "2026-07-22T00:39:00.000Z"
+      },
+      "Notas": {
+        "id": "JHIJ",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "verify_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "verify_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "versions.py",
+              "link": {
+                "url": "http://versions.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "versions.py",
+            "href": "http://versions.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " real ya implementa un tercer modo --scripts (Script Library Gap Report): cruza .py/.sh del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra SCRIPT_LIBRARY_DATA_SOURCE_ID en Notion. Read-only, no requiere resolver_registry_v2.json. Este modo no existe en ninguna versión del Kernel (ni PDF de control, ni fetch actual de Notion, ni propuesta de refactor L0 de Arena). Requiere KERNEL:DOCUMENTATION-TRANSVERSAL-001 para anclarlo en KERNEL:VERSION-CHECK-TOOL antes de que alguien lo descubra por accidente en vez de por Kernel. Detectado 2026-07-21 en auditoría de verify_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " real ya implementa un tercer modo --scripts (Script Library Gap Report): cruza .py/.sh del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra SCRIPT_LIBRARY_DATA_SOURCE_ID en Notion. Read-only, no requiere resolver_registry_v2.json. Este modo no existe en ninguna versión del Kernel (ni PDF de control, ni fetch actual de Notion, ni propuesta de refactor L0 de Arena). Requiere KERNEL:DOCUMENTATION-TRANSVERSAL-001 para anclarlo en KERNEL:VERSION-CHECK-TOOL antes de que alguien lo descubra por accidente en vez de por Kernel. Detectado 2026-07-21 en auditoría de verify_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "versions.py",
+              "link": {
+                "url": "http://versions.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "versions.py",
+            "href": "http://versions.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " durante refactor L0.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " durante refactor L0.",
+            "href": null
+          }
+        ]
+      },
+      "Archivar": {
+        "id": "TOTP",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Detección": {
+        "id": "UIYK",
+        "type": "date",
+        "date": null
+      },
+      "Etiquetas": {
+        "id": "choA",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Componente": {
+        "id": "dGZn",
+        "type": "select",
+        "select": {
+          "id": "29d8b8e5-ed3d-4153-91fe-a114e5a65925",
+          "name": "Layer 1",
+          "color": "gray"
+        }
+      },
+      "Prioridad": {
+        "id": "hihn",
+        "type": "select",
+        "select": {
+          "id": "xGU[",
+          "name": "MEDIO",
+          "color": "yellow"
+        }
+      },
+      "Status": {
+        "id": "oToy",
+        "type": "select",
+        "select": {
+          "id": "a7fa0cb0-b9ca-4807-b5cc-024f0053ffce",
+          "name": "Abierto",
+          "color": "red"
+        }
+      },
+      "Next_Action": {
+        "id": "%7DM_%40",
+        "type": "select",
+        "select": {
+          "id": "f0da0434-25ed-4ae8-8284-6289c922cfb0",
+          "name": "Documentar",
+          "color": "blue"
+        }
+      },
+      "Bug": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "KERNEL:VERSION-CHECK-TOOL no documenta el modo --scripts (Script Library Gap Report)",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "KERNEL:VERSION-CHECK-TOOL no documenta el modo --scripts (Script Library Gap Report)",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/KERNEL-VERSION-CHECK-TOOL-no-documenta-el-modo-scripts-Script-Library-Gap-Report-3a5938befc4281a390a1cbcadccfcc90",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a0938be-fc42-81d0-9097-c35f613a3b7d",
+    "created_time": "2026-07-17T21:32:00.000Z",
+    "last_edited_time": "2026-07-17T21:32:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",
+      "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Mantener": {
+        "id": "%3C%3CcS",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Solución": {
+        "id": "%3Cq%3Bo",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Fecha_Resolución": {
+        "id": "%3Fs%3FP",
+        "type": "date",
+        "date": null
+      },
+      "Creado": {
+        "id": "DSBI",
+        "type": "created_time",
+        "created_time": "2026-07-17T21:32:00.000Z"
+      },
+      "Notas": {
+        "id": "JHIJ",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "vl1 status no es subcomando válido (uso real: vl1 [tracker|analytics|batch|recovery|profile|feed|backfill]). Se asumió redundancia con vl1 analytics pero nunca se confirmó operativamente. Aclarar antes de dar por cerrado.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "vl1 status no es subcomando válido (uso real: vl1 [tracker|analytics|batch|recovery|profile|feed|backfill]). Se asumió redundancia con vl1 analytics pero nunca se confirmó operativamente. Aclarar antes de dar por cerrado.",
+            "href": null
+          }
+        ]
+      },
+      "Archivar": {
+        "id": "TOTP",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Detección": {
+        "id": "UIYK",
+        "type": "date",
+        "date": {
+          "start": "2026-07-16",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Etiquetas": {
+        "id": "choA",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Componente": {
+        "id": "dGZn",
+        "type": "select",
+        "select": {
+          "id": "29d8b8e5-ed3d-4153-91fe-a114e5a65925",
+          "name": "Layer 1",
+          "color": "gray"
+        }
+      },
+      "Prioridad": {
+        "id": "hihn",
+        "type": "select",
+        "select": {
+          "id": "i[`w",
+          "name": "BAJO",
+          "color": "green"
+        }
+      },
+      "Status": {
+        "id": "oToy",
+        "type": "select",
+        "select": {
+          "id": "a7fa0cb0-b9ca-4807-b5cc-024f0053ffce",
+          "name": "Abierto",
+          "color": "red"
+        }
+      },
+      "Next_Action": {
+        "id": "%7DM_%40",
+        "type": "select",
+        "select": {
+          "id": "af4daf81-63a6-40aa-bef5-49434f3418b2",
+          "name": "Auditoría",
+          "color": "orange"
+        }
+      },
+      "Bug": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "vl1 analytics — confirmar si cubre el caso de uso que se buscaba con vl1 status",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "vl1 analytics — confirmar si cubre el caso de uso que se buscaba con vl1 status",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/vl1-analytics-confirmar-si-cubre-el-caso-de-uso-que-se-buscaba-con-vl1-status-3a0938befc4281d09097c35f613a3b7d",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39b938be-fc42-81ef-a1cc-dd5d763bfdbf",
+    "created_time": "2026-07-12T15:54:00.000Z",
+    "last_edited_time": "2026-07-20T09:48:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",
+      "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Mantener": {
+        "id": "%3C%3CcS",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Solución": {
+        "id": "%3Cq%3Bo",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Fecha_Resolución": {
+        "id": "%3Fs%3FP",
+        "type": "date",
+        "date": null
+      },
+      "Creado": {
+        "id": "DSBI",
+        "type": "created_time",
+        "created_time": "2026-07-12T15:54:00.000Z"
+      },
+      "Notas": {
+        "id": "JHIJ",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "CASO 1 — Electrónica Confidencial: mismo job (Computrabajo, jobid 18500D43304AC00661373E686DCF3405) capturado 2 veces con URL en distinta capitalización. Registro A: 385938be-fc42-8111-b887-c550dc265be2 (Score 60, Gate=APPLIED, Status=Postulado, Apply Date 2026-06-23, creado 2026-06-20). Registro B: fila CSV 'Coordinador de Visual Merchandising giro electrónica - inglés intermedio' (Score 40, Gate=CREATE, Status=Target, creado 2026-06-26). Hash SHA-256 distinto entre ambos — el hash de dedup no normaliza la URL a lowercase antes de hashear.\n\nCASO 2 — Vinos La Naval, 'Responsable de VM y Ejecución en Tiendas': mismo rol+marca capturado desde 2 portales. Registro A: 38b938befc4281e2912fd6930c1ecb43 vía OCC jobid=21223176, creado 2026-06-26, Score 60, Gate=CREATE, JD completo, CV-A ya generado 2026-06-27 con positioning N4. Registro B: 38d938befc4281a9a677d983c56eda3b vía Indeed jk=23c254f3e6503ec1, creado 2026-06-28, Score 40, Gate=BLOCKED, JD vacío, Fetch=Bloqueado. Ambas páginas ya tienen Archivar=YES pero siguen activas en el Tracker.\n\nCASO 3 — Ermenegildo Zegna, 'Visual Merchandiser LATAM' / 'VM Regional LATAM': causa raíz DISTINTA a Casos 1-2 — no es normalización de URL, es falta de cruce Inbound↔Vacante-pública. Registro real (Archivo Tracker): 36d938be-fc42-81f5-94ec-c9adb8e8cc63, JOB_ID=ZEGNA-VMLATAM-20260527, Fuente=Inbound (networking directo vía LinkedIn con Carlos Adrián González García, HR BP LATAM), Score 70, Gate=APPLIED, Status=Rechazado, Rej Date 2026-07-02, proceso completo. Registro CSV [29]: LinkedIn job alert público, Score 40, Gate=BLOCKED, Status=Target, sin JOB_ID. Registro CSV [43]: ",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "CASO 1 — Electrónica Confidencial: mismo job (Computrabajo, jobid 18500D43304AC00661373E686DCF3405) capturado 2 veces con URL en distinta capitalización. Registro A: 385938be-fc42-8111-b887-c550dc265be2 (Score 60, Gate=APPLIED, Status=Postulado, Apply Date 2026-06-23, creado 2026-06-20). Registro B: fila CSV 'Coordinador de Visual Merchandising giro electrónica - inglés intermedio' (Score 40, Gate=CREATE, Status=Target, creado 2026-06-26). Hash SHA-256 distinto entre ambos — el hash de dedup no normaliza la URL a lowercase antes de hashear.\n\nCASO 2 — Vinos La Naval, 'Responsable de VM y Ejecución en Tiendas': mismo rol+marca capturado desde 2 portales. Registro A: 38b938befc4281e2912fd6930c1ecb43 vía OCC jobid=21223176, creado 2026-06-26, Score 60, Gate=CREATE, JD completo, CV-A ya generado 2026-06-27 con positioning N4. Registro B: 38d938befc4281a9a677d983c56eda3b vía Indeed jk=23c254f3e6503ec1, creado 2026-06-28, Score 40, Gate=BLOCKED, JD vacío, Fetch=Bloqueado. Ambas páginas ya tienen Archivar=YES pero siguen activas en el Tracker.\n\nCASO 3 — Ermenegildo Zegna, 'Visual Merchandiser LATAM' / 'VM Regional LATAM': causa raíz DISTINTA a Casos 1-2 — no es normalización de URL, es falta de cruce Inbound↔Vacante-pública. Registro real (Archivo Tracker): 36d938be-fc42-81f5-94ec-c9adb8e8cc63, JOB_ID=ZEGNA-VMLATAM-20260527, Fuente=Inbound (networking directo vía LinkedIn con Carlos Adrián González García, HR BP LATAM), Score 70, Gate=APPLIED, Status=Rechazado, Rej Date 2026-07-02, proceso completo. Registro CSV [29]: LinkedIn job alert público, Score 40, Gate=BLOCKED, Status=Target, sin JOB_ID. Registro CSV [43]: ",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "careers.zegnagroup.com",
+              "link": {
+                "url": "http://careers.zegnagroup.com/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "careers.zegnagroup.com",
+            "href": "http://careers.zegnagroup.com/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " JobID=270880336, Score 40, Gate=BLOCKED, Status=REVIEW_NEEDED. Los 2 registros CSV son probable duplicado ENTRE SÍ, y además el pipeline nunca cruzó el proceso Inbound real (ya cerrado/rechazado) contra el posting público.\n\nCASO 4 — GILSA, 'Coordinador de Exhibiciones': patrón sistémico, 6 páginas para el mismo puesto. Consolidado por jk real: (a) jk=9f45d9e2450010ca — 3 páginas en Archivo Tracker: 385938befc4281608f6ed0ef28717561 (hash cfd3f813...), 37e938befc4281e6b56df88fe235d156 y 37e938befc42818e8d9bc01d48fbde6a (últimas 2 con hash IDÉNTICO 0ee1986c76b5c582cc21e1764fac187d31604dd07da84cb31a05856f2668fca1 — duplicado EXACTO confirmado). (b) jk=cf3ca0540af5d305 — página 38f938befc428134ab58dacfb57124cf, hash bc9ca2c8..., Tracker activo. (c) jk=cf3ca0540af5e1f7cb5 — página 397938befc42817d9ec3e55bf196d444, hash ef97b47..., Tracker activo. 3 jk distintos para el mismo título+empresa+ubicación. Hipótesis: Indeed rota el jk en cada repost del mismo listing expirado, y el dedup compara jk exacto en vez de fingerprint de contenido.\n\nCASO 5 (CONTROL POSITIVO) — Promotwist SC, 'Visual Merchandiser': a diferencia de los 4 casos anteriores, AQUÍ EL DEDUP SÍ FUNCIONÓ. Página 397938befc42811ba542de52a078819c (jk=dc2f85f4fe4f954a, creada 2026-07-08 20:25, layer L1) ya tiene Dedup_Flag='Posible duplicado' Y Next_Action='Archivar' correctamente asignados contra la página original 397938befc428196821dd2d4d6d4b9b6 (jk=22d2386603abd1f7, creada 2026-07-08 10:30, layer L3, Next_Action también='Archivar'). CONCLUSIÓN CLAVE: el motor de detección de duplicados no está roto de forma generalizada — en al menos este caso identificó el duplicado correctamente valiéndose de un mecanismo distinto a jk/hash exacto (probablemente similitud de título+marca+score+role_class dentro de ventana temporal corta). El bug transversal real, presente en los 5 casos, es que 'Next_Action=Archivar' y 'Dedup_Flag=Posible duplicado' NUNCA se ejecutan automáticamente — quedan marcados pero las páginas siguen visibles/activas en Tracker indefinidamente. Esto sugiere que el paso de detección funciona parcialmente (bien en Promotwist, mal en Casos 1/2/4 por variantes de URL/jk, ausente en Caso 3 por falta de cruce Inbound) pero el paso de EJECUCIÓN del archivado no corre en ningún caso.\n\nACCIÓN REQUERIDA: (1) Normalizar URL (lowercase, strip params tracking) antes del hash SHA-256 en feed_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " JobID=270880336, Score 40, Gate=BLOCKED, Status=REVIEW_NEEDED. Los 2 registros CSV son probable duplicado ENTRE SÍ, y además el pipeline nunca cruzó el proceso Inbound real (ya cerrado/rechazado) contra el posting público.\n\nCASO 4 — GILSA, 'Coordinador de Exhibiciones': patrón sistémico, 6 páginas para el mismo puesto. Consolidado por jk real: (a) jk=9f45d9e2450010ca — 3 páginas en Archivo Tracker: 385938befc4281608f6ed0ef28717561 (hash cfd3f813...), 37e938befc4281e6b56df88fe235d156 y 37e938befc42818e8d9bc01d48fbde6a (últimas 2 con hash IDÉNTICO 0ee1986c76b5c582cc21e1764fac187d31604dd07da84cb31a05856f2668fca1 — duplicado EXACTO confirmado). (b) jk=cf3ca0540af5d305 — página 38f938befc428134ab58dacfb57124cf, hash bc9ca2c8..., Tracker activo. (c) jk=cf3ca0540af5e1f7cb5 — página 397938befc42817d9ec3e55bf196d444, hash ef97b47..., Tracker activo. 3 jk distintos para el mismo título+empresa+ubicación. Hipótesis: Indeed rota el jk en cada repost del mismo listing expirado, y el dedup compara jk exacto en vez de fingerprint de contenido.\n\nCASO 5 (CONTROL POSITIVO) — Promotwist SC, 'Visual Merchandiser': a diferencia de los 4 casos anteriores, AQUÍ EL DEDUP SÍ FUNCIONÓ. Página 397938befc42811ba542de52a078819c (jk=dc2f85f4fe4f954a, creada 2026-07-08 20:25, layer L1) ya tiene Dedup_Flag='Posible duplicado' Y Next_Action='Archivar' correctamente asignados contra la página original 397938befc428196821dd2d4d6d4b9b6 (jk=22d2386603abd1f7, creada 2026-07-08 10:30, layer L3, Next_Action también='Archivar'). CONCLUSIÓN CLAVE: el motor de detección de duplicados no está roto de forma generalizada — en al menos este caso identificó el duplicado correctamente valiéndose de un mecanismo distinto a jk/hash exacto (probablemente similitud de título+marca+score+role_class dentro de ventana temporal corta). El bug transversal real, presente en los 5 casos, es que 'Next_Action=Archivar' y 'Dedup_Flag=Posible duplicado' NUNCA se ejecutan automáticamente — quedan marcados pero las páginas siguen visibles/activas en Tracker indefinidamente. Esto sugiere que el paso de detección funciona parcialmente (bien en Promotwist, mal en Casos 1/2/4 por variantes de URL/jk, ausente en Caso 3 por falta de cruce Inbound) pero el paso de EJECUCIÓN del archivado no corre en ningún caso.\n\nACCIÓN REQUERIDA: (1) Normalizar URL (lowercase, strip params tracking) antes del hash SHA-256 en feed_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "processor.py",
+              "link": {
+                "url": "http://processor.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "processor.py",
+            "href": "http://processor.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " — resuelve Casos 1-2 y el sub-duplicado exacto de Caso 4a. (2) Investigar por qué Promotwist (Caso 5) sí detectó el duplicado y replicar ese mecanismo para los demás casos — puede ya existir lógica de fingerprint parcial que no se aplica consistentemente. (3) PRIORIDAD ALTA: implementar/reparar la ejecución automática del archivado cuando Archivar=YES o Next_Action=Archivar — este es el bug común a los 5 casos y el de mayor impacto acumulado (páginas zombis en Tracker activo). (4) Para Caso 3: diseñar regla de cruce Marca+Rol entre Tracker activo y Archivo. (5) Para Caso 4: implementar dedup por fingerprint de contenido (título normalizado + empresa + ubicación) ya que jk de Indeed no es estable a través de reposts. Auditar cuántos otros roles de Score bajo sufren el mismo patrón de reposts acumulados. NO mover nada a archivo hasta confirmar registro canónico de cada grupo, EXCEPTO Caso 5 (Promotwist) donde el sistema ya identificó correctamente cuál es el duplicado — ahí solo falta ejecutar el archivado ya decidido.\n\nActualización 2026-07-18: Casos 1 y 2 resueltos — (1) normalize_url() ahora normaliza path a lowercase antes de hashear; (2) dedup_cross_layer() ya no compara title vía equals case-sensitive de Notion, ahora compara en Python normalizado post-fetch. Ambos verificados: Caso 1 en producción real (MATCH: True en test funcional), Caso 2 en aislamiento con datos sintéticos (pendiente de confirmación con caso real). Sin tocar: Caso 3 (cruce Inbound↔público), Caso 4 parte b (jk rotativo de Indeed, requiere fingerprint de contenido), y el bug transversal de Caso 5 (Next_Action=Archivar nunca se ejecuta automáticamente) — este último es probablemente el de mayor impacto acumulado y sigue enteramente abierto.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " — resuelve Casos 1-2 y el sub-duplicado exacto de Caso 4a. (2) Investigar por qué Promotwist (Caso 5) sí detectó el duplicado y replicar ese mecanismo para los demás casos — puede ya existir lógica de fingerprint parcial que no se aplica consistentemente. (3) PRIORIDAD ALTA: implementar/reparar la ejecución automática del archivado cuando Archivar=YES o Next_Action=Archivar — este es el bug común a los 5 casos y el de mayor impacto acumulado (páginas zombis en Tracker activo). (4) Para Caso 3: diseñar regla de cruce Marca+Rol entre Tracker activo y Archivo. (5) Para Caso 4: implementar dedup por fingerprint de contenido (título normalizado + empresa + ubicación) ya que jk de Indeed no es estable a través de reposts. Auditar cuántos otros roles de Score bajo sufren el mismo patrón de reposts acumulados. NO mover nada a archivo hasta confirmar registro canónico de cada grupo, EXCEPTO Caso 5 (Promotwist) donde el sistema ya identificó correctamente cuál es el duplicado — ahí solo falta ejecutar el archivado ya decidido.\n\nActualización 2026-07-18: Casos 1 y 2 resueltos — (1) normalize_url() ahora normaliza path a lowercase antes de hashear; (2) dedup_cross_layer() ya no compara title vía equals case-sensitive de Notion, ahora compara en Python normalizado post-fetch. Ambos verificados: Caso 1 en producción real (MATCH: True en test funcional), Caso 2 en aislamiento con datos sintéticos (pendiente de confirmación con caso real). Sin tocar: Caso 3 (cruce Inbound↔público), Caso 4 parte b (jk rotativo de Indeed, requiere fingerprint de contenido), y el bug transversal de Caso 5 (Next_Action=Archivar nunca se ejecuta automáticamente) — este último es probablemente el de mayor impacto acumulado y sigue enteramente abierto.",
+            "href": null
+          }
+        ]
+      },
+      "Archivar": {
+        "id": "TOTP",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Detección": {
+        "id": "UIYK",
+        "type": "date",
+        "date": {
+          "start": "2026-07-12",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Etiquetas": {
+        "id": "choA",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Componente": {
+        "id": "dGZn",
+        "type": "select",
+        "select": {
+          "id": "29d8b8e5-ed3d-4153-91fe-a114e5a65925",
+          "name": "Layer 1",
+          "color": "gray"
+        }
+      },
+      "Prioridad": {
+        "id": "hihn",
+        "type": "select",
+        "select": {
+          "id": "YnqZ",
+          "name": "ALTO",
+          "color": "orange"
+        }
+      },
+      "Status": {
+        "id": "oToy",
+        "type": "select",
+        "select": {
+          "id": "baa65cba-2128-41df-9e5d-eeacca2ab736",
+          "name": "En revisión",
+          "color": "yellow"
+        }
+      },
+      "Next_Action": {
+        "id": "%7DM_%40",
+        "type": "select",
+        "select": {
+          "id": "cb037604-2af5-4fca-b93f-715d76fcf90a",
+          "name": "Patch",
+          "color": "red"
+        }
+      },
+      "Bug": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Dedup no detecta registros duplicados del Tracker (URL case-sensitivity + republicación cross-portal)",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Dedup no detecta registros duplicados del Tracker (URL case-sensitivity + republicación cross-portal)",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Dedup-no-detecta-registros-duplicados-del-Tracker-URL-case-sensitivity-republicaci-n-cross-portal-39b938befc4281efa1ccdd5d763bfdbf",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39a938be-fc42-81e3-85d2-d204065d6baa",
+    "created_time": "2026-07-11T02:42:00.000Z",
+    "last_edited_time": "2026-07-11T02:42:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",
+      "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Mantener": {
+        "id": "%3C%3CcS",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Solución": {
+        "id": "%3Cq%3Bo",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Fecha_Resolución": {
+        "id": "%3Fs%3FP",
+        "type": "date",
+        "date": null
+      },
+      "Creado": {
+        "id": "DSBI",
+        "type": "created_time",
+        "created_time": "2026-07-11T02:42:00.000Z"
+      },
+      "Notas": {
+        "id": "JHIJ",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Archivar": {
+        "id": "TOTP",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Detección": {
+        "id": "UIYK",
+        "type": "date",
+        "date": {
+          "start": "2026-07-10",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Etiquetas": {
+        "id": "choA",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Componente": {
+        "id": "dGZn",
+        "type": "select",
+        "select": {
+          "id": "29d8b8e5-ed3d-4153-91fe-a114e5a65925",
+          "name": "Layer 1",
+          "color": "gray"
+        }
+      },
+      "Prioridad": {
+        "id": "hihn",
+        "type": "select",
+        "select": {
+          "id": "i[`w",
+          "name": "BAJO",
+          "color": "green"
+        }
+      },
+      "Status": {
+        "id": "oToy",
+        "type": "select",
+        "select": {
+          "id": "a7fa0cb0-b9ca-4807-b5cc-024f0053ffce",
+          "name": "Abierto",
+          "color": "red"
+        }
+      },
+      "Next_Action": {
+        "id": "%7DM_%40",
+        "type": "select",
+        "select": {
+          "id": "ec8a270f-e7dd-43f8-be4b-c9f1007500ca",
+          "name": "Monitorear",
+          "color": "gray"
+        }
+      },
+      "Bug": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Feedback loop — outcomes insuficientes para análisis de gate logic",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Feedback loop — outcomes insuficientes para análisis de gate logic",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Feedback-loop-outcomes-insuficientes-para-an-lisis-de-gate-logic-39a938befc4281e385d2d204065d6baa",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "392938be-fc42-8111-bc97-f2a53f8b09d1",
+    "created_time": "2026-07-03T22:30:00.000Z",
+    "last_edited_time": "2026-07-04T12:31:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",
+      "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Mantener": {
+        "id": "%3C%3CcS",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Solución": {
+        "id": "%3Cq%3Bo",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Fecha_Resolución": {
+        "id": "%3Fs%3FP",
+        "type": "date",
+        "date": null
+      },
+      "Creado": {
+        "id": "DSBI",
+        "type": "created_time",
+        "created_time": "2026-07-03T22:30:00.000Z"
+      },
+      "Notas": {
+        "id": "JHIJ",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Se detectó comportamiento donde el modelo realiza auditorías espontáneas del Kernel e interpreta rutas lógicas como estructura física, sin trigger explícito. No hay evidencia de corrupción real en Source of Truth, Terminal, MCP o lazy_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Se detectó comportamiento donde el modelo realiza auditorías espontáneas del Kernel e interpreta rutas lógicas como estructura física, sin trigger explícito. No hay evidencia de corrupción real en Source of Truth, Terminal, MCP o lazy_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "loader.py",
+              "link": {
+                "url": "http://loader.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "loader.py",
+            "href": "http://loader.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": ". Se reforzó el System Prompt separando contrato operativo vs. implementación interna vs. límites de interpretación del modelo. Pendiente observar en próximas sesiones/cuentas.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": ". Se reforzó el System Prompt separando contrato operativo vs. implementación interna vs. límites de interpretación del modelo. Pendiente observar en próximas sesiones/cuentas.",
+            "href": null
+          }
+        ]
+      },
+      "Archivar": {
+        "id": "TOTP",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Detección": {
+        "id": "UIYK",
+        "type": "date",
+        "date": {
+          "start": "2026-07-03",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Etiquetas": {
+        "id": "choA",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Componente": {
+        "id": "dGZn",
+        "type": "select",
+        "select": {
+          "id": "350b3e11-0a34-4597-b0bd-830f6daff026",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Prioridad": {
+        "id": "hihn",
+        "type": "select",
+        "select": {
+          "id": "YnqZ",
+          "name": "ALTO",
+          "color": "orange"
+        }
+      },
+      "Status": {
+        "id": "oToy",
+        "type": "select",
+        "select": {
+          "id": "a7fa0cb0-b9ca-4807-b5cc-024f0053ffce",
+          "name": "Abierto",
+          "color": "red"
+        }
+      },
+      "Next_Action": {
+        "id": "%7DM_%40",
+        "type": "select",
+        "select": {
+          "id": "ec8a270f-e7dd-43f8-be4b-c9f1007500ca",
+          "name": "Monitorear",
+          "color": "gray"
+        }
+      },
+      "Bug": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "System Prompt — inferencias arquitectónicas espontáneas no solicitadas",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "System Prompt — inferencias arquitectónicas espontáneas no solicitadas",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/System-Prompt-inferencias-arquitect-nicas-espont-neas-no-solicitadas-392938befc428111bc97f2a53f8b09d1",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "387938be-fc42-81ec-9e28-ee615bf922a1",
+    "created_time": "2026-06-22T03:23:00.000Z",
+    "last_edited_time": "2026-06-22T03:23:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",
+      "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Mantener": {
+        "id": "%3C%3CcS",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Solución": {
+        "id": "%3Cq%3Bo",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Fecha_Resolución": {
+        "id": "%3Fs%3FP",
+        "type": "date",
+        "date": null
+      },
+      "Creado": {
+        "id": "DSBI",
+        "type": "created_time",
+        "created_time": "2026-06-22T03:23:00.000Z"
+      },
+      "Notas": {
+        "id": "JHIJ",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Campo JD está presente en el schema del consolidated JSON (confirmado en 2026-06-26_consolidated.json: Petco lo tiene poblado vía enriquecimiento L2 desde Career Pages wrapper). El bug original describía ausencia total del campo — incorrecto. Estado real: el campo existe pero llega null en 8/9 registros porque la extracción del JD completo no está asignada consistentemente a ningún wrapper. L1 (Aggregators, LinkedIn) no navega el JD. L2 (Career Pages) sí lo extrae cuando accede a la career page directamente. Fix: documentar en triggers-001 qué wrapper es responsable de extraer JD y en qué condiciones se popula vs queda null. No es un bug de schema — es una brecha de cobertura en la cadena de extracción.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Campo JD está presente en el schema del consolidated JSON (confirmado en 2026-06-26_consolidated.json: Petco lo tiene poblado vía enriquecimiento L2 desde Career Pages wrapper). El bug original describía ausencia total del campo — incorrecto. Estado real: el campo existe pero llega null en 8/9 registros porque la extracción del JD completo no está asignada consistentemente a ningún wrapper. L1 (Aggregators, LinkedIn) no navega el JD. L2 (Career Pages) sí lo extrae cuando accede a la career page directamente. Fix: documentar en triggers-001 qué wrapper es responsable de extraer JD y en qué condiciones se popula vs queda null. No es un bug de schema — es una brecha de cobertura en la cadena de extracción.",
+            "href": null
+          }
+        ]
+      },
+      "Archivar": {
+        "id": "TOTP",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Detección": {
+        "id": "UIYK",
+        "type": "date",
+        "date": {
+          "start": "2026-06-21",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Etiquetas": {
+        "id": "choA",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Componente": {
+        "id": "dGZn",
+        "type": "select",
+        "select": {
+          "id": "aa1aa037-2a79-40b7-a5da-8c7c7a3ddfde",
+          "name": "Layer 2",
+          "color": "gray"
+        }
+      },
+      "Prioridad": {
+        "id": "hihn",
+        "type": "select",
+        "select": null
+      },
+      "Status": {
+        "id": "oToy",
+        "type": "select",
+        "select": {
+          "id": "a7fa0cb0-b9ca-4807-b5cc-024f0053ffce",
+          "name": "Abierto",
+          "color": "red"
+        }
+      },
+      "Next_Action": {
+        "id": "%7DM_%40",
+        "type": "select",
+        "select": {
+          "id": "f0da0434-25ed-4ae8-8284-6289c922cfb0",
+          "name": "Documentar",
+          "color": "blue"
+        }
+      },
+      "Bug": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "JD null en mayoría de registros — extracción inconsistente en wrappers",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "JD null en mayoría de registros — extracción inconsistente en wrappers",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/JD-null-en-mayor-a-de-registros-extracci-n-inconsistente-en-wrappers-387938befc4281ec9e28ee615bf922a1",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "384938be-fc42-81ce-9d26-cb04f7078c43",
+    "created_time": "2026-06-19T07:42:00.000Z",
+    "last_edited_time": "2026-06-19T07:42:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",
+      "database_id": "36e938be-fc42-81bd-9e1f-dc360b3b45f5"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Mantener": {
+        "id": "%3C%3CcS",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Solución": {
+        "id": "%3Cq%3Bo",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Fecha_Resolución": {
+        "id": "%3Fs%3FP",
+        "type": "date",
+        "date": null
+      },
+      "Creado": {
+        "id": "DSBI",
+        "type": "created_time",
+        "created_time": "2026-06-19T07:42:00.000Z"
+      },
+      "Notas": {
+        "id": "JHIJ",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Gemini Deep Research 2026-06-18: Las vacantes de “Retail Design” en México no existen como puestos de nómina local. Inditex coordina diseño de espacios desde España (Bershka Diseño S.L.). Nike y Adidas operan diseño corporativamente. Los agregadores indexan estas etiquetas con IDs ficticios. feed_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Gemini Deep Research 2026-06-18: Las vacantes de “Retail Design” en México no existen como puestos de nómina local. Inditex coordina diseño de espacios desde España (Bershka Diseño S.L.). Nike y Adidas operan diseño corporativamente. Los agregadores indexan estas etiquetas con IDs ficticios. feed_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "processor.py",
+              "link": {
+                "url": "http://processor.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "processor.py",
+            "href": "http://processor.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " debería filtrar o marcar automáticamente vacantes con Role_Class=Pivote + título “Retail Design” como bajo confidence antes de escribir al tracker.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " debería filtrar o marcar automáticamente vacantes con Role_Class=Pivote + título “Retail Design” como bajo confidence antes de escribir al tracker.",
+            "href": null
+          }
+        ]
+      },
+      "Archivar": {
+        "id": "TOTP",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Detección": {
+        "id": "UIYK",
+        "type": "date",
+        "date": {
+          "start": "2026-06-18",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Etiquetas": {
+        "id": "choA",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Componente": {
+        "id": "dGZn",
+        "type": "select",
+        "select": {
+          "id": "00b8fdfb-1cd1-4215-92e0-fc1650707ecb",
+          "name": "Python",
+          "color": "blue"
+        }
+      },
+      "Prioridad": {
+        "id": "hihn",
+        "type": "select",
+        "select": null
+      },
+      "Status": {
+        "id": "oToy",
+        "type": "select",
+        "select": {
+          "id": "a7fa0cb0-b9ca-4807-b5cc-024f0053ffce",
+          "name": "Abierto",
+          "color": "red"
+        }
+      },
+      "Next_Action": {
+        "id": "%7DM_%40",
+        "type": "select",
+        "select": {
+          "id": "f0da0434-25ed-4ae8-8284-6289c922cfb0",
+          "name": "Documentar",
+          "color": "blue"
+        }
+      },
+      "Bug": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Retail Design como categoría genera vacantes fantasma",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Retail Design como categoría genera vacantes fantasma",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Retail-Design-como-categor-a-genera-vacantes-fantasma-384938befc4281ce9d26cb04f7078c43",
+    "public_url": null,
+    "archived": false
+  }
+]

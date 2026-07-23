@@ -1,0 +1,3614 @@
+[
+  {
+    "object": "page",
+    "id": "3a5938be-fc42-8162-a90a-c8662f2b038e",
+    "created_time": "2026-07-22T23:55:00.000Z",
+    "last_edited_time": "2026-07-22T23:55:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "6e166e02-330f-4383-b55c-34947fc2698e",
+          "name": "Ejecutar",
+          "color": "red"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-22T23:55:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-22",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Dry run completo aprobado desde v9.6.5, arrastrado sin ejecución ≥5 sesiones. Escalado Nivel 2 (KERNEL:GATE-DECISION-009) con APROBAR_WRITE explícito del operador (2026-07-22). Cubre: Master Index, cross-refs, expansión verify_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Dry run completo aprobado desde v9.6.5, arrastrado sin ejecución ≥5 sesiones. Escalado Nivel 2 (KERNEL:GATE-DECISION-009) con APROBAR_WRITE explícito del operador (2026-07-22). Cubre: Master Index, cross-refs, expansión verify_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "versions.py",
+              "link": {
+                "url": "http://versions.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "versions.py",
+            "href": "http://versions.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " a 9 DOC_KEYS.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " a 9 DOC_KEYS.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "YtBl",
+          "name": "ALTO",
+          "color": "orange"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Navigation Brief — ejecutar Notion writes (dry run ya aprobado)",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Navigation Brief — ejecutar Notion writes (dry run ya aprobado)",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Navigation-Brief-ejecutar-Notion-writes-dry-run-ya-aprobado-3a5938befc428162a90ac8662f2b038e",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a5938be-fc42-81a2-874a-e7dee784b6ea",
+    "created_time": "2026-07-22T23:04:00.000Z",
+    "last_edited_time": "2026-07-22T23:04:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "c1288fab-5d68-45c9-b20c-94a4fff42a41",
+          "name": "Decidir",
+          "color": "gray"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-22T23:04:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-22",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "0b1a4655-584d-4287-9725-755696e6d6e9",
+          "name": "En progreso",
+          "color": "yellow"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "DOCUMENTATION-TRANSVERSAL… (BEGINNING)\n\nFase 1: Validación + Mapeo (consolidación L0 en KERNEL §3)\n\nEstado actual verificado (post-consolidación):\nSe unificó exitosamente en KERNEL:DOCUMENTATION (L0) como núcleo temático único (§3.1 a §3.10). Todos los sub-ID existen y están anclados correctamente. No hay duplicados ni referencias huérfanas en KERNEL.\n\nValidación de respeto al contrato (DOCUMENTATION-001/002/010):\n- IDs con formato [PREFIX:KEY] consistente.\n- Ownership: KERNEL como SSOT para L0 (no replicación en MANUAL salvo referencias mínimas).\n- No drift detectado en versión v9.7.5 (confirmado vía vversions --sync).\n- Reglas transversales respetadas: DRY RUN previo, APROBAR_WRITE para cambios, Census listo para regenerar al cierre.\n\nMapeo de nodos susceptibles (prioridad MANUAL):\n\n| Documento | Estado actual | Nodos susceptibles (creación/modificación) | Prioridad | Recomendación |\n|-----------|---------------|--------------------------------------------|-----------|---------------|\n| MANUAL | v9.7.5 | §6 Ciclo de Sesión (describe --check eliminado en v9.6.2); §3 Filosofía de Fallo (refrescar enlaces L0); §9 VANTAGE Runtime (actualizar comandos vl1/vversions); §11 Health Check (integrar auto-sync L0) | ALTA | Reescribir §6 completo + referencias cruzadas a nuevos §3.x de KERNEL. |\n| KERNEL | v9.7.5 | Ya consolidado L0. Posible §3.11 (Routing/SCOPE refinement) | Media | Solo si surge gap en fase 2. |\n| CANON | v9.7.5 | Referencias a L0 (Positioning, Golden Skeleton) | Baja | Actualizar hyperlinks block-level. |\n| SP | v9.7.5 | Inferencias espontáneas (ticket ALTO relacionado) | Alta | Reforzar guards contra violaciones L0. |\n| ALIASES / BRIEF / VANTAGE | v9.7.5 | Hiperlinks accionables pendientes | Media | Batch de conversión texto → block links. |\n\nHuecos detectados en MANUAL (priorizados):\n- §6: Desincronizado con eliminación de --check (v9.6.2) y nuevo flujo --bootstrap/--sync.\n- Referencias L0 dispersas sin hipervínculos block-level.\n- Ausencia de mención explícita a los 9 documentos fundacionales en conteo de sync.\n\nDRY RUN listo.\n¿APROBAR_WRITE para proceder a fase 2 (edición concreta en MANUAL §6 + referencias transversales)? O indica ajustes.\nDOCUMENTATION FINISHED (fase 1).\n\n---\n\nDOCUMENTATION-TRANSVERSAL… (PHASE 2: DRY RUN + PLAN DE INTEGRACIÓN)\n\nAlcance: Fase 2 prioriza MANUAL (como instruido). DRY RUN para nodos identificados en Fase 1. Cambios mínimos, respetando invisibilidad estructural (§15 MANUAL), continuidad de voz y diff mínimo. Todos preservan IDs canónicos y enlaces L0 del KERNEL.\n\n1. MANUAL §6 (Ciclo de Sesión) — DRY RUN\n\nCambio propuesto (reescritura focalizada de párrafos desincronizados):\n- Reemplazar referencias a --check obsoleto por flujo actual (--bootstrap + --check eliminado → --sync).\n- Actualizar secuencia Terminal-first (bootstrap → check → sync).\n- Añadir mención explícita a 9 documentos fundacionales + BRIEF/VANTAGE.\n- Integrar guards de Census y Session Ledger.\n\nDRY RUN (extracto clave modificado):\n\n### Apertura — /vantage-session-open\n1. Corre vversions --bootstrap en Terminal → dump Ledger + Changelog + tickets ALTO/CRÍTICO.\n2. Corre vversions --sync (verificación real post-escritura).\n3. Pega outputs en Claude → invoca trigger.\nClaude escribe fila OPEN en Ledger (housekeeping, sin APROBAR_WRITE).\n\n### Cierre — /vantage-session-close\n1. generate_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "DOCUMENTATION-TRANSVERSAL… (BEGINNING)\n\nFase 1: Validación + Mapeo (consolidación L0 en KERNEL §3)\n\nEstado actual verificado (post-consolidación):\nSe unificó exitosamente en KERNEL:DOCUMENTATION (L0) como núcleo temático único (§3.1 a §3.10). Todos los sub-ID existen y están anclados correctamente. No hay duplicados ni referencias huérfanas en KERNEL.\n\nValidación de respeto al contrato (DOCUMENTATION-001/002/010):\n- IDs con formato [PREFIX:KEY] consistente.\n- Ownership: KERNEL como SSOT para L0 (no replicación en MANUAL salvo referencias mínimas).\n- No drift detectado en versión v9.7.5 (confirmado vía vversions --sync).\n- Reglas transversales respetadas: DRY RUN previo, APROBAR_WRITE para cambios, Census listo para regenerar al cierre.\n\nMapeo de nodos susceptibles (prioridad MANUAL):\n\n| Documento | Estado actual | Nodos susceptibles (creación/modificación) | Prioridad | Recomendación |\n|-----------|---------------|--------------------------------------------|-----------|---------------|\n| MANUAL | v9.7.5 | §6 Ciclo de Sesión (describe --check eliminado en v9.6.2); §3 Filosofía de Fallo (refrescar enlaces L0); §9 VANTAGE Runtime (actualizar comandos vl1/vversions); §11 Health Check (integrar auto-sync L0) | ALTA | Reescribir §6 completo + referencias cruzadas a nuevos §3.x de KERNEL. |\n| KERNEL | v9.7.5 | Ya consolidado L0. Posible §3.11 (Routing/SCOPE refinement) | Media | Solo si surge gap en fase 2. |\n| CANON | v9.7.5 | Referencias a L0 (Positioning, Golden Skeleton) | Baja | Actualizar hyperlinks block-level. |\n| SP | v9.7.5 | Inferencias espontáneas (ticket ALTO relacionado) | Alta | Reforzar guards contra violaciones L0. |\n| ALIASES / BRIEF / VANTAGE | v9.7.5 | Hiperlinks accionables pendientes | Media | Batch de conversión texto → block links. |\n\nHuecos detectados en MANUAL (priorizados):\n- §6: Desincronizado con eliminación de --check (v9.6.2) y nuevo flujo --bootstrap/--sync.\n- Referencias L0 dispersas sin hipervínculos block-level.\n- Ausencia de mención explícita a los 9 documentos fundacionales en conteo de sync.\n\nDRY RUN listo.\n¿APROBAR_WRITE para proceder a fase 2 (edición concreta en MANUAL §6 + referencias transversales)? O indica ajustes.\nDOCUMENTATION FINISHED (fase 1).\n\n---\n\nDOCUMENTATION-TRANSVERSAL… (PHASE 2: DRY RUN + PLAN DE INTEGRACIÓN)\n\nAlcance: Fase 2 prioriza MANUAL (como instruido). DRY RUN para nodos identificados en Fase 1. Cambios mínimos, respetando invisibilidad estructural (§15 MANUAL), continuidad de voz y diff mínimo. Todos preservan IDs canónicos y enlaces L0 del KERNEL.\n\n1. MANUAL §6 (Ciclo de Sesión) — DRY RUN\n\nCambio propuesto (reescritura focalizada de párrafos desincronizados):\n- Reemplazar referencias a --check obsoleto por flujo actual (--bootstrap + --check eliminado → --sync).\n- Actualizar secuencia Terminal-first (bootstrap → check → sync).\n- Añadir mención explícita a 9 documentos fundacionales + BRIEF/VANTAGE.\n- Integrar guards de Census y Session Ledger.\n\nDRY RUN (extracto clave modificado):\n\n### Apertura — /vantage-session-open\n1. Corre vversions --bootstrap en Terminal → dump Ledger + Changelog + tickets ALTO/CRÍTICO.\n2. Corre vversions --sync (verificación real post-escritura).\n3. Pega outputs en Claude → invoca trigger.\nClaude escribe fila OPEN en Ledger (housekeeping, sin APROBAR_WRITE).\n\n### Cierre — /vantage-session-close\n1. generate_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "census.py",
+              "link": {
+                "url": "http://census.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "census.py",
+            "href": "http://census.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " (si IDs cambiaron).\n2. vversions --check + --sync.\n3. Pega outputs → trigger cierra sesión + pending_summary.\n\nPlan de integración:\n- Inyectar en §6.2 (Apertura) y §6.3 (Cierre).\n- Actualizar TOC y referencias cruzadas (§3, §11).\n- Impacto downstream: CV pipeline, Health Check, L4 sync.\n\n2. MANUAL Referencias L0 dispersas — DRY RUN\n\nCambio propuesto: Convertir referencias textuales a hyperlinks block-level donde posible (ej. KERNEL:FAIL-PHILOSOPHY → link ancla).\n\nDRY RUN (ejemplos):\n- §3 → ",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " (si IDs cambiaron).\n2. vversions --check + --sync.\n3. Pega outputs → trigger cierra sesión + pending_summary.\n\nPlan de integración:\n- Inyectar en §6.2 (Apertura) y §6.3 (Cierre).\n- Actualizar TOC y referencias cruzadas (§3, §11).\n- Impacto downstream: CV pipeline, Health Check, L4 sync.\n\n2. MANUAL Referencias L0 dispersas — DRY RUN\n\nCambio propuesto: Convertir referencias textuales a hyperlinks block-level donde posible (ej. KERNEL:FAIL-PHILOSOPHY → link ancla).\n\nDRY RUN (ejemplos):\n- §3 → ",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "KERNEL:FAIL-PHILOSOPHY",
+              "link": {
+                "url": "https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428121bb10efedac1b4b99"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "KERNEL:FAIL-PHILOSOPHY",
+            "href": "https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428121bb10efedac1b4b99"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "\n- §11 Health Check → enlazar §3.6 KERNEL:DOCUMENTATION-006.\n\nPlan de integración: Batch en §1-§12 (prioridad Health Check, Filosofía, Runtime). Usar skill para escritura.\n\n3. MANUAL Conteo documentos fundacionales — DRY RUN\n\nCambio propuesto (§4 Setup + §9 Runtime):\nActualizar \"6 documentos\" → \"9 documentos fundacionales (Kernel, Manual, Canon, SP, Aliases, Changelog, Census, BRIEF, VANTAGE)\".\n\nPlan de integración: §4 Paso 3, §9.1, L4 vdoc.\n\nDRY RUN global listo.\nImpacto total estimado: ~12 bloques modificados, 0 nuevos IDs, compatibilidad CV-A/B/QA intacta.\n\nAPROBAR_WRITE para ejecutar escrituras en MANUAL (o especifica ajustes / siguiente documento)?\nDOCUMENTATION FINISHED (fase 2).",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "\n- §11 Health Check → enlazar §3.6 KERNEL:DOCUMENTATION-006.\n\nPlan de integración: Batch en §1-§12 (prioridad Health Check, Filosofía, Runtime). Usar skill para escritura.\n\n3. MANUAL Conteo documentos fundacionales — DRY RUN\n\nCambio propuesto (§4 Setup + §9 Runtime):\nActualizar \"6 documentos\" → \"9 documentos fundacionales (Kernel, Manual, Canon, SP, Aliases, Changelog, Census, BRIEF, VANTAGE)\".\n\nPlan de integración: §4 Paso 3, §9.1, L4 vdoc.\n\nDRY RUN global listo.\nImpacto total estimado: ~12 bloques modificados, 0 nuevos IDs, compatibilidad CV-A/B/QA intacta.\n\nAPROBAR_WRITE para ejecutar escrituras en MANUAL (o especifica ajustes / siguiente documento)?\nDOCUMENTATION FINISHED (fase 2).",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "YtBl",
+          "name": "ALTO",
+          "color": "orange"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Documentación Transversal — Consolidación L0 (KERNEL §3) + integración en MANUAL",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Documentación Transversal — Consolidación L0 (KERNEL §3) + integración en MANUAL",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Documentaci-n-Transversal-Consolidaci-n-L0-KERNEL-3-integraci-n-en-MANUAL-3a5938befc4281a2874ae7dee784b6ea",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a4938be-fc42-8102-ad1e-fd22804e1678",
+    "created_time": "2026-07-21T00:31:00.000Z",
+    "last_edited_time": "2026-07-21T00:31:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "9f7fb3a9-2c5c-49ee-a687-3cecd00ac8f6",
+          "name": "Python",
+          "color": "blue"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "9dda802a-782c-4de3-bbf2-2c47a3993f3b",
+          "name": "Definir",
+          "color": "orange"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-21T00:31:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-20",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Detectado en extraccion de TOC: formato de headings de ID + titulo de seccion/subseccion inconsistente a traves de Kernel/Manual/Career Canon. Precedente parcial: normalize_heading_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Detectado en extraccion de TOC: formato de headings de ID + titulo de seccion/subseccion inconsistente a traves de Kernel/Manual/Career Canon. Precedente parcial: normalize_heading_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "ids.py",
+              "link": {
+                "url": "http://ids.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "ids.py",
+            "href": "http://ids.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " (Changelog v9.4.7) ya cubre parte del problema en Career Canon; evaluar si extender ese script o crear uno nuevo de alcance transversal.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " (Changelog v9.4.7) ya cubre parte del problema en Career Canon; evaluar si extender ese script o crear uno nuevo de alcance transversal.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "EaG]",
+          "name": "MEDIO",
+          "color": "yellow"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Generar script de normalizacion de formato de IDs y titulos de seccion/subseccion en la suite documental",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Generar script de normalizacion de formato de IDs y titulos de seccion/subseccion en la suite documental",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Generar-script-de-normalizacion-de-formato-de-IDs-y-titulos-de-seccion-subseccion-en-la-suite-docume-3a4938befc428102ad1efd22804e1678",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a4938be-fc42-81db-a143-d7fb7cc2172a",
+    "created_time": "2026-07-21T00:31:00.000Z",
+    "last_edited_time": "2026-07-21T00:31:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "9f7fb3a9-2c5c-49ee-a687-3cecd00ac8f6",
+          "name": "Python",
+          "color": "blue"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "6e166e02-330f-4383-b55c-34947fc2698e",
+          "name": "Ejecutar",
+          "color": "red"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-21T00:31:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-20",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Resultado de última corrida: IDs en spec 131, resueltos 121, sin link 10 (KERNEL:OWNERSHIP-001, KERNEL:OWNERSHIP-002, KERNEL:TRIGGER-001, KERNEL:TRIGGER-002, KERNEL:TRIGGER-005, KERNEL:TRIGGER-006, KERNEL:TRIGGER-007, KERNEL:TRIGGER-009, KERNEL:GATE-DECISION-004, KERNEL:NAMING-CONVENTION). Huérfanos detectados (en Kernel, fuera de CENSUS_SPEC): KERNEL:HEALTH-CHECK-001.1 y KERNEL:HEALTH-CHECK-003 - agregar a CENSUS_SPEC o confirmar que son ruido. [CENSUS-SYNC-R1] aplica: no cerrar sin regenerar Census tras el fix.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Resultado de última corrida: IDs en spec 131, resueltos 121, sin link 10 (KERNEL:OWNERSHIP-001, KERNEL:OWNERSHIP-002, KERNEL:TRIGGER-001, KERNEL:TRIGGER-002, KERNEL:TRIGGER-005, KERNEL:TRIGGER-006, KERNEL:TRIGGER-007, KERNEL:TRIGGER-009, KERNEL:GATE-DECISION-004, KERNEL:NAMING-CONVENTION). Huérfanos detectados (en Kernel, fuera de CENSUS_SPEC): KERNEL:HEALTH-CHECK-001.1 y KERNEL:HEALTH-CHECK-003 - agregar a CENSUS_SPEC o confirmar que son ruido. [CENSUS-SYNC-R1] aplica: no cerrar sin regenerar Census tras el fix.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "YtBl",
+          "name": "ALTO",
+          "color": "orange"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Modificar generate_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Modificar generate_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "census.py",
+              "link": {
+                "url": "http://census.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "census.py",
+            "href": "http://census.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " para resolver 10 IDs sin link y confirmar 2 huérfanos",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " para resolver 10 IDs sin link y confirmar 2 huérfanos",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Modificar-generate_census-py-para-resolver-10-IDs-sin-link-y-confirmar-2-hu-rfanos-3a4938befc4281dba143d7fb7cc2172a",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a4938be-fc42-81df-a8ad-ef888b51e898",
+    "created_time": "2026-07-21T00:31:00.000Z",
+    "last_edited_time": "2026-07-21T00:31:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "9f7fb3a9-2c5c-49ee-a687-3cecd00ac8f6",
+          "name": "Python",
+          "color": "blue"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "9dda802a-782c-4de3-bbf2-2c47a3993f3b",
+          "name": "Definir",
+          "color": "orange"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-21T00:31:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-20",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Ambos scripts referenciados en Changelog (v9.6.6 menciona apply_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Ambos scripts referenciados en Changelog (v9.6.6 menciona apply_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "hyperlinks.py",
+              "link": {
+                "url": "http://hyperlinks.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "hyperlinks.py",
+            "href": "http://hyperlinks.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": ") sin desarrollo completo confirmado contra codigo real en esta sesion. Definir alcance exacto de cada uno antes de implementar.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": ") sin desarrollo completo confirmado contra codigo real en esta sesion. Definir alcance exacto de cada uno antes de implementar.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "EaG]",
+          "name": "MEDIO",
+          "color": "yellow"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Desarrollar generate_id_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Desarrollar generate_id_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "inventory.py",
+              "link": {
+                "url": "http://inventory.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "inventory.py",
+            "href": "http://inventory.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " y apply_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " y apply_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "hyperlinks.py",
+              "link": {
+                "url": "http://hyperlinks.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "hyperlinks.py",
+            "href": "http://hyperlinks.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " (porciones pendientes)",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " (porciones pendientes)",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Desarrollar-generate_id_inventory-py-y-apply_hyperlinks-py-porciones-pendientes-3a4938befc4281dfa8adef888b51e898",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a3938be-fc42-819d-9a79-f503bd945a9c",
+    "created_time": "2026-07-20T23:40:00.000Z",
+    "last_edited_time": "2026-07-20T23:40:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "a269765c-5f44-4f7b-bce1-2dd2b94845b4",
+          "name": "Documentar",
+          "color": "blue"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-20T23:40:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-20",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Todo §6 (MANUAL:SESSION-CYCLE-001) describe verify_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Todo §6 (MANUAL:SESSION-CYCLE-001) describe verify_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "versions.py",
+              "link": {
+                "url": "http://versions.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "versions.py",
+            "href": "http://versions.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " operando con 3 flags activos (--bootstrap, --check, --sync), incluyendo instrucciones paso a paso de cómo correr --check en apertura y cierre de sesión. Pero KERNEL:VERSION-CHECK-TOOL punto 3 confirma que el modo --check fue ELIMINADO en v9.6.2 — la verificación real vive íntegramente en --sync. El Manual completo (Setup §4, Arranque Frío §5, Ciclo Open/Close §6, referencia §9.2) queda desalineado del Kernel vigente. Requiere reescritura sustancial de §6, no un ajuste de cifra. Relacionado con pendiente ya anotado sobre vantage-session-open.skill, pero de mayor alcance. Además, §6 y §9.2 tienen 4 menciones de conteo de fundacionales (6/7) que también deben pasar a 9 una vez resuelto esto. Ver sesión SESSION-20260720-C.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " operando con 3 flags activos (--bootstrap, --check, --sync), incluyendo instrucciones paso a paso de cómo correr --check en apertura y cierre de sesión. Pero KERNEL:VERSION-CHECK-TOOL punto 3 confirma que el modo --check fue ELIMINADO en v9.6.2 — la verificación real vive íntegramente en --sync. El Manual completo (Setup §4, Arranque Frío §5, Ciclo Open/Close §6, referencia §9.2) queda desalineado del Kernel vigente. Requiere reescritura sustancial de §6, no un ajuste de cifra. Relacionado con pendiente ya anotado sobre vantage-session-open.skill, pero de mayor alcance. Además, §6 y §9.2 tienen 4 menciones de conteo de fundacionales (6/7) que también deben pasar a 9 una vez resuelto esto. Ver sesión SESSION-20260720-C.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "YtBl",
+          "name": "ALTO",
+          "color": "orange"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Manual §6 (Ciclo de Sesión) describe flujo --check ya eliminado del Kernel (v9.6.2) — reescritura pendiente",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Manual §6 (Ciclo de Sesión) describe flujo --check ya eliminado del Kernel (v9.6.2) — reescritura pendiente",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Manual-6-Ciclo-de-Sesi-n-describe-flujo-check-ya-eliminado-del-Kernel-v9-6-2-reescritura-pe-3a3938befc42819d9a79f503bd945a9c",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a3938be-fc42-814f-bcdc-ce1a48cf1916",
+    "created_time": "2026-07-20T23:23:00.000Z",
+    "last_edited_time": "2026-07-20T23:23:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "6e166e02-330f-4383-b55c-34947fc2698e",
+          "name": "Ejecutar",
+          "color": "red"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-20T23:23:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": true
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-20",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "[CENSUS-SYNC-R1] — Conteo de fundacionales pasa de 7→9 (BRIEF + VANTAGE Central Hub). Requiere alinear resolver_registry_v2.json (prefijos KERNEL/MANUAL/CANON/SP/ALIASES/CHANGELOG/BRIEF/VANTAGE), verify_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "[CENSUS-SYNC-R1] — Conteo de fundacionales pasa de 7→9 (BRIEF + VANTAGE Central Hub). Requiere alinear resolver_registry_v2.json (prefijos KERNEL/MANUAL/CANON/SP/ALIASES/CHANGELOG/BRIEF/VANTAGE), verify_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "versions.py",
+              "link": {
+                "url": "http://versions.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "versions.py",
+            "href": "http://versions.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " (7 líneas→9), y todos los nodos documentales del parche en curso (Kernel §DOC-CONTRACT, SP §SYNC-RULE/CEDULA-DIGITAL/BOOTSTRAP/VERSION-CHECK-TOOL). Ver sesión SESSION-20260720-C.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " (7 líneas→9), y todos los nodos documentales del parche en curso (Kernel §DOC-CONTRACT, SP §SYNC-RULE/CEDULA-DIGITAL/BOOTSTRAP/VERSION-CHECK-TOOL). Ver sesión SESSION-20260720-C.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "YtBl",
+          "name": "ALTO",
+          "color": "orange"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Normalizar a nivel scripts documentos fundacionales: NUEVE (agregar BRIEF + VANTAGE al conteo)",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Normalizar a nivel scripts documentos fundacionales: NUEVE (agregar BRIEF + VANTAGE al conteo)",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Normalizar-a-nivel-scripts-documentos-fundacionales-NUEVE-agregar-BRIEF-VANTAGE-al-conteo-3a3938befc42814fbcdcce1a48cf1916",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a2938be-fc42-8101-8234-f556cc230dfa",
+    "created_time": "2026-07-19T12:07:00.000Z",
+    "last_edited_time": "2026-07-19T12:07:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "9dda802a-782c-4de3-bbf2-2c47a3993f3b",
+          "name": "Definir",
+          "color": "orange"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-19T12:07:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-19",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "vantage-handoff es skill independiente por decisión del operador (2026-07-19), pero vantage-session-close debería invocarlo automáticamente en su protocolo de cierre para que ningún cierre de sesión quede sin snapshot de handoff. Pendiente definir el punto exacto de integración en el protocolo de session-close (antes o después de Changelog/Ledger). Detectado en auditoría final de skills pre-export (R-05). Confirmado como aún vigente en auditoría segunda pasada de skills (R-05b/H-PH-03, 2026-07-19) — el skill renombrado Present-Handoff sigue declarando la dependencia unilateralmente, sin ticket formal hasta ahora. Este es ese ticket.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "vantage-handoff es skill independiente por decisión del operador (2026-07-19), pero vantage-session-close debería invocarlo automáticamente en su protocolo de cierre para que ningún cierre de sesión quede sin snapshot de handoff. Pendiente definir el punto exacto de integración en el protocolo de session-close (antes o después de Changelog/Ledger). Detectado en auditoría final de skills pre-export (R-05). Confirmado como aún vigente en auditoría segunda pasada de skills (R-05b/H-PH-03, 2026-07-19) — el skill renombrado Present-Handoff sigue declarando la dependencia unilateralmente, sin ticket formal hasta ahora. Este es ese ticket.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "EaG]",
+          "name": "MEDIO",
+          "color": "yellow"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Integrar vantage-handoff con vantage-session-close",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Integrar vantage-handoff con vantage-session-close",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Integrar-vantage-handoff-con-vantage-session-close-3a2938befc4281018234f556cc230dfa",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "3a1938be-fc42-8172-bcbc-cd8e8cf2ec81",
+    "created_time": "2026-07-18T16:07:00.000Z",
+    "last_edited_time": "2026-07-18T16:07:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "22ee9fde-3f47-4a1c-b500-388927af343f",
+          "name": "Layer 1",
+          "color": "gray"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "9dda802a-782c-4de3-bbf2-2c47a3993f3b",
+          "name": "Definir",
+          "color": "orange"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-18T16:07:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-18",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Origen: v9.5.6 (Devin, JD Null Audit). Confirmado: Layer_1/scripts/layer_1_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Origen: v9.5.6 (Devin, JD Null Audit). Confirmado: Layer_1/scripts/layer_1_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "run.py",
+              "link": {
+                "url": "http://run.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "run.py",
+            "href": "http://run.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " (validate_url_pre_ingestion) y feed_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " (validate_url_pre_ingestion) y feed_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "processor.py",
+              "link": {
+                "url": "http://processor.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "processor.py",
+            "href": "http://processor.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " (_first_nonempty) NO son la causa — solo consumen el campo jd/jd_snippet/description ya vacío. La causa real está upstream: los prompts de discovery (A-Gemini, A-Grok, ",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " (_first_nonempty) NO son la causa — solo consumen el campo jd/jd_snippet/description ya vacío. La causa real está upstream: los prompts de discovery (A-Gemini, A-Grok, ",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "A-You.com",
+              "link": {
+                "url": "http://a-you.com/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "A-You.com",
+            "href": "http://a-you.com/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " — Layer 1) y las búsquedas vía Perplexity+Comet en LinkedIn/Aggregators/Career Sites (Layer 2, mismo núcleo operativo que L1) no están extrayendo el JD del HTML/resultado. Requiere primero definir alcance de la auditoría (qué prompts/flujos revisar) antes de ejecutar.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " — Layer 1) y las búsquedas vía Perplexity+Comet en LinkedIn/Aggregators/Career Sites (Layer 2, mismo núcleo operativo que L1) no están extrayendo el JD del HTML/resultado. Requiere primero definir alcance de la auditoría (qué prompts/flujos revisar) antes de ejecutar.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "EaG]",
+          "name": "MEDIO",
+          "color": "yellow"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Auditar scripts de discovery upstream (",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Auditar scripts de discovery upstream (",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "you.com/Grok/LinkedIn",
+              "link": {
+                "url": "http://you.com/Grok/LinkedIn"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "you.com/Grok/LinkedIn",
+            "href": "http://you.com/Grok/LinkedIn"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": ") — job_description llega NULL en algunos registros",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": ") — job_description llega NULL en algunos registros",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Auditar-scripts-de-discovery-upstream-you-com-Grok-LinkedIn-job_description-llega-NULL-en-alguno-3a1938befc428172bcbccd8e8cf2ec81",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39e938be-fc42-81c0-ac8b-e95eb4a0e835",
+    "created_time": "2026-07-15T20:16:00.000Z",
+    "last_edited_time": "2026-07-20T09:48:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "9f7fb3a9-2c5c-49ee-a687-3cecd00ac8f6",
+          "name": "Python",
+          "color": "blue"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "9dda802a-782c-4de3-bbf2-2c47a3993f3b",
+          "name": "Definir",
+          "color": "orange"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-15T20:16:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": true
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-15",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "0b1a4655-584d-4287-9725-755696e6d6e9",
+          "name": "En progreso",
+          "color": "yellow"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Convertir referencias cruzadas de texto plano (ej. 'Consultar KERNEL:GATE-DECISION') a hyperlinks accionables (formato ",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Convertir referencias cruzadas de texto plano (ej. 'Consultar KERNEL:GATE-DECISION') a hyperlinks accionables (formato ",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "https://notion.so/{page_id}#{block_id}",
+              "link": {
+                "url": "https://notion.so/%7Bpage_id%7D#%7Bblock_id%7D"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "https://notion.so/{page_id}#{block_id}",
+            "href": "https://notion.so/%7Bpage_id%7D#%7Bblock_id%7D"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": ") en Kernel y Manual. Requiere primero extraer block_id real de cada heading '## ID: KERNEL:XXX' / '## ID: MANUAL:XXX' via notion-fetch a nivel de bloque. Depende de que exista el inventario de referencias cruzadas (task hermana) para saber que apunta a que antes de escribir los links.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": ") en Kernel y Manual. Requiere primero extraer block_id real de cada heading '## ID: KERNEL:XXX' / '## ID: MANUAL:XXX' via notion-fetch a nivel de bloque. Depende de que exista el inventario de referencias cruzadas (task hermana) para saber que apunta a que antes de escribir los links.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "YtBl",
+          "name": "ALTO",
+          "color": "orange"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Convertir referencias cruzadas de texto a hyperlinks accionables (block-level) en Kernel y Manual",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Convertir referencias cruzadas de texto a hyperlinks accionables (block-level) en Kernel y Manual",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Convertir-referencias-cruzadas-de-texto-a-hyperlinks-accionables-block-level-en-Kernel-y-Manual-39e938befc4281c0ac8be95eb4a0e835",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39e938be-fc42-81f9-9aae-e1738fe0a794",
+    "created_time": "2026-07-15T20:16:00.000Z",
+    "last_edited_time": "2026-07-17T02:09:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "6e166e02-330f-4383-b55c-34947fc2698e",
+          "name": "Ejecutar",
+          "color": "red"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-15T20:16:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-15",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Los IDs (## ID: KERNEL:XXX) y referencias cruzadas intradocumentales en Kernel y Manual perdieron el color de anotacion en algun punto de las ediciones recientes; todo el texto aparece plano/blanco, dificultando distinguir visualmente anclas de contenido normal.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Los IDs (## ID: KERNEL:XXX) y referencias cruzadas intradocumentales en Kernel y Manual perdieron el color de anotacion en algun punto de las ediciones recientes; todo el texto aparece plano/blanco, dificultando distinguir visualmente anclas de contenido normal.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "EaG]",
+          "name": "MEDIO",
+          "color": "yellow"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Restaurar color de anotacion en IDs y referencias intradocumentales de Kernel y Manual",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Restaurar color de anotacion en IDs y referencias intradocumentales de Kernel y Manual",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Restaurar-color-de-anotacion-en-IDs-y-referencias-intradocumentales-de-Kernel-y-Manual-39e938befc4281f99aaee1738fe0a794",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39e938be-fc42-8197-9bb7-d45c8f6bff99",
+    "created_time": "2026-07-15T19:41:00.000Z",
+    "last_edited_time": "2026-07-20T09:48:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "9f7fb3a9-2c5c-49ee-a687-3cecd00ac8f6",
+          "name": "Python",
+          "color": "blue"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "6e166e02-330f-4383-b55c-34947fc2698e",
+          "name": "Ejecutar",
+          "color": "red"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-15T19:41:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-15",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "0b1a4655-584d-4287-9725-755696e6d6e9",
+          "name": "En progreso",
+          "color": "yellow"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Se edito la apariencia de Dashboard y Checklist para adoptar el look de Notion, pero los cambios no se reflejan en el render actual. Revisar si vantage-tokens.css / vantage-theme.js (capa visual compartida, KERNEL:DASHBOARD-CHECKLIST-ARCH) estan siendo referenciados correctamente por ambos HTML, o si hay cache/build step pendiente.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Se edito la apariencia de Dashboard y Checklist para adoptar el look de Notion, pero los cambios no se reflejan en el render actual. Revisar si vantage-tokens.css / vantage-theme.js (capa visual compartida, KERNEL:DASHBOARD-CHECKLIST-ARCH) estan siendo referenciados correctamente por ambos HTML, o si hay cache/build step pendiente.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": ">ZMw",
+          "name": "BAJO",
+          "color": "green"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Alinear apariencia visual de Dashboard y Checklist al estilo Notion — cambios editados no se reflejan",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Alinear apariencia visual de Dashboard y Checklist al estilo Notion — cambios editados no se reflejan",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Alinear-apariencia-visual-de-Dashboard-y-Checklist-al-estilo-Notion-cambios-editados-no-se-refleja-39e938befc4281979bb7d45c8f6bff99",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39e938be-fc42-812e-aa02-ca5e50fe56e1",
+    "created_time": "2026-07-15T19:24:00.000Z",
+    "last_edited_time": "2026-07-18T15:29:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "a269765c-5f44-4f7b-bce1-2dd2b94845b4",
+          "name": "Documentar",
+          "color": "blue"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-15T19:24:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-15",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Huecos #3, #4, #8, #9. (3) CANON:OUTPUT-CONTRACT-001 y derivados viven en Career Canon, referencia externa intencional. (4) Pesos/thresholds de scoring excluidos a propósito (Class B). (8) Colisión de nomenclatura 'Tracker' — ya parcialmente mitigada inline en la reestructuración propuesta. (9) dashboard_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Huecos #3, #4, #8, #9. (3) CANON:OUTPUT-CONTRACT-001 y derivados viven en Career Canon, referencia externa intencional. (4) Pesos/thresholds de scoring excluidos a propósito (Class B). (8) Colisión de nomenclatura 'Tracker' — ya parcialmente mitigada inline en la reestructuración propuesta. (9) dashboard_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "notion.py",
+              "link": {
+                "url": "http://notion.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "notion.py",
+            "href": "http://notion.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " / run_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " / run_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "pipeline.py",
+              "link": {
+                "url": "http://pipeline.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "pipeline.py",
+            "href": "http://pipeline.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " sin contratos internos documentados a nivel Kernel.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " sin contratos internos documentados a nivel Kernel.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": ">ZMw",
+          "name": "BAJO",
+          "color": "green"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Housekeeping documental menor: refs a Career Canon, exclusión de scoring, nomenclatura Tracker",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Housekeeping documental menor: refs a Career Canon, exclusión de scoring, nomenclatura Tracker",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Housekeeping-documental-menor-refs-a-Career-Canon-exclusi-n-de-scoring-nomenclatura-Tracker-39e938befc42812eaa02ca5e50fe56e1",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39e938be-fc42-8143-ae1e-c24f376b6ab5",
+    "created_time": "2026-07-15T19:24:00.000Z",
+    "last_edited_time": "2026-07-17T02:09:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "9dda802a-782c-4de3-bbf2-2c47a3993f3b",
+          "name": "Definir",
+          "color": "orange"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-15T19:24:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-15",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Huecos #6, #7, #10. (6) SYSTEM PROMPT citado como target de fetch/versión sin describir qué gobierna. (7) GAP-03/class_b_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Huecos #6, #7, #10. (6) SYSTEM PROMPT citado como target de fetch/versión sin describir qué gobierna. (7) GAP-03/class_b_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "guard.py",
+              "link": {
+                "url": "http://guard.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "guard.py",
+            "href": "http://guard.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": " con mitigación interina pero sin criterio de cierre rastreable más allá de 'FX-1 open'. (10) vl1 profile modifica profile_config.yaml sin contrato de ownership/autorización explícito en el Kernel.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " con mitigación interina pero sin criterio de cierre rastreable más allá de 'FX-1 open'. (10) vl1 profile modifica profile_config.yaml sin contrato de ownership/autorización explícito en el Kernel.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "EaG]",
+          "name": "MEDIO",
+          "color": "yellow"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Cerrar gaps de gobernanza documental: SYSTEM PROMPT como par, FX-1/class_b_",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Cerrar gaps de gobernanza documental: SYSTEM PROMPT como par, FX-1/class_b_",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "guard.py",
+              "link": {
+                "url": "http://guard.py/"
+              }
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "guard.py",
+            "href": "http://guard.py/"
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": ", ownership de vl1 profile",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": ", ownership de vl1 profile",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Cerrar-gaps-de-gobernanza-documental-SYSTEM-PROMPT-como-par-FX-1-class_b_guard-py-ownership-de-vl-39e938befc428143ae1ec24f376b6ab5",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39e938be-fc42-81c6-99e2-d6b79456cbe4",
+    "created_time": "2026-07-15T19:24:00.000Z",
+    "last_edited_time": "2026-07-17T02:09:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "a269765c-5f44-4f7b-bce1-2dd2b94845b4",
+          "name": "Documentar",
+          "color": "blue"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-15T19:24:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-15",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Huecos #2 y #5. RT-1 se usa en GATE-DECISION-005, FAIL-PHILOSOPHY y PURPOSE pero no tiene contrato de trigger propio (solo inferible vía Manual §8.2). STATIC BOOTLOADER v1.0 vive en Project Instructions de Claude y dispara L0-Bootstrap, pero el Kernel nunca lo nombra (solo Manual §4 Paso 3).",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Huecos #2 y #5. RT-1 se usa en GATE-DECISION-005, FAIL-PHILOSOPHY y PURPOSE pero no tiene contrato de trigger propio (solo inferible vía Manual §8.2). STATIC BOOTLOADER v1.0 vive en Project Instructions de Claude y dispara L0-Bootstrap, pero el Kernel nunca lo nombra (solo Manual §4 Paso 3).",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "YtBl",
+          "name": "ALTO",
+          "color": "orange"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Formalizar contrato RT-1 como trigger + documentar STATIC BOOTLOADER v1.0 dentro del Kernel",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Formalizar contrato RT-1 como trigger + documentar STATIC BOOTLOADER v1.0 dentro del Kernel",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Formalizar-contrato-RT-1-como-trigger-documentar-STATIC-BOOTLOADER-v1-0-dentro-del-Kernel-39e938befc4281c699e2d6b79456cbe4",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39d938be-fc42-815f-84ce-e53b0b38b23f",
+    "created_time": "2026-07-14T22:44:00.000Z",
+    "last_edited_time": "2026-07-14T22:44:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "9dda802a-782c-4de3-bbf2-2c47a3993f3b",
+          "name": "Definir",
+          "color": "orange"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-14T22:44:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-14",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Agrupa huecos #5, #8, #11. #5: la 'Regla 4' del Census se cita dos veces (§6, §11) pero nunca se transcribe textualmente, se infiere de contexto. #8: KERNEL:DOC-CONTRACT solo se menciona en la entrada DT-015 del Changelog, sin sección propia que explique qué es. #11: el header 'Impacto del Sistema (KPIs)' en §1 no tiene contenido debajo más que la mención de Positioning Modes — no está claro qué KPIs concretos se miden ni sus valores; gap preexistente, no regresión de esta reestructuración. Consultado rara vez, sin impacto en flujo operativo.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Agrupa huecos #5, #8, #11. #5: la 'Regla 4' del Census se cita dos veces (§6, §11) pero nunca se transcribe textualmente, se infiere de contexto. #8: KERNEL:DOC-CONTRACT solo se menciona en la entrada DT-015 del Changelog, sin sección propia que explique qué es. #11: el header 'Impacto del Sistema (KPIs)' en §1 no tiene contenido debajo más que la mención de Positioning Modes — no está claro qué KPIs concretos se miden ni sus valores; gap preexistente, no regresión de esta reestructuración. Consultado rara vez, sin impacto en flujo operativo.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": ">ZMw",
+          "name": "BAJO",
+          "color": "green"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Housekeeping: transcribir Census Regla 4 + explicar KERNEL:DOC-CONTRACT + rellenar KPIs de Objetivo §1",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Housekeeping: transcribir Census Regla 4 + explicar KERNEL:DOC-CONTRACT + rellenar KPIs de Objetivo §1",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Housekeeping-transcribir-Census-Regla-4-explicar-KERNEL-DOC-CONTRACT-rellenar-KPIs-de-Objetivo--39d938befc42815f84cee53b0b38b23f",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39d938be-fc42-81dc-b349-f01f237c85a9",
+    "created_time": "2026-07-14T22:44:00.000Z",
+    "last_edited_time": "2026-07-14T22:44:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "9dda802a-782c-4de3-bbf2-2c47a3993f3b",
+          "name": "Definir",
+          "color": "orange"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-14T22:44:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-14",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Agrupa huecos #6 y #7. #6: se explica el efecto de la Regla de Versión Única (todos los fundamentales comparten versión) pero no el criterio exacto de cuándo un cambio amerita bump mayor vs menor, ni quién lo dispara fuera del Ciclo de Sesión. #7: se mencionan los campos status/session_id/pending_summary del Session Ledger pero no el schema completo de la tabla (¿timestamps explícitos de apertura/cierre? ¿otros campos?). Gobernanza, no operación diaria.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Agrupa huecos #6 y #7. #6: se explica el efecto de la Regla de Versión Única (todos los fundamentales comparten versión) pero no el criterio exacto de cuándo un cambio amerita bump mayor vs menor, ni quién lo dispara fuera del Ciclo de Sesión. #7: se mencionan los campos status/session_id/pending_summary del Session Ledger pero no el schema completo de la tabla (¿timestamps explícitos de apertura/cierre? ¿otros campos?). Gobernanza, no operación diaria.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "EaG]",
+          "name": "MEDIO",
+          "color": "yellow"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Documentar mecanismo de bump mayor/menor (Regla de Versión Única) + schema completo Session Ledger",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Documentar mecanismo de bump mayor/menor (Regla de Versión Única) + schema completo Session Ledger",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Documentar-mecanismo-de-bump-mayor-menor-Regla-de-Versi-n-nica-schema-completo-Session-Ledger-39d938befc4281dcb349f01f237c85a9",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39d938be-fc42-81f0-9e5a-f8caab098922",
+    "created_time": "2026-07-14T22:44:00.000Z",
+    "last_edited_time": "2026-07-14T22:44:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "5d9cb66a-7f26-4eee-a218-47a7062de5eb",
+          "name": "Notion",
+          "color": "purple"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "9dda802a-782c-4de3-bbf2-2c47a3993f3b",
+          "name": "Definir",
+          "color": "orange"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-14T22:44:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-14",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "La jerarquía de dedup L1>L2 está bien explicada en el Manual, pero el Kernel probablemente define 'pipeline' como concepto más amplio que no se reproduce íntegro. Gap conceptual, no bloqueante.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "La jerarquía de dedup L1>L2 está bien explicada en el Manual, pero el Kernel probablemente define 'pipeline' como concepto más amplio que no se reproduce íntegro. Gap conceptual, no bloqueante.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "EaG]",
+          "name": "MEDIO",
+          "color": "yellow"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Explicar KERNEL:CV-PIPELINE como concepto completo en Manual",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Explicar KERNEL:CV-PIPELINE como concepto completo en Manual",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Explicar-KERNEL-CV-PIPELINE-como-concepto-completo-en-Manual-39d938befc4281f09e5af8caab098922",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "39d938be-fc42-81ee-9899-dd5744eb27af",
+    "created_time": "2026-07-14T12:57:00.000Z",
+    "last_edited_time": "2026-07-17T02:09:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": null
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": null
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-14T12:57:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-11",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Deuda técnica reconocida. Mitigación vigente (whitelist Class A en DRY RUN). No requiere acción inmediata.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Deuda técnica reconocida. Mitigación vigente (whitelist Class A en DRY RUN). No requiere acción inmediata.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": null
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "FX-1 / TCK-05 — Class B Guard para escrituras MCP directas",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "FX-1 / TCK-05 — Class B Guard para escrituras MCP directas",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/FX-1-TCK-05-Class-B-Guard-para-escrituras-MCP-directas-39d938befc4281ee9899dd5744eb27af",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "397938be-fc42-81a6-b73c-f9c99993a621",
+    "created_time": "2026-07-08T08:27:00.000Z",
+    "last_edited_time": "2026-07-08T08:27:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "9f7fb3a9-2c5c-49ee-a687-3cecd00ac8f6",
+          "name": "Python",
+          "color": "blue"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "9dda802a-782c-4de3-bbf2-2c47a3993f3b",
+          "name": "Definir",
+          "color": "orange"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-08T08:27:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-08",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Bloque 4 #17 — Auditoría V2 (Devin). Tests de pipeline completo con mocks. Depende de: #16 (suite unitaria).",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Bloque 4 #17 — Auditoría V2 (Devin). Tests de pipeline completo con mocks. Depende de: #16 (suite unitaria).",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "EaG]",
+          "name": "MEDIO",
+          "color": "yellow"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Crear tests de integración con mocks de Notion/Gmail/Groq",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Crear tests de integración con mocks de Notion/Gmail/Groq",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/Crear-tests-de-integraci-n-con-mocks-de-Notion-Gmail-Groq-397938befc4281a6b73cf9c99993a621",
+    "public_url": null,
+    "archived": false
+  },
+  {
+    "object": "page",
+    "id": "393938be-fc42-8107-9460-cdb919396cef",
+    "created_time": "2026-07-04T16:16:00.000Z",
+    "last_edited_time": "2026-07-04T19:17:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "2acd872b-594c-81a3-9b9a-0002454de4ec"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "data_source_id",
+      "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",
+      "database_id": "d2a65ca1-6a35-465d-bcff-b0d82dddd549"
+    },
+    "in_trash": false,
+    "is_archived": false,
+    "is_locked": false,
+    "properties": {
+      "Componente": {
+        "id": "%3A%5C%3DY",
+        "type": "select",
+        "select": {
+          "id": "9f7fb3a9-2c5c-49ee-a687-3cecd00ac8f6",
+          "name": "Python",
+          "color": "blue"
+        }
+      },
+      "Next_Action": {
+        "id": "Lsib",
+        "type": "select",
+        "select": {
+          "id": "a269765c-5f44-4f7b-bce1-2dd2b94845b4",
+          "name": "Documentar",
+          "color": "blue"
+        }
+      },
+      "Creado": {
+        "id": "Qw%3CG",
+        "type": "created_time",
+        "created_time": "2026-07-04T16:16:00.000Z"
+      },
+      "Archivar": {
+        "id": "SeKq",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Fecha_Creación": {
+        "id": "h%5B%7BC",
+        "type": "date",
+        "date": {
+          "start": "2026-07-04",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "nkBm",
+        "type": "select",
+        "select": {
+          "id": "a77f23ef-d858-4368-8eac-45cd1ed3fd78",
+          "name": "Pendiente",
+          "color": "red"
+        }
+      },
+      "Fecha_Cierre": {
+        "id": "pr%5Cg",
+        "type": "date",
+        "date": null
+      },
+      "Notas": {
+        "id": "vRvH",
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Registrado como deuda técnica del release v2.4.0 (Runtime Contract Migration — entity_id Namespace). entity_prefix resolution logic en generate_entity_id() opera correctamente pero sin encapsulamiento explícito. Previene recurrencia de \"contrato declarado pero no enforced\". No bloqueante. Sistema operativo. Acceptance Audit: PASS WITH ARCHITECTURAL FINDING. Commit: 372e72f · tag v2.4.0.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Registrado como deuda técnica del release v2.4.0 (Runtime Contract Migration — entity_id Namespace). entity_prefix resolution logic en generate_entity_id() opera correctamente pero sin encapsulamiento explícito. Previene recurrencia de \"contrato declarado pero no enforced\". No bloqueante. Sistema operativo. Acceptance Audit: PASS WITH ARCHITECTURAL FINDING. Commit: 372e72f · tag v2.4.0.",
+            "href": null
+          }
+        ]
+      },
+      "Mantener": {
+        "id": "zZ%7D%3D",
+        "type": "checkbox",
+        "checkbox": false
+      },
+      "Prioridad": {
+        "id": "z%7D%60F",
+        "type": "select",
+        "select": {
+          "id": "EaG]",
+          "name": "MEDIO",
+          "color": "yellow"
+        }
+      },
+      "Task": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "DT-014: Extract Runtime Identity Contract",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "DT-014: Extract Runtime Identity Contract",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://app.notion.com/p/DT-014-Extract-Runtime-Identity-Contract-393938befc4281079460cdb919396cef",
+    "public_url": null,
+    "archived": false
+  }
+]

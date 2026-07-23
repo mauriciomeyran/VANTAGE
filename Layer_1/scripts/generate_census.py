@@ -102,6 +102,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:GATE-DECISION-006", "seccion": "§9.6", "nombre": "REJECTED (Post-Aplicación)"},
             {"id": "KERNEL:GATE-DECISION-007", "seccion": "§9.7", "nombre": "Ejecución Automática de Archivado"},
             {"id": "KERNEL:GATE-DECISION-008", "seccion": "§9.8", "nombre": "Capas de Evaluación de Gate: Técnica vs. Negocio"},
+            {"id": "KERNEL:GATE-DECISION-009", "seccion": "§9.9", "nombre": "Escalamiento de Pendientes a Tickets"},
             {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "§10", "nombre": "Reglas de Oro CV"},
             {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "§10.1", "nombre": "No Evaluar Fit Antes de Escribir"},
             {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "§10.2", "nombre": "No Calcular ni Estimar Campos Class B"},
