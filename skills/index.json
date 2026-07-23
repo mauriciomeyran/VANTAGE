@@ -1,0 +1,76 @@
+{
+  "resources": [
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/prompt-master.skill",
+      "name": "prompt-master",
+      "description": "Genera prompts optimizados para herramientas de IA",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/tailored-resume-generator.skill",
+      "name": "tailored-resume-generator",
+      "description": "Genera currículums personalizados según descripciones de trabajo",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-create-bug-task.skill",
+      "name": "vantage-create-bug-task",
+      "description": "Crea tickets en Bug Tracker o Task Tracker de VANTAGE",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal-implementacion.skill",
+      "name": "vantage-documentacion-transversal-implementacion",
+      "description": "Implementa documentación transversal",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal-propuesta.skill",
+      "name": "vantage-documentacion-transversal-propuesta",
+      "description": "Genera propuestas de documentación transversal",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal.skill",
+      "name": "vantage-documentacion-transversal",
+      "description": "Mantiene documentación transversal en documentos funcionales",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-present-handoff.skill",
+      "name": "vantage-present-handoff",
+      "description": "Genera snapshot de contexto de sesión para continuidad",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-close.skill",
+      "name": "vantage-session-close",
+      "description": "Protocolo de cierre de sesión VANTAGE",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-open.skill",
+      "name": "vantage-session-open",
+      "description": "Protocolo de apertura de sesión VANTAGE",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-tidy-bug-task-tracker.skill",
+      "name": "vantage-tidy-bug-task-tracker",
+      "description": "Marca tickets para archivo en Bug/Task Tracker",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-tidy-changelog.skill",
+      "name": "vantage-tidy-changelog",
+      "description": "Mantiene el Change Log con las últimas 10 entradas",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-tidy-opportunities-tracker.skill",
+      "name": "vantage-tidy-opportunities-tracker",
+      "description": "Identifica duplicados y vacantes expiradas en VANTAGE Tracker",
+      "mimeType": "application/octet-stream"
+    }
+  ]
+}

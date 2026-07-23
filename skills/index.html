@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VANTAGE Skills - MCP Documentation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #764ba2;
+            padding-bottom: 15px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .section {
+            margin: 30px 0;
+        }
+        .section h2 {
+            color: #764ba2;
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .skill-list {
+            list-style: none;
+        }
+        .skill-list li {
+            background: #f9f9f9;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .skill-list li:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+        .skill-name {
+            color: #667eea;
+            font-weight: bold;
+        }
+        .skill-desc {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VANTAGE Skills - MCP Documentation</h1>
+        <p class="subtitle">Este directorio contiene las skills de VANTAGE accesibles vía MCP (Model Context Protocol).</p>
+
+        <div class="section">
+            <h2>Configuración MCP</h2>
+            <div>
+                <strong>Devin CLI:</strong>
+                <div class="code-block">
+devin mcp add vantage-skills -- npx markdown-mcp-resource@latest
+https://mauriciomeyran.github.io/VANTAGE/skills/index.json
+                </div>
+                <strong>Otros clientes MCP:</strong>
+                <div class="code-block">
+npx markdown-mcp-resource@latest https://mauriciomeyran.github.io/VANTAGE/skills/index.json
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Skills Disponibles</h2>
+            <ul class="skill-list">
+                <li>
+                    <div class="skill-name">prompt-master</div>
+                    <div class="skill-desc">Genera prompts optimizados para herramientas de IA</div>
+                </li>
+                <li>
+                    <div class="skill-name">tailored-resume-generator</div>
+                    <div class="skill-desc">Genera currículums personalizados según descripciones de trabajo</div>
+                </li>
+                <li>
+                    <div class="skill-name">vantage-create-bug-task</div>
+                    <div class="skill-desc">Crea tickets en Bug Tracker o Task Tracker de VANTAGE</div>
+                </li>
+                <li>
+                    <div class="skill-name">vantage-documentacion-transversal-implementacion</div>
+                    <div class="skill-desc">Implementa documentación transversal</div>
+                </li>
+                <li>
+                    <div class="skill-name">vantage-documentacion-transversal-propuesta</div>
+                    <div class="skill-desc">Genera propuestas de documentación transversal</div>
+                </li>
+                <li>
+                    <div class="skill-name">vantage-documentacion-transversal</div>
+                    <div class="skill-desc">Mantiene documentación transversal en documentos funcionales</div>
+                </li>
+                <li>
+                    <div class="skill-name">vantage-present-handoff</div>
+                    <div class="skill-desc">Genera snapshot de contexto de sesión para continuidad</div>
+                </li>
+                <li>
+                    <div class="skill-name">vantage-session-close</div>
+                    <div class="skill-desc">Protocolo de cierre de sesión VANTAGE</div>
+                </li>
+                <li>
+                    <div class="skill-name">vantage-session-open</div>
+                    <div class="skill-desc">Protocolo de apertura de sesión VANTAGE</div>
+                </li>
+                <li>
+                    <div class="skill-name">vantage-tidy-bug-task-tracker</div>
+                    <div class="skill-desc">Marca tickets para archivo en Bug/Task Tracker</div>
+                </li>
+                <li>
+                    <div class="skill-name">vantage-tidy-changelog</div>
+                    <div class="skill-desc">Mantiene el Change Log con las últimas 10 entradas</div>
+                </li>
+                <li>
+                    <div class="skill-name">vantage-tidy-opportunities-tracker</div>
+                    <div class="skill-desc">Identifica duplicados y vacantes expiradas en VANTAGE Tracker</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>Última actualización: 2026-07-23 | VANTAGE Skills MCP Server</p>
+        </div>
+    </div>
+</body>
+</html>
