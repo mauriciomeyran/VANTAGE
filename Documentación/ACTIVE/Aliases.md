@@ -55,7 +55,7 @@
 | --- | --- | --- |
 | vgit | Fuerza un sync inmediato del repo git fuera de su horario automático. | Invoca git_sync_wrapper.sh — commit con timestamp + push a origin/main si hay cambios sin commitear. |
 | vsync-doc | Invocación directa del motor de sync documental (uso interno/depuración). | Corre vsync_doc.py sin el wrapper de comandos — requiere pasar flags manualmente. |
-| vdoc | Sincroniza los 6 documentos fundacionales entre Notion y disco local. | Corre vdoc.py (wrapper de comandos) → invoca vsync_doc.py con la dirección y documento pedidos (auto/notion/local, dry, o nombre de documento específico — ver Manual §8.1 para la matriz completa). |
+| vdoc | Sincroniza los 7 documentos fundacionales desde Notion hacia el disco local (Read Only): Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log, Brief. | Corre vdoc.py (wrapper de comandos) → invoca vsync_doc.py con la dirección y documento pedidos (notion/auto (equivalente), dry (previsualización limitada)). |
 # 6 — Dashboard (Martes — Recuperación)
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |

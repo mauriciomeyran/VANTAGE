@@ -53,6 +53,7 @@ DOCS = {
     "manual":        {"notion_id": "372938be-fc42-8050-9a67-e40857d7806e", "local_file": BASE_DIR / "Manual.md", "label": "MANUAL DE USUARIO"},
     "aliases":       {"notion_id": "37c938be-fc42-80d4-b9ae-f5969830331b", "local_file": BASE_DIR / "Aliases.md", "label": "ALIASES"},
     "change_log":    {"notion_id": "390938be-fc42-80e7-b429-d7d730339353", "local_file": BASE_DIR / "Change Log.md", "label": "CHANGE LOG"},
+    "brief":           {"notion_id": "3a3938be-fc42-8008-9e90-ec435c01f50d", "local_file": BASE_DIR / "Brief.md", "label": "DOCUMENT NAVIGATION BRIEF"},
 }
 
 NOTION_TEXT_LIMIT = 1990  # margen de seguridad bajo el límite de 2000

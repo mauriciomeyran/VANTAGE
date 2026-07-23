@@ -13,6 +13,7 @@ Los argumentos son independientes de orden y combinables:
     vdoc notion dry             # preview de lo que haría 'vdoc notion', sin escribir
     vdoc local dry              # preview de lo que haría 'vdoc local', sin escribir
     vdoc kernel                 # solo Kernel (auto)
+    vdoc brief                 # solo Brief (auto)
     vdoc kernel dry             # preview de solo Kernel (auto)
     vdoc notion kernel          # solo Kernel, forzado notion→local (pide confirmación)
     vdoc system_prompt   |  vdoc career_canon  |  vdoc manual
