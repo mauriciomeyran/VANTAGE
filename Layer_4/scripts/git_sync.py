@@ -178,10 +178,10 @@ def sync(dry_run: bool = False) -> dict:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="VANTAGE L4 Git Auto-Sync + MCP Server Update")
-    parser.add_argument("--dry-run", action="store_true", help="Ver cambios sin commitear")
+    parser.add_argument("--dry", action="store_true", help="Ver cambios sin commitear")
     args = parser.parse_args()
 
-    result = sync(dry_run=args.dry_run)
+    result = sync(dry_run=args.dry)
 
     if result["status"] == "clean":
         print(result["message"])

@@ -530,7 +530,7 @@ def main():
         update_props = {}
         changes = []
         if current_vm_scope != new_vm_scope:
-            update_props["VM_Scope"] = {"rich_text": [{"text": {"content": new_vm_scope}}]}
+            update_props["VM_Scope"] = {"select": {"name": new_vm_scope}}
             changes.append(f"VM_Scope: {current_vm_scope}->{new_vm_scope}")
         if current_role_class != new_role_class:
             update_props["Role_Class"] = {"select": {"name": new_role_class}}
@@ -600,7 +600,7 @@ def main():
                     client.pages.update(
                         page_id=item["id"],
                         properties={
-                            "Fetch": {"rich_text": [{"text": {"content": "Bloqueado"}}]},
+                            "Fetch": {"select": {"name": "Bloqueado"}},
                             "Status": {"select": {"name": "Expirada"}},
                         }
                     )

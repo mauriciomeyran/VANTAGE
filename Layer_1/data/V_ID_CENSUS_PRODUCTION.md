@@ -83,7 +83,7 @@
 | [`KERNEL:CV-GOLDEN-RULES`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a5938befc42801b8c3cc3c96fa70187 ) | §6 (referencia) | [Referencia a KERNEL:CV-GOLDEN-RULES — no sección propia del SP] |
 | [`SP:SCHEMA`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f6a321f71d15c03e5d ) | §7 | Schema — Trackers (Class A/B) |
 | [`KERNEL:ROUTING`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a5938befc42803eb866cb3d4c359754 ) | §8 (referencia) | [Referencia a KERNEL:ROUTING — no sección propia del SP] |
-| [`SP:ID-CONNECTORS-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42812ab19fe572be4eac94 ) | §9 | ID Connectors — esquema PREFIX:NOMBRE-SECCION |
+| [`SP:ID-CONNECTORS`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42812ab19fe572be4eac94 ) | §9 | ID Connectors — esquema PREFIX:NOMBRE-SECCION |
 | [`SP:BOOTSTRAP-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281c68a05fd98ecfef859 ) | (encabezado) | Operating Specification — Bootstrap de Sesión |
 | [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd ) | §1 | Sincronización Inicial y Verificación de Versión |
 | [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca ) | §10 | Regla de Consistencia Documental |
@@ -149,7 +149,7 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`BRIEF:001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#2affc7590d5b4bd7aee18c1feb0fbd49 ) | §0 | Propósito y Alcance |
+| [`BRIEF:001`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#3a3938befc4280bcaa82eda21b6a90e2 ) | §0 | Propósito y Alcance |
 | [`BRIEF:002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3a3938befc42800e8748cd345f864d4d ) | §1 | Document Authority Matrix |
 | [`BRIEF:003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3a3938befc4280c487dbd8e00f3bd5f7 ) | §2 | Ecosistema Documental |
 | [`BRIEF:004`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3a3938befc4280598b02ec12dd35a6ec ) | §3 | Navigation Contracts |

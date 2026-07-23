@@ -1,9 +1,33 @@
 {
   "resources": [
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/corporate-communication-style.skill",
+      "name": "corporate-communication-style",
+      "description": "VANTAGE Skill: corporate-communication-style",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/critico-pensante-style.skill",
+      "name": "critico-pensante-style",
+      "description": "VANTAGE Skill: critico-pensante-style",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/prompt-master.skill",
       "name": "prompt-master",
       "description": "Genera prompts optimizados para herramientas de IA",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/retail-auditor-style.skill",
+      "name": "retail-auditor-style",
+      "description": "VANTAGE Skill: retail-auditor-style",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/socio-estrategico-style.skill",
+      "name": "socio-estrategico-style",
+      "description": "VANTAGE Skill: socio-estrategico-style",
       "mimeType": "application/octet-stream"
     },
     {
@@ -19,6 +43,12 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal.skill",
+      "name": "vantage-documentacion-transversal",
+      "description": "Mantiene documentación transversal en documentos funcionales",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal-implementacion.skill",
       "name": "vantage-documentacion-transversal-implementacion",
       "description": "Implementa documentación transversal",
@@ -28,12 +58,6 @@
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal-propuesta.skill",
       "name": "vantage-documentacion-transversal-propuesta",
       "description": "Genera propuestas de documentación transversal",
-      "mimeType": "application/octet-stream"
-    },
-    {
-      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal.skill",
-      "name": "vantage-documentacion-transversal",
-      "description": "Mantiene documentación transversal en documentos funcionales",
       "mimeType": "application/octet-stream"
     },
     {

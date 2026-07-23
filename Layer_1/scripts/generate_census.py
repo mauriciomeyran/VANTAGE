@@ -138,7 +138,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "§6 (referencia)", "nombre": "[Referencia a KERNEL:CV-GOLDEN-RULES — no sección propia del SP]"},
             {"id": "SP:SCHEMA", "seccion": "§7", "nombre": "Schema — Trackers (Class A/B)"},
             {"id": "KERNEL:ROUTING", "seccion": "§8 (referencia)", "nombre": "[Referencia a KERNEL:ROUTING — no sección propia del SP]"},
-            {"id": "SP:ID-CONNECTORS-001", "seccion": "§9", "nombre": "ID Connectors — esquema PREFIX:NOMBRE-SECCION"},
+            {"id": "SP:ID-CONNECTORS", "seccion": "§9", "nombre": "ID Connectors — esquema PREFIX:NOMBRE-SECCION"},
             {"id": "SP:BOOTSTRAP-001", "seccion": "(encabezado)", "nombre": "Operating Specification — Bootstrap de Sesión"},
             {"id": "SP:SYNC-RULE", "seccion": "§1", "nombre": "Sincronización Inicial y Verificación de Versión"},
             {"id": "SP:CONSISTENCY", "seccion": "§10", "nombre": "Regla de Consistencia Documental"},
