@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-vsync_doc.py — VANTAGE v8.5.6 (LAYER 4)
+vsync_doc.py — VANTAGE v8.5.7 (LAYER 4)
 - BASE_DIR = .../ACTIVE (version-agnostic)
 - Usa .venv de Layer_1
 - Fetch con httpx (fix NoneType)
@@ -11,6 +11,7 @@ vsync_doc.py — VANTAGE v8.5.6 (LAYER 4)
 - v8.5.5: REMOVED --direction local (ACTIVE LOCAL es read-only, Notion es única fuente de verdad)
 - v8.5.5: Auto mode ahora solo permite notion→local, local→notion deshabilitado
 - v8.5.6: FIX Permission handling — _make_writable() y _restore_permissions() para manejar archivos read-only
+- v8.5.7: TEMPORALMENTE HABILITADO --direction local para push de hipervínculos (debe ser deshabilitado después)
 """
 
 import sys, os, argparse, time, hashlib, json, stat
@@ -387,7 +388,7 @@ def auto_commit(dry_run=False):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--direction", choices=["notion","auto"], default="auto", help="notion→local (read-only) o auto (decide por hash)")
+    p.add_argument("--direction", choices=["notion","auto","local"], default="auto", help="notion→local (read-only), auto (decide por hash), o local→notion (temporal para push)")
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--doc", choices=list(DOCS.keys()))
     args = p.parse_args()
@@ -439,9 +440,14 @@ def main():
             print(f"  ✓ {d['label']:<30} notion→local")
 
         elif args.direction == "local":
-            print(f"  ✗ {d['label']:<30} ERROR — --direction local deshabilitado (ACTIVE LOCAL es read-only)")
-            print(f"    Use --direction notion para sincronizar desde Notion hacia local")
-            continue
+            # TEMPORALMENTE HABILITADO para push de hipervínculos
+            print(f"  → {d['label']:<30} local→notion (TEMPORAL - push de hipervínculos)")
+            original_mode = _make_writable(local)
+            push_local_to_notion(d["notion_id"], local)
+            _restore_permissions(local, original_mode)
+            manifest = _load_manifest()
+            manifest[k] = _hash(local.read_text(encoding="utf-8"))
+            _save_manifest(manifest)
 
         else:  # auto — decide por hash de contenido vs manifest, no por mtime
             manifest = _load_manifest()
@@ -453,10 +459,13 @@ def main():
             elif decision == "conflict":
                 print(f"  ⚠️ {d['label']:<30} CONFLICT — ambos lados cambiaron desde el último sync. SIN APLICAR. Resolver manual con --direction.")
             elif decision == "local->notion":
-                print(f"  ⚠️  {d['label']:<30} SKIP — local→notion deshabilitado (ACTIVE LOCAL es read-only)")
-                print(f"    Cambios locales detectados pero no se pueden subir a Notion.")
-                print(f"    Use --direction notion para sobrescribir local con la versión de Notion.")
-                continue
+                # TEMPORALMENTE HABILITADO para push de hipervínculos
+                print(f"  → {d['label']:<30} local→notion (TEMPORAL - push de hipervínculos)")
+                original_mode = _make_writable(local)
+                push_local_to_notion(d["notion_id"], local)
+                _restore_permissions(local, original_mode)
+                manifest[k] = _hash(local.read_text(encoding="utf-8"))
+                _save_manifest(manifest)
             else:  # notion->local
                 local.parent.mkdir(parents=True, exist_ok=True)
                 original_mode = _make_writable(local)

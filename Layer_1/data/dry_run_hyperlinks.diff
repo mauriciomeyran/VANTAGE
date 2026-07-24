@@ -1,15 +1,3 @@
---- a/Career Canon.md
-+++ b/Career Canon.md
-@@ -195,7 +195,7 @@
- 
- ⬇️
- 
--§N CANON:OUTPUT-CONTRACT 
-+§N [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#53a2d31605f84299a99118add45e2af7) 
- Contrato de entregable
- 
- ---
-
 --- a/Kernel.md
 +++ b/Kernel.md
 @@ -8,8 +8,8 @@
@@ -101,8 +89,8 @@
  Ejemplo: "Gucci — VM Coordinator, LATAM (2026)" → 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM
  Aplica a: CV-B (.md), export QA (.pdf), archivo Figma (.fig) y cualquier output futuro de una vacante específica. El stem se fija al generar el primer entregable y se reutiliza sin variación.
  No aplica a: DRY RUN archivado, artefactos de sistema (logs, backups, entity_index).
--Relación con CANON:OUTPUT-CONTRACT-001: contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
-+Relación con [CANON:OUTPUT-CONTRACT-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110a5effba7515cd721): contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
+-Relación con CANON:OUTPUT-CONTRACT: contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
++Relación con [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#53a2d31605f84299a99118add45e2af7): contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
  ---
  ---
  # IV. INFRAESTRUCTURA DE CONTEXTO
@@ -231,7 +219,8 @@
 +| N4 | [CANON:POSITIONING-N4](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110b8f1cb5aa81bb921) | C04/C05 · +43% tráfico · +18% conversión · 21 reportes | JD enfatiza liderazgo de campo comercial, KPIs de tráfico/conversión, gestión de equipos directos |
 +Regla de desempate (JDs híbridos) — ver [CANON:POSITIONING-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42811ba92acf1dc1467702) para el texto completo: (1) más keywords mapeados al ancla, (2) empate → mayor seniority (N2>N1, N4>N3 con presupuesto regional explícito), (3) empate persistente → escalar a decisión humana vía fit_gaps.
  ## 20. Golden Skeleton — Qué es y Dónde Vive ID: MANUAL:GOLDEN-SKELETON-REF
- El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-SKELETON-001) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
+-El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-001) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
++El "Golden Skeleton" ([CANON:OUTPUT-CONTRACT-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110a5effba7515cd721)) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
  - SSOT de IDs de nodo Figma: registry_seed.json en 04-Vantage_CV/Figma Sync/.
  - Slots clave: 2055:9 (Nombre), 2055:10 (Tagline), 2043:51 (Perfil), 2043:56-60 (Skills), 2043:64+ (Experiencia).
  - Regla de invariancia: si el Skeleton cambia en Figma, registry_seed.json se actualiza antes del siguiente CV-B — nunca al revés.
@@ -275,41 +264,28 @@
  ---
  ## §3 — SP:CEDULA-DIGITAL
  # CÉDULA DIGITAL
-@@ -94,10 +94,10 @@
- ARCHIVO SCRIPT LIBRARY (DS)........39f938be-fc42-80ec-8f2e-000b16d736e2
+@@ -114,7 +114,7 @@
  ---
- ## §4 — KERNEL:SCOPE
--Consultar KERNEL:SCOPE en el Technical Kernel.
-+Consultar [KERNEL:SCOPE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810293b4e55167657d86) en el Technical Kernel.
- ---
- ## §5 — KERNEL:DATA-FLOW
--Consultar KERNEL:DATA-FLOW en el Technical Kernel.
-+Consultar [KERNEL:DATA-FLOW](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428101ade4f430c4bee781) en el Technical Kernel.
- ---
- ## §6 — SP:TRIGGERS
- Los siguientes triggers forman parte de la interfaz operativa de VANTAGE:
-@@ -112,7 +112,7 @@
- Cada trigger mantiene el comportamiento definido en el Technical Kernel.
- ---
- ## §7 — KERNEL:CV-GOLDEN-RULES
+ ## §7 KERNEL:CV-GOLDEN-RULES
+ ## Referencia — consultar en Technical Kernel
 -Consultar KERNEL:CV-GOLDEN-RULES en el Technical Kernel.
 +Consultar [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) en el Technical Kernel.
  ---
- ## §8 — SP:SCHEMA
- # Class A/B
-@@ -139,7 +139,7 @@
- Ambos esquemas son referencia estática para creación directa de páginas vía notion-create-pages sin fetch previo del data source. Notion es la fuente de verdad; este bloque es un caché de lectura. Si el schema real cambia (nueva opción de select, campo nuevo), el cambio debe propagarse aquí en la misma sesión en que se detecte.
+ ## §8 SP:SCHEMA
+ ## Schema — trackers (Class A/B)
+@@ -143,7 +143,7 @@
  ---
- ## §9 — KERNEL:ROUTING
+ ## §9 SP:CONSISTENCY
+ ## Referencia — consultar en Technical Kernel
 -Consultar KERNEL:ROUTING en el Technical Kernel.
 +Consultar [KERNEL:ROUTING](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42811aa042c048ec085cbc) en el Technical Kernel.
  Nota operativa — Notion SQL:
  notion-query-data-sources (SQL directo) está bloqueado en el plan actual de este workspace. Para queries a databases, usar directamente notion-fetch con la data_source_url (formato collection://...) o notion-search. No intentar SQL como primer paso — ir directo al fallback.
  Nota operativa — Extracción completa de filas de un DB:
-@@ -166,5 +166,5 @@
+@@ -171,5 +171,5 @@
  ---
- ## §12 — SP:VERSION-CHECK-TOOL
- ### Herramienta de Verificación de Versión de Bajo Costo
+ ## §12 SP:VERSION-CHECK-TOOL
+ ## Herramienta de verificación de versión de bajo costo
 -Para la verificación de versión requerida en SP:SYNC-RULE (los 9 documentos fundacionales), el operador puede correr verify_versions.py (Layer_1/scripts/, ver KERNEL:VERSION-CHECK-TOOL) en Terminal y pegar el output de 9 líneas en vez de que el AI Component ejecute 7 notion-fetch completos.
 +Para la verificación de versión requerida en [SP:SYNC-RULE](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd) (los 9 documentos fundacionales), el operador puede correr verify_versions.py (Layer_1/scripts/, ver [KERNEL:VERSION-CHECK-TOOL](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#380a32a5525b4d5d8cd44516fb1b74d4)) en Terminal y pegar el output de 9 líneas en vez de que el AI Component ejecute 7 notion-fetch completos.
  Antes de hacer fetch completo de un documento fundacional solo para leer su propiedad Versión, preguntar primero al operador si puede correr el script y pegar el output.

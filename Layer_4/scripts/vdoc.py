@@ -95,7 +95,8 @@ def main():
     forced = direction in ("notion", "local")
 
     # Confirmación obligatoria para dirección forzada (notion/local explícitos)
-    if forced:
+    # EXCEPCIÓN TEMPORAL: dirección local no requiere confirmación (push de hipervínculos)
+    if forced and direction != "local":
         preview_args = vsync_args + ["--dry-run"]
         run(preview_args, "vsync_doc (preview — dirección forzada)")
         print("\n⚠️  Esta operación sobreescribe sin comparar fecha de modificación.")

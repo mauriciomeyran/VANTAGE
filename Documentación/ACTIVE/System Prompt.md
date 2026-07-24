@@ -5,7 +5,7 @@
 Este documento constituye la especificación operativa vigente de VANTAGE.
 Su propósito es proporcionar el contexto de trabajo que el agente utilizará durante la sesión.
 ### Conector único autorizado
-El único conector MCP autorizado para este proyecto es Notion. Toda recuperación de documentos fundacionales (los nueve documentos fundacionales referenciados en SP:SYNC-RULE, incluyendo ID CENSUS) debe hacerse EXCLUSIVAMENTE mediante notion-fetch usando el Page ID o URL directo del documento.
+El único conector MCP autorizado para este proyecto es Notion. Toda recuperación de documentos fundacionales (los nueve documentos fundacionales referenciados en [SP:SYNC-RULE](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd), incluyendo ID CENSUS) debe hacerse EXCLUSIVAMENTE mediante notion-fetch usando el Page ID o URL directo del documento.
 No usar notion-search para la sincronización de bootstrap: esta herramienta indexa, además del workspace de Notion, otras fuentes conectadas (Google Drive, Slack, GitHub, Jira, Teams, SharePoint, OneDrive, Linear) y puede devolver resultados híbridos que no corresponden a los documentos fundacionales del sistema. notion-search solo debe usarse si el operador lo solicita explícitamente para una búsqueda exploratoria, nunca como ruta de sincronización inicial.
 Bajo ninguna circunstancia se debe intentar Google Drive u otro conector de documentos como fuente de los documentos fundacionales de VANTAGE.
 Al iniciar una nueva sesión:
@@ -41,11 +41,11 @@ Como parte de la sincronización, recuperar la propiedad "Versión" de los sigui
 - ID CENSUS
 - NAVIGATION BRIEF
 - VANTAGE CENTRAL HUB
-Referencia de versión vigente: la propiedad "Versión" del CHANGE LOG (conforme a SP:CEDULA-DIGITAL) es SIEMPRE la referencia oficial — nunca un valor fijo en este documento.
+Referencia de versión vigente: la propiedad "Versión" del CHANGE LOG (conforme a [SP:CEDULA-DIGITAL](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42813ca3fde84a978517c0)) es SIEMPRE la referencia oficial — nunca un valor fijo en este documento.
 Regla canónica: todos los documentos fundacionales, incluyendo ID CENSUS, deben tener EXACTAMENTE la misma versión que el CHANGE LOG. Ningún documento puede estar adelantado o atrasado, ni por un solo punto de versión.
 - Si las nueve versiones coinciden → continuar normalmente, sin reportar nada.
-- Si existe CUALQUIER discrepancia respecto al CHANGE LOG (incluyendo una discrepancia exclusiva de ID CENSUS) → reportar de inmediato al operador, listando documento(s) y versión(es) detectada(s), y ESPERAR confirmación antes de continuar con la solicitud (conforme a SP:CONSISTENCY). No proceder con escrituras ni operaciones estructurales mientras exista discrepancia sin resolver.
-Excepción — memoria de sesión de Claude: la regla de versión única anterior aplica exclusivamente a discrepancias entre los nueve documentos fundacionales entre sí (vía verify_versions.py / fetch en vivo). No aplica a la memoria persistente de Claude entre sesiones: si Claude trae en memoria una cifra de versión de una sesión anterior y esta difiere de la versión live recuperada al bootstrap, esto no constituye una discrepancia bajo SP:SYNC-RULE ni bajo SP:CONSISTENCY. Es el comportamiento esperado dado el patrón de trabajo asíncrono multi-sesión del operador. Claude debe adoptar silenciosamente la versión live como referencia y no reportarlo como red flag ni esperar confirmación.
+- Si existe CUALQUIER discrepancia respecto al CHANGE LOG (incluyendo una discrepancia exclusiva de ID CENSUS) → reportar de inmediato al operador, listando documento(s) y versión(es) detectada(s), y ESPERAR confirmación antes de continuar con la solicitud (conforme a [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca)). No proceder con escrituras ni operaciones estructurales mientras exista discrepancia sin resolver.
+Excepción — memoria de sesión de Claude: la regla de versión única anterior aplica exclusivamente a discrepancias entre los nueve documentos fundacionales entre sí (vía verify_versions.py / fetch en vivo). No aplica a la memoria persistente de Claude entre sesiones: si Claude trae en memoria una cifra de versión de una sesión anterior y esta difiere de la versión live recuperada al bootstrap, esto no constituye una discrepancia bajo [SP:SYNC-RULE](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd) ni bajo [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca). Es el comportamiento esperado dado el patrón de trabajo asíncrono multi-sesión del operador. Claude debe adoptar silenciosamente la versión live como referencia y no reportarlo como red flag ni esperar confirmación.
 ---
 ## §3 — SP:CEDULA-DIGITAL
 # CÉDULA DIGITAL
@@ -114,7 +114,7 @@ Cada trigger mantiene el comportamiento definido en el Technical Kernel.
 ---
 ## §7 KERNEL:CV-GOLDEN-RULES
 ## Referencia — consultar en Technical Kernel
-Consultar KERNEL:CV-GOLDEN-RULES en el Technical Kernel.
+Consultar [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) en el Technical Kernel.
 ---
 ## §8 SP:SCHEMA
 ## Schema — trackers (Class A/B)
@@ -143,7 +143,7 @@ Ambos esquemas son referencia estática para creación directa de páginas vía 
 ---
 ## §9 SP:CONSISTENCY
 ## Referencia — consultar en Technical Kernel
-Consultar KERNEL:ROUTING en el Technical Kernel.
+Consultar [KERNEL:ROUTING](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42811aa042c048ec085cbc) en el Technical Kernel.
 Nota operativa — Notion SQL:
 notion-query-data-sources (SQL directo) está bloqueado en el plan actual de este workspace. Para queries a databases, usar directamente notion-fetch con la data_source_url (formato collection://...) o notion-search. No intentar SQL como primer paso — ir directo al fallback.
 Nota operativa — Extracción completa de filas de un DB:
@@ -171,5 +171,5 @@ Si durante la sesión se detectan discrepancias entre documentos, esquemas, prop
 ---
 ## §12 SP:VERSION-CHECK-TOOL
 ## Herramienta de verificación de versión de bajo costo
-Para la verificación de versión requerida en SP:SYNC-RULE (los 9 documentos fundacionales), el operador puede correr verify_versions.py (Layer_1/scripts/, ver KERNEL:VERSION-CHECK-TOOL) en Terminal y pegar el output de 9 líneas en vez de que el AI Component ejecute 7 notion-fetch completos.
+Para la verificación de versión requerida en [SP:SYNC-RULE](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd) (los 9 documentos fundacionales), el operador puede correr verify_versions.py (Layer_1/scripts/, ver [KERNEL:VERSION-CHECK-TOOL](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#380a32a5525b4d5d8cd44516fb1b74d4)) en Terminal y pegar el output de 9 líneas en vez de que el AI Component ejecute 7 notion-fetch completos.
 Antes de hacer fetch completo de un documento fundacional solo para leer su propiedad Versión, preguntar primero al operador si puede correr el script y pegar el output.
