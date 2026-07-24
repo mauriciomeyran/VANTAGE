@@ -388,7 +388,7 @@ def auto_commit(dry_run=False):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--direction", choices=["notion","auto"], default="auto", help="notion→local (read-only) o auto (decide por hash)")
+    p.add_argument("--direction", choices=["notion","auto","local"], default="auto", help="notion→local (read-only), auto (decide por hash), o local→notion (temporal para fix)")
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--doc", choices=list(DOCS.keys()))
     args = p.parse_args()
@@ -440,9 +440,14 @@ def main():
             print(f"  ✓ {d['label']:<30} notion→local")
 
         elif args.direction == "local":
-            print(f"  ✗ {d['label']:<30} ERROR — --direction local deshabilitado (ACTIVE LOCAL es read-only)")
-            print(f"    Use --direction notion para sincronizar desde Notion hacia local")
-            continue
+            # TEMPORALMENTE HABILITADO para fix de link doble-envuelto
+            print(f"  → {d['label']:<30} local→notion (TEMPORAL - fix de link)")
+            original_mode = _make_writable(local)
+            push_local_to_notion(d["notion_id"], local)
+            _restore_permissions(local, original_mode)
+            manifest = _load_manifest()
+            manifest[k] = _hash(local.read_text(encoding="utf-8"))
+            _save_manifest(manifest)
 
         else:  # auto — decide por hash de contenido vs manifest, no por mtime
             manifest = _load_manifest()
