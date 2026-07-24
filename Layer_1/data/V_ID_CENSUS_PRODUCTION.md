@@ -86,7 +86,7 @@
 | [`SP:ID-CONNECTORS`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42812ab19fe572be4eac94 ) | §9 | ID Connectors — esquema PREFIX:NOMBRE-SECCION |
 | [`SP:BOOTSTRAP-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281c68a05fd98ecfef859 ) | (encabezado) | Operating Specification — Bootstrap de Sesión |
 | [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd ) | §1 | Sincronización Inicial y Verificación de Versión |
-| [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca ) | §10 | Regla de Consistencia Documental |
+| [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281308292c868385bb318 ) | §10 | Regla de Consistencia Documental |
 | [`SP:VERSION-CHECK-TOOL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#b84275d1780b498a94cdb554244df034 ) | §11 | Herramienta de Verificación de Versión de Bajo Costo |
 
 ---
@@ -127,21 +127,43 @@
 | [`CANON:PROFILE-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42819eada8c4c10a8513f4 ) | §A | Professional Profile Canon |
 | [`CANON:SKILLS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281e58a53c9554cb3693d ) | §B | Skills Canon |
 | [`CANON:EXPERIENCE-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42812fbebcdcf9b4287266 ) | §D | Experience Records |
-| [`CANON:EXPERIENCE-C01 … C05`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42812ea136fa5ec141d19e ) | §D.1–D.5 | C01 L'Oréal Luxe · C02 Bisonte Experiential · C03 Levi Strauss (Dockers) · C04 Aéropostale · C05 El Palacio de Hierro (ALDO) |
+| [`CANON:EXPERIENCE-C01`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281889f7dc00f42b0302e ) | §D.1 | C01 L'Oréal Luxe |
+| [`CANON:EXPERIENCE-C02`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42812d9187c6abcaf3a055 ) | §D.2 | C02 Bisonte Experiential |
+| [`CANON:EXPERIENCE-C03`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281fcba33c04d786f23a3 ) | §D.3 | C03 Levi Strauss (Dockers) |
+| [`CANON:EXPERIENCE-C04`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281399448deae8e03feb5 ) | §D.4 | C04 Aéropostale |
+| [`CANON:EXPERIENCE-C05`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428101b9ddc74fb51e9670 ) | §D.5 | C05 El Palacio de Hierro (ALDO) |
 | [`CANON:ACHIEVEMENTS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281fc9f88dc891c180b2a ) | §H | Achievement Library |
-| [`CANON:KPIS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42810ba9a1f0febedc739d ) | §I | Core KPIs |
-| [`CANON:KPI-001 … KPI-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281139ffde9f794c6c477 ) | §I.1–I.8 | KPI01 Traffic +43% · KPI02 Conversion +18% · KPI03 Campaign Cost -74% · KPI04 Floorset Time -33% · KPI05 POP Coverage 100% · KPI06 Rebranding Coverage 100% · KPI07 Adidas Punch List (17) · KPI08 Years Experience (10+) |
-| [`CANON:FACTS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281f49ca3f45975cfe4c7 ) | §J | Canonical Facts |
-| [`CANON:FACT-001 … FACT-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281008d10f28565ea1639 ) | §J.1–J.8 | CF01 ALDO Cert. Year 2014 · CF02 ALDO Periodo 2012–2017 · CF03 Adidas Punch List 17 · CF04 Adidas Punch List Non-Blocking · CF05 Levi's 270+ POS/6 países · CF06 Aéropostale 21 Direct Reports · CF07 Aéropostale 17 Stores · CF08 L'Oréal Marcas |
-| [`CANON:UF-001 … UF-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42810cbb59cbecda3daa92 ) | §J.9–J.11 | UF01 L'Oréal End Date · UF02 Canonical Email · UF03 Certifications Canon |
+| [`CANON:KPIS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428105aa48e2cd5eeb1d5c ) | §I | Core KPIs |
+| [`CANON:KPI-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428165b116c5ab225704d3 ) | §I.1 | KPI01 Traffic +43% |
+| [`CANON:KPI-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281cc825bcc7ffc944861 ) | §I.2 | KPI02 Conversion +18% |
+| [`CANON:KPI-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42813d9182d8fbf4f7ac9c ) | §I.3 | KPI03 Campaign Cost -74% |
+| [`CANON:KPI-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#d4df9b4fce484b35851e89379b6cc894 ) | §I.4 | KPI04 Floorset Time -33% |
+| [`CANON:KPI-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42813fae1bf4d652b4e383 ) | §I.5 | KPI05 POP Coverage 100% |
+| [`CANON:KPI-006`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281e6b3d3d54cc2c2d897 ) | §I.6 | KPI06 Rebranding Coverage 100% |
+| [`CANON:KPI-007`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281c0a644ed06936cfa65 ) | §I.7 | KPI07 Adidas Punch List (17) |
+| [`CANON:KPI-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281ccbd9fea7f671a13d5 ) | §I.8 | KPI08 Years Experience (10+) |
+| [`CANON:FACTS-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281f4ac7dc0309d3c0554 ) | §J | Canonical Facts |
+| [`CANON:FACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428176b5b4ffc5eb62a1c2 ) | §J.1 | CF01 ALDO Cert. Year 2014 |
+| [`CANON:FACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281dfaf84f85ecf2fadcd ) | §J.2 | CF02 ALDO Periodo 2012–2017 |
+| [`CANON:FACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42814b8fe5f13720f74a47 ) | §J.3 | CF03 Adidas Punch List 17 |
+| [`CANON:FACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428154845ae643f7ac5c13 ) | §J.4 | CF04 Adidas Punch List Non-Blocking |
+| [`CANON:FACT-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281ca90e1d03e6762a5ac ) | §J.5 | CF05 Levi's 270+ POS/6 países |
+| [`CANON:FACT-006`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281b2b404da20a44a09f0 ) | §J.6 | CF06 Aéropostale 21 Direct Reports |
+| [`CANON:FACT-007`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281628a9efef46fa846c7 ) | §J.7 | CF07 Aéropostale 17 Stores |
+| [`CANON:FACT-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281808eefd25dfebc5329 ) | §J.8 | CF08 L'Oréal Marcas |
+| [`CANON:UF-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281368c51f280d549e751 ) | §J.9 | UF01 L'Oréal End Date |
+| [`CANON:UF-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428105a250f82d9c348a9a ) | §J.10 | UF02 Canonical Email |
+| [`CANON:UF-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42810cbb59cbecda3daa92 ) | §J.11 | UF03 Certifications Canon |
 | [`CANON:POSITIONING-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42811ba92acf1dc1467702 ) | §K | Positioning Modes N1–N4 |
-| [`CANON:POSITIONING-N1 … N4`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#23630f08c3f44b0891d10f6f84cae51d ) | §K.1–K.4 | N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution & Rollout · N4 Commercial VM & Field Leadership |
-| [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42818190e0fbc29f4f8c5c ) | §L | Output Contract |
-| [`CANON:OUTPUT-CONTRACT-SKELETON-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110a5effba7515cd721 ) | §L.1 | Golden Skeleton (Reference) |
-| [`CANON:OUTPUT-CONTRACT-TAGREGISTRY-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42813d8f74c1e850590dab ) | §L.3 | Tag Registry (doble ID junto con CANON:TAG-REGISTRY, ver nota) |
-| [`CANON:FIGMA-TAG-SCHEMA`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42817f90ace83dd96245a9 ) | §L.2 | Figma Tag Schema |
-| [`CANON:POSITIONING-MODE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428128b20dc6192e8b8757 ) | §L.3.1 | Activación por Positioning Mode |
-| [`CANON:TAG-REGISTRY`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281dbac5ae5ae1adf1e90 ) | §L.3 | Tag Registry (doble ID junto con CANON:OUTPUT-CONTRACT-TAGREGISTRY-001, ver nota) |
+| [`CANON:POSITIONING-N1`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#f641c03c1b344851aeb05e53c34e9566 ) | §K.1 | N1 Luxury Brand Execution |
+| [`CANON:POSITIONING-N2`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#466fcef7c2434407974361739b90ae56 ) | §K.2 | N2 Store Design & Flagship |
+| [`CANON:POSITIONING-N3`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#23630f08c3f44b0891d10f6f84cae51d ) | §K.3 | N3 Regional Brand Execution & Rollout |
+| [`CANON:POSITIONING-N4`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#eb73641cd7174593925b6b035852ca16 ) | §K.4 | N4 Commercial VM & Field Leadership |
+| [`CANON:OUTPUT-CONTRACT`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#53a2d31605f84299a99118add45e2af7 ) | §8 | Contrato de entregable |
+| [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110a5effba7515cd721 ) | §8.1 | Golden Skeleton |
+| [`CANON:OUTPUT-CONTRACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42817f90ace83dd96245a9 ) | §8.2 | Figma Tags |
+| [`CANON:OUTPUT-CONTRACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281dbac5ae5ae1adf1e90 ) | §8.3 | Tag Registry |
+| [`CANON:OUTPUT-CONTRACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428128b20dc6192e8b8757 ) | §8.4 | Positioning Modes |
 
 ---
 
@@ -149,8 +171,8 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`BRIEF:001`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#3a3938befc4280bcaa82eda21b6a90e2 ) | §0 | Propósito y Alcance |
-| [`BRIEF:002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3a3938befc42800e8748cd345f864d4d ) | §1 | Document Authority Matrix |
+| [`BRIEF:001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#2affc7590d5b4bd7aee18c1feb0fbd49 ) | §0 | Propósito y Alcance |
+| [`BRIEF:002`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#abfcd1ef5b9843ca89fe05ef21a64b96 ) | §1 | Document Authority Matrix |
 | [`BRIEF:003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3a3938befc4280c487dbd8e00f3bd5f7 ) | §2 | Ecosistema Documental |
 | [`BRIEF:004`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3a3938befc4280598b02ec12dd35a6ec ) | §3 | Navigation Contracts |
 | [`BRIEF:005`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3a3938befc428047a372f98c731f1183 ) | §4 | Domain Architecture |
@@ -165,4 +187,12 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-_Ninguno detectado en esta corrida._
+| ID | Documento | Link |
+|---|---|---|
+| `ALIASES:CV-PIPELINE` | Aliases | [link]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#39b938befc428113b187f0f31467bf32 ) |
+| `ALIASES:DASHBOARD` | Aliases | [link]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#39b938befc42814ab508eacf9bbf7d9d ) |
+| `ALIASES:L0-RUNTIME` | Aliases | [link]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#39b938befc4281018108cf0d3b87acc2 ) |
+| `ALIASES:L1L2-DISCOVERY` | Aliases | [link]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#39b938befc4281bfb8bfea0e14f5f12a ) |
+| `ALIASES:L3-PASSIVE-INTAKE` | Aliases | [link]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#39b938befc42819db399e5e106c7563a ) |
+| `ALIASES:L4-VERSION-CONTROL` | Aliases | [link]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#39b938befc4281bd9b18e32fddaa3c96 ) |
+| `ALIASES:SESSION-CYCLE` | Aliases | [link]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#39b938befc4281839797f6047001e66f ) |

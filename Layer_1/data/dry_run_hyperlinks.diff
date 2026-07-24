@@ -1,0 +1,315 @@
+--- a/Career Canon.md
++++ b/Career Canon.md
+@@ -195,7 +195,7 @@
+ 
+ ⬇️
+ 
+-§N CANON:OUTPUT-CONTRACT 
++§N [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#53a2d31605f84299a99118add45e2af7) 
+ Contrato de entregable
+ 
+ ---
+
+--- a/Kernel.md
++++ b/Kernel.md
+@@ -8,8 +8,8 @@
+ ---
+ ## TABLE OF CONTENTS
+ ─── I. FUNDAMENTO
+-  §1   KERNEL:PURPOSE
+-  §2   KERNEL:FAIL-PHILOSOPHY
++  §1   [KERNEL:PURPOSE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f69905dfc6c82c5503)
++  §2   [KERNEL:FAIL-PHILOSOPHY](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428121bb10efedac1b4b99)
+   §3   KERNEL:DOCUMENTATION (L0)
+           §3.1   DOCUMENTATION-001 - Contract
+           §3.2   DOCUMENTATION-002 - Norm
+@@ -22,14 +22,14 @@
+           §3.9   DOCUMENTATION-009 - Session Ledger
+           §3.10  DOCUMENTATION-010 - Documentation Transversal
+ 
+-  §4   KERNEL:ARCHITECTURE (L1, L2, L3, L4, Figma Sync)
+-  §5   KERNEL:OWNERSHIP
+-  §6   KERNEL:DASHBOARD-CHECKLIST-ARCH
++  §4   [KERNEL:ARCHITECTURE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42818a8a61d5a0d71bcf2b) (L1, L2, L3, L4, Figma Sync)
++  §5   [KERNEL:OWNERSHIP](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42814385dbe5005b04496c)
++  §6   [KERNEL:DASHBOARD-CHECKLIST-ARCH](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816ead88efa4b9a4e05f)
+ 
+ ─── II. DATOS, ESQUEMAS Y REGLAS
+-  §7   KERNEL:SCHEMA
+-  §8   KERNEL:TRACKER-SCHEMA
+-  §9   KERNEL:GATE-DECISION
++  §7   [KERNEL:SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42812dbc97e075758ba0ee)
++  §8   [KERNEL:TRACKER-SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281c2ba8aca2a41ff358b)
++  §9   [KERNEL:GATE-DECISION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810d9f3af9b12751d7e1)
+           §9.1  GATE-DECISION-001 — Bypass
+           §9.2  GATE-DECISION-002 — Lógica Estándar
+           §9.3  GATE-DECISION-003 — REVIEW_NEEDED
+@@ -39,18 +39,18 @@
+           §9.7  GATE-DECISION-007 — Archivado Automático
+           §9.8  GATE-DECISION-008 — Capas Técnica vs. Negocio
+           §9.9  GATE-DECISION-009 — Escalamiento de Pendientes a Tickets
+-  §10   KERNEL:CV-GOLDEN-RULES
++  §10   [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d)
+ 
+ ─── III. EJECUCIÓN
+-  §11  KERNEL:TRIGGERS
+-  §12  KERNEL:CV-PIPELINE
+-  §13  KERNEL:CANON-UPDATE
+-  §14  KERNEL:NAMING-CONVENTION
++  §11  [KERNEL:TRIGGERS](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f297c7d591f3c132f4)
++  §12  [KERNEL:CV-PIPELINE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428190b72cf74c14c31a4a)
++  §13  [KERNEL:CANON-UPDATE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42817db23de75a46a964ac)
++  §14  [KERNEL:NAMING-CONVENTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281bbbe93d1e053bb8e42)
+ 
+ ─── IV. INFRAESTRUCTURA DE CONTEXTO
+-  §15  KERNEL:SCOPE / KERNEL:ROUTING
+-  §16  KERNEL:DATA-FLOW
+-  §17  KERNEL:EVOLUTION
++  §15  [KERNEL:SCOPE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810293b4e55167657d86) / [KERNEL:ROUTING](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42811aa042c048ec085cbc)
++  §16  [KERNEL:DATA-FLOW](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428101ade4f430c4bee781)
++  §17  [KERNEL:EVOLUTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816d813af068ac1d81be)
+ ---
+ # I. FUNDAMENTO
+ ## §1 — KERNEL:PURPOSE
+@@ -117,7 +117,7 @@
+ ### L0-Bootstrap — Dynamic Governance Layer
+ Tipo: Capa de Sincronización de Sesión (Fetch-on-Start)
+ Propósito: Elimina el drift de versiones entre la UI estática del agente y el repositorio dinámico de Notion.
+-Bootstrap Protocol: ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de SP:BOOTSTRAP-001 y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
++Bootstrap Protocol: ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de [SP:BOOTSTRAP-001](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281c68a05fd98ecfef859) y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
+ Convención de estado (X-ING → X-ED): el Bootstrap declara inicio con BOOTLOADING... y cierre con BOOTLOADED: DOCUMENTOS CARGADOS.
+ Distinción de alcance — Bootstrap vs. Session Ledger: el Bootstrap corre en cada mensaje inicial de cualquier conversación del proyecto — carga de contexto universal, no registro de sesión formal. El Session Ledger (§3.9) es opt-in: solo se escribe cuando el operador invoca vantage-session-open.
+ ```plain text
+@@ -320,14 +320,14 @@
+ - Restricción crítica:
+ - Inferencias de Claude (ej: "parece bloqueante") nunca califican para Nivel 3.
+ - Si Claude sospecha bloqueo pero no tiene fuente dura, el caso baja a Nivel 2 (sugerencia + confirmación).
+-- Prohibido por SP:CONSISTENCY §5: Automatismos basados en inferencias no confirmadas.
++- Prohibido por [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca) §5: Automatismos basados en inferencias no confirmadas.
+ ---
+ Resolución de los 3 puntos de fricción identificados:
+ | Punto | Solución |
+ | --- | --- |
+ | Umbral de iteraciones | Criterio orientativo para Nivel 1 vs Nivel 2. Nunca criterio único para Nivel 3. El único criterio duro para Nivel 3 es: "bloqueante/degradante confirmado por fuente dura". |
+ | Re-evaluación Nivel 2 → Nivel 3 | Si durante la sesión aparece evidencia dura de que un pendiente Nivel 2 es bloqueante/degradante, Claude re-clasifica explícitamente a Nivel 3, lo declara al operador ("Reclasifico X de Nivel 2 a Nivel 3 por [evidencia]" ) y dispara el ticket automático. |
+-| Choque con SP:CONSISTENCY §5 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
++| Choque con [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca) §5 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
+ Referencia cruzada Manual: Ver Manual §6 — Ciclo de Sesión para la implementación práctica de este escalamiento dentro del flujo operador (dónde se declara un Nivel 2, qué cuenta como fuente dura para Nivel 3, y cómo se refleja en el cierre de sesión).
+ ---
+ ## §10 — KERNEL:CV-GOLDEN-RULES
+@@ -432,7 +432,7 @@
+ Ejemplo: "Gucci — VM Coordinator, LATAM (2026)" → 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM
+ Aplica a: CV-B (.md), export QA (.pdf), archivo Figma (.fig) y cualquier output futuro de una vacante específica. El stem se fija al generar el primer entregable y se reutiliza sin variación.
+ No aplica a: DRY RUN archivado, artefactos de sistema (logs, backups, entity_index).
+-Relación con CANON:OUTPUT-CONTRACT-001: contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
++Relación con [CANON:OUTPUT-CONTRACT-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110a5effba7515cd721): contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
+ ---
+ ---
+ # IV. INFRAESTRUCTURA DE CONTEXTO
+
+--- a/Manual.md
++++ b/Manual.md
+@@ -2,8 +2,8 @@
+ 
+ > [!IMPORTANT]
+ > REFERENCIAS CRÍTICAS ACTUALIZADAS (v9.6.4)
+-> - Filosofía de Fallo: KERNEL:FAIL-PHILOSOPHY
+-> - Session Ledger: KERNEL:SESSION-LEDGER
++> - Filosofía de Fallo: [KERNEL:FAIL-PHILOSOPHY](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428121bb10efedac1b4b99)
++> - Session Ledger: [KERNEL:SESSION-LEDGER](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816aa4e8c4daaebe11b1)
+ # TABLE OF CONTENTS
+ ## I. INTRODUCCIÓN
+ > Comprender qué es VANTAGE y cómo funciona antes de operarlo.
+@@ -169,7 +169,7 @@
+ Ya no es necesario realizar copy-paste manual del System Prompt maestro en cada actualización.
+ 1. Copia el STATIC BOOTLOADER v1.0 (disponible en la Cédula Digital) y pégalo en Settings → Project → Project Instructions en la UI de Claude.
+ 1. Inicia un nuevo chat. El Agente Vantage realizará un fetch automático de la gobernanza activa desde Notion.
+-1. Confirma que el Agente responde con “VANTAGE: SISTEMA SINCRONIZADO” (sin número de versión fijo — ver SP:BOOTSTRAP-001) antes de enviar peticiones.
++1. Confirma que el Agente responde con “VANTAGE: SISTEMA SINCRONIZADO” (sin número de versión fijo — ver [SP:BOOTSTRAP-001](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281c68a05fd98ecfef859)) antes de enviar peticiones.
+ Nota: este setup de Claude es de una sola vez por proyecto — no se repite en cada sesión de trabajo. Lo que sí se repite en cada sesión es el Ciclo de Sesión completo, explicado en §6.
+ ### Paso 4 — Verificar Archivos del Sistema y Permisos de Ejecución
+ Confirma que los archivos del sistema existen en tu Mac en las rutas esperadas (Layer_1, Layer_3, Layer_4, Dashboard). Si reinstalas o mueves archivos, verifica permisos de ejecución:
+@@ -253,7 +253,7 @@
+ 1. Te recuerda, sin que tengas que preguntarlo, qué quedó pendiente de la sesión anterior.
+ No necesitas invocarlo tú manualmente cada vez que se te ocurra — pero sí necesitas recordar que es el primer paso obligatorio: si acabas de abrir Claude para trabajar en VANTAGE hoy, el primer paso siempre es este ciclo, antes de tocar Tracker, Dashboard o cualquier trigger de CV descrito en §8.
+ ### Por qué existe esto
+-Antes de que este ciclo existiera, cada sesión de Claude arrancaba “en frío”: el agente asumía que el corpus de Notion (Kernel, Manual, System Prompt, Career Canon, Aliases, Changelog) estaba en la versión que recordaba de la sesión anterior, y no había ningún mecanismo que confirmara si una sesión había terminado bien o si Claude simplemente dejó de responder a medio trabajo — un timeout, un cierre accidental de pestaña, un crash. El resultado era drift silencioso: un documento se actualizaba, otro no, y nadie se enteraba hasta que las contradicciones aparecían en producción (esto es, en parte, lo que motivó el Census — ver KERNEL:CENSUS-SYNC, y §11 — Health Check, donde se detalla cómo se regenera el Census).
++Antes de que este ciclo existiera, cada sesión de Claude arrancaba “en frío”: el agente asumía que el corpus de Notion (Kernel, Manual, System Prompt, Career Canon, Aliases, Changelog) estaba en la versión que recordaba de la sesión anterior, y no había ningún mecanismo que confirmara si una sesión había terminado bien o si Claude simplemente dejó de responder a medio trabajo — un timeout, un cierre accidental de pestaña, un crash. El resultado era drift silencioso: un documento se actualizaba, otro no, y nadie se enteraba hasta que las contradicciones aparecían en producción (esto es, en parte, lo que motivó el Census — ver [KERNEL:CENSUS-SYNC](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281599aa3f17926239597), y §11 — Health Check, donde se detalla cómo se regenera el Census).
+ El ciclo Open/Close resuelve esto tratando cada sesión como una transacción con inicio y fin explícitos, en vez de una conversación que simplemente “pasa”.
+ ### Un cambio de fondo: el operador corre Terminal primero, Claude ya no improvisa la verificación
+ Antes de entrar al detalle paso a paso, vale la pena explicar un giro importante en cómo funciona este ciclo desde la optimización de verify_versions.py: el script dejó de ser una herramienta de un solo modo (verificar versión) y ahora opera con tres flags — --bootstrap, --check y --sync — cada uno con una responsabilidad distinta y acotada. Este cambio no es cosmético: reordena quién hace qué entre tú y Claude.
+@@ -278,7 +278,7 @@
+ PASS — all components at X.X.X
+ ```
+ 1. Abre un chat nuevo en Claude, pega ambos outputs — el dump del --bootstrap y la tabla del --check — e invoca /vantage-session-open. Claude ya no hace ningún fetch propio a Notion en este paso: los dos payloads que le entregaste son toda la información que necesita para arrancar. Si alguno de los dos outputs falta o está incompleto, Claude te lo señala y espera a que lo completes antes de continuar — no improvisa el faltante ni lo reconstruye por su cuenta vía MCP.
+-1. Claude procesa ambos payloads y realiza una sola escritura: crea la fila nueva en el Session Ledger ([[KERNEL:SESSION-LEDGER](https://www.notion.so/377938befc42805ea408c9ae518d4fe7#39e938befc42816aa4e8c4daaebe11b1)](https://www.notion.so/377938befc42805ea408c9ae518d4fe7#39e938befc42816aa4e8c4daaebe11b1)) con status: OPEN y un session_id que genera él mismo. Esta escritura es de housekeeping — no requiere APROBAR_WRITE, por la misma razón que tampoco lo requiere el auto-sync del Entity Index (KERNEL:HEALTH-CHECK-001): no toca campos Class A ni Class B del Tracker, es infraestructura de continuidad de sesión, no dato de negocio del pipeline de vacantes.
++1. Claude procesa ambos payloads y realiza una sola escritura: crea la fila nueva en el Session Ledger ([[KERNEL:SESSION-LEDGER](https://www.notion.so/377938befc42805ea408c9ae518d4fe7#39e938befc42816aa4e8c4daaebe11b1)](https://www.notion.so/377938befc42805ea408c9ae518d4fe7#39e938befc42816aa4e8c4daaebe11b1)) con status: OPEN y un session_id que genera él mismo. Esta escritura es de housekeeping — no requiere APROBAR_WRITE, por la misma razón que tampoco lo requiere el auto-sync del Entity Index ([KERNEL:HEALTH-CHECK-001](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42812d8303fa0cd5118520)): no toca campos Class A ni Class B del Tracker, es infraestructura de continuidad de sesión, no dato de negocio del pipeline de vacantes.
+ 1. Claude confirma el estado de la sesión. Si la tabla del --check mostró PASS limpio en los 7 documentos, responde VANTAGE: SISTEMA SINCRONIZADO y queda listo para recibir instrucciones normales de trabajo. Si detecta un drift de versión en el output que le pegaste, lo reporta explícitamente antes de continuar — recuerda que este es exactamente el mismo tratamiento que ya conocías: el drift no bloquea el trabajo salvo que el documento desincronizado sea justo el que vas a editar en esa sesión, en cuyo caso primero se resuelve el drift.
+ Al terminar estos cinco pasos, recién ahí es seguro empezar con el Lunes de §8, o cualquier otro día del ciclo semanal que corresponda.
+ ### Cierre — /vantage-session-close
+@@ -293,7 +293,7 @@
+ - El Ledger anterior quedó OPEN → esto lo verás reflejado directamente en el dump que genera --bootstrap. Revisa manualmente si algo quedó a medio escribir antes de seguir. El sistema te lo señala, pero la decisión de qué hacer con eso es tuya.
+ - Drift de versión detectado y no es el documento que ibas a tocar hoy → se reporta, no bloquea. Puedes decidir resolverlo ahora o después.
+ - Drift de versión detectado y SÍ es el documento que ibas a tocar → se resuelve el drift primero, antes de aplicar cualquier parche nuevo — de lo contrario terminarías escribiendo sobre una base que ya no coincide con lo que las otras piezas del sistema esperan.
+-- Un cambio de código, schema o flujo operativo quedó sin reflejo en la documentación → esto no es parte del drift de versión que acabas de revisar arriba, es el caso que cubre KERNEL:DOCUMENTATION-TRANSVERSAL-001: el contrato que detecta contenido operativo nuevo sin ancla en Kernel, Manual, Canon o System Prompt, ya sea porque tú lo pides explícitamente ("documentación transversal", "parche orgánico") o porque el sistema lo señala como recordatorio no-bloqueante a media tarea, sin detener lo que estabas haciendo.
++- Un cambio de código, schema o flujo operativo quedó sin reflejo en la documentación → esto no es parte del drift de versión que acabas de revisar arriba, es el caso que cubre [KERNEL:DOCUMENTATION-TRANSVERSAL-001](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428142a984f97acbd800b4): el contrato que detecta contenido operativo nuevo sin ancla en Kernel, Manual, Canon o System Prompt, ya sea porque tú lo pides explícitamente ("documentación transversal", "parche orgánico") o porque el sistema lo señala como recordatorio no-bloqueante a media tarea, sin detener lo que estabas haciendo.
+ - Un pendiente detectado durante la sesión necesita convertirse en ticket (o no) → esto lo gobierna KERNEL:GATE-DECISION-009 (3 niveles de escalamiento). En resumen: esfuerzo bajo y sin bloqueo confirmado se queda en pending_summary del Ledger (Nivel 1); esfuerzo alto sin fuente dura de bloqueo se sugiere como ticket y espera tu APROBAR_WRITE (Nivel 2); bloqueo o degradación confirmados por una fuente dura (dump de Terminal, Ledger, Changelog, o tu propia declaración explícita) disparan vantage-create-bug-task de forma automática (Nivel 3). Ver KERNEL §9.9 para el detalle completo y las reglas de re-clasificación entre niveles.
+ Con la sesión abierta y sincronizada, el siguiente paso natural es abrir tu mapa de la semana — el V-Checklist, explicado en §7.
+ ---
+@@ -559,7 +559,7 @@
+ vl1 backfill --dry-run
+ ```
+ Sin --dry-run, solicita confirmación explícita (s) antes de cualquier escritura.
+-vversions — alias corto de verify_versions.py, el motor de verificación y sincronización de versión de los 7 documentos fundacionales (KERNEL:VERSION-CHECK-TOOL). No es un comando del Tracker de vacantes como los vl1 * de arriba — es infraestructura documental, y su uso está integrado al Ciclo de Sesión completo en §6, no como comando suelto. Acepta tres flags: --bootstrap (dump de apertura), --check (lectura de versión, read-only) y --sync (única escritura, propagación en lote).
++vversions — alias corto de verify_versions.py, el motor de verificación y sincronización de versión de los 7 documentos fundacionales ([KERNEL:VERSION-CHECK-TOOL](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#380a32a5525b4d5d8cd44516fb1b74d4)). No es un comando del Tracker de vacantes como los vl1 * de arriba — es infraestructura documental, y su uso está integrado al Ciclo de Sesión completo en §6, no como comando suelto. Acepta tres flags: --bootstrap (dump de apertura), --check (lectura de versión, read-only) y --sync (única escritura, propagación en lote).
+ vcensus — alias corto de generate_census.py. Regenera el V-ID-CENSUS y reporta IDs huérfanos detectados en los documentos fuente. Se corre en el paso 1 del Cierre de Sesión (§6) si algún ID cambió de estado durante la sesión — ver también §11, "El V-ID-Census", para el detalle completo de cuándo es obligatorio.
+ ### 9.3 Cuándo correr sync
+ Correr vantage.py sync después de:
+@@ -657,7 +657,7 @@
+ - vantage-tidy-opportunities-tracker — identifica duplicados y vacantes expiradas en el Tracker de vacantes para archivado, usando los mecanismos de fingerprint y protección de estado terminal ya implementados en feed_processor.py (ver §10 — Gestión de Datos). Requiere Dry Run + APROBAR_WRITE.
+ - vantage-tidy-changelog — mantiene el Change Log con las últimas 10 entradas visibles, moviendo el exceso al Archivo Changelog histórico. Úsala cuando el Change Log activo supera 10 entradas o para housekeeping documental puntual.
+ - vantage-present-handoff — genera el snapshot de contexto de sesión para continuidad en un chat nuevo. Es independiente y se puede invocar en cualquier momento; no requiere que la sesión esté cerrando (ver también §6 — Ciclo de Sesión, Cierre, donde vantage-session-close la invoca automáticamente como parte de su secuencia normal).
+-Cada una declara su propio verbo de apertura/cierre (KERNEL:SKILL-ANNOUNCE-CONVENTION) — nunca el lenguaje de Bootstrap ni de Session Ledger.
++Cada una declara su propio verbo de apertura/cierre ([KERNEL:SKILL-ANNOUNCE-CONVENTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281db9f8eee98d8f90185)) — nunca el lenguaje de Bootstrap ni de Session Ledger.
+ ---
+ ## 12. TROUBLESHOOTING · ID: MANUAL:TROUBLESHOOTING-001
+ ### Problemas Comunes y Soluciones
+@@ -718,9 +718,9 @@
+ - Si aparece pero validación falla: revisar logs de run_pipeline.py en Dashboard.
+ ### Referencias a documentación adicional
+ - Filosofía de fallo: [KERNEL:FAIL-PHILOSOPHY](V | KERNEL) (ver también §3 de este Manual).
+-- Reglas de Oro: KERNEL:CV-GOLDEN-RULES (ver también §18 de este Manual).
+-- Schema de datos: KERNEL:SCHEMA.
+-- Gate Decisions: KERNEL:GATE-DECISION (ver también §2 de este Manual).
++- Reglas de Oro: [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) (ver también §18 de este Manual).
++- Schema de datos: [KERNEL:SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42812dbc97e075758ba0ee).
++- Gate Decisions: [KERNEL:GATE-DECISION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810d9f3af9b12751d7e1) (ver también §2 de este Manual).
+ ---
+ ## 13. PROMPTS & WRAPPERS · ID: MANUAL:PROMPTS-WRAPPERS-001
+ Se consultan vía MCP desde la PROMPT LIBRARY en Notion. Este es el catálogo que Perplexity Desktop lee cada Lunes (§8.1) para ensamblar los prompts de L1 y L2: los Prompt Bases (BASE SPEC L1, BASE SPEC L2) y los Wrappers correspondientes (Career Sites, LinkedIn, Aggregators, Gemini, Grok, you.com, Prompt A/B/C, Prompt E de consolidación).
+@@ -741,42 +741,42 @@
+ Un parche que pasa estos cinco filtros no se distingue, seis meses después, del texto que rodeaba su punto de inserción original.
+ ---
+ ## 16. REGLAS DE ORO PARA OPERADORES · ID: MANUAL:REGLAS-DE-ORO-001
+-Base: KERNEL:CV-GOLDEN-RULES.
++Base: [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d).
+ > El contenido detallado de estas reglas vive en el Kernel del sistema y no está reproducido en este Manual más allá de esta referencia. Ver lista de huecos detectados al final de este documento.
+ ---
+ ## 17. SLA DE LATENCIA POST-INGESTA · ID: MANUAL:SLA-001
+ > Nota: el SLA “< 45 minutos” cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh (ver §8.1, Lunes) — no tiene SLA fijo salvo ejecución manual explícita de layer_1_run.py.
+ ## 18. Reglas de Oro CV — Referencia Operativa ID: MANUAL:CV-GOLDEN-RULES-INDEX
+-Las Reglas de Oro (KERNEL:CV-GOLDEN-RULES) son restricciones de arquitectura, no preferencias. Viven íntegras en el Kernel — esta sección es un índice de navegación, no una copia.
++Las Reglas de Oro ([KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d)) son restricciones de arquitectura, no preferencias. Viven íntegras en el Kernel — esta sección es un índice de navegación, no una copia.
+ | ID | Regla | Qué bloquea |
+ | --- | --- | --- |
+-| KERNEL:CV-GOLDEN-RULES-001 | No Evaluar Fit Antes de Escribir | Preguntas de "¿me conviene esta vacante?" — el fit lo decide Score (Python) + el operador |
+-| KERNEL:CV-GOLDEN-RULES-002 | No Calcular ni Estimar Campos Class B | Estimar Score, Gate_Decision, VM_Scope, etc. — son Python-only |
+-| KERNEL:CV-GOLDEN-RULES-003 | No Cuestionar la Calidad de Datos del Usuario | Comentarios sobre volumen/calidad del JSON de búsqueda — estrategia es 100% humana |
+-| KERNEL:CV-GOLDEN-RULES-004 | No Delegar Escritura al Usuario | "Copia esto y pégalo en Notion" — el sistema escribe directo, salvo export PDF/Drive |
+-| KERNEL:CV-GOLDEN-RULES-005 | No Interpretar en SYNC | SYNC reporta datos puros, sin análisis ni recomendaciones |
++| [KERNEL:CV-GOLDEN-RULES-001](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281c0b026c8bcf4901816) | No Evaluar Fit Antes de Escribir | Preguntas de "¿me conviene esta vacante?" — el fit lo decide Score (Python) + el operador |
++| [KERNEL:CV-GOLDEN-RULES-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428196851ef48a510e16ca) | No Calcular ni Estimar Campos Class B | Estimar Score, Gate_Decision, VM_Scope, etc. — son Python-only |
++| [KERNEL:CV-GOLDEN-RULES-003](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428140b36ff15f47f0a359) | No Cuestionar la Calidad de Datos del Usuario | Comentarios sobre volumen/calidad del JSON de búsqueda — estrategia es 100% humana |
++| [KERNEL:CV-GOLDEN-RULES-004](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281a29b7adf00572b5f87) | No Delegar Escritura al Usuario | "Copia esto y pégalo en Notion" — el sistema escribe directo, salvo export PDF/Drive |
++| [KERNEL:CV-GOLDEN-RULES-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42814ebc31de3ceca9c168) | No Interpretar en SYNC | SYNC reporta datos puros, sin análisis ni recomendaciones |
+ Toda violación produce el Template Universal de Rechazo (ver Kernel): OPERACIÓN RECHAZADA → razón → alternativa operativa → confirmación SÍ/CANCELAR.
+-Para el detalle completo de cada regla (ejemplos de solicitudes que la activan, redacción exacta de la respuesta estandarizada), consultar directamente KERNEL:CV-GOLDEN-RULES en el Kernel — fuente única, no se replica aquí para evitar drift entre documentos.
++Para el detalle completo de cada regla (ejemplos de solicitudes que la activan, redacción exacta de la respuesta estandarizada), consultar directamente [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) en el Kernel — fuente única, no se replica aquí para evitar drift entre documentos.
+ ## 19. Positioning Modes (N1–N4) — Criterio de Selección ID: MANUAL:POSITIONING-CRITERIA
+-CANON:POSITIONING-001 define 4 modos de posicionamiento para CV-B. Esta sección resuelve el gap operativo: con qué criterio elegir uno.
++[CANON:POSITIONING-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42811ba92acf1dc1467702) define 4 modos de posicionamiento para CV-B. Esta sección resuelve el gap operativo: con qué criterio elegir uno.
+ | Modo | ID | Ancla canónica | Cuándo aplica |
+ | --- | --- | --- | --- |
+-| N1 | CANON:POSITIONING-N1 | C01 · 3 marcas lujo · CAPEX/OPEX · NPI | JD enfatiza gestión multi-marca de lujo, presupuesto, lanzamientos de producto |
+-| N2 | CANON:POSITIONING-N2 | C02 · Adidas Brand Center · KPI07 · blueprints | JD enfatiza Store Design, Flagship, construcción/remodelación física |
+-| N3 | CANON:POSITIONING-N3 | C03 · 270+ POS · 6 países · KPI03–06 · CF05 | JD enfatiza rollout regional multi-país, estandarización, eficiencia operativa |
+-| N4 | CANON:POSITIONING-N4 | C04/C05 · +43% tráfico · +18% conversión · 21 reportes | JD enfatiza liderazgo de campo comercial, KPIs de tráfico/conversión, gestión de equipos directos |
+-Regla de desempate (JDs híbridos) — ver CANON:POSITIONING-001 para el texto completo: (1) más keywords mapeados al ancla, (2) empate → mayor seniority (N2>N1, N4>N3 con presupuesto regional explícito), (3) empate persistente → escalar a decisión humana vía fit_gaps.
++| N1 | [CANON:POSITIONING-N1](https://app.notion.com/p/372938befc4280509a67e40857d7806e#f641c03c1b344851aeb05e53c34e9566) | C01 · 3 marcas lujo · CAPEX/OPEX · NPI | JD enfatiza gestión multi-marca de lujo, presupuesto, lanzamientos de producto |
++| N2 | [CANON:POSITIONING-N2](https://app.notion.com/p/372938befc4280509a67e40857d7806e#466fcef7c2434407974361739b90ae56) | C02 · Adidas Brand Center · KPI07 · blueprints | JD enfatiza Store Design, Flagship, construcción/remodelación física |
++| N3 | [CANON:POSITIONING-N3](https://app.notion.com/p/372938befc4280509a67e40857d7806e#23630f08c3f44b0891d10f6f84cae51d) | C03 · 270+ POS · 6 países · KPI03–06 · CF05 | JD enfatiza rollout regional multi-país, estandarización, eficiencia operativa |
++| N4 | [CANON:POSITIONING-N4](https://app.notion.com/p/372938befc4280509a67e40857d7806e#eb73641cd7174593925b6b035852ca16) | C04/C05 · +43% tráfico · +18% conversión · 21 reportes | JD enfatiza liderazgo de campo comercial, KPIs de tráfico/conversión, gestión de equipos directos |
++Regla de desempate (JDs híbridos) — ver [CANON:POSITIONING-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42811ba92acf1dc1467702) para el texto completo: (1) más keywords mapeados al ancla, (2) empate → mayor seniority (N2>N1, N4>N3 con presupuesto regional explícito), (3) empate persistente → escalar a decisión humana vía fit_gaps.
+ ## 20. Golden Skeleton — Qué es y Dónde Vive ID: MANUAL:GOLDEN-SKELETON-REF
+ El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-SKELETON-001) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
+ - SSOT de IDs de nodo Figma: registry_seed.json en 04-Vantage_CV/Figma Sync/.
+ - Slots clave: 2055:9 (Nombre), 2055:10 (Tagline), 2043:51 (Perfil), 2043:56-60 (Skills), 2043:64+ (Experiencia).
+ - Regla de invariancia: si el Skeleton cambia en Figma, registry_seed.json se actualiza antes del siguiente CV-B — nunca al revés.
+-- Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en CANON:OUTPUT-CONTRACT-001 — no se replica aquí.
++- Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en [CANON:OUTPUT-CONTRACT-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110a5effba7515cd721) — no se replica aquí.
+ ## 21. Schema Class A/B — Referencia de Campos ID: MANUAL:SCHEMA-FIELD-REF
+-KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.
++[KERNEL:SCHEMA-001](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281faa81ac25589b3c67f) define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.
+ Class A — Human-Primary (operador/feed_processor escriben):
+ Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NAD · layer · hash
+ Class B — System-Primary (Python únicamente, ningún otro componente escribe):
+ Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente
+-Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida (KERNEL:SCHEMA-003).
+-Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
++Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida ([KERNEL:SCHEMA-003](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42817eb1dad96ac1ccc2b0)).
++Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver [KERNEL:GATE-DECISION-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42815a9d52ccf7394c183a)). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
+
+--- a/System Prompt.md
++++ b/System Prompt.md
+@@ -5,7 +5,7 @@
+ Este documento constituye la especificación operativa vigente de VANTAGE.
+ Su propósito es proporcionar el contexto de trabajo que el agente utilizará durante la sesión.
+ ### Conector único autorizado
+-El único conector MCP autorizado para este proyecto es Notion. Toda recuperación de documentos fundacionales (los nueve documentos fundacionales referenciados en SP:SYNC-RULE, incluyendo ID CENSUS) debe hacerse EXCLUSIVAMENTE mediante notion-fetch usando el Page ID o URL directo del documento.
++El único conector MCP autorizado para este proyecto es Notion. Toda recuperación de documentos fundacionales (los nueve documentos fundacionales referenciados en [SP:SYNC-RULE](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd), incluyendo ID CENSUS) debe hacerse EXCLUSIVAMENTE mediante notion-fetch usando el Page ID o URL directo del documento.
+ No usar notion-search para la sincronización de bootstrap: esta herramienta indexa, además del workspace de Notion, otras fuentes conectadas (Google Drive, Slack, GitHub, Jira, Teams, SharePoint, OneDrive, Linear) y puede devolver resultados híbridos que no corresponden a los documentos fundacionales del sistema. notion-search solo debe usarse si el operador lo solicita explícitamente para una búsqueda exploratoria, nunca como ruta de sincronización inicial.
+ Bajo ninguna circunstancia se debe intentar Google Drive u otro conector de documentos como fuente de los documentos fundacionales de VANTAGE.
+ Al iniciar una nueva sesión:
+@@ -41,11 +41,11 @@
+ - ID CENSUS
+ - NAVIGATION BRIEF
+ - VANTAGE CENTRAL HUB
+-Referencia de versión vigente: la propiedad "Versión" del CHANGE LOG (conforme a SP:CEDULA-DIGITAL) es SIEMPRE la referencia oficial — nunca un valor fijo en este documento.
++Referencia de versión vigente: la propiedad "Versión" del CHANGE LOG (conforme a [SP:CEDULA-DIGITAL](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42813ca3fde84a978517c0)) es SIEMPRE la referencia oficial — nunca un valor fijo en este documento.
+ Regla canónica: todos los documentos fundacionales, incluyendo ID CENSUS, deben tener EXACTAMENTE la misma versión que el CHANGE LOG. Ningún documento puede estar adelantado o atrasado, ni por un solo punto de versión.
+ - Si las nueve versiones coinciden → continuar normalmente, sin reportar nada.
+-- Si existe CUALQUIER discrepancia respecto al CHANGE LOG (incluyendo una discrepancia exclusiva de ID CENSUS) → reportar de inmediato al operador, listando documento(s) y versión(es) detectada(s), y ESPERAR confirmación antes de continuar con la solicitud (conforme a SP:CONSISTENCY). No proceder con escrituras ni operaciones estructurales mientras exista discrepancia sin resolver.
+-Excepción — memoria de sesión de Claude: la regla de versión única anterior aplica exclusivamente a discrepancias entre los nueve documentos fundacionales entre sí (vía verify_versions.py / fetch en vivo). No aplica a la memoria persistente de Claude entre sesiones: si Claude trae en memoria una cifra de versión de una sesión anterior y esta difiere de la versión live recuperada al bootstrap, esto no constituye una discrepancia bajo SP:SYNC-RULE ni bajo SP:CONSISTENCY. Es el comportamiento esperado dado el patrón de trabajo asíncrono multi-sesión del operador. Claude debe adoptar silenciosamente la versión live como referencia y no reportarlo como red flag ni esperar confirmación.
++- Si existe CUALQUIER discrepancia respecto al CHANGE LOG (incluyendo una discrepancia exclusiva de ID CENSUS) → reportar de inmediato al operador, listando documento(s) y versión(es) detectada(s), y ESPERAR confirmación antes de continuar con la solicitud (conforme a [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca)). No proceder con escrituras ni operaciones estructurales mientras exista discrepancia sin resolver.
++Excepción — memoria de sesión de Claude: la regla de versión única anterior aplica exclusivamente a discrepancias entre los nueve documentos fundacionales entre sí (vía verify_versions.py / fetch en vivo). No aplica a la memoria persistente de Claude entre sesiones: si Claude trae en memoria una cifra de versión de una sesión anterior y esta difiere de la versión live recuperada al bootstrap, esto no constituye una discrepancia bajo [SP:SYNC-RULE](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd) ni bajo [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca). Es el comportamiento esperado dado el patrón de trabajo asíncrono multi-sesión del operador. Claude debe adoptar silenciosamente la versión live como referencia y no reportarlo como red flag ni esperar confirmación.
+ ---
+ ## §3 — SP:CEDULA-DIGITAL
+ # CÉDULA DIGITAL
+@@ -94,10 +94,10 @@
+ ARCHIVO SCRIPT LIBRARY (DS)........39f938be-fc42-80ec-8f2e-000b16d736e2
+ ---
+ ## §4 — KERNEL:SCOPE
+-Consultar KERNEL:SCOPE en el Technical Kernel.
++Consultar [KERNEL:SCOPE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810293b4e55167657d86) en el Technical Kernel.
+ ---
+ ## §5 — KERNEL:DATA-FLOW
+-Consultar KERNEL:DATA-FLOW en el Technical Kernel.
++Consultar [KERNEL:DATA-FLOW](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428101ade4f430c4bee781) en el Technical Kernel.
+ ---
+ ## §6 — SP:TRIGGERS
+ Los siguientes triggers forman parte de la interfaz operativa de VANTAGE:
+@@ -112,7 +112,7 @@
+ Cada trigger mantiene el comportamiento definido en el Technical Kernel.
+ ---
+ ## §7 — KERNEL:CV-GOLDEN-RULES
+-Consultar KERNEL:CV-GOLDEN-RULES en el Technical Kernel.
++Consultar [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) en el Technical Kernel.
+ ---
+ ## §8 — SP:SCHEMA
+ # Class A/B
+@@ -139,7 +139,7 @@
+ Ambos esquemas son referencia estática para creación directa de páginas vía notion-create-pages sin fetch previo del data source. Notion es la fuente de verdad; este bloque es un caché de lectura. Si el schema real cambia (nueva opción de select, campo nuevo), el cambio debe propagarse aquí en la misma sesión en que se detecte.
+ ---
+ ## §9 — KERNEL:ROUTING
+-Consultar KERNEL:ROUTING en el Technical Kernel.
++Consultar [KERNEL:ROUTING](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42811aa042c048ec085cbc) en el Technical Kernel.
+ Nota operativa — Notion SQL:
+ notion-query-data-sources (SQL directo) está bloqueado en el plan actual de este workspace. Para queries a databases, usar directamente notion-fetch con la data_source_url (formato collection://...) o notion-search. No intentar SQL como primer paso — ir directo al fallback.
+ Nota operativa — Extracción completa de filas de un DB:
+@@ -166,5 +166,5 @@
+ ---
+ ## §12 — SP:VERSION-CHECK-TOOL
+ ### Herramienta de Verificación de Versión de Bajo Costo
+-Para la verificación de versión requerida en SP:SYNC-RULE (los 9 documentos fundacionales), el operador puede correr verify_versions.py (Layer_1/scripts/, ver KERNEL:VERSION-CHECK-TOOL) en Terminal y pegar el output de 9 líneas en vez de que el AI Component ejecute 7 notion-fetch completos.
++Para la verificación de versión requerida en [SP:SYNC-RULE](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281f1ae66e4e694a74ddd) (los 9 documentos fundacionales), el operador puede correr verify_versions.py (Layer_1/scripts/, ver [KERNEL:VERSION-CHECK-TOOL](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#380a32a5525b4d5d8cd44516fb1b74d4)) en Terminal y pegar el output de 9 líneas en vez de que el AI Component ejecute 7 notion-fetch completos.
+ Antes de hacer fetch completo de un documento fundacional solo para leer su propiedad Versión, preguntar primero al operador si puede correr el script y pegar el output.

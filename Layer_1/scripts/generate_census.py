@@ -178,61 +178,43 @@ CENSUS_SPEC = [
             {"id": "CANON:PROFILE-001", "seccion": "§A", "nombre": "Professional Profile Canon"},
             {"id": "CANON:SKILLS-001", "seccion": "§B", "nombre": "Skills Canon"},
             {"id": "CANON:EXPERIENCE-001", "seccion": "§D", "nombre": "Experience Records"},
-            {
-                "id": "CANON:EXPERIENCE-C01 … C05",
-                "lookup_ids": [
-                    "CANON:EXPERIENCE-C01",
-                    "CANON:EXPERIENCE-C02",
-                    "CANON:EXPERIENCE-C03",
-                    "CANON:EXPERIENCE-C04",
-                    "CANON:EXPERIENCE-C05",
-                ],
-                "seccion": "§D.1–D.5",
-                "nombre": "C01 L'Oréal Luxe · C02 Bisonte Experiential · C03 Levi Strauss (Dockers) · C04 Aéropostale · C05 El Palacio de Hierro (ALDO)",
-            },
+            {"id": "CANON:EXPERIENCE-C01", "seccion": "§D.1", "nombre": "C01 L'Oréal Luxe"},
+            {"id": "CANON:EXPERIENCE-C02", "seccion": "§D.2", "nombre": "C02 Bisonte Experiential"},
+            {"id": "CANON:EXPERIENCE-C03", "seccion": "§D.3", "nombre": "C03 Levi Strauss (Dockers)"},
+            {"id": "CANON:EXPERIENCE-C04", "seccion": "§D.4", "nombre": "C04 Aéropostale"},
+            {"id": "CANON:EXPERIENCE-C05", "seccion": "§D.5", "nombre": "C05 El Palacio de Hierro (ALDO)"},
             {"id": "CANON:ACHIEVEMENTS-001", "seccion": "§H", "nombre": "Achievement Library"},
             {"id": "CANON:KPIS-001", "seccion": "§I", "nombre": "Core KPIs"},
-            {
-                "id": "CANON:KPI-001 … KPI-008",
-                "lookup_ids": [
-                    "CANON:KPI-001", "CANON:KPI-002", "CANON:KPI-003", "CANON:KPI-004",
-                    "CANON:KPI-005", "CANON:KPI-006", "CANON:KPI-007", "CANON:KPI-008",
-                ],
-                "seccion": "§I.1–I.8",
-                "nombre": "KPI01 Traffic +43% · KPI02 Conversion +18% · KPI03 Campaign Cost -74% · KPI04 Floorset Time -33% · KPI05 POP Coverage 100% · KPI06 Rebranding Coverage 100% · KPI07 Adidas Punch List (17) · KPI08 Years Experience (10+)",
-            },
+            {"id": "CANON:KPI-001", "seccion": "§I.1", "nombre": "KPI01 Traffic +43%"},
+            {"id": "CANON:KPI-002", "seccion": "§I.2", "nombre": "KPI02 Conversion +18%"},
+            {"id": "CANON:KPI-003", "seccion": "§I.3", "nombre": "KPI03 Campaign Cost -74%"},
+            {"id": "CANON:KPI-004", "seccion": "§I.4", "nombre": "KPI04 Floorset Time -33%"},
+            {"id": "CANON:KPI-005", "seccion": "§I.5", "nombre": "KPI05 POP Coverage 100%"},
+            {"id": "CANON:KPI-006", "seccion": "§I.6", "nombre": "KPI06 Rebranding Coverage 100%"},
+            {"id": "CANON:KPI-007", "seccion": "§I.7", "nombre": "KPI07 Adidas Punch List (17)"},
+            {"id": "CANON:KPI-008", "seccion": "§I.8", "nombre": "KPI08 Years Experience (10+)"},
             {"id": "CANON:FACTS-001", "seccion": "§J", "nombre": "Canonical Facts"},
-            {
-                "id": "CANON:FACT-001 … FACT-008",
-                "lookup_ids": [
-                    "CANON:FACT-001", "CANON:FACT-002", "CANON:FACT-003", "CANON:FACT-004",
-                    "CANON:FACT-005", "CANON:FACT-006", "CANON:FACT-007", "CANON:FACT-008",
-                ],
-                "seccion": "§J.1–J.8",
-                "nombre": "CF01 ALDO Cert. Year 2014 · CF02 ALDO Periodo 2012–2017 · CF03 Adidas Punch List 17 · CF04 Adidas Punch List Non-Blocking · CF05 Levi's 270+ POS/6 países · CF06 Aéropostale 21 Direct Reports · CF07 Aéropostale 17 Stores · CF08 L'Oréal Marcas",
-            },
-            {
-                "id": "CANON:UF-001 … UF-003",
-                "lookup_ids": ["CANON:UF-001", "CANON:UF-002", "CANON:UF-003"],
-                "seccion": "§J.9–J.11",
-                "nombre": "UF01 L'Oréal End Date · UF02 Canonical Email · UF03 Certifications Canon",
-            },
+            {"id": "CANON:FACT-001", "seccion": "§J.1", "nombre": "CF01 ALDO Cert. Year 2014"},
+            {"id": "CANON:FACT-002", "seccion": "§J.2", "nombre": "CF02 ALDO Periodo 2012–2017"},
+            {"id": "CANON:FACT-003", "seccion": "§J.3", "nombre": "CF03 Adidas Punch List 17"},
+            {"id": "CANON:FACT-004", "seccion": "§J.4", "nombre": "CF04 Adidas Punch List Non-Blocking"},
+            {"id": "CANON:FACT-005", "seccion": "§J.5", "nombre": "CF05 Levi's 270+ POS/6 países"},
+            {"id": "CANON:FACT-006", "seccion": "§J.6", "nombre": "CF06 Aéropostale 21 Direct Reports"},
+            {"id": "CANON:FACT-007", "seccion": "§J.7", "nombre": "CF07 Aéropostale 17 Stores"},
+            {"id": "CANON:FACT-008", "seccion": "§J.8", "nombre": "CF08 L'Oréal Marcas"},
+            {"id": "CANON:UF-001", "seccion": "§J.9", "nombre": "UF01 L'Oréal End Date"},
+            {"id": "CANON:UF-002", "seccion": "§J.10", "nombre": "UF02 Canonical Email"},
+            {"id": "CANON:UF-003", "seccion": "§J.11", "nombre": "UF03 Certifications Canon"},
             {"id": "CANON:POSITIONING-001", "seccion": "§K", "nombre": "Positioning Modes N1–N4"},
-            {
-                "id": "CANON:POSITIONING-N1 … N4",
-                "lookup_ids": [
-                    "CANON:POSITIONING-N1", "CANON:POSITIONING-N2",
-                    "CANON:POSITIONING-N3", "CANON:POSITIONING-N4",
-                ],
-                "seccion": "§K.1–K.4",
-                "nombre": "N1 Luxury Brand Execution · N2 Store Design & Flagship · N3 Regional Brand Execution & Rollout · N4 Commercial VM & Field Leadership",
-            },
-            {"id": "CANON:OUTPUT-CONTRACT-001", "seccion": "§L", "nombre": "Output Contract"},
-            {"id": "CANON:OUTPUT-CONTRACT-SKELETON-001", "seccion": "§L.1", "nombre": "Golden Skeleton (Reference)"},
-            {"id": "CANON:OUTPUT-CONTRACT-TAGREGISTRY-001", "seccion": "§L.3", "nombre": "Tag Registry (doble ID junto con CANON:TAG-REGISTRY, ver nota)"},
-            {"id": "CANON:FIGMA-TAG-SCHEMA", "seccion": "§L.2", "nombre": "Figma Tag Schema"},
-            {"id": "CANON:POSITIONING-MODE", "seccion": "§L.3.1", "nombre": "Activación por Positioning Mode"},
-            {"id": "CANON:TAG-REGISTRY", "seccion": "§L.3", "nombre": "Tag Registry (doble ID junto con CANON:OUTPUT-CONTRACT-TAGREGISTRY-001, ver nota)"},
+            {"id": "CANON:POSITIONING-N1", "seccion": "§K.1", "nombre": "N1 Luxury Brand Execution"},
+            {"id": "CANON:POSITIONING-N2", "seccion": "§K.2", "nombre": "N2 Store Design & Flagship"},
+            {"id": "CANON:POSITIONING-N3", "seccion": "§K.3", "nombre": "N3 Regional Brand Execution & Rollout"},
+            {"id": "CANON:POSITIONING-N4", "seccion": "§K.4", "nombre": "N4 Commercial VM & Field Leadership"},
+            {"id": "CANON:OUTPUT-CONTRACT", "seccion": "§8", "nombre": "Contrato de entregable"},
+            {"id": "CANON:OUTPUT-CONTRACT-001", "seccion": "§8.1", "nombre": "Golden Skeleton"},
+            {"id": "CANON:OUTPUT-CONTRACT-002", "seccion": "§8.2", "nombre": "Figma Tags"},
+            {"id": "CANON:OUTPUT-CONTRACT-003", "seccion": "§8.3", "nombre": "Tag Registry"},
+            {"id": "CANON:OUTPUT-CONTRACT-004", "seccion": "§8.4", "nombre": "Positioning Modes"},
         ],
     },
     {
@@ -364,10 +346,18 @@ def extract_ids_from_rich_text(rich_text: list) -> list:
     return ids
 
 
-# Patrón canónico de encabezado de sección: "§N — PREFIX:KEY", "§N.M — PREFIX:KEY",
-# admite guión largo (—) o corto (-) como separador, y espacio opcional.
-# Ej: "§22 — KERNEL:DOCUMENTATION-TRANSVERSAL-001", "§2.6 - KERNEL:ARHITECTURE-L4"
-SECTION_HEADING_PREFIX_RE = re.compile(r"^§[\w.]+\s*[—-]\s*")
+# Patrón canónico de encabezado de sección. Admite TRES variantes vigentes:
+#   (1) "§N — PREFIX:KEY" / "§N - PREFIX:KEY"  — formato legacy, guion largo o corto
+#   (2) "§N PREFIX:KEY"                         — formato v9.7.9 (normalización
+#       transversal de heading-ID a "## §N PREFIX:KEY" / "## Título", sin
+#       separador), ver Changelog v9.7.9. Sin esta variante, NINGÚN heading
+#       normalizado bajo el esquema nuevo se detecta como definición — bug
+#       detectado en sesión Cross-Reference Hyperlinks Pt 2 (CANON:OUTPUT-CONTRACT
+#       resolviendo contra una mención de paso en Kernel en vez de su propia
+#       definición en Career Canon, por ausencia total de competidores is_def=True).
+# Ej: "§22 — KERNEL:DOCUMENTATION-TRANSVERSAL-001", "§2.6 - KERNEL:ARHITECTURE-L4",
+#     "§8 CANON:OUTPUT-CONTRACT"
+SECTION_HEADING_PREFIX_RE = re.compile(r"^§[\w.]+\s*(?:[—-]\s*)?")
 
 
 def is_definition_block(plain: str, id_str: str, btype: str) -> bool:
@@ -390,10 +380,52 @@ def is_definition_block(plain: str, id_str: str, btype: str) -> bool:
     return (
         stripped == id_str
         or stripped == f"ID: {id_str}"
-        or f"ID: {id_str}" in plain
-        or (is_heading and plain.lstrip("` ").startswith(id_str))          # nomenclatura (a)
-        or (is_heading and heading_body.startswith(id_str))                # nomenclatura (b)
+        or _contains_id_boundary(plain, f"ID: {id_str}")
+        or (is_heading and _starts_with_id_boundary(plain.lstrip("` "), id_str))  # nomenclatura (a)
+        or (is_heading and _starts_with_id_boundary(heading_body, id_str))        # nomenclatura (b)
     )
+
+
+def _contains_id_boundary(haystack: str, needle: str) -> bool:
+    """
+    Como `needle in haystack`, pero exige que el carácter inmediatamente
+    posterior a la coincidencia no continúe el mismo token de ID.
+
+    Sin esto, "ID: CANON:OUTPUT-CONTRACT-001" contiene como substring literal
+    "ID: CANON:OUTPUT-CONTRACT" — una mención de pasada al ID hijo (retirado
+    en v9.7.9, aún citado narrativamente en Kernel §14) se contaba como
+    definición del ID padre homónimo-por-prefijo, ganándole a la definición
+    real en Career Canon por prioridad de documento. Misma clase de bug que
+    _starts_with_id_boundary, disparada por una rama distinta (esta no exige
+    heading ni posición al inicio del bloque).
+    """
+    idx = haystack.find(needle)
+    if idx == -1:
+        return False
+    end = idx + len(needle)
+    if end >= len(haystack):
+        return True
+    nxt = haystack[end]
+    return not (nxt.isalnum() or nxt in "-_:")
+
+
+def _starts_with_id_boundary(text: str, id_str: str) -> bool:
+    """
+    Como str.startswith(id_str), pero exige que lo que sigue al match no
+    continúe el mismo token de ID (letra, dígito, '-', '_' o ':').
+
+    Sin este boundary, "CANON:OUTPUT-CONTRACT-001".startswith("CANON:OUTPUT-CONTRACT")
+    es True — un heading que menciona el ID hijo se cuenta como definición
+    del ID padre homónimo-por-prefijo. Bug detectado en v9.7.9: el heading
+    de KERNEL:NAMING-CONVENTION que referencia el ID retirado
+    CANON:OUTPUT-CONTRACT-001 "ganaba" como definición de CANON:OUTPUT-CONTRACT
+    sobre la definición real en Career Canon, porque Kernel tiene mayor
+    DOC_PRIORITY. Ver Changelog / sesión Cross-Reference Hyperlinks Pt 2.
+    """
+    if not text.startswith(id_str):
+        return False
+    rest = text[len(id_str):]
+    return rest == "" or not (rest[0].isalnum() or rest[0] in "-_:")
 
 
 def extract_ids_from_block(block: dict) -> list:

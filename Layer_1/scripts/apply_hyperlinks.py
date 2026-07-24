@@ -6,7 +6,7 @@ Convierte referencias cruzadas en prosa plana (ej. "Consultar KERNEL:GATE-DECISI
 a hipervínculos Markdown accionables (ej. "Consultar [KERNEL:GATE-DECISION](https://...)")
 en los documentos fundacionales de VANTAGE, usando el mapeo ID -> URL de bloque
 extraído directamente del ID CENSUS vivo en Notion (394938be-fc42-81e6-a381-e3869e60d89d),
-sesión 2026-07-20.
+sesión 2026-07-24.
 
 NO requiere red ni MCP: opera 100% sobre filesystem local, igual que
 generate_id_inventory.py. Reutiliza la misma lógica de detección DEF/REF para
@@ -35,18 +35,10 @@ IDs excluidos de auto-enlace (EXCLUDE_IDS) y por qué:
     - CANON:ARCHIVO-VANTAGE: referencia externa a una DB de Notion sin
       equivalente .md -- nunca tendrá un anchor de bloque válido en el
       universo de documentos escaneados.
-    - CANON:POSITIONING-N1..N4: el Census colapsa las 4 en un solo anchor
-      compartido, y ese anchor apunta al Page ID del MANUAL, no al del
-      Career Canon (bug confirmado, pendiente de que el operador corra
-      `vcensus` para regenerar block IDs individuales). Enlazarlos ahora
-      insertaría 4 links idénticos apuntando al documento equivocado.
-    - CANON:EXPERIENCE-C01..C05, CANON:KPI-001..008, CANON:FACT-001..008,
-      CANON:UF-001..003: mismo patrón estructural que POSITIONING-N1..N4 --
-      el Census los colapsa en una sola fila con un solo anchor compartido,
-      aunque cada uno tiene su propio heading real en Career Canon.md. Se
-      excluyen por la misma razón: un link compartido sería técnicamente
-      enlazable pero indistinguible entre hermanos, y no es lo que pidió
-      el operador. Quedan pendientes de la misma corrida de `vcensus`.
+    - NOTA: CANON:POSITIONING-N1..N4, CANON:EXPERIENCE-C01..C05, CANON:KPI-001..008,
+      CANON:FACT-001..008, CANON:UF-001..003 previamente estaban excluidos por
+      estar agrupados en el census. Tras desagrupar en generate_census.py (v9.7.9+),
+      ahora tienen anchors individuales y están activos en MAPPING.
 
 DEF vs REF (idéntico a generate_id_inventory.py, para no auto-enlazar un
 heading a sí mismo):
@@ -182,12 +174,41 @@ MAPPING = {
     "CANON:KPIS-001": f"{CANON_PAGE}#39a938befc42810ba9a1f0febedc739d",
     "CANON:FACTS-001": f"{CANON_PAGE}#39a938befc4281f49ca3f45975cfe4c7",
     "CANON:POSITIONING-001": f"{CANON_PAGE}#39a938befc42811ba92acf1dc1467702",
-    "CANON:OUTPUT-CONTRACT-001": f"{CANON_PAGE}#39a938befc42818190e0fbc29f4f8c5c",
-    "CANON:OUTPUT-CONTRACT-SKELETON-001": f"{CANON_PAGE}#39a938befc428110a5effba7515cd721",
-    "CANON:OUTPUT-CONTRACT-TAGREGISTRY-001": f"{CANON_PAGE}#39a938befc42813d8f74c1e850590dab",
-    "CANON:FIGMA-TAG-SCHEMA": f"{CANON_PAGE}#39a938befc42817f90ace83dd96245a9",
-    "CANON:POSITIONING-MODE": f"{CANON_PAGE}#39a938befc428128b20dc6192e8b8757",
-    "CANON:TAG-REGISTRY": f"{CANON_PAGE}#39a938befc4281dbac5ae5ae1adf1e90",
+    "CANON:OUTPUT-CONTRACT": f"{CANON_PAGE}#53a2d31605f84299a99118add45e2af7",
+    "CANON:OUTPUT-CONTRACT-001": f"{CANON_PAGE}#39a938befc428110a5effba7515cd721",
+    "CANON:OUTPUT-CONTRACT-002": f"{CANON_PAGE}#39a938befc42817f90ace83dd96245a9",
+    "CANON:OUTPUT-CONTRACT-003": f"{CANON_PAGE}#39a938befc4281dbac5ae5ae1adf1e90",
+    "CANON:OUTPUT-CONTRACT-004": f"{CANON_PAGE}#39a938befc428128b20dc6192e8b8757",
+    # --- Individual IDs (previously grouped) ---
+    "CANON:EXPERIENCE-C01": f"{CANON_PAGE}#39a938befc4281889f7dc00f42b0302e",
+    "CANON:EXPERIENCE-C02": f"{CANON_PAGE}#39a938befc42812d9187c6abcaf3a055",
+    "CANON:EXPERIENCE-C03": f"{CANON_PAGE}#39a938befc4281fcba33c04d786f23a3",
+    "CANON:EXPERIENCE-C04": f"{CANON_PAGE}#39a938befc4281399448deae8e03feb5",
+    "CANON:EXPERIENCE-C05": f"{CANON_PAGE}#39a938befc428101b9ddc74fb51e9670",
+    "CANON:KPI-001": f"{CANON_PAGE}#39a938befc428165b116c5ab225704d3",
+    "CANON:KPI-002": f"{CANON_PAGE}#39a938befc4281cc825bcc7ffc944861",
+    "CANON:KPI-003": f"{CANON_PAGE}#39a938befc42813d9182d8fbf4f7ac9c",
+    "CANON:KPI-004": f"{CANON_PAGE}#d4df9b4fce484b35851e89379b6cc894",
+    "CANON:KPI-005": f"{CANON_PAGE}#39a938befc42813fae1bf4d652b4e383",
+    "CANON:KPI-006": f"{CANON_PAGE}#39a938befc4281e6b3d3d54cc2c2d897",
+    "CANON:KPI-007": f"{CANON_PAGE}#39a938befc4281c0a644ed06936cfa65",
+    "CANON:KPI-008": f"{CANON_PAGE}#39a938befc4281ccbd9fea7f671a13d5",
+    "CANON:FACT-001": f"{CANON_PAGE}#39a938befc428176b5b4ffc5eb62a1c2",
+    "CANON:FACT-002": f"{CANON_PAGE}#39a938befc4281dfaf84f85ecf2fadcd",
+    "CANON:FACT-003": f"{CANON_PAGE}#39a938befc42814b8fe5f13720f74a47",
+    "CANON:FACT-004": f"{CANON_PAGE}#39a938befc428154845ae643f7ac5c13",
+    "CANON:FACT-005": f"{CANON_PAGE}#39a938befc4281ca90e1d03e6762a5ac",
+    "CANON:FACT-006": f"{CANON_PAGE}#39a938befc4281b2b404da20a44a09f0",
+    "CANON:FACT-007": f"{CANON_PAGE}#39a938befc4281628a9efef46fa846c7",
+    "CANON:FACT-008": f"{CANON_PAGE}#39a938befc4281808eefd25dfebc5329",
+    "CANON:UF-001": f"{CANON_PAGE}#39a938befc4281368c51f280d549e751",
+    "CANON:UF-002": f"{CANON_PAGE}#39a938befc428105a250f82d9c348a9a",
+    "CANON:UF-003": f"{CANON_PAGE}#39a938befc42810cbb59cbecda3daa92",
+    # POSITIONING-N1..N4 point to MANUAL (not CANON) per census resolution
+    "CANON:POSITIONING-N1": f"{MANUAL_PAGE}#f641c03c1b344851aeb05e53c34e9566",
+    "CANON:POSITIONING-N2": f"{MANUAL_PAGE}#466fcef7c2434407974361739b90ae56",
+    "CANON:POSITIONING-N3": f"{MANUAL_PAGE}#23630f08c3f44b0891d10f6f84cae51d",
+    "CANON:POSITIONING-N4": f"{MANUAL_PAGE}#eb73641cd7174593925b6b035852ca16",
 }
 
 # IDs con doble DEF real (Kernel + System Prompt "referencia"): el link
@@ -206,13 +227,6 @@ EXCLUDE_IDS = {
     "CANON:ARCHIVO-VANTAGE",
     "CANON:POSITIONING-N1", "CANON:POSITIONING-N2",
     "CANON:POSITIONING-N3", "CANON:POSITIONING-N4",
-    "CANON:EXPERIENCE-C01", "CANON:EXPERIENCE-C02", "CANON:EXPERIENCE-C03",
-    "CANON:EXPERIENCE-C04", "CANON:EXPERIENCE-C05",
-    "CANON:KPI-001", "CANON:KPI-002", "CANON:KPI-003", "CANON:KPI-004",
-    "CANON:KPI-005", "CANON:KPI-006", "CANON:KPI-007", "CANON:KPI-008",
-    "CANON:FACT-001", "CANON:FACT-002", "CANON:FACT-003", "CANON:FACT-004",
-    "CANON:FACT-005", "CANON:FACT-006", "CANON:FACT-007", "CANON:FACT-008",
-    "CANON:UF-001", "CANON:UF-002", "CANON:UF-003",
 }
 
 TARGET_FILES = {"Kernel.md", "Manual.md", "System Prompt.md", "Career Canon.md"}
