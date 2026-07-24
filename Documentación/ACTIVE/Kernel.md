@@ -7,7 +7,6 @@
 </callout>
 ---
 ## TABLE OF CONTENTS
-```plain text
 ─── I. FUNDAMENTO
   §1   KERNEL:PURPOSE
   §2   KERNEL:FAIL-PHILOSOPHY
@@ -52,7 +51,6 @@
   §15  KERNEL:SCOPE / KERNEL:ROUTING
   §16  KERNEL:DATA-FLOW
   §17  KERNEL:EVOLUTION
-```
 ---
 # I. FUNDAMENTO
 ## §1 — KERNEL:PURPOSE
@@ -72,7 +70,7 @@ Qué Hace el Sistema Cuando Falla: no intenta reparar outputs. No sugiere workar
 Excepción — Gate = BLOCKED recuperable vía RT-1: el AI informa la opción pero no la ejecuta sin instrucción explícita.
 ---
 ## §3 — KERNEL:DOCUMENTATION (L0)
-Acceso y Manejo de Información (ReadOnly)
+Acceso y Manejo de Información 
 ### §3.1 — KERNEL:DOCUMENTATION-001
 ### Canonical Document ID Contract
 Invariantes del Contrato

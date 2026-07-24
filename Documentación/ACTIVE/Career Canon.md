@@ -192,6 +192,14 @@ Cuando un JD activa criterios de dos o más Positioning Modes simultáneamente, 
 El Positioning Mode seleccionado se declara explícitamente en el HANDOFF. No se mezclan bullets de dos modos en un mismo CV-B.
 ---
 ## CANON:OUTPUT-CONTRACT-001 — L. OUTPUT CONTRACT
+
+⬇️
+
+§N CANON:OUTPUT-CONTRACT 
+Contrato de entregable
+
+---
+---
 ### FIGMA SYNC PROTOCOL (STRICT)
 1. IMMUTABILITY OF IDs: Los ###### figma_text_id son llaves primarias. Está terminantemente prohibido alterararlas, omitirlas o inventar nuevas.
 1. SLOT INTEGRITY: No se permiten fusiones ni divisiones de bloques. Si el Skeleton tiene 4 bullets para una experiencia, el output DEBE tener 4 bloques, incluso si uno queda vacío.
@@ -228,6 +236,11 @@ LinkedIn | Portafolio
 > Formato base obligatorio para todos los Derived Outputs generados desde el Career Canon. Aplica ES + EN.
 > SSOT de IDs de nodos: registry_seed.json en 04-Vantage_CV/Figma Sync/ es la fuente única de verdad para los IDs numéricos de nodo Figma. Si hay discrepancia entre un figma_text_id en un output CV-B y el registry, el registry gana. Ante cualquier cambio en la estructura del lienzo Figma, actualizar registry_seed.json antes de generar nuevos CV-B.
 ## Tag Registry · ID: CANON:TAG-REGISTRY
+
+⬇️
+
+§CANON:TAG-REGISTRY
+Registro de Figma Tags
 CANON:OUTPUT-CONTRACT-TAGREGISTRY-001
 ### Formato de Entrega Obligatorio
 Cada Derived Output generado bajo este contrato requiere dos outputs:

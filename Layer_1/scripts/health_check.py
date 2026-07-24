@@ -32,6 +32,7 @@ DOCS_FUNDACIONALES = {
     "V-KERNEL": ("377938be-fc42-805e-a408-c9ae518d4fe7", "Kernel.md"),
     "V-MANUAL": ("372938be-fc42-8050-9a67-e40857d7806e", "Manual.md"),
     "V-CAREER-CANON":  ("377938be-fc42-8089-93f2-f52dbd2dec6c", "Career Canon.md"),
+    "V-BRIEF":         ("3a3938be-fc42-8008-9e90-ec435c01f50d", "Brief.md"),
 }
 
 ACTIVE_DIR = Path(__file__).resolve().parent.parent.parent / "Documentación" / "ACTIVE"

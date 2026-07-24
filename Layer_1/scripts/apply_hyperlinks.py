@@ -223,6 +223,18 @@ ID_PATTERN = re.compile(r'\b([A-Z][A-Z0-9_]*:[A-Z0-9][A-Z0-9-]*)\b')
 STANDALONE_ID_LINE_RE = re.compile(r'^\s*`?([A-Z][A-Z0-9_]*:[A-Z0-9][A-Z0-9-]*)`?\s*$')
 HEADING_RE = re.compile(r'^(?:>\s*)*(#{1,6})\s*(.+?)\s*$')
 
+# Guardrail (bug confirmado sesión 2026-07-23): un TOC u otro bloque de
+# referencia puede vivir dentro de un fenced code block (```...```). Los
+# links Markdown NUNCA renderizan dentro de un fence -- Notion (y cualquier
+# renderer) los muestra tal cual, como texto plano con corchetes y
+# paréntesis literales. convert_line() antes solo excluía headings
+# (HEADING_RE), sin ningún chequeo de "¿estoy dentro de un fence?", así que
+# terminaba insertando ruido visual activo en vez de fallar silenciosamente.
+# FENCE_RE detecta la línea delimitadora (``` o ```lang, con indentación
+# opcional); el toggle de estado vive en process_file(), no aquí -- esta
+# función NUNCA re-analiza fences ya vistos, solo reconoce la línea actual.
+FENCE_RE = re.compile(r'^\s*```')
+
 
 def line_is_standalone_id(line: str):
     m = STANDALONE_ID_LINE_RE.match(line)
@@ -331,7 +343,21 @@ def process_file(path: Path):
     lines = original.splitlines(keepends=True)
     new_lines = []
     total_changes = []
+    in_fence = False
     for line in lines:
+        if FENCE_RE.match(line):
+            # Línea delimitadora del fence (apertura o cierre): nunca se
+            # convierte, y alterna el estado para las líneas siguientes.
+            new_lines.append(line)
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            # Dentro de un fenced code block: pasar sin tocar. Un TOC o
+            # cualquier otro contenido aquí es, por definición, texto
+            # plano no-navegable -- enlazarlo produciría corchetes y
+            # paréntesis literales en vez de un link real.
+            new_lines.append(line)
+            continue
         new_line, changes = convert_line(line)
         new_lines.append(new_line)
         total_changes.extend(changes)

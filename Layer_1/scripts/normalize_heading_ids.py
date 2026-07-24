@@ -10,6 +10,7 @@ por el sistema:
 
     (a) Heading = ID puro                    ej. "### KERNEL:ARCHITECTURE-L0"
     (b) Heading = "§N — ID"  (sección top)    ej. "## §22 — KERNEL:DOC-CONTRACT"
+    (c) Subsecciones jerárquicas             ej. "### §3.1 — DOCUMENTATION-001 - Contract"
 
 Cualquier otra forma (ID a mitad de frase, "Sección 22: KERNEL:X", ID sin
 el separador correcto, doble prefijo, etc.) se reporta como "mal formado".
@@ -80,8 +81,8 @@ DOCUMENTS = {
 # (ver falso positivo confirmado en la corrida 2026-07-16 19:07).
 SKIP_DOCS_FOR_HEADING_AUDIT = {"Change Log"}
 
-# Patrón canónico "§N — ID" / "§N.M — ID" (em dash o guión corto, espacios flexibles)
-SECTION_HEADING_PREFIX_RE = re.compile(r"^§[\w.]+\s*[—-]\s*")
+# Patrón canónico "§N — ID" / "§N.M — ID" (em dash o guión corto, espacios flexibles con soporte estricto a subsecciones decimales)
+SECTION_HEADING_PREFIX_RE = re.compile(r"^§[\d.]+\s*[—-]\s*")
 
 # Un ID válido: uno de los prefijos + clave en mayúsculas/números/guiones
 ID_TOKEN_RE = re.compile(
@@ -151,14 +152,11 @@ def classify_heading(plain: str, id_str: str) -> str:
     IMPORTANTE: esta clasificación debe reflejar EXACTAMENTE las mismas
     nomenclaturas que generate_census.py acepta en is_definition_block —
     de lo contrario este script reporta como "mal formado" texto que el
-    census ya reconoce perfectamente, generando falsos positivos (ver
-    corrida 2026-07-16 19:07, donde patrones "ID: X" y "N. Título · ID: X"
-    salieron marcados como error sin serlo).
+    census ya reconoce perfectamente, generando falsos positivos.
     """
     stripped = plain.strip("` \n")
 
     # Nomenclatura (c): "... ID: PREFIX:KEY" en cualquier parte del heading
-    # (usado en System Prompt, Manual y parte de Career Canon).
     if f"ID: {id_str}" in plain or stripped == f"ID: {id_str}":
         return "ok_id_label"
 
@@ -166,7 +164,7 @@ def classify_heading(plain: str, id_str: str) -> str:
     if stripped == id_str:
         return "ok_bare"
 
-    # Nomenclatura (b): "§N — ID" al inicio del heading.
+    # Nomenclatura (b): "§N — ID" o "§N.M — ID" al inicio del heading.
     heading_body = SECTION_HEADING_PREFIX_RE.sub("", stripped)
     if heading_body == id_str or heading_body.startswith(id_str):
         return "ok_sectioned"
@@ -177,13 +175,13 @@ def classify_heading(plain: str, id_str: str) -> str:
 def suggest_fix(plain: str, id_str: str) -> str:
     """
     Propone una reescritura canónica mínima: conserva cualquier número de
-    sección detectado (si lo hay) y cualquier texto descriptivo que venga
-    DESPUÉS del ID, pero garantiza el orden "§N — ID — resto".
+    sección detectado (incluyendo subsecciones decimales) y cualquier texto descriptivo
+    que venga DESPUÉS del ID, pero garantiza el orden "§N — ID — resto".
     Si no se detecta número de sección, propone el heading como ID puro.
     """
     stripped = plain.strip("` \n")
 
-    section_match = re.match(r"^(§[\w.]+)", stripped)
+    section_match = re.match(r"^(§[\d.]+)", stripped)
     # Texto restante quitando cualquier ocurrencia del ID y del número de sección
     remainder = stripped
     if section_match:
@@ -293,7 +291,7 @@ def main():
     parser.add_argument("--yes", action="store_true", help="Omite el prompt de confirmación con --apply.")
     args = parser.parse_args()
 
-    print("\nNormalize Heading IDs — Auditoría v1.0")
+    print("\nNormalize Heading IDs — Auditoría v1.1 (Jerárquica)")
     print(f"Modo: {'APLICAR CAMBIOS' if args.apply else 'SOLO LECTURA (dry-run)'}")
     print("=" * 60)
 
