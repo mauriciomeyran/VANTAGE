@@ -39,7 +39,7 @@ VGIT  = PROJECT / "Layer_4/scripts/git_sync.py"
 # genera vía generate-census y se sube directo a Notion; no tiene contraparte
 # en ACTIVE/ ni tiene sentido respaldarlo por este flujo.
 DOCS = {"kernel", "system_prompt", "career_canon", "manual", "aliases", "change_log", "Navigation_Brief", "VANTAGE"}
-DIRECTIONS = {"notion", "local", "auto"}
+DIRECTIONS = {"notion", "auto"}
 
 def run(cmd, label=""):
     print(f"\n── {label} ──")
@@ -95,8 +95,7 @@ def main():
     forced = direction in ("notion", "local")
 
     # Confirmación obligatoria para dirección forzada (notion/local explícitos)
-    # EXCEPCIÓN TEMPORAL: dirección local no requiere confirmación (push de hipervínculos)
-    if forced and direction != "local":
+    if forced:
         preview_args = vsync_args + ["--dry-run"]
         run(preview_args, "vsync_doc (preview — dirección forzada)")
         print("\n⚠️  Esta operación sobreescribe sin comparar fecha de modificación.")
