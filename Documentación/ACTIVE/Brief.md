@@ -1,7 +1,7 @@
 # V | DOCUMENT NAVIGATION BRIEF 
 
-## ID:BRIEF:001
-# 1. Propósito y Alcance
+## §1 BRIEF:001
+## Propósito y Alcance
 ## Propósito
 Este documento define el contrato oficial de navegación documental de VANTAGE.
 Su función es determinar qué documento constituye la Fuente Única de Verdad (SSOT) para cada tipo de conocimiento y establecer la ruta mínima necesaria para recuperar información de forma consistente.
@@ -22,8 +22,8 @@ Este documento no:
 - mantiene el inventario de IDs (ID Census);
 - registra historial de cambios (Change Log).
 ---
-## ID: BRIEF:002
-# 2. Document Authority Matrix
+## §2 BRIEF:002
+## Document Authority Matrix
 
 Esta matriz define el documento autorizado para cada dominio del sistema.
 | Necesidad | Documento SSOT | Rol |
@@ -39,8 +39,8 @@ Esta matriz define el documento autorizado para cada dominio del sistema.
 | Historial | Change Log | Auditoría |
 | Esquemas | Tracker Schema | Modelo de datos |
 ---
-## ID: BRIEF:003
-# 3. Ecosistema Documental
+## §3 BRIEF:003
+## Ecosistema Documental
 Cada documento tiene una única responsabilidad.
 | Documento | Responsabilidad |
 | --- | --- |
@@ -55,8 +55,8 @@ Cada documento tiene una única responsabilidad.
 | Aliases | Normaliza terminología |
 Ningún documento debe duplicar la responsabilidad de otro.
 ---
-## ID: BRIEF:004
-# 4. Navigation Contracts
+## §4 BRIEF:004
+## Navigation Contracts
 ## Consulta Arquitectónica
 Destino: Kernel
 Se utiliza para:
@@ -110,8 +110,8 @@ Se utiliza para:
 - reconstruir decisiones
 - auditoría
 ---
-## ID: BRIEF:005
-# 5. Domain Architecture
+## §5 BRIEF:005
+## Domain Architecture
 ## Housekeeping
 Responsabilidad
 Mantener la integridad documental y eliminar drift.
@@ -163,8 +163,8 @@ Incluye:
 - Handoff
 - Export
 ---
-## ID: BRIEF:006
-# 6. Verification Depth Contract
+## §6 BRIEF:006
+## Verification Depth Contract
 Toda modificación debe respetar el nivel mínimo de validación requerido.
 | Nivel | Alcance |
 | --- | --- |
@@ -175,8 +175,8 @@ Toda modificación debe respetar el nivel mínimo de validación requerido.
 | L4 | Validación integral del sistema |
 Cada operación debe utilizar el menor nivel posible compatible con su riesgo.
 ---
-## ID: BRIEF:007
-# 7. Cross-Document Dependencies
+## §7 BRIEF:007
+## Cross-Document Dependencies
 La siguiente matriz define las dependencias estructurales entre los documentos fundacionales.
 Una dependencia indica que un cambio en el documento de origen puede afectar la consistencia de uno o más documentos relacionados y requiere una evaluación explícita antes de cerrar la operación.
 | Cambio en | Evaluar | Acción mínima requerida |
@@ -214,8 +214,8 @@ El registro deberá incluir, como mínimo:
 Una modificación estructural no podrá considerarse cerrada hasta que se cumplan todas las acciones derivadas de su evaluación de impacto.
 Si alguna dependencia permanece pendiente de validación, la operación conservará el estado Pending Validation y no deberá marcarse como completamente sincronizada.
 ---
-## ID: BRIEF:008
-# 8. Maintenance Contract
+## §8 BRIEF:008
+## Maintenance Contract
 Toda modificación estructural debe responder afirmativamente las siguientes preguntas antes de aprobarse.
 ## Autoridad
 - ¿Cuál es el SSOT del cambio?
@@ -231,8 +231,8 @@ Toda modificación estructural debe responder afirmativamente las siguientes pre
 ## Navegación
 - ¿Debe actualizarse este Navigation Brief?
 ---
-## ID: BRIEF:009
-# 9. Navigation Decision Tree
+## §9 BRIEF:009
+## Navigation Decision Tree
 ```plain text
 Solicitud
 
@@ -265,8 +265,8 @@ Clasificar tipo de conocimiento
 Responder
 ```
 ---
-## ID: BRIEF:010
-# 10. Principios de Navegación
+## §10 BRIEF:010
+## Principios de Navegación
 1. Existe una única Fuente de Verdad para cada tipo de conocimiento.
 1. La navegación siempre precede a la recuperación de contenido.
 1. Se consulta el documento con menor alcance que pueda responder correctamente la solicitud.
@@ -275,8 +275,8 @@ Responder
 1. El Kernel gobierna contratos; el Manual gobierna procedimientos.
 1. El Navigation Brief gobierna exclusivamente la navegación entre documentos.
 ---
-## ID: BRIEF:011
-# 11. Resultado Esperado
+## §11 BRIEF:011
+## Resultado Esperado
 Al finalizar la lectura de este documento, cualquier operador o sistema de IA debe ser capaz de:
 - identificar la fuente de verdad correcta para cualquier consulta;
 - navegar el ecosistema documental sin ambigüedad;

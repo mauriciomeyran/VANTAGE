@@ -432,7 +432,7 @@ Reglas de normalización: espacios → guión bajo; sin acentos ni caracteres es
 Ejemplo: "Gucci — VM Coordinator, LATAM (2026)" → 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM
 Aplica a: CV-B (.md), export QA (.pdf), archivo Figma (.fig) y cualquier output futuro de una vacante específica. El stem se fija al generar el primer entregable y se reutiliza sin variación.
 No aplica a: DRY RUN archivado, artefactos de sistema (logs, backups, entity_index).
-Relación con CANON:OUTPUT-CONTRACT-001: contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
+Relación con CANON:OUTPUT-CONTRACT: contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
 ---
 ---
 # IV. INFRAESTRUCTURA DE CONTEXTO

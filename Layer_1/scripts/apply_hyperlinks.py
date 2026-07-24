@@ -35,10 +35,11 @@ IDs excluidos de auto-enlace (EXCLUDE_IDS) y por qué:
     - CANON:ARCHIVO-VANTAGE: referencia externa a una DB de Notion sin
       equivalente .md -- nunca tendrá un anchor de bloque válido en el
       universo de documentos escaneados.
-    - NOTA: CANON:POSITIONING-N1..N4, CANON:EXPERIENCE-C01..C05, CANON:KPI-001..008,
-      CANON:FACT-001..008, CANON:UF-001..003 previamente estaban excluidos por
-      estar agrupados en el census. Tras desagrupar en generate_census.py (v9.7.9+),
-      ahora tienen anchors individuales y están activos en MAPPING.
+    - NOTA: CANON:EXPERIENCE-C01..C05, CANON:KPI-001..008,
+      CANON:FACT-001..008, CANON:UF-001..003 están excluidos por
+      estar agrupados en el census (no tienen anchors individuales).
+      CANON:POSITIONING-N1..N4 tienen anchors individuales y están activos en MAPPING
+      (corregidos para apuntar a Career Canon, no Manual).
 
 DEF vs REF (idéntico a generate_id_inventory.py, para no auto-enlazar un
 heading a sí mismo):
@@ -204,11 +205,11 @@ MAPPING = {
     "CANON:UF-001": f"{CANON_PAGE}#39a938befc4281368c51f280d549e751",
     "CANON:UF-002": f"{CANON_PAGE}#39a938befc428105a250f82d9c348a9a",
     "CANON:UF-003": f"{CANON_PAGE}#39a938befc42810cbb59cbecda3daa92",
-    # POSITIONING-N1..N4 point to MANUAL (not CANON) per census resolution
-    "CANON:POSITIONING-N1": f"{MANUAL_PAGE}#f641c03c1b344851aeb05e53c34e9566",
-    "CANON:POSITIONING-N2": f"{MANUAL_PAGE}#466fcef7c2434407974361739b90ae56",
-    "CANON:POSITIONING-N3": f"{MANUAL_PAGE}#23630f08c3f44b0891d10f6f84cae51d",
-    "CANON:POSITIONING-N4": f"{MANUAL_PAGE}#eb73641cd7174593925b6b035852ca16",
+    # POSITIONING-N1..N4 point to Career Canon (corrected from Manual)
+    "CANON:POSITIONING-N1": f"{CANON_PAGE}#39a938befc4281b39765c122a5d6378d",
+    "CANON:POSITIONING-N2": f"{CANON_PAGE}#39a938befc4281049bb9ea0791d90b0e",
+    "CANON:POSITIONING-N3": f"{CANON_PAGE}#39a938befc42819d9a64db7ddab1e776",
+    "CANON:POSITIONING-N4": f"{CANON_PAGE}#39a938befc428110b8f1cb5aa81bb921",
 }
 
 # IDs con doble DEF real (Kernel + System Prompt "referencia"): el link
@@ -225,8 +226,15 @@ EXCLUDE_IDS = {
     "KERNEL:BOOTSTRAP-001",
     "KERNEL:PATCH-QUALITY-001",
     "CANON:ARCHIVO-VANTAGE",
-    "CANON:POSITIONING-N1", "CANON:POSITIONING-N2",
-    "CANON:POSITIONING-N3", "CANON:POSITIONING-N4",
+    # Grouped IDs without individual anchors (from census)
+    "CANON:EXPERIENCE-C01", "CANON:EXPERIENCE-C02", "CANON:EXPERIENCE-C03",
+    "CANON:EXPERIENCE-C04", "CANON:EXPERIENCE-C05",
+    "CANON:KPI-001", "CANON:KPI-002", "CANON:KPI-003", "CANON:KPI-004",
+    "CANON:KPI-005", "CANON:KPI-006", "CANON:KPI-007", "CANON:KPI-008",
+    "CANON:FACT-001", "CANON:FACT-002", "CANON:FACT-003", "CANON:FACT-004",
+    "CANON:FACT-005", "CANON:FACT-006", "CANON:FACT-007", "CANON:FACT-008",
+    "CANON:UF-001", "CANON:UF-002", "CANON:UF-003",
+    # NOTE: CANON:POSITIONING-N1..N4 are NOW active in MAPPING with correct Career Canon anchors
 }
 
 TARGET_FILES = {"Kernel.md", "Manual.md", "System Prompt.md", "Career Canon.md"}
