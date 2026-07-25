@@ -218,6 +218,18 @@ CENSUS_SPEC = [
         ],
     },
     {
+        "name": "ALIASES",
+        "rows": [
+            {"id": "ALIASES:SESSION-CYCLE", "seccion": "§1", "nombre": "Session Cycle"},
+            {"id": "ALIASES:L0-RUNTIME", "seccion": "§2", "nombre": "L0 · VANTAGE Runtime"},
+            {"id": "ALIASES:L1L2-DISCOVERY", "seccion": "§3", "nombre": "L1/L2 · Discovery (Lunes)"},
+            {"id": "ALIASES:L3-PASSIVE-INTAKE", "seccion": "§4", "nombre": "L3 · Passive Intake"},
+            {"id": "ALIASES:L4-VERSION-CONTROL", "seccion": "§5", "nombre": "L4 · Version Control & Documentación"},
+            {"id": "ALIASES:DASHBOARD", "seccion": "§6", "nombre": "Dashboard (Martes — Recuperación)"},
+            {"id": "ALIASES:CV-PIPELINE", "seccion": "§7", "nombre": "CV Pipeline (Miércoles)"},
+        ],
+    },
+    {
         "name": "NAVIGATION BRIEF",
         "rows": [
             {"id": "BRIEF:001", "seccion": "§0", "nombre": "Propósito y Alcance"},
@@ -359,6 +371,49 @@ def extract_ids_from_rich_text(rich_text: list) -> list:
 #     "§8 CANON:OUTPUT-CONTRACT"
 SECTION_HEADING_PREFIX_RE = re.compile(r"^§[\w.]+\s*(?:[—-]\s*)?")
 
+# Misma forma que SECTION_HEADING_PREFIX_RE, pero con grupo de captura —
+# se usa para EXTRAER el número/letra de sección real ("§9.9", "§K.1",
+# "§L.3") desde el heading, en vez de solo detectar y descartar el prefijo.
+# Esta es la fuente de verdad dinámica que reemplaza el campo "seccion"
+# hardcodeado en CENSUS_SPEC (ver BUG — CENSUS_SPEC hardcodeado, sesión
+# Cross-Reference Hyperlinks Pt 2, 2026-07-24): CENSUS_SPEC es una lista
+# Python escrita a mano que nunca se recalcula contra los headers reales
+# del documento, así que un reordenamiento de secciones (ej. Manual
+# insertando §5 Arranque Frío / §6 Ciclo de Sesión) o una renumeración
+# (ej. Career Canon Output Contract de §L a §8) produce drift silencioso
+# que persiste idéntico entre corridas — no es inestabilidad de red.
+SECTION_HEADING_CAPTURE_RE = re.compile(r"^§([\w.]+)\s*(?:[—-]\s*)?")
+
+# Segunda convención vigente, propia del Manual: el heading no usa "§" en
+# absoluto, arranca directo con el número/subnúmero plano seguido de punto
+# y/o espacio — ej. "1. OBJETIVO DE VANTAGE · ID: MANUAL:OBJETIVO-001" o
+# "8.2 MARTES — ... · ID: MANUAL:DASHBOARD-001". Sin esta segunda forma,
+# TODO el Manual caía al fallback hardcodeado de CENSUS_SPEC en cada
+# corrida — no porque el Manual no tenga sección en vivo, sino porque su
+# convención de heading es distinta a la del Kernel (detectado al revisar
+# el primer reporte de "IDs con Sección hardcodeada" tras el fix inicial,
+# 2026-07-24: los 48 flagged eran casi en su totalidad filas de MANUAL).
+LEADING_NUMBER_SECTION_RE = re.compile(r"^(\d+(?:\.\d+)*)\.?\s+")
+
+
+def extract_live_section(plain: str) -> str | None:
+    """
+    Extrae la sección real ("§9.9", "§K.1", "§8.2") del texto crudo de un
+    heading de definición, soportando las DOS convenciones vigentes:
+      (1) "§N — ID" / "§N ID"           (Kernel, Career Canon, Brief)
+      (2) "N. Título ... ID: MANUAL:X"  (Manual — número plano sin "§")
+    Devuelve None si ninguna de las dos convenciones aplica (ej. heading
+    = ID puro sin ningún prefijo numérico, como "### KERNEL:TRIGGER-001").
+    """
+    stripped = plain.strip("` \n")
+    m = SECTION_HEADING_CAPTURE_RE.match(stripped)
+    if m:
+        return f"§{m.group(1)}"
+    m2 = LEADING_NUMBER_SECTION_RE.match(stripped)
+    if m2:
+        return f"§{m2.group(1)}"
+    return None
+
 
 def is_definition_block(plain: str, id_str: str, btype: str) -> bool:
     """
@@ -430,8 +485,16 @@ def _starts_with_id_boundary(text: str, id_str: str) -> bool:
 
 def extract_ids_from_block(block: dict) -> list:
     """
-    Devuelve lista de (id_str, is_definition) para cada ID encontrado en el bloque.
-    Cubre: headings, párrafos, listas, callouts, quotes, toggles, code, table_row.
+    Devuelve lista de (id_str, is_definition, seccion) para cada ID
+    encontrado en el bloque. Cubre: headings, párrafos, listas, callouts,
+    quotes, toggles, code, table_row.
+
+    `seccion` es la sección real detectada en vivo desde el propio texto
+    del heading (ej. "§9.9"), o None si el bloque no es un heading con
+    prefijo "§N" — en cuyo caso el caller debe usar el fallback hardcodeado
+    de CENSUS_SPEC. Solo los headings de definición pueden aportar una
+    sección en vivo; menciones de pasada, tablas y bloques de código nunca
+    la aportan (no tiene sentido leer "sección" de una celda de tabla).
     """
     btype = block["type"]
     found = []
@@ -441,12 +504,15 @@ def extract_ids_from_block(block: dict) -> list:
         "callout", "quote", "toggle",
         "heading_1", "heading_2", "heading_3",
     }
+    is_heading_type = btype in {"heading_1", "heading_2", "heading_3"}
 
     if btype in text_types:
         rich_text = block[btype].get("rich_text", [])
         plain = "".join(s.get("plain_text", "") for s in rich_text).strip()
         for id_str in extract_ids_from_rich_text(rich_text):
-            found.append((id_str, is_definition_block(plain, id_str, btype)))
+            is_def = is_definition_block(plain, id_str, btype)
+            seccion = extract_live_section(plain) if (is_def and is_heading_type) else None
+            found.append((id_str, is_def, seccion))
 
     elif btype == "code":
         rich_text = block["code"].get("rich_text", [])
@@ -454,7 +520,7 @@ def extract_ids_from_block(block: dict) -> list:
         for line in plain.splitlines():
             for id_str in extract_ids_from_rich_text([{"plain_text": line}]):
                 is_def = line.strip().strip("`") == id_str
-                found.append((id_str, is_def))
+                found.append((id_str, is_def, None))
 
     elif btype == "table_row":
         cells = block["table_row"].get("cells", [])
@@ -462,7 +528,7 @@ def extract_ids_from_block(block: dict) -> list:
             cell_plain = "".join(s.get("plain_text", "") for s in cell).strip()
             for id_str in extract_ids_from_rich_text(cell):
                 is_def = cell_plain.strip("` \n") == id_str or f"ID: {id_str}" in cell_plain
-                found.append((id_str, is_def))
+                found.append((id_str, is_def, None))
 
     return found
 
@@ -502,11 +568,12 @@ def build_link_index() -> tuple:
             block_id_clean = block["id"].replace("-", "")
             link = f"https://app.notion.com/p/{page_id_clean}#{block_id_clean}"
 
-            for id_str, is_def in extract_ids_from_block(block):
+            for id_str, is_def, seccion in extract_ids_from_block(block):
                 link_index.setdefault(id_str, []).append({
-                    "doc":    doc_name,
-                    "link":   link,
-                    "is_def": is_def,
+                    "doc":     doc_name,
+                    "link":    link,
+                    "is_def":  is_def,
+                    "seccion": seccion,
                 })
 
     return link_index, incomplete_docs
@@ -516,7 +583,11 @@ def pick_best_link(entries: list) -> dict | None:
     """
     Selecciona el mejor candidato priorizando:
       1. Bloques de definición (is_def=True) sobre menciones
-      2. Documento de mayor prioridad (menor número en DOC_PRIORITY)
+      2. Dentro de definiciones, los que traen sección detectada en vivo
+         (seccion != None) sobre los que no — esto es lo que permite que
+         el "seccion" real del documento le gane al fallback hardcodeado
+         de CENSUS_SPEC cuando ambos están disponibles.
+      3. Documento de mayor prioridad (menor número en DOC_PRIORITY)
     """
     if not entries:
         return None
@@ -524,17 +595,24 @@ def pick_best_link(entries: list) -> dict | None:
     defs = [e for e in entries if e["is_def"]]
     pool = defs if defs else entries
 
-    return min(pool, key=lambda e: (DOC_PRIORITY.get(e["doc"], 999), e["link"]))
+    with_seccion = [e for e in pool if e.get("seccion")]
+    ranked_pool = with_seccion if with_seccion else pool
+
+    return min(ranked_pool, key=lambda e: (DOC_PRIORITY.get(e["doc"], 999), e["link"]))
 
 
-def resolve_link(row: dict, link_index: dict) -> str | None:
-    """Resuelve el mejor link para una fila del CENSUS_SPEC."""
+def resolve_link(row: dict, link_index: dict) -> dict | None:
+    """
+    Resuelve la mejor entrada (link + seccion en vivo, si existe) para una
+    fila del CENSUS_SPEC. Devuelve el dict completo de link_index (no solo
+    el link) para que el caller pueda decidir entre la sección detectada
+    en vivo y el fallback hardcodeado de CENSUS_SPEC.
+    """
     lookup_ids = row.get("lookup_ids") or [row["id"]]
     candidates = []
     for lid in lookup_ids:
         candidates.extend(link_index.get(lid, []))
-    best = pick_best_link(candidates)
-    return best["link"] if best else None
+    return pick_best_link(candidates)
 
 # ─── DETECCIÓN DE HUÉRFANOS (KERNEL:CENSUS-SYNC, Regla 2) ─────────────────────
 
@@ -604,9 +682,24 @@ def render_markdown(link_index: dict, orphans: dict) -> tuple:
     entre documentos. Este formato es una vista de auditoría/espejo del
     CENSUS_SPEC; la fuente de verdad para lectura humana sigue siendo la
     página de Notion (394938be), curada a mano por el operador.
+
+    La columna "Sección" ya NO es el valor hardcodeado de CENSUS_SPEC por
+    defecto: se prioriza la sección detectada en vivo desde el propio
+    heading del documento fuente (ver extract_live_section / BUG —
+    CENSUS_SPEC hardcodeado, 2026-07-24). Solo cae al valor hardcodeado de
+    CENSUS_SPEC cuando el ID resolvió link pero ningún heading de
+    definición trae un prefijo "§N" detectable — y en ese caso lo marca
+    explícitamente con "⚠︎sin verificar en vivo" para que el drift nunca
+    vuelva a pasar desapercibido.
+
+    Devuelve: (markdown, unresolved, hardcoded_fallbacks) — unresolved es
+    la lista de IDs sin link; hardcoded_fallbacks es la lista de IDs cuya
+    "Sección" mostrada vino del valor estático de CENSUS_SPEC, no de una
+    detección en vivo.
     """
     lines = []
     unresolved = []
+    hardcoded_fallbacks = []  # IDs donde no hubo sección detectada en vivo
 
     for i, section in enumerate(CENSUS_SPEC):
         if i > 0:
@@ -614,10 +707,24 @@ def render_markdown(link_index: dict, orphans: dict) -> tuple:
             lines.append("")
         lines += [f"## {section['name']}", "", "| ID | Sección | Nombre |", "|---|---|---|"]
         for row in section["rows"]:
-            link = resolve_link(row, link_index)
+            best = resolve_link(row, link_index)
             display_id = row["id"]
-            seccion = row.get("seccion", "")
+            link = best["link"] if best else None
+            live_seccion = best.get("seccion") if best else None
             nombre = row.get("nombre", "")
+
+            if live_seccion:
+                seccion = live_seccion
+            else:
+                # Sin heading "§N — ID" detectado en vivo (ej. headings sin
+                # prefijo de sección, o ID no resuelto). Fallback al valor
+                # hardcodeado de CENSUS_SPEC, marcado explícitamente para
+                # que el drift nunca vuelva a pasar desapercibido.
+                seccion = row.get("seccion", "")
+                if link:
+                    seccion = f"{seccion} ⚠︎sin verificar en vivo" if seccion else "⚠︎sin verificar en vivo"
+                    hardcoded_fallbacks.append(display_id)
+
             if link:
                 cell = f"[`{display_id}`]( {link} )"
             else:
@@ -640,7 +747,7 @@ def render_markdown(link_index: dict, orphans: dict) -> tuple:
         lines.append("_Ninguno detectado en esta corrida._")
     lines.append("")
 
-    return "\n".join(lines).rstrip() + "\n", unresolved
+    return "\n".join(lines).rstrip() + "\n", unresolved, hardcoded_fallbacks
 
 # ─── ENTRY POINT ──────────────────────────────────────────────────────────────
 
@@ -663,7 +770,7 @@ def print_debug_ids(link_index: dict, ids_to_debug: list) -> None:
             print("    (sin ninguna entrada — el ID nunca fue extraído de ningún bloque)")
             continue
         for e in entries:
-            print(f"    - doc={e['doc']!r} is_def={e['is_def']} link={e['link']}")
+            print(f"    - doc={e['doc']!r} is_def={e['is_def']} seccion={e.get('seccion')!r} link={e['link']}")
     print("\n" + "#" * 52)
 
 
@@ -691,7 +798,7 @@ if __name__ == "__main__":
 
     known_ids = known_ids_from_spec()
     orphans = find_orphan_ids(link_index, known_ids)
-    md, unresolved = render_markdown(link_index, orphans)
+    md, unresolved, hardcoded_fallbacks = render_markdown(link_index, orphans)
 
     output = Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/data/V_ID_CENSUS_PRODUCTION.md")
     output.write_text(md, encoding="utf-8")
@@ -711,6 +818,12 @@ if __name__ == "__main__":
         print("  ⚠ Huérfanos detectados — agregar a CENSUS_SPEC o confirmar que son ruido:")
         for uid, entry in orphans.items():
             print(f"    - {uid}  ({entry['doc']})")
+    print("-" * 52)
+    print(f"  IDs con Sección hardcodeada (sin heading '§N' detectable en vivo): {len(hardcoded_fallbacks)}")
+    if hardcoded_fallbacks:
+        print("  ⚠ Revisar manualmente si el número/letra en CENSUS_SPEC sigue vigente:")
+        for uid in hardcoded_fallbacks:
+            print(f"    - {uid}")
     print("=" * 52)
 
     if incomplete_docs:

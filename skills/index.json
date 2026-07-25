@@ -43,12 +43,6 @@
       "mimeType": "application/octet-stream"
     },
     {
-      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal.skill",
-      "name": "vantage-documentacion-transversal",
-      "description": "Mantiene documentación transversal en documentos funcionales",
-      "mimeType": "application/octet-stream"
-    },
-    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal-implementacion.skill",
       "name": "vantage-documentacion-transversal-implementacion",
       "description": "Implementa documentación transversal",

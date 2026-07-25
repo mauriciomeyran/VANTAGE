@@ -1,5 +1,7 @@
 # V | KERNEL
 
+# V | KERNEL
+
 ## KERNEL:AUDIENCE-SCOPE
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Sistemas Agente de IA.
@@ -81,15 +83,15 @@ Invariantes del Contrato
 Prefijos Autorizados
 | Prefijo | Documento Destino | Mapeo Registry |
 | --- | --- | --- |
-| KERNEL | V | KERNEL | registry["KERNEL"] |
-| MANUAL | V | MANUAL | registry["MANUAL"] |
-| CANON | V | CAREER CANON | registry["CANON"] |
-| TRACKER | V | TRACKER | registry["TRACKER"] |
-| SP | V | SYSTEM PROMPT | registry["SP"] |
-| ALIASES | V | ALIASES | registry["ALIASES"] |
-| CHANGELOG | V | CHANGE LOG | registry["CHANGELOG"] |
-| BRIEF | V | NAVIGATION BRIEF | registry["BRIEF"] |
-| VANTAGE | V | VANTAGE CENTRAL HUB | registry["VANTAGE"] |
+| KERNEL | V | KERNEL |
+| MANUAL | V | MANUAL |
+| CANON | V | CAREER CANON |
+| TRACKER | V | TRACKER |
+| SP | V | SYSTEM PROMPT |
+| ALIASES | V | ALIASES |
+| CHANGELOG | V | CHANGE LOG |
+| BRIEF | V | NAVIGATION BRIEF |
+| VANTAGE | V | VANTAGE CENTRAL HUB |
 Reglas de Migración: toda referencia a páginas del sistema que use UUIDs hardcodeados o anclas planas debe migrar a este esquema. lazy_loader.py aplica este contrato en tiempo de ejecución. DT-015 — CERRADO: normalización documental (26 ocurrencias) vía trigger NORM. 100% canónico.
 ---
 ### §3.2 — KERNEL:DOCUMENTATION-002

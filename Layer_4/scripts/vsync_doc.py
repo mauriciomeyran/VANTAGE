@@ -257,10 +257,51 @@ def _make_code_blocks(lang, content):
         }})
     return blocks
 
+import re as _re
+
+# Patrón de link markdown "[texto](url)". No captura links dentro de un
+# fence de código (los bloques 'code' nunca pasan por esta función — ver
+# _make_code_blocks, que sigue escribiendo contenido crudo a propósito).
+_MD_LINK_RE = _re.compile(r"\[([^\[\]]+)\]\((https?://[^\s()]+)\)")
+
+def _text_to_rich_text(content: str) -> list:
+    """
+    Convierte una línea de markdown a una lista de segmentos rich_text de
+    Notion, resolviendo "[texto](url)" a un link real (rich_text con
+    campo "link"), en vez de dejar la sintaxis markdown como texto plano.
+
+    FIX (Cross-Reference Hyperlinks — bug de tabla): antes de este parche,
+    todo el contenido (incluyendo celdas de tabla vía _try_parse_table)
+    se empujaba a Notion como texto literal sin interpretar la sintaxis
+    de link, así que "[KERNEL:CV-GOLDEN-RULES-001](url)" llegaba a Notion
+    como el string completo con corchetes y URL pegados al ID — rompiendo
+    la coincidencia exacta que generate_census.py necesita para reconocer
+    el bloque como definición del ID. Ver DT — Census Sync / Cross-Reference
+    Hyperlinks Pt 3.
+
+    Trunca el contenido combinado a NOTION_TEXT_LIMIT igual que antes.
+    """
+    content = content[:NOTION_TEXT_LIMIT]
+    segments = []
+    pos = 0
+    for m in _MD_LINK_RE.finditer(content):
+        if m.start() > pos:
+            segments.append({"type": "text", "text": {"content": content[pos:m.start()]}})
+        label, url = m.group(1), m.group(2)
+        segments.append({"type": "text", "text": {"content": label, "link": {"url": url}}})
+        pos = m.end()
+    if pos < len(content):
+        segments.append({"type": "text", "text": {"content": content[pos:]}})
+    if not segments:
+        segments = [{"type": "text", "text": {"content": ""}}]
+    return segments
+
+
 def _make_text_block(block_type, key, content):
-    """Crea un bloque de texto truncando si supera el límite."""
+    """Crea un bloque de texto truncando si supera el límite, resolviendo
+    cualquier link markdown embebido a un link real de Notion."""
     return {"object":"block","type":block_type, block_type:{
-        "rich_text": [{"type":"text","text":{"content": content[:NOTION_TEXT_LIMIT]}}]
+        "rich_text": _text_to_rich_text(content)
     }}
 
 def _try_parse_table(lines, i):
@@ -296,7 +337,7 @@ def _try_parse_table(lines, i):
         cells = row[:width] + [""] * max(0, width - len(row))
         table_rows.append({
             "object": "block", "type": "table_row",
-            "table_row": {"cells": [[{"type":"text","text":{"content": c[:NOTION_TEXT_LIMIT]}}] for c in cells]}
+            "table_row": {"cells": [_text_to_rich_text(c) for c in cells]}
         })
 
     table_block = {

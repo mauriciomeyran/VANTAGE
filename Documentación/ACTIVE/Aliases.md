@@ -1,5 +1,7 @@
 # V | ALIASES
 
+# V | ALIASES
+
 ## TABLE OF CONTENT
 ```plain text
 1. Session Cycle
