@@ -1,7 +1,7 @@
 # V | CHANGELOG
 
 ---
-### v9.9.0 — Cierre de Cross-Reference Hyperlinks Pt 2: apply_hyperlinks.py aplicado a producción (62 hipervínculos) · 2026-07-24
+### v9.8.1 — Cierre de Cross-Reference Hyperlinks Pt 2: apply_hyperlinks.py aplicado a producción (62 hipervínculos) · 2026-07-24
 Tipo: [DOC] [FIX]
 Alcance: Kernel.md, Manual.md, System Prompt.md, Career Canon.md (local + Notion) · Layer_1/scripts/apply_hyperlinks.py (local).
 Contexto: Cierre del hilo iniciado en v9.7.9 (normalización de IDs) y continuado en v9.8.0 (fix de generate_census.py). Quedaba pendiente actualizar MAPPING/EXCLUDE_IDS de apply_hyperlinks.py tras la renumeración de v9.7.9 y aplicar los hipervínculos resultantes. Trabajo delegado a Devin (fix inicial de MAPPING para Output Contract) y luego a Cursor (corrección final de CANON:POSITIONING-N1..N4 + push a Notion), tras agotar tokens de sesión en ambas herramientas — texto de handoff auditado por Claude en cada relevo, no tomado como verificado sin revisión propia.
