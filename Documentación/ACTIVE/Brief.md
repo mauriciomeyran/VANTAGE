@@ -1,32 +1,32 @@
 # V | DOCUMENT NAVIGATION BRIEF 
 
-## §1 BRIEF:001
+## 01 BRIEF:001
 ## Propósito y Alcance
-## Propósito
+### Propósito
 Este documento define el contrato oficial de navegación documental de VANTAGE.
 Su función es determinar qué documento constituye la Fuente Única de Verdad (SSOT) para cada tipo de conocimiento y establecer la ruta mínima necesaria para recuperar información de forma consistente.
 No reemplaza la documentación fundacional; la orquesta.
-—
-## Alcance
-Este documento responde exclusivamente a l2as siguientes preguntas:
+---
+### Alcance
+Este documento responde exclusivamente a las siguientes preguntas:
 - ¿Dónde debe buscarse una determinada información?
 - ¿Qué documento tiene autoridad sobre cada dominio?
 - ¿Cuál es la profundidad mínima de verificación requerida?
 - ¿Qué dependencias documentales deben respetarse?
-—
-## Fuera de Alcance
+---
+### Fuera de Alcance
 Este documento no:
 - define contratos operativos (Kernel);
 - describe procedimientos paso a paso (Manual);
 - documenta el perfil profesional (Career Canon);
 - mantiene el inventario de IDs (ID Census);
 - registra historial de cambios (Change Log).
-—
-## §2 BRIEF:002
+---
+## 02 BRIEF:002
 ## Document Authority Matrix
 Esta matriz define el documento autorizado para cada dominio del sistema.
 | Necesidad | Documento SSOT | Rol |
-| — | — | — |
+| :--- | :--- | :--- |
 | Arquitectura del sistema | Kernel | Contrato normativo |
 | Operación diaria | Manual | Procedimientos |
 | Perfil profesional | Career Canon | Identidad profesional |
@@ -37,12 +37,12 @@ Esta matriz define el documento autorizado para cada dominio del sistema.
 | Alias y nomenclatura | Aliases | Normalización |
 | Historial | Change Log | Auditoría |
 | Esquemas | Tracker Schema | Modelo de datos |
-—
-## §3 BRIEF:003
+---
+## 03 BRIEF:003
 ## Ecosistema Documental
 Cada documento tiene una única responsabilidad.
 | Documento | Responsabilidad |
-| — | — |
+| :--- | :--- |
 | Navigation Brief | Decide qué documento consultar |
 | Master Index | Localiza documentos |
 | ID Census | Resuelve entidades e IDs |
@@ -53,10 +53,10 @@ Cada documento tiene una única responsabilidad.
 | Change Log | Conserva la historia del sistema |
 | Aliases | Normaliza terminología |
 Ningún documento debe duplicar la responsabilidad de otro.
-—
-## §4 BRIEF:004
+---
+## 04 BRIEF:004
 ## Navigation Contracts
-## Consulta Arquitectónica
+### Consulta Arquitectónica
 Destino: Kernel
 Se utiliza para:
 - contratos
@@ -66,8 +66,8 @@ Se utiliza para:
 - triggers
 - gates
 - filosofía
-—
-## Consulta Operativa
+---
+### Consulta Operativa
 Destino: Manual
 Se utiliza para:
 - procedimientos
@@ -75,8 +75,8 @@ Se utiliza para:
 - ejecución
 - troubleshooting
 - operación diaria
-—
-## Consulta Profesional
+---
+### Consulta Profesional
 Destino: Career Canon
 Se utiliza para:
 - CV
@@ -85,15 +85,15 @@ Se utiliza para:
 - narrativa profesional
 - skeletons
 - output contract
-—
-## Consulta Documental
+---
+### Consulta Documental
 Destino: Master Index
 Se utiliza para:
 - localizar documentos
 - descubrir documentación
 - verificar estructura documental
-—
-## Consulta de IDs
+---
+### Consulta de IDs
 Destino: ID Census
 Se utiliza para:
 - validar IDs
@@ -101,17 +101,17 @@ Se utiliza para:
 - localizar secciones
 - verificar namespaces
 - auditoría documental
-—
-## Consulta Histórica
+---
+### Consulta Histórica
 Destino: Change Log
 Se utiliza para:
 - conocer cuándo ocurrió un cambio
 - reconstruir decisiones
 - auditoría
-—
-## §5 BRIEF:005
+---
+## 05 BRIEF:005
 ## Domain Architecture
-## Housekeeping
+### Housekeeping
 Responsabilidad
 Mantener la integridad documental y eliminar drift.
 Produce
@@ -122,8 +122,8 @@ Produce
 Depende de
 Ningún dominio.
 Es la base del sistema.
-—
-## Core Assets
+---
+### Core Assets
 Responsabilidad
 Mantener sincronizados todos los activos fundacionales.
 Incluye:
@@ -133,8 +133,8 @@ Incluye:
 - ACTIVE
 - Git
 - Bootloader
-—
-## Discovery
+---
+### Discovery
 Responsabilidad
 Captura y consolidación de oportunidades.
 Incluye:
@@ -142,8 +142,8 @@ Incluye:
 - L2
 - L3
 Produce información para Gate Logic.
-—
-## Gate Logic
+---
+### Gate Logic
 Responsabilidad
 Evaluación determinista del pipeline.
 Incluye:
@@ -151,8 +151,8 @@ Incluye:
 - Gate Decision
 - Next Action
 - Recovery RT-1
-—
-## CV Pipeline
+---
+### CV Pipeline
 Responsabilidad
 Producción documental posterior al Gate.
 Incluye:
@@ -161,25 +161,25 @@ Incluye:
 - QA
 - Handoff
 - Export
-—
-## §6 BRIEF:006
+---
+## 06 BRIEF:006
 ## Verification Depth Contract
 Toda modificación debe respetar el nivel mínimo de validación requerido.
 | Nivel | Alcance |
-| — | — |
+| :--- | :--- |
 | L0 | Consulta Read-Only |
 | L1 | Verificación documental |
 | L2 | Validación Runtime |
 | L3 | Validación Pipeline |
 | L4 | Validación integral del sistema |
 Cada operación debe utilizar el menor nivel posible compatible con su riesgo.
-—
-## §7 BRIEF:007
+---
+## 07 BRIEF:007
 ## Cross-Document Dependencies
 La siguiente matriz define las dependencias estructurales entre los documentos fundacionales.
 Una dependencia indica que un cambio en el documento de origen puede afectar la consistencia de uno o más documentos relacionados y requiere una evaluación explícita antes de cerrar la operación.
 | Cambio en | Evaluar | Acción mínima requerida |
-| — | — | — |
+| :--- | :--- | :--- |
 | Kernel | Manual, Navigation Brief, System Prompt | Revisar contratos afectados |
 | Manual | Navigation Brief | Verificar que la navegación siga siendo válida |
 | Career Canon | CV Skills, Output Contracts | Validar consistencia del pipeline CV |
@@ -189,7 +189,7 @@ Una dependencia indica que un cambio en el documento de origen puede afectar la 
 | IDs | ID Census | Ejecutar vcensus |
 | Bootstrap / System Prompt | Navigation Brief | Validar estrategia de recuperación |
 | Estructura documental | Master Index | Actualizar inventario |
-—
+---
 ### 7.1 Impact Assessment Contract
 Toda modificación que afecte un documento con dependencias registradas deberá generar una Evaluación de Impacto (Impact Assessment) antes del cierre de la operación.
 Como mínimo, la evaluación responderá:
@@ -199,7 +199,7 @@ Como mínimo, la evaluación responderá:
 - ¿Debe regenerarse algún artefacto de Runtime?
 - ¿Debe ejecutarse una validación adicional?
 - ¿Se requiere sincronización (vsync_doc, vversions, vcensus)?
-—
+---
 ### 7.2 Mandatory Change Reporting
 Cuando una evaluación de impacto determine que existe afectación sobre otro documento o artefacto del sistema, será obligatorio registrar dicha afectación en el Change Log.
 El registro deberá incluir, como mínimo:
@@ -208,29 +208,29 @@ El registro deberá incluir, como mínimo:
 - Tipo de impacto (Normativo, Operativo, Runtime o Navegación).
 - Acción correctiva ejecutada.
 - Estado final de la validación.
-—
+---
 ### 7.3 Closure Gate
 Una modificación estructural no podrá considerarse cerrada hasta que se cumplan todas las acciones derivadas de su evaluación de impacto.
 Si alguna dependencia permanece pendiente de validación, la operación conservará el estado Pending Validation y no deberá marcarse como completamente sincronizada.
-—
-## §8 BRIEF:008
+---
+## 08 BRIEF:008
 ## Maintenance Contract
 Toda modificación estructural debe responder afirmativamente las siguientes preguntas antes de aprobarse.
-## Autoridad
+### Autoridad
 - ¿Cuál es el SSOT del cambio?
-## Contrato
+### Contrato
 - ¿Se modifica un contrato existente?
-## IDs
+### IDs
 - ¿Se crea, modifica o elimina algún ID?
-## Runtime
+### Runtime
 - ¿Debe regenerarse el ID Census?
 - ¿Debe ejecutarse Version Check?
-## Auditoría
+### Auditoría
 - ¿Debe actualizarse el Change Log?
-## Navegación
+### Navegación
 - ¿Debe actualizarse este Navigation Brief?
-—
-## §9 BRIEF:009
+---
+## 09 BRIEF:009
 ## Navigation Decision Tree
 ```plain text
 Solicitud
@@ -252,8 +252,8 @@ Clasificar tipo de conocimiento
 ↓
 Responder
 ```
-—
-## §10 BRIEF:010
+---
+## 10 BRIEF:010
 ## Principios de Navegación
 1. Existe una única Fuente de Verdad para cada tipo de conocimiento.
 1. La navegación siempre precede a la recuperación de contenido.
@@ -262,8 +262,8 @@ Responder
 1. El ID Census pertenece a la capa de observabilidad (L0) y nunca actúa como documentación normativa.
 1. El Kernel gobierna contratos; el Manual gobierna procedimientos.
 1. El Navigation Brief gobierna exclusivamente la navegación entre documentos.
-—
-## §11 BRIEF:011
+---
+## 11 BRIEF:011
 ## Resultado Esperado
 Al finalizar la lectura de este documento, cualquier operador o sistema de IA debe ser capaz de:
 - identificar la fuente de verdad correcta para cualquier consulta;

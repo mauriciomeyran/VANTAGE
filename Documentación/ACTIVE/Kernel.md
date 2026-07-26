@@ -10,49 +10,51 @@
 ---
 ## TABLE OF CONTENTS
 ─── I. FUNDAMENTO
-  §1   [KERNEL:PURPOSE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f69905dfc6c82c5503)
-  §2   [KERNEL:FAIL-PHILOSOPHY](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428121bb10efedac1b4b99)
-  §3   KERNEL:DOCUMENTATION (L0)
-          §3.1   DOCUMENTATION-001 - Contract
-          §3.2   DOCUMENTATION-002 - Norm
-          §3.3   DOCUMENTATION-003 - Architecture
-          §3.4   DOCUMENTATION-004 - Bootstrap
-          §3.5   DOCUMENTATION-005 - Skill Announce Convention
-          §3.6   DOCUMENTATION-006 - Health-Check Tool
-          §3.7   DOCUMENTATION-007 - Version-Check Tool
-          §3.8   DOCUMENTATION-008 - Census-Sync Tool
-          §3.9   DOCUMENTATION-009 - Session Ledger
-          §3.10  DOCUMENTATION-010 - Documentation Transversal
+§1   [KERNEL:PURPOSE](V | KERNEL)
+§2   [KERNEL:FAIL-PHILOSOPHY](V | KERNEL)
+§3   KERNEL:DOCUMENTATION (L0)
+§3.1   DOCUMENTATION-001 - Contract
+§3.2   DOCUMENTATION-002 - Norm
+§3.3   DOCUMENTATION-003 - Architecture
+§3.4   DOCUMENTATION-004 - Bootstrap
+§3.5   DOCUMENTATION-005 - Skill Announce Convention
+§3.6   DOCUMENTATION-006 - Health-Check Tool
+§3.7   DOCUMENTATION-007 - Version-Check Tool
+§3.8   DOCUMENTATION-008 - Census-Sync Tool
+§3.9   DOCUMENTATION-009 - Session Ledger
+§3.10  DOCUMENTATION-010 - Documentation Transversal
 
-  §4   [KERNEL:ARCHITECTURE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42818a8a61d5a0d71bcf2b) (L1, L2, L3, L4, Figma Sync)
-  §5   [KERNEL:OWNERSHIP](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42814385dbe5005b04496c)
-  §6   [KERNEL:DASHBOARD-CHECKLIST-ARCH](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816ead88efa4b9a4e05f)
+§4   [KERNEL:ARCHITECTURE](V | KERNEL) (L1, L2, L3, L4, Figma Sync)
+§5   [KERNEL:OWNERSHIP](V | KERNEL)
+§6   [KERNEL:DASHBOARD-CHECKLIST-ARCH](V | KERNEL)
 
 ─── II. DATOS, ESQUEMAS Y REGLAS
-  §7   [KERNEL:SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42812dbc97e075758ba0ee)
-  §8   [KERNEL:TRACKER-SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281c2ba8aca2a41ff358b)
-  §9   [KERNEL:GATE-DECISION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810d9f3af9b12751d7e1)
-          §9.1  GATE-DECISION-001 — Bypass
-          §9.2  GATE-DECISION-002 — Lógica Estándar
-          §9.3  GATE-DECISION-003 — REVIEW_NEEDED
-          §9.4  GATE-DECISION-004 — Gates Deterministas
-          §9.5  GATE-DECISION-005 — Recuperación BLOCKED
-          §9.6  GATE-DECISION-006 — REJECTED
-          §9.7  GATE-DECISION-007 — Archivado Automático
-          §9.8  GATE-DECISION-008 — Capas Técnica vs. Negocio
-          §9.9  GATE-DECISION-009 — Escalamiento de Pendientes a Tickets
-  §10   [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d)
+§7   [KERNEL:SCHEMA](V | KERNEL)
+§8   [KERNEL:TRACKER-SCHEMA](V | KERNEL)
+§9   [KERNEL:GATE-DECISION](V | KERNEL)
+§9.1  GATE-DECISION-001 — Bypass
+§9.2  GATE-DECISION-002 — Lógica Estándar
+§9.3  GATE-DECISION-003 — REVIEW_NEEDED
+§9.4  GATE-DECISION-004 — Gates Deterministas
+§9.5  GATE-DECISION-005 — Recuperación BLOCKED
+§9.6  GATE-DECISION-006 — REJECTED
+§9.7  GATE-DECISION-007 — Archivado Automático
+§9.8  GATE-DECISION-008 — Capas Técnica vs. Negocio
+§9.9  GATE-DECISION-009 — Escalamiento de Pendientes a Tickets
+§10   [KERNEL:CV-GOLDEN-RULES](V | KERNEL)
 
 ─── III. EJECUCIÓN
-  §11  [KERNEL:TRIGGERS](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f297c7d591f3c132f4)
-  §12  [KERNEL:CV-PIPELINE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428190b72cf74c14c31a4a)
-  §13  [KERNEL:CANON-UPDATE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42817db23de75a46a964ac)
-  §14  [KERNEL:NAMING-CONVENTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281bbbe93d1e053bb8e42)
+§11  [KERNEL:TRIGGERS](V | KERNEL)
+§12  [KERNEL:CV-PIPELINE](V | KERNEL)
+§13  [KERNEL:CANON-UPDATE](V | KERNEL)
+§14  [KERNEL:NAMING-CONVENTION](V | KERNEL)
 
 ─── IV. INFRAESTRUCTURA DE CONTEXTO
-  §15  [KERNEL:SCOPE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810293b4e55167657d86) / [KERNEL:ROUTING](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42811aa042c048ec085cbc)
-  §16  [KERNEL:DATA-FLOW](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428101ade4f430c4bee781)
-  §17  [KERNEL:EVOLUTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816d813af068ac1d81be)
+§15  [KERNEL:CONTEXT-INFRASTRUCTURE](V | KERNEL)
+§15.1  KERNEL:CONTEXT-INFRASTRUCTURE-001
+§15.2  KERNEL:CONTEXT-INFRASTRUCTURE-002
+§16  [KERNEL:DATA-FLOW](V | KERNEL)
+§17  [KERNEL:EVOLUTION](V | KERNEL)
 ---
 # I. FUNDAMENTO
 ## §1 — KERNEL:PURPOSE
@@ -429,7 +431,7 @@ Compatibilidad downstream: CV-A: PASS/FAIL · CV-B: PASS/FAIL · QA: PASS/FAIL
 ## §14 — KERNEL:NAMING-CONVENTION
 Convención de Nombres de Outputs
 Ahora que §12 (CV-PIPELINE) y §13 (CANON-UPDATE) ya definieron qué archivos produce el sistema y cómo se mantiene su fuente, esta sección cierra el bloque de Ejecución definiendo cómo se nombran físicamente en disco.
-Formato del stem: {Año}_{Nombre}_{Apellido}_{Marca_normalizada}_{Vacante_normalizada}
+Formato del stem: {Año}{Nombre}{Apellido}{Marca_normalizada}{Vacante_normalizada}
 Reglas de normalización: espacios → guión bajo; sin acentos ni caracteres especiales; sin símbolos de puntuación; guión bajo como único separador (no CamelCase).
 Ejemplo: "Gucci — VM Coordinator, LATAM (2026)" → 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM
 Aplica a: CV-B (.md), export QA (.pdf), archivo Figma (.fig) y cualquier output futuro de una vacante específica. El stem se fija al generar el primer entregable y se reutiliza sin variación.
@@ -438,12 +440,11 @@ Relación con [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc4280899
 ---
 ---
 # IV. INFRAESTRUCTURA DE CONTEXTO
-## §15 — KERNEL:SCOPE / KERNEL:ROUTING
+## §15 — KERNEL:CONTEXT-INFRASTRUCTURE
 Economía de Contexto y Rutas de Carga
-Fusión narrativa de dos secciones parcialmente redundantes; ambos IDs se conservan como anclas.
-### KERNEL:SCOPE — Principio General
+### §15.1 — KERNEL:CONTEXT-INFRASTRUCTURE-001
 Acceso a lógica base preferente vía Terminal (lazy_loader.py). MCP autorizado para lectura, DRY RUN y modificación documental cuando exista instrucción explícita. Jerarquía: L1 > L2 > L3. FEED: única vía manual es FAST (§11-TRIGGER-008). Triaje de ejecución: Requerimientos → Triaje de costos (A: Terminal, B: MCP, C: Upload) → Confirmación. Priorizar Opción A.
-### KERNEL:ROUTING — Mecanismo Técnico de las Rutas MCP
+### §15.2 — KERNEL:CONTEXT-INFRASTRUCTURE-002
 MCP autorizado cuando: el operador lo solicite explícitamente, la operación sea documental, se presente DRY RUN previo, exista autorización posterior vía APROBAR_WRITE.
 Ruta recomendada: python lazy_loader.py --page {KERNEL_MASTER} --route {ruta}
 ---

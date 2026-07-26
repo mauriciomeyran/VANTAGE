@@ -4,18 +4,20 @@
 
 # V | CAREER CANON
 
+# V | CAREER CANON
+
 ## Índice del Career Canon (TOC)
 | # | PREFIX:KEY | Heading Normalizado | Portion |
 | --- | --- | --- | --- |
-| 0 | [CANON:AUDIENCE-SCOPE](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3a7938befc4281e7a101e4d8b298f9e7) | §0 CANON:AUDIENCE-SCOPE | Declaración de audiencia y alcance del Canon Runtime |
-| 1 | [CANON:PROFILE-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3a7938befc42813fa97cff7d4105890e) | A. Professional Profile | Perfil profesional (ES/EN) |
-| 2 | [CANON:SKILLS-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3a7938befc428124a6d7e83f069fa1d5) | B. Skills Canon | Skills canónicas por categoría (ES/EN) |
-| 3 | [CANON:EXPERIENCE-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3a7938befc428137b8cfcc02b134a9fc) | D. Experience Records | Experiencia cronológica (C01–C05) |
-| 4 | [CANON:ACHIEVEMENTS-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3a7938befc428119a7aff3760d754c96) | H. Achievement Library | Logros mapeados a KPI/CF por empresa |
-| 5 | [CANON:KPIS-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3a7938befc42814fa312cd8621c4d558) | I. Core KPIs | Indicadores canónicos (KPI01–KPI08) |
-| 6 | [CANON:FACTS-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3a7938befc42818aba3dda6e3234b36a) | J. Canonical Facts | Hechos canónicos (CF01–CF08, UF01–UF03) |
-| 7 | [CANON:POSITIONING-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3a7938befc42814ba697d97190cdd818) | K. Positioning Modes | Modos de posicionamiento N1–N4 + regla de desempate |
-| 8 | [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3a7938befc4281d29d6ffad03263da56) | Contrato de Entregable | Skeleton, Tag Registry, Figma Sync Protocol |
+| 0 | CANON:AUDIENCE-SCOPE | §0 CANON:AUDIENCE-SCOPE | Declaración de audiencia y alcance del Canon Runtime |
+| 1 | CANON:PROFILE-001 | A. Professional Profile | Perfil profesional (ES/EN) |
+| 2 | CANON:SKILLS-001 | B. Skills Canon | Skills canónicas por categoría (ES/EN) |
+| 3 | CANON:EXPERIENCE-001 | D. Experience Records | Experiencia cronológica (C01–C05) |
+| 4 | CANON:ACHIEVEMENTS-001 | H. Achievement Library | Logros mapeados a KPI/CF por empresa |
+| 5 | CANON:KPIS-001 | I. Core KPIs | Indicadores canónicos (KPI01–KPI08) |
+| 6 | CANON:FACTS-001 | J. Canonical Facts | Hechos canónicos (CF01–CF08, UF01–UF03) |
+| 7 | CANON:POSITIONING-001 | K. Positioning Modes | Modos de posicionamiento N1–N4 + regla de desempate |
+| 8 | CANON:OUTPUT-CONTRACT | Contrato de Entregable | Skeleton, Tag Registry, Figma Sync Protocol |
 ## §0 CANON:AUDIENCE-SCOPE
 ## Declaración de audiencia y alcance
 > - Audiencia: Sistemas Agente de IA + Operador Humano (Mauricio Meyrán).
