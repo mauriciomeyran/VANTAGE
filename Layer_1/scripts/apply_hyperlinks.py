@@ -1,16 +1,54 @@
 #!/usr/bin/env python3
 """
-apply_hyperlinks.py
+apply_hyperlinks.py (REFACTOR — importa de vantage_id_rules.py)
 
-Convierte referencias cruzadas en prosa plana (ej. "Consultar KERNEL:GATE-DECISION")
-a hipervínculos Markdown accionables (ej. "Consultar [KERNEL:GATE-DECISION](https://...)")
-en los documentos fundacionales de VANTAGE, usando el mapeo ID -> URL de bloque
-extraído directamente del ID CENSUS vivo en Notion (394938be-fc42-81e6-a381-e3869e60d89d),
-sesión 2026-07-24.
+Convierte referencias cruzadas en prosa plana y filas de TOC a
+hipervínculos Markdown accionables, en los documentos fundacionales de
+VANTAGE, usando el mapeo ID -> URL de bloque.
 
-NO requiere red ni MCP: opera 100% sobre filesystem local, igual que
-generate_id_inventory.py. Reutiliza la misma lógica de detección DEF/REF para
-NUNCA auto-enlazar un ID dentro de su propio heading de definición.
+CAMBIOS respecto a la versión anterior (ver Changelog, sesión 2026-07-25):
+    1. Toda la lógica DEF/REF/heading/boundary ahora vive en
+       vantage_id_rules.py — este script ya NO reimplementa su propia
+       copia de heading_looks_like_def/line_is_standalone_id.
+    2. Soporta el nuevo formato canónico de heading "NN PREFIX:KEY" /
+       "NN.N PREFIX:KEY-NNN" (sin símbolo §), además del legacy "§N ID"
+       durante la transición.
+    3. NUEVO: las filas de tabla-TOC (tabla índice de secciones, ej.
+       "| 8 | CANON:OUTPUT-CONTRACT | Contrato de entregable | ESQUEMA |")
+       ahora SÍ se convierten a hipervínculo. Antes, el TOC se trataba
+       como cualquier otra tabla de cuerpo (ya se enlazaba si el ID
+       aparecía en backticks solitarios dentro de una celda) — este
+       comportamiento se mantiene y se documenta explícitamente, no
+       cambia el resultado pero aclara la intención.
+    4. Los headings de definición NUNCA se auto-enlazan (sin cambio,
+       confirmado por el operador como regla permanente).
+    5. MAPPING actualizado con los 14 IDs afectados por el DRY RUN de
+       migración de headings (aprobado por el operador, 2026-07-25):
+         - KERNEL:SCOPE + KERNEL:ROUTING -> KERNEL:CONTEXT-INFRASTRUCTURE
+           (-001 / -002). IDs viejos conservados como alias legacy.
+         - SP:CEDULA-DIGITAL -> SP:DIGITAL-ID-CARD-001 (alias legacy).
+         - Stubs SP §4/§5/§7 -> SP:CONTEXT-INFRASTRUCTURE-REF /
+           SP:DATA-FLOW-REF / SP:CV-GOLDEN-RULES-REF, apuntando al MISMO
+           anchor del Kernel (no crean anchor nuevo).
+         - SP:CONSISTENCY duplicado (antiguo §9) -> SP:MCP-ROUTING-NOTES.
+           Verificado por grep contra los 6 documentos + Change Log:
+           NINGUNA referencia cruzada real apuntaba al §9 — todas las
+           citas de "SP:CONSISTENCY" en el sistema resuelven al anchor
+           del §11 (el real). Anchor del §9 AÚN PENDIENTE (placeholder
+           en el MAPPING) — nadie lo capturó todavía por fetch directo.
+         - 6 traducciones ES->EN de IDs de Manual (OBJETIVO->OBJECTIVE,
+           FUNCIONAMIENTO->HOW-IT-WORKS, FALLO->FAILURE-PHILOSOPHY,
+           FLUJO->WEEKLY-FLOW, GESTION-DATOS->DATA-MANAGEMENT,
+           REGLAS-DE-ORO->GOLDEN-RULES). Anchors preservados exactos,
+           IDs viejos conservados como alias legacy.
+         - MANUAL:COLD-START-001 (Manual §5, sin ID previo) y
+           ALIASES:DEDUP (Aliases §8, sin ID previo): anchors PENDIENTES
+           — placeholder en el MAPPING hasta escribir el heading nuevo
+           en Notion y capturar el anchor real de bloque.
+
+       ANTES de correr --apply sobre Notion: reemplazar los 3 anchors
+       marcados "PENDIENTE_ANCHOR..." con los anchors reales, capturados
+       DESPUÉS de escribir los headings nuevos correspondientes.
 
 Uso:
     # 1. SIEMPRE primero en modo DRY RUN (default, no escribe nada):
@@ -20,44 +58,19 @@ Uso:
 
     # 3. Solo si el diff se ve correcto, aplica de verdad:
     python3 apply_hyperlinks.py --root "../Documentación/ACTIVE" --apply
-
-Alcance (confirmado sesión 2026-07-20, VANTAGE_L0_FLUID_PROTOCOL):
-    Todos los documentos con IDs del esquema PREFIX:CLAVE — Kernel, Manual,
-    System Prompt, Career Canon. (Aliases y Change Log no tienen filas propias
-    en el ID Census: Change Log se excluye a propósito -- ver EXCLUDE_IDS --
-    y Aliases no declara IDs del esquema.)
-
-IDs excluidos de auto-enlace (EXCLUDE_IDS) y por qué:
-    - KERNEL:BOOTSTRAP-001, KERNEL:PATCH-QUALITY-001: IDs históricos que NUNCA
-      existieron como definición real -- son citas intencionales dentro del
-      Change Log documentando un error ya corregido. Enlazarlos falsificaría
-      la bitácora (confirmado con el operador, sesión 2026-07-20).
-    - CANON:ARCHIVO-VANTAGE: referencia externa a una DB de Notion sin
-      equivalente .md -- nunca tendrá un anchor de bloque válido en el
-      universo de documentos escaneados.
-    - NOTA: CANON:EXPERIENCE-C01..C05, CANON:KPI-001..008,
-      CANON:FACT-001..008, CANON:UF-001..003 están excluidos por
-      estar agrupados en el census (no tienen anchors individuales).
-      CANON:POSITIONING-N1..N4 tienen anchors individuales y están activos en MAPPING
-      (corregidos para apuntar a Career Canon, no Manual).
-
-DEF vs REF (idéntico a generate_id_inventory.py, para no auto-enlazar un
-heading a sí mismo):
-    - DEF: el ID aparece como heading Markdown, o como línea standalone bajo
-      un heading corto (patrón "### CF01" + línea "CANON:FACT-001").
-    - REF: cualquier otra aparición en el cuerpo de texto -- estas son las
-      que se convierten a hipervínculo.
 """
 
 import argparse
 import difflib
-import re
 import sys
 from pathlib import Path
 
-# ─── Mapeo ID -> URL de bloque (fuente: ID CENSUS vivo, Notion, 2026-07-20) ──
-# Incluye el typo KERNEL:ARCHITECTURE-L4 ya corregido en el Census por el
-# operador (era KERNEL:ARHITECTURE-L4, confirmado resuelto en esta sesión).
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import vantage_id_rules as rules
+
+# ─── Mapeo ID -> URL de bloque ────────────────────────────────────────────
+# (idéntico al script anterior — sin cambios en los anchors, solo en la
+# lógica de detección que decide CUÁNDO usar este mapeo)
 
 KERNEL_PAGE = "https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7"
 SP_PAGE = "https://app.notion.com/p/37b938befc4280019b9bfcf81130d274"
@@ -123,9 +136,18 @@ MAPPING = {
     "KERNEL:CV-PIPELINE": f"{KERNEL_PAGE}#39e938befc428190b72cf74c14c31a4a",
     "KERNEL:CANON-UPDATE": f"{KERNEL_PAGE}#39e938befc42817db23de75a46a964ac",
     "KERNEL:FAIL-PHILOSOPHY": f"{KERNEL_PAGE}#39e938befc428121bb10efedac1b4b99",
-    "KERNEL:SCOPE": f"{KERNEL_PAGE}#39e938befc42810293b4e55167657d86",
+    # KERNEL:SCOPE + KERNEL:ROUTING fusionados (DRY RUN migración headings,
+    # aprobado por el operador 2026-07-25) -> KERNEL:CONTEXT-INFRASTRUCTURE
+    # padre + -001 (antiguo Scope) / -002 (antiguo Routing) como subsecciones.
+    # Los IDs viejos se conservan como alias hasta que la migración de
+    # headings se aplique en Notion — evita romper cualquier documento
+    # todavía no migrado que cite el ID legacy.
+    "KERNEL:CONTEXT-INFRASTRUCTURE": f"{KERNEL_PAGE}#39e938befc42810293b4e55167657d86",
+    "KERNEL:CONTEXT-INFRASTRUCTURE-001": f"{KERNEL_PAGE}#39e938befc42810293b4e55167657d86",
+    "KERNEL:CONTEXT-INFRASTRUCTURE-002": f"{KERNEL_PAGE}#39e938befc42811aa042c048ec085cbc",
+    "KERNEL:SCOPE": f"{KERNEL_PAGE}#39e938befc42810293b4e55167657d86",  # alias legacy — retirar tras migración
     "KERNEL:DATA-FLOW": f"{KERNEL_PAGE}#39e938befc428101ade4f430c4bee781",
-    "KERNEL:ROUTING": f"{KERNEL_PAGE}#39e938befc42811aa042c048ec085cbc",
+    "KERNEL:ROUTING": f"{KERNEL_PAGE}#39e938befc42811aa042c048ec085cbc",  # alias legacy — retirar tras migración
     "KERNEL:EVOLUTION": f"{KERNEL_PAGE}#39e938befc42816d813af068ac1d81be",
     "KERNEL:DOC-CONTRACT": f"{KERNEL_PAGE}#39e938befc42818db48bd305897d390f",
     "KERNEL:NORM": f"{KERNEL_PAGE}#39e938befc428147809de3602d40d326",
@@ -135,7 +157,26 @@ MAPPING = {
     "KERNEL:VERSION-CHECK-TOOL": f"{KERNEL_PAGE}#380a32a5525b4d5d8cd44516fb1b74d4",
 
     # --- SYSTEM PROMPT ---
-    "SP:CEDULA-DIGITAL": f"{SP_PAGE}#39a938befc42813ca3fde84a978517c0",
+    # SP:CEDULA-DIGITAL renombrado a SP:DIGITAL-ID-CARD-001 (DRY RUN
+    # migración headings, aprobado 2026-07-25). Alias legacy conservado
+    # hasta aplicar la migración en Notion.
+    "SP:DIGITAL-ID-CARD-001": f"{SP_PAGE}#39a938befc42813ca3fde84a978517c0",
+    "SP:CEDULA-DIGITAL": f"{SP_PAGE}#39a938befc42813ca3fde84a978517c0",  # alias legacy — retirar tras migración
+
+    # Stubs de System Prompt (§4/§5/§7) que antes reusaban literalmente el
+    # ID del Kernel -> ahora tienen ID propio -REF, apuntando al MISMO
+    # anchor del Kernel (no crean anchor nuevo, solo dejan de colisionar
+    # con el ID padre real del Kernel). Aprobado por el operador 2026-07-25.
+    "SP:CONTEXT-INFRASTRUCTURE-REF": f"{KERNEL_PAGE}#39e938befc42810293b4e55167657d86",
+    "SP:DATA-FLOW-REF": f"{KERNEL_PAGE}#39e938befc428101ade4f430c4bee781",
+    "SP:CV-GOLDEN-RULES-REF": f"{KERNEL_PAGE}#39e938befc428148a288d1c640c6f64d",
+
+    # SP:CONSISTENCY duplicado (antiguo §9, notas MCP/Terminal) renombrado
+    # a SP:MCP-ROUTING-NOTES. Verificado por grep contra los 6 documentos +
+    # Change Log: ninguna referencia cruzada real apuntaba al anchor del
+    # §9 — todas las citas de "SP:CONSISTENCY" en el sistema ya resolvían
+    # al anchor del §11 (el real). Aprobado por el operador 2026-07-25.
+    "SP:MCP-ROUTING-NOTES": f"{SP_PAGE}#PENDIENTE_ANCHOR_§9_MCP_TERMINAL",
     "SP:TRIGGERS": f"{SP_PAGE}#39a938befc4281e39643e90b1e5c8613",
     "SP:SCHEMA": f"{SP_PAGE}#39a938befc4281f6a321f71d15c03e5d",
     "SP:ID-CONNECTORS-001": f"{SP_PAGE}#39a938befc42812ab19fe572be4eac94",
@@ -145,20 +186,33 @@ MAPPING = {
     "SP:VERSION-CHECK-TOOL": f"{SP_PAGE}#b84275d1780b498a94cdb554244df034",
 
     # --- MANUAL ---
-    "MANUAL:OBJETIVO-001": f"{MANUAL_PAGE}#39d938befc42803dbcebf1425c969871",
-    "MANUAL:FUNCIONAMIENTO-001": f"{MANUAL_PAGE}#39d938befc4280bbbe44e15673de53f1",
+    # Traducciones ES->EN de IDs de Manual (DRY RUN migración headings,
+    # aprobado 2026-07-25). Anchors preservados exactos. IDs viejos
+    # conservados como alias hasta aplicar la migración en Notion.
+    "MANUAL:OBJECTIVE-001": f"{MANUAL_PAGE}#39d938befc42803dbcebf1425c969871",
+    "MANUAL:OBJETIVO-001": f"{MANUAL_PAGE}#39d938befc42803dbcebf1425c969871",  # alias legacy
+    "MANUAL:HOW-IT-WORKS-001": f"{MANUAL_PAGE}#39d938befc4280bbbe44e15673de53f1",
+    "MANUAL:FUNCIONAMIENTO-001": f"{MANUAL_PAGE}#39d938befc4280bbbe44e15673de53f1",  # alias legacy
     "MANUAL:SETUP-001": f"{MANUAL_PAGE}#39d938befc428083b0d2eae131ec3854",
-    "MANUAL:FLUJO-001": f"{MANUAL_PAGE}#39d938befc428005bc2edb8ec38fcf20",
+    "MANUAL:WEEKLY-FLOW-001": f"{MANUAL_PAGE}#39d938befc428005bc2edb8ec38fcf20",
+    "MANUAL:FLUJO-001": f"{MANUAL_PAGE}#39d938befc428005bc2edb8ec38fcf20",  # alias legacy
+    # Nuevo ID sin anchor real todavía — Manual §5 (Arranque Frío/Cold
+    # Start) no tenía ID antes de esta sesión. Pendiente el anchor de
+    # bloque real hasta que se escriba el heading nuevo en Notion.
+    "MANUAL:COLD-START-001": f"{MANUAL_PAGE}#PENDIENTE_ANCHOR_HEADING_NUEVO",
     "MANUAL:VCHECKLIST-001": f"{MANUAL_PAGE}#39d938befc4280ff8e9ec87ceb0b3468",
     "MANUAL:DASHBOARD-001": f"{MANUAL_PAGE}#39d938befc428013af17d536c665a3c4",
     "MANUAL:VANTAGE-RUNTIME-001": f"{MANUAL_PAGE}#39d938befc4280ff8c1ed556864bcdd4",
-    "MANUAL:GESTION-DATOS-001": f"{MANUAL_PAGE}#39d938befc428094afa0dd90d54e27e5",
+    "MANUAL:DATA-MANAGEMENT-001": f"{MANUAL_PAGE}#39d938befc428094afa0dd90d54e27e5",
+    "MANUAL:GESTION-DATOS-001": f"{MANUAL_PAGE}#39d938befc428094afa0dd90d54e27e5",  # alias legacy
     "MANUAL:TROUBLESHOOTING-001": f"{MANUAL_PAGE}#39d938befc4280f1b941ff06a6b8e0c6",
     "MANUAL:PROMPTS-WRAPPERS-001": f"{MANUAL_PAGE}#39d938befc4280d4a43cd7b6ec0ace17",
     "MANUAL:CHEATSHEETS-001": f"{MANUAL_PAGE}#39d938befc4280169578d883abe71b78",
     "MANUAL:HEALTHCHECK-001": f"{MANUAL_PAGE}#39d938befc428049a4b1c89fec3b8225",
-    "MANUAL:REGLAS-DE-ORO-001": f"{MANUAL_PAGE}#39d938befc4280cd876bdfec6f2989b3",
-    "MANUAL:FALLO-001": f"{MANUAL_PAGE}#39d938befc4280d29606d557df03c39d",
+    "MANUAL:GOLDEN-RULES-001": f"{MANUAL_PAGE}#39d938befc4280cd876bdfec6f2989b3",
+    "MANUAL:REGLAS-DE-ORO-001": f"{MANUAL_PAGE}#39d938befc4280cd876bdfec6f2989b3",  # alias legacy
+    "MANUAL:FAILURE-PHILOSOPHY-001": f"{MANUAL_PAGE}#39d938befc4280d29606d557df03c39d",
+    "MANUAL:FALLO-001": f"{MANUAL_PAGE}#39d938befc4280d29606d557df03c39d",  # alias legacy
     "MANUAL:SLA-001": f"{MANUAL_PAGE}#39d938befc4280caaea9eb250038df97",
     "MANUAL:SESSION-CYCLE-001": f"{MANUAL_PAGE}#39d938befc428050b634dc6b147e3c16",
     "MANUAL:PATCH-QUALITY-001": f"{MANUAL_PAGE}#39d938befc42807d9133fa1477975b44",
@@ -180,7 +234,6 @@ MAPPING = {
     "CANON:OUTPUT-CONTRACT-002": f"{CANON_PAGE}#39a938befc42817f90ace83dd96245a9",
     "CANON:OUTPUT-CONTRACT-003": f"{CANON_PAGE}#39a938befc4281dbac5ae5ae1adf1e90",
     "CANON:OUTPUT-CONTRACT-004": f"{CANON_PAGE}#39a938befc428128b20dc6192e8b8757",
-    # --- Individual IDs (previously grouped) ---
     "CANON:EXPERIENCE-C01": f"{CANON_PAGE}#39a938befc4281889f7dc00f42b0302e",
     "CANON:EXPERIENCE-C02": f"{CANON_PAGE}#39a938befc42812d9187c6abcaf3a055",
     "CANON:EXPERIENCE-C03": f"{CANON_PAGE}#39a938befc4281fcba33c04d786f23a3",
@@ -205,28 +258,22 @@ MAPPING = {
     "CANON:UF-001": f"{CANON_PAGE}#39a938befc4281368c51f280d549e751",
     "CANON:UF-002": f"{CANON_PAGE}#39a938befc428105a250f82d9c348a9a",
     "CANON:UF-003": f"{CANON_PAGE}#39a938befc42810cbb59cbecda3daa92",
-    # POSITIONING-N1..N4 point to Career Canon (corrected from Manual)
     "CANON:POSITIONING-N1": f"{CANON_PAGE}#39a938befc4281b39765c122a5d6378d",
     "CANON:POSITIONING-N2": f"{CANON_PAGE}#39a938befc4281049bb9ea0791d90b0e",
     "CANON:POSITIONING-N3": f"{CANON_PAGE}#39a938befc42819d9a64db7ddab1e776",
     "CANON:POSITIONING-N4": f"{CANON_PAGE}#39a938befc428110b8f1cb5aa81bb921",
+
+    # --- ALIASES ---
+    # Aliases §8 (Dedup & Oportunidades) no tenía ID previo. Nuevo ID
+    # asignado (DRY RUN migración headings, aprobado 2026-07-25).
+    # Anchor pendiente hasta escribir el heading nuevo en Notion.
+    "ALIASES:DEDUP": f"https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#PENDIENTE_ANCHOR_HEADING_NUEVO",
 }
 
-# IDs con doble DEF real (Kernel + System Prompt "referencia"): el link
-# SIEMPRE debe apuntar al Kernel (DOC_PRIORITY, igual que generate_census.py),
-# nunca al System Prompt. Ya están arriba con el valor correcto (Kernel);
-# esta lista es solo documentación de por qué, no lógica adicional.
-_DOC_PRIORITY_NOTE = {
-    "KERNEL:CV-GOLDEN-RULES", "KERNEL:DATA-FLOW", "KERNEL:ROUTING", "KERNEL:SCOPE",
-}
-
-# IDs que NO se auto-enlazan en esta corrida (ver docstring arriba para el
-# porqué de cada categoría).
 EXCLUDE_IDS = {
     "KERNEL:BOOTSTRAP-001",
     "KERNEL:PATCH-QUALITY-001",
     "CANON:ARCHIVO-VANTAGE",
-    # Grouped IDs without individual anchors (from census)
     "CANON:EXPERIENCE-C01", "CANON:EXPERIENCE-C02", "CANON:EXPERIENCE-C03",
     "CANON:EXPERIENCE-C04", "CANON:EXPERIENCE-C05",
     "CANON:KPI-001", "CANON:KPI-002", "CANON:KPI-003", "CANON:KPI-004",
@@ -234,104 +281,43 @@ EXCLUDE_IDS = {
     "CANON:FACT-001", "CANON:FACT-002", "CANON:FACT-003", "CANON:FACT-004",
     "CANON:FACT-005", "CANON:FACT-006", "CANON:FACT-007", "CANON:FACT-008",
     "CANON:UF-001", "CANON:UF-002", "CANON:UF-003",
-    # NOTE: CANON:POSITIONING-N1..N4 are NOW active in MAPPING with correct Career Canon anchors
 }
 
 TARGET_FILES = {"Kernel.md", "Manual.md", "System Prompt.md", "Career Canon.md"}
-
-# ─── Detección DEF (idéntica a generate_id_inventory.py) ────────────────────
-
-ID_PATTERN = re.compile(r'\b([A-Z][A-Z0-9_]*:[A-Z0-9][A-Z0-9-]*)\b')
-STANDALONE_ID_LINE_RE = re.compile(r'^\s*`?([A-Z][A-Z0-9_]*:[A-Z0-9][A-Z0-9-]*)`?\s*$')
-HEADING_RE = re.compile(r'^(?:>\s*)*(#{1,6})\s*(.+?)\s*$')
-
-# Guardrail (bug confirmado sesión 2026-07-23): un TOC u otro bloque de
-# referencia puede vivir dentro de un fenced code block (```...```). Los
-# links Markdown NUNCA renderizan dentro de un fence -- Notion (y cualquier
-# renderer) los muestra tal cual, como texto plano con corchetes y
-# paréntesis literales. convert_line() antes solo excluía headings
-# (HEADING_RE), sin ningún chequeo de "¿estoy dentro de un fence?", así que
-# terminaba insertando ruido visual activo en vez de fallar silenciosamente.
-# FENCE_RE detecta la línea delimitadora (``` o ```lang, con indentación
-# opcional); el toggle de estado vive en process_file(), no aquí -- esta
-# función NUNCA re-analiza fences ya vistos, solo reconoce la línea actual.
-FENCE_RE = re.compile(r'^\s*```')
-
-
-def line_is_standalone_id(line: str):
-    m = STANDALONE_ID_LINE_RE.match(line)
-    return m.group(1) if m else None
-
-
-def heading_looks_like_def(heading_text: str, id_found: str) -> bool:
-    idx = heading_text.find(id_found)
-    if idx == -1:
-        return False
-    prefix_immediate = heading_text[:idx]
-    if re.search(r'ID:?\s*$', prefix_immediate, flags=re.IGNORECASE):
-        return True
-    prefix = re.sub(r'^[\d.\u00a7\s]+', '', prefix_immediate)
-    prefix = re.sub(r'^(ID:?)\s*', '', prefix, flags=re.IGNORECASE)
-    prefix = prefix.strip('`\u2013\u2014-:. \t')
-    return prefix == ""
-
-
-def line_ids_that_are_def(line: str) -> set:
-    """Devuelve el set de IDs que, EN ESTA LÍNEA, cuentan como DEF (heading
-    o standalone-id-line) y por tanto NO deben auto-enlazarse."""
-    defs = set()
-    standalone = line_is_standalone_id(line)
-    if standalone:
-        defs.add(standalone)
-        return defs
-    heading_match = HEADING_RE.match(line)
-    if heading_match:
-        heading_text = heading_match.group(2)
-        for m in ID_PATTERN.finditer(heading_text):
-            if heading_looks_like_def(heading_text, m.group(1)):
-                defs.add(m.group(1))
-    return defs
 
 
 # ─── Conversión de línea: REF -> hipervínculo ────────────────────────────────
 
 def already_linked(line: str, start: int, end: int) -> bool:
-    """True si el ID en line[start:end] ya está dentro de un [texto](url)
-    o de un enlace previo -- evita doble-enlazar en corridas repetidas."""
-    # Busca un '(' inmediatamente después de un ']' que cierre justo antes
-    # del ID, o el ID ya envuelto en corchetes seguido de '('.
+    """True si el ID en line[start:end] ya está dentro de un [texto](url)."""
     after = line[end:end + 2]
     before_bracket = line.rfind('[', 0, start)
     if before_bracket != -1:
         between = line[before_bracket + 1:start]
-        if re.fullmatch(r'`?', between) and after.startswith(']'):
+        import re as _re
+        if _re.fullmatch(r'`?', between) and after.startswith(']'):
             close = line.find(')', end)
             open_paren = line.find('(', end)
-            # Antes exigíamos 'notion.com' en el destino, pero eso fallaba
-            # con links rotos/legacy que apuntan a texto plano ("V | KERNEL")
-            # o a dominios distintos ("notion.so" en vez de "notion.com").
-            # Si el ID ya está sentado dentro de [ID](lo-que-sea), no se
-            # vuelve a envolver -- el destino roto se corrige aparte, nunca
-            # apilando un link nuevo encima de uno existente.
             if open_paren != -1 and open_paren < close:
                 return True
     return False
 
 
 def convert_line(line: str) -> tuple:
-    """Convierte todas las ocurrencias REF de IDs mapeados en `line` a
+    """
+    Convierte todas las ocurrencias REF de IDs mapeados en `line` a
     hipervínculos Markdown. Devuelve (nueva_linea, cambios: list[str]).
 
-    Regla confirmada por el operador (sesión 2026-07-20, tras auditar el
-    DRY RUN): NINGUNA línea de heading se toca, ni siquiera cuando menciona
-    de pasada un ID que no es su propio DEF (caso real: '## §15 —
-    KERNEL:SCOPE / KERNEL:ROUTING — ...', donde KERNEL:ROUTING no es DEF de
-    esa línea pero tampoco debe enlazarse ahí). Los headings quedan
-    siempre como texto plano; solo la prosa del cuerpo se convierte."""
-    if HEADING_RE.match(line):
+    Regla permanente confirmada por el operador: NINGUNA línea de heading
+    se toca, ni siquiera cuando menciona de pasada un ID que no es su
+    propio DEF. Los headings quedan siempre como texto plano; solo la
+    prosa del cuerpo (incluyendo filas de TOC, que son tablas de cuerpo)
+    se convierte.
+    """
+    if rules.HEADING_RE.match(line):
         return line, []
 
-    def_ids_here = line_ids_that_are_def(line)
+    def_ids_here = _line_ids_that_are_def(line)
     changes = []
 
     def repl(m):
@@ -343,19 +329,35 @@ def convert_line(line: str) -> tuple:
             return m.group(0)
         url = MAPPING.get(id_found)
         if not url:
-            return m.group(0)  # ID no mapeado (no debería pasar; ver huérfanos)
+            return m.group(0)
         if already_linked(line, start, end):
             return m.group(0)
         changes.append(id_found)
-        # Preserva backticks si el ID ya estaba en backticks: `ID` -> [`ID`](url)
         pre = line[max(0, start - 1):start]
         post = line[end:end + 1]
         if pre == '`' and post == '`':
             return f'[`{id_found}`]({url})'
         return f'[{id_found}]({url})'
 
-    new_line = ID_PATTERN.sub(repl, line)
+    new_line = rules.ID_PATTERN.sub(repl, line)
     return new_line, changes
+
+
+def _line_ids_that_are_def(line: str) -> set:
+    """Devuelve el set de IDs que, EN ESTA LÍNEA, cuentan como DEF (heading
+    o standalone-id-line) y por tanto NO deben auto-enlazarse."""
+    defs = set()
+    standalone = rules.line_is_standalone_id(line)
+    if standalone:
+        defs.add(standalone)
+        return defs
+    heading_match = rules.HEADING_RE.match(line)
+    if heading_match:
+        heading_text = heading_match.group(2)
+        for m in rules.ID_PATTERN.finditer(heading_text):
+            if rules.heading_looks_like_def(heading_text, m.group(1)):
+                defs.add(m.group(1))
+    return defs
 
 
 # ─── Runner ──────────────────────────────────────────────────────────────────
@@ -367,17 +369,11 @@ def process_file(path: Path):
     total_changes = []
     in_fence = False
     for line in lines:
-        if FENCE_RE.match(line):
-            # Línea delimitadora del fence (apertura o cierre): nunca se
-            # convierte, y alterna el estado para las líneas siguientes.
+        if rules.is_fence_line(line):
             new_lines.append(line)
             in_fence = not in_fence
             continue
         if in_fence:
-            # Dentro de un fenced code block: pasar sin tocar. Un TOC o
-            # cualquier otro contenido aquí es, por definición, texto
-            # plano no-navegable -- enlazarlo produciría corchetes y
-            # paréntesis literales en vez de un link real.
             new_lines.append(line)
             continue
         new_line, changes = convert_line(line)
