@@ -76,6 +76,8 @@ KERNEL_PAGE = "https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7"
 SP_PAGE = "https://app.notion.com/p/37b938befc4280019b9bfcf81130d274"
 MANUAL_PAGE = "https://app.notion.com/p/372938befc4280509a67e40857d7806e"
 CANON_PAGE = "https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c"
+ALIASES_PAGE = "https://app.notion.com/p/37c938befc4280d4b9aef5969830331b"
+BRIEF_PAGE = "https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d"
 
 MAPPING = {
     # --- KERNEL ---
@@ -145,9 +147,7 @@ MAPPING = {
     "KERNEL:CONTEXT-INFRASTRUCTURE": f"{KERNEL_PAGE}#39e938befc42810293b4e55167657d86",
     "KERNEL:CONTEXT-INFRASTRUCTURE-001": f"{KERNEL_PAGE}#39e938befc42810293b4e55167657d86",
     "KERNEL:CONTEXT-INFRASTRUCTURE-002": f"{KERNEL_PAGE}#39e938befc42811aa042c048ec085cbc",
-    "KERNEL:SCOPE": f"{KERNEL_PAGE}#39e938befc42810293b4e55167657d86",  # alias legacy — retirar tras migración
     "KERNEL:DATA-FLOW": f"{KERNEL_PAGE}#39e938befc428101ade4f430c4bee781",
-    "KERNEL:ROUTING": f"{KERNEL_PAGE}#39e938befc42811aa042c048ec085cbc",  # alias legacy — retirar tras migración
     "KERNEL:EVOLUTION": f"{KERNEL_PAGE}#39e938befc42816d813af068ac1d81be",
     "KERNEL:DOC-CONTRACT": f"{KERNEL_PAGE}#39e938befc42818db48bd305897d390f",
     "KERNEL:NORM": f"{KERNEL_PAGE}#39e938befc428147809de3602d40d326",
@@ -161,7 +161,6 @@ MAPPING = {
     # migración headings, aprobado 2026-07-25). Alias legacy conservado
     # hasta aplicar la migración en Notion.
     "SP:DIGITAL-ID-CARD-001": f"{SP_PAGE}#39a938befc42813ca3fde84a978517c0",
-    "SP:CEDULA-DIGITAL": f"{SP_PAGE}#39a938befc42813ca3fde84a978517c0",  # alias legacy — retirar tras migración
 
     # Stubs de System Prompt (§4/§5/§7) que antes reusaban literalmente el
     # ID del Kernel -> ahora tienen ID propio -REF, apuntando al MISMO
@@ -176,7 +175,7 @@ MAPPING = {
     # Change Log: ninguna referencia cruzada real apuntaba al anchor del
     # §9 — todas las citas de "SP:CONSISTENCY" en el sistema ya resolvían
     # al anchor del §11 (el real). Aprobado por el operador 2026-07-25.
-    "SP:MCP-ROUTING-NOTES": f"{SP_PAGE}#PENDIENTE_ANCHOR_§9_MCP_TERMINAL",
+    "SP:MCP-ROUTING-NOTES": f"{SP_PAGE}#3a7938befc4281a5ad7cdccae2a5d2fa",
     "SP:TRIGGERS": f"{SP_PAGE}#39a938befc4281e39643e90b1e5c8613",
     "SP:SCHEMA": f"{SP_PAGE}#39a938befc4281f6a321f71d15c03e5d",
     "SP:ID-CONNECTORS-001": f"{SP_PAGE}#39a938befc42812ab19fe572be4eac94",
@@ -190,29 +189,23 @@ MAPPING = {
     # aprobado 2026-07-25). Anchors preservados exactos. IDs viejos
     # conservados como alias hasta aplicar la migración en Notion.
     "MANUAL:OBJECTIVE-001": f"{MANUAL_PAGE}#39d938befc42803dbcebf1425c969871",
-    "MANUAL:OBJETIVO-001": f"{MANUAL_PAGE}#39d938befc42803dbcebf1425c969871",  # alias legacy
     "MANUAL:HOW-IT-WORKS-001": f"{MANUAL_PAGE}#39d938befc4280bbbe44e15673de53f1",
-    "MANUAL:FUNCIONAMIENTO-001": f"{MANUAL_PAGE}#39d938befc4280bbbe44e15673de53f1",  # alias legacy
     "MANUAL:SETUP-001": f"{MANUAL_PAGE}#39d938befc428083b0d2eae131ec3854",
     "MANUAL:WEEKLY-FLOW-001": f"{MANUAL_PAGE}#39d938befc428005bc2edb8ec38fcf20",
-    "MANUAL:FLUJO-001": f"{MANUAL_PAGE}#39d938befc428005bc2edb8ec38fcf20",  # alias legacy
     # Nuevo ID sin anchor real todavía — Manual §5 (Arranque Frío/Cold
     # Start) no tenía ID antes de esta sesión. Pendiente el anchor de
     # bloque real hasta que se escriba el heading nuevo en Notion.
-    "MANUAL:COLD-START-001": f"{MANUAL_PAGE}#PENDIENTE_ANCHOR_HEADING_NUEVO",
+    "MANUAL:COLD-START-001": f"{MANUAL_PAGE}#3a7938befc428193b2d6dc09fd66dbf9",
     "MANUAL:VCHECKLIST-001": f"{MANUAL_PAGE}#39d938befc4280ff8e9ec87ceb0b3468",
     "MANUAL:DASHBOARD-001": f"{MANUAL_PAGE}#39d938befc428013af17d536c665a3c4",
     "MANUAL:VANTAGE-RUNTIME-001": f"{MANUAL_PAGE}#39d938befc4280ff8c1ed556864bcdd4",
     "MANUAL:DATA-MANAGEMENT-001": f"{MANUAL_PAGE}#39d938befc428094afa0dd90d54e27e5",
-    "MANUAL:GESTION-DATOS-001": f"{MANUAL_PAGE}#39d938befc428094afa0dd90d54e27e5",  # alias legacy
     "MANUAL:TROUBLESHOOTING-001": f"{MANUAL_PAGE}#39d938befc4280f1b941ff06a6b8e0c6",
     "MANUAL:PROMPTS-WRAPPERS-001": f"{MANUAL_PAGE}#39d938befc4280d4a43cd7b6ec0ace17",
     "MANUAL:CHEATSHEETS-001": f"{MANUAL_PAGE}#39d938befc4280169578d883abe71b78",
     "MANUAL:HEALTHCHECK-001": f"{MANUAL_PAGE}#39d938befc428049a4b1c89fec3b8225",
     "MANUAL:GOLDEN-RULES-001": f"{MANUAL_PAGE}#39d938befc4280cd876bdfec6f2989b3",
-    "MANUAL:REGLAS-DE-ORO-001": f"{MANUAL_PAGE}#39d938befc4280cd876bdfec6f2989b3",  # alias legacy
     "MANUAL:FAILURE-PHILOSOPHY-001": f"{MANUAL_PAGE}#39d938befc4280d29606d557df03c39d",
-    "MANUAL:FALLO-001": f"{MANUAL_PAGE}#39d938befc4280d29606d557df03c39d",  # alias legacy
     "MANUAL:SLA-001": f"{MANUAL_PAGE}#39d938befc4280caaea9eb250038df97",
     "MANUAL:SESSION-CYCLE-001": f"{MANUAL_PAGE}#39d938befc428050b634dc6b147e3c16",
     "MANUAL:PATCH-QUALITY-001": f"{MANUAL_PAGE}#39d938befc42807d9133fa1477975b44",
@@ -264,10 +257,33 @@ MAPPING = {
     "CANON:POSITIONING-N4": f"{CANON_PAGE}#39a938befc428110b8f1cb5aa81bb921",
 
     # --- ALIASES ---
+    "ALIASES:SESSION-CYCLE": f"{ALIASES_PAGE}#3a7938befc42811eb1f6dcb74ca2cbbd",
+    "ALIASES:L0-RUNTIME": f"{ALIASES_PAGE}#3a7938befc428192a84cebefe364437b",
+    "ALIASES:L1L2-DISCOVERY": f"{ALIASES_PAGE}#3a7938befc428145bc03f55e1d93d0c9",
+    "ALIASES:L3-PASSIVE-INTAKE": f"{ALIASES_PAGE}#3a7938befc428188bf47cf569d4262a6",
+    "ALIASES:L4-VERSION-CONTROL": f"{ALIASES_PAGE}#3a7938befc4281afb0c0ce4975f8acd3",
+    "ALIASES:DASHBOARD": f"{ALIASES_PAGE}#3a7938befc428118925cd38477b8e59e",
+    "ALIASES:CV-PIPELINE": f"{ALIASES_PAGE}#3a7938befc4281789239ed14fd5b861f",
     # Aliases §8 (Dedup & Oportunidades) no tenía ID previo. Nuevo ID
     # asignado (DRY RUN migración headings, aprobado 2026-07-25).
-    # Anchor pendiente hasta escribir el heading nuevo en Notion.
-    "ALIASES:DEDUP": f"https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#PENDIENTE_ANCHOR_HEADING_NUEVO",
+    # Anchor real capturado vía Terminal (blocks.children.list), sesión 2026-07-26.
+    "ALIASES:DEDUP": f"{ALIASES_PAGE}#577c2a7ecc7f4458971c43f9a77197b0",
+
+    # --- NAVIGATION BRIEF ---
+    # Ampliación de alcance a los 6 documentos fundacionales (aprobado por
+    # el operador, sesión 2026-07-26). Anchors reales capturados vía
+    # Terminal (blocks.children.list).
+    "BRIEF:001": f"{BRIEF_PAGE}#3a8938befc4280738380d045d0c84f12",
+    "BRIEF:002": f"{BRIEF_PAGE}#366b2d2e446b4da6895553771081a21c",
+    "BRIEF:003": f"{BRIEF_PAGE}#7eac296112974bb7afef033844c5ebc0",
+    "BRIEF:004": f"{BRIEF_PAGE}#3a8938befc42803f87bed34b75b0f135",
+    "BRIEF:005": f"{BRIEF_PAGE}#156b4a4a3df74f6dbf0b49252cabc53a",
+    "BRIEF:006": f"{BRIEF_PAGE}#a724e3eb84504b7d9c5cb92e2a12e2cd",
+    "BRIEF:007": f"{BRIEF_PAGE}#3a6d59f563dc465fa05fc7f63d8e15ba",
+    "BRIEF:008": f"{BRIEF_PAGE}#c8ecf031be2541388ae2690a310fab7b",
+    "BRIEF:009": f"{BRIEF_PAGE}#e15f134d7c05421e995b60a7b39a2d98",
+    "BRIEF:010": f"{BRIEF_PAGE}#fa38fab480ba42838cb703ba4b4a136b",
+    "BRIEF:011": f"{BRIEF_PAGE}#de3585fa1b794ac5b5f32ab14a3f1b73",
 }
 
 EXCLUDE_IDS = {
@@ -283,7 +299,10 @@ EXCLUDE_IDS = {
     "CANON:UF-001", "CANON:UF-002", "CANON:UF-003",
 }
 
-TARGET_FILES = {"Kernel.md", "Manual.md", "System Prompt.md", "Career Canon.md"}
+TARGET_FILES = {
+    "Kernel.md", "Manual.md", "System Prompt.md", "Career Canon.md",
+    "Aliases.md", "Brief.md",
+}
 
 
 # ─── Conversión de línea: REF -> hipervínculo ────────────────────────────────

@@ -122,8 +122,9 @@ CENSUS_SPEC = [
             {"id": "KERNEL:CV-PIPELINE", "seccion": "§12", "nombre": "Flujo CV-A → CV-B"},
             {"id": "KERNEL:CANON-UPDATE", "seccion": "§13", "nombre": "Actualización del Canon"},
             {"id": "KERNEL:NAMING-CONVENTION", "seccion": "§14", "nombre": "Convención de Nombres de Outputs"},
-            {"id": "KERNEL:SCOPE", "seccion": "§15", "nombre": "Scope y economía de contexto (Terminal vs MCP)"},
-            {"id": "KERNEL:ROUTING", "seccion": "§15", "nombre": "Rutas de carga MCP / lazy_loader"},
+            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE", "seccion": "§15", "nombre": "Infraestructura de Contexto"},
+            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-001", "seccion": "§15.1", "nombre": "Scope"},
+            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-002", "seccion": "§15.2", "nombre": "Routing"},
             {"id": "KERNEL:DATA-FLOW", "seccion": "§16", "nombre": "Flujo de Datos y Escritura"},
             {"id": "KERNEL:EVOLUTION", "seccion": "§17", "nombre": "Evolución del sistema, deuda técnica, criterios de cambio"},
         ],
@@ -131,40 +132,41 @@ CENSUS_SPEC = [
     {
         "name": "SYSTEM PROMPT",
         "rows": [
-            {"id": "SP:CEDULA-DIGITAL", "seccion": "§2", "nombre": "Cédula Digital — rutas de operación y UUIDs"},
-            {"id": "KERNEL:SCOPE", "seccion": "§3 (referencia)", "nombre": "[Referencia a KERNEL:SCOPE — no sección propia del SP]"},
-            {"id": "KERNEL:DATA-FLOW", "seccion": "§4 (referencia)", "nombre": "[Referencia a KERNEL:DATA-FLOW — no sección propia del SP]"},
-            {"id": "SP:TRIGGERS", "seccion": "§5", "nombre": "Triggers operativos de VANTAGE"},
-            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "§6 (referencia)", "nombre": "[Referencia a KERNEL:CV-GOLDEN-RULES — no sección propia del SP]"},
-            {"id": "SP:SCHEMA", "seccion": "§7", "nombre": "Schema — Trackers (Class A/B)"},
-            {"id": "KERNEL:ROUTING", "seccion": "§8 (referencia)", "nombre": "[Referencia a KERNEL:ROUTING — no sección propia del SP]"},
-            {"id": "SP:ID-CONNECTORS", "seccion": "§9", "nombre": "ID Connectors — esquema PREFIX:NOMBRE-SECCION"},
-            {"id": "SP:BOOTSTRAP-001", "seccion": "(encabezado)", "nombre": "Operating Specification — Bootstrap de Sesión"},
-            {"id": "SP:SYNC-RULE", "seccion": "§1", "nombre": "Sincronización Inicial y Verificación de Versión"},
-            {"id": "SP:CONSISTENCY", "seccion": "§10", "nombre": "Regla de Consistencia Documental"},
-            {"id": "SP:VERSION-CHECK-TOOL", "seccion": "§11", "nombre": "Herramienta de Verificación de Versión de Bajo Costo"},
+            {"id": "SP:DIGITAL-ID-CARD-001", "seccion": "§3", "nombre": "Cédula Digital — rutas de operación y UUIDs"},
+            {"id": "SP:CONTEXT-INFRASTRUCTURE-REF", "seccion": "§4", "nombre": "Referencia — Consultar en Technical Kernel (ex KERNEL:SCOPE)"},
+            {"id": "SP:DATA-FLOW-REF", "seccion": "§5", "nombre": "Referencia — Consultar en Technical Kernel (KERNEL:DATA-FLOW)"},
+            {"id": "SP:TRIGGERS", "seccion": "§6", "nombre": "Triggers operativos de VANTAGE"},
+            {"id": "SP:CV-GOLDEN-RULES-REF", "seccion": "§7", "nombre": "Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES)"},
+            {"id": "SP:SCHEMA", "seccion": "§8", "nombre": "Schema — Trackers (Class A/B)"},
+            {"id": "SP:MCP-ROUTING-NOTES", "seccion": "§9", "nombre": "Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY)"},
+            {"id": "SP:ID-CONNECTORS", "seccion": "§10", "nombre": "ID Connectors — esquema PREFIX:NOMBRE-SECCION"},
+            {"id": "SP:BOOTSTRAP-001", "seccion": "§1", "nombre": "Operating Specification — Bootstrap de Sesión"},
+            {"id": "SP:SYNC-RULE", "seccion": "§2", "nombre": "Sincronización Inicial y Verificación de Versión"},
+            {"id": "SP:CONSISTENCY", "seccion": "§11", "nombre": "Regla de Consistencia Documental"},
+            {"id": "SP:VERSION-CHECK-TOOL", "seccion": "§12", "nombre": "Herramienta de Verificación de Versión de Bajo Costo"},
         ],
     },
     {
         "name": "MANUAL",
         "rows": [
-            {"id": "MANUAL:OBJETIVO-001", "seccion": "§1", "nombre": "Objetivo de VANTAGE"},
-            {"id": "MANUAL:FUNCIONAMIENTO-001", "seccion": "§2", "nombre": "Cómo Funciona"},
-            {"id": "MANUAL:SETUP-001", "seccion": "§3", "nombre": "Setup"},
-            {"id": "MANUAL:FLUJO-001", "seccion": "§4", "nombre": "Flujo Punta a Punta"},
-            {"id": "MANUAL:VCHECKLIST-001", "seccion": "§4.1", "nombre": "El Checklist — V-Checklist semanal"},
-            {"id": "MANUAL:DASHBOARD-001", "seccion": "§4.2", "nombre": "Dashboard — recuperación antes de CV Optimization"},
-            {"id": "MANUAL:VANTAGE-RUNTIME-001", "seccion": "§5", "nombre": "VANTAGE Runtime (Consulta Operativa)"},
-            {"id": "MANUAL:GESTION-DATOS-001", "seccion": "§6", "nombre": "Gestión de Datos"},
-            {"id": "MANUAL:TROUBLESHOOTING-001", "seccion": "§7", "nombre": "Troubleshooting"},
-            {"id": "MANUAL:PROMPTS-WRAPPERS-001", "seccion": "§8", "nombre": "Prompts & Wrappers"},
-            {"id": "MANUAL:CHEATSHEETS-001", "seccion": "§9", "nombre": "Cheat Sheets"},
-            {"id": "MANUAL:HEALTHCHECK-001", "seccion": "§10", "nombre": "Health Check"},
-            {"id": "MANUAL:REGLAS-DE-ORO-001", "seccion": "§12", "nombre": "Reglas de Oro para Operadores"},
-            {"id": "MANUAL:FALLO-001", "seccion": "§13", "nombre": "Filosofía de Fallo para Operadores"},
-            {"id": "MANUAL:SLA-001", "seccion": "§14", "nombre": "SLA de Latencia Post-Ingesta"},
-            {"id": "MANUAL:SESSION-CYCLE-001", "seccion": "§5.6", "nombre": "Ciclo de Sesión — Open/Close"},
-            {"id": "MANUAL:PATCH-QUALITY-001", "seccion": "§9", "nombre": "Criterio de Calidad para Parches Documentales"},
+            {"id": "MANUAL:OBJECTIVE-001", "seccion": "§1", "nombre": "Objetivo de VANTAGE"},
+            {"id": "MANUAL:HOW-IT-WORKS-001", "seccion": "§2", "nombre": "Cómo Funciona"},
+            {"id": "MANUAL:FAILURE-PHILOSOPHY-001", "seccion": "§3", "nombre": "Filosofía de Fallo para Operadores"},
+            {"id": "MANUAL:SETUP-001", "seccion": "§4", "nombre": "Setup"},
+            {"id": "MANUAL:COLD-START-001", "seccion": "§5", "nombre": "Arranque Frío — Checklist de Reactivación"},
+            {"id": "MANUAL:SESSION-CYCLE-001", "seccion": "§6", "nombre": "Ciclo de Sesión — Open/Close"},
+            {"id": "MANUAL:VCHECKLIST-001", "seccion": "§7", "nombre": "El Checklist — V-Checklist semanal"},
+            {"id": "MANUAL:WEEKLY-FLOW-001", "seccion": "§8", "nombre": "Flujo Semanal de Operación"},
+            {"id": "MANUAL:DASHBOARD-001", "seccion": "§8.2", "nombre": "Dashboard — recuperación antes de CV Optimization"},
+            {"id": "MANUAL:VANTAGE-RUNTIME-001", "seccion": "§9", "nombre": "VANTAGE Runtime (Consulta Operativa)"},
+            {"id": "MANUAL:DATA-MANAGEMENT-001", "seccion": "§10", "nombre": "Gestión de Datos"},
+            {"id": "MANUAL:HEALTHCHECK-001", "seccion": "§11", "nombre": "Health Check"},
+            {"id": "MANUAL:TROUBLESHOOTING-001", "seccion": "§12", "nombre": "Troubleshooting"},
+            {"id": "MANUAL:PROMPTS-WRAPPERS-001", "seccion": "§13", "nombre": "Prompts & Wrappers"},
+            {"id": "MANUAL:CHEATSHEETS-001", "seccion": "§14", "nombre": "Cheat Sheets"},
+            {"id": "MANUAL:PATCH-QUALITY-001", "seccion": "§15", "nombre": "Criterio de Calidad para Parches Documentales"},
+            {"id": "MANUAL:GOLDEN-RULES-001", "seccion": "§16", "nombre": "Reglas de Oro para Operadores"},
+            {"id": "MANUAL:SLA-001", "seccion": "§17", "nombre": "SLA de Latencia Post-Ingesta"},
             {"id": "MANUAL:CV-GOLDEN-RULES-INDEX", "seccion": "§18", "nombre": "Reglas de Oro CV — Referencia Operativa"},
             {"id": "MANUAL:POSITIONING-CRITERIA", "seccion": "§19", "nombre": "Positioning Modes (N1–N4) — Criterio de Selección"},
             {"id": "MANUAL:GOLDEN-SKELETON-REF", "seccion": "§20", "nombre": "Golden Skeleton — Qué es y Dónde Vive"},
@@ -227,6 +229,7 @@ CENSUS_SPEC = [
             {"id": "ALIASES:L4-VERSION-CONTROL", "seccion": "§5", "nombre": "L4 · Version Control & Documentación"},
             {"id": "ALIASES:DASHBOARD", "seccion": "§6", "nombre": "Dashboard (Martes — Recuperación)"},
             {"id": "ALIASES:CV-PIPELINE", "seccion": "§7", "nombre": "CV Pipeline (Miércoles)"},
+            {"id": "ALIASES:DEDUP", "seccion": "§8", "nombre": "Dedup & Oportunidades"},
         ],
     },
     {
@@ -398,12 +401,18 @@ LEADING_NUMBER_SECTION_RE = re.compile(r"^(\d+(?:\.\d+)*)\.?\s+")
 
 def extract_live_section(plain: str) -> str | None:
     """
-    Extrae la sección real ("§9.9", "§K.1", "§8.2") del texto crudo de un
-    heading de definición, soportando las DOS convenciones vigentes:
-      (1) "§N — ID" / "§N ID"           (Kernel, Career Canon, Brief)
-      (2) "N. Título ... ID: MANUAL:X"  (Manual — número plano sin "§")
-    Devuelve None si ninguna de las dos convenciones aplica (ej. heading
-    = ID puro sin ningún prefijo numérico, como "### KERNEL:TRIGGER-001").
+    Extrae la sección real del texto crudo de un heading de definición,
+    soportando las TRES convenciones vigentes durante la migración:
+      (1) "§N — ID" / "§N ID"            (legacy Kernel/Canon/Brief, en salida)
+      (2) "N. Título ... ID: MANUAL:X"   (legacy Manual — número plano, sin "§")
+      (3) "NN PREFIX:KEY" / "NN.N ..."   (CANÓNICO, aprobado 2026-07-25 —
+                                           reemplaza (1) y (2) por completo)
+    Para (1) se conserva el "§" tal cual aparece en el documento real. Para
+    (2)/(3) NO se inventa un "§" que el heading no tiene — se devuelve el
+    número plano tal como está escrito, para reflejar fielmente el estado
+    real del documento (legacy vs. ya migrado a formato canónico).
+    Devuelve None si ninguna convención aplica (heading = ID puro, sin
+    ningún prefijo numérico, ej. "### KERNEL:TRIGGER-001").
     """
     stripped = plain.strip("` \n")
     m = SECTION_HEADING_CAPTURE_RE.match(stripped)
@@ -411,7 +420,7 @@ def extract_live_section(plain: str) -> str | None:
         return f"§{m.group(1)}"
     m2 = LEADING_NUMBER_SECTION_RE.match(stripped)
     if m2:
-        return f"§{m2.group(1)}"
+        return m2.group(1)
     return None
 
 
@@ -420,24 +429,34 @@ def is_definition_block(plain: str, id_str: str, btype: str) -> bool:
     Determina si el bloque ES la definición del ID (heading o texto que arranca
     con el ID), vs. una mención de pasada.
 
-    Reconoce DOS nomenclaturas válidas de heading, ambas presentes en los
-    documentos fundacionales:
+    Reconoce TRES nomenclaturas válidas de heading, las tres presentes hoy en
+    los documentos fundacionales durante la migración:
       (a) Heading = ID puro, ej. "### KERNEL:ARCHITECTURE-L0"
-      (b) Heading = "§N — ID" (sección numerada), ej. "## §22 — KERNEL:DOC-CONTRACT"
-    La versión anterior de esta función solo cubría (a); (b) es el formato de
-    TODOS los headings de sección de primer nivel del Kernel, lo que hacía que
-    ninguna sección nueva pudiera detectarse como huérfana (ver DT — Census
-    Sync, corrida 2026-07-16).
+      (b) Heading = "§N — ID" (legacy, en migración fuera), ej.
+          "## §22 — KERNEL:DOC-CONTRACT"
+      (c) Heading = "NN PREFIX:KEY" / "NN.N PREFIX:KEY-NNN" — formato canónico
+          APROBADO por el operador el 2026-07-25 para reemplazar (b) por
+          completo (sin "§", padding 2 dígitos en sección padre, sin padding
+          en el decimal de subsección), ej. "## 08 CANON:OUTPUT-CONTRACT" o
+          "## 08.1 CANON:OUTPUT-CONTRACT-001".
+    La versión anterior de esta función solo cubría (a) y (b); (c) es el
+    formato objetivo de la migración de headings en curso — sin soporte para
+    (c), todo heading ya migrado al nuevo estándar dejaría de detectarse como
+    definición, generando falsos huérfanos.
     """
     stripped = plain.strip("` \n")
     heading_body = SECTION_HEADING_PREFIX_RE.sub("", stripped)
+    if heading_body == stripped:
+        # No había prefijo "§..." — probar el prefijo canónico nuevo, número
+        # plano sin símbolo (nomenclatura c).
+        heading_body = LEADING_NUMBER_SECTION_RE.sub("", stripped)
     is_heading = btype in {"heading_1", "heading_2", "heading_3"}
     return (
         stripped == id_str
         or stripped == f"ID: {id_str}"
         or _contains_id_boundary(plain, f"ID: {id_str}")
         or (is_heading and _starts_with_id_boundary(plain.lstrip("` "), id_str))  # nomenclatura (a)
-        or (is_heading and _starts_with_id_boundary(heading_body, id_str))        # nomenclatura (b)
+        or (is_heading and _starts_with_id_boundary(heading_body, id_str))        # nomenclaturas (b)/(c)
     )
 
 
