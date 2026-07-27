@@ -615,6 +615,24 @@ def main():
             elif "WHITELISTED" in reason or "SPA" in reason:
                 whitelist_bypass_count += 1
 
+            # FIX BUG CRÍTICO (Bug Tracker 3aa938be-fc42-818b-a4b9-f66c144ef50d):
+            # el camino de éxito nunca escribía Fetch, dejándolo vacío y forzando
+            # BLOCKED en gate() por default. Solo escribe si hace falta, para no
+            # sumar llamadas innecesarias a la API (current_fetch ya viene de línea 574).
+            if current_fetch != "Accesible":
+                if not DRY_RUN:
+                    try:
+                        client.pages.update(
+                            page_id=item["id"],
+                            properties={
+                                "Fetch": {"select": {"name": "Accesible"}},
+                            }
+                        )
+                    except Exception as e:
+                        print(f"WARNING: Error actualizando Fetch {item['id'][:8]}: {e}")
+                else:
+                    print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Fetch'] -> Accesible")
+
     print(f"OK URL Gate: {url_gate_updates} validos, {url_gate_rejects} rechazados")
     if jd_bypass_count > 0:
         print(f"   -> {jd_bypass_count} bypass por JD existente")
