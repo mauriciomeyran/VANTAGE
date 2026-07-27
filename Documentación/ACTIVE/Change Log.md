@@ -1,6 +1,21 @@
 # V | CHANGELOG
 
 ---
+### v9.9.5 — Documentación Transversal: vsum.py (Continuidad de Sesiones) · 2026-07-27
+Tipo: [DOC]
+Alcance: Kernel, Manual, Aliases, System Prompt (Notion).
+Contexto: vsum.py — script nuevo del operador para resumir transcripts de sesiones (Claude/Gemini/ChatGPT) a Markdown estructurado, con push opcional a un INBOX de Notion — no tenía ancla documental en ningún fundacional. Se ejecutó vantage-documentacion-transversal-propuesta seguido de -implementacion para integrarlo.
+Kernel: nuevo párrafo en §4.4 (KERNEL:ARCHITECTURE-L4), junto a vsync_doc.py/vgit — describe vsum.py como herramienta de continuidad entre sesiones e IAs, escritura vía notion_client directo (mismo patrón ya usado por vsync_doc.py, no excepción nueva a SP:MCP-ROUTING-NOTES).
+Manual: nueva entrada en §9.2 (MANUAL:VANTAGE-RUNTIME-001), junto a vversions/vcensus — aclara que no es comando del Tracker ni observabilidad de Notion, sino infraestructura de continuidad documental sobre transcripts externos.
+Aliases: nueva fila vsum en §5 (ALIASES:L4-VERSION-CONTROL).
+System Prompt: nueva entrada en la Cédula Digital (SP:DIGITAL-ID-CARD-001) — INBOX (Session Summaries) con su Page ID, nodo de Notion previamente no documentado.
+Write-Back Verification: los 4 documentos re-fetched de forma independiente por Claude tras cada escritura — sin mismatch. Un residuo de placeholder introducido en el primer intento de escritura del Kernel fue detectado en el mismo write-back y corregido en una segunda pasada antes de continuar.
+IDs afectados: ninguna alta/baja de KERNEL:ID/MANUAL:ID — integración como filas/párrafos en nodos existentes, no sección nueva. Census no requiere regeneración por ID canónico, pero conviene re-correr para reflejar la fila nueva de Aliases.
+Pendiente (fuera de esta entrada):
+- Correr apply_hyperlinks.py --dry-run para confirmar si SP:DIGITAL-ID-CARD-001 requiere nuevo hipervínculo hacia la entrada de INBOX (probablemente no, es una línea de UUID plano, no un ID canónico PREFIX:KEY).
+- Heredados de v9.9.4: investigar las 5 KERNEL:CV-GOLDEN-RULES-00X con sección hardcodeada en Census; decidir cierre de SESSION-20260724-A; auditar patrón de anidamiento mention-page en otras celdas de Kernel/Career Canon.
+Versión actualizada: 9.9.5 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.9.3/v9.9.4 (mixto, ver v9.9.4) hasta que el operador corra verify_versions.py --sync.
+---
 ### v9.9.4 — Recuperación de Manual Post-Incidente de Red + Fix de Anidamiento de Links · 2026-07-26
 Tipo: [FIX]
 Alcance: Manual (Notion).

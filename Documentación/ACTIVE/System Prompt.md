@@ -1,6 +1,6 @@
 # V | SYSTEM PROMPT 
 
-# V | SYSTEM PROMPT 
+# V | SYSTEM PROMPT
 
 ## 01 SP:BOOTSTRAP-001
 ## Operating Specification
@@ -94,6 +94,7 @@ VERSION MANIFEST (DB).............02331706-d2f5-43d1-8166-ed53b690dbd7
 SESSION LEDGER (DB)................38324240-c686-47d0-8082-cee5e4409f88
 FIGMA SYNC........................04-Vantage_CV/Figma Sync/
 ARCHIVO SCRIPT LIBRARY (DS)........39f938be-fc42-80ec-8f2e-000b16d736e2
+INBOX (Session Summaries)..........f30938be-fc42-824a-ad9b-01c5305c73f3
 ---
 ## 04 SP:CONTEXT-INFRASTRUCTURE-REF
 ## Alcance del Kernel

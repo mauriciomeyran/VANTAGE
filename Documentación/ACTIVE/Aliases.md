@@ -1,7 +1,5 @@
 # V | ALIASES
 
-# V | ALIASES
-
 ## TABLE OF CONTENT
 ```plain text
 1. Session Cycle
@@ -63,6 +61,7 @@
 | vsync-doc | Invocación directa del motor de sync documental (uso interno/depuración). | Corre vsync_doc.py sin el wrapper de comandos — requiere pasar flags manualmente. |
 | vdoc | Sincroniza los 6 documentos fundacionales desde Notion hacia el disco local (Read Only): Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log. | Corre vdoc.py (wrapper de comandos) → invoca vsync_doc.py con la dirección y documento pedidos (notion/auto (equivalente), dry (previsualización limitada)). |
 | vhyperlinks | Aplica hipervínculos cross-reference sobre los 6 documentos fundacionales locales, a partir de cada mención de un ID canónico (PREFIX:KEY). | Corre apply_hyperlinks.py --root Documentación/ACTIVE. Sin --apply es dry-run (reporta cuántos links propuestos por documento, no escribe). Agregar --apply para escribir de verdad. |
+| vsum | Resume transcripts de sesiones (propias o de otra IA) a Markdown estructurado, para continuidad entre chats sin pérdida de contexto. | Corre vsum.py: parsea el transcript (.md o URL de Claude share), lo resume vía Groq o Gemini (fallback automático), y opcionalmente crea la página de resumen como hija del INBOX en Notion (--notion) vía notion_client directo. |
 ## 06 ALIASES:DASHBOARD
 ## Dashboard (Martes — Recuperación)
 | Alias | Qué hace | Procedimiento interno |
