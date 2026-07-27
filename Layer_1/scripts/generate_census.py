@@ -73,6 +73,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:DOCUMENTATION-008", "seccion": "§3.8", "nombre": "Sincronización Obligatoria del ID Census"},
             {"id": "KERNEL:DOCUMENTATION-009", "seccion": "§3.9", "nombre": "Registro de Continuidad de Sesión"},
             {"id": "KERNEL:DOCUMENTATION-010", "seccion": "§3.10", "nombre": "Documentación Transversal"},
+            {"id": "KERNEL:DOCUMENTATION-011", "seccion": "§3.11", "nombre": "Sistema de Cross-Reference Hyperlinks"},
             {"id": "KERNEL:ARCHITECTURE", "seccion": "§4", "nombre": "Arquitectura de Cuatro Capas"},
             {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "§4", "nombre": "L1 — Active Recon"},
             {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "§4", "nombre": "L2 — Strategic Search"},
