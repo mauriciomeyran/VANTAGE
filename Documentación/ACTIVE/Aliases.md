@@ -26,7 +26,6 @@
 | --- | --- | --- |
 | start | Arranca el sistema al inicio de cada sesión: activa el entorno, carga variables y corre el chequeo de salud. | Activa .venv, exporta config/layer_1.env, y ejecuta health_check.py, que revisa en orden versión, entorno, git, conectividad a Notion, sync documental y antigüedad de índices — auto-sincroniza el Entity Index si pasó más de 24h. |
 | vversions --bootstrap | Genera el paquete de contexto de apertura de sesión: última fila del Ledger, última entrada del Changelog, tickets críticos pendientes. | Lee pages.retrieve sobre la página del Session Ledger y el Changelog y arma el bloque [DUMP INICIO SESIÓN VANTAGE] — no escribe nada. |
-| vversions --check | Confirma que los 7 documentos fundacionales están en la misma versión antes de trabajar. | Itera los 7 page_id fijos y lee solo la propiedad Versión de cada uno vía pages.retrieve — no toca el contenido. |
 | vversions --sync | Propaga la versión ya escrita en el Changelog hacia los 6 documentos restantes. | Único flag con escritura: lee la versión target del Changelog y ejecuta 6 pages.patch secuenciales sobre la propiedad Versión — housekeeping, exento de APROBAR_WRITE. |
 ## 02 ALIASES:L0-RUNTIME
 ## L0 · VANTAGE Runtime
@@ -40,7 +39,7 @@
 | vresolve | Resuelve una entidad específica (ID o nombre) a su ficha completa. | Corre vantage.py resolve — 4 pasos: lookup en índice, mapeo a data source, query a Notion, validación. |
 | vcontext | Trae contexto extendido de una entidad (relaciones, backlinks). | Corre vantage.py context sobre graph_v2.json y backlinks_v2.json. |
 | vquery | Corre una consulta estructurada contra el índice. | Corre vantage.py query — filtra entity_index_v2.json por los parámetros dados. |
-| vversions (sin flag) | Punto de entrada al motor de verificación de versión — requiere flag explícito (--bootstrap/--check/--sync, ver familia 1). | — |
+| vversions (sin flag) | Punto de entrada al motor de verificación de versión — requiere flag explícito (--bootstrap/--sync, ver familia 1). | — |
 | vcensus | Regenera el V-ID-CENSUS y reporta IDs huérfanos. | Corre generate_census.py — resuelve cada ID contra CENSUS_SPEC, detecta huérfanos no listados, y genera deeplink de bloque exacto vía API para cada uno. |
 | vsource | Recarga la configuración de shell tras editar .zshrc, sin abrir una terminal nueva. | source ~/.zshrc — housekeeping puro, no toca Notion ni el pipeline. |
 ## 03 ALIASES:L1L2-DISCOVERY
@@ -62,7 +61,7 @@
 | --- | --- | --- |
 | vgit | Fuerza un sync inmediato del repo git fuera de su horario automático. | Invoca git_sync_wrapper.sh — commit con timestamp + push a origin/main si hay cambios sin commitear. |
 | vsync-doc | Invocación directa del motor de sync documental (uso interno/depuración). | Corre vsync_doc.py sin el wrapper de comandos — requiere pasar flags manualmente. |
-| vdoc | Sincroniza los 7 documentos fundacionales desde Notion hacia el disco local (Read Only): Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log, Brief. | Corre vdoc.py (wrapper de comandos) → invoca vsync_doc.py con la dirección y documento pedidos (notion/auto (equivalente), dry (previsualización limitada)). |
+| vdoc | Sincroniza los 6 documentos fundacionales desde Notion hacia el disco local (Read Only): Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log. | Corre vdoc.py (wrapper de comandos) → invoca vsync_doc.py con la dirección y documento pedidos (notion/auto (equivalente), dry (previsualización limitada)). |
 | vhyperlinks | Aplica hipervínculos cross-reference sobre los 6 documentos fundacionales locales, a partir de cada mención de un ID canónico (PREFIX:KEY). | Corre apply_hyperlinks.py --root Documentación/ACTIVE. Sin --apply es dry-run (reporta cuántos links propuestos por documento, no escribe). Agregar --apply para escribir de verdad. |
 ## 06 ALIASES:DASHBOARD
 ## Dashboard (Martes — Recuperación)
