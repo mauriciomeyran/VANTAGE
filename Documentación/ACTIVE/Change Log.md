@@ -1,6 +1,22 @@
 # V | CHANGELOG
 
 ---
+### v9.9.4 — Recuperación de Manual Post-Incidente de Red + Fix de Anidamiento de Links · 2026-07-26
+Tipo: [FIX]
+Alcance: Manual (Notion).
+Contexto: Durante el push local→Notion de apply_hyperlinks.py (ver v9.9.2/v9.9.3), un corte de energía interrumpió la conexión a mitad de la escritura sobre Manual (httpcore.ConnectError, tras fallar reintentos de borrado de bloque en Kernel). El operador restauró Manual manualmente a un snapshot de v9.9.1 para garantizar integridad estructural, lo que revirtió los 9 hipervínculos de §18 (KERNEL:CV-GOLDEN-RULES-001..005) y §19 (CANON:POSITIONING-N1..N4) aplicados en v9.9.2.
+Cambios:
+- Fetch independiente de Manual completo (Claude) confirmó la reversión de los 9 links a texto plano en las celdas de tabla de §18/§19 — resto del documento intacto.
+- Reaplicados los 9 hipervínculos vía notion-update-page (update_content, una operación por celda), usando los anchors ya verificados en el diff auditado de apply_hyperlinks.py en esta misma sesión.
+- Bug adicional descubierto y corregido durante la reaplicación: el primer intento de reemplazo de cada celda generó un anidamiento roto — [[KERNEL:CV-GOLDEN-RULES-00N](anchor)](mention-page url="...") — porque cada celda ya tenía una mention-page completa envolviendo el ID (probablemente residuo de una operación previa de notion-create-pages/sync automático de páginas mencionadas). Corregido con una segunda pasada de update_content que remueve el envoltorio mention-page y deja únicamente [ID](anchor) limpio, igual al patrón usado en el resto del documento.
+Write-Back Verification: Manual re-fetched de forma independiente por Claude tras cada una de las dos pasadas (reaplicación + fix de anidamiento) — confirmado que las 9 celdas de §18/§19 están correctas y sin anidamiento, y que ninguna otra sección del documento (§1–§17, §20–§21) sufrió alteración.
+IDs afectados: ninguno — mismos 9 IDs ya existentes desde v9.7.9/v9.9.0, sin alta/baja/rename. Census no requiere regeneración.
+Pendiente (fuera de esta entrada, heredado):
+- Investigar por qué las 5 KERNEL:CV-GOLDEN-RULES-00X siguen resolviendo con sección hardcodeada en el Census pese a que Kernel y Manual están confirmados en formato canónico completo.
+- Decidir cierre de SESSION-20260724-A, abierta en el Ledger desde hace varios días.
+- Investigar si el patrón de anidamiento mention-page descubierto aquí afecta otras celdas de tabla en Kernel o Career Canon — no auditado exhaustivamente en esta sesión, solo confirmado en Manual §18/§19.
+Versión actualizada: 9.9.4 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.9.3 hasta que el operador corra verify_versions.py --sync.
+---
 ### v9.9.3 — Documentación Transversal: Sistema de Cross-Reference Hyperlinks · 2026-07-26
 Tipo: [DOC]
 Alcance: Kernel, Manual, Aliases (Notion) + 2 skills locales (fuera de Notion).

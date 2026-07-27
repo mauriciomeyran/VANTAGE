@@ -63,7 +63,7 @@
 | vgit | Fuerza un sync inmediato del repo git fuera de su horario automático. | Invoca git_sync_wrapper.sh — commit con timestamp + push a origin/main si hay cambios sin commitear. |
 | vsync-doc | Invocación directa del motor de sync documental (uso interno/depuración). | Corre vsync_doc.py sin el wrapper de comandos — requiere pasar flags manualmente. |
 | vdoc | Sincroniza los 7 documentos fundacionales desde Notion hacia el disco local (Read Only): Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log, Brief. | Corre vdoc.py (wrapper de comandos) → invoca vsync_doc.py con la dirección y documento pedidos (notion/auto (equivalente), dry (previsualización limitada)). |
-| vhyperlinks | Aplica hipervínculos cross-reference sobre los 6 documentos fundacionales editables — convierte menciones de IDs canónicos en links reales al bloque de definición. | Corre apply_hyperlinks.py --root "Documentación/ACTIVE" (dry-run por defecto; agregar --apply para escribir). Ver Manual §11, "Aplicación de Hipervínculos Cross-Reference". |
+| vhyperlinks | Aplica hipervínculos cross-reference sobre los 6 documentos fundacionales locales, a partir de cada mención de un ID canónico (PREFIX:KEY). | Corre apply_hyperlinks.py --root Documentación/ACTIVE. Sin --apply es dry-run (reporta cuántos links propuestos por documento, no escribe). Agregar --apply para escribir de verdad. |
 ## 06 ALIASES:DASHBOARD
 ## Dashboard (Martes — Recuperación)
 | Alias | Qué hace | Procedimiento interno |
