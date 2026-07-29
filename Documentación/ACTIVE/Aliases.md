@@ -1,23 +1,15 @@
 # V | ALIASES
 
-## TABLE OF CONTENT
-```plain text
-1. Session Cycle
-
-2. L0 · VANTAGE Runtime
-
-3. L1/L2 · Discovery (Lunes)
-
-4. L3 · Passive Intake
-
-5. L4 · Version Control & Documentación
-
-6. Dashboard (Martes — Recuperación)
-
-7. CV Pipeline (Miércoles)
-
-8. Dedup & Oportunidades
-```
+| # | ID | SECCIÓN | PORCIÓN |
+| --- | --- | --- | --- |
+| 01 | ALIASES:SESSION-CYCLE | Session Cycle |  |
+| 02 | ALIASES:L0-RUNTIME | L0 · VANTAGE Runtime |  |
+| 03 | ALIASES:L1L2-DISCOVERY | L1/L2 · Discovery |  |
+| 04 | ALIASES:L3-PASSIVE-INTAKE | L3 · Passive Intake |  |
+| 05 | ALIASES:L4-VERSION-CONTROL | L4 · Version Control |  |
+| 06 | ALIASES:DASHBOARD | Dashboard |  |
+| 07 | ALIASES:CV-PIPELINE | CV Pipeline |  |
+| 08 | ALIASES:DEDUP | Dedup & Oportunidades |  |
 ## 01 ALIASES:SESSION-CYCLE
 ## Session Cycle
 | Alias | Qué hace | Procedimiento interno |

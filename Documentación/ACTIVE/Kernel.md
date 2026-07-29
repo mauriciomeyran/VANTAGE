@@ -1,62 +1,28 @@
 # V | KERNEL
 
-# V | KERNEL
-
-## KERNEL:AUDIENCE-SCOPE
+> 
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Sistemas Agente de IA.
 - Alcance: Este documento es el KERNEL_RUNTIME, que contiene únicamente los contratos operativos activos para la IA. Para el documento de referencia completo, solicitar acceso al KERNEL 8.0.
-</callout>
----
-## TABLE OF CONTENTS
-─── I. FUNDAMENTO
-01   [KERNEL:PURPOSE](V | KERNEL)
-02   [KERNEL:FAIL-PHILOSOPHY](V | KERNEL)
-03   KERNEL:DOCUMENTATION (L0)
-03.1   DOCUMENTATION-001 - Contract
-03.2   DOCUMENTATION-002 - Norm
-03.3   DOCUMENTATION-003 - Architecture
-03.4   DOCUMENTATION-004 - Bootstrap
-03.5   DOCUMENTATION-005 - Skill Announce Convention
-03.6   DOCUMENTATION-006 - Health-Check Tool
-03.7   DOCUMENTATION-007 - Version-Check Tool
-03.8   DOCUMENTATION-008 - Census-Sync Tool
-03.9   DOCUMENTATION-009 - Session Ledger
-03.10  DOCUMENTATION-010 - Documentation Transversal
-03.11  DOCUMENTATION-011 - Cross-Reference Hyperlink System
-
-04   [KERNEL:ARCHITECTURE](V | KERNEL) (L1, L2, L3, L4, Figma Sync)
-05   [KERNEL:OWNERSHIP](V | KERNEL)
-06   [KERNEL:DASHBOARD-CHECKLIST-ARCH](V | KERNEL)
-
-─── II. DATOS, ESQUEMAS Y REGLAS
-07   [KERNEL:SCHEMA](V | KERNEL)
-08   [KERNEL:TRACKER-SCHEMA](V | KERNEL)
-09   [KERNEL:GATE-DECISION](V | KERNEL)
-09.1  GATE-DECISION-001 — Bypass
-09.2  GATE-DECISION-002 — Lógica Estándar
-09.3  GATE-DECISION-003 — REVIEW_NEEDED
-09.4  GATE-DECISION-004 — Gates Deterministas
-09.5  GATE-DECISION-005 — Recuperación BLOCKED
-09.6  GATE-DECISION-006 — REJECTED
-09.7  GATE-DECISION-007 — Archivado Automático
-09.8  GATE-DECISION-008 — Capas Técnica vs. Negocio
-09.9  GATE-DECISION-009 — Escalamiento de Pendientes a Tickets
-10   [KERNEL:CV-GOLDEN-RULES](V | KERNEL)
-
-─── III. EJECUCIÓN
-11  [KERNEL:TRIGGERS](V | KERNEL)
-12  [KERNEL:CV-PIPELINE](V | KERNEL)
-13  [KERNEL:CANON-UPDATE](V | KERNEL)
-14  [KERNEL:NAMING-CONVENTION](V | KERNEL)
-
-─── IV. INFRAESTRUCTURA DE CONTEXTO
-15  [KERNEL:CONTEXT-INFRASTRUCTURE](V | KERNEL)
-15.1  KERNEL:CONTEXT-INFRASTRUCTURE-001
-15.2  KERNEL:CONTEXT-INFRASTRUCTURE-002
-16  [KERNEL:DATA-FLOW](V | KERNEL)
-17  [KERNEL:EVOLUTION](V | KERNEL)
----
+| # | ID | SECCIÓN | PORCIÓN |
+| --- | --- | --- | --- |
+| 01 | KERNEL:PURPOSE | FUNDAMENTO | FUNDAMENTO |
+| 02 | KERNEL:FAIL-PHILOSOPHY | FILOSOFÍA DE FALLO | FUNDAMENTO |
+| 03 | KERNEL:DOCUMENTATION | DOCUMENTACIÓN (L0) | FUNDAMENTO |
+| 04 | KERNEL:ARCHITECTURE | ARQUITECTURA | FUNDAMENTO |
+| 05 | KERNEL:OWNERSHIP | OWNERSHIP | FUNDAMENTO |
+| 06 | KERNEL:DASHBOARD-CHECKLIST-ARCH | DASHBOARD CHECKLIST | FUNDAMENTO |
+| 07 | KERNEL:SCHEMA | SCHEMA | DATOS, ESQUEMAS Y REGLAS |
+| 08 | KERNEL:TRACKER-SCHEMA | TRACKER SCHEMA | DATOS, ESQUEMAS Y REGLAS |
+| 09 | KERNEL:GATE-DECISION | GATE DECISION | DATOS, ESQUEMAS Y REGLAS |
+| 10 | KERNEL:CV-GOLDEN-RULES | CV GOLDEN RULES | DATOS, ESQUEMAS Y REGLAS |
+| 11 | KERNEL:TRIGGERS | TRIGGERS | EJECUCIÓN |
+| 12 | KERNEL:CV-PIPELINE | CV PIPELINE | EJECUCIÓN |
+| 13 | KERNEL:CANON-UPDATE | CANON UPDATE | EJECUCIÓN |
+| 14 | KERNEL:NAMING-CONVENTION | NAMING CONVENTION | EJECUCIÓN |
+| 15 | KERNEL:CONTEXT-INFRASTRUCTURE | CONTEXT INFRASTRUCTURE | INFRAESTRUCTURA DE CONTEXTO |
+| 16 | KERNEL:DATA-FLOW | DATA FLOW | INFRAESTRUCTURA DE CONTEXTO |
+| 17 | KERNEL:EVOLUTION | EVOLUTION | INFRAESTRUCTURA DE CONTEXTO |
 # I. FUNDAMENTO
 ## 01 KERNEL:PURPOSE
 ## Propósito del Sistema
@@ -253,7 +219,6 @@ Capa de presentación adicional sobre los datos que las capas de búsqueda produ
 1. Capa visual compartida — vantage-tokens.css + vantage-theme.js. Única capa realmente compartida entre (1) y (2).
 Regla: cualquier cambio a color de estado semántico o toggle de tema se hace en vantage-tokens.css/vantage-theme.js, nunca inline.
 ---
----
 # II. DATOS, ESQUEMAS Y REGLAS
 ## 07 KERNEL:SCHEMA
 ## Modelo de Datos y Ownership
@@ -370,6 +335,26 @@ Resolución de los 3 puntos de fricción identificados:
 | Re-evaluación Nivel 2 → Nivel 3 | Si durante la sesión aparece evidencia dura de que un pendiente Nivel 2 es bloqueante/degradante, Claude re-clasifica explícitamente a Nivel 3, lo declara al operador ("Reclasifico X de Nivel 2 a Nivel 3 por [evidencia]" ) y dispara el ticket automático. |
 | Choque con [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca) §5 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
 Referencia cruzada Manual: Ver Manual §6 — Ciclo de Sesión para la implementación práctica de este escalamiento dentro del flujo operador (dónde se declara un Nivel 2, qué cuenta como fuente dura para Nivel 3, y cómo se refleja en el cierre de sesión).
+---
+## 09.10 KERNEL:GATE-DECISION-010
+## Definición de Estados Terminales Protegidos
+Contrato de terminalidad (doble criterio). Fuente de verdad ejecutable: gate_logic.py (constantes de módulo).
+### Criterios (orden de evaluación obligatorio)
+1. Status → STATUS_TERMINAL_MAP (prioridad)
+- "Postulado" → protege como APPLIED
+- "Rechazado" → protege como REJECTED
+1. Next_Action → TERMINAL_ACTIONS
+- "Archivar" · "Expirada"
+1. Si ninguno aplica → None (registro elegible para recálculo por gate())
+### Invariantes
+- gate_logic() se invoca antes de gate() en todo pipeline ordinario y backfill (layer_1_run.py Fase 4).
+- Un registro terminal no puede ser sobreescrito por recálculo de Score/Gate, aunque cambien campos Class A.
+- RT-1 (/accept): la escritura de Class A corregido debe limpiar atómicamente Next_Action y Gate_Decision (select: null) en el mismo write, para que el siguiente run no trate la vacante recuperada como terminal fantasma.
+- Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con KERNEL:OWNERSHIP-002.
+### Referencias
+- Implementación: Layer_1/scripts/gate_logic.py, Layer_1/scripts/layer_1_run.py
+- Atomicidad RT-1: Dashboard/scripts/dashboard_routes.py (/accept), dashboard_notion.py
+- Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002
 ---
 ## 10 KERNEL:CV-GOLDEN-RULES
 ## Golden Rules — Límites de Ejecución

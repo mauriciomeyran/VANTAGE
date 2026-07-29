@@ -39,16 +39,9 @@ if venv_path.exists():
 
 from notion_client import Client
 from difflib import SequenceMatcher
-from gate_logic import gate_logic
-
-# FIX Bug Tracker 3ac938be-fc42-8149-a909-c8a1b426e7e6 (2026-07-29):
-# Protección terminal ESTRECHA (Q1, Resolución Arquitectónica). El check
-# amplio "if current_action: continue" que vivía en Fase 4 hacía
-# inalcanzable la llamada a gate_logic() (Nivel 3, KERNEL:GATE-DECISION-009
-# — falso COMPLIANT reportado por Devin). Constante promovida a nivel de
-# módulo aquí porque gate_logic.py la define local a la función y no la
-# exporta; ver Notas del ticket para el gap de scope en gate_logic.py.
-TERMINAL_ACTIONS = {"Archivar", "Expirada"}
+from gate_logic import gate_logic, TERMINAL_ACTIONS, STATUS_TERMINAL_MAP
+# TERMINAL_ACTIONS y STATUS_TERMINAL_MAP viven ahora en gate_logic.py
+# (módulo-level, exportables). Ver KERNEL:GATE-DECISION-010.
 
 # ── Dry-run mode ─────────────────────────────────────────────────────────────
 DRY_RUN = "--dry-run" in sys.argv
@@ -832,32 +825,22 @@ def main():
         current_gate = txt(props.get("Gate_Decision"))
         current_action = txt(props.get("Next_Action"))
 
-        # PROTECCIÓN ESTRECHA (Q1, Resolución Arquitectónica 2026-07-29):
-        # Solo protege si Next_Action YA es un estado terminal explícito.
-        # Cualquier otro valor (ej. "Follow-up", "Re-check") es recalculable
-        # en cada run — consistente con KERNEL:OWNERSHIP-002.
-        if current_action in TERMINAL_ACTIONS:
-            protected_count += 1
-            continue
-
         # Saltar si está expirada/archivada
         if status in ["Expirada", "Archivar"]:
             continue
 
-        # PRECEDENCIA OBLIGATORIA: gate_logic() antes que gate() (Arena spec)
-        # gate_logic() protege estados terminales de sobreescritura por recálculo.
-        # Nota: ahora SÍ es alcanzable — antes del fix, el "continue" amplio de
-        # arriba hacía que current_action fuera siempre falsy en este punto,
-        # por lo que "and current_action" nunca podía ser True (Nivel 3,
-        # KERNEL:GATE-DECISION-009 — Bug Tracker 3ac938be-fc42-8149-a909-c8a1b426e7e6).
+        # PRECEDENCIA OBLIGATORIA (KERNEL:GATE-DECISION-010):
+        # 1. Status → STATUS_TERMINAL_MAP  (APPLIED / REJECTED)
+        # 2. Next_Action → TERMINAL_ACTIONS (Archivar / Expirada)
+        # 3. None → elegible para recálculo por gate()
         entry = {
             "Next_Action": current_action,
             "Status": status,
             "Gate_Decision": current_gate,
             "Fetch": fetch
         }
-        protected_action = gate_logic(entry)
-        if protected_action in TERMINAL_ACTIONS and current_action in TERMINAL_ACTIONS:
+        protected = gate_logic(entry)
+        if protected is not None:
             protected_count += 1
             continue
 

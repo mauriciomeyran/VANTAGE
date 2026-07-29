@@ -351,7 +351,19 @@ def register_routes(app):
 
             patch = json.loads(row['proposed_patch'])
 
-            write_result = write_patch_to_notion(row['notion_page_id'], patch)
+            # Atomicidad RT-1 (KERNEL:GATE-DECISION-010 / Patch 1):
+            # limpiar Class B de la corrida anterior para que la vacante
+            # recuperada no quede bloqueada como fantasma.
+            # Claves internas del dashboard: next_action / gate.
+            # None → write_patch_to_notion escribe {"select": null}.
+            clear_class_b = {
+                'next_action': None,
+                'gate': None,
+            }
+            # El patch del operador tiene prioridad sobre los clears.
+            merged_patch = {**clear_class_b, **patch}
+
+            write_result = write_patch_to_notion(row['notion_page_id'], merged_patch)
 
             seq = row['event_sequence'] + 1
             now = _now()

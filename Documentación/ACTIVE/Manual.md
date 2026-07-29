@@ -1,82 +1,32 @@
 # V | MANUAL
 
-# V | MANUAL
-
-> [!IMPORTANT]
-> REFERENCIAS CRÍTICAS ACTUALIZADAS (v9.6.4)
-> - Filosofía de Fallo: [KERNEL:FAIL-PHILOSOPHY](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428121bb10efedac1b4b99)
-> - Session Ledger: [KERNEL:SESSION-LEDGER](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816aa4e8c4daaebe11b1)
-# TABLE OF CONTENTS
-## I. INTRODUCCIÓN
-> Comprender qué es VANTAGE y cómo funciona antes de operarlo.
-```plain text
-01  MANUAL:OBJECTIVE-001 — Objetivo de VANTAGE
-
-02  MANUAL:HOW-IT-WORKS-001 — Cómo Funciona
-
-03  MANUAL:FAILURE-PHILOSOPHY-001 — Filosofía de Fallo para Operadores
-```
----
-## II. PUESTA EN MARCHA
-> Preparar el entorno y abrir una sesión de trabajo.
-```plain text
-04  MANUAL:SETUP-001 — Setup
-
-05  MANUAL:COLD-START-001 — Arranque Frío
-
-06  MANUAL:SESSION-CYCLE-001 — Ciclo de Sesión
-```
----
-## III. OPERACIÓN DIARIA
-> Herramientas y flujo operativo antes del ciclo semanal.
-```plain text
-07  MANUAL:VCHECKLIST-001 — El Checklist y las Interfaces Compartidas
-
-08  MANUAL:WEEKLY-FLOW-001 — Flujo Semanal de Operación
-
-09  MANUAL:VANTAGE-RUNTIME-001 — VANTAGE Runtime
-```
----
-## IV. MANTENIMIENTO DEL SISTEMA
-> Administración del estado operativo y resolución de incidencias.
-```plain text
-10  MANUAL:DATA-MANAGEMENT-001 — Gestión de Datos
-
-11  MANUAL:HEALTHCHECK-001 — Health Check
-
-12  MANUAL:TROUBLESHOOTING-001 — Troubleshooting
-```
----
-## V. RECURSOS OPERATIVOS
-> Material de consulta durante la operación.
-```plain text
-13  MANUAL:PROMPTS-WRAPPERS-001 — Prompts & Wrappers
-
-14  MANUAL:CHEATSHEETS-001 — Cheat Sheets
-```
----
-## VI. GOBERNANZA OPERATIVA
-> Reglas y estándares que gobiernan el uso del sistema.
-```plain text
-15  MANUAL:PATCH-QUALITY-001 — Criterio de Calidad para Parches Documentales
-
-16  MANUAL:GOLDEN-RULES-001 — Reglas de Oro para Operadores
-
-17  MANUAL:SLA-001 — SLA de Latencia Post-Ingesta
-```
----
-## VII. REFERENCIAS
-> Información de apoyo utilizada por otros capítulos del Manual.
-```plain text
-18  MANUAL:CV-GOLDEN-RULES-INDEX — Reglas de Oro CV — Referencia Operativa
-
-19  MANUAL:POSITIONING-CRITERIA — Positioning Modes (N1–N4)
-
-20  MANUAL:GOLDEN-SKELETON-REF — Golden Skeleton — Qué Es y Dónde Vive
-
-21  MANUAL:SCHEMA-FIELD-REF — Schema Class A/B — Referencia de Campos
-```
-## 01 MANUAL:OBJECTIVE-001
+> 
+## DECLARACIÓN DE AUDIENCIA Y ALCANCE
+- Audiencia: Operador humano (Mauricio Meyrán)
+| # | ID | SECCIÓN | PORCIÓN |
+| --- | --- | --- | --- |
+| 01 | MANUAL:OBJECTIVE | Objetivo de VANTAGE |  |
+| 02 | MANUAL:HOW-IT-WORKS | Cómo Funciona |  |
+| 03 | MANUAL:FAILURE-PHILOSOPHY | Filosofía de Fallo |  |
+| 04 | MANUAL:SETUP | Setup |  |
+| 05 | MANUAL:COLD-START | Arranque Frío |  |
+| 06 | MANUAL:SESSION-CYCLE | Ciclo de Sesión |  |
+| 07 | MANUAL:VCHECKLIST | El Checklist |  |
+| 08 | MANUAL:WEEKLY-FLOW | Flujo Semanal |  |
+| 09 | MANUAL:VANTAGE-RUNTIME | VANTAGE Runtime |  |
+| 10 | MANUAL:DATA-MANAGEMENT | Gestión de Datos |  |
+| 11 | MANUAL:HEALTHCHECK | Health Check |  |
+| 12 | MANUAL:TROUBLESHOOTING | Troubleshooting |  |
+| 13 | MANUAL:PROMPTS-WRAPPERS | Prompts & Wrappers |  |
+| 14 | MANUAL:CHEATSHEETS | Cheat Sheets |  |
+| 15 | MANUAL:PATCH-QUALITY | Calidad de Parches |  |
+| 16 | MANUAL:GOLDEN-RULES | Reglas de Oro |  |
+| 17 | MANUAL:SLA | SLA de Latencia |  |
+| 18 | MANUAL:CV-GOLDEN-RULES-INDEX | Reglas de Oro CV |  |
+| 19 | MANUAL:POSITIONING-CRITERIA | Positioning Criteria |  |
+| 20 | MANUAL:GOLDEN-SKELETON-REF | Golden Skeleton |  |
+| 21 | MANUAL:SCHEMA-FIELD-REF | Schema Class A/B |  |
+## 01 MANUAL:OBJECTIVE
 ## Objetivo de VANTAGE
 ### El Problema que Resuelve
 Una búsqueda laboral sin estructura produce cuatro fallas operativas concretas:
@@ -103,7 +53,7 @@ Geografía: CDMX / LATAM.
 Sectores target: Lujo (LVMH, Kering, Richemont), retail premium (Nike, Apple, Inditex), cool DNA (Gentle Monster, Ben & Frank), agencias de experiencia.
 > Las empresas excluidas permanentemente (Hard Blocks) y las reglas de deduplicación están documentadas de forma completa y única en §10 — Gestión de Datos. Este Manual evita repetir esa lista en más de un lugar para que nunca quede una copia desactualizada.
 ---
-## 02 MANUAL:HOW-IT-WORKS-001
+## 02 MANUAL:HOW-IT-WORKS
 ## Cómo Funciona
 ### Flujo General del Pipeline
 El pipeline opera secuencialmente. Cada paso tiene un responsable (una capa del sistema: L1, L2, L3, Python, o el operador humano) y un output definido antes de pasar al siguiente paso. El detalle operativo día por día de este flujo está en §8 — Flujo Semanal de Operación; aquí se explica la lógica que sostiene ese flujo.
@@ -132,7 +82,7 @@ El sistema aplica dos capas de exclusión para garantizar la calidad de la seña
 - Hard Blocks (Permanentes): empresas o roles que nunca entrarán al sistema (ej. L’Oréal, Levi’s). Se filtran en el origen, antes de que la vacante exista siquiera como registro en Notion, y no son recuperables bajo ninguna circunstancia.
 - Soft Blocks (Contextuales): vacantes bloqueadas por inconsistencias en datos Class A (URL rota, JD parcial) o por score insuficiente. A diferencia de los Hard Blocks, estas sí son recuperables — corrigiendo el dato erróneo a través del Dashboard (ver §8.2, Martes).
 ---
-## 03 MANUAL:FAILURE-PHILOSOPHY-001
+## 03 MANUAL:FAILURE-PHILOSOPHY
 ## Filosofía de Fallo para Operadores
 Base: *[KERNEL:FAIL-PHILOSOPHY](V | KERNEL).*
 Antes de entrar a Setup y al ciclo operativo, es necesario internalizar esto, porque vas a encontrarlo constantemente desde el primer Lunes que operes el sistema:
@@ -146,7 +96,7 @@ Un “fallo” del sistema no es un bug — es el filtro operando correctamente.
 | JSON vacío en el Feed de discovery | La búsqueda no encontró resultados relevantes esa ejecución. | No amplíes los criterios de búsqueda sin análisis previo — podrías bajar la calidad de la señal general. | Revisa el Viernes de Analytics (§8.5) antes de decidir si el prompt necesita ajuste. |
 Ante cualquiera de estos casos, el sistema reporta el estado y espera tu instrucción dentro del flujo normal del pipeline — no requiere, ni acepta bien, intervenciones manuales que intenten “corregir” el resultado en sí mismo en vez de corregir el dato de entrada que lo produjo.
 ---
-## 04 MANUAL:SETUP-001
+## 04 MANUAL:SETUP
 ## Setup
 Esta sección se ejecuta una sola vez, al instalar el sistema por primera vez (o al reinstalarlo desde cero). Si el sistema ya está instalado y solo llevas varios días sin usarlo, lo que necesitas es §5 — Arranque Frío, no este capítulo completo.
 ### Prerrequisitos
@@ -212,7 +162,7 @@ python vsync_doc.py --dry-run
 Output esperado: 6 documentos listados con diff por documento, sin errores.
 Si falla: verificar que layer_1.env exista y que el token no tenga un salto de línea (\n) embebido por error de copy-paste.
 ---
-## 05 MANUAL:COLD-START-001
+## 05 MANUAL:COLD-START
 ## Arranque Frío — Checklist de Reactivación
 Usar cuando el sistema no ha sido operado por más de 5 días. A diferencia de Setup (§4), aquí no estás instalando nada nuevo — estás confirmando que todo lo que ya instalaste sigue funcionando después de un periodo de inactividad, antes de confiar en que el primer comando que corras te va a dar un resultado correcto.
 ```plain text
@@ -250,7 +200,7 @@ Usar cuando el sistema no ha sido operado por más de 5 días. A diferencia de S
 ```
 Una vez que este checklist pasa limpio, el sistema está en condición de operar con normalidad — el siguiente paso es abrir tu primera sesión de trabajo del día, lo cual te lleva directo a §6.
 ---
-## 06 MANUAL:SESSION-CYCLE-001
+## 06 MANUAL:SESSION-CYCLE
 ## Ciclo de Sesión — Open/Close
 ### Cuándo se dispara esto, y por qué es distinto del ciclo semanal
 El ciclo semanal que se detalla en §8 (Lunes → Viernes) asume que el sistema documental y el estado del pipeline están sanos al momento de empezar a trabajar. Esa suposición no es gratuita: cada vez que abres una conversación nueva con Claude para operar VANTAGE, esa conversación pasa primero por su propio ciclo de vida — independiente del ciclo semanal, y que existe precisamente para que nunca operes sobre un supuesto sin verificar.
@@ -290,7 +240,7 @@ La sesión termina con el mensaje SESIÓN COMPLETADA → nuevo chat, que sigue s
 - Un pendiente detectado durante la sesión necesita convertirse en ticket (o no) → esto lo gobierna KERNEL:GATE-DECISION-009 (3 niveles de escalamiento). En resumen: esfuerzo bajo y sin bloqueo confirmado se queda en pending_summary del Ledger (Nivel 1); esfuerzo alto sin fuente dura de bloqueo se sugiere como ticket y espera tu APROBAR_WRITE (Nivel 2); bloqueo o degradación confirmados por una fuente dura (dump de Terminal, Ledger, Changelog, o tu propia declaración explícita) disparan vantage-create-bug-task de forma automática (Nivel 3). Ver KERNEL §9.9 para el detalle completo y las reglas de re-clasificación entre niveles.
 Con la sesión abierta y sincronizada, el siguiente paso natural es abrir tu mapa de la semana — el V-Checklist, explicado en §7.
 ---
-## 07 MANUAL:VCHECKLIST-001
+## 07 MANUAL:VCHECKLIST
 ## El Checklist y las Interfaces Compartidas
 ### El Checklist — tu acompañante durante todo el ciclo
 El V-Checklist (V-CHECKLIST · Vantage Weekly) es la interfaz operativa de todo el ciclo semanal que se detalla en §8. Es un archivo HTML autocontenido con progreso persistente (localStorage), modo claro/oscuro y navegación por día. Ábrelo una vez al iniciar la semana y consúltalo a lo largo de las actividades de cada día — no es una herramienta puntual de un solo momento, es tu mapa de avance de lunes a viernes.
@@ -309,7 +259,7 @@ No copies/pegues código de un HTML al otro para “igualar” un color o compon
 Si algo se ve distinto entre los dos HTML, es señal de que alguien editó un color o estilo directo en el <style> inline de uno de los dos archivos en vez de en vantage-tokens.css. Revisa ahí primero.
 Con el Checklist abierto y el ciclo de sesión ya confirmado (§6), estás listo para empezar el Lunes — el primer día del ciclo semanal, detallado a continuación.
 ---
-## 08 MANUAL:WEEKLY-FLOW-001
+## 08 MANUAL:WEEKLY-FLOW
 ## Flujo Semanal de Operación
 Este es el ciclo completo de trabajo, de lunes a viernes. Asume que ya pasaste por Setup (§4) o Arranque Frío (§5) según corresponda, que la sesión actual de Claude ya pasó por su Ciclo de Sesión (§6), y que tienes el Checklist (§7) abierto como guía de avance.
 ### 8.1 LUNES — Búsqueda Activa Completa (Discovery)
@@ -534,7 +484,7 @@ Output: efectividad por fuente, tasa de links muertos por tipo de URL, ratio car
 Acción concreta: si career pages producen menos de 5 resultados relevantes en la semana, ajusta el Prompt A (ver §13 — Prompts & Wrappers) — no el threshold de Score. (Recuerda §3, Filosofía de Fallo: el Score bajo no es el problema a corregir, el input de búsqueda sí lo es.)
 Con esto se cierra el ciclo semanal. La siguiente vez que abras Claude para trabajar en VANTAGE, el ciclo completo empieza de nuevo desde §6 — Ciclo de Sesión.
 ---
-## 09 MANUAL:VANTAGE-RUNTIME-001
+## 09 MANUAL:VANTAGE-RUNTIME
 ## VANTAGE Runtime (Consulta Operativa)
 Ya viste varios de estos comandos en acción durante el flujo semanal (§8) — esta sección los reúne como catálogo de referencia completo, junto con el detalle de cuándo y por qué correr cada uno.
 ### 9.1 ¿Qué es el Runtime?
@@ -581,7 +531,7 @@ cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_dupl
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/dedup_opportunities.py    # alias: vopport
 ```
 ---
-## 10 MANUAL:DATA-MANAGEMENT-001
+## 10 MANUAL:DATA-MANAGEMENT
 ## Gestión de Datos
 Esta sección consolida en un solo lugar todo lo relacionado con exclusiones y deduplicación de vacantes — conceptos que se mencionan a lo largo de §1, §2 y §8, y que aquí tienen su definición completa y única.
 ### Hard Blocks — Empresas Excluidas Permanentemente
@@ -597,7 +547,7 @@ A diferencia de los Hard Blocks, estas vacantes sí pueden recuperarse: fueron b
 - Clave compuesta: brand + title + location.
 - Jerarquía entre capas: L1 > L2 > L3. Cuando dos capas detectan la misma vacante, persiste la instancia de la capa de mayor jerarquía, pero se toman de la capa de menor jerarquía los datos que puedan complementar sus propiedades Class A (esto es exactamente lo que ocurre en el paso de Consolidation & Dedup del Lunes, §8.1).
 ---
-## 11 MANUAL:HEALTHCHECK-001
+## 11 MANUAL:HEALTHCHECK
 ## Health Check
 ### Red Flags — Ajustar Inputs, No Sistema
 - Ready-to-Apply vacío por más de 3 días → ajustar Prompt A (ver §13 — Prompts & Wrappers), no el threshold. (Ver también §3 — Filosofía de Fallo.)
@@ -668,7 +618,7 @@ Con el Census y su ciclo de regeneración ya cubiertos arriba, esta es la contra
 - vantage-present-handoff — genera el snapshot de contexto de sesión para continuidad en un chat nuevo. Es independiente y se puede invocar en cualquier momento; no requiere que la sesión esté cerrando (ver también §6 — Ciclo de Sesión, Cierre, donde vantage-session-close la invoca automáticamente como parte de su secuencia normal).
 Cada una declara su propio verbo de apertura/cierre ([KERNEL:SKILL-ANNOUNCE-CONVENTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281db9f8eee98d8f90185)) — nunca el lenguaje de Bootstrap ni de Session Ledger.
 ---
-## 12 MANUAL:TROUBLESHOOTING-001
+## 12 MANUAL:TROUBLESHOOTING
 ## Troubleshooting
 ### Problemas Comunes y Soluciones
 Pipeline no corre:
@@ -732,18 +682,18 @@ Gate = BLOCKED recuperable pero el Dashboard no lo detecta:
 - Schema de datos: [KERNEL:SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42812dbc97e075758ba0ee).
 - Gate Decisions: [KERNEL:GATE-DECISION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810d9f3af9b12751d7e1) (ver también §2 de este Manual).
 ---
-## 13 MANUAL:PROMPTS-WRAPPERS-001
+## 13 MANUAL:PROMPTS-WRAPPERS
 ## Prompts & Wrappers
 Se consultan vía MCP desde la PROMPT LIBRARY en Notion. Este es el catálogo que Perplexity Desktop lee cada Lunes (§8.1) para ensamblar los prompts de L1 y L2: los Prompt Bases (BASE SPEC L1, BASE SPEC L2) y los Wrappers correspondientes (Career Sites, LinkedIn, Aggregators, Gemini, Grok, you.com, Prompt A/B/C, Prompt E de consolidación).
 ---
-## 14 MANUAL:CHEATSHEETS-001
+## 14 MANUAL:CHEATSHEETS
 ## Cheat Sheets
 ### Cómo la IA lee el KERNEL y el CAREER CANON (Lazy Load)
 La extracción de reglas y contratos lógicos (Lazy Load) opera con la siguiente prioridad:
 Prioridad A — Terminal (canónico): lazy_loader.py ejecuta Server-Side Lazy Load. Parsea bloques hijos de la Notion API y devuelve únicamente el payload del ID solicitado. Consumo: ~150 tokens por llamada.
 Prioridad B — MCP Notion: reservado exclusivamente para escrituras (APROBAR_WRITE) y modificaciones estructurales de páginas. No se usa para lectura de reglas o contratos.
 ---
-## 15 MANUAL:PATCH-QUALITY-001
+## 15 MANUAL:PATCH-QUALITY
 ## Criterio de Calidad para Parches Documentales
 Todo parche a los 6 documentos fundacionales debe cumplir estos cinco criterios antes de aplicarse — si falla alguno, se reescribe antes de solicitar APROBAR_WRITE:
 1. Invisibilidad estructural — no crea secciones nuevas si el contenido cabe en una existente.
@@ -753,12 +703,12 @@ Todo parche a los 6 documentos fundacionales debe cumplir estos cinco criterios 
 1. Coherencia transversal — no puede contradecir ni duplicar una definición ya existente en Kernel, System Prompt, Career Canon o Aliases.
 Un parche que pasa estos cinco filtros no se distingue, seis meses después, del texto que rodeaba su punto de inserción original.
 ---
-## 16 MANUAL:GOLDEN-RULES-001
+## 16 MANUAL:GOLDEN-RULES
 ## Reglas de Oro para Operadores
 Base: [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d).
 > El contenido detallado de estas reglas vive en el Kernel del sistema y no está reproducido en este Manual más allá de esta referencia. Ver lista de huecos detectados al final de este documento.
 ---
-## 17 MANUAL:SLA-001
+## 17 MANUAL:SLA
 ## SLA de Latencia Post-Ingesta
 > Nota: el SLA “< 45 minutos” cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh (ver §8.1, Lunes) — no tiene SLA fijo salvo ejecución manual explícita de layer_1_run.py.
 ## 18 MANUAL:CV-GOLDEN-RULES-INDEX

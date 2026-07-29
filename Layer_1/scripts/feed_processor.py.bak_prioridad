@@ -1025,7 +1025,7 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
     # Prioridad default para entradas nuevas (Class A — §8 Kernel)
     # Default 4 alineado con FAST defaults §14. El operador ajusta manualmente en Notion.
     if "Prioridad" in schema.properties:
-        props["Prioridad"] = schema.select_value("4 CRÍTICO")
+        props["Prioridad"] = schema.select_value("4")
 
     notes_parts = []
     if p.notes:

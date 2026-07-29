@@ -1,147 +1,50 @@
-import os
-from dotenv import load_dotenv
-from notion_utils import Client
+"""
+VANTAGE Gate Logic — Terminal State Protection (KERNEL:GATE-DECISION)
 
-def txt(prop):
-    if not prop: return ""
-    t = prop.get("type")
-    if t == "rich_text" and prop.get("rich_text"): 
-        return prop["rich_text"][0]["plain_text"]
-    if t == "select" and prop.get("select"): 
-        return prop["select"]["name"]
-    if t == "title" and prop.get("title"): 
-        return prop["title"][0]["plain_text"]
-    return ""
+Contrato (Patch 1 / GATE-DECISION-010):
+  1. Evalúa Status contra STATUS_TERMINAL_MAP primero.
+  2. Luego Next_Action contra TERMINAL_ACTIONS.
+  3. Retorna el valor terminal (str) si el registro NO debe ser recalculado;
+     retorna None si es elegible para recálculo por gate().
+
+No contiene lógica de scoring ni de Next_Action operativa:
+esa responsabilidad vive en layer_1_run.py (Fase 4).
+"""
+
+# ── Constantes de módulo (exportables) ──────────────────────────────────────
+TERMINAL_ACTIONS = {"Archivar", "Expirada"}
+
+STATUS_TERMINAL_MAP = {
+    "Postulado": "APPLIED",
+    "Rechazado": "REJECTED",
+}
+
 
 def gate_logic(entry):
     """
-    Determine the next action based on entry status and current action.
-    Implements terminal state protection where manual human intent overrides automation.
+    Protección de estados terminales.
+
+    Args:
+        entry: dict con al menos "Status" y "Next_Action".
+
+    Returns:
+        str  — valor terminal ("APPLIED", "REJECTED", "Archivar", "Expirada")
+               si el registro NO debe ser recalculado.
+        None — el registro es elegible para recálculo por gate().
     """
-    # Terminal states that should never be overwritten
-    TERMINAL_ACTIONS = {"Archivar", "Expirada"}
-    
-    # Check if current action is already a terminal state
-    current_action = entry.get("Next_Action", "")
+    status = entry.get("Status") or ""
+    if status in STATUS_TERMINAL_MAP:
+        return STATUS_TERMINAL_MAP[status]
+
+    current_action = entry.get("Next_Action") or ""
     if current_action in TERMINAL_ACTIONS:
-        # Terminal state protection: respect manual human intent
         return current_action
-    
-    # Original gate logic (only runs if not in terminal state)
-    status = entry.get("Status", "")
-    gate_decision = entry.get("Gate_Decision", "")
-    
-    # APPLIED override
-    if gate_decision == "APPLIED":
-        if status == "Postulado": 
-            return "Follow-up"
-        elif status == "En proceso": 
-            return "Interview prep"
-        elif status == "Negociando": 
-            return "Follow-up"
-        elif status == "Sin respuesta": 
-            return "Follow-up"
-    
-    # CREATE logic
-    elif gate_decision == "CREATE":
-        if status == "Postulado":
-            return "Follow-up"
-        return "Re-check"
-    
-    # BLOCKED logic with terminal state protection
-    elif gate_decision == "BLOCKED":
-        fetch = entry.get("Fetch", "")
-        if fetch == "Bloqueado":
-            return "Reparar URL"
-        elif fetch == "Parcial":
-            return "Verificar JD"
-        else:
-            # This is where the conflict was - now respects terminal states
-            return "Archivar"
-    
-    # Default fallback
-    return "Archivar"
+
+    return None
+
 
 def evaluate_gate(fetch, vm_scope, role_class):
-    """Evalúa la regla del gate"""
+    """Evalúa la regla del gate (helper legacy / smoke)."""
     if fetch == "Accesible" and (vm_scope == "Alto" or role_class == "Pivote"):
         return "CREATE"
     return "BLOCKED"
-
-if __name__ == "__main__":
-    load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
-    client = Client(auth=os.environ["NOTION_TOKEN"])
-    ds_id = "442938be-fc42-828f-b72e-076818d65a5b"
-
-    print("Evaluando Gate Logic con Protección de Estados Terminales...")
-    print("=" * 60)
-    
-    items = client.data_sources.query(data_source_id=ds_id)["results"]
-    
-    create_count = 0
-    blocked_count = 0
-    terminal_protected = 0
-    
-    for item in items:
-        props = item["properties"]
-        
-        # Extraer propiedades
-        rol = txt(props.get("Rol"))
-        marca = txt(props.get("Marca"))
-        fetch = txt(props.get("Fetch"))
-        vm_scope = txt(props.get("VM_Scope"))
-        role_class = txt(props.get("Role_Class"))
-        status = txt(props.get("Status"))
-        source_type = txt(props.get("Source_Type "))
-        current_action = txt(props.get("Next_Action"))
-        
-        # Crear entry para gate_logic
-        entry = {
-            "Next_Action": current_action,
-            "Status": status,
-            "Gate_Decision": "",
-            "Fetch": fetch
-        }
-        
-        # Evaluar gate decision (solo para Vacante)
-        if source_type == "Vacante":
-            gate_decision = evaluate_gate(fetch, vm_scope, role_class)
-        else:
-            gate_decision = "CREATE"  # Bypass para otros tipos
-        
-        entry["Gate_Decision"] = gate_decision
-        
-        # Aplicar gate logic con protección terminal
-        new_action = gate_logic(entry)
-        
-        # Contar resultados
-        # Warning: Status=Postulado pero Gate_Decision no es APPLIED
-        if status == "Postulado" and gate_decision != "APPLIED":
-            print(f"⚠️  DESAJUSTE | {rol} @ {marca}")
-            print(f"   Status=Postulado pero Gate_Decision={gate_decision} — actualizar manualmente en Notion")
-            print()
-
-        if current_action in {"Archivar", "Expirada"}:
-            terminal_protected += 1
-            print(f"🛡️  PROTEGIDO | {rol} @ {marca}")
-            print(f"   Estado terminal: {current_action} → NO SE MODIFICA")
-        elif gate_decision == "CREATE":
-            create_count += 1
-            print(f"✅ CREATE | {rol} @ {marca}")
-            print(f"   Acción: {current_action} → {new_action}")
-        else:
-            blocked_count += 1
-            print(f"❌ BLOCKED | {rol} @ {marca}")
-            print(f"   Acción: {current_action} → {new_action}")
-        
-        print(f"   Fetch={fetch}, VM_Scope={vm_scope}, Role_Class={role_class}")
-        print()
-    
-    print("=" * 60)
-    print(f"📊 RESULTADOS:")
-    print(f"  ✅ CREATE:           {create_count}")
-    print(f"  ❌ BLOCKED:          {blocked_count}")
-    print(f"  🛡️  PROTEGIDOS:       {terminal_protected}")
-    print(f"  📋 TOTAL:            {len(items)}")
-    print()
-    print("💡 Estados terminales 'Archivar' y 'Expirada' NO se modifican.")

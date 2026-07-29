@@ -1,37 +1,27 @@
 # V | CAREER CANON
 
-# V | CAREER CANON
-
-# V | CAREER CANON
-
-# V | CAREER CANON
-
-# V | CAREER CANON
-
-## Índice del Career Canon (TOC)
-| # | PREFIX:KEY | Heading Normalizado | Portion |
+> 
+## DECLARACIÓN DE AUDIENCIA Y ALCANCE
+- Audiencia: Sistemas Agente de IA + Operador Humano (Mauricio Meyrán).
+- Alcance: Este documento es el CAREER_CANON_RUNTIME, que contiene la fuente de verdad profesional activa: perfil, skills, experiencias canónicas (C01–C05), KPIs validados, facts canónicos y Output Contract para producción de CV-B. Para el historial de versiones y secciones deprecadas (C/E/F/G), consultar el archivo histórico: CANON:ARCHIVO-VANTAGE.
+| # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
-| 0 | CANON:AUDIENCE-SCOPE | §0 CANON:AUDIENCE-SCOPE | Declaración de audiencia y alcance del Canon Runtime |
-| 1 | CANON:PROFILE-001 | A. Professional Profile | Perfil profesional (ES/EN) |
-| 2 | CANON:SKILLS-001 | B. Skills Canon | Skills canónicas por categoría (ES/EN) |
-| 3 | CANON:EXPERIENCE-001 | D. Experience Records | Experiencia cronológica (C01–C05) |
-| 4 | CANON:ACHIEVEMENTS-001 | H. Achievement Library | Logros mapeados a KPI/CF por empresa |
-| 5 | CANON:KPIS-001 | I. Core KPIs | Indicadores canónicos (KPI01–KPI08) |
-| 6 | CANON:FACTS-001 | J. Canonical Facts | Hechos canónicos (CF01–CF08, UF01–UF03) |
-| 7 | CANON:POSITIONING-001 | K. Positioning Modes | Modos de posicionamiento N1–N4 + regla de desempate |
-| 8 | CANON:OUTPUT-CONTRACT | Contrato de Entregable | Skeleton, Tag Registry, Figma Sync Protocol |
-## §0 CANON:AUDIENCE-SCOPE
-## Declaración de audiencia y alcance
-> - Audiencia: Sistemas Agente de IA + Operador Humano (Mauricio Meyrán).
-> - Alcance: Este documento es el CAREER_CANON_RUNTIME, que contiene la fuente de verdad profesional activa: perfil, skills, experiencias canónicas (C01–C05), KPIs validados, facts canónicos y Output Contract para producción de CV-B. Para el historial de versiones y secciones deprecadas (C/E/F/G), consultar el archivo histórico: CANON:ARCHIVO-VANTAGE.
-## 01 CANON:PROFILE-001
+| 01 | CANON:PROFILE | PROFESSIONAL PROFILE |  |
+| 02 | CANON:SKILLS | SKILLS CANON |  |
+| 03 | CANON:EXPERIENCE | EXPERIENCE RECORDS |  |
+| 04 | CANON:ACHIEVEMENTS | ACHIEVEMENT LIBRARY |  |
+| 05 | CANON:KPIS | CORE KPIS |  |
+| 06 | CANON:FACTS | CANONICAL FACTS |  |
+| 07 | CANON:POSITIONING | POSITIONING MODES |  |
+| 08 | CANON:OUTPUT-CONTRACT | OUTPUT CONTRACT |  |
+## 01 CANON:PROFILE
 ## A. Professional Profile
 ### ES
 Estratega de Visual Merchandising & Brand Execution con más de 10 años de trayectoria en retail de lujo, moda y alto rendimiento. Especialista en traducir lineamientos globales en ejecuciones locales de alto impacto, liderando estrategias regionales en LATAM y gestionando presupuestos CAPEX/OPEX nacionales. Experto en storytelling visual, lanzamientos de producto (NPI) y habilitación de equipos de campo, con un historial probado en la optimización de KPIs comerciales (+43% tráfico) y eficiencia operativa (-74% costos). Perfil con alta capacidad analítica y técnica, enfocado en elevar la experiencia del consumidor y la coherencia de marca en redes propias, franquicias y wholesale.
 ### EN
 Visual Merchandising & Brand Execution strategist with over 10 years of experience in luxury, fashion, and high-performance retail. Expert in translating global brand guidelines into high-impact local executions, leading LATAM regional strategies, and managing national CAPEX/OPEX budgets. Specialist in visual storytelling, new product introductions (NPI), and field team enablement, with a proven track record of optimizing commercial KPIs (+43% traffic) and operational efficiency (-74% costs). Highly analytical and technical profile, focused on elevating consumer experience and brand coherence across own stores, franchises, and wholesale channels.
 ---
-## 02 CANON:SKILLS-001
+## 02 CANON:SKILLS
 ## B. Skills Canon
 | Categoría | ES | EN |
 | --- | --- | --- |
@@ -41,7 +31,7 @@ Visual Merchandising & Brand Execution strategist with over 10 years of experien
 | Stack Técnico | Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, IA Generativa (ChatGPT, Perplexity, Claude) | Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, Generative AI (ChatGPT, Perplexity, Claude) |
 | Idiomas | Español (Nativo) · Inglés (Profesional Corporativo / Fluidez regional) | Spanish (Native) · English (Corporate Professional / Regional Fluency) |
 ---
-## 03 CANON:EXPERIENCE-001
+## 03 CANON:EXPERIENCE
 ## D. Experience Records
 ## 03.1 CANON:EXPERIENCE-C01
 ## C01 · L’Oréal Luxe México
@@ -111,7 +101,7 @@ EN
 - Developed training programs for floor staff, elevating the standard of visual maintenance and launch execution.
 - During the last 3 years of the role, directly managed one Jr. Brand Coordinator.
 ---
-## 04 CANON:ACHIEVEMENTS-001
+## 04 CANON:ACHIEVEMENTS
 ## H. Achievement Library
 | Achievement | Compañía | KPI Ref |
 | --- | --- | --- |
@@ -128,7 +118,7 @@ EN
 | Coordinación de 17 tiendas retail + 12 corners wholesale | C05 | – |
 | Liderazgo de coordinadora Jr. con reporte directo (últimos 3 años en rol) | C05 | – |
 ---
-## 05 CANON:KPIS-001
+## 05 CANON:KPIS
 ## I. Core KPIs
 ## 05.1 CANON:KPI-001
 ## KPI01 · Traffic +43%
@@ -147,7 +137,7 @@ EN
 ## 05.8 CANON:KPI-008
 ## KPI08 · Years experience (10+ canonical)
 ---
-## 06 CANON:FACTS-001
+## 06 CANON:FACTS
 ## J. Canonical Facts
 ## 06.1 CANON:FACT-001
 ## CF01 · ALDO Certification Year = 2014
@@ -172,7 +162,7 @@ EN
 ## 06.11 CANON:UF-003
 ## UF03 · Certifications Canon = ALDO Group (2014) + AutoCAD & SketchUp Essentials (2024) ONLY. No additional certs valid.
 ---
-## 07 CANON:POSITIONING-001
+## 07 CANON:POSITIONING
 ## K. Positioning Modes
 ## 07.1 CANON:POSITIONING-N1
 ## N1 · Luxury Brand Execution

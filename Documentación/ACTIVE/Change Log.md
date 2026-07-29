@@ -1,6 +1,24 @@
 # V | CHANGELOG
 
 ---
+### v9.9.7 — Patch 1 real: Estados Terminales Protegidos + Atomicidad RT-1 · 2026-07-29
+Tipo: [FIX] [DOC]
+Alcance: Layer_1/scripts/gate_logic.py, Layer_1/scripts/layer_1_run.py, Dashboard/scripts/dashboard_routes.py, Dashboard/scripts/dashboard_notion.py, KERNEL §09.10, ID CENSUS.
+Contexto: El Hallazgo 1 de la auditoría (precedencia gate_logic() inalcanzable por código muerto) había sido reportado como COMPLIANT por Devin sin estarlo. En esta sesión se implementó y verificó el fix real, más el prerrequisito de clear atómico Class B en RT-1 para no romper el feedback loop.
+Código:
+- gate_logic.py — constantes de módulo TERMINAL_ACTIONS = {"Archivar", "Expirada"} y STATUS_TERMINAL_MAP = {"Postulado": "APPLIED", "Rechazado": "REJECTED"}; retorna valor terminal o None.
+- layer_1_run.py — import de constantes; precedencia obligatoria protected = gate_logic(entry); if protected is not None: continue antes de gate().
+- dashboard_notion.py — soporte de clear: None en select → {"select": null}.
+- dashboard_routes.py — en /accept, merge atómico de next_action=None + gate=None con el patch del operador (evita fantasmas post-RT-1).
+Smoke test: python3 scripts/layer_1_run.py --dry-run — sin crash; PROTEGIDAS: 1; CREATE: 39; APPLIED/REJECTED: 0; total 43.
+Documentación:
+- KERNEL: nuevo KERNEL:GATE-DECISION-010 (§09.10) — Definición de Estados Terminales Protegidos (doble criterio Status + Next_Action, invariantes, refs).
+- TOC KERNEL §09 actualizado.
+- ID CENSUS: fila KERNEL:GATE-DECISION-010 (ancla pendiente de verificación en vivo vía generate_census.py).
+IDs afectados: alta de KERNEL:GATE-DECISION-010. CENSUS-SYNC-R1 disparado — regenerar Census antes de cerrar ticket asociado.
+Pendiente (fuera de esta entrada): regenerar Census para resolver ancla real de §09.10; vversions --sync para propagar versión a fundacionales; campo Score_Method en schema Notion; verificar dedup histórico Status=Rechazado en código real.
+Versión actualizada: 9.9.7 (esta página — CHANGELOG). KERNEL / Census tocados en contenido; propiedad Versión de fundacionales permanece hasta verify_versions.py --sync.
+---
 ### v9.9.6 — Resolución de Auditoría Arquitectónica y Bump de Versión · 2026-07-29
 Tipo: [AUDIT] [FIX]
 Alcance: Layer_1/scripts/layer_1_run.py, Layer_1/scripts/dedup_fix_verified.patch, Bug Tracker (3ac938be-fc42-8149-a909-c8a1b426e7e6), Kernel.md, Manual.md, CHANGELOG.md.

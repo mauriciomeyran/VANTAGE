@@ -83,10 +83,21 @@ def write_patch_to_notion(page_id: str, patch: dict):
     properties = {}
 
     for field, value in patch.items():
-        if field not in field_map or value is None:
+        if field not in field_map:
             continue
 
         notion_field, field_type = field_map[field]
+
+        # None = clear explícito (solo select / url / number)
+        if value is None:
+            if field_type == 'select':
+                properties[notion_field] = {'select': None}
+            elif field_type == 'url':
+                properties[notion_field] = {'url': None}
+            elif field_type == 'number':
+                properties[notion_field] = {'number': None}
+            # title / rich_text no se limpian con None (evita vaciar contenido accidental)
+            continue
 
         if field_type == 'title':
             properties[notion_field] = {
