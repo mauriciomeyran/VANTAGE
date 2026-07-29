@@ -1,5 +1,7 @@
 # V | BRIEF
 
+# V | BRIEF
+
 ## TABLE OF CONTENTS
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
@@ -41,7 +43,7 @@ Este documento no:
 ## Matriz de Autoridad Documental
 Esta matriz define el documento autorizado para cada dominio del sistema.
 | Necesidad | Documento SSOT | Rol |
-| :--- | :--- | :--- |
+| --- | --- | --- |
 | Arquitectura del sistema | Kernel | Contrato normativo |
 | Operación diaria | Manual | Procedimientos |
 | Perfil profesional | Career Canon | Identidad profesional |
@@ -57,7 +59,7 @@ Esta matriz define el documento autorizado para cada dominio del sistema.
 ## Ecosistema Documental
 Cada documento tiene una única responsabilidad.
 | Documento | Responsabilidad |
-| :--- | :--- |
+| --- | --- |
 | Navigation Brief | Decide qué documento consultar |
 | Master Index | Localiza documentos |
 | ID Census | Resuelve entidades e IDs |
@@ -181,7 +183,7 @@ Incluye:
 ## Contratos de verificación
 Toda modificación debe respetar el nivel mínimo de validación requerido.
 | Nivel | Alcance |
-| :--- | :--- |
+| --- | --- |
 | L0 | Consulta Read-Only |
 | L1 | Verificación documental |
 | L2 | Validación Runtime |
@@ -194,7 +196,7 @@ Cada operación debe utilizar el menor nivel posible compatible con su riesgo.
 La siguiente matriz define las dependencias estructurales entre los documentos fundacionales.
 Una dependencia indica que un cambio en el documento de origen puede afectar la consistencia de uno o más documentos relacionados y requiere una evaluación explícita antes de cerrar la operación.
 | Cambio en | Evaluar | Acción mínima requerida |
-| :--- | :--- | :--- |
+| --- | --- | --- |
 | Kernel | Manual, Navigation Brief, System Prompt | Revisar contratos afectados |
 | Manual | Navigation Brief | Verificar que la navegación siga siendo válida |
 | Career Canon | CV Skills, Output Contracts | Validar consistencia del pipeline CV |

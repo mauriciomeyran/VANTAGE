@@ -1,5 +1,7 @@
 # V | CAREER CANON
 
+# V | CAREER CANON
+
 > 
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Sistemas Agente de IA + Operador Humano (Mauricio Meyrán).
@@ -13,7 +15,7 @@
 | 05 | CANON:KPIS | CORE KPIS |  |
 | 06 | CANON:FACTS | CANONICAL FACTS |  |
 | 07 | CANON:POSITIONING | POSITIONING MODES |  |
-| 08 | [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#53a2d31605f84299a99118add45e2af7) | OUTPUT CONTRACT |  |
+| 08 | CANON:OUTPUT-CONTRACT | OUTPUT CONTRACT |  |
 ## 01 CANON:PROFILE
 ## A. Professional Profile
 ### ES

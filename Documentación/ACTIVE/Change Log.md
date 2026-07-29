@@ -1,5 +1,7 @@
 # V | CHANGELOG
 
+# V | CHANGELOG
+
 ---
 ### v9.9.9 — Documentación Transversal: Matrices de Estado y Cadencia · 2026-07-29
 Tipo: [DOC]
@@ -104,7 +106,7 @@ BLOCKED → [Dashboard: Patch Class A] → Validar (dry-run) → PATCHED → Ace
 - 21 transiciones documentadas (ver AUDITORÍA ARQUITECTÓNICA).
 - Diagrama Mermaid: Ciclo de vida completo de vacantes en VANTAGE (incluye loops RT-1 y estados terminales).
 ---
-```mermaid
+[code:mermaid:1/2]
 stateDiagram-v2
     [*] --> RAW: Discovery Event
     RAW --> URL_GATE_CHECK: Trigger: ~/vantage_pipeline.sh
@@ -155,7 +157,9 @@ stateDiagram-v2
         PDF_EXPORTED --> QA_REVIEW: Trigger: "QA [PDF]"
     }
     
-    APPLYING --> APPLIED: Evento: Status → Postulado
+    APPLYING --> APPLIED: 
+[code:mermaid:2/2]
+Evento: Status → Postulado
     APPLIED --> REJECTED_POST: Evento: Status → Rechazado
     APPLIED --> EXPIRED_POST: Evento: NAD vencida
     
@@ -166,7 +170,6 @@ stateDiagram-v2
     ARCHIVED_MANUAL --> [*]
     REJECTED_POST --> [*]
     EXPIRED_POST --> [*]
-```
 ---
 - Layer_1/scripts/layer_1_run.py (parcheado: protección terminal).
 - Layer_1/scripts/dedup_fix_verified.patch (reclasificado como blindaje).
@@ -360,8 +363,8 @@ Cambios:
 
 Write-Back Verification: pendiente — re-fetch de Kernel y Manual a ejecutar inmediatamente después de esta entrada de Changelog, en la misma sesión.
 IDs afectados: ninguna alta/baja de ID canónico — adiciones de contenido bajo KERNEL:ARCHITECTURE-L4, ID ya existente, y bajo sección §8.1 del Manual sin ID propio nuevo. Census no requiere regeneración (CENSUS-SYNC-R1 no se dispara).
-Pendiente (fuera de esta entrada): decidir si git_[sync.py](http://sync.py) extendido a /skills/ amerita mención en KERNEL:DOCUMENTATION-005 (Convención de Anuncio de Skills) — no evaluado en esta sesión por estar fuera del alcance del brief original.
-Versión actualizada: 9.7.8 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.7.7 hasta que el operador corra verify_[versions.py](http://versions.py) --sync\.
+Pendiente (fuera de esta entrada): decidir si git_sync.py extendido a /skills/ amerita mención en KERNEL:DOCUMENTATION-005 (Convención de Anuncio de Skills) — no evaluado en esta sesión por estar fuera del alcance del brief original.
+Versión actualizada: 9.7.8 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.7.7 hasta que el operador corra verify_versions.py --sync\.
 - [CIERRE] Ticket "Adoptar fortalezas del Brief de Skills MCP en skills de documentación transversal" (3a6938be-fc42-810b-ab49-ef8784093f39) cerrado (Status: Hecho). Las 4 fortalezas identificadas se aplicaron directamente a ambos skills locales (sin DRY RUN, autorizado explícitamente por el operador): en vantage-documentacion-transversal-propuesta/SKILL.md — Paso 3 ahora exige justificación tentativa por nodo candidato ("probablemente X porque Y"); Paso 4 agrega resumen ejecutivo Antes/Después como primer elemento, sección de incertidumbre auto-señalada (no omitible, se declara vacía si no aplica), y gate de fase como texto literal visible en el entregable (FASE 1 COMPLETA — SOLO MAPEO...). En vantage-documentacion-transversal-implementacion/SKILL.md — ajuste de compatibilidad: reconoce el nuevo formato de entrada de Fase 1 y declara explícitamente si falta alguno de los tres elementos nuevos antes de generar el DRY RUN. Cambio 100% local (filesystem), sin alta/baja de ID canónico. Census no requiere regeneración.
 - [POST-CIERRE — SESSION-20260723-A] Census post-cierre detectó mismatch de sufijo SP:ID-CONNECTORS-001 (CENSUS_SPEC, línea 141 de generate_census.py) vs. SP:ID-CONNECTORS (ID real en SYSTEM PROMPT) — corregido vía sed local, sin escritura en Notion; vcensus re-confirmó 130/130 resueltos, 0 huérfanos.
 - [SESSION-20260723-B — Prompt Library] Consolidación de 6 post-mortems de corridas de búsqueda (Perplexity/Comet L1 ×3 vía documento adjunto; Gemini, Grok, You.com L2 ×3 vía texto en sesión) en un análisis comparativo de patrones repetidos. 4 parches aplicados vía notion-update-page (update_content) sin DRY RUN previo — autorizado explícitamente por el operador ("yep"): (1) Prompt A (368938be-fc42-8162-ae48-d48970a729dc) — Accepted Seniority: Head (IC only) ahora remite a criterio de verificación explícito en INCLUSION RULES (title contiene "Head" AND JD sin lenguaje de gestión de personas; si no verificable, fetch_status: needs_verification); INCLUSION RULES — nuevas definiciones operacionales de Company identified (rechaza placeholders genéricos tipo "Empresa confidencial"/"Importante empresa") y Active posting (HTTP 200 AND CTA visible AND ≤21 días, fecha ausente → needs_verification); fit remains strong reemplazado por fit_strong con criterio verificable (≥2 de: industria en lista, visual_signal en título, seniority exacto); SOURCE BUCKETS — nota de alcance aclarando que la política de agregadores como fuente de descubrimiento vs. resultado final es decisión de cada wrapper, no del Prompt Base. (2–4) L2 - Wrapper Gemini (368938be-fc42-8139-b6a7-ee467f6c4584), L2 - Wrapper Grok (368938be-fc42-8145-944d-d15245b6e65e), L2 - Wrapper you.com (368938be-fc42-81c8-95cd-d8d75ff3abe4) — mismo parche en SEARCH SCOPE en los 3: agregadores (LinkedIn/OCC/Indeed/Computrabajo/Bumeran) pasan de "Never search"/"Forbidden" en bloque a "permitido solo para descubrimiento, prohibido como fuente final de datos", respondiendo al hallazgo de Gemini/Grok/You.com de que la exclusión total dejaba fuera ~80% del inventario real de CDMX (concentrado en agregadores por baja penetración de ATS directo en el mercado local). Ningún wrapper L1 (Career Sites/LinkedIn/Aggregators) fue tocado — sus hallazgos de post-mortem fueron de calidad de extracción (Workday/JS dinámico) y ambigüedad 
