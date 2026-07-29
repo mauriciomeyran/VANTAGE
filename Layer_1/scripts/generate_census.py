@@ -41,8 +41,6 @@ DOCUMENTS = {
     "Navigation Brief": "3a3938be-fc42-8008-9e90-ec435c01f50d",
 }
 
-# Prioridad de documento al resolver el "mejor" bloque para un ID
-# (menor número = mayor prioridad)
 DOC_PRIORITY = {
     "Kernel":        1,
     "System Prompt": 2,
@@ -53,7 +51,7 @@ DOC_PRIORITY = {
     "Navigation Brief": 7,
 }
 
-# ─── LISTADO CANÓNICO DE IDs (fuente: generate_census.py) ─────────────────────
+# ─── LISTADO CANÓNICO DE IDs ──────────────────────────────────────────────────
 
 CENSUS_SPEC = [
     {
@@ -78,23 +76,14 @@ CENSUS_SPEC = [
             {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "§4", "nombre": "L1 — Active Recon"},
             {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "§4", "nombre": "L2 — Strategic Search"},
             {"id": "KERNEL:ARCHITECTURE-L3", "seccion": "§4", "nombre": "L3 — Passive Intake"},
-            {"id": "KERNEL:ARHITECTURE-L4", "lookup_ids": ["KERNEL:ARHITECTURE-L4", "KERNEL:ARCHITECTURE-L4"], "seccion": "§4", "nombre": "L4 — Version Control & Infrastructure"},
-            {"id": "KERNEL:OWNERSHIP", "seccion": "§5", "nombre": "Responsabilidades AI vs Python"},
+            {"id": "KERNEL:ARCHITECTURE-L4", "lookup_ids": ["KERNEL:ARCHITECTURE-L4", "KERNEL:ARHITECTURE-L4"], "seccion": "§4", "nombre": "L4 — Version Control & Infrastructure"},
+            {"id": "KERNEL:OWNERSHIP", "seccion": "§5", "nombre": "División de Responsabilidades AI/Python"},
             {"id": "KERNEL:OWNERSHIP-001", "seccion": "§5.1", "nombre": "AI Component"},
             {"id": "KERNEL:OWNERSHIP-002", "seccion": "§5.2", "nombre": "Python Component"},
             {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH", "seccion": "§6", "nombre": "Arquitectura Dashboard/Checklist"},
-            {"id": "KERNEL:SCHEMA", "seccion": "§7", "nombre": "Class A vs Class B (Schema)"},
-            {"id": "KERNEL:SCHEMA-001", "seccion": "§7.1", "nombre": "Class A vs Class B — definición de ownership"},
-            {"id": "KERNEL:SCHEMA-002", "seccion": "§7.2", "nombre": "Restricción del Sistema"},
-            {"id": "KERNEL:SCHEMA-003", "seccion": "§7.3", "nombre": "Fuente como Campo Especial"},
-            {"id": "KERNEL:SCHEMA-004", "seccion": "§7.4", "nombre": "Entity Format"},
-            {"id": "KERNEL:SCHEMA-005", "seccion": "§7.5", "nombre": "Contrato de Resolución: 4 Pasos"},
-            {"id": "KERNEL:SCHEMA-006", "seccion": "§7.6", "nombre": "APROBAR_WRITE: Alcance"},
-            {"id": "KERNEL:SCHEMA-007", "seccion": "§7.7", "nombre": "Acceptance Audit"},
-            {"id": "KERNEL:TRACKER-SCHEMA", "seccion": "§8", "nombre": "Alcance y niveles de prioridad — Bug/Tasks Tracker"},
-            {"id": "KERNEL:TRACKER-SCHEMA-001", "seccion": "§8.1", "nombre": "Alcance del Tracker"},
-            {"id": "KERNEL:TRACKER-SCHEMA-002", "seccion": "§8.2", "nombre": "Niveles de Prioridad"},
-            {"id": "KERNEL:GATE-DECISION", "seccion": "§9", "nombre": "Lógica de gates"},
+            {"id": "KERNEL:SCHEMA", "seccion": "§7", "nombre": "Modelo de Datos y Ownership"},
+            {"id": "KERNEL:TRACKER-SCHEMA", "seccion": "§8", "nombre": "Bug Tracker y Tasks Tracker"},
+            {"id": "KERNEL:GATE-DECISION", "seccion": "§9", "nombre": "Lógica de Gate Decision"},
             {"id": "KERNEL:GATE-DECISION-001", "seccion": "§9.1", "nombre": "Bypass"},
             {"id": "KERNEL:GATE-DECISION-002", "seccion": "§9.2", "nombre": "Lógica Estándar"},
             {"id": "KERNEL:GATE-DECISION-003", "seccion": "§9.3", "nombre": "Resolución de REVIEW_NEEDED"},
@@ -104,71 +93,37 @@ CENSUS_SPEC = [
             {"id": "KERNEL:GATE-DECISION-007", "seccion": "§9.7", "nombre": "Ejecución Automática de Archivado"},
             {"id": "KERNEL:GATE-DECISION-008", "seccion": "§9.8", "nombre": "Capas de Evaluación de Gate: Técnica vs. Negocio"},
             {"id": "KERNEL:GATE-DECISION-009", "seccion": "§9.9", "nombre": "Escalamiento de Pendientes a Tickets"},
-            {"id": "KERNEL:GATE-DECISION-010", "seccion": "§9.10", "nombre": "Definición de Estados Terminales Protegidos"},
-            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "§10", "nombre": "Reglas de Oro CV"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "§10.1", "nombre": "No Evaluar Fit Antes de Escribir"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "§10.2", "nombre": "No Calcular ni Estimar Campos Class B"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-003", "seccion": "§10.3", "nombre": "No Cuestionar la Calidad de Datos del Usuario"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-004", "seccion": "§10.4", "nombre": "No Delegar Escritura al Usuario"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-005", "seccion": "§10.5", "nombre": "No Interpretar en SYNC"},
-            {"id": "KERNEL:TRIGGERS", "seccion": "§11", "nombre": "Contratos detallados de Triggers"},
-            {"id": "KERNEL:TRIGGER-001", "seccion": "§11.1", "nombre": "FEED — Procesamiento por Lotes"},
-            {"id": "KERNEL:TRIGGER-002", "seccion": "§11.2", "nombre": "VL1 — Comandos de mantenimiento del Tracker"},
-            {"id": "KERNEL:TRIGGER-003", "seccion": "§11.3", "nombre": "QA — Checklist Canónico de 6 ítems"},
-            {"id": "KERNEL:TRIGGER-004", "seccion": "§11.4", "nombre": "DRY RUN"},
-            {"id": "KERNEL:TRIGGER-005", "seccion": "§11.5", "nombre": "SYNC"},
-            {"id": "KERNEL:TRIGGER-006", "seccion": "§11.6", "nombre": "TOP 3 BY SCORE"},
-            {"id": "KERNEL:TRIGGER-007", "seccion": "§11.7", "nombre": "NEXT ACTION"},
-            {"id": "KERNEL:TRIGGER-008", "seccion": "§11.8", "nombre": "FEED (sin trigger CV-A)"},
-            {"id": "KERNEL:TRIGGER-009", "seccion": "§11.9", "nombre": "STATUS"},
-            {"id": "KERNEL:CV-PIPELINE", "seccion": "§12", "nombre": "Flujo CV-A → CV-B"},
+            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "§10", "nombre": "Golden Rules — Límites de Ejecución"},
+            {"id": "KERNEL:TRIGGERS", "seccion": "§11", "nombre": "Contratos de Ejecución del AI Component"},
+            {"id": "KERNEL:CV-PIPELINE", "seccion": "§12", "nombre": "Pipeline de CV"},
             {"id": "KERNEL:CANON-UPDATE", "seccion": "§13", "nombre": "Actualización del Canon"},
-            {"id": "KERNEL:NAMING-CONVENTION", "seccion": "§14", "nombre": "Convención de Nombres de Outputs"},
-            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE", "seccion": "§15", "nombre": "Infraestructura de Contexto"},
-            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-001", "seccion": "§15.1", "nombre": "Scope"},
-            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-002", "seccion": "§15.2", "nombre": "Routing"},
-            {"id": "KERNEL:DATA-FLOW", "seccion": "§16", "nombre": "Flujo de Datos y Escritura"},
-            {"id": "KERNEL:EVOLUTION", "seccion": "§17", "nombre": "Evolución del sistema, deuda técnica, criterios de cambio"},
-        ],
-    },
-    {
-        "name": "SYSTEM PROMPT",
-        "rows": [
-            {"id": "SP:DIGITAL-ID-CARD-001", "seccion": "§3", "nombre": "Cédula Digital — rutas de operación y UUIDs"},
-            {"id": "SP:CONTEXT-INFRASTRUCTURE-REF", "seccion": "§4", "nombre": "Referencia — Consultar en Technical Kernel (ex KERNEL:SCOPE)"},
-            {"id": "SP:DATA-FLOW-REF", "seccion": "§5", "nombre": "Referencia — Consultar en Technical Kernel (KERNEL:DATA-FLOW)"},
-            {"id": "SP:TRIGGERS", "seccion": "§6", "nombre": "Triggers operativos de VANTAGE"},
-            {"id": "SP:CV-GOLDEN-RULES-REF", "seccion": "§7", "nombre": "Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES)"},
-            {"id": "SP:SCHEMA", "seccion": "§8", "nombre": "Schema — Trackers (Class A/B)"},
-            {"id": "SP:MCP-ROUTING-NOTES", "seccion": "§9", "nombre": "Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY)"},
-            {"id": "SP:ID-CONNECTORS", "seccion": "§10", "nombre": "ID Connectors — esquema PREFIX:NOMBRE-SECCION"},
-            {"id": "SP:BOOTSTRAP-001", "seccion": "§1", "nombre": "Operating Specification — Bootstrap de Sesión"},
-            {"id": "SP:SYNC-RULE", "seccion": "§2", "nombre": "Sincronización Inicial y Verificación de Versión"},
-            {"id": "SP:CONSISTENCY", "seccion": "§11", "nombre": "Regla de Consistencia Documental"},
-            {"id": "SP:VERSION-CHECK-TOOL", "seccion": "§12", "nombre": "Herramienta de Verificación de Versión de Bajo Costo"},
+            {"id": "KERNEL:NAMING-CONVENTION", "seccion": "§14", "nombre": "Convención de Nombres"},
+            {"id": "KERNEL:SCOPE", "lookup_ids": ["KERNEL:SCOPE", "KERNEL:ROUTING"], "seccion": "§15", "nombre": "Scope / Routing"},
+            {"id": "KERNEL:DATA-FLOW", "seccion": "§16", "nombre": "Flujo de Datos"},
+            {"id": "KERNEL:EVOLUTION", "seccion": "§17", "nombre": "Evolución del Sistema"},
         ],
     },
     {
         "name": "MANUAL",
         "rows": [
-            {"id": "MANUAL:OBJECTIVE-001", "seccion": "§1", "nombre": "Objetivo de VANTAGE"},
-            {"id": "MANUAL:HOW-IT-WORKS-001", "seccion": "§2", "nombre": "Cómo Funciona"},
-            {"id": "MANUAL:FAILURE-PHILOSOPHY-001", "seccion": "§3", "nombre": "Filosofía de Fallo para Operadores"},
-            {"id": "MANUAL:SETUP-001", "seccion": "§4", "nombre": "Setup"},
-            {"id": "MANUAL:COLD-START-001", "seccion": "§5", "nombre": "Arranque Frío — Checklist de Reactivación"},
-            {"id": "MANUAL:SESSION-CYCLE-001", "seccion": "§6", "nombre": "Ciclo de Sesión — Open/Close"},
-            {"id": "MANUAL:VCHECKLIST-001", "seccion": "§7", "nombre": "El Checklist — V-Checklist semanal"},
-            {"id": "MANUAL:WEEKLY-FLOW-001", "seccion": "§8", "nombre": "Flujo Semanal de Operación"},
+            {"id": "MANUAL:OBJECTIVE", "seccion": "§1", "nombre": "Objetivo de VANTAGE"},
+            {"id": "MANUAL:HOW-IT-WORKS", "seccion": "§2", "nombre": "Cómo Funciona"},
+            {"id": "MANUAL:FAILURE-PHILOSOPHY", "seccion": "§3", "nombre": "Filosofía de Fallo para Operadores"},
+            {"id": "MANUAL:SETUP", "seccion": "§4", "nombre": "Setup"},
+            {"id": "MANUAL:COLD-START", "seccion": "§5", "nombre": "Arranque Frío — Checklist de Reactivación"},
+            {"id": "MANUAL:SESSION-CYCLE", "seccion": "§6", "nombre": "Ciclo de Sesión — Open/Close"},
+            {"id": "MANUAL:VCHECKLIST", "seccion": "§7", "nombre": "El Checklist — V-Checklist semanal"},
+            {"id": "MANUAL:WEEKLY-FLOW", "seccion": "§8", "nombre": "Flujo Semanal de Operación"},
             {"id": "MANUAL:DASHBOARD-001", "seccion": "§8.2", "nombre": "Dashboard — recuperación antes de CV Optimization"},
-            {"id": "MANUAL:VANTAGE-RUNTIME-001", "seccion": "§9", "nombre": "VANTAGE Runtime (Consulta Operativa)"},
-            {"id": "MANUAL:DATA-MANAGEMENT-001", "seccion": "§10", "nombre": "Gestión de Datos"},
-            {"id": "MANUAL:HEALTHCHECK-001", "seccion": "§11", "nombre": "Health Check"},
-            {"id": "MANUAL:TROUBLESHOOTING-001", "seccion": "§12", "nombre": "Troubleshooting"},
-            {"id": "MANUAL:PROMPTS-WRAPPERS-001", "seccion": "§13", "nombre": "Prompts & Wrappers"},
-            {"id": "MANUAL:CHEATSHEETS-001", "seccion": "§14", "nombre": "Cheat Sheets"},
-            {"id": "MANUAL:PATCH-QUALITY-001", "seccion": "§15", "nombre": "Criterio de Calidad para Parches Documentales"},
-            {"id": "MANUAL:GOLDEN-RULES-001", "seccion": "§16", "nombre": "Reglas de Oro para Operadores"},
-            {"id": "MANUAL:SLA-001", "seccion": "§17", "nombre": "SLA de Latencia Post-Ingesta"},
+            {"id": "MANUAL:VANTAGE-RUNTIME", "seccion": "§9", "nombre": "VANTAGE Runtime (Consulta Operativa)"},
+            {"id": "MANUAL:DATA-MANAGEMENT", "seccion": "§10", "nombre": "Gestión de Datos"},
+            {"id": "MANUAL:HEALTHCHECK", "seccion": "§11", "nombre": "Health Check"},
+            {"id": "MANUAL:TROUBLESHOOTING", "seccion": "§12", "nombre": "Troubleshooting"},
+            {"id": "MANUAL:PROMPTS-WRAPPERS", "seccion": "§13", "nombre": "Prompts & Wrappers"},
+            {"id": "MANUAL:CHEATSHEETS", "seccion": "§14", "nombre": "Cheat Sheets"},
+            {"id": "MANUAL:PATCH-QUALITY", "seccion": "§15", "nombre": "Criterio de Calidad para Parches Documentales"},
+            {"id": "MANUAL:GOLDEN-RULES", "seccion": "§16", "nombre": "Reglas de Oro para Operadores"},
+            {"id": "MANUAL:SLA", "seccion": "§17", "nombre": "SLA de Latencia Post-Ingesta"},
             {"id": "MANUAL:CV-GOLDEN-RULES-INDEX", "seccion": "§18", "nombre": "Reglas de Oro CV — Referencia Operativa"},
             {"id": "MANUAL:POSITIONING-CRITERIA", "seccion": "§19", "nombre": "Positioning Modes (N1–N4) — Criterio de Selección"},
             {"id": "MANUAL:GOLDEN-SKELETON-REF", "seccion": "§20", "nombre": "Golden Skeleton — Qué es y Dónde Vive"},
@@ -178,47 +133,67 @@ CENSUS_SPEC = [
     {
         "name": "CAREER CANON",
         "rows": [
-            {"id": "CAREER_CANON:AUDIENCE-SCOPE", "lookup_ids": ["CAREER_CANON:AUDIENCE-SCOPE", "CANON:AUDIENCE-SCOPE"], "seccion": "(encabezado)", "nombre": "Declaración de Audiencia y Alcance del Canon Runtime"},
-            {"id": "CANON:PROFILE-001", "seccion": "§A", "nombre": "Professional Profile Canon"},
-            {"id": "CANON:SKILLS-001", "seccion": "§B", "nombre": "Skills Canon"},
-            {"id": "CANON:EXPERIENCE-001", "seccion": "§D", "nombre": "Experience Records"},
+            {
+                "id": "CAREER_CANON:AUDIENCE-SCOPE",
+                "lookup_ids": ["CAREER_CANON:AUDIENCE-SCOPE", "CANON:AUDIENCE-SCOPE"],
+                "seccion": "(encabezado)",
+                "nombre": "Declaración de Audiencia y Alcance del Canon Runtime"
+            },
+            {"id": "CANON:PROFILE", "seccion": "§A", "nombre": "Professional Profile Canon"},
+            {"id": "CANON:SKILLS", "seccion": "§B", "nombre": "Skills Canon"},
+            {"id": "CANON:EXPERIENCE", "seccion": "§D", "nombre": "Experience Records"},
             {"id": "CANON:EXPERIENCE-C01", "seccion": "§D.1", "nombre": "C01 L'Oréal Luxe"},
             {"id": "CANON:EXPERIENCE-C02", "seccion": "§D.2", "nombre": "C02 Bisonte Experiential"},
             {"id": "CANON:EXPERIENCE-C03", "seccion": "§D.3", "nombre": "C03 Levi Strauss (Dockers)"},
             {"id": "CANON:EXPERIENCE-C04", "seccion": "§D.4", "nombre": "C04 Aéropostale"},
             {"id": "CANON:EXPERIENCE-C05", "seccion": "§D.5", "nombre": "C05 El Palacio de Hierro (ALDO)"},
-            {"id": "CANON:ACHIEVEMENTS-001", "seccion": "§H", "nombre": "Achievement Library"},
-            {"id": "CANON:KPIS-001", "seccion": "§I", "nombre": "Core KPIs"},
-            {"id": "CANON:KPI-001", "seccion": "§I.1", "nombre": "KPI01 Traffic +43%"},
-            {"id": "CANON:KPI-002", "seccion": "§I.2", "nombre": "KPI02 Conversion +18%"},
-            {"id": "CANON:KPI-003", "seccion": "§I.3", "nombre": "KPI03 Campaign Cost -74%"},
-            {"id": "CANON:KPI-004", "seccion": "§I.4", "nombre": "KPI04 Floorset Time -33%"},
-            {"id": "CANON:KPI-005", "seccion": "§I.5", "nombre": "KPI05 POP Coverage 100%"},
-            {"id": "CANON:KPI-006", "seccion": "§I.6", "nombre": "KPI06 Rebranding Coverage 100%"},
-            {"id": "CANON:KPI-007", "seccion": "§I.7", "nombre": "KPI07 Adidas Punch List (17)"},
-            {"id": "CANON:KPI-008", "seccion": "§I.8", "nombre": "KPI08 Years Experience (10+)"},
-            {"id": "CANON:FACTS-001", "seccion": "§J", "nombre": "Canonical Facts"},
-            {"id": "CANON:FACT-001", "seccion": "§J.1", "nombre": "CF01 ALDO Cert. Year 2014"},
-            {"id": "CANON:FACT-002", "seccion": "§J.2", "nombre": "CF02 ALDO Periodo 2012–2017"},
-            {"id": "CANON:FACT-003", "seccion": "§J.3", "nombre": "CF03 Adidas Punch List 17"},
-            {"id": "CANON:FACT-004", "seccion": "§J.4", "nombre": "CF04 Adidas Punch List Non-Blocking"},
-            {"id": "CANON:FACT-005", "seccion": "§J.5", "nombre": "CF05 Levi's 270+ POS/6 países"},
-            {"id": "CANON:FACT-006", "seccion": "§J.6", "nombre": "CF06 Aéropostale 21 Direct Reports"},
-            {"id": "CANON:FACT-007", "seccion": "§J.7", "nombre": "CF07 Aéropostale 17 Stores"},
-            {"id": "CANON:FACT-008", "seccion": "§J.8", "nombre": "CF08 L'Oréal Marcas"},
-            {"id": "CANON:UF-001", "seccion": "§J.9", "nombre": "UF01 L'Oréal End Date"},
-            {"id": "CANON:UF-002", "seccion": "§J.10", "nombre": "UF02 Canonical Email"},
-            {"id": "CANON:UF-003", "seccion": "§J.11", "nombre": "UF03 Certifications Canon"},
-            {"id": "CANON:POSITIONING-001", "seccion": "§K", "nombre": "Positioning Modes N1–N4"},
-            {"id": "CANON:POSITIONING-N1", "seccion": "§K.1", "nombre": "N1 Luxury Brand Execution"},
-            {"id": "CANON:POSITIONING-N2", "seccion": "§K.2", "nombre": "N2 Store Design & Flagship"},
-            {"id": "CANON:POSITIONING-N3", "seccion": "§K.3", "nombre": "N3 Regional Brand Execution & Rollout"},
-            {"id": "CANON:POSITIONING-N4", "seccion": "§K.4", "nombre": "N4 Commercial VM & Field Leadership"},
-            {"id": "CANON:OUTPUT-CONTRACT", "seccion": "§8", "nombre": "Contrato de entregable"},
-            {"id": "CANON:OUTPUT-CONTRACT-001", "seccion": "§8.1", "nombre": "Golden Skeleton"},
-            {"id": "CANON:OUTPUT-CONTRACT-002", "seccion": "§8.2", "nombre": "Figma Tags"},
-            {"id": "CANON:OUTPUT-CONTRACT-003", "seccion": "§8.3", "nombre": "Tag Registry"},
-            {"id": "CANON:OUTPUT-CONTRACT-004", "seccion": "§8.4", "nombre": "Positioning Modes"},
+            {"id": "CANON:ACHIEVEMENTS", "seccion": "§H", "nombre": "Achievement Library"},
+            {"id": "CANON:KPIS", "seccion": "§I", "nombre": "Core KPIs"},
+            {"id": "CANON:FACTS", "seccion": "§J", "nombre": "Canonical Facts"},
+            {"id": "CANON:POSITIONING", "seccion": "§K", "nombre": "Positioning Modes N1–N4"},
+        ],
+    },
+    {
+        "name": "NAVIGATION BRIEF",
+        "rows": [
+            {"id": "BRIEF:PURPOSE-SCOPE", "lookup_ids": ["BRIEF:PURPOSE-SCOPE", "BRIEF:SCOPE", "BRIEF:001"], "seccion": "§0", "nombre": "Propósito y Alcance"},
+            {"id": "BRIEF:AUTHORITY-MATRIX", "lookup_ids": ["BRIEF:AUTHORITY-MATRIX", "BRIEF:002"], "seccion": "§1", "nombre": "Matriz de Autoridad Documental"},
+            {"id": "BRIEF:ECOSYSTEM", "lookup_ids": ["BRIEF:ECOSYSTEM", "BRIEF:003"], "seccion": "§2", "nombre": "Ecosistema Documental"},
+            {"id": "BRIEF:NAV-CONTRACTS", "lookup_ids": ["BRIEF:NAV-CONTRACTS", "BRIEF:004"], "seccion": "§3", "nombre": "Contratos de navegación"},
+            {"id": "BRIEF:DOMAIN-ARCHITECTURE", "lookup_ids": ["BRIEF:DOMAIN-ARCHITECTURE", "BRIEF:005"], "seccion": "§4", "nombre": "Dominios"},
+            {"id": "BRIEF:VERIFICATION-DEPTH", "lookup_ids": ["BRIEF:VERIFICATION-DEPTH", "BRIEF:006"], "seccion": "§5", "nombre": "Contratos de verificación"},
+            {"id": "BRIEF:CROSS-DEPENDENCIES", "lookup_ids": ["BRIEF:CROSS-DEPENDENCIES", "BRIEF:007"], "seccion": "§6", "nombre": "Dependencias entre documentos"},
+            {"id": "BRIEF:MAINTENANCE-CONTRACT", "lookup_ids": ["BRIEF:MAINTENANCE-CONTRACT", "BRIEF:008"], "seccion": "§7", "nombre": "Contrato de Mantenimiento"},
+            {"id": "BRIEF:DECISION-TREE", "lookup_ids": ["BRIEF:DECISION-TREE", "BRIEF:009"], "seccion": "§8", "nombre": "Árbol de Decisiones"},
+            {"id": "BRIEF:NAV-PRINCIPLES", "lookup_ids": ["BRIEF:NAV-PRINCIPLES", "BRIEF:010"], "seccion": "§9", "nombre": "Principios de Navegación"},
+            {"id": "BRIEF:EXPECTED-OUTCOME", "lookup_ids": ["BRIEF:EXPECTED-OUTCOME", "BRIEF:011"], "seccion": "§10", "nombre": "Resultado Esperado"},
+        ],
+    },
+    {
+        "name": "SYSTEM PROMPT",
+        "rows": [
+            {
+                "id": "SP:BOOTSTRAP",
+                "lookup_ids": ["SP:BOOTSTRAP-001", "SP:BOOTSTRAP"],
+                "seccion": "§1",
+                "nombre": "Operating Specification — Bootstrap de Sesión"
+            },
+            {"id": "SP:SYNC-RULE", "seccion": "§2", "nombre": "Sincronización Inicial y Verificación de Versión"},
+            {
+                "id": "SP:DIGITAL-ID-CARD",
+                "lookup_ids": ["SP:DIGITAL-ID-CARD-001", "SP:DIGITAL-ID-CARD"],
+                "seccion": "§3",
+                "nombre": "Cédula Digital — rutas de operación y UUIDs"
+            },
+            {"id": "SP:CONTEXT-INFRASTRUCTURE-REF", "seccion": "§4", "nombre": "Referencia — Consultar en Technical Kernel (ex KERNEL:SCOPE)"},
+            {"id": "SP:DATA-FLOW-REF", "seccion": "§5", "nombre": "Referencia — Consultar en Technical Kernel (KERNEL:DATA-FLOW)"},
+            {"id": "SP:TRIGGERS", "seccion": "§6", "nombre": "Triggers operativos de VANTAGE"},
+            {"id": "SP:CV-GOLDEN-RULES-REF", "seccion": "§7", "nombre": "Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES)"},
+            {"id": "SP:SCHEMA", "seccion": "§8", "nombre": "Schema — Trackers (Class A/B)"},
+            {"id": "SP:MCP-ROUTING-NOTES", "seccion": "§9", "nombre": "Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY)"},
+            {"id": "SP:ID-CONNECTORS", "seccion": "§10", "nombre": "ID Connectors — esquema PREFIX:NOMBRE-SECCION"},
+            {"id": "SP:CONSISTENCY", "seccion": "§11", "nombre": "Regla de Consistencia Documental"},
+            {"id": "SP:VERSION-CHECK-TOOL", "seccion": "§12", "nombre": "Herramienta de Verificación de Versión de Bajo Costo"},
         ],
     },
     {
@@ -234,56 +209,19 @@ CENSUS_SPEC = [
             {"id": "ALIASES:DEDUP", "seccion": "§8", "nombre": "Dedup & Oportunidades"},
         ],
     },
-    {
-        "name": "NAVIGATION BRIEF",
-        "rows": [
-            {"id": "BRIEF:001", "seccion": "§0", "nombre": "Propósito y Alcance"},
-            {"id": "BRIEF:002", "seccion": "§1", "nombre": "Document Authority Matrix"},
-            {"id": "BRIEF:003", "seccion": "§2", "nombre": "Ecosistema Documental"},
-            {"id": "BRIEF:004", "seccion": "§3", "nombre": "Navigation Contracts"},
-            {"id": "BRIEF:005", "seccion": "§4", "nombre": "Domain Architecture"},
-            {"id": "BRIEF:006", "seccion": "§5", "nombre": "Verification Depth Contract"},
-            {"id": "BRIEF:007", "seccion": "§6", "nombre": "Cross-Document Dependencies"},
-            {"id": "BRIEF:008", "seccion": "§7", "nombre": "Maintenance Contract"},
-            {"id": "BRIEF:009", "seccion": "§8", "nombre": "Navigation Decision Tree"},
-            {"id": "BRIEF:010", "seccion": "§9", "nombre": "Principios de Navegación"},
-            {"id": "BRIEF:011", "seccion": "§10", "nombre": "Resultado Esperado"},
-        ],
-    },
 ]
 
-# ─── CAPA DE RED (engine de generator.py con rate-limit de generate_census.py) ─
+# ─── CAPA DE RED ──────────────────────────────────────────────────────────────
 
 class FetchIncompleteError(Exception):
-    """
-    Señala que fetch_blocks() no pudo completar la paginación de un bloque
-    después de agotar los reintentos. Antes de este fix, un error transitorio
-    (5xx, timeout disfrazado de status_code, etc.) en CUALQUIER página después
-    de la primera hacía `break` silencioso: el documento se indexaba solo
-    parcialmente, sin aviso, y los IDs que vivían más adelante en el
-    documento quedaban "sin link" sin ninguna pista de por qué (ver DT:
-    10 IDs sin link en Kernel — GATE-DECISION-004, TRIGGERS, OWNERSHIP,
-    NAMING-CONVENTION, todos ubicados después del bloque ~100-200 de 310).
-    """
     pass
 
 
 MAX_RETRIES_PER_PAGE = 3
-RETRY_BACKOFF_SECONDS = 2  # se multiplica por el intento: 2s, 4s, 6s
+RETRY_BACKOFF_SECONDS = 2
 
 
 def fetch_blocks(block_id: str) -> list:
-    """
-    Obtiene todos los bloques de un nivel con paginación, manejo de
-    rate-limit (429) y reintento con backoff ante CUALQUIER otro error
-    transitorio (antes solo se reintentaba 429; cualquier otro status_code
-    hacía `break` silencioso a media paginación).
-
-    Si tras MAX_RETRIES_PER_PAGE intentos una página sigue fallando, esta
-    función ya NO trunca en silencio: levanta FetchIncompleteError para que
-    el caller sepa explícitamente que el documento quedó incompleto, en vez
-    de reportar simplemente más IDs "sin link" sin explicar la causa.
-    """
     blocks = []
     url = f"https://api.notion.com/v1/blocks/{block_id}/children"
     cursor = None
@@ -315,7 +253,6 @@ def fetch_blocks(block_id: str) -> list:
                 last_error = f"{r.status_code}: {r.text[:200]}"
                 continue
 
-            # status 200 — página OK, sale del loop de reintento
             data = r.json()
             blocks.extend(data.get("results", []))
             last_error = None
@@ -336,12 +273,6 @@ def fetch_blocks(block_id: str) -> list:
 
 
 def fetch_blocks_recursive(block_id: str) -> list:
-    """
-    Barre recursivamente todos los bloques hijos (engine de generator.py).
-    Deja propagar FetchIncompleteError tal cual — no la captura aquí — para
-    que build_link_index() sepa exactamente qué documento y qué bloque
-    quedaron incompletos, en vez de perder ese contexto.
-    """
     result = []
     for block in fetch_blocks(block_id):
         result.append(block)
@@ -349,10 +280,9 @@ def fetch_blocks_recursive(block_id: str) -> list:
             result.extend(fetch_blocks_recursive(block["id"]))
     return result
 
-# ─── EXTRACCIÓN DE IDs (engine de generator.py, expandido a más block types) ──
+# ─── EXTRACCIÓN DE IDs ────────────────────────────────────────────────────────
 
 def extract_ids_from_rich_text(rich_text: list) -> list:
-    """Extrae todos los tokens que empiecen con un prefijo válido."""
     ids = []
     for segment in rich_text:
         text = segment.get("plain_text", "").strip()
@@ -363,59 +293,12 @@ def extract_ids_from_rich_text(rich_text: list) -> list:
     return ids
 
 
-# Patrón canónico de encabezado de sección. Admite TRES variantes vigentes:
-#   (1) "§N — PREFIX:KEY" / "§N - PREFIX:KEY"  — formato legacy, guion largo o corto
-#   (2) "§N PREFIX:KEY"                         — formato v9.7.9 (normalización
-#       transversal de heading-ID a "## §N PREFIX:KEY" / "## Título", sin
-#       separador), ver Changelog v9.7.9. Sin esta variante, NINGÚN heading
-#       normalizado bajo el esquema nuevo se detecta como definición — bug
-#       detectado en sesión Cross-Reference Hyperlinks Pt 2 (CANON:OUTPUT-CONTRACT
-#       resolviendo contra una mención de paso en Kernel en vez de su propia
-#       definición en Career Canon, por ausencia total de competidores is_def=True).
-# Ej: "§22 — KERNEL:DOCUMENTATION-TRANSVERSAL-001", "§2.6 - KERNEL:ARHITECTURE-L4",
-#     "§8 CANON:OUTPUT-CONTRACT"
 SECTION_HEADING_PREFIX_RE = re.compile(r"^§[\w.]+\s*(?:[—-]\s*)?")
-
-# Misma forma que SECTION_HEADING_PREFIX_RE, pero con grupo de captura —
-# se usa para EXTRAER el número/letra de sección real ("§9.9", "§K.1",
-# "§L.3") desde el heading, en vez de solo detectar y descartar el prefijo.
-# Esta es la fuente de verdad dinámica que reemplaza el campo "seccion"
-# hardcodeado en CENSUS_SPEC (ver BUG — CENSUS_SPEC hardcodeado, sesión
-# Cross-Reference Hyperlinks Pt 2, 2026-07-24): CENSUS_SPEC es una lista
-# Python escrita a mano que nunca se recalcula contra los headers reales
-# del documento, así que un reordenamiento de secciones (ej. Manual
-# insertando §5 Arranque Frío / §6 Ciclo de Sesión) o una renumeración
-# (ej. Career Canon Output Contract de §L a §8) produce drift silencioso
-# que persiste idéntico entre corridas — no es inestabilidad de red.
 SECTION_HEADING_CAPTURE_RE = re.compile(r"^§([\w.]+)\s*(?:[—-]\s*)?")
-
-# Segunda convención vigente, propia del Manual: el heading no usa "§" en
-# absoluto, arranca directo con el número/subnúmero plano seguido de punto
-# y/o espacio — ej. "1. OBJETIVO DE VANTAGE · ID: MANUAL:OBJETIVO-001" o
-# "8.2 MARTES — ... · ID: MANUAL:DASHBOARD-001". Sin esta segunda forma,
-# TODO el Manual caía al fallback hardcodeado de CENSUS_SPEC en cada
-# corrida — no porque el Manual no tenga sección en vivo, sino porque su
-# convención de heading es distinta a la del Kernel (detectado al revisar
-# el primer reporte de "IDs con Sección hardcodeada" tras el fix inicial,
-# 2026-07-24: los 48 flagged eran casi en su totalidad filas de MANUAL).
 LEADING_NUMBER_SECTION_RE = re.compile(r"^(\d+(?:\.\d+)*)\.?\s+")
 
 
 def extract_live_section(plain: str) -> str | None:
-    """
-    Extrae la sección real del texto crudo de un heading de definición,
-    soportando las TRES convenciones vigentes durante la migración:
-      (1) "§N — ID" / "§N ID"            (legacy Kernel/Canon/Brief, en salida)
-      (2) "N. Título ... ID: MANUAL:X"   (legacy Manual — número plano, sin "§")
-      (3) "NN PREFIX:KEY" / "NN.N ..."   (CANÓNICO, aprobado 2026-07-25 —
-                                           reemplaza (1) y (2) por completo)
-    Para (1) se conserva el "§" tal cual aparece en el documento real. Para
-    (2)/(3) NO se inventa un "§" que el heading no tiene — se devuelve el
-    número plano tal como está escrito, para reflejar fielmente el estado
-    real del documento (legacy vs. ya migrado a formato canónico).
-    Devuelve None si ninguna convención aplica (heading = ID puro, sin
-    ningún prefijo numérico, ej. "### KERNEL:TRIGGER-001").
-    """
     stripped = plain.strip("` \n")
     m = SECTION_HEADING_CAPTURE_RE.match(stripped)
     if m:
@@ -427,54 +310,21 @@ def extract_live_section(plain: str) -> str | None:
 
 
 def is_definition_block(plain: str, id_str: str, btype: str) -> bool:
-    """
-    Determina si el bloque ES la definición del ID (heading o texto que arranca
-    con el ID), vs. una mención de pasada.
-
-    Reconoce TRES nomenclaturas válidas de heading, las tres presentes hoy en
-    los documentos fundacionales durante la migración:
-      (a) Heading = ID puro, ej. "### KERNEL:ARCHITECTURE-L0"
-      (b) Heading = "§N — ID" (legacy, en migración fuera), ej.
-          "## §22 — KERNEL:DOC-CONTRACT"
-      (c) Heading = "NN PREFIX:KEY" / "NN.N PREFIX:KEY-NNN" — formato canónico
-          APROBADO por el operador el 2026-07-25 para reemplazar (b) por
-          completo (sin "§", padding 2 dígitos en sección padre, sin padding
-          en el decimal de subsección), ej. "## 08 CANON:OUTPUT-CONTRACT" o
-          "## 08.1 CANON:OUTPUT-CONTRACT-001".
-    La versión anterior de esta función solo cubría (a) y (b); (c) es el
-    formato objetivo de la migración de headings en curso — sin soporte para
-    (c), todo heading ya migrado al nuevo estándar dejaría de detectarse como
-    definición, generando falsos huérfanos.
-    """
     stripped = plain.strip("` \n")
     heading_body = SECTION_HEADING_PREFIX_RE.sub("", stripped)
     if heading_body == stripped:
-        # No había prefijo "§..." — probar el prefijo canónico nuevo, número
-        # plano sin símbolo (nomenclatura c).
         heading_body = LEADING_NUMBER_SECTION_RE.sub("", stripped)
     is_heading = btype in {"heading_1", "heading_2", "heading_3"}
     return (
         stripped == id_str
         or stripped == f"ID: {id_str}"
         or _contains_id_boundary(plain, f"ID: {id_str}")
-        or (is_heading and _starts_with_id_boundary(plain.lstrip("` "), id_str))  # nomenclatura (a)
-        or (is_heading and _starts_with_id_boundary(heading_body, id_str))        # nomenclaturas (b)/(c)
+        or (is_heading and _starts_with_id_boundary(plain.lstrip("` "), id_str))
+        or (is_heading and _starts_with_id_boundary(heading_body, id_str))
     )
 
 
 def _contains_id_boundary(haystack: str, needle: str) -> bool:
-    """
-    Como `needle in haystack`, pero exige que el carácter inmediatamente
-    posterior a la coincidencia no continúe el mismo token de ID.
-
-    Sin esto, "ID: CANON:OUTPUT-CONTRACT-001" contiene como substring literal
-    "ID: CANON:OUTPUT-CONTRACT" — una mención de pasada al ID hijo (retirado
-    en v9.7.9, aún citado narrativamente en Kernel §14) se contaba como
-    definición del ID padre homónimo-por-prefijo, ganándole a la definición
-    real en Career Canon por prioridad de documento. Misma clase de bug que
-    _starts_with_id_boundary, disparada por una rama distinta (esta no exige
-    heading ni posición al inicio del bloque).
-    """
     idx = haystack.find(needle)
     if idx == -1:
         return False
@@ -486,18 +336,6 @@ def _contains_id_boundary(haystack: str, needle: str) -> bool:
 
 
 def _starts_with_id_boundary(text: str, id_str: str) -> bool:
-    """
-    Como str.startswith(id_str), pero exige que lo que sigue al match no
-    continúe el mismo token de ID (letra, dígito, '-', '_' o ':').
-
-    Sin este boundary, "CANON:OUTPUT-CONTRACT-001".startswith("CANON:OUTPUT-CONTRACT")
-    es True — un heading que menciona el ID hijo se cuenta como definición
-    del ID padre homónimo-por-prefijo. Bug detectado en v9.7.9: el heading
-    de KERNEL:NAMING-CONVENTION que referencia el ID retirado
-    CANON:OUTPUT-CONTRACT-001 "ganaba" como definición de CANON:OUTPUT-CONTRACT
-    sobre la definición real en Career Canon, porque Kernel tiene mayor
-    DOC_PRIORITY. Ver Changelog / sesión Cross-Reference Hyperlinks Pt 2.
-    """
     if not text.startswith(id_str):
         return False
     rest = text[len(id_str):]
@@ -505,18 +343,6 @@ def _starts_with_id_boundary(text: str, id_str: str) -> bool:
 
 
 def extract_ids_from_block(block: dict) -> list:
-    """
-    Devuelve lista de (id_str, is_definition, seccion) para cada ID
-    encontrado en el bloque. Cubre: headings, párrafos, listas, callouts,
-    quotes, toggles, code, table_row.
-
-    `seccion` es la sección real detectada en vivo desde el propio texto
-    del heading (ej. "§9.9"), o None si el bloque no es un heading con
-    prefijo "§N" — en cuyo caso el caller debe usar el fallback hardcodeado
-    de CENSUS_SPEC. Solo los headings de definición pueden aportar una
-    sección en vivo; menciones de pasada, tablas y bloques de código nunca
-    la aportan (no tiene sentido leer "sección" de una celda de tabla).
-    """
     btype = block["type"]
     found = []
 
@@ -556,21 +382,6 @@ def extract_ids_from_block(block: dict) -> list:
 # ─── CONSTRUCCIÓN DEL ÍNDICE ───────────────────────────────────────────────────
 
 def build_link_index() -> tuple:
-    """
-    Barre todos los documentos y construye un índice:
-      id_str -> list of { doc, link, is_def }
-
-    Si un documento falla la indexación (FetchIncompleteError tras agotar
-    reintentos), NO aborta toda la corrida — se salta ese documento,
-    lo registra en `incomplete_docs`, y continúa con el resto. Antes de
-    este fix, un fallo de red a media paginación producía un índice
-    parcial SIN ningún aviso; ahora el fallo es explícito y se reporta
-    al final junto con el resto del census.
-
-    Devuelve: (link_index, incomplete_docs) — incomplete_docs es una lista
-    de dicts {doc, error} para los documentos que no pudieron indexarse
-    completo.
-    """
     link_index = {}
     incomplete_docs = []
 
@@ -601,15 +412,6 @@ def build_link_index() -> tuple:
 
 
 def pick_best_link(entries: list) -> dict | None:
-    """
-    Selecciona el mejor candidato priorizando:
-      1. Bloques de definición (is_def=True) sobre menciones
-      2. Dentro de definiciones, los que traen sección detectada en vivo
-         (seccion != None) sobre los que no — esto es lo que permite que
-         el "seccion" real del documento le gane al fallback hardcodeado
-         de CENSUS_SPEC cuando ambos están disponibles.
-      3. Documento de mayor prioridad (menor número en DOC_PRIORITY)
-    """
     if not entries:
         return None
 
@@ -623,26 +425,15 @@ def pick_best_link(entries: list) -> dict | None:
 
 
 def resolve_link(row: dict, link_index: dict) -> dict | None:
-    """
-    Resuelve la mejor entrada (link + seccion en vivo, si existe) para una
-    fila del CENSUS_SPEC. Devuelve el dict completo de link_index (no solo
-    el link) para que el caller pueda decidir entre la sección detectada
-    en vivo y el fallback hardcodeado de CENSUS_SPEC.
-    """
     lookup_ids = row.get("lookup_ids") or [row["id"]]
     candidates = []
     for lid in lookup_ids:
         candidates.extend(link_index.get(lid, []))
     return pick_best_link(candidates)
 
-# ─── DETECCIÓN DE HUÉRFANOS (KERNEL:CENSUS-SYNC, Regla 2) ─────────────────────
+# ─── DETECCIÓN DE HUÉRFANOS ───────────────────────────────────────────────────
 
 def known_ids_from_spec() -> set:
-    """
-    Aplana CENSUS_SPEC a un set de todos los IDs "conocidos" (tanto el
-    id declarado como cualquier lookup_id asociado), para poder comparar
-    contra lo que realmente se encontró en los documentos.
-    """
     known = set()
     for section in CENSUS_SPEC:
         for row in section["rows"]:
@@ -652,43 +443,19 @@ def known_ids_from_spec() -> set:
     return known
 
 
-# IDs retirados formalmente (ver Change Log) que persisten como texto
-# narrativo/histórico dentro de la propia entrada de retiro. No son
-# definiciones activas — el heading/sección real ya no existe — pero el
-# extractor los marca is_def=True al toparse con el patrón `PREFIX:CLAVE`
-# dentro de esa entrada histórica. Confirmado ruido documentado (v9.2.0),
-# no requieren alta en CENSUS_SPEC ni acción recurrente.
 KNOWN_RETIRED_NOISE = {
-    "MANUAL:DASHBOARD-CHECKLIST-001",  # retirado v9.1.6, dividido en
-                                        # MANUAL:VCHECKLIST-001 + MANUAL:DASHBOARD-001
+    "MANUAL:DASHBOARD-CHECKLIST-001",
 }
 
 
 def find_orphan_ids(link_index: dict, known_ids: set) -> dict:
-    """
-    Detecta IDs encontrados en los documentos (con al menos un bloque de
-    definición, is_def=True) que NO están declarados en CENSUS_SPEC.
-
-    Solo se consideran definiciones, no menciones sueltas, para evitar
-    falsos positivos de cross-references (ej. "ver KERNEL:X en el Kernel").
-
-    IDs retirados y documentados en KNOWN_RETIRED_NOISE se excluyen incluso
-    si el extractor los marca is_def=True, porque la "definición" detectada
-    es en realidad la narración histórica de su propio retiro (ver Change
-    Log), no una sección viva sin dar de alta.
-
-    Devuelve: id_str -> mejor entry (doc, link) para reportarlo, ordenado
-    por prefijo y nombre para lectura consistente.
-    """
     orphans = {}
     for id_str, entries in link_index.items():
-        if id_str in known_ids:
-            continue
-        if id_str in KNOWN_RETIRED_NOISE:
+        if id_str in known_ids or id_str in KNOWN_RETIRED_NOISE:
             continue
         def_entries = [e for e in entries if e["is_def"]]
         if not def_entries:
-            continue  # solo mención de pasada, no es una definición nueva
+            continue
         orphans[id_str] = pick_best_link(def_entries)
 
     return dict(sorted(orphans.items()))
@@ -696,31 +463,9 @@ def find_orphan_ids(link_index: dict, known_ids: set) -> dict:
 # ─── RENDER ────────────────────────────────────────────────────────────────────
 
 def render_markdown(link_index: dict, orphans: dict) -> tuple:
-    """
-    Genera el Markdown en el formato "bonito" curado por el operador en
-    Notion: un subtítulo `##` por documento, tabla de 3 columnas
-    (ID · Sección · Nombre — sin columna de estatus), separador `---`
-    entre documentos. Este formato es una vista de auditoría/espejo del
-    CENSUS_SPEC; la fuente de verdad para lectura humana sigue siendo la
-    página de Notion (394938be), curada a mano por el operador.
-
-    La columna "Sección" ya NO es el valor hardcodeado de CENSUS_SPEC por
-    defecto: se prioriza la sección detectada en vivo desde el propio
-    heading del documento fuente (ver extract_live_section / BUG —
-    CENSUS_SPEC hardcodeado, 2026-07-24). Solo cae al valor hardcodeado de
-    CENSUS_SPEC cuando el ID resolvió link pero ningún heading de
-    definición trae un prefijo "§N" detectable — y en ese caso lo marca
-    explícitamente con "⚠︎sin verificar en vivo" para que el drift nunca
-    vuelva a pasar desapercibido.
-
-    Devuelve: (markdown, unresolved, hardcoded_fallbacks) — unresolved es
-    la lista de IDs sin link; hardcoded_fallbacks es la lista de IDs cuya
-    "Sección" mostrada vino del valor estático de CENSUS_SPEC, no de una
-    detección en vivo.
-    """
     lines = []
     unresolved = []
-    hardcoded_fallbacks = []  # IDs donde no hubo sección detectada en vivo
+    hardcoded_fallbacks = []
 
     for i, section in enumerate(CENSUS_SPEC):
         if i > 0:
@@ -737,10 +482,6 @@ def render_markdown(link_index: dict, orphans: dict) -> tuple:
             if live_seccion:
                 seccion = live_seccion
             else:
-                # Sin heading "§N — ID" detectado en vivo (ej. headings sin
-                # prefijo de sección, o ID no resuelto). Fallback al valor
-                # hardcodeado de CENSUS_SPEC, marcado explícitamente para
-                # que el drift nunca vuelva a pasar desapercibido.
                 seccion = row.get("seccion", "")
                 if link:
                     seccion = f"{seccion} ⚠︎sin verificar en vivo" if seccion else "⚠︎sin verificar en vivo"
@@ -754,9 +495,6 @@ def render_markdown(link_index: dict, orphans: dict) -> tuple:
             lines.append(f"| {cell} | {seccion} | {nombre} |")
         lines.append("")
 
-    # Sección de huérfanos — siempre se imprime, incluso vacía, para que
-    # quede explícito en el artefacto que la detección corrió (Regla 2:
-    # "no ignorar silenciosamente IDs nuevos").
     lines.append("---")
     lines.append("")
     lines += ["## IDs Huérfanos (fuera de CENSUS_SPEC)", ""]
@@ -773,14 +511,6 @@ def render_markdown(link_index: dict, orphans: dict) -> tuple:
 # ─── ENTRY POINT ──────────────────────────────────────────────────────────────
 
 def print_debug_ids(link_index: dict, ids_to_debug: list) -> None:
-    """
-    Modo de diagnóstico puntual: para cada ID solicitado, imprime TODAS
-    las entradas crudas encontradas en link_index (documento, is_def,
-    link) sin pasar por pick_best_link ni por resolve_link. Esto permite
-    ver exactamente qué candidatos existen (o la ausencia total) para un
-    ID específico, en vez de inferir la causa por comparación indirecta
-    con otros IDs que sí resolvieron.
-    """
     print("\n" + "#" * 52)
     print("  DEBUG-ID: candidatos crudos en link_index")
     print("#" * 52)
@@ -796,8 +526,6 @@ def print_debug_ids(link_index: dict, ids_to_debug: list) -> None:
 
 
 if __name__ == "__main__":
-    import sys
-
     debug_ids = []
     if "--debug-id" in sys.argv:
         idx = sys.argv.index("--debug-id")
@@ -815,13 +543,14 @@ if __name__ == "__main__":
 
     if debug_ids:
         print_debug_ids(link_index, debug_ids)
-        sys.exit(0)  # modo debug: no genera el census completo, solo diagnostica
+        sys.exit(0)
 
     known_ids = known_ids_from_spec()
     orphans = find_orphan_ids(link_index, known_ids)
     md, unresolved, hardcoded_fallbacks = render_markdown(link_index, orphans)
 
     output = Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/data/V_ID_CENSUS_PRODUCTION.md")
+    output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(md, encoding="utf-8")
 
     total = sum(len(s["rows"]) for s in CENSUS_SPEC)
@@ -848,15 +577,9 @@ if __name__ == "__main__":
     print("=" * 52)
 
     if incomplete_docs:
-        print("\n" + "!" * 52)
-        print("  ⚠️  ADVERTENCIA: CENSUS INCOMPLETO")
+        print("\n  ⚠️  ADVERTENCIA: CENSUS INCOMPLETO")
         print("  Los siguientes documentos NO se indexaron completos")
-        print("  (fallo de red persistente tras reintentos). Los IDs 'sin")
-        print("  link' de arriba pueden deberse a ESTO, no a un problema")
-        print("  real de esos IDs. Re-correr vcensus antes de confiar en")
-        print("  el resultado de 'sin resolver' para estos documentos.")
         for entry in incomplete_docs:
             print(f"    - {entry['doc']}: {entry['error']}")
-        print("!" * 52)
 
     print(f"\nExportado a: {output.resolve()}")
