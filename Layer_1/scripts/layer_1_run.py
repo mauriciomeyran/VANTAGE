@@ -41,6 +41,15 @@ from notion_client import Client
 from difflib import SequenceMatcher
 from gate_logic import gate_logic
 
+# FIX Bug Tracker 3ac938be-fc42-8149-a909-c8a1b426e7e6 (2026-07-29):
+# Protección terminal ESTRECHA (Q1, Resolución Arquitectónica). El check
+# amplio "if current_action: continue" que vivía en Fase 4 hacía
+# inalcanzable la llamada a gate_logic() (Nivel 3, KERNEL:GATE-DECISION-009
+# — falso COMPLIANT reportado por Devin). Constante promovida a nivel de
+# módulo aquí porque gate_logic.py la define local a la función y no la
+# exporta; ver Notas del ticket para el gap de scope en gate_logic.py.
+TERMINAL_ACTIONS = {"Archivar", "Expirada"}
+
 # ── Dry-run mode ─────────────────────────────────────────────────────────────
 DRY_RUN = "--dry-run" in sys.argv
 
@@ -81,6 +90,20 @@ def query_all_items(client, ds_id=None):
     de data_sources, mismo patrón que consolidate_duplicates.py.
     El parámetro ds_id se ignora (se mantiene por compatibilidad con los
     llamadores existentes); el data source real es VANTAGE_DATA_SOURCE_ID.
+
+    FIX auditoría duplicados-paginación (2026-07-29, Bug Tracker pendiente
+    de alta): sort único por created_time no es clave estable de orden
+    cuando hay empates exactos (imports batch de feed_processor.py). Bajo
+    keyset pagination esto produce solapamiento inestable entre páginas
+    DENTRO de una misma llamada (evidencia: dry-run Fase 4, 38 líneas de
+    output para 10 IDs únicos). Mitigación: (a) segundo criterio de sort
+    por last_edited_time (best-effort, no elimina el empate garantizado);
+    (b) deduplicación defensiva por id antes de retornar, con log de
+    duplicados detectados para no ocultar el síntoma; (c) guarda contra
+    next_cursor vacío con has_more=True (bug latente distinto, blindaje
+    barato, no confirmado en la evidencia). NO se descarta que el mismo
+    empate cause omisiones además de duplicados — pendiente de chequeo de
+    completitud aparte, fuera de este fix.
     """
     token = os.environ["NOTION_TOKEN"]
     headers = {
@@ -95,12 +118,20 @@ def query_all_items(client, ds_id=None):
     print(f"  [DEBUG] query_all_items call #{_QUERY_ALL_ITEMS_CALLS}")
     all_results = []
     cursor = None
+    seen_ids = set()
+    duplicate_ids_seen = []  # evidencia diagnóstica — no ocultar el síntoma
 
     with httpx.Client(timeout=30) as http_client:
         while True:
             body = {
                 "page_size": 100,
-                "sorts": [{"timestamp": "created_time", "direction": "ascending"}],
+                "sorts": [
+                    {"timestamp": "created_time", "direction": "ascending"},
+                    # Desempate best-effort — ver docstring. No garantiza
+                    # eliminar colisiones exactas de created_time en
+                    # imports batch (feed_processor.py).
+                    {"timestamp": "last_edited_time", "direction": "ascending"},
+                ],
             }
             if cursor:
                 body["start_cursor"] = cursor
@@ -110,7 +141,20 @@ def query_all_items(client, ds_id=None):
             data = response.json()
 
             batch = data.get("results", [])
-            all_results.extend(batch)
+
+            # Deduplicación defensiva + instrumentación de evidencia.
+            # Independiente de la causa raíz: si Notion repite un id entre
+            # páginas de la MISMA llamada, no debe inflar all_results ni
+            # los conteos/prints aguas abajo (Fases 1-4).
+            new_batch = []
+            for record in batch:
+                rid = record.get("id")
+                if rid in seen_ids:
+                    duplicate_ids_seen.append(rid)
+                    continue
+                seen_ids.add(rid)
+                new_batch.append(record)
+            all_results.extend(new_batch)
 
             if len(all_results) > VANTAGE_MAX_EXPECTED_RESULTS:
                 print(
@@ -121,7 +165,27 @@ def query_all_items(client, ds_id=None):
 
             if not data.get("has_more"):
                 break
-            cursor = data.get("next_cursor")
+
+            next_cursor = data.get("next_cursor")
+            if not next_cursor:
+                # Guarda defensiva: has_more=True pero next_cursor vacío
+                # repetiría el body sin start_cursor (loop en página 1).
+                # No observado en la evidencia actual, blindaje barato.
+                print(
+                    "  ⚠️  query_all_items: has_more=True pero next_cursor "
+                    "vacío — abortando paginación para evitar loop"
+                )
+                break
+            cursor = next_cursor
+
+    if duplicate_ids_seen:
+        print(
+            f"  ⚠️  query_all_items: {len(duplicate_ids_seen)} duplicados "
+            f"detectados y descartados dentro de la misma llamada "
+            f"(paginación inestable por empate de sort key). "
+            f"IDs (primeros 10, truncados): "
+            f"{[str(d)[:8] for d in duplicate_ids_seen[:10]]}"
+        )
 
     return all_results
 
@@ -768,8 +832,11 @@ def main():
         current_gate = txt(props.get("Gate_Decision"))
         current_action = txt(props.get("Next_Action"))
 
-        # PROTECCIÓN TOTAL: Si ya tiene una acción, NO MODIFICAR
-        if current_action:
+        # PROTECCIÓN ESTRECHA (Q1, Resolución Arquitectónica 2026-07-29):
+        # Solo protege si Next_Action YA es un estado terminal explícito.
+        # Cualquier otro valor (ej. "Follow-up", "Re-check") es recalculable
+        # en cada run — consistente con KERNEL:OWNERSHIP-002.
+        if current_action in TERMINAL_ACTIONS:
             protected_count += 1
             continue
 
@@ -778,17 +845,19 @@ def main():
             continue
 
         # PRECEDENCIA OBLIGATORIA: gate_logic() antes que gate() (Arena spec)
-        # gate_logic() protege estados terminales de sobreescritura por recálculo
+        # gate_logic() protege estados terminales de sobreescritura por recálculo.
+        # Nota: ahora SÍ es alcanzable — antes del fix, el "continue" amplio de
+        # arriba hacía que current_action fuera siempre falsy en este punto,
+        # por lo que "and current_action" nunca podía ser True (Nivel 3,
+        # KERNEL:GATE-DECISION-009 — Bug Tracker 3ac938be-fc42-8149-a909-c8a1b426e7e6).
         entry = {
             "Next_Action": current_action,
             "Status": status,
             "Gate_Decision": current_gate,
             "Fetch": fetch
         }
-        
-        # Si gate_logic() retorna un estado terminal protegido, respetarlo
         protected_action = gate_logic(entry)
-        if protected_action in {"Archivar", "Expirada"} and current_action:
+        if protected_action in TERMINAL_ACTIONS and current_action in TERMINAL_ACTIONS:
             protected_count += 1
             continue
 
