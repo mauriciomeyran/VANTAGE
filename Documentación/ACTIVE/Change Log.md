@@ -1,6 +1,31 @@
 # V | CHANGELOG
 
 ---
+### v9.9.8 — Normalización de CENSUS_SPEC: Adopción de IDs Huérfanos y Alineación con Documentos Reales · 2026-07-29
+Tipo: [DOC] [FIX]
+Alcance: Layer_1/scripts/generate_census.py (CENSUS_SPEC), V_ID_CENSUS_PRODUCTION.md (validación implícita).
+Contexto:
+El CENSUS_SPEC mantenía referencias a IDs legacy con sufijo -001 (ej: MANUAL:OBJECTIVE-001, BRIEF:001, CANON:PROFILE-001, SP:BOOTSTRAP-001) que no existían en los documentos reales, generando 21 IDs sin link + 38 huérfanos. Los documentos ya usaban IDs sin sufijo (ej: MANUAL:OBJECTIVE, BRIEF:PURPOSE-SCOPE) o nombres descriptivos, pero el spec no se había actualizado.
+Cambios:
+- MANUAL: Reemplazo de 21 IDs con sufijo -001 por versiones canónicas sin sufijo (ej: MANUAL:OBJECTIVE-001 → MANUAL:OBJECTIVE).
+- CAREER CANON: IDs padres sin -001 (ej: CANON:PROFILE, CANON:SKILLS) + lookup_ids para retrocompatibilidad con variantes legacy.
+- NAVIGATION BRIEF: Reemplazo de BRIEF:001–BRIEF:011 por nombres descriptivos (ej: BRIEF:PURPOSE-SCOPE, BRIEF:AUTHORITY-MATRIX) + lookup_ids para mapear IDs antiguos.
+- SYSTEM PROMPT: Alineación de IDs padres (ej: SP:BOOTSTRAP con lookup_ids: ["SP:BOOTSTRAP-001", "SP:BOOTSTRAP"]).
+- Subsecciones: Se mantienen con sufijo -001 (ej: KERNEL:DOCUMENTATION-001) según regla de diseño.
+IDs afectados:
+- Altas: Ninguna (solo renombres).
+- Bajas: 21 IDs legacy con -001 (MANUAL, CAREER CANON, BRIEF, SYSTEM PROMPT).
+- Modificados: 4 secciones del CENSUS_SPEC (MANUAL, CAREER CANON, NAVIGATION BRIEF, SYSTEM PROMPT).
+- Census: 0 huérfanos (antes: 21 sin link + 38 huérfanos).
+Write-Back Verification:
+- generate_census.py validado con py_compile (sin errores de sintaxis).
+- vcensus ejecutado: 162/162 IDs resueltos (confirmado por operador en Terminal).
+Pendiente (fuera de esta entrada):
+- verify_versions.py --sync para propagar v9.9.8 a los 6 documentos fundacionales.
+- Auditar KERNEL:CV-GOLDEN-RULES-001–005 (sección hardcodeada en Census vs. formato canónico en Kernel).
+Versión actualizada: 9.9.8 (CHANGELOG + CENSUS_SPEC). El resto de los fundacionales permanece en v9.9.7 hasta verify_versions.py --sync.
+---
+---
 ### v9.9.7 — Patch 1 real: Estados Terminales Protegidos + Atomicidad RT-1 · 2026-07-29
 Tipo: [FIX] [DOC]
 Alcance: Layer_1/scripts/gate_logic.py, Layer_1/scripts/layer_1_run.py, Dashboard/scripts/dashboard_routes.py, Dashboard/scripts/dashboard_notion.py, KERNEL §09.10, ID CENSUS.
