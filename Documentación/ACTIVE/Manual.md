@@ -484,6 +484,24 @@ Output: efectividad por fuente, tasa de links muertos por tipo de URL, ratio car
 Acción concreta: si career pages producen menos de 5 resultados relevantes en la semana, ajusta el Prompt A (ver §13 — Prompts & Wrappers) — no el threshold de Score. (Recuerda §3, Filosofía de Fallo: el Score bajo no es el problema a corregir, el input de búsqueda sí lo es.)
 Con esto se cierra el ciclo semanal. La siguiente vez que abras Claude para trabajar en VANTAGE, el ciclo completo empieza de nuevo desde §6 — Ciclo de Sesión.
 ---
+## 08.6 MANUAL:CADENCE-MATRIX
+## Matriz de Cadencia Operativa (Referencia)
+Complementa la narrativa día-por-día de §8.1–8.5 con una vista de
+trigger → resultado desacoplada del calendario. Las entradas del
+Tracker reflejadas en la columna “Resultado” son siempre campos Class B
+calculados por Python — no escritura manual (ver KERNEL:SCHEMA-002).
+| Trigger | Contexto de Invocación | Objetivo | Resultado en Tracker | Referencia |
+| --- | --- | --- | --- | --- |
+| feed_processor.py  • APROBAR_WRITE | Lunes (o cualquier día con nuevas vacantes) — operador revisa output de L1/L2/L3 | Ingresar vacantes nuevas al SSOT con Class A poblado | Filas nuevas con Status=RAW → pipeline calcula Class B inmediatamente | KERNEL:TRIGGER-001, KERNEL:SCHEMA-002 |
+| ~/vantage_pipeline.sh (run completo) | Después de cada APROBAR_WRITE de feed | Calcular Score, Gate_Decision, Next_Action sobre entradas Class A | Gate_Decision=CREATE/BLOCKED, Score, VM_Scope, Role_Class actualizados | KERNEL:GATE-DECISION-010 |
+| vd (:8000) — Dashboard RT-1 | Condicional: solo si existen vacantes con Gate=BLOCKED recuperables | Corregir Class A de vacantes bloqueadas y re-ingresar al pipeline | PATCHED → re-evaluación → CREATE o BLOCKED renovado | KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-011 |
+| CV-A [URL/JD] | Miércoles (o cuando vacante alcanza READY_TO_APPLY) | Generar artefacto CV-A adaptado a la vacante | Artefacto en Figma Sync; sin cambio en Tracker | KERNEL:CV-GOLDEN-RULES |
+| STATUS [SYSTEM] | Cualquier momento — auditoría ad-hoc | Verificar estado global del sistema y detectar huérfanos/inconsistencias | Sin escritura — reporte en sesión | SP:TRIGGERS |
+Nota operativa: Los días de semana en §8.1–8.5 son metadato de cadencia del operador,
+no guard conditions de ningún gate. Una vacante con Score ≥ 60 puede alcanzar
+READY_TO_APPLY el mismo día de su ingesta, sin esperar al ciclo siguiente.
+→ Ver KERNEL:GATE-DECISION-011 para vista completa de transiciones.
+---
 ## 09 MANUAL:VANTAGE-RUNTIME
 ## VANTAGE Runtime (Consulta Operativa)
 Ya viste varios de estos comandos en acción durante el flujo semanal (§8) — esta sección los reúne como catálogo de referencia completo, junto con el detalle de cuándo y por qué correr cada uno.

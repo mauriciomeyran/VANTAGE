@@ -1,6 +1,24 @@
 # V | CHANGELOG
 
 ---
+### v9.9.9 — Documentación Transversal: Matrices de Estado y Cadencia · 2026-07-29
+Tipo: [DOC]
+Alcance: V | KERNEL (§09.11), V | MANUAL (§08.6).
+Contexto:
+Auditoría arquitectónica previa identificó ausencia de referencias tabulares consolidadas para (a) la máquina de estados del pipeline y (b) el flujo de triggers semanal. Los documentos tenían la información en prosa distribuida en múltiples secciones, sin vista indexada para scripts/auditorías. Se inyectan dos matrices de referencia puras — adiciones aditivas, sin tocar contenido existente.
+Cambios:
+- KERNEL §09.11 KERNEL:GATE-DECISION-011: Matriz de Transición de Estados — 13 transiciones, cubre todos los caminos desde [ENTRY] hasta terminales (APPLIED, REJECTED, BLOCKED). Incluye nota de precedencia gate_logic() → gate() (Hallazgo 2 de auditoría). Insertada inmediatamente antes de §10 KERNEL:CV-GOLDEN-RULES.
+- MANUAL §08.6 MANUAL:CADENCE-MATRIX: Matriz de Cadencia Operativa — 5 triggers con contexto de invocación, objetivo y resultado en Tracker. Insertada después de §08.5 Viernes, antes de §09 MANUAL:VANTAGE-RUNTIME.
+IDs afectados:
+- Altas: KERNEL:GATE-DECISION-011, MANUAL:CADENCE-MATRIX — 2 IDs nuevos.
+- Bajas: ninguna.
+- Census: pendiente regenerar (vcensus) para registrar los 2 nuevos IDs.
+Write-Back Verification: Ambas páginas Notion confirmadas OK vía API response.
+Pendiente:
+- vcensus para incorporar los 2 nuevos IDs al Census.
+- vversions --sync para propagar v9.9.9 a los fundacionales.
+Versión actualizada: 9.9.9 (CHANGELOG). El resto de fundacionales permanece en v9.9.8 hasta vversions --sync.
+---
 ### v9.9.8 — Normalización de CENSUS_SPEC: Adopción de IDs Huérfanos y Alineación con Documentos Reales · 2026-07-29
 Tipo: [DOC] [FIX]
 Alcance: Layer_1/scripts/generate_census.py (CENSUS_SPEC), V_ID_CENSUS_PRODUCTION.md (validación implícita).

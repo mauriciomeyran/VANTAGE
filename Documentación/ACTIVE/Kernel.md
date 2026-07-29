@@ -356,6 +356,32 @@ Contrato de terminalidad (doble criterio). Fuente de verdad ejecutable: gate_log
 - Atomicidad RT-1: Dashboard/scripts/dashboard_routes.py (/accept), dashboard_notion.py
 - Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002
 ---
+## 09.11 KERNEL:GATE-DECISION-011
+## Matriz de Transición de Estados (Referencia Técnica)
+Vista tabular consolidada de todas las reglas Gate (§09.1–§09.10).
+Referencia canónica para scripts y auditorías — no reemplaza la descripción
+en prosa de cada sección; la complementa con indexación de estados.
+| Estado Origen | Evento / Trigger | Guard / Regla | Estado Destino | Componente | Efecto Class B |
+| --- | --- | --- | --- | --- | --- |
+| [ENTRY] | feed_processor.py ingesta JSON | Source_Type ∈ {Inbound, Referencia, Networking} | READY_TO_APPLY | Python | Gate_Decision=CREATE, Score=bypass |
+| [ENTRY] | feed_processor.py ingesta JSON | URL viva + Score ≥ 60 + Status=Target | READY_TO_APPLY | Python | Gate_Decision=CREATE, Score, VM_Scope, Role_Class, Next_Action |
+| [ENTRY] | feed_processor.py ingesta JSON | URL muerta OR Score < 60 | BLOCKED | Python | Gate_Decision=BLOCKED, Score=0 (si URL muerta) |
+| [ENTRY] | feed_processor.py ingesta JSON | Dedup match en ventana 30d | REJECTED_DUPLICATE | Python | Dedup_Flag=True, Next_Action=Descartar |
+| BLOCKED | vd — Dashboard RT-1 edita Class A | Patch válido → run_pipeline.py --dry PASS | PATCHED | Humano + Python | Score, Gate_Decision recalculados |
+| PATCHED | Operador acepta patch en Dashboard | Aceptar → vantage_pipeline.sh | READY_TO_APPLY OR BLOCKED | Python | Gate_Decision re-evaluado; si falla → regresa BLOCKED |
+| PATCHED | Operador rechaza patch en Dashboard | Rechazar | BLOCKED | Humano | Sin cambio en SSOT |
+| REVIEW_NEEDED | Operador edita Notion directo + Status→Target | vantage_pipeline.sh evalúa Class B por primera vez | READY_TO_APPLY OR BLOCKED | Humano + Python | Score, Gate_Decision, Next_Action calculados |
+| READY_TO_APPLY | Operador inicia postulación | Status→Postulando | APPLYING | Humano | Status (Class A) |
+| APPLYING | Confirmación de envío | Status→Postulado | APPLIED | Humano | Status (Class A) |
+| APPLIED | Resultado negativo | Status→Rechazado | REJECTED | Humano | Status (Class A) — terminal, protegido por gate_logic() |
+| READY_TO_APPLY / BLOCKED | URL_GATE detecta URL muerta en re-run | Score=0 + Gate_Decision=BLOCKED | BLOCKED | Python | Score, Gate_Decision |
+| Cualquier no-terminal | gate_logic() evalúa estado terminal existente | Status ∈ {Postulado, Rechazado, Expirada} | Estado preservado | Python | Sin escritura — gate_logic() bloquea re-evaluación |
+Nota de orden de precedencia (Hallazgo 2 — auditoría arquitectónica):
+gate_logic() debe ejecutarse ANTES que gate() como filtro de mutabilidad.
+Si Status ∈ {Postulado, Rechazado, Expirada} → pipeline termina aquí,
+sin invocar gate(). Previene regresión de estado en terminales.
+→ Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), KERNEL:GATE-DECISION-005 (RT-1)
+---
 ## 10 KERNEL:CV-GOLDEN-RULES
 ## Golden Rules — Límites de Ejecución
 Restricciones de arquitectura formales, no preferencias. Cada violación genera respuesta estandarizada de rechazo.
