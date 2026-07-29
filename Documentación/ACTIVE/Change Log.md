@@ -1,6 +1,117 @@
 # V | CHANGELOG
 
 ---
+### v9.9.6 — Resolución de Auditoría Arquitectónica y Bump de Versión · 2026-07-29
+Tipo: [AUDIT] [FIX]
+Alcance: Layer_1/scripts/layer_1_run.py, Layer_1/scripts/dedup_fix_verified.patch, Bug Tracker (3ac938be-fc42-8149-a909-c8a1b426e7e6), Kernel.md, Manual.md, CHANGELOG.md.
+---
+- Controversia A (Tiempo/Calendario vs. Flujo de Estados):
+- Riesgo: Confusión entre cronología operativa (Lunes/Martes) y transiciones de datos (estados de vacantes).
+- Cambio: Separación de diagramas: Ciclo de Vida de la Vacante (grafo de estados puro) vs. Cadencia Operativa (Gantt/checklist de invocación humana).
+- Regla: Ninguna transición de estado puede llevar como etiqueta un día de la semana (solo eventos/comandos como feed_processor.py o Status→Target).
+- Controversia B (Límites de Ownership: Python vs. IA):
+- Riesgo: Superficie de ataque en escritura directa vía MCP sin guard equivalente a feed_processor.py.
+- Cambio: Representar ingesta como dos sub-procesos secuenciales:
+- Fase 1 (AI): Generación de JSON (Class A único: Rol, Marca, URL, etc.).
+- Fase 2 (Python): Cálculo de Class B (Score, Gate_Decision, etc.).
+- Regla: Todo flujo desde IA/Feed hacia Notion debe pasar por un nodo de validación explícito ([FILTRO CLASS B]).
+- Controversia C (Loopback de Recuperación RT-1/Dashboard):
+- Riesgo: Representación lineal del Dashboard oculta su naturaleza de feedback loop determinista.
+- Cambio: Dashboard como ciclo cerrado de retroalimentación con 4 puntos de retorno al pipeline principal:
+```javascript
+BLOCKED → [Dashboard: Patch Class A] → Validar (dry-run) → PATCHED → Aceptar → RETURNED_TO_CREATE → vantage_pipeline.sh
+```
+- Regla: Toda flecha desde Dashboard hacia Notion debe re-entrar a vantage_pipeline.sh (nunca directa a READY_TO_APPLY).
+---
+| Hallazgo | Riesgo | Mitigación |
+| --- | --- | --- |
+| Ventana de Dedup vs. Persistencia de Estados Terminales | Reaplicación a roles rechazados previamente (Status=Rechazado). | Extender clave de dedup con fingerprint histórico para bloquear REJECTED_RECURRING sin confirmación humana. |
+| Desincronización gate() vs. gate_logic() | Regresión de estado (ej: APPLIED → BLOCKED). | Documentar orden de precedencia: gate_logic() primero (filtro de mutabilidad), luego gate(). |
+| Bypass de Inbound/Referencia/Networking | Contaminación de Class B con Score=null. | Añadir campo Score_Method (DETERMINISTIC/BYPASS) para distinguir visualmente en el Tracker. |
+| Ausencia de Idempotencia en ~/vantage_pipeline.sh | Doble procesamiento de instancias RETURNED_TO_CREATE. | Campo last_pipeline_run_id (Class B) para rechazar re-ejecuciones en el mismo ciclo. |
+---
+1. Diagnóstico de UUIDs Duplicados:
+- Resultado: Counter(ids) sobre 43 items → 43 IDs únicos (sin duplicados reales).
+- Conclusión: Los patrones repetidos (397938be × 10, 3a5938be × 7) eran artefactos de logging truncado (coincidencia parcial en primeros 8 caracteres).
+- Acción:
+- Reclasificar dedup_fix_verified.patch como instrumentación defensiva (blindaje contra logging ambiguo).
+- Cerrar Bug Tracker (3ac938be-fc42-8149-a909-c8a1b426e7e6) con resolución: "Falso positivo (UUIDs truncados)".
+1. Actualización de Documentación:
+- Kernel.md: Añadida regla KERNEL:GATE-DECISION-009 para orden de precedencia gate_logic() → gate().
+- Manual.md: Sección §12 actualizada con procedimiento para Score_Method y manejo de REJECTED_RECURRING.
+1. Matriz de Transición de Estados:
+- 21 transiciones documentadas (ver AUDITORÍA ARQUITECTÓNICA).
+- Diagrama Mermaid: Ciclo de vida completo de vacantes en VANTAGE (incluye loops RT-1 y estados terminales).
+---
+```mermaid
+stateDiagram-v2
+    [*] --> RAW: Discovery Event
+    RAW --> URL_GATE_CHECK: Trigger: ~/vantage_pipeline.sh
+    
+    state URL_GATE_CHECK <<choice>>
+    URL_GATE_CHECK --> BLOCKED_URL: Guard: URL no responde
+    URL_GATE_CHECK --> BYPASS_CHECK: Guard: URL responde OK
+    
+    state BYPASS_CHECK <<choice>>
+    BYPASS_CHECK --> CREATE: Guard: Source_Type ∈ {Inbound, Referencia, Networking}
+    BYPASS_CHECK --> SCORING: Guard: Source_Type estándar
+    
+    SCORING --> EVALUATING: Python calcula Score (0-100)
+    
+    state EVALUATING <<choice>>
+    EVALUATING --> READY_TO_APPLY: Guard: Score >= 60
+    EVALUATING --> PARA_REVISAR: Guard: 40 <= Score <= 59
+    EVALUATING --> ARCHIVED: Guard: Score < 40
+    
+    RAW --> REVIEW_NEEDED: Guard: Class A incompleto
+    REVIEW_NEEDED --> RAW: Evento: Status → Target
+    
+    ARCHIVED --> BLOCKED_SOFT: Guard: Gate=BLOCKED (recuperable)
+    
+    state BLOCKED_SOFT {
+        [*] --> INSTANCE_CREATED: Botón: Crear instancia
+        INSTANCE_CREATED --> PATCH_PROPOSED: Botón: Proponer Patch
+        PATCH_PROPOSED --> VALIDATE_CHOICE: Botón: Validar (dry-run)
+        
+        state VALIDATE_CHOICE <<choice>>
+        VALIDATE_CHOICE --> PATCHED: Guard: dry-run PASS
+        VALIDATE_CHOICE --> PATCH_PROPOSED: Guard: dry-run FAIL
+        
+        PATCHED --> RETURNED_TO_CREATE: Botón: Aceptar Patch
+    }
+    
+    RETURNED_TO_CREATE --> URL_GATE_CHECK: Trigger: ~/vantage_pipeline.sh
+    BLOCKED_SOFT --> ARCHIVED_MANUAL: Botón: Archivar
+    
+    READY_TO_APPLY --> CV_OPTIMIZATION: Trigger: "CV-A [URL]"
+    CV_OPTIMIZATION --> CV_PRODUCTION: Trigger: "CV-B [HANDOFF]"
+    CV_PRODUCTION --> AWAITING_AUTH: Output: Markdown con Figma tags
+    AWAITING_AUTH --> APPLYING: Evento: Operador autoriza
+    
+    state APPLYING {
+        [*] --> FIGMA_INJECTED: Plugin Figma
+        FIGMA_INJECTED --> PDF_EXPORTED: Export manual PDF
+        PDF_EXPORTED --> QA_REVIEW: Trigger: "QA [PDF]"
+    }
+    
+    APPLYING --> APPLIED: Evento: Status → Postulado
+    APPLIED --> REJECTED_POST: Evento: Status → Rechazado
+    APPLIED --> EXPIRED_POST: Evento: NAD vencida
+    
+    PARA_REVISAR --> READY_TO_APPLY: Evento: Operador decide trabajarla
+    PARA_REVISAR --> ARCHIVED: Evento: Operador descarta
+    
+    ARCHIVED --> [*]
+    ARCHIVED_MANUAL --> [*]
+    REJECTED_POST --> [*]
+    EXPIRED_POST --> [*]
+```
+---
+- Layer_1/scripts/layer_1_run.py (parcheado: protección terminal).
+- Layer_1/scripts/dedup_fix_verified.patch (reclasificado como blindaje).
+- Layer_1/scripts/fix_terminal_protection_layer_1_run.patch (aplicado).
+- Bug Tracker (3ac938be-fc42-8149-a909-c8a1b426e7e6) → Status: Cerrado.
+---
 ### v9.9.5 — Documentación Transversal: vsum.py (Continuidad de Sesiones) · 2026-07-27
 Tipo: [DOC]
 Alcance: Kernel, Manual, Aliases, System Prompt (Notion).
