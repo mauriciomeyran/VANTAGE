@@ -191,6 +191,7 @@
 | `KERNEL:CV-GOLDEN-RULES-004` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#eb23d51d2647458f96a947050f36fd06 ) |
 | `KERNEL:CV-GOLDEN-RULES-005` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#9e5c51ecb8994f6483df470e5c9a816b ) |
 | `KERNEL:GATE-DECISION-010` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#0250f2d38eed45b094d92fe2deb84daf ) |
+| `KERNEL:GATE-DECISION-011` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#48eba5f247d440ffa6016afa04b4d0be ) |
 | `KERNEL:SCHEMA-001` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a7938befc42816a9971f7a2b29dbb25 ) |
 | `KERNEL:SCHEMA-002` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a7938befc42814abe3cc142f62efa8f ) |
 | `KERNEL:SCHEMA-003` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a7938befc4281c1a7a0f62eff7d7d35 ) |
@@ -209,3 +210,4 @@
 | `KERNEL:TRIGGER-007` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a7938befc4281d492edff85771db9a2 ) |
 | `KERNEL:TRIGGER-008` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a7938befc4281cca5e3c98f3621b189 ) |
 | `KERNEL:TRIGGER-009` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3a7938befc42816c8777eead1ff6fde2 ) |
+| `MANUAL:CADENCE-MATRIX` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#1bf8b260566e44bfbb3512b2399d6655 ) |
