@@ -2,7 +2,7 @@
 
 # V | BRIEF
 
-## TABLE OF CONTENTS
+**Table of Contents**
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
 | 01 | BRIEF:PURPOSE-SCOPE | Propósito y Alcance |  |
@@ -17,13 +17,15 @@
 | 10 | BRIEF:NAV-PRINCIPLES | Principios de Navegación |  |
 | 11 | BRIEF:EXPECTED-OUTCOME | Resultado Esperado |  |
 ---
-## 01 BRIEF:SCOPE
+## 01 BRIEF:PURPOSE-SCOPE
 ## Propósito y Alcance
+### 01.1 BRIEF:PURPOSE-SCOPE-001
 ### Propósito
 Este documento define el contrato oficial de navegación documental de VANTAGE.
 Su función es determinar qué documento constituye la Fuente Única de Verdad (SSOT) para cada tipo de conocimiento y establecer la ruta mínima necesaria para recuperar información de forma consistente.
 No reemplaza la documentación fundacional; la orquesta.
 ---
+### 01.2 BRIEF:PURPOSE-SCOPE-002
 ### Alcance
 Este documento responde exclusivamente a las siguientes preguntas:
 - ¿Dónde debe buscarse una determinada información?
@@ -31,6 +33,7 @@ Este documento responde exclusivamente a las siguientes preguntas:
 - ¿Cuál es la profundidad mínima de verificación requerida?
 - ¿Qué dependencias documentales deben respetarse?
 ---
+### 01.3 BRIEF:PURPOSE-SCOPE-003
 ### Fuera de Alcance
 Este documento no:
 - define contratos operativos (Kernel);
@@ -73,6 +76,7 @@ Ningún documento debe duplicar la responsabilidad de otro.
 ---
 ## 04 BRIEF:NAV-CONTRACTS
 ## Contratos de navegación
+### 04.1 BRIEF:CONSULTATION-001
 ### Consulta Arquitectónica
 Destino: Kernel
 Se utiliza para:
@@ -128,6 +132,7 @@ Se utiliza para:
 ---
 ## 05 BRIEF:DOMAIN-ARCHITECTURE
 ## Dominios
+### 05.1 BRIEF:HOUSEKEEPING-001
 ### Housekeeping
 Responsabilidad
 Mantener la integridad documental y eliminar drift.
@@ -207,7 +212,8 @@ Una dependencia indica que un cambio en el documento de origen puede afectar la 
 | Bootstrap / System Prompt | Navigation Brief | Validar estrategia de recuperación |
 | Estructura documental | Master Index | Actualizar inventario |
 ---
-### 7.1 Impact Assessment Contract
+### 07.1 BRIEF:CROSS-DEPENDENCIES-001
+### Impact Assessment Contract
 Toda modificación que afecte un documento con dependencias registradas deberá generar una Evaluación de Impacto (Impact Assessment) antes del cierre de la operación.
 Como mínimo, la evaluación responderá:
 - ¿Qué documentos pueden verse afectados?
@@ -217,7 +223,8 @@ Como mínimo, la evaluación responderá:
 - ¿Debe ejecutarse una validación adicional?
 - ¿Se requiere sincronización (vsync_doc, vversions, vcensus)?
 ---
-### 7.2 Mandatory Change Reporting
+### 07.2 BRIEF:CROSS-DEPENDENCIES-002
+### Mandatory Change Reporting
 Cuando una evaluación de impacto determine que existe afectación sobre otro documento o artefacto del sistema, será obligatorio registrar dicha afectación en el Change Log.
 El registro deberá incluir, como mínimo:
 - Documento modificado.
@@ -226,13 +233,15 @@ El registro deberá incluir, como mínimo:
 - Acción correctiva ejecutada.
 - Estado final de la validación.
 ---
-### 7.3 Closure Gate
+### 07.3 BRIEF:CROSS-DEPENDENCIES-003
+### Closure Gate
 Una modificación estructural no podrá considerarse cerrada hasta que se cumplan todas las acciones derivadas de su evaluación de impacto.
 Si alguna dependencia permanece pendiente de validación, la operación conservará el estado Pending Validation y no deberá marcarse como completamente sincronizada.
 ---
 ## 08 BRIEF:MAINTENANCE-CONTRACT
 ## Contrato de Mantenimiento
 Toda modificación estructural debe responder afirmativamente las siguientes preguntas antes de aprobarse.
+### 08.1 BRIEF:AUTHORITY-001
 ### Autoridad
 - ¿Cuál es el SSOT del cambio?
 ### Contrato

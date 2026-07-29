@@ -39,7 +39,7 @@
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | vl1 | Corre el pipeline principal de Active Recon — procesa el JSON consolidado del día y lo escribe en el Tracker. | Invoca layer_1_pipeline.sh, que activa .venv y dispara feed_processor.py: normaliza campos, aplica dedup cross-layer, presenta DRY RUN antes de escribir. |
-| vl1status / vl1analytics / vl1batch / vl1recovery / vl1profile / vl1feed / vl1backfill | Atajos de un solo token a cada subcomando de vl1 (ver Manual §9.2 para el detalle de cada uno). | Cada uno equivale a vl1 <subcomando> — mismo contrato, solo evita el espacio. |
+| vl1status / vl1analytics / vl1batch / vl1recovery / vl1profile / vl1feed / vl1backfill | Atajos de un solo token a cada subcomando de vl1 (ver Manual 09.2 para el detalle de cada uno). | Cada uno equivale a vl1 <subcomando> — mismo contrato, solo evita el espacio. |
 | vl1app | Abre la app empaquetada de Layer 1 desde Finder/Spotlight en vez de Terminal. | open /Applications/Layer 1. |
 ## 04 ALIASES:L3-PASSIVE-INTAKE
 ## L3 · Passive Intake
@@ -64,7 +64,7 @@
 | vdapp | Abre la app empaquetada del Dashboard. | open /Applications/Dashboard. |
 ## 07 ALIASES:CV-PIPELINE
 ## CV Pipeline (Miércoles)
-Sin alias de Terminal — CV-A, CV-B y QA se disparan directamente en el chat de Claude (ver Manual §8.3).
+Sin alias de Terminal — CV-A, CV-B y QA se disparan directamente en el chat de Claude (ver Manual 08.3).
 ## 08 ALIASES:DEDUP
 ## Dedup & Oportunidades
 | Alias | Qué hace | Procedimiento interno |
@@ -72,4 +72,4 @@ Sin alias de Terminal — CV-A, CV-B y QA se disparan directamente en el chat de
 | vdedup | Consolida entradas duplicadas detectadas en el Tracker. | Corre consolidate_duplicates.py sobre la clave compuesta brand+title+location. |
 | vopport | Limpia duplicados específicamente en oportunidades ya calificadas. | Corre dedup_opportunities.py. |
 ---
-Figma Sync (plugin CV, 04-Vantage_CV/Figma Sync/) no tiene alias de Terminal propio — se opera desde Figma Desktop, ver Manual §8.3.
+Figma Sync (plugin CV, 04-Vantage_CV/Figma Sync/) no tiene alias de Terminal propio — se opera desde Figma Desktop, ver Manual 08.3.
