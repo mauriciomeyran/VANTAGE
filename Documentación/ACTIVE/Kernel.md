@@ -2,6 +2,8 @@
 
 # V | KERNEL
 
+# V | KERNEL
+
 > 
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Sistemas Agente de IA.

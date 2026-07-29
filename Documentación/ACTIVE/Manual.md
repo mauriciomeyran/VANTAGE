@@ -2,6 +2,8 @@
 
 # V | MANUAL
 
+# V | MANUAL
+
 > 
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Operador humano (Mauricio Meyrán)
@@ -224,7 +226,7 @@ Esto convierte el ciclo en un modelo asimétrico y determinista: tú corres Term
 Con ese cambio de fondo entendido, así es como se ve la apertura en la práctica, paso a paso:
 1. Corre python3 scripts/verify_versions.py --bootstrap en tu Terminal local. Este es el flag nuevo, y su función reemplaza algo que antes hacía Claude por su cuenta: leer la última fila del Session Ledger para confirmar que cerró bien, y leer la última entrada de V-CHANGELOG para tener contexto de continuidad. Ahora ambas lecturas ocurren en Terminal, no en Claude — el script te entrega un bloque de texto delimitado por [DUMP INICIO SESIÓN VANTAGE], que contiene exactamente esa información: el estado de la última sesión (si cerró en CLOSED o quedó OPEN por una terminación abrupta), el resumen de la última entrada del Changelog, y un snapshot de los tickets CRÍTICO y ALTO pendientes en el Bug/Task Tracker.
 1. Abre un chat nuevo en Claude, pega ese output — el dump del --bootstrap — e invoca /vantage-session-open. Claude ya no hace ningún fetch propio a Notion en este paso: el payload que le entregaste es toda la información que necesita para arrancar. Si el output falta o está incompleto, Claude te lo señala y espera a que lo completes antes de continuar — no improvisa el faltante ni lo reconstruye por su cuenta vía MCP.
-1. Claude procesa ambos payloads y realiza una sola escritura: crea la fila nueva en el Session Ledger ([KERNEL:SESSION-LEDGER](https://www.notion.so/377938befc42805ea408c9ae518d4fe7#39e938befc42816aa4e8c4daaebe11b1)) con status: OPEN y un session_id que genera él mismo. Esta escritura es de housekeeping — no requiere APROBAR_WRITE, por la misma razón que tampoco lo requiere el auto-sync del Entity Index ([KERNEL:HEALTH-CHECK-001](V | KERNEL)): no toca campos Class A ni Class B del Tracker, es infraestructura de continuidad de sesión, no dato de negocio del pipeline de vacantes.
+1. Claude procesa ambos payloads y realiza una sola escritura: crea la fila nueva en el Session Ledger (KERNEL:SESSION-LEDGER) con status: OPEN y un session_id que genera él mismo. Esta escritura es de housekeeping — no requiere APROBAR_WRITE, por la misma razón que tampoco lo requiere el auto-sync del Entity Index ([KERNEL:HEALTH-CHECK-001](V | KERNEL)): no toca campos Class A ni Class B del Tracker, es infraestructura de continuidad de sesión, no dato de negocio del pipeline de vacantes.
 1. Claude confirma el estado de la sesión a partir del dump de --bootstrap. Si no señala discrepancias, responde VANTAGE: SISTEMA SINCRONIZADO y queda listo para recibir instrucciones normales de trabajo. Si el dump muestra un drift de versión heredado de la sesión anterior, lo reporta explícitamente antes de continuar — recuerda que este es exactamente el mismo tratamiento que ya conocías: el drift no bloquea el trabajo salvo que el documento desincronizado sea justo el que vas a editar en esa sesión, en cuyo caso primero se resuelve el drift.
 Al terminar estos cinco pasos, recién ahí es seguro empezar con el Lunes de §8, o cualquier otro día del ciclo semanal que corresponda.
 ### Cierre — /vantage-session-close

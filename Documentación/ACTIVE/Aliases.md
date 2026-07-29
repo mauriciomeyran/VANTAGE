@@ -2,6 +2,8 @@
 
 # V | ALIASES
 
+# V | ALIASES
+
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
 | 01 | ALIASES:SESSION-CYCLE | Session Cycle |  |

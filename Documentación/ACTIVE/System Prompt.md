@@ -2,6 +2,8 @@
 
 # V | SYSTEM PROMPT 
 
+# V | SYSTEM PROMPT 
+
 > 
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Sistemas Agente de IA.

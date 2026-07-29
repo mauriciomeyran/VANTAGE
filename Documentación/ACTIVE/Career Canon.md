@@ -2,6 +2,8 @@
 
 # V | CAREER CANON
 
+# V | CAREER CANON
+
 > 
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Sistemas Agente de IA + Operador Humano (Mauricio Meyrán).

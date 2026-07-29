@@ -2,6 +2,8 @@
 
 # V | CHANGELOG
 
+# V | CHANGELOG
+
 ---
 ### v9.9.9 — Documentación Transversal: Matrices de Estado y Cadencia · 2026-07-29
 Tipo: [DOC]
@@ -110,62 +112,62 @@ BLOCKED → [Dashboard: Patch Class A] → Validar (dry-run) → PATCHED → Ace
 stateDiagram-v2
     [*] --> RAW: Discovery Event
     RAW --> URL_GATE_CHECK: Trigger: ~/vantage_pipeline.sh
-    
+
     state URL_GATE_CHECK <<choice>>
     URL_GATE_CHECK --> BLOCKED_URL: Guard: URL no responde
     URL_GATE_CHECK --> BYPASS_CHECK: Guard: URL responde OK
-    
+
     state BYPASS_CHECK <<choice>>
     BYPASS_CHECK --> CREATE: Guard: Source_Type ∈ {Inbound, Referencia, Networking}
     BYPASS_CHECK --> SCORING: Guard: Source_Type estándar
-    
+
     SCORING --> EVALUATING: Python calcula Score (0-100)
-    
+
     state EVALUATING <<choice>>
     EVALUATING --> READY_TO_APPLY: Guard: Score >= 60
     EVALUATING --> PARA_REVISAR: Guard: 40 <= Score <= 59
     EVALUATING --> ARCHIVED: Guard: Score < 40
-    
+
     RAW --> REVIEW_NEEDED: Guard: Class A incompleto
     REVIEW_NEEDED --> RAW: Evento: Status → Target
-    
+
     ARCHIVED --> BLOCKED_SOFT: Guard: Gate=BLOCKED (recuperable)
-    
+
     state BLOCKED_SOFT {
         [*] --> INSTANCE_CREATED: Botón: Crear instancia
         INSTANCE_CREATED --> PATCH_PROPOSED: Botón: Proponer Patch
         PATCH_PROPOSED --> VALIDATE_CHOICE: Botón: Validar (dry-run)
-        
+
         state VALIDATE_CHOICE <<choice>>
         VALIDATE_CHOICE --> PATCHED: Guard: dry-run PASS
         VALIDATE_CHOICE --> PATCH_PROPOSED: Guard: dry-run FAIL
-        
+
         PATCHED --> RETURNED_TO_CREATE: Botón: Aceptar Patch
     }
-    
+
     RETURNED_TO_CREATE --> URL_GATE_CHECK: Trigger: ~/vantage_pipeline.sh
     BLOCKED_SOFT --> ARCHIVED_MANUAL: Botón: Archivar
-    
+
     READY_TO_APPLY --> CV_OPTIMIZATION: Trigger: "CV-A [URL]"
     CV_OPTIMIZATION --> CV_PRODUCTION: Trigger: "CV-B [HANDOFF]"
     CV_PRODUCTION --> AWAITING_AUTH: Output: Markdown con Figma tags
     AWAITING_AUTH --> APPLYING: Evento: Operador autoriza
-    
+
     state APPLYING {
         [*] --> FIGMA_INJECTED: Plugin Figma
         FIGMA_INJECTED --> PDF_EXPORTED: Export manual PDF
         PDF_EXPORTED --> QA_REVIEW: Trigger: "QA [PDF]"
     }
-    
+
     APPLYING --> APPLIED: 
 [code:mermaid:2/2]
 Evento: Status → Postulado
     APPLIED --> REJECTED_POST: Evento: Status → Rechazado
     APPLIED --> EXPIRED_POST: Evento: NAD vencida
-    
+
     PARA_REVISAR --> READY_TO_APPLY: Evento: Operador decide trabajarla
     PARA_REVISAR --> ARCHIVED: Evento: Operador descarta
-    
+
     ARCHIVED --> [*]
     ARCHIVED_MANUAL --> [*]
     REJECTED_POST --> [*]
