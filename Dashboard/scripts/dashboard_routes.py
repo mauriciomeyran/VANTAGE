@@ -188,14 +188,14 @@ def register_routes(app):
                 INSERT INTO instances (
                     instance_id, notion_page_id, state, version_id,
                     event_sequence, correlation_id, operator_id,
-                    payload, proposed_patch, block_reason,
+                    payload, proposed_patch, block_reason, last_pipeline_run_id,
                     created_at, updated_at
                 ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
                 ''',
                 (
                     instance_id, notion_page_id, 'BLOCKED', 1,
                     0, correlation_id, 'human',
-                    json.dumps(payload), None, None,
+                    json.dumps(payload), None, None, None,
                     now, now,
                 )
             )
@@ -355,6 +355,7 @@ def register_routes(app):
 
             seq = row['event_sequence'] + 1
             now = _now()
+            pipeline_run_id = f"run_{int(time.time())}"
 
             if write_result.get('success'):
                 new_state  = 'RETURNED_TO_CREATE'
@@ -368,10 +369,11 @@ def register_routes(app):
                 UPDATE instances
                 SET state          = ?,
                     event_sequence = ?,
-                    updated_at     = ?
+                    updated_at     = ?,
+                    last_pipeline_run_id = ?
                 WHERE instance_id = ?
                 ''',
-                (new_state, seq, now, instance_id)
+                (new_state, seq, now, pipeline_run_id, instance_id)
             )
 
             append_event(

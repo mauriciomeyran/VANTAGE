@@ -39,6 +39,7 @@ if venv_path.exists():
 
 from notion_client import Client
 from difflib import SequenceMatcher
+from gate_logic import gate_logic
 
 # ── Dry-run mode ─────────────────────────────────────────────────────────────
 DRY_RUN = "--dry-run" in sys.argv
@@ -652,9 +653,18 @@ def main():
         jd = txt(props.get("JD"))
         contacto = txt(props.get("Contacto"))
         current_score = props.get("Score", {}).get("number")
+        source_type = txt(props.get("Source_Type ")) or "Vacante"
 
         entry_data = {"title": rol, "company": marca, "jd": jd, "contact": contacto}
-        new_score = calculate_score_v6(entry_data)
+        
+        # Determinar método de scoring (Hallazgo 3 - Arena spec)
+        if source_type in ["Inbound", "Referencia", "Networking"]:
+            score_method = "BYPASS"
+            # Bypass: Score se deja en 0 o valor existente, no se recalcula
+            new_score = current_score if current_score is not None else 0
+        else:
+            score_method = "DETERMINISTIC"
+            new_score = calculate_score_v6(entry_data)
 
         if new_score >= 60:
             ready_to_apply += 1
@@ -662,20 +672,28 @@ def main():
         if current_score != new_score or current_score is None:
             if not DRY_RUN:
                 try:
+                    update_props = {"Score": {"number": new_score}}
+                    # Solo escribir Score_Method si existe la propiedad en schema
+                    # (si no existe, el update fallará silenciosamente para ese campo)
+                    try:
+                        update_props["Score_Method"] = {"select": {"name": score_method}}
+                    except:
+                        pass  # Campo no existe en schema aún
+                    
                     client.pages.update(
                         page_id=item["id"],
-                        properties={"Score": {"number": new_score}}
+                        properties=update_props
                     )
                     scoring_updates += 1
                     empresa = marca or "Sin empresa"
-                    scoring_changes.append(f"[{item['id'][:8]}] {empresa}: Score {current_score}->{new_score}")
+                    scoring_changes.append(f"[{item['id'][:8]}] {empresa}: Score {current_score}->{new_score} ({score_method})")
                 except Exception as e:
                     print(f"X Error scoring {item['id'][:8]}: {e}")
             else:
                 scoring_updates += 1
                 empresa = marca or "Sin empresa"
-                scoring_changes.append(f"[{item['id'][:8]}] {empresa}: Score {current_score}->{new_score}")
-                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Score'] -> {new_score}")
+                scoring_changes.append(f"[{item['id'][:8]}] {empresa}: Score {current_score}->{new_score} ({score_method})")
+                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Score'] -> {new_score}, ['Score_Method'] -> {score_method}")
 
     if scoring_updates > 0:
         print(f"OK Scoring v6.4: {scoring_updates} cambios")
@@ -757,6 +775,21 @@ def main():
 
         # Saltar si está expirada/archivada
         if status in ["Expirada", "Archivar"]:
+            continue
+
+        # PRECEDENCIA OBLIGATORIA: gate_logic() antes que gate() (Arena spec)
+        # gate_logic() protege estados terminales de sobreescritura por recálculo
+        entry = {
+            "Next_Action": current_action,
+            "Status": status,
+            "Gate_Decision": current_gate,
+            "Fetch": fetch
+        }
+        
+        # Si gate_logic() retorna un estado terminal protegido, respetarlo
+        protected_action = gate_logic(entry)
+        if protected_action in {"Archivar", "Expirada"} and current_action:
+            protected_count += 1
             continue
 
         if evaluate_rejection_status(status):

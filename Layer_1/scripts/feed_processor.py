@@ -542,12 +542,63 @@ def _set_dedup_flag_if_needed(
             print(f"  ⚠️  Error asignando Dedup_Flag para {page_id[:8]}: {exc}")
 
 
+def _check_historical_rejected_status(
+    record: dict,
+    notion_utils: Client,
+    schema: NotionSchema,
+) -> bool:
+    """
+    Verifica si existe un registro histórico con Status=Rechazado para el mismo fingerprint.
+    
+    Este check es independiente de la ventana de dedup de 30 días - previene re-creación
+    de vacantes que el operador ya rechazó explícitamente por razones cualitativas.
+    
+    Usa content_fingerprint (brand + title + location) para identificar el mismo rol
+    incluso si la empresa republicó la vacante después de >30 días.
+    """
+    brand = (record.get("brand") or record.get("brand_raw") or "").strip().lower()
+    title = (record.get("title") or "").strip().lower()
+    location = (record.get("location") or "").strip().lower()
+    
+    if not brand or not title:
+        return False
+    
+    # Buscar registros con Status=Rechazado sin filtro de tiempo
+    candidates = query_notion_db(
+        notion_utils,
+        filter_body={
+            "and": [
+                schema.text_filter(schema.brand_prop, brand),
+                schema.text_filter(schema.status_prop, "Rechazado"),
+            ]
+        },
+        schema=schema,
+    )
+    
+    # Comparar por fingerprint de contenido
+    for row in candidates:
+        existing_brand = _extract_text_prop(row, schema.brand_prop).strip().lower()
+        existing_title = _extract_text_prop(row, schema.title_prop).strip().lower()
+        existing_location = _extract_text_prop(row, schema.location_prop or "location", "").strip().lower() if schema.location_prop else ""
+        
+        if existing_brand == brand and existing_title == title and existing_location == location:
+            return True
+    
+    return False
+
+
 def dedup_cross_layer(
     record: dict,
     notion_utils: Client,
     schema: NotionSchema,
     window_days: int = 30,
 ) -> bool:
+    # CHECK 1: Verificar Status=Rechazado histórico (sin ventana de tiempo)
+    # Esto previene re-creación de vacantes ya rechazadas cualitativamente
+    if _check_historical_rejected_status(record, notion_utils, schema):
+        print(f"  ⛔ HISTORICAL_REJECTED: vacante previamente rechazada detectada")
+        return True
+    
     hash_key = compute_dedup_hash(record)
     incoming_layer = record.get("layer", "L3")
 

@@ -23,6 +23,7 @@ def init_db():
                 payload         TEXT NOT NULL,
                 proposed_patch  TEXT,
                 block_reason    TEXT,
+                last_pipeline_run_id TEXT,
                 created_at      TEXT NOT NULL,
                 updated_at      TEXT NOT NULL
             );
