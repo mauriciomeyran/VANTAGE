@@ -1,39 +1,35 @@
 # V | ALIASES
 
-# V | ALIASES
-
-# V | ALIASES
-
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
-| 01 | [ALIASES:SESSION-CYCLE](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc42811eb1f6dcb74ca2cbbd) | Session Cycle |  |
-| 02 | [ALIASES:L0-RUNTIME](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc428192a84cebefe364437b) | L0 · VANTAGE Runtime |  |
-| 03 | [ALIASES:L1L2-DISCOVERY](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc428145bc03f55e1d93d0c9) | L1/L2 · Discovery |  |
-| 04 | [ALIASES:L3-PASSIVE-INTAKE](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc428188bf47cf569d4262a6) | L3 · Passive Intake |  |
-| 05 | [ALIASES:L4-VERSION-CONTROL](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc4281afb0c0ce4975f8acd3) | L4 · Version Control |  |
-| 06 | [ALIASES:DASHBOARD](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc428118925cd38477b8e59e) | Dashboard |  |
-| 07 | [ALIASES:CV-PIPELINE](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc4281789239ed14fd5b861f) | CV Pipeline |  |
-| 08 | [ALIASES:DEDUP](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#577c2a7ecc7f4458971c43f9a77197b0) | Dedup & Oportunidades |  |
+| 01 | ALIASES:SESSION-CYCLE | Session Cycle |  |
+| 02 | ALIASES:L0-RUNTIME | L0 · VANTAGE Runtime |  |
+| 03 | ALIASES:L1L2-DISCOVERY | L1/L2 · Discovery |  |
+| 04 | ALIASES:L3-PASSIVE-INTAKE | L3 · Passive Intake |  |
+| 05 | ALIASES:L4-VERSION-CONTROL | L4 · Version Control |  |
+| 06 | ALIASES:DASHBOARD | Dashboard |  |
+| 07 | ALIASES:CV-PIPELINE | CV Pipeline |  |
+| 08 | ALIASES:DEDUP | Dedup & Oportunidades |  |
 ## 01 ALIASES:SESSION-CYCLE
 ## Session Cycle
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | start | Arranca el sistema al inicio de cada sesión: activa el entorno, carga variables y corre el chequeo de salud. | Activa .venv, exporta config/layer_1.env, y ejecuta health_check.py, que revisa en orden versión, entorno, git, conectividad a Notion, sync documental y antigüedad de índices — auto-sincroniza el Entity Index si pasó más de 24h. |
-| vversions --bootstrap | Genera el paquete de contexto de apertura de sesión: última fila del Ledger, última entrada del Changelog, tickets críticos pendientes. | Lee pages.retrieve sobre la página del Session Ledger y el Changelog y arma el bloque [DUMP INICIO SESIÓN VANTAGE] — no escribe nada. |
-| vversions --sync | Propaga la versión ya escrita en el Changelog hacia los 6 documentos restantes. | Único flag con escritura: lee la versión target del Changelog y ejecuta 6 pages.patch secuenciales sobre la propiedad Versión — housekeeping, exento de APROBAR_WRITE. |
+| vversions –bootstrap | Genera el paquete de contexto de apertura de sesión: última fila del Ledger, última entrada del Changelog, tickets críticos pendientes. | Lee pages.retrieve sobre la página del Session Ledger y el Changelog y arma el bloque [DUMP INICIO SESIÓN VANTAGE] — no escribe nada. |
+| vversions –sync | Propaga la versión ya escrita en el Changelog hacia los 6 documentos restantes. | Único flag con escritura: lee la versión target del Changelog y ejecuta 6 pages.patch secuenciales sobre la propiedad Versión — housekeeping, exento de APROBAR_WRITE. |
 ## 02 ALIASES:L0-RUNTIME
 ## L0 · VANTAGE Runtime
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
-| vload | Motor base del Lazy Loader — consulta rutas específicas del Kernel sin fetch completo. | Activa .venv y corre lazy_loader.py --page {ID} --route {ruta}; parsea bloques hijos vía API y devuelve solo el payload pedido (~150 tokens). |
-| vtrig / vgolden / vcheat / vscope / vdataflow / vrouting | Atajos directos a secciones específicas del Kernel (Triggers, Golden Rules, Cheat Sheet, Scope, Data Flow, Routing) sin escribir la ruta a mano cada vez. | Cada uno es vload con --page y --route ya fijos al ID de esa sección. |
+| vload | Motor base del Lazy Loader — consulta rutas específicas del Kernel sin fetch completo. | Activa .venv y corre lazy_loader.py –page {ID} –route {ruta}; parsea bloques hijos vía API y devuelve solo el payload pedido (~150 tokens). |
+| vtrig / vgolden / vcheat / vscope / vdataflow / vrouting | Atajos directos a secciones específicas del Kernel (Triggers, Golden Rules, Cheat Sheet, Scope, Data Flow, Routing) sin escribir la ruta a mano cada vez. | Cada uno es vload con –page y –route ya fijos al ID de esa sección. |
 | vstatus | Muestra el estado del Runtime: cuántas entidades tiene indexadas y qué tan viejo está el índice. | Corre vantage.py status — lectura pura contra entity_index_v2.json. |
 | vsync | Regenera el índice de entidades del Runtime desde Notion. | Corre vantage.py sync — reconstruye entity_index_v2.json, graph_v2.json, backlinks_v2.json. |
-| vask | Hace una pregunta en lenguaje natural al Runtime sobre el estado del Tracker. | Corre vantage.py ask "..." — resuelve contra el índice ya cargado. |
+| vask | Hace una pregunta en lenguaje natural al Runtime sobre el estado del Tracker. | Corre vantage.py ask “…” — resuelve contra el índice ya cargado. |
 | vresolve | Resuelve una entidad específica (ID o nombre) a su ficha completa. | Corre vantage.py resolve — 4 pasos: lookup en índice, mapeo a data source, query a Notion, validación. |
 | vcontext | Trae contexto extendido de una entidad (relaciones, backlinks). | Corre vantage.py context sobre graph_v2.json y backlinks_v2.json. |
 | vquery | Corre una consulta estructurada contra el índice. | Corre vantage.py query — filtra entity_index_v2.json por los parámetros dados. |
-| vversions (sin flag) | Punto de entrada al motor de verificación de versión — requiere flag explícito (--bootstrap/--sync, ver familia 1). | — |
+| vversions (sin flag) | Punto de entrada al motor de verificación de versión — requiere flag explícito (–bootstrap/–sync, ver familia 1). | — |
 | vcensus | Regenera el V-ID-CENSUS y reporta IDs huérfanos. | Corre generate_census.py — resuelve cada ID contra CENSUS_SPEC, detecta huérfanos no listados, y genera deeplink de bloque exacto vía API para cada uno. |
 | vsource | Recarga la configuración de shell tras editar .zshrc, sin abrir una terminal nueva. | source ~/.zshrc — housekeeping puro, no toca Notion ni el pipeline. |
 ## 03 ALIASES:L1L2-DISCOVERY
@@ -41,7 +37,7 @@
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | vl1 | Corre el pipeline principal de Active Recon — procesa el JSON consolidado del día y lo escribe en el Tracker. | Invoca layer_1_pipeline.sh, que activa .venv y dispara feed_processor.py: normaliza campos, aplica dedup cross-layer, presenta DRY RUN antes de escribir. |
-| vl1status / vl1analytics / vl1batch / vl1recovery / vl1profile / vl1feed / vl1backfill | Atajos de un solo token a cada subcomando de vl1 (ver Manual 09.2 para el detalle de cada uno). | Cada uno equivale a vl1 <subcomando> — mismo contrato, solo evita el espacio. |
+| vl1status / vl1analytics / vl1batch / vl1recovery / vl1profile / vl1feed / vl1backfill | Atajos de un solo token a cada subcomando de vl1 (ver Manual 09.2 para el detalle de cada uno). | Cada uno equivale a vl1  — mismo contrato, solo evita el espacio. |
 | vl1app | Abre la app empaquetada de Layer 1 desde Finder/Spotlight en vez de Terminal. | open /Applications/Layer 1. |
 ## 04 ALIASES:L3-PASSIVE-INTAKE
 ## L3 · Passive Intake
@@ -56,8 +52,8 @@
 | vgit | Fuerza un sync inmediato del repo git fuera de su horario automático. | Invoca git_sync_wrapper.sh — commit con timestamp + push a origin/main si hay cambios sin commitear. |
 | vsync-doc | Invocación directa del motor de sync documental (uso interno/depuración). | Corre vsync_doc.py sin el wrapper de comandos — requiere pasar flags manualmente. |
 | vdoc | Sincroniza los 6 documentos fundacionales desde Notion hacia el disco local (Read Only): Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log. | Corre vdoc.py (wrapper de comandos) → invoca vsync_doc.py con la dirección y documento pedidos (notion/auto (equivalente), dry (previsualización limitada)). |
-| vhyperlinks | Aplica hipervínculos cross-reference sobre los 6 documentos fundacionales locales, a partir de cada mención de un ID canónico (PREFIX:KEY). | Corre apply_hyperlinks.py --root Documentación/ACTIVE. Sin --apply es dry-run (reporta cuántos links propuestos por documento, no escribe). Agregar --apply para escribir de verdad. |
-| vsum | Resume transcripts de sesiones (propias o de otra IA) a Markdown estructurado, para continuidad entre chats sin pérdida de contexto. | Corre vsum.py: parsea el transcript (.md o URL de Claude share), lo resume vía Groq o Gemini (fallback automático), y opcionalmente crea la página de resumen como hija del INBOX en Notion (--notion) vía notion_client directo. |
+| vhyperlinks | Aplica hipervínculos cross-reference sobre los 6 documentos fundacionales locales, a partir de cada mención de un ID canónico (PREFIX:KEY). | Corre apply_hyperlinks.py –root Documentación/ACTIVE. Sin –apply es dry-run (reporta cuántos links propuestos por documento, no escribe). Agregar –apply para escribir de verdad. |
+| vsum | Resume transcripts de sesiones (propias o de otra IA) a Markdown estructurado, para continuidad entre chats sin pérdida de contexto. | Corre vsum.py: parsea el transcript (.md o URL de Claude share), lo resume vía Groq o Gemini (fallback automático), y opcionalmente crea la página de resumen como hija del INBOX en Notion (–notion) vía notion_client directo. |
 ## 06 ALIASES:DASHBOARD
 ## Dashboard (Martes — Recuperación)
 | Alias | Qué hace | Procedimiento interno |
@@ -70,8 +66,8 @@ Sin alias de Terminal — CV-A, CV-B y QA se disparan directamente en el chat de
 ## 08 ALIASES:DEDUP
 ## Dedup & Oportunidades
 | Alias | Qué hace | Procedimiento interno |
-| --- | --- | --- |
+| — | — | — |
 | vdedup | Consolida entradas duplicadas detectadas en el Tracker. | Corre consolidate_duplicates.py sobre la clave compuesta brand+title+location. |
 | vopport | Limpia duplicados específicamente en oportunidades ya calificadas. | Corre dedup_opportunities.py. |
----
+—
 Figma Sync (plugin CV, 04-Vantage_CV/Figma Sync/) no tiene alias de Terminal propio — se opera desde Figma Desktop, ver Manual 08.3.

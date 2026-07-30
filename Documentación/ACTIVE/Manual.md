@@ -1,35 +1,30 @@
 # V | MANUAL
 
-# V | MANUAL
-
-# V | MANUAL
-
-> 
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Operador humano (Mauricio Meyrán)
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
-| 01 | MANUAL:OBJECTIVE | Objetivo de VANTAGE |  |
-| 02 | MANUAL:HOW-IT-WORKS | Cómo Funciona |  |
-| 03 | MANUAL:FAILURE-PHILOSOPHY | Filosofía de Fallo |  |
-| 04 | MANUAL:SETUP | Setup |  |
-| 05 | MANUAL:COLD-START | Arranque Frío |  |
-| 06 | MANUAL:SESSION-CYCLE | Ciclo de Sesión |  |
-| 07 | MANUAL:VCHECKLIST | El Checklist |  |
-| 08 | MANUAL:WEEKLY-FLOW | Flujo Semanal |  |
-| 09 | MANUAL:VANTAGE-RUNTIME | VANTAGE Runtime |  |
-| 10 | MANUAL:DATA-MANAGEMENT | Gestión de Datos |  |
-| 11 | MANUAL:HEALTHCHECK | Health Check |  |
-| 12 | MANUAL:TROUBLESHOOTING | Troubleshooting |  |
-| 13 | MANUAL:PROMPTS-WRAPPERS | Prompts & Wrappers |  |
-| 14 | MANUAL:CHEATSHEETS | Cheat Sheets |  |
-| 15 | MANUAL:PATCH-QUALITY | Calidad de Parches |  |
-| 16 | MANUAL:GOLDEN-RULES | Reglas de Oro |  |
-| 17 | MANUAL:SLA | SLA de Latencia |  |
-| 18 | [MANUAL:CV-GOLDEN-RULES-INDEX](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3b50c9994bb6457a8afde3252f4647eb) | Reglas de Oro CV |  |
-| 19 | [MANUAL:POSITIONING-CRITERIA](https://app.notion.com/p/372938befc4280509a67e40857d7806e#01ffec90def642749ae52ef84da7a56b) | Positioning Criteria |  |
-| 20 | [MANUAL:GOLDEN-SKELETON-REF](https://app.notion.com/p/372938befc4280509a67e40857d7806e#e457e54ec4a84a778a7cfd248e718188) | Golden Skeleton |  |
-| 21 | [MANUAL:SCHEMA-FIELD-REF](https://app.notion.com/p/372938befc4280509a67e40857d7806e#4cafd4cfe04847368733b9ba19faf39c) | Schema Class A/B |  |
+| 01 | MANUAL:OBJECTIVE | Objetivo de VANTAGE | |
+| 02 | MANUAL:HOW-IT-WORKS | Cómo Funciona | |
+| 03 | MANUAL:FAILURE-PHILOSOPHY | Filosofía de Fallo | |
+| 04 | MANUAL:SETUP | Setup | |
+| 05 | MANUAL:COLD-START | Arranque Frío | |
+| 06 | MANUAL:SESSION-CYCLE | Ciclo de Sesión | |
+| 07 | MANUAL:VCHECKLIST | El Checklist | |
+| 08 | MANUAL:WEEKLY-FLOW | Flujo Semanal | |
+| 09 | MANUAL:VANTAGE-RUNTIME | VANTAGE Runtime | |
+| 10 | MANUAL:DATA-MANAGEMENT | Gestión de Datos | |
+| 11 | MANUAL:HEALTHCHECK | Health Check | |
+| 12 | MANUAL:TROUBLESHOOTING | Troubleshooting | |
+| 13 | MANUAL:PROMPTS-WRAPPERS | Prompts & Wrappers | |
+| 14 | MANUAL:CHEATSHEETS | Cheat Sheets | |
+| 15 | MANUAL:PATCH-QUALITY | Calidad de Parches | |
+| 16 | MANUAL:GOLDEN-RULES | Reglas de Oro | |
+| 17 | MANUAL:SLA | SLA de Latencia | |
+| 18 | MANUAL:CV-GOLDEN-RULES-INDEX | Reglas de Oro CV | |
+| 19 | MANUAL:POSITIONING-CRITERIA | Positioning Criteria | |
+| 20 | MANUAL:GOLDEN-SKELETON-REF | Golden Skeleton | |
+| 21 | MANUAL:SCHEMA-FIELD-REF | Schema Class A/B | |
 ## 01 MANUAL:OBJECTIVE
 ## Objetivo de VANTAGE
 ### El Problema que Resuelve
@@ -88,7 +83,7 @@ El sistema aplica dos capas de exclusión para garantizar la calidad de la seña
 ---
 ## 03 MANUAL:FAILURE-PHILOSOPHY
 ## Filosofía de Fallo para Operadores
-Base: *[KERNEL:FAIL-PHILOSOPHY](V | KERNEL).*
+Base: [KERNEL:FAIL-PHILOSOPHY](V | KERNEL).
 Antes de entrar a Setup y al ciclo operativo, es necesario internalizar esto, porque vas a encontrarlo constantemente desde el primer Lunes que operes el sistema:
 Un “fallo” del sistema no es un bug — es el filtro operando correctamente. Los siguientes resultados son señales normales de funcionamiento, no errores que debas reparar manualmente ni forzar a que Claude “arregle”:
 | Resultado que verás | Qué significa realmente | Qué NO hacer | Qué hacer en su lugar |
@@ -98,7 +93,7 @@ Un “fallo” del sistema no es un bug — es el filtro operando correctamente.
 | Gate = BLOCKED | Los criterios Class A no se cumplieron (URL rota, JD parcial, fuente no reconocida). | No lo fuerces a CREATE manualmente en Notion. | Si es recuperable, usa el Dashboard (§8.2, Martes) para corregir el dato de origen y dejar que el pipeline recalcule. |
 | Ready-to-Apply vacío | No hay oportunidades válidas esta semana — puede pasar, especialmente en semanas de baja actividad del mercado. | No fuerces un CREATE artificial para “llenar” la bandeja. | Espera al siguiente ciclo de discovery (Lunes), o revisa si el Prompt de búsqueda necesita ajuste (ver §12, Health Check — Red Flags). |
 | JSON vacío en el Feed de discovery | La búsqueda no encontró resultados relevantes esa ejecución. | No amplíes los criterios de búsqueda sin análisis previo — podrías bajar la calidad de la señal general. | Revisa el Viernes de Analytics (§8.5) antes de decidir si el prompt necesita ajuste. |
-Ante cualquiera de estos casos, el sistema reporta el estado y espera tu instrucción dentro del flujo normal del pipeline — no requiere, ni acepta bien, intervenciones manuales que intenten “corregir” el resultado en sí mismo en vez de corregir el dato de entrada que lo produjo.
+| Ante cualquiera de estos casos, el sistema reporta el estado y espera tu instrucción dentro del flujo normal del pipeline — no requiere, ni acepta bien, intervenciones manuales que intenten “corregir” el resultado en sí mismo en vez de corregir el dato de entrada que lo produjo. |  |  |  |
 ---
 ## 04 MANUAL:SETUP
 ## Setup
@@ -163,9 +158,8 @@ cd ~/Documents/03 Projects/VANTAGE/Layer_4/scripts
 source ../../Layer_1/.venv/bin/activate
 python vsync_doc.py --dry-run
 ```
-Output esperado: 6 documentos listados con diff por documento, sin errores.
+## Output esperado: 6 documentos listados con diff por documento, sin errores.
 Si falla: verificar que layer_1.env exista y que el token no tenga un salto de línea (\n) embebido por error de copy-paste.
----
 ## 05 MANUAL:COLD-START
 ## Arranque Frío — Checklist de Reactivación
 Usar cuando el sistema no ha sido operado por más de 5 días. A diferencia de Setup (§4), aquí no estás instalando nada nuevo — estás confirmando que todo lo que ya instalaste sigue funcionando después de un periodo de inactividad, antes de confiar en que el primer comando que corras te va a dar un resultado correcto.
@@ -202,8 +196,7 @@ Usar cuando el sistema no ha sido operado por más de 5 días. A diferencia de S
       python3 vantage.py ask "find candidates"
       # Confirmar que la lista refleja el estado actual de Notion
 ```
-Una vez que este checklist pasa limpio, el sistema está en condición de operar con normalidad — el siguiente paso es abrir tu primera sesión de trabajo del día, lo cual te lleva directo a §6.
----
+## Una vez que este checklist pasa limpio, el sistema está en condición de operar con normalidad — el siguiente paso es abrir tu primera sesión de trabajo del día, lo cual te lleva directo a §6.
 ## 06 MANUAL:SESSION-CYCLE
 ## Ciclo de Sesión — Open/Close
 ### Cuándo se dispara esto, y por qué es distinto del ciclo semanal
@@ -215,32 +208,31 @@ Este ciclo se dispara con dos comandos — /vantage-session-open al inicio de ca
 1. Te recuerda, sin que tengas que preguntarlo, qué quedó pendiente de la sesión anterior.
 No necesitas invocarlo tú manualmente cada vez que se te ocurra — pero sí necesitas recordar que es el primer paso obligatorio: si acabas de abrir Claude para trabajar en VANTAGE hoy, el primer paso siempre es este ciclo, antes de tocar Tracker, Dashboard o cualquier trigger de CV descrito en §8.
 ### Por qué existe esto
-Antes de que este ciclo existiera, cada sesión de Claude arrancaba “en frío”: el agente asumía que el corpus de Notion (Kernel, Manual, System Prompt, Career Canon, Aliases, Changelog) estaba en la versión que recordaba de la sesión anterior, y no había ningún mecanismo que confirmara si una sesión había terminado bien o si Claude simplemente dejó de responder a medio trabajo — un timeout, un cierre accidental de pestaña, un crash. El resultado era drift silencioso: un documento se actualizaba, otro no, y nadie se enteraba hasta que las contradicciones aparecían en producción (esto es, en parte, lo que motivó el Census — ver [KERNEL:CENSUS-SYNC](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281599aa3f17926239597), y §11 — Health Check, donde se detalla cómo se regenera el Census).
+Antes de que este ciclo existiera, cada sesión de Claude arrancaba “en frío”: el agente asumía que el corpus de Notion (Kernel, Manual, System Prompt, Career Canon, Aliases, Changelog) estaba en la versión que recordaba de la sesión anterior, y no había ningún mecanismo que confirmara si una sesión había terminado bien o si Claude simplemente dejó de responder a medio trabajo — un timeout, un cierre accidental de pestaña, un crash. El resultado era drift silencioso: un documento se actualizaba, otro no, y nadie se enteraba hasta que las contradicciones aparecían en producción (esto es, en parte, lo que motivó el Census — ver KERNEL:CENSUS-SYNC, y §11 — Health Check, donde se detalla cómo se regenera el Census).
 El ciclo Open/Close resuelve esto tratando cada sesión como una transacción con inicio y fin explícitos, en vez de una conversación que simplemente “pasa”.
-### Un cambio de fondo: el operador corre Terminal primero, Claude ya no improvisa la verificación
-Antes de entrar al detalle paso a paso, vale la pena explicar un giro importante en cómo funciona este ciclo desde la optimización de verify_versions.py: el script dejó de ser una herramienta de un solo modo (verificar versión) y ahora opera con dos flags — --bootstrap y --sync — cada uno con una responsabilidad distinta y acotada. El modo --check fue eliminado en Kernel v9.6.2: la verificación real vive íntegramente en --sync. Este cambio no es cosmético: reordena quién hace qué entre tú y Claude.
-En el diseño anterior, Claude tenía margen para decidir cómo resolver la verificación de versión si Terminal no estaba a la mano — podía hacer un fetch directo vía MCP a cada uno de los 9 documentos fundacionales, más lento pero funcional, como downgrade aceptable. Ese margen desaparece por completo en el flujo actual. Terminal ya no es la ruta preferente — es un requisito obligatorio. Si Terminal no está disponible, la sesión simplemente no avanza: no hay fallback, no hay downgrade de eficiencia, no hay pregunta de “¿puedes correr el script?”. Claude ya no pregunta porque Claude ya no tiene la opción de resolverlo por otra vía.
-La razón detrás de esta decisión es doble: primero, reduce el margen de error de que Claude intente reconstruir el estado del sistema leyendo bases de datos completas vía MCP — una operación cara en tokens y con más superficie para malinterpretar un dato a medias. Segundo, mantiene bajo el conteo de tokens de cada sesión, porque los tres outputs que generan los flags de verify_versions.py son bloques de texto compactos, ya resueltos, que Claude simplemente consume — no bases de datos completas que Claude tiene que parsear e interpretar por su cuenta.
-Esto convierte el ciclo en un modelo asimétrico y determinista: tú corres Terminal primero y le entregas a Claude los resultados ya calculados; Claude nunca reconstruye ese cálculo por su cuenta, ni lo intenta.
-### Apertura — /vantage-session-open
-Con ese cambio de fondo entendido, así es como se ve la apertura en la práctica, paso a paso:
-1. Corre python3 scripts/verify_versions.py --bootstrap en tu Terminal local. Este es el flag nuevo, y su función reemplaza algo que antes hacía Claude por su cuenta: leer la última fila del Session Ledger para confirmar que cerró bien, y leer la última entrada de V-CHANGELOG para tener contexto de continuidad. Ahora ambas lecturas ocurren en Terminal, no en Claude — el script te entrega un bloque de texto delimitado por [DUMP INICIO SESIÓN VANTAGE], que contiene exactamente esa información: el estado de la última sesión (si cerró en CLOSED o quedó OPEN por una terminación abrupta), el resumen de la última entrada del Changelog, y un snapshot de los tickets CRÍTICO y ALTO pendientes en el Bug/Task Tracker.
-1. Abre un chat nuevo en Claude, pega ese output — el dump del --bootstrap — e invoca /vantage-session-open. Claude ya no hace ningún fetch propio a Notion en este paso: el payload que le entregaste es toda la información que necesita para arrancar. Si el output falta o está incompleto, Claude te lo señala y espera a que lo completes antes de continuar — no improvisa el faltante ni lo reconstruye por su cuenta vía MCP.
-1. Claude procesa ambos payloads y realiza una sola escritura: crea la fila nueva en el Session Ledger ([KERNEL:SESSION-LEDGER](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816aa4e8c4daaebe11b1)) con status: OPEN y un session_id que genera él mismo. Esta escritura es de housekeeping — no requiere APROBAR_WRITE, por la misma razón que tampoco lo requiere el auto-sync del Entity Index ([KERNEL:HEALTH-CHECK-001](V | KERNEL)): no toca campos Class A ni Class B del Tracker, es infraestructura de continuidad de sesión, no dato de negocio del pipeline de vacantes.
-1. Claude confirma el estado de la sesión a partir del dump de --bootstrap. Si no señala discrepancias, responde VANTAGE: SISTEMA SINCRONIZADO y queda listo para recibir instrucciones normales de trabajo. Si el dump muestra un drift de versión heredado de la sesión anterior, lo reporta explícitamente antes de continuar — recuerda que este es exactamente el mismo tratamiento que ya conocías: el drift no bloquea el trabajo salvo que el documento desincronizado sea justo el que vas a editar en esa sesión, en cuyo caso primero se resuelve el drift.
-Al terminar estos cinco pasos, recién ahí es seguro empezar con el Lunes de §8, o cualquier otro día del ciclo semanal que corresponda.
-### Cierre — /vantage-session-close
-El cierre es la contraparte simétrica, y conserva la misma lógica de fondo que la apertura: primero corres Terminal, después le entregas a Claude los resultados ya resueltos para que cierre el ciclo sin tener que reconstruir nada por su cuenta.
-1. Si algún ID cambió de estado durante la sesión (de pendiente a resuelto, o se creó uno nuevo), corre generate_census.py en Terminal — el mismo comando que ya conocías, que regenera el Census y de paso te señala cualquier ID huérfano detectado en los documentos fuente. Este paso sigue siendo obligatorio antes de escribir el Changelog, nunca al revés: si el Census no puede regenerarse en este momento porque no tienes Terminal a la mano, el ticket asociado se marca Blocked-Census en vez de darse por cerrado en falso — eso no cambió.
-1. Corre python3 scripts/verify_versions.py --sync en Terminal. Es el único modo de escritura y verificación real: relee los 9 documentos fundacionales post-escritura y, tomando la versión target definida en tu entrada de Changelog de esta sesión, propaga esa versión al resto de los documentos sin pasar por Claude. Es housekeeping puro, exento de APROBAR_WRITE por la misma razón que el resto de las escrituras de infraestructura descritas arriba: APROBAR_WRITE queda reservado exclusivamente para modificaciones de contenido, código o IDs en los documentos fundacionales — nunca para la sincronización mecánica de un número de versión ya decidido. Copia el SYNC COMPLETE que te entrega el script al terminar.
-1. Pega ese output — el SYNC COMPLETE del paso 2 — en el chat, e invoca /vantage-session-close. Claude valida que el gate de sincronización esté limpio con lo que le entregaste, y a partir de ahí ejecuta lo que ya hacía antes: presenta el inventario de cambios de la sesión (qué se tocó — documentos editados, entradas de Tracker modificadas, IDs creados o resueltos), te entrega el resumen automático de hecho/pendiente sin que lo pidas —generado internamente por la skill vantage-present-handoff, la misma que puedes invocar de forma independiente en cualquier otro momento si necesitas ese snapshot fuera de un cierre formal— y cierra la fila del Ledger que quedó abierta al inicio de la sesión: status: OPEN pasa a status: CLOSED, con el resumen de pendientes escrito en pending_summary — el mismo campo que la próxima sesión leerá en el dump de su propio --bootstrap.
-La sesión termina con el mensaje SESIÓN COMPLETADA → nuevo chat, que sigue siendo tu señal de que es seguro cerrar la ventana o empezar una conversación nueva sin perder continuidad.
+### Versiones cortas — vantage-session-open / vantage-session-close
+Ambos skills viven en /mnt/skills/user/ y son deliberadamente cortos: cada token gastado en abrir/cerrar sesión es un token que no queda para la tarea real — relevante dado el tier de la cuenta.
+Apertura — /vantage-session-open:
+1. LEDGER — SQL directo vía MCP está bloqueado en este plan (query_data_sources no disponible en este workspace); el paso usa notion-search (sobre el data source del Ledger) + notion-fetch de la fila más reciente en su lugar. Si Status=OPEN o hay duplicados → WARN. Crea fila nueva (Status: OPEN).
+1. HEALTH — verifica System Prompt + ID Census vía MCP (ya cubierto por el Bootstrap universal, KERNEL:DOCUMENTATION-004).
+1. PENDING — lee Pending Summary de la fila anterior; si el Status previo fue CLOSED-COMPRIMIDO, prioriza esa deuda técnica antes que la solicitud nueva del operador.
+1. SNAPSHOT — si el operador pega un dump de --bootstrap, lo usa como contexto adicional; si no hay dump, reporta SNAPSHOT: 0 TAREAS CRÍTICAS y continúa. A diferencia del flujo anterior, Terminal ya no es requisito bloqueante para abrir sesión.
+1. READY — SESSION-OPENED: VANTAGE READY (Version/Tier Mode).
+Cierre — /vantage-session-close:
+0.5. TOKEN-GATE — alerta de tokens o instrucción de "cierre rápido/comprimido" activa MODO COMPRIMIDO (reemplaza los pasos 3-4 completos por sus variantes comprimidas). Default: MODO COMPLETO.
+1. INVENTORY — el operador declara si hubo cambios; si no, salta al paso 6 (Ledger).
+1. CENSUS — cambio de estado de algún ID → requiere output local de generate_census.py. Sin ese output, el ticket asociado se marca Blocked-Census — Terminal sigue siendo obligatorio solo para este paso puntual, no para el ciclo completo.
+1. CHANGELOG & VERSION — Completo: draft en texto plano, espera APROBAR_WRITE. Comprimido: una línea [COMPRIMIDO] resumen + "expandir en próxima sesión".
+1. VERIFY & SYNC — Gate Absoluto en modo Completo: requiere output local de verify_versions.py --sync con [VEREDICTO FINAL] PASS. Comprimido: sin ese output, marca SYNC PENDIENTE en el Ledger en vez de bloquear el cierre — la sincronización real queda pendiente y marcada, nunca fingida.
+1. SUMMARY — bloque homologado (mismas 5 secciones que produce vantage-present-handoff). Comprimido: un bullet por sección, priorizando IDs y pendientes.
+1. LEDGER — actualiza Notion → Status: CLOSED o CLOSED-COMPRIMIDO, Closed At [ahora], Pending Summary [bloque del paso 5].
+1. TERMINATE — SESSION CLOSED → nuevo chat.
 ### Qué hacer si algo no cuadra
 - Terminal no está disponible → Operación detenida (Fail-Fast). No existe bypass automatizado vía MCP para este chequeo — ni en apertura ni en cierre — con el fin de proteger la cuota de la API de Notion y evitar el desperdicio de tokens de contexto reconstruyendo estado desde bases de datos completas. El operador debe diagnosticar la conectividad o el entorno local antes de proceder con cualquier modificación de documentación.
 - El Ledger anterior quedó OPEN → esto lo verás reflejado directamente en el dump que genera --bootstrap. Revisa manualmente si algo quedó a medio escribir antes de seguir. El sistema te lo señala, pero la decisión de qué hacer con eso es tuya.
 - Drift de versión detectado y no es el documento que ibas a tocar hoy → se reporta, no bloquea. Puedes decidir resolverlo ahora o después.
 - Drift de versión detectado y SÍ es el documento que ibas a tocar → se resuelve el drift primero, antes de aplicar cualquier parche nuevo — de lo contrario terminarías escribiendo sobre una base que ya no coincide con lo que las otras piezas del sistema esperan.
-- Un cambio de código, schema o flujo operativo quedó sin reflejo en la documentación → esto no es parte del drift de versión que acabas de revisar arriba, es el caso que cubre [KERNEL:DOCUMENTATION-TRANSVERSAL-001](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428142a984f97acbd800b4): el contrato que detecta contenido operativo nuevo sin ancla en Kernel, Manual, Canon o System Prompt, ya sea porque tú lo pides explícitamente ("documentación transversal", "parche orgánico") o porque el sistema lo señala como recordatorio no-bloqueante a media tarea, sin detener lo que estabas haciendo.
+- Un cambio de código, schema o flujo operativo quedó sin reflejo en la documentación → esto no es parte del drift de versión que acabas de revisar arriba, es el caso que cubre KERNEL:DOCUMENTATION-TRANSVERSAL-001: el contrato que detecta contenido operativo nuevo sin ancla en Kernel, Manual, Canon o System Prompt, ya sea porque tú lo pides explícitamente ("documentación transversal", "parche orgánico") o porque el sistema lo señala como recordatorio no-bloqueante a media tarea, sin detener lo que estabas haciendo.
 - Un pendiente detectado durante la sesión necesita convertirse en ticket (o no) → esto lo gobierna KERNEL:GATE-DECISION-009 (3 niveles de escalamiento). En resumen: esfuerzo bajo y sin bloqueo confirmado se queda en pending_summary del Ledger (Nivel 1); esfuerzo alto sin fuente dura de bloqueo se sugiere como ticket y espera tu APROBAR_WRITE (Nivel 2); bloqueo o degradación confirmados por una fuente dura (dump de Terminal, Ledger, Changelog, o tu propia declaración explícita) disparan vantage-create-bug-task de forma automática (Nivel 3). Ver KERNEL §9.9 para el detalle completo y las reglas de re-clasificación entre niveles.
 Con la sesión abierta y sincronizada, el siguiente paso natural es abrir tu mapa de la semana — el V-Checklist, explicado en §7.
 ---
@@ -259,10 +251,9 @@ Esto importa porque el Dashboard (que verás en detalle en §8.2, Martes) usa ex
 ### Tema claro/oscuro
 El botón de tema (ícono sol/luna, arriba a la derecha en ambos HTML) persiste tu elección y se sincroniza automáticamente si tienes ambos HTML abiertos en pestañas distintas del mismo navegador — cambias el tema en uno, el otro se actualiza sin recargar. Antes del parche de 2026-07-10, el tema no se guardaba y siempre reiniciaba en oscuro.
 ### Qué NO hacer
-No copies/pegues código de un HTML al otro para “igualar” un color o componente — edita vantage-tokens.css o vantage-theme.js, que ambos ya leen. Editar directo en el HTML reintroduce el mismo drift que se corrigió.
+## No copies/pegues código de un HTML al otro para “igualar” un color o componente — edita vantage-tokens.css o vantage-theme.js, que ambos ya leen. Editar directo en el HTML reintroduce el mismo drift que se corrigió.
 Si algo se ve distinto entre los dos HTML, es señal de que alguien editó un color o estilo directo en el <style> inline de uno de los dos archivos en vez de en vantage-tokens.css. Revisa ahí primero.
 Con el Checklist abierto y el ciclo de sesión ya confirmado (§6), estás listo para empezar el Lunes — el primer día del ciclo semanal, detallado a continuación.
----
 ## 08 MANUAL:WEEKLY-FLOW
 ## Flujo Semanal de Operación
 Este es el ciclo completo de trabajo, de lunes a viernes. Asume que ya pasaste por Setup (§4) o Arranque Frío (§5) según corresponda, que la sesión actual de Claude ya pasó por su Ciclo de Sesión (§6), y que tienes el Checklist (§7) abierto como guía de avance.
@@ -271,7 +262,7 @@ El lunes es el ciclo de búsqueda activa completo. Se dispara manualmente y cubr
 El ciclo comienza con los prompts de búsqueda, los cuales no se copian de versiones anteriores — se ensamblan bajo demanda a través de Perplexity Desktop: cada prompt combina dos capas: el Prompt Base (perfil, reglas de exclusión, etc.) + el Prompt Wrapper (que contiene la fecha del día TODAY’S DATE, el modo de búsqueda, etc.).
 Abre Perplexity Desktop y dale la instrucción:
 ```plain text
-Lee PROMPT LIBRARY vía MCP. https://dub.sh/app.notion
+Lee PROMPT LIBRARY vía MCP. <https://dub.sh/app.notion>
 
 Recupera:
 - BASE SPEC L1
@@ -408,10 +399,9 @@ Contrato de resolución — 4 pasos obligatorios:
 ```bash
 ~/vantage_pipeline.sh
 ```
-Python detecta Status = Target en entradas que tenían Gate vacío o REVIEW_NEEDED y procesa sus campos Class B normalmente — calcula Score, Gate_Decision y el resto.
+## Python detecta Status = Target en entradas que tenían Gate vacío o REVIEW_NEEDED y procesa sus campos Class B normalmente — calcula Score, Gate_Decision y el resto.
 Por qué Target y no otro valor: Target es el estado operativo estándar de una vacante en espera de procesamiento. Usarlo como señal de resolución mantiene el contrato de estados consistente — no requiere un valor nuevo ni lógica adicional en Python.
 Nota importante: estas entradas no pasan por el Dashboard. El Dashboard es para vacantes con Gate = BLOCKED que ya tienen campos Class B calculados y necesitan corrección de inputs Class A. REVIEW_NEEDED es un estado previo — todavía no llegó a tener Gate calculado.
----
 ### 8.3 MIÉRCOLES — CV Optimization
 Optimización de CV para vacantes priorizadas en Ready-to-Apply. Claude opera activamente en este ciclo — es el único día donde el AI Component tiene rol principal. L3 sigue corriendo en sus horarios habituales, en background.
 Abre Ready-to-Apply en Notion y elige la vacante a trabajar. Copia la URL del campo URL (career page oficial) o el texto del JD. Abre una nueva sesión de Claude (recuerda: esto significa pasar primero por el Ciclo de Sesión de §6 si aún no lo has hecho hoy) y dispara:
@@ -471,40 +461,37 @@ Si QA aprueba, cambia Status a Postulado en Notion y corre:
 ```bash
 ~/vantage_pipeline.sh
 ```
-Python detecta el Status y asigna Gate_Decision = APPLIED. La vacante sale de Ready-to-Apply automáticamente.
----
+## Python detecta el Status y asigna Gate_Decision = APPLIED. La vacante sale de Ready-to-Apply automáticamente.
 ### 8.4 JUEVES — Segunda Pasada (Condicional)
 Ejecuta solo si hay nuevas vacantes que procesar — 10 minutos máximo:
 ```bash
 ~/vantage_pipeline.sh
 ```
-Script: ~/vantage_pipeline.sh. Este día no tiene un procedimiento distinto al ya descrito en el Lunes (§8.1) — es simplemente una repetición ligera del paso de procesamiento, para no dejar acumular vacantes hasta la siguiente semana si el Lunes no alcanzó a cubrir todo el backlog.
----
+## Script: ~/vantage_pipeline.sh. Este día no tiene un procedimiento distinto al ya descrito en el Lunes (§8.1) — es simplemente una repetición ligera del paso de procesamiento, para no dejar acumular vacantes hasta la siguiente semana si el Lunes no alcanzó a cubrir todo el backlog.
 ### 8.5 VIERNES — Analytics
 ```bash
 ~/vantage_pipeline.sh analytics
 ```
-Output: efectividad por fuente, tasa de links muertos por tipo de URL, ratio career pages vs. aggregators.
+## Output: efectividad por fuente, tasa de links muertos por tipo de URL, ratio career pages vs. aggregators.
 Acción concreta: si career pages producen menos de 5 resultados relevantes en la semana, ajusta el Prompt A (ver §13 — Prompts & Wrappers) — no el threshold de Score. (Recuerda §3, Filosofía de Fallo: el Score bajo no es el problema a corregir, el input de búsqueda sí lo es.)
 Con esto se cierra el ciclo semanal. La siguiente vez que abras Claude para trabajar en VANTAGE, el ciclo completo empieza de nuevo desde §6 — Ciclo de Sesión.
----
 ## 08.6 MANUAL:CADENCE-MATRIX
 ## Matriz de Cadencia Operativa (Referencia)
 Complementa la narrativa día-por-día de §8.1–8.5 con una vista de
 trigger → resultado desacoplada del calendario. Las entradas del
 Tracker reflejadas en la columna “Resultado” son siempre campos Class B
-calculados por Python — no escritura manual (ver [KERNEL:SCHEMA-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281609ac6eec8e5d03b24)).
+calculados por Python — no escritura manual (ver KERNEL:SCHEMA-002).
 | Trigger | Contexto de Invocación | Objetivo | Resultado en Tracker | Referencia |
 | --- | --- | --- | --- | --- |
-| feed_processor.py  • APROBAR_WRITE | Lunes (o cualquier día con nuevas vacantes) — operador revisa output de L1/L2/L3 | Ingresar vacantes nuevas al SSOT con Class A poblado | Filas nuevas con Status=RAW → pipeline calcula Class B inmediatamente | [KERNEL:TRIGGER-001](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281b8bd25efe38438bb51), [KERNEL:SCHEMA-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281609ac6eec8e5d03b24) |
+| feed_processor.py  • APROBAR_WRITE | Lunes (o cualquier día con nuevas vacantes) — operador revisa output de L1/L2/L3 | Ingresar vacantes nuevas al SSOT con Class A poblado | Filas nuevas con Status=RAW → pipeline calcula Class B inmediatamente | KERNEL:TRIGGER-001, KERNEL:SCHEMA-002 |
 | ~/vantage_pipeline.sh (run completo) | Después de cada APROBAR_WRITE de feed | Calcular Score, Gate_Decision, Next_Action sobre entradas Class A | Gate_Decision=CREATE/BLOCKED, Score, VM_Scope, Role_Class actualizados | KERNEL:GATE-DECISION-010 |
-| vd (:8000) — Dashboard RT-1 | Condicional: solo si existen vacantes con Gate=BLOCKED recuperables | Corregir Class A de vacantes bloqueadas y re-ingresar al pipeline | PATCHED → re-evaluación → CREATE o BLOCKED renovado | [KERNEL:GATE-DECISION-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428113ac64f877a148e71e), KERNEL:GATE-DECISION-011 |
-| CV-A [URL/JD] | Miércoles (o cuando vacante alcanza READY_TO_APPLY) | Generar artefacto CV-A adaptado a la vacante | Artefacto en Figma Sync; sin cambio en Tracker | [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) |
-| STATUS [SYSTEM] | Cualquier momento — auditoría ad-hoc | Verificar estado global del sistema y detectar huérfanos/inconsistencias | Sin escritura — reporte en sesión | [SP:TRIGGERS](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281e39643e90b1e5c8613) |
-Nota operativa: Los días de semana en §8.1–8.5 son metadato de cadencia del operador,
-no guard conditions de ningún gate. Una vacante con Score ≥ 60 puede alcanzar
-READY_TO_APPLY el mismo día de su ingesta, sin esperar al ciclo siguiente.
-→ Ver KERNEL:GATE-DECISION-011 para vista completa de transiciones.
+| vd (:8000) — Dashboard RT-1 | Condicional: solo si existen vacantes con Gate=BLOCKED recuperables | Corregir Class A de vacantes bloqueadas y re-ingresar al pipeline | PATCHED → re-evaluación → CREATE o BLOCKED renovado | KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-011 |
+| CV-A [URL/JD] | Miércoles (o cuando vacante alcanza READY_TO_APPLY) | Generar artefacto CV-A adaptado a la vacante | Artefacto en Figma Sync; sin cambio en Tracker | KERNEL:CV-GOLDEN-RULES |
+| STATUS [SYSTEM] | Cualquier momento — auditoría ad-hoc | Verificar estado global del sistema y detectar huérfanos/inconsistencias | Sin escritura — reporte en sesión | SP:TRIGGERS |
+| Nota operativa: Los días de semana en §8.1–8.5 son metadato de cadencia del operador, |  |  |  |  |
+| no guard conditions de ningún gate. Una vacante con Score ≥ 60 puede alcanzar |  |  |  |  |
+| READY_TO_APPLY el mismo día de su ingesta, sin esperar al ciclo siguiente. |  |  |  |  |
+| → Ver KERNEL:GATE-DECISION-011 para vista completa de transiciones. |  |  |  |  |
 ---
 ## 09 MANUAL:VANTAGE-RUNTIME
 ## VANTAGE Runtime (Consulta Operativa)
@@ -638,7 +625,7 @@ Con el Census y su ciclo de regeneración ya cubiertos arriba, esta es la contra
 - vantage-tidy-opportunities-tracker — identifica duplicados y vacantes expiradas en el Tracker de vacantes para archivado, usando los mecanismos de fingerprint y protección de estado terminal ya implementados en feed_processor.py (ver §10 — Gestión de Datos). Requiere Dry Run + APROBAR_WRITE.
 - vantage-tidy-changelog — mantiene el Change Log con las últimas 10 entradas visibles, moviendo el exceso al Archivo Changelog histórico. Úsala cuando el Change Log activo supera 10 entradas o para housekeeping documental puntual.
 - vantage-present-handoff — genera el snapshot de contexto de sesión para continuidad en un chat nuevo. Es independiente y se puede invocar en cualquier momento; no requiere que la sesión esté cerrando (ver también §6 — Ciclo de Sesión, Cierre, donde vantage-session-close la invoca automáticamente como parte de su secuencia normal).
-Cada una declara su propio verbo de apertura/cierre ([KERNEL:SKILL-ANNOUNCE-CONVENTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281db9f8eee98d8f90185)) — nunca el lenguaje de Bootstrap ni de Session Ledger.
+Cada una declara su propio verbo de apertura/cierre (KERNEL:SKILL-ANNOUNCE-CONVENTION) — nunca el lenguaje de Bootstrap ni de Session Ledger.
 ---
 ## 12 MANUAL:TROUBLESHOOTING
 ## Troubleshooting
@@ -700,25 +687,23 @@ Gate = BLOCKED recuperable pero el Dashboard no lo detecta:
 - Si aparece pero validación falla: revisar logs de run_pipeline.py en Dashboard.
 ### Referencias a documentación adicional
 - Filosofía de fallo: [KERNEL:FAIL-PHILOSOPHY](V | KERNEL) (ver también §3 de este Manual).
-- Reglas de Oro: [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) (ver también §18 de este Manual).
-- Schema de datos: [KERNEL:SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42812dbc97e075758ba0ee).
-- Gate Decisions: [KERNEL:GATE-DECISION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810d9f3af9b12751d7e1) (ver también §2 de este Manual).
+- Reglas de Oro: KERNEL:CV-GOLDEN-RULES (ver también §18 de este Manual).
+- Schema de datos: KERNEL:SCHEMA.
+- Gate Decisions: KERNEL:GATE-DECISION (ver también §2 de este Manual).
 ---
 ## 13 MANUAL:PROMPTS-WRAPPERS
 ## Prompts & Wrappers
-Se consultan vía MCP desde la PROMPT LIBRARY en Notion. Este es el catálogo que Perplexity Desktop lee cada Lunes (§8.1) para ensamblar los prompts de L1 y L2: los Prompt Bases (BASE SPEC L1, BASE SPEC L2) y los Wrappers correspondientes (Career Sites, LinkedIn, Aggregators, Gemini, Grok, you.com, Prompt A/B/C, Prompt E de consolidación).
----
+## Se consultan vía MCP desde la PROMPT LIBRARY en Notion. Este es el catálogo que Perplexity Desktop lee cada Lunes (§8.1) para ensamblar los prompts de L1 y L2: los Prompt Bases (BASE SPEC L1, BASE SPEC L2) y los Wrappers correspondientes (Career Sites, LinkedIn, Aggregators, Gemini, Grok, you.com, Prompt A/B/C, Prompt E de consolidación).
 ## 14 MANUAL:CHEATSHEETS
 ## Cheat Sheets
 ### Cómo la IA lee el KERNEL y el CAREER CANON (Lazy Load)
-La extracción de reglas y contratos lógicos (Lazy Load) opera con la siguiente prioridad:
+## La extracción de reglas y contratos lógicos (Lazy Load) opera con la siguiente prioridad:
 Prioridad A — Terminal (canónico): lazy_loader.py ejecuta Server-Side Lazy Load. Parsea bloques hijos de la Notion API y devuelve únicamente el payload del ID solicitado. Consumo: ~150 tokens por llamada.
 Prioridad B — MCP Notion: reservado exclusivamente para escrituras (APROBAR_WRITE) y modificaciones estructurales de páginas. No se usa para lectura de reglas o contratos.
----
 ## 15 MANUAL:PATCH-QUALITY
 ## Criterio de Calidad para Parches Documentales
 Todo parche a los 6 documentos fundacionales debe cumplir estos cinco criterios antes de aplicarse — si falla alguno, se reescribe antes de solicitar APROBAR_WRITE:
-1. Invisibilidad estructural — no crea secciones nuevas si el contenido cabe en una existente.
+1. Invisibilidad estructural — no crea secciones nuevas si el contenido cabe en una existente. Nota: la invisibilidad estructural incluye el nivel de heading Markdown, no solo el contenido — una subsección (NN.N) que comparte nivel ## con su capítulo padre rompe esta invisibilidad tanto como un párrafo con tono distinto. Ver la matriz tipográfica congelada en KERNEL:DOCUMENTATION-001 como referencia de nivel correcto por tipo de nodo.
 1. Continuidad de voz — mismo registro y nivel técnico del bloque que lo rodea.
 1. Progresión narrativa intacta — el lector no debe notar un salto temático al leer de corrido.
 1. Diff mínimo — se edita solo el texto indispensable, nunca el bloque completo si un párrafo basta.
@@ -727,7 +712,7 @@ Un parche que pasa estos cinco filtros no se distingue, seis meses después, del
 ---
 ## 16 MANUAL:GOLDEN-RULES
 ## Reglas de Oro para Operadores
-Base: [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d).
+Base: KERNEL:CV-GOLDEN-RULES.
 > El contenido detallado de estas reglas vive en el Kernel del sistema y no está reproducido en este Manual más allá de esta referencia. Ver lista de huecos detectados al final de este documento.
 ---
 ## 17 MANUAL:SLA
@@ -735,39 +720,39 @@ Base: [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae
 > Nota: el SLA “< 45 minutos” cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh (ver §8.1, Lunes) — no tiene SLA fijo salvo ejecución manual explícita de layer_1_run.py.
 ## 18 MANUAL:CV-GOLDEN-RULES-INDEX
 ## Reglas de Oro CV — Referencia Operativa
-Las Reglas de Oro ([KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d)) son restricciones de arquitectura, no preferencias. Viven íntegras en el Kernel — esta sección es un índice de navegación, no una copia.
+Las Reglas de Oro (KERNEL:CV-GOLDEN-RULES) son restricciones de arquitectura, no preferencias. Viven íntegras en el Kernel — esta sección es un índice de navegación, no una copia.
 | ID | Regla | Qué bloquea |
 | --- | --- | --- |
-| [KERNEL:CV-GOLDEN-RULES-001](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281c0b026c8bcf4901816) | No Evaluar Fit Antes de Escribir | Preguntas de "¿me conviene esta vacante?" — el fit lo decide Score (Python) + el operador |
-| [KERNEL:CV-GOLDEN-RULES-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428196851ef48a510e16ca) | No Calcular ni Estimar Campos Class B | Estimar Score, Gate_Decision, VM_Scope, etc. — son Python-only |
-| [KERNEL:CV-GOLDEN-RULES-003](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428140b36ff15f47f0a359) | No Cuestionar la Calidad de Datos del Usuario | Comentarios sobre volumen/calidad del JSON de búsqueda — estrategia es 100% humana |
-| [KERNEL:CV-GOLDEN-RULES-004](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281a29b7adf00572b5f87) | No Delegar Escritura al Usuario | "Copia esto y pégalo en Notion" — el sistema escribe directo, salvo export PDF/Drive |
-| [KERNEL:CV-GOLDEN-RULES-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42814ebc31de3ceca9c168) | No Interpretar en SYNC | SYNC reporta datos puros, sin análisis ni recomendaciones |
-Toda violación produce el Template Universal de Rechazo (ver Kernel): OPERACIÓN RECHAZADA → razón → alternativa operativa → confirmación SÍ/CANCELAR.
-Para el detalle completo de cada regla (ejemplos de solicitudes que la activan, redacción exacta de la respuesta estandarizada), consultar directamente [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) en el Kernel — fuente única, no se replica aquí para evitar drift entre documentos.
+| KERNEL:CV-GOLDEN-RULES-001 | No Evaluar Fit Antes de Escribir | Preguntas de "¿me conviene esta vacante?" — el fit lo decide Score (Python) + el operador |
+| KERNEL:CV-GOLDEN-RULES-002 | No Calcular ni Estimar Campos Class B | Estimar Score, Gate_Decision, VM_Scope, etc. — son Python-only |
+| KERNEL:CV-GOLDEN-RULES-003 | No Cuestionar la Calidad de Datos del Usuario | Comentarios sobre volumen/calidad del JSON de búsqueda — estrategia es 100% humana |
+| KERNEL:CV-GOLDEN-RULES-004 | No Delegar Escritura al Usuario | "Copia esto y pégalo en Notion" — el sistema escribe directo, salvo export PDF/Drive |
+| KERNEL:CV-GOLDEN-RULES-005 | No Interpretar en SYNC | SYNC reporta datos puros, sin análisis ni recomendaciones |
+| Toda violación produce el Template Universal de Rechazo (ver Kernel): OPERACIÓN RECHAZADA → razón → alternativa operativa → confirmación SÍ/CANCELAR. |  |  |
+| Para el detalle completo de cada regla (ejemplos de solicitudes que la activan, redacción exacta de la respuesta estandarizada), consultar directamente KERNEL:CV-GOLDEN-RULES en el Kernel — fuente única, no se replica aquí para evitar drift entre documentos. |  |  |
 ## 19 MANUAL:POSITIONING-CRITERIA
 ## Positioning Modes (N1–N4) — Criterio de Selección
-[CANON:POSITIONING-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42811ba92acf1dc1467702) define 4 modos de posicionamiento para CV-B. Esta sección resuelve el gap operativo: con qué criterio elegir uno.
+CANON:POSITIONING-001 define 4 modos de posicionamiento para CV-B. Esta sección resuelve el gap operativo: con qué criterio elegir uno.
 | Modo | ID | Ancla canónica | Cuándo aplica |
 | --- | --- | --- | --- |
-| N1 | [CANON:POSITIONING-N1](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281b39765c122a5d6378d) | C01 · 3 marcas lujo · CAPEX/OPEX · NPI | JD enfatiza gestión multi-marca de lujo, presupuesto, lanzamientos de producto |
-| N2 | [CANON:POSITIONING-N2](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281049bb9ea0791d90b0e) | C02 · Adidas Brand Center · KPI07 · blueprints | JD enfatiza Store Design, Flagship, construcción/remodelación física |
-| N3 | [CANON:POSITIONING-N3](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42819d9a64db7ddab1e776) | C03 · 270+ POS · 6 países · KPI03–06 · CF05 | JD enfatiza rollout regional multi-país, estandarización, eficiencia operativa |
-| N4 | [CANON:POSITIONING-N4](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110b8f1cb5aa81bb921) | C04/C05 · +43% tráfico · +18% conversión · 21 reportes | JD enfatiza liderazgo de campo comercial, KPIs de tráfico/conversión, gestión de equipos directos |
-Regla de desempate (JDs híbridos) — ver [CANON:POSITIONING-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42811ba92acf1dc1467702) para el texto completo: (1) más keywords mapeados al ancla, (2) empate → mayor seniority (N2>N1, N4>N3 con presupuesto regional explícito), (3) empate persistente → escalar a decisión humana vía fit_gaps.
+| N1 | CANON:POSITIONING-N1 | C01 · 3 marcas lujo · CAPEX/OPEX · NPI | JD enfatiza gestión multi-marca de lujo, presupuesto, lanzamientos de producto |
+| N2 | CANON:POSITIONING-N2 | C02 · Adidas Brand Center · KPI07 · blueprints | JD enfatiza Store Design, Flagship, construcción/remodelación física |
+| N3 | CANON:POSITIONING-N3 | C03 · 270+ POS · 6 países · KPI03–06 · CF05 | JD enfatiza rollout regional multi-país, estandarización, eficiencia operativa |
+| N4 | CANON:POSITIONING-N4 | C04/C05 · +43% tráfico · +18% conversión · 21 reportes | JD enfatiza liderazgo de campo comercial, KPIs de tráfico/conversión, gestión de equipos directos |
+| Regla de desempate (JDs híbridos) — ver CANON:POSITIONING-001 para el texto completo: (1) más keywords mapeados al ancla, (2) empate → mayor seniority (N2>N1, N4>N3 con presupuesto regional explícito), (3) empate persistente → escalar a decisión humana vía fit_gaps. |  |  |  |
 ## 20 MANUAL:GOLDEN-SKELETON-REF
 ## Golden Skeleton — Qué es y Dónde Vive
-El "Golden Skeleton" ([CANON:OUTPUT-CONTRACT-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110a5effba7515cd721)) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
+El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-001) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
 - SSOT de IDs de nodo Figma: registry_seed.json en 04-Vantage_CV/Figma Sync/.
 - Slots clave: 2055:9 (Nombre), 2055:10 (Tagline), 2043:51 (Perfil), 2043:56-60 (Skills), 2043:64+ (Experiencia).
 - Regla de invariancia: si el Skeleton cambia en Figma, registry_seed.json se actualiza antes del siguiente CV-B — nunca al revés.
-- Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en [CANON:OUTPUT-CONTRACT-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110a5effba7515cd721) — no se replica aquí.
+- Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en CANON:OUTPUT-CONTRACT-001 — no se replica aquí.
 ## 21 MANUAL:SCHEMA-FIELD-REF
 ## Schema Class A/B — Referencia de Campos
-[KERNEL:SCHEMA-001](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281faa81ac25589b3c67f) define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.
+KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.
 Class A — Human-Primary (operador/feed_processor escriben):
 Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NAD · layer · hash
 Class B — System-Primary (Python únicamente, ningún otro componente escribe):
 Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente
-Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida ([KERNEL:SCHEMA-003](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42817eb1dad96ac1ccc2b0)).
-Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver [KERNEL:GATE-DECISION-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42815a9d52ccf7394c183a)). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
+Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida (KERNEL:SCHEMA-003).
+Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.

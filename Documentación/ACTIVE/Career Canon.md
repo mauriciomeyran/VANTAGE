@@ -1,44 +1,40 @@
 # V | CAREER CANON
 
-# V | CAREER CANON
-
-# V | CAREER CANON
-
-> 
-## DECLARACIÓN DE AUDIENCIA Y ALCANCE
+DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Sistemas Agente de IA + Operador Humano (Mauricio Meyrán).
 - Alcance: Este documento es el CAREER_CANON_RUNTIME, que contiene la fuente de verdad profesional activa: perfil, skills, experiencias canónicas (C01–C05), KPIs validados, facts canónicos y Output Contract para producción de CV-B. Para el historial de versiones y secciones deprecadas (C/E/F/G), consultar el archivo histórico: CANON:ARCHIVO-VANTAGE.
+
 | # | ID | SECCIÓN | PORCIÓN |
-| --- | --- | --- | --- |
-| 01 | CANON:PROFILE | PROFESSIONAL PROFILE |  |
-| 02 | CANON:SKILLS | SKILLS CANON |  |
-| 03 | CANON:EXPERIENCE | EXPERIENCE RECORDS |  |
-| 04 | CANON:ACHIEVEMENTS | ACHIEVEMENT LIBRARY |  |
-| 05 | CANON:KPIS | CORE KPIS |  |
-| 06 | CANON:FACTS | CANONICAL FACTS |  |
-| 07 | CANON:POSITIONING | POSITIONING MODES |  |
-| 08 | [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#53a2d31605f84299a99118add45e2af7) | OUTPUT CONTRACT |  |
+| — | — | — | — |
+| 01 | CANON:PROFILE | PROFESSIONAL PROFILE | |
+| 02 | CANON:SKILLS | SKILLS CANON | |
+| 03 | CANON:EXPERIENCE | EXPERIENCE RECORDS | |
+| 04 | CANON:ACHIEVEMENTS | ACHIEVEMENT LIBRARY | |
+| 05 | CANON:KPIS | CORE KPIS | |
+| 06 | CANON:FACTS | CANONICAL FACTS | |
+| 07 | CANON:POSITIONING | POSITIONING MODES | |
+| 08 | CANON:OUTPUT-CONTRACT | OUTPUT CONTRACT | |
 ## 01 CANON:PROFILE
 ## A. Professional Profile
 ### ES
 Estratega de Visual Merchandising & Brand Execution con más de 10 años de trayectoria en retail de lujo, moda y alto rendimiento. Especialista en traducir lineamientos globales en ejecuciones locales de alto impacto, liderando estrategias regionales en LATAM y gestionando presupuestos CAPEX/OPEX nacionales. Experto en storytelling visual, lanzamientos de producto (NPI) y habilitación de equipos de campo, con un historial probado en la optimización de KPIs comerciales (+43% tráfico) y eficiencia operativa (-74% costos). Perfil con alta capacidad analítica y técnica, enfocado en elevar la experiencia del consumidor y la coherencia de marca en redes propias, franquicias y wholesale.
 ### EN
 Visual Merchandising & Brand Execution strategist with over 10 years of experience in luxury, fashion, and high-performance retail. Expert in translating global brand guidelines into high-impact local executions, leading LATAM regional strategies, and managing national CAPEX/OPEX budgets. Specialist in visual storytelling, new product introductions (NPI), and field team enablement, with a proven track record of optimizing commercial KPIs (+43% traffic) and operational efficiency (-74% costs). Highly analytical and technical profile, focused on elevating consumer experience and brand coherence across own stores, franchises, and wholesale channels.
----
+—
 ## 02 CANON:SKILLS
 ## B. Skills Canon
 | Categoría | ES | EN |
-| --- | --- | --- |
+| — | — | — |
 | Estrategia Visual | Planeación estacional, Consumer-centric storytelling, Zoning & Mapping tools, manuales de ejecución regional | Seasonal planning, Consumer-centric storytelling, Zoning & Mapping tools, regional execution manuals |
 | Operaciones & Finanzas | Control de presupuesto CAPEX/OPEX, negociación con proveedores, aperturas de Flagship Stores, remodelaciones y rollouts | CAPEX/OPEX budget control, vendor negotiation, Flagship Store openings, remodeling, and rollouts |
 | Liderazgo & Training | Gestión de equipos directos e indirectos, coaching de alto desempeño, estandarización de procesos operativos y auditorías de campo | Direct and indirect team management, high-performance coaching, operational process standardization, and field audits |
 | Stack Técnico | Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, IA Generativa (ChatGPT, Perplexity, Claude) | Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, Generative AI (ChatGPT, Perplexity, Claude) |
 | Idiomas | Español (Nativo) · Inglés (Profesional Corporativo / Fluidez regional) | Spanish (Native) · English (Corporate Professional / Regional Fluency) |
----
+—
 ## 03 CANON:EXPERIENCE
 ## D. Experience Records
-## 03.1 CANON:EXPERIENCE-C01
-## C01 · L’Oréal Luxe México
+### 03.1 CANON:EXPERIENCE-C01
+### C01 · L’Oréal Luxe México
 Coordinador de Visual Merchandising & Brand Execution – División de Lujo • [CF08: Valentino / Giorgio Armani / Ralph Lauren] – Valentino / Giorgio Armani / Ralph Lauren
 ES
 - Lidero la estrategia de VM para Valentino, Giorgio Armani y Ralph Lauren (fragancias), asegurando la consistencia de marca en canales de alto tráfico y lujo.
@@ -48,27 +44,25 @@ ES
 - Colaboro con Marketing y Trade Marketing para alinear el calendario comercial con la ejecución visual, actuando como embajador de marca en cuentas clave.
 EN
 - Lead the VM strategy for Valentino, Giorgio Armani, and Ralph Lauren (fragrances), ensuring brand consistency across high-traffic and luxury channels.
-- Manage the division's national budget (CAPEX/OPEX), optimizing investment in POP materials, displays, and window fixtures for launches and seasonal campaigns.
-- Coordinate local and international vendors for production, importation, and installation of materials, overseeing finish quality and compliance with the division's technical specifications.
+- Manage the division’s national budget (CAPEX/OPEX), optimizing investment in POP materials, displays, and window fixtures for launches and seasonal campaigns.
+- Coordinate local and international vendors for production, importation, and installation of materials, overseeing finish quality and compliance with the division’s technical specifications.
 - Coordinated the national rollout of key NPI campaigns in 2025 (Born in Roma, Stronger With You), managing production and installation with external agencies within the assigned budget.
 - Collaborate with Marketing and Trade Marketing to align the commercial calendar with visual execution, acting as brand ambassador at key accounts.
----
-## 03.2 CANON:EXPERIENCE-C02
-## C02 · Bisonte Experiential Marketing
 Coordinador de Brand Environment y Store Design • [P01: Adidas Brand Center Madero]
 ES
+### 03.2 CANON:EXPERIENCE-C02
+### C02 · Bisonte Experiential Marketing
 - Lideré la implementación visual y técnica para la apertura del Adidas Brand Center Madero (Flagship Store), cumpliendo con los estándares globales de la marca.
 - Supervisé la producción y logística de materiales de Store Design en un proyecto rescatado a 3 meses de apertura, logrando entrega en fecha con 17 observaciones menores en punch list – ninguna bloqueante ni comprometiendo la experiencia del consumidor. [CF03] · [CF04]
 - Coordiné proveedores especializados para garantizar la calidad en acabados y mobiliario, asegurando la integridad del diseño arquitectónico y visual.
 EN
-- Led the visual and technical implementation for the Adidas Brand Center Madero (Flagship Store) opening, meeting the brand's highest global standards.
+- Led the visual and technical implementation for the Adidas Brand Center Madero (Flagship Store) opening, meeting the brand’s highest global standards.
 - Supervised production and logistics for Store Design materials on a project rescued 3 months before opening, achieving on-time delivery with 17 minor punch list observations – none blocking the opening or compromising the consumer experience. [CF03] · [CF04]
 - Coordinated specialized vendors to ensure quality in finishes and furniture, safeguarding architectural and visual design integrity.
----
-## 03.3 CANON:EXPERIENCE-C03
-## C03 · Levi Strauss & Co. (Dockers)
 Senior Brand Environment Coordinator – LATAM • [CF05: 270+ POS / 6 países] – 270+ POS / 6 países
 ES
+### 03.3 CANON:EXPERIENCE-C03
+### C03 · Levi Strauss & Co. (Dockers)
 - Gestioné la estrategia visual para 6 países en LATAM y 270+ puntos de venta, asegurando la estandarización regional de la marca. [CF05]
 - Diseñé una estrategia de producción local que generó un ahorro del 74% en costos de campañas nacionales en México. [KPI03]
 - Reduje en un 33% el tiempo de actualización de floorsets mediante la creación de manuales de Zoning & Mapping y herramientas digitales para field teams. [KPI04]
@@ -78,11 +72,10 @@ EN
 - Designed a local production strategy that generated 74% cost savings on national campaigns in Mexico. [KPI03]
 - Reduced floorset update time by 33% through the creation of Zoning & Mapping manuals and digital tools for field teams. [KPI04]
 - Led a team of 3 direct coordinators and 3 indirect reports, ensuring 100% POP coverage during the COVID-19 contingency through remote coordination. [KPI05]
----
-## 03.4 CANON:EXPERIENCE-C04
-## C04 · Aéropostale México
 Gerente de Visual Merchandising • [CF06: 21 reportes directos] · [CF07: 17 tiendas]
 ES
+### 03.4 CANON:EXPERIENCE-C04
+### C04 · Aéropostale México
 - Construí el área de VM desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona (21 reportes directos en total). [CF06]
 - Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión estratégica. [KPI01] · [KPI02] · [CF07]
 - Estandaricé los planogramas de categorías clave (Denim & Lifestyle), alineando la exhibición con los objetivos de ventas mensuales.
@@ -90,21 +83,31 @@ EN
 - Built the VM department from scratch, managing 17 VM Assistant Managers and 4 Zone Supervisors (21 direct reports in total). [CF06]
 - Contributed directly to a +43% increase in traffic and +18% in conversion across the 17 stores under strategic supervision. [KPI01] · [KPI02] · [CF07]
 - Standardized planograms for key categories (Denim & Lifestyle), aligning display with monthly sales objectives.
----
-## 03.5 CANON:EXPERIENCE-C05
-## C05 · El Palacio de Hierro (ALDO Group)
 Coordinador de Visual Merchandising & Marketing • [CF02: 2012–2017]
 ES
+### 03.5 CANON:EXPERIENCE-C05
+### C05 · El Palacio de Hierro (ALDO Group)
 - Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas y remodelaciones críticas.
 - Supervisé la implementación de campañas globales, adaptando los lineamientos de la casa matriz en Canadá para el mercado mexicano.
 - Desarrollé programas de capacitación para el personal de piso, elevando el estándar de mantenimiento visual y ejecución de lanzamientos.
-- Durante los últimos 3 años del rol, gestioné una coordinadora Jr. con reporte directo.
+- Durante los últimos 3 años del rol, gestioné una coordinadora Jr. con reporte directo.
 EN
 - Coordinated visual and marketing execution for 17 retail stores and 12 wholesale corners, leading critical openings and remodels.
-- Supervised the implementation of global campaigns, adapting Canadian headquarters' guidelines for the Mexican market.
+- Supervised the implementation of global campaigns, adapting Canadian headquarters’ guidelines for the Mexican market.
 - Developed training programs for floor staff, elevating the standard of visual maintenance and launch execution.
-- During the last 3 years of the role, directly managed one Jr. Brand Coordinator.
----
+- During the last 3 years of the role, directly managed one Jr. Brand Coordinator.
+Ancla canónica: C01 · 3 marcas lujo · CAPEX/OPEX · NPI
+### 07.2 CANON:POSITIONING-N2
+### N2 · Store Design & Flagship Execution
+Ancla canónica: C02 · Adidas Brand Center · KPI07 · blueprints
+### 07.3 CANON:POSITIONING-N3
+### N3 · Regional Brand Execution & Rollout
+Ancla canónica: C03 · 270+ POS · 6 países · KPI03–06 · CF05
+### 07.4 CANON:POSITIONING-N4
+### N4 · Commercial VM & Field Leadership
+Ancla canónica: C04/C05 · +43% tráfico · +18% conversión · 21 reportes
+Regla de Desempate – JDs Híbridos
+Cuando un JD activa criterios de dos o más Positioning Modes simultáneamente, aplicar en orden de precedencia:
 ## 04 CANON:ACHIEVEMENTS
 ## H. Achievement Library
 | Achievement | Compañía | KPI Ref |
@@ -120,113 +123,69 @@ EN
 | +18% conversión en red de 17 tiendas | C04 | KPI02 |
 | Construcción área de VM desde cero · 21 reportes directos | C04 | CF06 |
 | Coordinación de 17 tiendas retail + 12 corners wholesale | C05 | – |
-| Liderazgo de coordinadora Jr. con reporte directo (últimos 3 años en rol) | C05 | – |
----
-## 05 CANON:KPIS
-## I. Core KPIs
-## 05.1 CANON:KPI-001
-## KPI01 · Traffic +43%
-## 05.2 CANON:KPI-002
-## KPI02 · Conversion +18%
-## 05.3 CANON:KPI-003
-## KPI03 · Campaign cost reduction -74%
-## 05.4 CANON:KPI-004
-## KPI04 · Floorset time reduction -33%
-## 05.5 CANON:KPI-005
-## KPI05 · POP coverage 100%
-## 05.6 CANON:KPI-006
-## KPI06 · Rebranding coverage 100%
-## 05.7 CANON:KPI-007
-## KPI07 · Adidas punch list count (17)
-## 05.8 CANON:KPI-008
-## KPI08 · Years experience (10+ canonical)
----
+| Liderazgo de coordinadora Jr. con reporte directo (últimos 3 años en rol) | C05 | – |
 ## 06 CANON:FACTS
 ## J. Canonical Facts
-## 06.1 CANON:FACT-001
-## CF01 · ALDO Certification Year = 2014
-## 06.2 CANON:FACT-002
-## CF02 · ALDO Employment Period = 2012–2017
-## 06.3 CANON:FACT-003
-## CF03 · Adidas Punch List = 17 Minor Observations
-## 06.4 CANON:FACT-004
-## CF04 · Adidas Punch List Severity = Non-Blocking
-## 06.5 CANON:FACT-005
-## CF05 · Levi's Coverage = 270+ POS / 6 LATAM Countries
-## 06.6 CANON:FACT-006
-## CF06 · Aéropostale Team = 21 Direct Reports
-## 06.7 CANON:FACT-007
-## CF07 · Aéropostale Network = 17 Stores
-## 06.8 CANON:FACT-008
-## CF08 · L'Oréal Brands = Valentino / Giorgio Armani / Ralph Lauren
-## 06.9 CANON:UF-001
-## UF01 · L'Oréal End Date = March 2026
-## 06.10 CANON:UF-002
-## UF02 · Canonical Email = mauricio.meyran@icloud.com
-## 06.11 CANON:UF-003
-## UF03 · Certifications Canon = ALDO Group (2014) + AutoCAD & SketchUp Essentials (2024) ONLY. No additional certs valid.
----
+### 06.1 CANON:FACT-001
+### CF01 · ALDO Certification Year = 2014
+### 06.2 CANON:FACT-002
+### CF02 · ALDO Employment Period = 2012–2017
+### 06.3 CANON:FACT-003
+### CF03 · Adidas Punch List = 17 Minor Observations
+### 06.4 CANON:FACT-004
+### CF04 · Adidas Punch List Severity = Non-Blocking
+### 06.5 CANON:FACT-005
+### CF05 · Levi’s Coverage = 270+ POS / 6 LATAM Countries
+### 06.6 CANON:FACT-006
+### CF06 · Aéropostale Team = 21 Direct Reports
+### 06.7 CANON:FACT-007
+### CF07 · Aéropostale Network = 17 Stores
+### 06.8 CANON:FACT-008
+### CF08 · L’Oréal Brands = Valentino / Giorgio Armani / Ralph Lauren
+### 06.9 CANON:UF-001
+### UF01 · L’Oréal End Date = March 2026
+### 06.10 CANON:UF-002
+### UF02 · Canonical Email = mauricio.meyran@icloud.com
+### 06.11 CANON:UF-003
+### UF03 · Certifications Canon = ALDO Group (2014) + AutoCAD & SketchUp Essentials (2024) ONLY. No additional certs valid.
 ## 07 CANON:POSITIONING
 ## K. Positioning Modes
-## 07.1 CANON:POSITIONING-N1
-## N1 · Luxury Brand Execution
-Ancla canónica: C01 · 3 marcas lujo · CAPEX/OPEX · NPI
-## 07.2 CANON:POSITIONING-N2
-## N2 · Store Design & Flagship Execution
-Ancla canónica: C02 · Adidas Brand Center · KPI07 · blueprints
-## 07.3 CANON:POSITIONING-N3
-## N3 · Regional Brand Execution & Rollout
-Ancla canónica: C03 · 270+ POS · 6 países · KPI03–06 · CF05
-## 07.4 CANON:POSITIONING-N4
-## N4 · Commercial VM & Field Leadership
-Ancla canónica: C04/C05 · +43% tráfico · +18% conversión · 21 reportes
-Regla de Desempate – JDs Híbridos
-Cuando un JD activa criterios de dos o más Positioning Modes simultáneamente, aplicar en orden de precedencia:
+### 07.1 CANON:POSITIONING-N1
+### N1 · Luxury Brand Execution
 1. El modo con mayor número de keywords del JD mapeados a su ancla canónica.
 1. En empate de keywords: el modo de mayor seniority estratégico (N2 > N1, N4 > N3 cuando el JD tiene presupuesto regional explícito).
 1. En empate persistente: declarar en fit_gaps del HANDOFF y escalar a decisión humana antes de proceder con CV-B.
 El Positioning Mode seleccionado se declara explícitamente en el HANDOFF. No se mezclan bullets de dos modos en un mismo CV-B.
----
+—
 ## 08 CANON:OUTPUT-CONTRACT
 ## Contrato de Entregable
 ### FIGMA SYNC PROTOCOL (STRICT)
 1. IMMUTABILITY OF IDs: Los ###### figma_text_id son llaves primarias. Está terminantemente prohibido alterararlas, omitirlas o inventar nuevas.
 1. SLOT INTEGRITY: No se permiten fusiones ni divisiones de bloques. Si el Skeleton tiene 4 bullets para una experiencia, el output DEBE tener 4 bloques, incluso si uno queda vacío.
-1. NULL-FILL RULE: Si el Canon Career no tiene información suficiente para un slot específico del Skeleton, el slot debe mantenerse con su ID original y el texto "[PENDING DATA]" o quedar vacío, pero NUNCA eliminarse.
-1. MARKDOWN ESCAPING: Mantener el uso de \( y \) para compatibilidad con el plugin de Figma si se detecta en el Skeleton original.
-## 08.1 CANON:OUTPUT-CONTRACT-001
-## Golden Skeleton
+1. NULL-FILL RULE: Si el Canon Career no tiene información suficiente para un slot específico del Skeleton, el slot debe mantenerse con su ID original y el texto “[PENDING DATA]” o quedar vacío, pero NUNCA eliminarse.
+1. MARKDOWN ESCAPING: Mantener el uso de ( y ) para compatibilidad con el plugin de Figma si se detecta en el Skeleton original.
+### 08.1 CANON:OUTPUT-CONTRACT-001
+### Golden Skeleton
 Use this exact sequence of IDs for any Figma-destined output
 - ID Header Sample: ###### figma_text_id
 - Key Slots: 2055:9 (Name), 2055:10 (Headline), 2043:51 (Profile), 2043:56-60 (Skills), 2043:64+ (Experience).
 - Rule: If the skeleton changes in Figma, this record must be updated before the next CV-B run.
 ```plain text
 ###### figma_text_id
-
-**MAURICIO MEYRÁN**
-
-###### figma_text_id
-
-**Coordinador de Visual Merchandising · Brand Execution & Retail Operations**
+MAURICIO MEYRÁN
+Coordinador de Visual Merchandising · Brand Execution & Retail Operations
 Miguel Hidalgo, CDMX | mauricio.meyran@icloud.com
 LinkedIn | Portafolio
-
-###### figma_text_id
-
-**PERFIL PROFESIONAL**
-
-###### figma_text_id
-
-**Estratega de Visual Merchandising** con más de 10 años de trayectoria en el sector de Retail de lujo y moda, especializado en liderar la ejecución de directrices de marca, diseño de espacios comerciales y optimización de KPIs operativos en tienda.
-
-...
+PERFIL PROFESIONAL
+Estratega de Visual Merchandising con más de 10 años de trayectoria en el sector de Retail de lujo y moda, especializado en liderar la ejecución de directrices de marca, diseño de espacios comerciales y optimización de KPIs operativos en tienda.
+…
 ```
-## 08.2 CANON:OUTPUT-CONTRACT-002
-## Figma Tags
+### 08.2 CANON:OUTPUT-CONTRACT-002
+### Figma Tags
 > Formato base obligatorio para todos los Derived Outputs generados desde el Career Canon. Aplica ES + EN.
 > SSOT de IDs de nodos: registry_seed.json en 04-Vantage_CV/Figma Sync/ es la fuente única de verdad para los IDs numéricos de nodo Figma. Si hay discrepancia entre un figma_text_id en un output CV-B y el registry, el registry gana. Ante cualquier cambio en la estructura del lienzo Figma, actualizar registry_seed.json antes de generar nuevos CV-B.
-## 08.3 CANON:OUTPUT-CONTRACT-003
-## Tag Registry
+### 08.3 CANON:OUTPUT-CONTRACT-003
+### Tag Registry
 ### Formato de Entrega Obligatorio
 Cada Derived Output generado bajo este contrato requiere dos outputs:
 1. Markdown con Figma Tags como contenido dentro de la página específica de la vacante que se estará trabajando, dentro de un bloque de código (markdown). Colocar en un párrafo aparte un footer con metadata: Output Contract version, Positioning Mode activo, referencia canónica al Canon.
@@ -239,8 +198,8 @@ Cada Derived Output generado bajo este contrato requiere dos outputs:
 - Skills = Categoría: texto plano
 - Tagline 2:5 = [Título · Subtítulo] · Ciudad | Tel | Email | LinkedIn | Portfolio
 - & en nombres de empresa → &
-## 08.4 CANON:OUTPUT-CONTRACT-004
-## Positioning Modes (Aplicación en Output)
+### 08.4 CANON:OUTPUT-CONTRACT-004
+### Positioning Modes (Aplicación en Output)
 Los slots Variable por modo se derivan del Positioning Mode activo (sección K · N1–N4):
 - 2055:10 tagline
 - 2043:51 / 2043:52 párrafos de perfil 1–2

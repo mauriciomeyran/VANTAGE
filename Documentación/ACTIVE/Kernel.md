@@ -1,32 +1,27 @@
 # V | KERNEL
 
-# V | KERNEL
-
-# V | KERNEL
-
-> 
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Sistemas Agente de IA.
 - Alcance: Este documento es el KERNEL_RUNTIME, que contiene únicamente los contratos operativos activos para la IA. Para el documento de referencia completo, solicitar acceso al KERNEL 8.0.
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
-| 01 | [KERNEL:PURPOSE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f69905dfc6c82c5503) | FUNDAMENTO | FUNDAMENTO |
-| 02 | [KERNEL:FAIL-PHILOSOPHY](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428121bb10efedac1b4b99) | FILOSOFÍA DE FALLO | FUNDAMENTO |
+| 01 | KERNEL:PURPOSE | FUNDAMENTO | FUNDAMENTO |
+| 02 | KERNEL:FAIL-PHILOSOPHY | FILOSOFÍA DE FALLO | FUNDAMENTO |
 | 03 | KERNEL:DOCUMENTATION | DOCUMENTACIÓN (L0) | FUNDAMENTO |
-| 04 | [KERNEL:ARCHITECTURE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42818a8a61d5a0d71bcf2b) | ARQUITECTURA | FUNDAMENTO |
-| 05 | [KERNEL:OWNERSHIP](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42814385dbe5005b04496c) | OWNERSHIP | FUNDAMENTO |
-| 06 | [KERNEL:DASHBOARD-CHECKLIST-ARCH](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816ead88efa4b9a4e05f) | DASHBOARD CHECKLIST | FUNDAMENTO |
-| 07 | [KERNEL:SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42812dbc97e075758ba0ee) | SCHEMA | DATOS, ESQUEMAS Y REGLAS |
-| 08 | [KERNEL:TRACKER-SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281c2ba8aca2a41ff358b) | TRACKER SCHEMA | DATOS, ESQUEMAS Y REGLAS |
-| 09 | [KERNEL:GATE-DECISION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810d9f3af9b12751d7e1) | GATE DECISION | DATOS, ESQUEMAS Y REGLAS |
-| 10 | [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) | CV GOLDEN RULES | DATOS, ESQUEMAS Y REGLAS |
-| 11 | [KERNEL:TRIGGERS](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f297c7d591f3c132f4) | TRIGGERS | EJECUCIÓN |
-| 12 | [KERNEL:CV-PIPELINE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428190b72cf74c14c31a4a) | CV PIPELINE | EJECUCIÓN |
-| 13 | [KERNEL:CANON-UPDATE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42817db23de75a46a964ac) | CANON UPDATE | EJECUCIÓN |
-| 14 | [KERNEL:NAMING-CONVENTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281bbbe93d1e053bb8e42) | NAMING CONVENTION | EJECUCIÓN |
-| 15 | [KERNEL:CONTEXT-INFRASTRUCTURE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810293b4e55167657d86) | CONTEXT INFRASTRUCTURE | INFRAESTRUCTURA DE CONTEXTO |
-| 16 | [KERNEL:DATA-FLOW](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428101ade4f430c4bee781) | DATA FLOW | INFRAESTRUCTURA DE CONTEXTO |
-| 17 | [KERNEL:EVOLUTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816d813af068ac1d81be) | EVOLUTION | INFRAESTRUCTURA DE CONTEXTO |
+| 04 | KERNEL:ARCHITECTURE | ARQUITECTURA | FUNDAMENTO |
+| 05 | KERNEL:OWNERSHIP | OWNERSHIP | FUNDAMENTO |
+| 06 | KERNEL:DASHBOARD-CHECKLIST-ARCH | DASHBOARD CHECKLIST | FUNDAMENTO |
+| 07 | KERNEL:SCHEMA | SCHEMA | DATOS, ESQUEMAS Y REGLAS |
+| 08 | KERNEL:TRACKER-SCHEMA | TRACKER SCHEMA | DATOS, ESQUEMAS Y REGLAS |
+| 09 | KERNEL:GATE-DECISION | GATE DECISION | DATOS, ESQUEMAS Y REGLAS |
+| 10 | KERNEL:CV-GOLDEN-RULES | CV GOLDEN RULES | DATOS, ESQUEMAS Y REGLAS |
+| 11 | KERNEL:TRIGGERS | TRIGGERS | EJECUCIÓN |
+| 12 | KERNEL:CV-PIPELINE | CV PIPELINE | EJECUCIÓN |
+| 13 | KERNEL:CANON-UPDATE | CANON UPDATE | EJECUCIÓN |
+| 14 | KERNEL:NAMING-CONVENTION | NAMING CONVENTION | EJECUCIÓN |
+| 15 | KERNEL:CONTEXT-INFRASTRUCTURE | CONTEXT INFRASTRUCTURE | INFRAESTRUCTURA DE CONTEXTO |
+| 16 | KERNEL:DATA-FLOW | DATA FLOW | INFRAESTRUCTURA DE CONTEXTO |
+| 17 | KERNEL:EVOLUTION | EVOLUTION | INFRAESTRUCTURA DE CONTEXTO |
 # I. FUNDAMENTO
 ## 01 KERNEL:PURPOSE
 ## Propósito del Sistema
@@ -40,15 +35,14 @@ Qué Significa Esto para el Sistema AI: el componente AI es el procesador textua
 ---
 ## 02 KERNEL:FAIL-PHILOSOPHY
 ## Filosofía de Fallo
-Los fallos del sistema son señales de que el pipeline funciona correctamente. Un gate que nunca bloquea no está filtrando. La presencia de gates BLOCKED, scores en 0 y entradas EXPIRED es evidencia de que el sistema aplica sus criterios.
+## Los fallos del sistema son señales de que el pipeline funciona correctamente. Un gate que nunca bloquea no está filtrando. La presencia de gates BLOCKED, scores en 0 y entradas EXPIRED es evidencia de que el sistema aplica sus criterios.
 Qué Hace el Sistema Cuando Falla: no intenta reparar outputs. No sugiere workarounds. No escala urgencia. Reporta el estado y espera instrucción humana.
 Excepción — Gate = BLOCKED recuperable vía RT-1: el AI informa la opción pero no la ejecuta sin instrucción explícita.
----
 ## 03 KERNEL:DOCUMENTATION
 ## Documentación y Gobernanza (L0)
-Acceso y Manejo de Información 
-## 03.1 KERNEL:DOCUMENTATION-001
-## Canonical Document ID Contract
+Acceso y Manejo de Información
+### 03.1 KERNEL:DOCUMENTATION-001
+### Canonical Document ID Contract
 Invariantes del Contrato
 - Formato Único: [PREFIX]:[KEY] (ej. MANUAL:SETUP).
 - Prefix Ownership: Cada prefijo mapea a una única página canónica en Notion.
@@ -66,18 +60,19 @@ Prefijos Autorizados
 | CHANGELOG | V | CHANGE LOG |
 | BRIEF | V | NAVIGATION BRIEF |
 | VANTAGE | V | VANTAGE CENTRAL HUB |
+Matriz Tipográfica Congelada (Jerarquía de Encabezados): la resolución de un ID canónico a su nivel de heading Markdown sigue una jerarquía fija — Documento (raíz) = #; Capítulo/Sección canónica = ##; Subsección (NN.N) = ###; Figma Tag (solo derivados, inmutable) = ######. Esta matriz es la fuente de verdad para cualquier futura alta de ID bajo este contrato — ningún nodo NN.N comparte nivel con su capítulo padre.
 Reglas de Migración: toda referencia a páginas del sistema que use UUIDs hardcodeados o anclas planas debe migrar a este esquema. lazy_loader.py aplica este contrato en tiempo de ejecución. DT-015 — CERRADO: normalización documental (26 ocurrencias) vía trigger NORM. 100% canónico.
 ---
-## 03.2 KERNEL:DOCUMENTATION-002
-## Normalización Documental de IDs Legacy
+### 03.2 KERNEL:DOCUMENTATION-002
+### Normalización Documental de IDs Legacy
 - Esquema: [PREFIX]:[KEY].
 - Alcance: todos los documentos fundacionales.
 - Excepciones: IDs de Notion (UUIDs) en metadatos o URLs.
 - Gobernanza: cambios requieren APROBAR_WRITE + entrada en Changelog.
 Estado actual: normalización completada. DT-015 (26 ocurrencias) — CERRADO.
 ---
-## 03.3 KERNEL:DOCUMENTATION-003
-## L0 — VANTAGE Runtime
+### 03.3 KERNEL:DOCUMENTATION-003
+### L0 — VANTAGE Runtime
 Tipo: Capa de Observabilidad y Abstracción de Datos (ReadOnly)
 Propósito: Provee la verdad técnica sobre Notion. Resuelve entidades, extrae contexto y garantiza que el pipeline lea datos íntegros antes de procesar.
 Runtime Build — proceso determinista que genera: entity_index_v2.json, graph_v2.json, backlinks_v2.json. Consume resolver_registry_v2.json como fuente de namespace ownership — si el Registry no define el prefix de un tipo de entidad, el Build falla explícitamente. graph_layer.py construye graph_v2.json; nunca infiere namespaces ni redefine contratos.
@@ -89,11 +84,11 @@ Version Check Tool y Census como parte de L0: verify_versions.py (alias vversion
 Notion (Source) → Version Check (9 docs) / Census (ID audit) → Reporte a operador
 ```
 ---
-## 03.4 KERNEL:DOCUMENTATION-004
-## L0-Bootstrap — Dynamic Governance Layer
+### 03.4 KERNEL:DOCUMENTATION-004
+### L0-Bootstrap — Dynamic Governance Layer
 Tipo: Capa de Sincronización de Sesión (Fetch-on-Start)
 Propósito: Elimina el drift de versiones entre la UI estática del agente y el repositorio dinámico de Notion.
-Bootstrap Protocol: ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de [SP:BOOTSTRAP-001](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281c68a05fd98ecfef859) y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
+Bootstrap Protocol: ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de SP:BOOTSTRAP-001 y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
 Convención de estado (X-ING → X-ED): el Bootstrap declara inicio con BOOTLOADING... y cierre con BOOTLOADED: DOCUMENTOS CARGADOS.
 Distinción de alcance — Bootstrap vs. Session Ledger: el Bootstrap corre en cada mensaje inicial de cualquier conversación del proyecto — carga de contexto universal, no registro de sesión formal. El Session Ledger (§3.9) es opt-in: solo se escribe cuando el operador invoca vantage-session-open.
 ```plain text
@@ -102,8 +97,8 @@ Sesión Iniciada → BOOTLOADING... → AI Fetch (Bootstrap IDs) → Sincronizac
 (Ledger: solo si el operador invoca vantage-session-open)
 ```
 ---
-## 03.5 KERNEL:DOCUMENTATION-005
-## Convención de Anuncio de Skills
+### 03.5 KERNEL:DOCUMENTATION-005
+### Convención de Anuncio de Skills
 Todo skill de VANTAGE declara inicio y cierre de su protocolo con un verbo propio en gerundio/participio, nunca con un mensaje genérico compartido ni con el lenguaje de cierre del Bootstrap universal (BOOTLOADED).
 Implementación actual:
 - vantage-session-open — SESSION-OPENING…/SESSION-OPENED
@@ -116,21 +111,19 @@ Implementación actual:
 - vantage-tidy-bug-task-tracker — TIDYING TRACKER…/TRACKER TIDIED
 - vantage-tidy-opportunities-tracker — TIDYING OPPORTUNITIES…/OPPORTUNITIES TIDIED
 ---
-## 03.6 KERNEL:DOCUMENTATION-006
-## Contrato de health_check.py
-Naturaleza: lectura estricta por defecto. Única excepción: auto-sync condicional del Entity Index.
+### 03.6 KERNEL:DOCUMENTATION-006
+### Contrato de health_check.py
+## Naturaleza: lectura estricta por defecto. Única excepción: auto-sync condicional del Entity Index.
 Checks ejecutados (orden fijo): version → env → git → vgit → notion → docs_sync → vdoc → index_age → pending_tickets.
 Entity Index Auto-Sync: umbral 24h sobre graph_v2.json/entity_index_v2.json. Acción: subprocess a python3 vantage.py sync, timeout 120s. Clasificación: housekeeping de rutina, no remediación de fallo.
 Reporte de Tickets: agrupación por Prioridad (CRÍTICO/ALTO/MEDIO/BAJO) sobre Bug Tracker y Task Tracker. Detalle explícito solo para CRÍTICO y ALTO.
----
-## 03.7 KERNEL:DOCUMENTATION-007
-## Herramienta de Verificación de Versión
-Propósito: ruta de bajo costo para verificar y sincronizar la Versión de los 9 documentos fundacionales sin pagar el costo de un fetch completo por documento.
+### 03.7 KERNEL:DOCUMENTATION-007
+### Herramienta de Verificación de Versión
+## Propósito: ruta de bajo costo para verificar y sincronizar la Versión de los 9 documentos fundacionales sin pagar el costo de un fetch completo por documento.
 Modos: --sync (único modo de escritura y verificación real, relee cada documento post-escritura) y --bootstrap (dump read-only de apertura de sesión). Modo Check eliminado en v9.6.2 — la verificación real vive íntegramente en --sync.
 Alias: vversions — acepta --bootstrap o --sync, sin modo default.
----
-## 03.8 KERNEL:DOCUMENTATION-008
-## Sincronización Obligatoria del ID Census
+### 03.8 KERNEL:DOCUMENTATION-008
+### Sincronización Obligatoria del ID Census
 El V-ID-CENSUS es el noveno documento fundacional, derivado — su fuente de verdad son los IDs reales de los otros ocho documentos.
 - Regla 1 [CENSUS-SYNC-R1]: ningún ticket que implique cambio de estado de un ID se marca Done sin Census regenerado. Si no puede ejecutarse, el ticket queda Blocked-Census.
 - Regla 2: generate_census.py detecta IDs huérfanos y los reporta antes de cerrar el ticket asociado.
@@ -138,14 +131,13 @@ El V-ID-CENSUS es el noveno documento fundacional, derivado — su fuente de ver
 - Regla 4: ninguna sesión con cambios cierra sin DRY RUN automático de lo modificado.
 - Regla 5: health_check.py reporta antigüedad del Census (umbral 7 días) como advertencia informativa, no bloqueante.
 ---
-## 03.9 KERNEL:DOCUMENTATION-009
-## Session Ledger
-Naturaleza: excepción de escritura de housekeeping — no requiere APROBAR_WRITE.
+### 03.9 KERNEL:DOCUMENTATION-009
+### Session Ledger
+## Naturaleza: excepción de escritura de housekeeping — no requiere APROBAR_WRITE.
 Estructura: database Notion (data_source_id 8d736032-eef9-4e6e-a05a-df8b8079ebff) con session_id, status (OPEN/CLOSED), opened_at, pending_summary.
 Escritura autorizada: solo SKILL-OPEN paso 0 (→ OPEN) y SKILL-CLOSE paso 6 (→ CLOSED + pending_summary).
----
-## 03.10 KERNEL:DOCUMENTATION-010
-## Documentación Transversal — Contrato de Integridad Documental
+### 03.10 KERNEL:DOCUMENTATION-010
+### Documentación Transversal — Contrato de Integridad Documental
 Protocolo (seis fases): Mapeo → DRY RUN → Inyección → Write-Back Verification → Changelog + versión → Binary Gate de salida.
 Skills de Gobernanza Documental:
 | Skill | Propósito | Gate |
@@ -156,43 +148,42 @@ Skills de Gobernanza Documental:
 | vantage-tidy-bug-task-tracker | Limpieza de campos/normalización | ✅ Obligatorio |
 | vantage-tidy-opportunities-tracker | Duplicados/normalización Class A | ✅ Obligatorio |
 ---
-## 03.11 KERNEL:DOCUMENTATION-011
-## Sistema de Cross-Reference Hyperlinks
-Propósito: convertir cada mención de un ID canónico (PREFIX:KEY) en los 6 documentos fundamentales en un hipervínculo real al bloque de definición, en vez de texto plano — para que el sistema sea navegable y auditable, no solo nombrado.
+### 03.11 KERNEL:DOCUMENTATION-011
+### Sistema de Cross-Reference Hyperlinks
+## Propósito: convertir cada mención de un ID canónico (PREFIX:KEY) en los 6 documentos fundamentales en un hipervínculo real al bloque de definición, en vez de texto plano — para que el sistema sea navegable y auditable, no solo nombrado.
 Piezas: generate_census.py (resuelve cada ID a su anchor de bloque real vía API, detecta huérfanos), apply_hyperlinks.py (aplica los hipervínculos sobre los .md locales, --dry-run por defecto), y vantage_id_rules.py — módulo destinado a ser la fuente única de reglas DEF/REF/heading para ambos.
 Regla permanente: el heading de definición nunca se auto-enlaza a sí mismo; toda mención posterior (TOC, prosa, tablas de referencia) sí es clickeable.
 Estado de adopción (2026-07-26): apply_hyperlinks.py ya importa de vantage_id_rules.py; generate_census.py mantiene lógica propia parcheada en paralelo, funcionalmente equivalente pero no consolidada; generate_id_inventory.py y normalize_heading_ids.py aún no migrados — este último, además, sigue proponiendo el formato legacy §N — ID como destino y no debe correrse con --apply hasta su propia migración.
-Ver Manual §11 ([MANUAL:HEALTHCHECK-001](https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428049a4b1c89fec3b8225)) para el procedimiento operativo de cuándo correr cada script.
----
+Ver Manual §11 (MANUAL:HEALTHCHECK-001) para el procedimiento operativo de cuándo correr cada script.
 ---
 ## 04 KERNEL:ARCHITECTURE
 ## Arquitectura de Cuatro Capas
-## 04.1 KERNEL:ARCHITECTURE-L1
-## Active Recon
+### 04.1 KERNEL:ARCHITECTURE-L1
+### Active Recon
 Trigger: humano (ciclo semanal — lunes)
 ```plain text
 Human signal → Career Sites · LinkedIn · Aggregators (paralelo) → JSON estructurado
 → FEED → feed_processor.py → Notion (Class A) → vantage-pipeline
 ```
-## 04.2 KERNEL:ARCHITECTURE-L2
-## Strategic Search
+### 04.2 KERNEL:ARCHITECTURE-L2
+### Strategic Search
 Trigger: humano (ciclo semanal — lunes)
 ```plain text
 Human signal → Gemini · You.com · Grok (extracción paralela) → Perplexity (Consolidation & Dedup)
 → FEED → feed_processor.py → Notion (Class A) → vantage-pipeline
 ```
-## 04.3 KERNEL:ARCHITECTURE-L3
-## Passive Intake
+### 04.3 KERNEL:ARCHITECTURE-L3
+### Passive Intake
 Trigger: automático (continuo)
 ```plain text
 Gmail (.Jobs label) → layer_3_mail.py (IMAP + Groq) → Notion (Class A poblado, Class B vacío) → vantage-pipeline
 ```
-## 04.4 KERNEL:ARCHITECTURE-L4
-## Version Control & Infrastructure
+### 04.4 KERNEL:ARCHITECTURE-L4
+### Version Control & Infrastructure
 No es capa de búsqueda — infraestructura documental. Auto-commit + push cuando hay cambios en el repo. Alias: vgit · 09:00/15:00/21:00. Repo: github.com/mauriciomeyran/VANTAGE.
 vsync_doc.py — sync bidireccional Notion → ACTIVE/ para los 6 fundacionales editables (Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log). Alias: vdoc · Flags: dry | notion | local | auto.
 Skills Distribution — Single Source of Truth: /skills/ en la raíz del repo es la fuente canónica de los .skill files de VANTAGE (actualmente 12) + index.json + index.html. GitHub Pages sirve esta ruta desde main en https://mauriciomeyran.github.io/VANTAGE/skills/. git_sync.py (el mismo motor detrás del alias vgit) detecta nuevos .skill en /skills/, regenera index.json y ejecuta commit + push en la misma corrida — no requiere paso manual adicional. Consumidores: Claude Desktop vía MCP filesystem local (@modelcontextprotocol/server-filesystem apuntando a /skills/); Devin Desktop vía devin mcp add vantage-skills -- npx markdown-mcp-resource@latest <URL> contra el espejo de GitHub Pages. /skills/ local es la fuente primaria; GitHub Pages es espejo — ambos LLMs leen en última instancia de la misma raíz canónica.
-vsum.py (alias vsum) — herramienta de continuidad entre sesiones e IAs, no capa de búsqueda ni de pipeline: resume transcripts de sesiones (Claude, Gemini, ChatGPT, u otro) a Markdown estructurado (contexto, hallazgos, decisiones, pendientes), orientado a que la siguiente sesión o la siguiente IA no pierda continuidad. Escribe vía notion_client.Client directo (no MCP) como página hija del INBOX (ver Cédula Digital, [SP:DIGITAL-ID-CARD-001](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42813ca3fde84a978517c0)) — mismo patrón de acceso directo a la API ya usado por vsync_doc.py, no una excepción nueva a [SP:MCP-ROUTING-NOTES](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3a7938befc4281a5ad7cdccae2a5d2fa). No lee ni escribe el Tracker de vacantes; su único contacto con Notion es de salida (push opcional del resumen), nunca de entrada.
+vsum.py (alias vsum) — herramienta de continuidad entre sesiones e IAs, no capa de búsqueda ni de pipeline: resume transcripts de sesiones (Claude, Gemini, ChatGPT, u otro) a Markdown estructurado (contexto, hallazgos, decisiones, pendientes), orientado a que la siguiente sesión o la siguiente IA no pierda continuidad. Escribe vía notion_client.Client directo (no MCP) como página hija del INBOX (ver Cédula Digital, SP:DIGITAL-ID-CARD-001) — mismo patrón de acceso directo a la API ya usado por vsync_doc.py, no una excepción nueva a SP:MCP-ROUTING-NOTES. No lee ni escribe el Tracker de vacantes; su único contacto con Notion es de salida (push opcional del resumen), nunca de entrada.
 Jerarquía de Dedup: L1 > L2 > L3. Perplexity aplica esta jerarquía en Consolidation & Dedup; L3 entra directo a feed_processor.py.
 Punto de Convergencia Único: las tres capas de búsqueda escriben a Notion. vantage-pipeline lee de Notion, no de outputs de capa directamente.
 ### Figma Sync — CV Output Layer
@@ -201,24 +192,22 @@ Tipo: Capa de Materialización de CV (WriteOnly sobre lienzo Figma)
 CV-B (Markdown + figma_text_id) → ui.html (payload) → code.js (Registry V2)
 → figma.getNodeById(rawId) → node.characters = item.text → Lienzo Figma
 ```
-Invariantes: Figma Sync no escribe en Notion ni Tracker. No es capa de búsqueda. registry_seed.json no se edita manualmente sin regenerar desde Figma.
----
+## Invariantes: Figma Sync no escribe en Notion ni Tracker. No es capa de búsqueda. registry_seed.json no se edita manualmente sin regenerar desde Figma.
 ## 05 KERNEL:OWNERSHIP
 ## División de Responsabilidades AI/Python
-## 05.1 KERNEL:OWNERSHIP-001
-## AI Component
+### 05.1 KERNEL:OWNERSHIP-001
+### AI Component
 Procesador textual del pipeline: validación de triggers, generación de HANDOFF, deduplicación textual, normalización, generación de DRY RUN, escritura de campos Class A, producción de CVs.
 Restricciones (no negociables): NO modifica campos Class B. NO evalúa fit estratégico. NO calcula scores ni estima gate decisions. NO ejecuta triggers fuera de §11.
-## 05.2 KERNEL:OWNERSHIP-002
-## Python Component
-Motor de lógica de negocio y escritura autónoma: único componente con permiso de escritura autónoma en Notion. Procesa FEED (feed_processor.py, layer_1_run.py, layer_3_mail.py). Calcula Score, Gate_Decision, VM_Scope, Role_Class, Match, Next_Action, Fetch, Fuente.
+### 05.2 KERNEL:OWNERSHIP-002
+### Python Component
+## Motor de lógica de negocio y escritura autónoma: único componente con permiso de escritura autónoma en Notion. Procesa FEED (feed_processor.py, layer_1_run.py, layer_3_mail.py). Calcula Score, Gate_Decision, VM_Scope, Role_Class, Match, Next_Action, Fetch, Fuente.
 Excepción — Bypass: Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE automático (ver §9.1).
 Invariante crítico: Python recalcula campos Class B en cada run — ningún valor estimado por el AI Component tiene validez en el pipeline.
----
 ## 06 KERNEL:DASHBOARD-CHECKLIST-ARCH
 ## Arquitectura Dashboard/Checklist
 Capa de presentación adicional sobre los datos que las capas de búsqueda producen.
-1. Backend operativo real — dashboard_server.py + dashboard.db + dashboard_notion.py. Fuente de verdad del pipeline. dashboard.html consume vía fetch('<http://127.0.0.1:8000>{path}').
+1. Backend operativo real — dashboard_server.py + dashboard.db + dashboard_notion.py. Fuente de verdad del pipeline. dashboard.html consume vía fetch('http://127.0.0.1:8000{path}').
 1. Checklist operativo semanal — Checklist.html. Standalone, estado en localStorage['vchecklist_v1']. Sin backend, sin Notion.
 1. Capa visual compartida — vantage-tokens.css + vantage-theme.js. Única capa realmente compartida entre (1) y (2).
 Regla: cualquier cambio a color de estado semántico o toggle de tema se hace en vantage-tokens.css/vantage-theme.js, nunca inline.
@@ -227,40 +216,39 @@ Regla: cualquier cambio a color de estado semántico o toggle de tema se hace en
 ## 07 KERNEL:SCHEMA
 ## Modelo de Datos y Ownership
 Aclaración terminológica: "el Tracker" sin calificativo se refiere siempre a la base de datos principal donde L1/L2/L3 escriben cada vacante — distinta del Bug Tracker y Tasks Tracker (§8).
-## 07.1 KERNEL:SCHEMA-001
-## Class A vs Class B
+### 07.1 KERNEL:SCHEMA-001
+### Class A vs Class B
 El schema define ownership. Cada campo pertenece a exactamente un componente.
 Class A — Human-Primary: AI Component escribe en CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_processor.py escribe en FEED L1/L3: Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NAD · layer · hash.
 Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Archivar · Repetida.
 Class B — System-Primary: Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente · Dedup_Flag.
-## 07.2 KERNEL:SCHEMA-002
-## Restricción del Sistema
+### 07.2 KERNEL:SCHEMA-002
+### Restricción del Sistema
 Campos Class B en JSON entrante se ignoran sin excepción — Python los calcula en el siguiente run.
-## 07.3 KERNEL:SCHEMA-003
-## Fuente como Campo Especial
+### 07.3 KERNEL:SCHEMA-003
+### Fuente como Campo Especial
 Python sobrescribe Fuente en cada run. Persistencia manual → Fuente_Manual (Class A).
-## 07.4 KERNEL:SCHEMA-004
-## Entity Format
+### 07.4 KERNEL:SCHEMA-004
+### Entity Format
 PREFIX:H_<hash16> / PREFIX:U_<UUID>. Prefixes válidos: TRACKER, ARCHIVO, DRYRUN, BUG. Namespace Ownership Contract: resolver_registry_v2.json es el único punto de verdad para entity_prefix.
 Ver §3.3 (KERNEL:DOCUMENTATION-003 — L0 Runtime) para el mecanismo de resolución que consume este contrato.
-## 07.5 KERNEL:SCHEMA-005
-## Contrato de Resolución: 4 Pasos
+### 07.5 KERNEL:SCHEMA-005
+### Contrato de Resolución: 4 Pasos
 Lookup → Registry Mapping → Notion Query → Validation.
 Ver §3.3 (KERNEL:DOCUMENTATION-003 — L0 Runtime) — este contrato es la contraparte de datos del Runtime Build descrito ahí.
-## 07.6 KERNEL:SCHEMA-006
-## APROBAR_WRITE: Alcance
+### 07.6 KERNEL:SCHEMA-006
+### APROBAR_WRITE: Alcance
 Autoriza escritura de campos Class A únicamente. Variantes aceptadas: APROBAR_WRITE · APROBAR · SÍ · sí · YEP · yep. Eliminados (RAI-03): Ok · Go · YES · yes.
-## 07.7 KERNEL:SCHEMA-007
-## Acceptance Audit
-Resultados: PASS / PASS WITH ARCHITECTURAL FINDING / FAIL.
+### 07.7 KERNEL:SCHEMA-007
+### Acceptance Audit
+## Resultados: PASS / PASS WITH ARCHITECTURAL FINDING / FAIL.
 Mapeo de Vocabulario — Prompts → Tracker: source_type "career_page" → Career Page Oficial; source_type "job_board" → Agregador; source_name → NO escribir (Class B); apply_url → URL; brand → Marca; title → Rol; holding → Holding (null → "Investigar").
 Entry Template — Campos Class A Requeridos: Rol · Marca · URL · Source_Type · Status · Prioridad · JD · JOB_ID · Holding.
----
 ## 08 KERNEL:TRACKER-SCHEMA
 ## Bug Tracker y Tasks Tracker
 Distinto del Tracker de vacantes (§7) — bases de datos de trabajo interno del propio VANTAGE.
-## 08.1 KERNEL:TRACKER-SCHEMA-001
-## Alcance
+### 08.1 KERNEL:TRACKER-SCHEMA-001
+### Alcance
 - Reactivo (algo roto) → Bug Tracker
 - Proactivo (trabajo/decisión pendiente) → Tasks Tracker
 | Tracker | DB ID | COL ID |
@@ -268,8 +256,8 @@ Distinto del Tracker de vacantes (§7) — bases de datos de trabajo interno del
 | Bug Tracker | 36e938be-fc42-81bd-9e1f-dc360b3b45f5 | 36e938be-fc42-81f8-8c6f-000b6769ba03 |
 | Tasks Tracker | d2a65ca1-6a35-465d-bcff-b0d82dddd549 | — |
 > [TAREA 4 aplicada] DB ID y COL ID de Bug Tracker invertidos respecto a la versión anterior del Kernel — corregidos en esta pasada.
-## 08.2 KERNEL:TRACKER-SCHEMA-002
-## Niveles de Prioridad
+### 08.2 KERNEL:TRACKER-SCHEMA-002
+### Niveles de Prioridad
 | Nivel | Criterio |
 | --- | --- |
 | CRÍTICO | El flujo punta a punta no puede completarse |
@@ -280,34 +268,33 @@ Distinto del Tracker de vacantes (§7) — bases de datos de trabajo interno del
 ## 09 KERNEL:GATE-DECISION
 ## Lógica de Gate Decision
 Con Class A/B (§7) y OWNERSHIP (§5) ya definidos, esta sección describe la lógica que decide, para cada vacante, si avanza, se bloquea o se descarta.
-## 09.1 KERNEL:GATE-DECISION-001
-## Bypass
+### 09.1 KERNEL:GATE-DECISION-001
+### Bypass
 Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE automático. Bypasses: URL_GATE + Score threshold + Visual Signal detection.
-## 09.2 KERNEL:GATE-DECISION-002
-## Lógica Estándar
+### 09.2 KERNEL:GATE-DECISION-002
+### Lógica Estándar
 Orden: URL_GATE (link muerto → Score=0, Status=Expirada) → Score (0–100) → Gate_Decision (≥60 CREATE · 40–59 Para Revisar · <40 BLOCKED/Archivar).
-## 09.3 KERNEL:GATE-DECISION-003
-## Resolución de REVIEW_NEEDED
+### 09.3 KERNEL:GATE-DECISION-003
+### Resolución de REVIEW_NEEDED
 Gap GAP-03 documentado: escritura directa vía MCP no tiene guard equivalente al de feed_processor.py. Mitigación interina: whitelist de campos Class A en DRY RUN. Disparador de resolución: Status = "Target".
-## 09.4 KERNEL:GATE-DECISION-004
-## Por Qué los Gates Son Deterministas
+### 09.4 KERNEL:GATE-DECISION-004
+### Por Qué los Gates Son Deterministas
 Un gate que puede sobreescribirse manualmente no es un gate — es una sugerencia.
-## 09.5 KERNEL:GATE-DECISION-005
-## Flujo de Recuperación BLOCKED
+### 09.5 KERNEL:GATE-DECISION-005
+### Flujo de Recuperación BLOCKED
 RT-1 permite corregir campos Class A y re-validar con Python. RT-1 no sobreescribe el gate.
-## 09.6 KERNEL:GATE-DECISION-006
-## REJECTED (Post-Aplicación)
+### 09.6 KERNEL:GATE-DECISION-006
+### REJECTED (Post-Aplicación)
 REJECTED es Class B derivado de Status = "Rechazado" (Class A). Python traduce vía evaluate_rejection_status(). El operador nunca escribe Gate_Decision directamente.
 > [Corrección aplicada] Este ID ya existía en el cuerpo del Kernel pero faltaba en la TOC — agregado como sub-ítem de §9.
-## 09.7 KERNEL:GATE-DECISION-007
-## Ejecución Automática de Archivado
+### 09.7 KERNEL:GATE-DECISION-007
+### Ejecución Automática de Archivado
 Next_Action='Archivar' Y Dedup_Flag='Posible duplicado' (ambos Class B) → archivado automático vía auto_archive.py. Dry-run obligatorio antes de execute.
-## 09.8 KERNEL:GATE-DECISION-008
-## Capas de Evaluación de Gate: Técnica vs. Negocio
-gate() (capa técnica, CREATE/BLOCKED puro) vs. gate_logic() (capa de negocio/workflow, protege estados terminales).
----
-## 09.9 KERNEL:GATE-DECISION-009
-## Escalamiento de Pendientes a Tickets
+### 09.8 KERNEL:GATE-DECISION-008
+### Capas de Evaluación de Gate: Técnica vs. Negocio
+## gate() (capa técnica, CREATE/BLOCKED puro) vs. gate_logic() (capa de negocio/workflow, protege estados terminales).
+### 09.9 KERNEL:GATE-DECISION-009
+### Escalamiento de Pendientes a Tickets
 Regla de escalamiento (3 niveles):
 - Condición: Pendiente con esfuerzo estimado bajo (referencia orientativa: <5 iteraciones) y sin evidencia de bloqueo.
 - Acción: Se mantiene registrado en Handoff y/o pending_summary del Ledger. Ver Manual §6 para el detalle operativo de cómo y cuándo se registra este campo dentro del ciclo de sesión.
@@ -330,18 +317,18 @@ Regla de escalamiento (3 niveles):
 - Restricción crítica:
 - Inferencias de Claude (ej: "parece bloqueante") nunca califican para Nivel 3.
 - Si Claude sospecha bloqueo pero no tiene fuente dura, el caso baja a Nivel 2 (sugerencia + confirmación).
-- Prohibido por [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca) §5: Automatismos basados en inferencias no confirmadas.
+- Prohibido por SP:CONSISTENCY §5: Automatismos basados en inferencias no confirmadas.
 ---
 Resolución de los 3 puntos de fricción identificados:
 | Punto | Solución |
 | --- | --- |
 | Umbral de iteraciones | Criterio orientativo para Nivel 1 vs Nivel 2. Nunca criterio único para Nivel 3. El único criterio duro para Nivel 3 es: "bloqueante/degradante confirmado por fuente dura". |
 | Re-evaluación Nivel 2 → Nivel 3 | Si durante la sesión aparece evidencia dura de que un pendiente Nivel 2 es bloqueante/degradante, Claude re-clasifica explícitamente a Nivel 3, lo declara al operador ("Reclasifico X de Nivel 2 a Nivel 3 por [evidencia]" ) y dispara el ticket automático. |
-| Choque con [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca) §5 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
-Referencia cruzada Manual: Ver Manual §6 — Ciclo de Sesión para la implementación práctica de este escalamiento dentro del flujo operador (dónde se declara un Nivel 2, qué cuenta como fuente dura para Nivel 3, y cómo se refleja en el cierre de sesión).
+| Choque con SP:CONSISTENCY §5 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
+| Referencia cruzada Manual: Ver Manual §6 — Ciclo de Sesión para la implementación práctica de este escalamiento dentro del flujo operador (dónde se declara un Nivel 2, qué cuenta como fuente dura para Nivel 3, y cómo se refleja en el cierre de sesión). |  |
 ---
-## 09.10 KERNEL:GATE-DECISION-010
-## Definición de Estados Terminales Protegidos
+### 09.10 KERNEL:GATE-DECISION-010
+### Definición de Estados Terminales Protegidos
 Contrato de terminalidad (doble criterio). Fuente de verdad ejecutable: gate_logic.py (constantes de módulo).
 ### Criterios (orden de evaluación obligatorio)
 1. Status → STATUS_TERMINAL_MAP (prioridad)
@@ -354,14 +341,14 @@ Contrato de terminalidad (doble criterio). Fuente de verdad ejecutable: gate_log
 - gate_logic() se invoca antes de gate() en todo pipeline ordinario y backfill (layer_1_run.py Fase 4).
 - Un registro terminal no puede ser sobreescrito por recálculo de Score/Gate, aunque cambien campos Class A.
 - RT-1 (/accept): la escritura de Class A corregido debe limpiar atómicamente Next_Action y Gate_Decision (select: null) en el mismo write, para que el siguiente run no trate la vacante recuperada como terminal fantasma.
-- Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con [KERNEL:OWNERSHIP-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281b2af80c4f4f31f42b5).
+- Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con KERNEL:OWNERSHIP-002.
 ### Referencias
 - Implementación: Layer_1/scripts/gate_logic.py, Layer_1/scripts/layer_1_run.py
 - Atomicidad RT-1: Dashboard/scripts/dashboard_routes.py (/accept), dashboard_notion.py
-- Contratos relacionados: [KERNEL:GATE-DECISION-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428113ac64f877a148e71e), [KERNEL:GATE-DECISION-006](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281d1a8c9fd8e3acdfd96), [KERNEL:GATE-DECISION-008](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#006e0b519639447590ad173aebc265c4), [KERNEL:OWNERSHIP-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281b2af80c4f4f31f42b5)
+- Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002
 ---
-## 09.11 KERNEL:GATE-DECISION-011
-## Matriz de Transición de Estados (Referencia Técnica)
+### 09.11 KERNEL:GATE-DECISION-011
+### Matriz de Transición de Estados (Referencia Técnica)
 Vista tabular consolidada de todas las reglas Gate (§09.1–§09.10).
 Referencia canónica para scripts y auditorías — no reemplaza la descripción
 en prosa de cada sección; la complementa con indexación de estados.
@@ -380,11 +367,11 @@ en prosa de cada sección; la complementa con indexación de estados.
 | APPLIED | Resultado negativo | Status→Rechazado | REJECTED | Humano | Status (Class A) — terminal, protegido por gate_logic() |
 | READY_TO_APPLY / BLOCKED | URL_GATE detecta URL muerta en re-run | Score=0 + Gate_Decision=BLOCKED | BLOCKED | Python | Score, Gate_Decision |
 | Cualquier no-terminal | gate_logic() evalúa estado terminal existente | Status ∈ {Postulado, Rechazado, Expirada} | Estado preservado | Python | Sin escritura — gate_logic() bloquea re-evaluación |
-Nota de orden de precedencia (Hallazgo 2 — auditoría arquitectónica):
-gate_logic() debe ejecutarse ANTES que gate() como filtro de mutabilidad.
-Si Status ∈ {Postulado, Rechazado, Expirada} → pipeline termina aquí,
-sin invocar gate(). Previene regresión de estado en terminales.
-→ Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), [KERNEL:GATE-DECISION-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428113ac64f877a148e71e) (RT-1)
+| Nota de orden de precedencia (Hallazgo 2 — auditoría arquitectónica): |  |  |  |  |  |
+| gate_logic() debe ejecutarse ANTES que gate() como filtro de mutabilidad. |  |  |  |  |  |
+| Si Status ∈ {Postulado, Rechazado, Expirada} → pipeline termina aquí, |  |  |  |  |  |
+| sin invocar gate(). Previene regresión de estado en terminales. |  |  |  |  |  |
+| → Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), KERNEL:GATE-DECISION-005 (RT-1) |  |  |  |  |  |
 ---
 ## 10 KERNEL:CV-GOLDEN-RULES
 ## Golden Rules — Límites de Ejecución
@@ -409,7 +396,7 @@ Alternativa operativa: [pasos concretos dentro del sistema]
 ## Contratos de Ejecución del AI Component
 Cada trigger define un contrato de input, proceso y output. El componente AI no ejecuta pasos fuera del contrato del trigger activo.
 > [TAREA 2 aplicada] Esta sección tenía residuos de exportación (
-, backslashes de escape \*\*, \-\-, \[\], <empty-block/> sueltos) en el Kernel anterior — normalizados a Markdown estándar en toda esta sección.
+, backslashes de escape \\, \-\-, \[\], <empty-block/> sueltos) en el Kernel anterior — normalizados a Markdown estándar en toda esta sección.
 ## 11.1 KERNEL:TRIGGER-001
 ## FEED
 Procesamiento por Lotes. FEED con más de 10 vacantes se divide en lotes de 10, secuencial, con header de lote. Sin reintento automático por lote — ante fallo parcial, reportar y esperar instrucción.
@@ -452,8 +439,7 @@ Ejecuta ~/vantage_pipeline.sh status y reporta el output exacto, sin interpretac
 JSON de vacantes sin trigger explícito → "El procesamiento de FEED está migrado a feed_processor.py." Excepción FAST: array de longitud 1 + trigger FAST explícito = procesamiento normal, sin lotes.
 ## 11.9 KERNEL:TRIGGER-009
 ## STATUS
-Lectura del estado general del sistema. Solo lectura, no interpreta si el sistema está "sano" o "degradado" — reporta datos.
----
+## Lectura del estado general del sistema. Solo lectura, no interpreta si el sistema está "sano" o "degradado" — reporta datos.
 ## 12 KERNEL:CV-PIPELINE
 ## CV Pipeline — Arquitectura de Dos Sesiones Obligatorias
 ### CV-A
@@ -469,11 +455,10 @@ Input: URL o JD. Process: extrae keywords + gaps + tono de marca. Output: HANDOF
 Un HANDOFF incompleto no avanza a CV-B. El sistema no inventa valores para campos faltantes.
 Regla de Orden de Experiencia: cronológico descendente siempre. Orden canónico obligatorio: C01 → C02 → C03 → C04 → C05. No se modifica por Positioning Mode, relevancia ni ninguna otra variable.
 ### CV-B
-Input: HANDOFF completo + Career Canon activo. Validation: verificar los 5 campos del HANDOFF. Canon check: empresa, rol, bullets y KPIs derivados del Canon — no inventados.
+## Input: HANDOFF completo + Career Canon activo. Validation: verificar los 5 campos del HANDOFF. Canon check: empresa, rol, bullets y KPIs derivados del Canon — no inventados.
 Auditoría de Estructura: COUNT(figma_text_id)_SKELETON == COUNT(figma_text_id)_OUTPUT. Si no coincide, abortar y re-mapear.
 Auditoría de Secuencia: los slots de experiencia deben aparecer en secuencia canónica estricta C01→C05. Ninguna variable del HANDOFF autoriza alterarla.
 Output: Markdown con Figma tags. Post-autorización: escribir en Notion bajo # MARKDOWN CANON ALIGNED. Post-aplicación: Status = Postulado → Python marca APPLIED.
----
 ## 13 KERNEL:CANON-UPDATE
 ## Trigger de Actualización del Career Canon
 Con el pipeline de CV y su convención de nombres ya definidos, esta sección cubre el trigger que mantiene actualizada la fuente que ese pipeline extrae: el Career Canon. No es discovery, scoring, gate decision ni evaluación de fit.
@@ -492,14 +477,13 @@ Compatibilidad downstream: CV-A: PASS/FAIL · CV-B: PASS/FAIL · QA: PASS/FAIL
 ---
 ## 14 KERNEL:NAMING-CONVENTION
 ## Convención de Nombres de Outputs
-Ahora que §12 (CV-PIPELINE) y §13 (CANON-UPDATE) ya definieron qué archivos produce el sistema y cómo se mantiene su fuente, esta sección cierra el bloque de Ejecución definiendo cómo se nombran físicamente en disco.
+## Ahora que §12 (CV-PIPELINE) y §13 (CANON-UPDATE) ya definieron qué archivos produce el sistema y cómo se mantiene su fuente, esta sección cierra el bloque de Ejecución definiendo cómo se nombran físicamente en disco.
 Formato del stem: {Año}{Nombre}{Apellido}{Marca_normalizada}{Vacante_normalizada}
 Reglas de normalización: espacios → guión bajo; sin acentos ni caracteres especiales; sin símbolos de puntuación; guión bajo como único separador (no CamelCase).
 Ejemplo: "Gucci — VM Coordinator, LATAM (2026)" → 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM
 Aplica a: CV-B (.md), export QA (.pdf), archivo Figma (.fig) y cualquier output futuro de una vacante específica. El stem se fija al generar el primer entregable y se reutiliza sin variación.
 No aplica a: DRY RUN archivado, artefactos de sistema (logs, backups, entity_index).
-Relación con [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#53a2d31605f84299a99118add45e2af7): contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
----
+Relación con CANON:OUTPUT-CONTRACT: contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
 ---
 # IV. INFRAESTRUCTURA DE CONTEXTO
 ## 15 KERNEL:CONTEXT-INFRASTRUCTURE
@@ -509,9 +493,8 @@ Relación con [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc4280899
 Acceso a lógica base preferente vía Terminal (lazy_loader.py). MCP autorizado para lectura, DRY RUN y modificación documental cuando exista instrucción explícita. Jerarquía: L1 > L2 > L3. FEED: única vía manual es FAST (§11-TRIGGER-008). Triaje de ejecución: Requerimientos → Triaje de costos (A: Terminal, B: MCP, C: Upload) → Confirmación. Priorizar Opción A.
 ## 15.2 KERNEL:CONTEXT-INFRASTRUCTURE-002
 ## Routing
-MCP autorizado cuando: el operador lo solicite explícitamente, la operación sea documental, se presente DRY RUN previo, exista autorización posterior vía APROBAR_WRITE.
+## MCP autorizado cuando: el operador lo solicite explícitamente, la operación sea documental, se presente DRY RUN previo, exista autorización posterior vía APROBAR_WRITE.
 Ruta recomendada: python lazy_loader.py --page {KERNEL_MASTER} --route {ruta}
----
 ## 16 KERNEL:DATA-FLOW
 ## Flujo de Datos y Escritura
 Kernel → DRY RUN → APROBAR_WRITE → Notion Write. El componente AI consulta el Kernel para confirmar el contrato del trigger activo; produce DRY RUN (§11-TRIGGER-004); espera variante válida de APROBAR_WRITE (§7-SCHEMA-006); solo entonces escribe.
@@ -521,10 +504,9 @@ Pre-validación: cruzar esquema contra §7 SCHEMA antes de cualquier escritura.
 ---
 ## 17 KERNEL:EVOLUTION
 ## Evolución del Sistema
-Cambios válidos: cambio estructural de mercado, cambio en targets, ineficiencia probada con datos, violación de boundary entre capas.
+## Cambios válidos: cambio estructural de mercado, cambio en targets, ineficiencia probada con datos, violación de boundary entre capas.
 Cambios inválidos: "Score se siente muy estricto", Ready-to-Apply vacío, un dead link apareció, frustración temporal.
 Comportamiento ante solicitud de cambio inválido: el AI identifica la condición, informa la razón, redirige al workflow activo. No ejecuta, no negocia.
 Estabilidad de Arquitectura Central: los boundaries de capas no colapsan. Los contratos de campo Class A/B no se mezclan. La arquitectura de tres capas, el URL_GATE como primer filtro y la división AI/Python son invariantes del sistema.
 Linaje Histórico — Preservado, No Operacional: GPT Atlas, Grok discovery, SEARCH-EXEC/SEARCH-SIGNAL, fórmulas de scoring pre-v5.0 — contexto histórico, no código activo.
----
 ---
