@@ -27,15 +27,15 @@
 ## Propósito del Sistema
 VANTAGE resuelve un problema de ingeniería de atención: en una búsqueda laboral sin estructura, las oportunidades de alta señal desaparecen antes de ser procesadas, mientras el tiempo se consume en vacantes de baja calidad. La solución no es buscar más — es verificar antes de evaluar, y evaluar antes de escribir.
 Invariantes del Sistema
-1. Una vacante no entra al pipeline sin URL válida — excepción: Bypass activo (ver §9.1).
+1. Una vacante no entra al pipeline sin URL válida — excepción: Bypass activo (ver 09.1).
 1. Score no lo calcula el sistema de lenguaje — lo calcula Python con lógica determinista.
-1. Gate decision no se sobreescribe manualmente. RT-1 permite corregir inputs Class A para que Python recalcule (ver §9.5).
+1. Gate decision no se sobreescribe manualmente. RT-1 permite corregir inputs Class A para que Python recalcule (ver 09.5).
 1. Strategy es responsabilidad humana; processing es responsabilidad del sistema.
-Qué Significa Esto para el Sistema AI: el componente AI es el procesador textual del pipeline — deduplica, normaliza, genera DRY RUN, escribe Class A en Notion, produce CVs. Evaluación de calidad estratégica y cálculo de campos Class B no son operaciones de este componente (ver §5 OWNERSHIP, §10 CV-GOLDEN-RULES). Si una tarea no está en la tabla de triggers (§11), no se ejecuta.
+Qué Significa Esto para el Sistema AI: el componente AI es el procesador textual del pipeline — deduplica, normaliza, genera DRY RUN, escribe Class A en Notion, produce CVs. Evaluación de calidad estratégica y cálculo de campos Class B no son operaciones de este componente (ver 05 OWNERSHIP, 10 CV-GOLDEN-RULES). Si una tarea no está en la tabla de triggers (11), no se ejecuta.
 ---
 ## 02 KERNEL:FAIL-PHILOSOPHY
 ## Filosofía de Fallo
-## Los fallos del sistema son señales de que el pipeline funciona correctamente. Un gate que nunca bloquea no está filtrando. La presencia de gates BLOCKED, scores en 0 y entradas EXPIRED es evidencia de que el sistema aplica sus criterios.
+Los fallos del sistema son señales de que el pipeline funciona correctamente. Un gate que nunca bloquea no está filtrando. La presencia de gates BLOCKED, scores en 0 y entradas EXPIRED es evidencia de que el sistema aplica sus criterios.
 Qué Hace el Sistema Cuando Falla: no intenta reparar outputs. No sugiere workarounds. No escala urgencia. Reporta el estado y espera instrucción humana.
 Excepción — Gate = BLOCKED recuperable vía RT-1: el AI informa la opción pero no la ejecuta sin instrucción explícita.
 ## 03 KERNEL:DOCUMENTATION
@@ -90,7 +90,7 @@ Tipo: Capa de Sincronización de Sesión (Fetch-on-Start)
 Propósito: Elimina el drift de versiones entre la UI estática del agente y el repositorio dinámico de Notion.
 Bootstrap Protocol: ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de SP:BOOTSTRAP-001 y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
 Convención de estado (X-ING → X-ED): el Bootstrap declara inicio con BOOTLOADING... y cierre con BOOTLOADED: DOCUMENTOS CARGADOS.
-Distinción de alcance — Bootstrap vs. Session Ledger: el Bootstrap corre en cada mensaje inicial de cualquier conversación del proyecto — carga de contexto universal, no registro de sesión formal. El Session Ledger (§3.9) es opt-in: solo se escribe cuando el operador invoca vantage-session-open.
+Distinción de alcance — Bootstrap vs. Session Ledger: el Bootstrap corre en cada mensaje inicial de cualquier conversación del proyecto — carga de contexto universal, no registro de sesión formal. El Session Ledger (03.9) es opt-in: solo se escribe cuando el operador invoca vantage-session-open.
 ```plain text
 Sesión Iniciada → BOOTLOADING... → AI Fetch (Bootstrap IDs) → Sincronización de Verdad Operativa
 → BOOTLOADED: DOCUMENTOS CARGADOS → Procesamiento Petición
@@ -154,7 +154,7 @@ Skills de Gobernanza Documental:
 Piezas: generate_census.py (resuelve cada ID a su anchor de bloque real vía API, detecta huérfanos), apply_hyperlinks.py (aplica los hipervínculos sobre los .md locales, --dry-run por defecto), y vantage_id_rules.py — módulo destinado a ser la fuente única de reglas DEF/REF/heading para ambos.
 Regla permanente: el heading de definición nunca se auto-enlaza a sí mismo; toda mención posterior (TOC, prosa, tablas de referencia) sí es clickeable.
 Estado de adopción (2026-07-26): apply_hyperlinks.py ya importa de vantage_id_rules.py; generate_census.py mantiene lógica propia parcheada en paralelo, funcionalmente equivalente pero no consolidada; generate_id_inventory.py y normalize_heading_ids.py aún no migrados — este último, además, sigue proponiendo el formato legacy §N — ID como destino y no debe correrse con --apply hasta su propia migración.
-Ver Manual §11 (MANUAL:HEALTHCHECK-001) para el procedimiento operativo de cuándo correr cada script.
+Ver MANUAL:HEALTHCHECK para el procedimiento operativo de cuándo correr cada script.
 ---
 ## 04 KERNEL:ARCHITECTURE
 ## Arquitectura de Cuatro Capas
@@ -198,11 +198,11 @@ CV-B (Markdown + figma_text_id) → ui.html (payload) → code.js (Registry V2)
 ### 05.1 KERNEL:OWNERSHIP-001
 ### AI Component
 Procesador textual del pipeline: validación de triggers, generación de HANDOFF, deduplicación textual, normalización, generación de DRY RUN, escritura de campos Class A, producción de CVs.
-Restricciones (no negociables): NO modifica campos Class B. NO evalúa fit estratégico. NO calcula scores ni estima gate decisions. NO ejecuta triggers fuera de §11.
+Restricciones (no negociables): NO modifica campos Class B. NO evalúa fit estratégico. NO calcula scores ni estima gate decisions. NO ejecuta triggers fuera de 11.
 ### 05.2 KERNEL:OWNERSHIP-002
 ### Python Component
 ## Motor de lógica de negocio y escritura autónoma: único componente con permiso de escritura autónoma en Notion. Procesa FEED (feed_processor.py, layer_1_run.py, layer_3_mail.py). Calcula Score, Gate_Decision, VM_Scope, Role_Class, Match, Next_Action, Fetch, Fuente.
-Excepción — Bypass: Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE automático (ver §9.1).
+Excepción — Bypass: Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE automático (ver 09.1).
 Invariante crítico: Python recalcula campos Class B en cada run — ningún valor estimado por el AI Component tiene validez en el pipeline.
 ## 06 KERNEL:DASHBOARD-CHECKLIST-ARCH
 ## Arquitectura Dashboard/Checklist
@@ -215,7 +215,7 @@ Regla: cualquier cambio a color de estado semántico o toggle de tema se hace en
 # II. DATOS, ESQUEMAS Y REGLAS
 ## 07 KERNEL:SCHEMA
 ## Modelo de Datos y Ownership
-Aclaración terminológica: "el Tracker" sin calificativo se refiere siempre a la base de datos principal donde L1/L2/L3 escriben cada vacante — distinta del Bug Tracker y Tasks Tracker (§8).
+Aclaración terminológica: "el Tracker" sin calificativo se refiere siempre a la base de datos principal donde L1/L2/L3 escriben cada vacante — distinta del Bug Tracker y Tasks Tracker (08).
 ### 07.1 KERNEL:SCHEMA-001
 ### Class A vs Class B
 El schema define ownership. Cada campo pertenece a exactamente un componente.
@@ -231,11 +231,11 @@ Python sobrescribe Fuente en cada run. Persistencia manual → Fuente_Manual (Cl
 ### 07.4 KERNEL:SCHEMA-004
 ### Entity Format
 PREFIX:H_<hash16> / PREFIX:U_<UUID>. Prefixes válidos: TRACKER, ARCHIVO, DRYRUN, BUG. Namespace Ownership Contract: resolver_registry_v2.json es el único punto de verdad para entity_prefix.
-Ver §3.3 (KERNEL:DOCUMENTATION-003 — L0 Runtime) para el mecanismo de resolución que consume este contrato.
+Ver 03.3 (KERNEL:DOCUMENTATION-003 — L0 Runtime) para el mecanismo de resolución que consume este contrato.
 ### 07.5 KERNEL:SCHEMA-005
 ### Contrato de Resolución: 4 Pasos
 Lookup → Registry Mapping → Notion Query → Validation.
-Ver §3.3 (KERNEL:DOCUMENTATION-003 — L0 Runtime) — este contrato es la contraparte de datos del Runtime Build descrito ahí.
+Ver 03.3 (KERNEL:DOCUMENTATION-003 — L0 Runtime) — este contrato es la contraparte de datos del Runtime Build descrito ahí.
 ### 07.6 KERNEL:SCHEMA-006
 ### APROBAR_WRITE: Alcance
 Autoriza escritura de campos Class A únicamente. Variantes aceptadas: APROBAR_WRITE · APROBAR · SÍ · sí · YEP · yep. Eliminados (RAI-03): Ok · Go · YES · yes.
@@ -246,7 +246,7 @@ Mapeo de Vocabulario — Prompts → Tracker: source_type "career_page" → Care
 Entry Template — Campos Class A Requeridos: Rol · Marca · URL · Source_Type · Status · Prioridad · JD · JOB_ID · Holding.
 ## 08 KERNEL:TRACKER-SCHEMA
 ## Bug Tracker y Tasks Tracker
-Distinto del Tracker de vacantes (§7) — bases de datos de trabajo interno del propio VANTAGE.
+Distinto del Tracker de vacantes (07) — bases de datos de trabajo interno del propio VANTAGE.
 ### 08.1 KERNEL:TRACKER-SCHEMA-001
 ### Alcance
 - Reactivo (algo roto) → Bug Tracker
@@ -267,7 +267,7 @@ Distinto del Tracker de vacantes (§7) — bases de datos de trabajo interno del
 ---
 ## 09 KERNEL:GATE-DECISION
 ## Lógica de Gate Decision
-Con Class A/B (§7) y OWNERSHIP (§5) ya definidos, esta sección describe la lógica que decide, para cada vacante, si avanza, se bloquea o se descarta.
+Con Class A/B (07) y OWNERSHIP (05) ya definidos, esta sección describe la lógica que decide, para cada vacante, si avanza, se bloquea o se descarta.
 ### 09.1 KERNEL:GATE-DECISION-001
 ### Bypass
 Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE automático. Bypasses: URL_GATE + Score threshold + Visual Signal detection.
@@ -297,7 +297,7 @@ Next_Action='Archivar' Y Dedup_Flag='Posible duplicado' (ambos Class B) → arch
 ### Escalamiento de Pendientes a Tickets
 Regla de escalamiento (3 niveles):
 - Condición: Pendiente con esfuerzo estimado bajo (referencia orientativa: <5 iteraciones) y sin evidencia de bloqueo.
-- Acción: Se mantiene registrado en Handoff y/o pending_summary del Ledger. Ver Manual §6 para el detalle operativo de cómo y cuándo se registra este campo dentro del ciclo de sesión.
+- Acción: Se mantiene registrado en Handoff y/o pending_summary del Ledger. Ver MANUAL:SESSION-CYCLE para el detalle operativo de cómo y cuándo se registra este campo dentro del ciclo de sesión.
 - Resultado: No dispara ticket.
 ---
 - Condición: Pendiente con esfuerzo estimado alto (referencia orientativa: ≥5 iteraciones) pero sin evidencia confirmada de bloqueo o degradación operativa.
@@ -317,15 +317,15 @@ Regla de escalamiento (3 niveles):
 - Restricción crítica:
 - Inferencias de Claude (ej: "parece bloqueante") nunca califican para Nivel 3.
 - Si Claude sospecha bloqueo pero no tiene fuente dura, el caso baja a Nivel 2 (sugerencia + confirmación).
-- Prohibido por SP:CONSISTENCY §5: Automatismos basados en inferencias no confirmadas.
+- Prohibido por SP:CONSISTENCY 05: Automatismos basados en inferencias no confirmadas.
 ---
 Resolución de los 3 puntos de fricción identificados:
 | Punto | Solución |
 | --- | --- |
 | Umbral de iteraciones | Criterio orientativo para Nivel 1 vs Nivel 2. Nunca criterio único para Nivel 3. El único criterio duro para Nivel 3 es: "bloqueante/degradante confirmado por fuente dura". |
 | Re-evaluación Nivel 2 → Nivel 3 | Si durante la sesión aparece evidencia dura de que un pendiente Nivel 2 es bloqueante/degradante, Claude re-clasifica explícitamente a Nivel 3, lo declara al operador ("Reclasifico X de Nivel 2 a Nivel 3 por [evidencia]" ) y dispara el ticket automático. |
-| Choque con SP:CONSISTENCY §5 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
-| Referencia cruzada Manual: Ver Manual §6 — Ciclo de Sesión para la implementación práctica de este escalamiento dentro del flujo operador (dónde se declara un Nivel 2, qué cuenta como fuente dura para Nivel 3, y cómo se refleja en el cierre de sesión). |  |
+| Choque con SP:CONSISTENCY 05 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
+| Referencia cruzada Manual: Ver MANUAL:SESSION-CYCLE — Ciclo de Sesión para la implementación práctica de este escalamiento dentro del flujo operador (dónde se declara un Nivel 2, qué cuenta como fuente dura para Nivel 3, y cómo se refleja en el cierre de sesión). |  |
 ---
 ### 09.10 KERNEL:GATE-DECISION-010
 ### Definición de Estados Terminales Protegidos
@@ -349,7 +349,7 @@ Contrato de terminalidad (doble criterio). Fuente de verdad ejecutable: gate_log
 ---
 ### 09.11 KERNEL:GATE-DECISION-011
 ### Matriz de Transición de Estados (Referencia Técnica)
-Vista tabular consolidada de todas las reglas Gate (§09.1–§09.10).
+Vista tabular consolidada de todas las reglas Gate (09.1–09.10).
 Referencia canónica para scripts y auditorías — no reemplaza la descripción
 en prosa de cada sección; la complementa con indexación de estados.
 | Estado Origen | Evento / Trigger | Guard / Regla | Estado Destino | Componente | Efecto Class B |
@@ -400,7 +400,7 @@ Cada trigger define un contrato de input, proceso y output. El componente AI no 
 ## 11.1 KERNEL:TRIGGER-001
 ## FEED
 Procesamiento por Lotes. FEED con más de 10 vacantes se divide en lotes de 10, secuencial, con header de lote. Sin reintento automático por lote — ante fallo parcial, reportar y esperar instrucción.
-Proceso: validación de longitud → header de lote → mapeo de vocabulario (§7-SCHEMA-007) → detección de señales de advertencia → filtrado de campos prohibidos → escritura secuencial.
+Proceso: validación de longitud → header de lote → mapeo de vocabulario (07-SCHEMA-007) → detección de señales de advertencia → filtrado de campos prohibidos → escritura secuencial.
 Restricciones: NO escribir campos Class B. NO reparar URLs rotas. NO procesar lote N+1 si lote N falló.
 ## 11.2 KERNEL:TRIGGER-002
 ## VL1
@@ -417,7 +417,7 @@ Output: GO/NO-GO por ítem; cualquier FAIL → NO-GO final.
 Preview Obligatorio de Escritura. No hay escritura sin DRY RUN previo.
 Campos Permitidos (Class A): Op · Empresa · Rol · URL · Source_Type · Prioridad · Status.
 Campos Prohibidos (Class B): Visual Signal · Innovation DNA · Score Estimado · Gate_Decision · Decisión CREATE/BLOCKED.
-Autorización: una de las variantes válidas de APROBAR_WRITE (§7-SCHEMA-006).
+Autorización: una de las variantes válidas de APROBAR_WRITE (07-SCHEMA-006).
 ## 11.5 KERNEL:TRIGGER-005
 ## SYNC
 Reporte de Estado del Tracker. Datos puros, sin interpretación.
@@ -477,7 +477,7 @@ Compatibilidad downstream: CV-A: PASS/FAIL · CV-B: PASS/FAIL · QA: PASS/FAIL
 ---
 ## 14 KERNEL:NAMING-CONVENTION
 ## Convención de Nombres de Outputs
-## Ahora que §12 (CV-PIPELINE) y §13 (CANON-UPDATE) ya definieron qué archivos produce el sistema y cómo se mantiene su fuente, esta sección cierra el bloque de Ejecución definiendo cómo se nombran físicamente en disco.
+## Ahora que 12 (CV-PIPELINE) y 13 (CANON-UPDATE) ya definieron qué archivos produce el sistema y cómo se mantiene su fuente, esta sección cierra el bloque de Ejecución definiendo cómo se nombran físicamente en disco.
 Formato del stem: {Año}{Nombre}{Apellido}{Marca_normalizada}{Vacante_normalizada}
 Reglas de normalización: espacios → guión bajo; sin acentos ni caracteres especiales; sin símbolos de puntuación; guión bajo como único separador (no CamelCase).
 Ejemplo: "Gucci — VM Coordinator, LATAM (2026)" → 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM
@@ -490,16 +490,16 @@ Relación con CANON:OUTPUT-CONTRACT: contratos distintos y complementarios — O
 ## Economía de Contexto y Rutas de Carga
 ## 15.1 KERNEL:CONTEXT-INFRASTRUCTURE-001
 ## Scope
-Acceso a lógica base preferente vía Terminal (lazy_loader.py). MCP autorizado para lectura, DRY RUN y modificación documental cuando exista instrucción explícita. Jerarquía: L1 > L2 > L3. FEED: única vía manual es FAST (§11-TRIGGER-008). Triaje de ejecución: Requerimientos → Triaje de costos (A: Terminal, B: MCP, C: Upload) → Confirmación. Priorizar Opción A.
+Acceso a lógica base preferente vía Terminal (lazy_loader.py). MCP autorizado para lectura, DRY RUN y modificación documental cuando exista instrucción explícita. Jerarquía: L1 > L2 > L3. FEED: única vía manual es FAST (11-TRIGGER-008). Triaje de ejecución: Requerimientos → Triaje de costos (A: Terminal, B: MCP, C: Upload) → Confirmación. Priorizar Opción A.
 ## 15.2 KERNEL:CONTEXT-INFRASTRUCTURE-002
 ## Routing
 ## MCP autorizado cuando: el operador lo solicite explícitamente, la operación sea documental, se presente DRY RUN previo, exista autorización posterior vía APROBAR_WRITE.
 Ruta recomendada: python lazy_loader.py --page {KERNEL_MASTER} --route {ruta}
 ## 16 KERNEL:DATA-FLOW
 ## Flujo de Datos y Escritura
-Kernel → DRY RUN → APROBAR_WRITE → Notion Write. El componente AI consulta el Kernel para confirmar el contrato del trigger activo; produce DRY RUN (§11-TRIGGER-004); espera variante válida de APROBAR_WRITE (§7-SCHEMA-006); solo entonces escribe.
+Kernel → DRY RUN → APROBAR_WRITE → Notion Write. El componente AI consulta el Kernel para confirmar el contrato del trigger activo; produce DRY RUN (11-TRIGGER-004); espera variante válida de APROBAR_WRITE (07-SCHEMA-006); solo entonces escribe.
 Ningún paso puede saltarse: escribir sin DRY RUN previo, o sin APROBAR_WRITE explícito, viola el contrato aunque el contenido sea correcto.
-Pre-validación: cruzar esquema contra §7 SCHEMA antes de cualquier escritura.
+Pre-validación: cruzar esquema contra 07 SCHEMA antes de cualquier escritura.
 > [TAREA 3 aplicada] El Kernel anterior tenía un bloque Tabla de Cross-References Actualizadas (esquema §L0-XXX) pegado al final de esta sección — nota de trabajo interna de una sesión de edición previa, sin ID canónico ni función de contrato. Removido en esta pasada; el Kernel no documenta su propio proceso de edición.
 ---
 ## 17 KERNEL:EVOLUTION
