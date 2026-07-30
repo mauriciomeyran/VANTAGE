@@ -10,23 +10,23 @@
 - Alcance: Este documento es el KERNEL_RUNTIME, que contiene únicamente los contratos operativos activos para la IA. Para el documento de referencia completo, solicitar acceso al KERNEL 8.0.
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
-| 01 | KERNEL:PURPOSE | FUNDAMENTO | FUNDAMENTO |
-| 02 | KERNEL:FAIL-PHILOSOPHY | FILOSOFÍA DE FALLO | FUNDAMENTO |
+| 01 | [KERNEL:PURPOSE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f69905dfc6c82c5503) | FUNDAMENTO | FUNDAMENTO |
+| 02 | [KERNEL:FAIL-PHILOSOPHY](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428121bb10efedac1b4b99) | FILOSOFÍA DE FALLO | FUNDAMENTO |
 | 03 | KERNEL:DOCUMENTATION | DOCUMENTACIÓN (L0) | FUNDAMENTO |
-| 04 | KERNEL:ARCHITECTURE | ARQUITECTURA | FUNDAMENTO |
-| 05 | KERNEL:OWNERSHIP | OWNERSHIP | FUNDAMENTO |
-| 06 | KERNEL:DASHBOARD-CHECKLIST-ARCH | DASHBOARD CHECKLIST | FUNDAMENTO |
-| 07 | KERNEL:SCHEMA | SCHEMA | DATOS, ESQUEMAS Y REGLAS |
-| 08 | KERNEL:TRACKER-SCHEMA | TRACKER SCHEMA | DATOS, ESQUEMAS Y REGLAS |
-| 09 | KERNEL:GATE-DECISION | GATE DECISION | DATOS, ESQUEMAS Y REGLAS |
-| 10 | KERNEL:CV-GOLDEN-RULES | CV GOLDEN RULES | DATOS, ESQUEMAS Y REGLAS |
-| 11 | KERNEL:TRIGGERS | TRIGGERS | EJECUCIÓN |
-| 12 | KERNEL:CV-PIPELINE | CV PIPELINE | EJECUCIÓN |
-| 13 | KERNEL:CANON-UPDATE | CANON UPDATE | EJECUCIÓN |
-| 14 | KERNEL:NAMING-CONVENTION | NAMING CONVENTION | EJECUCIÓN |
-| 15 | KERNEL:CONTEXT-INFRASTRUCTURE | CONTEXT INFRASTRUCTURE | INFRAESTRUCTURA DE CONTEXTO |
-| 16 | KERNEL:DATA-FLOW | DATA FLOW | INFRAESTRUCTURA DE CONTEXTO |
-| 17 | KERNEL:EVOLUTION | EVOLUTION | INFRAESTRUCTURA DE CONTEXTO |
+| 04 | [KERNEL:ARCHITECTURE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42818a8a61d5a0d71bcf2b) | ARQUITECTURA | FUNDAMENTO |
+| 05 | [KERNEL:OWNERSHIP](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42814385dbe5005b04496c) | OWNERSHIP | FUNDAMENTO |
+| 06 | [KERNEL:DASHBOARD-CHECKLIST-ARCH](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816ead88efa4b9a4e05f) | DASHBOARD CHECKLIST | FUNDAMENTO |
+| 07 | [KERNEL:SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42812dbc97e075758ba0ee) | SCHEMA | DATOS, ESQUEMAS Y REGLAS |
+| 08 | [KERNEL:TRACKER-SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281c2ba8aca2a41ff358b) | TRACKER SCHEMA | DATOS, ESQUEMAS Y REGLAS |
+| 09 | [KERNEL:GATE-DECISION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810d9f3af9b12751d7e1) | GATE DECISION | DATOS, ESQUEMAS Y REGLAS |
+| 10 | [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) | CV GOLDEN RULES | DATOS, ESQUEMAS Y REGLAS |
+| 11 | [KERNEL:TRIGGERS](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f297c7d591f3c132f4) | TRIGGERS | EJECUCIÓN |
+| 12 | [KERNEL:CV-PIPELINE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428190b72cf74c14c31a4a) | CV PIPELINE | EJECUCIÓN |
+| 13 | [KERNEL:CANON-UPDATE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42817db23de75a46a964ac) | CANON UPDATE | EJECUCIÓN |
+| 14 | [KERNEL:NAMING-CONVENTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281bbbe93d1e053bb8e42) | NAMING CONVENTION | EJECUCIÓN |
+| 15 | [KERNEL:CONTEXT-INFRASTRUCTURE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810293b4e55167657d86) | CONTEXT INFRASTRUCTURE | INFRAESTRUCTURA DE CONTEXTO |
+| 16 | [KERNEL:DATA-FLOW](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428101ade4f430c4bee781) | DATA FLOW | INFRAESTRUCTURA DE CONTEXTO |
+| 17 | [KERNEL:EVOLUTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816d813af068ac1d81be) | EVOLUTION | INFRAESTRUCTURA DE CONTEXTO |
 # I. FUNDAMENTO
 ## 01 KERNEL:PURPOSE
 ## Propósito del Sistema
@@ -93,7 +93,7 @@ Notion (Source) → Version Check (9 docs) / Census (ID audit) → Reporte a ope
 ## L0-Bootstrap — Dynamic Governance Layer
 Tipo: Capa de Sincronización de Sesión (Fetch-on-Start)
 Propósito: Elimina el drift de versiones entre la UI estática del agente y el repositorio dinámico de Notion.
-Bootstrap Protocol: ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de SP:BOOTSTRAP-001 y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
+Bootstrap Protocol: ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de [SP:BOOTSTRAP-001](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281c68a05fd98ecfef859) y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
 Convención de estado (X-ING → X-ED): el Bootstrap declara inicio con BOOTLOADING... y cierre con BOOTLOADED: DOCUMENTOS CARGADOS.
 Distinción de alcance — Bootstrap vs. Session Ledger: el Bootstrap corre en cada mensaje inicial de cualquier conversación del proyecto — carga de contexto universal, no registro de sesión formal. El Session Ledger (§3.9) es opt-in: solo se escribe cuando el operador invoca vantage-session-open.
 ```plain text
@@ -162,7 +162,7 @@ Propósito: convertir cada mención de un ID canónico (PREFIX:KEY) en los 6 doc
 Piezas: generate_census.py (resuelve cada ID a su anchor de bloque real vía API, detecta huérfanos), apply_hyperlinks.py (aplica los hipervínculos sobre los .md locales, --dry-run por defecto), y vantage_id_rules.py — módulo destinado a ser la fuente única de reglas DEF/REF/heading para ambos.
 Regla permanente: el heading de definición nunca se auto-enlaza a sí mismo; toda mención posterior (TOC, prosa, tablas de referencia) sí es clickeable.
 Estado de adopción (2026-07-26): apply_hyperlinks.py ya importa de vantage_id_rules.py; generate_census.py mantiene lógica propia parcheada en paralelo, funcionalmente equivalente pero no consolidada; generate_id_inventory.py y normalize_heading_ids.py aún no migrados — este último, además, sigue proponiendo el formato legacy §N — ID como destino y no debe correrse con --apply hasta su propia migración.
-Ver Manual §11 (MANUAL:HEALTHCHECK-001) para el procedimiento operativo de cuándo correr cada script.
+Ver Manual §11 ([MANUAL:HEALTHCHECK-001](https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428049a4b1c89fec3b8225)) para el procedimiento operativo de cuándo correr cada script.
 ---
 ---
 ## 04 KERNEL:ARCHITECTURE
@@ -192,7 +192,7 @@ Gmail (.Jobs label) → layer_3_mail.py (IMAP + Groq) → Notion (Class A poblad
 No es capa de búsqueda — infraestructura documental. Auto-commit + push cuando hay cambios en el repo. Alias: vgit · 09:00/15:00/21:00. Repo: github.com/mauriciomeyran/VANTAGE.
 vsync_doc.py — sync bidireccional Notion → ACTIVE/ para los 6 fundacionales editables (Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log). Alias: vdoc · Flags: dry | notion | local | auto.
 Skills Distribution — Single Source of Truth: /skills/ en la raíz del repo es la fuente canónica de los .skill files de VANTAGE (actualmente 12) + index.json + index.html. GitHub Pages sirve esta ruta desde main en https://mauriciomeyran.github.io/VANTAGE/skills/. git_sync.py (el mismo motor detrás del alias vgit) detecta nuevos .skill en /skills/, regenera index.json y ejecuta commit + push en la misma corrida — no requiere paso manual adicional. Consumidores: Claude Desktop vía MCP filesystem local (@modelcontextprotocol/server-filesystem apuntando a /skills/); Devin Desktop vía devin mcp add vantage-skills -- npx markdown-mcp-resource@latest <URL> contra el espejo de GitHub Pages. /skills/ local es la fuente primaria; GitHub Pages es espejo — ambos LLMs leen en última instancia de la misma raíz canónica.
-vsum.py (alias vsum) — herramienta de continuidad entre sesiones e IAs, no capa de búsqueda ni de pipeline: resume transcripts de sesiones (Claude, Gemini, ChatGPT, u otro) a Markdown estructurado (contexto, hallazgos, decisiones, pendientes), orientado a que la siguiente sesión o la siguiente IA no pierda continuidad. Escribe vía notion_client.Client directo (no MCP) como página hija del INBOX (ver Cédula Digital, SP:DIGITAL-ID-CARD-001) — mismo patrón de acceso directo a la API ya usado por vsync_doc.py, no una excepción nueva a SP:MCP-ROUTING-NOTES. No lee ni escribe el Tracker de vacantes; su único contacto con Notion es de salida (push opcional del resumen), nunca de entrada.
+vsum.py (alias vsum) — herramienta de continuidad entre sesiones e IAs, no capa de búsqueda ni de pipeline: resume transcripts de sesiones (Claude, Gemini, ChatGPT, u otro) a Markdown estructurado (contexto, hallazgos, decisiones, pendientes), orientado a que la siguiente sesión o la siguiente IA no pierda continuidad. Escribe vía notion_client.Client directo (no MCP) como página hija del INBOX (ver Cédula Digital, [SP:DIGITAL-ID-CARD-001](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc42813ca3fde84a978517c0)) — mismo patrón de acceso directo a la API ya usado por vsync_doc.py, no una excepción nueva a [SP:MCP-ROUTING-NOTES](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3a7938befc4281a5ad7cdccae2a5d2fa). No lee ni escribe el Tracker de vacantes; su único contacto con Notion es de salida (push opcional del resumen), nunca de entrada.
 Jerarquía de Dedup: L1 > L2 > L3. Perplexity aplica esta jerarquía en Consolidation & Dedup; L3 entra directo a feed_processor.py.
 Punto de Convergencia Único: las tres capas de búsqueda escriben a Notion. vantage-pipeline lee de Notion, no de outputs de capa directamente.
 ### Figma Sync — CV Output Layer
@@ -330,14 +330,14 @@ Regla de escalamiento (3 niveles):
 - Restricción crítica:
 - Inferencias de Claude (ej: "parece bloqueante") nunca califican para Nivel 3.
 - Si Claude sospecha bloqueo pero no tiene fuente dura, el caso baja a Nivel 2 (sugerencia + confirmación).
-- Prohibido por SP:CONSISTENCY §5: Automatismos basados en inferencias no confirmadas.
+- Prohibido por [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca) §5: Automatismos basados en inferencias no confirmadas.
 ---
 Resolución de los 3 puntos de fricción identificados:
 | Punto | Solución |
 | --- | --- |
 | Umbral de iteraciones | Criterio orientativo para Nivel 1 vs Nivel 2. Nunca criterio único para Nivel 3. El único criterio duro para Nivel 3 es: "bloqueante/degradante confirmado por fuente dura". |
 | Re-evaluación Nivel 2 → Nivel 3 | Si durante la sesión aparece evidencia dura de que un pendiente Nivel 2 es bloqueante/degradante, Claude re-clasifica explícitamente a Nivel 3, lo declara al operador ("Reclasifico X de Nivel 2 a Nivel 3 por [evidencia]" ) y dispara el ticket automático. |
-| Choque con SP:CONSISTENCY §5 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
+| Choque con [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca) §5 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
 Referencia cruzada Manual: Ver Manual §6 — Ciclo de Sesión para la implementación práctica de este escalamiento dentro del flujo operador (dónde se declara un Nivel 2, qué cuenta como fuente dura para Nivel 3, y cómo se refleja en el cierre de sesión).
 ---
 ## 09.10 KERNEL:GATE-DECISION-010
@@ -354,11 +354,11 @@ Contrato de terminalidad (doble criterio). Fuente de verdad ejecutable: gate_log
 - gate_logic() se invoca antes de gate() en todo pipeline ordinario y backfill (layer_1_run.py Fase 4).
 - Un registro terminal no puede ser sobreescrito por recálculo de Score/Gate, aunque cambien campos Class A.
 - RT-1 (/accept): la escritura de Class A corregido debe limpiar atómicamente Next_Action y Gate_Decision (select: null) en el mismo write, para que el siguiente run no trate la vacante recuperada como terminal fantasma.
-- Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con KERNEL:OWNERSHIP-002.
+- Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con [KERNEL:OWNERSHIP-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281b2af80c4f4f31f42b5).
 ### Referencias
 - Implementación: Layer_1/scripts/gate_logic.py, Layer_1/scripts/layer_1_run.py
 - Atomicidad RT-1: Dashboard/scripts/dashboard_routes.py (/accept), dashboard_notion.py
-- Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002
+- Contratos relacionados: [KERNEL:GATE-DECISION-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428113ac64f877a148e71e), [KERNEL:GATE-DECISION-006](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281d1a8c9fd8e3acdfd96), [KERNEL:GATE-DECISION-008](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#006e0b519639447590ad173aebc265c4), [KERNEL:OWNERSHIP-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281b2af80c4f4f31f42b5)
 ---
 ## 09.11 KERNEL:GATE-DECISION-011
 ## Matriz de Transición de Estados (Referencia Técnica)
@@ -384,7 +384,7 @@ Nota de orden de precedencia (Hallazgo 2 — auditoría arquitectónica):
 gate_logic() debe ejecutarse ANTES que gate() como filtro de mutabilidad.
 Si Status ∈ {Postulado, Rechazado, Expirada} → pipeline termina aquí,
 sin invocar gate(). Previene regresión de estado en terminales.
-→ Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), KERNEL:GATE-DECISION-005 (RT-1)
+→ Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), [KERNEL:GATE-DECISION-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428113ac64f877a148e71e) (RT-1)
 ---
 ## 10 KERNEL:CV-GOLDEN-RULES
 ## Golden Rules — Límites de Ejecución
@@ -498,7 +498,7 @@ Reglas de normalización: espacios → guión bajo; sin acentos ni caracteres es
 Ejemplo: "Gucci — VM Coordinator, LATAM (2026)" → 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM
 Aplica a: CV-B (.md), export QA (.pdf), archivo Figma (.fig) y cualquier output futuro de una vacante específica. El stem se fija al generar el primer entregable y se reutiliza sin variación.
 No aplica a: DRY RUN archivado, artefactos de sistema (logs, backups, entity_index).
-Relación con CANON:OUTPUT-CONTRACT: contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
+Relación con [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#53a2d31605f84299a99118add45e2af7): contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
 ---
 ---
 # IV. INFRAESTRUCTURA DE CONTEXTO

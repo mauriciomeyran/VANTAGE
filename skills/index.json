@@ -55,24 +55,6 @@
       "mimeType": "application/octet-stream"
     },
     {
-      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-present-handoff.skill",
-      "name": "vantage-present-handoff",
-      "description": "Genera snapshot de contexto de sesión para continuidad",
-      "mimeType": "application/octet-stream"
-    },
-    {
-      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-close.skill",
-      "name": "vantage-session-close",
-      "description": "Protocolo de cierre de sesión VANTAGE",
-      "mimeType": "application/octet-stream"
-    },
-    {
-      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-open.skill",
-      "name": "vantage-session-open",
-      "description": "Protocolo de apertura de sesión VANTAGE",
-      "mimeType": "application/octet-stream"
-    },
-    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-tidy-bug-task-tracker.skill",
       "name": "vantage-tidy-bug-task-tracker",
       "description": "Marca tickets para archivo en Bug/Task Tracker",

@@ -33,7 +33,7 @@ Al activarse, declarar: `RESUMING DOCUMENTATION — IMPLEMENTATION PHASE...`
 ### Fase 2 — DRY RUN de parches + Aprobación
 
 1. Con el mapeo de nodos ya autorizado como insumo, generar el DRY RUN real: contenido completo de cada parche, en su nodo ya autorizado, con los IDs nuevos (si aplica) ya definidos.
-2. Re-fetch en vivo de cada documento objetivo inmediatamente antes de redactar el DRY RUN — el mapeo de Fase 1 pudo haberse generado en otra sesión y el documento pudo cambiar desde entonces.
+2. Re-fetch condicional: si el mapeo de Fase 1 (Paso 2 de `vantage-documentacion-transversal-propuesta`) se ejecutó en esta misma sesión/chat — el fetch ya está en contexto activo y no hay handoff entre sesiones de por medio — omitir el re-fetch y declarar explícitamente `RE-FETCH OMITIDO — mapeo de Fase 1 vigente en este mismo chat`. Solo re-fetchear si: (a) el mapeo proviene de otra sesión (Tracker, Handoff, o mensaje pegado por el operador), (b) transcurrió una escritura a Notion sobre ese mismo documento entre Fase 1 y Fase 2 dentro de la sesión actual, o (c) el operador indica explícitamente que el documento pudo cambiar por fuera del chat (edición manual, otro agente).
 3. Validar cada parche contra los 5 filtros de `MANUAL:PATCH-QUALITY-001`.
 4. **No escribir nada a Notion sin `APROBAR_WRITE` explícito** (tokens válidos: `APROBAR_WRITE`, `APROBAR`, `SÍ`, `sí`, `YEP`, `yep` — inválidos: `Ok`, `Go`, `yes`, `YES`). Este es un gate distinto e independiente del de autorización de la propuesta (Fase 1) — aplica sin excepción, incluso si el operador ya vio un DRY RUN idéntico antes en la misma sesión. Puede aprobarse por parche individual o por lote completo; declarar cuál aplica antes de escribir.
 
@@ -69,7 +69,7 @@ Al entregar el resumen de salida, declarar el cierre del protocolo respondiendo:
 Antes de considerar la implementación completa, verificar:
 
 - [ ] **Nodo:** cada bloque nuevo vive en el nodo autorizado en Fase 1, ningún adendum al final por default.
-- [ ] **Re-fetch previo al DRY RUN:** documentos objetivo releídos en vivo antes de redactar (no se asumió el mapeo de Fase 1 como vigente sin verificar).
+- [ ] **Re-fetch previo al DRY RUN:** documentos objetivo releídos en vivo antes de redactar, O re-fetch omitido explícitamente por mapeo de Fase 1 vigente en la misma sesión (declarado en Paso 2).
 - [ ] **Changelog:** entrada generada, versión actualizada y coincidente en los documentos tocados.
 - [ ] **Census:** si se creó/eliminó un ID canónico, `KERNEL:CENSUS-SYNC` Regla 1 ejecutada o explícitamente delegada al operador.
 - [ ] **Consistencia:** el parche no contradice el System Prompt ni otro documento fundacional (`SP:CONSISTENCY`); no duplica contenido ya existente.
