@@ -163,46 +163,58 @@ CENSUS_SPEC = [
             {"id": "MANUAL:WEEKLY-FLOW-006", "seccion": "§20", "nombre": "Cadence Matrix — Weekly Rhythm"},
             {"id": "MANUAL:GOLDEN-SKELETON-REF", "seccion": "§21", "nombre": "Golden Skeleton — Qué es y Dónde Vive"},
             {"id": "MANUAL:SCHEMA-FIELD-REF", "seccion": "§22", "nombre": "Schema Class A/B — Referencia de Campos"},
-            {"id": "CANON:PROFILE", "seccion": "§A", "nombre": "Professional Profile Canon"},
-            {"id": "CANON:SKILLS", "seccion": "§B", "nombre": "Skills Canon"},
-            {"id": "CANON:EXPERIENCE", "seccion": "§D", "nombre": "Experience Records"},
-            {"id": "CANON:EXPERIENCE-C01", "seccion": "§D.1", "nombre": "C01 L'Oréal Luxe"},
-            {"id": "CANON:EXPERIENCE-C02", "seccion": "§D.2", "nombre": "C02 Bisonte Experiential"},
-            {"id": "CANON:EXPERIENCE-C03", "seccion": "§D.3", "nombre": "C03 Levi Strauss (Dockers)"},
-            {"id": "CANON:EXPERIENCE-C04", "seccion": "§D.4", "nombre": "C04 Aéropostale"},
-            {"id": "CANON:EXPERIENCE-C05", "seccion": "§D.5", "nombre": "C05 El Palacio de Hierro (ALDO)"},
-            {"id": "CANON:ACHIEVEMENTS", "seccion": "§H", "nombre": "Achievement Library"},
-            {"id": "CANON:KPIS", "seccion": "§I", "nombre": "Core KPIs"},
-            {"id": "CANON:KPI-001", "seccion": "§I.1", "nombre": "KPI — Revenue Impact"},
-            {"id": "CANON:KPI-002", "seccion": "§I.2", "nombre": "KPI — Cost Optimization"},
-            {"id": "CANON:KPI-003", "seccion": "§I.3", "nombre": "KPI — Time to Market"},
-            {"id": "CANON:KPI-004", "seccion": "§I.4", "nombre": "KPI — Quality Score"},
-            {"id": "CANON:KPI-005", "seccion": "§I.5", "nombre": "KPI — Customer Satisfaction"},
-            {"id": "CANON:KPI-006", "seccion": "§I.6", "nombre": "KPI — Team Productivity"},
-            {"id": "CANON:KPI-007", "seccion": "§I.7", "nombre": "KPI — Innovation Index"},
-            {"id": "CANON:KPI-008", "seccion": "§I.8", "nombre": "KPI — Strategic Alignment"},
-            {"id": "CANON:FACTS", "seccion": "§J", "nombre": "Canonical Facts"},
-            {"id": "CANON:FACT-001", "seccion": "§J.1", "nombre": "Fact — Industry Experience"},
-            {"id": "CANON:FACT-002", "seccion": "§J.2", "nombre": "Fact — Technical Stack"},
-            {"id": "CANON:FACT-003", "seccion": "§J.3", "nombre": "Fact — Team Leadership"},
-            {"id": "CANON:FACT-004", "seccion": "§J.4", "nombre": "Fact — Project Scale"},
-            {"id": "CANON:FACT-005", "seccion": "§J.5", "nombre": "Fact — Geographic Scope"},
-            {"id": "CANON:FACT-006", "seccion": "§J.6", "nombre": "Fact — Budget Management"},
-            {"id": "CANON:FACT-007", "seccion": "§J.7", "nombre": "Fact — Methodology Expertise"},
-            {"id": "CANON:FACT-008", "seccion": "§J.8", "nombre": "Fact — Certifications & Education"},
-            {"id": "CANON:POSITIONING", "seccion": "§K", "nombre": "Positioning Modes N1–N4"},
-            {"id": "CANON:POSITIONING-N1", "seccion": "§K.1", "nombre": "Positioning N1 — Strategic Leader"},
-            {"id": "CANON:POSITIONING-N2", "seccion": "§K.2", "nombre": "Positioning N2 — Technical Expert"},
-            {"id": "CANON:POSITIONING-N3", "seccion": "§K.3", "nombre": "Positioning N3 — Delivery Manager"},
-            {"id": "CANON:POSITIONING-N4", "seccion": "§K.4", "nombre": "Positioning N4 — Innovation Driver"},
-            {"id": "CANON:OUTPUT-CONTRACT", "seccion": "§L", "nombre": "Output Contract Framework"},
-            {"id": "CANON:OUTPUT-CONTRACT-001", "seccion": "§L.1", "nombre": "Output Contract — CV Documents"},
-            {"id": "CANON:OUTPUT-CONTRACT-002", "seccion": "§L.2", "nombre": "Output Contract — Portfolio Materials"},
-            {"id": "CANON:OUTPUT-CONTRACT-003", "seccion": "§L.3", "nombre": "Output Contract — Case Studies"},
-            {"id": "CANON:OUTPUT-CONTRACT-004", "seccion": "§L.4", "nombre": "Output Contract — Interview Prep"},
-            {"id": "CANON:UF-001", "seccion": "§M.1", "nombre": "Unique Factor — Global Experience"},
-            {"id": "CANON:UF-002", "seccion": "§M.2", "nombre": "Unique Factor — Industry Transformation"},
-            {"id": "CANON:UF-003", "seccion": "§M.3", "nombre": "Unique Factor — Digital Innovation"},
+            {"id": "CANON:PROFILE", "seccion": "§01", "nombre": "Professional Profile Canon"},
+            {"id": "CANON:SKILLS", "seccion": "§02", "nombre": "Skills Canon"},
+            {"id": "CANON:EXPERIENCE", "seccion": "§03", "nombre": "Experience Records"},
+            {"id": "CANON:EXPERIENCE-C01", "seccion": "§03.1", "nombre": "C01 L'Oréal Luxe"},
+            {"id": "CANON:EXPERIENCE-C02", "seccion": "§03.2", "nombre": "C02 Bisonte Experiential"},
+            {"id": "CANON:EXPERIENCE-C03", "seccion": "§03.3", "nombre": "C03 Levi Strauss (Dockers)"},
+            {"id": "CANON:EXPERIENCE-C04", "seccion": "§03.4", "nombre": "C04 Aéropostale"},
+            {"id": "CANON:EXPERIENCE-C05", "seccion": "§03.5", "nombre": "C05 El Palacio de Hierro (ALDO)"},
+            {"id": "CANON:CAREER-TIMELINE", "seccion": "§04", "nombre": "Career Timeline (reintegrada v9.11.0)"},
+            {"id": "CANON:ACHIEVEMENTS", "seccion": "§05", "nombre": "Achievement Library"},
+            {"id": "CANON:KPIS", "seccion": "§06", "nombre": "Core KPIs (reintegrada v9.11.0)"},
+            {"id": "CANON:KPI-001", "seccion": "§06.1", "nombre": "KPI01 — Traffic +43% (Aéropostale)"},
+            {"id": "CANON:KPI-002", "seccion": "§06.2", "nombre": "KPI02 — Conversion +18% (Aéropostale)"},
+            {"id": "CANON:KPI-003", "seccion": "§06.3", "nombre": "KPI03 — Campaign Cost Reduction -74% (Levi's/Dockers)"},
+            {"id": "CANON:KPI-004", "seccion": "§06.4", "nombre": "KPI04 — Floorset Time Reduction -33% (Levi's/Dockers)"},
+            {"id": "CANON:KPI-005", "seccion": "§06.5", "nombre": "KPI05 — POP Coverage 100% (COVID-19 LATAM)"},
+            {"id": "CANON:KPI-006", "seccion": "§06.6", "nombre": "KPI06 — Rebranding Coverage 100% (Levi's/Dockers)"},
+            {"id": "CANON:KPI-007", "seccion": "§06.7", "nombre": "KPI07 — Adidas Punch List Count (17)"},
+            {"id": "CANON:KPI-008", "seccion": "§06.8", "nombre": "KPI08 — Years Experience (10+ Canonical)"},
+            {"id": "CANON:FACTS", "seccion": "§07", "nombre": "Canonical Facts"},
+            {"id": "CANON:FACT-001", "seccion": "§07.1", "nombre": "Fact — ALDO Certification Year"},
+            {"id": "CANON:FACT-002", "seccion": "§07.2", "nombre": "Fact — ALDO Employment Period"},
+            {"id": "CANON:FACT-003", "seccion": "§07.3", "nombre": "Fact — Adidas Punch List Count"},
+            {"id": "CANON:FACT-004", "seccion": "§07.4", "nombre": "Fact — Adidas Punch List Severity"},
+            {"id": "CANON:FACT-005", "seccion": "§07.5", "nombre": "Fact — Levi's Coverage"},
+            {"id": "CANON:FACT-006", "seccion": "§07.6", "nombre": "Fact — Aéropostale Team Size"},
+            {"id": "CANON:FACT-007", "seccion": "§07.7", "nombre": "Fact — Aéropostale Network Size"},
+            {"id": "CANON:FACT-008", "seccion": "§07.8", "nombre": "Fact — L'Oréal Brands"},
+            {"id": "CANON:UF-001", "seccion": "§07.9", "nombre": "Unique Factor — L'Oréal End Date"},
+            {"id": "CANON:UF-002", "seccion": "§07.10", "nombre": "Unique Factor — Canonical Email"},
+            {"id": "CANON:UF-003", "seccion": "§07.11", "nombre": "Unique Factor — Certifications Canon"},
+            {"id": "CANON:EDUCATION", "seccion": "§08", "nombre": "Education (reintegrada v9.11.0)"},
+            {"id": "CANON:EDUCATION-001", "seccion": "§08.1", "nombre": "ED01 — Licenciatura en Artes Visuales"},
+            {"id": "CANON:EDUCATION-002", "seccion": "§08.2", "nombre": "ED02 — Diplomado en Museos y Exposiciones"},
+            {"id": "CANON:CERTIFICATIONS", "seccion": "§09", "nombre": "Certifications (reintegrada v9.11.0)"},
+            {"id": "CANON:CERTIFICATION-001", "seccion": "§09.1", "nombre": "CERT01 — Store Operations Leaders Orientation"},
+            {"id": "CANON:CERTIFICATION-002", "seccion": "§09.2", "nombre": "CERT02 — AutoCAD & SketchUp Essentials"},
+            {"id": "CANON:MAJOR-PROJECTS", "seccion": "§10", "nombre": "Major Projects (reintegrada v9.11.0)"},
+            {"id": "CANON:MAJOR-PROJECT-001", "seccion": "§10.1", "nombre": "P01 — Adidas Brand Center Madero"},
+            {"id": "CANON:MAJOR-PROJECT-002", "seccion": "§10.2", "nombre": "P02 — Dockers LATAM Rebranding"},
+            {"id": "CANON:MAJOR-PROJECT-003", "seccion": "§10.3", "nombre": "P03 — AeroFest Frontón México"},
+            {"id": "CANON:POSITIONING", "seccion": "§11", "nombre": "Positioning Modes N1–N4"},
+            {"id": "CANON:POSITIONING-N1", "seccion": "§11.1", "nombre": "Positioning N1 — Luxury Brand Execution"},
+            {"id": "CANON:POSITIONING-N2", "seccion": "§11.2", "nombre": "Positioning N2 — Store Design & Flagship Execution"},
+            {"id": "CANON:POSITIONING-N3", "seccion": "§11.3", "nombre": "Positioning N3 — Regional Brand Execution & Rollout"},
+            {"id": "CANON:POSITIONING-N4", "seccion": "§11.4", "nombre": "Positioning N4 — Commercial VM & Field Leadership"},
+            {"id": "CANON:OUTPUT-CONTRACT", "seccion": "§12", "nombre": "Output Contract Framework"},
+            {"id": "CANON:OUTPUT-CONTRACT-001", "seccion": "§12.1", "nombre": "Output Contract — Golden Skeleton"},
+            {"id": "CANON:OUTPUT-CONTRACT-002", "seccion": "§12.2", "nombre": "Output Contract — Figma Tags / Registry SSOT"},
+            {"id": "CANON:OUTPUT-CONTRACT-003", "seccion": "§12.3", "nombre": "Output Contract — Tag Registry / Formato de Entrega"},
+            {"id": "CANON:OUTPUT-CONTRACT-004", "seccion": "§12.4", "nombre": "Output Contract — Positioning Modes (Aplicación)"},
+            {"id": "CANON:DERIVED-OUTPUTS-ARCHIVE", "seccion": "§13", "nombre": "Derived Outputs Archive (reintegrada v9.11.0)"},
         ],
     },
     {
@@ -415,7 +427,7 @@ def extract_ids_from_block(block: dict) -> list:
             is_def = is_definition_block(plain, id_str, btype)
             seccion = extract_live_section(plain) if is_def else None
 
-            found.append((id_str, is_def, seccion))
+            found.append((id_str, is_def, seccion, plain))
 
     elif btype == "code":
         rich_text = block["code"].get("rich_text", [])
@@ -423,7 +435,7 @@ def extract_ids_from_block(block: dict) -> list:
         for line in plain.splitlines():
             for id_str in extract_ids_from_rich_text([{"plain_text": line}]):
                 is_def = line.strip().strip("`") == id_str
-                found.append((id_str, is_def, None))
+                found.append((id_str, is_def, None, line.strip()))
 
     elif btype == "table_row":
         cells = block["table_row"].get("cells", [])
@@ -431,7 +443,7 @@ def extract_ids_from_block(block: dict) -> list:
             cell_plain = "".join(s.get("plain_text", "") for s in cell).strip()
             for id_str in extract_ids_from_rich_text(cell):
                 is_def = cell_plain.strip("` \n") == id_str or f"ID: {id_str}" in cell_plain
-                found.append((id_str, is_def, None))
+                found.append((id_str, is_def, None, cell_plain))
 
     return found
 
@@ -456,12 +468,13 @@ def build_link_index() -> tuple:
             block_id_clean = block["id"].replace("-", "")
             link = f"https://app.notion.com/p/{page_id_clean}#{block_id_clean}"
 
-            for id_str, is_def, seccion in extract_ids_from_block(block):
+            for id_str, is_def, seccion, plain in extract_ids_from_block(block):
                 link_index.setdefault(id_str, []).append({
                     "doc":     doc_name,
                     "link":    link,
                     "is_def":  is_def,
                     "seccion": seccion,
+                    "plain":   plain,
                 })
 
     return link_index, incomplete_docs
@@ -578,6 +591,7 @@ def print_debug_ids(link_index: dict, ids_to_debug: list) -> None:
             continue
         for e in entries:
             print(f"    - doc={e['doc']!r} is_def={e['is_def']} seccion={e.get('seccion')!r} link={e['link']}")
+            print(f"      plain={e.get('plain')!r}")
     print("\n" + "#" * 52)
 
 

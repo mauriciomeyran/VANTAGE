@@ -110,46 +110,58 @@
 | [`MANUAL:WEEKLY-FLOW-006`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280c792bec53a71f11c47 ) | 08.6 | Cadence Matrix — Weekly Rhythm |
 | [`MANUAL:GOLDEN-SKELETON-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280cfb29eeb500ea18d97 ) | 20 | Golden Skeleton — Qué es y Dónde Vive |
 | [`MANUAL:SCHEMA-FIELD-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42806a920cd01aa2f81bcd ) | 21 | Schema Class A/B — Referencia de Campos |
-| [`CANON:PROFILE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428007b744ce0ffcf1bfce ) | §A ⚠︎sin verificar en vivo | Professional Profile Canon |
-| [`CANON:SKILLS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428007b744ce0ffcf1bfce ) | §B ⚠︎sin verificar en vivo | Skills Canon |
-| [`CANON:EXPERIENCE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428007b744ce0ffcf1bfce ) | §D ⚠︎sin verificar en vivo | Experience Records |
-| [`CANON:EXPERIENCE-C01`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428007b744ce0ffcf1bfce ) | §D.1 ⚠︎sin verificar en vivo | C01 L'Oréal Luxe |
-| [`CANON:EXPERIENCE-C02`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428052af0ccf972cdac1e9 ) | 03.2 | C02 Bisonte Experiential |
-| [`CANON:EXPERIENCE-C03`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280fb98d5c06ab0a59a4b ) | 03.3 | C03 Levi Strauss (Dockers) |
-| [`CANON:EXPERIENCE-C04`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42800ea985c60f35b24cd2 ) | 03.4 | C04 Aéropostale |
-| [`CANON:EXPERIENCE-C05`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428002b962e72ccb9d2155 ) | 03.5 | C05 El Palacio de Hierro (ALDO) |
-| [`CANON:ACHIEVEMENTS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280038b19e6e8db21c15f ) | 04 | Achievement Library |
-| [`CANON:KPIS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428007b744ce0ffcf1bfce ) | §I ⚠︎sin verificar en vivo | Core KPIs |
-| `CANON:KPI-001` | §I.1 | KPI — Revenue Impact |
-| `CANON:KPI-002` | §I.2 | KPI — Cost Optimization |
-| `CANON:KPI-003` | §I.3 | KPI — Time to Market |
-| `CANON:KPI-004` | §I.4 | KPI — Quality Score |
-| `CANON:KPI-005` | §I.5 | KPI — Customer Satisfaction |
-| `CANON:KPI-006` | §I.6 | KPI — Team Productivity |
-| `CANON:KPI-007` | §I.7 | KPI — Innovation Index |
-| `CANON:KPI-008` | §I.8 | KPI — Strategic Alignment |
-| [`CANON:FACTS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42806ea4f5e3a1155ce8b6 ) | 06 | Canonical Facts |
-| [`CANON:FACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42809a8366f87f5af00e7c ) | 06.1 | Fact — Industry Experience |
-| [`CANON:FACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280fabdbfcb708ae49307 ) | 06.2 | Fact — Technical Stack |
-| [`CANON:FACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280a5a25effb9f9458f85 ) | 06.3 | Fact — Team Leadership |
-| [`CANON:FACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42802b9f85fc55365e13ef ) | 06.4 | Fact — Project Scale |
-| [`CANON:FACT-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280939bf9c14433a7d203 ) | 06.5 | Fact — Geographic Scope |
-| [`CANON:FACT-006`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428026886bd4b10e4c7e37 ) | 06.6 | Fact — Budget Management |
-| [`CANON:FACT-007`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280828a8fd193909cbd2c ) | 06.7 | Fact — Methodology Expertise |
-| [`CANON:FACT-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428067aacbc37c2cb503e8 ) | 06.8 | Fact — Certifications & Education |
-| [`CANON:POSITIONING`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42800580acfac704c04eb0 ) | 07 | Positioning Modes N1–N4 |
-| [`CANON:POSITIONING-N1`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280a58696fc3282b62562 ) | 07.1 | Positioning N1 — Strategic Leader |
-| [`CANON:POSITIONING-N2`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42801aa619ec12b304a776 ) | §K.2 ⚠︎sin verificar en vivo | Positioning N2 — Technical Expert |
-| [`CANON:POSITIONING-N3`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280df89ecced651d49b6d ) | §K.3 ⚠︎sin verificar en vivo | Positioning N3 — Delivery Manager |
-| [`CANON:POSITIONING-N4`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280a59b57fed91bae6ccc ) | §K.4 ⚠︎sin verificar en vivo | Positioning N4 — Innovation Driver |
-| [`CANON:OUTPUT-CONTRACT`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42807bb066e05ffe83888a ) | §L ⚠︎sin verificar en vivo | Output Contract Framework |
-| [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280198b2dd58a2ed83da1 ) | §L.1 ⚠︎sin verificar en vivo | Output Contract — CV Documents |
-| [`CANON:OUTPUT-CONTRACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280289fb2e371631818f9 ) | §L.2 ⚠︎sin verificar en vivo | Output Contract — Portfolio Materials |
-| [`CANON:OUTPUT-CONTRACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280289fb2e371631818f9 ) | §L.3 ⚠︎sin verificar en vivo | Output Contract — Case Studies |
-| [`CANON:OUTPUT-CONTRACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280289fb2e371631818f9 ) | §L.4 ⚠︎sin verificar en vivo | Output Contract — Interview Prep |
-| [`CANON:UF-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280c9ab20edcf1b18905d ) | 06.9 | Unique Factor — Global Experience |
-| [`CANON:UF-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280378d01eb8802427c56 ) | 06.10 | Unique Factor — Industry Transformation |
-| [`CANON:UF-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280deac68f3171b29d8d2 ) | 06.11 | Unique Factor — Digital Innovation |
+| [`CANON:PROFILE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#f98593129cc54950b4409c49f1007eff ) | 01 | Professional Profile Canon |
+| [`CANON:SKILLS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#aa2eaf1416b249d09ae26f3e3a75889d ) | 02 | Skills Canon |
+| [`CANON:EXPERIENCE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#0139b01a88d448d1983476a46fcaa4fb ) | 03 | Experience Records |
+| [`CANON:EXPERIENCE-C01`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#c47e269dc6b148f6a947a47e2cb329fe ) | 03.1 | C01 L'Oréal Luxe |
+| [`CANON:EXPERIENCE-C02`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#09191c87d4d0468fbf25324b2aafff7d ) | 03.2 | C02 Bisonte Experiential |
+| [`CANON:EXPERIENCE-C03`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#f6728ed155104b5781a3c641ec8ef02d ) | 03.3 | C03 Levi Strauss (Dockers) |
+| [`CANON:EXPERIENCE-C04`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#d5aea665d3cf4ae0aaa44820ff19de8f ) | 03.4 | C04 Aéropostale |
+| [`CANON:EXPERIENCE-C05`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#8edfb555be4947a79c57212174643854 ) | 03.5 | C05 El Palacio de Hierro (ALDO) |
+| [`CANON:CAREER-TIMELINE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#c6429d263e1f4d8c81b8b802c0fc1cfd ) | 04 | Career Timeline (reintegrada v9.11.0) |
+| [`CANON:ACHIEVEMENTS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#30fdc52a067946bab0948a7a3cd693c7 ) | 05 | Achievement Library |
+| [`CANON:KPIS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#9fd77507918543fab85ae6ab0543a995 ) | 06 | Core KPIs (reintegrada v9.11.0) |
+| [`CANON:KPI-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#33fbf940a19e48aab4e4d560f130af5a ) | 06.1 | KPI01 — Traffic +43% (Aéropostale) |
+| [`CANON:KPI-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#2cbbd91205564299b5cd5dc4a924961e ) | 06.2 | KPI02 — Conversion +18% (Aéropostale) |
+| [`CANON:KPI-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#f19e90d7c3d041faaad0dc664bfaac72 ) | 06.3 | KPI03 — Campaign Cost Reduction -74% (Levi's/Dockers) |
+| [`CANON:KPI-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#1d8fd5282eb64a26a8dc0a71e0e44d2f ) | 06.4 | KPI04 — Floorset Time Reduction -33% (Levi's/Dockers) |
+| [`CANON:KPI-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#29b3e66ba77e4081876dc849cace98ca ) | 06.5 | KPI05 — POP Coverage 100% (COVID-19 LATAM) |
+| [`CANON:KPI-006`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#9b128a4926804d118961d619a73fecd0 ) | 06.6 | KPI06 — Rebranding Coverage 100% (Levi's/Dockers) |
+| [`CANON:KPI-007`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#9586cc7f589246629f04e392eb953b39 ) | 06.7 | KPI07 — Adidas Punch List Count (17) |
+| [`CANON:KPI-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#a12367e4ee7e437182c75fcb73f570f8 ) | 06.8 | KPI08 — Years Experience (10+ Canonical) |
+| [`CANON:FACTS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#24cb1909da514308a187e4363a191f47 ) | 07 | Canonical Facts |
+| [`CANON:FACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#dc5b14da4db3423bb75e1e47ed3196c5 ) | 07.1 | Fact — ALDO Certification Year |
+| [`CANON:FACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#8663d6cc4f484f909d05fdfa039d89ab ) | 07.2 | Fact — ALDO Employment Period |
+| [`CANON:FACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#a8cf935097224d1eb509835bd08d0420 ) | 07.3 | Fact — Adidas Punch List Count |
+| [`CANON:FACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#6236fe6f83784a8e8fc54fd4c12f77e8 ) | 07.4 | Fact — Adidas Punch List Severity |
+| [`CANON:FACT-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#9c7155acb4c2468c85757fbda2fde5b2 ) | 07.5 | Fact — Levi's Coverage |
+| [`CANON:FACT-006`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#0b492f9eb45e485681d1f2ee0146b6ea ) | 07.6 | Fact — Aéropostale Team Size |
+| [`CANON:FACT-007`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#17bc0d3e2a8443939217b7dd5d110397 ) | 07.7 | Fact — Aéropostale Network Size |
+| [`CANON:FACT-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#7763e35983d643dc95bfcd6e8b6a90b4 ) | 07.8 | Fact — L'Oréal Brands |
+| [`CANON:UF-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#fc1c7526fd2e460d958e38978ee2fd26 ) | 07.9 | Unique Factor — L'Oréal End Date |
+| [`CANON:UF-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#8a807d5abfa34bb9ae5a72c23b80b698 ) | 07.10 | Unique Factor — Canonical Email |
+| [`CANON:UF-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#e804e9cd8ea04fa4b1684032f5199ee4 ) | 07.11 | Unique Factor — Certifications Canon |
+| [`CANON:EDUCATION`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#6cf7a8b8685744f18394340488c25a38 ) | 08 | Education (reintegrada v9.11.0) |
+| [`CANON:EDUCATION-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#865e7ac3cec14eae9f55a7d9626649f5 ) | 08.1 | ED01 — Licenciatura en Artes Visuales |
+| [`CANON:EDUCATION-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#a272a8fef0df4eccab8addd365a9d0fb ) | 08.2 | ED02 — Diplomado en Museos y Exposiciones |
+| [`CANON:CERTIFICATIONS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#048a20c926a648fa9451b9124431f7df ) | 09 | Certifications (reintegrada v9.11.0) |
+| [`CANON:CERTIFICATION-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#6985e03bae384c80bc0066f6112d0732 ) | 09.1 | CERT01 — Store Operations Leaders Orientation |
+| [`CANON:CERTIFICATION-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#253ca7eaa3514ec8b869f175a8d222dc ) | 09.2 | CERT02 — AutoCAD & SketchUp Essentials |
+| [`CANON:MAJOR-PROJECTS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#5dbf61ae4d3d44a8acaa4d96f7e3ea4d ) | 10 | Major Projects (reintegrada v9.11.0) |
+| [`CANON:MAJOR-PROJECT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#7ce828d79b144798b4a8d909a5f70bb6 ) | 10.1 | P01 — Adidas Brand Center Madero |
+| [`CANON:MAJOR-PROJECT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#10ab7c7605914c98bfa6c959603249af ) | 10.2 | P02 — Dockers LATAM Rebranding |
+| [`CANON:MAJOR-PROJECT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#ee09c90e04754157b92e8f53f9c56ef9 ) | 10.3 | P03 — AeroFest Frontón México |
+| [`CANON:POSITIONING`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#f10b697b2c2941ca9f43540d59f14b2a ) | 11 | Positioning Modes N1–N4 |
+| [`CANON:POSITIONING-N1`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#7f270f48d61c45169bb1ce307a071484 ) | 11.1 | Positioning N1 — Luxury Brand Execution |
+| [`CANON:POSITIONING-N2`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#876bbd9719724f2cbf03f0373bf3a0bd ) | 11.2 | Positioning N2 — Store Design & Flagship Execution |
+| [`CANON:POSITIONING-N3`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#d8df1188a6644635b7da6bf411f5c1aa ) | 11.3 | Positioning N3 — Regional Brand Execution & Rollout |
+| [`CANON:POSITIONING-N4`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#0cae7376f9494546b563004d7dadd64c ) | 11.4 | Positioning N4 — Commercial VM & Field Leadership |
+| [`CANON:OUTPUT-CONTRACT`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#ac370d6b1704448a9e589d61ff856d7f ) | 12 | Output Contract Framework |
+| [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#8f8a0f05cb1c4ddc9902e11cc124edb1 ) | 12.1 | Output Contract — Golden Skeleton |
+| [`CANON:OUTPUT-CONTRACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428015a83dd038ef725334 ) | 12.2 | Output Contract — Figma Tags / Registry SSOT |
+| [`CANON:OUTPUT-CONTRACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280cf8892e98c8abbbf1b ) | 12.3 | Output Contract — Tag Registry / Formato de Entrega |
+| [`CANON:OUTPUT-CONTRACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#0e66ccd2192345549c384a7468ae9539 ) | 12.4 | Output Contract — Positioning Modes (Aplicación) |
+| [`CANON:DERIVED-OUTPUTS-ARCHIVE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#9521e4ab89c949edbcc050082a419f45 ) | 13 | Derived Outputs Archive (reintegrada v9.11.0) |
 
 ---
 
