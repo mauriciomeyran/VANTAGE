@@ -1,5 +1,58 @@
 # V | CHANGELOG
 
+### v9.10.4 — Documentación Transversal: SP:SCHEMA Alineado con Schema Vivo de Notion · 2026-07-31
+Tipo: [DOC] [FIX]
+Alcance: System Prompt (SP:SCHEMA, sección 08).
+Contexto: SP:SCHEMA documentaba solo 7 de 13 campos reales del Bug Tracker y 7 de 10 del Tasks Tracker (confirmado vía fetch directo de ambos data sources). Gap detectado al intentar llenar Fecha_Resolución en un ticket recién cerrado — el campo no aparecía en el schema documentado pese a existir en Notion.
+Cambios:
+- SP:SCHEMA — Bug Tracker: alta de Fecha_Resolución, Solución, Etiquetas, Archivar, Mantener, Creado.
+- SP:SCHEMA — Tasks Tracker: alta de Fecha_Cierre, Archivar, Mantener, Creado.
+IDs afectados: ninguno — extensión de contenido sobre SP:SCHEMA existente, no alta de ID nuevo. Census no requiere regeneración.
+Write-Back Verification: System Prompt re-fetched tras la escritura de contenido — confirmado sin mismatch.
+Pendiente (fuera de esta entrada): vversions --sync para propagar versión a los fundacionales restantes.
+Versión actualizada: 9.10.4 (CHANGELOG + SYSTEM PROMPT). El resto de los fundacionales permanece en versión previa hasta vversions --sync.
+---
+### v9.10.3 — TOC del Manual y Tabla 08.6 Convertidas a Bloques de Tabla Reales · 2026-07-30
+Tipo: [FIX]
+Alcance: Manual (TOC / DECLARACIÓN DE AUDIENCIA Y ALCANCE, MANUAL:CADENCE-MATRIX).
+Contexto: El operador identificó, vía captura de pantalla, que la TOC del Manual (tabla de 21 filas con #/ID/Sección/Porción) nunca fue un bloque <table> real de Notion — era texto plano con pipes | y 
+ dentro de un bullet, por lo que se renderizaba como texto corrido en vez de tabla. Mismo patrón de fricción ya identificado en la tabla 08.6 (4 filas de nota fragmentadas con celdas vacías), corregida en esta misma sesión previamente.
+Cambios:
+- Manual — TOC (bajo "DECLARACIÓN DE AUDIENCIA Y ALCANCE"): convertida de texto plano (| # | ID | ... |
+) a bloque <table header-row="true"> real, 21 filas + header, preservando todos los links existentes (§18–§21).
+IDs afectados: ninguno — cambio puramente estructural de contenedor (texto → tabla), sin alterar contenido ni IDs. Census no requiere regeneración.
+Write-Back Verification: Manual re-fetched de forma independiente tras la escritura — tabla confirmada con las 21 filas correctas, links preservados, sin residuo del formato anterior.
+Pendiente (fuera de esta entrada): vversions --sync para propagar versión a los fundacionales restantes (heredado, aún no ejecutado). Revisión humana del resto del Manual (01–07, 09–21) en curso por el operador — pendiente aviso de cierre antes de generar plantilla de referencia para KERNEL/Career Canon.
+Versión actualizada: 9.10.3 (CHANGELOG). El resto de los fundacionales permanece en v9.10.0/v9.9.x hasta vversions --sync.
+---
+### v9.10.2 — Corrección de Terminología (Bloque vs. Línea) + Alta de Criterio 6: Concreción de Títulos · 2026-07-30
+Tipo: [DOC] [FIX]
+Alcance: Manual (MANUAL:PATCH-QUALITY).
+Contexto: El operador editó manualmente 08–08.6 con el patrón real vigente — ID y título unidos por 
+ dentro de un único bloque de heading, no "dos líneas contiguas" como quedó redactado en v9.10.1. Se identificó que "línea" es un término ambiguo entre la capa visual (donde ambos patrones parecen "dos renglones") y la capa de bloque Markdown/Notion (donde son estructuras distintas: un bloque con 
+ interno vs. dos bloques heading consecutivos). El operador también solicitó formalizar que los títulos deben ser concretos/ilustrativos, no descriptivos-compuestos.
+Cambios:
+- Manual — MANUAL:PATCH-QUALITY (§15), criterio 1: redacción corregida de "líneas contiguas" a "un único bloque de heading... unión por 
+ interno", explicitando que el criterio de éxito es la estructura de bloque, no el conteo visual de líneas.
+- Manual — MANUAL:PATCH-QUALITY (§15), alta de criterio 6 (Concreción de títulos): títulos deben ser ilustrativos/concretos, no construcciones semánticas compuestas.
+- Ajuste de conteo en encabezado y cierre del bloque ("cinco" → "seis" criterios) para reflejar el nuevo total.
+IDs afectados: ninguna alta/baja — extensión de contenido sobre MANUAL:PATCH-QUALITY, ID ya existente. Census no requiere regeneración.
+Write-Back Verification: Manual re-fetched de forma independiente tras cada escritura — confirmado sin mismatch en las 3 pasadas (corrección criterio 1 + alta criterio 6, ajuste de conteo cierre, ajuste de conteo apertura).
+Pendiente (fuera de esta entrada): Reformateo masivo pendiente de KERNEL + Career Canon + resto del Manual (secciones 01–07, 09–21) para alinear con el patrón de bloque único 
+ ya vigente en 08–08.6 — mapeo formal aún no ejecutado. vversions --sync para propagar versión a los fundacionales restantes (heredado, aún no ejecutado).
+Versión actualizada: 9.10.2 (CHANGELOG). El resto de los fundacionales permanece en v9.10.0/v9.9.x hasta vversions --sync.
+---
+### v9.10.1 — Documentación Transversal: Continuidad ID+Título en Bloque de Encabezado · 2026-07-30
+Tipo: [DOC]
+Alcance: Manual (MANUAL:PATCH-QUALITY, criterio 1).
+Contexto: El operador detectó (evidencia visual, dos capturas de Notion UI) espacio vertical entre el identificador técnico y el título descriptivo de un heading (ej. "08 MANUAL:WEEKLY-FLOW" y su título). Confirmado como artefacto de rendering de Notion entre dos heading_2 consecutivos — no hay blank line real en el Markdown fuente vía API. El operador solicitó formalizar la regla igualmente, en forma genérica (sin ejemplo de nodo específico), para prevenir que un colaborador futuro (Devin/Mistral) intente "corregir" el rendering insertando contenido de separación real.
+Cambios:
+- Manual — MANUAL:PATCH-QUALITY (§15), criterio 1: extensión de la misma oración ya existente sobre nivel de heading, agregando la regla de continuidad ID+título en líneas contiguas del mismo bloque, con aclaración explícita de que el espaciado de Notion es artefacto de plataforma, no instrucción de contenido. Redacción genérica, sin referencia a un nodo particular.
+IDs afectados: ninguna alta/baja — extensión de contenido sobre MANUAL:PATCH-QUALITY, ID ya existente. Census no requiere regeneración.
+Write-Back Verification: Manual re-fetched de forma independiente tras la escritura — texto confirmado sin mismatch.
+Pendiente (fuera de esta entrada): vversions --sync para propagar versión a los fundacionales restantes (heredado de v9.10.0, aún no ejecutado).
+Versión actualizada: 9.10.1 (CHANGELOG). El resto de los fundacionales permanece en v9.10.0/v9.9.x hasta vversions --sync.
+---
 ### v9.10.0 — Auditoría de Jerarquía Tipográfica + Documentación Transversal: Matriz Congelada · 2026-07-30
 Tipo: [AUDIT] [DOC]
 Alcance: Kernel (37 headings + KERNEL:DOCUMENTATION-001), Career Canon (24 headings), Manual (MANUAL:PATCH-QUALITY).

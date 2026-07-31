@@ -334,7 +334,7 @@ def validate_graph_artifacts(
 def main() -> None:
     parser = argparse.ArgumentParser(description="VANTAGE Entity Index Generator v2")
     parser.add_argument("--limit", type=int, default=None)
-    parser.add_argument("--out", type=Path, default=_SCRIPTS_DIR / "entity_index_v2.json")
+    parser.add_argument("--out", type=Path, default=_LAYER_1_ROOT / "data" / "entity_index_v2.json")
     parser.add_argument("--skip-graph", action="store_true", help="Skip graph generation (entity index only)")
     args = parser.parse_args()
 

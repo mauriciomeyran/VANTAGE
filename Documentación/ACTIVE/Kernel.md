@@ -487,7 +487,7 @@ Relación con CANON:OUTPUT-CONTRACT: contratos distintos y complementarios — O
 ---
 # IV. INFRAESTRUCTURA DE CONTEXTO
 ## 15 KERNEL:CONTEXT-INFRASTRUCTURE
-## Economía de Contexto y Rutas de Carga
+Economía de Contexto y Rutas de Carga
 ## 15.1 KERNEL:CONTEXT-INFRASTRUCTURE-001
 ## Scope
 Acceso a lógica base preferente vía Terminal (lazy_loader.py). MCP autorizado para lectura, DRY RUN y modificación documental cuando exista instrucción explícita. Jerarquía: L1 > L2 > L3. FEED: única vía manual es FAST (11-TRIGGER-008). Triaje de ejecución: Requerimientos → Triaje de costos (A: Terminal, B: MCP, C: Upload) → Confirmación. Priorizar Opción A.

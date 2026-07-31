@@ -2,76 +2,76 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`KERNEL:PURPOSE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281349d09f7915b8cce1e ) | 01 | Propósito del Sistema |
-| [`KERNEL:FAIL-PHILOSOPHY`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281de8a40eaeec6e41e29 ) | 02 | Filosofía de Fallo |
-| [`KERNEL:DOCUMENTATION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42816b8d8eeae1e393ded7 ) | 03 | Documentación (L0) |
-| [`KERNEL:DOCUMENTATION-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281608579d5c0ff50d107 ) | 03.1 | Canonical Document ID Contract |
-| [`KERNEL:DOCUMENTATION-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281cba9f0fcb8459fb6c2 ) | 03.2 | Normalización Documental de IDs Legacy |
-| [`KERNEL:DOCUMENTATION-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42817689fec665af31aa97 ) | 03.3 | L0 — VANTAGE Runtime |
-| [`KERNEL:DOCUMENTATION-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281d08eede46b6516bf83 ) | 03.4 | L0-Bootstrap — Dynamic Governance Layer |
-| [`KERNEL:DOCUMENTATION-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428152a80af5bdc7768fac ) | 03.5 | Convención de Anuncio de Skills |
-| [`KERNEL:DOCUMENTATION-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428197b67af06de62df145 ) | 03.6 | Contrato de health_check.py |
-| [`KERNEL:DOCUMENTATION-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428158aee4cf4b58ab9559 ) | 03.7 | Version-Check Tool (verify_versions.py) |
-| [`KERNEL:DOCUMENTATION-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281fdaabbfbce3da5f378 ) | 03.8 | Sincronización Obligatoria del ID Census |
-| [`KERNEL:DOCUMENTATION-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42811b9e21f514f66e5855 ) | 03.9 | Registro de Continuidad de Sesión |
-| [`KERNEL:DOCUMENTATION-010`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281a1b93de540967f79d6 ) | 03.10 | Documentación Transversal |
-| [`KERNEL:DOCUMENTATION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428174883ee0c784446ea2 ) | 03.11 | Sistema de Cross-Reference Hyperlinks |
-| [`KERNEL:ARCHITECTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42817c8d69fed87dfaf827 ) | 04 | Arquitectura de Cuatro Capas |
-| [`KERNEL:ARCHITECTURE-L1`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428148b36bc75a2cecf377 ) | 04.1 | L1 — Active Recon |
-| [`KERNEL:ARCHITECTURE-L2`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281ba8b74e0d4904e55e5 ) | 04.2 | L2 — Strategic Search |
-| [`KERNEL:ARCHITECTURE-L3`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42818fa098dfe5cdc72065 ) | 04.3 | L3 — Passive Intake |
-| [`KERNEL:ARCHITECTURE-L4`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428170a6fffc94b5aee573 ) | 04.4 | L4 — Version Control & Infrastructure |
-| [`KERNEL:OWNERSHIP`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281248be0f409041382c4 ) | 05 | División de Responsabilidades AI/Python |
-| [`KERNEL:OWNERSHIP-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281c3808feda2fb161d0c ) | 05.1 | AI Component |
-| [`KERNEL:OWNERSHIP-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281dd9640f7b1095c2ffc ) | 05.2 | Python Component |
-| [`KERNEL:DASHBOARD-CHECKLIST-ARCH`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428164a11dcd1d188c2860 ) | 06 | Arquitectura Dashboard/Checklist |
-| [`KERNEL:SCHEMA`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281f4998dd1a0745a75da ) | 07 | Modelo de Datos y Ownership |
-| [`KERNEL:SCHEMA-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281b3a6bdc1e36f470c20 ) | 07.1 | Schema — Class A Fields |
-| [`KERNEL:SCHEMA-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281d499f9d59cc0fde235 ) | 07.2 | Schema — Class B Fields |
-| [`KERNEL:SCHEMA-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281afb8a6ee8472ff5e49 ) | 07.3 | Schema — Field Validation Rules |
-| [`KERNEL:SCHEMA-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281f49111ef781ffd918d ) | 07.4 | Schema — Relationship Constraints |
-| [`KERNEL:SCHEMA-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281cba089cc0968b71735 ) | 07.5 | Schema — Index Definition |
-| [`KERNEL:SCHEMA-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281ffbbfbc83f38563365 ) | 07.6 | Schema — Migration Strategy |
-| [`KERNEL:SCHEMA-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428129bca3f99c1c8fc0e8 ) | 07.7 | Schema — Version Control |
-| [`KERNEL:TRACKER-SCHEMA`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428112ab7dfa7888f998db ) | 08 | Bug Tracker y Tasks Tracker |
-| [`KERNEL:TRACKER-SCHEMA-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281a78d8fca53c7bbbebd ) | 08.1 | Tracker Schema — Bug Tracker |
-| [`KERNEL:TRACKER-SCHEMA-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281c3a807d419df511e73 ) | 08.2 | Tracker Schema — Tasks Tracker |
-| [`KERNEL:GATE-DECISION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42811d81b3ee5808db4f07 ) | 09 | Lógica de Gate Decision |
-| [`KERNEL:GATE-DECISION-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281a69ac0f801aa6f0706 ) | 09.1 | Bypass |
-| [`KERNEL:GATE-DECISION-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281eb8882c8496a9afc8e ) | 09.2 | Lógica Estándar |
-| [`KERNEL:GATE-DECISION-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281e3b8f3c8aa27b849df ) | 09.3 | Resolución de REVIEW_NEEDED |
-| [`KERNEL:GATE-DECISION-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42817492acd285c13cd50f ) | 09.4 | Por Qué los Gates Son Deterministas |
-| [`KERNEL:GATE-DECISION-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428109b65dfbf9c0d78ad0 ) | 09.5 | Flujo de Recuperación BLOCKED |
-| [`KERNEL:GATE-DECISION-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428149b66dc26d72cc225d ) | 09.6 | REJECTED (Post-Aplicación) |
-| [`KERNEL:GATE-DECISION-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42811d91f7d307c6d84221 ) | 09.7 | Ejecución Automática de Archivado |
-| [`KERNEL:GATE-DECISION-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428172b5efcbb5acd85282 ) | 09.8 | Capas de Evaluación de Gate: Técnica vs. Negocio |
-| [`KERNEL:GATE-DECISION-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428113b25bdc17ba3d9e88 ) | 09.9 | Escalamiento de Pendientes a Tickets |
-| [`KERNEL:GATE-DECISION-010`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428104bd18fec1f13c93d5 ) | 09.10 | Gate Decision — Technical Review |
-| [`KERNEL:GATE-DECISION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281638beafedad84f8b21 ) | 09.11 | Gate Decision — Business Review |
-| [`KERNEL:CV-GOLDEN-RULES`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428123bf44c0187e94f36a ) | 10 | Golden Rules — Límites de Ejecución |
-| [`KERNEL:CV-GOLDEN-RULES-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428120aaa8e1c7a0355447 ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #1 |
-| [`KERNEL:CV-GOLDEN-RULES-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42814dbc98f8d81b69b15f ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #2 |
-| [`KERNEL:CV-GOLDEN-RULES-003`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428101a5d5d01a08c99e63 ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #3 |
-| [`KERNEL:CV-GOLDEN-RULES-004`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428193ae21fb1073054f87 ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #4 |
-| [`KERNEL:CV-GOLDEN-RULES-005`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428117917fff8df24f8da7 ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #5 |
-| [`KERNEL:TRIGGERS`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42812d93afc7cf2959cf66 ) | 11 | Contratos de Ejecución del AI Component |
-| [`KERNEL:TRIGGER-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281df80abdee17d46ff6f ) | 11.1 | Trigger — Discovery Request |
-| [`KERNEL:TRIGGER-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42815b9468eaeab23e9bcb ) | 11.2 | Trigger — CV Optimization |
-| [`KERNEL:TRIGGER-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428170818fec59e5df3c2d ) | 11.3 | Trigger — Recovery Request |
-| [`KERNEL:TRIGGER-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42812ca57affbd0ae50004 ) | 11.4 | Trigger — Documentation Update |
-| [`KERNEL:TRIGGER-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42811ea791d20f3d57f8df ) | 11.5 | Trigger — Schema Validation |
-| [`KERNEL:TRIGGER-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281eab9d5fa8e840c1ca1 ) | 11.6 | Trigger — Gate Decision |
-| [`KERNEL:TRIGGER-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42812fa9e4de278cbaf73b ) | 11.7 | Trigger — Archiving |
-| [`KERNEL:TRIGGER-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281948b05fd14a88212ea ) | 11.8 | Trigger — Health Check |
-| [`KERNEL:TRIGGER-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281379d52f02182ea3181 ) | 11.9 | Trigger — Version Check |
-| [`KERNEL:CV-PIPELINE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42815aa0f5fd044a456973 ) | 12 | Pipeline de CV |
-| [`KERNEL:CANON-UPDATE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428102aba5ce1eed811e16 ) | 13 | Actualización del Canon |
-| [`KERNEL:NAMING-CONVENTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281eca0d7def7aa4902ed ) | 14 | Convención de Nombres |
-| [`KERNEL:CONTEXT-INFRASTRUCTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42815aa258d7ed2229a00b ) | 15 | Context Infrastructure |
-| [`KERNEL:CONTEXT-INFRASTRUCTURE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281d18948d58fa8ac55fa ) | 15.1 | Context Infrastructure — Data Sources |
-| [`KERNEL:CONTEXT-INFRASTRUCTURE-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281589238fde6133219b4 ) | 15.2 | Context Infrastructure — Integration Points |
-| [`KERNEL:DATA-FLOW`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281329a44dd40ed0cacda ) | 16 | Flujo de Datos |
-| [`KERNEL:EVOLUTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4281a7b642c3258c9aec47 ) | 17 | Evolución del Sistema |
+| [`KERNEL:PURPOSE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280568dcbd955ea9b5b03 ) | 01 | Propósito del Sistema |
+| [`KERNEL:FAIL-PHILOSOPHY`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42804ca28acd3a7e30c19a ) | 02 | Filosofía de Fallo |
+| [`KERNEL:DOCUMENTATION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428036854edf6639aba3c9 ) | 03 | Documentación (L0) |
+| [`KERNEL:DOCUMENTATION-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280e2b8afc46403c19715 ) | 03.1 | Canonical Document ID Contract |
+| [`KERNEL:DOCUMENTATION-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280fb9cf9cde00b3bc1bc ) | 03.2 | Normalización Documental de IDs Legacy |
+| [`KERNEL:DOCUMENTATION-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280d6ab95c3f13d41899a ) | 03.3 | L0 — VANTAGE Runtime |
+| [`KERNEL:DOCUMENTATION-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280d78b4ed8293cf8c1c2 ) | 03.4 | L0-Bootstrap — Dynamic Governance Layer |
+| [`KERNEL:DOCUMENTATION-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280a99f82fb35cc2341c5 ) | 03.5 | Convención de Anuncio de Skills |
+| [`KERNEL:DOCUMENTATION-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280f59f8ce8c4c58c2e24 ) | 03.6 | Contrato de health_check.py |
+| [`KERNEL:DOCUMENTATION-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280f59c69ebc3b75f8628 ) | 03.7 | Version-Check Tool (verify_versions.py) |
+| [`KERNEL:DOCUMENTATION-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42801ca367f7b14d92bcdf ) | 03.8 | Sincronización Obligatoria del ID Census |
+| [`KERNEL:DOCUMENTATION-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280e1b5b6e613a2b9bbc6 ) | 03.9 | Registro de Continuidad de Sesión |
+| [`KERNEL:DOCUMENTATION-010`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428064bad8fe4ad4113975 ) | 03.10 | Documentación Transversal |
+| [`KERNEL:DOCUMENTATION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280ceb134ccd331673678 ) | 03.11 | Sistema de Cross-Reference Hyperlinks |
+| [`KERNEL:ARCHITECTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280288b56fade509b08b9 ) | 04 | Arquitectura de Cuatro Capas |
+| [`KERNEL:ARCHITECTURE-L1`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428056ab4af10ab2da4c8f ) | 04.1 | L1 — Active Recon |
+| [`KERNEL:ARCHITECTURE-L2`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428070af5af732107591dc ) | 04.2 | L2 — Strategic Search |
+| [`KERNEL:ARCHITECTURE-L3`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42801c91a5cdcb0109508e ) | 04.3 | L3 — Passive Intake |
+| [`KERNEL:ARCHITECTURE-L4`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42804bb104c2b090ddbb6f ) | 04.4 | L4 — Version Control & Infrastructure |
+| [`KERNEL:OWNERSHIP`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280d7b2f6ca5d4a99da9b ) | 05 | División de Responsabilidades AI/Python |
+| [`KERNEL:OWNERSHIP-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42803ca7b1e0d557223878 ) | 05.1 | AI Component |
+| [`KERNEL:OWNERSHIP-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428062907cd0ad67aceaba ) | 05.2 | Python Component |
+| [`KERNEL:DASHBOARD-CHECKLIST-ARCH`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42800494cef1ba4f6e1e12 ) | 06 | Arquitectura Dashboard/Checklist |
+| [`KERNEL:SCHEMA`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280ffb68df89da60aeabc ) | 07 | Modelo de Datos y Ownership |
+| [`KERNEL:SCHEMA-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428057982dd4f40f284104 ) | 07.1 | Schema — Class A Fields |
+| [`KERNEL:SCHEMA-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280048d27cd4ae51c2926 ) | 07.2 | Schema — Class B Fields |
+| [`KERNEL:SCHEMA-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280b8b8cef355fd6ff321 ) | 07.3 | Schema — Field Validation Rules |
+| [`KERNEL:SCHEMA-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428064b290f3a7efef6d32 ) | 07.4 | Schema — Relationship Constraints |
+| [`KERNEL:SCHEMA-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42805cb540d7e471233d55 ) | 07.5 | Schema — Index Definition |
+| [`KERNEL:SCHEMA-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280a7ad2fd7b2a4c855e7 ) | 07.6 | Schema — Migration Strategy |
+| [`KERNEL:SCHEMA-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42808b8f14c9d4318d79bd ) | 07.7 | Schema — Version Control |
+| [`KERNEL:TRACKER-SCHEMA`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428000afbbed14ed2d9a43 ) | 08 | Bug Tracker y Tasks Tracker |
+| [`KERNEL:TRACKER-SCHEMA-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42800c80c2f97fb5cd3cc1 ) | 08.1 | Tracker Schema — Bug Tracker |
+| [`KERNEL:TRACKER-SCHEMA-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280659d81fe9cb1e1bbcc ) | 08.2 | Tracker Schema — Tasks Tracker |
+| [`KERNEL:GATE-DECISION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42805f9258c2903bfc9587 ) | 09 | Lógica de Gate Decision |
+| [`KERNEL:GATE-DECISION-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280e3b63cfc59a8ef76a9 ) | 09.1 | Bypass |
+| [`KERNEL:GATE-DECISION-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428025ac25ee8034bf5a64 ) | 09.2 | Lógica Estándar |
+| [`KERNEL:GATE-DECISION-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280dd8002c879a7a0b97f ) | 09.3 | Resolución de REVIEW_NEEDED |
+| [`KERNEL:GATE-DECISION-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42802bb830d745bdb5c66e ) | 09.4 | Por Qué los Gates Son Deterministas |
+| [`KERNEL:GATE-DECISION-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280c881b8f5094651e94e ) | 09.5 | Flujo de Recuperación BLOCKED |
+| [`KERNEL:GATE-DECISION-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428041ae77c1907f683eaf ) | 09.6 | REJECTED (Post-Aplicación) |
+| [`KERNEL:GATE-DECISION-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42803d8cc5f9445e018090 ) | 09.7 | Ejecución Automática de Archivado |
+| [`KERNEL:GATE-DECISION-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280a58c31db1a5adf2cf3 ) | 09.8 | Capas de Evaluación de Gate: Técnica vs. Negocio |
+| [`KERNEL:GATE-DECISION-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280f0b0a6dc6ece9c7517 ) | 09.9 | Escalamiento de Pendientes a Tickets |
+| [`KERNEL:GATE-DECISION-010`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42802d8210f71ed7b80cc6 ) | 09.10 | Gate Decision — Technical Review |
+| [`KERNEL:GATE-DECISION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42803bb1b0d286fae1a5ee ) | 09.11 | Gate Decision — Business Review |
+| [`KERNEL:CV-GOLDEN-RULES`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280d78be0e797fac28a81 ) | 10 | Golden Rules — Límites de Ejecución |
+| [`KERNEL:CV-GOLDEN-RULES-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428034b711fd77468c404a ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #1 |
+| [`KERNEL:CV-GOLDEN-RULES-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42800a985fd447cecdd2be ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #2 |
+| [`KERNEL:CV-GOLDEN-RULES-003`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280089a2dd2f4f9f52077 ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #3 |
+| [`KERNEL:CV-GOLDEN-RULES-004`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42808c80dddf711028b832 ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #4 |
+| [`KERNEL:CV-GOLDEN-RULES-005`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42807d85f0de1211b2586d ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #5 |
+| [`KERNEL:TRIGGERS`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42807bb15cef200fdda408 ) | 11 | Contratos de Ejecución del AI Component |
+| [`KERNEL:TRIGGER-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42800b863cecb82d08965c ) | 11.1 | Trigger — Discovery Request |
+| [`KERNEL:TRIGGER-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428075a5a1d727ea555313 ) | 11.2 | Trigger — CV Optimization |
+| [`KERNEL:TRIGGER-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280f9b683fcb54c09db32 ) | 11.3 | Trigger — Recovery Request |
+| [`KERNEL:TRIGGER-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280b38ef0c066d097ec05 ) | 11.4 | Trigger — Documentation Update |
+| [`KERNEL:TRIGGER-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280c38467fe6df624b4f2 ) | 11.5 | Trigger — Schema Validation |
+| [`KERNEL:TRIGGER-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280fa98eaf73e2b1bf778 ) | 11.6 | Trigger — Gate Decision |
+| [`KERNEL:TRIGGER-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280159f89dd0e0690bb51 ) | 11.7 | Trigger — Archiving |
+| [`KERNEL:TRIGGER-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42804eb47fdd684b1dc743 ) | 11.8 | Trigger — Health Check |
+| [`KERNEL:TRIGGER-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280bb83b9fb9f2e48831c ) | 11.9 | Trigger — Version Check |
+| [`KERNEL:CV-PIPELINE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280ee9edac5dbb75a7fd1 ) | 12 | Pipeline de CV |
+| [`KERNEL:CANON-UPDATE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280359cc3e96a741ad89a ) | 13 | Actualización del Canon |
+| [`KERNEL:NAMING-CONVENTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428020a404f7508f230044 ) | 14 | Convención de Nombres |
+| [`KERNEL:CONTEXT-INFRASTRUCTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42808d971fd25d0c75aef1 ) | 15 | Context Infrastructure |
+| [`KERNEL:CONTEXT-INFRASTRUCTURE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42802db7afcc41d4cb387d ) | 15.1 | Context Infrastructure — Data Sources |
+| [`KERNEL:CONTEXT-INFRASTRUCTURE-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428084b00ccd10d899ca5d ) | 15.2 | Context Infrastructure — Integration Points |
+| [`KERNEL:DATA-FLOW`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428022bcf1d4d96fca1e3d ) | 16 | Flujo de Datos |
+| [`KERNEL:EVOLUTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280abacb8ee9a0bbb5957 ) | 17 | Evolución del Sistema |
 
 ---
 
@@ -79,69 +79,69 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`MANUAL:OBJECTIVE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428147ba6ff666e25ede13 ) | 01 | Objetivo de VANTAGE |
-| [`MANUAL:HOW-IT-WORKS`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281b2bc56e248e827ec85 ) | 02 | Cómo Funciona |
-| [`MANUAL:FAILURE-PHILOSOPHY`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281d79334efb6877c6640 ) | 03 | Filosofía de Fallo para Operadores |
-| [`MANUAL:SETUP`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428130b39deb1db2b727b0 ) | 04 | Setup |
-| [`MANUAL:COLD-START`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42816993d0c5b8744fd495 ) | 05 | Arranque Frío — Checklist de Reactivación |
-| [`MANUAL:SESSION-CYCLE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281438efcec2c3d6f6752 ) | 06 | Ciclo de Sesión — Open/Close |
-| [`MANUAL:VCHECKLIST`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42817abde4f0b94bac0b13 ) | 07 | El Checklist — V-Checklist semanal |
-| [`MANUAL:WEEKLY-FLOW`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42811daf87ea6e37eb33ad ) | 08 | Flujo Semanal de Operación |
-| [`MANUAL:DASHBOARD-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281068069db1c902f4f39 ) | 08.2 | Dashboard — recuperación antes de CV Optimization |
-| [`MANUAL:VANTAGE-RUNTIME`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281e9b262cc8b767fd940 ) | 09 | VANTAGE Runtime (Consulta Operativa) |
-| [`MANUAL:DATA-MANAGEMENT`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281978319ddfb670bc0d2 ) | 10 | Gestión de Datos |
-| [`MANUAL:HEALTHCHECK`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281c98103ef6950bb9235 ) | 11 | Health Check |
-| [`MANUAL:TROUBLESHOOTING`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281ff9012e5404be9a83f ) | 12 | Troubleshooting |
-| [`MANUAL:PROMPTS-WRAPPERS`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42815bad24e9086ffc5870 ) | 13 | Prompts & Wrappers |
-| [`MANUAL:CHEATSHEETS`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42814a8f64e3292a843c3e ) | 14 | Cheat Sheets |
-| [`MANUAL:PATCH-QUALITY`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42815cba99dd279170033f ) | 15 | Criterio de Calidad para Parches Documentales |
-| [`MANUAL:GOLDEN-RULES`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281538742ce386ccd3249 ) | 16 | Reglas de Oro para Operadores |
-| [`MANUAL:SLA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281acb0e5fe6f27a43ae2 ) | 17 | SLA de Latencia Post-Ingesta |
-| [`MANUAL:CV-GOLDEN-RULES-INDEX`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428193b7e9db51fb8454a4 ) | 18 | Reglas de Oro CV — Referencia Operativa |
-| [`MANUAL:POSITIONING-CRITERIA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281059251d0e0c94ed315 ) | 19 | Positioning Modes (N1–N4) — Criterio de Selección |
-| [`MANUAL:CADENCE-MATRIX`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428129bdbcee2904228de3 ) | 08.6 | Cadence Matrix — Weekly Rhythm |
-| [`MANUAL:GOLDEN-SKELETON-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4281129aade8bf0e8c9d36 ) | 20 | Golden Skeleton — Qué es y Dónde Vive |
-| [`MANUAL:SCHEMA-FIELD-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42810f89d6c394bf56b8d3 ) | 21 | Schema Class A/B — Referencia de Campos |
-| [`CANON:PROFILE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281b69e3bf8e6e37ef1e9 ) | 01 | Professional Profile Canon |
-| [`CANON:SKILLS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428125ae70f0693aa40745 ) | 02 | Skills Canon |
-| [`CANON:EXPERIENCE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428182b084d39cea85aeb5 ) | 03 | Experience Records |
-| [`CANON:EXPERIENCE-C01`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42814ba387e6f80088e898 ) | 03.1 | C01 L'Oréal Luxe |
-| [`CANON:EXPERIENCE-C02`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281659746d3dafb90d1d0 ) | 03.2 | C02 Bisonte Experiential |
-| [`CANON:EXPERIENCE-C03`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428129bed5fb87a58e515a ) | 03.3 | C03 Levi Strauss (Dockers) |
-| [`CANON:EXPERIENCE-C04`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428113b091ccfc4aaae706 ) | 03.4 | C04 Aéropostale |
-| [`CANON:EXPERIENCE-C05`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42812c9f09db96a0f367cb ) | 03.5 | C05 El Palacio de Hierro (ALDO) |
-| [`CANON:ACHIEVEMENTS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281479402c36060df5d3a ) | 04 | Achievement Library |
-| [`CANON:KPIS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42819c93c2c96c970bea1e ) | 05 | Core KPIs |
-| [`CANON:KPI-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42814086d6db3ffa55f65e ) | 05.1 | KPI — Revenue Impact |
-| [`CANON:KPI-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281e9b12cc4ff477c0fda ) | 05.2 | KPI — Cost Optimization |
-| [`CANON:KPI-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428103984dfdca54627b84 ) | 05.3 | KPI — Time to Market |
-| [`CANON:KPI-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428165a64dcb416340314c ) | 05.4 | KPI — Quality Score |
-| [`CANON:KPI-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428156a1fcf9bb2c508be1 ) | 05.5 | KPI — Customer Satisfaction |
-| [`CANON:KPI-006`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428185ab81c1209285f124 ) | 05.6 | KPI — Team Productivity |
-| [`CANON:KPI-007`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281a39de6f69ede057725 ) | 05.7 | KPI — Innovation Index |
-| [`CANON:KPI-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42813a86fcdca27a73b9d9 ) | 05.8 | KPI — Strategic Alignment |
-| [`CANON:FACTS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42810fa645cd685c515300 ) | 06 | Canonical Facts |
-| [`CANON:FACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42811db870d19b40c241d1 ) | 06.1 | Fact — Industry Experience |
-| [`CANON:FACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281fcbbd7c22229b5c24e ) | 06.2 | Fact — Technical Stack |
-| [`CANON:FACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281479686de1b8782866e ) | 06.3 | Fact — Team Leadership |
-| [`CANON:FACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42813a983feeb347d2f42d ) | 06.4 | Fact — Project Scale |
-| [`CANON:FACT-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281779c2efe21e19320ab ) | 06.5 | Fact — Geographic Scope |
-| [`CANON:FACT-006`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281b19071d018e335d317 ) | 06.6 | Fact — Budget Management |
-| [`CANON:FACT-007`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281d4a5c6e9424130f98f ) | 06.7 | Fact — Methodology Expertise |
-| [`CANON:FACT-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42811eaa28c8395f7413e7 ) | 06.8 | Fact — Certifications & Education |
-| [`CANON:POSITIONING`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42818db805cf78dcbe0f73 ) | 07 | Positioning Modes N1–N4 |
-| [`CANON:POSITIONING-N1`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281cd957fc9b2e054eb0f ) | 07.1 | Positioning N1 — Strategic Leader |
-| [`CANON:POSITIONING-N2`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281b28028c17ab191b284 ) | 07.2 | Positioning N2 — Technical Expert |
-| [`CANON:POSITIONING-N3`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428175ba94e73def53c4e5 ) | 07.3 | Positioning N3 — Delivery Manager |
-| [`CANON:POSITIONING-N4`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281b6ab8ed5a69e838d56 ) | 07.4 | Positioning N4 — Innovation Driver |
-| [`CANON:OUTPUT-CONTRACT`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428155afc2d8f5cb29de3c ) | 08 | Output Contract Framework |
-| [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281ecb93aebd7f8c4b947 ) | 08.1 | Output Contract — CV Documents |
-| [`CANON:OUTPUT-CONTRACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281e88deae546de168730 ) | 08.2 | Output Contract — Portfolio Materials |
-| [`CANON:OUTPUT-CONTRACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281f6b0f4e7cfd25d3248 ) | 08.3 | Output Contract — Case Studies |
-| [`CANON:OUTPUT-CONTRACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42816eb85afac19f2f2680 ) | 08.4 | Output Contract — Interview Prep |
-| [`CANON:UF-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4281509857db1871caffd9 ) | 06.9 | Unique Factor — Global Experience |
-| [`CANON:UF-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42818bbeb4d7655ea2c29e ) | 06.10 | Unique Factor — Industry Transformation |
-| [`CANON:UF-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428111a4d8dbf8a83c6b89 ) | 06.11 | Unique Factor — Digital Innovation |
+| [`MANUAL:OBJECTIVE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280e98cf7e70d48b64161 ) | 01 | Objetivo de VANTAGE |
+| [`MANUAL:HOW-IT-WORKS`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428049a847d459dce012ff ) | 02 | Cómo Funciona |
+| [`MANUAL:FAILURE-PHILOSOPHY`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280978b26c1e3a1222b07 ) | 03 | Filosofía de Fallo para Operadores |
+| [`MANUAL:SETUP`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280b885d0dd43eea6ccaf ) | 04 | Setup |
+| [`MANUAL:COLD-START`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280b9bed3c6a3b3c72bff ) | 05 | Arranque Frío — Checklist de Reactivación |
+| [`MANUAL:SESSION-CYCLE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428019bb7cf6352073a7e5 ) | 06 | Ciclo de Sesión — Open/Close |
+| `MANUAL:VCHECKLIST` | §7 | El Checklist — V-Checklist semanal |
+| [`MANUAL:WEEKLY-FLOW`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428005a097dff5e1b05d1a ) | 08 | Flujo Semanal de Operación |
+| `MANUAL:DASHBOARD-001` | §8.2 | Dashboard — recuperación antes de CV Optimization |
+| [`MANUAL:VANTAGE-RUNTIME`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#3ac938befc42801d82d4db2ef7b5766a ) | §9 ⚠︎sin verificar en vivo | VANTAGE Runtime (Consulta Operativa) |
+| [`MANUAL:DATA-MANAGEMENT`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42808fa151eda9ccd757f9 ) | 10 | Gestión de Datos |
+| [`MANUAL:HEALTHCHECK`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#1bc6cf37428d4b26915750590a67d369 ) | §11 ⚠︎sin verificar en vivo | Health Check |
+| [`MANUAL:TROUBLESHOOTING`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280bb990bd6ac7e1609fd ) | 12 | Troubleshooting |
+| [`MANUAL:PROMPTS-WRAPPERS`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280e4a448fc506b42f981 ) | 13 | Prompts & Wrappers |
+| `MANUAL:CHEATSHEETS` | §14 | Cheat Sheets |
+| [`MANUAL:PATCH-QUALITY`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280a09ae4ea03969dcecf ) | 15 | Criterio de Calidad para Parches Documentales |
+| [`MANUAL:GOLDEN-RULES`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428070896ed08e5dcbba2b ) | 16 | Reglas de Oro para Operadores |
+| [`MANUAL:SLA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42801fa7f5ede6bdc8df52 ) | 17 | SLA de Latencia Post-Ingesta |
+| [`MANUAL:CV-GOLDEN-RULES-INDEX`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280798cf6e06717e4df33 ) | 18 | Reglas de Oro CV — Referencia Operativa |
+| [`MANUAL:POSITIONING-CRITERIA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280489f52ec2c026c2653 ) | 19 | Positioning Modes (N1–N4) — Criterio de Selección |
+| [`MANUAL:CADENCE-MATRIX`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#3ac938befc42801aaf41f3b317f5563e ) | §20 ⚠︎sin verificar en vivo | Cadence Matrix — Weekly Rhythm |
+| [`MANUAL:GOLDEN-SKELETON-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280cfb29eeb500ea18d97 ) | 20 | Golden Skeleton — Qué es y Dónde Vive |
+| [`MANUAL:SCHEMA-FIELD-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42806a920cd01aa2f81bcd ) | 21 | Schema Class A/B — Referencia de Campos |
+| [`CANON:PROFILE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428007b744ce0ffcf1bfce ) | §A ⚠︎sin verificar en vivo | Professional Profile Canon |
+| [`CANON:SKILLS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428007b744ce0ffcf1bfce ) | §B ⚠︎sin verificar en vivo | Skills Canon |
+| [`CANON:EXPERIENCE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428007b744ce0ffcf1bfce ) | §D ⚠︎sin verificar en vivo | Experience Records |
+| [`CANON:EXPERIENCE-C01`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428007b744ce0ffcf1bfce ) | §D.1 ⚠︎sin verificar en vivo | C01 L'Oréal Luxe |
+| [`CANON:EXPERIENCE-C02`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428052af0ccf972cdac1e9 ) | 03.2 | C02 Bisonte Experiential |
+| [`CANON:EXPERIENCE-C03`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280fb98d5c06ab0a59a4b ) | 03.3 | C03 Levi Strauss (Dockers) |
+| [`CANON:EXPERIENCE-C04`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42800ea985c60f35b24cd2 ) | 03.4 | C04 Aéropostale |
+| [`CANON:EXPERIENCE-C05`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428002b962e72ccb9d2155 ) | 03.5 | C05 El Palacio de Hierro (ALDO) |
+| [`CANON:ACHIEVEMENTS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280038b19e6e8db21c15f ) | 04 | Achievement Library |
+| [`CANON:KPIS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428007b744ce0ffcf1bfce ) | §I ⚠︎sin verificar en vivo | Core KPIs |
+| `CANON:KPI-001` | §I.1 | KPI — Revenue Impact |
+| `CANON:KPI-002` | §I.2 | KPI — Cost Optimization |
+| `CANON:KPI-003` | §I.3 | KPI — Time to Market |
+| `CANON:KPI-004` | §I.4 | KPI — Quality Score |
+| `CANON:KPI-005` | §I.5 | KPI — Customer Satisfaction |
+| `CANON:KPI-006` | §I.6 | KPI — Team Productivity |
+| `CANON:KPI-007` | §I.7 | KPI — Innovation Index |
+| `CANON:KPI-008` | §I.8 | KPI — Strategic Alignment |
+| [`CANON:FACTS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42806ea4f5e3a1155ce8b6 ) | 06 | Canonical Facts |
+| [`CANON:FACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42809a8366f87f5af00e7c ) | 06.1 | Fact — Industry Experience |
+| [`CANON:FACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280fabdbfcb708ae49307 ) | 06.2 | Fact — Technical Stack |
+| [`CANON:FACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280a5a25effb9f9458f85 ) | 06.3 | Fact — Team Leadership |
+| [`CANON:FACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42802b9f85fc55365e13ef ) | 06.4 | Fact — Project Scale |
+| [`CANON:FACT-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280939bf9c14433a7d203 ) | 06.5 | Fact — Geographic Scope |
+| [`CANON:FACT-006`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428026886bd4b10e4c7e37 ) | 06.6 | Fact — Budget Management |
+| [`CANON:FACT-007`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280828a8fd193909cbd2c ) | 06.7 | Fact — Methodology Expertise |
+| [`CANON:FACT-008`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428067aacbc37c2cb503e8 ) | 06.8 | Fact — Certifications & Education |
+| [`CANON:POSITIONING`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc42800580acfac704c04eb0 ) | 07 | Positioning Modes N1–N4 |
+| [`CANON:POSITIONING-N1`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280a58696fc3282b62562 ) | 07.1 | Positioning N1 — Strategic Leader |
+| [`CANON:POSITIONING-N2`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42801aa619ec12b304a776 ) | §K.2 ⚠︎sin verificar en vivo | Positioning N2 — Technical Expert |
+| [`CANON:POSITIONING-N3`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280df89ecced651d49b6d ) | §K.3 ⚠︎sin verificar en vivo | Positioning N3 — Delivery Manager |
+| [`CANON:POSITIONING-N4`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280a59b57fed91bae6ccc ) | §K.4 ⚠︎sin verificar en vivo | Positioning N4 — Innovation Driver |
+| [`CANON:OUTPUT-CONTRACT`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42807bb066e05ffe83888a ) | §L ⚠︎sin verificar en vivo | Output Contract Framework |
+| [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280198b2dd58a2ed83da1 ) | §L.1 ⚠︎sin verificar en vivo | Output Contract — CV Documents |
+| [`CANON:OUTPUT-CONTRACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280289fb2e371631818f9 ) | §L.2 ⚠︎sin verificar en vivo | Output Contract — Portfolio Materials |
+| [`CANON:OUTPUT-CONTRACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280289fb2e371631818f9 ) | §L.3 ⚠︎sin verificar en vivo | Output Contract — Case Studies |
+| [`CANON:OUTPUT-CONTRACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280289fb2e371631818f9 ) | §L.4 ⚠︎sin verificar en vivo | Output Contract — Interview Prep |
+| [`CANON:UF-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280c9ab20edcf1b18905d ) | 06.9 | Unique Factor — Global Experience |
+| [`CANON:UF-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280378d01eb8802427c56 ) | 06.10 | Unique Factor — Industry Transformation |
+| [`CANON:UF-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280deac68f3171b29d8d2 ) | 06.11 | Unique Factor — Digital Innovation |
 
 ---
 
@@ -149,26 +149,26 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`BRIEF:PURPOSE-SCOPE`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42819d9060c37127279e22 ) | 01 | Propósito y Alcance |
-| [`BRIEF:AUTHORITY-MATRIX`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4281a7911eca80943f0c49 ) | 02 | Matriz de Autoridad Documental |
-| [`BRIEF:ECOSYSTEM`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42814d8a49ec77e2682845 ) | 03 | Ecosistema Documental |
-| [`BRIEF:NAV-CONTRACTS`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4281f2b15dfd94307b3716 ) | 04 | Contratos de navegación |
-| [`BRIEF:DOMAIN-ARCHITECTURE`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4281c78115e441d26ab74e ) | 05 | Dominios |
-| [`BRIEF:VERIFICATION-DEPTH`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4281c9a94bd6ff73b66e95 ) | 06 | Contratos de verificación |
-| [`BRIEF:CROSS-DEPENDENCIES`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4281d895dbd19665b7f7fc ) | 07 | Dependencias entre documentos |
-| [`BRIEF:MAINTENANCE-CONTRACT`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428170b255ef67dfcc12b4 ) | 08 | Contrato de Mantenimiento |
-| [`BRIEF:DECISION-TREE`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4281449405ead638d3d22e ) | 09 | Árbol de Decisiones |
-| [`BRIEF:NAV-PRINCIPLES`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4281558728e2a86757ace1 ) | 10 | Principios de Navegación |
-| [`BRIEF:EXPECTED-OUTCOME`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42816da007e95e4c1ab51f ) | 11 | Resultado Esperado |
-| [`BRIEF:AUTHORITY-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428166924ff69efc369cd8 ) | 08.1 | TBD |
-| [`BRIEF:CONSULTATION-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4281e8adbcf6417213cb09 ) | 04.1 | TBD |
-| [`BRIEF:CROSS-DEPENDENCIES-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42816e86f9f9dc3aea5869 ) | 07.1 | TBD |
-| [`BRIEF:CROSS-DEPENDENCIES-002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4281bea776f35ac737f0b3 ) | 07.2 | TBD |
-| [`BRIEF:CROSS-DEPENDENCIES-003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428141b44cd01075ab08b8 ) | 07.3 | TBD |
-| [`BRIEF:HOUSEKEEPING-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42817c9875c1a1515b1c51 ) | 05.1 | TBD |
-| [`BRIEF:PURPOSE-SCOPE-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428111be38f8e4bf49e9ac ) | 01.1 | TBD |
-| [`BRIEF:PURPOSE-SCOPE-002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4281ffbca0ebc1080aebf7 ) | 01.2 | TBD |
-| [`BRIEF:PURPOSE-SCOPE-003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4281c48533df9d7b607ef1 ) | 01.3 | TBD |
+| [`BRIEF:PURPOSE-SCOPE`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280dc8ddac79fb7f21c20 ) | 01 | Propósito y Alcance |
+| [`BRIEF:AUTHORITY-MATRIX`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428001b89fc091c5a50623 ) | 02 | Matriz de Autoridad Documental |
+| [`BRIEF:ECOSYSTEM`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42804ab65fd6fe04962658 ) | 03 | Ecosistema Documental |
+| [`BRIEF:NAV-CONTRACTS`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280ba853bf14edc2238d7 ) | 04 | Contratos de navegación |
+| [`BRIEF:DOMAIN-ARCHITECTURE`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428006964dcf3038c55a40 ) | 05 | Dominios |
+| [`BRIEF:VERIFICATION-DEPTH`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428020b5dcfedeaaabe8a1 ) | 06 | Contratos de verificación |
+| [`BRIEF:CROSS-DEPENDENCIES`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428098b886f9b780928266 ) | 07 | Dependencias entre documentos |
+| [`BRIEF:MAINTENANCE-CONTRACT`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428006956fc8b34c2334b6 ) | 08 | Contrato de Mantenimiento |
+| [`BRIEF:DECISION-TREE`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428032b035e8d6cb0c4c96 ) | 09 | Árbol de Decisiones |
+| [`BRIEF:NAV-PRINCIPLES`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280d4b714fd82e4936999 ) | 10 | Principios de Navegación |
+| [`BRIEF:EXPECTED-OUTCOME`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280d8b1afd11c1c5c1010 ) | 11 | Resultado Esperado |
+| [`BRIEF:AUTHORITY-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42802caa56c4f87b4050fc ) | 08.1 | TBD |
+| [`BRIEF:CONSULTATION-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42802fa21fe89016dde5cd ) | 04.1 | TBD |
+| [`BRIEF:CROSS-DEPENDENCIES-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42804389def2c1ab68a0b6 ) | 07.1 | TBD |
+| [`BRIEF:CROSS-DEPENDENCIES-002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428036b922da36d1d7d899 ) | 07.2 | TBD |
+| [`BRIEF:CROSS-DEPENDENCIES-003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42809db0f7df304b56f926 ) | 07.3 | TBD |
+| [`BRIEF:HOUSEKEEPING-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280e7badff13e913011ca ) | 05.1 | TBD |
+| [`BRIEF:PURPOSE-SCOPE-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280399d8af50fad3f683e ) | 01.1 | TBD |
+| [`BRIEF:PURPOSE-SCOPE-002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42809689c5e4a8a6d96e86 ) | 01.2 | TBD |
+| [`BRIEF:PURPOSE-SCOPE-003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280c5aa5ae0740d76d057 ) | 01.3 | TBD |
 
 ---
 
@@ -176,18 +176,18 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`SP:BOOTSTRAP`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc42812eb796dff56ea0008e ) | 01 | Operating Specification — Bootstrap de Sesión |
-| [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc42814dbb41c02d1bdbe40e ) | 02 | Sincronización Inicial y Verificación de Versión |
-| [`SP:CONTEXT-INFRASTRUCTURE-REF`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc42817da6d2f2f2baf50aed ) | 04 | Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE) |
-| [`SP:DIGITAL-ID-CARD`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc4281a8a26ac218e940a29b ) | 03 | Cédula Digital — rutas de operación y UUIDs |
-| [`SP:DATA-FLOW-REF`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc4281a397c0dfee78eabe00 ) | 05 | Referencia — Consultar en Technical Kernel (KERNEL:DATA-FLOW) |
-| [`SP:TRIGGERS`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc42819cbd9dd2e82ecee25c ) | 06 | Triggers operativos de VANTAGE |
-| [`SP:CV-GOLDEN-RULES-REF`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc4281e789aee840731c3d5d ) | 07 | Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES) |
-| [`SP:SCHEMA`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc4281969cbaebd24fc3175c ) | 08 | Schema — Trackers (Class A/B) |
-| [`SP:MCP-ROUTING-NOTES`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc42816eb757fb123445b8a9 ) | 09 | Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY) |
-| [`SP:ID-CONNECTORS`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc4281ee927ed01969ee03ef ) | 10 | ID Connectors — esquema PREFIX:NOMBRE-SECCION |
-| [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc4281718de4c9f1c04b4439 ) | 11 | Regla de Consistencia Documental |
-| [`SP:VERSION-CHECK-TOOL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ac938befc428172b782c62a84318a5e ) | 12 | Herramienta de Verificación de Versión de Bajo Costo |
+| [`SP:BOOTSTRAP`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc42808d80a8ded9c197cc71 ) | §1 ⚠︎sin verificar en vivo | Operating Specification — Bootstrap de Sesión |
+| [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280f8bf1fdd9a7de87a0c ) | 02 | Sincronización Inicial y Verificación de Versión |
+| `SP:CONTEXT-INFRASTRUCTURE-REF` | §4 | Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE) |
+| [`SP:DIGITAL-ID-CARD`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc42804b89f3d54be60da65d ) | 03 | Cédula Digital — rutas de operación y UUIDs |
+| `SP:DATA-FLOW-REF` | §5 | Referencia — Consultar en Technical Kernel (KERNEL:DATA-FLOW) |
+| [`SP:TRIGGERS`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc42802c847ce1c7ada302c9 ) | 06 | Triggers operativos de VANTAGE |
+| `SP:CV-GOLDEN-RULES-REF` | §7 | Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES) |
+| [`SP:SCHEMA`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc42804382e5db82d2703b96 ) | 08 | Schema — Trackers (Class A/B) |
+| [`SP:MCP-ROUTING-NOTES`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc428092a76fca8ab856050e ) | 09 | Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY) |
+| `SP:ID-CONNECTORS` | §10 | ID Connectors — esquema PREFIX:NOMBRE-SECCION |
+| [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280d0b05fe411fd9d84ec ) | 10 | Regla de Consistencia Documental |
+| [`SP:VERSION-CHECK-TOOL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280b8aba9f18b0457d3fa ) | 11 | Herramienta de Verificación de Versión de Bajo Costo |
 
 ---
 
@@ -195,17 +195,36 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`ALIASES:SESSION-CYCLE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc42812bb9a4cd1223fc6c20 ) | 01 | Session Cycle |
-| [`ALIASES:L0-RUNTIME`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc4281538632f9b7b4c9c6ff ) | 02 | L0 · VANTAGE Runtime |
-| [`ALIASES:L1L2-DISCOVERY`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc4281a1be7dff0f376e308e ) | 03 | L1/L2 · Discovery (Lunes) |
-| [`ALIASES:L3-PASSIVE-INTAKE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc42817499d6cfaf5882eed0 ) | 04 | L3 · Passive Intake |
-| [`ALIASES:L4-VERSION-CONTROL`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc42812093fcc3db2e0a9348 ) | 05 | L4 · Version Control & Documentación |
-| [`ALIASES:DASHBOARD`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc4281c18108dece751445ff ) | 06 | Dashboard (Martes — Recuperación) |
-| [`ALIASES:CV-PIPELINE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc4281f186f5c660fcf68f58 ) | 07 | CV Pipeline (Miércoles) |
-| [`ALIASES:DEDUP`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc42819ab304f4a82c85a232 ) | 08 | Dedup & Oportunidades |
+| [`ALIASES:SESSION-CYCLE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc42800d8889fca21367f7d1 ) | 01 | Session Cycle |
+| [`ALIASES:L0-RUNTIME`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc42809c8c11d40be70071d4 ) | 02 | L0 · VANTAGE Runtime |
+| [`ALIASES:L1L2-DISCOVERY`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc4280b49d3dc34e0f566249 ) | 03 | L1/L2 · Discovery (Lunes) |
+| [`ALIASES:L3-PASSIVE-INTAKE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc4280c3995bf29c4329c70f ) | 04 | L3 · Passive Intake |
+| [`ALIASES:L4-VERSION-CONTROL`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc4280d7be45f8b72c1b8903 ) | 05 | L4 · Version Control & Documentación |
+| [`ALIASES:DASHBOARD`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc42807c951ef524f3daae44 ) | 06 | Dashboard (Martes — Recuperación) |
+| [`ALIASES:CV-PIPELINE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc42805c82fac793a0162192 ) | 07 | CV Pipeline (Miércoles) |
+| [`ALIASES:DEDUP`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc4280798f34ed2a9bb0f1d2 ) | §8 ⚠︎sin verificar en vivo | Dedup & Oportunidades |
 
 ---
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-_Ninguno detectado en esta corrida._
+| ID | Documento | Link |
+|---|---|---|
+| `MANUAL:CHECKLIST` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280bf8317eb28cb97d09f ) |
+| `MANUAL:HEALTH-CHECK` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42803087fcf93c131cdb20 ) |
+| `MANUAL:LAZY-LOAD` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#4f9398f7897e44548a24a760e4df331b ) |
+| `MANUAL:RUNTIME` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280d09928fbb45e44b2d2 ) |
+| `MANUAL:RUNTIME-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428081a042e045585530f5 ) |
+| `MANUAL:RUNTIME-002` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428068b7d0ccb0b3f91add ) |
+| `MANUAL:RUNTIME-003` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280f89393e30e78e70d41 ) |
+| `MANUAL:RUNTIME-004` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42809ebfecc01fb783a025 ) |
+| `MANUAL:WEEKLY-FLOW-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280b6b35fe73378fa12e6 ) |
+| `MANUAL:WEEKLY-FLOW-002` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428035a471f5c355d1e796 ) |
+| `MANUAL:WEEKLY-FLOW-003` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280d0ba91fc7de9c46703 ) |
+| `MANUAL:WEEKLY-FLOW-004` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280f48c81d997c5370a72 ) |
+| `MANUAL:WEEKLY-FLOW-005` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280ecbf6ede89097c0d6f ) |
+| `MANUAL:WEEKLY-FLOW-006` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280c792bec53a71f11c47 ) |
+| `SP:BOOTLOADER` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc428023bc1ad539d673df65 ) |
+| `SP:CONTEXT-INFRASTRUCTURE` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280a9a8e7c488d432fa95 ) |
+| `SP:CV-GOLDEN-RULES` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280c68b6dc0d853eead7c ) |
+| `SP:DATA-FLOW` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280fd9280f1f8bb27ec90 ) |
