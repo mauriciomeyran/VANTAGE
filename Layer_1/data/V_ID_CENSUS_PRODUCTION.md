@@ -85,12 +85,12 @@
 | [`MANUAL:SETUP`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280b885d0dd43eea6ccaf ) | 04 | Setup |
 | [`MANUAL:COLD-START`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280b9bed3c6a3b3c72bff ) | 05 | Arranque Frío — Checklist de Reactivación |
 | [`MANUAL:SESSION-CYCLE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428019bb7cf6352073a7e5 ) | 06 | Ciclo de Sesión — Open/Close |
-| `MANUAL:VCHECKLIST` | §7 | El Checklist — V-Checklist semanal |
+| [`MANUAL:CHECKLIST`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280bf8317eb28cb97d09f ) | 07 | El Checklist — V-Checklist semanal |
 | [`MANUAL:WEEKLY-FLOW`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428005a097dff5e1b05d1a ) | 08 | Flujo Semanal de Operación |
-| `MANUAL:DASHBOARD-001` | §8.2 | Dashboard — recuperación antes de CV Optimization |
-| [`MANUAL:VANTAGE-RUNTIME`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#3ac938befc42801d82d4db2ef7b5766a ) | §9 ⚠︎sin verificar en vivo | VANTAGE Runtime (Consulta Operativa) |
+| [`MANUAL:WEEKLY-FLOW-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428035a471f5c355d1e796 ) | 8.2 | Dashboard — recuperación antes de CV Optimization |
+| [`MANUAL:RUNTIME`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280d09928fbb45e44b2d2 ) | 09 | VANTAGE Runtime (Consulta Operativa) |
 | [`MANUAL:DATA-MANAGEMENT`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42808fa151eda9ccd757f9 ) | 10 | Gestión de Datos |
-| [`MANUAL:HEALTHCHECK`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#1bc6cf37428d4b26915750590a67d369 ) | §11 ⚠︎sin verificar en vivo | Health Check |
+| [`MANUAL:HEALTHCHECK`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42803087fcf93c131cdb20 ) | 11 | Health Check |
 | [`MANUAL:TROUBLESHOOTING`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280bb990bd6ac7e1609fd ) | 12 | Troubleshooting |
 | [`MANUAL:PROMPTS-WRAPPERS`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280e4a448fc506b42f981 ) | 13 | Prompts & Wrappers |
 | `MANUAL:CHEATSHEETS` | §14 | Cheat Sheets |
@@ -99,7 +99,7 @@
 | [`MANUAL:SLA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42801fa7f5ede6bdc8df52 ) | 17 | SLA de Latencia Post-Ingesta |
 | [`MANUAL:CV-GOLDEN-RULES-INDEX`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280798cf6e06717e4df33 ) | 18 | Reglas de Oro CV — Referencia Operativa |
 | [`MANUAL:POSITIONING-CRITERIA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280489f52ec2c026c2653 ) | 19 | Positioning Modes (N1–N4) — Criterio de Selección |
-| [`MANUAL:CADENCE-MATRIX`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#3ac938befc42801aaf41f3b317f5563e ) | §20 ⚠︎sin verificar en vivo | Cadence Matrix — Weekly Rhythm |
+| [`MANUAL:WEEKLY-FLOW-006`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280c792bec53a71f11c47 ) | 08.6 | Cadence Matrix — Weekly Rhythm |
 | [`MANUAL:GOLDEN-SKELETON-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280cfb29eeb500ea18d97 ) | 20 | Golden Skeleton — Qué es y Dónde Vive |
 | [`MANUAL:SCHEMA-FIELD-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42806a920cd01aa2f81bcd ) | 21 | Schema Class A/B — Referencia de Campos |
 | [`CANON:PROFILE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428007b744ce0ffcf1bfce ) | §A ⚠︎sin verificar en vivo | Professional Profile Canon |
@@ -176,16 +176,15 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`SP:BOOTSTRAP`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc42808d80a8ded9c197cc71 ) | §1 ⚠︎sin verificar en vivo | Operating Specification — Bootstrap de Sesión |
+| [`SP:BOOTLOADER`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc428023bc1ad539d673df65 ) | 01 | Operating Specification — Bootstrap de Sesión |
 | [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280f8bf1fdd9a7de87a0c ) | 02 | Sincronización Inicial y Verificación de Versión |
-| `SP:CONTEXT-INFRASTRUCTURE-REF` | §4 | Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE) |
+| [`SP:CONTEXT-INFRASTRUCTURE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280a9a8e7c488d432fa95 ) | 04 | Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE) |
 | [`SP:DIGITAL-ID-CARD`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc42804b89f3d54be60da65d ) | 03 | Cédula Digital — rutas de operación y UUIDs |
-| `SP:DATA-FLOW-REF` | §5 | Referencia — Consultar en Technical Kernel (KERNEL:DATA-FLOW) |
+| [`SP:DATA-FLOW`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280fd9280f1f8bb27ec90 ) | 05 | Referencia — Consultar en Technical Kernel (KERNEL:DATA-FLOW) |
 | [`SP:TRIGGERS`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc42802c847ce1c7ada302c9 ) | 06 | Triggers operativos de VANTAGE |
-| `SP:CV-GOLDEN-RULES-REF` | §7 | Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES) |
+| [`SP:CV-GOLDEN-RULES`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280c68b6dc0d853eead7c ) | 07 | Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES) |
 | [`SP:SCHEMA`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc42804382e5db82d2703b96 ) | 08 | Schema — Trackers (Class A/B) |
 | [`SP:MCP-ROUTING-NOTES`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc428092a76fca8ab856050e ) | 09 | Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY) |
-| `SP:ID-CONNECTORS` | §10 | ID Connectors — esquema PREFIX:NOMBRE-SECCION |
 | [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280d0b05fe411fd9d84ec ) | 10 | Regla de Consistencia Documental |
 | [`SP:VERSION-CHECK-TOOL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280b8aba9f18b0457d3fa ) | 11 | Herramienta de Verificación de Versión de Bajo Costo |
 
@@ -210,21 +209,12 @@
 
 | ID | Documento | Link |
 |---|---|---|
-| `MANUAL:CHECKLIST` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280bf8317eb28cb97d09f ) |
-| `MANUAL:HEALTH-CHECK` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42803087fcf93c131cdb20 ) |
 | `MANUAL:LAZY-LOAD` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#4f9398f7897e44548a24a760e4df331b ) |
-| `MANUAL:RUNTIME` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280d09928fbb45e44b2d2 ) |
 | `MANUAL:RUNTIME-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428081a042e045585530f5 ) |
 | `MANUAL:RUNTIME-002` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428068b7d0ccb0b3f91add ) |
 | `MANUAL:RUNTIME-003` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280f89393e30e78e70d41 ) |
 | `MANUAL:RUNTIME-004` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42809ebfecc01fb783a025 ) |
 | `MANUAL:WEEKLY-FLOW-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280b6b35fe73378fa12e6 ) |
-| `MANUAL:WEEKLY-FLOW-002` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428035a471f5c355d1e796 ) |
 | `MANUAL:WEEKLY-FLOW-003` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280d0ba91fc7de9c46703 ) |
 | `MANUAL:WEEKLY-FLOW-004` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280f48c81d997c5370a72 ) |
 | `MANUAL:WEEKLY-FLOW-005` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280ecbf6ede89097c0d6f ) |
-| `MANUAL:WEEKLY-FLOW-006` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280c792bec53a71f11c47 ) |
-| `SP:BOOTLOADER` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc428023bc1ad539d673df65 ) |
-| `SP:CONTEXT-INFRASTRUCTURE` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280a9a8e7c488d432fa95 ) |
-| `SP:CV-GOLDEN-RULES` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280c68b6dc0d853eead7c ) |
-| `SP:DATA-FLOW` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3ae938befc4280fd9280f1f8bb27ec90 ) |

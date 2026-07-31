@@ -5,7 +5,7 @@
 Audiencia: Sistemas Agente de IA.
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
-| 01 | SP:BOOTSTRAP | Especificación del Bootstrap |  |
+| 01 | SP:BOOTLOADER | Especificación del Bootloader |  |
 | 02 | SP:SYNC-RULE | Sincronización Inicial |  |
 | 03 | SP:DIGITAL-ID-CARD | Cédula Digital |  |
 | 04 | SP:CONTEXT-INFRASTRUCTURE | Alcance del Kernel |  |

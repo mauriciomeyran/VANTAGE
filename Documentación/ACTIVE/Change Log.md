@@ -1,5 +1,19 @@
 # V | CHANGELOG
 
+### v9.10.5 — Fix: MANUAL:HEALTHCHECK Restaurado Sin Guión Tras Edición Manual · 2026-07-31
+Tipo: [FIX]
+Alcance: Manual (sección 11 y sus 2 referencias cruzadas).
+Contexto: El operador editó manualmente el Manual en Notion entre escrituras de esta sesión, renombrando el heading de la sección 11 de MANUAL:HEALTHCHECK a MANUAL:HEALTH-CHECK (con guión) y el subtítulo interno de "El V-ID-Census" a "¿Qué es el Census ID?". Esto dejó 2 referencias cruzadas (sección 03, tabla Filosofía de Fallo; sección 09.1) apuntando al ID y nombre anteriores. Confirmado en vivo vía notion-fetch antes de actuar — sin asumir causa, verificado que no era artefacto de conversor local (el .md compartido por el operador reflejó fielmente el estado real de Notion, timestamps confirmados).
+Cambios:
+- Manual — heading sección 11: MANUAL:HEALTH-CHECK → MANUAL:HEALTHCHECK (sin guión, confirmado como estándar por el operador).
+- Manual — sección 03, tabla Filosofía de Fallo: referencia actualizada a MANUAL:HEALTHCHECK.
+- Manual — sección 09.1: referencia actualizada a MANUAL:HEALTHCHECK, con el nombre de subtítulo vigente "¿Qué es el Census ID?" (el operador confirmó este nombre como estándar, no revertir a "El V-ID-Census").
+IDs afectados: ninguna alta/baja — corrección de un ID existente que había sido editado manualmente, más alineación de 2 referencias cruzadas. Census no requiere regeneración.
+Write-Back Verification: Manual re-fetched de forma independiente tras la escritura — los 3 cambios confirmados sin residuo del guión ni del nombre de subtítulo anterior.
+Nota de vocabulario: a partir de esta entrada, el símbolo § se considera deprecado en toda comunicación de sesión (no solo en documentos) — usar "sección N" en su lugar, por instrucción explícita del operador.
+Pendiente (fuera de esta entrada): vversions --sync para propagar versión a los fundacionales restantes (heredado, aún no ejecutado). Revisión humana del resto del Manual en curso por el operador.
+Versión actualizada: 9.10.5 (CHANGELOG). El resto de los fundacionales permanece en versión previa hasta vversions --sync.
+---
 ### v9.10.4 — Documentación Transversal: SP:SCHEMA Alineado con Schema Vivo de Notion · 2026-07-31
 Tipo: [DOC] [FIX]
 Alcance: System Prompt (SP:SCHEMA, sección 08).
