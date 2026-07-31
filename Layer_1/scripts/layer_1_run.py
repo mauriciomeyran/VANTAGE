@@ -467,7 +467,7 @@ def analyze_outcome_patterns():
     try:
         load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
         client = Client(auth=os.environ["NOTION_TOKEN"])
-        ds_id = "596938be-fc42-836b-aea7-814a1491bd47"
+        ds_id = "442938be-fc42-828f-b72e-076818d65a5b"
         items = query_all_items(client, ds_id)
         rejection_patterns = {}
         score_effectiveness = {}
@@ -540,7 +540,7 @@ def main():
         sys.exit(1)
     
     client = Client(auth=os.environ["NOTION_TOKEN"])
-    ds_id = "596938befc42836baea7814a1491bd47"
+    ds_id = "442938be-fc42-828f-b72e-076818d65a5b"
 
     # ==================== FASE 1: CLASIFICACIÓN (VM_Scope, Role_Class, Source_Type) ====================
     print("\nFase 1: Clasificacion (VM_Scope, Role_Class, Source_Type)...")

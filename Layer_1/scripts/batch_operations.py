@@ -25,7 +25,7 @@ def txt(prop):
 def main():
     load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
     client = Client(auth=os.environ["NOTION_TOKEN"])
-    ds_id = "596938be-fc42-836b-aea7-814a1491bd47"
+    ds_id = "442938be-fc42-828f-b72e-076818d65a5b"
 
     print("🔄 JHS BATCH OPERATIONS")
     if not EXECUTE:
