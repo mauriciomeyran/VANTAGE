@@ -87,13 +87,21 @@
 | [`MANUAL:SESSION-CYCLE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428019bb7cf6352073a7e5 ) | 06 | Ciclo de Sesión — Open/Close |
 | [`MANUAL:CHECKLIST`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280bf8317eb28cb97d09f ) | 07 | El Checklist — V-Checklist semanal |
 | [`MANUAL:WEEKLY-FLOW`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428005a097dff5e1b05d1a ) | 08 | Flujo Semanal de Operación |
+| [`MANUAL:WEEKLY-FLOW-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280b6b35fe73378fa12e6 ) | 8.1 | Lunes — Búsqueda Activa |
 | [`MANUAL:WEEKLY-FLOW-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428035a471f5c355d1e796 ) | 8.2 | Dashboard — recuperación antes de CV Optimization |
+| [`MANUAL:WEEKLY-FLOW-003`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280d0ba91fc7de9c46703 ) | 8.3 | Miércoles — CV Optimization |
+| [`MANUAL:WEEKLY-FLOW-004`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280f48c81d997c5370a72 ) | 08.4 | Jueves |
+| [`MANUAL:WEEKLY-FLOW-005`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280ecbf6ede89097c0d6f ) | 08.5 | Viernes |
 | [`MANUAL:RUNTIME`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280d09928fbb45e44b2d2 ) | 09 | VANTAGE Runtime (Consulta Operativa) |
+| [`MANUAL:RUNTIME-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428081a042e045585530f5 ) | 9.1 | ¿Qué es el Runtime? |
+| [`MANUAL:RUNTIME-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428068b7d0ccb0b3f91add ) | 9.2 | Comandos Principales |
+| [`MANUAL:RUNTIME-003`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280f89393e30e78e70d41 ) | 9.3 | Cuándo Correr Sync |
+| [`MANUAL:RUNTIME-004`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42809ebfecc01fb783a025 ) | 9.4 | Runtime Build |
 | [`MANUAL:DATA-MANAGEMENT`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42808fa151eda9ccd757f9 ) | 10 | Gestión de Datos |
 | [`MANUAL:HEALTHCHECK`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42803087fcf93c131cdb20 ) | 11 | Health Check |
 | [`MANUAL:TROUBLESHOOTING`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280bb990bd6ac7e1609fd ) | 12 | Troubleshooting |
 | [`MANUAL:PROMPTS-WRAPPERS`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280e4a448fc506b42f981 ) | 13 | Prompts & Wrappers |
-| `MANUAL:CHEATSHEETS` | §14 | Cheat Sheets |
+| [`MANUAL:LAZY-LOAD`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#4f9398f7897e44548a24a760e4df331b ) | 14 | Lazy Load |
 | [`MANUAL:PATCH-QUALITY`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280a09ae4ea03969dcecf ) | 15 | Criterio de Calidad para Parches Documentales |
 | [`MANUAL:GOLDEN-RULES`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428070896ed08e5dcbba2b ) | 16 | Reglas de Oro para Operadores |
 | [`MANUAL:SLA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42801fa7f5ede6bdc8df52 ) | 17 | SLA de Latencia Post-Ingesta |
@@ -207,14 +215,4 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-| ID | Documento | Link |
-|---|---|---|
-| `MANUAL:LAZY-LOAD` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#4f9398f7897e44548a24a760e4df331b ) |
-| `MANUAL:RUNTIME-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428081a042e045585530f5 ) |
-| `MANUAL:RUNTIME-002` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428068b7d0ccb0b3f91add ) |
-| `MANUAL:RUNTIME-003` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280f89393e30e78e70d41 ) |
-| `MANUAL:RUNTIME-004` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42809ebfecc01fb783a025 ) |
-| `MANUAL:WEEKLY-FLOW-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280b6b35fe73378fa12e6 ) |
-| `MANUAL:WEEKLY-FLOW-003` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280d0ba91fc7de9c46703 ) |
-| `MANUAL:WEEKLY-FLOW-004` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280f48c81d997c5370a72 ) |
-| `MANUAL:WEEKLY-FLOW-005` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280ecbf6ede89097c0d6f ) |
+_Ninguno detectado en esta corrida._
