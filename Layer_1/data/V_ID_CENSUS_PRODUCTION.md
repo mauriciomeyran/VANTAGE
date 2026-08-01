@@ -56,20 +56,20 @@
 | [`KERNEL:CV-GOLDEN-RULES-005`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42807d85f0de1211b2586d ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #5 |
 | [`KERNEL:TRIGGERS`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42807bb15cef200fdda408 ) | 11 | Contratos de Ejecución del AI Component |
 | [`KERNEL:TRIGGER-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42800b863cecb82d08965c ) | 11.1 | Trigger — Discovery Request |
-| [`KERNEL:TRIGGER-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428075a5a1d727ea555313 ) | 11.2 | Trigger — CV Optimization |
+| [`KERNEL:TRIGGER-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#543df641f0164f4fae7c6a1e1e4abbff ) | 11.2 | Trigger — CV Optimization |
 | [`KERNEL:TRIGGER-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280f9b683fcb54c09db32 ) | 11.3 | Trigger — Recovery Request |
-| [`KERNEL:TRIGGER-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280b38ef0c066d097ec05 ) | 11.4 | Trigger — Documentation Update |
-| [`KERNEL:TRIGGER-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280c38467fe6df624b4f2 ) | 11.5 | Trigger — Schema Validation |
+| [`KERNEL:TRIGGER-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#0c37d33d3baf4a1bb2493b1a585b8568 ) | 11.4 | Trigger — Documentation Update |
+| [`KERNEL:TRIGGER-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#15f3fed721f84c418555d34533f08323 ) | 11.5 | Trigger — Schema Validation |
 | [`KERNEL:TRIGGER-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280fa98eaf73e2b1bf778 ) | 11.6 | Trigger — Gate Decision |
-| [`KERNEL:TRIGGER-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280159f89dd0e0690bb51 ) | 11.7 | Trigger — Archiving |
+| [`KERNEL:TRIGGER-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#abdc173e571a4b0680fb861fa77bfdd0 ) | 11.7 | Trigger — Archiving |
 | [`KERNEL:TRIGGER-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42804eb47fdd684b1dc743 ) | 11.8 | Trigger — Health Check |
-| [`KERNEL:TRIGGER-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280bb83b9fb9f2e48831c ) | 11.9 | Trigger — Version Check |
+| [`KERNEL:TRIGGER-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42804d8e62c429aa952221 ) | 11.9 | Trigger — Version Check |
 | [`KERNEL:CV-PIPELINE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280ee9edac5dbb75a7fd1 ) | 12 | Pipeline de CV |
 | [`KERNEL:CANON-UPDATE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280359cc3e96a741ad89a ) | 13 | Actualización del Canon |
 | [`KERNEL:NAMING-CONVENTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428020a404f7508f230044 ) | 14 | Convención de Nombres |
 | [`KERNEL:CONTEXT-INFRASTRUCTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42808d971fd25d0c75aef1 ) | 15 | Context Infrastructure |
-| [`KERNEL:CONTEXT-INFRASTRUCTURE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42802db7afcc41d4cb387d ) | 15.1 | Context Infrastructure — Data Sources |
-| [`KERNEL:CONTEXT-INFRASTRUCTURE-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428084b00ccd10d899ca5d ) | 15.2 | Context Infrastructure — Integration Points |
+| [`KERNEL:CONTEXT-INFRASTRUCTURE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280008436d9f204b62ce1 ) | 15.1 | Context Infrastructure — Data Sources |
+| [`KERNEL:CONTEXT-INFRASTRUCTURE-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#d1b0060b33cb4003923779b54e3f816b ) | 15.2 | Context Infrastructure — Integration Points |
 | [`KERNEL:DATA-FLOW`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428022bcf1d4d96fca1e3d ) | 16 | Flujo de Datos |
 | [`KERNEL:EVOLUTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280abacb8ee9a0bbb5957 ) | 17 | Evolución del Sistema |
 
@@ -181,7 +181,7 @@
 | [`BRIEF:NAV-PRINCIPLES`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280d4b714fd82e4936999 ) | 10 | Principios de Navegación |
 | [`BRIEF:EXPECTED-OUTCOME`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280d8b1afd11c1c5c1010 ) | 11 | Resultado Esperado |
 | [`BRIEF:AUTHORITY-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42802caa56c4f87b4050fc ) | 08.1 | TBD |
-| [`BRIEF:CONSULTATION-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42802fa21fe89016dde5cd ) | 04.1 | TBD |
+| `BRIEF:CONSULTATION-001` | TBD | TBD |
 | [`BRIEF:CROSS-DEPENDENCIES-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42804389def2c1ab68a0b6 ) | 07.1 | TBD |
 | [`BRIEF:CROSS-DEPENDENCIES-002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428036b922da36d1d7d899 ) | 07.2 | TBD |
 | [`BRIEF:CROSS-DEPENDENCIES-003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42809db0f7df304b56f926 ) | 07.3 | TBD |
@@ -221,7 +221,7 @@
 | [`ALIASES:L4-VERSION-CONTROL`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc4280d7be45f8b72c1b8903 ) | 05 | L4 · Version Control & Documentación |
 | [`ALIASES:DASHBOARD`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc42807c951ef524f3daae44 ) | 06 | Dashboard (Martes — Recuperación) |
 | [`ALIASES:CV-PIPELINE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc42805c82fac793a0162192 ) | 07 | CV Pipeline (Miércoles) |
-| [`ALIASES:DEDUP`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3ac938befc4280798f34ed2a9bb0f1d2 ) | §8 ⚠︎sin verificar en vivo | Dedup & Oportunidades |
+| [`ALIASES:DEDUP`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#7c33c1620e7c44bd94b4a46190a17a5a ) | 08 | Dedup & Oportunidades |
 
 ---
 
