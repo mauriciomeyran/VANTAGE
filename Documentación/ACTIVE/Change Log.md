@@ -1,5 +1,59 @@
 # V | CHANGELOG
 
+### v9.11.1 — Homologación Arquitectónica del Aliases · 2026-07-31
+Tipo: [DOC] [ARCHITECTURE]
+Alcance: Aliases (completo).
+Cambios: Encabezados a Bloque Único; tabla DEDUP convertida a nativa; resto de tablas preservadas. 0 IDs nuevos.
+Write-Back Verification: OK.
+Pendiente: vversions --sync.
+Versión actualizada: 9.11.1 (CHANGELOG + Aliases).
+---
+### v9.11.1 — Homologación Arquitectónica y Atomización del Navigation Brief · 2026-07-31
+Tipo: [DOC] [ARCHITECTURE]
+Alcance: Navigation Brief (completo).
+Contexto: Continuación del contrato de sesión HOMOLOGACIÓN ARQUITECTÓNICA Y ATOMIZACIÓN VANTAGE.
+Cambios:
+- Todos los encabezados migrados a formato Bloque Único (ID + Título).
+- Tablas pipe convertidas a bloques <table> nativos.
+- Atomización de PURPOSE-SCOPE, CROSS-DEPENDENCIES, MAINTENANCE-CONTRACT y DECISION-TREE.
+- 0 IDs nuevos.
+Write-Back Verification: re-fetch independiente OK.
+Pendiente: vversions --sync. Siguiente: ALIASES.
+Versión actualizada: 9.11.1 (CHANGELOG + Navigation Brief).
+---
+### v9.11.1 — Homologación Arquitectónica y Atomización del Career Canon · 2026-07-31
+Tipo: [DOC] [ARCHITECTURE]
+Alcance: Career Canon (completo).
+Contexto: Continuación del contrato de sesión HOMOLOGACIÓN ARQUITECTÓNICA Y ATOMIZACIÓN VANTAGE. Se normalizó la jerarquía completa del Career Canon bajo Matriz Tipográfica Congelada y Regla de Bloque Único.
+Cambios:
+- Todos los encabezados de definición (capítulos ## y subsecciones ###) migrados a formato Bloque Único: ID en la línea de heading + Título en la línea siguiente del mismo bloque.
+- Atomización de bloques densos (Profile ES/EN, Regla de Desempate en Positioning, reglas de Output Contract) a listas y párrafos cortos.
+- Tablas nativas preservadas.
+- Ningún ID nuevo creado.
+IDs afectados: ninguna alta/baja. Census no requiere regeneración.
+Write-Back Verification: Career Canon re-fetched de forma independiente tras replace_content — estructura y contenido confirmados correctos.
+Pendiente: Operador debe correr vversions --sync para propagar v9.11.1. Continuar con NAVIGATION BRIEF → ALIASES.
+Versión actualizada: 9.11.1 (CHANGELOG + Career Canon).
+---
+### v9.11.1 — Homologación Arquitectónica y Atomización del Technical Kernel · 2026-07-31
+Tipo: [DOC] [ARCHITECTURE]
+Alcance: Technical Kernel (completo).
+Contexto: Contrato de sesión HOMOLOGACIÓN ARQUITECTÓNICA Y ATOMIZACIÓN VANTAGE. Se normalizó la jerarquía completa del Kernel bajo Matriz Tipográfica Congelada v9.10.0/v9.10.2 y Regla de Bloque Único (ID + Título en un único bloque de heading separado por n interno). Se atomizaron todos los bloques monolíticos densos a párrafos cortos + listas para facilitar lazy loading.
+Cambios:
+- Todos los encabezados de definición (capítulos ## y subsecciones ###) migrados a formato Bloque Único: ID en la línea de heading + Título en español en la línea siguiente del mismo bloque.
+- Eliminación residual de patrones de dos H2 consecutivos y de cualquier uso residual de §.
+- Atomización visual de secciones densas (especialmente 01 PURPOSE, 02 FAIL-PHILOSOPHY, 03.x, 09.9 Escalamiento, 09.10/09.11, 12 CV-PIPELINE, 17 EVOLUTION) a listas numeradas/bullets y párrafos cortos.
+- TOC convertida/limpiada a tabla nativa.
+- Tablas existentes preservadas y alineadas.
+- Ningún ID nuevo creado (atomización de 09.9 se mantuvo visual sin elevar a nuevos IDs formales para evitar CENSUS-SYNC-R1 innecesario en esta pasada).
+- Residuos de exportación y notas de trabajo internas removidos donde existían.
+IDs afectados: ninguna alta/baja. Census no requiere regeneración (CENSUS-SYNC-R1 no disparado).
+Write-Back Verification: Technical Kernel re-fetched de forma independiente tras replace_content — estructura de encabezados, atomización y tablas confirmadas correctas, sin residuo del formato anterior.
+Pendiente (fuera de esta entrada):
+- Operador debe correr vversions --sync para propagar v9.11.1 a los 9 fundacionales.
+- Continuar homologación sobre CAREER CANON → NAVIGATION BRIEF → ALIASES según orden de prioridad del contrato de sesión.
+Versión actualizada: 9.11.1 (CHANGELOG + Kernel). El resto de los fundacionales permanece en v9.11.0 hasta vversions --sync.
+---
 ### v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31
 Tipo: [DOC] [FEATURE]
 Alcance: Career Canon (reestructuración completa de índice y secciones 04–13).

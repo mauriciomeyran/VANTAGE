@@ -1,5 +1,6 @@
 # V | ALIASES
 
+# V | ALIASES
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
 | 01 | ALIASES:SESSION-CYCLE | Session Cycle |  |
@@ -11,14 +12,14 @@
 | 07 | ALIASES:CV-PIPELINE | CV Pipeline |  |
 | 08 | ALIASES:DEDUP | Dedup & Oportunidades |  |
 ## 01 ALIASES:SESSION-CYCLE
-## Session Cycle
+Session Cycle
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | start | Arranca el sistema al inicio de cada sesión: activa el entorno, carga variables y corre el chequeo de salud. | Activa .venv, exporta config/layer_1.env, y ejecuta health_check.py, que revisa en orden versión, entorno, git, conectividad a Notion, sync documental y antigüedad de índices — auto-sincroniza el Entity Index si pasó más de 24h. |
 | vversions –bootstrap | Genera el paquete de contexto de apertura de sesión: última fila del Ledger, última entrada del Changelog, tickets críticos pendientes. | Lee pages.retrieve sobre la página del Session Ledger y el Changelog y arma el bloque [DUMP INICIO SESIÓN VANTAGE] — no escribe nada. |
 | vversions –sync | Propaga la versión ya escrita en el Changelog hacia los 6 documentos restantes. | Único flag con escritura: lee la versión target del Changelog y ejecuta 6 pages.patch secuenciales sobre la propiedad Versión — housekeeping, exento de APROBAR_WRITE. |
 ## 02 ALIASES:L0-RUNTIME
-## L0 · VANTAGE Runtime
+L0 · VANTAGE Runtime
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | vload | Motor base del Lazy Loader — consulta rutas específicas del Kernel sin fetch completo. | Activa .venv y corre lazy_loader.py –page {ID} –route {ruta}; parsea bloques hijos vía API y devuelve solo el payload pedido (~150 tokens). |
@@ -33,20 +34,20 @@
 | vcensus | Regenera el V-ID-CENSUS y reporta IDs huérfanos. | Corre generate_census.py — resuelve cada ID contra CENSUS_SPEC, detecta huérfanos no listados, y genera deeplink de bloque exacto vía API para cada uno. |
 | vsource | Recarga la configuración de shell tras editar .zshrc, sin abrir una terminal nueva. | source ~/.zshrc — housekeeping puro, no toca Notion ni el pipeline. |
 ## 03 ALIASES:L1L2-DISCOVERY
-## L1/L2 · Discovery (Lunes)
+L1/L2 · Discovery (Lunes)
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | vl1 | Corre el pipeline principal de Active Recon — procesa el JSON consolidado del día y lo escribe en el Tracker. | Invoca layer_1_pipeline.sh, que activa .venv y dispara feed_processor.py: normaliza campos, aplica dedup cross-layer, presenta DRY RUN antes de escribir. |
-| vl1status / vl1analytics / vl1batch / vl1recovery / vl1profile / vl1feed / vl1backfill | Atajos de un solo token a cada subcomando de vl1 (ver Manual 09.2 para el detalle de cada uno). | Cada uno equivale a vl1  — mismo contrato, solo evita el espacio. |
+| vl1status / vl1analytics / vl1batch / vl1recovery / vl1profile / vl1feed / vl1backfill | Atajos de un solo token a cada subcomando de vl1 (ver Manual 09.2 para el detalle de cada uno). | Cada uno equivale a vl1 — mismo contrato, solo evita el espacio. |
 | vl1app | Abre la app empaquetada de Layer 1 desde Finder/Spotlight en vez de Terminal. | open /Applications/Layer 1. |
 ## 04 ALIASES:L3-PASSIVE-INTAKE
-## L3 · Passive Intake
+L3 · Passive Intake
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | vl3 | Procesa manualmente el backlog de Gmail (.Jobs) si el ciclo automático no corrió. | Invoca layer_3_mail.sh — lee vía IMAP, extrae vacantes con Groq (máx. 5 correos/run), escribe Class A en el Tracker. |
 | vl3app | Abre la app empaquetada de Layer 3. | open /Applications/Layer 2 (nombre de carpeta heredado, corresponde a L3). |
 ## 05 ALIASES:L4-VERSION-CONTROL
-## L4 · Version Control & Documentación
+L4 · Version Control & Documentación
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | vgit | Fuerza un sync inmediato del repo git fuera de su horario automático. | Invoca git_sync_wrapper.sh — commit con timestamp + push a origin/main si hay cambios sin commitear. |
@@ -55,19 +56,18 @@
 | vhyperlinks | Aplica hipervínculos cross-reference sobre los 6 documentos fundacionales locales, a partir de cada mención de un ID canónico (PREFIX:KEY). | Corre apply_hyperlinks.py –root Documentación/ACTIVE. Sin –apply es dry-run (reporta cuántos links propuestos por documento, no escribe). Agregar –apply para escribir de verdad. |
 | vsum | Resume transcripts de sesiones (propias o de otra IA) a Markdown estructurado, para continuidad entre chats sin pérdida de contexto. | Corre vsum.py: parsea el transcript (.md o URL de Claude share), lo resume vía Groq o Gemini (fallback automático), y opcionalmente crea la página de resumen como hija del INBOX en Notion (–notion) vía notion_client directo. |
 ## 06 ALIASES:DASHBOARD
-## Dashboard (Martes — Recuperación)
+Dashboard (Martes — Recuperación)
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | vd | Abre el Dashboard de recuperación de vacantes bloqueadas. | Invoca dashboard_start.sh — arranca Flask en :8000, corre smoke test, abre dashboard.html en el navegador. |
 | vdapp | Abre la app empaquetada del Dashboard. | open /Applications/Dashboard. |
 ## 07 ALIASES:CV-PIPELINE
-## CV Pipeline (Miércoles)
+CV Pipeline (Miércoles)
 Sin alias de Terminal — CV-A, CV-B y QA se disparan directamente en el chat de Claude (ver Manual 08.3).
 ## 08 ALIASES:DEDUP
-## Dedup & Oportunidades
+Dedup & Oportunidades
 | Alias | Qué hace | Procedimiento interno |
-| — | — | — |
+| --- | --- | --- |
 | vdedup | Consolida entradas duplicadas detectadas en el Tracker. | Corre consolidate_duplicates.py sobre la clave compuesta brand+title+location. |
 | vopport | Limpia duplicados específicamente en oportunidades ya calificadas. | Corre dedup_opportunities.py. |
-—
 Figma Sync (plugin CV, 04-Vantage_CV/Figma Sync/) no tiene alias de Terminal propio — se opera desde Figma Desktop, ver Manual 08.3.
