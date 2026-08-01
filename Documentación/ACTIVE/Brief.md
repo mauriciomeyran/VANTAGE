@@ -71,7 +71,8 @@ Ningún documento debe duplicar la responsabilidad de otro.
 ---
 ## 04 BRIEF:NAV-CONTRACTS
 Contratos de Navegación
-### Consulta Arquitectónica
+### 04.1 BRIEF:CONSULTATION-001
+Consulta Arquitectónica
 Destino: Kernel
 Se utiliza para:
 - contratos
@@ -81,7 +82,8 @@ Se utiliza para:
 - triggers
 - gates
 - filosofía
-### Consulta Operativa
+### 04.2 BRIEF:CONSULTATION-002
+Consulta Operativa
 Destino: Manual
 Se utiliza para:
 - procedimientos
@@ -89,7 +91,8 @@ Se utiliza para:
 - ejecución
 - troubleshooting
 - operación diaria
-### Consulta Profesional
+### 04.3 BRIEF:CONSULTATION-003
+Consulta Profesional
 Destino: Career Canon
 Se utiliza para:
 - CV
@@ -98,13 +101,15 @@ Se utiliza para:
 - narrativa profesional
 - skeletons
 - output contract
-### Consulta Documental
+### 04.4 BRIEF:CONSULTATION-004
+Consulta Documental
 Destino: Master Index
 Se utiliza para:
 - localizar documentos
 - descubrir documentación
 - verificar estructura documental
-### Consulta de IDs
+### 04.5 BRIEF:CONSULTATION-005
+Consulta de IDs
 Destino: ID Census
 Se utiliza para:
 - validar IDs
@@ -112,7 +117,8 @@ Se utiliza para:
 - localizar secciones
 - verificar namespaces
 - auditoría documental
-### Consulta Histórica
+### 04.6 BRIEF:CONSULTATION-006
+Consulta Histórica
 Destino: Change Log
 Se utiliza para:
 - conocer cuándo ocurrió un cambio
@@ -132,7 +138,8 @@ Produce
 - sincronización
 Depende de  
 Ningún dominio. Es la base del sistema.
-### Core Assets
+### 05.2 BRIEF:CORE-ASSETS-001
+Core Assets
 Responsabilidad  
 Mantener sincronizados todos los activos fundacionales.
 Incluye
@@ -142,7 +149,8 @@ Incluye
 - ACTIVE
 - Git
 - Bootloader
-### Discovery
+### 05.3 BRIEF:DISCOVERY-001
+Discovery
 Responsabilidad  
 Captura y consolidación de oportunidades.
 Incluye
@@ -150,7 +158,8 @@ Incluye
 - L2
 - L3
 Produce información para Gate Logic.
-### Gate Logic
+### 05.4 BRIEF:GATE-LOGIC-001
+Gate Logic
 Responsabilidad  
 Evaluación determinista del pipeline.
 Incluye
@@ -158,7 +167,8 @@ Incluye
 - Gate Decision
 - Next Action
 - Recovery RT-1
-### CV Pipeline
+### 05.5 BRIEF:CV-PIPELINE-001
+CV Pipeline
 Responsabilidad  
 Producción documental posterior al Gate.
 Incluye

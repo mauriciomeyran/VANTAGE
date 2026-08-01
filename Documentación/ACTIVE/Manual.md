@@ -871,11 +871,11 @@ CANON:POSITIONING-001 define 4 modos de posicionamiento para CV-B. Esta sección
 | Regla de desempate (JDs híbridos) — ver CANON:POSITIONING-001 para el texto completo: (1) más keywords mapeados al ancla, (2) empate → mayor seniority (N2>N1, N4>N3 con presupuesto regional explícito), (3) empate persistente → escalar a decisión humana vía fit_gaps. |  |  |  |
 ## 20 MANUAL:GOLDEN-SKELETON-REF
 Golden Skeleton
-El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-001) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
+El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-002) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
 - SSOT de IDs de nodo Figma: registry_seed.json en 04-Vantage_CV/Figma Sync/.
 - Slots clave: 2055:9 (Nombre), 2055:10 (Tagline), 2043:51 (Perfil), 2043:56-60 (Skills), 2043:64+ (Experiencia).
 - Regla de invariancia: si el Skeleton cambia en Figma, registry_seed.json se actualiza antes del siguiente CV-B — nunca al revés.
-- Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en CANON:OUTPUT-CONTRACT-001 — no se replica aquí.
+- Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en CANON:OUTPUT-CONTRACT-002 — no se replica aquí.
 ## 21 MANUAL:SCHEMA-FIELD-REF
 Schema Class A/B
 KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.

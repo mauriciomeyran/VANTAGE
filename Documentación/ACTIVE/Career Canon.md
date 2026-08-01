@@ -21,9 +21,11 @@ DECLARACIÓN DE AUDIENCIA Y ALCANCE
 | 13 | CANON:DERIVED-OUTPUTS-ARCHIVE | DERIVED OUTPUTS ARCHIVE (Historial) |  |
 ## 01 CANON:PROFILE
 Professional Profile
-### ES
+### 01.1 CANON:PROFILE-001
+ES
 Estratega de Visual Merchandising & Brand Execution con más de 10 años de trayectoria en retail de lujo, moda y alto rendimiento. Especialista en traducir lineamientos globales en ejecuciones locales de alto impacto, liderando estrategias regionales en LATAM y gestionando presupuestos CAPEX/OPEX nacionales. Experto en storytelling visual, lanzamientos de producto (NPI) y habilitación de equipos de campo, con un historial probado en la optimización de KPIs comerciales (+43% tráfico) y eficiencia operativa (-74% costos). Perfil con alta capacidad analítica y técnica, enfocado en elevar la experiencia del consumidor y la coherencia de marca en redes propias, franquicias y wholesale.
-### EN
+### 01.2 CANON:PROFILE-002
+EN
 Visual Merchandising & Brand Execution strategist with over 10 years of experience in luxury, fashion, and high-performance retail. Expert in translating global brand guidelines into high-impact local executions, leading LATAM regional strategies, and managing national CAPEX/OPEX budgets. Specialist in visual storytelling, new product introductions (NPI), and field team enablement, with a proven track record of optimizing commercial KPIs (+43% traffic) and operational efficiency (-74% costs). Highly analytical and technical profile, focused on elevating consumer experience and brand coherence across own stores, franchises, and wholesale channels.
 ---
 ## 02 CANON:SKILLS
@@ -251,12 +253,13 @@ El Positioning Mode seleccionado se declara explícitamente en el HANDOFF. No se
 ---
 ## 12 CANON:OUTPUT-CONTRACT
 Output Contract
-### FIGMA SYNC PROTOCOL (STRICT)
+### 12.1 CANON:OUTPUT-CONTRACT-001
+FIGMA SYNC PROTOCOL (STRICT)
 1. IMMUTABILITY OF IDs: Los ###### figma_text_id son llaves primarias. Está terminantemente prohibido alterarlas, omitirlas o inventar nuevas.
 1. SLOT INTEGRITY: No se permiten fusiones ni divisiones de bloques. Si el Skeleton tiene 4 bullets para una experiencia, el output DEBE tener 4 bloques, incluso si uno queda vacío.
 1. NULL-FILL RULE: Si el Canon Career no tiene información suficiente para un slot específico del Skeleton, el slot debe mantenerse con su ID original y el texto "[PENDING DATA]" o quedar vacío, pero NUNCA eliminarse.
 1. MARKDOWN ESCAPING: Mantener el uso de ( y ) para compatibilidad con el plugin de Figma si se detecta en el Skeleton original.
-### 12.1 CANON:OUTPUT-CONTRACT-001
+### 12.2 CANON:OUTPUT-CONTRACT-002
 Golden Skeleton
 Use this exact sequence of IDs for any Figma-destined output.
 - ID Header Sample: ###### figma_text_id
@@ -273,11 +276,11 @@ Use this exact sequence of IDs for any Figma-destined output.
 **Estratega de Visual Merchandising** con más de 10 años de trayectoria en el sector de Retail de lujo y moda, especializado en liderar la ejecución de directrices de marca, diseño de espacios comerciales y optimización de KPIs operativos en tienda.
 …
 ```
-### 12.2 CANON:OUTPUT-CONTRACT-002
+### 12.3 CANON:OUTPUT-CONTRACT-003
 Figma Tags
 > Formato base obligatorio para todos los Derived Outputs generados desde el Career Canon. Aplica ES + EN.
 > SSOT de IDs de nodos: registry_seed.json en 04-Vantage_CV/Figma Sync/ es la fuente única de verdad para los IDs numéricos de nodo Figma. Si hay discrepancia entre un figma_text_id en un output CV-B y el registry, el registry gana. Ante cualquier cambio en la estructura del lienzo Figma, actualizar registry_seed.json antes de generar nuevos CV-B.
-### 12.3 CANON:OUTPUT-CONTRACT-003
+### 12.4 CANON:OUTPUT-CONTRACT-004
 Tag Registry
 Formato de Entrega Obligatorio
 Cada Derived Output generado bajo este contrato requiere dos outputs:
@@ -291,7 +294,7 @@ Reglas de Serialización
 - Skills = Categoría: texto plano
 - Tagline 2:5 = [Título · Subtítulo] · Ciudad | Tel | Email | LinkedIn | Portfolio
 - & en nombres de empresa → &
-### 12.4 CANON:OUTPUT-CONTRACT-004
+### 12.5 CANON:OUTPUT-CONTRACT-005
 Positioning Modes (Aplicación en Output)
 Los slots Variable por modo se derivan del Positioning Mode activo (sección 11 · N1–N4):
 - 2055:10 tagline

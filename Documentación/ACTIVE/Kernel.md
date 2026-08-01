@@ -29,6 +29,7 @@
 Propósito del Sistema
 VANTAGE resuelve un problema de ingeniería de atención: en una búsqueda laboral sin estructura, las oportunidades de alta señal desaparecen antes de ser procesadas, mientras el tiempo se consume en vacantes de baja calidad.
 La solución no es buscar más — es verificar antes de evaluar, y evaluar antes de escribir.
+### 01.1 KERNEL:PURPOSE-001
 Invariantes del Sistema
 1. Una vacante no entra al pipeline sin URL válida — excepción: Bypass activo (ver 09.1).
 1. Score no lo calcula el sistema de lenguaje — lo calcula Python con lógica determinista.
@@ -43,12 +44,14 @@ El componente AI es el procesador textual del pipeline:
 ## 02 KERNEL:FAIL-PHILOSOPHY
 Filosofía de Fallo
 Los fallos del sistema son señales de que el pipeline funciona correctamente. Un gate que nunca bloquea no está filtrando. La presencia de gates BLOCKED, scores en 0 y entradas EXPIRED es evidencia de que el sistema aplica sus criterios.
+### 02.1 KERNEL:FAIL-PHILOSOPHY-001
 Qué hace el Sistema cuando falla
 - No intenta reparar outputs.
 - No sugiere workarounds.
 - No escala urgencia.
 - Reporta el estado y espera instrucción humana.
-Excepción — Gate = BLOCKED recuperable vía RT-1
+### 02.2 KERNEL:FAIL-PHILOSOPHY-002
+Excepción — Gate BLOCKED Recuperable vía RT-1
 El AI informa la opción pero no la ejecuta sin instrucción explícita.
 ---
 ## 03 KERNEL:DOCUMENTATION
@@ -559,7 +562,8 @@ Lectura del estado general del sistema. Solo lectura, no interpreta si el sistem
 ---
 ## 12 KERNEL:CV-PIPELINE
 CV Pipeline — Arquitectura de Dos Sesiones Obligatorias
-### CV-A
+### 12.1 KERNEL:CV-PIPELINE-001
+CV-A
 Input
 URL o JD.
 Process
@@ -581,7 +585,8 @@ SESIÓN COMPLETADA → nueva sesión.
 Un HANDOFF incompleto no avanza a CV-B. El sistema no inventa valores para campos faltantes.
 Regla de Orden de Experiencia
 Cronológico descendente siempre. Orden canónico obligatorio: C01 → C02 → C03 → C04 → C05. No se modifica por Positioning Mode, relevancia ni ninguna otra variable.
-### CV-B
+### 12.2 KERNEL:CV-PIPELINE-002
+CV-B
 Input
 HANDOFF completo + Career Canon activo.
 Validation

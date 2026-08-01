@@ -45,14 +45,18 @@ Cambios:
 - Atomización visual de secciones densas (especialmente 01 PURPOSE, 02 FAIL-PHILOSOPHY, 03.x, 09.9 Escalamiento, 09.10/09.11, 12 CV-PIPELINE, 17 EVOLUTION) a listas numeradas/bullets y párrafos cortos.
 - TOC convertida/limpiada a tabla nativa.
 - Tablas existentes preservadas y alineadas.
-- Ningún ID nuevo creado (atomización de 09.9 se mantuvo visual sin elevar a nuevos IDs formales para evitar CENSUS-SYNC-R1 innecesario en esta pasada).
 - Residuos de exportación y notas de trabajo internas removidos donde existían.
-IDs afectados: ninguna alta/baja. Census no requiere regeneración (CENSUS-SYNC-R1 no disparado).
-Write-Back Verification: Technical Kernel re-fetched de forma independiente tras replace_content — estructura de encabezados, atomización y tablas confirmadas correctas, sin residuo del formato anterior.
+Corrección post-escritura (misma versión, pasada de seguimiento): la decisión inicial de esta entrada fue mantener 01 PURPOSE, 02 FAIL-PHILOSOPHY y 12 CV-PIPELINE como atomización visual sin ID formal, para evitar CENSUS-SYNC-R1 innecesario. Una sesión de seguimiento, sin visibilidad de esa decisión al generar su propuesta, mapeó exactamente esos tres bloques como huérfanos de navegación y propuso IDs — el operador autorizó (Yep) y luego, al reportársele el conflicto con esta entrada, confirmó explícitamente mantener los 5 IDs nuevos sobre la decisión original.
+- Alta de KERNEL:PURPOSE-001 (01.1) — Invariantes del Sistema, dentro de 01 KERNEL:PURPOSE.
+- Alta de KERNEL:FAIL-PHILOSOPHY-001 (02.1) y KERNEL:FAIL-PHILOSOPHY-002 (02.2) — split de "Qué hace el Sistema cuando falla" y "Excepción RT-1", dentro de 02 KERNEL:FAIL-PHILOSOPHY.
+- Alta de KERNEL:CV-PIPELINE-001 (12.1) y KERNEL:CV-PIPELINE-002 (12.2) — CV-A y CV-B, que vivían como H3 sin ID canónico (violación literal de KERNEL:DOCUMENTATION-001 corregida), dentro de 12 KERNEL:CV-PIPELINE.
+IDs afectados: Altas — KERNEL:PURPOSE-001, KERNEL:FAIL-PHILOSOPHY-001, KERNEL:FAIL-PHILOSOPHY-002, KERNEL:CV-PIPELINE-001, KERNEL:CV-PIPELINE-002 (5 IDs nuevos). Bajas: ninguna. Census SÍ requiere regeneración — CENSUS-SYNC-R1 disparado por esta corrección.
+Write-Back Verification: Technical Kernel re-fetched de forma independiente tras replace_content (pasada original) y de nuevo tras los 5 update_content de la corrección — ambas confirmadas sin mismatch.
 Pendiente (fuera de esta entrada):
 - Operador debe correr vversions --sync para propagar v9.11.1 a los 9 fundacionales.
+- Operador debe correr vcensus para regenerar V_ID_CENSUS_PRODUCTION.md con los 5 IDs nuevos (CENSUS-SYNC-R1).
 - Continuar homologación sobre CAREER CANON → NAVIGATION BRIEF → ALIASES según orden de prioridad del contrato de sesión.
-Versión actualizada: 9.11.1 (CHANGELOG + Kernel). El resto de los fundacionales permanece en v9.11.0 hasta vversions --sync.
+Versión actualizada: 9.11.1 (CHANGELOG + Kernel, sin bump adicional — corrección registrada dentro de la misma versión por instrucción explícita del operador). El resto de los fundacionales permanece en v9.11.0 hasta vversions --sync.
 ---
 ### v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31
 Tipo: [DOC] [FEATURE]
