@@ -55,12 +55,12 @@ ID_PATTERN = re.compile(r'\b([A-Z][A-Z0-9_]*:[A-Z0-9][A-Z0-9-]*)\b')
 # seguido de un separador opcional (espacio simple es el canónico; se
 # tolera además guion largo/corto residual de documentos aún no
 # migrados, para no romper la detección durante la transición).
-SECTION_HEADING_PREFIX_RE = re.compile(r"^\d{2}(?:\.\d+)?\s*(?:[—-]\s*)?")
+SECTION_HEADING_PREFIX_RE = re.compile(r"^\d{1,2}(?:\.\d+)?\s*(?:[—-]\s*)?")
 
 # Igual que arriba pero con grupo de captura, para EXTRAER el número de
 # sección real detectado en vivo (reemplaza el valor hardcodeado de
 # CENSUS_SPEC cuando ambos están disponibles).
-SECTION_HEADING_CAPTURE_RE = re.compile(r"^(\d{2}(?:\.\d+)?)\s*(?:[—-]\s*)?")
+SECTION_HEADING_CAPTURE_RE = re.compile(r"^(\d{1,2}(?:\.\d+)?)\s*(?:[—-]\s*)?")
 
 # Compatibilidad hacia atrás: documentos aún no migrados al formato sin §
 # siguen usando "§N — ID" o "§N ID". Se reconoce para no romper la
