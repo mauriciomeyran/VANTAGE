@@ -13,6 +13,12 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/extract-learnings.skill",
+      "name": "extract-learnings",
+      "description": "VANTAGE Skill: extract-learnings",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/prompt-master.skill",
       "name": "prompt-master",
       "description": "Genera prompts optimizados para herramientas de IA",
@@ -52,6 +58,30 @@
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal-propuesta.skill",
       "name": "vantage-documentacion-transversal-propuesta",
       "description": "Genera propuestas de documentación transversal",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-hyperlink-loop.skill",
+      "name": "vantage-hyperlink-loop",
+      "description": "VANTAGE Skill: vantage-hyperlink-loop",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-present-handoff.skill",
+      "name": "vantage-present-handoff",
+      "description": "Genera snapshot de contexto de sesión para continuidad",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-close.skill",
+      "name": "vantage-session-close",
+      "description": "Protocolo de cierre de sesión VANTAGE",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-open.skill",
+      "name": "vantage-session-open",
+      "description": "Protocolo de apertura de sesión VANTAGE",
       "mimeType": "application/octet-stream"
     },
     {

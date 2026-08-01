@@ -17,7 +17,7 @@ DECLARACIÓN DE AUDIENCIA Y ALCANCE
 | 09 | CANON:CERTIFICATIONS | CERTIFICATIONS |  |
 | 10 | CANON:MAJOR-PROJECTS | MAJOR PROJECTS |  |
 | 11 | CANON:POSITIONING | POSITIONING MODES |  |
-| 12 | CANON:OUTPUT-CONTRACT | OUTPUT CONTRACT |  |
+| 12 | [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#53a2d31605f84299a99118add45e2af7) | OUTPUT CONTRACT |  |
 | 13 | CANON:DERIVED-OUTPUTS-ARCHIVE | DERIVED OUTPUTS ARCHIVE (Historial) |  |
 ## 01 CANON:PROFILE
 Professional Profile
@@ -207,7 +207,7 @@ LinkedIn Learning · 2024
 ---
 ## 10 CANON:MAJOR-PROJECTS
 Major Projects
-> Reintegrada desde CAREER CANON (DEPRECATED) — v9.11.0. P01 ya se referenciaba de forma implícita en CANON:POSITIONING-N2 sin registro formal detrás; esta sección lo formaliza.
+> Reintegrada desde CAREER CANON (DEPRECATED) — v9.11.0. P01 ya se referenciaba de forma implícita en [CANON:POSITIONING-N2](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281049bb9ea0791d90b0e) sin registro formal detrás; esta sección lo formaliza.
 ### 10.1 CANON:MAJOR-PROJECT-001
 P01 · Adidas Brand Center Madero
 Compañía: C02 · Bisonte Experiential Marketing · Período: 2022–2023
