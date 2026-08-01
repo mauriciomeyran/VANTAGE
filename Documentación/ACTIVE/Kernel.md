@@ -82,6 +82,8 @@ La resolución de un ID canónico a su nivel de heading Markdown sigue una jerar
 - Subsección (NN.N) = ###
 - Figma Tag (solo derivados, inmutable) = ######
 Esta matriz es la fuente de verdad para cualquier futura alta de ID bajo este contrato — ningún nodo NN.N comparte nivel con su capítulo padre.
+Regla de Bloque Único
+Todo heading ### (subsección NN.N) declara su ID canónico [PREFIX]:[KEY] en la misma línea de heading que su título — nunca en línea separada ni como texto plano bajo el heading. No existe excepción decorativa: un heading ### sin ID visible en su propia línea viola este contrato.
 Reglas de Migración
 Toda referencia a páginas del sistema que use UUIDs hardcodeados o anclas planas debe migrar a este esquema. lazy_loader.py aplica este contrato en tiempo de ejecución. DT-015 — CERRADO: normalización documental (26 ocurrencias) vía trigger NORM. 100% canónico.
 ---
@@ -481,11 +483,21 @@ Si Status ∈ {Postulado, Rechazado, Expirada} → pipeline termina aquí, sin i
 ## 10 KERNEL:CV-GOLDEN-RULES
 Golden Rules — Límites de Ejecución
 Restricciones de arquitectura formales, no preferencias. Cada violación genera respuesta estandarizada de rechazo.
-1. Regla #1 — No Evaluar Fit Antes de Escribir. Excepción: CV-A extrae keywords/gaps técnicos, no es evaluación de fit.
-1. Regla #2 — No Calcular ni Estimar Campos Class B. Campos protegidos: Score · VM_Scope · Role_Class · Match · Gate_Decision · Next_Action · Fetch · Fuente · JD_Quality · Dedup_Flag.
-1. Regla #3 — No Cuestionar la Calidad de Datos del Usuario. Sin sugerencias, sin recomendaciones de fuentes alternativas.
-1. Regla #4 — No Delegar Escritura al Usuario. Excepciones: export PDF, upload a Google Drive.
-1. Regla #5 — No Interpretar en SYNC. Datos puros, sin análisis de tendencias.
+### 10.1 KERNEL:CV-GOLDEN-RULES-001
+Regla #1 — No Evaluar Fit Antes de Escribir
+Excepción: CV-A extrae keywords/gaps técnicos, no es evaluación de fit.
+### 10.2 KERNEL:CV-GOLDEN-RULES-002
+Regla #2 — No Calcular ni Estimar Campos Class B
+Campos protegidos: Score · VM_Scope · Role_Class · Match · Gate_Decision · Next_Action · Fetch · Fuente · JD_Quality · Dedup_Flag.
+### 10.3 KERNEL:CV-GOLDEN-RULES-003
+Regla #3 — No Cuestionar la Calidad de Datos del Usuario
+Sin sugerencias, sin recomendaciones de fuentes alternativas.
+### 10.4 KERNEL:CV-GOLDEN-RULES-004
+Regla #4 — No Delegar Escritura al Usuario
+Excepciones: export PDF, upload a Google Drive.
+### 10.5 KERNEL:CV-GOLDEN-RULES-005
+Regla #5 — No Interpretar en SYNC
+Datos puros, sin análisis de tendencias.
 Template Universal de Rechazo
 ```plain text
 OPERACIÓN RECHAZADA — Violación Regla de Oro #[N]
