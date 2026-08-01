@@ -176,7 +176,13 @@ def audit() -> list[dict]:
             id_str = ids_in_heading[0]
             status = classify_heading(plain, id_str)
 
-            if status == "malformed":
+            # Se reportan tanto los headings mal formados como los que
+            # siguen en formato legacy "§N — ID": vantage_id_rules.py
+            # declara explícitamente que ok_legacy_sectioned "SIEMPRE se
+            # reporta como candidato a migrar al formato canónico nuevo,
+            # nunca se acepta como destino final" — antes esta condición
+            # los ignoraba en silencio (Bug Tracker, 2026-08-01).
+            if status in ("malformed", "ok_legacy_sectioned"):
                 block_id_clean = block["id"].replace("-", "")
                 findings.append({
                     "doc": doc_name,
@@ -253,7 +259,8 @@ def main():
     print(f"  Headings mal formados encontrados: {len(findings)}")
     print("-" * 60)
     for f in findings:
-        print(f"  [{f['doc']}] {f['id_str']}")
+        tag = "LEGACY" if f["status"] == "ok_legacy_sectioned" else "MALFORMED"
+        print(f"  [{f['doc']}] [{tag}] {f['id_str']}")
         print(f"    Actual:    {f['current_text']!r}")
         print(f"    Sugerido:  {f['suggested_fix']!r}")
         print(f"    Link:      {f['link']}")

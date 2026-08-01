@@ -1,7 +1,57 @@
 # V | CHANGELOG
 
+### v9.11.8 — Fix Raíz: PATCH Puntual Reemplaza Destroy/Rebuild para Hyperlinks (apply_hyperlinks_notion.py) · 2026-08-01
+Tipo: [FIX] [ARCHITECTURE]
+Alcance: Layer_1/scripts/apply_hyperlinks_notion.py (nuevo, local); Career Canon (2 bloques quote, sección 10 CANON:MAJOR-PROJECTS).
+Contexto: Bug reportado por el operador al abrir sesión — "los links de la TOC no hacen nada al click" pese a que vcensus reportaba 209/209 IDs resueltos y vhyperlinks --apply corría sin error. Causa raíz aislada por lectura directa de código (no inferida): vsync_doc.py y vsync_doc_fast.py (push_local_to_notion()) hacen delete-all + create-all sobre TODOS los bloques de la página en cada corrida de 'vdoc local' — cualquier anchor #block-id generado por vhyperlinks queda huérfano en cuanto corre el siguiente sync, porque Notion asigna block-IDs nuevos a los bloques recreados. Confirmado como mecanismo consciente pero mal cerrado: el propio código trae comentarios "TEMPORALMENTE HABILITADO... debe ser deshabilitado después" (v8.5.7) nunca revertidos.
+Cambios:
+- Nuevo script apply_hyperlinks_notion.py: aplica hyperlinks DIRECTO a bloques de Notion vía PATCH puntual (notion.blocks.update / PATCH /v1/blocks/{id}), preservando block-ID — nunca borra ni recrea bloques para este flujo. Reusa fetch_blocks_recursive/extract_ids_from_block/is_definition_block de generate_census.py (no reimplementa) y vantage_id_rules.py (mismo módulo único de reglas que ya usan normalize_heading_ids.py y apply_hyperlinks.py).
+- MAPPING ID→URL ya no es diccionario estático hardcodeado (como en apply_hyperlinks.py, con anchors PENDIENTE_ANCHOR sin resolver) — se construye en cada corrida desde el link_index real de generate_census.py, eliminando de raíz la clase de bug de anchors desactualizados.
+- Validado en producción: --doc career_canon --apply, 2 bloques patcheados (quote, sección CANON:MAJOR-PROJECTS), 0 errores. Confirmado por el operador en Notion: link clickeable, block-ID preservado (verificado contra Historial de versiones — edición incremental, no rebuild).
+IDs afectados: ninguno — ambos bloques ya contenían los IDs CANON:OUTPUT-CONTRACT-002 y CANON:POSITIONING-N2 en texto plano; el cambio fue solo la conversión a hipervínculo real. Census no requiere regeneración.
+Write-Back Verification: confirmado por el operador directamente en Notion (click funcional) — no solo por código de retorno 200 del script.
+Pendiente (fuera de esta entrada, explícitamente pineado por el operador para sesión futura):
+- 3 anchors sin DEF resuelto en la spec (MANUAL:COLD-START-001, ALIASES:DEDUP, SP:CONSISTENCY §9 legacy) — no se resuelven en este fix, quedan sin link igual que hoy en vcensus.
+- EXCLUDE_IDS vacío en apply_hyperlinks_notion.py — copiar la lista real de apply_hyperlinks.py (27 IDs en la última corrida) antes de correr --all sobre documentos donde esa exclusión importe.
+- Sin probar aún en Kernel (26 cambios) ni Manual (40 cambios) — mayor volumen de table_row, recomendado --dry-run individual antes de --apply.
+- Documentación transversal formal de este hallazgo (KERNEL:ARCHITECTURE-L4, KERNEL:DOCUMENTATION-011, posible actualización del skill vantage-hyperlink-loop) — decisión del operador: diferida a sesión futura por límite de tokens en esta sesión.
+- vsync_doc.py / vsync_doc_fast.py NO fueron modificados ni deprecados en esta entrada — siguen existiendo con el mecanismo destroy/rebuild; el operador debe evitar 'vdoc local' sobre documentos con hyperlinks recién aplicados hasta que se decida su reemplazo formal o se documente la restricción de uso.
+Versión actualizada: 9.11.8 (CHANGELOG). El resto de los fundacionales permanece en v9.11.7 hasta vversions --sync.
+---
+### v9.11.7 — Registro Retroactivo: Fix Protección Terminal gate_logic() (commit ca5f1a8, 2026-07-29) · 2026-08-01
+Tipo: [FIX] [DOC-RETROACTIVO]
+Alcance: Layer_1/scripts/layer_1_run.py (local, código ya en producción desde el 29-jul); Bug Tracker (ticket 3ac938be-fc42-8149-a909-c8a1b426e7e6).
+Contexto: El fix real se aplicó el 2026-07-29 vía fix_terminal_protection_layer_1_run.patch (commit ca5f1a8, 04:47), ANTES de que el ticket correspondiente fuera abierto — por eso nunca generó su propia entrada de Changelog en su momento. Un reporte de Devin marcó el hallazgo original ("protección de gate_logic() es código muerto por la línea 772") como implementado; verificación directa contra el código real (layer_1_run.py, main, GitHub) en esta sesión confirmó que la línea 'if current_action: continue' descrita por el ticket ya NO existe — el patch la había reemplazado antes de la apertura del ticket. Falso positivo confirmado, no un bug nuevo.
+Cambios (ya vigentes en producción desde el 29-jul, documentados aquí por primera vez):
+- layer_1_run.py línea ~842: único mecanismo de protección de estado terminal es ahora gate_logic(entry), invocado antes de gate() (FASE 4).
+- gate_logic.py: TERMINAL_ACTIONS = {'Archivar', 'Expirada'} — criterio angosto, alineado con decisión de gobierno 2026-08-01.
+IDs afectados: ninguno — cambio de código Python, no de documentación Notion. Census no requiere regeneración.
+Verificación: confirmado por Devin y re-verificado independientemente por Claude contra el repo (GitHub, rama main) en esta sesión. Ticket 3ac938be-fc42-8149-a909-c8a1b426e7e6 cerrado como Resuelto (falso positivo), Prioridad 4 CRÍTICO, Fecha_Resolución 2026-08-01.
+Nota de alcance — no confundir con B3: este fix resuelve únicamente la capa de PROTECCIÓN de estados terminales (qué registros NO se re-evalúan). Es distinto y no desbloquea automáticamente el bug de EJECUCIÓN de archivado automático (Bug Tracker: "Dedup Caso 5 — Next_Action=Archivar no se ejecuta automáticamente", Status Abierto) — ese bug sigue abierto, y además existe un tercer ticket sin resolver ("Discrepancia de protección de estados terminales": gate_logic.py vs. layer_1_run.py FASE 4) que es prerequisito de diseño antes de construir auto_archive.py (KERNEL:GATE-DECISION-007).
+Pendiente (fuera de esta entrada):
+- Decisión del operador sobre la discrepancia FASE 4 (protección amplia: cualquier Next_Action no vacío) vs. gate_logic.py (protección angosta: solo Archivar/Expirada) — ticket abierto, Prioridad 3 ALTO.
+- Bug "Dedup Caso 5" (archivado automático nunca se ejecuta) — sigue abierto, Prioridad 3 ALTO, sin auto_archive.py construido.
+- T3, T5, T7, D3/GAP-03, D4/B6 Caso 4 — heredados, sin tocar esta sesión.
+Versión actualizada: 9.11.7 (CHANGELOG). El resto de los fundacionales permanece en v9.11.5/9.11.6 hasta vversions --sync.
+---
 # V | CHANGELOG
 
+### v9.11.6 — Manual §6 Sincronizado + Fix normalize_heading_ids.py (ok_legacy_sectioned) · 2026-08-01
+Tipo: [FIX] [DOC]
+Alcance: Manual (MANUAL:SESSION-CYCLE, §6); Layer_1/scripts/normalize_heading_ids.py (local).
+Contexto: Dos hallazgos independientes en la misma sesión. (1) Manual §6 seguía documentando "6 documentos fundacionales + el Census" pese a la expansión a 9 fundacionales vigente desde v9.11.x — drift de conteo detectado por auditoría cruzada con SP:SYNC-RULE. (2) Lectura directa de vantage_id_rules.py y normalize_heading_ids.py reveló que audit() ignoraba en silencio el estado ok_legacy_sectioned (headings aún en formato §N) pese a que el propio módulo lo declara "SIEMPRE candidato a migrar" — confirmado por código, no inferido.
+Cambios:
+- Manual — MANUAL:SESSION-CYCLE (§6): "Confirma que los 6 documentos fundacionales + el Census..." corregido a "9 documentos fundacionales + el Census". Ejecutado vía contrato determinista (Mistral, pares old_str/new_str, APROBAR_WRITE explícito).
+- normalize_heading_ids.py — audit(): condición ampliada de status == "malformed" a status in ("malformed", "ok_legacy_sectioned"); reporte de consola distingue tag [LEGACY]/[MALFORMED]. Diff mínimo, sin cambio de firma ni flags nuevos. py_compile OK.
+IDs afectados: ninguno — ambos cambios son de contenido/tooling, no alta/baja de ID canónico. Census no requiere regeneración.
+Write-Back Verification: Manual re-fetched de forma independiente tras la escritura — línea corregida confirmada, resto de §6 y del documento byte-idéntico. Script verificado vía py_compile, entregado al operador vía present_files.
+Ticket asociado: Bug Tracker 3af938be-fc42-813e-9b50-e286ae7f121a (Resuelto, Prioridad 3 ALTO).
+Pendiente (fuera de esta entrada):
+- Operador debe reemplazar normalize_heading_ids.py en Layer_1/scripts/ y correr dry-run real para confirmar 0 headings § vivos o detectarlos por primera vez.
+- T3 (Documentación Transversal Fase 2), T4 (Census — contradicción a verificar, fetch de esta sesión mostró 0 huérfanos), T5, T7, B3, D3/GAP-03, D4/B6 Caso 4 — heredados, sin tocar esta sesión (detalle completo en handoff de sesión).
+- Changelog retroactivo del patch fix_terminal_protection_layer_1_run.patch (2026-07-29) — aún sin decisión.
+Versión actualizada: 9.11.6 (CHANGELOG + Manual). El resto de los fundacionales permanece en v9.11.5 hasta vversions --sync.
+---
 ### v9.11.5 — Kernel: Regla de Bloque Único Formalizada en KERNEL:DOCUMENTATION-001 · 2026-08-01
 Tipo: [DOC]
 Alcance: Kernel (sección 03.1 KERNEL:DOCUMENTATION-001).
@@ -146,10 +196,13 @@ Versión actualizada: 9.10.4 (CHANGELOG + SYSTEM PROMPT). El resto de los fundac
 Tipo: [FIX]
 Alcance: Manual (TOC / DECLARACIÓN DE AUDIENCIA Y ALCANCE, MANUAL:CADENCE-MATRIX).
 Contexto: El operador identificó, vía captura de pantalla, que la TOC del Manual (tabla de 21 filas con #/ID/Sección/Porción) nunca fue un bloque <table> real de Notion — era texto plano con pipes | y 
- dentro de un bullet, por lo que se renderizaba como texto corrido en vez de tabla. Mismo patrón de fricción ya identificado en la tabla 08.6 (4 filas de nota fragmentadas con celdas vacías), corregida en esta misma sesión previamente.
+dentro de un bullet, por lo que se renderizaba como texto corrido en vez de tabla. Mismo patrón de fricción ya identificado en la tabla 08.6 (4 filas de nota fragmentadas con celdas vacías), corregida en esta misma sesión previamente.
 Cambios:
 - Manual — TOC (bajo "DECLARACIÓN DE AUDIENCIA Y ALCANCE"): convertida de texto plano (| # | ID | ... |
 ) a bloque <table header-row="true"> real, 21 filas + header, preservando todos los links existentes (§18–§21).
+</table>
+</table>
+</table>
 IDs afectados: ninguno — cambio puramente estructural de contenedor (texto → tabla), sin alterar contenido ni IDs. Census no requiere regeneración.
 Write-Back Verification: Manual re-fetched de forma independiente tras la escritura — tabla confirmada con las 21 filas correctas, links preservados, sin residuo del formato anterior.
 Pendiente (fuera de esta entrada): vversions --sync para propagar versión a los fundacionales restantes (heredado, aún no ejecutado). Revisión humana del resto del Manual (01–07, 09–21) en curso por el operador — pendiente aviso de cierre antes de generar plantilla de referencia para KERNEL/Career Canon.
@@ -159,17 +212,17 @@ Versión actualizada: 9.10.3 (CHANGELOG). El resto de los fundacionales permanec
 Tipo: [DOC] [FIX]
 Alcance: Manual (MANUAL:PATCH-QUALITY).
 Contexto: El operador editó manualmente 08–08.6 con el patrón real vigente — ID y título unidos por 
- dentro de un único bloque de heading, no "dos líneas contiguas" como quedó redactado en v9.10.1. Se identificó que "línea" es un término ambiguo entre la capa visual (donde ambos patrones parecen "dos renglones") y la capa de bloque Markdown/Notion (donde son estructuras distintas: un bloque con 
- interno vs. dos bloques heading consecutivos). El operador también solicitó formalizar que los títulos deben ser concretos/ilustrativos, no descriptivos-compuestos.
+dentro de un único bloque de heading, no "dos líneas contiguas" como quedó redactado en v9.10.1. Se identificó que "línea" es un término ambiguo entre la capa visual (donde ambos patrones parecen "dos renglones") y la capa de bloque Markdown/Notion (donde son estructuras distintas: un bloque con 
+interno vs. dos bloques heading consecutivos). El operador también solicitó formalizar que los títulos deben ser concretos/ilustrativos, no descriptivos-compuestos.
 Cambios:
 - Manual — MANUAL:PATCH-QUALITY (§15), criterio 1: redacción corregida de "líneas contiguas" a "un único bloque de heading... unión por 
- interno", explicitando que el criterio de éxito es la estructura de bloque, no el conteo visual de líneas.
+interno", explicitando que el criterio de éxito es la estructura de bloque, no el conteo visual de líneas.
 - Manual — MANUAL:PATCH-QUALITY (§15), alta de criterio 6 (Concreción de títulos): títulos deben ser ilustrativos/concretos, no construcciones semánticas compuestas.
 - Ajuste de conteo en encabezado y cierre del bloque ("cinco" → "seis" criterios) para reflejar el nuevo total.
 IDs afectados: ninguna alta/baja — extensión de contenido sobre MANUAL:PATCH-QUALITY, ID ya existente. Census no requiere regeneración.
 Write-Back Verification: Manual re-fetched de forma independiente tras cada escritura — confirmado sin mismatch en las 3 pasadas (corrección criterio 1 + alta criterio 6, ajuste de conteo cierre, ajuste de conteo apertura).
 Pendiente (fuera de esta entrada): Reformateo masivo pendiente de KERNEL + Career Canon + resto del Manual (secciones 01–07, 09–21) para alinear con el patrón de bloque único 
- ya vigente en 08–08.6 — mapeo formal aún no ejecutado. vversions --sync para propagar versión a los fundacionales restantes (heredado, aún no ejecutado).
+ya vigente en 08–08.6 — mapeo formal aún no ejecutado. vversions --sync para propagar versión a los fundacionales restantes (heredado, aún no ejecutado).
 Versión actualizada: 9.10.2 (CHANGELOG). El resto de los fundacionales permanece en v9.10.0/v9.9.x hasta vversions --sync.
 ---
 ---

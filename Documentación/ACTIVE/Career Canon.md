@@ -1,8 +1,5 @@
 # V | CAREER CANON
 
-# V | CAREER CANON
-
-# V | CAREER CANON
 DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Sistemas Agente de IA + Operador Humano (Mauricio Meyrán).
 - Alcance: Este documento es el CAREER_CANON_RUNTIME, que contiene la fuente de verdad profesional activa: perfil, skills, historial de carrera, KPIs validados, facts canónicos, educación, certificaciones, proyectos mayores y Output Contract para producción de CV-B. Para el archivo histórico previo a la reintegración v9.11.0, consultar CANON:ARCHIVO-VANTAGE.

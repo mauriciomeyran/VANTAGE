@@ -1,11 +1,6 @@
 import sys
 from pathlib import Path
 
-if "/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Archive/Legacy_Scripts" not in sys.path:
-    sys.path.insert(0, "/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Archive/Legacy_Scripts")
-import sys
-from pathlib import Path
-
 # Resolver rutas: scripts, Layer_1 y VANTAGE raíz
 _SCRIPT_DIR = Path(__file__).resolve().parent
 _LAYER1_DIR = _SCRIPT_DIR.parent
