@@ -217,11 +217,11 @@ DOCS = {
 # Procesar solo documentos con hipervínculos nuevos (orden por cantidad de cambios)
 # Basado en diff de apply_hyperlinks.py
 DOCS_ORDERED = [
-    "career_canon",    # 2 hipervínculos nuevos
-    "aliases",         # 8 hipervínculos nuevos
-    "system_prompt",   # 12 hipervínculos nuevos
-    "kernel",          # 26 hipervínculos nuevos
-    "manual",          # 40 hipervínculos nuevos
+    "career_canon",    # 2 hipervínculos nuevos - más pequeño primero
+    # "aliases",         # 8 hipervínculos nuevos
+    # "system_prompt",   # 12 hipervínculos nuevos
+    # "kernel",          # 26 hipervínculos nuevos
+    # "manual",          # 40 hipervínculos nuevos
     # Brief: 0 cambios (omitido)
     # change_log: sin cambios de hipervínculos (omitido)
 ]
@@ -255,7 +255,7 @@ def main():
         start_time = time.time()
         
         try:
-            vsync.push_local_to_notion(notion_id, local_file)
+            push_local_to_notion(notion_id, local_file)
             elapsed = time.time() - start_time
             print(f"   ✅ Completado en {elapsed:.1f}s")
         except Exception as e:

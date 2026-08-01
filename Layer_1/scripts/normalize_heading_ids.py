@@ -38,6 +38,11 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
+# ─── IMPORTAR DESDE vantage_id_rules.py (módulo único de reglas) ─────
+# FIX: eliminar reimplementación local de classify_heading/suggest_fix
+# Los 4 scripts DEBEN importar de aquí, nunca reimplementar localmente
+from vantage_id_rules import classify_heading, suggest_canonical_heading
+
 # ─── CONFIGURACIÓN (idéntica a generate_census.py) ────────────────────────────
 
 # NOTA: este script vive en VANTAGE/Layer_1/scripts/ — se sube dos niveles
@@ -81,10 +86,8 @@ DOCUMENTS = {
 # (ver falso positivo confirmado en la corrida 2026-07-16 19:07).
 SKIP_DOCS_FOR_HEADING_AUDIT = {"Change Log"}
 
-# Patrón canónico "§N — ID" / "§N.M — ID" (em dash o guión corto, espacios flexibles con soporte estricto a subsecciones decimales)
-SECTION_HEADING_PREFIX_RE = re.compile(r"^§[\d.]+\s*[—-]\s*")
-
-# Un ID válido: uno de los prefijos + clave en mayúsculas/números/guiones
+# Patrón de ID válido (importado de vantage_id_rules.py cuando se necesite)
+# SECTION_HEADING_PREFIX_RE eliminado - ahora usa vantage_id_rules.SECTION_HEADING_PREFIX_RE
 ID_TOKEN_RE = re.compile(
     r"(?:" + "|".join(re.escape(p) for p in VALID_PREFIXES) + r")[A-Z0-9][A-Z0-9_-]*"
 )
@@ -142,61 +145,6 @@ def get_plain_text(block: dict) -> str | None:
     return "".join(s.get("plain_text", "") for s in rich_text)
 
 
-# ─── CLASIFICACIÓN ─────────────────────────────────────────────────────────────
-
-def classify_heading(plain: str, id_str: str) -> str:
-    """
-    Devuelve 'ok_bare', 'ok_sectioned', 'ok_id_label', o 'malformed' para
-    un heading que contiene id_str.
-
-    IMPORTANTE: esta clasificación debe reflejar EXACTAMENTE las mismas
-    nomenclaturas que generate_census.py acepta en is_definition_block —
-    de lo contrario este script reporta como "mal formado" texto que el
-    census ya reconoce perfectamente, generando falsos positivos.
-    """
-    stripped = plain.strip("` \n")
-
-    # Nomenclatura (c): "... ID: PREFIX:KEY" en cualquier parte del heading
-    if f"ID: {id_str}" in plain or stripped == f"ID: {id_str}":
-        return "ok_id_label"
-
-    # Nomenclatura (a): heading = ID puro.
-    if stripped == id_str:
-        return "ok_bare"
-
-    # Nomenclatura (b): "§N — ID" o "§N.M — ID" al inicio del heading.
-    heading_body = SECTION_HEADING_PREFIX_RE.sub("", stripped)
-    if heading_body == id_str or heading_body.startswith(id_str):
-        return "ok_sectioned"
-
-    return "malformed"
-
-
-def suggest_fix(plain: str, id_str: str) -> str:
-    """
-    Propone una reescritura canónica mínima: conserva cualquier número de
-    sección detectado (incluyendo subsecciones decimales) y cualquier texto descriptivo
-    que venga DESPUÉS del ID, pero garantiza el orden "§N — ID — resto".
-    Si no se detecta número de sección, propone el heading como ID puro.
-    """
-    stripped = plain.strip("` \n")
-
-    section_match = re.match(r"^(§[\d.]+)", stripped)
-    # Texto restante quitando cualquier ocurrencia del ID y del número de sección
-    remainder = stripped
-    if section_match:
-        remainder = remainder[len(section_match.group(1)):]
-    remainder = remainder.replace(id_str, "")
-    remainder = re.sub(r"^\s*[—-]\s*", "", remainder).strip(" —-")
-
-    if section_match:
-        base = f"{section_match.group(1)} — {id_str}"
-    else:
-        base = id_str
-
-    return f"{base} — {remainder}".rstrip(" —") if remainder else base
-
-
 # ─── MAIN AUDIT ────────────────────────────────────────────────────────────────
 
 def audit() -> list[dict]:
@@ -236,7 +184,7 @@ def audit() -> list[dict]:
                     "current_text": plain.strip(),
                     "id_str": id_str,
                     "status": status,
-                    "suggested_fix": suggest_fix(plain, id_str),
+                    "suggested_fix": suggest_canonical_heading(plain, id_str),
                     "link": f"https://app.notion.com/p/{page_id_clean}#{block_id_clean}",
                 })
 
