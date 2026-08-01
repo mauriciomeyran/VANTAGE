@@ -1,6 +1,8 @@
 # V | BRIEF
 
 # V | BRIEF
+
+# V | BRIEF
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
 | 01 | BRIEF:PURPOSE-SCOPE | Propósito y Alcance |  |

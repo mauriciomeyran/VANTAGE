@@ -1,5 +1,7 @@
 # V | CHANGELOG
 
+# V | CHANGELOG
+
 ### v9.11.5 — Kernel: Regla de Bloque Único Formalizada en KERNEL:DOCUMENTATION-001 · 2026-08-01
 Tipo: [DOC]
 Alcance: Kernel (sección 03.1 KERNEL:DOCUMENTATION-001).

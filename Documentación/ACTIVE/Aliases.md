@@ -1,16 +1,18 @@
 # V | ALIASES
 
 # V | ALIASES
+
+# V | ALIASES
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
-| 01 | [ALIASES:SESSION-CYCLE](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc42811eb1f6dcb74ca2cbbd) | Session Cycle |  |
-| 02 | [ALIASES:L0-RUNTIME](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc428192a84cebefe364437b) | L0 · VANTAGE Runtime |  |
-| 03 | [ALIASES:L1L2-DISCOVERY](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc428145bc03f55e1d93d0c9) | L1/L2 · Discovery |  |
-| 04 | [ALIASES:L3-PASSIVE-INTAKE](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc428188bf47cf569d4262a6) | L3 · Passive Intake |  |
-| 05 | [ALIASES:L4-VERSION-CONTROL](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc4281afb0c0ce4975f8acd3) | L4 · Version Control |  |
-| 06 | [ALIASES:DASHBOARD](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc428118925cd38477b8e59e) | Dashboard |  |
-| 07 | [ALIASES:CV-PIPELINE](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3a7938befc4281789239ed14fd5b861f) | CV Pipeline |  |
-| 08 | [ALIASES:DEDUP](https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#577c2a7ecc7f4458971c43f9a77197b0) | Dedup & Oportunidades |  |
+| 01 | ALIASES:SESSION-CYCLE | Session Cycle |  |
+| 02 | ALIASES:L0-RUNTIME | L0 · VANTAGE Runtime |  |
+| 03 | ALIASES:L1L2-DISCOVERY | L1/L2 · Discovery |  |
+| 04 | ALIASES:L3-PASSIVE-INTAKE | L3 · Passive Intake |  |
+| 05 | ALIASES:L4-VERSION-CONTROL | L4 · Version Control |  |
+| 06 | ALIASES:DASHBOARD | Dashboard |  |
+| 07 | ALIASES:CV-PIPELINE | CV Pipeline |  |
+| 08 | ALIASES:DEDUP | Dedup & Oportunidades |  |
 ## 01 ALIASES:SESSION-CYCLE
 Session Cycle
 | Alias | Qué hace | Procedimiento interno |

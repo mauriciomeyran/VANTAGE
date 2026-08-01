@@ -1,29 +1,31 @@
 # V | KERNEL
 
 # V | KERNEL
+
+# V | KERNEL
 > 
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 - Audiencia: Sistemas Agente de IA.
 - Alcance: Este documento es el KERNEL_RUNTIME, que contiene únicamente los contratos operativos activos para la IA. Para el documento de referencia completo, solicitar acceso al KERNEL 8.0.
 | # | ID | SECCIÓN | PORCIÓN |
 | --- | --- | --- | --- |
-| 01 | [KERNEL:PURPOSE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f69905dfc6c82c5503) | FUNDAMENTO | FUNDAMENTO |
-| 02 | [KERNEL:FAIL-PHILOSOPHY](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428121bb10efedac1b4b99) | FILOSOFÍA DE FALLO | FUNDAMENTO |
+| 01 | KERNEL:PURPOSE | FUNDAMENTO | FUNDAMENTO |
+| 02 | KERNEL:FAIL-PHILOSOPHY | FILOSOFÍA DE FALLO | FUNDAMENTO |
 | 03 | KERNEL:DOCUMENTATION | DOCUMENTACIÓN (L0) | FUNDAMENTO |
-| 04 | [KERNEL:ARCHITECTURE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42818a8a61d5a0d71bcf2b) | ARQUITECTURA | FUNDAMENTO |
-| 05 | [KERNEL:OWNERSHIP](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42814385dbe5005b04496c) | OWNERSHIP | FUNDAMENTO |
-| 06 | [KERNEL:DASHBOARD-CHECKLIST-ARCH](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816ead88efa4b9a4e05f) | DASHBOARD CHECKLIST | FUNDAMENTO |
-| 07 | [KERNEL:SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42812dbc97e075758ba0ee) | SCHEMA | DATOS, ESQUEMAS Y REGLAS |
-| 08 | [KERNEL:TRACKER-SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281c2ba8aca2a41ff358b) | TRACKER SCHEMA | DATOS, ESQUEMAS Y REGLAS |
-| 09 | [KERNEL:GATE-DECISION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810d9f3af9b12751d7e1) | GATE DECISION | DATOS, ESQUEMAS Y REGLAS |
-| 10 | [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) | CV GOLDEN RULES | DATOS, ESQUEMAS Y REGLAS |
-| 11 | [KERNEL:TRIGGERS](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281f297c7d591f3c132f4) | TRIGGERS | EJECUCIÓN |
-| 12 | [KERNEL:CV-PIPELINE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428190b72cf74c14c31a4a) | CV PIPELINE | EJECUCIÓN |
-| 13 | [KERNEL:CANON-UPDATE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42817db23de75a46a964ac) | CANON UPDATE | EJECUCIÓN |
-| 14 | [KERNEL:NAMING-CONVENTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281bbbe93d1e053bb8e42) | NAMING CONVENTION | EJECUCIÓN |
-| 15 | [KERNEL:CONTEXT-INFRASTRUCTURE](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810293b4e55167657d86) | CONTEXT INFRASTRUCTURE | INFRAESTRUCTURA DE CONTEXTO |
-| 16 | [KERNEL:DATA-FLOW](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428101ade4f430c4bee781) | DATA FLOW | INFRAESTRUCTURA DE CONTEXTO |
-| 17 | [KERNEL:EVOLUTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42816d813af068ac1d81be) | EVOLUTION | INFRAESTRUCTURA DE CONTEXTO |
+| 04 | KERNEL:ARCHITECTURE | ARQUITECTURA | FUNDAMENTO |
+| 05 | KERNEL:OWNERSHIP | OWNERSHIP | FUNDAMENTO |
+| 06 | KERNEL:DASHBOARD-CHECKLIST-ARCH | DASHBOARD CHECKLIST | FUNDAMENTO |
+| 07 | KERNEL:SCHEMA | SCHEMA | DATOS, ESQUEMAS Y REGLAS |
+| 08 | KERNEL:TRACKER-SCHEMA | TRACKER SCHEMA | DATOS, ESQUEMAS Y REGLAS |
+| 09 | KERNEL:GATE-DECISION | GATE DECISION | DATOS, ESQUEMAS Y REGLAS |
+| 10 | KERNEL:CV-GOLDEN-RULES | CV GOLDEN RULES | DATOS, ESQUEMAS Y REGLAS |
+| 11 | KERNEL:TRIGGERS | TRIGGERS | EJECUCIÓN |
+| 12 | KERNEL:CV-PIPELINE | CV PIPELINE | EJECUCIÓN |
+| 13 | KERNEL:CANON-UPDATE | CANON UPDATE | EJECUCIÓN |
+| 14 | KERNEL:NAMING-CONVENTION | NAMING CONVENTION | EJECUCIÓN |
+| 15 | KERNEL:CONTEXT-INFRASTRUCTURE | CONTEXT INFRASTRUCTURE | INFRAESTRUCTURA DE CONTEXTO |
+| 16 | KERNEL:DATA-FLOW | DATA FLOW | INFRAESTRUCTURA DE CONTEXTO |
+| 17 | KERNEL:EVOLUTION | EVOLUTION | INFRAESTRUCTURA DE CONTEXTO |
 # I. FUNDAMENTO
 ## 01 KERNEL:PURPOSE
 Propósito del Sistema
@@ -66,15 +68,15 @@ Invariantes del Contrato
 Prefijos Autorizados
 | Prefijo | Documento Destino | Mapeo Registry |
 | --- | --- | --- |
-| KERNEL | V | KERNEL | KERNEL |
-| MANUAL | V | MANUAL | MANUAL |
-| CANON | V | CAREER CANON | CAREER CANON |
-| TRACKER | V | TRACKER | TRACKER |
-| SP | V | SYSTEM PROMPT | SYSTEM PROMPT |
-| ALIASES | V | ALIASES | ALIASES |
-| CHANGELOG | V | CHANGE LOG | CHANGE LOG |
-| BRIEF | V | NAVIGATION BRIEF | NAVIGATION BRIEF |
-| VANTAGE | V | VANTAGE CENTRAL HUB | VANTAGE CENTRAL HUB |
+| KERNEL | V | KERNEL |
+| MANUAL | V | MANUAL |
+| CANON | V | CAREER CANON |
+| TRACKER | V | TRACKER |
+| SP | V | SYSTEM PROMPT |
+| ALIASES | V | ALIASES |
+| CHANGELOG | V | CHANGE LOG |
+| BRIEF | V | NAVIGATION BRIEF |
+| VANTAGE | V | VANTAGE CENTRAL HUB |
 Matriz Tipográfica Congelada (Jerarquía de Encabezados)
 La resolución de un ID canónico a su nivel de heading Markdown sigue una jerarquía fija:
 - Documento (raíz) = #
@@ -117,7 +119,7 @@ L0-Bootstrap — Dynamic Governance Layer
 Tipo: Capa de Sincronización de Sesión (Fetch-on-Start).
 Propósito: Elimina el drift de versiones entre la UI estática del agente y el repositorio dinámico de Notion.
 Bootstrap Protocol
-Ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de [SP:BOOTSTRAP-001](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281c68a05fd98ecfef859) y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
+Ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de SP:BOOTSTRAP-001 y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
 Convención de estado (X-ING → X-ED)
 El Bootstrap declara inicio con BOOTLOADING... y cierre con BOOTLOADED: DOCUMENTOS CARGADOS.
 Distinción de alcance — Bootstrap vs. Session Ledger
@@ -429,13 +431,13 @@ Nivel 3 — Bloqueo o degradación confirmada por fuente dura
 - Restricción crítica:
 - Inferencias de Claude (ej: "parece bloqueante") nunca califican para Nivel 3.
 - Si Claude sospecha bloqueo pero no tiene fuente dura, el caso baja a Nivel 2 (sugerencia + confirmación).
-- Prohibido por [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca) 05: Automatismos basados en inferencias no confirmadas.
+- Prohibido por SP:CONSISTENCY 05: Automatismos basados en inferencias no confirmadas.
 Resolución de los 3 puntos de fricción identificados
 | Punto | Solución |
 | --- | --- |
 | Umbral de iteraciones | Criterio orientativo para Nivel 1 vs Nivel 2. Nunca criterio único para Nivel 3. El único criterio duro para Nivel 3 es: "bloqueante/degradante confirmado por fuente dura". |
 | Re-evaluación Nivel 2 → Nivel 3 | Si durante la sesión aparece evidencia dura de que un pendiente Nivel 2 es bloqueante/degradante, Claude re-clasifica explícitamente a Nivel 3, lo declara al operador ("Reclasifico X de Nivel 2 a Nivel 3 por [evidencia]") y dispara el ticket automático. |
-| Choque con [SP:CONSISTENCY](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc428152b7b1fc33a4e390ca) 05 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
+| Choque con SP:CONSISTENCY 05 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
 Referencia cruzada Manual: Ver MANUAL:SESSION-CYCLE — Ciclo de Sesión para la implementación práctica de este escalamiento dentro del flujo operador.
 ### 09.10 KERNEL:GATE-DECISION-010
 Definición de Estados Terminales Protegidos
@@ -451,11 +453,11 @@ Invariantes
 - gate_logic() se invoca antes de gate() en todo pipeline ordinario y backfill (layer_1_run.py Fase 4).
 - Un registro terminal no puede ser sobreescrito por recálculo de Score/Gate, aunque cambien campos Class A.
 - RT-1 (/accept): la escritura de Class A corregido debe limpiar atómicamente Next_Action y Gate_Decision (select: null) en el mismo write, para que el siguiente run no trate la vacante recuperada como terminal fantasma.
-- Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con [KERNEL:OWNERSHIP-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281b2af80c4f4f31f42b5).
+- Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con KERNEL:OWNERSHIP-002.
 Referencias
 - Implementación: Layer_1/scripts/gate_logic.py, Layer_1/scripts/layer_1_run.py
 - Atomicidad RT-1: Dashboard/scripts/dashboard_routes.py (/accept), dashboard_notion.py
-- Contratos relacionados: [KERNEL:GATE-DECISION-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428113ac64f877a148e71e), [KERNEL:GATE-DECISION-006](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281d1a8c9fd8e3acdfd96), [KERNEL:GATE-DECISION-008](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#006e0b519639447590ad173aebc265c4), [KERNEL:OWNERSHIP-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281b2af80c4f4f31f42b5)
+- Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002
 ### 09.11 KERNEL:GATE-DECISION-011
 Matriz de Transición de Estados (Referencia Técnica)
 Vista tabular consolidada de todas las reglas Gate (09.1–09.10).
@@ -478,7 +480,7 @@ Referencia canónica para scripts y auditorías — no reemplaza la descripción
 Nota de orden de precedencia (Hallazgo 2 — auditoría arquitectónica)
 gate_logic() debe ejecutarse ANTES que gate() como filtro de mutabilidad.
 Si Status ∈ {Postulado, Rechazado, Expirada} → pipeline termina aquí, sin invocar gate(). Previene regresión de estado en terminales.
-→ Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), [KERNEL:GATE-DECISION-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428113ac64f877a148e71e) (RT-1).
+→ Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), KERNEL:GATE-DECISION-005 (RT-1).
 ---
 ## 10 KERNEL:CV-GOLDEN-RULES
 Golden Rules — Límites de Ejecución
@@ -664,7 +666,7 @@ CV-B (.md), export QA (.pdf), archivo Figma (.fig) y cualquier output futuro de 
 El stem se fija al generar el primer entregable y se reutiliza sin variación.
 No aplica a
 DRY RUN archivado, artefactos de sistema (logs, backups, entity_index).
-Relación con [CANON:OUTPUT-CONTRACT](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#53a2d31605f84299a99118add45e2af7)
+Relación con CANON:OUTPUT-CONTRACT
 Contratos distintos y complementarios — Output Contract gobierna estructura interna del contenido; esta sección gobierna el nombre físico del archivo. Ninguno reemplaza al otro.
 ---
 # IV. INFRAESTRUCTURA DE CONTEXTO

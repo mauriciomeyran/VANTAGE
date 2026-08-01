@@ -1,5 +1,7 @@
 # V | MANUAL
 
+# V | MANUAL
+
 > 
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
 Audiencia: Operador humano (Mauricio Meyrán)
@@ -22,10 +24,10 @@ Audiencia: Operador humano (Mauricio Meyrán)
 | 15 | MANUAL:PATCH-QUALITY | Calidad de Parches |  |
 | 16 | MANUAL:GOLDEN-RULES | Reglas de Oro |  |
 | 17 | MANUAL:SLA | SLA de Latencia |  |
-| 18 | [MANUAL:CV-GOLDEN-RULES-INDEX](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3b50c9994bb6457a8afde3252f4647eb) | Reglas de Oro CV |  |
-| 19 | [MANUAL:POSITIONING-CRITERIA](https://app.notion.com/p/372938befc4280509a67e40857d7806e#01ffec90def642749ae52ef84da7a56b) | Positioning Criteria |  |
-| 20 | [MANUAL:GOLDEN-SKELETON-REF](https://app.notion.com/p/372938befc4280509a67e40857d7806e#e457e54ec4a84a778a7cfd248e718188) | Golden Skeleton |  |
-| 21 | [MANUAL:SCHEMA-FIELD-REF](https://app.notion.com/p/372938befc4280509a67e40857d7806e#4cafd4cfe04847368733b9ba19faf39c) | Schema Class A/B |  |
+| 18 | MANUAL:CV-GOLDEN-RULES-INDEX | Reglas de Oro CV |  |
+| 19 | MANUAL:POSITIONING-CRITERIA | Positioning Criteria |  |
+| 20 | MANUAL:GOLDEN-SKELETON-REF | Golden Skeleton |  |
+| 21 | MANUAL:SCHEMA-FIELD-REF | Schema Class A/B |  |
 ## 01 MANUAL:OBJECTIVE
 Objetivo
 ### ¿Qué problema que resuelve?
@@ -117,7 +119,7 @@ El sistema aplica dos capas de exclusión para garantizar la calidad de la seña
 ---
 ## 03 MANUAL:FAILURE-PHILOSOPHY
 Filosofía de Fallo para Operadores
-Base [KERNEL:FAIL-PHILOSOPHY](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428121bb10efedac1b4b99)
+Base KERNEL:FAIL-PHILOSOPHY
 Antes de entrar a Setup y al ciclo operativo, es necesario internalizar esto, porque vas a encontrarlo constantemente desde el primer Lunes que operes el sistema: Un “fallo” del sistema no es un bug — es el filtro operando correctamente. Los siguientes resultados son señales normales de funcionamiento, no errores que debas reparar manualmente ni forzar a que Claude “arregle”:
 | RESULTADO | QUE SIGNIFICA | QUE NO HACER | QUE SI HACER |
 | --- | --- | --- | --- |
@@ -238,7 +240,7 @@ No necesitas invocarlo tú manualmente cada vez que se te ocurra — pero sí ne
 ### ¿Por qué existe esto?
 Antes de que este ciclo existiera, cada sesión de Claude arrancaba “en frío”: el agente asumía que el corpus de Notion (Kernel, Manual, System Prompt, Career Canon, Aliases, Changelog) estaba en la versión que recordaba de la sesión anterior.
 - No había ningún mecanismo que confirmara si una sesión había terminado bien o si Claude simplemente dejó de responder a medio trabajo — un timeout, un cierre accidental de pestaña, un crash.
-- El resultado era drift silencioso: un documento se actualizaba, otro no, y nadie se enteraba hasta que las contradicciones aparecían en producción (esto es, en parte, lo que motivó el Census — ver [KERNEL:CENSUS-SYNC](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281599aa3f17926239597), y MANUAL:HEALTHCHECK, donde se detalla cómo se regenera el Census).
+- El resultado era drift silencioso: un documento se actualizaba, otro no, y nadie se enteraba hasta que las contradicciones aparecían en producción (esto es, en parte, lo que motivó el Census — ver KERNEL:CENSUS-SYNC, y MANUAL:HEALTHCHECK, donde se detalla cómo se regenera el Census).
 Ambos skills viven en /mnt/skills/user/ y son deliberadamente cortos: cada token gastado en abrir/cerrar sesión es un token que no queda para la tarea real — relevante dado el tier de la cuenta.
 ### Open Protocol
 1. ANNOUNCE: SESSION-OPENING...
@@ -582,7 +584,7 @@ Ejecuta solo si hay nuevas vacantes que procesar — 10 minutos máximo:
 ```bash
 ~/vantage_pipeline.sh
 ```
-Script: ~/vantage_pipeline.sh. Este día no tiene un procedimiento distinto al ya descrito en el Lunes ([MANUAL:WEEKLY-FLOW-001](https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428005bc2edb8ec38fcf20)) — es simplemente una repetición ligera del paso de procesamiento, para no dejar acumular vacantes hasta la siguiente semana si el Lunes no alcanzó a cubrir todo el backlog.
+Script: ~/vantage_pipeline.sh. Este día no tiene un procedimiento distinto al ya descrito en el Lunes (MANUAL:WEEKLY-FLOW-001) — es simplemente una repetición ligera del paso de procesamiento, para no dejar acumular vacantes hasta la siguiente semana si el Lunes no alcanzó a cubrir todo el backlog.
 ### 08.5 MANUAL:WEEKLY-FLOW-005
 Viernes
 ```bash
@@ -596,14 +598,14 @@ Matriz de Cadencia Operativa
 Complementa la narrativa día-por-día con una vista de:
 - Trigger → resultado desacoplada del calendario.
 - Las entradas del Tracker reflejadas en la columna “Resultado” son siempre campos Class B
-calculados por Python — no escritura manual (ver [KERNEL:SCHEMA-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281609ac6eec8e5d03b24)).
+calculados por Python — no escritura manual (ver KERNEL:SCHEMA-002).
 | Trigger | Contexto de Invocación | Objetivo | Resultado en Tracker | Referencia |
 | --- | --- | --- | --- | --- |
-| feed_processor.py  • APROBAR_WRITE | Lunes (o cualquier día con nuevas vacantes) — operador revisa output de L1/L2/L3 | Ingresar vacantes nuevas al SSOT con Class A poblado | Filas nuevas con Status=RAW → pipeline calcula Class B inmediatamente | [KERNEL:TRIGGER-001](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281b8bd25efe38438bb51), [KERNEL:SCHEMA-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281609ac6eec8e5d03b24) |
+| feed_processor.py  • APROBAR_WRITE | Lunes (o cualquier día con nuevas vacantes) — operador revisa output de L1/L2/L3 | Ingresar vacantes nuevas al SSOT con Class A poblado | Filas nuevas con Status=RAW → pipeline calcula Class B inmediatamente | KERNEL:TRIGGER-001, KERNEL:SCHEMA-002 |
 | ~/vantage_pipeline.sh (run completo) | Después de cada APROBAR_WRITE de feed | Calcular Score, Gate_Decision, Next_Action sobre entradas Class A | Gate_Decision=CREATE/BLOCKED, Score, VM_Scope, Role_Class actualizados | KERNEL:GATE-DECISION-010 |
-| vd (:8000) — Dashboard RT-1 | Condicional: solo si existen vacantes con Gate=BLOCKED recuperables | Corregir Class A de vacantes bloqueadas y re-ingresar al pipeline | PATCHED → re-evaluación → CREATE o BLOCKED renovado | [KERNEL:GATE-DECISION-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428113ac64f877a148e71e), KERNEL:GATE-DECISION-011 |
-| CV-A [URL/JD] | Miércoles (o cuando vacante alcanza READY_TO_APPLY) | Generar artefacto CV-A adaptado a la vacante | Artefacto en Figma Sync; sin cambio en Tracker | [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) |
-| STATUS [SYSTEM] | Cualquier momento — auditoría ad-hoc | Verificar estado global del sistema y detectar huérfanos/inconsistencias | Sin escritura — reporte en sesión | [SP:TRIGGERS](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#39a938befc4281e39643e90b1e5c8613) |
+| vd (:8000) — Dashboard RT-1 | Condicional: solo si existen vacantes con Gate=BLOCKED recuperables | Corregir Class A de vacantes bloqueadas y re-ingresar al pipeline | PATCHED → re-evaluación → CREATE o BLOCKED renovado | KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-011 |
+| CV-A [URL/JD] | Miércoles (o cuando vacante alcanza READY_TO_APPLY) | Generar artefacto CV-A adaptado a la vacante | Artefacto en Figma Sync; sin cambio en Tracker | KERNEL:CV-GOLDEN-RULES |
+| STATUS [SYSTEM] | Cualquier momento — auditoría ad-hoc | Verificar estado global del sistema y detectar huérfanos/inconsistencias | Sin escritura — reporte en sesión | SP:TRIGGERS |
 Nota operativa: los días de semana en 8.1–8.5 son metadato de cadencia del operador, no guard conditions de ningún gate. Una vacante con Score ≥ 60 puede alcanzar READY_TO_APPLY el mismo día de su ingesta, sin esperar al ciclo siguiente. → Ver KERNEL:GATE-DECISION-011 para vista completa de transiciones.
 ---
 ## 09 MANUAL:RUNTIME
@@ -675,7 +677,7 @@ A diferencia de los Hard Blocks, estas vacantes sí pueden recuperarse: fueron b
 ### Deduplicación
 - Ventana: 30 días. Una vacante que ya existe en el Tracker no se vuelve a crear si aparece de nuevo dentro de esta ventana.
 - Clave compuesta: brand + title + location.
-- Jerarquía entre capas: L1 > L2 > L3. Cuando dos capas detectan la misma vacante, persiste la instancia de la capa de mayor jerarquía, pero se toman de la capa de menor jerarquía los datos que puedan complementar sus propiedades Class A (esto es exactamente lo que ocurre en el paso de Consolidation & Dedup del Lunes, [MANUAL:WEEKLY-FLOW-001](https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428005bc2edb8ec38fcf20)).
+- Jerarquía entre capas: L1 > L2 > L3. Cuando dos capas detectan la misma vacante, persiste la instancia de la capa de mayor jerarquía, pero se toman de la capa de menor jerarquía los datos que puedan complementar sus propiedades Class A (esto es exactamente lo que ocurre en el paso de Consolidation & Dedup del Lunes, MANUAL:WEEKLY-FLOW-001).
 ---
 ## 11 MANUAL:HEALTHCHECK
 Health Check
@@ -750,7 +752,7 @@ Con el Census y su ciclo de regeneración ya cubiertos arriba, esta es la contra
 - vantage-tidy-opportunities-tracker — identifica duplicados y vacantes expiradas en el Tracker de vacantes para archivado, usando los mecanismos de fingerprint y protección de estado terminal ya implementados en feed_processor.py (ver MANUAL:DATA-MANAGEMENT). Requiere Dry Run + APROBAR_WRITE.
 - vantage-tidy-changelog — mantiene el Change Log con las últimas 10 entradas visibles, moviendo el exceso al Archivo Changelog histórico. Úsala cuando el Change Log activo supera 10 entradas o para housekeeping documental puntual.
 - vantage-present-handoff — genera el snapshot de contexto de sesión para continuidad en un chat nuevo. Es independiente y se puede invocar en cualquier momento; no requiere que la sesión esté cerrando (ver también MANUAL:SESSION-CYCLE, Cierre, donde vantage-session-close la invoca automáticamente como parte de su secuencia normal).
-Cada una declara su propio verbo de apertura/cierre ([KERNEL:SKILL-ANNOUNCE-CONVENTION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281db9f8eee98d8f90185)) — nunca el lenguaje de Bootstrap ni de Session Ledger.
+Cada una declara su propio verbo de apertura/cierre (KERNEL:SKILL-ANNOUNCE-CONVENTION) — nunca el lenguaje de Bootstrap ni de Session Ledger.
 ---
 ## 12 MANUAL:TROUBLESHOOTING
 Problemas Comunes y Soluciones
@@ -811,13 +813,13 @@ Problemas Comunes y Soluciones
 - Si aparece pero validación falla: revisar logs de run_pipeline.py en Dashboard.
 ### Referencias a documentación adicional
 - Filosofía de fallo: [KERNEL:FAIL-PHILOSOPHY](V | KERNEL) (ver también MANUAL:FAILURE-PHILOSOPHY de este Manual).
-- Reglas de Oro: [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) (ver también [MANUAL:CV-GOLDEN-RULES-INDEX](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3b50c9994bb6457a8afde3252f4647eb) de este Manual).
-- Schema de datos: [KERNEL:SCHEMA](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42812dbc97e075758ba0ee).
-- Gate Decisions: [KERNEL:GATE-DECISION](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42810d9f3af9b12751d7e1) (ver también MANUAL:HOW-IT-WORKS de este Manual).
+- Reglas de Oro: KERNEL:CV-GOLDEN-RULES (ver también MANUAL:CV-GOLDEN-RULES-INDEX de este Manual).
+- Schema de datos: KERNEL:SCHEMA.
+- Gate Decisions: KERNEL:GATE-DECISION (ver también MANUAL:HOW-IT-WORKS de este Manual).
 ---
 ## 13 MANUAL:PROMPTS-WRAPPERS
 Prompts & Wrappers
-Se consultan vía MCP desde la PROMPT LIBRARY en Notion — es Claude quien hace fetch de cada componente por su ID (no Perplexity Desktop directamente); Perplexity Desktop solo recibe el texto ya ensamblado y concatenado, listo para pegar en cada motor, según el orden descrito en [MANUAL:WEEKLY-FLOW-001](https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428005bc2edb8ec38fcf20). El catálogo se organiza en tres grupos:
+Se consultan vía MCP desde la PROMPT LIBRARY en Notion — es Claude quien hace fetch de cada componente por su ID (no Perplexity Desktop directamente); Perplexity Desktop solo recibe el texto ya ensamblado y concatenado, listo para pegar en cada motor, según el orden descrito en MANUAL:WEEKLY-FLOW-001. El catálogo se organiza en tres grupos:
 - Prompt A + Wrappers — el Prompt Base (perfil, reglas de exclusión) combinado con el Wrapper específico de cada canal: Career Sites, LinkedIn, Aggregators, Gemini, Grok, you.com.
 - Prompts B y C — búsqueda complementaria, utilizables en cualquiera de los tres motores L2 (Gemini, Grok, you.com).
 - Prompt E — consolidación final; no se concatena con Prompt A, se usa solo tras compilar los JSONs de L1+L2.
@@ -841,47 +843,47 @@ Un parche que pasa estos seis filtros no se distingue, seis meses después, del 
 ---
 ## 16 MANUAL:GOLDEN-RULES
 Reglas de Oro
-Base: [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d).
+Base: KERNEL:CV-GOLDEN-RULES.
 > El contenido detallado de estas reglas vive en el Kernel del sistema y no está reproducido en este Manual más allá de esta referencia. Ver lista de huecos detectados al final de este documento.
 ---
 ## 17 MANUAL:SLA
 SLA de Latencia
-> Nota: el SLA “< 45 minutos” cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh (ver [MANUAL:WEEKLY-FLOW-001](https://app.notion.com/p/372938befc4280509a67e40857d7806e#39d938befc428005bc2edb8ec38fcf20), Lunes) — no tiene SLA fijo salvo ejecución manual explícita de layer_1_run.py.
+> Nota: el SLA “< 45 minutos” cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh (ver MANUAL:WEEKLY-FLOW-001, Lunes) — no tiene SLA fijo salvo ejecución manual explícita de layer_1_run.py.
 ## 18 MANUAL:CV-GOLDEN-RULES-INDEX
 Reglas de Oro CV
-Las Reglas de Oro ([KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d)) son restricciones de arquitectura, no preferencias. Viven íntegras en el Kernel — esta sección es un índice de navegación, no una copia.
+Las Reglas de Oro (KERNEL:CV-GOLDEN-RULES) son restricciones de arquitectura, no preferencias. Viven íntegras en el Kernel — esta sección es un índice de navegación, no una copia.
 | ID | Regla | Qué bloquea |
 | --- | --- | --- |
-| [KERNEL:CV-GOLDEN-RULES-001](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281c0b026c8bcf4901816) | No Evaluar Fit Antes de Escribir | Preguntas de "¿me conviene esta vacante?" — el fit lo decide Score (Python) + el operador |
-| [KERNEL:CV-GOLDEN-RULES-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428196851ef48a510e16ca) | No Calcular ni Estimar Campos Class B | Estimar Score, Gate_Decision, VM_Scope, etc. — son Python-only |
-| [KERNEL:CV-GOLDEN-RULES-003](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428140b36ff15f47f0a359) | No Cuestionar la Calidad de Datos del Usuario | Comentarios sobre volumen/calidad del JSON de búsqueda — estrategia es 100% humana |
-| [KERNEL:CV-GOLDEN-RULES-004](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281a29b7adf00572b5f87) | No Delegar Escritura al Usuario | "Copia esto y pégalo en Notion" — el sistema escribe directo, salvo export PDF/Drive |
-| [KERNEL:CV-GOLDEN-RULES-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42814ebc31de3ceca9c168) | No Interpretar en SYNC | SYNC reporta datos puros, sin análisis ni recomendaciones |
+| KERNEL:CV-GOLDEN-RULES-001 | No Evaluar Fit Antes de Escribir | Preguntas de "¿me conviene esta vacante?" — el fit lo decide Score (Python) + el operador |
+| KERNEL:CV-GOLDEN-RULES-002 | No Calcular ni Estimar Campos Class B | Estimar Score, Gate_Decision, VM_Scope, etc. — son Python-only |
+| KERNEL:CV-GOLDEN-RULES-003 | No Cuestionar la Calidad de Datos del Usuario | Comentarios sobre volumen/calidad del JSON de búsqueda — estrategia es 100% humana |
+| KERNEL:CV-GOLDEN-RULES-004 | No Delegar Escritura al Usuario | "Copia esto y pégalo en Notion" — el sistema escribe directo, salvo export PDF/Drive |
+| KERNEL:CV-GOLDEN-RULES-005 | No Interpretar en SYNC | SYNC reporta datos puros, sin análisis ni recomendaciones |
 | Toda violación produce el Template Universal de Rechazo (ver Kernel): OPERACIÓN RECHAZADA → razón → alternativa operativa → confirmación SÍ/CANCELAR. |  |  |
-| Para el detalle completo de cada regla (ejemplos de solicitudes que la activan, redacción exacta de la respuesta estandarizada), consultar directamente [KERNEL:CV-GOLDEN-RULES](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc428148a288d1c640c6f64d) en el Kernel — fuente única, no se replica aquí para evitar drift entre documentos. |  |  |
+| Para el detalle completo de cada regla (ejemplos de solicitudes que la activan, redacción exacta de la respuesta estandarizada), consultar directamente KERNEL:CV-GOLDEN-RULES en el Kernel — fuente única, no se replica aquí para evitar drift entre documentos. |  |  |
 ## 19 MANUAL:POSITIONING-CRITERIA
 Positioning Criteria
-[CANON:POSITIONING-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42811ba92acf1dc1467702) define 4 modos de posicionamiento para CV-B. Esta sección resuelve el gap operativo: con qué criterio elegir uno.
+CANON:POSITIONING-001 define 4 modos de posicionamiento para CV-B. Esta sección resuelve el gap operativo: con qué criterio elegir uno.
 | Modo | ID | Ancla canónica | Cuándo aplica |
 | --- | --- | --- | --- |
-| N1 | [CANON:POSITIONING-N1](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281b39765c122a5d6378d) | C01 · 3 marcas lujo · CAPEX/OPEX · NPI | JD enfatiza gestión multi-marca de lujo, presupuesto, lanzamientos de producto |
-| N2 | [CANON:POSITIONING-N2](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc4281049bb9ea0791d90b0e) | C02 · Adidas Brand Center · KPI07 · blueprints | JD enfatiza Store Design, Flagship, construcción/remodelación física |
-| N3 | [CANON:POSITIONING-N3](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42819d9a64db7ddab1e776) | C03 · 270+ POS · 6 países · KPI03–06 · CF05 | JD enfatiza rollout regional multi-país, estandarización, eficiencia operativa |
-| N4 | [CANON:POSITIONING-N4](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc428110b8f1cb5aa81bb921) | C04/C05 · +43% tráfico · +18% conversión · 21 reportes | JD enfatiza liderazgo de campo comercial, KPIs de tráfico/conversión, gestión de equipos directos |
-| Regla de desempate (JDs híbridos) — ver [CANON:POSITIONING-001](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42811ba92acf1dc1467702) para el texto completo: (1) más keywords mapeados al ancla, (2) empate → mayor seniority (N2>N1, N4>N3 con presupuesto regional explícito), (3) empate persistente → escalar a decisión humana vía fit_gaps. |  |  |  |
+| N1 | CANON:POSITIONING-N1 | C01 · 3 marcas lujo · CAPEX/OPEX · NPI | JD enfatiza gestión multi-marca de lujo, presupuesto, lanzamientos de producto |
+| N2 | CANON:POSITIONING-N2 | C02 · Adidas Brand Center · KPI07 · blueprints | JD enfatiza Store Design, Flagship, construcción/remodelación física |
+| N3 | CANON:POSITIONING-N3 | C03 · 270+ POS · 6 países · KPI03–06 · CF05 | JD enfatiza rollout regional multi-país, estandarización, eficiencia operativa |
+| N4 | CANON:POSITIONING-N4 | C04/C05 · +43% tráfico · +18% conversión · 21 reportes | JD enfatiza liderazgo de campo comercial, KPIs de tráfico/conversión, gestión de equipos directos |
+| Regla de desempate (JDs híbridos) — ver CANON:POSITIONING-001 para el texto completo: (1) más keywords mapeados al ancla, (2) empate → mayor seniority (N2>N1, N4>N3 con presupuesto regional explícito), (3) empate persistente → escalar a decisión humana vía fit_gaps. |  |  |  |
 ## 20 MANUAL:GOLDEN-SKELETON-REF
 Golden Skeleton
-El "Golden Skeleton" ([CANON:OUTPUT-CONTRACT-002](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42817f90ace83dd96245a9)) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
+El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-002) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
 - SSOT de IDs de nodo Figma: registry_seed.json en 04-Vantage_CV/Figma Sync/.
 - Slots clave: 2055:9 (Nombre), 2055:10 (Tagline), 2043:51 (Perfil), 2043:56-60 (Skills), 2043:64+ (Experiencia).
 - Regla de invariancia: si el Skeleton cambia en Figma, registry_seed.json se actualiza antes del siguiente CV-B — nunca al revés.
-- Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en [CANON:OUTPUT-CONTRACT-002](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#39a938befc42817f90ace83dd96245a9) — no se replica aquí.
+- Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en CANON:OUTPUT-CONTRACT-002 — no se replica aquí.
 ## 21 MANUAL:SCHEMA-FIELD-REF
 Schema Class A/B
-[KERNEL:SCHEMA-001](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc4281faa81ac25589b3c67f) define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.
+KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.
 Class A — Human-Primary (operador/feed_processor escriben):
 Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NAD · layer · hash
 Class B — System-Primary (Python únicamente, ningún otro componente escribe):
 Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente
-Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida ([KERNEL:SCHEMA-003](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42817eb1dad96ac1ccc2b0)).
-Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver [KERNEL:GATE-DECISION-002](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#39e938befc42815a9d52ccf7394c183a)). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
+Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida (KERNEL:SCHEMA-003).
+Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
