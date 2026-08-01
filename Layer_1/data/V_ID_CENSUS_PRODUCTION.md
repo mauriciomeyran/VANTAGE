@@ -3,7 +3,10 @@
 | ID | Sección | Nombre |
 |---|---|---|
 | [`KERNEL:PURPOSE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280568dcbd955ea9b5b03 ) | 01 | Propósito del Sistema |
+| [`KERNEL:PURPOSE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#e0f01c66a77a4c0391cf3ee1747a1f2d ) | 01.1 | Invariantes del Sistema |
 | [`KERNEL:FAIL-PHILOSOPHY`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42804ca28acd3a7e30c19a ) | 02 | Filosofía de Fallo |
+| [`KERNEL:FAIL-PHILOSOPHY-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b62f00b4468c4b2b9f308e10b403a6f2 ) | 02.1 | Qué hace el Sistema cuando falla |
+| [`KERNEL:FAIL-PHILOSOPHY-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#945ce5a2c9bc41b1a4927a11310f9ee5 ) | 02.2 | Excepción — Gate BLOCKED Recuperable vía RT-1 |
 | [`KERNEL:DOCUMENTATION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428036854edf6639aba3c9 ) | 03 | Documentación (L0) |
 | [`KERNEL:DOCUMENTATION-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280e2b8afc46403c19715 ) | 03.1 | Canonical Document ID Contract |
 | [`KERNEL:DOCUMENTATION-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280fb9cf9cde00b3bc1bc ) | 03.2 | Normalización Documental de IDs Legacy |
@@ -49,11 +52,11 @@
 | [`KERNEL:GATE-DECISION-010`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42802d8210f71ed7b80cc6 ) | 09.10 | Gate Decision — Technical Review |
 | [`KERNEL:GATE-DECISION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42803bb1b0d286fae1a5ee ) | 09.11 | Gate Decision — Business Review |
 | [`KERNEL:CV-GOLDEN-RULES`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280d78be0e797fac28a81 ) | 10 | Golden Rules — Límites de Ejecución |
-| [`KERNEL:CV-GOLDEN-RULES-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc428034b711fd77468c404a ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #1 |
-| [`KERNEL:CV-GOLDEN-RULES-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42800a985fd447cecdd2be ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #2 |
-| [`KERNEL:CV-GOLDEN-RULES-003`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280089a2dd2f4f9f52077 ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #3 |
-| [`KERNEL:CV-GOLDEN-RULES-004`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42808c80dddf711028b832 ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #4 |
-| [`KERNEL:CV-GOLDEN-RULES-005`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42807d85f0de1211b2586d ) | §10 ⚠︎sin verificar en vivo | Regla de Oro #5 |
+| [`KERNEL:CV-GOLDEN-RULES-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280a98873dbc8f8fe282b ) | 10.1 | Regla de Oro #1 |
+| [`KERNEL:CV-GOLDEN-RULES-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42802385e7d5e1fb9f363d ) | 10.2 | Regla de Oro #2 |
+| [`KERNEL:CV-GOLDEN-RULES-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#70558f4fe6af46b9ae6248711b406470 ) | 10.3 | Regla de Oro #3 |
+| [`KERNEL:CV-GOLDEN-RULES-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#7de75afecb844dd28fd8ca69d9f52fc4 ) | 10.4 | Regla de Oro #4 |
+| [`KERNEL:CV-GOLDEN-RULES-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#873eb1e2d66c43b29de9527029b2e887 ) | 10.5 | Regla de Oro #5 |
 | [`KERNEL:TRIGGERS`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42807bb15cef200fdda408 ) | 11 | Contratos de Ejecución del AI Component |
 | [`KERNEL:TRIGGER-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42800b863cecb82d08965c ) | 11.1 | Trigger — Discovery Request |
 | [`KERNEL:TRIGGER-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#543df641f0164f4fae7c6a1e1e4abbff ) | 11.2 | Trigger — CV Optimization |
@@ -65,6 +68,8 @@
 | [`KERNEL:TRIGGER-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42804eb47fdd684b1dc743 ) | 11.8 | Trigger — Health Check |
 | [`KERNEL:TRIGGER-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42804d8e62c429aa952221 ) | 11.9 | Trigger — Version Check |
 | [`KERNEL:CV-PIPELINE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280ee9edac5dbb75a7fd1 ) | 12 | Pipeline de CV |
+| [`KERNEL:CV-PIPELINE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428005a474d59d2433eaea ) | 12.1 | CV-A |
+| [`KERNEL:CV-PIPELINE-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280d1a33cfd38de6cd97c ) | 12.2 | CV-B |
 | [`KERNEL:CANON-UPDATE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc4280359cc3e96a741ad89a ) | 13 | Actualización del Canon |
 | [`KERNEL:NAMING-CONVENTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc428020a404f7508f230044 ) | 14 | Convención de Nombres |
 | [`KERNEL:CONTEXT-INFRASTRUCTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3ac938befc42808d971fd25d0c75aef1 ) | 15 | Context Infrastructure |
@@ -111,6 +116,8 @@
 | [`MANUAL:GOLDEN-SKELETON-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc4280cfb29eeb500ea18d97 ) | 20 | Golden Skeleton — Qué es y Dónde Vive |
 | [`MANUAL:SCHEMA-FIELD-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ac938befc42806a920cd01aa2f81bcd ) | 21 | Schema Class A/B — Referencia de Campos |
 | [`CANON:PROFILE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#f98593129cc54950b4409c49f1007eff ) | 01 | Professional Profile Canon |
+| [`CANON:PROFILE-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#126795469a32490581e1cb012cc2b62f ) | 01.1 | Professional Profile — ES |
+| [`CANON:PROFILE-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#4708ba0956c14a2996fa62cebcda3041 ) | 01.2 | Professional Profile — EN |
 | [`CANON:SKILLS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#aa2eaf1416b249d09ae26f3e3a75889d ) | 02 | Skills Canon |
 | [`CANON:EXPERIENCE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#0139b01a88d448d1983476a46fcaa4fb ) | 03 | Experience Records |
 | [`CANON:EXPERIENCE-C01`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#c47e269dc6b148f6a947a47e2cb329fe ) | 03.1 | C01 L'Oréal Luxe |
@@ -157,10 +164,11 @@
 | [`CANON:POSITIONING-N3`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#d8df1188a6644635b7da6bf411f5c1aa ) | 11.3 | Positioning N3 — Regional Brand Execution & Rollout |
 | [`CANON:POSITIONING-N4`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#0cae7376f9494546b563004d7dadd64c ) | 11.4 | Positioning N4 — Commercial VM & Field Leadership |
 | [`CANON:OUTPUT-CONTRACT`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#ac370d6b1704448a9e589d61ff856d7f ) | 12 | Output Contract Framework |
-| [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#8f8a0f05cb1c4ddc9902e11cc124edb1 ) | 12.1 | Output Contract — Golden Skeleton |
-| [`CANON:OUTPUT-CONTRACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428015a83dd038ef725334 ) | 12.2 | Output Contract — Figma Tags / Registry SSOT |
-| [`CANON:OUTPUT-CONTRACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280cf8892e98c8abbbf1b ) | 12.3 | Output Contract — Tag Registry / Formato de Entrega |
-| [`CANON:OUTPUT-CONTRACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#0e66ccd2192345549c384a7468ae9539 ) | 12.4 | Output Contract — Positioning Modes (Aplicación) |
+| [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#610bfbdee04947a1b6e02e13f722a13c ) | 12.1 | Output Contract — Golden Skeleton |
+| [`CANON:OUTPUT-CONTRACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#8f8a0f05cb1c4ddc9902e11cc124edb1 ) | 12.2 | Output Contract — Figma Tags / Registry SSOT |
+| [`CANON:OUTPUT-CONTRACT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc428015a83dd038ef725334 ) | 12.3 | Output Contract — Tag Registry / Formato de Entrega |
+| [`CANON:OUTPUT-CONTRACT-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3ac938befc4280cf8892e98c8abbbf1b ) | 12.4 | Output Contract — Positioning Modes (Aplicación) |
+| [`CANON:OUTPUT-CONTRACT-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#0e66ccd2192345549c384a7468ae9539 ) | 12.5 | Output Contract — Positioning Modes (Aplicación en Output) |
 | [`CANON:DERIVED-OUTPUTS-ARCHIVE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#9521e4ab89c949edbcc050082a419f45 ) | 13 | Derived Outputs Archive (reintegrada v9.11.0) |
 
 ---
@@ -180,15 +188,24 @@
 | [`BRIEF:DECISION-TREE`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428032b035e8d6cb0c4c96 ) | 09 | Árbol de Decisiones |
 | [`BRIEF:NAV-PRINCIPLES`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280d4b714fd82e4936999 ) | 10 | Principios de Navegación |
 | [`BRIEF:EXPECTED-OUTCOME`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280d8b1afd11c1c5c1010 ) | 11 | Resultado Esperado |
-| [`BRIEF:AUTHORITY-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42802caa56c4f87b4050fc ) | 08.1 | TBD |
-| `BRIEF:CONSULTATION-001` | TBD | TBD |
-| [`BRIEF:CROSS-DEPENDENCIES-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42804389def2c1ab68a0b6 ) | 07.1 | TBD |
-| [`BRIEF:CROSS-DEPENDENCIES-002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428036b922da36d1d7d899 ) | 07.2 | TBD |
-| [`BRIEF:CROSS-DEPENDENCIES-003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42809db0f7df304b56f926 ) | 07.3 | TBD |
-| [`BRIEF:HOUSEKEEPING-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280e7badff13e913011ca ) | 05.1 | TBD |
-| [`BRIEF:PURPOSE-SCOPE-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280399d8af50fad3f683e ) | 01.1 | TBD |
-| [`BRIEF:PURPOSE-SCOPE-002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42809689c5e4a8a6d96e86 ) | 01.2 | TBD |
-| [`BRIEF:PURPOSE-SCOPE-003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280c5aa5ae0740d76d057 ) | 01.3 | TBD |
+| [`BRIEF:AUTHORITY-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42802caa56c4f87b4050fc ) | 08.1 | Autoridad |
+| [`BRIEF:CONSULTATION-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280fab699e7457f17888b ) | 04.1 | Consulta Arquitectónica |
+| [`BRIEF:CONSULTATION-002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42805ab71ad3b1979342a1 ) | 04.2 | Consulta Operativa |
+| [`BRIEF:CONSULTATION-003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280588226d8e23598d2d4 ) | 04.3 | Consulta Profesional |
+| [`BRIEF:CONSULTATION-004`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428049b6efe517c3950cf8 ) | 04.4 | Consulta Documental |
+| [`BRIEF:CONSULTATION-005`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42809280f9c71aec6970fa ) | 04.5 | Consulta de IDs |
+| [`BRIEF:CONSULTATION-006`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428009ac05c9fd2f77d9ab ) | 04.6 | Consulta Histórica |
+| [`BRIEF:CROSS-DEPENDENCIES-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42804389def2c1ab68a0b6 ) | 07.1 | Impact Assessment Contract |
+| [`BRIEF:CROSS-DEPENDENCIES-002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc428036b922da36d1d7d899 ) | 07.2 | Mandatory Change Reporting |
+| [`BRIEF:CROSS-DEPENDENCIES-003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42809db0f7df304b56f926 ) | 07.3 | Closure Gate |
+| [`BRIEF:HOUSEKEEPING-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280e7badff13e913011ca ) | 05.1 | Housekeeping |
+| [`BRIEF:CORE-ASSETS-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280d5ab79d2b785574e92 ) | 05.2 | Core Assets |
+| [`BRIEF:DISCOVERY-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42808f8191e2f500413294 ) | 05.3 | Discovery |
+| [`BRIEF:GATE-LOGIC-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280e987b5c965240a84e0 ) | 05.4 | Gate Logic |
+| [`BRIEF:CV-PIPELINE-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280fa8823d57fefba6fab ) | 05.5 | CV Pipeline |
+| [`BRIEF:PURPOSE-SCOPE-001`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280399d8af50fad3f683e ) | 01.1 | Propósito |
+| [`BRIEF:PURPOSE-SCOPE-002`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc42809689c5e4a8a6d96e86 ) | 01.2 | Alcance |
+| [`BRIEF:PURPOSE-SCOPE-003`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3ac938befc4280c5aa5ae0740d76d057 ) | 01.3 | Fuera de Alcance |
 
 ---
 
