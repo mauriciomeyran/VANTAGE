@@ -1,5 +1,49 @@
 # V | CHANGELOG
 
+### v9.12.1 — Documentación Transversal: apply_hyperlinks_notion.py Formalizado (KERNEL:DOCUMENTATION-011, KERNEL:ARCHITECTURE-L4, MANUAL:HEALTHCHECK, Aliases) · 2026-08-01
+Tipo: [DOC]
+Alcance: Kernel (KERNEL:DOCUMENTATION-011, KERNEL:ARCHITECTURE-L4); Manual (sección Aplicación de Hipervínculos Cross-Reference); Aliases (ALIASES:L4-VERSION-CONTROL, fila vhyperlinks).
+Contexto: Cierra el pendiente diferido explícitamente en v9.11.8 y v9.11.9 ("Documentación transversal formal de este hallazgo — diferida a sesión futura"). apply_hyperlinks_notion.py llevaba dos entradas de Changelog documentando su creación y uso en producción sin que ningún documento fundacional reflejara su existencia como pieza del sistema — Kernel y Manual seguían describiendo apply_hyperlinks.py (variante local, deprecada) como si fuera la vía activa.
+Cambios:
+- KERNEL:DOCUMENTATION-011 — Piezas actualizado: apply_hyperlinks_notion.py agregado como vía activa de escritura; apply_hyperlinks.py marcado DEPRECATED. Estado de adopción (2026-08-01) agregado, referenciando el fix de table_row (v9.12.0).
+- KERNEL:ARCHITECTURE-L4 — nota de riesgo agregada tras la descripción de vsync_doc.py/vdoc: destroy/rebuild de push_local_to_notion() invalida anchors de hyperlinks; advertencia de no correr vdoc local sobre documentos con hyperlinks recién aplicados.
+- MANUAL:HEALTHCHECK — sección "Aplicación de Hipervínculos Cross-Reference" reescrita: comando activo es apply_hyperlinks_notion.py --all --apply, apply_hyperlinks.py marcado deprecated, referencia cruzada al riesgo de vdoc local.
+- Aliases — ALIASES:L4-VERSION-CONTROL, fila vhyperlinks: procedimiento interno actualizado a apply_hyperlinks_notion.py.
+IDs afectados: ninguno — actualización de contenido bajo IDs existentes. Census no requiere regeneración.
+Write-Back Verification: confirmado en Fase 4 de este mismo protocolo tras la escritura — re-fetch de los 4 nodos sin mismatch.
+Pendiente (fuera de esta entrada, sin cambio): EXCLUDE_IDS vacío en apply_hyperlinks_notion.py; 3 anchors sin DEF (MANUAL:COLD-START-001, ALIASES:DEDUP, SP:CONSISTENCY §9 legacy); V-MASTER-INDEX desactualizado.
+Versión actualizada: 9.12.1 (CHANGELOG). El resto de los fundacionales permanece en v9.12.0 hasta vversions --sync.
+---
+### v9.12.0 — Fix TOC Hyperlinks: is_definition_block() excluye table_row · 2026-08-01
+Tipo: [FIX] [BUG]
+Alcance: Layer_1/scripts/generate_census.py (is_definition_block()); apply_hyperlinks_notion.py (--all --apply); los 7 documentos fundacionales; Bug Tracker (ticket 3af938be-fc42-8151-a309-d1c14abcea4a).
+Contexto: Bug reportado en v9.11.9 — ningún TOC (tabla de índice al inicio de cada documento, columna "ID") recibía hipervínculo pese a que apply_hyperlinks_notion.py --all --apply corría sin error. Causa raíz aislada por lectura directa de código: la rama "stripped == id_str" en is_definition_block() fue diseñada para detectar bloques-ancla standalone (párrafo cuyo único contenido es el ID), pero también se dispara cuando una celda de tabla del TOC contiene únicamente el ID como texto plano — patrón estándar en las tablas de índice. Consecuencia: las celdas de TOC se clasificaban erróneamente como DEF propio → se excluían de recibir link.
+Cambios:
+- generate_census.py — is_definition_block(): agregada variable is_table_row = (btype == "table_row"); modificado la primera condición del return de "stripped == id_str" a "(stripped == id_str and not is_table_row)". Esto es quirúrgico: solo afecta la rama problemática, preservando todas las demás condiciones intactas.
+- Verificación de no-regresión: vcensus corrido tras el fix — 209/209 IDs resueltos (sin cambio), 0 huérfanos nuevos, 0 IDs que antes resolvían DEF correctamente dejaron de hacerlo.
+- apply_hyperlinks_notion.py --all --dry-run: 239 bloques en el plan (vs 143 antes del fix) — diferencia de +96 bloques correspondientes a celdas de TOC que antes se excluían erróneamente.
+- apply_hyperlinks_notion.py --all --apply: 239 bloques patcheados, 0 errores. Breakdown por documento: Kernel 29 (17 TOC + 12 prosa), System Prompt 16 (11 TOC + 5 prosa), Manual 111 (21 TOC + 90 prosa/tablas), Career Canon 15 (13 TOC + 2 quotes), Aliases 8 (8 TOC), Change Log 49 (49 prosa), Navigation Brief 11 (11 TOC).
+IDs afectados: ninguno — conversión de texto plano a hipervínculo real sobre IDs ya existentes en los 7 documentos. Census no requiere regeneración.
+Write-Back Verification: --apply ejecutado exitosamente con 0 errores. Verificación de clickeabilidad en Notion pendiente (protocolo del proyecto: verificación independiente por operador en sesión con Claude).
+Versión actualizada: 9.12.0 (CHANGELOG). El resto de los fundacionales permanece en v9.11.9 hasta vversions --sync.
+---
+### v9.11.9 — Batch Hyperlinks (--all --apply, 143 bloques) + Bug TOC-Exclusion Confirmado por Código · 2026-08-01
+Tipo: [FEATURE] [BUG]
+Alcance: Layer_1/scripts/apply_hyperlinks_notion.py (--all --apply); los 7 documentos fundacionales (Kernel, System Prompt, Manual, Career Canon, Aliases, Change Log, Navigation Brief); Bug Tracker (ticket nuevo).
+Contexto: Continuación directa de v9.11.8. Tras validar el patrón PATCH puntual en Career Canon (2 bloques) y Kernel (12 bloques, dry-run verificado línea por línea contra generate_id_inventory.py antes de aplicar), se corrió --all --apply sobre los 7 documentos en una sola pasada. Durante la revisión, el operador señaló que ningún TOC se estaba enlazando — investigación por lectura directa de código (no inferida) aisló la causa en is_definition_block() (generate_census.py): la condición stripped == id_str, pensada para detectar bloques-ancla standalone, también matchea falsamente celdas de tabla TOC cuyo único contenido es el ID bare — excluyéndolas de recibir link.
+Cambios:
+- apply_hyperlinks_notion.py --all --apply ejecutado sobre los 7 documentos: Kernel 12, System Prompt 5, Manual 78, Career Canon 2, Aliases 0, Change Log 46, Navigation Brief 0 — total 143 bloques patcheados, 0 errores. (Kernel y Career Canon ya habían sido aplicados individualmente antes de esta corrida — el re-patch fue idempotente, sin efecto adicional.)
+- Bug registrado en Bug Tracker: TOC de los 7 documentos no recibe hyperlinks por falso positivo en is_definition_block() — Prioridad 2 MEDIO, Componente Python, Next_Action Patch. Cross-ref: V-MASTER-INDEX (391938be-fc42-8085-b7ad-ff68b601dec4) contiene TOCs duplicadas manualmente, fuera de este pipeline, desactualizada — housekeeping separado, no bloquea este fix.
+IDs afectados: ninguno — conversión de texto plano a hipervínculo real sobre IDs ya existentes en los 7 documentos. Census no requiere regeneración.
+Write-Back Verification: Kernel re-fetched de forma independiente tras --apply — los 12 links confirmados clickeables con anchors reales (ejemplos verificados: MANUAL:SETUP, KERNEL:DOCUMENTATION-003 ×2, SP:CONSISTENCY, MANUAL:SESSION-CYCLE, KERNEL:OWNERSHIP-002, los 4 GATE-DECISION de la fila 460, los 2 de la fila 483, CANON:OUTPUT-CONTRACT).
+Pendiente (fuera de esta entrada):
+- Fix de is_definition_block() (excluir btype table_row de la rama "stripped == id_str", o exigir is_heading) — bloquea que los TOCs de los 7 documentos se enlacen. Cambio afecta también al censo (vcensus), requiere revisión de impacto antes de aplicar.
+- Documentación transversal formal (KERNEL:ARCHITECTURE-L4, KERNEL:DOCUMENTATION-011, posible ajuste de vantage-hyperlink-loop) — diferida hasta resolver el bug de TOC.
+- EXCLUDE_IDS vacío en apply_hyperlinks_notion.py — copiar la lista real de apply_hyperlinks.py (27 IDs) antes de futuras corridas donde esa exclusión importe.
+- 3 anchors sin DEF resuelto en la spec (MANUAL:COLD-START-001, ALIASES:DEDUP, SP:CONSISTENCY §9 legacy) — pin explícito, sin cambio en esta entrada.
+- V-MASTER-INDEX desactualizado (v9.6.5 propia, docs listados en v9.11.5, IDs obsoletos) — housekeeping separado, sin fecha asignada.
+Versión actualizada: 9.11.9 (CHANGELOG). El resto de los fundacionales permanece en v9.11.8 hasta vversions --sync.
+---
 ### v9.11.8 — Fix Raíz: PATCH Puntual Reemplaza Destroy/Rebuild para Hyperlinks (apply_hyperlinks_notion.py) · 2026-08-01
 Tipo: [FIX] [ARCHITECTURE]
 Alcance: Layer_1/scripts/apply_hyperlinks_notion.py (nuevo, local); Career Canon (2 bloques quote, sección 10 CANON:MAJOR-PROJECTS).
@@ -203,6 +247,8 @@ Cambios:
 </table>
 </table>
 </table>
+</table>
+</table>
 IDs afectados: ninguno — cambio puramente estructural de contenedor (texto → tabla), sin alterar contenido ni IDs. Census no requiere regeneración.
 Write-Back Verification: Manual re-fetched de forma independiente tras la escritura — tabla confirmada con las 21 filas correctas, links preservados, sin residuo del formato anterior.
 Pendiente (fuera de esta entrada): vversions --sync para propagar versión a los fundacionales restantes (heredado, aún no ejecutado). Revisión humana del resto del Manual (01–07, 09–21) en curso por el operador — pendiente aviso de cierre antes de generar plantilla de referencia para KERNEL/Career Canon.
@@ -225,5 +271,5 @@ Pendiente (fuera de esta entrada): Reformateo masivo pendiente de KERNEL + Caree
 ya vigente en 08–08.6 — mapeo formal aún no ejecutado. vversions --sync para propagar versión a los fundacionales restantes (heredado, aún no ejecutado).
 Versión actualizada: 9.10.2 (CHANGELOG). El resto de los fundacionales permanece en v9.10.0/v9.9.x hasta vversions --sync.
 ---
----
 > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
+---

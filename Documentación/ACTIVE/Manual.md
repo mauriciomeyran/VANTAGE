@@ -737,14 +737,15 @@ Nunca al revés (esto es exactamente el paso 2 del Cierre de Sesión, MANUAL:SES
 Al cerrar sesión: si hubo cambios a documentación o bases de datos, se te presenta automáticamente un resumen de lo que quedó hecho vs. pendiente — sin que tengas que pedirlo.
 Aviso en arranque: health_check.py (alias start) reporta la antigüedad del Census en cada corrida — ! census — Nd sin regenerar si pasó el umbral de 7 días. Es solo un recordatorio visual, no dispara nada automáticamente; sigue siendo tu responsabilidad correr generate_census.py cuando cierres un ticket que cambió estado de un ID.
 ### Aplicación de Hipervínculos Cross-Reference
-Con el Census ya resolviendo cada ID a su bloque real, el siguiente paso es convertir esas menciones en links clickeables dentro de los propios documentos — eso lo hace apply_hyperlinks.py, no generate_census.py (el Census resuelve, el script de hipervínculos escribe).
-Cuándo correrlo: después de cualquier alta/baja/rename de ID canónico, o tras una migración de formato de heading — en ambos casos el MAPPING interno del script puede quedar desactualizado.
+Con el Census ya resolviendo cada ID a su bloque real, el siguiente paso es convertir esas menciones en links clickeables — eso lo hace apply_hyperlinks_notion.py, no generate_census.py (el Census resuelve, el script de hipervínculos escribe).
+Cuándo correrlo: después de cualquier alta/baja/rename de ID canónico, o tras una migración de formato de heading — en ambos casos el mapping interno puede quedar desactualizado.
 Cómo corre:
 ```bash
-python3 apply_hyperlinks.py --root "Documentación/ACTIVE"
+python3 apply_hyperlinks_notion.py --all --apply
 ```
-Sin --apply, solo reporta cuántos hipervínculos propuestos hay por documento (dry-run, no escribe nada). Revisa el diff generado; si se ve correcto, vuelve a correr agregando --apply.
-Si el dry-run reporta 0 en los 6 documentos, no hay nada pendiente — no hace falta --apply.
+Escribe PATCH puntual directo sobre bloques de Notion, preservando block-ID — nunca pasa por destroy/rebuild (ver KERNEL:ARCHITECTURE-L4 para el riesgo que esto evita). Sin --apply corre en modo dry-run, reportando cuántos hipervínculos propuestos hay por documento sin escribir.
+apply_hyperlinks.py (variante anterior, sobre .md locales) queda DEPRECATED — no usar para escrituras nuevas.
+Después de correr --apply sobre un documento, evita correr vdoc local sobre ese mismo documento hasta la siguiente sesión (ver riesgo de destroy/rebuild, KERNEL:ARCHITECTURE-L4) — de lo contrario los anchors recién escritos quedan huérfanos.
 ### Skills de Mantenimiento del Tracker (VANTAGE)
 Con el Census y su ciclo de regeneración ya cubiertos arriba, esta es la contraparte operativa del lado de Bug/Task Tracker y Changelog: cinco skills que Claude ejecuta bajo invocación explícita del operador, cada una con su propio contrato de Dry Run + APROBAR_WRITE cuando corresponde.
 - vantage-create-bug-task — crea un ticket nuevo en Bug Tracker (defecto reactivo) o Task Tracker (trabajo/decisión pendiente). Úsala en cualquier momento de la sesión en que detectes o reportes uno de los dos.

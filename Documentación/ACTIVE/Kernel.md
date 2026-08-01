@@ -203,13 +203,14 @@ Sistema de Cross-Reference Hyperlinks
 Propósito: convertir cada mención de un ID canónico (PREFIX:KEY) en los 6 documentos fundamentales en un hipervínculo real al bloque de definición, en vez de texto plano — para que el sistema sea navegable y auditable, no solo nombrado.
 Piezas
 - generate_census.py (resuelve cada ID a su anchor de bloque real vía API, detecta huérfanos)
-- apply_hyperlinks.py (aplica los hipervínculos sobre los .md locales, --dry-run por defecto)
+- apply_hyperlinks_notion.py — PATCH puntual directo sobre bloques Notion (notion.blocks.update), preserva block-ID, no pasa por destroy/rebuild. Reutiliza fetch_blocks_recursive/extract_ids_from_block/is_definition_block de generate_census.py. Es la vía activa de escritura.
+- apply_hyperlinks.py — DEPRECATED. Operaba sobre los .md locales con MAPPING estático hardcodeado; reemplazado por apply_hyperlinks_notion.py, que construye el MAPPING en cada corrida desde el link_index real del Census.
 - vantage_id_rules.py — módulo destinado a ser la fuente única de reglas DEF/REF/heading para ambos.
 Regla permanente
 El heading de definición nunca se auto-enlaza a sí mismo; toda mención posterior (TOC, prosa, tablas de referencia) sí es clickeable.
-Estado de adopción (2026-07-26)
-- apply_hyperlinks.py ya importa de vantage_id_rules.py.
-- generate_census.py mantiene lógica propia parcheada en paralelo, funcionalmente equivalente pero no consolidada.
+Estado de adopción (2026-08-01)
+- apply_hyperlinks_notion.py reemplaza a apply_hyperlinks.py como vía de escritura — ver KERNEL:ARCHITECTURE-L4 para el riesgo de destroy/rebuild que motivó el cambio.
+- Fix de is_definition_block() en generate_census.py: exclusión de table_row en la condición stripped == id_str — corrige falso positivo que excluía celdas de TOC de recibir hipervínculo (239 vs 143 bloques patcheados, 0 regresiones). Detalle completo en Changelog v9.12.0.
 - generate_id_inventory.py y normalize_heading_ids.py aún no migrados — este último sigue proponiendo el formato legacy §N — ID como destino y no debe correrse con --apply hasta su propia migración.
 Ver MANUAL:HEALTHCHECK para el procedimiento operativo de cuándo correr cada script.
 ---
@@ -241,6 +242,7 @@ No es capa de búsqueda — infraestructura documental.
 - Auto-commit + push cuando hay cambios en el repo. Alias: vgit · 09:00/15:00/21:00.
 - Repo: github.com/mauriciomeyran/VANTAGE.
 - vsync_doc.py — sync bidireccional Notion → ACTIVE/ para los 6 fundacionales editables (Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log). Alias: vdoc · Flags: dry | notion | local | auto.
+Riesgo conocido — vdoc local sobre documentos con hyperlinks aplicados: push_local_to_notion() (vsync_doc.py / vsync_doc_fast.py) hace delete-all + create-all de bloques en cada corrida — cualquier anchor #block-id generado por el sistema de hyperlinks (KERNEL:DOCUMENTATION-011) queda huérfano al recrearse el bloque con ID nuevo. apply_hyperlinks_notion.py evita este riesgo (PATCH puntual, preserva block-ID), pero vdoc local sigue sin guard equivalente — evitarlo sobre documentos con hyperlinks recién aplicados hasta que se decida su reemplazo formal.
 Skills Distribution — Single Source of Truth
 /skills/ en la raíz del repo es la fuente canónica de los .skill files de VANTAGE (actualmente 12) + index.json + index.html. GitHub Pages sirve esta ruta desde main en https://mauriciomeyran.github.io/VANTAGE/skills/. git_sync.py (el mismo motor detrás del alias vgit) detecta nuevos .skill en /skills/, regenera index.json y ejecuta commit + push en la misma corrida — no requiere paso manual adicional.
 Consumidores:
