@@ -399,8 +399,9 @@ def is_definition_block(plain: str, id_str: str, btype: str) -> bool:
     if heading_body == stripped:
         heading_body = LEADING_NUMBER_SECTION_RE.sub("", stripped)
     is_heading = btype in {"heading_1", "heading_2", "heading_3"}
+    is_table_row = btype == "table_row"
     return (
-        stripped == id_str
+        (stripped == id_str and not is_table_row)
         or stripped == f"ID: {id_str}"
         or _contains_id_boundary(plain, f"ID: {id_str}")
         or (is_heading and _starts_with_id_boundary(plain.lstrip("` "), id_str))

@@ -9,7 +9,7 @@ Total: 1
 ## `CANON:ARCHIVO-VANTAGE`
 
 Citado 1× en:
-- `Career Canon.md` · L20 · sección: CANON:AUDIENCE-SCOPE
+- `Career Canon.md` · L5 · sección: V | CAREER CANON
 
 ---
 

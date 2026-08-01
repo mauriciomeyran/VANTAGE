@@ -1,6 +1,51 @@
 {
   "entities": [
     {
+      "entity_id": "TRACKER:H_86e7da55e1edd7d9",
+      "canonical_id": "86e7da55e1edd7d92a52b036ca1570e8df90b064c863d0d6e1bb34a1cce86402",
+      "page_id": "3af938be-fc42-81ef-b8d7-e7185c8f0b60",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-3af938befc4281efb8d7e7185c8f0b60",
+      "hash": "86e7da55e1edd7d92a52b036ca1570e8df90b064c863d0d6e1bb34a1cce86402",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_3da0ab79eff8bc96",
+      "canonical_id": "3da0ab79eff8bc9661e0b23091f909333ee4bed4833f90670765448e7949cfee",
+      "page_id": "3af938be-fc42-8112-95a4-f6cbdefb0017",
+      "page_url": "https://app.notion.com/p/Digital-Merchandiser-3af938befc42811295a4f6cbdefb0017",
+      "hash": "3da0ab79eff8bc9661e0b23091f909333ee4bed4833f90670765448e7949cfee",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_54ae2fe7144f022a",
+      "canonical_id": "54ae2fe7144f022a0db4ea78d200087ea7cbb03ccf1c52f6e8164798f1d20951",
+      "page_id": "3ae938be-fc42-8192-bf81-eaf5d676c5ec",
+      "page_url": "https://app.notion.com/p/Lead-Visual-Merchandising-3ae938befc428192bf81eaf5d676c5ec",
+      "hash": "54ae2fe7144f022a0db4ea78d200087ea7cbb03ccf1c52f6e8164798f1d20951",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_70d4a685b4ad3351",
+      "canonical_id": "70d4a685b4ad3351c028dd1c17cf09131e654e6f064f2b21196db5668391ea15",
+      "page_id": "3ae938be-fc42-816e-bce9-c7b7cef59bec",
+      "page_url": "https://app.notion.com/p/Gerente-de-Visual-Merchandising-y-Desarrollo-de-Tienda-3ae938befc42816ebce9c7b7cef59bec",
+      "hash": "70d4a685b4ad3351c028dd1c17cf09131e654e6f064f2b21196db5668391ea15",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_1af6fc1a1bda7f6c",
+      "canonical_id": "1af6fc1a1bda7f6c98673c1a0f0a2b77925b4f7ed64b0c04cd1378eeb00d4e1a",
+      "page_id": "3ae938be-fc42-810a-a219-f016d688a39e",
+      "page_url": "https://app.notion.com/p/SUPERVISOR-DE-VISUAL-MERCHANDISING-VICTORIAS-SECRET-SANTA-FE-3ae938befc42810aa219f016d688a39e",
+      "hash": "1af6fc1a1bda7f6c98673c1a0f0a2b77925b4f7ed64b0c04cd1378eeb00d4e1a",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
       "entity_id": "TRACKER:H_acd8317415148d7c",
       "canonical_id": "acd8317415148d7c6292faf9daefbf8ed7d02b8a5f2352b26e591625a6f91081",
       "page_id": "3ae938be-fc42-8114-85a0-d3ad18d60194",
@@ -6041,10 +6086,10 @@
     }
   ],
   "metrics": {
-    "total_entities": 671,
-    "tracker_entities": 44,
+    "total_entities": 676,
+    "tracker_entities": 49,
     "archive_entities": 627,
-    "hash_coverage": 86.14,
+    "hash_coverage": 86.24,
     "orphan_candidates": 93
   }
 }
