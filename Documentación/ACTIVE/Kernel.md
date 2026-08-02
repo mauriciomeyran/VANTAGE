@@ -211,7 +211,7 @@ El heading de definición nunca se auto-enlaza a sí mismo; toda mención poster
 Estado de adopción (2026-08-01)
 - apply_hyperlinks_notion.py reemplaza a apply_hyperlinks.py como vía de escritura — ver KERNEL:ARCHITECTURE-L4 para el riesgo de destroy/rebuild que motivó el cambio.
 - Fix de is_definition_block() en generate_census.py: exclusión de table_row en la condición stripped == id_str — corrige falso positivo que excluía celdas de TOC de recibir hipervínculo (239 vs 143 bloques patcheados, 0 regresiones). Detalle completo en Changelog v9.12.0.
-- generate_id_inventory.py y normalize_heading_ids.py aún no migrados — este último sigue proponiendo el formato legacy §N — ID como destino y no debe correrse con --apply hasta su propia migración.
+- generate_id_inventory.py y normalize_heading_ids.py ya fueron migrados 
 Ver MANUAL:HEALTHCHECK para el procedimiento operativo de cuándo correr cada script.
 ---
 ## 04 KERNEL:ARCHITECTURE

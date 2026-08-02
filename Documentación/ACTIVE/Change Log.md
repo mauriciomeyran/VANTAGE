@@ -1,5 +1,30 @@
 # V | CHANGELOG
 
+### v9.13.3 — Auditoría de Cierre: Tooling de Heading IDs Verificado (GATE 1/2 PASS) · 2026-08-02
+Tipo: [DOC] [AUDIT]
+Alcance: Layer_1/scripts/vantage_id_rules.py, normalize_heading_ids.py, generate_id_inventory.py (verificación, sin cambio de código). KERNEL:DOCUMENTATION-011 (referencia de estado).
+Contexto: Contrato de sesión solicitaba refactor de vantage_id_rules.py y fix de normalize_heading_ids.py bajo el supuesto de que ambos scripts operaban con lógica legacy (búsqueda de símbolo §, falsos positivos de "heading mal formado"). Verificación directa contra código y ejecución real determinó que el supuesto no aplicaba: la migración correspondiente ya se había completado en sesión previa (contrato 2026-07-25, ver contrato_migracion_headings.md) y KERNEL:DOCUMENTATION-011 ya confirma "generate_id_inventory.py y normalize_heading_ids.py ya fueron migrados". No hubo refactor que ejecutar — la tarea real era auditoría de cierre.
+Cambios:
+- py_compile OK sobre los 3 scripts (vantage_id_rules.py, normalize_heading_ids.py, generate_id_inventory.py) — GATE 2 (integridad de dependencias) PASS. Confirmado que normalize_heading_ids.py importa classify_heading/suggest_canonical_heading de vantage_id_rules.py sin reimplementación local.
+- normalize_heading_ids.py ejecutado en modo dry-run real (sin --apply) sobre los 6 documentos editables vía Terminal del operador (venv Layer_1/.venv), no simulado: "Ningún heading mal formado detectado. Nomenclatura 100% canónica." — GATE 1 PASS.
+- GATE 3 (sync de versión) ya satisfecho por vversions --sync corrido por el operador en esta misma sesión, previo a esta entrada — confirmó los 9 fundacionales en v9.13.2 antes de este batch.
+IDs afectados: ninguno — verificación de tooling, no de documentación fundacional. Census no requiere regeneración.
+Verificación: py_compile exit 0 (3/3 scripts); normalize_heading_ids.py --csv corrido en Terminal real del operador, exit 0, 0 hallazgos.
+Pendiente (fuera de esta entrada): ninguno nuevo generado por esta auditoría.
+Versión actualizada: 9.13.3 (CHANGELOG). El resto de los fundacionales permanece en v9.13.2 hasta vversions --sync.
+---
+### v9.13.2 — Infraestructura: Refactor vsync_doc (PATCH) e Implementación class_b_guard (GAP-03) · 2026-08-01
+Tipo: [FIX] [INFRA] [SECURITY]
+Alcance: Layer_4/scripts/vsync_doc.py; Layer_1/scripts/class_b_guard.py.
+Contexto: Resolución del riesgo de integridad de anchors documentado en KERNEL:ARCHITECTURE-L4 y mitigación técnica de GAP-03 (KERNEL:GATE-DECISION-003).
+Cambios:
+- vsync_doc.py: Función push_local_to_notion() reescrita íntegramente para usar el método PATCH puntual (notion.blocks.update). Se elimina el patrón destructivo delete-all + create-all que invalidaba los block_ids necesarios para el Sistema de Cross-Reference Hyperlinks (KERNEL:DOCUMENTATION-011).
+- class_b_guard.py: Implementación del guard técnico para bloquear escrituras desde el componente AI hacia campos Class B (Score, Gate_Decision, VM_Scope, etc.). Asegura el cumplimiento del contrato de ownership definido en KERNEL:SCHEMA-001 y KERNEL:OWNERSHIP-001.
+- Deuda Técnica: Eliminados comentarios temporales de v8.5.7 en los scripts de sincronización.
+Verificación: py_compile OK; diff validado sin ciclos de borrado; test de bloqueo Class B PASS.
+IDs afectados: Ninguno (cambios de lógica de sistema). Census no requiere regeneración.
+Pendiente: vversions --sync para propagar v9.13.2 a los documentos fundacionales.
+---
 ### v9.13.1 — [COMPRIMIDO] Saneamiento Bug/Task Tracker: 9 tickets cerrados, 2 propiedades Solución creadas, 1 bug de skill logueado · 2026-08-01
 Tipo: [COMPRIMIDO]
 Resumen: vantage-tidy-bug-task-tracker corrido (8 tickets, Bug+Task) pero Escenario 2 (cruce Changelog) no fue exhaustivo — operador cerró manualmente varios tickets adicionales después, exponiendo el gap. Bug Tracker: 3 tickets cerrados manualmente por el operador recibieron Solución+Fecha_Resolución retroactivas (Dedup no detecta duplicados, Sesiones huérfanas, GAP-03); 1 ticket más (is_definition_block TOC) cerrado con evidencia real hallada en Changelog v9.12.0. Ticket nuevo creado: 'Escenario 2 del skill vantage-tidy-bug-task-tracker no hace cruce exhaustivo contra Changelog' (3af938be-fc42-812e-99d9-c886c680bbfb), Prioridad ALTO. Propiedad Solución (rich_text) creada en Tasks Tracker (aaaaef55...) y Archivo Task Tracker (c470ead7...), antes inexistente en ambas — 15 tareas archivadas documentadas: 1 con evidencia real (v9.11.2), 10 autocontenidas en Notas, 4 marcadas explícitamente sin evidencia/pendientes de confirmar con el operador. Bug Tracker y Task Tracker activos revisados en su totalidad contra Changelog completo (activo+archivo) — 7 bugs y 5 tasks abiertas confirmadas vigentes, sin decisión arquitectónica que las vuelva obsoletas. Expandir en próxima sesión: revisar los 4 tasks sin evidencia con el operador directamente.
@@ -20,7 +45,7 @@ Write-Back Verification: 12/12 páginas del Archivo Tracker re-fetched individua
 Pendiente (fuera de esta entrada):
 - Hard Block formal para variantes de "Nike Artz Pedregal" (7+ páginas de piso de venta identificadas, sin tocar) — requiere batch separado con APROBAR_WRITE explícito.
 - KERNEL:GATE-DECISION sin actualizar aún para reflejar TERMINAL_ACTIONS={Archivar, Expirada} como definición canónica documentada (código ya lo aplica desde v9.11.7).
-- Reemplazo pendiente en Layer_1/scripts/ por el operador: normalize_heading_ids.py, apply_hyperlinks.py, vantage-tidy-opportunities-tracker.md (versiones limpiadas, acción local del operador, fuera de alcance de este Changelog).
+- Reemplazo pendiente en Layer_1/scripts: normalize_heading_ids.py, apply_hyperlinks.py, vantage-tidy-opportunities-tracker.md (versiones limpiadas, acción local del operador, fuera de alcance de este Changelog).
 - T3, T5, T7, D3/GAP-03, D4/B6 Caso 4, 7 IDs ALIASES:* faltantes en CENSUS_SPEC, 3 anchors PENDIENTE_ANCHOR — heredados, sin tocar esta sesión.
 - Esquema del Archivo Tracker con propiedades duplicadas/corruptas (Next_Action 1, Score_Method faltante) — cosmético, no bloqueante.
 Versión actualizada: 9.13.0 (CHANGELOG). El resto de los fundacionales permanece en v9.12.1 hasta vversions --sync.
