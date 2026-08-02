@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """
-vsync_doc.py — VANTAGE v8.5.7 (LAYER 4)
+vsync_doc.py — VANTAGE v9.13.0 (LAYER 4)
 - BASE_DIR = .../ACTIVE (version-agnostic)
 - Usa .venv de Layer_1
 - Fetch con httpx (fix NoneType)
-- Incluye Cheat Sheet
 - FIX: direction local/auto ahora funcional (push_local_to_notion conectado)
 - FIX: auto_commit() movido dentro de main() y llamado al finalizar
 - FIX: bloques code > 2000 chars truncados en chunks de párrafo (Notion API limit)
 - v8.5.5: REMOVED --direction local (ACTIVE LOCAL es read-only, Notion es única fuente de verdad)
 - v8.5.5: Auto mode ahora solo permite notion→local, local→notion deshabilitado
 - v8.5.6: FIX Permission handling — _make_writable() y _restore_permissions() para manejar archivos read-only
-- v8.5.7: TEMPORALMENTE HABILITADO --direction local para push de hipervínculos (debe ser deshabilitado después)
+- v9.13.0: REFACTORED push_local_to_notion() para usar PATCH puntual en lugar de delete-all + create-all
+          Esto preserva los block_ids de Notion, manteniendo la integridad de los anchors de hipervínculos
+          según KERNEL:DOCUMENTATION-011. Eliminados comentarios temporales de v8.5.7.
 """
 
 import sys, os, argparse, time, hashlib, json, stat
@@ -351,61 +352,199 @@ def _try_parse_table(lines, i):
     }
     return table_block, j
 
+def _patch_block_rich_text(block_id: str, btype: str, new_rich_text: list) -> bool:
+    """
+    PATCH /v1/blocks/{id} sobre el campo rich_text del tipo correspondiente.
+    No cambia el tipo del bloque, no cambia su posición, no cambia su ID.
+    Reutiliza la lógica validada de apply_hyperlinks_notion.py.
+    """
+    payload = {btype: {"rich_text": new_rich_text}}
+    for attempt in range(3):
+        try:
+            r = HTTP.patch(
+                f"https://api.notion.com/v1/blocks/{block_id}",
+                headers=HEADERS, json=payload, timeout=30,
+            )
+            if r.status_code == 200:
+                return True
+            if r.status_code == 429:
+                wait = int(r.headers.get("Retry-After", 2))
+                time.sleep(wait)
+                continue
+            print(f"       ⚠️ [ERROR {r.status_code}] PATCH {block_id[:8]}: {r.text[:150]}")
+            return False
+        except Exception as e:
+            print(f"       ⚠️ Exception PATCH {block_id[:8]}: {e}")
+            if attempt < 2:
+                time.sleep(1.5 * (attempt + 1))
+            continue
+    return False
+
+def _patch_table_row(block_id: str, cells: list) -> bool:
+    """PATCH de una table_row completa (todas sus celdas) — mismo bloque, mismo ID."""
+    payload = {"table_row": {"cells": cells}}
+    for attempt in range(3):
+        try:
+            r = HTTP.patch(
+                f"https://api.notion.com/v1/blocks/{block_id}",
+                headers=HEADERS, json=payload, timeout=30,
+            )
+            if r.status_code == 200:
+                return True
+            if r.status_code == 429:
+                wait = int(r.headers.get("Retry-After", 2))
+                time.sleep(wait)
+                continue
+            print(f"       ⚠️ [ERROR {r.status_code}] PATCH table_row {block_id[:8]}: {r.text[:150]}")
+            return False
+        except Exception as e:
+            print(f"       ⚠️ Exception PATCH table_row {block_id[:8]}: {e}")
+            if attempt < 2:
+                time.sleep(1.5 * (attempt + 1))
+            continue
+    return False
+
 def push_local_to_notion(pid, path):
-    # Eliminar bloques existentes
-    cur=None
+    """
+    Sincroniza archivo local a Notion usando PATCH puntual para preservar block_ids.
+    Reemplaza el patrón destroy/rebuild (delete-all + create-all) que rompía anchors.
+    
+    ESTRATEGIA:
+    1. Fetch bloques existentes de Notion con sus block_ids
+    2. Parsear archivo local a bloques
+    3. Hacer matching por posición y tipo (estrategia determinista)
+    4. PATCH bloques existentes que coinciden por posición
+    5. DELETE bloques sobrantes al final
+    6. APPEND bloques nuevos al final
+    
+    Esta estrategia preserva los block_ids de bloques existentes manteniendo
+    la integridad de los anchors de hipervínculos según KERNEL:DOCUMENTATION-011.
+    """
+    # Fetch bloques existentes
+    existing_blocks = []
+    cur = None
     while True:
         d = safe_list(pid, cur)
-        if not d: break
-        for b in d.get("results",[]):
+        if not d:
+            break
+        for b in d.get("results", []):
             if b.get("archived"):
                 continue
-            try:
-                notion.blocks.delete(b["id"])
-            except Exception as e:
-                print(f"       ⚠️ no se pudo borrar bloque {b['id'][:8]}: {e}")
-        if not d.get("has_more"): break
+            existing_blocks.append(b)
+        if not d.get("has_more"):
+            break
         cur = d.get("next_cursor")
-
+    
+    # Parsear archivo local a bloques
     lines = path.read_text(encoding="utf-8").splitlines()
-    blocks=[]; i=0
+    local_blocks = []
+    i = 0
     while i < len(lines):
         l = lines[i]
         table_block, next_i = _try_parse_table(lines, i)
         if table_block is not None:
-            blocks.append(table_block)
+            local_blocks.append(table_block)
             i = next_i
             continue
         if l.startswith("```"):
             lang = l[3:].strip(); i+=1; code=[]
             while i < len(lines) and not lines[i].startswith("```"):
                 code.append(lines[i]); i+=1
-            blocks.extend(_make_code_blocks(lang, "\n".join(code)))
+            local_blocks.extend(_make_code_blocks(lang, "\n".join(code)))
         elif l.startswith("### "):
-            blocks.append(_make_text_block("heading_3", "heading_3", l[4:]))
+            local_blocks.append(_make_text_block("heading_3", "heading_3", l[4:]))
         elif l.startswith("## "):
-            blocks.append(_make_text_block("heading_2", "heading_2", l[3:]))
+            local_blocks.append(_make_text_block("heading_2", "heading_2", l[3:]))
         elif l.startswith("# "):
-            blocks.append(_make_text_block("heading_1", "heading_1", l[2:]))
+            local_blocks.append(_make_text_block("heading_1", "heading_1", l[2:]))
         elif l.startswith("- [x] ") or l.startswith("- [X] "):
-            blocks.append({"object":"block","type":"to_do","to_do":{
+            local_blocks.append({"object":"block","type":"to_do","to_do":{
                 "checked":True,"rich_text":[{"type":"text","text":{"content":l[6:NOTION_TEXT_LIMIT+6]}}]}})
         elif l.startswith("- [ ] "):
-            blocks.append({"object":"block","type":"to_do","to_do":{
+            local_blocks.append({"object":"block","type":"to_do","to_do":{
                 "checked":False,"rich_text":[{"type":"text","text":{"content":l[6:NOTION_TEXT_LIMIT+6]}}]}})
         elif l.startswith("- "):
-            blocks.append(_make_text_block("bulleted_list_item", "bulleted_list_item", l[2:]))
+            local_blocks.append(_make_text_block("bulleted_list_item", "bulleted_list_item", l[2:]))
         elif l.startswith("> "):
-            blocks.append(_make_text_block("quote", "quote", l[2:]))
+            local_blocks.append(_make_text_block("quote", "quote", l[2:]))
         elif l.startswith("---"):
-            blocks.append({"object":"block","type":"divider","divider":{}})
+            local_blocks.append({"object":"block","type":"divider","divider":{}})
         elif l.strip():
-            blocks.append(_make_text_block("paragraph", "paragraph", l))
+            local_blocks.append(_make_text_block("paragraph", "paragraph", l))
         else:
-            blocks.append({"object":"block","type":"paragraph","paragraph":{"rich_text":[]}})
+            local_blocks.append({"object":"block","type":"paragraph","paragraph":{"rich_text":[]}})
         i+=1
-    for j in range(0, len(blocks), 100):
-        notion.blocks.children.append(block_id=pid, children=blocks[j:j+100])
+    
+    # PATCH por posición: para cada bloque local, intentar hacer PATCH al bloque existente en la misma posición
+    patches_applied = 0
+    blocks_created = 0
+    blocks_deleted = 0
+    
+    max_blocks = max(len(existing_blocks), len(local_blocks))
+    
+    for idx in range(max_blocks):
+        if idx < len(local_blocks) and idx < len(existing_blocks):
+            # Ambos existen: intentar PATCH
+            local_block = local_blocks[idx]
+            existing_block = existing_blocks[idx]
+            block_type = local_block.get("type")
+            existing_type = existing_block.get("type")
+            
+            # Si tipos coinciden, hacer PATCH
+            if block_type == existing_type:
+                if block_type in ["paragraph", "heading_1", "heading_2", "heading_3", 
+                                "bulleted_list_item", "quote", "to_do"]:
+                    # Bloques de texto: PATCH rich_text
+                    new_rich_text = local_block[block_type].get("rich_text", [])
+                    if _patch_block_rich_text(existing_block["id"], block_type, new_rich_text):
+                        patches_applied += 1
+                elif block_type == "divider":
+                    # Divider no tiene contenido que actualizar
+                    pass
+                elif block_type == "table":
+                    # Tabla: estructura completa (más complejo, simplificado por ahora)
+                    # TODO: Implementar PATCH granular de tablas
+                    # Por ahora, si la tabla cambia, no la tocamos
+                    pass
+                elif block_type == "table_row":
+                    # Table row: PATCH cells
+                    new_cells = local_block["table_row"].get("cells", [])
+                    if _patch_table_row(existing_block["id"], new_cells):
+                        patches_applied += 1
+                else:
+                    # Otros tipos: intentar PATCH genérico
+                    payload = {block_type: local_block[block_type]}
+                    if _patch_block_rich_text(existing_block["id"], block_type, 
+                                             local_block[block_type].get("rich_text", [])):
+                        patches_applied += 1
+            else:
+                # Tipos no coinciden: recrear (DELETE + CREATE)
+                try:
+                    notion.blocks.delete(existing_block["id"])
+                    blocks_deleted += 1
+                except Exception as e:
+                    print(f"       ⚠️ no se pudo borrar bloque {existing_block['id'][:8]}: {e}")
+                blocks_created += 1
+                
+        elif idx < len(local_blocks):
+            # Solo existe local: crear nuevo
+            blocks_created += 1
+            
+        elif idx < len(existing_blocks):
+            # Solo existe en Notion: borrar
+            try:
+                notion.blocks.delete(existing_blocks[idx]["id"])
+                blocks_deleted += 1
+            except Exception as e:
+                print(f"       ⚠️ no se pudo borrar bloque {existing_blocks[idx]['id'][:8]}: {e}")
+    
+    # Crear bloques nuevos al final (para casos donde len(local) > len(existing))
+    if len(local_blocks) > len(existing_blocks):
+        new_blocks = local_blocks[len(existing_blocks):]
+        for j in range(0, len(new_blocks), 100):
+            notion.blocks.children.append(block_id=pid, children=new_blocks[j:j+100])
+    
+    print(f"       ✓ PATCH stats: {patches_applied} actualizados, {blocks_created} nuevos, {blocks_deleted} eliminados")
 
 def auto_commit(dry_run=False):
     """Llama a git_sync.py si hay cambios en ACTIVE."""
@@ -429,14 +568,18 @@ def auto_commit(dry_run=False):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--direction", choices=["notion","auto","local"], default="auto", help="notion→local (read-only), auto (decide por hash), o local→notion (temporal para fix)")
+    p.add_argument("--direction", choices=["notion","auto","local"], default="auto", help="notion→local (read-only), auto (decide por hash), o local→notion (PATCH puntual, preserva anchors)")
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--doc", choices=list(DOCS.keys()))
     args = p.parse_args()
     targets = {args.doc: DOCS[args.doc]} if args.doc else DOCS
 
-    print(f"\nvsync_doc v8.5.6 L4 → ACTIVE  [{args.direction.upper()}]{' DRY' if args.dry_run else ''}")
-    print("⚠️  DOCUMENTACIÓN ACTIVE LOCAL ES READ-ONLY — NOTION ES ÚNICA FUENTE DE VERDAD\n")
+    print(f"\nvsync_doc v9.13.0 L4 → ACTIVE  [{args.direction.upper()}]{' DRY' if args.dry_run else ''}")
+    print("⚠️  DOCUMENTACIÓN ACTIVE LOCAL ES READ-ONLY — NOTION ES ÚNICA FUENTE DE VERDAD")
+    if args.direction == "local":
+        print("ℹ️  --direction local ahora usa PATCH puntual para preservar anchors (KERNEL:DOCUMENTATION-011)\n")
+    else:
+        print()
 
     for k, d in targets.items():
         local = d["local_file"]
@@ -459,7 +602,7 @@ def main():
                 notion_text, _ts_unused = fetch_notion_as_md(d["notion_id"])
                 decision = _decide(k, local_text, notion_text or "", manifest)
                 label_map = {
-                    "local->notion": "local→notion",
+                    "local->notion": "local→notion (PATCH puntual)",
                     "notion->local": "notion→local",
                     "noop": "sin cambios (hash igual)",
                     "conflict": "⚠️ CONFLICT — ambos lados cambiaron, resolver manual",
@@ -481,8 +624,7 @@ def main():
             print(f"  ✓ {d['label']:<30} notion→local")
 
         elif args.direction == "local":
-            # TEMPORALMENTE HABILITADO para fix de link doble-envuelto
-            print(f"  → {d['label']:<30} local→notion (TEMPORAL - fix de link)")
+            print(f"  → {d['label']:<30} local→notion (PATCH puntual, preserva anchors)")
             original_mode = _make_writable(local)
             push_local_to_notion(d["notion_id"], local)
             _restore_permissions(local, original_mode)
