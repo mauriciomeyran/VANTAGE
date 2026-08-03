@@ -150,31 +150,31 @@ def apply_importancia_matrix(urgencia: str, importancia_bucket: str) -> str:
     Aplica la matriz Urgencia × Importancia para determinar Prioridad final.
     
     Matriz:
-             | Base  | Media | Alta   | Muy Alta
-    CRÍTICO      | CRÍTICO | CRÍTICO | CRÍTICO | CRÍTICO
-    ALTO (≤3d)   | MEDIO   | ALTO    | CRÍTICO | CRÍTICO
-    MEDIO (4-14d)| BAJO    | MEDIO   | ALTO    | CRÍTICO
-    BAJO (>14d)  | BAJO    | BAJO    | MEDIO   | ALTO
+             | Base    | Media   | Alta     | Muy Alta
+    CRÍTICO  | 4 CRÍTICO| 4 CRÍTICO| 4 CRÍTICO| 4 CRÍTICO
+    ALTO     | 2 MEDIO | 3 ALTO  | 4 CRÍTICO| 4 CRÍTICO
+    MEDIO    | 1 BAJO  | 2 MEDIO | 3 ALTO   | 4 CRÍTICO
+    BAJO     | 1 BAJO  | 1 BAJO  | 2 MEDIO  | 3 ALTO
     """
     matrix = {
-        ("CRÍTICO", "Base"):     "CRÍTICO",
-        ("CRÍTICO", "Media"):    "CRÍTICO",
-        ("CRÍTICO", "Alta"):     "CRÍTICO",
-        ("CRÍTICO", "Muy Alta"): "CRÍTICO",
-        ("ALTO",    "Base"):     "MEDIO",
-        ("ALTO",    "Media"):    "ALTO",
-        ("ALTO",    "Alta"):     "CRÍTICO",
-        ("ALTO",    "Muy Alta"): "CRÍTICO",
-        ("MEDIO",   "Base"):     "BAJO",
-        ("MEDIO",   "Media"):    "MEDIO",
-        ("MEDIO",   "Alta"):     "ALTO",
-        ("MEDIO",   "Muy Alta"): "CRÍTICO",
-        ("BAJO",    "Base"):     "BAJO",
-        ("BAJO",    "Media"):    "BAJO",
-        ("BAJO",    "Alta"):     "MEDIO",
-        ("BAJO",    "Muy Alta"): "ALTO",
+        ("CRÍTICO", "Base"):     "4 CRÍTICO",
+        ("CRÍTICO", "Media"):    "4 CRÍTICO",
+        ("CRÍTICO", "Alta"):     "4 CRÍTICO",
+        ("CRÍTICO", "Muy Alta"): "4 CRÍTICO",
+        ("ALTO",    "Base"):     "2 MEDIO",
+        ("ALTO",    "Media"):    "3 ALTO",
+        ("ALTO",    "Alta"):     "4 CRÍTICO",
+        ("ALTO",    "Muy Alta"): "4 CRÍTICO",
+        ("MEDIO",   "Base"):     "1 BAJO",
+        ("MEDIO",   "Media"):    "2 MEDIO",
+        ("MEDIO",   "Alta"):     "3 ALTO",
+        ("MEDIO",   "Muy Alta"): "4 CRÍTICO",
+        ("BAJO",    "Base"):     "1 BAJO",
+        ("BAJO",    "Media"):    "1 BAJO",
+        ("BAJO",    "Alta"):     "2 MEDIO",
+        ("BAJO",    "Muy Alta"): "3 ALTO",
     }
-    return matrix.get((urgencia, importancia_bucket), "BAJO")  # fallback defensivo
+    return matrix.get((urgencia, importancia_bucket), "1 BAJO")  # fallback defensivo
 
 
 def infer_prioridad(props: dict, today: date) -> tuple[str, str]:
@@ -398,7 +398,7 @@ def print_preview(rows: list[BackfillRow]) -> None:
     print(f"{len(rows)} entradas a actualizar · layer: {n_layer} · hash: {n_hash} · prioridad: {n_prioridad}\n")
     
     print("Distribución de Prioridad (nueva fórmula):")
-    for nivel in ["CRÍTICO", "ALTO", "MEDIO", "BAJO"]:
+    for nivel in ["4 CRÍTICO", "3 ALTO", "2 MEDIO", "1 BAJO"]:
         count = prioridad_dist.get(nivel, 0)
         print(f"  {nivel}: {count}")
     print()
