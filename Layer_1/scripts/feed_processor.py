@@ -1022,10 +1022,8 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
     if "Source_Type " in schema.properties:
         props["Source_Type "] = schema.select_value("Vacante")
 
-    # Prioridad default para entradas nuevas (Class A — §8 Kernel)
-    # Default 4 alineado con FAST defaults §14. El operador ajusta manualmente en Notion.
-    if "Prioridad" in schema.properties:
-        props["Prioridad"] = schema.select_value("4 CRÍTICO")
+    # Prioridad: sin default — vl1 backfill (KERNEL:TRIGGER-002) es responsable de llenar este campo
+    # en registros donde llega vacío. feed_processor.py deja el campo vacío/null si no viene en el JSON.
 
     notes_parts = []
     if p.notes:
@@ -1246,7 +1244,7 @@ def main() -> None:
 
     processed = [process_record(r, notion_utils, schema, alias_data) for r in records]
 
-    print_dryrun_summary(processed, args.layer)
+    print_dryrun_summary(processed, args.layer, schema)
     dryrun_path = write_dryrun_file(processed, args.layer)
     print(f"📄 DRY RUN guardado: {dryrun_path}")
 

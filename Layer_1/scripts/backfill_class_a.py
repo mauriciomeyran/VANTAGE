@@ -10,12 +10,27 @@ Uso:
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from dataclasses import dataclass
+from datetime import date, timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
-from notion_utils import Client
+
+# backfill_class_a necesita Client del SDK de PyPI (notion-client),
+# no del wrapper local notion_utils.py
+import sys as _sys, importlib.util as _ilu
+_scripts_dir = str(Path(__file__).resolve().parent)
+_saved_path = _sys.path[:]
+_saved_nc   = _sys.modules.pop("notion_utils", None)
+_sys.path   = [p for p in _sys.path if p not in (_scripts_dir, ".", "")]
+try:
+    from notion_client import Client
+finally:
+    _sys.path = _saved_path
+    if _saved_nc is not None:
+        _sys.modules["notion_utils"] = _saved_nc
 
 _SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(_SCRIPTS_DIR) not in sys.path:
@@ -111,6 +126,159 @@ def infer_layer(props: dict) -> tuple[str, str]:
     return "L1", "default"
 
 
+def get_importancia_bucket(score: int) -> str:
+    """
+    Determina el bucket de Importancia basado en Score.
+    
+    Score=40 es BASE SCORE (sin bonificaciones) = "Sin evaluar"
+    Score ≠ 40 tiene al menos un bono activado = valor calculado real
+    """
+    if score == 40:
+        return "Base"        # Sin datos — BASE SCORE exacto, sin bonificaciones
+    elif score <= 60:
+        return "Media"       # 41-60
+    elif score <= 80:
+        return "Alta"        # 61-80
+    elif score <= 100:
+        return "Muy Alta"    # 81-100
+    else:
+        return "Base"        # fallback defensivo
+
+
+def apply_importancia_matrix(urgencia: str, importancia_bucket: str) -> str:
+    """
+    Aplica la matriz Urgencia × Importancia para determinar Prioridad final.
+    
+    Matriz:
+             | Base  | Media | Alta   | Muy Alta
+    CRÍTICO      | CRÍTICO | CRÍTICO | CRÍTICO | CRÍTICO
+    ALTO (≤3d)   | MEDIO   | ALTO    | CRÍTICO | CRÍTICO
+    MEDIO (4-14d)| BAJO    | MEDIO   | ALTO    | CRÍTICO
+    BAJO (>14d)  | BAJO    | BAJO    | MEDIO   | ALTO
+    """
+    matrix = {
+        ("CRÍTICO", "Base"):     "CRÍTICO",
+        ("CRÍTICO", "Media"):    "CRÍTICO",
+        ("CRÍTICO", "Alta"):     "CRÍTICO",
+        ("CRÍTICO", "Muy Alta"): "CRÍTICO",
+        ("ALTO",    "Base"):     "MEDIO",
+        ("ALTO",    "Media"):    "ALTO",
+        ("ALTO",    "Alta"):     "CRÍTICO",
+        ("ALTO",    "Muy Alta"): "CRÍTICO",
+        ("MEDIO",   "Base"):     "BAJO",
+        ("MEDIO",   "Media"):    "MEDIO",
+        ("MEDIO",   "Alta"):     "ALTO",
+        ("MEDIO",   "Muy Alta"): "CRÍTICO",
+        ("BAJO",    "Base"):     "BAJO",
+        ("BAJO",    "Media"):    "BAJO",
+        ("BAJO",    "Alta"):     "MEDIO",
+        ("BAJO",    "Muy Alta"): "ALTO",
+    }
+    return matrix.get((urgencia, importancia_bucket), "BAJO")  # fallback defensivo
+
+
+def infer_prioridad(props: dict, today: date) -> tuple[str, str]:
+    """
+    Infiere Prioridad usando matriz Urgencia × Importancia.
+    
+    Pasos:
+    1. Calcular Urgencia (lógica original: deadline + antigüedad + Source_Type)
+    2. Calcular Importancia (bucket de Score)
+    3. Aplicar matriz Urgencia × Importancia
+    
+    Retorna: (valor_prioridad, razón)
+    Valores válidos: "1 BAJO", "2 MEDIO", "3 ALTO", "4 CRÍTICO"
+    """
+    # PASO 1: Calcular Urgencia (lógica original intacta)
+    jd_text = txt(props.get("JD")).lower()
+    
+    # Detectar deadline explícito en JD (apply by, deadline, fecha límite)
+    deadline_patterns = [
+        r"apply by\s+(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})",
+        r"deadline\s*[:]\s*(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})",
+        r"fecha\s+límite\s*[:]\s*(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})",
+        r"deadline\s*:\s*(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})",
+    ]
+    
+    deadline_near = False
+    for pattern in deadline_patterns:
+        match = re.search(pattern, jd_text)
+        if match:
+            try:
+                # Parsear fecha del match (soporta formatos DD-MM-YYYY, DD/MM/YYYY, etc.)
+                date_str = match.group(1)
+                # Simplificación: extraer componentes numéricos
+                parts = re.findall(r'\d+', date_str)
+                if len(parts) >= 3:
+                    day, month, year = int(parts[0]), int(parts[1]), int(parts[2])
+                    # Ajustar año si viene en formato 2 dígitos
+                    if year < 100:
+                        year += 2000
+                    deadline_date = date(year, month, day)
+                    days_until = (deadline_date - today).days
+                    if days_until <= 5:
+                        deadline_near = True
+                        break
+            except (ValueError, IndexError):
+                continue
+    
+    # Extraer Source_Type (con espacio final según schema)
+    source_type = txt(props.get("Source_Type "))
+    
+    # Determinar nivel de urgencia
+    if deadline_near or source_type in {"Inbound", "Referencia", "Networking"}:
+        urgencia = "CRÍTICO"
+        urgencia_reason = "deadline_jd" if deadline_near else f"source_type_{source_type}"
+    else:
+        # Extraer Fecha de creación de Notion como proxy
+        created_time = props.get("created_time")
+        if created_time:
+            try:
+                # Notion ISO format: 2026-08-01T12:00:00.000Z
+                created_date = date.fromisoformat(created_time.replace("Z", "+00:00").split("T")[0])
+                days_old = (today - created_date).days
+            except (ValueError, AttributeError):
+                # Si no podemos parsear, default a MEDIO
+                urgencia = "MEDIO"
+                urgencia_reason = "fecha_invalida"
+            else:
+                # CRITERIO 2: "3 ALTO" — Fecha de creación ≤3 días
+                if days_old <= 3:
+                    urgencia = "ALTO"
+                    urgencia_reason = f"creado_{days_old}_dias"
+                # CRITERIO 3: "2 MEDIO" — Fecha de creación entre 4–14 días
+                elif 4 <= days_old <= 14:
+                    urgencia = "MEDIO"
+                    urgencia_reason = f"creado_{days_old}_dias"
+                # CRITERIO 4: "1 BAJO" — Fecha de creación >14 días
+                else:
+                    urgencia = "BAJO"
+                    urgencia_reason = f"creado_{days_old}_dias"
+        else:
+            # Sin fecha de creación, default a MEDIO
+            urgencia = "MEDIO"
+            urgencia_reason = "sin_fecha_creacion"
+    
+    # PASO 2: Calcular Importancia (bucket de Score)
+    score = props.get("Score", 40)
+    if isinstance(score, dict):
+        score = score.get("number", 40)
+    try:
+        score_int = int(score)
+    except (ValueError, TypeError):
+        score_int = 40
+    
+    importancia_bucket = get_importancia_bucket(score_int)
+    
+    # PASO 3: Aplicar matriz Urgencia × Importancia
+    prioridad_final = apply_importancia_matrix(urgencia, importancia_bucket)
+    
+    # Construir razón combinada
+    prioridad_reason = f"{urgencia_reason}_{importancia_bucket}"
+    
+    return prioridad_final, prioridad_reason
+
+
 @dataclass
 class BackfillRow:
     page_id: str
@@ -122,12 +290,18 @@ class BackfillRow:
     needs_layer: bool
     needs_hash: bool
     needs_prioridad: bool
+    prioridad: str = ""
+    prioridad_reason: str = ""
+    score: int = 40
+    importancia_bucket: str = ""
+    urgencia: str = ""
 
 
 def collect_backfill_rows(items: list[dict], schema: NotionSchema) -> list[BackfillRow]:
     rows: list[BackfillRow] = []
     layer_prop = schema.layer_prop
     hash_prop = schema.hash_prop
+    today = date.today()
 
     if not layer_prop and not hash_prop:
         print("❌ Schema sin propiedades 'layer' ni 'hash'. Abortando.")
@@ -135,18 +309,21 @@ def collect_backfill_rows(items: list[dict], schema: NotionSchema) -> list[Backf
 
     for item in items:
         props = item["properties"]
+        # Agregar created_time al props para infer_prioridad
+        props["created_time"] = item.get("created_time")
+        
         current_layer = txt(props.get(layer_prop)) if layer_prop else ""
         current_hash = txt(props.get(hash_prop)) if hash_prop else ""
 
         needs_layer = bool(layer_prop) and current_layer not in ("L1", "L2", "L3")
         needs_hash = bool(hash_prop) and not current_hash.strip()
 
-        # Prioridad: backfill si el campo existe en schema y está vacío (None)
+        # Prioridad: backfill si el campo existe en schema y está vacío (select None)
         prioridad_prop = "Prioridad"
-        current_prioridad = props.get(prioridad_prop, {})
+        current_prioridad_prop = props.get(prioridad_prop) or {}
         needs_prioridad = (
             prioridad_prop in schema.properties
-            and (current_prioridad is None or current_prioridad.get("number") is None)
+            and current_prioridad_prop.get("select") is None
         )
 
         if not needs_layer and not needs_hash and not needs_prioridad:
@@ -159,6 +336,30 @@ def collect_backfill_rows(items: list[dict], schema: NotionSchema) -> list[Backf
             layer_reason = "sin_cambio"
 
         hash_key = compute_dedup_hash(record)
+        
+        # Calcular prioridad si es necesaria
+        prioridad = ""
+        prioridad_reason = ""
+        score = 40
+        importancia_bucket = ""
+        urgencia = ""
+        
+        if needs_prioridad:
+            prioridad, prioridad_reason = infer_prioridad(props, today)
+            # Extraer Score para mostrar en dry-run
+            score_val = props.get("Score", 40)
+            if isinstance(score_val, dict):
+                score_val = score_val.get("number", 40)
+            try:
+                score = int(score_val)
+            except (ValueError, TypeError):
+                score = 40
+            importancia_bucket = get_importancia_bucket(score)
+            # Re-extraer urgencia de la razón (formato: "razon_bucket")
+            if "_" in prioridad_reason:
+                urgencia = prioridad_reason.split("_")[0]
+            else:
+                urgencia = prioridad_reason
 
         rows.append(BackfillRow(
             page_id=item["id"],
@@ -170,6 +371,11 @@ def collect_backfill_rows(items: list[dict], schema: NotionSchema) -> list[Backf
             needs_layer=needs_layer,
             needs_hash=needs_hash,
             needs_prioridad=needs_prioridad,
+            prioridad=prioridad,
+            prioridad_reason=prioridad_reason,
+            score=score,
+            importancia_bucket=importancia_bucket,
+            urgencia=urgencia,
         ))
 
     return rows
@@ -179,20 +385,36 @@ def print_preview(rows: list[BackfillRow]) -> None:
     n_layer = sum(1 for r in rows if r.needs_layer)
     n_hash = sum(1 for r in rows if r.needs_hash)
     n_prioridad = sum(1 for r in rows if r.needs_prioridad)
+    
+    # Distribución por nivel de prioridad (solo para registros que necesitan prioridad)
+    prioridad_dist = {}
+    for r in rows:
+        if r.needs_prioridad and r.prioridad:
+            prioridad_dist[r.prioridad] = prioridad_dist.get(r.prioridad, 0) + 1
 
     print(f"\n{'=' * 80}")
-    print("BACKFILL Class A — preview")
+    print("BACKFILL Class A — preview (Urgencia × Importancia)")
     print(f"{'=' * 80}")
     print(f"{len(rows)} entradas a actualizar · layer: {n_layer} · hash: {n_hash} · prioridad: {n_prioridad}\n")
-    print("| Brand | Title | Layer | Hash (8) | Motivo layer |")
+    
+    print("Distribución de Prioridad (nueva fórmula):")
+    for nivel in ["CRÍTICO", "ALTO", "MEDIO", "BAJO"]:
+        count = prioridad_dist.get(nivel, 0)
+        print(f"  {nivel}: {count}")
+    print()
+    
+    print("| ID (8) | Score | Importancia_Bucket | Urgencia | Prioridad_Nueva |")
     print("|---|---|---|---|---|")
-    for r in rows[:50]:
-        print(
-            f"| {r.brand[:18]} | {(r.title or '')[:28]} | {r.layer} | "
-            f"{r.hash_key[:8]} | {r.layer_reason} |"
-        )
-    if len(rows) > 50:
-        print(f"| ... | +{len(rows) - 50} más | | | |")
+    for r in rows:
+        if r.needs_prioridad:
+            id_display = r.page_id[:8]
+            score_display = r.score
+            imp_display = r.importancia_bucket
+            urg_display = r.urgencia
+            prio_display = r.prioridad
+            print(
+                f"| {id_display} | {score_display} | {imp_display} | {urg_display} | {prio_display} |"
+            )
     print(f"\n{'=' * 80}\n")
 
 
@@ -213,8 +435,8 @@ def apply_backfill(
         if row.needs_hash and hash_prop:
             update[hash_prop] = schema.prop_text_value(hash_prop, row.hash_key)
 
-        if row.needs_prioridad:
-            update["Prioridad"] = schema.select_value("4")
+        if row.needs_prioridad and row.prioridad:
+            update["Prioridad"] = schema.select_value(row.prioridad)
 
         if not update:
             continue
@@ -228,7 +450,7 @@ def apply_backfill(
             if row.needs_hash:
                 flags.append(f"hash={row.hash_key[:8]}")
             if row.needs_prioridad:
-                flags.append("prioridad=4")
+                flags.append(f"prioridad={row.prioridad}")
             print(f"  ✅ [{row.page_id[:8]}] {row.brand[:20]} — {', '.join(flags)}")
         except Exception as exc:
             failed += 1

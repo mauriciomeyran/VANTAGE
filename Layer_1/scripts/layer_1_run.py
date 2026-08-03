@@ -660,12 +660,13 @@ def main():
                         properties={
                             "Fetch": {"select": {"name": "Bloqueado"}},
                             "Status": {"select": {"name": "Expirada"}},
+                            "Next_Action": {"select": {"name": "Archivar"}},
                         }
                     )
                 except Exception as e:
                     print(f"WARNING: Error actualizando {item['id'][:8]}: {e}")
             else:
-                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Fetch', 'Status'] -> Bloqueado / Expirada")
+                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Fetch', 'Status', 'Next_Action'] -> Bloqueado / Expirada / Archivar")
         else:
             url_gate_updates += 1
             if reason == "JD_ALREADY_EXISTS":
@@ -786,7 +787,10 @@ def main():
             try:
                 client.pages.update(
                     page_id=item["id"],
-                    properties={"Status": {"select": {"name": "Expirada"}}},
+                    properties={
+                        "Status": {"select": {"name": "Expirada"}},
+                        "Next_Action": {"select": {"name": "Archivar"}},
+                    },
                 )
                 misfit_updates += 1
                 print(f"  X [{item['id'][:8]}] {marca[:20]} | {rol[:35]} -> Expirada ({reasons[0]})")
@@ -794,7 +798,7 @@ def main():
                 print(f"WARNING: Error limpiando {item['id'][:8]}: {e}")
         else:
             misfit_updates += 1
-            print(f"  [DRY-RUN] {item['id'][:8]}: actualizaría ['Status'] -> Expirada ({reasons[0]})")
+            print(f"  [DRY-RUN] {item['id'][:8]}: actualizaría ['Status', 'Next_Action'] -> Expirada / Archivar ({reasons[0]})")
     if misfit_updates:
         print(f"OK {misfit_updates} vacantes fuera de perfil marcadas Expirada")
     else:

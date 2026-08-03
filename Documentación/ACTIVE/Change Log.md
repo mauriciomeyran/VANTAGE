@@ -1,5 +1,227 @@
 # V | CHANGELOG
 
+# v9.13.7 DRY RUN PARA CHANGELOG - Deuda Técnica Rx Tracker (Prioridad + Gate/Next_Action)
+Fecha: 2026-08-03
+Contexto: Resolución de deuda técnica relacionada con propiedad Prioridad (huérfana) y fragmentación de lógica Gate/Next_Action
+## CONTEXTO INICIAL
+### Problema Identificado
+1. Propiedad Prioridad: Declarada como "eliminada en v8.0" en docstring de layer_1_run.py, pero presente en schema Notion sin escritor activo. Referencia KERNEL:TRIGGER-002 indicaba que backfill_class_a.py sería el escritor designado, pero nunca se había ejecutado.
+1. Fragmentación Gate/Next_Action: assign_next_action.py (script suelto invocado via Raycast) duplicaba lógica de layer_1_run.py Fase 4 con divergencias de negocio.
+1. Bug de consistencia: Fase 2 y Fase 3.5 escribían Status="Expirada" sin escribir Next_Action="Archivar", dejando inconsistencia de datos.
+### Hallazgos del Diagnóstico
+- Prioridad estaba huérfana de facto: backfill_class_a.py existía y era funcional, pero nunca se había ejecutado sobre las 58 filas actuales
+- assign_next_action.py tenía 2 bugs de negocio:
+- No manejaba Status="Rechazado" explícitamente (caía a default BLOCKED → Archivar)
+- Era más permisivo con Role_Class="Pivote" sin filtro has_vm_title_signal()
+- Score=40 = BASE SCORE (sin bonificaciones) = "Sin evaluar", no un valor calculado orgánico
+- Distribución real de Score: 46 registros con Score=40, 7 con Score=50, 1 con Score=55, 1 con Score=60, 4 con Score=65
+---
+## CAMBIOS IMPLEMENTADOS POR TICKET
+### TICKET A — Fix Next_Action huérfano
+Objetivo: Resolver inconsistencia entre Status="Expirada" y Next_Action="Archivar"
+Cambios en layer_1_run.py:
+FASE 2 (líneas 658-664):
+```python
+# ANTES
+client.pages.update(
+    page_id=item["id"],
+    properties={
+        "Fetch": {"select": {"name": "Bloqueado"}},
+        "Status": {"select": {"name": "Expirada"}},
+    }
+)
+
+# DESPUÉS
+client.pages.update(
+    page_id=item["id"],
+    properties={
+        "Fetch": {"select": {"name": "Bloqueado"}},
+        "Status": {"select": {"name": "Expirada"}},
+        "Next_Action": {"select": {"name": "Archivar"}},  # ← AGREGADO
+    }
+)
+```
+FASE 3.5 (líneas 788-794):
+```python
+# ANTES
+client.pages.update(
+    page_id=item["id"],
+    properties={"Status": {"select": {"name": "Expirada"}}},
+)
+
+# DESPUÉS
+client.pages.update(
+    page_id=item["id"],
+    properties={
+        "Status": {"select": {"name": "Expirada"}},
+        "Next_Action": {"select": {"name": "Archivar"}},  # ← AGREGADO
+    },
+)
+```
+Dry-run: 0 registros afectados en estado actual (0 rechazados en Fase 2, 0 vacantes fuera de perfil en Fase 3.5)
+Ejecución real: Exit code 0, sin cambios en estado actual (fix preventivo para futuros registros)
+---
+### TICKET B — Implementación de Prioridad (fórmula híbrida Urgencia × Importancia)
+Objetivo: Extender infer_prioridad() en backfill_class_a.py para cruzar Urgencia (deadline/antigüedad) con Importancia (Score/VM_Scope)
+Lógica implementada:
+PASO 1 - Definir eje de Importancia:
+```python
+def get_importancia_bucket(score: int) -> str:
+    if score == 40:
+        return "Base"        # Sin datos — BASE SCORE exacto, sin bonificaciones
+    elif score <= 60:
+        return "Media"       # 41-60
+    elif score <= 80:
+        return "Alta"        # 61-80
+    elif score <= 100:
+        return "Muy Alta"    # 81-100
+    else:
+        return "Base"        # fallback defensivo
+```
+PASO 2 - Matriz Urgencia × Importancia:
+```python
+def apply_importancia_matrix(urgencia: str, importancia_bucket: str) -> str:
+    matrix = {
+        ("CRÍTICO", "Base"):     "CRÍTICO",
+        ("CRÍTICO", "Media"):    "CRÍTICO",
+        ("CRÍTICO", "Alta"):     "CRÍTICO",
+        ("CRÍTICO", "Muy Alta"): "CRÍTICO",
+        ("ALTO",    "Base"):     "MEDIO",
+        ("ALTO",    "Media"):    "ALTO",
+        ("ALTO",    "Alta"):     "CRÍTICO",
+        ("ALTO",    "Muy Alta"): "CRÍTICO",
+        ("MEDIO",   "Base"):     "BAJO",
+        ("MEDIO",   "Media"):    "MEDIO",
+        ("MEDIO",   "Alta"):     "ALTO",
+        ("MEDIO",   "Muy Alta"): "CRÍTICO",
+        ("BAJO",    "Base"):     "BAJO",
+        ("BAJO",    "Media"):    "BAJO",
+        ("BAJO",    "Alta"):     "MEDIO",
+        ("BAJO",    "Muy Alta"): "ALTO",
+    }
+    return matrix.get((urgencia, importancia_bucket), "BAJO")
+```
+PASO 3 - Reconexión en infer_prioridad():
+- Conservó detector de deadline vía regex intacto
+- Calcula Urgencia (lógica original: deadline + antigüedad + Source_Type)
+- Calcula Importancia (bucket de Score)
+- Aplica matriz Urgencia × Importancia
+Matriz de decisión implementada:
+| Urgencia \ Importancia | Base (Score=40) | Media (41-60) | Alta (61-80) | Muy Alta (81-100) |
+| --- | --- | --- | --- | --- |
+| CRÍTICO (deadline/Inbound) | CRÍTICO | CRÍTICO | CRÍTICO | CRÍTICO |
+| ALTO (≤3 días) | MEDIO | ALTO | CRÍTICO | CRÍTICO |
+| MEDIO (4-14 días) | BAJO | MEDIO | ALTO | CRÍTICO |
+| BAJO (>14 días) | BAJO | BAJO | MEDIO | ALTO |
+Dry-run (59 registros):
+```plain text
+Distribución de Prioridad (nueva fórmula):
+  CRÍTICO: 2
+  ALTO: 5
+  MEDIO: 13
+  BAJO: 39
+```
+Ejecución real:
+```plain text
+✅ Actualizadas: 59  |  ❌ Fallidas: 0
+```
+Archivos modificados:
+- Layer_1/scripts/backfill_class_a.py (reescritura completa de infer_prioridad() + agregado de funciones auxiliares)
+---
+### TICKET C — Deprecación de assign_next_action.py
+Objetivo: Archivar script duplicado con lógica divergente
+Acciones ejecutadas:
+1. Creó carpeta Layer_1/scripts/deprecated/
+1. Movió Layer_1/scripts/assign_next_action.py → Layer_1/scripts/deprecated/assign_next_action.py
+1. Movió Raycast/vantage-assign.sh → Layer_1/scripts/deprecated/vantage-assign.sh
+1. Creó Layer_1/scripts/deprecated/DEPRECATED_assign_next_action.md con:
+- Qué hacía el script
+- Por qué se archivó (duplicación + divergencia)
+- Bugs conocidos (Rechazado, Pivote sin has_vm_title_signal)
+- Camino correcto para revivir (importar funciones canónicas de layer_1_run.py)
+Commit:
+```plain text
+[main c175d22] deprecate: move assign_next_action.py and vantage-assign.sh to /deprecated
+```
+Verificación post-movimiento:
+- No quedan referencias activas a rutas viejas
+- Solo referencias en archivos de diagnóstico y documentación de deprecated
+---
+### TICKET D — Higiene menor
+Objetivo: Limpieza de código temporal y validación de sintaxis
+Cambios:
+1. Eliminó print(f"DEBUG: props['Prioridad'] = ...") de feed_processor.py línea 1029
+1. Validó sintaxis con python -m py_compile sobre:
+- backfill_class_a.py ✅
+- layer_1_run.py ✅
+- feed_processor.py ✅
+---
+## REPORTE FINAL
+### Archivos Modificados
+1. Layer_1/scripts/layer_1_run.py - Fix Next_Action huérfano (2 puntos de escritura)
+1. Layer_1/scripts/backfill_class_a.py - Implementación fórmula híbrida Urgencia × Importancia
+1. Layer_1/scripts/feed_processor.py - Eliminación DEBUG print
+### Archivos Movidos/Archivados
+1. Layer_1/scripts/assign_next_action.py → Layer_1/scripts/deprecated/
+1. Raycast/vantage-assign.sh → Layer_1/scripts/deprecated/
+1. Layer_1/scripts/deprecated/DEPRECATED_assign_next_action.md (nuevo)
+### Archivos de Diagnóstico Creados (para referencia)
+- DIAGNOSTICO_RX_TRACKER_PRIORIDAD.md
+- DIAGNOSTICO_RX_TRACKER_PRIORIDAD_v2.md
+- DIAGNOSTICO_comparacion_gate_logic.md
+- DIAGNOSTICO_layer_1_run_gate_functions.py
+- DIAGNOSTICO_backfill_class_a.py
+- DIAGNOSTICO_VERIFICACION_FASE4.py
+- extract_scores.py
+- extract_scores_detailed.py
+### Impacto en Datos
+- Prioridad: 59 registros escritos con nueva fórmula híbrida
+- CRÍTICO: 2 (3.4%)
+- ALTO: 5 (8.5%)
+- MEDIO: 13 (22.0%)
+- BAJO: 39 (66.1%)
+- Next_Action: 0 cambios en estado actual (fix preventivo)
+- layer/hash: 1 hash actualizado, 0 layers actualizados
+### Estado Final
+- ✅ Propiedad Prioridad ahora poblada con lógica híbrida Urgencia × Importancia
+- ✅ Bug de Next_Action huérfano resuelto (preventivo)
+- ✅ Duplicación de lógica Gate/Next_Action eliminada (assign_next_action.py archivado)
+- ✅ Código limpio (DEBUG prints eliminados, sintaxis validada)
+### Resolución de Contradicciones
+- Docstring vs Kernel.md: Documentado que KERNEL:TRIGGER-002 es la autoridad para Prioridad, docstring de layer_1_run.py estaba desactualizado
+- input() restriction: Confirmado que restricción "nunca usa input() interactivo" aplica solo a VL1 batch, no a backfill_class_a.py
+---
+## PRÓXIMOS PASOS RECOMENDADOS
+1. Actualizar docstring de layer_1_run.py para reflejar que Prioridad sí se escribe (via backfill_class_a.py según KERNEL:TRIGGER-002)
+1. Considerar actualización de lógica de gate en layer_1_run.py Fase 4 si se necesita acceso manual a recálculo de Next_Action (path de revival documentado en DEPRECATED_assign_next_action.md)
+1. Monitorear distribución de Prioridad en futuros runs para validar calibración de matriz Urgencia × Importancia
+---
+## v9.13.6 — Fix: Rigor de posted_date en Prompt A para Sostener la Rúbrica de Prioridad (Prompt E) · 2026-08-02
+Tipo: [FIX] [PROMPT]
+Alcance: PROMPT LIBRARY — Prompt A (368938be-fc42-8162-ae48-d48970a729dc).
+Contexto: Continuación directa de v9.13.5. Auditoría de Prompt A confirmó que el ITEM SCHEMA ya expone posted_date, source_type y jd — los tres campos que la rúbrica de Prioridad de Prompt E consume — sin gap estructural. Pero la regla de Active posting permitía fetch_status: needs_verification + posted_date: null con demasiada facilidad (cualquier posting sin fecha visible en el HTML caía directo a null), lo que hubiera degradado la rúbrica de Prioridad a "1 BAJO" por omisión de dato en vez de por antigüedad real — socavando el fix de v9.13.5 antes de que produjera valor.
+Cambios:
+- Prompt A — regla Active posting: agregado bloque de resolución de posted_date con 3 vías de intento obligatorias antes de usar null — (1) fecha explícita en página/metadata schema.org, (2) fecha relativa de plataforma ("Hace 3 días") convertida a YYYY-MM-DD, (3) fecha en URL/job_id de ATS. Solo si las tres fallan, posted_date: null + fetch_status: needs_verification (comportamiento previo preservado como último recurso, no eliminado).
+IDs afectados: ninguno — cambio de prompt externo (wrappers L1/L2 vía Comet/motores de búsqueda), no de documentación fundacional. Census no requiere regeneración.
+Verificación: re-fetch independiente de Prompt A tras la escritura — bloque confirmado en posición correcta, resto del prompt (schema, exclusiones, query patterns) byte-idéntico.
+Pendiente (fuera de esta entrada): validar en el próximo ciclo semanal (Lunes) qué porcentaje real de posted_date se resuelve por las 3 vías nuevas vs. cuántos siguen cayendo a null — sin datos de producción aún.
+Versión actualizada: 9.13.6 (CHANGELOG). El resto de los fundacionales permanece en v9.13.4 hasta vversions --sync.
+---
+Tipo: [FIX] [PROMPT]
+Alcance: PROMPT LIBRARY — Prompt E (368938be-fc42-8177-b4a1-d2e8ea1e2e08); Layer_1/scripts/feed_processor.py (líneas 1022-1028).
+Contexto: Auditoría de trazabilidad del campo Prioridad solicitada por el operador, motivada por KERNEL:SCHEMA-007 (Prioridad es campo Class A requerido del Entry Template) y KERNEL:PURPOSE ("evaluar antes de escribir"). Devin confirmó por inspección directa: (1) el JSON consolidado de L1+L2 nunca contenía Prioridad — no se calculaba en ningún punto de la fase de consolidación; (2) feed_processor.py compensaba esa ausencia con un default hardcodeado "4 CRÍTICO" (líneas 1025-1028), contradiciendo KERNEL:TRIGGER-002 y MANUAL:RUNTIME-002 (9.2), que asignan explícitamente esa responsabilidad a vl1 backfill. El default ensuciaba el pipeline con falsos positivos de urgencia crítica en todo registro sin Prioridad de origen.
+Cambios:
+- Prompt E — nuevo bloque PRIORIDAD insertado antes de OUTPUT: rúbrica determinista de 4 niveles (CRÍTICO/ALTO/MEDIO/BAJO) basada exclusivamente en campos ya presentes en el registro (posted_date, source_type, detección textual de deadline en jd) — sin evaluación de fit ni juicio de calidad del rol, consistente con el rol de Perplexity como orquestador de consolidación/dedup, no de evaluación.
+- feed_processor.py — removida la asignación props["Prioridad"] = schema.select_value("4 CRÍTICO"). La clave Prioridad ahora queda completamente ausente del payload cuando no viene en el JSON de entrada (no None, no string vacío — ausente).
+Verificación (evidencia real de ejecución, no inferida):
+- py_compile OK sobre feed_processor.py.
+- Dry-run con JSON de prueba sin campo Prioridad (test_prioridad_default.json): output confirma props['Prioridad'] = CLAVE AUSENTE — comportamiento verificado, no asumido.
+- Auditoría de rutas de escritura: feed_processor.py es CREATE-only para registros Class A (notion.pages.create()); las únicas rutas UPDATE existentes (_upgrade_layer_if_needed, _set_dedup_flag_if_needed) tocan exclusivamente layer y Dedup_Flag — ninguna puede sobrescribir una Prioridad ya poblada en un registro existente. Riesgo de sobrescritura confirmado como cero, no supuesto.
+IDs afectados: ninguno — cambio de prompt externo (Perplexity) y código Python, no de documentación fundacional. Census no requiere regeneración.
+Pendiente (fuera de esta entrada):
+- Prioridad sigue sin calcularse en L1 (Career Sites/LinkedIn/Aggregators, vía Comet) ni en L3 (Gmail/Groq) — comportamiento esperado por diseño: ambos caminos dependen de vl1 backfill para llenar el campo, consistente con KERNEL:TRIGGER-002.
+Versión actualizada: 9.13.5 (CHANGELOG). El resto de los fundacionales permanece en v9.13.4 hasta vversions --sync.
+---
 Tipo: [FIX] [GOVERNANCE] [CLEANUP]
 Alcance: Layer_4/scripts/vsync_doc_fast.py (Deprecado); Session Ledger (Auditoría); Career Canon (Validación Visual); Skill vsum (Optimización).
 Contexto: Fase final del Plan de Respuesta Ágil. Cierre de brechas de seguridad en sincronización rápida y resolución de inconsistencias históricas en el Ledger.
