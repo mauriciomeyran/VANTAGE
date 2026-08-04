@@ -44,6 +44,11 @@ from feed_processor import (  # noqa: E402
     query_notion_db,
 )
 from layer_1_run import is_agregador  # noqa: E402
+from priority_logic import (  # noqa: E402
+    get_importancia_bucket,
+    apply_importancia_matrix,
+    infer_prioridad,
+)
 
 _LAYER_1_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(_LAYER_1_ROOT / ".env", override=True)
@@ -124,159 +129,6 @@ def infer_layer(props: dict) -> tuple[str, str]:
         return "L2", f"fuente_{fuente.lower()}"
 
     return "L1", "default"
-
-
-def get_importancia_bucket(score: int) -> str:
-    """
-    Determina el bucket de Importancia basado en Score.
-    
-    Score=40 es BASE SCORE (sin bonificaciones) = "Sin evaluar"
-    Score ≠ 40 tiene al menos un bono activado = valor calculado real
-    """
-    if score == 40:
-        return "Base"        # Sin datos — BASE SCORE exacto, sin bonificaciones
-    elif score <= 60:
-        return "Media"       # 41-60
-    elif score <= 80:
-        return "Alta"        # 61-80
-    elif score <= 100:
-        return "Muy Alta"    # 81-100
-    else:
-        return "Base"        # fallback defensivo
-
-
-def apply_importancia_matrix(urgencia: str, importancia_bucket: str) -> str:
-    """
-    Aplica la matriz Urgencia × Importancia para determinar Prioridad final.
-    
-    Matriz:
-             | Base    | Media   | Alta     | Muy Alta
-    CRÍTICO  | 4 CRÍTICO| 4 CRÍTICO| 4 CRÍTICO| 4 CRÍTICO
-    ALTO     | 2 MEDIO | 3 ALTO  | 4 CRÍTICO| 4 CRÍTICO
-    MEDIO    | 1 BAJO  | 2 MEDIO | 3 ALTO   | 4 CRÍTICO
-    BAJO     | 1 BAJO  | 1 BAJO  | 2 MEDIO  | 3 ALTO
-    """
-    matrix = {
-        ("CRÍTICO", "Base"):     "4 CRÍTICO",
-        ("CRÍTICO", "Media"):    "4 CRÍTICO",
-        ("CRÍTICO", "Alta"):     "4 CRÍTICO",
-        ("CRÍTICO", "Muy Alta"): "4 CRÍTICO",
-        ("ALTO",    "Base"):     "2 MEDIO",
-        ("ALTO",    "Media"):    "3 ALTO",
-        ("ALTO",    "Alta"):     "4 CRÍTICO",
-        ("ALTO",    "Muy Alta"): "4 CRÍTICO",
-        ("MEDIO",   "Base"):     "1 BAJO",
-        ("MEDIO",   "Media"):    "2 MEDIO",
-        ("MEDIO",   "Alta"):     "3 ALTO",
-        ("MEDIO",   "Muy Alta"): "4 CRÍTICO",
-        ("BAJO",    "Base"):     "1 BAJO",
-        ("BAJO",    "Media"):    "1 BAJO",
-        ("BAJO",    "Alta"):     "2 MEDIO",
-        ("BAJO",    "Muy Alta"): "3 ALTO",
-    }
-    return matrix.get((urgencia, importancia_bucket), "1 BAJO")  # fallback defensivo
-
-
-def infer_prioridad(props: dict, today: date) -> tuple[str, str]:
-    """
-    Infiere Prioridad usando matriz Urgencia × Importancia.
-    
-    Pasos:
-    1. Calcular Urgencia (lógica original: deadline + antigüedad + Source_Type)
-    2. Calcular Importancia (bucket de Score)
-    3. Aplicar matriz Urgencia × Importancia
-    
-    Retorna: (valor_prioridad, razón)
-    Valores válidos: "1 BAJO", "2 MEDIO", "3 ALTO", "4 CRÍTICO"
-    """
-    # PASO 1: Calcular Urgencia (lógica original intacta)
-    jd_text = txt(props.get("JD")).lower()
-    
-    # Detectar deadline explícito en JD (apply by, deadline, fecha límite)
-    deadline_patterns = [
-        r"apply by\s+(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})",
-        r"deadline\s*[:]\s*(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})",
-        r"fecha\s+límite\s*[:]\s*(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})",
-        r"deadline\s*:\s*(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})",
-    ]
-    
-    deadline_near = False
-    for pattern in deadline_patterns:
-        match = re.search(pattern, jd_text)
-        if match:
-            try:
-                # Parsear fecha del match (soporta formatos DD-MM-YYYY, DD/MM/YYYY, etc.)
-                date_str = match.group(1)
-                # Simplificación: extraer componentes numéricos
-                parts = re.findall(r'\d+', date_str)
-                if len(parts) >= 3:
-                    day, month, year = int(parts[0]), int(parts[1]), int(parts[2])
-                    # Ajustar año si viene en formato 2 dígitos
-                    if year < 100:
-                        year += 2000
-                    deadline_date = date(year, month, day)
-                    days_until = (deadline_date - today).days
-                    if days_until <= 5:
-                        deadline_near = True
-                        break
-            except (ValueError, IndexError):
-                continue
-    
-    # Extraer Source_Type (con espacio final según schema)
-    source_type = txt(props.get("Source_Type "))
-    
-    # Determinar nivel de urgencia
-    if deadline_near or source_type in {"Inbound", "Referencia", "Networking"}:
-        urgencia = "CRÍTICO"
-        urgencia_reason = "deadline_jd" if deadline_near else f"source_type_{source_type}"
-    else:
-        # Extraer Fecha de creación de Notion como proxy
-        created_time = props.get("created_time")
-        if created_time:
-            try:
-                # Notion ISO format: 2026-08-01T12:00:00.000Z
-                created_date = date.fromisoformat(created_time.replace("Z", "+00:00").split("T")[0])
-                days_old = (today - created_date).days
-            except (ValueError, AttributeError):
-                # Si no podemos parsear, default a MEDIO
-                urgencia = "MEDIO"
-                urgencia_reason = "fecha_invalida"
-            else:
-                # CRITERIO 2: "3 ALTO" — Fecha de creación ≤3 días
-                if days_old <= 3:
-                    urgencia = "ALTO"
-                    urgencia_reason = f"creado_{days_old}_dias"
-                # CRITERIO 3: "2 MEDIO" — Fecha de creación entre 4–14 días
-                elif 4 <= days_old <= 14:
-                    urgencia = "MEDIO"
-                    urgencia_reason = f"creado_{days_old}_dias"
-                # CRITERIO 4: "1 BAJO" — Fecha de creación >14 días
-                else:
-                    urgencia = "BAJO"
-                    urgencia_reason = f"creado_{days_old}_dias"
-        else:
-            # Sin fecha de creación, default a MEDIO
-            urgencia = "MEDIO"
-            urgencia_reason = "sin_fecha_creacion"
-    
-    # PASO 2: Calcular Importancia (bucket de Score)
-    score = props.get("Score", 40)
-    if isinstance(score, dict):
-        score = score.get("number", 40)
-    try:
-        score_int = int(score)
-    except (ValueError, TypeError):
-        score_int = 40
-    
-    importancia_bucket = get_importancia_bucket(score_int)
-    
-    # PASO 3: Aplicar matriz Urgencia × Importancia
-    prioridad_final = apply_importancia_matrix(urgencia, importancia_bucket)
-    
-    # Construir razón combinada
-    prioridad_reason = f"{urgencia_reason}_{importancia_bucket}"
-    
-    return prioridad_final, prioridad_reason
 
 
 @dataclass

@@ -7,6 +7,7 @@ Pasos:
   0   URL Gate pre-scoring (agregadores aceptados; JD >100 chars bypass) + escritura de Fetch
   1   Scoring determinístico v6.4 (Score, VM_Scope, Role_Class)
   1.5 Limpieza por fit de perfil y exclusiones
+  1.6 Prioridad (Urgencia x Importancia) — ver priority_logic.py
   3   Gate Logic (Gate_Decision, Next_Action) — única fuente de verdad
   4   Análisis de patrones de rechazo
 
@@ -19,6 +20,12 @@ Cambios v8.0:
   - ~40% menos llamadas a API de Notion por run
   - Class A (layer, hash, dedup cross-layer): feed_processor.py
 
+Cambios v8.1 (2026-08-03):
+  - REINTEGRADO: Prioridad — Fase 3.6, vía priority_logic.py (módulo compartido
+    con backfill_class_a.py, evita import circular). Escritura primaria pasa de
+    backfill_class_a.py (manual, catch-up) a este run (automático, semanal).
+    Ver KERNEL:TRIGGER-002 — pendiente de actualizar referencia post-patch.
+
 Uso: python3 scripts/layer_1_run.py
 """
 
@@ -27,7 +34,7 @@ import sys
 import time
 import requests
 import httpx
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 import pathlib
 
@@ -805,6 +812,49 @@ def main():
         print("OK Sin vacantes fuera de perfil")
 
 
+
+    # ==================== FASE 3.6: PRIORIDAD (Urgencia x Importancia) ====================
+    # Escritura primaria de Prioridad — reemplaza la dependencia de backfill_class_a.py
+    # como único escritor. Corre después de Fase 3 porque necesita Score ya calculado.
+    # backfill_class_a.py queda como catch-up para huecos legacy, no como vía primaria.
+    print("\nFase 3.6: Prioridad (Urgencia x Importancia)...")
+    from priority_logic import infer_prioridad
+
+    prioridad_updates = 0
+    prioridad_changes = []
+    today = date.today()
+
+    for item in items:
+        props = item["properties"]
+        current_prioridad = txt(props.get("Prioridad"))
+        nuevo_prioridad, razon = infer_prioridad(props, today)
+
+        if current_prioridad != nuevo_prioridad:
+            if not DRY_RUN:
+                try:
+                    client.pages.update(
+                        page_id=item["id"],
+                        properties={"Prioridad": {"select": {"name": nuevo_prioridad}}},
+                    )
+                    prioridad_updates += 1
+                    empresa = txt(props.get("Marca")) or "Sin empresa"
+                    prioridad_changes.append(f"[{item['id'][:8]}] {empresa}: Prioridad {current_prioridad or '(vacío)'}->{nuevo_prioridad} ({razon})")
+                except Exception as e:
+                    print(f"X Error prioridad {item['id'][:8]}: {e}")
+            else:
+                prioridad_updates += 1
+                empresa = txt(props.get("Marca")) or "Sin empresa"
+                prioridad_changes.append(f"[{item['id'][:8]}] {empresa}: Prioridad {current_prioridad or '(vacío)'}->{nuevo_prioridad} ({razon})")
+                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Prioridad'] -> {nuevo_prioridad} ({razon})")
+
+    if prioridad_updates > 0:
+        print(f"OK Prioridad: {prioridad_updates} cambios")
+        for change in prioridad_changes[:5]:
+            print(f"  -> {change}")
+        if len(prioridad_changes) > 5:
+            print(f"  -> ... y {len(prioridad_changes)-5} cambios mas")
+    else:
+        print("OK Prioridad: Sin cambios")
 
     # ==================== FASE 4: GATE LOGIC (Gate_Decision, Next_Action) ====================
     print("\nFase 4: Gate logic y Next Actions...")
