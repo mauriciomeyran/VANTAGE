@@ -20,10 +20,10 @@
 | [`KERNEL:DOCUMENTATION-010`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42814ea9a3e9abd1b8e80e ) | 03.10 | Documentación Transversal |
 | [`KERNEL:DOCUMENTATION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e3ad72f7f5b13d2804 ) | 03.11 | Sistema de Cross-Reference Hyperlinks |
 | [`KERNEL:ARCHITECTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810a8870dd1d384c1e7a ) | 04 | Arquitectura de Cuatro Capas |
-| [`KERNEL:ARCHITECTURE-L1`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f3825bd740b23ec959 ) | 04.1 | L1 — Active Recon |
-| [`KERNEL:ARCHITECTURE-L2`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42818ea302ddf39ab5ad8d ) | 04.2 | L2 — Strategic Search |
-| [`KERNEL:ARCHITECTURE-L3`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428105afa8f6deffc3530d ) | 04.3 | L3 — Passive Intake |
-| [`KERNEL:ARCHITECTURE-L4`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281668d64e36a289d81e2 ) | 04.4 | L4 — Version Control & Infrastructure |
+| [`KERNEL:ARCHITECTURE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f3825bd740b23ec959 ) | 04.1 | L1 — Active Recon |
+| [`KERNEL:ARCHITECTURE-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42818ea302ddf39ab5ad8d ) | 04.2 | L2 — Strategic Search |
+| [`KERNEL:ARCHITECTURE-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428105afa8f6deffc3530d ) | 04.3 | L3 — Passive Intake |
+| [`KERNEL:ARCHITECTURE-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281668d64e36a289d81e2 ) | 04.4 | L4 — Version Control & Infrastructure |
 | [`KERNEL:OWNERSHIP`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42815cbfaec3f4090ea4bf ) | 05 | División de Responsabilidades AI/Python |
 | [`KERNEL:OWNERSHIP-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e8a1abc8652e2568ce ) | 05.1 | AI Component |
 | [`KERNEL:OWNERSHIP-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281c58d23ce22d20833b4 ) | 05.2 | Python Component |
@@ -36,6 +36,7 @@
 | [`KERNEL:SCHEMA-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e9b20cfbc3a943a9b4 ) | 07.5 | Schema — Index Definition |
 | [`KERNEL:SCHEMA-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428190accee01c75ed1fcf ) | 07.6 | Schema — Migration Strategy |
 | [`KERNEL:SCHEMA-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281d7a2aef152785b1a41 ) | 07.7 | Schema — Version Control |
+| [`KERNEL:SCHEMA-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#c5a64bcdea6f4ec5be379447a33cf4d2 ) | 07.8 | Valores Operativos — Next_Action (Tracker de Vacantes) |
 | [`KERNEL:TRACKER-SCHEMA`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281a386b2c1c72e7ed2e8 ) | 08 | Bug Tracker y Tasks Tracker |
 | [`KERNEL:TRACKER-SCHEMA-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281efa463f09608bfa5c8 ) | 08.1 | Tracker Schema — Bug Tracker |
 | [`KERNEL:TRACKER-SCHEMA-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281c2bf38d2a21c0c2fd8 ) | 08.2 | Tracker Schema — Tasks Tracker |
@@ -120,11 +121,11 @@
 | [`CANON:PROFILE-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281178bc8cb6f121c0b29 ) | 01.2 | Professional Profile — EN |
 | [`CANON:SKILLS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42812999f6d2d98274e084 ) | 02 | Skills Canon |
 | [`CANON:EXPERIENCE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281f29a56e97647eeacaa ) | 03 | Experience Records |
-| [`CANON:EXPERIENCE-C01`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281169ea3e44f17dcb959 ) | 03.1 | C01 L'Oréal Luxe |
-| [`CANON:EXPERIENCE-C02`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc428181a676cfdf5a0b937a ) | 03.2 | C02 Bisonte Experiential |
-| [`CANON:EXPERIENCE-C03`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281ceba87cde6ad858909 ) | 03.3 | C03 Levi Strauss (Dockers) |
-| [`CANON:EXPERIENCE-C04`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281afbc4ad559abab7b5a ) | 03.4 | C04 Aéropostale |
-| [`CANON:EXPERIENCE-C05`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281168008e0ab3209f740 ) | 03.5 | C05 El Palacio de Hierro (ALDO) |
+| [`CANON:EXPERIENCE-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281169ea3e44f17dcb959 ) | 03.1 | C01 L'Oréal Luxe |
+| [`CANON:EXPERIENCE-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc428181a676cfdf5a0b937a ) | 03.2 | C02 Bisonte Experiential |
+| [`CANON:EXPERIENCE-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281ceba87cde6ad858909 ) | 03.3 | C03 Levi Strauss (Dockers) |
+| [`CANON:EXPERIENCE-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281afbc4ad559abab7b5a ) | 03.4 | C04 Aéropostale |
+| [`CANON:EXPERIENCE-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281168008e0ab3209f740 ) | 03.5 | C05 El Palacio de Hierro (ALDO) |
 | [`CANON:CAREER-TIMELINE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc428143bcddff2725915725 ) | 04 | Career Timeline (reintegrada v9.11.0) |
 | [`CANON:ACHIEVEMENTS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42813a9db3e42f574e18e3 ) | 05 | Achievement Library |
 | [`CANON:KPIS`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc428168bae8d260f3c42fa8 ) | 06 | Core KPIs (reintegrada v9.11.0) |
@@ -159,10 +160,10 @@
 | [`CANON:MAJOR-PROJECT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42814a9d52f1ed01b78909 ) | 10.2 | P02 — Dockers LATAM Rebranding |
 | [`CANON:MAJOR-PROJECT-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281ee979af95ed5340a87 ) | 10.3 | P03 — AeroFest Frontón México |
 | [`CANON:POSITIONING`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281edab5ce6bbd93cf3d8 ) | 11 | Positioning Modes N1–N4 |
-| [`CANON:POSITIONING-N1`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42812dada6c08a403c5fe1 ) | 11.1 | Positioning N1 — Luxury Brand Execution |
-| [`CANON:POSITIONING-N2`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281afab06c21b9d850103 ) | 11.2 | Positioning N2 — Store Design & Flagship Execution |
-| [`CANON:POSITIONING-N3`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281e78b92cee0016940d7 ) | 11.3 | Positioning N3 — Regional Brand Execution & Rollout |
-| [`CANON:POSITIONING-N4`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42812eaf61f04cc6da14b8 ) | 11.4 | Positioning N4 — Commercial VM & Field Leadership |
+| [`CANON:POSITIONING-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42812dada6c08a403c5fe1 ) | 11.1 | Positioning N1 — Luxury Brand Execution |
+| [`CANON:POSITIONING-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281afab06c21b9d850103 ) | 11.2 | Positioning N2 — Store Design & Flagship Execution |
+| [`CANON:POSITIONING-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281e78b92cee0016940d7 ) | 11.3 | Positioning N3 — Regional Brand Execution & Rollout |
+| [`CANON:POSITIONING-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42812eaf61f04cc6da14b8 ) | 11.4 | Positioning N4 — Commercial VM & Field Leadership |
 | [`CANON:OUTPUT-CONTRACT`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281b1a145e48c1e349d63 ) | 12 | Output Contract Framework |
 | [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281ad95dded8ab38b3070 ) | 12.1 | Output Contract — Golden Skeleton |
 | [`CANON:OUTPUT-CONTRACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc428112817ecea719f19557 ) | 12.2 | Output Contract — Figma Tags / Registry SSOT |
@@ -177,7 +178,7 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`BRIEF:PURPOSE-SCOPE`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc42812d8813ce86cbd71d28 ) | 01 | Propósito y Alcance |
+| [`BRIEF:PURPOSE-SCOPE`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3b2938befc4280668c3fc28cabb0a8f8 ) | 01 | Propósito y Alcance |
 | [`BRIEF:AUTHORITY-MATRIX`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281039f28e60fd49760af ) | 02 | Matriz de Autoridad Documental |
 | [`BRIEF:ECOSYSTEM`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281bc805fd9e9c5c05856 ) | 03 | Ecosistema Documental |
 | [`BRIEF:NAV-CONTRACTS`]( https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428151a093f8b716de4583 ) | 04 | Contratos de navegación |
