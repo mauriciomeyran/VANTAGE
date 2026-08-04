@@ -32,10 +32,10 @@ Campos reales confirmados en schema: `Bug`/título, `Fecha_Detección`, `Compone
 
 | Nivel | Criterio |
 |---|---|
-| CRÍTICO | El flujo punta a punta no puede completarse |
-| ALTO | El flujo se completa forzando el sistema (workaround requerido) |
-| MEDIO | Sin resolución en la semana, el flujo punta a punta se verá comprometido |
-| BAJO | No bloquea operación — nice-to-have |
+| 4 CRÍTICO | El flujo punta a punta no puede completarse |
+| 3 ALTO | El flujo se completa forzando el sistema (workaround requerido) |
+| 2 MEDIO | Sin resolución en la semana, el flujo punta a punta se verá comprometido |
+| 1 BAJO | No bloquea operación — nice-to-have |
 
 ## Gancho con KERNEL:CENSUS-SYNC Regla 1
 

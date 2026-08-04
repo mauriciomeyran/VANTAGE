@@ -37,8 +37,18 @@ VANTAGE_FALLBACK_ID = "36e938be-fc42-81d6-bf40-dfe7dee782a5"
 # confirmación del operador. data_source_id real: 8d736032-eef9-4e6e-a05a-df8b8079ebff
 # (título "Session ID", ordenar por Opened At desc y tomar la primera fila = última sesión).
 SESSION_LEDGER_DATA_SOURCE_ID = "8d736032-eef9-4e6e-a05a-df8b8079ebff"
-BUG_TRACKER_DB_ID = "36e938befc4281bd9e1fdc360b3b45f5"
-TASKS_TRACKER_DB_ID = "d2a65ca16a35465dbcffb0d82dddd549"
+
+# BUG/TASKS TRACKER — data_source_id (COL), NO database_id (DB).
+# Corregido: la versión previa usaba el DB ID contra el endpoint legacy
+# /v1/databases/{id}/query con Notion-Version 2022-06-28, inconsistente con
+# el resto del script (que ya usa /v1/data_sources/{id}/query + 2025-09-03
+# para Session Ledger y Script Library). Esa inconsistencia de endpoint/ID
+# era la causa real de los HTTP 400 fantasma — no un mensaje oculto.
+# IDs confirmados en SP:DIGITAL-ID-CARD:
+#   BUG TRACKER (COL)   = 36e938be-fc42-81f8-8c6f-000b6769ba03
+#   TASKS TRACKER (COL) = aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8
+BUG_TRACKER_DATA_SOURCE_ID = "36e938befc4281f88c6f000b6769ba03"
+TASKS_TRACKER_DATA_SOURCE_ID = "aaaaef55a1ce45f79c8b1c1def2c18e8"
 
 # SCRIPT LIBRARY — inventario de scripts en Notion (propiedad título: "Script").
 # Mismo patrón que SESSION_LEDGER_DATA_SOURCE_ID: query directo vía httpx a
@@ -135,6 +145,24 @@ def get_notion_headers(token: str) -> dict:
         "Content-Type": "application/json"
     }
 
+def query_data_source(client: httpx.Client, data_source_id: str, headers: dict, payload: dict) -> tuple:
+    """Único punto de entrada para POST /v1/data_sources/{id}/query en todo el
+    script. Fuerza siempre Notion-Version 2025-09-03 (requerido por data
+    sources, distinto del 2022-06-28 usado para /v1/pages) y siempre devuelve
+    el body de error real (response.text[:200]) en vez de tragárselo — así no
+    puede reaparecer la ambigüedad de "HTTP 400" sin contexto.
+    Devuelve (data, None) en éxito, o (None, {"error": "..."}) en fallo."""
+    url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
+    query_headers = dict(headers)
+    query_headers["Notion-Version"] = "2025-09-03"
+    try:
+        response = client.post(url, headers=query_headers, json=payload)
+    except Exception as e:
+        return None, {"error": str(e)}
+    if response.status_code != 200:
+        return None, {"error": f"HTTP {response.status_code}: {response.text[:200]}"}
+    return response.json(), None
+
 def get_page_version(client: httpx.Client, page_id: str, headers: dict) -> str:
     """Extrae únicamente la propiedad 'Versión' o 'Version' de la página."""
     url = f"https://api.notion.com/v1/pages/{page_id}"
@@ -193,18 +221,15 @@ def get_last_ledger_row(client: httpx.Client, data_source_id: str, headers: dict
     vía POST /v1/data_sources/{id}/query, ordenando por 'Opened At' descendente
     y tomando la primera fila = sesión más reciente. Requiere Notion-Version
     que soporte data_sources (2025-09-03), distinta a la usada para /pages."""
-    url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
-    query_headers = dict(headers)
-    query_headers["Notion-Version"] = "2025-09-03"
     payload = {
         "sorts": [{"property": "Opened At", "direction": "descending"}],
         "page_size": 1
     }
     try:
-        response = client.post(url, headers=query_headers, json=payload)
-        if response.status_code != 200:
-            return {"error": f"HTTP {response.status_code}: {response.text[:200]}"}
-        results = response.json().get("results", [])
+        data, err = query_data_source(client, data_source_id, headers, payload)
+        if err:
+            return err
+        results = data.get("results", [])
         if not results:
             return {"error": "Sin filas en Session Ledger"}
         props = results[0].get("properties", {})
@@ -236,12 +261,13 @@ def get_last_ledger_row(client: httpx.Client, data_source_id: str, headers: dict
     except Exception as e:
         return {"error": str(e)}
 
-def get_priority_tickets(client: httpx.Client, database_id: str, headers: dict, label: str) -> list:
+def get_priority_tickets(client: httpx.Client, data_source_id: str, headers: dict, label: str) -> list:
     """Consulta un tracker (Bug o Tasks) y devuelve los tickets con Prioridad
     CRÍTICO o ALTO que además NO estén en un estado terminal, conforme a
     KERNEL:HEALTH-CHECK-002 (detalle explícito solo para estas dos prioridades,
-    excluyendo tickets ya cerrados)."""
-    url = f"https://api.notion.com/v1/databases/{database_id}/query"
+    excluyendo tickets ya cerrados).
+    data_source_id es el COL (data source), NO el DB — mismo contrato que
+    get_last_ledger_row y get_script_library_titles vía query_data_source()."""
 
     # Status terminales por tracker (SP:SCHEMA — Bug Tracker vs Tasks Tracker
     # no comparten las mismas opciones de select). Labels reales confirmados
@@ -262,8 +288,8 @@ def get_priority_tickets(client: httpx.Client, database_id: str, headers: dict, 
             "and": [
                 {
                     "or": [
-                        {"property": "Prioridad", "select": {"equals": "CRÍTICO"}},
-                        {"property": "Prioridad", "select": {"equals": "ALTO"}}
+                        {"property": "Prioridad", "select": {"equals": "4 CRÍTICO"}},
+                        {"property": "Prioridad", "select": {"equals": "3 ALTO"}}
                     ]
                 },
                 *status_filters
@@ -271,10 +297,10 @@ def get_priority_tickets(client: httpx.Client, database_id: str, headers: dict, 
         }
     }
     try:
-        response = client.post(url, headers=headers, json=payload)
-        if response.status_code != 200:
-            return [{"error": f"{label}: HTTP {response.status_code}"}]
-        results = response.json().get("results", [])
+        data, err = query_data_source(client, data_source_id, headers, payload)
+        if err:
+            return [{"error": f"{label}: {err['error']}"}]
+        results = data.get("results", [])
         tickets = []
         for row in results:
             props = row.get("properties", {})
@@ -320,20 +346,16 @@ def get_script_library_titles(client: httpx.Client, data_source_id: str, headers
     """Pagina completo el data source SCRIPT LIBRARY y devuelve
     {titulo_script: estado} para cada fila. Un solo query_data_sources no
     trae más de 100 filas — este loop sigue next_cursor hasta agotarlo."""
-    url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
-    query_headers = dict(headers)
-    query_headers["Notion-Version"] = "2025-09-03"
     titles = {}
     cursor = None
     while True:
         payload = {"page_size": 100}
         if cursor:
             payload["start_cursor"] = cursor
-        response = client.post(url, headers=query_headers, json=payload)
-        if response.status_code != 200:
-            print(f"[-] Error consultando SCRIPT LIBRARY: HTTP {response.status_code}: {response.text[:200]}", file=sys.stderr)
+        data, err = query_data_source(client, data_source_id, headers, payload)
+        if err:
+            print(f"[-] Error consultando SCRIPT LIBRARY: {err['error']}", file=sys.stderr)
             sys.exit(1)
-        data = response.json()
         for row in data.get("results", []):
             props = row.get("properties", {})
             title_prop = props.get("Script", {})
@@ -400,8 +422,8 @@ def render_bootstrap_dump(client: httpx.Client, changelog_page_id: str, headers:
     (resumen truncado), y snapshot de tickets CRÍTICO/ALTO."""
     ledger = get_last_ledger_row(client, SESSION_LEDGER_DATA_SOURCE_ID, headers)
     changelog_version = get_page_version(client, changelog_page_id, headers)
-    bug_tickets = get_priority_tickets(client, BUG_TRACKER_DB_ID, headers, "Bug")
-    task_tickets = get_priority_tickets(client, TASKS_TRACKER_DB_ID, headers, "Task")
+    bug_tickets = get_priority_tickets(client, BUG_TRACKER_DATA_SOURCE_ID, headers, "Bug")
+    task_tickets = get_priority_tickets(client, TASKS_TRACKER_DATA_SOURCE_ID, headers, "Task")
     all_tickets = bug_tickets + task_tickets
 
     print("[DUMP INICIO SESIÓN VANTAGE]")

@@ -31,7 +31,7 @@ description: **Marca** tickets del Bug Tracker o Task Tracker para archivado man
 ## Procedimiento
 1. Recorrer Bug Tracker y Task Tracker buscando Status en estado terminal (*resuelto/hecho*).
 2. Cruzar contra el Change Log (últimas 10 entradas + Archivo si es necesario) para detectar resoluciones no registradas.
-3. Clasificar cada candidato por Prioridad (CRÍTICO/ALTO/MEDIO/BAJO — KERNEL:TRACKER-SCHEMA-002).
+3. Clasificar cada candidato por Prioridad (4 CRÍTICO/3 ALTO/2 MEDIO/1 BAJO — KERNEL:TRACKER-SCHEMA-002).
 4. Si no hay candidatos: informar *"sin candidatos de marcado en esta corrida"* y terminar.
 5. Presentar **Dry Run**: tabla con columnas `Ticket | Escenario | Evidencia | Prioridad`.
 6. Esperar `APROBAR_WRITE`.
