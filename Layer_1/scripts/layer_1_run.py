@@ -26,7 +26,12 @@ Cambios v8.1 (2026-08-03):
     backfill_class_a.py (manual, catch-up) a este run (automático, semanal).
     Ver KERNEL:TRIGGER-002 — pendiente de actualizar referencia post-patch.
 
-Uso: python3 scripts/layer_1_run.py
+Uso: python3 scripts/layer_1_run.py [--dedup-audit]
+
+Opciones:
+  --dedup-audit  Ejecuta dedup_opportunities.py al final del run para marcar
+                 duplicados detectados vía fuzzy matching (empresa >=0.85, rol >=0.7)
+  --dry-run      Modo diagnóstico: no escribe cambios a Notion
 """
 
 import os
@@ -667,7 +672,7 @@ def main():
                         properties={
                             "Fetch": {"select": {"name": "Bloqueado"}},
                             "Status": {"select": {"name": "Expirada"}},
-                            "Next_Action": {"select": {"name": "Archivar"}},
+                            "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
                         }
                     )
                 except Exception as e:
@@ -796,7 +801,7 @@ def main():
                     page_id=item["id"],
                     properties={
                         "Status": {"select": {"name": "Expirada"}},
-                        "Next_Action": {"select": {"name": "Archivar"}},
+                        "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
                     },
                 )
                 misfit_updates += 1
@@ -810,6 +815,65 @@ def main():
         print(f"OK {misfit_updates} vacantes fuera de perfil marcadas Expirada")
     else:
         print("OK Sin vacantes fuera de perfil")
+
+    # ==================== FASE 3.5.1: EXPIRACIÓN POR NAD VENCIDO ====================
+    print("\nFase 3.5.1: Expiración por NAD vencido...")
+    from datetime import date
+    
+    nad_expiry_updates = 0
+    today = date.today()
+    
+    for item in items:
+        props = item["properties"]
+        status = txt(props.get("Status"))
+        
+        # Solo procesar registros que no estén ya en estado terminal
+        if status in ["Expirada", "Archivar", "Postulado", "Rechazado"]:
+            continue
+        
+        # Extraer NAD
+        nad_field = props.get("NAD", {})
+        nad_value = None
+        if nad_field.get("type") == "date" and nad_field.get("date"):
+            nad_value = nad_field["date"].get("start")
+        
+        if not nad_value:
+            continue
+        
+        # Parsear NAD y comparar con fecha actual
+        try:
+            from datetime import datetime
+            nad_date = datetime.strptime(nad_value, "%Y-%m-%d").date()
+            if nad_date < today:
+                # NAD vencido - marcar como Expirada
+                if not DRY_RUN:
+                    try:
+                        client.pages.update(
+                            page_id=item["id"],
+                            properties={
+                                "Status": {"select": {"name": "Expirada"}},
+                                "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
+                            },
+                        )
+                        nad_expiry_updates += 1
+                        marca = txt(props.get("Marca"))
+                        rol = txt(props.get("Rol"))
+                        print(f"  ⏰ [{item['id'][:8]}] {marca[:20]} | {rol[:35]} -> Expirada (NAD vencido: {nad_value})")
+                    except Exception as e:
+                        print(f"WARNING: Error expirando por NAD {item['id'][:8]}: {e}")
+                else:
+                    nad_expiry_updates += 1
+                    marca = txt(props.get("Marca"))
+                    rol = txt(props.get("Rol"))
+                    print(f"  [DRY-RUN] {item['id'][:8]}: actualizaría ['Status', 'Next_Action'] -> Expirada / Archivar (NAD vencido: {nad_value})")
+        except ValueError:
+            # Formato de fecha inválido - skip
+            continue
+    
+    if nad_expiry_updates:
+        print(f"OK {nad_expiry_updates} vacantes marcadas Expirada por NAD vencido")
+    else:
+        print("OK Sin vacantes con NAD vencido")
 
 
 
@@ -989,6 +1053,38 @@ def main():
             print("  Empresas con alta tasa de rechazo:")
             for company, rate, total in sorted(high_rejection_companies, key=lambda x: x[1], reverse=True)[:3]:
                 print(f"    {company}: {rate:.0f}% rechazo ({total} aplicaciones)")
+
+    # ==================== FASE 6: DEDUP AUDIT (opcional) ====================
+    if "--dedup-audit" in sys.argv:
+        print("\nFase 6: Dedup audit (fuzzy matching)...")
+        print("Ejecutando dedup_opportunities.py para detectar duplicados...")
+        
+        try:
+            import subprocess
+            dedup_script = script_dir / "dedup_opportunities.py"
+            
+            # Ejecutar dedup_opportunities.py
+            result = subprocess.run(
+                [sys.executable, str(dedup_script)],
+                capture_output=True,
+                text=True,
+                timeout=300  # 5 minutos max
+            )
+            
+            if result.returncode == 0:
+                print("OK Dedup audit completado")
+                if result.stdout:
+                    print(result.stdout)
+            else:
+                print(f"⚠️  Dedup audit finalizó con código {result.returncode}")
+                if result.stderr:
+                    print(f"Error: {result.stderr}")
+        except subprocess.TimeoutExpired:
+            print("⚠️  Dedup audit excedió timeout de 5 minutos")
+        except Exception as e:
+            print(f"⚠️  Error ejecutando dedup audit: {e}")
+    else:
+        print("\nFase 6: Dedup audit omitido (use --dedup-audit para activar)")
 
     print("\n" + "=" * 60)
     print("RESUMEN FINAL v8.0:")
