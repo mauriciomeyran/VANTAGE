@@ -453,6 +453,7 @@ Criterios (orden de evaluación obligatorio)
 1. Si ninguno aplica → None (registro elegible para recálculo por gate())
 Invariantes
 - gate_logic() se invoca antes de gate() en todo pipeline ordinario y backfill (layer_1_run.py Fase 4).
+- Todo write que fija Status=Expirada (Fase 2 — URL_GATE; Fase 3.5 — filtro de perfil) debe fijar Next_Action=Archivar en el mismo write — evita drift entre el criterio Status→TERMINAL y Next_Action→TERMINAL_ACTIONS.
 - Un registro terminal no puede ser sobreescrito por recálculo de Score/Gate, aunque cambien campos Class A.
 - RT-1 (/accept): la escritura de Class A corregido debe limpiar atómicamente Next_Action y Gate_Decision (select: null) en el mismo write, para que el siguiente run no trate la vacante recuperada como terminal fantasma.
 - Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con KERNEL:OWNERSHIP-002.
@@ -529,7 +530,14 @@ Restricciones
 ### 11.2 KERNEL:TRIGGER-002
 VL1
 Comandos de mantenimiento del Tracker — no son triggers del AI Component, son comandos Python autónomos. Ningún comando VL1 escribe campos Class B.
-- VL1 backfill — escribe layer, hash, Prioridad (Class A) en registros vacíos.
+- VL1 backfill — catch-up de campos Class A faltantes en registros existentes: layer, hash y Prioridad. Prioridad se calcula por matriz Urgencia × Importancia (ver tabla). Importancia = bucket de Score: Base (=40) · Media (41–60) · Alta (61–80) · Muy Alta (81–100). Urgencia conserva la lógica original (deadline/antigüedad/Source_Type). Desde Fase 3.6 (layer_1_run.py), Prioridad se escribe primero en el ingreso normal del pipeline — backfill opera solo sobre huecos que quedaron vacíos (migraciones, registros previos a Fase 3.6). Ambos consumen la misma lógica desde priority_logic.py, módulo compartido para evitar import circular entre layer_1_run.py y backfill_class_a.py.
+| Urgencia \ Importancia | Base | Media | Alta | Muy Alta |
+| --- | --- | --- | --- | --- |
+| CRÍTICO (deadline/Inbound) | CRÍTICO | CRÍTICO | CRÍTICO | CRÍTICO |
+| ALTO (≤3 días) | MEDIO | ALTO | CRÍTICO | CRÍTICO |
+| MEDIO (4–14 días) | BAJO | MEDIO | ALTO | CRÍTICO |
+| BAJO (>14 días) | BAJO | BAJO | MEDIO | ALTO |
+Implementación: priority_logic.py (matriz compartida) — invocado por layer_1_run.py Fase 3.6 (escritura primaria) y por backfill_class_a.py::apply_importancia_matrix() (catch-up).
 - VL1 batch — modifica Status (Class A) en batch. Guardia: ausencia de execute hace el comando permanentemente read-only; nunca usa input() interactivo.
 ### 11.3 KERNEL:TRIGGER-003
 QA
