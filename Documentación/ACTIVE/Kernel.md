@@ -359,16 +359,16 @@ Alcance
 | Tracker | DB ID | COL ID |
 | --- | --- | --- |
 | Bug Tracker | 36e938be-fc42-81bd-9e1f-dc360b3b45f5 | 36e938be-fc42-81f8-8c6f-000b6769ba03 |
-| Tasks Tracker | d2a65ca1-6a35-465d-bcff-b0d82dddd549 | — |
+| Tasks Tracker | d2a65ca1-6a35-465d-bcff-b0d82dddd549 | aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8 |
 > [TAREA 4 aplicada] DB ID y COL ID de Bug Tracker invertidos respecto a la versión anterior del Kernel — corregidos en esta pasada.
 ### 08.2 KERNEL:TRACKER-SCHEMA-002
 Niveles de Prioridad
 | Nivel | Criterio |
 | --- | --- |
-| CRÍTICO | El flujo punta a punta no puede completarse |
-| ALTO | El flujo se completa forzando el sistema (workaround requerido) |
-| MEDIO | Sin resolución en la semana, el flujo se verá comprometido |
-| BAJO | No bloquea operación — nice-to-have |
+| 4 CRÍTICO | El flujo punta a punta no puede completarse |
+| 3 ALTO | El flujo se completa forzando el sistema (workaround requerido) |
+| 2 MEDIO | Sin resolución en la semana, el flujo se verá comprometido |
+| 1 BAJO | No bloquea operación — nice-to-have |
 ---
 ## 09 KERNEL:GATE-DECISION
 Lógica de Gate Decision

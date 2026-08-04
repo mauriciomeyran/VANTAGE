@@ -1,6 +1,6 @@
 # V | SYSTEM PROMPT 
 
-# V | SYSTEM PROMPT 
+# V | SYSTEM PROMPT
 
 > 
 ## DECLARACIÓN DE AUDIENCIA Y ALCANCE
@@ -127,7 +127,7 @@ Bug Tracker y Tasks Tracker comparten estructura base como caché de lectura est
 - Fecha_Detección (date)
 - Fecha_Resolución (date)
 - Componente (select): Python | Notion | Layer 1 | Layer 2 | Layer 3 | RT-1
-- Prioridad (select): BAJO | MEDIO | ALTO | CRÍTICO
+- Prioridad (select): 1 BAJO | 2 MEDIO | 3 ALTO | 4 CRÍTICO
 - Status (select): Abierto | En revisión | Resuelto
 - Next_Action (select): Patch | Auditoría | Documentar | Monitorear
 - Notas (text)
@@ -141,7 +141,7 @@ Bug Tracker y Tasks Tracker comparten estructura base como caché de lectura est
 - Fecha_Creación (date)
 - Fecha_Cierre (date)
 - Componente (select): Python | Notion | Layer 1 | Layer 2 | Layer 3 | Figma
-- Prioridad (select): BAJO | MEDIO | ALTO | CRÍTICO
+- Prioridad (select): 1 BAJO | 2 MEDIO | 3 ALTO | 4 CRÍTICO
 - Status (select): Pendiente | En progreso | Hecho | Completado
 - Next_Action (select): Definir | Ejecutar | Documentar | Decidir
 - Notas (text)

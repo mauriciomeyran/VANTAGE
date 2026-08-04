@@ -1,5 +1,19 @@
 # V | CHANGELOG
 
+# v9.13.10 — Fix: verify_versions.py HTTP 400 Fantasma (Endpoint Legacy + Schema Prioridad Desalineado) · 2026-08-03
+Tipo: [FIX] [DOC]
+Alcance: Layer_1/scripts/verify_versions.py (código, local); KERNEL:TRACKER-SCHEMA-001, KERNEL:TRACKER-SCHEMA-002, SP:SCHEMA (Notion).
+Contexto: Los 2 tickets "HTTP 400" (Bug + Task) reportados por vversions --bootstrap desde 2026-07-27 (4 sesiones consecutivas sin diagnóstico) tenían dos causas apiladas. Primero, get_priority_tickets() era la única función del script pegando contra el endpoint legacy /v1/databases/{id}/query con Notion-Version 2022-06-28 y el DB ID en vez del data source ID (COL), inconsistente con get_last_ledger_row() y get_script_library_titles(), que ya usaban /v1/data_sources/{id}/query + 2025-09-03. Segundo, una vez corregido el endpoint, Notion devolvió el error real: el filtro de Prioridad usaba "CRÍTICO"/"ALTO" sin prefijo, mientras el schema real de Bug/Tasks Tracker usa "4 CRÍTICO"/"3 ALTO"/"2 MEDIO"/"1 BAJO" — desalineación heredada de la migración a fórmula híbrida Urgencia × Importancia (v9.13.7/v9.13.8), nunca propagada a KERNEL:TRACKER-SCHEMA-002 ni SP:SCHEMA.
+Cambios:
+- verify_versions.py — nuevo helper query_data_source() centraliza todo POST a /v1/data_sources/{id}/query (Notion-Version 2025-09-03, captura response.text[:200] en error). get_last_ledger_row(), get_priority_tickets() y get_script_library_titles() migradas al mismo helper — ya no puede reaparecer un HTTP sin body de error oculto. BUG_TRACKER_DB_ID/TASKS_TRACKER_DB_ID renombradas a BUG_TRACKER_DATA_SOURCE_ID/TASKS_TRACKER_DATA_SOURCE_ID con los COL ID correctos. Filtro de Prioridad corregido a "4 CRÍTICO"/"3 ALTO".
+- KERNEL:TRACKER-SCHEMA-002 — tabla "Niveles de Prioridad" actualizada con prefijo numérico (4 CRÍTICO/3 ALTO/2 MEDIO/1 BAJO), reflejando el schema real de Notion.
+- KERNEL:TRACKER-SCHEMA-001 — celda Tasks Tracker COL ID completada (antes vacía) con aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8, ya confirmado en SP:DIGITAL-ID-CARD.
+- SP:SCHEMA — mismo fix de prefijo numérico en Prioridad, aplicado a los bloques de Bug Tracker y Tasks Tracker.
+IDs afectados: ninguno — corrección de valores/celdas bajo IDs ya existentes (KERNEL:TRACKER-SCHEMA-001, KERNEL:TRACKER-SCHEMA-002, SP:SCHEMA). Census no requiere regeneración.
+Write-Back Verification: KERNEL y SYSTEM PROMPT re-fetched de forma independiente tras la escritura — ambos bloques confirmados en posición correcta, resto de ambos documentos byte-idéntico. verify_versions.py validado localmente con py_compile antes de entrega al operador.
+Pendiente (fuera de esta entrada): vantage-tidy-bug-task-tracker/SKILL.md y vantage-create-bug-task/SKILL.md (fuera de Notion, gobernanza local) aún referencian Prioridad sin prefijo numérico — armonía cosmética, no bloqueante, pendiente de próxima sesión local.
+Versión actualizada: 9.13.10 (CHANGELOG). El resto de los fundacionales permanece en v9.13.9 hasta vversions --sync.
+---
 # v9.13.9 — Documentación Transversal: Prioridad Migra a Escritura Primaria en Fase 3.6 (priority_logic.py, KERNEL:TRIGGER-002, MANUAL:RUNTIME-002) · 2026-08-03
 Tipo: [DOC]
 Alcance: Kernel (KERNEL:TRIGGER-002); Manual (MANUAL:RUNTIME-002).
