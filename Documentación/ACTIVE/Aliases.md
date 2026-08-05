@@ -1,18 +1,5 @@
 # V | ALIASES
 
-# V | ALIASES
-
-# V | ALIASES
-| # | ID | SECCIÓN | PORCIÓN |
-| --- | --- | --- | --- |
-| 01 | ALIASES:SESSION-CYCLE | Session Cycle |  |
-| 02 | ALIASES:L0-RUNTIME | L0 · VANTAGE Runtime |  |
-| 03 | ALIASES:L1L2-DISCOVERY | L1/L2 · Discovery |  |
-| 04 | ALIASES:L3-PASSIVE-INTAKE | L3 · Passive Intake |  |
-| 05 | ALIASES:L4-VERSION-CONTROL | L4 · Version Control |  |
-| 06 | ALIASES:DASHBOARD | Dashboard |  |
-| 07 | ALIASES:CV-PIPELINE | CV Pipeline |  |
-| 08 | ALIASES:DEDUP | Dedup & Oportunidades |  |
 ## 01 ALIASES:SESSION-CYCLE
 Session Cycle
 | Alias | Qué hace | Procedimiento interno |

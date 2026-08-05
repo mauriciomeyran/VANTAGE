@@ -1,31 +1,5 @@
 # V | KERNEL
 
-# V | KERNEL
-
-# V | KERNEL
-> 
-## DECLARACIÓN DE AUDIENCIA Y ALCANCE
-- Audiencia: Sistemas Agente de IA.
-- Alcance: Este documento es el KERNEL_RUNTIME, que contiene únicamente los contratos operativos activos para la IA. Para el documento de referencia completo, solicitar acceso al KERNEL 8.0.
-| # | ID | SECCIÓN | PORCIÓN |
-| --- | --- | --- | --- |
-| 01 | KERNEL:PURPOSE | FUNDAMENTO | FUNDAMENTO |
-| 02 | KERNEL:FAIL-PHILOSOPHY | FILOSOFÍA DE FALLO | FUNDAMENTO |
-| 03 | KERNEL:DOCUMENTATION | DOCUMENTACIÓN (L0) | FUNDAMENTO |
-| 04 | KERNEL:ARCHITECTURE | ARQUITECTURA | FUNDAMENTO |
-| 05 | KERNEL:OWNERSHIP | OWNERSHIP | FUNDAMENTO |
-| 06 | KERNEL:DASHBOARD-CHECKLIST-ARCH | DASHBOARD CHECKLIST | FUNDAMENTO |
-| 07 | KERNEL:SCHEMA | SCHEMA | DATOS, ESQUEMAS Y REGLAS |
-| 08 | KERNEL:TRACKER-SCHEMA | TRACKER SCHEMA | DATOS, ESQUEMAS Y REGLAS |
-| 09 | KERNEL:GATE-DECISION | GATE DECISION | DATOS, ESQUEMAS Y REGLAS |
-| 10 | KERNEL:CV-GOLDEN-RULES | CV GOLDEN RULES | DATOS, ESQUEMAS Y REGLAS |
-| 11 | KERNEL:TRIGGERS | TRIGGERS | EJECUCIÓN |
-| 12 | KERNEL:CV-PIPELINE | CV PIPELINE | EJECUCIÓN |
-| 13 | KERNEL:CANON-UPDATE | CANON UPDATE | EJECUCIÓN |
-| 14 | KERNEL:NAMING-CONVENTION | NAMING CONVENTION | EJECUCIÓN |
-| 15 | KERNEL:CONTEXT-INFRASTRUCTURE | CONTEXT INFRASTRUCTURE | INFRAESTRUCTURA DE CONTEXTO |
-| 16 | KERNEL:DATA-FLOW | DATA FLOW | INFRAESTRUCTURA DE CONTEXTO |
-| 17 | KERNEL:EVOLUTION | EVOLUTION | INFRAESTRUCTURA DE CONTEXTO |
 # I. FUNDAMENTO
 ## 01 KERNEL:PURPOSE
 Propósito del Sistema
@@ -214,6 +188,16 @@ Estado de adopción (2026-08-01)
 - generate_id_inventory.py y normalize_heading_ids.py ya fueron migrados 
 Ver MANUAL:HEALTHCHECK para el procedimiento operativo de cuándo correr cada script.
 ---
+### 03.12 KERNEL:DOCUMENTATION-012
+Notebook Gemini — Auditor Documental Externo
+Tipo: Capa de Consulta ReadOnly externa (Google Gemini, ventana de contexto sin límite de tokens equivalente), complementaria al fetch nativo de Claude sobre el corpus fundacional — no es un script ni un alias de Terminal.
+Contrato de Cero Inferencia Silenciosa
+- Toda afirmación técnica requiere ancla exacta (PREFIX:KEY).
+- Ante instrucción o mecanismo no documentado en las fuentes cargadas, declara explícitamente "Fuera de Alcance" o "No encontrado" — nunca infiere.
+- No calcula Score, no redacta CVs, no crea reglas de negocio; su alcance es reportar lo ya escrito en el corpus.
+Uso preferente
+Consulta puntual de triaje/verificación documental (detección de drifts entre documentos) cuando no se requiere fetch estructural ni escritura en Notion — evita consumir fetch/tokens de Claude en preguntas de bajo riesgo.
+---
 ## 04 KERNEL:ARCHITECTURE
 Arquitectura de Cuatro Capas
 ### 04.1 KERNEL:ARCHITECTURE-L1
@@ -223,6 +207,13 @@ Trigger: humano (ciclo semanal — lunes)
 Human signal → Career Sites · LinkedIn · Aggregators (paralelo) → JSON estructurado
 → FEED → feed_processor.py → Notion (Class A) → vantage-pipeline
 ```
+Objetivo: maximizar cobertura y trazabilidad de entrada — no decide prioridad estratégica, solo captura oportunidades de alta señal antes de que se evaporen.
+Componentes: Career Sites · LinkedIn · Aggregators — wrappers especializados por fuente, convergiendo a un schema común.
+Responsabilidades: buscar vacantes, validar evidencia mínima, extraer campos canónicos, mantener trazabilidad por fuente, emitir resultados estructurados (no recomendaciones).
+Campos inmutables: los campos Class A emitidos por cada wrapper (ver KERNEL:SCHEMA-001) no se reinterpretan en L1 — feed_processor.py normaliza formato, no criterio.
+Reglas de dedup: L1 no deduplica — la jerarquía L1>L2>L3 y el punto de convergencia único viven en KERNEL:ARCHITECTURE-L4.
+Estados de error: fuente sin resultados o evidencia insuficiente → registro no se emite, sin retry automático (ver KERNEL:FAIL-PHILOSOPHY).
+Métricas mínimas: resultados por fuente, total de resultados, timestamp de búsqueda.
 ### 04.2 KERNEL:ARCHITECTURE-L2
 Strategic Search
 Trigger: humano (ciclo semanal — lunes)
@@ -230,12 +221,25 @@ Trigger: humano (ciclo semanal — lunes)
 Human signal → Gemini · You.com · Grok (extracción paralela) → Perplexity (Consolidation & Dedup)
 → FEED → feed_processor.py → Notion (Class A) → vantage-pipeline
 ```
+Objetivo: resolver fragmentación entre motores de extracción — prioriza reconciliación y reducción de ruido sobre amplitud de cobertura.
+Componentes: Gemini · You.com · Grok (extracción paralela) — Perplexity como consolidador determinista.
+Responsabilidades: consolidar, deduplicar, resolver conflictos, enriquecer solo cuando no rompe evidencia válida, emitir métricas y estados.
+Reglas de consolidación/enriquecimiento: Perplexity aplica reglas deterministas sobre los JSON recibidos — no infiere ni inventa datos; prioriza evidencia y preserva el registro de mayor calidad o canonicalidad cuando hay conflicto.
+Estados de error: JSON malformado o evidencia contradictoria sin resolución determinista → registro se reporta, no se fuerza a Notion.
+Métricas mínimas: registros consolidados, duplicados eliminados, conflictos resueltos.
 ### 04.3 KERNEL:ARCHITECTURE-L3
 Passive Intake
 Trigger: automático (continuo)
 ```plain text
 Gmail (.Jobs label) → layer_3_mail.py (IMAP + Groq) → Notion (Class A poblado, Class B vacío) → vantage-pipeline
 ```
+Objetivo: captura pasiva y continua de vacantes ya remitidas al operador — sin ciclo humano semanal, sin dependencia de búsqueda activa.
+Componentes: Gmail (label .Jobs) · layer_3_mail.py (IMAP + extracción Groq).
+Responsabilidades: leer backlog de correo, extraer vacantes, poblar Class A; Class B queda vacío — lo calcula Python en el siguiente run del pipeline.
+Campos inmutables: máx. 5 correos por corrida (ver ALIASES:L3-PASSIVE-INTAKE); Class B nunca se estima aquí.
+Reglas de dedup: L3 no deduplica — entra directo a feed_processor.py; la jerarquía L1>L2>L3 se resuelve en KERNEL:ARCHITECTURE-L4.
+Estados de error: fallo de IMAP o extracción → correo se omite del batch, sin reintento automático (ver KERNEL:FAIL-PHILOSOPHY).
+Métricas mínimas: correos procesados, vacantes extraídas, Class A poblado / Class B pendiente.
 ### 04.4 KERNEL:ARCHITECTURE-L4
 Version Control & Infrastructure
 No es capa de búsqueda — infraestructura documental.
@@ -348,6 +352,22 @@ Mapeo de Vocabulario — Prompts → Tracker
 - holding → Holding (null → "Investigar")
 Entry Template — Campos Class A Requeridos
 Rol · Marca · URL · Source_Type · Status · Prioridad · JD · JOB_ID · Holding.
+---
+### 07.8 KERNEL:SCHEMA-008
+Valores Operativos — Next_Action (Tracker de Vacantes)
+Campo Class B (System-Primary), tipo rich_text (texto libre, no select) — escrito exclusivamente por layer_1_run.py (y su clon layer_1_run_dash.py). Auditoría de código realizada 2026-08-04 (Devin), verificada línea por línea contra el repositorio.
+Valores confirmados en código activo (8):
+| Valor | Condición de disparo |
+| --- | --- |
+| Archivar | Terminal — URL Gate bloqueado / Misfits / NAD vencido / Gate BLOCKED default |
+| Expirada | Constante de protección en TERMINAL_ACTIONS (gate_logic.py) |
+| Ninguna | Status=Rechazado → Gate_Decision=REJECTED |
+| Follow-up | Status ∈ {Postulado, Negociando, Sin respuesta} |
+| Interview prep | Status=En proceso |
+| Re-check | Gate_Decision=CREATE, o default de get_application_next_action() |
+| Reparar URL | Source_Type=Vacante AND Fetch=Bloqueado |
+| Verificar JD | Source_Type=Vacante AND Fetch=Parcial |
+Corrección de tipo de campo: el Changelog v9.13.7 (Ticket A) documentó la escritura de Next_Action con sintaxis {"select": {"name": ...}}. Verificación de código 2026-08-04 confirma que el campo es rich_text ({"rich_text": [{"text": {"content": ...}}]}) — no select. El Changelog no se reescribe (no reescribe su propio historial); esta sección es la fuente viva correcta.
 ---
 ## 08 KERNEL:TRACKER-SCHEMA
 Bug Tracker y Tasks Tracker

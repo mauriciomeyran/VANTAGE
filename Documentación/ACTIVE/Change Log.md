@@ -1,6 +1,48 @@
 # V | CHANGELOG
 
-# v9.13.10 — Fix: verify_versions.py HTTP 400 Fantasma (Endpoint Legacy + Schema Prioridad Desalineado) · 2026-08-03
+### v9.14.1 — Documentación Transversal: Notebook Gemini — Auditor Documental Externo (KERNEL:DOCUMENTATION-012, MANUAL:RUNTIME-005, SP:CONSISTENCY-002) · 2026-08-05
+Tipo: [DOC]
+Alcance: Kernel (KERNEL:DOCUMENTATION-012, nuevo, 03.12); Manual (MANUAL:RUNTIME-005, nuevo, 9.5); System Prompt (SP:CONSISTENCY-002, nuevo, 10.1).
+Contexto: El operador aportó un abstract externo describiendo a Notebook Gemini (Google Gemini, ventana de contexto sin límite de tokens equivalente) como capa de auditoría documental de solo-lectura ya en uso fuera de este chat, sin ancla en ningún documento fundacional. Protocolo de documentación transversal completo (propuesta → implementación) ejecutado sobre este gap. Durante la propuesta se descartó un alta en ALIASES:L0-RUNTIME (alias vnotebook) al detectarse que rompe la coherencia transversal del documento: cada fila de ALIASES documenta un script real invocado vía Terminal, y Notebook Gemini no invoca ningún script — es una consulta manual fuera del pipeline.
+Cambios:
+- KERNEL:DOCUMENTATION-012 (nuevo, 03.12, sibling de KERNEL:DOCUMENTATION-011) — define a Notebook Gemini como componente ReadOnly externo, Contrato de Cero Inferencia Silenciosa (ancla obligatoria PREFIX:KEY, declaración explícita de "Fuera de Alcance"/"No encontrado", sin cálculo de Score/CV/reglas de negocio), uso preferente para triaje documental de bajo riesgo.
+- MANUAL:RUNTIME-005 (nuevo, 9.5, sibling de 9.1–9.4) — procedimiento de triaje: cuándo delegar verificación documental a Notebook Gemini en vez de fetch estructural de Claude (mismo principio de economía de tokens que vversions/vcensus), qué resuelve y qué no resuelve.
+- SP:CONSISTENCY-002 (nuevo, 10.1, sub-nodo de SP:CONSISTENCY) — instruye a Claude a validar su plan contra un reporte de Notebook Gemini ante discrepancias de gobernanza documental, aclarando que el reporte no sustituye APROBAR_WRITE ni DRY RUN.
+IDs afectados: 3 altas (KERNEL:DOCUMENTATION-012, MANUAL:RUNTIME-005, SP:CONSISTENCY-002) — Census requiere regeneración (vcensus, pendiente, acción local del operador).
+Write-Back Verification: Kernel, Manual y System Prompt re-fetched de forma independiente tras cada escritura — los 3 bloques confirmados en posición correcta, sin mismatch.
+Pendiente (fuera de esta entrada): vcensus + vversions --sync para propagar v9.14.1 al resto de los fundacionales.
+Versión actualizada: 9.14.1 (CHANGELOG). El resto de los fundacionales permanece en v9.14.0 hasta vversions --sync.
+---
+### v9.14.0 — Documentación Transversal: Contrato Operativo L1/L2/L3 (KERNEL:ARCHITECTURE-L1/L2/L3, rename -001/-002/-003/-004 → -L1/-L2/-L3/-L4) · 2026-08-05
+Tipo: [DOC] [RENAME]
+Alcance: Kernel (KERNEL:ARCHITECTURE-L1, KERNEL:ARCHITECTURE-L2, KERNEL:ARCHITECTURE-L3, KERNEL:ARCHITECTURE-L4 — §04, renombrados + reestructurados); Manual (MANUAL:WEEKLY-FLOW-001, 8.1 — nota de navegación).
+Contexto: El operador aportó un abstract externo describiendo L1/L2 con vocabulario que el Kernel no cubría (Objetivo, Componentes, Campos inmutables, Reglas de dedup/enriquecimiento, Estados de error, Métricas mínimas) — solo tenía trigger + diagrama de flujo por capa. Protocolo de documentación transversal completo (propuesta → implementación) ejecutado sobre este gap. Durante el mapeo se detectó y confirmó un drift preexistente: el ID CENSUS ya listaba KERNEL:ARCHITECTURE-L1/L2/L3/L4, mientras el Kernel vivo mantenía la nomenclatura legacy -001/-002/-003/-004 (Manual, en MANUAL:MONITOR §11, ya citaba -L4 también — el Census y esa referencia puntual estaban adelantados a su fuente). El operador confirmó el Census como versión correcta; este batch alinea el Kernel a esa nomenclatura.
+Cambios:
+- KERNEL:ARCHITECTURE-L1 (04.1, rename de -001) — nodo contenedor. Nuevo hijo 04.1.1 KERNEL:ARCHITECTURE-L1-001 (Flujo Operativo, contenido preexistente sin alterar). Nuevo hijo 04.1.2 KERNEL:ARCHITECTURE-L1-002 (Contrato Operativo: Objetivo, Componentes, Responsabilidades, Campos inmutables, Reglas de dedup con referencia cruzada a L4, Estados de error, Métricas mínimas).
+- KERNEL:ARCHITECTURE-L2 (04.2, rename de -002) — mismo patrón: 04.2.1 KERNEL:ARCHITECTURE-L2-001 (Flujo Operativo) + 04.2.2 KERNEL:ARCHITECTURE-L2-002 (Contrato Operativo: Objetivo, Componentes, Responsabilidades, Reglas de consolidación/enriquecimiento, Estados de error, Métricas mínimas).
+- KERNEL:ARCHITECTURE-L3 (04.3, rename de -003) — mismo patrón: 04.3.1 KERNEL:ARCHITECTURE-L3-001 (Flujo Operativo) + 04.3.2 KERNEL:ARCHITECTURE-L3-002 (Contrato Operativo: Objetivo, Componentes, Responsabilidades, Campos inmutables, Reglas de dedup, Estados de error, Métricas mínimas).
+- KERNEL:ARCHITECTURE-L4 (04.4, rename de -004) — rename simple, sin alteración de contenido.
+- MANUAL:WEEKLY-FLOW-001 (8.1 Lunes) — nota de navegación agregada al párrafo inicial, apuntando a los 3 nuevos IDs de Contrato Operativo (mismo patrón índice-hacia-Kernel que MANUAL:GOLDEN-RULES §16 y MANUAL:CV-GOLDEN-RULES-INDEX §18).
+IDs afectados: 4 renames (KERNEL:ARCHITECTURE-001/002/003/004 → -L1/-L2/-L3/-L4) + 6 altas (KERNEL:ARCHITECTURE-L1-001/L1-002/L2-001/L2-002/L3-001/L3-002) = 10 IDs — Census requiere regeneración (vcensus, pendiente, acción local del operador).
+Write-Back Verification: Kernel y Manual re-fetched de forma independiente tras la escritura — los 5 bloques (4 en Kernel + 1 en Manual) confirmados en posición correcta, sin mismatch.
+Pendiente (fuera de esta entrada): vcensus + vversions --sync para propagar v9.14.0 al resto de los fundacionales.
+Versión actualizada: 9.14.0 (CHANGELOG). El resto de los fundacionales permanece en v9.13.11 hasta vversions --sync.
+---
+### v9.13.11 — Documentación: Valores Operativos Next_Action (KERNEL:SCHEMA-008) + Fix Alias vhyperlinks Local + Corrida Completa de Hyperlinks · 2026-08-04
+Tipo: [DOC] [FIX]
+Alcance: Kernel (KERNEL:SCHEMA-008, nuevo); System Prompt (SP:SCHEMA, cross-ref); alias local vhyperlinks (.zshrc, fuera de Notion).
+Contexto: Cierre del gap documental sobre Next_Action del Tracker de vacantes (ver v9.13.7-v9.13.9, donde se documentó Prioridad y el invariante de Next_Action huérfano pero nunca los valores operativos en sí). Auditoría de código realizada por Devin sobre layer_1_run.py, verificada línea por línea contra el repositorio real por Claude antes de documentar. En paralelo se detectó y corrigió un bug de entorno local: el alias vhyperlinks apuntaba a apply_hyperlinks.py (deprecado, ya no existe en repo) en vez de apply_hyperlinks_notion.py — bug confirmado por dump de Terminal (KERNEL:GATE-DECISION-009 Nivel 3), ticket no llegó a crearse en Bug Tracker porque el operador resolvió directo en la misma sesión.
+Cambios:
+- KERNEL:SCHEMA-008 (nuevo, 07.8) — documenta los 8 valores operativos confirmados en código activo de Next_Action (Archivar, Expirada, Ninguna, Follow-up, Interview prep, Re-check, Reparar URL, Verificar JD), con condición de disparo de cada uno. Corrige además el tipo de campo documentado en v9.13.7 (rich_text real, no select).
+- SP:SCHEMA (08) — línea de cross-referencia a KERNEL:SCHEMA-008.
+- Alias local vhyperlinks (.zshrc) — corregido de apply_hyperlinks.py a apply_hyperlinks_notion.py --all, con --root removido (flag inexistente en el script nuevo, confirmado contra código fuente real).
+- Corrida real de vhyperlinks --apply sobre los 7 documentos fundacionales tras el fix del alias: 228 bloques patcheados, 0 errores — incluye la autocorrección del anchor del link a KERNEL:SCHEMA-008 en SP:SCHEMA (Claude había escrito un anchor placeholder incorrecto en la inyección original; el censo dinámico lo resolvió al valor real sin intervención manual).
+IDs afectados: 1 alta (KERNEL:SCHEMA-008) — Census requiere regeneración (vcensus, pendiente, acción local del operador).
+Write-Back Verification: Kernel y System Prompt re-fetched de forma independiente tras la inyección inicial y de nuevo tras la corrida de vhyperlinks — bloque en posición correcta ambas veces, anchor del link confirmado corregido en la segunda verificación.
+Pendiente (fuera de esta entrada): vcensus + vversions --sync para propagar v9.13.11 al resto de los fundacionales.
+Versión actualizada: 9.13.11 (CHANGELOG). El resto de los fundacionales permanece en v9.13.10 hasta vversions --sync.
+---
+### v9.13.10 — Fix: verify_versions.py HTTP 400 Fantasma (Endpoint Legacy + Schema Prioridad Desalineado) · 2026-08-03
 Tipo: [FIX] [DOC]
 Alcance: Layer_1/scripts/verify_versions.py (código, local); KERNEL:TRACKER-SCHEMA-001, KERNEL:TRACKER-SCHEMA-002, SP:SCHEMA (Notion).
 Contexto: Los 2 tickets "HTTP 400" (Bug + Task) reportados por vversions --bootstrap desde 2026-07-27 (4 sesiones consecutivas sin diagnóstico) tenían dos causas apiladas. Primero, get_priority_tickets() era la única función del script pegando contra el endpoint legacy /v1/databases/{id}/query con Notion-Version 2022-06-28 y el DB ID en vez del data source ID (COL), inconsistente con get_last_ledger_row() y get_script_library_titles(), que ya usaban /v1/data_sources/{id}/query + 2025-09-03. Segundo, una vez corregido el endpoint, Notion devolvió el error real: el filtro de Prioridad usaba "CRÍTICO"/"ALTO" sin prefijo, mientras el schema real de Bug/Tasks Tracker usa "4 CRÍTICO"/"3 ALTO"/"2 MEDIO"/"1 BAJO" — desalineación heredada de la migración a fórmula híbrida Urgencia × Importancia (v9.13.7/v9.13.8), nunca propagada a KERNEL:TRACKER-SCHEMA-002 ni SP:SCHEMA.
@@ -14,7 +56,7 @@ Write-Back Verification: KERNEL y SYSTEM PROMPT re-fetched de forma independient
 Pendiente (fuera de esta entrada): vantage-tidy-bug-task-tracker/SKILL.md y vantage-create-bug-task/SKILL.md (fuera de Notion, gobernanza local) aún referencian Prioridad sin prefijo numérico — armonía cosmética, no bloqueante, pendiente de próxima sesión local.
 Versión actualizada: 9.13.10 (CHANGELOG). El resto de los fundacionales permanece en v9.13.9 hasta vversions --sync.
 ---
-# v9.13.9 — Documentación Transversal: Prioridad Migra a Escritura Primaria en Fase 3.6 (priority_logic.py, KERNEL:TRIGGER-002, MANUAL:RUNTIME-002) · 2026-08-03
+### v9.13.9 — Documentación Transversal: Prioridad Migra a Escritura Primaria en Fase 3.6 (priority_logic.py, KERNEL:TRIGGER-002, MANUAL:RUNTIME-002) · 2026-08-03
 Tipo: [DOC]
 Alcance: Kernel (KERNEL:TRIGGER-002); Manual (MANUAL:RUNTIME-002).
 Contexto: Continuación directa de v9.13.8. Esa entrada documentó la fórmula de Prioridad (Urgencia × Importancia) asumiendo a VL1 backfill como escritor primario — supuesto correcto en ese momento, pero superado por el trabajo de esta sesión: se implementó priority_logic.py como módulo compartido, se rompió el import circular entre layer_1_run.py y backfill_class_a.py, y se agregó Fase 3.6 en layer_1_run.py como escritura primaria de Prioridad en el ingreso normal del pipeline. VL1 backfill pasa a ser catch-up (huecos de migración o registros pre-Fase 3.6), no la vía principal. Se migraron 59 registros existentes al formato numérico de Prioridad como parte de este trabajo. Siguiendo el patrón de v9.11.7 (registro retroactivo sin editar entradas pasadas), esta entrada es nueva y no modifica v9.13.7 ni v9.13.8 — el Change Log no reescribe su propio historial.
@@ -26,7 +68,7 @@ Write-Back Verification: Kernel y Manual re-fetched de forma independiente tras 
 Pendiente (fuera de esta entrada): ninguno nuevo generado por esta implementación.
 Versión actualizada: 9.13.9 (CHANGELOG). El resto de los fundacionales permanece en v9.13.8 hasta vversions --sync.
 ---
-# v9.13.8 — Documentación Transversal: Fórmula de Prioridad (Urgencia × Importancia) + Invariante Status/Next_Action (KERNEL:GATE-DECISION-010, KERNEL:TRIGGER-002, MANUAL:RUNTIME-002) · 2026-08-03
+### v9.13.8 — Documentación Transversal: Fórmula de Prioridad (Urgencia × Importancia) + Invariante Status/Next_Action (KERNEL:GATE-DECISION-010, KERNEL:TRIGGER-002, MANUAL:RUNTIME-002) · 2026-08-03
 Tipo: [DOC]
 Alcance: Kernel (KERNEL:GATE-DECISION-010, KERNEL:TRIGGER-002); Manual (MANUAL:RUNTIME-002).
 Contexto: Cierra el gap documental dejado por la entrada v9.13.7 (Deuda Técnica Rx Tracker) — dos cambios de lógica de negocio implementados en Python (backfill_class_a.py, layer_1_run.py) sin contraparte en los documentos fundacionales: (1) la fórmula híbrida Urgencia × Importancia que ahora calcula Prioridad nunca estuvo descrita fuera del código; (2) el fix de Next_Action huérfano (Fase 2/3.5 escribiendo Status=Expirada sin Next_Action=Archivar) no tenía invariante explícito en KERNEL:GATE-DECISION-010 pese a que ese ID ya gobierna la relación Status→Next_Action.
@@ -39,7 +81,7 @@ Write-Back Verification: Kernel y Manual re-fetched de forma independiente tras 
 Pendiente (fuera de esta entrada): ninguno nuevo generado por esta implementación.
 Versión actualizada: 9.13.8 (CHANGELOG). El resto de los fundacionales permanece en v9.13.7 hasta vversions --sync.
 ---
-# v9.13.7 DRY RUN PARA CHANGELOG - Deuda Técnica Rx Tracker (Prioridad + Gate/Next_Action)
+### v9.13.7 DRY RUN PARA CHANGELOG - Deuda Técnica Rx Tracker (Prioridad + Gate/Next_Action)
 Fecha: 2026-08-03
 Contexto: Resolución de deuda técnica relacionada con propiedad Prioridad (huérfana) y fragmentación de lógica Gate/Next_Action
 ## CONTEXTO INICIAL
@@ -235,7 +277,7 @@ Cambios:
 1. Considerar actualización de lógica de gate en layer_1_run.py Fase 4 si se necesita acceso manual a recálculo de Next_Action (path de revival documentado en DEPRECATED_assign_next_action.md)
 1. Monitorear distribución de Prioridad en futuros runs para validar calibración de matriz Urgencia × Importancia
 ---
-# v9.13.6 — Fix: Rigor de posted_date en Prompt A para Sostener la Rúbrica de Prioridad (Prompt E) · 2026-08-02
+### v9.13.6 — Fix: Rigor de posted_date en Prompt A para Sostener la Rúbrica de Prioridad (Prompt E) · 2026-08-02
 Tipo: [FIX] [PROMPT]
 Alcance: PROMPT LIBRARY — Prompt A (368938be-fc42-8162-ae48-d48970a729dc).
 Contexto: Continuación directa de v9.13.5. Auditoría de Prompt A confirmó que el ITEM SCHEMA ya expone posted_date, source_type y jd — los tres campos que la rúbrica de Prioridad de Prompt E consume — sin gap estructural. Pero la regla de Active posting permitía fetch_status: needs_verification + posted_date: null con demasiada facilidad (cualquier posting sin fecha visible en el HTML caía directo a null), lo que hubiera degradado la rúbrica de Prioridad a "1 BAJO" por omisión de dato en vez de por antigüedad real — socavando el fix de v9.13.5 antes de que produjera valor.
@@ -246,7 +288,7 @@ Verificación: re-fetch independiente de Prompt A tras la escritura — bloque c
 Pendiente (fuera de esta entrada): validar en el próximo ciclo semanal (Lunes) qué porcentaje real de posted_date se resuelve por las 3 vías nuevas vs. cuántos siguen cayendo a null — sin datos de producción aún.
 Versión actualizada: 9.13.6 (CHANGELOG). El resto de los fundacionales permanece en v9.13.4 hasta vversions --sync.
 ---
-# v9.13.5 — Fix: Prioridad Class A ahora "viva" desde origen (Prompt E) + Default Fantasma Removido en feed_processor.py · 2026-08-02
+### v9.13.5 — Fix: Prioridad Class A ahora "viva" desde origen (Prompt E) + Default Fantasma Removido en feed_processor.py · 2026-08-02
 Tipo: [FIX] [PROMPT]
 Alcance: PROMPT LIBRARY — Prompt E (368938be-fc42-8177-b4a1-d2e8ea1e2e08); Layer_1/scripts/feed_processor.py (líneas 1022-1028).
 Contexto: Auditoría de trazabilidad del campo Prioridad solicitada por el operador, motivada por KERNEL:SCHEMA-007 (Prioridad es campo Class A requerido del Entry Template) y KERNEL:PURPOSE ("evaluar antes de escribir"). Devin confirmó por inspección directa: (1) el JSON consolidado de L1+L2 nunca contenía Prioridad — no se calculaba en ningún punto de la fase de consolidación; (2) feed_processor.py compensaba esa ausencia con un default hardcodeado "4 CRÍTICO" (líneas 1025-1028), contradiciendo KERNEL:TRIGGER-002 y MANUAL:RUNTIME-002 (9.2), que asignan explícitamente esa responsabilidad a vl1 backfill. El default ensuciaba el pipeline con falsos positivos de urgencia crítica en todo registro sin Prioridad de origen.
@@ -262,7 +304,7 @@ Pendiente (fuera de esta entrada):
 - Prioridad sigue sin calcularse en L1 (Career Sites/LinkedIn/Aggregators, vía Comet) ni en L3 (Gmail/Groq) — comportamiento esperado por diseño: ambos caminos dependen de vl1 backfill para llenar el campo, consistente con KERNEL:TRIGGER-002.
 Versión actualizada: 9.13.5 (CHANGELOG). El resto de los fundacionales permanece en v9.13.4 hasta vversions --sync.
 ---
-# v9.13.4 — Gobernanza y Saneamiento: Neutralización de Riesgos y Cierre de Drifts · 2026-08-02
+### v9.13.4 — Gobernanza y Saneamiento: Neutralización de Riesgos y Cierre de Drifts · 2026-08-02
 Tipo: [FIX] [GOVERNANCE] [CLEANUP]
 Alcance: Layer_4/scripts/vsync_doc_fast.py (Deprecado); Session Ledger (Auditoría); Career Canon (Validación Visual); Skill vsum (Optimización).
 Contexto: Fase final del Plan de Respuesta Ágil. Cierre de brechas de seguridad en sincronización rápida y resolución de inconsistencias históricas en el Ledger.
@@ -275,7 +317,7 @@ Verificación: Auditoría de consistencia 100% PASS; Riesgo de sincronización r
 IDs afectados: Ninguno.
 Pendiente: Eliminación física de vsync_doc_fast.py en el repositorio local por parte del operador.
 ---
-# v9.13.3 — Auditoría de Cierre: Tooling de Heading IDs Verificado (GATE 1/2 PASS) · 2026-08-02
+### v9.13.3 — Auditoría de Cierre: Tooling de Heading IDs Verificado (GATE 1/2 PASS) · 2026-08-02
 Tipo: [DOC] [AUDIT]
 Alcance: Layer_1/scripts/vantage_id_rules.py, normalize_heading_ids.py, generate_id_inventory.py (verificación, sin cambio de código). KERNEL:DOCUMENTATION-011 (referencia de estado).
 Contexto: Contrato de sesión solicitaba refactor de vantage_id_rules.py y fix de normalize_heading_ids.py bajo el supuesto de que ambos scripts operaban con lógica legacy (búsqueda de símbolo §, falsos positivos de "heading mal formado"). Verificación directa contra código y ejecución real determinó que el supuesto no aplicaba: la migración correspondiente ya se había completado en sesión previa (contrato 2026-07-25, ver contrato_migracion_headings.md) y KERNEL:DOCUMENTATION-011 ya confirma "generate_id_inventory.py y normalize_heading_ids.py ya fueron migrados". No hubo refactor que ejecutar — la tarea real era auditoría de cierre.
@@ -288,7 +330,7 @@ Verificación: py_compile exit 0 (3/3 scripts); normalize_heading_ids.py --csv c
 Pendiente (fuera de esta entrada): ninguno nuevo generado por esta auditoría.
 Versión actualizada: 9.13.3 (CHANGELOG). El resto de los fundacionales permanece en v9.13.2 hasta vversions --sync.
 ---
-# v9.13.2 — Infraestructura: Refactor vsync_doc (PATCH) e Implementación class_b_guard (GAP-03) · 2026-08-01
+### v9.13.2 — Infraestructura: Refactor vsync_doc (PATCH) e Implementación class_b_guard (GAP-03) · 2026-08-01
 Tipo: [FIX] [INFRA] [SECURITY]
 Alcance: Layer_4/scripts/vsync_doc.py; Layer_1/scripts/class_b_guard.py.
 Contexto: Resolución del riesgo de integridad de anchors documentado en KERNEL:ARCHITECTURE-L4 y mitigación técnica de GAP-03 (KERNEL:GATE-DECISION-003).
@@ -300,11 +342,11 @@ Verificación: py_compile OK; diff validado sin ciclos de borrado; test de bloqu
 IDs afectados: Ninguno (cambios de lógica de sistema). Census no requiere regeneración.
 Pendiente: vversions --sync para propagar v9.13.2 a los documentos fundacionales.
 ---
-# v9.13.1 — [COMPRIMIDO] Saneamiento Bug/Task Tracker: 9 tickets cerrados, 2 propiedades Solución creadas, 1 bug de skill logueado · 2026-08-01
+### v9.13.1 — [COMPRIMIDO] Saneamiento Bug/Task Tracker: 9 tickets cerrados, 2 propiedades Solución creadas, 1 bug de skill logueado · 2026-08-01
 Tipo: [COMPRIMIDO]
 Resumen: vantage-tidy-bug-task-tracker corrido (8 tickets, Bug+Task) pero Escenario 2 (cruce Changelog) no fue exhaustivo — operador cerró manualmente varios tickets adicionales después, exponiendo el gap. Bug Tracker: 3 tickets cerrados manualmente por el operador recibieron Solución+Fecha_Resolución retroactivas (Dedup no detecta duplicados, Sesiones huérfanas, GAP-03); 1 ticket más (is_definition_block TOC) cerrado con evidencia real hallada en Changelog v9.12.0. Ticket nuevo creado: 'Escenario 2 del skill vantage-tidy-bug-task-tracker no hace cruce exhaustivo contra Changelog' (3af938be-fc42-812e-99d9-c886c680bbfb), Prioridad ALTO. Propiedad Solución (rich_text) creada en Tasks Tracker (aaaaef55...) y Archivo Task Tracker (c470ead7...), antes inexistente en ambas — 15 tareas archivadas documentadas: 1 con evidencia real (v9.11.2), 10 autocontenidas en Notas, 4 marcadas explícitamente sin evidencia/pendientes de confirmar con el operador. Bug Tracker y Task Tracker activos revisados en su totalidad contra Changelog completo (activo+archivo) — 7 bugs y 5 tasks abiertas confirmadas vigentes, sin decisión arquitectónica que las vuelva obsoletas. Expandir en próxima sesión: revisar los 4 tasks sin evidencia con el operador directamente.
 ---
-# v9.13.0 — Cierre Auditoría Dedup Archivo Tracker (6/6 grupos) + Fix vantage_id_rules.py Verificado + 2 Tickets Resueltos · 2026-08-01
+### v9.13.0 — Cierre Auditoría Dedup Archivo Tracker (6/6 grupos) + Fix vantage_id_rules.py Verificado + 2 Tickets Resueltos · 2026-08-01
 Tipo: [FIX] [BUG] [DOC]
 Alcance: Archivo Tracker (12 páginas, data source 674696fd-94b6-464a-ac1f-64b0cc917e15); Layer_1/scripts/vantage_id_rules.py (verificación, sin cambio de código en esta entrada); Bug Tracker (2 tickets: 3aa938be-fc42-818e-bd1a-e899bbd6d569, 3a5938be-fc42-81ef-b268-ff186307f6b3).
 Contexto: Continuación directa de v9.12.1. El dry-run de Devin sobre el Archivo Tracker (6 grupos: GILSA, Scappino, Petco, Nike Artz Pedregal, Dolce & Gabbana, Bershka) había sido marcado INCOMPLETO al cierre de v9.12.1 — verificado en esa sesión que GILSA tenía 6 páginas reales vs 3 reportadas. Esta sesión completó la verificación independiente página-por-página de los 6 grupos completos, confirmando el mismo patrón de bug en múltiples grupos: Devin agrupaba por similitud de Rol/título en vez de por fingerprint real de posting (URL o hash), produciendo tanto falsos positivos (páginas de Puma, Paco Rabanne, Pull&Bear agrupadas bajo "Bershka" por compartir el título genérico "Escaparatista") como falsos negativos (Dolce & Gabbana: 6 páginas reales del mismo posting vs. 2 reportadas).

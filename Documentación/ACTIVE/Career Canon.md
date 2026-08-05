@@ -1,23 +1,5 @@
 # V | CAREER CANON
 
-DECLARACIÓN DE AUDIENCIA Y ALCANCE
-- Audiencia: Sistemas Agente de IA + Operador Humano (Mauricio Meyrán).
-- Alcance: Este documento es el CAREER_CANON_RUNTIME, que contiene la fuente de verdad profesional activa: perfil, skills, historial de carrera, KPIs validados, facts canónicos, educación, certificaciones, proyectos mayores y Output Contract para producción de CV-B. Para el archivo histórico previo a la reintegración v9.11.0, consultar CANON:ARCHIVO-VANTAGE.
-| # | ID | SECCIÓN | PORCIÓN |
-| --- | --- | --- | --- |
-| 01 | CANON:PROFILE | PROFESSIONAL PROFILE |  |
-| 02 | CANON:SKILLS | SKILLS CANON |  |
-| 03 | CANON:EXPERIENCE | EXPERIENCE RECORDS |  |
-| 04 | CANON:CAREER-TIMELINE | CAREER TIMELINE |  |
-| 05 | CANON:ACHIEVEMENTS | ACHIEVEMENT LIBRARY |  |
-| 06 | CANON:KPIS | CORE KPIS |  |
-| 07 | CANON:FACTS | CANONICAL FACTS |  |
-| 08 | CANON:EDUCATION | EDUCATION |  |
-| 09 | CANON:CERTIFICATIONS | CERTIFICATIONS |  |
-| 10 | CANON:MAJOR-PROJECTS | MAJOR PROJECTS |  |
-| 11 | CANON:POSITIONING | POSITIONING MODES |  |
-| 12 | CANON:OUTPUT-CONTRACT | OUTPUT CONTRACT |  |
-| 13 | CANON:DERIVED-OUTPUTS-ARCHIVE | DERIVED OUTPUTS ARCHIVE (Historial) |  |
 ## 01 CANON:PROFILE
 Professional Profile
 ### 01.1 CANON:PROFILE-001
@@ -39,7 +21,7 @@ Skills Canon
 ---
 ## 03 CANON:EXPERIENCE
 Experience Records
-### 03.1 CANON:EXPERIENCE-C01
+### 03.1 CANON:EXPERIENCE-001
 C01 · L'Oréal Luxe México
 Coordinador de Visual Merchandising & Brand Execution – División de Lujo · [CF08: Valentino / Giorgio Armani / Ralph Lauren]
 ES
@@ -54,7 +36,7 @@ EN
 - Coordinate local and international vendors for production, importation, and installation of materials, overseeing finish quality and compliance with the division's technical specifications.
 - Coordinated the national rollout of key NPI campaigns in 2025 (Born in Roma, Stronger With You), managing production and installation with external agencies within the assigned budget.
 - Collaborate with Marketing and Trade Marketing to align the commercial calendar with visual execution, acting as brand ambassador at key accounts.
-### 03.2 CANON:EXPERIENCE-C02
+### 03.2 CANON:EXPERIENCE-002
 C02 · Bisonte Experiential Marketing
 Coordinador de Brand Environment y Store Design · [P01: Adidas Brand Center Madero]
 ES
@@ -65,7 +47,7 @@ EN
 - Led the visual and technical implementation for the Adidas Brand Center Madero (Flagship Store) opening, meeting the brand's highest global standards.
 - Supervised production and logistics for Store Design materials on a project rescued 3 months before opening, achieving on-time delivery with 17 minor punch list observations – none blocking the opening or compromising the consumer experience. [CF03] · [CF04]
 - Coordinated specialized vendors to ensure quality in finishes and furniture, safeguarding architectural and visual design integrity.
-### 03.3 CANON:EXPERIENCE-C03
+### 03.3 CANON:EXPERIENCE-003
 C03 · Levi Strauss & Co. (Dockers)
 Senior Brand Environment Coordinator – LATAM · [CF05: 270+ POS / 6 países]
 ES
@@ -78,7 +60,7 @@ EN
 - Designed a local production strategy that generated 74% cost savings on national campaigns in Mexico. [KPI03]
 - Reduced floorset update time by 33% through the creation of Zoning & Mapping manuals and digital tools for field teams. [KPI04]
 - Led a team of 3 direct coordinators and 3 indirect reports, ensuring 100% POP coverage during the COVID-19 contingency through remote coordination. [KPI05]
-### 03.4 CANON:EXPERIENCE-C04
+### 03.4 CANON:EXPERIENCE-004
 C04 · Aéropostale México
 Gerente de Visual Merchandising · [CF06: 21 reportes directos] · [CF07: 17 tiendas]
 ES
@@ -89,7 +71,7 @@ EN
 - Built the VM department from scratch, managing 17 VM Assistant Managers and 4 Zone Supervisors (21 direct reports in total). [CF06]
 - Contributed directly to a +43% increase in traffic and +18% in conversion across the 17 stores under strategic supervision. [KPI01] · [KPI02] · [CF07]
 - Standardized planograms for key categories (Denim & Lifestyle), aligning display with monthly sales objectives.
-### 03.5 CANON:EXPERIENCE-C05
+### 03.5 CANON:EXPERIENCE-005
 C05 · El Palacio de Hierro (ALDO Group)
 Coordinador de Visual Merchandising & Marketing · [CF02: 2012–2017]
 ES
@@ -206,7 +188,7 @@ LinkedIn Learning · 2024
 ---
 ## 10 CANON:MAJOR-PROJECTS
 Major Projects
-> Reintegrada desde CAREER CANON (DEPRECATED) — v9.11.0. P01 ya se referenciaba de forma implícita en CANON:POSITIONING-N2 sin registro formal detrás; esta sección lo formaliza.
+> Reintegrada desde CAREER CANON (DEPRECATED) — v9.11.0. P01 ya se referenciaba de forma implícita en CANON:POSITIONING-002 sin registro formal detrás; esta sección lo formaliza.
 ### 10.1 CANON:MAJOR-PROJECT-001
 P01 · Adidas Brand Center Madero
 Compañía: C02 · Bisonte Experiential Marketing · Período: 2022–2023
@@ -231,16 +213,16 @@ Coordination of Aéropostale's participation in AeroFest (Frontón México, 2018
 ---
 ## 11 CANON:POSITIONING
 Positioning Modes
-### 11.1 CANON:POSITIONING-N1
+### 11.1 CANON:POSITIONING-001
 N1 · Luxury Brand Execution
 Ancla canónica: C01 · 3 marcas lujo · CAPEX/OPEX · NPI
-### 11.2 CANON:POSITIONING-N2
+### 11.2 CANON:POSITIONING-002
 N2 · Store Design & Flagship Execution
 Ancla canónica: C02 · Adidas Brand Center · KPI07 · blueprints
-### 11.3 CANON:POSITIONING-N3
+### 11.3 CANON:POSITIONING-003
 N3 · Regional Brand Execution & Rollout
 Ancla canónica: C03 · 270+ POS · 6 países · KPI03–06 · CF05
-### 11.4 CANON:POSITIONING-N4
+### 11.4 CANON:POSITIONING-004
 N4 · Commercial VM & Field Leadership
 Ancla canónica: C04/C05 · +43% tráfico · +18% conversión · 21 reportes
 Regla de Desempate – JDs Híbridos

@@ -1,23 +1,6 @@
 # V | BRIEF
 
-# V | BRIEF
-
-# V | BRIEF
-| # | ID | SECCIÓN | PORCIÓN |
-| --- | --- | --- | --- |
-| 01 | BRIEF:PURPOSE-SCOPE | Propósito y Alcance |  |
-| 02 | BRIEF:AUTHORITY-MATRIX | Matriz de Autoridad Documental |  |
-| 03 | BRIEF:ECOSYSTEM | Ecosistema Documental |  |
-| 04 | BRIEF:NAV-CONTRACTS | Contratos de Navegación |  |
-| 05 | BRIEF:DOMAIN-ARCHITECTURE | Dominios |  |
-| 06 | BRIEF:VERIFICATION-DEPTH | Contratos de Verificación |  |
-| 07 | BRIEF:CROSS-DEPENDENCIES | Dependencias entre Documentos |  |
-| 08 | BRIEF:MAINTENANCE-CONTRACT | Contrato de Mantenimiento |  |
-| 09 | BRIEF:DECISION-TREE | Árbol de Decisiones |  |
-| 10 | BRIEF:NAV-PRINCIPLES | Principios de Navegación |  |
-| 11 | BRIEF:EXPECTED-OUTCOME | Resultado Esperado |  |
 ## 01 BRIEF:PURPOSE-SCOPE
-Propósito y Alcance
 ### 01.1 BRIEF:PURPOSE-SCOPE-001
 Propósito
 Este documento define el contrato oficial de navegación documental de VANTAGE.
