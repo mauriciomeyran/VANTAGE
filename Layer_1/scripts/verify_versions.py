@@ -64,7 +64,7 @@ PROJECT_ROOT = SCRIPT_DIR.parent.parent
 # de prueba, o de respaldo no cuenta como script en uso activo.
 EXCLUDED_DIR_NAMES = {
     "archive", "archived", "tests", "test", "backup",
-    "one_offs", "deprecated_scripts", ".venv", "node_modules", ".git",
+    "one_offs", "deprecated_scripts", ".venv", "venv", "node_modules", ".git",
 }
 EXCLUDED_DIR_SUBSTRINGS = ("backup_", "discarded_")
 

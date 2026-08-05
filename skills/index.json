@@ -85,6 +85,12 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-script-library.skill",
+      "name": "vantage-sync-script-library",
+      "description": "VANTAGE Skill: vantage-sync-script-library",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-tidy-bug-task-tracker.skill",
       "name": "vantage-tidy-bug-task-tracker",
       "description": "Marca tickets para archivo en Bug/Task Tracker",

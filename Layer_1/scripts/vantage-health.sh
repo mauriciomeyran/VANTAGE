@@ -4,7 +4,7 @@
 # @raycast.mode fullOutput
 # @raycast.icon 🩺
 # @raycast.packageName VANTAGE
-# @raycast.keywords vhealth, vstart
+# @raycast.keywords vhealth, start
 
 notify_success() { osascript -e "display notification \"$2\" with title \"$1\" sound name \"Hero\""; }
 notify_warning() { osascript -e "display notification \"$2\" with title \"$1\" sound name \"Pop\""; }

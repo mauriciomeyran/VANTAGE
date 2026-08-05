@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-generate_id_inventory.py
+Layer_1/scripts/generate_id_inventory.py — v9.14.1
 
 Genera un inventario de referencias cruzadas de IDs del esquema VANTAGE
 ([PREFIX]:[KEY]) a partir de los .md locales en Layer_1/ACTIVE/ (o la
@@ -11,8 +11,12 @@ Distinto del ID Census: el Census dice qué IDs existen y su estado
 DÓNDE se le hace referencia (REF), con contexto de línea y sección,
 y el conteo total de citas.
 
+Capa: L1 — Active Recon [KERNEL:04.1]
+Estatus: Activo / SSOT de Referencias Cruzadas
+Ruta Local: /Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/scripts/generate_id_inventory.py
+
 Uso:
-    python3 generate_id_inventory.py --root /ruta/a/ACTIVE --out ./out
+    python3 scripts/generate_id_inventory.py --root ../Documentación/ACTIVE --out ../data
 
 Salidas (en --out):
     inventario_ids_por_id.md   -> un bloque por ID, agrupando DEF + REFs
