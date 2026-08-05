@@ -19,11 +19,12 @@
 | [`KERNEL:DOCUMENTATION-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42816f80dec85df01a673b ) | 03.9 | Registro de Continuidad de Sesión |
 | [`KERNEL:DOCUMENTATION-010`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42814ea9a3e9abd1b8e80e ) | 03.10 | Documentación Transversal |
 | [`KERNEL:DOCUMENTATION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e3ad72f7f5b13d2804 ) | 03.11 | Sistema de Cross-Reference Hyperlinks |
+| [`KERNEL:DOCUMENTATION-012`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74 ) | 03.12 | Notebook Gemini — Auditor Documental Externo |
 | [`KERNEL:ARCHITECTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810a8870dd1d384c1e7a ) | 04 | Arquitectura de Cuatro Capas |
-| [`KERNEL:ARCHITECTURE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f3825bd740b23ec959 ) | 04.1 | L1 — Active Recon |
-| [`KERNEL:ARCHITECTURE-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42818ea302ddf39ab5ad8d ) | 04.2 | L2 — Strategic Search |
-| [`KERNEL:ARCHITECTURE-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428105afa8f6deffc3530d ) | 04.3 | L3 — Passive Intake |
-| [`KERNEL:ARCHITECTURE-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281668d64e36a289d81e2 ) | 04.4 | L4 — Version Control & Infrastructure |
+| [`KERNEL:ARCHITECTURE-L1`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f3825bd740b23ec959 ) | 04.1 | L1 — Active Recon |
+| [`KERNEL:ARCHITECTURE-L2`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#73f6ec3692de4632a16d89313b91456d ) | 04.2 | L2 — Strategic Search |
+| [`KERNEL:ARCHITECTURE-L3`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#42d63b98d72a4512911fe520df42947a ) | 04.3 | L3 — Passive Intake |
+| [`KERNEL:ARCHITECTURE-L4`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#112a181a8573420888342840865da012 ) | 04.4 | L4 — Version Control & Infrastructure |
 | [`KERNEL:OWNERSHIP`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42815cbfaec3f4090ea4bf ) | 05 | División de Responsabilidades AI/Python |
 | [`KERNEL:OWNERSHIP-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e8a1abc8652e2568ce ) | 05.1 | AI Component |
 | [`KERNEL:OWNERSHIP-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281c58d23ce22d20833b4 ) | 05.2 | Python Component |
@@ -90,7 +91,7 @@
 | [`MANUAL:FAILURE-PHILOSOPHY`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281acbc8ae6f6ea66fc81 ) | 03 | Filosofía de Fallo para Operadores |
 | [`MANUAL:SETUP`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42812aadb8fbd79d7ae232 ) | 04 | Setup |
 | [`MANUAL:COLD-START`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281c1990cf60bb0ea7150 ) | 05 | Arranque Frío — Checklist de Reactivación |
-| [`MANUAL:SESSION-CYCLE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281cfa544ffa3c97d76db ) | 06 | Ciclo de Sesión — Open/Close |
+| [`MANUAL:SESSION-CYCLE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3b2938befc4280d09b20d589e9201485 ) | 06 | Ciclo de Sesión — Open/Close |
 | [`MANUAL:CHECKLIST`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281afb902e07df65402b7 ) | 07 | El Checklist — V-Checklist semanal |
 | [`MANUAL:WEEKLY-FLOW`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281acb2a3c6424edbee13 ) | 08 | Flujo Semanal de Operación |
 | [`MANUAL:WEEKLY-FLOW-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281f5a1e2fdfd73c58b05 ) | 8.1 | Lunes — Búsqueda Activa |
@@ -103,8 +104,9 @@
 | [`MANUAL:RUNTIME-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281c3a7a8def378bdf338 ) | 9.2 | Comandos Principales |
 | [`MANUAL:RUNTIME-003`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281dbbb2ae5338a1d2f85 ) | 9.3 | Cuándo Correr Sync |
 | [`MANUAL:RUNTIME-004`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281998641d184b08c7f9b ) | 9.4 | Runtime Build |
+| [`MANUAL:RUNTIME-005`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#340ca4f2fad44035bd64f487f4af10f5 ) | 9.5 | Notebook Gemini — Triaje de Consultas Documentales |
 | [`MANUAL:DATA-MANAGEMENT`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281b7846ffb025d561130 ) | 10 | Gestión de Datos |
-| [`MANUAL:HEALTHCHECK`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428154adfeea50d386ac78 ) | 11 | Health Check |
+| [`MANUAL:MONITOR`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428154adfeea50d386ac78 ) | 11 | Health Check |
 | [`MANUAL:TROUBLESHOOTING`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42813ab8c1d308d4f5d97e ) | 12 | Troubleshooting |
 | [`MANUAL:PROMPTS-WRAPPERS`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428136b742cbbe89ab727b ) | 13 | Prompts & Wrappers |
 | [`MANUAL:LAZY-LOAD`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281148290d0192758acc7 ) | 14 | Lazy Load |
@@ -224,6 +226,7 @@
 | [`SP:SCHEMA`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281cebc7acf109277b8d9 ) | 08 | Schema — Trackers (Class A/B) |
 | [`SP:MCP-ROUTING-NOTES`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281e8aabec1d52a036038 ) | 09 | Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY) |
 | [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428150a82cfb23a2d0edd3 ) | 10 | Regla de Consistencia Documental |
+| [`SP:CONSISTENCY-002`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#75dfe84eb19746b59525a869980388f2 ) | 10.1 | Triaje vía Notebook Gemini |
 | [`SP:VERSION-CHECK-TOOL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428191acd1e6a71d7f5cc4 ) | 11 | Herramienta de Verificación de Versión de Bajo Costo |
 
 ---
