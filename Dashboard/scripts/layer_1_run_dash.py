@@ -543,7 +543,7 @@ def main():
                     properties={
                         "Fetch": {"rich_text": [{"text": {"content": "Bloqueado"}}]},
                         "Status": {"select": {"name": "Expirada"}},
-                        "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
+                        "Next_Action": {"select": {"name": "Archivar"}},
                         "Gate_Decision": {"select": {"name": "BLOCKED"}}
                     }
                 )
@@ -698,7 +698,7 @@ def main():
                 properties={
                     "Status": {"select": {"name": "Expirada"}},
                     "Gate_Decision": {"select": {"name": "BLOCKED"}},
-                    "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
+                    "Next_Action": {"select": {"name": "Archivar"}},
                 },
             )
             misfit_updates += 1
@@ -845,7 +845,7 @@ def main():
 
         update = {
             "Gate_Decision": {"select": {"name": decision}},
-            "Next_Action": {"rich_text": [{"text": {"content": next_action}}]}
+            "Next_Action": {"select": {"name": next_action}}
         }
 
         try:

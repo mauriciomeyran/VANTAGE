@@ -1,5 +1,129 @@
 # V | CHANGELOG
 
+---
+Tipo: [SCHEMA] [CODE] [AUDIT]
+Alcance: Notion (VANTAGE TRACKER); Scripts (Layer_1, Dashboard); Kernel (KERNEL:SCHEMA-008); Manual (MANUAL:SCHEMA-FIELD-REF); System Prompt (SP:SCHEMA).
+Contexto: Formalización y cierre de deuda técnica estructural. La propiedad Next_Action migra de rich_text a select con 8 opciones validadas para eliminar drifts y errores 400 de la API. Esta entrada consolida la ejecución coordinada entre Claude, Devin y la auditoría L0.
+ACCIONES POR COMPONENTE
+1. Claude (Notion Schema Execution):
+- Auditoría de Schema Live: Confirmado que Next_Action operaba como type:text sin opciones, validando la discrepancia reportada.
+- Migración de Campo: Ejecutado cambio de tipo a select en el VANTAGE TRACKER.
+- Creación de Opciones: Inyectadas las 8 opciones operativas canónicas: Archivar, Expirada, Ninguna, Follow-up, Interview prep, Re-check, Reparar URL, Verificar JD.
+- Validación de Integridad: Verificado que Notion migró automáticamente los 33 valores existentes sin pérdida de datos en la conversión.
+1. Devin (Code Refactor & Backfill Audit):
+- Refactor de Escritura: Modificados los payloads de escritura en layer_1_run.py (4 puntos) y layer_1_run_dash.py (3 puntos) para usar la sintaxis {"select": {"name": VALUE}}.
+- Script de Backfill: Creado backfill_next_action_select.py para auditoría de huérfanos post-migración.
+- Resultado Dry-Run: Confirmados 33/33 registros migrados correctamente por Notion (0 huérfanos). Se determinó que no se requiere ejecución de backfill manual.
+1. Reference Librarian (Documentation Mapping):
+- Parches Transversales: Reescritos los contratos en Kernel, Manual y System Prompt para alinearlos con el nuevo tipo de dato y la Regla de Bloque Único.
+RESUMEN DE AUDITORÍA (FULL PASS)
+| Componente | Estado | Detalles |
+| --- | --- | --- |
+| L0 Runtime Index | ✅ PASS | Índices frescos (<2.3h). |
+| L0 ID Census | ✅ PASS | 0 IDs huérfanos detectados tras la migración. |
+| L1 Pipeline | ✅ PASS | 33 registros en estado estable. |
+| Next_Action Migration | ✅ PASS | 33/33 migrados, 0 huérfanos. |
+VEREDICTO FINAL: SISTEMA READY para producción. Migración de esquema y código completada con paridad documental.
+---
+---
+Tipo: [SCHEMA] [CODE] [AUDIT]
+Alcance: Notion (VANTAGE TRACKER); Scripts (Layer_1, Dashboard); Kernel (KERNEL:SCHEMA-008); Manual (MANUAL:SCHEMA-FIELD-REF); System Prompt (SP:SCHEMA).
+Contexto: Formalización y cierre de deuda técnica estructural. La propiedad Next_Action migra de rich_text a select con 8 opciones validadas para eliminar drifts y errores 400 de la API. Esta entrada consolida la ejecución coordinada entre Claude, Devin y la auditoría L0.
+ACCIONES POR COMPONENTE
+1. Claude (Notion Schema Execution):
+- Auditoría de Schema Live: Confirmado que Next_Action operaba como type:text sin opciones, validando la discrepancia reportada.
+- Migración de Campo: Ejecutado cambio de tipo a select en el VANTAGE TRACKER.
+- Creación de Opciones: Inyectadas las 8 opciones operativas canónicas: Archivar, Expirada, Ninguna, Follow-up, Interview prep, Re-check, Reparar URL, Verificar JD.
+- Validación de Integridad: Verificado que Notion migró automáticamente los 33 valores existentes sin pérdida de datos en la conversión.
+1. Devin (Code Refactor & Backfill Audit):
+- Refactor de Escritura: Modificados los payloads de escritura en layer_1_run.py (4 puntos) y layer_1_run_dash.py (3 puntos) para usar la sintaxis {"select": {"name": VALUE}}.
+- Script de Backfill: Creado backfill_next_action_select.py para auditoría de huérfanos post-migración.
+- Resultado Dry-Run: Confirmados 33/33 registros migrados correctamente por Notion (0 huérfanos). Se determinó que no se requiere ejecución de backfill manual.
+1. Reference Librarian (Documentation Mapping):
+- Parches Transversales: Reescritos los contratos en Kernel, Manual y System Prompt para alinearlos con el nuevo tipo de dato y la Regla de Bloque Único.
+RESUMEN DE AUDITORÍA (FULL PASS)
+| Componente | Estado | Detalles |
+| --- | --- | --- |
+| L0 Runtime Index | ✅ PASS | Índices frescos (<2.3h). |
+| L0 ID Census | ✅ PASS | 0 IDs huérfanos detectados tras la migración. |
+| L1 Pipeline | ✅ PASS | 33 registros en estado estable. |
+| Next_Action Migration | ✅ PASS | 33/33 migrados, 0 huérfanos. |
+VEREDICTO FINAL: SISTEMA READY para producción. Migración de esquema y código completada con paridad documental.
+---
+---
+Tipo: [SCHEMA] [CODE] [AUDIT]
+Alcance: Notion (VANTAGE TRACKER); Scripts (Layer_1, Dashboard); Kernel (KERNEL:SCHEMA-008); Manual (MANUAL:SCHEMA-FIELD-REF); System Prompt (SP:SCHEMA).
+Contexto: Formalización y cierre de deuda técnica estructural. La propiedad Next_Action migra de rich_text a select con 8 opciones validadas para eliminar drifts y errores 400 de la API. Esta entrada consolida la ejecución coordinada entre Claude, Devin y la auditoría L0.
+ACCIONES POR COMPONENTE
+1. Claude (Notion Schema Execution):
+- Auditoría de Schema Live: Confirmado que Next_Action operaba como type:text sin opciones, validando la discrepancia reportada.
+- Migración de Campo: Ejecutado cambio de tipo a select en el VANTAGE TRACKER.
+- Creación de Opciones: Inyectadas las 8 opciones operativas canónicas: Archivar, Expirada, Ninguna, Follow-up, Interview prep, Re-check, Reparar URL, Verificar JD.
+- Validación de Integridad: Verificado que Notion migró automáticamente los 33 valores existentes sin pérdida de datos en la conversión.
+1. Devin (Code Refactor & Backfill Audit):
+- Refactor de Escritura: Modificados los payloads de escritura en layer_1_run.py (4 puntos) y layer_1_run_dash.py (3 puntos) para usar la sintaxis {"select": {"name": VALUE}}.
+- Script de Backfill: Creado backfill_next_action_select.py para auditoría de huérfanos post-migración.
+- Resultado Dry-Run: Confirmados 33/33 registros migrados correctamente por Notion (0 huérfanos). Se determinó que no se requiere ejecución de backfill manual.
+1. Reference Librarian (Documentation Mapping):
+- Parches Transversales: Reescritos los contratos en Kernel, Manual y System Prompt para alinearlos con el nuevo tipo de dato y la Regla de Bloque Único.
+RESUMEN DE AUDITORÍA (FULL PASS)
+| Componente | Estado | Detalles |
+| --- | --- | --- |
+| L0 Runtime Index | ✅ PASS | Índices frescos (<2.3h). |
+| L0 ID Census | ✅ PASS | 0 IDs huérfanos detectados tras la migración. |
+| L1 Pipeline | ✅ PASS | 33 registros en estado estable. |
+| Next_Action Migration | ✅ PASS | 33/33 migrados, 0 huérfanos. |
+VEREDICTO FINAL: SISTEMA READY para producción. Migración de esquema y código completada con paridad documental.
+---
+### v9.14.3 — Auditoría de Integridad L0 + Resolución de Identidad del Librarian · 2026-08-06
+Tipo: [AUDIT] [GOVERNANCE] Alcance: Capa L0 (Observabilidad); Kernel (KERNEL:DOCUMENTATION-012); Manual (MANUAL:RUNTIME-005); System Prompt (SP:CONSISTENCY-002). Contexto: Verificación obligatoria de la infraestructura de ahorro de contexto antes de iniciar procesos de CV-A/CV-B. El protocolo detectó y corrigió un error de identificación sobre el componente "Reference Librarian" en el entorno operativo.
+1. Resultados de Auditoría L0 (100% PASS):
+- Runtime Index Age: ✅ PASS. Índices entity_index_v2.json y graph_v2.json con antigüedad < 1.0h (umbral: 24h) [KERNEL:DOCUMENTATION-006, MANUAL:11].
+- Census Check: ✅ PASS. 0 IDs huérfanos detectados; protocolo de transferencia documental desbloqueado [KERNEL:DOCUMENTATION-008].
+- Lazy Loader: ✅ PASS. Verificado fetch quirúrgico de ~150 tokens vía vload, optimizando ventana de contexto [ALIASES:02, MANUAL:14].
+- Cross-Reference Validation: ✅ PASS. Confirmado uso de método PATCH en apply_hyperlinks_notion.py para preservación de block-IDs [KERNEL:DOCUMENTATION-011, CHANGELOG:v9.13.2].
+2. Resolución de Discrepancia: Reference Librarian:
+- Hallazgo: El reporte inicial marcó el componente como "no encontrado".
+- Corrección: Se validó que el Reference Librarian es la identidad de Notebook Gemini, formalizada en la v9.14.1como una Capa de Consulta ReadOnly externa [CHANGELOG:v9.14.1, KERNEL:03.12].
+- Contrato: Se verificó satisfactoriamente el contrato de Cero Inferencia Silenciosa y anclaje obligatorio de IDs [KERNEL:DOCUMENTATION-012].
+3. Invariantes de Seguridad Reforzados:
+- Se ratifica la Nota de Orden de Precedencia: el pipeline debe invocar gate_logic() antes que gate() para prevenir regresiones en estados terminales ("Postulado", "Rechazado", "Expirada") [KERNEL:09.11].
+- Persistente: La propiedad Score_Method permanece como "corrupta/faltante" en el esquema del Archivo Tracker, sin ancla en el Kernel v9.14.1 [CHANGELOG:v9.13.0].
+- Veredicto: SISTEMA CERTIFICADO PARA PRODUCCIÓN CV-A/CV-B/QA.
+- Acción del Operador: Ejecutar vversions --sync para propagar formalmente la v9.14.1 si existen cambios pendientes en otros documentos [KERNEL:DOCUMENTATION-007].
+Certificación del Bibliotecario: Este registro es consistente con los hallazgos de la sesión y respeta la jerarquía de autoridad definida en el BRIEF:02. Puede ser inyectado en el Change Log tras recibir un APROBAR_WRITE[KERNEL:SCHEMA-006].
+---
+### v9.14.2 — Auditoría de Integridad L0 (Devin)
+Componentes verificados:
+✅ Runtime Index Status (vstatus)
+
+```plain text
+
+entity_index_v2.json: 2.3 horas de antigüedad (threshold: 24h)
+Total entidades: 692
+Tracker entities: 33
+Archive entities: 659
+Hash coverage: 86.71%
+```
+✅ Census Check (vcensus)
+```plain text
+
+IDs en spec: 213
+IDs resueltos: 213
+IDs SIN link: 0
+IDs huérfanos: 0
+```
+✅ Pipeline Layer 1 (layer_1_run.py --dry-run)
+```plain text
+
+Total procesado: 33 registros
+URL Gate: 33 válidos, 0 rechazados
+READY-TO-APPLY (>=60): 14
+CREATE (Pipeline Activo): 32
+PROTEGIDAS: 1
+ESTADO ESTABLE: Sin cambios necesarios
+```
+Conclusión: ✅ L0 completamente operativo para CV production
 ### v9.14.1 — Documentación Transversal: Notebook Gemini — Auditor Documental Externo (KERNEL:DOCUMENTATION-012, MANUAL:RUNTIME-005, SP:CONSISTENCY-002) · 2026-08-05
 Tipo: [DOC]
 Alcance: Kernel (KERNEL:DOCUMENTATION-012, nuevo, 03.12); Manual (MANUAL:RUNTIME-005, nuevo, 9.5); System Prompt (SP:CONSISTENCY-002, nuevo, 10.1).

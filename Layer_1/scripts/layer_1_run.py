@@ -687,7 +687,7 @@ def main():
                         properties={
                             "Fetch": {"select": {"name": "Bloqueado"}},
                             "Status": {"select": {"name": "Expirada"}},
-                            "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
+                            "Next_Action": {"select": {"name": "Archivar"}},
                         }
                     )
                 except Exception as e:
@@ -816,7 +816,7 @@ def main():
                     page_id=item["id"],
                     properties={
                         "Status": {"select": {"name": "Expirada"}},
-                        "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
+                        "Next_Action": {"select": {"name": "Archivar"}},
                     },
                 )
                 misfit_updates += 1
@@ -867,7 +867,7 @@ def main():
                             page_id=item["id"],
                             properties={
                                 "Status": {"select": {"name": "Expirada"}},
-                                "Next_Action": {"rich_text": [{"text": {"content": "Archivar"}}]},
+                                "Next_Action": {"select": {"name": "Archivar"}},
                             },
                         )
                         nad_expiry_updates += 1
@@ -1013,7 +1013,7 @@ def main():
 
         update = {
             "Gate_Decision": {"select": {"name": decision}},
-            "Next_Action": {"rich_text": [{"text": {"content": next_action}}]}
+            "Next_Action": {"select": {"name": next_action}}
         }
 
         if not DRY_RUN:

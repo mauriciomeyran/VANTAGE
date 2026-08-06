@@ -105,6 +105,7 @@ Referencia — consultar KERNEL:CV-GOLDEN-RULES.
 Esquema de Trackers
 Bug Tracker y Tasks Tracker comparten estructura base como caché de lectura estático. Notion es la fuente de verdad.
 Para valores operativos de Next_Action del Tracker de vacantes (distinto de los listados abajo para Bug/Tasks Tracker), ver KERNEL:SCHEMA-008.
+- Next_Action (select): Archivar | Expirada | Ninguna | Follow-up | Interview prep | Re-check | Reparar URL | Verificar JD
 - Bug Tracker (data source 36e938be-fc42-81f8-8c6f-000b6769ba03):
 - Bug (title)
 - Fecha_Detección (date)
