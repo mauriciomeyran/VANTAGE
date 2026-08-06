@@ -215,6 +215,18 @@ def is_agregador(url):
             return True
     return False
 
+def normalize_url(url):
+    """
+    Normaliza URLs agregando esquema https:// si falta.
+    Si la URL ya tiene http:// o https://, se devuelve sin cambios.
+    """
+    if not url or not isinstance(url, str):
+        return url
+    url = url.strip()
+    if url.startswith("http://") or url.startswith("https://"):
+        return url
+    return f"https://{url}"
+
 
 
 # ---------- Validación de URL ----------
@@ -223,6 +235,9 @@ def validate_url_pre_ingestion(url, jd_text=""):
     GATE CRÍTICO v7.5 - Acepta agregadores sin exigir CTA directa
     JD > 100 chars = VÁLIDO sin importar URL
     """
+    # Normalizar URL: agregar https:// si falta esquema
+    url = normalize_url(url)
+    
     # PRIORIDAD 1: JD existente — skip URL validation
     if jd_text and isinstance(jd_text, str):
         jd_clean = jd_text.strip()
