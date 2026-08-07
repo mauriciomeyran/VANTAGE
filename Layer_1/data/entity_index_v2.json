@@ -19,24 +19,6 @@
       "source_db": "VANTAGE_TRACKER"
     },
     {
-      "entity_id": "TRACKER:H_b5d4207626e9fc7a",
-      "canonical_id": "b5d4207626e9fc7a13c98fb290cf6f26c6a5a462ce192f717cb061f55a26be4c",
-      "page_id": "3af938be-fc42-81d1-ab2f-cff9391844f6",
-      "page_url": "https://app.notion.com/p/Visual-Merchandiser-3af938befc4281d1ab2fcff9391844f6",
-      "hash": "b5d4207626e9fc7a13c98fb290cf6f26c6a5a462ce192f717cb061f55a26be4c",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_f31c6d051c60b2a3",
-      "canonical_id": "f31c6d051c60b2a3ef15ce6c96204cc27ff1f2a2ef96ebfe5be23145a52c143a",
-      "page_id": "3af938be-fc42-81a6-8bfc-cf8d82974686",
-      "page_url": "https://app.notion.com/p/Visual-Merchandiser-3af938befc4281a68bfccf8d82974686",
-      "hash": "f31c6d051c60b2a3ef15ce6c96204cc27ff1f2a2ef96ebfe5be23145a52c143a",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
       "entity_id": "TRACKER:H_86e7da55e1edd7d9",
       "canonical_id": "86e7da55e1edd7d92a52b036ca1570e8df90b064c863d0d6e1bb34a1cce86402",
       "page_id": "3af938be-fc42-81ef-b8d7-e7185c8f0b60",
@@ -64,15 +46,6 @@
       "source_db": "VANTAGE_TRACKER"
     },
     {
-      "entity_id": "TRACKER:H_1af6fc1a1bda7f6c",
-      "canonical_id": "1af6fc1a1bda7f6c98673c1a0f0a2b77925b4f7ed64b0c04cd1378eeb00d4e1a",
-      "page_id": "3ae938be-fc42-810a-a219-f016d688a39e",
-      "page_url": "https://app.notion.com/p/SUPERVISOR-DE-VISUAL-MERCHANDISING-VICTORIAS-SECRET-SANTA-FE-3ae938befc42810aa219f016d688a39e",
-      "hash": "1af6fc1a1bda7f6c98673c1a0f0a2b77925b4f7ed64b0c04cd1378eeb00d4e1a",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
       "entity_id": "TRACKER:H_45c7257886eb797c",
       "canonical_id": "45c7257886eb797cb771cde5e740881241192a93123795051af4233a383c01ca",
       "page_id": "3ab938be-fc42-8118-b37e-fa53224430a2",
@@ -82,65 +55,11 @@
       "source_db": "VANTAGE_TRACKER"
     },
     {
-      "entity_id": "TRACKER:H_54f8d4dad4427f2c",
-      "canonical_id": "54f8d4dad4427f2c28fa702d07df03c08f3da23b81136e8daa31bab541e1b6e3",
-      "page_id": "3a9938be-fc42-81d0-991f-d1d92adb7b38",
-      "page_url": "https://app.notion.com/p/Jr-Visual-Merchandising-Operations-3a9938befc4281d0991fd1d92adb7b38",
-      "hash": "54f8d4dad4427f2c28fa702d07df03c08f3da23b81136e8daa31bab541e1b6e3",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_7be190317b64b912",
-      "canonical_id": "7be190317b64b9122faf1fea7372e8be92009dfe187112f8df81b4536fecbf65",
-      "page_id": "3a9938be-fc42-81e0-bacf-c85cc27ec41f",
-      "page_url": "https://app.notion.com/p/Visual-Merchandasing-Temporal-3a9938befc4281e0bacfc85cc27ec41f",
-      "hash": "7be190317b64b9122faf1fea7372e8be92009dfe187112f8df81b4536fecbf65",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_5468a850323edade",
-      "canonical_id": "5468a850323edade8a90140a2ce7f0b0c3e5a69cf5b75e2e53b6f13ecc6bae67",
-      "page_id": "3a6938be-fc42-81fa-8bb4-d62be23c72fe",
-      "page_url": "https://app.notion.com/p/Supervisor-Distrital-Imagen-Visual-Merchandising-3a6938befc4281fa8bb4d62be23c72fe",
-      "hash": "5468a850323edade8a90140a2ce7f0b0c3e5a69cf5b75e2e53b6f13ecc6bae67",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_0be8af35be14f19c",
-      "canonical_id": "0be8af35be14f19c346f2483e6f5f79e42cf4c5be00958a9f88f4b44fe9ce26a",
-      "page_id": "3a6938be-fc42-818a-a501-fff53af2ce26",
-      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Field-3a6938befc42818aa501fff53af2ce26",
-      "hash": "0be8af35be14f19c346f2483e6f5f79e42cf4c5be00958a9f88f4b44fe9ce26a",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_87104cdaacaf8b1f",
-      "canonical_id": "87104cdaacaf8b1f83ab1643bc33688c0ec2aeecdd9e61f8a600c43bb5bd0548",
-      "page_id": "3a5938be-fc42-8164-bb7e-de1e4dad6a77",
-      "page_url": "https://app.notion.com/p/Visual-Merchandising-3a5938befc428164bb7ede1e4dad6a77",
-      "hash": "87104cdaacaf8b1f83ab1643bc33688c0ec2aeecdd9e61f8a600c43bb5bd0548",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
       "entity_id": "TRACKER:H_9b68d2078200b503",
       "canonical_id": "9b68d2078200b503c277f3f5d69c744bdd638b37458eba7f82ef7cf2cfa6c3dd",
       "page_id": "3a5938be-fc42-81ed-b9e6-f97a066441af",
       "page_url": "https://app.notion.com/p/Visual-Merchandiser-Retail-Skincare-3a5938befc4281edb9e6f97a066441af",
       "hash": "9b68d2078200b503c277f3f5d69c744bdd638b37458eba7f82ef7cf2cfa6c3dd",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_300a7ec9682d7525",
-      "canonical_id": "300a7ec9682d7525527396733dd85d582a9f4b690a84b5cc9f19724ded240cc6",
-      "page_id": "3a5938be-fc42-811c-9f62-f40055e9cb0d",
-      "page_url": "https://app.notion.com/p/Visual-Merchandising-3a5938befc42811c9f62f40055e9cb0d",
-      "hash": "300a7ec9682d7525527396733dd85d582a9f4b690a84b5cc9f19724ded240cc6",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER"
     },
@@ -163,15 +82,6 @@
       "source_db": "VANTAGE_TRACKER"
     },
     {
-      "entity_id": "TRACKER:H_8e25ab78a467792d",
-      "canonical_id": "8e25ab78a467792d93287d1220b0e8d3df7f9180ee5f6bfce1e4eb242d2676a1",
-      "page_id": "3a5938be-fc42-81d4-8d7a-e0938b259e78",
-      "page_url": "https://app.notion.com/p/Jr-Visual-Merchandiser-3a5938befc4281d48d7ae0938b259e78",
-      "hash": "8e25ab78a467792d93287d1220b0e8d3df7f9180ee5f6bfce1e4eb242d2676a1",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
       "entity_id": "TRACKER:H_29ba59be72285b49",
       "canonical_id": "29ba59be72285b49f42a1d99608dada58603cedeba4112ed8abd21b7d29c1395",
       "page_id": "39e938be-fc42-8163-a826-e98e697035cb",
@@ -190,38 +100,11 @@
       "source_db": "VANTAGE_TRACKER"
     },
     {
-      "entity_id": "TRACKER:H_5db64cc022a70d63",
-      "canonical_id": "5db64cc022a70d6342c837aac976b61b77335a88e709446718e14375a17e0701",
-      "page_id": "39e938be-fc42-81ca-bd71-f4d160c6d6b3",
-      "page_url": "https://app.notion.com/p/VM-Coordinator-39e938befc4281cabd71f4d160c6d6b3",
-      "hash": "5db64cc022a70d6342c837aac976b61b77335a88e709446718e14375a17e0701",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_3ac880542075d3d2",
-      "canonical_id": "3ac880542075d3d233ac32f4940ecc0ba8e6ed20f41dd222596bd7a126d94569",
-      "page_id": "39e938be-fc42-8146-bdc6-da4b4c89e574",
-      "page_url": "https://app.notion.com/p/Visual-Merchandiser-39e938befc428146bdc6da4b4c89e574",
-      "hash": "3ac880542075d3d233ac32f4940ecc0ba8e6ed20f41dd222596bd7a126d94569",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
       "entity_id": "TRACKER:H_8e24a0356e95ab6c",
       "canonical_id": "8e24a0356e95ab6c8b179fc98e51a3c22be90130ec70380768de9c7a7f46af69",
       "page_id": "39a938be-fc42-8135-ba15-eb001d21125e",
       "page_url": "https://app.notion.com/p/Supervisor-Visual-Merchandising-39a938befc428135ba15eb001d21125e",
       "hash": "8e24a0356e95ab6c8b179fc98e51a3c22be90130ec70380768de9c7a7f46af69",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_83533bf7a3d87172",
-      "canonical_id": "83533bf7a3d87172760e4f5ba266b4b3d5241e9a888282b704dd7c7dcb81bd9b",
-      "page_id": "39a938be-fc42-8102-a26e-cbc0fe20917c",
-      "page_url": "https://app.notion.com/p/Supervisor-de-Visual-Merchandising-y-Styling-39a938befc428102a26ecbc0fe20917c",
-      "hash": "83533bf7a3d87172760e4f5ba266b4b3d5241e9a888282b704dd7c7dcb81bd9b",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER"
     },
@@ -240,51 +123,6 @@
       "page_id": "397938be-fc42-8196-821d-d2d4d6d4b9b6",
       "page_url": "https://app.notion.com/p/Visual-Merchandiser-397938befc428196821dd2d4d6d4b9b6",
       "hash": "7dec3738efd07cbd5a990bbcadf04344069b96781e19a771e73ce6bbc68cad60",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_80f30422c5b9d400",
-      "canonical_id": "80f30422c5b9d4003bf0732849c7759b13ca7890cbf878deb62233f8fef2e00a",
-      "page_id": "397938be-fc42-813a-ae1b-ea98ac12a646",
-      "page_url": "https://app.notion.com/p/Visual-Merchandiser-LATAM-397938befc42813aae1bea98ac12a646",
-      "hash": "80f30422c5b9d4003bf0732849c7759b13ca7890cbf878deb62233f8fef2e00a",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_b6e6d92fdea689a5",
-      "canonical_id": "b6e6d92fdea689a58af1e2feeb36aad7ed6c3ff88504672862bf2b3c63f9033b",
-      "page_id": "397938be-fc42-816d-87e8-cca79a6169e9",
-      "page_url": "https://app.notion.com/p/Coordinador-Visual-Merchandising-397938befc42816d87e8cca79a6169e9",
-      "hash": "b6e6d92fdea689a58af1e2feeb36aad7ed6c3ff88504672862bf2b3c63f9033b",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_8aff2f3d5a9e53d9",
-      "canonical_id": "8aff2f3d5a9e53d9b486743dccf3a56e14b8a7a43ea0a13eebbdf4002eabb781",
-      "page_id": "397938be-fc42-8167-a21a-c49279b136f2",
-      "page_url": "https://app.notion.com/p/Visual-Merchandiser-LATAM-397938befc428167a21ac49279b136f2",
-      "hash": "8aff2f3d5a9e53d9b486743dccf3a56e14b8a7a43ea0a13eebbdf4002eabb781",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_0ee0ae2436023635",
-      "canonical_id": "0ee0ae2436023635ff20481e099e55d1b79c7a57df2b0522df0028165fb32ca4",
-      "page_id": "397938be-fc42-813a-a5a9-f6b839ffdced",
-      "page_url": "https://app.notion.com/p/Visual-Merchandising-397938befc42813aa5a9f6b839ffdced",
-      "hash": "0ee0ae2436023635ff20481e099e55d1b79c7a57df2b0522df0028165fb32ca4",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_ae89fbf45c844cdc",
-      "canonical_id": "ae89fbf45c844cdc042e02646b4e08379851d3134daa35dca0f26a1bb3225114",
-      "page_id": "38f938be-fc42-8152-9c3b-c50076920858",
-      "page_url": "https://app.notion.com/p/Visual-Merchandising-Manager-38f938befc4281529c3bc50076920858",
-      "hash": "ae89fbf45c844cdc042e02646b4e08379851d3134daa35dca0f26a1bb3225114",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER"
     },
@@ -397,6 +235,24 @@
       "source_db": "ARCHIVO_TRACKER"
     },
     {
+      "entity_id": "ARCHIVO:H_b5d4207626e9fc7a",
+      "canonical_id": "b5d4207626e9fc7a13c98fb290cf6f26c6a5a462ce192f717cb061f55a26be4c",
+      "page_id": "3af938be-fc42-81d1-ab2f-cff9391844f6",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-3af938befc4281d1ab2fcff9391844f6",
+      "hash": "b5d4207626e9fc7a13c98fb290cf6f26c6a5a462ce192f717cb061f55a26be4c",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_f31c6d051c60b2a3",
+      "canonical_id": "f31c6d051c60b2a3ef15ce6c96204cc27ff1f2a2ef96ebfe5be23145a52c143a",
+      "page_id": "3af938be-fc42-81a6-8bfc-cf8d82974686",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-3af938befc4281a68bfccf8d82974686",
+      "hash": "f31c6d051c60b2a3ef15ce6c96204cc27ff1f2a2ef96ebfe5be23145a52c143a",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
       "entity_id": "ARCHIVO:H_caa58d7f86e2763f",
       "canonical_id": "caa58d7f86e2763f6c2180bc9eeacb7415783e0c66684923be2d2f15a66ef5f3",
       "page_id": "3af938be-fc42-816f-878a-d8d22f2b248f",
@@ -411,6 +267,15 @@
       "page_id": "3af938be-fc42-8112-95a4-f6cbdefb0017",
       "page_url": "https://app.notion.com/p/Digital-Merchandiser-3af938befc42811295a4f6cbdefb0017",
       "hash": "3da0ab79eff8bc9661e0b23091f909333ee4bed4833f90670765448e7949cfee",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_1af6fc1a1bda7f6c",
+      "canonical_id": "1af6fc1a1bda7f6c98673c1a0f0a2b77925b4f7ed64b0c04cd1378eeb00d4e1a",
+      "page_id": "3ae938be-fc42-810a-a219-f016d688a39e",
+      "page_url": "https://app.notion.com/p/SUPERVISOR-DE-VISUAL-MERCHANDISING-VICTORIAS-SECRET-SANTA-FE-3ae938befc42810aa219f016d688a39e",
+      "hash": "1af6fc1a1bda7f6c98673c1a0f0a2b77925b4f7ed64b0c04cd1378eeb00d4e1a",
       "entity_type": "archive",
       "source_db": "ARCHIVO_TRACKER"
     },
@@ -451,6 +316,33 @@
       "source_db": "ARCHIVO_TRACKER"
     },
     {
+      "entity_id": "ARCHIVO:H_54f8d4dad4427f2c",
+      "canonical_id": "54f8d4dad4427f2c28fa702d07df03c08f3da23b81136e8daa31bab541e1b6e3",
+      "page_id": "3a9938be-fc42-81d0-991f-d1d92adb7b38",
+      "page_url": "https://app.notion.com/p/Jr-Visual-Merchandising-Operations-3a9938befc4281d0991fd1d92adb7b38",
+      "hash": "54f8d4dad4427f2c28fa702d07df03c08f3da23b81136e8daa31bab541e1b6e3",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_7be190317b64b912",
+      "canonical_id": "7be190317b64b9122faf1fea7372e8be92009dfe187112f8df81b4536fecbf65",
+      "page_id": "3a9938be-fc42-81e0-bacf-c85cc27ec41f",
+      "page_url": "https://app.notion.com/p/Visual-Merchandasing-Temporal-3a9938befc4281e0bacfc85cc27ec41f",
+      "hash": "7be190317b64b9122faf1fea7372e8be92009dfe187112f8df81b4536fecbf65",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_5468a850323edade",
+      "canonical_id": "5468a850323edade8a90140a2ce7f0b0c3e5a69cf5b75e2e53b6f13ecc6bae67",
+      "page_id": "3a6938be-fc42-81fa-8bb4-d62be23c72fe",
+      "page_url": "https://app.notion.com/p/Supervisor-Distrital-Imagen-Visual-Merchandising-3a6938befc4281fa8bb4d62be23c72fe",
+      "hash": "5468a850323edade8a90140a2ce7f0b0c3e5a69cf5b75e2e53b6f13ecc6bae67",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
       "entity_id": "ARCHIVO:H_c94731fff5b3e206",
       "canonical_id": "c94731fff5b3e206ea43d0deef75b9649b832a7a0673d386abbc6c2d81c2ad51",
       "page_id": "3a6938be-fc42-8183-9c66-f059a654658d",
@@ -460,11 +352,47 @@
       "source_db": "ARCHIVO_TRACKER"
     },
     {
+      "entity_id": "ARCHIVO:H_0be8af35be14f19c",
+      "canonical_id": "0be8af35be14f19c346f2483e6f5f79e42cf4c5be00958a9f88f4b44fe9ce26a",
+      "page_id": "3a6938be-fc42-818a-a501-fff53af2ce26",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Field-3a6938befc42818aa501fff53af2ce26",
+      "hash": "0be8af35be14f19c346f2483e6f5f79e42cf4c5be00958a9f88f4b44fe9ce26a",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_87104cdaacaf8b1f",
+      "canonical_id": "87104cdaacaf8b1f83ab1643bc33688c0ec2aeecdd9e61f8a600c43bb5bd0548",
+      "page_id": "3a5938be-fc42-8164-bb7e-de1e4dad6a77",
+      "page_url": "https://app.notion.com/p/Visual-Merchandising-3a5938befc428164bb7ede1e4dad6a77",
+      "hash": "87104cdaacaf8b1f83ab1643bc33688c0ec2aeecdd9e61f8a600c43bb5bd0548",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
       "entity_id": "ARCHIVO:H_43d7ef69bed45f41",
       "canonical_id": "43d7ef69bed45f419aad5d0aebbd1755d70c5ff3ff2c8430b18c47247d57ec2e",
       "page_id": "3a5938be-fc42-8185-8e94-e8c4870a61c0",
       "page_url": "https://app.notion.com/p/Subgerente-de-Tienda-Visual-Merchandising-Paseo-Acoxpa-3a5938befc4281858e94e8c4870a61c0",
       "hash": "43d7ef69bed45f419aad5d0aebbd1755d70c5ff3ff2c8430b18c47247d57ec2e",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_300a7ec9682d7525",
+      "canonical_id": "300a7ec9682d7525527396733dd85d582a9f4b690a84b5cc9f19724ded240cc6",
+      "page_id": "3a5938be-fc42-811c-9f62-f40055e9cb0d",
+      "page_url": "https://app.notion.com/p/Visual-Merchandising-3a5938befc42811c9f62f40055e9cb0d",
+      "hash": "300a7ec9682d7525527396733dd85d582a9f4b690a84b5cc9f19724ded240cc6",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_8e25ab78a467792d",
+      "canonical_id": "8e25ab78a467792d93287d1220b0e8d3df7f9180ee5f6bfce1e4eb242d2676a1",
+      "page_id": "3a5938be-fc42-81d4-8d7a-e0938b259e78",
+      "page_url": "https://app.notion.com/p/Jr-Visual-Merchandiser-3a5938befc4281d48d7ae0938b259e78",
+      "hash": "8e25ab78a467792d93287d1220b0e8d3df7f9180ee5f6bfce1e4eb242d2676a1",
       "entity_type": "archive",
       "source_db": "ARCHIVO_TRACKER"
     },
@@ -739,6 +667,24 @@
       "source_db": "ARCHIVO_TRACKER"
     },
     {
+      "entity_id": "ARCHIVO:H_5db64cc022a70d63",
+      "canonical_id": "5db64cc022a70d6342c837aac976b61b77335a88e709446718e14375a17e0701",
+      "page_id": "39e938be-fc42-81ca-bd71-f4d160c6d6b3",
+      "page_url": "https://app.notion.com/p/VM-Coordinator-39e938befc4281cabd71f4d160c6d6b3",
+      "hash": "5db64cc022a70d6342c837aac976b61b77335a88e709446718e14375a17e0701",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_3ac880542075d3d2",
+      "canonical_id": "3ac880542075d3d233ac32f4940ecc0ba8e6ed20f41dd222596bd7a126d94569",
+      "page_id": "39e938be-fc42-8146-bdc6-da4b4c89e574",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-39e938befc428146bdc6da4b4c89e574",
+      "hash": "3ac880542075d3d233ac32f4940ecc0ba8e6ed20f41dd222596bd7a126d94569",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
       "entity_id": "ARCHIVO:H_5869c5c02e4618e3",
       "canonical_id": "5869c5c02e4618e357d4ff77862799189d249c4c080197b920a94e0293d59f5e",
       "page_id": "39e938be-fc42-818e-8cfc-eba64845512b",
@@ -762,6 +708,15 @@
       "page_id": "39d938be-fc42-81c1-9277-fb0c6760633c",
       "page_url": "https://app.notion.com/p/Especialista-en-Visual-Merchandising-y-Exhibiciones-39d938befc4281c19277fb0c6760633c",
       "hash": "323fd3799ca3860d20876f342d93dad556fbbebdd510841a2e8c3982137fa1b5",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_83533bf7a3d87172",
+      "canonical_id": "83533bf7a3d87172760e4f5ba266b4b3d5241e9a888282b704dd7c7dcb81bd9b",
+      "page_id": "39a938be-fc42-8102-a26e-cbc0fe20917c",
+      "page_url": "https://app.notion.com/p/Supervisor-de-Visual-Merchandising-y-Styling-39a938befc428102a26ecbc0fe20917c",
+      "hash": "83533bf7a3d87172760e4f5ba266b4b3d5241e9a888282b704dd7c7dcb81bd9b",
       "entity_type": "archive",
       "source_db": "ARCHIVO_TRACKER"
     },
@@ -829,11 +784,47 @@
       "source_db": "ARCHIVO_TRACKER"
     },
     {
+      "entity_id": "ARCHIVO:H_80f30422c5b9d400",
+      "canonical_id": "80f30422c5b9d4003bf0732849c7759b13ca7890cbf878deb62233f8fef2e00a",
+      "page_id": "397938be-fc42-813a-ae1b-ea98ac12a646",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-LATAM-397938befc42813aae1bea98ac12a646",
+      "hash": "80f30422c5b9d4003bf0732849c7759b13ca7890cbf878deb62233f8fef2e00a",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_b6e6d92fdea689a5",
+      "canonical_id": "b6e6d92fdea689a58af1e2feeb36aad7ed6c3ff88504672862bf2b3c63f9033b",
+      "page_id": "397938be-fc42-816d-87e8-cca79a6169e9",
+      "page_url": "https://app.notion.com/p/Coordinador-Visual-Merchandising-397938befc42816d87e8cca79a6169e9",
+      "hash": "b6e6d92fdea689a58af1e2feeb36aad7ed6c3ff88504672862bf2b3c63f9033b",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_8aff2f3d5a9e53d9",
+      "canonical_id": "8aff2f3d5a9e53d9b486743dccf3a56e14b8a7a43ea0a13eebbdf4002eabb781",
+      "page_id": "397938be-fc42-8167-a21a-c49279b136f2",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-LATAM-397938befc428167a21ac49279b136f2",
+      "hash": "8aff2f3d5a9e53d9b486743dccf3a56e14b8a7a43ea0a13eebbdf4002eabb781",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
       "entity_id": "ARCHIVO:H_e4ab06a3d17fd5a9",
       "canonical_id": "e4ab06a3d17fd5a9bb456f6a16c4dfa9e366ec7278a0ea90c9a3d0e85ce98afb",
       "page_id": "397938be-fc42-8175-bbf7-fabe3809e995",
       "page_url": "https://app.notion.com/p/Supervisor-visual-Merchandising-397938befc428175bbf7fabe3809e995",
       "hash": "e4ab06a3d17fd5a9bb456f6a16c4dfa9e366ec7278a0ea90c9a3d0e85ce98afb",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_0ee0ae2436023635",
+      "canonical_id": "0ee0ae2436023635ff20481e099e55d1b79c7a57df2b0522df0028165fb32ca4",
+      "page_id": "397938be-fc42-813a-a5a9-f6b839ffdced",
+      "page_url": "https://app.notion.com/p/Visual-Merchandising-397938befc42813aa5a9f6b839ffdced",
+      "hash": "0ee0ae2436023635ff20481e099e55d1b79c7a57df2b0522df0028165fb32ca4",
       "entity_type": "archive",
       "source_db": "ARCHIVO_TRACKER"
     },
@@ -906,6 +897,15 @@
       "page_id": "38f938be-fc42-81f8-9fb5-c7857312b8e7",
       "page_url": "https://app.notion.com/p/Supervisor-de-Visual-Merchandising-38f938befc4281f89fb5c7857312b8e7",
       "hash": "d8e65c7b0f83537f366b8d6de964285df7b9e3d244000fad4a7c93da70a7a0c5",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_ae89fbf45c844cdc",
+      "canonical_id": "ae89fbf45c844cdc042e02646b4e08379851d3134daa35dca0f26a1bb3225114",
+      "page_id": "38f938be-fc42-8152-9c3b-c50076920858",
+      "page_url": "https://app.notion.com/p/Store-Second-Manager-38f938befc4281529c3bc50076920858",
+      "hash": "ae89fbf45c844cdc042e02646b4e08379851d3134daa35dca0f26a1bb3225114",
       "entity_type": "archive",
       "source_db": "ARCHIVO_TRACKER"
     },
@@ -6231,8 +6231,8 @@
   ],
   "metrics": {
     "total_entities": 692,
-    "tracker_entities": 33,
-    "archive_entities": 659,
+    "tracker_entities": 15,
+    "archive_entities": 677,
     "hash_coverage": 86.71,
     "orphan_candidates": 92
   }

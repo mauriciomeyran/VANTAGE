@@ -1,17 +1,4 @@
 {
   "version": "2.0",
-  "backlinks": {
-    "TRACKER:H_b5d4207626e9fc7a": [
-      {
-        "from": "ARCHIVO:H_b5d4207626e9fc7a",
-        "type": "archived_from"
-      }
-    ],
-    "TRACKER:H_f31c6d051c60b2a3": [
-      {
-        "from": "ARCHIVO:H_f31c6d051c60b2a3",
-        "type": "archived_from"
-      }
-    ]
-  }
+  "backlinks": {}
 }
