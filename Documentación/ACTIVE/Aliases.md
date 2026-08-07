@@ -19,7 +19,7 @@ L0 · VANTAGE Runtime
 | vresolve | Resuelve una entidad específica (ID o nombre) a su ficha completa. | Corre vantage.py resolve — 4 pasos: lookup en índice, mapeo a data source, query a Notion, validación. |
 | vcontext | Trae contexto extendido de una entidad (relaciones, backlinks). | Corre vantage.py context sobre graph_v2.json y backlinks_v2.json. |
 | vquery | Corre una consulta estructurada contra el índice. | Corre vantage.py query — filtra entity_index_v2.json por los parámetros dados. |
-| vversions (sin flag) | Punto de entrada al motor de verificación de versión — requiere flag explícito (–bootstrap/–sync, ver familia 1). | — |
+| vversions (sin flag) | Punto de entrada al motor de verificación de versión y observabilidad de librerías de activos — requiere flag explícito (–bootstrap/–sync, ver familia 1; –scripts/–skills, ver MANUAL:RUNTIME-002). | — |
 | vcensus | Regenera el V-ID-CENSUS y reporta IDs huérfanos. | Corre generate_census.py — resuelve cada ID contra CENSUS_SPEC, detecta huérfanos no listados, y genera deeplink de bloque exacto vía API para cada uno. |
 | vsource | Recarga la configuración de shell tras editar .zshrc, sin abrir una terminal nueva. | source ~/.zshrc — housekeeping puro, no toca Notion ni el pipeline. |
 ## 03 ALIASES:L1L2-DISCOVERY

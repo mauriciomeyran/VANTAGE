@@ -148,4 +148,4 @@ Ante una discrepancia o duda de gobernanza documental cubierta por los puntos 1-
 ---
 ## 11 SP:VERSION-CHECK-TOOL
 Herramienta de Verificación
-Para la verificación de versión de los 9 documentos fundacionales, utilizar preferentemente el script local verify_versions.py en Terminal para mitigar costos de llamadas MCP.
+Para la verificación de versión de los 9 documentos fundacionales, utilizar preferentemente el script local verify_versions.py en Terminal para mitigar costos de llamadas MCP. El mismo script cubre también observabilidad de librerías de activos vía --scripts y --skills (ver KERNEL:DOCUMENTATION-007) — útil para proponer su uso ante tareas de sincronización de Script/Skill Library.

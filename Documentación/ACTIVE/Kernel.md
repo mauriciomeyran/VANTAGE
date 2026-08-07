@@ -134,8 +134,10 @@ Propósito: ruta de bajo costo para verificar y sincronizar la Versión de los 9
 Modos
 - --sync (único modo de escritura y verificación real, relee cada documento post-escritura)
 - --bootstrap (dump read-only de apertura de sesión)
+- --scripts (gap report read-only: cruza scripts .py/.sh del árbol activo contra SCRIPT LIBRARY en Notion)
+- --skills (gap report read-only: cruza archivos .skill del árbol activo contra SKILL LIBRARY en Notion)
 Modo Check eliminado en v9.6.2 — la verificación real vive íntegramente en --sync.
-Alias: vversions — acepta --bootstrap o --sync, sin modo default.
+Alias: vversions — acepta --bootstrap, --sync, --scripts o --skills, sin modo default.
 ---
 ### 03.8 KERNEL:DOCUMENTATION-008
 Sincronización Obligatoria del ID Census

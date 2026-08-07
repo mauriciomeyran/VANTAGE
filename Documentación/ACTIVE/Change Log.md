@@ -1,6 +1,21 @@
 # V | CHANGELOG
 
 ---
+### v9.14.4 — Refactor ArgumentParser: Separación Semántica Scripts/Skills (verify_versions.py, KERNEL:DOCUMENTATION-007, SP:VERSION-CHECK-TOOL, ALIASES:L0-RUNTIME, MANUAL:RUNTIME-002) · 2026-08-07
+Tipo: [CODE] [DOC]
+Alcance: Layer_1/scripts/verify_versions.py (código, local); Kernel (KERNEL:DOCUMENTATION-007); System Prompt (SP:VERSION-CHECK-TOOL); Aliases (ALIASES:L0-RUNTIME); Manual (MANUAL:RUNTIME-002).
+Contexto: Homologación de gobernanza entre Script Library y la nueva Skill Library (SKILL_LIBRARY_DATA_SOURCE_ID confirmado, base creada 2026-08-07). verify_versions.py generalizó scan_committed_scripts() → scan_committed_assets(project_root, extensions) y render_scripts_gap_report() para aceptar extensions/data_source_id/label/title_property dinámicos, agregando el flag --skills (paralelo a --scripts existente) sin regresión sobre su comportamiento previo. get_script_library_titles() expone title_property (default "Script", "Skill" para la base nueva) porque ambas bases usan nombres de propiedad título distintos.
+Cambios:
+- verify_versions.py — scan_committed_assets() generaliza el filtro de extensión (antes hardcodeado a .py/.sh); render_scripts_gap_report() acepta extensions/data_source_id/label/title_property; nuevo argparse --skills paralelo a --scripts; SKILL_LIBRARY_DATA_SOURCE_ID fijado a 2f1938be-fc42-83c8-8972-07300201136d.
+- KERNEL:DOCUMENTATION-007 (03.7) — Modos ampliado con --scripts y --skills como modos de auditoría read-only de librerías de activos; línea de Alias actualizada.
+- SP:VERSION-CHECK-TOOL (11) — nota de alcance extendido a observabilidad de Script/Skill Library.
+- ALIASES:L0-RUNTIME (02) — fila vversions (sin flag) actualizada, ya no restringida a --bootstrap/--sync.
+- MANUAL:RUNTIME-002 (9.2) — bullet vversions actualizado de dos a cuatro flags documentados.
+IDs afectados: ninguno — extensión de contenido bajo IDs ya existentes (KERNEL:DOCUMENTATION-007, SP:VERSION-CHECK-TOOL, ALIASES:L0-RUNTIME, MANUAL:RUNTIME-002). Census no requiere regeneración.
+Write-Back Verification: Kernel, System Prompt, Aliases y Manual re-fetched de forma independiente tras cada escritura — 4 bloques confirmados en posición correcta, sin mismatch.
+Pendiente (fuera de esta entrada): vversions --sync para propagar v9.14.4 al resto de los fundacionales (acción local del operador).
+Versión actualizada: 9.14.4 (CHANGELOG). El resto de los fundacionales permanece en v9.14.3 hasta vversions --sync.
+---
 Tipo: [SCHEMA] [CODE] [AUDIT]
 Alcance: Notion (VANTAGE TRACKER); Scripts (Layer_1, Dashboard); Kernel (KERNEL:SCHEMA-008); Manual (MANUAL:SCHEMA-FIELD-REF); System Prompt (SP:SCHEMA).
 Contexto: Formalización y cierre de deuda técnica estructural. La propiedad Next_Action migra de rich_text a select con 8 opciones validadas para eliminar drifts y errores 400 de la API. Esta entrada consolida la ejecución coordinada entre Claude, Devin y la auditoría L0.
