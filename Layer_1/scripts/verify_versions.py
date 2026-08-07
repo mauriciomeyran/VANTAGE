@@ -56,6 +56,7 @@ TASKS_TRACKER_DATA_SOURCE_ID = "aaaaef55a1ce45f79c8b1c1def2c18e8"
 # por lo que NO aplica la restricción de plan Business/Notion AI que bloquea
 # query_data_sources/query_database_view a nivel de conector MCP.
 SCRIPT_LIBRARY_DATA_SOURCE_ID = "ea914544-338f-485e-ac1b-7f137a5c9cee"
+SKILL_LIBRARY_DATA_SOURCE_ID = "2f1938be-fc42-83c8-8972-07300201136d"
 
 # Proyecto root real: Layer_1/scripts -> Layer_1 -> VANTAGE/
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
@@ -314,12 +315,13 @@ def get_priority_tickets(client: httpx.Client, data_source_id: str, headers: dic
     except Exception as e:
         return [{"error": f"{label}: {str(e)}"}]
 
-def scan_committed_scripts(project_root: Path) -> list:
+def scan_committed_assets(project_root: Path, extensions: tuple) -> list:
     """Escanea el árbol activo del proyecto (Layer_1/3/4, Dashboard, Raycast) en
-    busca de .py/.sh, excluyendo archive/tests/backup/one_offs/deprecated y
-    archivos con prefijo DEPRECATED_. Devuelve lista de (nombre, ruta_relativa)
-    ordenada por nombre. No depende de git — escanea el filesystem local tal
-    como está, que es lo que realmente se ejecuta."""
+    busca de archivos cuyo suffix esté en 'extensions', excluyendo
+    archive/tests/backup/one_offs/deprecated y archivos con prefijo
+    DEPRECATED_. Devuelve lista de (nombre, ruta_relativa) ordenada por
+    nombre. No depende de git — escanea el filesystem local tal como está,
+    que es lo que realmente se ejecuta."""
     found = []
     for top in sorted(ACTIVE_TOP_LEVEL_DIRS):
         top_path = project_root / top
@@ -328,7 +330,7 @@ def scan_committed_scripts(project_root: Path) -> list:
         for path in top_path.rglob("*"):
             if not path.is_file():
                 continue
-            if path.suffix not in (".py", ".sh"):
+            if path.suffix not in extensions:
                 continue
             if path.name.startswith(EXCLUDED_FILE_PREFIXES):
                 continue
@@ -342,10 +344,12 @@ def scan_committed_scripts(project_root: Path) -> list:
     found.sort(key=lambda t: t[0])
     return found
 
-def get_script_library_titles(client: httpx.Client, data_source_id: str, headers: dict) -> dict:
-    """Pagina completo el data source SCRIPT LIBRARY y devuelve
-    {titulo_script: estado} para cada fila. Un solo query_data_sources no
-    trae más de 100 filas — este loop sigue next_cursor hasta agotarlo."""
+def get_script_library_titles(client: httpx.Client, data_source_id: str, headers: dict, title_property: str = "Script") -> dict:
+    """Pagina completo el data source (SCRIPT LIBRARY o SKILL LIBRARY) y
+    devuelve {titulo: estado} para cada fila. 'title_property' es el nombre
+    de la propiedad title en ese data source (difiere entre bases: "Script"
+    vs "Skill"). Un solo query_data_sources no trae más de 100 filas — este
+    loop sigue next_cursor hasta agotarlo."""
     titles = {}
     cursor = None
     while True:
@@ -358,7 +362,7 @@ def get_script_library_titles(client: httpx.Client, data_source_id: str, headers
             sys.exit(1)
         for row in data.get("results", []):
             props = row.get("properties", {})
-            title_prop = props.get("Script", {})
+            title_prop = props.get(title_property, {})
             texts = title_prop.get("title", [])
             # BUGFIX: Notion parte el título en múltiples rich-text runs cuando
             # detecta un link automático dentro del nombre (ej. "patch_cheat_sheet.py"
@@ -375,12 +379,13 @@ def get_script_library_titles(client: httpx.Client, data_source_id: str, headers
         cursor = data.get("next_cursor")
     return titles
 
-def render_scripts_gap_report(client: httpx.Client, headers: dict) -> None:
-    """Cruza scripts committeados en disco (árbol activo) contra SCRIPT LIBRARY
-    en Notion. Read-only en ambos lados — no escribe ni crea filas
-    automáticamente, solo reporta para que el operador decida el alta."""
-    disk_scripts = scan_committed_scripts(PROJECT_ROOT)
-    library_titles = get_script_library_titles(client, SCRIPT_LIBRARY_DATA_SOURCE_ID, headers)
+def render_scripts_gap_report(client: httpx.Client, headers: dict, extensions: tuple, data_source_id: str, label: str, title_property: str = "Script") -> None:
+    """Cruza assets committeados en disco (árbol activo) contra la base de
+    Notion correspondiente (SCRIPT LIBRARY o SKILL LIBRARY). Read-only en
+    ambos lados — no escribe ni crea filas automáticamente, solo reporta
+    para que el operador decida el alta."""
+    disk_scripts = scan_committed_assets(PROJECT_ROOT, extensions)
+    library_titles = get_script_library_titles(client, data_source_id, headers, title_property)
 
     disk_names = {name for name, _ in disk_scripts}
     missing = sorted(name for name in disk_names if name not in library_titles)
@@ -391,10 +396,10 @@ def render_scripts_gap_report(client: httpx.Client, headers: dict) -> None:
         if estado == "Activo" and title not in disk_names
     )
 
-    print("[SCRIPT LIBRARY — GAP REPORT]")
+    print(f"[{label} — GAP REPORT]")
     print("-" * 60)
-    print(f"Scripts en árbol activo (disco): {len(disk_names)}")
-    print(f"Filas en SCRIPT LIBRARY (Notion): {len(library_titles)}")
+    print(f"Assets en árbol activo (disco): {len(disk_names)}")
+    print(f"Filas en {label} (Notion): {len(library_titles)}")
     print("-" * 60)
     print(f"SIN REGISTRAR EN NOTION — {len(missing)} encontrados:")
     if not missing:
@@ -413,7 +418,7 @@ def render_scripts_gap_report(client: httpx.Client, headers: dict) -> None:
     for name in orphan_notion:
         print(f"  [?] {name}")
     print("-" * 60)
-    print("[FIN SCRIPT LIBRARY — GAP REPORT]")
+    print(f"[FIN {label} — GAP REPORT]")
 
 def render_bootstrap_dump(client: httpx.Client, changelog_page_id: str, headers: dict) -> None:
     """Genera el bloque [DUMP INICIO SESIÓN VANTAGE] descrito en
@@ -457,7 +462,8 @@ def main():
     parser = argparse.ArgumentParser(description="Verify and Sync document versions across Notion SSOT.")
     parser.add_argument("--sync", action="store_true", help="Sincroniza la versión de CHANGELOG hacia todos los documentos y verifica por relectura (veredicto PASS/FAIL real). Reemplaza al antiguo par --sync + --check.")
     parser.add_argument("--bootstrap", action="store_true", help="Genera el dump de contexto de apertura de sesión (Ledger + Changelog + tickets prioritarios). Read-only.")
-    parser.add_argument("--scripts", action="store_true", help="Cruza los scripts .py/.sh del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SCRIPT LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
+    parser.add_argument("--scripts", action="store_true", help="Cruza los scripts .py/.sh (únicamente) del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SCRIPT LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
+    parser.add_argument("--skills", action="store_true", help="Cruza los archivos .skill del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SKILL LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     args = parser.parse_args()
 
     # 1. Inicialización de Entorno e Infraestructura
@@ -467,13 +473,19 @@ def main():
         print("[-] Error: NOTION_TOKEN no definido en layer_1.env", file=sys.stderr)
         sys.exit(1)
 
-    # --scripts no depende del registro de documentos fundacionales (resolver_registry_v2.json)
-    # — se resuelve y sale temprano para no exigir ese archivo si el operador solo quiere
-    # el gap report de scripts.
+    # --scripts/--skills no dependen del registro de documentos fundacionales
+    # (resolver_registry_v2.json) — se resuelven y salen temprano para no exigir
+    # ese archivo si el operador solo quiere el gap report correspondiente.
     if args.scripts:
         headers = get_notion_headers(token)
         with httpx.Client(timeout=20.0) as client:
-            render_scripts_gap_report(client, headers)
+            render_scripts_gap_report(client, headers, (".py", ".sh"), SCRIPT_LIBRARY_DATA_SOURCE_ID, "SCRIPT LIBRARY")
+        return
+
+    if args.skills:
+        headers = get_notion_headers(token)
+        with httpx.Client(timeout=20.0) as client:
+            render_scripts_gap_report(client, headers, (".skill",), SKILL_LIBRARY_DATA_SOURCE_ID, "SKILL LIBRARY", title_property="Skill")
         return
 
     registry_path = find_registry_file(SCRIPT_DIR)
