@@ -75,7 +75,7 @@ EXCLUDED_FILE_PREFIXES = ("DEPRECATED_",)
 
 # Solo estas carpetas de primer nivel se consideran "árbol activo" del sistema.
 # Fuera de esta lista (ej. "- Documentación/") no son scripts operativos.
-ACTIVE_TOP_LEVEL_DIRS = {"Layer_1", "Layer_3", "Layer_4", "Dashboard", "Raycast"}
+ACTIVE_TOP_LEVEL_DIRS = {"Layer_1", "Layer_3", "Layer_4", "Dashboard", "Raycast", "skills"}
 
 def load_env(env_path: Path) -> dict:
     """Carga variables de entorno manualmente para evitar dependencias externas."""
