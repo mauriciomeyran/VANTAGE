@@ -879,5 +879,6 @@ Class A — Human-Primary (operador/feed_processor escriben):
 Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NAD · layer · hash
 Class B — System-Primary (Python únicamente, ningún otro componente escribe):
 Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente
+Next_Action: select (10 valores operativos). Ver KERNEL:SCHEMA-008.
 Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida (KERNEL:SCHEMA-003).
 Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.

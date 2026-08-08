@@ -1,6 +1,51 @@
 # V | CHANGELOG
 
 ---
+### v9.14.6 — Expansión de Next_Action: Inclusión de "Optimizar" · 2026-08-08
+Tipo: [SCHEMA] [DOC]
+Alcance: Technical Kernel (KERNEL:SCHEMA-008); Manual (MANUAL:SCHEMA-FIELD-REF); Change Log.
+Contexto: Regularización post-ejecución parcial. Valor "Optimizar" (Class B Next_Action) se dispara cuando JD_Quality = "JD Completo", priorizando vacantes listas para CV-A.
+Cambios ejecutados y verificados:
+- KERNEL:SCHEMA-008: conteo (9)→(10); fila "Optimizar | JD_Quality = "JD Completo" (Prioridad de procesamiento)" insertada como primera fila de la tabla.
+- MANUAL:SCHEMA-FIELD-REF: nota añadida bajo Class B — "Next_Action: select (10 valores operativos). Ver KERNEL:SCHEMA-008".
+IDs afectados: ninguno nuevo (extensión de contenido bajo IDs existentes).
+Write-Back Verification: Kernel y Manual re-fetched post-escritura — ambos bloques confirmados, mismatch=0.
+Pendiente (operador / Terminal):
+- layer_1_run.py Fase 4: condicional JD_Quality == "JD Completo" → next_action = "Optimizar".
+- vcensus + vversions --sync.
+- SP:SCHEMA y MANUAL:HOW-IT-WORKS (si se requiere armonización adicional).
+Versión actualizada: 9.14.6 (CHANGELOG).
+---
+### v9.14.4a — Auditoria: Diagnostico Mutacion Post-vl3/vl1 (Rx Tracker) · 2026-08-07
+Tipo: [AUDIT]
+Alcance: VANTAGE TRACKER (442938be...) — solo lectura, sin escritura.
+Contexto: El operador reporto que el Tracker "cambio totalmente" tras correr vl3 y luego vl1, sobre un CSV baseline de la noche anterior (20:58) con 15 registros ya triados para CV-A.
+Hallazgos (diff por hash, baseline vs. estado post-vl3/vl1):
+- Los 15 registros de la baseline siguen todos presentes (0 desaparecidos).
+- vl1 agrego 7 registros nuevos (esperado).
+- Optimizar/Postular/Interview/Archivar/Gate_Decision/Status/Next_Action: sin cambios en ninguno de los 15 — el triage manual de CV-A quedo intacto.
+- Lo que si cambio: Score y Prioridad de varios registros (recalculo normal del pipeline, no corrupcion de datos).
+Veredicto: falso positivo de "todo cambio" — el operador interpreto el recalculo esperado de Score/Prioridad como perdida de triage. Sin fix de codigo ni documentacion requerido; comportamiento del pipeline es el esperado.
+IDs afectados: ninguno. Census no requiere regeneracion.
+Version actualizada: sin bump (entrada retroactiva de auditoria, sin escritura asociada).
+---
+### v9.14.5 — Rediseño Matriz Next_Action + Fix Drift SCHEMA-008 (KERNEL:SCHEMA-008, KERNEL:GATE-DECISION-010/011, SP:SCHEMA, Notion Tracker) · 2026-08-08
+Tipo: [SCHEMA] [DOC] [FIX]
+Alcance: Notion (VANTAGE TRACKER, propiedad Next_Action); Kernel (KERNEL:SCHEMA-008, KERNEL:GATE-DECISION-010, KERNEL:GATE-DECISION-011, KERNEL:EVOLUTION §17); System Prompt (SP:SCHEMA); Bug Tracker (ticket nuevo).
+Contexto: Continuación de una sesión Rx Tracker donde el operador reportó mutación masiva de estado tras correr vl3+vl1; diagnóstico confirmó que el triage previo estaba intacto (cambio real fue en Score/Prioridad, no en Gate/Next_Action). A partir de ahí se abrió un rediseno de la matriz Next_Action con el operador (9 preguntas respondidas directamente) para eliminar dos puntos de riesgo: el catch-all silencioso a Archivar, y Rechazado cayendo a Ninguna sin señal de que falta análisis manual (screenshot → Takeaways → Archivar=True). Durante el mapeo de nodos se detectó un drift documental preexistente por fetch directo del schema real de Notion: KERNEL:SCHEMA-008 documentaba rich_text (auditoría 2026-08-04, v9.13.11) mientras el campo real ya era select desde v9.14.2/v9.14.3 (auditoría 2026-08-06) — el contenido correcto había quedado huérfano y duplicado bajo KERNEL:EVOLUTION §17 en vez de reemplazar 07.8. Se corrigió en el mismo batch.
+Cambios:
+- Notion — VANTAGE TRACKER (442938be...), propiedad Next_Action (select): altas "Post-Mortem" y "Investigar"; "Ninguna" se conserva como opción legacy (no destructivo sobre registros históricos), ya no usada por código nuevo.
+- KERNEL:SCHEMA-008 (07.8) — tipo corregido a select (v9.14.2); tabla reescrita a 9 valores: Rechazado→Post-Mortem (reemplaza Ninguna), default no-match→Investigar (reemplaza Archivar como catch-all), Inbound unifica Referencia/Networking→Re-check. Párrafo de "corrección de tipo" desactualizado reescrito con el historial real (v9.13.7 select → v9.13.11 error rich_text → v9.14.2/3 migración confirmada → v9.14.5 fix de drift).
+- KERNEL:GATE-DECISION-010 (09.10) — nuevo bullet de invariante: Status=Rechazado ahora escribe Next_Action=Post-Mortem (antes Ninguna); protección terminal sin cambio (ya cubierta por STATUS_TERMINAL_MAP).
+- KERNEL:GATE-DECISION-011 (09.11) — fila APPLIED→REJECTED, columna Efecto Class B actualizada con Next_Action=Post-Mortem.
+- KERNEL:EVOLUTION (§17) — eliminado bloque huérfano duplicado (2x) que contradecía 07.8 sin ancla propia.
+- SP:SCHEMA (08) — lista Next_Action actualizada a 9 valores (Post-Mortem, Investigar; Ninguna removida de la lista operativa).
+- Bug Tracker — ticket nuevo (3b6938be...): drift SCHEMA-008 rich_text/select, Prioridad 3 ALTO, Next_Action=Documentar. Nota adicional: duplicados detectados en Changelog vivo (v9.14.3 x2, v9.14.2 x3) — no corregidos en este batch, refuerzan pendiente de vantage-tidy-changelog.
+IDs afectados: ninguno nuevo — extensión/corrección de contenido bajo IDs existentes (KERNEL:SCHEMA-008, KERNEL:GATE-DECISION-010, KERNEL:GATE-DECISION-011, SP:SCHEMA). Census no requiere regeneración.
+Write-Back Verification: Kernel re-fetched independientemente tras cada tanda de escritura (2 pasadas) — 07.8, 09.10, 09.11 y limpieza de §17 confirmados en posición correcta. System Prompt re-fetched — SP:SCHEMA confirmado. Notion Tracker re-fetched tras ALTER COLUMN — 10 opciones confirmadas (8 originales + Post-Mortem + Investigar), 0 opciones perdidas.
+Pendiente (fuera de esta entrada): implementación en código (layer_1_run.py Fase 4 — branches de Source_Type, default, rama Rechazado→Post-Mortem) no ejecutada en este batch, que fue exclusivamente documental (mapeo + Notion schema); vantage-tidy-changelog (duplicados v9.14.2/v9.14.3); resto de pendientes heredados sin tocar.
+Versión actualizada: 9.14.5 (CHANGELOG). El resto de los fundacionales permanece en v9.14.4 hasta vversions --sync.
+---
 ### v9.14.4 — Refactor ArgumentParser: Separación Semántica Scripts/Skills (verify_versions.py, KERNEL:DOCUMENTATION-007, SP:VERSION-CHECK-TOOL, ALIASES:L0-RUNTIME, MANUAL:RUNTIME-002) · 2026-08-07
 Tipo: [CODE] [DOC]
 Alcance: Layer_1/scripts/verify_versions.py (código, local); Kernel (KERNEL:DOCUMENTATION-007); System Prompt (SP:VERSION-CHECK-TOOL); Aliases (ALIASES:L0-RUNTIME); Manual (MANUAL:RUNTIME-002).

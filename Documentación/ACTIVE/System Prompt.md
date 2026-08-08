@@ -70,7 +70,10 @@ Cédula Digital
 | ARCHIVO DRY RUN (COL) | 37d938be-fc42-8022-9191-000bf6cdac7b |
 | VERSION MANIFEST (DB) | 02331706-d2f5-43d1-8166-ed53b690dbd7 |
 | SESSION LEDGER (DB) | 38324240-c686-47d0-8082-cee5e4409f88 |
-| INBOX (Session Summaries) | f30938be-fc42-824a-ad9b-01c5305c73f3 |
+| ARCHIVO SCRIPT LIBRARY (DS) | 39f938be-fc42-8016-a9a9-da076ce5d63 |
+| SCRIPT LIBRARY (DB) | 39f938befc428016a9a9daa076ce5d63 |
+| SCRIPT LIBRARY (COL) | f3e42cf0347647368ac8076ea313d780 |
+| SKILL LIBRARY (DB) | 3b5938befc4280ffb714ebab2989fa3d |
 | FIGMA SYNC | 04-Vantage_CV/Figma Sync/ |
 | SCRIPT LIBRARY (DB) | f3e42cf0347647368ac8076ea313d780 |
 | SCRIPT LIBRARY (COL) | ea914544-338f-485e-ac1b-7f137a5c9cee |
@@ -110,7 +113,7 @@ Referencia — consultar KERNEL:CV-GOLDEN-RULES.
 Esquema de Trackers
 Bug Tracker y Tasks Tracker comparten estructura base como caché de lectura estático. Notion es la fuente de verdad.
 Para valores operativos de Next_Action del Tracker de vacantes (distinto de los listados abajo para Bug/Tasks Tracker), ver KERNEL:SCHEMA-008.
-- Next_Action (select): Archivar | Expirada | Ninguna | Follow-up | Interview prep | Re-check | Reparar URL | Verificar JD
+- Next_Action (select): Archivar | Expirada | Investigar | Post-Mortem | Follow-up | Interview prep | Re-check | Reparar URL | Verificar JD (v9.14.5 — reemplaza Ninguna por Post-Mortem, agrega Investigar como default no destructivo)
 - Bug Tracker (data source 36e938be-fc42-81f8-8c6f-000b6769ba03):
 - Bug (title)
 - Fecha_Detección (date)

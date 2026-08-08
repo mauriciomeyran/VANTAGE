@@ -977,14 +977,24 @@ def main():
             protected_count += 1
             continue
 
+        # v9.14.6: JD_Quality == "JD Completo" → priorizar Optimizar (CV-A ready)
+        jd_quality = txt(props.get("JD_Quality"))
+
         if evaluate_rejection_status(status):
             decision = "REJECTED"
-            next_action = "Ninguna"
+            next_action = "Post-Mortem"  # v9.14.5: antes "Ninguna" -- senal explicita de analisis pendiente antes de Archivar=True
             rejected_status_count += 1
         elif evaluate_application_status(status):
             decision = "APPLIED"
             next_action = get_application_next_action(status)
             applied_count += 1
+        elif jd_quality == "JD Completo":
+            decision = gate(fetch, vm_scope, role_class, source_type, rol=rol, marca=marca)
+            next_action = "Optimizar"
+            if decision == "CREATE":
+                create_count += 1
+            else:
+                blocked_count += 1
         else:
             decision = gate(fetch, vm_scope, role_class, source_type, rol=rol, marca=marca)
 
@@ -997,12 +1007,12 @@ def main():
             elif source_type == "Vacante" and fetch == "Parcial":
                 next_action = "Verificar JD"
                 blocked_count += 1
-            elif source_type in ["Inbound", "Referencia", "Networking"]:
-                next_action = "Re-check"
-                if decision != "CREATE":
-                    create_count += 1
+            # v9.14.5: rama "elif source_type in [Inbound, Referencia, Networking]" removida --
+            # era codigo muerto: gate() ya retorna CREATE para los 3 (bypass, ver 09.1),
+            # por lo que siempre caian en la rama "decision == CREATE" de arriba.
+            # Inbound/Referencia/Networking quedan unificados bajo Re-check via ese mismo camino.
             else:
-                next_action = "Archivar"
+                next_action = "Investigar"  # v9.14.5: antes "Archivar" (catch-all destructivo por default)
                 blocked_count += 1
 
         changes = []

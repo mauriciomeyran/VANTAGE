@@ -357,19 +357,21 @@ Rol · Marca · URL · Source_Type · Status · Prioridad · JD · JOB_ID · Hol
 ---
 ### 07.8 KERNEL:SCHEMA-008
 Valores Operativos — Next_Action (Tracker de Vacantes)
-Campo Class B (System-Primary), tipo rich_text (texto libre, no select) — escrito exclusivamente por layer_1_run.py (y su clon layer_1_run_dash.py). Auditoría de código realizada 2026-08-04 (Devin), verificada línea por línea contra el repositorio.
-Valores confirmados en código activo (8):
+Campo Class B (System-Primary), tipo select (migrado de rich_text en v9.14.2) — escrito por layer_1_run.py y layer_1_run_dash.py con la estructura {"select": {"name": VALUE}}. Auditoría de código realizada 2026-08-06, verificada línea por línea contra el repositorio.
+Valores confirmados en código activo (10), rediseño v9.14.6 (KERNEL:GATE-DECISION-010):
 | Valor | Condición de disparo |
 | --- | --- |
+| Optimizar | JD_Quality = "JD Completo" (Prioridad de procesamiento) |
 | Archivar | Terminal — URL Gate bloqueado / Misfits / NAD vencido / Gate BLOCKED default |
+| Investigar | Default no destructivo — ningún branch de Source_Type/Status/Fetch matchea (reemplaza a Archivar como catch-all, v9.14.5) |
+| Post-Mortem | Status=Rechazado → Gate_Decision=REJECTED (reemplaza a Ninguna, v9.14.5 — señala análisis pendiente antes de Archivar=True) |
 | Expirada | Constante de protección en TERMINAL_ACTIONS (gate_logic.py) |
-| Ninguna | Status=Rechazado → Gate_Decision=REJECTED |
 | Follow-up | Status ∈ {Postulado, Negociando, Sin respuesta} |
 | Interview prep | Status=En proceso |
-| Re-check | Gate_Decision=CREATE, o default de get_application_next_action() |
+| Re-check | Gate_Decision=CREATE (Source_Type=Vacante), o Source_Type=Inbound (unifica Referencia/Networking, v9.14.5) |
 | Reparar URL | Source_Type=Vacante AND Fetch=Bloqueado |
 | Verificar JD | Source_Type=Vacante AND Fetch=Parcial |
-Corrección de tipo de campo: el Changelog v9.13.7 (Ticket A) documentó la escritura de Next_Action con sintaxis {"select": {"name": ...}}. Verificación de código 2026-08-04 confirma que el campo es rich_text ({"rich_text": [{"text": {"content": ...}}]}) — no select. El Changelog no se reescribe (no reescribe su propio historial); esta sección es la fuente viva correcta.
+Historial de tipo de campo: v9.13.7 introdujo escritura select; v9.13.11 documentó (erróneamente) rich_text tras una auditoría desactualizada; v9.14.2/v9.14.3 (Changelog) confirmaron y ejecutaron la migración real a select — esta sección se corrige en v9.14.5 para alinearse con el Changelog, tras detectarse el drift por fetch directo del schema vivo de Notion.
 ---
 ## 08 KERNEL:TRACKER-SCHEMA
 Bug Tracker y Tasks Tracker
@@ -478,6 +480,7 @@ Invariantes
 - Todo write que fija Status=Expirada (Fase 2 — URL_GATE; Fase 3.5 — filtro de perfil) debe fijar Next_Action=Archivar en el mismo write — evita drift entre el criterio Status→TERMINAL y Next_Action→TERMINAL_ACTIONS.
 - Un registro terminal no puede ser sobreescrito por recálculo de Score/Gate, aunque cambien campos Class A.
 - RT-1 (/accept): la escritura de Class A corregido debe limpiar atómicamente Next_Action y Gate_Decision (select: null) en el mismo write, para que el siguiente run no trate la vacante recuperada como terminal fantasma.
+- v9.14.5: Status=Rechazado ahora escribe Next_Action=Post-Mortem (antes Ninguna) — protección terminal vía STATUS_TERMINAL_MAP sin cambio, ya cubierta por el criterio 1 de esta sección.
 - Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con KERNEL:OWNERSHIP-002.
 Referencias
 - Implementación: Layer_1/scripts/gate_logic.py, Layer_1/scripts/layer_1_run.py
@@ -499,7 +502,7 @@ Referencia canónica para scripts y auditorías — no reemplaza la descripción
 | REVIEW_NEEDED | Operador edita Notion directo + Status→Target | vantage_pipeline.sh evalúa Class B por primera vez | READY_TO_APPLY OR BLOCKED | Humano + Python | Score, Gate_Decision, Next_Action calculados |
 | READY_TO_APPLY | Operador inicia postulación | Status→Postulando | APPLYING | Humano | Status (Class A) |
 | APPLYING | Confirmación de envío | Status→Postulado | APPLIED | Humano | Status (Class A) |
-| APPLIED | Resultado negativo | Status→Rechazado | REJECTED | Humano | Status (Class A) — terminal, protegido por gate_logic() |
+| APPLIED | Resultado negativo | Status→Rechazado | REJECTED | Humano | Status (Class A) — terminal, protegido por gate_logic(); Next_Action=Post-Mortem (v9.14.5) |
 | READY_TO_APPLY / BLOCKED | URL_GATE detecta URL muerta en re-run | Score=0 + Gate_Decision=BLOCKED | BLOCKED | Python | Score, Gate_Decision |
 | Cualquier no-terminal | gate_logic() evalúa estado terminal existente | Status ∈ {Postulado, Rechazado, Expirada} | Estado preservado | Python | Sin escritura — gate_logic() bloquea re-evaluación |
 Nota de orden de precedencia (Hallazgo 2 — auditoría arquitectónica)
@@ -730,8 +733,6 @@ Cruzar esquema contra 07 SCHEMA antes de cualquier escritura.
 > [TAREA 3 aplicada] El Kernel anterior tenía un bloque Tabla de Cross-References Actualizadas (esquema §L0-XXX) pegado al final de esta sección — nota de trabajo interna de una sesión de edición previa, sin ID canónico ni función de contrato. Removido en esta pasada; el Kernel no documenta su propio proceso de edición.
 ---
 ## 17 KERNEL:EVOLUTION
-Campo Class B (System-Primary), tipo select (migrado de rich_text en v9.14.2) — escrito por layer_1_run.py y layer_1_run_dash.py con la estructura {"select": {"name": VALUE}}. Auditoría de código realizada 2026-08-06.
-Campo Class B (System-Primary), tipo select (migrado de rich_text en v9.14.2) — escrito por layer_1_run.py y layer_1_run_dash.py con la estructura {"select": {"name": VALUE}}. Auditoría de código realizada 2026-08-06.
 Evolución del Sistema
 Cambios válidos
 - Cambio estructural de mercado
