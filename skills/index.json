@@ -49,6 +49,18 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-cv-a.skill",
+      "name": "vantage-cv-a",
+      "description": "VANTAGE Skill: vantage-cv-a",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-cv-b.skill",
+      "name": "vantage-cv-b",
+      "description": "VANTAGE Skill: vantage-cv-b",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal-implementacion.skill",
       "name": "vantage-documentacion-transversal-implementacion",
       "description": "Implementa documentación transversal",
@@ -73,6 +85,12 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-qa.skill",
+      "name": "vantage-qa",
+      "description": "VANTAGE Skill: vantage-qa",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-close.skill",
       "name": "vantage-session-close",
       "description": "Protocolo de cierre de sesión VANTAGE",
@@ -88,6 +106,12 @@
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-script-library.skill",
       "name": "vantage-sync-script-library",
       "description": "VANTAGE Skill: vantage-sync-script-library",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-skill-library.skill",
+      "name": "vantage-sync-skill-library",
+      "description": "VANTAGE Skill: vantage-sync-skill-library",
       "mimeType": "application/octet-stream"
     },
     {
