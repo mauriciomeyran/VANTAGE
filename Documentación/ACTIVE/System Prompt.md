@@ -70,17 +70,12 @@ Cédula Digital
 | ARCHIVO DRY RUN (COL) | 37d938be-fc42-8022-9191-000bf6cdac7b |
 | VERSION MANIFEST (DB) | 02331706-d2f5-43d1-8166-ed53b690dbd7 |
 | SESSION LEDGER (DB) | 38324240-c686-47d0-8082-cee5e4409f88 |
-| ARCHIVO SCRIPT LIBRARY (DS) | 39f938be-fc42-8016-a9a9-da076ce5d63 |
+| ARCHIVO SCRIPT LIBRARY (DS) | 39f938be-fc42-80ec-8f2e-000b16d736e2 |
 | SCRIPT LIBRARY (DB) | 39f938befc428016a9a9daa076ce5d63 |
 | SCRIPT LIBRARY (COL) | f3e42cf0347647368ac8076ea313d780 |
 | SKILL LIBRARY (DB) | 3b5938befc4280ffb714ebab2989fa3d |
-| FIGMA SYNC | 04-Vantage_CV/Figma Sync/ |
-| SCRIPT LIBRARY (DB) | f3e42cf0347647368ac8076ea313d780 |
-| SCRIPT LIBRARY (COL) | ea914544-338f-485e-ac1b-7f137a5c9cee |
-| SKILL LIBRARY (DB) | 3b5938befc4280ffb714ebab2989fa3d |
 | SKILL LIBRARY (COL) | 2f1938be-fc42-83c8-8972-07300201136d |
-| ARCHIVO SCRIPT LIBRARY (DB) | 39f938befc428016a9a9daa076ce5d63 |
-| ARCHIVO SCRIPT LIBRARY (COL) | 39f938be-fc42-80ec-8f2e-000b16d736e2 |
+| FIGMA SYNC | 04-Vantage_CV/Figma Sync/ |
 ---
 ## 04 SP:CONTEXT-INFRASTRUCTURE
 Economía de Contexto y Rutas de Carga
@@ -105,6 +100,7 @@ Los siguientes triggers forman parte de la interfaz operativa de VANTAGE y manti
 - VSYNC-DOC
 - STATUS [SYSTEM]
 ---
+### 07 SP:CV-GOLDEN-RULES-REF
 Referencia — consultar KERNEL:CV-GOLDEN-RULES.
 CV-À SCOPE LOCK (Skills CV-A):
 - PROHIBIDO: Estimar/mencionar Gate_Decision, VM_Scope o campos Class B. Usar verbos de decisión ("bloquear", "pasa").
@@ -114,7 +110,7 @@ CV-À SCOPE LOCK (Skills CV-A):
 Esquema de Trackers
 Bug Tracker y Tasks Tracker comparten estructura base como caché de lectura estático. Notion es la fuente de verdad.
 Para valores operativos de Next_Action del Tracker de vacantes (distinto de los listados abajo para Bug/Tasks Tracker), ver KERNEL:SCHEMA-008.
-- Next_Action (select): Archivar | Expirada | Investigar | Post-Mortem | Follow-up | Interview prep | Re-check | Reparar URL | Verificar JD (v9.14.5 — reemplaza Ninguna por Post-Mortem, agrega Investigar como default no destructivo)
+- Next_Action (select): Archivar | Expirada | Investigar | Post-Mortem | Follow-up | Interview prep | Re-check | Reparar URL | Verificar JD (v9.14.5 — reemplaza Ninguna por Post-Mortem, agrega Investigar como default no destructivo) | Optimizar
 - Bug Tracker (data source 36e938be-fc42-81f8-8c6f-000b6769ba03):
 - Bug (title)
 - Fecha_Detección (date)

@@ -210,7 +210,7 @@ Human signal → Career Sites · LinkedIn · Aggregators (paralelo) → JSON est
 → FEED → feed_processor.py → Notion (Class A) → vantage-pipeline
 ```
 Objetivo: maximizar cobertura y trazabilidad de entrada — no decide prioridad estratégica, solo captura oportunidades de alta señal antes de que se evaporen.
-Componentes: Career Sites · LinkedIn · Aggregators — wrappers especializados por fuente, convergiendo a un schema común.
+Componentes: Career Sites · LinkedIn · Aggregators — wrappers especializados por fuente, convergiendo a un schema común. Herramienta de soporte: Weekly Prompt Assembler (weekly_prompt_assembler.py, alias vassemble) — materializa en disco los 7 prompts semanales por motor desde la PROMPT LIBRARY, reemplazando el ensamblado anterior vía agente dentro de Perplexity Desktop (ver ALIASES:L1L2-DISCOVERY).
 Responsabilidades: buscar vacantes, validar evidencia mínima, extraer campos canónicos, mantener trazabilidad por fuente, emitir resultados estructurados (no recomendaciones).
 Campos inmutables: los campos Class A emitidos por cada wrapper (ver KERNEL:SCHEMA-001) no se reinterpretan en L1 — feed_processor.py normaliza formato, no criterio.
 Reglas de dedup: L1 no deduplica — la jerarquía L1>L2>L3 y el punto de convergencia único viven en KERNEL:ARCHITECTURE-L4.
@@ -317,7 +317,7 @@ Class A vs Class B
 El schema define ownership. Cada campo pertenece a exactamente un componente.
 Class A — Human-Primary
 AI Component escribe en CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_processor.py escribe en FEED L1/L3:
-- Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NAD · layer · hash.
+- Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash.
 Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Archivar · Repetida.
 Class B — System-Primary
 Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente · Dedup_Flag.
@@ -620,9 +620,15 @@ CV-A
 Input
 URL o JD.
 Process
-Extrae keywords + gaps + tono de marca.
+Extrae keywords + gaps + tono de marca. Determina el Positioning Mode aplicable mediante el Algoritmo de Selección N1–N4 (4 pasos, determinista):
+1. Keywords — extraer JD_keywords_top6 del JD.
+1. Mapeo — alinear cada keyword contra los anclajes canónicos de CANON:POSITIONING.
+1. Conteo — contar matches por ancla.
+1. Desempate — si dos o más modos empatan, aplicar la Regla de Desempate de CANON:POSITIONING (keywords → seniority → escalamiento humano).
+Contrato de Persistencia de la Decisión
+El modo seleccionado no es válido sin su justificación: CV-A escribe positioning_rationale (texto libre, 1 línea) en el HANDOFF, documentando el match predominante que determinó el modo (ej. "JD centrado en obra civil → N2"). Sin este campo, el HANDOFF está incompleto y no avanza a CV-B.
 Output
-HANDOFF (JSON de 5 campos).
+HANDOFF (JSON de 7 campos).
 Cierre obligatorio
 SESIÓN COMPLETADA → nueva sesión.
 ```json
@@ -632,7 +638,8 @@ SESIÓN COMPLETADA → nueva sesión.
   "JD_keywords_top6": ["", "", "", "", "", ""],
   "fit_gaps": ["", ""],
   "tono_marca": "",
-  "idioma": ""
+  "idioma": "",
+  "positioning_rationale": ""
 }
 ```
 Un HANDOFF incompleto no avanza a CV-B. El sistema no inventa valores para campos faltantes.
@@ -643,7 +650,7 @@ CV-B
 Input
 HANDOFF completo + Career Canon activo.
 Validation
-Verificar los 5 campos del HANDOFF.
+Verificar los 7 campos del HANDOFF.
 Canon check
 Empresa, rol, bullets y KPIs derivados del Canon — no inventados.
 Auditoría de Estructura

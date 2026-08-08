@@ -29,6 +29,7 @@ L1/L2 · Discovery (Lunes)
 | vl1 | Corre el pipeline principal de Active Recon — procesa el JSON consolidado del día y lo escribe en el Tracker. | Invoca layer_1_pipeline.sh, que activa .venv y dispara feed_processor.py: normaliza campos, aplica dedup cross-layer, presenta DRY RUN antes de escribir. |
 | vl1status / vl1analytics / vl1batch / vl1recovery / vl1profile / vl1feed / vl1backfill | Atajos de un solo token a cada subcomando de vl1 (ver Manual 09.2 para el detalle de cada uno). | Cada uno equivale a vl1 — mismo contrato, solo evita el espacio. |
 | vl1app | Abre la app empaquetada de Layer 1 desde Finder/Spotlight en vez de Terminal. | open /Applications/Layer 1. |
+| vassemble | Genera los 7 prompts semanales (.md) por motor desde la PROMPT LIBRARY, con fecha del día ya sustituida. | Corre weekly_prompt_assembler.py: fetch vía notion_utils.notion_get (cache/throttling/retry ya existentes) de Prompt A + Wrapper por motor + Prompt E, sustitución de [YYYY-MM-DD], concatenación Prompt A + Wrapper por orden fijo, escritura de Prompt_[Motor][Fecha].md y Prompt_E_Consolidation[Fecha].md en Layer_1/data/Prompts/. |
 ## 04 ALIASES:L3-PASSIVE-INTAKE
 L3 · Passive Intake
 | Alias | Qué hace | Procedimiento interno |

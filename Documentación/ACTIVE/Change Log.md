@@ -1,5 +1,49 @@
 # V | CHANGELOG
 
+### v9.14.9 — Asignación de Ownership Class A a Positioning_Mode (KERNEL:SCHEMA-001, MANUAL:SCHEMA-FIELD-REF) · 2026-08-08
+Tipo: [SCHEMA] [DOC]
+Alcance: Kernel (KERNEL:SCHEMA-001); Manual (MANUAL:SCHEMA-FIELD-REF).
+Contexto: Positioning_Mode ya operaba de facto como campo determinado por el AI Component en CV-A (Algoritmo de Selección N1–N4, KERNEL:CV-PIPELINE-001) y ya era referenciado en MANUAL:OBJECTIVE como campo de distribución del Tracker, pero carecía de ownership formal en la lista Class A/B — este batch cierra ese gap. Nota de alcance: la propuesta original incluía un tercer parche sobre SP:SCHEMA (Sección 08) que se detuvo en Fase 2 — esa sección no contiene un encabezado de schema para el Tracker de vacantes bajo el cual insertar la propiedad; queda pendiente de resolución con el operador antes de ejecutarse.
+Cambios:
+- KERNEL:SCHEMA-001 (07.1) — Positioning_Mode insertado en la lista Class A, entre Status y Prioridad.
+- MANUAL:SCHEMA-FIELD-REF (21) — mismo campo insertado en la tabla índice, mismo orden.
+IDs afectados: ninguno — extensión de contenido bajo IDs ya existentes. Census no requiere regeneración.
+Write-Back Verification: Kernel y Manual re-fetched de forma independiente tras cada escritura.
+Pendiente (fuera de esta entrada): resolución del Parche #2 (SP:SCHEMA — nodo "Tracker de vacantes" inexistente); vversions --sync para propagar v9.14.9 al resto de los fundacionales.
+Versión actualizada: 9.14.9 (CHANGELOG). El resto de los fundacionales permanece en v9.14.8 hasta vversions --sync.
+---
+### v9.14.8 — Enriquecimiento Teórico de Positioning Modes N1–N4: Algoritmo, Contrato de Persistencia, Mitigación de Riesgos, Router Mental (KERNEL:CV-PIPELINE-001, CANON:POSITIONING-005, MANUAL:POSITIONING-CRITERIA, CANON:OUTPUT-CONTRACT-005) · 2026-08-08
+Tipo: [DOC] [ENRICHMENT]
+Alcance: Kernel (KERNEL:CV-PIPELINE-001, KERNEL:CV-PIPELINE-002); Career Canon (CANON:POSITIONING, CANON:POSITIONING-005 nuevo, CANON:OUTPUT-CONTRACT-005); Manual (MANUAL:WEEKLY-FLOW-003, MANUAL:POSITIONING-CRITERIA).
+Contexto: El operador solicitó elevar el capítulo de Positioning Modes de "definición funcional" a "base teórica operativa", integrando un corpus de investigación externa (Perplexity) sobre la justificación algorítmica y arquitectónica de N1–N4. Durante Fase 1 se detectó que gran parte del mapeo original propuesto ya estaba cubierto por contenido vivo (matriz de anclas, regla de desempate, router JD-first) — el enriquecimiento real se limitó a gaps genuinos: el algoritmo determinista de selección, un contrato de trazabilidad de la decisión, la sección de mitigación de riesgos, y el volumen procedimental del Manual. Se detectó y corrigió en el mismo batch una discrepancia de conteo de campos del HANDOFF preexistente (Kernel citaba 5, Manual citaba 6 en dos lugares distintos) — unificado a 7 con la incorporación de positioning_rationale.
+Cambios:
+- KERNEL:CV-PIPELINE-001 (12.1) — inyectado Algoritmo de Selección N1–N4 (Keywords → Mapeo → Conteo → Desempate, con referencia cruzada a CANON:POSITIONING) y Contrato de Persistencia de la Decisión (campo positioning_rationale obligatorio en el HANDOFF). HANDOFF actualizado de 5 a 7 campos (JSON + prosa).
+- KERNEL:CV-PIPELINE-002 (12.2) — "Verificar los 7 campos del HANDOFF" (antes 5).
+- CANON:POSITIONING (11) — frase de apertura formalizando la sección como Matriz de Respaldo Estratégico.
+- CANON:POSITIONING-005 (nuevo, 11.5) — alta de ID: sección Mitigación de Riesgos (Anti-overselling, Anti-fragmentación de identidad).
+- CANON:OUTPUT-CONTRACT-005 (12.5) — vínculo explícito entre el Positioning Mode activo y el concepto de "preset narrativo" definido en KERNEL:CV-PIPELINE-001.
+- MANUAL:WEEKLY-FLOW-003 (8.3, CV-A y CV-B) — HANDOFF actualizado a 7 campos (JSON + ambas menciones en prosa, incluyendo un mismatch de "6 campos" detectado en Write-Back que no estaba en el mapeo original).
+- MANUAL:POSITIONING-CRITERIA (19) — tabla "Vista JD-first" expandida con columna Señales de Alarma (Red Flags) por modo; nuevo bloque Gestión de Ambigüedad — JDs Híbridos, detallando cómo redactar fit_gaps ante escalamiento a decisión humana.
+IDs afectados: 1 alta (CANON:POSITIONING-005) — Census requiere regeneración (vcensus, pendiente, acción local del operador).
+Write-Back Verification: Kernel, Manual y Career Canon re-fetched de forma independiente tras cada escritura — todos los bloques confirmados en posición correcta. Un mismatch adicional fuera del DRY RUN original (MANUAL:WEEKLY-FLOW-003, "6 campos" en sección CV-B) detectado y corregido en el mismo ciclo de verificación.
+Pendiente (fuera de esta entrada): consolidación de referencias informales a "KERNEL:CENSUS-SYNC" (sin ancla propia en el corpus vivo — apuntan de facto a KERNEL:DOCUMENTATION-008) — no ejecutada por falta de fuente verificable; candidata a ticket separado en Task Tracker si el operador lo autoriza. vcensus + vversions --sync para propagar v9.14.8 al resto de los fundacionales.
+Versión actualizada: 9.14.8 (CHANGELOG). El resto de los fundacionales permanece en v9.14.6 hasta vversions --sync.
+---
+---
+### v9.14.7 — Weekly Prompt Assembler reemplaza Ensamblado vía Agente en Perplexity Desktop (KERNEL:ARCHITECTURE-L1-002, MANUAL:WEEKLY-FLOW-001, MANUAL:PROMPTS-WRAPPERS, ALIASES:L1L2-DISCOVERY) · 2026-08-08
+Tipo: [DOC] [INFRA]
+Alcance: Kernel (KERNEL:ARCHITECTURE-L1-002); Manual (MANUAL:WEEKLY-FLOW-001, MANUAL:PROMPTS-WRAPPERS §13); Aliases (ALIASES:L1L2-DISCOVERY).
+Contexto: El operador introdujo weekly_prompt_assembler.py (verificado contra el archivo real, no solo el abstract) — reemplaza el mecanismo de ensamblado de prompts vía "Prompt D" (agente ejecutado dentro de Perplexity Desktop, documentado hasta v9.14.6) por materialización local en disco de los 7 prompts semanales. Durante la propuesta se detectó y resolvió una contradicción real: MANUAL:PROMPTS-WRAPPERS describía a Claude como quien hace fetch de cada componente vía MCP — ya no aplica, el script hace el fetch directo vía notion_utils.notion_get. fetch_notion_page() fue verificado por contenido de archivo (no self-report) tras hallarse inicialmente como stub (NotImplementedError) en una primera versión pegada por el operador.
+Cambios:
+- KERNEL:ARCHITECTURE-L1-002: nueva frase sobre Weekly Prompt Assembler (weekly_prompt_assembler.py, alias vassemble) como herramienta de soporte de L1, con referencia cruzada a ALIASES:L1L2-DISCOVERY.
+- MANUAL:WEEKLY-FLOW-001 (8.1 Lunes): bloque completo del "Prompt D" (agente ensamblador) reemplazado por instrucción de ejecutar vassemble; subsecciones "¿Cómo inicio L1?" / "¿Cómo inicio L2?" reemplazadas por "¿Cómo uso los archivos generados?", consistente con la materialización en disco.
+- MANUAL:PROMPTS-WRAPPERS (§13): corregido — el script hace el fetch, no Claude vía MCP.
+- ALIASES:L1L2-DISCOVERY (Familia 03): alta de fila vassemble, con procedimiento interno confirmado contra el archivo real (notion_utils.notion_get, no NotImplementedError).
+IDs afectados: ninguno nuevo — extensión/corrección de contenido bajo IDs ya existentes. Census no requiere regeneración.
+Write-Back Verification: pendiente (siguiente paso de esta misma sesión — Fase 4 del protocolo).
+Pendiente (fuera de esta entrada): vversions --sync para propagar v9.14.7 al resto de los fundacionales.
+Versión actualizada: 9.14.7 (CHANGELOG). El resto de los fundacionales permanece en v9.14.6 hasta vversions --sync.
+---
 ---
 ### v9.14.6 — Refuerzo de Gobernanza CV-A: CV-À SCOPE LOCK + Alta de Regla #6 (KERNEL:CV-GOLDEN-RULES-006) · 2026-08-08
 Tipo: [DOC] [GOVERNANCE]

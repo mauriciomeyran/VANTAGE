@@ -284,79 +284,24 @@ Este es el ciclo completo de trabajo, de lunes a viernes. Asume que ya pasaste p
 Lunes
 El lunes es el ciclo de búsqueda activa completo. Se dispara manualmente y cubre las dos capas de búsqueda humana (L1 y L2), más la revisión de lo que L3 recolectó de forma pasiva durante la semana.
 Contrato operativo completo de cada capa (Objetivo, Componentes, Campos inmutables, Estados de error, Métricas) — ver KERNEL:ARCHITECTURE-L1-002 (L1), KERNEL:ARCHITECTURE-L2-002 (L2), KERNEL:ARCHITECTURE-L3-002 (L3). Esta sección cubre únicamente el procedimiento paso a paso.
-El ciclo comienza con los prompts de búsqueda, los cuales no se copian de versiones anteriores — se ensamblan bajo demanda a través de Perplexity Desktop: cada prompt combina dos capas: 
-- El Prompt Base (perfil, reglas de exclusión, etc.)
-- El Prompt Wrapper (que contiene la fecha del día TODAY’S DATE, el modo de búsqueda, etc.).
-Abre Perplexity Desktop y dale el Prompt D:
-```plain text
-Eres un agente de ensamblado de prompts para el ciclo semanal de VANTAGE.
-
-Tu única tarea es hacer fetch de los componentes en el orden indicado
-
-y entregarlos concatenados, listos para copiar al motor correspondiente.
-
-━━━ INSTRUCCIONES ━━━
-
-1. Hacer fetch de cada componente en el orden de la tabla.
-2. Concatenar: Prompt A primero, Wrapper debajo. Entregar cada prompt concatenado dentro de su propio fence.
-3. Entregar el texto plano resultante. Sin prose. Sin comentarios.
-4. Sustituir [YYYY-MM-DD] con la fecha de hoy en cada componente.
-5. Al final, entregar Prompt E solo (no se concatena con Prompt A).
-
-━━━ ORDEN DE EJECUCIÓN ━━━
-
-| # | Sesión | Componentes | Motor destino |
-| --- | --- | --- | --- |
-| 1 | Career Sites | Prompt A + Wrapper Career Sites | Motor con crawler |
-| 2 | LinkedIn | Prompt A + Wrapper LinkedIn | Motor con crawler |
-| 3 | Aggregators | Prompt A + Wrapper Aggregators | Motor con crawler |
-| 4 | Gemini | Prompt A + Wrapper Gemini | Gemini |
-| 5 | Grok | Prompt A + Wrapper Grok | Grok |
-| 6 | You.com | Prompt A + Wrapper You.com | You.com |
-| 7 | Consolidación | Prompt E (solo) | Perplexity |
-
-━━━ IDs DE FETCH ━━━
-
-Prompt A:             368938be-fc42-8162-ae48-d48970a729dc
-
-Wrapper Career Sites: 374938be-fc42-8158-93e6-cfeb7bbc5f8b
-
-Wrapper LinkedIn:     374938be-fc42-81f0-8fc6-d80ae31080ea
-
-Wrapper Aggregators:  379938be-fc42-8189-8460-f87cac78f4bc
-
-Wrapper Gemini:       368938be-fc42-8139-b6a7-ee467f6c4584
-
-Wrapper Grok:         368938be-fc42-8145-944d-d15245b6e65e
-
-Wrapper You.com:      368938be-fc42-81c8-95cd-d8d75ff3abe4
-
-Prompt E:             368938be-fc42-8177-b4a1-d2e8ea1e2e08
+El ciclo comienza con los prompts de búsqueda, los cuales no se copian de versiones anteriores — se materializan bajo demanda ejecutando el Weekly Prompt Assembler:
+```bash
+vassemble
 ```
+El script hace fetch de Prompt A (base) y de cada Wrapper (Career Sites, LinkedIn, Aggregators, Gemini, Grok, You.com) y de Prompt E desde la PROMPT LIBRARY, sustituye [YYYY-MM-DD] por la fecha del día en cada componente, y genera 7 archivos .md listos para copiar directo a cada motor: Prompt_[Motor][Fecha].md y Prompt_E_Consolidation[Fecha].md.
+| # | Sesión | Archivo generado | Motor destino |
+| --- | --- | --- | --- |
+| 1 | Career Sites | Prompt_Career_Sites_[Fecha].md | Motor con crawler |
+| 2 | LinkedIn | Prompt_LinkedIn_[Fecha].md | Motor con crawler |
+| 3 | Aggregators | Prompt_Aggregators_[Fecha].md | Motor con crawler |
+| 4 | Gemini | Prompt_Gemini_[Fecha].md | Gemini |
+| 5 | Grok | Prompt_Grok_[Fecha].md | Grok |
+| 6 | You.com | Prompt_You_com_[Fecha].md | You.com |
+| 7 | Consolidación | Prompt_E_Consolidation_[Fecha].md | Perplexity |
 ### ¿Por qué importa la fecha?
 TODAY’S DATE define la ventana de búsqueda activa (14 días preferente, hasta 21 con match fuerte). Un prompt con fecha incorrecta produce resultados fuera de ventana o advertencias innecesarias en todos los ítems.
-### ¿Cómo inicio L1?
-```plain text
-"Entrégame los prompts de L1"
-"Entrégame los prompts de Career Sites"
-"Entrégame el prompt de LinkedIn"
-"Entrégame el prompt de Aggregators"
-```
-- En Comet Desktop, usando Perplexity con el control del navegador activado, ejecutarás cada bloque en una pestaña diferente.
-- Cada ejecución produce un JSON independiente.
-- Compila los JSONs; los usarás en el paso de consolidación más abajo.
-### ¿Cómo inicio L2?
-```plain text
-"Entrégame el prompt de Gemini"
-"Entrégame el prompt de Grok"
-"Entrégame el prompt de you.com"
-"Entrégame el prompt B"
-"Entrégame el prompt C"
-```
-- Ejecutarás cada bloque de instrucciones en su motor de búsqueda correspondiente usando Deep Research siempre que te sea posible.
-- Los Prompts B y C pueden ser utilizados en cualquiera de los tres motores de búsqueda. 
-- Cada ejecución produce un JSON independiente. 
-- Compila los JSONs; los usarás en el siguiente paso.
+### ¿Cómo uso los archivos generados?
+Abre cada Prompt_[Motor]_[Fecha].md y pega su contenido en el motor correspondiente (Career Sites/LinkedIn/Aggregators vía Comet Desktop con control de navegador activo; Gemini/Grok/You.com directo en Deep Research). Los Prompts B y C pueden usarse en cualquiera de los tres motores L2. Cada ejecución produce un JSON independiente — compílalos para el paso de consolidación.
 ### ¿Como los compilo?
 En preparación para entrar al Pipeline es necesario consolidar la información recopilada.
 - Regresarás a Perplexity Desktop y, usando como base el Prompt E, pegarás los JSONs de L1 + L2.
@@ -494,13 +439,13 @@ CV-A es análisis: qué keywords posicionar, qué gaps cubrir, qué tono de marc
 Claude realiza tres tareas de análisis, en este orden:
 - Extrae los 6 keywords de posicionamiento del JD.
 - Identifica los gaps entre los requisitos del rol y el perfil de experiencia canónico del Career Canon.
-- Determina el Positioning Mode aplicable — hay cuatro posibles, definidos en el Career Canon:
+- Determina el Positioning Mode aplicable mediante el Algoritmo de Selección N1–N4 (KERNEL:CV-PIPELINE-001) — hay cuatro modos posibles, definidos en el Career Canon:
 - N1 Luxury Brand Execution
 - N2 Store Design & Flagship
 - N3 Regional Brand Execution
 - N4 Commercial VM & Field Leadership
 Además, define el tono de marca del CV y detecta el idioma del JD (ES/EN) para el output.
-Output de la sesión — el HANDOFF, 6 campos obligatorios:
+Output de la sesión — el HANDOFF, 7 campos obligatorios:
 ```json
 {
   "empresa": "",
@@ -508,7 +453,8 @@ Output de la sesión — el HANDOFF, 6 campos obligatorios:
   "JD_keywords_top6": ["", "", "", "", "", ""],
   "fit_gaps": ["", ""],
   "tono_marca": "",
-  "idioma": ""
+  "idioma": "",
+  "positioning_rationale": ""
 }
 ```
 La sesión termina aquí. No se escribe ningún CV en CV-A.
@@ -520,7 +466,7 @@ Abre una sesión nueva de Claude. Pega el HANDOFF completo y dispara:
 CV-B [pega el HANDOFF]
 ```
 Claude ejecuta, en secuencia:
-- Verifica los 6 campos del HANDOFF.
+- Verifica los 7 campos del HANDOFF.
 - Cruza el HANDOFF contra el contrato de output del Career Canon para validar que bullets y KPIs sean derivados canónicos (no inventados).
 - Aplica el Positioning Mode definido en CV-A.
 - Usa el campo idioma del HANDOFF para seleccionar la versión ES o EN de cada sección del Career Canon (no se generan CVs bilingües ni se mezclan idiomas dentro de un mismo output).
@@ -813,7 +759,7 @@ Problemas Comunes y Soluciones
 ---
 ## 13 MANUAL:PROMPTS-WRAPPERS
 Prompts & Wrappers
-Se consultan vía MCP desde la PROMPT LIBRARY en Notion — es Claude quien hace fetch de cada componente por su ID (no Perplexity Desktop directamente); Perplexity Desktop solo recibe el texto ya ensamblado y concatenado, listo para pegar en cada motor, según el orden descrito en MANUAL:WEEKLY-FLOW-001. El catálogo se organiza en tres grupos:
+Se consultan desde la PROMPT LIBRARY en Notion vía el Weekly Prompt Assembler (weekly_prompt_assembler.py, alias vassemble) — el script hace fetch de cada componente por su ID, sustituye fecha y concatena localmente; el operador recibe archivos .md ya ensamblados, listos para pegar en cada motor, según el orden descrito en MANUAL:WEEKLY-FLOW-001. El catálogo se organiza en tres grupos:
 - Prompt A + Wrappers — el Prompt Base (perfil, reglas de exclusión) combinado con el Wrapper específico de cada canal: Career Sites, LinkedIn, Aggregators, Gemini, Grok, you.com.
 - Prompts B y C — búsqueda complementaria, utilizables en cualquiera de los tres motores L2 (Gemini, Grok, you.com).
 - Prompt E — consolidación final; no se concatena con Prompt A, se usa solo tras compilar los JSONs de L1+L2.
@@ -859,13 +805,15 @@ Las Reglas de Oro (KERNEL:CV-GOLDEN-RULES) son restricciones de arquitectura, no
 ## 19 MANUAL:POSITIONING-CRITERIA
 Positioning Criteria
 CANON:POSITIONING define 4 modos de posicionamiento para CV-B. Esta sección resuelve el gap operativo: con qué criterio elegir uno.
-| Modo | ID | Ancla canónica | Cuándo aplica |
-| --- | --- | --- | --- |
-| N1 | CANON:POSITIONING-001 | C01 · 3 marcas lujo · CAPEX/OPEX · NPI | JD enfatiza gestión multi-marca de lujo, presupuesto, lanzamientos de producto |
-| N2 | CANON:POSITIONING-002 | C02 · Adidas Brand Center · KPI07 · blueprints | JD enfatiza Store Design, Flagship, construcción/remodelación física |
-| N3 | CANON:POSITIONING-003 | C03 · 270+ POS · 6 países · KPI03–06 · CF05 | JD enfatiza rollout regional multi-país, estandarización, eficiencia operativa |
-| N4 | CANON:POSITIONING-004 | C04/C05 · +43% tráfico · +18% conversión · 21 reportes | JD enfatiza liderazgo de campo comercial, KPIs de tráfico/conversión, gestión de equipos directos |
+| Modo | ID | Ancla canónica | Cuándo aplica | Señales de Alarma |
+| --- | --- | --- | --- | --- |
+| N1 | CANON:POSITIONING-001 | C01 · 3 marcas lujo · CAPEX/OPEX · NPI | JD enfatiza gestión multi-marca de lujo, presupuesto, lanzamientos de producto | No usar si el JD es retail masivo/fast fashion o venta por volumen, sin componente multi-marca de lujo |
+| N2 | CANON:POSITIONING-002 | C02 · Adidas Brand Center · KPI07 · blueprints | JD enfatiza Store Design, Flagship, construcción/remodelación física | No usar solo por "diseño" — requiere obra física, planos, coordinación con arquitectos, no solo estética |
+| N3 | CANON:POSITIONING-003 | C03 · 270+ POS · 6 países · KPI03–06 · CF05 | JD enfatiza rollout regional multi-país, estandarización, eficiencia operativa | No usar si el JD es de un solo mercado/tienda — sin alcance multi-país no hay ancla regional real |
+| N4 | CANON:POSITIONING-004 | C04/C05 · +43% tráfico · +18% conversión · 21 reportes | JD enfatiza liderazgo de campo comercial, KPIs de tráfico/conversión, gestión de equipos directos | No usar si el JD no reporta KPIs comerciales medibles (tráfico/conversión) o no involucra equipos de campo |
 - Regla de desempate (JDs híbridos) — ver CANON:POSITIONING para el texto completo: (1) más keywords mapeados al ancla, (2) empate → mayor seniority (N2>N1, N4>N3 con presupuesto regional explícito), (3) empate persistente → escalar a decisión humana vía fit_gaps.
+Gestión de Ambigüedad — JDs Híbridos
+Cuando el algoritmo de KERNEL:CV-PIPELINE-001 escala a decisión humana (empate persistente), fit_gaps del HANDOFF debe declarar el conflicto explícitamente: qué dos modos empataron, cuántos keywords mapeó cada uno, y qué falta para resolverlo sin intervención humana (ej. "N1 vs N2 empatados 3-3 — JD menciona lujo y construcción de flagship en igual peso; falta señal de presupuesto regional para desempatar por seniority"). CV-A no entrega HANDOFF completo sin esta nota cuando aplica el escalamiento.
 ## 20 MANUAL:GOLDEN-SKELETON-REF
 Golden Skeleton
 El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-002) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
@@ -877,7 +825,7 @@ El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-002) es la secuencia fija de bloques
 Schema Class A/B
 KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.
 Class A — Human-Primary (operador/feed_processor escriben):
-Rol · Marca · Source_Type · URL · Status · Prioridad · Holding · JD · NAD · layer · hash
+Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash
 Class B — System-Primary (Python únicamente, ningún otro componente escribe):
 Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente
 Next_Action: select (10 valores operativos). Ver KERNEL:SCHEMA-008.
