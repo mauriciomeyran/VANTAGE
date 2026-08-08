@@ -220,6 +220,7 @@ CENSUS_SPEC = [
             {"id": "CANON:POSITIONING-002", "seccion": "11.2", "nombre": "Positioning N2 — Store Design & Flagship Execution"},
             {"id": "CANON:POSITIONING-003", "seccion": "11.3", "nombre": "Positioning N3 — Regional Brand Execution & Rollout"},
             {"id": "CANON:POSITIONING-004", "seccion": "11.4", "nombre": "Positioning N4 — Commercial VM & Field Leadership"},
+                {"id": "CANON:POSITIONING-005", "seccion": "11.5", "nombre": "Mitigación de Riesgos"},
             {"id": "CANON:OUTPUT-CONTRACT", "seccion": "12", "nombre": "Output Contract Framework"},
             {"id": "CANON:OUTPUT-CONTRACT-001", "seccion": "12.1", "nombre": "Output Contract — Golden Skeleton"},
             {"id": "CANON:OUTPUT-CONTRACT-002", "seccion": "12.2", "nombre": "Output Contract — Figma Tags / Registry SSOT"},

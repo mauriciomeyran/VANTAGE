@@ -1007,7 +1007,7 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
         props[schema.fetch_status_prop] = schema.select_value(fetch)
     elif schema.fuente_prop:
         fuente = "Agregador" if fetch == "aggregator" else "Career Page Oficial"
-        props[schema.fuente_prop] = schema.rich_text_value(fuente)
+        props[schema.fuente_prop] = schema.select_value(fuente)
 
     if schema.location_prop and rec.get("location"):
         props[schema.location_prop] = schema.rich_text_value(rec["location"])
@@ -1244,7 +1244,7 @@ def main() -> None:
 
     processed = [process_record(r, notion_utils, schema, alias_data) for r in records]
 
-    print_dryrun_summary(processed, args.layer, schema)
+    print_dryrun_summary(processed, args.layer)
     dryrun_path = write_dryrun_file(processed, args.layer)
     print(f"📄 DRY RUN guardado: {dryrun_path}")
 

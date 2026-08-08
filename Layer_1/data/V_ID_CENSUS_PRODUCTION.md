@@ -167,6 +167,7 @@
 | [`CANON:POSITIONING-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281afab06c21b9d850103 ) | 11.2 | Positioning N2 — Store Design & Flagship Execution |
 | [`CANON:POSITIONING-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281e78b92cee0016940d7 ) | 11.3 | Positioning N3 — Regional Brand Execution & Rollout |
 | [`CANON:POSITIONING-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42812eaf61f04cc6da14b8 ) | 11.4 | Positioning N4 — Commercial VM & Field Leadership |
+| [`CANON:POSITIONING-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#bb785fe76dfd41569aeb9ab80167a427 ) | 11.5 | Mitigación de Riesgos |
 | [`CANON:OUTPUT-CONTRACT`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281b1a145e48c1e349d63 ) | 12 | Output Contract Framework |
 | [`CANON:OUTPUT-CONTRACT-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281ad95dded8ab38b3070 ) | 12.1 | Output Contract — Golden Skeleton |
 | [`CANON:OUTPUT-CONTRACT-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc428112817ecea719f19557 ) | 12.2 | Output Contract — Figma Tags / Registry SSOT |
@@ -223,7 +224,7 @@
 | [`SP:DIGITAL-ID-CARD`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42819a919cc80ec56ad76c ) | 03 | Cédula Digital — rutas de operación y UUIDs |
 | [`SP:DATA-FLOW`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42819ea9a2ffe6eb852fcb ) | 05 | Referencia — Consultar en Technical Kernel (KERNEL:DATA-FLOW) |
 | [`SP:TRIGGERS`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42818aa6eac0882e9c30c0 ) | 06 | Triggers operativos de VANTAGE |
-| [`SP:CV-GOLDEN-RULES-REF`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#42a6ed5ddea04df3af38681f379eecdc ) | 07 ⚠︎sin verificar en vivo | Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES) |
+| [`SP:CV-GOLDEN-RULES-REF`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428101b2d4f1124a2c06ab ) | 07 | Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES) |
 | [`SP:SCHEMA`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281cebc7acf109277b8d9 ) | 08 | Schema — Trackers (Class A/B) |
 | [`SP:MCP-ROUTING-NOTES`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281e8aabec1d52a036038 ) | 09 | Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY) |
 | [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428150a82cfb23a2d0edd3 ) | 10 | Regla de Consistencia Documental |
