@@ -105,9 +105,10 @@ Los siguientes triggers forman parte de la interfaz operativa de VANTAGE y manti
 - VSYNC-DOC
 - STATUS [SYSTEM]
 ---
-## 07 SP:CV-GOLDEN-RULES
-Reglas de Oro
 Referencia — consultar KERNEL:CV-GOLDEN-RULES.
+CV-À SCOPE LOCK (Skills CV-A):
+- PROHIBIDO: Estimar/mencionar Gate_Decision, VM_Scope o campos Class B. Usar verbos de decisión ("bloquear", "pasa").
+- PERMITIDO: Señalar discrepancias en el campo "observaciones" del HANDOFF sin recomendar descarte.
 ---
 ## 08 SP:SCHEMA
 Esquema de Trackers

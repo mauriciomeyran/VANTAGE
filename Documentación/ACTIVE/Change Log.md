@@ -1,6 +1,20 @@
 # V | CHANGELOG
 
 ---
+### v9.14.6 — Refuerzo de Gobernanza CV-A: CV-À SCOPE LOCK + Alta de Regla #6 (KERNEL:CV-GOLDEN-RULES-006) · 2026-08-08
+Tipo: [DOC] [GOVERNANCE]
+Alcance: Technical Kernel (KERNEL:OWNERSHIP-001, KERNEL:CV-GOLDEN-RULES-006); System Prompt (SP:CV-GOLDEN-RULES-REF); Manual (MANUAL:CV-GOLDEN-RULES-INDEX).
+Contexto: Refuerzo de límites operativos para el AI Component durante la ejecución de Skills CV-A (CV-A, CV-B, QA, FAST). El objetivo es evitar que la IA re-evalúe, estime o modifique decisiones ya tomadas por Python o el operador, garantizando que su rol se limite a informar discrepancias en el campo "observaciones" del HANDOFF sin emitir verbos de decisión (ej. "bloquear", "pasa").
+Cambios:
+- KERNEL:OWNERSHIP-001: Añadido CV-À SCOPE LOCK como restricción explícita para el AI Component, prohibiendo evaluar fit estratégico o cuestionar Gate_Decision.
+- SP:CV-GOLDEN-RULES-REF: Inyectada instrucción operativa CV-À SCOPE LOCK, detallando lo PROHIBIDO (estimar Gate_Decision, VM_Scope o campos Class B; usar verbos de decisión) y lo PERMITIDO (señalar discrepancias en "observaciones" del HANDOFF).
+- KERNEL:CV-GOLDEN-RULES-006 (nuevo, 10.6): Alta de Regla #6 — Invarianza de la Decisión de Gate, prohibiendo que el AI Component re-evalúe fit, estime scores o aplique exclusiones sobre vacantes con Gate_Decision ya calculada.
+- MANUAL:CV-GOLDEN-RULES-INDEX: Añadida fila para KERNEL:CV-GOLDEN-RULES-006, vinculando a la nueva regla.
+IDs afectados: 1 alta (KERNEL:CV-GOLDEN-RULES-006).
+Write-Back Verification: Kernel, System Prompt y Manual re-fetched tras escritura — 3 bloques confirmados en posición correcta.
+Pendiente: vversions --sync para propagar v9.14.6 al resto de los fundacionales.
+Versión actualizada: 9.14.6 (CHANGELOG). El resto de los fundacionales permanece en v9.14.5 hasta vversions --sync.
+---
 ### v9.14.6 — Expansión de Next_Action: Inclusión de "Optimizar" · 2026-08-08
 Tipo: [SCHEMA] [DOC]
 Alcance: Technical Kernel (KERNEL:SCHEMA-008); Manual (MANUAL:SCHEMA-FIELD-REF); Change Log.

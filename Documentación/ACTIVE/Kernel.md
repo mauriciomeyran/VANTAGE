@@ -288,6 +288,7 @@ Restricciones (no negociables)
 - NO evalúa fit estratégico.
 - NO calcula scores ni estima gate decisions.
 - NO ejecuta triggers fuera de 11.
+CV-À SCOPE LOCK: Prohibido en esta fase evaluar fit estratégico o cuestionar la Gate_Decision tomada por Python. La IA informa discrepancias en "observaciones" del HANDOFF sin emitir verbos de decisión ("bloquear", "pasa").
 ### 05.2 KERNEL:OWNERSHIP-002
 Python Component
 Motor de lógica de negocio y escritura autónoma: único componente con permiso de escritura autónoma en Notion.
@@ -536,6 +537,9 @@ Razón: [qué regla viola y por qué existe la restricción]
 Alternativa operativa: [pasos concretos dentro del sistema]
 ¿Proceder? Escribe SÍ o CANCELAR
 ```
+### 10.6 KERNEL:CV-GOLDEN-RULES-006
+Regla #6 — Invarianza de la Decisión de Gate
+Prohibido que el AI Component re-evalúe fit, estime scores o aplique exclusiones sobre vacantes que ya poseen una Gate_Decision calculada por Python o aprobada por el operador.
 ---
 # III. EJECUCIÓN
 ## 11 KERNEL:TRIGGERS

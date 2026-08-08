@@ -59,6 +59,7 @@
 | [`KERNEL:CV-GOLDEN-RULES-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e78666f83de32a09ba ) | 10.3 | Regla de Oro #3 |
 | [`KERNEL:CV-GOLDEN-RULES-004`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42819394fcce90dc89df0c ) | 10.4 | Regla de Oro #4 |
 | [`KERNEL:CV-GOLDEN-RULES-005`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281a0b4c3fac3a44af77f ) | 10.5 | Regla de Oro #5 |
+| [`KERNEL:CV-GOLDEN-RULES-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3b6938befc4280b08b52e629fd3516ca ) | 10.6 | Regla de Oro #6 — Invarianza de la Decisión de Gate |
 | [`KERNEL:TRIGGERS`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428195a4f1dd06e2e00019 ) | 11 | Contratos de Ejecución del AI Component |
 | [`KERNEL:TRIGGER-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428134b6d6d9c786c9dd26 ) | 11.1 | Trigger — Discovery Request |
 | [`KERNEL:TRIGGER-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281ad9db7e3dbe58fd519 ) | 11.2 | Trigger — CV Optimization |
@@ -222,7 +223,7 @@
 | [`SP:DIGITAL-ID-CARD`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42819a919cc80ec56ad76c ) | 03 | Cédula Digital — rutas de operación y UUIDs |
 | [`SP:DATA-FLOW`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42819ea9a2ffe6eb852fcb ) | 05 | Referencia — Consultar en Technical Kernel (KERNEL:DATA-FLOW) |
 | [`SP:TRIGGERS`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42818aa6eac0882e9c30c0 ) | 06 | Triggers operativos de VANTAGE |
-| [`SP:CV-GOLDEN-RULES`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281498b8dcac22a06a75a ) | 07 | Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES) |
+| [`SP:CV-GOLDEN-RULES-REF`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#42a6ed5ddea04df3af38681f379eecdc ) | 07 ⚠︎sin verificar en vivo | Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES) |
 | [`SP:SCHEMA`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281cebc7acf109277b8d9 ) | 08 | Schema — Trackers (Class A/B) |
 | [`SP:MCP-ROUTING-NOTES`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281e8aabec1d52a036038 ) | 09 | Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY) |
 | [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428150a82cfb23a2d0edd3 ) | 10 | Regla de Consistencia Documental |
