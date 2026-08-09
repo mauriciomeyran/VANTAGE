@@ -250,8 +250,9 @@ FIGMA SYNC PROTOCOL (STRICT)
 Golden Skeleton
 Use this exact sequence of IDs for any Figma-destined output.
 - ID Header Sample: ###### figma_text_id
-- KeySlots: 2055:9 (Name), 2055:10 (Headline), 2043:51 (Profile), 2043:56-60 (Skills), 2043:64+ (Experience).
+- KeySlots: 2:4 (Name), 2:5 (Headline), 2:9 (Profile), 2:14-18 (Skills), 2:22+ (Experience).
 - Rule: If the skeleton changes in Figma, this record must be updated before the next CV-B run.
+---
 ```plain text
 ###### [figma_text_id](2:4)
 
@@ -520,11 +521,10 @@ Reglas de Serialización
 - & en nombres de empresa → &
 ### 12.5 CANON:OUTPUT-CONTRACT-005
 Positioning Modes (Aplicación en Output)
-El Positioning Mode activo funciona como preset narrativo sobre el Canon (ver KERNEL:CV-PIPELINE-001, Algoritmo de Selección N1–N4): la decisión determinística ahí definida es la que fija qué subconjunto del Canon llena estos slots variables — Experience conserva siempre la secuencia C01–C05.
-Los slots Variable por modo se derivan del Positioning Mode activo (sección 11 · N1–N4):
-- 2055:10 tagline
-- 2043:51 / 2043:52 párrafos de perfil 1–2
-- 2043:56 / 2043:57 / 2043:58 skills 1–3
+El Positioning Mode activo funciona como preset narrativo sobre el Canon (ver KERNEL:CV-PIPELINE-001, Algoritmo de Selección N1–N4): la decisión determinística ahí definida es la que fija qué subconjunto del Canon llena estos slots variables — Experience conserva siempre la secuencia C01–C05. Los slots Variable por modo se derivan del Positioning Mode activo (sección 11 · N1–N4):
+- 2:5 tagline
+- 2:9 / 3:13 párrafos de perfil 1–2
+- 2:14 / 2:15 / 2:16 skills 1–3
 - Bullets C01–C05 priorizados según el modo activado
 ---
 ## 13 CANON:DERIVED-OUTPUTS-ARCHIVE

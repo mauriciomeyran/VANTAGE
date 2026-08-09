@@ -73,6 +73,10 @@ Referencia: `CANON:OUTPUT-CONTRACT-004`.
 - Tagline = `[Título · Subtítulo] · Ciudad | Tel | Email | LinkedIn | Portfolio`
 - `&` en nombres de empresa se mantiene como `&`
 
+## Anti-cloning Guard (v9.16.0)
+
+Antes de emitir el Markdown, verificar que ningún bullet de Experience coincide verbatim con el de un CV-B previo del mismo Positioning Mode en esta sesión o batch. Match exacto → re-derivar desde `fit_gaps`/`JD_keywords_top6` del HANDOFF activo. Reutilizar bullets pre-redactados entre vacantes distintas viola `KERNEL:CV-PIPELINE-002` y `CANON:OUTPUT-CONTRACT-001` (Regla #5, Distinctiveness Rule).
+
 ## Output — Formato de Entrega Obligatorio (dos artefactos)
 
 1. **Markdown en chat, dentro de un bloque de código `markdown`**, como contenido para la página de la vacante en Notion. Debajo, en párrafo aparte, un footer con metadata: versión del Output Contract, Positioning Mode activo, referencia canónica al Canon usado.

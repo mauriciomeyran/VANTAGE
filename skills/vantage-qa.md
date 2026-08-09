@@ -46,6 +46,9 @@ Nota: el historial laboral en estas empresas SÍ es válido como contenido del C
 ### 6. Formato y completitud
 Verificación visual y técnica: ¿el PDF se ve completo (sin cortes de texto, overflow, o secciones a medio renderizar)? ¿No quedan placeholders como `[PENDING DATA]` visibles en el documento final?
 
+### 7. Diferenciación de Contenido (Anti-cloning, v9.16.0)
+Compara el texto del PDF contra los demás entregables del mismo batch (otros CV-B generados en la misma sesión o corrida). Un match verbatim >80% en la sección Experience frente a cualquier otro entregable del batch resulta en FAIL automático de este ítem — independientemente del Positioning Mode. Si no hay otros entregables del batch disponibles para comparar, marca N/A y anótalo en observaciones.
+
 ## Output — Veredicto
 
 Estructura del reporte (en el chat, no requiere archivo descargable salvo que el operador lo pida):
@@ -61,6 +64,7 @@ Estructura del reporte (en el chat, no requiere archivo descargable salvo que el
 | 4 | Hard Blocks | PASS/FAIL | |
 | 5 | No inferencia / Canon | PASS/FAIL | |
 | 6 | Formato y completitud | PASS/FAIL | |
+| 7 | Diferenciación de Contenido | PASS/FAIL/N/A | |
 
 ## Veredicto: GO / NO-GO
 
