@@ -43,6 +43,12 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-audit-navigation-brief.skill",
+      "name": "vantage-audit-navigation-brief",
+      "description": "VANTAGE Skill: vantage-audit-navigation-brief",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-create-bug-task.skill",
       "name": "vantage-create-bug-task",
       "description": "Crea tickets en Bug Tracker o Task Tracker de VANTAGE",
@@ -100,6 +106,12 @@
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-open.skill",
       "name": "vantage-session-open",
       "description": "Protocolo de apertura de sesión VANTAGE",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-census-spec.skill",
+      "name": "vantage-sync-census-spec",
+      "description": "VANTAGE Skill: vantage-sync-census-spec",
       "mimeType": "application/octet-stream"
     },
     {

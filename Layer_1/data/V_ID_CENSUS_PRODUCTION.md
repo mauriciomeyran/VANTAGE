@@ -250,4 +250,11 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-_Ninguno detectado en esta corrida._
+| ID | Documento | Link |
+|---|---|---|
+| `MANUAL:FIGMA-SYNC-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#9d42e3fbc953459f8457043565e7e884 ) |
+| `MANUAL:FIGMA-SYNC-002` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#b805f3abb9f04c85992df278612f567c ) |
+| `MANUAL:FIGMA-SYNC-003` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#52c396b408134d48aad9d12a1c0f9999 ) |
+| `MANUAL:FIGMA-SYNC-004` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#9c0c9713ba4d405c97acb267657bbcff ) |
+| `MANUAL:FIGMA-SYNC-005` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3eb471d8f5744556af1ef7bcd51b1ca6 ) |
+| `MANUAL:FIGMA-SYNC-DIAGNOSTIC` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42816aaafcee86ee368a49 ) |

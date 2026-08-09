@@ -480,16 +480,12 @@ Escritura en Notion (dos destinos):
 - Página en DERIVED OUTPUTS · ARCHIVE del Career Canon — con footer de Positioning Mode activo y fecha.
 - Bloque # MARKDOWN CANON ALIGNED en la página de la vacante en el Tracker — el Markdown completo con Figma tags, dentro de un bloque de código markdown.
 ### Figma
-CV-B ya no tiene permiso creativo sobre la estructura. El proceso es de inyección en slots: se usa el Golden Skeleton como base, y se vacía la información del Career Canon en los slots existentes sin alterar sus IDs. Con el .md autorizado en mano, el flujo hacia Figma es directo — el plugin hace el trabajo pesado.
-Instalación del plugin (una sola vez, si aún no lo tienes instalado): Figma Desktop → Plugins → Development → Import plugin from manifest… → navega a ~/Documents/03 Projects/VANTAGE/Figma Sync/ → selecciona manifest.json. El plugin queda disponible permanentemente. Es importante saber que el plugin no modifica Notion ni el Tracker — opera exclusivamente sobre el lienzo Figma activo.
-Uso operativo, cada Miércoles:
+CV-B ya no tiene permiso creativo sobre la estructura. El proceso es de inyección en slots vía plugin — arquitectura, contrato de bloque, flujo de inyección, sanitización y diagnóstico de errores viven en MANUAL:FIGMA-SYNC-003 (§20, Flujo de Inyección) y subsecciones adyacentes 20.1–20.5. Con el .md autorizado en mano:
 1. Abre Figma Desktop y el archivo del CV.
 1. Plugins → Development → VANTAGE CV Sync.
-1. Copia el contenido completo del .md de CV-B y pégalo en el área de texto del plugin.
-1. Haz clic en Inyectar a Nodos Nativos.
-1. Verifica la notificación: VANTAGE Sync: X nodos actualizados vía Registry V2 (ID crudo).
-1. Revisa el lienzo visualmente y exporta: frame del CV → Export → PDF.
-Si el plugin reporta Keys sin resolver, revisa la entrada correspondiente en MANUAL:TROUBLESHOOTING.
+1. Pega el .md de CV-B y haz clic en Inyectar a Nodos Nativos.
+1. Verifica la notificación y revisa el lienzo antes de exportar (PDF).
+Si el plugin reporta "Keys sin resolver" o "0 nodos actualizados", ver MANUAL:FIGMA-SYNC-DIAGNOSTIC (§12).
 ### QA
 ```plain text
 QA [adjunta el PDF exportado]
@@ -713,12 +709,20 @@ Problemas Comunes y Soluciones
 - Ejecutar manualmente: vl3 (debe procesar hasta 5 correos).
 - Revisar heartbeat: cat ~/.vantage/l3_heartbeat.json (última ejecución exitosa).
 - Si falla autenticación IMAP: regenerar app password de Gmail.
-### Figma Plugin No Resuelve IDs
-- Verificar registry_seed.json actualizado desde lienzo Figma.
-- Confirmar que code.js tiene Registry V2 embebido (variable REGISTRY al inicio).
-- Comparar IDs en .md generado por CV-B vs IDs reales en capas Figma.
-- Si hay mismatch: regenerar registry_seed.json desde Developer Console de Figma.
-- Reinstalar plugin si persiste: Plugins → Development → Import plugin from manifest.
+### 12.1 MANUAL:FIGMA-SYNC-DIAGNOSTIC
+Matriz de Errores — Figma Sync
+"Keys sin resolver" tiene dos causas distintas:
+- Causa A — Registry desincronizado: la KEY no existe en REGISTRY/registry_seed.json (Skeleton cambió o se agregó sección sin re-mapear). Se arregla actualizando registry_seed.json.
+- Causa B — Nodo ausente en el lienzo activo: el ID sí está en el registro, pero el nodo TEXT fue borrado, movido o convertido a otro tipo en el archivo abierto. Se arregla restaurando el nodo — nunca renombrando capas, porque el plugin ignora nombres y solo usa IDs crudos.
+Checklist de situaciones:
+| Situación | Diagnóstico | Acción |
+| --- | --- | --- |
+| "0 nodos actualizados" | Regex no detectó ningún bloque figma_text_id válido | Revisar el patrón exacto de MANUAL:FIGMA-SYNC-002 |
+| "Fricción Estructural: IDs duplicados" | Misma KEY 2+ veces en el .md | Eliminar el bloque repetido antes de reintentar |
+| "Keys sin resolver: N" (secciones nuevas) | Causa A — KEY no existe en Registry | Actualizar registry_seed.json o usar solo keys del Golden Skeleton vigente |
+| "Keys sin resolver: N" (keys que ya existían) | Causa B — nodo borrado/movido/reagrupado | Restaurar el nodo TEXT original, sin cambiar su ID |
+| Se pierde la negrita esperada | Falló carga de fuente Bold/Medium en cascada | Verificar variantes Bold/Medium instaladas en Figma |
+| Cursivas o links desaparecen | Sanitización esperada, no un fallo | Ver MANUAL:FIGMA-SYNC-004 — solo negrita sobrevive |
 ### Dashboard No Abre
 - Verificar Flask corriendo: lsof -i :8000 (debe mostrar proceso Python).
 - Ejecutar smoke test: vd debe imprimir “SMOKE PASSED — abriendo dashboard”.
@@ -815,12 +819,33 @@ CANON:POSITIONING define 4 modos de posicionamiento para CV-B. Esta sección res
 Gestión de Ambigüedad — JDs Híbridos
 Cuando el algoritmo de KERNEL:CV-PIPELINE-001 escala a decisión humana (empate persistente), fit_gaps del HANDOFF debe declarar el conflicto explícitamente: qué dos modos empataron, cuántos keywords mapeó cada uno, y qué falta para resolverlo sin intervención humana (ej. "N1 vs N2 empatados 3-3 — JD menciona lujo y construcción de flagship en igual peso; falta señal de presupuesto regional para desempatar por seniority"). CV-A no entrega HANDOFF completo sin esta nota cuando aplica el escalamiento.
 ## 20 MANUAL:GOLDEN-SKELETON-REF
-Golden Skeleton
+Figma Sync & Golden Skeleton
 El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-002) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido textual.
 - SSOT de IDs de nodo Figma: registry_seed.json en 04-Vantage_CV/Figma Sync/.
 - Slots clave: 2055:9 (Nombre), 2055:10 (Tagline), 2043:51 (Perfil), 2043:56-60 (Skills), 2043:64+ (Experiencia).
 - Regla de invariancia: si el Skeleton cambia en Figma, registry_seed.json se actualiza antes del siguiente CV-B — nunca al revés.
 - Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en CANON:OUTPUT-CONTRACT-002 — no se replica aquí.
+### 20.1 MANUAL:FIGMA-SYNC-001
+Arquitectura del Ecosistema
+Tres piezas: manifest.json (identidad y permisos mínimos, sin red) · ui.html (parser/UI) · code.js (Registry V2 + escritura de nodo). Comunicación exclusiva vía postMessage entre ui.html y code.js — ver KERNEL:ARCHITECTURE-L4 para el diagrama de flujo completo.
+### 20.2 MANUAL:FIGMA-SYNC-002
+Contrato de Bloque
+Cada slot del .md debe seguir el patrón estricto: encabezado figma_text_id(KEY) seguido del contenido con negrita donde aplique. Sin esa cabecera exacta (nivel de heading correcto, key entre paréntesis), el bloque no se detecta — el síntoma es "0 nodos actualizados" sin error explícito.
+### 20.3 MANUAL:FIGMA-SYNC-003
+Flujo de Inyección
+Cuatro fases, en orden:
+1. Detección — ui.html revisa si el texto contiene figma_text_id; si no, intenta JSON.parse.
+1. Parsing — regex extrae cada bloque, detecta KEYs duplicadas (detiene el envío si las hay) y sanitiza contenido.
+1. Resolución — code.js busca cada KEY en REGISTRY/registry_seed.json; si no está, la intenta usar como ID crudo directo. Búsqueda O(1) vía figma.getNodeById — nunca por nombre de capa.
+1. Escritura — reemplazo total del texto del nodo (node.characters), con negrita quirúrgica por rango si aplica.
+### 20.4 MANUAL:FIGMA-SYNC-004
+Sanitización de Contenido
+Sobrevive: negrita (rango tipográfico real en Figma).
+Se elimina sin aviso: cursiva con guion bajo, links (se conserva solo el texto visible), backslashes de escape.
+Sin tratamiento especial: bullets con guion o asterisco, numeración, tablas — el "bullet" real ya lo define la estructura del Golden Skeleton, no la sintaxis Markdown.
+### 20.5 MANUAL:FIGMA-SYNC-005
+Regla de Reemplazo Total
+La inyección es node.characters = item.text — reemplazo total, no merge ni append. Cualquier edición manual hecha directamente en Figma sobre esos nodos se sobrescribe sin aviso ni backup en el siguiente sync. La única fuente de verdad post-sync es el .md pegado, no el estado previo del lienzo.
 ## 21 MANUAL:SCHEMA-FIELD-REF
 Schema Class A/B
 KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.

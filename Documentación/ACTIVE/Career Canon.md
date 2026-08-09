@@ -502,6 +502,7 @@ ALDO Group, Montréal, Canada
 Figma Tags
 > Formato base obligatorio para todos los Derived Outputs generados desde el Career Canon. Aplica ES + EN.
 > SSOT de IDs de nodos: registry_seed.json en 04-Vantage_CV/Figma Sync/ es la fuente única de verdad para los IDs numéricos de nodo Figma. Si hay discrepancia entre un figma_text_id en un output CV-B y el registry, el registry gana. Ante cualquier cambio en la estructura del lienzo Figma, actualizar registry_seed.json antes de generar nuevos CV-B.
+> El plugin de inyección resuelve exclusivamente por ID de nodo (búsqueda O(1) vía figma.getNodeById) — nunca por nombre de capa. Renombrar una capa en Figma no afecta ni repara la resolución; ver MANUAL:FIGMA-SYNC-003.
 ### 12.4 CANON:OUTPUT-CONTRACT-004
 Tag Registry
 Formato de Entrega Obligatorio

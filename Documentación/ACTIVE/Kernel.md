@@ -261,15 +261,20 @@ L1 > L2 > L3. Perplexity aplica esta jerarquía en Consolidation & Dedup; L3 ent
 Punto de Convergencia Único
 Las tres capas de búsqueda escriben a Notion. vantage-pipeline lee de Notion, no de outputs de capa directamente.
 Figma Sync — CV Output Layer
-Tipo: Capa de Materialización de CV (WriteOnly sobre lienzo Figma)
+Tipo: Capa de Materialización de CV (WriteOnly sobre lienzo Figma), arquitectura de 3 piezas sobre permisos mínimos (sin capabilities, sin enableProposedApi) — opera exclusivamente sobre el archivo Figma activo, sin llamadas de red.
+- manifest.json — declara identidad (vantage-cv-sync), sandbox (code.js) y UI (ui.html).
+- ui.html — parser de entrada: detecta formato, sanitiza Markdown, extrae boldRanges.
+- code.js — Registry V2 (REGISTRY / registry_seed.json) + resolución O(1) por figma.getNodeById + escritura tipográfica en el nodo.
+Ambas piezas activas (ui.html, code.js) se comunican vía postMessage — el mecanismo estándar de Figma entre el iframe de UI y el sandbox del plugin, y el único canal de datos del sistema; no existe transporte de red ni escritura fuera del lienzo abierto.
 ```plain text
-CV-B (Markdown + figma_text_id) → ui.html (payload) → code.js (Registry V2)
-→ figma.getNodeById(rawId) → node.characters = item.text → Lienzo Figma
+CV-B (Markdown + figma_text_id) → ui.html (parsing + sanitización + postMessage)
+→ code.js (Registry V2 → figma.getNodeById(rawId)) → node.characters = item.text → Lienzo Figma
 ```
 Invariantes
 - Figma Sync no escribe en Notion ni Tracker.
 - No es capa de búsqueda.
 - registry_seed.json no se edita manualmente sin regenerar desde Figma.
+- Ver MANUAL:FIGMA-SYNC-003 (§20) para el contrato de bloque, flujo de inyección, sanitización y regla de invarianza detallados.
 ---
 ## 05 KERNEL:OWNERSHIP
 División de Responsabilidades AI/Python
