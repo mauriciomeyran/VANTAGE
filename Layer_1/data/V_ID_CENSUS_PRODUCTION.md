@@ -109,6 +109,7 @@
 | [`MANUAL:DATA-MANAGEMENT`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281b7846ffb025d561130 ) | 10 | Gestión de Datos |
 | [`MANUAL:MONITOR`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428154adfeea50d386ac78 ) | 11 | Health Check |
 | [`MANUAL:TROUBLESHOOTING`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42813ab8c1d308d4f5d97e ) | 12 | Troubleshooting |
+| [`MANUAL:FIGMA-SYNC-DIAGNOSTIC`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42816aaafcee86ee368a49 ) | 12.1 | Matriz de Errores — Figma Sync |
 | [`MANUAL:PROMPTS-WRAPPERS`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428136b742cbbe89ab727b ) | 13 | Prompts & Wrappers |
 | [`MANUAL:LAZY-LOAD`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281148290d0192758acc7 ) | 14 | Lazy Load |
 | [`MANUAL:PATCH-QUALITY`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428108b097e0da852697b4 ) | 15 | Criterio de Calidad para Parches Documentales |
@@ -117,7 +118,12 @@
 | [`MANUAL:CV-GOLDEN-RULES-INDEX`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815592e9ecb6df06e21a ) | 18 | Reglas de Oro CV — Referencia Operativa |
 | [`MANUAL:POSITIONING-CRITERIA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815db277e3bcd24efda1 ) | 19 | Positioning Modes (N1–N4) — Criterio de Selección |
 | [`MANUAL:WEEKLY-FLOW-006`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42819f9217f1150e0619a2 ) | 08.6 | Cadence Matrix — Weekly Rhythm |
-| [`MANUAL:GOLDEN-SKELETON-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42810ea45dde6c4a0cb7e0 ) | 20 | Golden Skeleton — Qué es y Dónde Vive |
+| [`MANUAL:GOLDEN-SKELETON-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42810ea45dde6c4a0cb7e0 ) | 20 | Figma Sync & Golden Skeleton |
+| [`MANUAL:FIGMA-SYNC-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#9d42e3fbc953459f8457043565e7e884 ) | 20.1 | Arquitectura del Ecosistema |
+| [`MANUAL:FIGMA-SYNC-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#b805f3abb9f04c85992df278612f567c ) | 20.2 | Contrato de Bloque |
+| [`MANUAL:FIGMA-SYNC-003`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#52c396b408134d48aad9d12a1c0f9999 ) | 20.3 | Flujo de Inyección |
+| [`MANUAL:FIGMA-SYNC-004`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#9c0c9713ba4d405c97acb267657bbcff ) | 20.4 | Sanitización de Contenido |
+| [`MANUAL:FIGMA-SYNC-005`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3eb471d8f5744556af1ef7bcd51b1ca6 ) | 20.5 | Regla de Reemplazo Total |
 | [`MANUAL:SCHEMA-FIELD-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42817a81abc00d317d8300 ) | 21 | Schema Class A/B — Referencia de Campos |
 | [`CANON:PROFILE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42815ebad8f33dc7b4a7aa ) | 01 | Professional Profile Canon |
 | [`CANON:PROFILE-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281048b8bfcb2ab76b16e ) | 01.1 | Professional Profile — ES |
@@ -250,11 +256,4 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-| ID | Documento | Link |
-|---|---|---|
-| `MANUAL:FIGMA-SYNC-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#9d42e3fbc953459f8457043565e7e884 ) |
-| `MANUAL:FIGMA-SYNC-002` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#b805f3abb9f04c85992df278612f567c ) |
-| `MANUAL:FIGMA-SYNC-003` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#52c396b408134d48aad9d12a1c0f9999 ) |
-| `MANUAL:FIGMA-SYNC-004` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#9c0c9713ba4d405c97acb267657bbcff ) |
-| `MANUAL:FIGMA-SYNC-005` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3eb471d8f5744556af1ef7bcd51b1ca6 ) |
-| `MANUAL:FIGMA-SYNC-DIAGNOSTIC` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42816aaafcee86ee368a49 ) |
+_Ninguno detectado en esta corrida._

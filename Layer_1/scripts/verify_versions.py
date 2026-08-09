@@ -9,6 +9,7 @@ import sys
 import json
 import argparse
 from pathlib import Path
+from datetime import datetime, timezone
 import httpx
 
 # --- CONFIGURACIÓN DE RUTAS Y CONSTANTES ---
@@ -76,6 +77,10 @@ EXCLUDED_FILE_PREFIXES = ("DEPRECATED_",)
 # Solo estas carpetas de primer nivel se consideran "árbol activo" del sistema.
 # Fuera de esta lista (ej. "- Documentación/") no son scripts operativos.
 ACTIVE_TOP_LEVEL_DIRS = {"Layer_1", "Layer_3", "Layer_4", "Dashboard", "Raycast", "skills"}
+
+# Umbrales de alerta para detección de truncamiento de contenido en --length
+LENGTH_TRUNCATION_THRESHOLD_PCT = 5.0
+LENGTH_TRUNCATION_THRESHOLD_ABS = 10
 
 def load_env(env_path: Path) -> dict:
     """Carga variables de entorno manualmente para evitar dependencias externas."""
@@ -379,6 +384,176 @@ def get_script_library_titles(client: httpx.Client, data_source_id: str, headers
         cursor = data.get("next_cursor")
     return titles
 
+def get_page_line_count(client: httpx.Client, page_id: str, headers: dict, max_depth: int = 10) -> int | dict:
+    """Cuenta recursivamente las líneas de texto extraíble en una página Notion.
+    Usa GET /v1/blocks/{block_id}/children con paginación via next_cursor.
+    Tipos de bloque que cuentan como 1 línea si tienen texto no vacío:
+    paragraph, heading_1, heading_2, heading_3, bulleted_list_item,
+    numbered_list_item, to_do, toggle, quote, callout, table_row, code.
+    Bloques vacíos o solo whitespace NO cuentan.
+    divider, table_of_contents, column_list/column (contenedor) NO cuentan.
+    Devuelve int en éxito, o {"error": "..."} en fallo."""
+    try:
+        block_headers = dict(headers)
+        block_headers["Notion-Version"] = "2022-06-28"
+        url = f"https://api.notion.com/v1/blocks/{page_id}/children"
+        count = 0
+        cursor = None
+
+        while True:
+            params = {"page_size": 100}
+            if cursor:
+                params["start_cursor"] = cursor
+            response = client.get(url, headers=block_headers, params=params)
+            if response.status_code != 200:
+                return {"error": f"HTTP {response.status_code}: {response.text[:200]}"}
+
+            data = response.json()
+            for block in data.get("results", []):
+                block_type = block.get("type")
+                if not block_type:
+                    continue
+
+                # Bloques que NO cuentan como línea (contenedores o estructurales)
+                if block_type in ("divider", "table_of_contents", "column_list", "column"):
+                    pass
+
+                # Bloques que pueden contar si tienen texto
+                elif block_type in (
+                    "paragraph", "heading_1", "heading_2", "heading_3",
+                    "bulleted_list_item", "numbered_list_item", "to_do",
+                    "toggle", "quote", "callout", "code"
+                ):
+                    block_data = block.get(block_type, {})
+                    rich_text = block_data.get("rich_text", [])
+                    # Concatenar todo el texto y verificar si no está vacío
+                    text = "".join(t.get("plain_text", "") for t in rich_text)
+                    if text.strip():
+                        count += 1
+
+                # table_row cuenta como 1 línea por fila (no por celda)
+                elif block_type == "table_row":
+                    block_data = block.get("table_row", {})
+                    cells = block_data.get("cells", [])
+                    # Una fila cuenta si al menos una celda tiene texto no vacío
+                    has_content = False
+                    for cell in cells:
+                        cell_text = "".join(t.get("plain_text", "") for t in cell)
+                        if cell_text.strip():
+                            has_content = True
+                            break
+                    if has_content:
+                        count += 1
+
+                # Recursión para bloques con hijos (toggle, column, etc.)
+                if block.get("has_children") and max_depth > 0:
+                    child_id = block.get("id")
+                    if child_id:
+                        child_result = get_page_line_count(client, child_id, block_headers, max_depth - 1)
+                        if isinstance(child_result, dict):
+                            return child_result
+                        count += child_result
+
+            if not data.get("has_more"):
+                break
+            cursor = data.get("next_cursor")
+
+        return count
+    except Exception as e:
+        return {"error": str(e)}
+
+def render_length_report(client: httpx.Client, uuids: dict, headers: dict, baseline_path: Path, update_baseline: bool = False) -> None:
+    """Compara el conteo de líneas de los 9 documentos fundacionales contra
+    el baseline guardado para detectar truncamiento silencioso.
+    Si update_baseline=True, sobrescribe el baseline tras el reporte."""
+    # Cargar baseline existente o crear dict vacío
+    if baseline_path.exists():
+        with open(baseline_path, "r", encoding="utf-8") as f:
+            baseline = json.load(f)
+    else:
+        baseline = {}
+
+    results = []
+    attention_required = False
+    new_baseline_created = not baseline_path.exists()
+    new_docs_added = False
+
+    for doc in DOC_KEYS:
+        page_id = uuids.get(doc)
+        if not page_id:
+            results.append((doc, "-", "-", "-", f"[ERROR: ID no resuelto]"))
+            continue
+
+        # Contar líneas actuales
+        current_count = get_page_line_count(client, page_id, headers)
+        if isinstance(current_count, dict):
+            results.append((doc, "-", "-", "-", f"[ERROR: {current_count.get('error', 'desconocido')}]"))
+            continue
+
+        baseline_entry = baseline.get(doc)
+        if baseline_entry is None:
+            # Nuevo baseline inicial
+            baseline[doc] = {
+                "lines": current_count,
+                "captured_at": datetime.now(timezone.utc).isoformat()
+            }
+            new_docs_added = True
+            results.append((doc, "-", current_count, "-", "[BASELINE INICIAL]"))
+        else:
+            baseline_lines = baseline_entry.get("lines", 0)
+            delta = current_count - baseline_lines
+            delta_str = f"{delta:+d}" if delta != 0 else "0"
+
+            # Calcular porcentaje (evitar división por cero)
+            if baseline_lines > 0:
+                delta_pct = (delta / baseline_lines) * 100
+            else:
+                delta_pct = 0.0
+
+            # Determinar veredicto
+            if delta < 0 and (abs(delta_pct) >= LENGTH_TRUNCATION_THRESHOLD_PCT or abs(delta) >= LENGTH_TRUNCATION_THRESHOLD_ABS):
+                verdict = "⚠️ POSIBLE TRUNCAMIENTO"
+                attention_required = True
+            else:
+                verdict = "OK"
+
+            results.append((doc, baseline_lines, current_count, delta_str, verdict))
+
+            # Si update_baseline, actualizar valor en memoria (se persiste al final)
+            if update_baseline:
+                baseline[doc] = {
+                    "lines": current_count,
+                    "captured_at": datetime.now(timezone.utc).isoformat()
+                }
+
+    # Renderizar reporte
+    print("[VERIFICACIÓN DE LONGITUD — LENGTH CHECK]")
+    print("-" * 75)
+    print(f"{'DOCUMENTO':<15} | {'BASELINE':<12} | {'ACTUAL':<12} | {'DELTA':<8} | {'VEREDICTO':<25}")
+    print("-" * 75)
+    for doc, baseline_val, current, delta, verdict in results:
+        baseline_str = str(baseline_val) if baseline_val != "-" else "-"
+        current_str = str(current) if isinstance(current, int) else current
+        print(f"{doc:<15} | {baseline_str:<12} | {current_str:<12} | {delta:<8} | {verdict:<25}")
+    print("-" * 75)
+    print(f"[VEREDICTO FINAL] {'PASS' if not attention_required else 'ATENCIÓN REQUERIDA'}")
+    print("[FIN LENGTH CHECK]")
+
+    # Persistir baseline si se creó inicial, se agregaron docs nuevos o se solicitó actualización
+    if new_baseline_created or new_docs_added or update_baseline:
+        with open(baseline_path, "w", encoding="utf-8") as f:
+            json.dump(baseline, f, indent=2)
+        if new_baseline_created:
+            print(f"[BASELINE INICIAL CREADO — {len(DOC_KEYS)} documentos]")
+        elif new_docs_added:
+            print(f"[BASELINE ACTUALIZADO — docs nuevos agregados]")
+        elif update_baseline:
+            print(f"[BASELINE ACTUALIZADO — {len(DOC_KEYS)} documentos]")
+
+    # Exit code 1 si se requiere atención
+    if attention_required:
+        sys.exit(1)
+
 def render_scripts_gap_report(client: httpx.Client, headers: dict, extensions: tuple, data_source_id: str, label: str, title_property: str = "Script") -> None:
     """Cruza assets committeados en disco (árbol activo) contra la base de
     Notion correspondiente (SCRIPT LIBRARY o SKILL LIBRARY). Read-only en
@@ -464,6 +639,8 @@ def main():
     parser.add_argument("--bootstrap", action="store_true", help="Genera el dump de contexto de apertura de sesión (Ledger + Changelog + tickets prioritarios). Read-only.")
     parser.add_argument("--scripts", action="store_true", help="Cruza los scripts .py/.sh (únicamente) del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SCRIPT LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     parser.add_argument("--skills", action="store_true", help="Cruza los archivos .skill del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SKILL LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
+    parser.add_argument("--length", action="store_true", help="Compara el conteo de líneas de contenido de los 9 documentos fundacionales contra el último baseline guardado, para detectar truncamiento silencioso. Read-only salvo --update-baseline.")
+    parser.add_argument("--update-baseline", action="store_true", help="Usar junto a --length. Sobrescribe el baseline de longitud con el conteo actual tras confirmar que no hubo truncamiento (edición legítima).")
     args = parser.parse_args()
 
     # 1. Inicialización de Entorno e Infraestructura
@@ -498,7 +675,17 @@ def main():
 
     headers = get_notion_headers(token)
 
+    # --update-baseline requiere --length
+    if args.update_baseline and not args.length:
+        print("[-] Error: --update-baseline requiere --length", file=sys.stderr)
+        sys.exit(1)
+
     with httpx.Client(timeout=15.0) as client:
+        if args.length:
+            baseline_path = registry_path.parent / "length_baseline.json"
+            render_length_report(client, uuids, headers, baseline_path, update_baseline=args.update_baseline)
+            return
+
         if args.bootstrap:
             render_bootstrap_dump(client, uuids["CHANGELOG"], headers)
             return
