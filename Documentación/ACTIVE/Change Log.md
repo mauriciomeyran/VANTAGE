@@ -1,5 +1,34 @@
 # V | CHANGELOG
 
+---
+Contexto: drift detectado en batch de 16 CV-B (mismo Positioning Mode reutilizando
+bullets pre-redactados verbatim entre vacantes distintas) + defecto mecánico de
+viñetas dobles ("• •") en serialización Figma.
+Cambios:
+- KERNEL:12.2 — prohibición explícita de reutilizar bullets pre-redactados
+verbatim entre vacantes, incluso dentro del mismo Positioning Mode.
+- CANON:12.1 — alta de Regla #5, Distinctiveness Rule (Figma Sync Protocol).
+- vantage-cv-b.md — Anti-cloning Guard como paso de verificación previo a entrega.
+- vantage-qa.md — Ítem #7 del checklist: Diferenciación de Contenido, FAIL
+automático si match verbatim >80% en Experience frente a otro entregable del
+mismo batch.
+- MANUAL:08.3 — advertencia operativa de riesgo Batch-Cloning en el flujo de
+inyección Figma.
+- Regeneración operativa: 16 CV-B del batch (17 HANDOFFs − 1 duplicado de
+contenido) reconstruidos con bullets diferenciados por HANDOFF activo y sin
+viñetas dobles.
+Tipo: [INFRA] [DOC]
+Título: Implementación de banderas --length y --update-baseline para detección de truncamiento silencioso.
+Resumen de cambios:
+- Kernel: Subsección 007.3 integrada en KERNEL:DOCUMENTATION-007 (mecanismo, umbrales 5%/10 líneas, baseline).
+- Manual: Subsección HC-03 en MANUAL:HEALTHCHECK (procedimiento de salud de documentos).
+- Aliases: Extensión de ALIASES:L4-VERSION-CONTROL con flags --length y --update-baseline.
+- System Prompt: Subsección 11.3 en SP:VERSION-CHECK-TOOL (guardarraíl operativo para la IA).
+- Navigation Brief: Dependencia LENGTH-BASELINE añadida en CROSS-DEPENDENCIES-001 y matriz de autoridad actualizada.
+Notas:
+- Backward Compatibility: Las operaciones existentes (--sync, --bootstrap) no se ven afectadas.
+- Requisitos: length_baseline.json se genera automáticamente en la primera ejecución de --length.
+---
 ### v9.15.0 — Ecosistema Figma Sync: Arquitectura + Diagnóstico (KERNEL:ARCHITECTURE-L4, MANUAL:FIGMA-SYNC-001..005/DIAGNOSTIC, CANON:OUTPUT-CONTRACT-003) · 2026-08-08
 Tipo: [DOC] [ENRICHMENT]
 Alcance: Kernel (KERNEL:ARCHITECTURE-L4); Manual (MANUAL:WEEKLY-FLOW-003 §8.3, MANUAL:GOLDEN-SKELETON-REF §20 retitulada + 5 altas 20.1–20.5, MANUAL:TROUBLESHOOTING §12 — bloque reemplazado por MANUAL:FIGMA-SYNC-DIAGNOSTIC); Career Canon (CANON:OUTPUT-CONTRACT-003).

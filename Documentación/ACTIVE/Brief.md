@@ -37,6 +37,7 @@ Esta matriz define el documento autorizado para cada dominio del sistema.
 | Alias y nomenclatura | Aliases | Normalización |
 | Historial | Change Log | Auditoría |
 | Esquemas | Tracker Schema | Modelo de datos |
+| Verificación de integridad estructural | vversions | Herramienta de observabilidad (Lectura/Escritura) |
 ---
 ## 03 BRIEF:ECOSYSTEM
 Ecosistema Documental
@@ -190,6 +191,7 @@ Una dependencia indica que un cambio en el documento de origen puede afectar la 
 | IDs | ID Census | Ejecutar vcensus |
 | Bootstrap / System Prompt | Navigation Brief | Validar estrategia de recuperación |
 | Estructura documental | Master Index | Actualizar inventario |
+| LENGTH-BASELINE | vversions | Verificar length_baseline.json (Archivo Config/State, Sí) |
 ### 07.1 BRIEF:CROSS-DEPENDENCIES-001
 Impact Assessment Contract
 Toda modificación que afecte un documento con dependencias registradas deberá generar una Evaluación de Impacto (Impact Assessment) antes del cierre de la operación.

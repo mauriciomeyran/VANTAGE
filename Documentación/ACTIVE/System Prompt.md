@@ -154,3 +154,9 @@ Ante una discrepancia o duda de gobernanza documental cubierta por los puntos 1-
 ## 11 SP:VERSION-CHECK-TOOL
 Herramienta de Verificación
 Para la verificación de versión de los 9 documentos fundacionales, utilizar preferentemente el script local verify_versions.py en Terminal para mitigar costos de llamadas MCP. El mismo script cubre también observabilidad de librerías de activos vía --scripts y --skills (ver KERNEL:DOCUMENTATION-007) — útil para proponer su uso ante tareas de sincronización de Script/Skill Library.
+---
+Instrucción para la IA:
+- Sanity Check: Recomendar o ejecutar python vversions --length antes de sincronizaciones críticas si se sospecha alteración en la estructura de los documentos.
+- Manejo de Alertas:
+- Si --length devuelve ATENCIÓN REQUERIDA, detener cualquier script de sincronización automática y notificar inmediatamente al operador con el detalle de los documentos afectados.
+- No sugerir ni ejecutar --update-baseline sin que el operador haya verificado y validado explícitamente las diferencias.

@@ -486,6 +486,7 @@ CV-B ya no tiene permiso creativo sobre la estructura. El proceso es de inyecci�
 1. Pega el .md de CV-B y haz clic en Inyectar a Nodos Nativos.
 1. Verifica la notificación y revisa el lienzo antes de exportar (PDF).
 Si el plugin reporta "Keys sin resolver" o "0 nodos actualizados", ver MANUAL:FIGMA-SYNC-DIAGNOSTIC (§12).
+Riesgo de Batch-Cloning (v9.16.0): al inyectar un CV-B proveniente de un batch, si el lienzo muestra viñetas dobles ("• •") o el operador reconoce bullets idénticos a los de otra vacante del mismo Positioning Mode, rechazar el archivo y solicitar su regeneración antes de continuar con la inyección.
 ### QA
 ```plain text
 QA [adjunta el PDF exportado]
@@ -755,7 +756,6 @@ Checklist de situaciones:
 - Verificar que Gate_Decision = BLOCKED (no EXPIRED ni vacío).
 - Si no aparece: refrescar cache de Runtime (vantage.py sync).
 - Si aparece pero validación falla: revisar logs de run_pipeline.py en Dashboard.
-### Referencias a documentación adicional
 - Filosofía de fallo: [KERNEL:FAIL-PHILOSOPHY](V | KERNEL) (ver también MANUAL:FAILURE-PHILOSOPHY de este Manual).
 - Reglas de Oro: KERNEL:CV-GOLDEN-RULES (ver también MANUAL:CV-GOLDEN-RULES-INDEX de este Manual).
 - Schema de datos: KERNEL:SCHEMA.
@@ -827,7 +827,10 @@ El "Golden Skeleton" (CANON:OUTPUT-CONTRACT-002) es la secuencia fija de bloques
 - Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en CANON:OUTPUT-CONTRACT-002 — no se replica aquí.
 ### 20.1 MANUAL:FIGMA-SYNC-001
 Arquitectura del Ecosistema
-Tres piezas: manifest.json (identidad y permisos mínimos, sin red) · ui.html (parser/UI) · code.js (Registry V2 + escritura de nodo). Comunicación exclusiva vía postMessage entre ui.html y code.js — ver KERNEL:ARCHITECTURE-L4 para el diagrama de flujo completo.
+Tres piezas: 
+- manifest.json (identidad y permisos mínimos, sin red)
+- ui.html (parser/UI) 
+- code.js (Registry V2 + escritura de nodo). Comunicación exclusiva vía postMessage entre ui.html y code.js — ver KERNEL:ARCHITECTURE-L4 para el diagrama de flujo completo.
 ### 20.2 MANUAL:FIGMA-SYNC-002
 Contrato de Bloque
 Cada slot del .md debe seguir el patrón estricto: encabezado figma_text_id(KEY) seguido del contenido con negrita donde aplique. Sin esa cabecera exacta (nivel de heading correcto, key entre paréntesis), el bloque no se detecta — el síntoma es "0 nodos actualizados" sin error explícito.
@@ -856,3 +859,23 @@ Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetc
 Next_Action: select (10 valores operativos). Ver KERNEL:SCHEMA-008.
 Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida (KERNEL:SCHEMA-003).
 Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
+---
+### HC-03 Verificación de Longitud (--length / --update-baseline)
+Contexto:
+Procedimiento de sanity check para validar que ningún documento fundacional haya sufrido pérdida silenciosa de contenido tras operaciones de sincronización, edición masiva o fallo en scripts de inyección.
+Procedimiento:
+1. Ejecución básica de verificación (read-only):
+```bash
+python vversions --length
+```
+- Salida esperada: Tabla detallada con veredicto por documento y veredicto final.
+- Exit code: 1 si el veredicto final es ATENCIÓN REQUERIDA.
+1. Actualización de baseline tras edición legítima (write):
+```bash
+python vversions --length --update-baseline
+```
+- Precondición: Confirmar previamente que las variaciones de líneas son esperadas (ej. adición de secciones o refactorización documentada).
+- Efecto: Sobrescribe length_baseline.json con las métricas actuales y actualiza el timestamp captured_at de todos los documentos.
+Casos de uso clave:
+- Sanity check pre-sync: Ejecutar siempre antes de sincronizar cambios masivos.
+- Post-incidente: Diagnóstico rápido ante sospechas de truncamiento por falla de API o timeout.

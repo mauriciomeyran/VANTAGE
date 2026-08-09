@@ -245,6 +245,7 @@ FIGMA SYNC PROTOCOL (STRICT)
 1. SLOT INTEGRITY: No se permiten fusiones ni divisiones de bloques. Si el Skeleton tiene 4 bullets para una experiencia, el output DEBE tener 4 bloques, incluso si uno queda vacío.
 1. NULL-FILL RULE: Si el Canon Career no tiene información suficiente para un slot específico del Skeleton, el slot debe mantenerse con su ID original y el texto "[PENDING DATA]" o quedar vacío, pero NUNCA eliminarse.
 1. MARKDOWN ESCAPING: Mantener el uso de ( y ) para compatibilidad con el plugin de Figma si se detecta en el Skeleton original.
+1. DISTINCTIVENESS RULE: El lenguaje de cada bullet de Experience responde al Gap Analysis específico del HANDOFF activo (fit_gaps, JD_keywords_top6), no a una plantilla fija por Positioning Mode.
 ### 12.2 CANON:OUTPUT-CONTRACT-002
 Golden Skeleton
 Use this exact sequence of IDs for any Figma-destined output.
