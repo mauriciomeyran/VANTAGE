@@ -432,9 +432,9 @@ Python traduce vía evaluate_rejection_status().
 El operador nunca escribe Gate_Decision directamente.
 > [Corrección aplicada] Este ID ya existía en el cuerpo del Kernel pero faltaba en la TOC — agregado como sub-ítem de 09.
 ### 09.7 KERNEL:GATE-DECISION-007
-Ejecución Automática de Archivado
-Next_Action='Archivar' Y Dedup_Flag='Posible duplicado' (ambos Class B) → archivado automático vía auto_archive.py.
-Dry-run obligatorio antes de execute.
+Marcado Manual de Archivado
+Next_Action='Archivar' Y/O Dedup_Flag='Posible duplicado' (ambos Class B) son señales de candidatos a archivar — no disparan archivado automático. Decisión del operador (2026-08-01): se abandonó el enfoque de mover/copiar automáticamente vía auto_archive.py (deprecado, ver Archive/Legacy_Scripts/) por menor fricción, menor costo de tokens, y por desalineación de esquema con el Archivo Tracker (ver skill vantage-tidy-opportunities-tracker).
+El mecanismo vigente es la skill vantage-tidy-opportunities-tracker: identifica candidatos vía Dedup_Flag/Next_Action, marca Archivar = True en el registro original tras DRY RUN + APROBAR_WRITE — no crea copias ni toca el Archivo Tracker ni mueve páginas físicamente. El operador localiza visualmente los registros marcados y decide cuándo archivarlos manualmente.
 ### 09.8 KERNEL:GATE-DECISION-008
 Capas de Evaluación de Gate: Técnica vs. Negocio
 gate() (capa técnica, CREATE/BLOCKED puro) vs. gate_logic() (capa de negocio/workflow, protege estados terminales).
@@ -654,6 +654,8 @@ Cronológico descendente siempre. Orden canónico obligatorio: C01 → C02 → C
 CV-B
 Input
 HANDOFF completo + Career Canon activo.
+Restricción de Lote (Single-Item Processing)
+CV-B procesa exactamente UN HANDOFF por invocación. Prohibido procesar múltiples vacantes en la misma pasada/sesión continua, incluso si el operador entrega un batch de HANDOFFs. Ante un batch, CV-B debe: (1) tomar el primer HANDOFF y procesarlo completo como única unidad de trabajo, (2) detenerse y esperar invocación explícita separada para el siguiente. Razón: degradación de densidad y esfuerzo narrativo observada empíricamente en procesamiento secuencial de lote (v9.16.0 post-mortem, 13 CV-B en una sesión) — el contrato formal (IDs, Anti-cloning Guard, secuencia C01–C05) no previene esta degradación porque es un fallo de ejecución del AI Component bajo carga repetitiva, no un gap documental.
 Validation
 Verificar los 7 campos del HANDOFF.
 Canon check

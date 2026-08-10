@@ -833,7 +833,7 @@ Tres piezas:
 - code.js (Registry V2 + escritura de nodo). Comunicación exclusiva vía postMessage entre ui.html y code.js — ver KERNEL:ARCHITECTURE-L4 para el diagrama de flujo completo.
 ### 20.2 MANUAL:FIGMA-SYNC-002
 Contrato de Bloque
-Cada slot del .md debe seguir el patrón estricto: encabezado figma_text_id(KEY) seguido del contenido con negrita donde aplique. Sin esa cabecera exacta (nivel de heading correcto, key entre paréntesis), el bloque no se detecta — el síntoma es "0 nodos actualizados" sin error explícito.
+Cada slot del .md debe seguir el patrón estricto marcado en el Golden Skeleton: encabezado ###### figma_text_id(KEY) seguido del contenido con negrita donde aplique. Sin esa cabecera exacta (nivel de heading correcto seguido del KEY entre paréntesis), el bloque no se detecta — el síntoma es "0 nodos actualizados" sin error explícito.
 ### 20.3 MANUAL:FIGMA-SYNC-003
 Flujo de Inyección
 Cuatro fases, en orden:

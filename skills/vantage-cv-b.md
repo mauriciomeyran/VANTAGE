@@ -73,6 +73,10 @@ Referencia: `CANON:OUTPUT-CONTRACT-004`.
 - Tagline = `[Título · Subtítulo] · Ciudad | Tel | Email | LinkedIn | Portfolio`
 - `&` en nombres de empresa se mantiene como `&`
 
+## Restricción de Lote (Single-Item Processing)
+
+CV-B procesa exactamente UN HANDOFF por invocación, incluso si el operador entrega un batch. Ante un batch: tomar el primer HANDOFF, procesarlo completo, detenerse y esperar invocación explícita separada para el siguiente. Razón: degradación de densidad narrativa observada empíricamente en procesamiento secuencial de lote (v9.16.0 post-mortem) — el Anti-cloning Guard previene duplicación entre vacantes pero no previene la caída de esfuerzo por fatiga de lote dentro de una sola sesión continua.
+
 ## Anti-cloning Guard (v9.16.0)
 
 Antes de emitir el Markdown, verificar que ningún bullet de Experience coincide verbatim con el de un CV-B previo del mismo Positioning Mode en esta sesión o batch. Match exacto → re-derivar desde `fit_gaps`/`JD_keywords_top6` del HANDOFF activo. Reutilizar bullets pre-redactados entre vacantes distintas viola `KERNEL:CV-PIPELINE-002` y `CANON:OUTPUT-CONTRACT-001` (Regla #5, Distinctiveness Rule).
