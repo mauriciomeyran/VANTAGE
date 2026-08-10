@@ -2,6 +2,19 @@
 
 ---
 Tipo: [FIX] [INFRA]
+Título: Deuda Técnica — Sincronización de Runners y Vocabulario (Post-Auditoría)
+Contexto: Dictamen de consistencia documental (Reference Librarian, 2026-08-10) identificó deuda técnica residual: layer_1_run_dash.py no fue actualizado con fixes H1/H2, generando doble semántica de gate; divergencia de vocabulario "Para Revisar" vs "REVIEW_NEEDED" entre Kernel y código.
+Cambios:
+- layer_1_run_dash.py — actualizado a v7.6: gate() con umbral de Score (H1 FIX), protección de terminales extendida (H2 FIX), gate_logic() importado, evaluate_rejection_status() agregado, "PROTECCIÓN TOTAL" reemplazada por contrato KERNEL:GATE-DECISION-010.
+- Kernel.md — vocabulario normalizado: "Para Revisar" → "REVIEW_NEEDED" (L415).
+- Change Log.md — vocabulario normalizado: "Para Revisar" → "REVIEW_NEEDED" (L20).
+- Manual.md — vocabulario normalizado: "Para Revisar" → "REVIEW_NEEDED" (L161).
+IDs afectados: Ninguno nuevo — corrección de drift documental y sincronización de runners.
+Write-Back Verification: layer_1_run_dash.py sincronizado con layer_1_run.py v8.0; vocabulario unificado entre Kernel/código/documentación.
+Pendiente: verificar observabilidad (H9) y transición APPLIED automática; actualizar Task Tracker si aplica.
+Versión actualizada: 9.20.0 (CHANGELOG). Resto de fundacionales permanece en v9.19.0 hasta vversions --sync.
+---
+Tipo: [FIX] [INFRA]
 Título: H2 — Protección de terminalidad extendida a Score/Prioridad (KERNEL:GATE-DECISION-010 / GATE-DECISION-006)
 Contexto: Auditoría de conformidad/drift de VANTAGE (sesión arena.ia + Claude, 2026-08-10, GitHub Issue #2, H2) detectó que Fase 3 (Scoring) y Fase 3.6 (Prioridad) iteraban sobre TODAS las filas sin filtrar terminales, violando KERNEL:GATE-DECISION-010 ("un registro terminal no puede ser sobreescrito por recálculo de Score/Gate"). Solo Fase 4 estaba protegida vía gate_logic(). Adicionalmente, la transición APPLIED→REJECTED (GATE-DECISION-011 fila 11) era código muerto porque gate_logic() retornaba "REJECTED" y el código hacía continue antes de llegar a evaluate_rejection_status().
 Cambios:
@@ -17,7 +30,7 @@ Versión actualizada: 9.19.0 (CHANGELOG). Resto de fundacionales permanece en v9
 ---
 Tipo: [FIX] [INFRA]
 Título: H1 — Implementación de umbral de Score en gate() (KERNEL:GATE-DECISION-002 / GATE-DECISION-011)
-Contexto: Auditoría de conformidad/drift de VANTAGE (sesión arena.ia + Claude, 2026-08-10, GitHub Issue #1, H1) detectó que gate() decidía solo por fetch + VM_Scope + Role_Class y nunca leía Score, violando el contrato del Kernel que define bandas: ≥60 CREATE · 40-59 Para Revisar · <40 BLOCKED. Evidencia: 31/36 filas CREATE con Score<60 en snapshot, mientras Manual/Checklist filtraban por Score≥60.
+Contexto: Auditoría de conformidad/drift de VANTAGE (sesión arena.ia + Claude, 2026-08-10, GitHub Issue #1, H1) detectó que gate() decidía solo por fetch + VM_Scope + Role_Class y nunca leía Score, violando el contrato del Kernel que define bandas: ≥60 CREATE · 40-59 REVIEW_NEEDED · <40 BLOCKED. Evidencia: 31/36 filas CREATE con Score<60 en snapshot, mientras Manual/Checklist filtraban por Score≥60.
 Cambios:
 - layer_1_run.py:457-483 — gate() implementado con umbral de Score: score≥60 → CREATE, score≥40 → REVIEW_NEEDED, score<40 → BLOCKED. Score=None → REVIEW_NEEDED (golden rule: no pérdida silenciosa por dato faltante).
 - test_gate_logic.py — actualizado para reflejar contrato actual de gate_logic() (solo protección de terminales) + 9 tests nuevos de Score Band (TestGateScoreBand).

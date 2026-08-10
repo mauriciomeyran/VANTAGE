@@ -412,7 +412,7 @@ Lógica Estándar
 Orden:
 1. URL_GATE (link muerto → Score=0, Status=Expirada)
 1. Score (0–100)
-1. Gate_Decision (≥60 CREATE · 40–59 Para Revisar · <40 BLOCKED/Archivar).
+1. Gate_Decision (≥60 CREATE · 40–59 REVIEW_NEEDED · <40 BLOCKED/Archivar).
 ### 09.3 KERNEL:GATE-DECISION-003
 Resolución de REVIEW_NEEDED
 Gap GAP-03 documentado: escritura directa vía MCP no tiene guard equivalente al de feed_processor.py.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-VANTAGE Pipeline Runner v7.5
-Pipeline principal sobre el tracker Notion (territorio Claude: CV, CANON-UPDATE, FAST).
+VANTAGE Pipeline Runner v7.6 (Dashboard)
+Pipeline principal sobre el tracker Notion (territorio Dashboard: RT-1, UI web).
 
 Pasos:
   0   URL Gate pre-scoring (agregadores aceptados; JD >100 chars bypass)
@@ -9,13 +9,20 @@ Pasos:
   1   Scoring determinístico v6.4 (Score, Match, VM_Scope, Role_Class)
   2+  Gate decisions, status, patrones de rechazo
 
+Cambios v7.6:
+  - Sincronizado con layer_1_run.py v8.0: gate() con umbral de Score (H1 FIX)
+  - Sincronizado con layer_1_run.py v8.0: protección de terminales extendida (H2 FIX)
+  - gate_logic() importado para protección KERNEL:GATE-DECISION-010
+  - evaluate_rejection_status() agregado para transición APPLIED→REJECTED
+  - Reemplazada "PROTECCIÓN TOTAL" antigua con contrato actual del Kernel
+
 Cambios v7.5:
   - Fuente: aplica a Vacante e Inbound (cualquier registro con URL)
   - Score: siempre escribe cuando el campo está vacío (None)
   - Paginación: query completa del data source (>100 registros)
   - Class A (layer, hash, dedup cross-layer): feed_processor.py
 
-Uso: python3 scripts/layer_1_run.py
+Uso: python3 scripts/layer_1_run_dash.py
 """
 
 import os
@@ -27,6 +34,11 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from notion_client import Client
 from difflib import SequenceMatcher
+
+# Import gate_logic para protección de terminales (H2 FIX)
+import sys, os
+sys.path.insert(0, os.path.expanduser("~/Documents/03 Projects/VANTAGE/Layer_1/scripts"))
+from gate_logic import gate_logic, TERMINAL_ACTIONS, STATUS_TERMINAL_MAP
 
 # ---------- Utilidades ----------
 def txt(prop):
@@ -381,7 +393,7 @@ def get_match_level_v6(score):
     else:
         return "Bajo"  # Revisar
 
-def gate(fetch, vm_scope, role_class, source_type, rol="", marca=""):
+def gate(fetch, vm_scope, role_class, source_type, score=None, rol="", marca=""):
     import sys, os; sys.path.insert(0, os.path.expanduser("~/Documents/03 Projects/VANTAGE/Layer_1/scripts"))
     from profile_fit import has_vm_title_signal, is_role_excluded, resolve_alias_flags
 
@@ -391,15 +403,31 @@ def gate(fetch, vm_scope, role_class, source_type, rol="", marca=""):
         return "CREATE"
     if source_type == "Vacante":
         fetch_ok = fetch in ("Accesible", "Parcial")
-        if fetch_ok and vm_scope == "Alto":
+        scope_ok = fetch_ok and (
+            vm_scope == "Alto"
+            or (role_class == "Pivote" and has_vm_title_signal(rol))
+        )
+        if not scope_ok:
+            return "BLOCKED"
+        # H1 FIX (KERNEL:GATE-DECISION-002 / GATE-DECISION-011 fila 2, v9.18.0):
+        # Score decide la banda final una vez superado el filtro de scope/fetch.
+        # Score ausente (None) -> REVIEW_NEEDED, nunca BLOCKED silencioso --
+        # perder una vacante por dato faltante es peor que pedir revisión manual.
+        if score is None:
+            return "REVIEW_NEEDED"
+        if score >= 60:
             return "CREATE"
-        if fetch_ok and role_class == "Pivote" and has_vm_title_signal(rol):
-            return "CREATE"
+        if score >= 40:
+            return "REVIEW_NEEDED"
+        return "BLOCKED"
     return "BLOCKED"
 
 def evaluate_application_status(status):
     application_statuses = ["Postulado", "En proceso", "Negociando", "Sin respuesta"]
     return status in application_statuses
+
+def evaluate_rejection_status(status):
+    return status == "Rechazado"
 
 def get_application_next_action(status):
     if status == "Postulado":
@@ -803,26 +831,42 @@ def main():
         status = txt(props.get("Status"))
         current_gate = txt(props.get("Gate_Decision"))
         current_action = txt(props.get("Next_Action"))
+        score = props.get("Score", {}).get("number")
 
-        # PROTECCIÓN TOTAL: Si ya tiene una acción, NO MODIFICAR
-        if current_action:
+        # H2 FIX (KERNEL:GATE-DECISION-010): Protección de terminales vía gate_logic()
+        # Reemplaza "PROTECCIÓN TOTAL" antigua con contrato actual del Kernel
+        entry = {
+            "Next_Action": current_action,
+            "Status": status,
+            "Gate_Decision": current_gate,
+            "Fetch": fetch
+        }
+        protected = gate_logic(entry)
+        if protected is not None:
             protected_count += 1
-            continue
+            # H2 FIX: Si gate_logic() retorna "REJECTED" (Status="Rechazado"),
+            # NO hacer continue para permitir que evaluate_rejection_status() aplique REJECTED+Post-Mortem
+            if protected != "REJECTED":
+                continue
 
-        # Saltar si está expirada/rechazada
-        if status in ["Expirada", "Rechazado", "Archivar"]:
-            continue
-
-        if evaluate_application_status(status):
+        if evaluate_rejection_status(status):
+            decision = "REJECTED"
+            next_action = "Post-Mortem"
+            rejected_status_count += 1
+        elif evaluate_application_status(status):
             decision = "APPLIED"
             next_action = get_application_next_action(status)
             applied_count += 1
         else:
-            decision = gate(fetch, vm_scope, role_class, source_type, rol=rol, marca=marca)
+            # H1 FIX: pasar score como parámetro a gate()
+            decision = gate(fetch, vm_scope, role_class, source_type, score=score, rol=rol, marca=marca)
 
             if decision == "CREATE":
                 next_action = "Re-check"
                 create_count += 1
+            elif decision == "REVIEW_NEEDED":
+                next_action = "Investigar"
+                review_needed_count += 1
             elif source_type == "Vacante" and fetch == "Bloqueado":
                 next_action = "Reparar URL"
                 blocked_count += 1
