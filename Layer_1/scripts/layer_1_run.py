@@ -1018,6 +1018,10 @@ def main():
         # v9.14.6: JD_Quality == "JD Completo" → priorizar Optimizar (CV-A ready)
         jd_quality = txt(props.get("JD_Quality"))
 
+        # H9 FIX (Observabilidad Opción A): Detección manual de Status=Postulado sin Gate_Decision=APPLIED
+        if status == "Postulado" and current_gate != "APPLIED":
+            print(f"  [OBSERVABILIDAD] {item['id'][:8]}: Status=Postulado pero Gate_Decision={current_gate or '(vacío)'} → sugerencia manual: establecer Gate_Decision=APPLIED")
+
         if evaluate_rejection_status(status):
             decision = "REJECTED"
             next_action = "Post-Mortem"  # v9.14.5: antes "Ninguna" -- senal explicita de analisis pendiente antes de Archivar=True
@@ -1068,9 +1072,14 @@ def main():
         if current_action != next_action:
             changes.append(f"Action: {current_action}->{next_action}")
 
+        # H9 FIX (Observabilidad Opción A): Agregar Last_Gate_Run timestamp
+        from datetime import datetime
+        last_gate_run = datetime.now().isoformat()
+
         update = {
             "Gate_Decision": {"select": {"name": decision}},
-            "Next_Action": {"select": {"name": next_action}}
+            "Next_Action": {"select": {"name": next_action}},
+            "Last_Gate_Run": {"date": {"start": last_gate_run}}
         }
 
         if not DRY_RUN:
