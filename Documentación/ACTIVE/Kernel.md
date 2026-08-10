@@ -325,7 +325,7 @@ AI Component escribe en CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_process
 - Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash.
 Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Archivar · Repetida.
 Class B — System-Primary
-Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente · Dedup_Flag.
+Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Next_Action · Fetch · Fuente · Dedup_Flag.
 ### 07.2 KERNEL:SCHEMA-002
 Restricción del Sistema
 Campos Class B en JSON entrante se ignoran sin excepción — Python los calcula en el siguiente run.
@@ -496,9 +496,14 @@ Referencias
 Matriz de Transición de Estados (Referencia Técnica)
 Vista tabular consolidada de todas las reglas Gate (09.1–09.10).
 Referencia canónica para scripts y auditorías — no reemplaza la descripción en prosa de cada sección; la complementa con indexación de estados.
+
+
+ |  |  | |  |  |
+| | |   | | |
 | Estado Origen | Evento / Trigger | Guard / Regla | Estado Destino | Componente | Efecto Class B |
 | --- | --- | --- | --- | --- | --- |
-| [ENTRY] | feed_processor.py ingesta JSON | Source_Type ∈ {Inbound, Referencia, Networking} | READY_TO_APPLY | Python | Gate_Decision=CREATE, Score=bypass |
+| [ENTRY] | feed_processor.py ingesta JSON | URL muerta OR Score < 40 | BLOCKED | Python | Gate_Decision=BLOCKED, Score=0 (si URL muerta) |
+| [ENTRY] | feed_processor.py ingesta JSON | URL viva + Score 40–59 + Status=Target | REVIEW_NEEDED | Python | Gate_Decision=REVIEW_NEEDED, Score, VM_Scope, Role_Class, Next_Action |
 | [ENTRY] | feed_processor.py ingesta JSON | URL viva + Score ≥ 60 + Status=Target | READY_TO_APPLY | Python | Gate_Decision=CREATE, Score, VM_Scope, Role_Class, Next_Action |
 | [ENTRY] | feed_processor.py ingesta JSON | URL muerta OR Score < 60 | BLOCKED | Python | Gate_Decision=BLOCKED, Score=0 (si URL muerta) |
 | [ENTRY] | feed_processor.py ingesta JSON | Dedup match (hash/URL/brand+title) contra VANTAGE TRACKER activo, ventana 30d | REVIEW_NEEDED | Python | Status=REVIEW_NEEDED en el registro entrante; Dedup_Flag='Posible duplicado' (select) en el registro existente coincidente |
