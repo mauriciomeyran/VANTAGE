@@ -325,7 +325,7 @@ AI Component escribe en CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_process
 - Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash.
 Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Archivar · Repetida.
 Class B — System-Primary
-Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Next_Action · Fetch · Fuente · Dedup_Flag.
+Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Next_Action · Fetch · Fuente · Dedup_Flag · Score_Method · Last_Gate_Run.
 ### 07.2 KERNEL:SCHEMA-002
 Restricción del Sistema
 Campos Class B en JSON entrante se ignoran sin excepción — Python los calcula en el siguiente run.
