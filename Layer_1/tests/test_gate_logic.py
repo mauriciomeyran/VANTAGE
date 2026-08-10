@@ -22,7 +22,7 @@ if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
 try:
-    from gate_logic import gate_logic, evaluate_gate, txt
+    from gate_logic import gate_logic, evaluate_gate
     GATE_LOGIC_AVAILABLE = True
 except ImportError:
     GATE_LOGIC_AVAILABLE = False
@@ -46,13 +46,13 @@ except ImportError:
 # ============================================================================
 
 class TestGateLogic:
-    """Test suite for gate_logic() function"""
+    """Test suite for gate_logic() function - terminal state protection only"""
     
     def test_terminal_state_protection_archivar(self):
         """Test that 'Archivar' terminal state is protected"""
         entry = {
             "Next_Action": "Archivar",
-            "Status": "Postulado",
+            "Status": "Target",
             "Gate_Decision": "CREATE",
             "Fetch": "Accesible"
         }
@@ -65,7 +65,7 @@ class TestGateLogic:
         """Test that 'Expirada' terminal state is protected"""
         entry = {
             "Next_Action": "Expirada",
-            "Status": "Rechazado",
+            "Status": "Target",
             "Gate_Decision": "BLOCKED",
             "Fetch": "Bloqueado"
         }
@@ -74,60 +74,8 @@ class TestGateLogic:
         assert result == "Expirada", \
             "Terminal state 'Expirada' should not be overwritten"
     
-    def test_applied_postulado_followup(self):
-        """Test APPLIED gate decision with Postulado status"""
-        entry = {
-            "Next_Action": "Re-check",  # Non-terminal state
-            "Status": "Postulado",
-            "Gate_Decision": "APPLIED",
-            "Fetch": "Accesible"
-        }
-        
-        result = gate_logic(entry)
-        assert result == "Follow-up", \
-            "APPLIED + Postulado should return Follow-up"
-    
-    def test_applied_en_proceso_interview_prep(self):
-        """Test APPLIED gate decision with En proceso status"""
-        entry = {
-            "Next_Action": "Re-check",
-            "Status": "En proceso",
-            "Gate_Decision": "APPLIED",
-            "Fetch": "Accesible"
-        }
-        
-        result = gate_logic(entry)
-        assert result == "Interview prep", \
-            "APPLIED + En proceso should return Interview prep"
-    
-    def test_applied_negociando_followup(self):
-        """Test APPLIED gate decision with Negociando status"""
-        entry = {
-            "Next_Action": "Re-check",
-            "Status": "Negociando",
-            "Gate_Decision": "APPLIED",
-            "Fetch": "Accesible"
-        }
-        
-        result = gate_logic(entry)
-        assert result == "Follow-up", \
-            "APPLIED + Negociando should return Follow-up"
-    
-    def test_applied_sin_respuesta_followup(self):
-        """Test APPLIED gate decision with Sin respuesta status"""
-        entry = {
-            "Next_Action": "Re-check",
-            "Status": "Sin respuesta",
-            "Gate_Decision": "APPLIED",
-            "Fetch": "Accesible"
-        }
-        
-        result = gate_logic(entry)
-        assert result == "Follow-up", \
-            "APPLIED + Sin respuesta should return Follow-up"
-    
-    def test_create_postulado_followup(self):
-        """Test CREATE gate decision with Postulado status"""
+    def test_status_postulado_returns_applied(self):
+        """Test that Status='Postulado' returns APPLIED (terminal protection)"""
         entry = {
             "Next_Action": "Re-check",
             "Status": "Postulado",
@@ -136,11 +84,24 @@ class TestGateLogic:
         }
         
         result = gate_logic(entry)
-        assert result == "Follow-up", \
-            "CREATE + Postulado should return Follow-up"
+        assert result == "APPLIED", \
+            "Status='Postulado' should return APPLIED (terminal protection)"
     
-    def test_create_default_recheck(self):
-        """Test CREATE gate decision with default status"""
+    def test_status_rechazado_returns_rejected(self):
+        """Test that Status='Rechazado' returns REJECTED (terminal protection)"""
+        entry = {
+            "Next_Action": "Re-check",
+            "Status": "Rechazado",
+            "Gate_Decision": "BLOCKED",
+            "Fetch": "Accesible"
+        }
+        
+        result = gate_logic(entry)
+        assert result == "REJECTED", \
+            "Status='Rechazado' should return REJECTED (terminal protection)"
+    
+    def test_non_terminal_eligible_for_recalculation(self):
+        """Test that non-terminal states return None (eligible for recalculation)"""
         entry = {
             "Next_Action": "Re-check",
             "Status": "Target",
@@ -149,60 +110,8 @@ class TestGateLogic:
         }
         
         result = gate_logic(entry)
-        assert result == "Re-check", \
-            "CREATE with non-application status should return Re-check"
-    
-    def test_blocked_bloqueado_reparar_url(self):
-        """Test BLOCKED gate decision with Bloqueado fetch"""
-        entry = {
-            "Next_Action": "Re-check",
-            "Status": "Target",
-            "Gate_Decision": "BLOCKED",
-            "Fetch": "Bloqueado"
-        }
-        
-        result = gate_logic(entry)
-        assert result == "Reparar URL", \
-            "BLOCKED + Bloqueado should return Reparar URL"
-    
-    def test_blocked_parcial_verificar_jd(self):
-        """Test BLOCKED gate decision with Parcial fetch"""
-        entry = {
-            "Next_Action": "Re-check",
-            "Status": "Target",
-            "Gate_Decision": "BLOCKED",
-            "Fetch": "Parcial"
-        }
-        
-        result = gate_logic(entry)
-        assert result == "Verificar JD", \
-            "BLOCKED + Parcial should return Verificar JD"
-    
-    def test_blocked_default_archivar(self):
-        """Test BLOCKED gate decision with default fetch"""
-        entry = {
-            "Next_Action": "Re-check",
-            "Status": "Target",
-            "Gate_Decision": "BLOCKED",
-            "Fetch": "Accesible"
-        }
-        
-        result = gate_logic(entry)
-        assert result == "Archivar", \
-            "BLOCKED with other fetch should return Archivar"
-    
-    def test_default_fallback_archivar(self):
-        """Test default fallback to Archivar"""
-        entry = {
-            "Next_Action": "Re-check",
-            "Status": "Target",
-            "Gate_Decision": "UNKNOWN",
-            "Fetch": "Accesible"
-        }
-        
-        result = gate_logic(entry)
-        assert result == "Archivar", \
-            "Unknown gate decision should default to Archivar"
+        assert result is None, \
+            "Non-terminal state should return None (eligible for recalculation)"
 
 
 # ============================================================================
@@ -252,43 +161,49 @@ class TestGateLayer1:
     
     def test_inbound_create(self):
         """Test that Inbound source type returns CREATE"""
-        result = gate_layer1("Accesible", "Alto", "VM", "Inbound", "VM Manager", "Nike")
+        result = gate_layer1("Accesible", "Alto", "VM", "Inbound", rol="VM Manager", marca="Nike")
         assert result == "CREATE", \
             "Inbound source should always return CREATE"
     
     def test_referencia_create(self):
         """Test that Referencia source type returns CREATE"""
-        result = gate_layer1("Accesible", "Alto", "VM", "Referencia", "VM Manager", "Nike")
+        result = gate_layer1("Accesible", "Alto", "VM", "Referencia", rol="VM Manager", marca="Nike")
         assert result == "CREATE", \
             "Referencia source should always return CREATE"
     
     def test_networking_create(self):
         """Test that Networking source type returns CREATE"""
-        result = gate_layer1("Accesible", "Alto", "VM", "Networking", "VM Manager", "Nike")
+        result = gate_layer1("Accesible", "Alto", "VM", "Networking", rol="VM Manager", marca="Nike")
         assert result == "CREATE", \
             "Networking source should always return CREATE"
     
     def test_vacante_fetch_accesible_vm_scope_alto_create(self):
-        """Test Vacante with Accesible + VM_Scope Alto returns CREATE"""
-        result = gate_layer1("Accesible", "Alto", "VM", "Vacante", "VM Manager", "Nike")
+        """Test Vacante with Accesible + VM_Scope Alto returns CREATE (score>=60, no cambia lo que prueba este caso: scope)"""
+        result = gate_layer1("Accesible", "Alto", "VM", "Vacante", score=75, rol="VM Manager", marca="Nike")
         assert result == "CREATE", \
-            "Vacante + Accesible + VM_Scope Alto should return CREATE"
+            "Vacante + Accesible + VM_Scope Alto (score>=60) should return CREATE"
     
     def test_vacante_fetch_parcial_vm_scope_alto_create(self):
-        """Test Vacante with Parcial + VM_Scope Alto returns CREATE"""
-        result = gate_layer1("Parcial", "Alto", "VM", "Vacante", "VM Manager", "Nike")
+        """Test Vacante with Parcial + VM_Scope Alto returns CREATE (score>=60, no cambia lo que prueba este caso: scope)"""
+        result = gate_layer1("Parcial", "Alto", "VM", "Vacante", score=75, rol="VM Manager", marca="Nike")
         assert result == "CREATE", \
-            "Vacante + Parcial + VM_Scope Alto should return CREATE"
+            "Vacante + Parcial + VM_Scope Alto (score>=60) should return CREATE"
     
     def test_vacante_fetch_accesible_role_class_pivote_create(self):
-        """Test Vacante with Accesible + Role_Class Pivote returns CREATE"""
+        """Test Vacante with Accesible + Role_Class Pivote returns CREATE or BLOCKED depending on VM signal"""
         # Note: This depends on has_vm_title_signal() from profile_fit
         # For testing, we assume the role has VM signal
-        result = gate_layer1("Accesible", "Medio", "Pivote", "Vacante", "Brand Experience", "Nike")
+        result = gate_layer1("Accesible", "Medio", "Pivote", "Vacante", score=75, rol="Brand Experience", marca="Nike")
         # This may return BLOCKED if has_vm_title_signal returns False
         # The actual behavior depends on profile_fit module
         assert result in ["CREATE", "BLOCKED"], \
-            "Vacante + Accesible + Role_Class Pivote should return CREATE or BLOCKED depending on VM signal"
+            "Vacante + Accesible + Role_Class Pivote (score>=60) should return CREATE or BLOCKED depending on VM signal"
+
+    def test_vacante_score_none_review_needed(self):
+        """Score ausente (None, default) con scope_ok=True -> REVIEW_NEEDED, no CREATE ni BLOCKED"""
+        result = gate_layer1("Accesible", "Alto", "VM", "Vacante", rol="VM Manager", marca="Nike")
+        assert result == "REVIEW_NEEDED", \
+            "Vacante + scope_ok + score=None (default) should return REVIEW_NEEDED"
 
 
 # ============================================================================
@@ -378,13 +293,13 @@ class TestApplicationNextAction:
 # ============================================================================
 
 class TestGateLogicIntegration:
-    """Integration tests for gate logic functionality"""
+    """Integration tests for gate logic functionality - terminal state protection"""
     
     def test_terminal_state_priority_over_gate_decision(self):
         """Test that terminal state has priority over gate decision"""
         entry = {
             "Next_Action": "Archivar",  # Terminal state
-            "Status": "Postulado",
+            "Status": "Target",
             "Gate_Decision": "CREATE",  # Would normally change action
             "Fetch": "Accesible"
         }
@@ -393,41 +308,150 @@ class TestGateLogicIntegration:
         assert result == "Archivar", \
             "Terminal state should have priority over gate decision"
     
-    def test_application_status_workflow(self):
-        """Test complete application status workflow"""
-        # Simulate application progression
-        statuses = ["Postulado", "En proceso", "Negociando"]
-        expected_actions = ["Follow-up", "Interview prep", "Follow-up"]
+    def test_status_postulado_overrides_non_terminal_next_action(self):
+        """Test that Status='Postulado' overrides non-terminal Next_Action"""
+        entry = {
+            "Next_Action": "Re-check",  # Non-terminal
+            "Status": "Postulado",  # Terminal status
+            "Gate_Decision": "CREATE",
+            "Fetch": "Accesible"
+        }
         
-        for status, expected_action in zip(statuses, expected_actions):
-            entry = {
-                "Next_Action": "Re-check",
-                "Status": status,
-                "Gate_Decision": "APPLIED",
-                "Fetch": "Accesible"
-            }
-            result = gate_logic(entry)
-            assert result == expected_action, \
-                f"Status '{status}' should return '{expected_action}'"
+        result = gate_logic(entry)
+        assert result == "APPLIED", \
+            "Status='Postulado' should return APPLIED regardless of Next_Action"
     
-    def test_blocked_workflow(self):
-        """Test complete blocked workflow"""
-        blocked_cases = [
-            ("Bloqueado", "Reparar URL"),
-            ("Parcial", "Verificar JD"),
-            ("Accesible", "Archivar"),
-        ]
+    def test_status_rechazado_overrides_non_terminal_next_action(self):
+        """Test that Status='Rechazado' overrides non-terminal Next_Action"""
+        entry = {
+            "Next_Action": "Re-check",  # Non-terminal
+            "Status": "Rechazado",  # Terminal status
+            "Gate_Decision": "BLOCKED",
+            "Fetch": "Accesible"
+        }
         
-        for fetch, expected_action in blocked_cases:
-            entry = {
-                "Next_Action": "Re-check",
-                "Status": "Target",
-                "Gate_Decision": "BLOCKED",
-                "Fetch": fetch
-            }
-            result = gate_logic(entry)
-            assert result == expected_action, \
-                f"Fetch '{fetch}' should return '{expected_action}'"
+        result = gate_logic(entry)
+        assert result == "REJECTED", \
+            "Status='Rechazado' should return REJECTED regardless of Next_Action"
+
+
+# ============================================================================
+# H1 — gate() Score Band Tests (KERNEL:GATE-DECISION-002 / GATE-DECISION-011
+# fila 2, v9.18.0)
+# ============================================================================
+# A diferencia de TestGateLayer1 (arriba), estos casos mockean profile_fit
+# para aislar exclusivamente la lógica de banda de Score de gate(), sin
+# depender de que "VM Manager"/"Nike" pasen por is_role_excluded/
+# resolve_alias_flags en el módulo real.
+
+from unittest.mock import patch
+
+
+@patch("profile_fit.has_vm_title_signal", return_value=False)
+@patch("profile_fit.resolve_alias_flags", return_value=(False, None))
+@patch("profile_fit.is_role_excluded", return_value=False)
+class TestGateScoreBand:
+    """Vacante, scope_ok=True (vm_scope=Alto, fetch=Accesible) -- solo varía Score."""
+
+    def test_score_60_is_create(self, *_mocks):
+        assert gate_layer1("Accesible", "Alto", "VM", "Vacante", score=60) == "CREATE"
+
+    def test_score_75_is_create(self, *_mocks):
+        assert gate_layer1("Accesible", "Alto", "VM", "Vacante", score=75) == "CREATE"
+
+    def test_score_59_is_review_needed(self, *_mocks):
+        assert gate_layer1("Accesible", "Alto", "VM", "Vacante", score=59) == "REVIEW_NEEDED"
+
+    def test_score_40_is_review_needed(self, *_mocks):
+        assert gate_layer1("Accesible", "Alto", "VM", "Vacante", score=40) == "REVIEW_NEEDED"
+
+    def test_score_39_is_blocked(self, *_mocks):
+        assert gate_layer1("Accesible", "Alto", "VM", "Vacante", score=39) == "BLOCKED"
+
+    def test_score_0_is_blocked(self, *_mocks):
+        assert gate_layer1("Accesible", "Alto", "VM", "Vacante", score=0) == "BLOCKED"
+
+    def test_score_none_is_review_needed_not_blocked(self, *_mocks):
+        # Golden rule: dato faltante no debe traducirse en pérdida silenciosa
+        # de la vacante.
+        assert gate_layer1("Accesible", "Alto", "VM", "Vacante", score=None) == "REVIEW_NEEDED"
+
+    def test_scope_fails_blocked_regardless_of_score(self, *_mocks):
+        # vm_scope=Bajo, role_class no Pivote -> scope_ok=False -> BLOCKED
+        # aunque el Score sea perfecto.
+        assert gate_layer1("Accesible", "Bajo", "Otro", "Vacante", score=100) == "BLOCKED"
+
+    def test_fetch_bloqueado_blocked_regardless_of_score(self, *_mocks):
+        assert gate_layer1("Bloqueado", "Alto", "VM", "Vacante", score=100) == "BLOCKED"
+
+    def test_bypass_sources_ignore_score_entirely(self, *_mocks):
+        # Inbound/Referencia/Networking: CREATE incondicional, Score no aplica.
+        for source in ("Inbound", "Referencia", "Networking"):
+            assert gate_layer1("Bloqueado", "Bajo", "Otro", source, score=0) == "CREATE"
+            assert gate_layer1("Bloqueado", "Bajo", "Otro", source, score=None) == "CREATE"
+
+
+@patch("profile_fit.is_role_excluded", return_value=True)
+def test_excluded_role_blocked_before_score_check(mock_excluded):
+    # Guarda dura de exclusión/alias precede a cualquier lógica de Score.
+    with patch("profile_fit.resolve_alias_flags", return_value=(False, None)):
+        assert gate_layer1("Accesible", "Alto", "VM", "Vacante", score=100, rol="L'Oréal Manager") == "BLOCKED"
+
+
+class TestTerminalProtectionScoring:
+    """H2 FIX tests: Verify terminal records don't get Score/Priority recalculated"""
+    
+    def test_terminal_status_protected_from_scoring(self):
+        """Test that Postulado status is protected from Score recalculation"""
+        entry = {
+            "Next_Action": "Follow-up",
+            "Status": "Postulado",
+            "Gate_Decision": "CREATE",
+            "Fetch": "Accesible"
+        }
+        
+        result = gate_logic(entry)
+        assert result == "APPLIED", \
+            "Postulado should return APPLIED (terminal protection)"
+    
+    def test_rejected_status_protected_from_scoring(self):
+        """Test that Rechazado status is protected from Score recalculation"""
+        entry = {
+            "Next_Action": "Post-Mortem",
+            "Status": "Rechazado",
+            "Gate_Decision": "REJECTED",
+            "Fetch": "Accesible"
+        }
+        
+        result = gate_logic(entry)
+        assert result == "REJECTED", \
+            "Rechazado should return REJECTED (terminal protection)"
+    
+    def test_archivar_action_protected_from_scoring(self):
+        """Test that Archivar Next_Action is protected from Score recalculation"""
+        entry = {
+            "Next_Action": "Archivar",
+            "Status": "Target",
+            "Gate_Decision": "BLOCKED",
+            "Fetch": "Accesible"
+        }
+        
+        result = gate_logic(entry)
+        assert result == "Archivar", \
+            "Archivar Next_Action should be protected (terminal protection)"
+    
+    def test_expirada_action_protected_from_scoring(self):
+        """Test that Expirada Next_Action is protected from Score recalculation"""
+        entry = {
+            "Next_Action": "Expirada",
+            "Status": "Target",
+            "Gate_Decision": "BLOCKED",
+            "Fetch": "Bloqueado"
+        }
+        
+        result = gate_logic(entry)
+        assert result == "Expirada", \
+            "Expirada Next_Action should be protected (terminal protection)"
 
 
 if __name__ == "__main__":

@@ -116,8 +116,9 @@ Esta sección se ejecuta una sola vez, al instalar el sistema por primera vez (o
 - Acceso a Grok con modo DeepSearch o Think activo.
 ### Paso 1
 Verificar Notion
-- READY-TO-APPLY: Espacio de trabajo diario (Score ≥ 60).
-- REVIEW_NEEDED: Vacantes en rango Score 40–59.
+- READY-TO-APPLY: Espacio de trabajo diario (Score ≥ 60, Gate_Decision=CREATE).
+- REVIEW_NEEDED: Vacantes en rango Score 40–59 (Gate_Decision=REVIEW_NEEDED, requieren revisión manual).
+- BLOCKED: Score < 40 o fail de scope/fetch (Gate_Decision=BLOCKED).
 - ARCHIVE: Score 0 o Status Expirada.
 - ALL: Administración general.
 ### Paso 2

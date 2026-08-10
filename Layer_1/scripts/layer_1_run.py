@@ -454,7 +454,7 @@ def calculate_score_v6(entry):
 
 
 
-def gate(fetch, vm_scope, role_class, source_type, rol="", marca=""):
+def gate(fetch, vm_scope, role_class, source_type, score=None, rol="", marca=""):
     from profile_fit import has_vm_title_signal, is_role_excluded, resolve_alias_flags
 
     if is_role_excluded(rol) or resolve_alias_flags(marca)[0]:
@@ -463,10 +463,23 @@ def gate(fetch, vm_scope, role_class, source_type, rol="", marca=""):
         return "CREATE"
     if source_type == "Vacante":
         fetch_ok = fetch in ("Accesible", "Parcial")
-        if fetch_ok and vm_scope == "Alto":
+        scope_ok = fetch_ok and (
+            vm_scope == "Alto"
+            or (role_class == "Pivote" and has_vm_title_signal(rol))
+        )
+        if not scope_ok:
+            return "BLOCKED"
+        # H1 FIX (KERNEL:GATE-DECISION-002 / GATE-DECISION-011 fila 2, v9.18.0):
+        # Score decide la banda final una vez superado el filtro de scope/fetch.
+        # Score ausente (None) -> REVIEW_NEEDED, nunca BLOCKED silencioso --
+        # perder una vacante por dato faltante es peor que pedir revisión manual.
+        if score is None:
+            return "REVIEW_NEEDED"
+        if score >= 60:
             return "CREATE"
-        if fetch_ok and role_class == "Pivote" and has_vm_title_signal(rol):
-            return "CREATE"
+        if score >= 40:
+            return "REVIEW_NEEDED"
+        return "BLOCKED"
     return "BLOCKED"
 
 def evaluate_application_status(status):
@@ -739,6 +752,15 @@ def main():
         contacto = txt(props.get("Contacto"))
         current_score = props.get("Score", {}).get("number")
         source_type = txt(props.get("Source_Type ")) or "Vacante"
+        status = txt(props.get("Status"))
+        current_action = txt(props.get("Next_Action"))
+
+        # H2 FIX (KERNEL:GATE-DECISION-010): Proteger registros terminales de recálculo de Score
+        # Si gate_logic() retornaría algo no-None, el registro es terminal/protected y no debe mutar
+        entry = {"Next_Action": current_action, "Status": status}
+        protected = gate_logic(entry)
+        if protected is not None:
+            continue  # Skip terminal/protected records
 
         entry_data = {"title": rol, "company": marca, "jd": jd, "contact": contacto}
         
@@ -906,6 +928,16 @@ def main():
     for item in items:
         props = item["properties"]
         current_prioridad = txt(props.get("Prioridad"))
+        status = txt(props.get("Status"))
+        current_action = txt(props.get("Next_Action"))
+
+        # H2 FIX (KERNEL:GATE-DECISION-010): Proteger registros terminales de recálculo de Prioridad
+        # Si gate_logic() retornaría algo no-None, el registro es terminal/protected y no debe mutar
+        entry = {"Next_Action": current_action, "Status": status}
+        protected = gate_logic(entry)
+        if protected is not None:
+            continue  # Skip terminal/protected records
+
         nuevo_prioridad, razon = infer_prioridad(props, today)
 
         if current_prioridad != nuevo_prioridad:
@@ -943,6 +975,7 @@ def main():
     create_count = 0
     applied_count = 0
     blocked_count = 0
+    review_count = 0
     protected_count = 0
     rejected_status_count = 0
 
@@ -957,6 +990,7 @@ def main():
         status = txt(props.get("Status"))
         current_gate = txt(props.get("Gate_Decision"))
         current_action = txt(props.get("Next_Action"))
+        score = props.get("Score", {}).get("number")
 
         # Saltar si está expirada/archivada
         if status in ["Expirada", "Archivar"]:
@@ -975,7 +1009,11 @@ def main():
         protected = gate_logic(entry)
         if protected is not None:
             protected_count += 1
-            continue
+            # H2 FIX (KERNEL:GATE-DECISION-006): Si gate_logic() retorna "REJECTED" (Status="Rechazado"),
+            # NO hacer continue para permitir que evaluate_rejection_status() aplique REJECTED+Post-Mortem
+            # Esto activa la transición APPLIED→REJECTED documentada en GATE-DECISION-011 fila 11
+            if protected != "REJECTED":
+                continue
 
         # v9.14.6: JD_Quality == "JD Completo" → priorizar Optimizar (CV-A ready)
         jd_quality = txt(props.get("JD_Quality"))
@@ -989,18 +1027,27 @@ def main():
             next_action = get_application_next_action(status)
             applied_count += 1
         elif jd_quality == "JD Completo":
-            decision = gate(fetch, vm_scope, role_class, source_type, rol=rol, marca=marca)
-            next_action = "Optimizar"
+            decision = gate(fetch, vm_scope, role_class, source_type, score=score, rol=rol, marca=marca)
             if decision == "CREATE":
+                next_action = "Optimizar"
                 create_count += 1
+            elif decision == "REVIEW_NEEDED":
+                # H1 FIX: no se optimiza CV sobre un registro que aún no supera
+                # el umbral de Score -- fuerza revisión manual primero.
+                next_action = "Investigar"
+                review_count += 1
             else:
+                next_action = "Optimizar"
                 blocked_count += 1
         else:
-            decision = gate(fetch, vm_scope, role_class, source_type, rol=rol, marca=marca)
+            decision = gate(fetch, vm_scope, role_class, source_type, score=score, rol=rol, marca=marca)
 
             if decision == "CREATE":
                 next_action = "Re-check"
                 create_count += 1
+            elif decision == "REVIEW_NEEDED":
+                next_action = "Investigar"
+                review_count += 1
             elif source_type == "Vacante" and fetch == "Bloqueado":
                 next_action = "Reparar URL"
                 blocked_count += 1
@@ -1117,6 +1164,7 @@ def main():
     print(f"  JD Bypass: {jd_bypass_count} vacantes con JD existente")
     print(f"  READY-TO-APPLY (>=60): {ready_to_apply}")
     print(f"  CREATE (Pipeline Activo): {create_count}")
+    print(f"  REVIEW_NEEDED (Score 40-59): {review_count}")
     print(f"  APPLIED (En proceso): {applied_count}")
     print(f"  REJECTED: {rejected_status_count}")
     print(f"  BLOCKED: {blocked_count}")
