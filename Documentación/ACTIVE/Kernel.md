@@ -501,7 +501,7 @@ Referencia canónica para scripts y auditorías — no reemplaza la descripción
 | [ENTRY] | feed_processor.py ingesta JSON | Source_Type ∈ {Inbound, Referencia, Networking} | READY_TO_APPLY | Python | Gate_Decision=CREATE, Score=bypass |
 | [ENTRY] | feed_processor.py ingesta JSON | URL viva + Score ≥ 60 + Status=Target | READY_TO_APPLY | Python | Gate_Decision=CREATE, Score, VM_Scope, Role_Class, Next_Action |
 | [ENTRY] | feed_processor.py ingesta JSON | URL muerta OR Score < 60 | BLOCKED | Python | Gate_Decision=BLOCKED, Score=0 (si URL muerta) |
-| [ENTRY] | feed_processor.py ingesta JSON | Dedup match en ventana 30d | REJECTED_DUPLICATE | Python | Dedup_Flag=True, Next_Action=Descartar |
+| [ENTRY] | feed_processor.py ingesta JSON | Dedup match (hash/URL/brand+title) contra VANTAGE TRACKER activo, ventana 30d | REVIEW_NEEDED | Python | Status=REVIEW_NEEDED en el registro entrante; Dedup_Flag='Posible duplicado' (select) en el registro existente coincidente |
 | BLOCKED | vd — Dashboard RT-1 edita Class A | Patch válido → run_pipeline.py --dry PASS | PATCHED | Humano + Python | Score, Gate_Decision recalculados |
 | PATCHED | Operador acepta patch en Dashboard | Aceptar → vantage_pipeline.sh | READY_TO_APPLY OR BLOCKED | Python | Gate_Decision re-evaluado; si falla → regresa BLOCKED |
 | PATCHED | Operador rechaza patch en Dashboard | Rechazar | BLOCKED | Humano | Sin cambio en SSOT |
