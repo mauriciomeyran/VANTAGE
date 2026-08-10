@@ -158,7 +158,7 @@ Output esperado:
 ```plain text
 === VANTAGE PIPELINE STATUS ===
 Ready-to-Apply: [N] vacantes
-REVIEW_NEEDED: [N] vacantes
+Para Revisar: [N] vacantes
 …
 ```
 Si falla: verifica que ~/vantage_notion_audit/.env existe y contiene tu token de Notion.
