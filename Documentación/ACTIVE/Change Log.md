@@ -1,6 +1,74 @@
 # V | CHANGELOG
 
 ---
+Tipo: [DATA] [AUDIT]
+Alcance: VANTAGE TRACKER (5 páginas: Oniverse, Milano Operadora, Ikea, Confidencial/placeholder, Dior); alias_map.json (local).
+Contexto: Cierre de tareas C-003 a C-006 del plan B.md (Devin/Claude), verificadas contra datos vivos del Tracker (35 registros, CSV export + Notion MCP) en vez de asumir el plan original sin verificar. Se detectaron y corrigieron discrepancias entre B.md y el estado real: (1) C-004 asumía que fila 3 y fila 10 del Tracker compartían hash — falso; el duplicado real de fila 3 ya estaba archivado en ARCHIVO TRACKER (39a938befc428102a26ecbc0fe20917c, Archivar=true), por lo que C-004 no requirió escritura. (2) C-003 asumía 4 alias sin resolver — en Notion vivo, Milano Operadora e Ikea ya tenían Marca canónica, solo faltaba limpiar Notas; solo Oniverse requirió write real de Marca. (3) C-006 asumía 17 registros — el Tracker vivo tiene 35.
+Cambios:
+- alias_map.json (local) — altas: oniverse→Intimissimi, milano operadora→Milano Operadora, ikano retail→Ikea. "Importante empresa del sector" excluido (placeholder genérico, resolución manual).
+- Tracker — página Oniverse (3b6938befc42818e9ba8c68dbd300b0b): Marca→Intimissimi, Notas actualizadas.
+- Tracker — página Milano Operadora (3b6938befc4281b3a827d1acbf6b983c): Notas actualizadas (Marca ya canónica).
+- Tracker — página Ikea (3b6938befc4281619c75d37456a9f79f): Notas actualizadas (Marca ya canónica).
+- Tracker — página Confidencial/placeholder (3b6938befc4281f3b054f5785e989fa9): Notas documentando decisión de no-alta.
+- Tracker — página Dior (38d938befc42818f8447f0da5369c40b): Notas documentando decisión de mantener URL de búsqueda (C-005, opcional, no ejecutada re-captura).
+- C-006: auditoría de 35 registros vs. KERNEL:GATE-DECISION-011 (bandas de Score × Gate_Decision) — 35/35 coherentes, 0 excepciones estructurales. Sin escritura asociada (solo lectura).
+IDs afectados: ninguno nuevo. Census no requiere regeneración.
+Write-Back Verification: las 5 páginas de Tracker re-consultadas vía query_data_sources post-escritura — Marca/Notas confirmadas en los 5 casos, sin mismatch.
+Pendiente (fuera de esta entrada): 2 posibles duplicados no marcados sin resolver (CONFIDENCIAL/Gerente Nacional vs. Confidencial/Gerente; Ikano-Retail vs. Ikea) — requieren decisión del operador; verificación de precedencia Next_Action=Optimizar vs JD_Quality no confirmada por falta de esa columna en la query de auditoría.
+Versión actualizada: 9.19.3 (CHANGELOG). Resto de fundacionales permanece en v9.19.2 hasta vversions --sync.
+---
+Tipo: [DOC]
+Alcance: Kernel (KERNEL:GATE-DECISION-003 09.3, KERNEL:GATE-DECISION-010 09.10 Referencias, KERNEL:OWNERSHIP-002 05.2).
+Contexto: Cierre del pendiente D-002 dejado abierto en v9.19.1. Verificación línea por línea contra dashboard_notion.py confirmó que class_b_guard.guard_write_payload() está integrado en write_patch_to_notion() como guard previo a client.pages.update(), fail-closed (CLASS_B_BLOCKED) ante campos Class B o desconocidos (strict_unknown=True). Esto cierra GAP-03, documentado desde antes como mitigación interina (whitelist en DRY RUN) sin guard real equivalente al de feed_processor.py.
+Cambios:
+- KERNEL:GATE-DECISION-003 (09.3) — GAP-03 marcado CERRADO, reemplaza la mención de mitigación interina por la descripción del guard real confirmado.
+- KERNEL:GATE-DECISION-010 (09.10, bloque Referencias) — extendida la referencia a dashboard_notion.py para mencionar el guard D-002.
+- KERNEL:OWNERSHIP-002 (05.2) — nota añadida sobre la aplicación técnica del invariante "Python recalcula Class B" en la vía RT-1/Dashboard.
+IDs afectados: ninguno nuevo — extensión de contenido bajo IDs existentes. Census no requiere regeneración.
+Write-Back Verification: Kernel re-fetched tras escritura — los tres bloques confirmados en posición correcta, sin mismatch.
+Pendiente (fuera de esta entrada): vversions --sync para propagar v9.19.2 al resto de los fundacionales.
+Versión actualizada: 9.19.2 (CHANGELOG). Resto de fundacionales permanece en v9.19.1 hasta vversions --sync.
+---
+Tipo: [FIX] [CODE]
+Alcance: Layer_1/scripts/gate_logic.py (D-001, D-004); Layer_1/scripts/profile_fit.py (D-003); Kernel (KERNEL:GATE-DECISION-010).
+Contexto: Implementación coordinada Devin de tres fixes puntuales sobre gate_logic.py y profile_fit.py, verificados por dry-run del pipeline sin cambios lógicos a datos existentes (solo protección/observabilidad). D-002 (class_b_guard como middleware MCP) queda fuera de esta entrada — estado sin confirmar, pendiente de verificación en sesión futura.
+Cambios:
+- gate_logic.py — D-001: agregado "Expirada": "EXPIRADA" a STATUS_TERMINAL_MAP, alineando protección de terminalidad por Status con KERNEL:GATE-DECISION-010 (antes solo protegida indirectamente vía Next_Action=Expirada en TERMINAL_ACTIONS).
+- gate_logic.py — D-004: agregado logging explícito de protección de terminales para observabilidad.
+- profile_fit.py — D-003: agregado "Postulando" a _PROTECTED_STATUSES.
+- KERNEL:GATE-DECISION-010 (09.10) — Criterio 1 actualizado documentando el fix D-001.
+IDs afectados: ninguno nuevo — extensión/corrección de contenido bajo KERNEL:GATE-DECISION-010 ya existente. Census no requiere regeneración.
+Write-Back Verification: gate_logic.py y profile_fit.py verificados línea por línea contra el código fuente subido (comentarios # D-001 FIX, # D-003 FIX, # D-004 FIX confirmados). Kernel re-fetched tras escritura — 09.10 Criterio 1 confirmado, referencias cruzadas (GATE-DECISION-005, -006, -008) intactas.
+Pendiente (fuera de esta entrada): confirmar estado de D-002 (class_b_guard middleware MCP); C-002 posible duplicado (ya cubierto v9.14.5); C-003 a C-006 sin verificar con evidencia de código/tracker.
+Versión actualizada: 9.19.1 (CHANGELOG). Resto de fundacionales permanece en v9.18.0 hasta vversions --sync.
+Observaciones del dry-run:
+1. Logging de terminales (D-004) funcionando:
+- 10 registros con Status=Expirada muestran logging correcto:
+```plain text
+
+[gate_logic] PROTECTED: unknown → EXPIRADA (Status=Expirada, Next_Action=Archivar)
+```
+1. Cambios de prioridad (Fase 3.6):
+- 6 cambios por sin_fecha_creacion (comportamiento esperado)
+- Ejemplo: Confidencial/Zara/Bershka cambiando de BAJO→MEDIO/ALTO
+1. Gate updates:
+- 38 actualizaciones de Last_Gate_Run (timestamp normal de última ejecución)
+1. Estado estable:
+- "ESTADO ESTABLE: Sin cambios necesarios"
+- D-001 a D-004 no introducen cambios lógicos a los datos, solo protección/observabilidad
+RESUMEN FINAL v8.0:
+URL Gate: 0 links muertos eliminados
+JD Bypass: 2 vacantes con JD existente
+READY-TO-APPLY (>=60): 11
+CREATE (Pipeline Activo): 11
+REVIEW_NEEDED (Score 40-59): 24
+APPLIED (En proceso): 0
+REJECTED: 0
+BLOCKED: 0
+PROTEGIDAS: 0
+Total procesado: 45
+ESTADO ESTABLE: Sin cambios necesarios
+---
 Tipo: [FIX] [INFRA]
 Título: H2 — Protección de terminalidad extendida a Score/Prioridad (KERNEL:GATE-DECISION-010 / GATE-DECISION-006)
 Contexto: Auditoría de conformidad/drift de VANTAGE (sesión arena.ia + Claude, 2026-08-10, GitHub Issue #2, H2) detectó que Fase 3 (Scoring) y Fase 3.6 (Prioridad) iteraban sobre TODAS las filas sin filtrar terminales, violando KERNEL:GATE-DECISION-010 ("un registro terminal no puede ser sobreescrito por recálculo de Score/Gate"). Solo Fase 4 estaba protegida vía gate_logic(). Adicionalmente, la transición APPLIED→REJECTED (GATE-DECISION-011 fila 11) era código muerto porque gate_logic() retornaba "REJECTED" y el código hacía continue antes de llegar a evaluate_rejection_status().
@@ -14,7 +82,6 @@ Write-Back Verification: Tests pasando (45/45), protección de terminales extend
 Pendiente: avisar en GitHub Issue #2; actualizar Task Tracker (3b8938be-fc42-8166-81c9-ef9002012fac) con Status→Hecho y solución documentada.
 Versión actualizada: 9.19.0 (CHANGELOG). Resto de fundacionales permanece en v9.18.0 hasta vversions --sync.
 ---
----
 Tipo: [FIX] [INFRA]
 Título: H1 — Implementación de umbral de Score en gate() (KERNEL:GATE-DECISION-002 / GATE-DECISION-011)
 Contexto: Auditoría de conformidad/drift de VANTAGE (sesión arena.ia + Claude, 2026-08-10, GitHub Issue #1, H1) detectó que gate() decidía solo por fetch + VM_Scope + Role_Class y nunca leía Score, violando el contrato del Kernel que define bandas: ≥60 CREATE · 40-59 Para Revisar · <40 BLOCKED. Evidencia: 31/36 filas CREATE con Score<60 en snapshot, mientras Manual/Checklist filtraban por Score≥60.
@@ -27,7 +94,6 @@ IDs afectados: Tracker 596938befc42836baea7814a1491bd47 — 9 filas cambiadas de
 Write-Back Verification: Tests pasando (41/41), dry-run confirmado, aplicación exitosa al Tracker vivo.
 Pendiente: avisar en GitHub Issue #1; actualizar Task Tracker (3b8938be-fc42-8130-b47a-f0150c2502cd) con Status→Hecho y solución documentada.
 Versión actualizada: 9.18.0 (CHANGELOG). Resto de fundacionales permanece en v9.17.1 hasta vversions --sync.
----
 ---
 Tipo: [DOC] [FIX]
 Alcance: Kernel (KERNEL:GATE-DECISION-011).

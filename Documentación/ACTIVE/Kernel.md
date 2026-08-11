@@ -302,7 +302,7 @@ Motor de lógica de negocio y escritura autónoma: único componente con permiso
 Excepción — Bypass
 Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE automático (ver 09.1).
 Invariante crítico
-Python recalcula campos Class B en cada run — ningún valor estimado por el AI Component tiene validez en el pipeline.
+Python recalcula campos Class B en cada run — ningún valor estimado por el AI Component tiene validez en el pipeline. Este invariante se aplica técnicamente en la vía RT-1/Dashboard mediante el guard documentado en KERNEL:GATE-DECISION-003 (GAP-03 cerrado v9.19.2).
 ---
 ## 06 KERNEL:DASHBOARD-CHECKLIST-ARCH
 Arquitectura Dashboard/Checklist
@@ -415,8 +415,7 @@ Orden:
 1. Gate_Decision (≥60 CREATE · 40–59 REVIEW_NEEDED · <40 BLOCKED/Archivar).
 ### 09.3 KERNEL:GATE-DECISION-003
 Resolución de REVIEW_NEEDED
-Gap GAP-03 documentado: escritura directa vía MCP no tiene guard equivalente al de feed_processor.py.
-Mitigación interina: whitelist de campos Class A en DRY RUN.
+GAP-03 — CERRADO (v9.19.2): escritura directa vía MCP/RT-1 cuenta con guard equivalente al de feed_processor.py. class_b_guard.guard_write_payload() está integrado en dashboard_notion.py::write_patch_to_notion() como guard previo a client.pages.update(), fail-closed (CLASS_B_BLOCKED) ante campos Class B o desconocidos (strict_unknown=True). Verificado línea por línea contra el repositorio, 2026-08-10.
 Disparador de resolución: Status = "Target".
 ### 09.4 KERNEL:GATE-DECISION-004
 Por Qué los Gates Son Deterministas
@@ -478,6 +477,7 @@ Criterios (orden de evaluación obligatorio)
 1. Status → STATUS_TERMINAL_MAP (prioridad)
 - "Postulado" → protege como APPLIED
 - "Rechazado" → protege como REJECTED
+- "Expirada" → protege como EXPIRADA (fix D-001 aplicado v9.19.1 — antes protegida indirectamente solo vía Next_Action=Expirada en TERMINAL_ACTIONS; ambos mecanismos coexisten sin conflicto, evaluados en este orden)
 1. Next_Action → TERMINAL_ACTIONS
 - "Archivar" · "Expirada"
 1. Si ninguno aplica → None (registro elegible para recálculo por gate())
@@ -490,7 +490,7 @@ Invariantes
 - Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con KERNEL:OWNERSHIP-002.
 Referencias
 - Implementación: Layer_1/scripts/gate_logic.py, Layer_1/scripts/layer_1_run.py
-- Atomicidad RT-1: Dashboard/scripts/dashboard_routes.py (/accept), dashboard_notion.py
+- Atomicidad RT-1: Dashboard/scripts/dashboard_routes.py (/accept), dashboard_notion.py — la escritura en esta vía pasa por el guard class_b_guard.guard_write_payload() (ver KERNEL:GATE-DECISION-003, GAP-03 cerrado v9.19.2), que bloquea fail-closed cualquier campo Class B o desconocido antes de client.pages.update().
 - Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002
 ### 09.11 KERNEL:GATE-DECISION-011
 Matriz de Transición de Estados (Referencia Técnica)
