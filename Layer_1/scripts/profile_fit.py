@@ -37,6 +37,7 @@ _EXCLUDE_ROLE_PATTERNS: tuple[tuple[str, str], ...] = (
 
 _PROTECTED_STATUSES = frozenset({
     "Postulado", "En proceso", "Negociando", "Sin respuesta", "Contratado",
+    "Postulando",  # D-003 FIX: Protege estado activo de aplicación (puede durar días)
 })
 
 _TERMINAL_STATUSES = frozenset({

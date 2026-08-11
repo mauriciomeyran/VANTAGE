@@ -124,6 +124,22 @@ def write_patch_to_notion(page_id: str, patch: dict):
     if not properties:
         return {'success': False, 'error': 'PATCH_EMPTY'}
 
+    # D-002 FIX (GAP-003): Integrar class_b_guard como middleware antes de escritura
+    # Importar class_b_guard desde Layer_1/scripts
+    import sys, os
+    sys.path.insert(0, os.path.expanduser("~/Documents/03 Projects/VANTAGE/Layer_1/scripts"))
+    from class_b_guard import guard_write_payload
+
+    # Aplicar guard a las properties antes de enviar a Notion
+    guard_result = guard_write_payload(properties, strict_unknown=True)
+    if not guard_result.is_clean:
+        print(f"[CLASS_B_GUARD] {guard_result.report()}")
+        # Fallar fuertemente si hay campos Class B en el payload
+        return {'success': False, 'error': 'CLASS_B_BLOCKED'}
+    
+    # Usar payload limpio
+    properties = guard_result.clean_payload
+
     try:
         client.pages.update(page_id=page_id, properties=properties)
         return {'success': True, 'error': None}

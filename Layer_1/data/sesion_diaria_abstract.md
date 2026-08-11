@@ -155,6 +155,39 @@ Sesión de remediación técnica y documental del sistema VANTAGE tras auditorí
 
 ---
 
+### 7. Tareas Técnicas Adicionales (D-001 a D-004)
+**Decisión operador:** Opción A para todas (consistencia arquitectónica + seguridad)  
+**Estado:** ✅ COMPLETADAS
+
+**D-001 — STATUS_TERMINAL_MAP en gate_logic.py:**
+- Agregado `"Expirada": "EXPIRADA"` a STATUS_TERMINAL_MAP
+- Alineado con KERNEL:GATE-DECISION-010 que documenta "Expirada" como criterio de terminalidad por Status
+- Tests: 45/45 pasando, cero regressions
+
+**D-002 — Integrar class_b_guard en escritura MCP:**
+- `dashboard_notion.py:127-143` — integrado class_b_guard como middleware antes de client.pages.update()
+- Cierra GAP-003: escritura MCP ahora protegida contra campos Class B
+- Fail-closed: payload con campos Class B rechazado con error CLASS_B_BLOCKED
+
+**D-003 — Guard de terminales para "Postulando":**
+- `profile_fit.py:38-41` — agregado "Postulando" a _PROTECTED_STATUSES
+- Protege estado activo de aplicación (puede durar días) contra re-cálculo
+- Consistente con otros estados protegidos que duran semanas
+
+**D-004 — Logging de protección de terminales:**
+- `gate_logic.py:24-47` — agregado logging cuando retorna valor terminal
+- Formato: `[gate_logic] PROTECTED: {entry_id} → {terminal_value} (Status={status}, Next_Action={current_action})`
+- Mejora observabilidad de protección de terminales en pipeline runs
+
+**Código:**
+- `Kernel.md:503` — corregido "Score < 60 → BLOCKED" a "Score < 40 → BLOCKED"
+- `Kernel.md:504` — agregada fila "Score 40-59 → REVIEW_NEEDED"
+
+**Pendiente:**
+- Aplicar parches en Notion via Littlebird
+
+---
+
 ## Archivos Modificados
 
 **Código:**

@@ -17,6 +17,7 @@ TERMINAL_ACTIONS = {"Archivar", "Expirada"}
 STATUS_TERMINAL_MAP = {
     "Postulado": "APPLIED",
     "Rechazado": "REJECTED",
+    "Expirada": "EXPIRADA",  # D-001 FIX: Alineado con KERNEL:GATE-DECISION-010 que documenta "Expirada" como criterio de terminalidad por Status
 }
 
 
@@ -34,10 +35,18 @@ def gate_logic(entry):
     """
     status = entry.get("Status") or ""
     if status in STATUS_TERMINAL_MAP:
-        return STATUS_TERMINAL_MAP[status]
+        terminal_value = STATUS_TERMINAL_MAP[status]
+        # D-004 FIX: Logging de protección de terminales para observabilidad
+        entry_id = entry.get("id", "unknown")[:8] if "id" in entry else "unknown"
+        current_action = entry.get("Next_Action") or ""
+        print(f"[gate_logic] PROTECTED: {entry_id} → {terminal_value} (Status={status}, Next_Action={current_action})")
+        return terminal_value
 
     current_action = entry.get("Next_Action") or ""
     if current_action in TERMINAL_ACTIONS:
+        # D-004 FIX: Logging de protección de terminales para observabilidad
+        entry_id = entry.get("id", "unknown")[:8] if "id" in entry else "unknown"
+        print(f"[gate_logic] PROTECTED: {entry_id} → {current_action} (Status={status}, Next_Action={current_action})")
         return current_action
 
     return None
