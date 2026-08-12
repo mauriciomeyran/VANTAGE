@@ -256,4 +256,14 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-_Ninguno detectado en esta corrida._
+| ID | Documento | Link |
+|---|---|---|
+| `MANUAL:SCRIPT-GLOSSARY` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc428033aac7f397396a4d8e ) |
+| `MANUAL:SCRIPT-GLOSSARY-DASHBOARD` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280978eaccec1c0f3b28e ) |
+| `MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280f9bb7aec01efe805be ) |
+| `MANUAL:SCRIPT-GLOSSARY-L1` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc42800abcede97904b535f9 ) |
+| `MANUAL:SCRIPT-GLOSSARY-L1-MODULES` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280e6b469f114f00d1cb8 ) |
+| `MANUAL:SCRIPT-GLOSSARY-L1-TOOLS` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc428066b256f75d0faafcc3 ) |
+| `MANUAL:SCRIPT-GLOSSARY-L4` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc42808f819cf573211f33a2 ) |
+| `MANUAL:SCRIPT-GLOSSARY-RAYCAST` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280238bc8e40a944f19d7 ) |
+| `MANUAL:SCRIPT-GLOSSARY-XREF` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc42801ba178e80d98305fd1 ) |

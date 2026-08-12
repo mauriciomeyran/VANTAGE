@@ -13,7 +13,7 @@ cd ~/Documents/03\ Projects/VANTAGE/Layer_1/scripts || { notify_error "VANTAGE V
 source ../.venv/bin/activate
 export PYTHONUNBUFFERED=1
 
-echo "⚠️  Propaga versión del CHANGELOG a los 8 documentos restantes + verificación por relectura (PASS/FAIL real)."
+echo "⚠️  Propaga versión del CHANGELOG a los 9 documentos restantes + verificación por relectura (PASS/FAIL real)."
 if python3 verify_versions.py --sync; then
   notify_success "VANTAGE Versions (Sync)" "✅ Sync PASS en todos los documentos"
 else
