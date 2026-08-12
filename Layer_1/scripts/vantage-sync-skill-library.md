@@ -52,6 +52,14 @@ Mismo bug ya documentado y confirmado en `vantage-sync-script-library`: Notion a
 - **Al escribir** filas nuevas, pegar el nombre de archivo como texto plano — verificar en el Dry Run que el valor propuesto para `Ruta`/`Skill` no contenga `http://` antes de confirmar `APROBAR_WRITE`.
 - Esta skill no incluye limpieza retroactiva de filas ya corruptas — si se detecta corrupción existente al primer sync, tratarla como batch de escritura separado con su propio Dry Run, igual que en `vantage-sync-script-library`.
 
+### Segundo vector confirmado — corrupción en `Descripción` (sesión 2026-08-1x)
+
+El bug de auto-link no se limita a `Skill`/`Ruta`. Se confirmó que Notion también inyecta `http://` en `Descripción` cuando el texto contiene un patrón `palabra.extensión` (ej. una mención a `algo.py` dentro del resumen ejecutivo) — incluso si el texto de origen llega ya limpio al momento de construir la escritura. La corrupción ocurre **en el guardado** (`update_properties`/`create_pages`), no antes, por lo que no es detectable inspeccionando el string previo al `write`.
+
+- **Al escribir** `Descripción`, evitar cualquier patrón `palabra.extensión` dentro del texto libre. Workaround confirmado: reescribir `palabra.py` como `palabra (py)` (paréntesis en vez de punto-extensión) antes de enviar el `update_properties`.
+- **Write-Back Verification obligatoria en `Descripción`** además de `Skill`/`Ruta` — el doble fetch post-escritura debe revisar los tres campos, no solo los dos ya documentados.
+- Pendiente de verificar: si el mismo patrón aplicado a `.skill` (no solo `.py`) dentro de `Descripción` (texto libre, distinto del campo `Skill`) dispara el mismo bug. Sin evidencia confirmada aún — tratar con la misma precaución preventiva hasta confirmar o descartar en una futura alta.
+
 ## Clasificación de cada línea del gap report
 
 Para cada entrada en "SIN REGISTRAR EN NOTION", clasificar antes de proponer acción:

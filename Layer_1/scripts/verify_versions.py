@@ -21,17 +21,19 @@ REGISTRY_NAME = "resolver_registry_v2.json"
 # VANTAGE (página principal) se integró en modo idéntico a los demás — NO es
 # supervisión pasiva: participa en --sync y en el check de lectura con el
 # mismo veredicto PASS/FAIL que el resto.
-DOC_KEYS = ["CHANGELOG", "KERNEL", "MANUAL", "CANON", "SP", "ALIASES", "CENSUS", "BRIEF", "VANTAGE"]
+DOC_KEYS = ["CHANGELOG", "KERNEL", "MANUAL", "CANON", "SP", "ALIASES", "CENSUS", "BRIEF", "VANTAGE", "CHANGELOG_ARCHIVO"]
 
 # CENSUS no vive en resolver_registry_v2.json: no tiene prefijo propio en
 # KERNEL:DOC-CONTRACT (sus IDs internos usan KERNEL:/SP:/MANUAL:/CANON:/BRIEF:),
 # por lo que se declara aquí como fallback fijo.
-# BRIEF y VANTAGE SÍ viven ya en document_registry (incorporados vía
-# CENSUS-SYNC-R1, conteo de fundamentales 7→9) — los fallbacks de abajo solo
-# se usan como red de seguridad si el registro llegara a perder la clave.
+# BRIEF, VANTAGE y CHANGELOG_ARCHIVO SÍ viven ya en document_registry
+# (incorporados vía CENSUS-SYNC-R1 y actualización integración ARCHIVO) —
+# los fallbacks de abajo solo se usan como red de seguridad si el registro
+# llegara a perder la clave.
 CENSUS_FALLBACK_ID = "394938be-fc42-81e6-a381-e3869e60d89d"
 BRIEF_FALLBACK_ID = "3a3938be-fc42-8008-9e90-ec435c01f50d"
 VANTAGE_FALLBACK_ID = "36e938be-fc42-81d6-bf40-dfe7dee782a5"
+CHANGELOG_ARCHIVO_FALLBACK_ID = "3ba938be-fc42-8011-8947-fb4fa5d1f63f"
 
 # Infraestructura de sesión — no son documentos fundacionales, no participan de SP:SYNC-RULE
 # SESSION LEDGER es una DATABASE (no una página standalone) — corregido tras
@@ -137,6 +139,10 @@ def load_document_uuids(registry_path: Path) -> dict:
         if key == "VANTAGE":
             val = doc_registry.get(key)
             uuids[key] = val.replace("-", "") if val else VANTAGE_FALLBACK_ID.replace("-", "")
+            continue
+        if key == "CHANGELOG_ARCHIVO":
+            val = doc_registry.get(key)
+            uuids[key] = val.replace("-", "") if val else CHANGELOG_ARCHIVO_FALLBACK_ID.replace("-", "")
             continue
         val = doc_registry.get(key)
         if val:
@@ -465,7 +471,7 @@ def get_page_line_count(client: httpx.Client, page_id: str, headers: dict, max_d
         return {"error": str(e)}
 
 def render_length_report(client: httpx.Client, uuids: dict, headers: dict, baseline_path: Path, update_baseline: bool = False) -> None:
-    """Compara el conteo de líneas de los 9 documentos fundacionales contra
+    """Compara el conteo de líneas de los 10 documentos fundacionales contra
     el baseline guardado para detectar truncamiento silencioso.
     Si update_baseline=True, sobrescribe el baseline tras el reporte."""
     # Cargar baseline existente o crear dict vacío
@@ -687,7 +693,7 @@ def main():
     parser.add_argument("--scripts", action="store_true", help="Cruza los scripts .py/.sh (únicamente) del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SCRIPT LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     parser.add_argument("--skills", action="store_true", help="Cruza los archivos .skill del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SKILL LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     parser.add_argument("--new-scripts", action="store_true", help="Cruza los scripts .py/.sh del árbol activo contra el Glosario de Scripts LOCAL (MANUAL:SCRIPT-GLOSSARY), sin llamar a Notion. Exit 1 si hay scripts sin documentar — úsalo como gate para vantage-sync-script-glossary.")
-    parser.add_argument("--length", action="store_true", help="Compara el conteo de líneas de contenido de los 9 documentos fundacionales contra el último baseline guardado, para detectar truncamiento silencioso. Read-only salvo --update-baseline.")
+    parser.add_argument("--length", action="store_true", help="Compara el conteo de líneas de contenido de los 10 documentos fundacionales contra el último baseline guardado, para detectar truncamiento silencioso. Read-only salvo --update-baseline.")
     parser.add_argument("--update-baseline", action="store_true", help="Usar junto a --length. Sobrescribe el baseline de longitud con el conteo actual tras confirmar que no hubo truncamiento (edición legítima).")
     args = parser.parse_args()
 

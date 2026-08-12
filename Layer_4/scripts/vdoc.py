@@ -38,7 +38,7 @@ VGIT  = PROJECT / "Layer_4/scripts/git_sync.py"
 # Nota (CENSUS-SYNC-R1): ID Census queda fuera de este set a propósito — se
 # genera vía generate-census y se sube directo a Notion; no tiene contraparte
 # en ACTIVE/ ni tiene sentido respaldarlo por este flujo.
-DOCS = {"kernel", "system_prompt", "career_canon", "manual", "aliases", "change_log", "Navigation_Brief", "VANTAGE"}
+DOCS = {"kernel", "system_prompt", "career_canon", "manual", "aliases", "change_log", "Navigation_Brief", "VANTAGE", "change_log_archivo"}
 DIRECTIONS = {"notion", "auto", "local"}
 
 def run(cmd, label=""):

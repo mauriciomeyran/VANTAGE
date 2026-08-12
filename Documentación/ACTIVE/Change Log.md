@@ -1,5 +1,19 @@
 # V | CHANGELOG
 
+Tipo: [INFRA] [DOC]
+Alcance: Integración de "Archivo Changelog" (UUID: 3ba938be-fc42-8011-8947-fb4fa5d1f63f) al flujo de sincronización local y de versión.
+Contexto: La página de Notion "Archivo Changelog" cuenta con la propiedad "Versión" y cumple con el contrato de página fundacional. Se integra al registry y a los scripts de sincronización para incluirlo en el ciclo de versionado y check de salud.
+Cambios:
+- resolver_registry_v2.json — Agregada entrada "CHANGELOG_ARCHIVO": "3ba938be-fc42-8011-8947-fb4fa5d1f63f" en document_registry.
+- verify_versions.py — Añadido "CHANGELOG_ARCHIVO" a DOC_KEYS (conteo de fundamentales: 9→10). Agregado fallback ID y lógica de resolución.
+- vsync_doc.py — Añadida entrada "change_log_archivo" en diccionario DOCS con mapeo a "Changelog Archivo.md".
+- vdoc.py — Añadido "change_log_archivo" al set DOCS.
+- health_check.py — Añadida entrada "V-CHANGELOG-ARCHIVO" en DOCS_FUNDACIONALES.
+IDs afectados: Ninguno nuevo — integración de documento existente al flujo operativo. Census no requiere regeneración.
+Write-Back Verification: Cambios de configuración solo — no requieren verificación de write-back.
+Pendiente: vversions --sync para propagar v9.19.4 al resto de los fundacionales.
+Versión actualizada: 9.19.4 (CHANGELOG). Resto de fundacionales permanece en v9.19.3 hasta vversions --sync.
+---
 Tipo: [DATA] [AUDIT]
 Alcance: VANTAGE TRACKER (5 páginas: Oniverse, Milano Operadora, Ikea, Confidencial/placeholder, Dior); alias_map.json (local).
 Contexto: Cierre de tareas C-003 a C-006 del plan B.md (Devin/Claude), verificadas contra datos vivos del Tracker (35 registros, CSV export + Notion MCP) en vez de asumir el plan original sin verificar. Se detectaron y corrigieron discrepancias entre B.md y el estado real: (1) C-004 asumía que fila 3 y fila 10 del Tracker compartían hash — falso; el duplicado real de fila 3 ya estaba archivado en ARCHIVO TRACKER (39a938befc428102a26ecbc0fe20917c, Archivar=true), por lo que C-004 no requirió escritura. (2) C-003 asumía 4 alias sin resolver — en Notion vivo, Milano Operadora e Ikea ya tenían Marca canónica, solo faltaba limpiar Notas; solo Oniverse requirió write real de Marca. (3) C-006 asumía 17 registros — el Tracker vivo tiene 35.
