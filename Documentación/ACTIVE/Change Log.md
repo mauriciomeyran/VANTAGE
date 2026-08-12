@@ -1,20 +1,5 @@
 # V | CHANGELOG
 
-### v9.15.1 — Flag --length en verify_versions.py: Detección de Truncamiento Silencioso (verify_versions.py, KERNEL:DOCUMENTATION-007, SP:VERSION-CHECK-TOOL, MANUAL:RUNTIME-002) · 2026-08-09
-Tipo: [CODE] [DOC]
-Alcance: Layer_1/scripts/verify_versions.py (código, local); Kernel (KERNEL:DOCUMENTATION-007); System Prompt (SP:VERSION-CHECK-TOOL); Manual (MANUAL:RUNTIME-002).
-Contexto: El operador solicitó un mecanismo de bajo costo para detectar truncamiento silencioso de contenido en los 9 fundacionales. Brief técnico entregado a Devin especificando get_page_line_count() (paginación recursiva de blocks, max_depth=10) y render_length_report() (comparación contra baseline persistido). Auditoría línea por línea contra el archivo real en dos rondas: primera entrega con bug funcional (baseline de documentos nuevos agregados a un length_baseline.json ya existente se calculaba pero nunca se persistía a disco — new_docs_added no existía como condición de escritura); corregido y re-auditado en segunda pasada, verificado byte a byte contra la versión previa fuera de la función corregida.
-Cambios:
-- verify_versions.py — nuevas funciones get_page_line_count() (pagina /v1/blocks/{id}/children vía httpx directo, cuenta bloques con texto extraíble, excluye divider/table_of_contents/column contenedor) y render_length_report() (compara contra length_baseline.json, umbrales LENGTH_TRUNCATION_THRESHOLD_PCT=5.0 y _ABS=10 líneas); nuevo argparse --length (read-only) y --update-baseline (escritura de baseline, requiere --length); routing en main() tras load_document_uuids(), antes de --bootstrap/--sync.
-- KERNEL:DOCUMENTATION-007 (03.7) — Modos ampliado con --length; línea de Alias actualizada a cinco flags.
-- SP:VERSION-CHECK-TOOL (11) — nota de alcance extendida a detección de truncamiento silencioso.
-- MANUAL:RUNTIME-002 (9.2) — bullet vversions actualizado de cuatro a seis flags documentados.
-IDs afectados: ninguno — extensión de contenido bajo IDs ya existentes. Census no requiere regeneración.
-Write-Back Verification: Kernel, System Prompt y Manual re-fetched de forma independiente tras cada escritura — 3 bloques confirmados en posición correcta, sin mismatch.
-Pendiente (fuera de esta entrada): confirmar versión de Python del entorno de Terminal de producción antes de correr --length (la firma get_page_line_count() usa sintaxis int | dict, PEP 604, requiere ≥3.10); vversions --sync para propagar v9.15.1 al resto de los fundacionales (acción local del operador).
-Versión actualizada: 9.15.1 (CHANGELOG). El resto de los fundacionales permanece en v9.15.0 hasta vversions --sync.
----
----
 Tipo: [DATA] [AUDIT]
 Alcance: VANTAGE TRACKER (5 páginas: Oniverse, Milano Operadora, Ikea, Confidencial/placeholder, Dior); alias_map.json (local).
 Contexto: Cierre de tareas C-003 a C-006 del plan B.md (Devin/Claude), verificadas contra datos vivos del Tracker (35 registros, CSV export + Notion MCP) en vez de asumir el plan original sin verificar. Se detectaron y corrigieron discrepancias entre B.md y el estado real: (1) C-004 asumía que fila 3 y fila 10 del Tracker compartían hash — falso; el duplicado real de fila 3 ya estaba archivado en ARCHIVO TRACKER (39a938befc428102a26ecbc0fe20917c, Archivar=true), por lo que C-004 no requirió escritura. (2) C-003 asumía 4 alias sin resolver — en Notion vivo, Milano Operadora e Ikea ya tenían Marca canónica, solo faltaba limpiar Notas; solo Oniverse requirió write real de Marca. (3) C-006 asumía 17 registros — el Tracker vivo tiene 35.
@@ -84,7 +69,6 @@ Total procesado: 45
 ESTADO ESTABLE: Sin cambios necesarios
 ---
 Tipo: [FIX] [INFRA]
-Título: H2 — Protección de terminalidad extendida a Score/Prioridad (KERNEL:GATE-DECISION-010 / GATE-DECISION-006)
 Contexto: Auditoría de conformidad/drift de VANTAGE (sesión arena.ia + Claude, 2026-08-10, GitHub Issue #2, H2) detectó que Fase 3 (Scoring) y Fase 3.6 (Prioridad) iteraban sobre TODAS las filas sin filtrar terminales, violando KERNEL:GATE-DECISION-010 ("un registro terminal no puede ser sobreescrito por recálculo de Score/Gate"). Solo Fase 4 estaba protegida vía gate_logic(). Adicionalmente, la transición APPLIED→REJECTED (GATE-DECISION-011 fila 11) era código muerto porque gate_logic() retornaba "REJECTED" y el código hacía continue antes de llegar a evaluate_rejection_status().
 Cambios:
 - layer_1_run.py:743-770 — Fase 3 (Scoring): agregado filtro gate_logic() para skip registros terminales antes de recalcular Score.
@@ -97,7 +81,6 @@ Pendiente: avisar en GitHub Issue #2; actualizar Task Tracker (3b8938be-fc42-816
 Versión actualizada: 9.19.0 (CHANGELOG). Resto de fundacionales permanece en v9.18.0 hasta vversions --sync.
 ---
 Tipo: [FIX] [INFRA]
-Título: H1 — Implementación de umbral de Score en gate() (KERNEL:GATE-DECISION-002 / GATE-DECISION-011)
 Contexto: Auditoría de conformidad/drift de VANTAGE (sesión arena.ia + Claude, 2026-08-10, GitHub Issue #1, H1) detectó que gate() decidía solo por fetch + VM_Scope + Role_Class y nunca leía Score, violando el contrato del Kernel que define bandas: ≥60 CREATE · 40-59 Para Revisar · <40 BLOCKED. Evidencia: 31/36 filas CREATE con Score<60 en snapshot, mientras Manual/Checklist filtraban por Score≥60.
 Cambios:
 - layer_1_run.py:457-483 — gate() implementado con umbral de Score: score≥60 → CREATE, score≥40 → REVIEW_NEEDED, score<40 → BLOCKED. Score=None → REVIEW_NEEDED (golden rule: no pérdida silenciosa por dato faltante).
@@ -136,6 +119,7 @@ Cambios:
 IDs afectados: ninguno nuevo — extensión de contenido bajo KERNEL:CV-PIPELINE-002 ya existente. Census no requiere regeneración.
 Write-Back Verification: pendiente de re-fetch en este mismo batch.
 Versión actualizada: 9.17.0 (CHANGELOG). Resto de fundacionales permanece en v9.16.0 hasta vversions --sync.
+---
 Contexto: drift detectado en batch de 16 CV-B (mismo Positioning Mode reutilizando
 bullets pre-redactados verbatim entre vacantes distintas) + defecto mecánico de
 viñetas dobles ("• •") en serialización Figma.
@@ -152,17 +136,15 @@ inyección Figma.
 - Regeneración operativa: 16 CV-B del batch (17 HANDOFFs − 1 duplicado de
 contenido) reconstruidos con bullets diferenciados por HANDOFF activo y sin
 viñetas dobles.
+---
 Tipo: [INFRA] [DOC]
-Título: Implementación de banderas --length y --update-baseline para detección de truncamiento silencioso.
-Resumen de cambios:
+Cambios:
 - Kernel: Subsección 007.3 integrada en KERNEL:DOCUMENTATION-007 (mecanismo, umbrales 5%/10 líneas, baseline).
 - Manual: Subsección HC-03 en MANUAL:HEALTHCHECK (procedimiento de salud de documentos).
 - Aliases: Extensión de ALIASES:L4-VERSION-CONTROL con flags --length y --update-baseline.
 - System Prompt: Subsección 11.3 en SP:VERSION-CHECK-TOOL (guardarraíl operativo para la IA).
 - Navigation Brief: Dependencia LENGTH-BASELINE añadida en CROSS-DEPENDENCIES-001 y matriz de autoridad actualizada.
-Notas:
-- Backward Compatibility: Las operaciones existentes (--sync, --bootstrap) no se ven afectadas.
-- Requisitos: length_baseline.json se genera automáticamente en la primera ejecución de --length.
----
+Notas: Backward Compatibility — las operaciones existentes (--sync, --bootstrap) no se ven afectadas. Requisitos — length_baseline.json se genera automáticamente en la primera ejecución de --length.
+Versión actualizada: 9.15.1 (CHANGELOG) · 2026-08-08.
 ---
 > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.

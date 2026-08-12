@@ -136,9 +136,8 @@ Modos
 - --bootstrap (dump read-only de apertura de sesión)
 - --scripts (gap report read-only: cruza scripts .py/.sh del árbol activo contra SCRIPT LIBRARY en Notion)
 - --skills (gap report read-only: cruza archivos .skill del árbol activo contra SKILL LIBRARY en Notion)
-- --length (compara el conteo de líneas de contenido de los 9 fundacionales contra un baseline en length_baseline.json, para detectar truncamiento silencioso; read-only salvo --update-baseline, que sobrescribe el baseline tras confirmar una edición legítima)
 Modo Check eliminado en v9.6.2 — la verificación real vive íntegramente en --sync.
-Alias: vversions — acepta --bootstrap, --sync, --scripts, --skills o --length (+ --update-baseline), sin modo default.
+Alias: vversions — acepta --bootstrap, --sync, --scripts o --skills, sin modo default.
 ---
 ### 03.8 KERNEL:DOCUMENTATION-008
 Sincronización Obligatoria del ID Census

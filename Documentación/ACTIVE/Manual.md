@@ -555,14 +555,12 @@ vl1 backfill --dry-run
 Sin --dry-run, solicita confirmación explícita (s) antes de cualquier escritura.
 - 
 - vversions — alias corto de verify_versions.py, el motor de verificación y sincronización de versión de los 9 documentos fundacionales (KERNEL:VERSION-CHECK-TOOL). No es un comando del Tracker de vacantes como los vl1 * de arriba — es infraestructura documental, y su uso está integrado al Ciclo de Sesión completo en MANUAL:SESSION-CYCLE, no como comando suelto. 
-Acepta seis flags: 
+Acepta cuatro flags: 
 --bootstrap (dump read-only de apertura)
 --sync (único modo de escritura y verificación real, relee cada documento post-escritura)
 --scripts (gap report read-only de scripts .py/.sh contra SCRIPT LIBRARY)
---skills (gap report read-only de archivos .skill contra SKILL LIBRARY)
---length (compara líneas de contenido de los 9 fundacionales contra baseline en length_baseline.json, detecta truncamiento silencioso)
---update-baseline (se combina con --length, sobrescribe el baseline tras confirmar edición legítima) 
---scripts y --skills alimentan a vantage-sync-script-library y vantage-sync-skill-library respectivamente. El modo --check fue eliminado en Kernel v9.6.2.
+--skills (gap report read-only de archivos .skill contra SKILL LIBRARY) 
+Estos dos últimos alimentan a vantage-sync-script-library y vantage-sync-skill-library respectivamente. El modo --check fue eliminado en Kernel v9.6.2.
 - vcensus — alias corto de generate_census.py. Regenera el V-ID-CENSUS y reporta IDs huérfanos detectados en los documentos fuente. Se corre en el paso 1 del Cierre de Sesión (MANUAL:SESSION-CYCLE) si algún ID cambió de estado durante la sesión — ver también MANUAL:HEALTH-CHECK, "¿Qué es el Census ID?", para el detalle completo de cuándo es obligatorio.
 - vsum — alias corto de vsum.py. Resume transcripts de sesiones de trabajo (propias o de otra IA) a Markdown estructurado, orientado a continuidad entre chats sin pérdida de contexto. No es comando del Tracker de vacantes ni observabilidad de Notion como vversions/vcensus — es infraestructura de continuidad documental sobre transcripts externos.
 Acepta archivo .md, URL de Claude share. Acepta los siguientes flags:
@@ -1031,7 +1029,24 @@ Flags:
 Qué hace: Resolución de entidades individuales (context_layer.py entity_id) y búsqueda libre (query_layer.py texto) sobre el índice — motor interno detrás de vantage.py resolve/query.
 Uso: Un argumento posicional cada uno; normalmente no se invocan directo, sino a través de vantage.py.
 ---
-### 22.2 MANUAL:SCRIPT-GLOSSARY-L3
+Qué hace: Extrae la distribución de Score del Tracker activo — snapshot rápido de cómo se están calificando las vacantes actuales.
+Uso: Sin flags CLI — se corre directo. Requiere NOTION_TOKEN en el entorno.
+Caso de uso: Antes de ajustar el umbral del Score Gate (gate() en layer_1_run.py), corre esto para ver la distribución real y evitar mover el corte a ciegas.
+Qué hace: Igual que extract_scores.py pero genera histograma detallado en vez de resumen.
+Uso: Sin flags CLI — se corre directo. Requiere NOTION_TOKEN.
+Caso de uso: Cuando el resumen simple no te dice si el problema es concentración en un rango específico (ej. muchas vacantes atoradas en 55-60) — el detalle por bucket sí lo muestra.
+Qué hace: Analiza efectividad de fuentes de discovery (LinkedIn, agregadores, L2, L3, etc.) — cuáles fuentes convierten mejor a Gate_Decision=CREATE.
+Uso: Sin flags CLI — se corre directo. Requiere NOTION_TOKEN.
+Caso de uso: Al revisar si vale la pena seguir invirtiendo tiempo en una fuente de L2 específica (ej. Perplexity vs Grok) — esto te da el dato duro en vez de intuición.
+Qué hace: Imprime rápido las oportunidades con Gate_Decision=CREATE — vista de "qué está listo para actuar hoy" sin abrir Notion.
+Uso: Sin flags CLI — se corre directo. Requiere NOTION_TOKEN y NOTION_DB_OPPORTUNITIES.
+Caso de uso: Primera cosa que corres en la mañana para ver qué vacantes pasaron el gate sin tener que entrar al Tracker completo.
+⚠️ Hallazgo real (no corregido, solo documentado): vprint.sh invoca python3 .../VANTAGE/vprint.py — ruta incompleta, le falta Layer_1/scripts/. El script real vive en Layer_1/scripts/vprint.py, no en la raíz de VANTAGE. Si el wrapper falla con "No such file or directory", esta es la causa.
+Qué hace: Descarga el "digest" completo del repo VANTAGE desde Gitingest (gitingest.com/raw/mauriciomeyran/VANTAGE) — snapshot de texto plano de todo el árbol, útil para pegar contexto masivo a un LLM externo.
+Flags:
+| Argumento | Caso de uso |
+| --- | --- |
+| output_file (posicional, opcional) | Default VANTAGE_digest.txt. Especifica un nombre distinto si quieres conservar varios snapshots fechados sin sobrescribir el anterior. |
 Layer 3 — Passive Intake (Gmail)
 Qué hace: Lee correos no leídos de una etiqueta Gmail vía IMAP, extrae vacantes con Groq, las escribe en el Tracker.
 Variables de entorno (todas ajustables sin tocar código):
@@ -1043,6 +1058,52 @@ Variables de entorno (todas ajustables sin tocar código):
 | GROQ_MAX_RETRIES | 8 | Ajusta si tu conexión es inestable. |
 | GROQ_BODY_MAX_CHARS | 3500 | Si tus alertas de correo traen JDs muy largos y se están truncando antes de lo útil, súbelo (cuidado con costo de tokens de Groq). |
 | GROQ_MAX_EMAILS_PER_RUN | 10 | Si tuviste una semana sin correr L3 y hay backlog, súbelo temporalmente para procesar todo de un jalón. ⚠️ Nota de discrepancia: Manual y Aliases citan valores distintos (10 vs 5) — el código real usa 10 como default; candidato prioritario para el punto B. |
+---
+### 22.1a MANUAL:SCRIPT-GLOSSARY-L1-MODULES
+Módulos Compartidos (sin CLI propia — se importan, no se ejecutan solos)
+> Estos 7 no son "scripts" en el sentido operativo — son librerías internas que otros scripts importan. --new-scripts los detecta igual porque no distingue tipo de archivo; se documentan aquí por completitud, sin tabla de flags porque no tienen ninguno.
+Qué hace: Terminal State Protection (KERNEL:GATE-DECISION-010) — decide si un registro del Tracker ya está en estado terminal (Postulado, Rechazado, Expirada) y por lo tanto NO debe recalcularse. Contiene cero lógica de scoring.
+Quién lo consume: layer_1_run.py (Fase 4).
+Por qué te sirve saberlo: si un registro se queda "atorado" sin actualizar pese a nueva información, este es el módulo que decide si eso es correcto (protección de terminalidad) o un bug.
+Qué hace: Guard técnico para GAP-03 (KERNEL:GATE-DECISION-003) — punto único de verdad de qué campos puede escribir un actor no-Python (como Claude vía MCP) en el Tracker. No ejecuta la escritura, audita el payload antes y devuelve la versión limpiada + reporte de lo removido.
+Por qué existe: feed_processor.py ya filtra Class B por construcción, pero el conector MCP de Claude escribe directo a Notion sin pasar por ahí — esta es la asimetría que cierra.
+Por qué te sirve saberlo: si alguna vez ves un campo Class B escrito por mí (Claude) que no debería, este es el módulo que falló o que faltó invocar.
+Qué hace: Lógica de Prioridad (Class A) compartida — extraída de backfill_class_a.py para romper un import circular con layer_1_run.py.
+Quién lo consume: layer_1_run.py (Fase 3.6, escritura primaria semanal) y backfill_class_a.py (catch-up de registros legacy).
+Por qué te sirve saberlo: si cambias la matriz de urgencia/importancia que define Prioridad, este es el único archivo que debes tocar — no hay lógica duplicada en otro lado.
+Qué hace: Reglas de fit de perfil VM y exclusiones compartidas — detecta títulos de rol excluidos (vendedor, sales, planner sin "visual", store manager, etc.) vía regex.
+Quién lo consume: pipeline principal y scripts de cleanup.
+Por qué te sirve saberlo: si una vacante que debería excluirse se está colando (o viceversa, una válida se excluye), este archivo tiene el patrón regex responsable — no busques la lógica en otro lado.
+Qué hace: Carga graph_v2.json y backlinks_v2.json, expone funciones de consulta sobre el grafo de entidades (get_archived_from, get_backlinks, graph_stats).
+Quién lo consume: agent_api.py (y por extensión, vantage.py ask).
+Por qué te sirve saberlo: si vantage.py ask devuelve relaciones incorrectas o desactualizadas entre entidades, corre vantage.py sync para regenerar los JSON que este módulo lee — no es un bug del módulo en sí.
+Qué hace: Contrato canónico de resolución de entity_prefix por tipo de entidad — único SSOT, cierra DT-014. Ningún componente debe hardcodear un prefijo; si falta en el Registry, falla explícito (nunca default silencioso).
+Quién lo consume: generate_entity_index_v2.py, lazy_loader.py.
+Por qué te sirve saberlo: si ves un error de "prefijo ausente en Registry" en vez de un ID mal formado silencioso, es este contrato funcionando como debe — es una falla intencional, no un bug.
+Qué hace: Módulo único de reglas de detección DEF/REF/heading/boundary para todo el ecosistema de IDs PREFIX:KEY — consolida lógica que antes vivía duplicada (y desincronizada) en 4 scripts distintos (generate_census.py, generate_id_inventory.py, apply_hyperlinks_notion.py, normalize_heading_ids.py).
+Por qué te sirve saberlo: antes de esta consolidación (sesión 2026-07-25), cada script tenía su propia noción de "qué es una definición válida" — eso producía falsos huérfanos en el census. Si ves comportamiento inconsistente entre esos 4 scripts hoy, sería regresión de este contrato compartido.
+---
+### 22.1b MANUAL:SCRIPT-GLOSSARY-L1-TOOLS
+Utilidades y Herramientas de Sesión
+Qué hace: Capa de consulta en lenguaje natural sobre el índice de entidades — es el motor real detrás de vantage.py ask.
+Uso: python3 agent_api.py "texto de consulta" — un solo argumento posicional, entre comillas.
+Caso de uso: Ejemplos reales soportados: 'show active roles', 'show archived history', 'show bugs', 'find candidates', 'compare TRACKER:H_xxx TRACKER:H_yyy'.
+Qué hace: Limpieza de cachés de aplicaciones en Mac (Chrome, Safari, Firefox, Edge, y otras) — no toca sesión/login ni LocalStorage, solo caché regenerable. Reporta espacio liberado por ruta.
+Uso: Sin flags — se corre directo.
+Caso de uso: Tu Mac se siente lento o con poco espacio y quieres liberar caché de navegadores sin riesgo de cerrar sesiones activas.
+Qué hace: Manejo de fallos y "resume operations" del pipeline — guarda checkpoints (save_checkpoint) para poder retomar una corrida de L1 que se interrumpió a medias.
+Uso: Requiere NOTION_TOKEN.
+Caso de uso: Si layer_1_run.py se cae a la mitad de un batch grande (ej. por rate limit de Notion), este módulo es el que permite retomar desde el checkpoint en vez de reprocesar todo desde cero.
+Qué hace: Maneja cambios en la configuración/perfil del sistema (config/profile_config.yaml) — crea config default si no existe, actualiza progresión de perfil.
+Uso: python3 profile_evolution.py — sin flags, interactivo, requiere pyyaml instalado.
+Caso de uso: Cuando cambia tu rol objetivo o etapa de carrera (ej. de "Coordinador" a "Dirección") y quieres que el sistema actualice su configuración de perfil de forma guiada en vez de editar el YAML a mano.
+Qué hace: Arma los prompts semanales para los motores externos (L2) — trae Prompt A + Wrappers + Prompt E desde Notion, sustituye la fecha del día, concatena (A + Wrapper) y escribe archivos .md listos para pegar en Gemini/Grok/Perplexity/You.com.
+Uso: Sin flags — se corre directo, genera archivos con fecha en el nombre (Prompt_{motor}_{fecha}.md).
+Caso de uso: Es el primer paso de tu ciclo semanal de L2 — antes de ir a copiar/pegar prompts a mano en cada motor externo, esto te los pre-arma con la fecha correcta ya sustituida.
+Qué hace: Patcher de un solo uso (ya ejecutado) que separó la entrada cheat_sheet de vsync_doc.py en dos entradas independientes (aliases y change_log) — mismo patrón que patch_new_scripts.py (backup automático + validación de sintaxis antes de escribir).
+Uso: python3 patch_vsync_doc.py — sin flags. Es idempotente por diseño de patcher (aunque no verifiqué si tiene el mismo guard explícito).
+Nota operativa: Como es un patcher de una sola aplicación histórica (ya corrido, ver ALIASES/CHANGE_LOG separados en tu vsync_doc.py actual), no debería necesitar correrse de nuevo. Considera moverlo junto con patch_new_scripts.py fuera del árbol activo si quieres que --new-scripts deje de detectarlo como pendiente.
+⚠️ Hallazgo real — extract_score_distribution.py: este script parece ser un borrador abandonado, no una herramienta funcional. El propio código trae comentarios como "Simulación: voy a asumir que necesito procesar los datos reales" y "Por ahora, voy a mostrar el formato de análisis esperado" — usa datos de muestra hardcodeados (sample_data), no consulta Notion. extract_score_distribution.py parece ser una versión temprana/incompleta de extract_scores.py (que sí funciona). Documentado como hallazgo, no corregido — decide tú si vale la pena eliminarlo del árbol para que deje de aparecer en cada gap report.
 ---
 ### 22.3 MANUAL:SCRIPT-GLOSSARY-L4
 Layer 4 — Version Control & Sync Documental
@@ -1082,6 +1143,20 @@ Qué hace: Levanta el servidor local del Dashboard, corre smoke test, abre el na
 Uso: Sin flags — un solo comando hace todo el ciclo (start → healthcheck → smoke test → abrir browser). Si el smoke test falla, no abre el navegador y te avisa por notificación de sistema.
 Qué hace: Variante de layer_1_run.py adaptada para ser invocada desde el Dashboard web en vez de Terminal.
 Uso: Sin flags CLI propios — se invoca vía las rutas HTTP del Dashboard, no directo.
+---
+### 22.4a MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES
+Módulos Internos del Dashboard (sin CLI — arquitectura, no scripts ejecutables)
+> Al igual que los módulos de 22.1a, estos 5 no tienen flags porque no se ejecutan como scripts sueltos — son la arquitectura interna del servidor Flask del Dashboard. Documentados por su rol, no por CLI.
+| Módulo | Rol |
+| --- | --- |
+| dashboard_config.py | Carga config/dashboard.env, expone NOTION_TOKEN, DATABASE_ID (desde NOTION_DB_OPPORTUNITIES) y DB_PATH (SQLite local del Dashboard) al resto de módulos. |
+| dashboard_db.py | Capa de acceso a la base SQLite local (dashboard_instances.db) — inicialización de schema y operaciones CRUD internas del Dashboard (no confundir con el Tracker de Notion). |
+| dashboard_notion.py | Cliente Notion del Dashboard — reutiliza NOTION_TOKEN/DATABASE_ID de dashboard_config.py, importa txt() de layer_1_run.py para parseo de propiedades. |
+| dashboard_routes.py | Rutas HTTP Flask (jsonify/request) — endpoints del Dashboard, consume dashboard_notion.py para las queries reales (ej. query_blocked_vacancies, write_patch_to_notion). |
+| dashboard_validation.py | Reutiliza validación core del pipeline (validate_url_pre_ingestion, calculate_score_v6, get_vm_scope, get_role_class, gate) directamente de layer_1_run.py — garantiza que el Dashboard aplique exactamente la misma lógica de scoring/gate que el pipeline CLI, no una copia paralela. |
+Qué hace: Smoke test del servidor Dashboard corriendo en http://127.0.0.1:8000 — verifica /health y /blocked-vacancies, imprime SMOKE PASSED/SMOKE FAILED.
+Uso: Sin flags — requiere que el Dashboard ya esté corriendo localmente (lo invoca dashboard_start.sh como parte de su ciclo de arranque).
+Caso de uso: Si el Dashboard se ve raro tras un cambio de código, corre esto antes de asumir que es un bug visual — confirma si el backend responde correctamente primero.
 ---
 ### 22.5 MANUAL:SCRIPT-GLOSSARY-RAYCAST
 Raycast — Atajos de Un Click

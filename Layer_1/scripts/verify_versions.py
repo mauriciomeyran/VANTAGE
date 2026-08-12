@@ -9,7 +9,6 @@ import sys
 import json
 import argparse
 from pathlib import Path
-from datetime import datetime, timezone
 import httpx
 
 # --- CONFIGURACIÓN DE RUTAS Y CONSTANTES ---
@@ -38,18 +37,8 @@ VANTAGE_FALLBACK_ID = "36e938be-fc42-81d6-bf40-dfe7dee782a5"
 # confirmación del operador. data_source_id real: 8d736032-eef9-4e6e-a05a-df8b8079ebff
 # (título "Session ID", ordenar por Opened At desc y tomar la primera fila = última sesión).
 SESSION_LEDGER_DATA_SOURCE_ID = "8d736032-eef9-4e6e-a05a-df8b8079ebff"
-
-# BUG/TASKS TRACKER — data_source_id (COL), NO database_id (DB).
-# Corregido: la versión previa usaba el DB ID contra el endpoint legacy
-# /v1/databases/{id}/query con Notion-Version 2022-06-28, inconsistente con
-# el resto del script (que ya usa /v1/data_sources/{id}/query + 2025-09-03
-# para Session Ledger y Script Library). Esa inconsistencia de endpoint/ID
-# era la causa real de los HTTP 400 fantasma — no un mensaje oculto.
-# IDs confirmados en SP:DIGITAL-ID-CARD:
-#   BUG TRACKER (COL)   = 36e938be-fc42-81f8-8c6f-000b6769ba03
-#   TASKS TRACKER (COL) = aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8
-BUG_TRACKER_DATA_SOURCE_ID = "36e938befc4281f88c6f000b6769ba03"
-TASKS_TRACKER_DATA_SOURCE_ID = "aaaaef55a1ce45f79c8b1c1def2c18e8"
+BUG_TRACKER_DB_ID = "36e938befc4281bd9e1fdc360b3b45f5"
+TASKS_TRACKER_DB_ID = "d2a65ca16a35465dbcffb0d82dddd549"
 
 # SCRIPT LIBRARY — inventario de scripts en Notion (propiedad título: "Script").
 # Mismo patrón que SESSION_LEDGER_DATA_SOURCE_ID: query directo vía httpx a
@@ -57,21 +46,15 @@ TASKS_TRACKER_DATA_SOURCE_ID = "aaaaef55a1ce45f79c8b1c1def2c18e8"
 # por lo que NO aplica la restricción de plan Business/Notion AI que bloquea
 # query_data_sources/query_database_view a nivel de conector MCP.
 SCRIPT_LIBRARY_DATA_SOURCE_ID = "ea914544-338f-485e-ac1b-7f137a5c9cee"
-SKILL_LIBRARY_DATA_SOURCE_ID = "2f1938be-fc42-83c8-8972-07300201136d"
 
 # Proyecto root real: Layer_1/scripts -> Layer_1 -> VANTAGE/
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
-
-# Ruta local del Glosario de Scripts (MANUAL:SCRIPT-GLOSSARY, apéndice 22).
-# --new-scripts compara contra este archivo, no contra Notion — cero costo MCP.
-# Ajustar si el Glosario se mueve de ubicación.
-SCRIPT_GLOSSARY_PATH = PROJECT_ROOT / "Layer_1/data/script_glossary.md"
 
 # Directorios excluidos del escaneo de "scripts committeados" — código retirado,
 # de prueba, o de respaldo no cuenta como script en uso activo.
 EXCLUDED_DIR_NAMES = {
     "archive", "archived", "tests", "test", "backup",
-    "one_offs", "deprecated_scripts", ".venv", "venv", "node_modules", ".git",
+    "one_offs", "deprecated_scripts", ".venv", "node_modules", ".git",
 }
 EXCLUDED_DIR_SUBSTRINGS = ("backup_", "discarded_")
 
@@ -81,11 +64,7 @@ EXCLUDED_FILE_PREFIXES = ("DEPRECATED_",)
 
 # Solo estas carpetas de primer nivel se consideran "árbol activo" del sistema.
 # Fuera de esta lista (ej. "- Documentación/") no son scripts operativos.
-ACTIVE_TOP_LEVEL_DIRS = {"Layer_1", "Layer_3", "Layer_4", "Dashboard", "Raycast", "skills"}
-
-# Umbrales de alerta para detección de truncamiento de contenido en --length
-LENGTH_TRUNCATION_THRESHOLD_PCT = 5.0
-LENGTH_TRUNCATION_THRESHOLD_ABS = 10
+ACTIVE_TOP_LEVEL_DIRS = {"Layer_1", "Layer_3", "Layer_4", "Dashboard", "Raycast"}
 
 def load_env(env_path: Path) -> dict:
     """Carga variables de entorno manualmente para evitar dependencias externas."""
@@ -156,24 +135,6 @@ def get_notion_headers(token: str) -> dict:
         "Content-Type": "application/json"
     }
 
-def query_data_source(client: httpx.Client, data_source_id: str, headers: dict, payload: dict) -> tuple:
-    """Único punto de entrada para POST /v1/data_sources/{id}/query en todo el
-    script. Fuerza siempre Notion-Version 2025-09-03 (requerido por data
-    sources, distinto del 2022-06-28 usado para /v1/pages) y siempre devuelve
-    el body de error real (response.text[:200]) en vez de tragárselo — así no
-    puede reaparecer la ambigüedad de "HTTP 400" sin contexto.
-    Devuelve (data, None) en éxito, o (None, {"error": "..."}) en fallo."""
-    url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
-    query_headers = dict(headers)
-    query_headers["Notion-Version"] = "2025-09-03"
-    try:
-        response = client.post(url, headers=query_headers, json=payload)
-    except Exception as e:
-        return None, {"error": str(e)}
-    if response.status_code != 200:
-        return None, {"error": f"HTTP {response.status_code}: {response.text[:200]}"}
-    return response.json(), None
-
 def get_page_version(client: httpx.Client, page_id: str, headers: dict) -> str:
     """Extrae únicamente la propiedad 'Versión' o 'Version' de la página."""
     url = f"https://api.notion.com/v1/pages/{page_id}"
@@ -232,15 +193,18 @@ def get_last_ledger_row(client: httpx.Client, data_source_id: str, headers: dict
     vía POST /v1/data_sources/{id}/query, ordenando por 'Opened At' descendente
     y tomando la primera fila = sesión más reciente. Requiere Notion-Version
     que soporte data_sources (2025-09-03), distinta a la usada para /pages."""
+    url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
+    query_headers = dict(headers)
+    query_headers["Notion-Version"] = "2025-09-03"
     payload = {
         "sorts": [{"property": "Opened At", "direction": "descending"}],
         "page_size": 1
     }
     try:
-        data, err = query_data_source(client, data_source_id, headers, payload)
-        if err:
-            return err
-        results = data.get("results", [])
+        response = client.post(url, headers=query_headers, json=payload)
+        if response.status_code != 200:
+            return {"error": f"HTTP {response.status_code}: {response.text[:200]}"}
+        results = response.json().get("results", [])
         if not results:
             return {"error": "Sin filas en Session Ledger"}
         props = results[0].get("properties", {})
@@ -272,13 +236,12 @@ def get_last_ledger_row(client: httpx.Client, data_source_id: str, headers: dict
     except Exception as e:
         return {"error": str(e)}
 
-def get_priority_tickets(client: httpx.Client, data_source_id: str, headers: dict, label: str) -> list:
+def get_priority_tickets(client: httpx.Client, database_id: str, headers: dict, label: str) -> list:
     """Consulta un tracker (Bug o Tasks) y devuelve los tickets con Prioridad
     CRÍTICO o ALTO que además NO estén en un estado terminal, conforme a
     KERNEL:HEALTH-CHECK-002 (detalle explícito solo para estas dos prioridades,
-    excluyendo tickets ya cerrados).
-    data_source_id es el COL (data source), NO el DB — mismo contrato que
-    get_last_ledger_row y get_script_library_titles vía query_data_source()."""
+    excluyendo tickets ya cerrados)."""
+    url = f"https://api.notion.com/v1/databases/{database_id}/query"
 
     # Status terminales por tracker (SP:SCHEMA — Bug Tracker vs Tasks Tracker
     # no comparten las mismas opciones de select). Labels reales confirmados
@@ -299,8 +262,8 @@ def get_priority_tickets(client: httpx.Client, data_source_id: str, headers: dic
             "and": [
                 {
                     "or": [
-                        {"property": "Prioridad", "select": {"equals": "4 CRÍTICO"}},
-                        {"property": "Prioridad", "select": {"equals": "3 ALTO"}}
+                        {"property": "Prioridad", "select": {"equals": "CRÍTICO"}},
+                        {"property": "Prioridad", "select": {"equals": "ALTO"}}
                     ]
                 },
                 *status_filters
@@ -308,10 +271,10 @@ def get_priority_tickets(client: httpx.Client, data_source_id: str, headers: dic
         }
     }
     try:
-        data, err = query_data_source(client, data_source_id, headers, payload)
-        if err:
-            return [{"error": f"{label}: {err['error']}"}]
-        results = data.get("results", [])
+        response = client.post(url, headers=headers, json=payload)
+        if response.status_code != 200:
+            return [{"error": f"{label}: HTTP {response.status_code}"}]
+        results = response.json().get("results", [])
         tickets = []
         for row in results:
             props = row.get("properties", {})
@@ -325,13 +288,12 @@ def get_priority_tickets(client: httpx.Client, data_source_id: str, headers: dic
     except Exception as e:
         return [{"error": f"{label}: {str(e)}"}]
 
-def scan_committed_assets(project_root: Path, extensions: tuple) -> list:
+def scan_committed_scripts(project_root: Path) -> list:
     """Escanea el árbol activo del proyecto (Layer_1/3/4, Dashboard, Raycast) en
-    busca de archivos cuyo suffix esté en 'extensions', excluyendo
-    archive/tests/backup/one_offs/deprecated y archivos con prefijo
-    DEPRECATED_. Devuelve lista de (nombre, ruta_relativa) ordenada por
-    nombre. No depende de git — escanea el filesystem local tal como está,
-    que es lo que realmente se ejecuta."""
+    busca de .py/.sh, excluyendo archive/tests/backup/one_offs/deprecated y
+    archivos con prefijo DEPRECATED_. Devuelve lista de (nombre, ruta_relativa)
+    ordenada por nombre. No depende de git — escanea el filesystem local tal
+    como está, que es lo que realmente se ejecuta."""
     found = []
     for top in sorted(ACTIVE_TOP_LEVEL_DIRS):
         top_path = project_root / top
@@ -340,7 +302,7 @@ def scan_committed_assets(project_root: Path, extensions: tuple) -> list:
         for path in top_path.rglob("*"):
             if not path.is_file():
                 continue
-            if path.suffix not in extensions:
+            if path.suffix not in (".py", ".sh"):
                 continue
             if path.name.startswith(EXCLUDED_FILE_PREFIXES):
                 continue
@@ -354,25 +316,27 @@ def scan_committed_assets(project_root: Path, extensions: tuple) -> list:
     found.sort(key=lambda t: t[0])
     return found
 
-def get_script_library_titles(client: httpx.Client, data_source_id: str, headers: dict, title_property: str = "Script") -> dict:
-    """Pagina completo el data source (SCRIPT LIBRARY o SKILL LIBRARY) y
-    devuelve {titulo: estado} para cada fila. 'title_property' es el nombre
-    de la propiedad title en ese data source (difiere entre bases: "Script"
-    vs "Skill"). Un solo query_data_sources no trae más de 100 filas — este
-    loop sigue next_cursor hasta agotarlo."""
+def get_script_library_titles(client: httpx.Client, data_source_id: str, headers: dict) -> dict:
+    """Pagina completo el data source SCRIPT LIBRARY y devuelve
+    {titulo_script: estado} para cada fila. Un solo query_data_sources no
+    trae más de 100 filas — este loop sigue next_cursor hasta agotarlo."""
+    url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
+    query_headers = dict(headers)
+    query_headers["Notion-Version"] = "2025-09-03"
     titles = {}
     cursor = None
     while True:
         payload = {"page_size": 100}
         if cursor:
             payload["start_cursor"] = cursor
-        data, err = query_data_source(client, data_source_id, headers, payload)
-        if err:
-            print(f"[-] Error consultando SCRIPT LIBRARY: {err['error']}", file=sys.stderr)
+        response = client.post(url, headers=query_headers, json=payload)
+        if response.status_code != 200:
+            print(f"[-] Error consultando SCRIPT LIBRARY: HTTP {response.status_code}: {response.text[:200]}", file=sys.stderr)
             sys.exit(1)
+        data = response.json()
         for row in data.get("results", []):
             props = row.get("properties", {})
-            title_prop = props.get(title_property, {})
+            title_prop = props.get("Script", {})
             texts = title_prop.get("title", [])
             # BUGFIX: Notion parte el título en múltiples rich-text runs cuando
             # detecta un link automático dentro del nombre (ej. "patch_cheat_sheet.py"
@@ -389,183 +353,12 @@ def get_script_library_titles(client: httpx.Client, data_source_id: str, headers
         cursor = data.get("next_cursor")
     return titles
 
-def get_page_line_count(client: httpx.Client, page_id: str, headers: dict, max_depth: int = 10) -> int | dict:
-    """Cuenta recursivamente las líneas de texto extraíble en una página Notion.
-    Usa GET /v1/blocks/{block_id}/children con paginación via next_cursor.
-    Tipos de bloque que cuentan como 1 línea si tienen texto no vacío:
-    paragraph, heading_1, heading_2, heading_3, bulleted_list_item,
-    numbered_list_item, to_do, toggle, quote, callout, table_row, code.
-    Bloques vacíos o solo whitespace NO cuentan.
-    divider, table_of_contents, column_list/column (contenedor) NO cuentan.
-    Devuelve int en éxito, o {"error": "..."} en fallo."""
-    try:
-        block_headers = dict(headers)
-        block_headers["Notion-Version"] = "2022-06-28"
-        url = f"https://api.notion.com/v1/blocks/{page_id}/children"
-        count = 0
-        cursor = None
-
-        while True:
-            params = {"page_size": 100}
-            if cursor:
-                params["start_cursor"] = cursor
-            response = client.get(url, headers=block_headers, params=params)
-            if response.status_code != 200:
-                return {"error": f"HTTP {response.status_code}: {response.text[:200]}"}
-
-            data = response.json()
-            for block in data.get("results", []):
-                block_type = block.get("type")
-                if not block_type:
-                    continue
-
-                # Bloques que NO cuentan como línea (contenedores o estructurales)
-                if block_type in ("divider", "table_of_contents", "column_list", "column"):
-                    pass
-
-                # Bloques que pueden contar si tienen texto
-                elif block_type in (
-                    "paragraph", "heading_1", "heading_2", "heading_3",
-                    "bulleted_list_item", "numbered_list_item", "to_do",
-                    "toggle", "quote", "callout", "code"
-                ):
-                    block_data = block.get(block_type, {})
-                    rich_text = block_data.get("rich_text", [])
-                    # Concatenar todo el texto y verificar si no está vacío
-                    text = "".join(t.get("plain_text", "") for t in rich_text)
-                    if text.strip():
-                        count += 1
-
-                # table_row cuenta como 1 línea por fila (no por celda)
-                elif block_type == "table_row":
-                    block_data = block.get("table_row", {})
-                    cells = block_data.get("cells", [])
-                    # Una fila cuenta si al menos una celda tiene texto no vacío
-                    has_content = False
-                    for cell in cells:
-                        cell_text = "".join(t.get("plain_text", "") for t in cell)
-                        if cell_text.strip():
-                            has_content = True
-                            break
-                    if has_content:
-                        count += 1
-
-                # Recursión para bloques con hijos (toggle, column, etc.)
-                if block.get("has_children") and max_depth > 0:
-                    child_id = block.get("id")
-                    if child_id:
-                        child_result = get_page_line_count(client, child_id, block_headers, max_depth - 1)
-                        if isinstance(child_result, dict):
-                            return child_result
-                        count += child_result
-
-            if not data.get("has_more"):
-                break
-            cursor = data.get("next_cursor")
-
-        return count
-    except Exception as e:
-        return {"error": str(e)}
-
-def render_length_report(client: httpx.Client, uuids: dict, headers: dict, baseline_path: Path, update_baseline: bool = False) -> None:
-    """Compara el conteo de líneas de los 9 documentos fundacionales contra
-    el baseline guardado para detectar truncamiento silencioso.
-    Si update_baseline=True, sobrescribe el baseline tras el reporte."""
-    # Cargar baseline existente o crear dict vacío
-    if baseline_path.exists():
-        with open(baseline_path, "r", encoding="utf-8") as f:
-            baseline = json.load(f)
-    else:
-        baseline = {}
-
-    results = []
-    attention_required = False
-    new_baseline_created = not baseline_path.exists()
-    new_docs_added = False
-
-    for doc in DOC_KEYS:
-        page_id = uuids.get(doc)
-        if not page_id:
-            results.append((doc, "-", "-", "-", f"[ERROR: ID no resuelto]"))
-            continue
-
-        # Contar líneas actuales
-        current_count = get_page_line_count(client, page_id, headers)
-        if isinstance(current_count, dict):
-            results.append((doc, "-", "-", "-", f"[ERROR: {current_count.get('error', 'desconocido')}]"))
-            continue
-
-        baseline_entry = baseline.get(doc)
-        if baseline_entry is None:
-            # Nuevo baseline inicial
-            baseline[doc] = {
-                "lines": current_count,
-                "captured_at": datetime.now(timezone.utc).isoformat()
-            }
-            new_docs_added = True
-            results.append((doc, "-", current_count, "-", "[BASELINE INICIAL]"))
-        else:
-            baseline_lines = baseline_entry.get("lines", 0)
-            delta = current_count - baseline_lines
-            delta_str = f"{delta:+d}" if delta != 0 else "0"
-
-            # Calcular porcentaje (evitar división por cero)
-            if baseline_lines > 0:
-                delta_pct = (delta / baseline_lines) * 100
-            else:
-                delta_pct = 0.0
-
-            # Determinar veredicto
-            if delta < 0 and (abs(delta_pct) >= LENGTH_TRUNCATION_THRESHOLD_PCT or abs(delta) >= LENGTH_TRUNCATION_THRESHOLD_ABS):
-                verdict = "⚠️ POSIBLE TRUNCAMIENTO"
-                attention_required = True
-            else:
-                verdict = "OK"
-
-            results.append((doc, baseline_lines, current_count, delta_str, verdict))
-
-            # Si update_baseline, actualizar valor en memoria (se persiste al final)
-            if update_baseline:
-                baseline[doc] = {
-                    "lines": current_count,
-                    "captured_at": datetime.now(timezone.utc).isoformat()
-                }
-
-    # Renderizar reporte
-    print("[VERIFICACIÓN DE LONGITUD — LENGTH CHECK]")
-    print("-" * 75)
-    print(f"{'DOCUMENTO':<15} | {'BASELINE':<12} | {'ACTUAL':<12} | {'DELTA':<8} | {'VEREDICTO':<25}")
-    print("-" * 75)
-    for doc, baseline_val, current, delta, verdict in results:
-        baseline_str = str(baseline_val) if baseline_val != "-" else "-"
-        current_str = str(current) if isinstance(current, int) else current
-        print(f"{doc:<15} | {baseline_str:<12} | {current_str:<12} | {delta:<8} | {verdict:<25}")
-    print("-" * 75)
-    print(f"[VEREDICTO FINAL] {'PASS' if not attention_required else 'ATENCIÓN REQUERIDA'}")
-    print("[FIN LENGTH CHECK]")
-
-    # Persistir baseline si se creó inicial, se agregaron docs nuevos o se solicitó actualización
-    if new_baseline_created or new_docs_added or update_baseline:
-        with open(baseline_path, "w", encoding="utf-8") as f:
-            json.dump(baseline, f, indent=2)
-        if new_baseline_created:
-            print(f"[BASELINE INICIAL CREADO — {len(DOC_KEYS)} documentos]")
-        elif new_docs_added:
-            print(f"[BASELINE ACTUALIZADO — docs nuevos agregados]")
-        elif update_baseline:
-            print(f"[BASELINE ACTUALIZADO — {len(DOC_KEYS)} documentos]")
-
-    # Exit code 1 si se requiere atención
-    if attention_required:
-        sys.exit(1)
-
-def render_scripts_gap_report(client: httpx.Client, headers: dict, extensions: tuple, data_source_id: str, label: str, title_property: str = "Script") -> None:
-    """Cruza assets committeados en disco (árbol activo) contra la base de
-    Notion correspondiente (SCRIPT LIBRARY o SKILL LIBRARY). Read-only en
-    ambos lados — no escribe ni crea filas automáticamente, solo reporta
-    para que el operador decida el alta."""
-    disk_scripts = scan_committed_assets(PROJECT_ROOT, extensions)
-    library_titles = get_script_library_titles(client, data_source_id, headers, title_property)
+def render_scripts_gap_report(client: httpx.Client, headers: dict) -> None:
+    """Cruza scripts committeados en disco (árbol activo) contra SCRIPT LIBRARY
+    en Notion. Read-only en ambos lados — no escribe ni crea filas
+    automáticamente, solo reporta para que el operador decida el alta."""
+    disk_scripts = scan_committed_scripts(PROJECT_ROOT)
+    library_titles = get_script_library_titles(client, SCRIPT_LIBRARY_DATA_SOURCE_ID, headers)
 
     disk_names = {name for name, _ in disk_scripts}
     missing = sorted(name for name in disk_names if name not in library_titles)
@@ -576,10 +369,10 @@ def render_scripts_gap_report(client: httpx.Client, headers: dict, extensions: t
         if estado == "Activo" and title not in disk_names
     )
 
-    print(f"[{label} — GAP REPORT]")
+    print("[SCRIPT LIBRARY — GAP REPORT]")
     print("-" * 60)
-    print(f"Assets en árbol activo (disco): {len(disk_names)}")
-    print(f"Filas en {label} (Notion): {len(library_titles)}")
+    print(f"Scripts en árbol activo (disco): {len(disk_names)}")
+    print(f"Filas en SCRIPT LIBRARY (Notion): {len(library_titles)}")
     print("-" * 60)
     print(f"SIN REGISTRAR EN NOTION — {len(missing)} encontrados:")
     if not missing:
@@ -598,52 +391,7 @@ def render_scripts_gap_report(client: httpx.Client, headers: dict, extensions: t
     for name in orphan_notion:
         print(f"  [?] {name}")
     print("-" * 60)
-    print(f"[FIN {label} — GAP REPORT]")
-
-
-def render_new_scripts_gap_report(extensions: tuple, glossary_path: Path) -> None:
-    """Compara assets committeados en disco (árbol activo) contra el Glosario
-    de Scripts local (Markdown, MANUAL:SCRIPT-GLOSSARY). 100% local — no llama
-    a Notion. Detecta scripts nuevos sin entrada humana documentada, como
-    señal de entrada para el skill vantage-sync-script-glossary."""
-    disk_scripts = scan_committed_assets(PROJECT_ROOT, extensions)
-
-    if not glossary_path.exists():
-        print(f"[-] Error: Glosario no encontrado en {glossary_path}", file=sys.stderr)
-        print("    Ajusta SCRIPT_GLOSSARY_PATH en verify_versions.py o coloca el archivo ahí.", file=sys.stderr)
-        sys.exit(1)
-
-    glossary_text = glossary_path.read_text(encoding="utf-8")
-
-    missing = []
-    documented = []
-    for name, rel in disk_scripts:
-        # Match simple por nombre de archivo como string literal dentro del
-        # Glosario (ej. "`feed_processor.py`"). Suficiente porque el Glosario
-        # usa el nombre exacto de archivo como encabezado de cada entrada.
-        if name in glossary_text:
-            documented.append(name)
-        else:
-            missing.append((name, rel))
-
-    print("[SCRIPT GLOSSARY — GAP REPORT (local, sin Notion)]")
-    print("-" * 60)
-    print(f"Assets en árbol activo (disco): {len(disk_scripts)}")
-    print(f"Documentados en Glosario: {len(documented)}")
-    print("-" * 60)
-    print(f"SIN ENTRADA EN GLOSARIO — {len(missing)} encontrados:")
-    if not missing:
-        print("  (ninguno)")
-    for name, rel in sorted(missing):
-        print(f"  [-] {name}  ({rel})")
-    print("-" * 60)
-    print(f"[FIN SCRIPT GLOSSARY — GAP REPORT]")
-
-    # Exit code 1 si hay pendientes — permite usar esto como gate en un skill
-    # o automatización (ej. vantage-sync-script-glossary corre solo si esto
-    # devuelve distinto de 0).
-    if missing:
-        sys.exit(1)
+    print("[FIN SCRIPT LIBRARY — GAP REPORT]")
 
 def render_bootstrap_dump(client: httpx.Client, changelog_page_id: str, headers: dict) -> None:
     """Genera el bloque [DUMP INICIO SESIÓN VANTAGE] descrito en
@@ -652,8 +400,8 @@ def render_bootstrap_dump(client: httpx.Client, changelog_page_id: str, headers:
     (resumen truncado), y snapshot de tickets CRÍTICO/ALTO."""
     ledger = get_last_ledger_row(client, SESSION_LEDGER_DATA_SOURCE_ID, headers)
     changelog_version = get_page_version(client, changelog_page_id, headers)
-    bug_tickets = get_priority_tickets(client, BUG_TRACKER_DATA_SOURCE_ID, headers, "Bug")
-    task_tickets = get_priority_tickets(client, TASKS_TRACKER_DATA_SOURCE_ID, headers, "Task")
+    bug_tickets = get_priority_tickets(client, BUG_TRACKER_DB_ID, headers, "Bug")
+    task_tickets = get_priority_tickets(client, TASKS_TRACKER_DB_ID, headers, "Task")
     all_tickets = bug_tickets + task_tickets
 
     print("[DUMP INICIO SESIÓN VANTAGE]")
@@ -687,11 +435,7 @@ def main():
     parser = argparse.ArgumentParser(description="Verify and Sync document versions across Notion SSOT.")
     parser.add_argument("--sync", action="store_true", help="Sincroniza la versión de CHANGELOG hacia todos los documentos y verifica por relectura (veredicto PASS/FAIL real). Reemplaza al antiguo par --sync + --check.")
     parser.add_argument("--bootstrap", action="store_true", help="Genera el dump de contexto de apertura de sesión (Ledger + Changelog + tickets prioritarios). Read-only.")
-    parser.add_argument("--scripts", action="store_true", help="Cruza los scripts .py/.sh (únicamente) del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SCRIPT LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
-    parser.add_argument("--skills", action="store_true", help="Cruza los archivos .skill del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SKILL LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
-    parser.add_argument("--new-scripts", action="store_true", help="Cruza los scripts .py/.sh del árbol activo contra el Glosario de Scripts LOCAL (MANUAL:SCRIPT-GLOSSARY), sin llamar a Notion. Exit 1 si hay scripts sin documentar — úsalo como gate para vantage-sync-script-glossary.")
-    parser.add_argument("--length", action="store_true", help="Compara el conteo de líneas de contenido de los 9 documentos fundacionales contra el último baseline guardado, para detectar truncamiento silencioso. Read-only salvo --update-baseline.")
-    parser.add_argument("--update-baseline", action="store_true", help="Usar junto a --length. Sobrescribe el baseline de longitud con el conteo actual tras confirmar que no hubo truncamiento (edición legítima).")
+    parser.add_argument("--scripts", action="store_true", help="Cruza los scripts .py/.sh del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SCRIPT LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     args = parser.parse_args()
 
     # 1. Inicialización de Entorno e Infraestructura
@@ -701,25 +445,14 @@ def main():
         print("[-] Error: NOTION_TOKEN no definido en layer_1.env", file=sys.stderr)
         sys.exit(1)
 
-    # --scripts/--skills no dependen del registro de documentos fundacionales
-    # (resolver_registry_v2.json) — se resuelven y salen temprano para no exigir
-    # ese archivo si el operador solo quiere el gap report correspondiente.
+    # --scripts no depende del registro de documentos fundacionales (resolver_registry_v2.json)
+    # — se resuelve y sale temprano para no exigir ese archivo si el operador solo quiere
+    # el gap report de scripts.
     if args.scripts:
         headers = get_notion_headers(token)
         with httpx.Client(timeout=20.0) as client:
-            render_scripts_gap_report(client, headers, (".py", ".sh"), SCRIPT_LIBRARY_DATA_SOURCE_ID, "SCRIPT LIBRARY")
+            render_scripts_gap_report(client, headers)
         return
-
-    if args.skills:
-        headers = get_notion_headers(token)
-        with httpx.Client(timeout=20.0) as client:
-            render_scripts_gap_report(client, headers, (".skill",), SKILL_LIBRARY_DATA_SOURCE_ID, "SKILL LIBRARY", title_property="Skill")
-        return
-
-    if args.new_scripts:
-        render_new_scripts_gap_report((".py", ".sh"), SCRIPT_GLOSSARY_PATH)
-        return
-
 
     registry_path = find_registry_file(SCRIPT_DIR)
     uuids = load_document_uuids(registry_path)
@@ -731,17 +464,7 @@ def main():
 
     headers = get_notion_headers(token)
 
-    # --update-baseline requiere --length
-    if args.update_baseline and not args.length:
-        print("[-] Error: --update-baseline requiere --length", file=sys.stderr)
-        sys.exit(1)
-
     with httpx.Client(timeout=15.0) as client:
-        if args.length:
-            baseline_path = registry_path.parent / "length_baseline.json"
-            render_length_report(client, uuids, headers, baseline_path, update_baseline=args.update_baseline)
-            return
-
         if args.bootstrap:
             render_bootstrap_dump(client, uuids["CHANGELOG"], headers)
             return
