@@ -62,6 +62,11 @@ SKILL_LIBRARY_DATA_SOURCE_ID = "2f1938be-fc42-83c8-8972-07300201136d"
 # Proyecto root real: Layer_1/scripts -> Layer_1 -> VANTAGE/
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
 
+# Ruta local del Glosario de Scripts (MANUAL:SCRIPT-GLOSSARY, apéndice 22).
+# --new-scripts compara contra este archivo, no contra Notion — cero costo MCP.
+# Ajustar si el Glosario se mueve de ubicación.
+SCRIPT_GLOSSARY_PATH = PROJECT_ROOT / "Layer_1/data/script_glossary.md"
+
 # Directorios excluidos del escaneo de "scripts committeados" — código retirado,
 # de prueba, o de respaldo no cuenta como script en uso activo.
 EXCLUDED_DIR_NAMES = {
@@ -595,6 +600,51 @@ def render_scripts_gap_report(client: httpx.Client, headers: dict, extensions: t
     print("-" * 60)
     print(f"[FIN {label} — GAP REPORT]")
 
+
+def render_new_scripts_gap_report(extensions: tuple, glossary_path: Path) -> None:
+    """Compara assets committeados en disco (árbol activo) contra el Glosario
+    de Scripts local (Markdown, MANUAL:SCRIPT-GLOSSARY). 100% local — no llama
+    a Notion. Detecta scripts nuevos sin entrada humana documentada, como
+    señal de entrada para el skill vantage-sync-script-glossary."""
+    disk_scripts = scan_committed_assets(PROJECT_ROOT, extensions)
+
+    if not glossary_path.exists():
+        print(f"[-] Error: Glosario no encontrado en {glossary_path}", file=sys.stderr)
+        print("    Ajusta SCRIPT_GLOSSARY_PATH en verify_versions.py o coloca el archivo ahí.", file=sys.stderr)
+        sys.exit(1)
+
+    glossary_text = glossary_path.read_text(encoding="utf-8")
+
+    missing = []
+    documented = []
+    for name, rel in disk_scripts:
+        # Match simple por nombre de archivo como string literal dentro del
+        # Glosario (ej. "`feed_processor.py`"). Suficiente porque el Glosario
+        # usa el nombre exacto de archivo como encabezado de cada entrada.
+        if name in glossary_text:
+            documented.append(name)
+        else:
+            missing.append((name, rel))
+
+    print("[SCRIPT GLOSSARY — GAP REPORT (local, sin Notion)]")
+    print("-" * 60)
+    print(f"Assets en árbol activo (disco): {len(disk_scripts)}")
+    print(f"Documentados en Glosario: {len(documented)}")
+    print("-" * 60)
+    print(f"SIN ENTRADA EN GLOSARIO — {len(missing)} encontrados:")
+    if not missing:
+        print("  (ninguno)")
+    for name, rel in sorted(missing):
+        print(f"  [-] {name}  ({rel})")
+    print("-" * 60)
+    print(f"[FIN SCRIPT GLOSSARY — GAP REPORT]")
+
+    # Exit code 1 si hay pendientes — permite usar esto como gate en un skill
+    # o automatización (ej. vantage-sync-script-glossary corre solo si esto
+    # devuelve distinto de 0).
+    if missing:
+        sys.exit(1)
+
 def render_bootstrap_dump(client: httpx.Client, changelog_page_id: str, headers: dict) -> None:
     """Genera el bloque [DUMP INICIO SESIÓN VANTAGE] descrito en
     KERNEL:VERSION-CHECK-TOOL y MANUAL:SESSION-CYCLE-001 §Apertura paso 1:
@@ -639,6 +689,7 @@ def main():
     parser.add_argument("--bootstrap", action="store_true", help="Genera el dump de contexto de apertura de sesión (Ledger + Changelog + tickets prioritarios). Read-only.")
     parser.add_argument("--scripts", action="store_true", help="Cruza los scripts .py/.sh (únicamente) del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SCRIPT LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     parser.add_argument("--skills", action="store_true", help="Cruza los archivos .skill del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SKILL LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
+    parser.add_argument("--new-scripts", action="store_true", help="Cruza los scripts .py/.sh del árbol activo contra el Glosario de Scripts LOCAL (MANUAL:SCRIPT-GLOSSARY), sin llamar a Notion. Exit 1 si hay scripts sin documentar — úsalo como gate para vantage-sync-script-glossary.")
     parser.add_argument("--length", action="store_true", help="Compara el conteo de líneas de contenido de los 9 documentos fundacionales contra el último baseline guardado, para detectar truncamiento silencioso. Read-only salvo --update-baseline.")
     parser.add_argument("--update-baseline", action="store_true", help="Usar junto a --length. Sobrescribe el baseline de longitud con el conteo actual tras confirmar que no hubo truncamiento (edición legítima).")
     args = parser.parse_args()
@@ -664,6 +715,11 @@ def main():
         with httpx.Client(timeout=20.0) as client:
             render_scripts_gap_report(client, headers, (".skill",), SKILL_LIBRARY_DATA_SOURCE_ID, "SKILL LIBRARY", title_property="Skill")
         return
+
+    if args.new_scripts:
+        render_new_scripts_gap_report((".py", ".sh"), SCRIPT_GLOSSARY_PATH)
+        return
+
 
     registry_path = find_registry_file(SCRIPT_DIR)
     uuids = load_document_uuids(registry_path)

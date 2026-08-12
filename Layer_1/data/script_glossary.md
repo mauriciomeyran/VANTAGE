@@ -197,7 +197,35 @@ Layer 1 — Active Recon & Core Pipeline
 
 ---
 
-### 22.2 MANUAL:SCRIPT-GLOSSARY-L3
+#### `extract_scores.py`
+**Qué hace:** Extrae la distribución de `Score` del Tracker activo — snapshot rápido de cómo se están calificando las vacantes actuales.
+**Uso:** Sin flags CLI — se corre directo. Requiere `NOTION_TOKEN` en el entorno.
+**Caso de uso:** Antes de ajustar el umbral del Score Gate (`gate()` en `layer_1_run.py`), corre esto para ver la distribución real y evitar mover el corte a ciegas.
+
+#### `extract_scores_detailed.py`
+**Qué hace:** Igual que `extract_scores.py` pero genera histograma detallado en vez de resumen.
+**Uso:** Sin flags CLI — se corre directo. Requiere `NOTION_TOKEN`.
+**Caso de uso:** Cuando el resumen simple no te dice si el problema es concentración en un rango específico (ej. muchas vacantes atoradas en 55-60) — el detalle por bucket sí lo muestra.
+
+#### `source_analytics.py`
+**Qué hace:** Analiza efectividad de fuentes de discovery (LinkedIn, agregadores, L2, L3, etc.) — cuáles fuentes convierten mejor a `Gate_Decision=CREATE`.
+**Uso:** Sin flags CLI — se corre directo. Requiere `NOTION_TOKEN`.
+**Caso de uso:** Al revisar si vale la pena seguir invirtiendo tiempo en una fuente de L2 específica (ej. Perplexity vs Grok) — esto te da el dato duro en vez de intuición.
+
+#### `vprint.py` / `vprint.sh`
+**Qué hace:** Imprime rápido las oportunidades con `Gate_Decision=CREATE` — vista de "qué está listo para actuar hoy" sin abrir Notion.
+**Uso:** Sin flags CLI — se corre directo. Requiere `NOTION_TOKEN` y `NOTION_DB_OPPORTUNITIES`.
+**Caso de uso:** Primera cosa que corres en la mañana para ver qué vacantes pasaron el gate sin tener que entrar al Tracker completo.
+**⚠️ Hallazgo real (no corregido, solo documentado):** `vprint.sh` invoca `python3 .../VANTAGE/vprint.py` — ruta incompleta, le falta `Layer_1/scripts/`. El script real vive en `Layer_1/scripts/vprint.py`, no en la raíz de VANTAGE. Si el wrapper falla con "No such file or directory", esta es la causa.
+
+#### `get_vantage_digest.sh`
+**Qué hace:** Descarga el "digest" completo del repo VANTAGE desde Gitingest (`gitingest.com/raw/mauriciomeyran/VANTAGE`) — snapshot de texto plano de todo el árbol, útil para pegar contexto masivo a un LLM externo.
+**Flags:**
+| Argumento | Caso de uso |
+|---|---|
+| `output_file` (posicional, opcional) | Default `VANTAGE_digest.txt`. Especifica un nombre distinto si quieres conservar varios snapshots fechados sin sobrescribir el anterior. |
+
+
 Layer 3 — Passive Intake (Gmail)
 
 #### `layer_3_mail.py`
