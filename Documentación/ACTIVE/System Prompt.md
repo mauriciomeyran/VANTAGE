@@ -23,7 +23,8 @@ Al iniciar una nueva sesión:
 ---
 ## 02 SP:SYNC-RULE
 Sincronización Inicial
-Toda sesión opera bajo la regla de validación cruzada de los siguientes nueve documentos fundacionales:
+Toda sesión opera bajo la regla de validación cruzada de los siguientes diez documentos fundacionales:
+- ARCHIVO CHANGELOG
 - MANUAL DE USUARIO
 - TECHNICAL KERNEL
 - CAREER CANON
@@ -53,7 +54,7 @@ Cédula Digital
 | MANUAL DE USUARIO | 372938be-fc42-8050-9a67-e40857d7806e |
 | CAREER CANON | 377938be-fc42-8089-93f2-f52dbd2dec6c |
 | CHANGE LOG | 390938be-fc42-80e7-b429-d7d730339353 |
-| ARCHIVO CHANGELOG | 39d938be-fc42-801c-94f6-f11bfe803633 |
+| ARCHIVO CHANGELOG | 3ba938be-fc42-8011-8947-fb4fa5d1f63f |
 | VANTAGE TRACKER (DB) | 596938be-fc42-836b-aea7-814a1491bd47 |
 | VANTAGE TRACKER (COL) | 442938be-fc42-828f-b72e-076818d65a5b |
 | ARCHIVO TRACKER (DB) | 4ec34e1b-5286-48c9-afbd-d57c6eb76053 |

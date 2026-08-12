@@ -130,7 +130,7 @@ Agrupación por Prioridad (CRÍTICO / ALTO / MEDIO / BAJO) sobre Bug Tracker y T
 ---
 ### 03.7 KERNEL:DOCUMENTATION-007
 Herramienta de Verificación de Versión
-Propósito: ruta de bajo costo para verificar y sincronizar la Versión de los 9 documentos fundacionales sin pagar el costo de un fetch completo por documento.
+Propósito: ruta de bajo costo para verificar y sincronizar la Versión de los 10 documentos fundacionales sin pagar el costo de un fetch completo por documento.
 Modos
 - --sync (único modo de escritura y verificación real, relee cada documento post-escritura)
 - --bootstrap (dump read-only de apertura de sesión)

@@ -215,7 +215,7 @@ Este ciclo se dispara con dos comandos:
 - vantage-session-close al final
 Y hace tres cosas que ningún otro punto del sistema hace:
 1. Deja un registro de que la sesión existió y en qué estado terminó (el Session Ledger).
-1. Confirma que los 9 documentos fundacionales + el Census están todos en la misma versión (nunca uno adelantado y otro atrasado).
+1. Confirma que los 10 documentos fundacionales + el Census están todos en la misma versión (nunca uno adelantado y otro atrasado).
 1. Te recuerda, sin que tengas que preguntarlo, qué quedó pendiente de la sesión anterior.
 No necesitas invocarlo tú manualmente cada vez que se te ocurra — pero sí necesitas recordar que es el primer paso obligatorio: si acabas de abrir Claude para trabajar en VANTAGE hoy, el primer paso siempre es este ciclo, antes de tocar Tracker, Dashboard o cualquier trigger de CV descrito en MANUAL:WEEKLY-FLOW.
 ### ¿Por qué existe esto?
@@ -633,7 +633,7 @@ Qué lee, en este orden:
 1. Git — git status --porcelain; reporta si hay archivos sin commitear.
 1. Último commit (vgit) — git log -1 para timestamp de referencia.
 1. Notion reachable — fetch mínimo a V-SYSTEM-PROMPT para confirmar conectividad y token válido.
-1. Docs fundacionales — confirma que los 6 documentos existen localmente en ACTIVE/.
+1. Docs fundacionales — confirma que los 7 documentos existen localmente en ACTIVE/.
 1. Último vdoc sync — cuál de los 6 docs locales tiene el mtime más reciente, y hace cuánto.
 1. Antigüedad de índices (index_age) — ver detalle abajo. Única sección con capacidad de escritura (auto-sync condicional).
 1. Tickets pendientes — Bug Tracker y Task Tracker, agrupados por prioridad.
