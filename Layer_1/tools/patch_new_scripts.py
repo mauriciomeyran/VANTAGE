@@ -29,11 +29,13 @@ from pathlib import Path
 # SCRIPT_DIR.parent.parent.
 GLOSSARY_DEFAULT_REL = "Layer_1/data/script_glossary.md"
 
-CONST_BLOCK = f'''
 # Ruta local del Glosario de Scripts (MANUAL:SCRIPT-GLOSSARY, apéndice 22).
 # --new-scripts compara contra este archivo, no contra Notion — cero costo MCP.
-# Ajustar si el Glosario se mueve de ubicación.
-SCRIPT_GLOSSARY_PATH = PROJECT_ROOT / "{GLOSSARY_DEFAULT_REL}"
+# Apunta al Manual.md real que ya mantiene vsync_doc.py (BASE_DIR / "Manual.md"),
+# NO a una copia separada — así el Glosario se actualiza solo cada vez que
+# corres `vdoc.py notion`/`auto`, sin mantenimiento manual duplicado.
+CONST_BLOCK = '''
+SCRIPT_GLOSSARY_PATH = PROJECT_ROOT / "Documentación" / "ACTIVE" / "Manual.md"
 '''
 
 FUNC_BLOCK = '''
@@ -157,7 +159,10 @@ def main():
     print(f"[+] Patch aplicado: {target}")
     print("")
     print("Siguiente paso:")
-    print(f"  1. Coloca el Glosario local en: <VANTAGE_ROOT>/{GLOSSARY_DEFAULT_REL}")
+    print("  1. El Glosario ya apunta a tu Manual.md real (Documentación/ACTIVE/Manual.md)")
+    print("     — asegúrate de que la sección 22 (MANUAL:SCRIPT-GLOSSARY) esté ahí,")
+    print("     ya sea porque la pegaste directo o porque corriste `vdoc.py notion`")
+    print("     tras pegar el bloque en Notion.")
     print("  2. Corre: python3 verify_versions.py --new-scripts")
     print("  3. Exit code 1 = hay scripts sin documentar (úsalo como gate).")
 
