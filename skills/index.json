@@ -115,9 +115,21 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-script-glossary.skill",
+      "name": "vantage-sync-script-glossary",
+      "description": "VANTAGE Skill: vantage-sync-script-glossary",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-script-library.skill",
       "name": "vantage-sync-script-library",
       "description": "VANTAGE Skill: vantage-sync-script-library",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-skill-library.skill",
+      "name": "vantage-sync-skill-library",
+      "description": "VANTAGE Skill: vantage-sync-skill-library",
       "mimeType": "application/octet-stream"
     },
     {
