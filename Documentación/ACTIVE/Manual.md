@@ -888,13 +888,13 @@ Glosario de Scripts — Referencia Operativa en Humano
 ---
 ### 22.1 MANUAL:SCRIPT-GLOSSARY-L1
 Layer 1 — Active Recon & Core Pipeline
-Qué hace: Motor principal del pipeline L1 — ejecuta las fases de scoring, gating y deduplicación sobre el Tracker.
+layer_1_run.pyQué hace: Motor principal del pipeline L1 — ejecuta las fases de scoring, gating y deduplicación sobre el Tracker.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --dry-run | Antes de correr el pipeline completo en un día con muchos feeds nuevos, corre con --dry-run para ver qué escribiría sin comprometer el Tracker — útil si sospechas que un feed trae datos sucios. |
 | --dedup-audit | Al cerrar el ciclo semanal de L1, agrégalo para que el mismo comando dispare dedup_opportunities.py como subproceso y te dé el reporte fuzzy sin correr dos comandos separados. |
-Qué hace: Ingiere un JSON de feed (L1/L2/L3) y crea/actualiza registros en el Tracker.
+feed_processor.pyQué hace: Ingiere un JSON de feed (L1/L2/L3) y crea/actualiza registros en el Tracker.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
@@ -902,25 +902,25 @@ Flags:
 | --layer {1,2,3} | Si estás cargando un feed que viene de investigación manual en Perplexity (no de L1 automatizado), usa --layer 2 para que el Tracker lo etiquete correctamente como fuente estratégica. |
 | --fast | Encontraste UNA vacante urgente fuera de tu ciclo semanal (ej. alguien te la compartió por WhatsApp) — usa --fast para meterla sola sin esperar al batch de los lunes. Rechaza feeds con más de un item. |
 | --interactive | Cuando el feed trae vacantes de calidad mixta y quieres decidir una por una ([S]í/[O]mitir/[Q]uit) en vez de que todo se escriba automáticamente. Ojo: si eliges Quit a medio camino, lo ya escrito no se revierte. |
-Qué hace: Genera el ID Census — barrido completo de IDs canónicos en los 9 documentos fundacionales, detecta huérfanos.
+generate_census.pyQué hace: Genera el ID Census — barrido completo de IDs canónicos en los 9 documentos fundacionales, detecta huérfanos.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --debug-id <id1> <id2> … | Ya sabes que KERNEL:SCHEMA-008 está fallando en el census y no quieres esperar el barrido completo — pásalo directo y te da diagnóstico quirúrgico de esos IDs específicos. |
-Qué hace: Reconstruye el índice de entidades (entity_index_v2.json), el grafo de relaciones y los backlinks — la base de datos interna que usa vantage.py ask/query.
+generate_entity_index_v2.pyQué hace: Reconstruye el índice de entidades (entity_index_v2.json), el grafo de relaciones y los backlinks — la base de datos interna que usa vantage.py ask/query.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --limit <N> | Estás probando un cambio en la lógica de indexado y no quieres esperar a que procese todas las fuentes — límita a N entidades por fuente para iterar rápido. |
 | --out <ruta> | Quieres generar un índice de prueba sin pisar el archivo real que usa producción — apunta a una ruta temporal. |
 | --skip-graph | Solo necesitas refrescar el índice de entidades (para vantage.py query) y no te importa el grafo/backlinks en este momento — ahorra tiempo de corrida. |
-Qué hace: Escanea un árbol de archivos y genera un inventario CSV/Markdown de todas las definiciones y referencias de IDs canónicos encontradas.
+generate_id_inventory.pyQué hace: Escanea un árbol de archivos y genera un inventario CSV/Markdown de todas las definiciones y referencias de IDs canónicos encontradas.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --root <ruta> (requerido) | Quieres auditar solo una subcarpeta (ej. solo Layer_1/) en vez de todo VANTAGE — acota el escaneo. |
 | --out <ruta> | ⚠️ Nota real: el default NO es ./out como dice el help — es una ruta absoluta fija a tu carpeta Layer_1/data. Si corres esto desde otra máquina o usuario, especifica --out explícitamente o el inventario se va a una ruta que no existe. |
-Qué hace: Aplica el sistema de cross-reference hyperlinks entre documentos fundacionales (PATCH de bloques en Notion).
+apply_hyperlinks_notion.pyQué hace: Aplica el sistema de cross-reference hyperlinks entre documentos fundacionales (PATCH de bloques en Notion).
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
@@ -928,42 +928,42 @@ Flags:
 | --all | Ciclo completo de housekeeping documental — mutuamente excluyente con --doc. |
 | --apply | El modo real de escritura — sin este flag, cualquier corrida (incluso sin --dry-run) es preview únicamente. |
 | --dry-run | ⚠️ No tiene efecto propio — el script ya es dry-run por default sin --apply. Es no-op explícito, no un modo adicional. |
-Qué hace: Audita y corrige headings legacy o mal formados en los documentos fundacionales.
+normalize_heading_ids.pyQué hace: Audita y corrige headings legacy o mal formados en los documentos fundacionales.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --csv <ruta> | Quieres revisar en Excel/Numbers qué headings están mal antes de decidir si vale la pena corregirlos — exporta el reporte sin tocar Notion. |
 | --apply | Ya revisaste el CSV y confirmaste que los fixes son correctos — aplica los reemplazos vía API. |
 | --yes | Vas a correr --apply en un batch grande ya pre-aprobado y no quieres que te pregunte confirmación por cada heading. |
-Qué hace: Detecta y fusiona registros duplicados en el Tracker, archivando el sobrante.
+consolidate_duplicates.pyQué hace: Detecta y fusiona registros duplicados en el Tracker, archivando el sobrante.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --dry-run | Antes de fusionar nada, corre esto para ver qué grupos detectaría como duplicados. |
 | --yes | Ya revisaste el dry-run y confías en el resultado — salta la confirmación interactiva. |
 | --aggressive | El matching normal (por URL) no está agrupando vacantes que sabes que son la misma posición republicada con URL distinta — usa matching por marca+rol. No fusiona URLs de vacantes genuinamente distintas. |
-Qué hace: Busca coincidencias entre el Tracker activo y el Archivo Tracker por regla marca+rol.
+cross_tracker_match.pyQué hace: Busca coincidencias entre el Tracker activo y el Archivo Tracker por regla marca+rol.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --dry-run | ⚠️ Importante: default es True vía store_true, y no existe forma de desactivarlo — este script siempre es solo-reporte, nunca ejecuta acciones. Si tu intención es que alguna vez actúe, hoy no puede — es candidato para el punto B (documentación transversal) si quieres dejarlo explícito en Kernel. |
-Qué hace: Auditoría fuzzy de duplicados y limpieza puntual del flag Dedup_Flag.
+dedup_opportunities.pyQué hace: Auditoría fuzzy de duplicados y limpieza puntual del flag Dedup_Flag.
 Uso:
 | Modo | Caso de uso |
 | --- | --- |
 | Sin argumentos | Auditoría general — lo que corre dedup_audit.sh/Raycast. |
 | --clear <page_id> | Un registro quedó marcado erróneamente como "Posible duplicado" y quieres limpiar solo ese flag sin re-correr toda la auditoría. ⚠️ Solo accesible desde Terminal directo — el wrapper de Raycast (dedup_audit.sh) no lo expone. |
-Qué hace: Backfill de campos Class A (layer, hash, Prioridad) en registros existentes del Tracker.
+backfill_class_a.pyQué hace: Backfill de campos Class A (layer, hash, Prioridad) en registros existentes del Tracker.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --dry-run | Antes de correr un backfill masivo tras un cambio de schema, revisa qué se llenaría. |
-Qué hace: Migra el campo Next_Action de texto libre a select tipado.
+backfill_next_action_select.pyQué hace: Migra el campo Next_Action de texto libre a select tipado.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --execute | Ya validaste el dry-run (default) y quieres aplicar la conversión real. |
-Qué hace: Herramienta central de verificación — versión de los 9 fundacionales, gap-report de scripts/skills, e integridad de longitud documental.
+verify_versions.py (alias vversions)Qué hace: Herramienta central de verificación — versión de los 9 fundacionales, gap-report de scripts/skills, e integridad de longitud documental.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
@@ -973,14 +973,14 @@ Flags:
 | --skills | Igual que arriba pero para archivos .skill. |
 | --length | Antes de una sincronización crítica, si sospechas que algún documento se truncó silenciosamente (edición accidental, corte de API), corre esto como sanity check. |
 | --update-baseline | Solo después de confirmar manualmente que un cambio de longitud fue una edición legítima (no truncamiento) — actualiza el baseline. Requiere --length. |
-Qué hace: Limpia valores de URL corruptos (http:// mal formados) en Script Library.
+clean_script_library_links.pyQué hace: Limpia valores de URL corruptos (http:// mal formados) en Script Library.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --apply | Detectaste links rotos en Script Library tras una migración — aplica la limpieza real. Sin el flag, solo lista candidatos. |
-Qué hace: Calcula y completa fingerprints de deduplicación en el Archivo Tracker.
+backfill_archive_fingerprint.pyQué hace: Calcula y completa fingerprints de deduplicación en el Archivo Tracker.
 Uso: Sin flags CLI propios — se corre directo, solo requiere NOTION_TOKEN/NOTION_API_KEY en el entorno.
-Qué hace: Cliente HTTP compartido para todas las llamadas a Notion — caché, rate limiting, reintentos. No se invoca directo salvo para diagnóstico.
+notion_utils.pyQué hace: Cliente HTTP compartido para todas las llamadas a Notion — caché, rate limiting, reintentos. No se invoca directo salvo para diagnóstico.
 Uso (comando posicional):
 | Comando | Caso de uso |
 | --- | --- |
@@ -995,9 +995,9 @@ Variables de entorno (tuning silencioso — hoy corren con default sin que lo no
 | NOTION_MAX_RETRIES | 3 | Súbelo si tu conexión es inestable y ves fallos por timeout en vez de reintentos agotados. |
 | VANTAGE_LOG_LEVEL | INFO | Cambia a DEBUG cuando estés troubleshooting un bug de integración con Notion y quieras ver el detalle de cada request. |
 | NOTION_VERSION | 2022-06-28 (la mayoría) / 2025-09-03 (resolver_layer_v1.py) | ⚠️ Nota real: hay inconsistencia entre scripts — mezclar versiones de API en el mismo flujo puede producir HTTP 400 (ya documentado en KERNEL). |
-Qué hace: Chequeo de salud del sistema — conectividad, versión, tickets pendientes, estado de git.
+health_check.pyQué hace: Chequeo de salud del sistema — conectividad, versión, tickets pendientes, estado de git.
 Uso: Sin flags — se corre directo (via vantage-health.sh en Raycast). Exit code 0 = sano, 1 = issues encontrados (no fallo fatal).
-Qué hace: CLI unificado de consulta en lenguaje natural sobre el índice de entidades.
+vantage.pyQué hace: CLI unificado de consulta en lenguaje natural sobre el índice de entidades.
 Comandos:
 | Comando | Caso de uso |
 | --- | --- |
@@ -1007,12 +1007,12 @@ Comandos:
 | query <texto> | Búsqueda estructurada — une todos los tokens. |
 | status | Estado general del sistema, sin argumentos. |
 | sync | Reconstruye índice/grafo/backlinks desde Notion — requiere NOTION_TOKEN. Costoso, úsalo solo cuando sepas que el índice está desactualizado. |
-Qué hace: Calcula métricas de efectividad y conversión sobre el Tracker.
+feedback_loop.pyQué hace: Calcula métricas de efectividad y conversión sobre el Tracker.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --json | Quieres pasar el output a otro script o graficarlo — output máquina-legible en vez del reporte de texto. |
-Qué hace: Convierte el formato del Archivo Changelog exportado (toggle blocks Markdown).
+toggle_changelog_archive.pyQué hace: Convierte el formato del Archivo Changelog exportado (toggle blocks Markdown).
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
@@ -1020,35 +1020,35 @@ Flags:
 | --out <ruta> | Default es /tmp/archivo_changelog_toggled.md — especifica otra ruta si quieres conservarlo fuera de /tmp. |
 | --dry-run | Ver las primeras 80 líneas convertidas sin escribir el archivo completo. |
 | --apply | ⚠️ No tiene efecto real — el archivo se escribe siempre que --dry-run esté ausente; este flag es vestigial. |
-Qué hace: Fetch quirúrgico de una sección específica de un documento de Notion (economía de contexto — evita traer el documento completo).
+lazy_loader.pyQué hace: Fetch quirúrgico de una sección específica de un documento de Notion (economía de contexto — evita traer el documento completo).
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --page <uuid> (requerido) | La página de Notion sobre la que quieres resolver una ruta. |
 | --route <PREFIX:CLAVE> (requerido) | Ej. KERNEL:SCHEMA-008 — trae solo esa sección, no el documento entero. Ideal cuando Claude necesita un solo nodo y no quieres gastar tokens en el resto. |
-Qué hace: Resolución de entidades individuales (context_layer.py entity_id) y búsqueda libre (query_layer.py texto) sobre el índice — motor interno detrás de vantage.py resolve/query.
+context_layer.py / query_layer.pyQué hace: Resolución de entidades individuales (context_layer.py entity_id) y búsqueda libre (query_layer.py texto) sobre el índice — motor interno detrás de vantage.py resolve/query.
 Uso: Un argumento posicional cada uno; normalmente no se invocan directo, sino a través de vantage.py.
 ---
-Qué hace: Extrae la distribución de Score del Tracker activo — snapshot rápido de cómo se están calificando las vacantes actuales.
+extract_scores.pyQué hace: Extrae la distribución de Score del Tracker activo — snapshot rápido de cómo se están calificando las vacantes actuales.
 Uso: Sin flags CLI — se corre directo. Requiere NOTION_TOKEN en el entorno.
 Caso de uso: Antes de ajustar el umbral del Score Gate (gate() en layer_1_run.py), corre esto para ver la distribución real y evitar mover el corte a ciegas.
-Qué hace: Igual que extract_scores.py pero genera histograma detallado en vez de resumen.
+extract_scores_detailed.pyQué hace: Igual que extract_scores.py pero genera histograma detallado en vez de resumen.
 Uso: Sin flags CLI — se corre directo. Requiere NOTION_TOKEN.
 Caso de uso: Cuando el resumen simple no te dice si el problema es concentración en un rango específico (ej. muchas vacantes atoradas en 55-60) — el detalle por bucket sí lo muestra.
-Qué hace: Analiza efectividad de fuentes de discovery (LinkedIn, agregadores, L2, L3, etc.) — cuáles fuentes convierten mejor a Gate_Decision=CREATE.
+source_analytics.pyQué hace: Analiza efectividad de fuentes de discovery (LinkedIn, agregadores, L2, L3, etc.) — cuáles fuentes convierten mejor a Gate_Decision=CREATE.
 Uso: Sin flags CLI — se corre directo. Requiere NOTION_TOKEN.
 Caso de uso: Al revisar si vale la pena seguir invirtiendo tiempo en una fuente de L2 específica (ej. Perplexity vs Grok) — esto te da el dato duro en vez de intuición.
-Qué hace: Imprime rápido las oportunidades con Gate_Decision=CREATE — vista de "qué está listo para actuar hoy" sin abrir Notion.
+vprint.py / vprint.shQué hace: Imprime rápido las oportunidades con Gate_Decision=CREATE — vista de "qué está listo para actuar hoy" sin abrir Notion.
 Uso: Sin flags CLI — se corre directo. Requiere NOTION_TOKEN y NOTION_DB_OPPORTUNITIES.
 Caso de uso: Primera cosa que corres en la mañana para ver qué vacantes pasaron el gate sin tener que entrar al Tracker completo.
 ⚠️ Hallazgo real (no corregido, solo documentado): vprint.sh invoca python3 .../VANTAGE/vprint.py — ruta incompleta, le falta Layer_1/scripts/. El script real vive en Layer_1/scripts/vprint.py, no en la raíz de VANTAGE. Si el wrapper falla con "No such file or directory", esta es la causa.
-Qué hace: Descarga el "digest" completo del repo VANTAGE desde Gitingest (gitingest.com/raw/mauriciomeyran/VANTAGE) — snapshot de texto plano de todo el árbol, útil para pegar contexto masivo a un LLM externo.
+get_vantage_digest.shQué hace: Descarga el "digest" completo del repo VANTAGE desde Gitingest (gitingest.com/raw/mauriciomeyran/VANTAGE) — snapshot de texto plano de todo el árbol, útil para pegar contexto masivo a un LLM externo.
 Flags:
 | Argumento | Caso de uso |
 | --- | --- |
 | output_file (posicional, opcional) | Default VANTAGE_digest.txt. Especifica un nombre distinto si quieres conservar varios snapshots fechados sin sobrescribir el anterior. |
 Layer 3 — Passive Intake (Gmail)
-Qué hace: Lee correos no leídos de una etiqueta Gmail vía IMAP, extrae vacantes con Groq, las escribe en el Tracker.
+layer_3_mail.pyQué hace: Lee correos no leídos de una etiqueta Gmail vía IMAP, extrae vacantes con Groq, las escribe en el Tracker.
 Variables de entorno (todas ajustables sin tocar código):
 | Variable | Default | Caso de uso |
 | --- | --- | --- |
@@ -1062,52 +1062,52 @@ Variables de entorno (todas ajustables sin tocar código):
 ### 22.1a MANUAL:SCRIPT-GLOSSARY-L1-MODULES
 Módulos Compartidos (sin CLI propia — se importan, no se ejecutan solos)
 > Estos 7 no son "scripts" en el sentido operativo — son librerías internas que otros scripts importan. --new-scripts los detecta igual porque no distingue tipo de archivo; se documentan aquí por completitud, sin tabla de flags porque no tienen ninguno.
-Qué hace: Terminal State Protection (KERNEL:GATE-DECISION-010) — decide si un registro del Tracker ya está en estado terminal (Postulado, Rechazado, Expirada) y por lo tanto NO debe recalcularse. Contiene cero lógica de scoring.
+gate_logic.pyQué hace: Terminal State Protection (KERNEL:GATE-DECISION-010) — decide si un registro del Tracker ya está en estado terminal (Postulado, Rechazado, Expirada) y por lo tanto NO debe recalcularse. Contiene cero lógica de scoring.
 Quién lo consume: layer_1_run.py (Fase 4).
 Por qué te sirve saberlo: si un registro se queda "atorado" sin actualizar pese a nueva información, este es el módulo que decide si eso es correcto (protección de terminalidad) o un bug.
-Qué hace: Guard técnico para GAP-03 (KERNEL:GATE-DECISION-003) — punto único de verdad de qué campos puede escribir un actor no-Python (como Claude vía MCP) en el Tracker. No ejecuta la escritura, audita el payload antes y devuelve la versión limpiada + reporte de lo removido.
+class_b_guard.pyQué hace: Guard técnico para GAP-03 (KERNEL:GATE-DECISION-003) — punto único de verdad de qué campos puede escribir un actor no-Python (como Claude vía MCP) en el Tracker. No ejecuta la escritura, audita el payload antes y devuelve la versión limpiada + reporte de lo removido.
 Por qué existe: feed_processor.py ya filtra Class B por construcción, pero el conector MCP de Claude escribe directo a Notion sin pasar por ahí — esta es la asimetría que cierra.
 Por qué te sirve saberlo: si alguna vez ves un campo Class B escrito por mí (Claude) que no debería, este es el módulo que falló o que faltó invocar.
-Qué hace: Lógica de Prioridad (Class A) compartida — extraída de backfill_class_a.py para romper un import circular con layer_1_run.py.
+priority_logic.pyQué hace: Lógica de Prioridad (Class A) compartida — extraída de backfill_class_a.py para romper un import circular con layer_1_run.py.
 Quién lo consume: layer_1_run.py (Fase 3.6, escritura primaria semanal) y backfill_class_a.py (catch-up de registros legacy).
 Por qué te sirve saberlo: si cambias la matriz de urgencia/importancia que define Prioridad, este es el único archivo que debes tocar — no hay lógica duplicada en otro lado.
-Qué hace: Reglas de fit de perfil VM y exclusiones compartidas — detecta títulos de rol excluidos (vendedor, sales, planner sin "visual", store manager, etc.) vía regex.
+profile_fit.pyQué hace: Reglas de fit de perfil VM y exclusiones compartidas — detecta títulos de rol excluidos (vendedor, sales, planner sin "visual", store manager, etc.) vía regex.
 Quién lo consume: pipeline principal y scripts de cleanup.
 Por qué te sirve saberlo: si una vacante que debería excluirse se está colando (o viceversa, una válida se excluye), este archivo tiene el patrón regex responsable — no busques la lógica en otro lado.
-Qué hace: Carga graph_v2.json y backlinks_v2.json, expone funciones de consulta sobre el grafo de entidades (get_archived_from, get_backlinks, graph_stats).
+graph_layer.pyQué hace: Carga graph_v2.json y backlinks_v2.json, expone funciones de consulta sobre el grafo de entidades (get_archived_from, get_backlinks, graph_stats).
 Quién lo consume: agent_api.py (y por extensión, vantage.py ask).
 Por qué te sirve saberlo: si vantage.py ask devuelve relaciones incorrectas o desactualizadas entre entidades, corre vantage.py sync para regenerar los JSON que este módulo lee — no es un bug del módulo en sí.
-Qué hace: Contrato canónico de resolución de entity_prefix por tipo de entidad — único SSOT, cierra DT-014. Ningún componente debe hardcodear un prefijo; si falta en el Registry, falla explícito (nunca default silencioso).
+runtime_identity.pyQué hace: Contrato canónico de resolución de entity_prefix por tipo de entidad — único SSOT, cierra DT-014. Ningún componente debe hardcodear un prefijo; si falta en el Registry, falla explícito (nunca default silencioso).
 Quién lo consume: generate_entity_index_v2.py, lazy_loader.py.
 Por qué te sirve saberlo: si ves un error de "prefijo ausente en Registry" en vez de un ID mal formado silencioso, es este contrato funcionando como debe — es una falla intencional, no un bug.
-Qué hace: Módulo único de reglas de detección DEF/REF/heading/boundary para todo el ecosistema de IDs PREFIX:KEY — consolida lógica que antes vivía duplicada (y desincronizada) en 4 scripts distintos (generate_census.py, generate_id_inventory.py, apply_hyperlinks_notion.py, normalize_heading_ids.py).
+vantage_id_rules.pyQué hace: Módulo único de reglas de detección DEF/REF/heading/boundary para todo el ecosistema de IDs PREFIX:KEY — consolida lógica que antes vivía duplicada (y desincronizada) en 4 scripts distintos (generate_census.py, generate_id_inventory.py, apply_hyperlinks_notion.py, normalize_heading_ids.py).
 Por qué te sirve saberlo: antes de esta consolidación (sesión 2026-07-25), cada script tenía su propia noción de "qué es una definición válida" — eso producía falsos huérfanos en el census. Si ves comportamiento inconsistente entre esos 4 scripts hoy, sería regresión de este contrato compartido.
 ---
 ### 22.1b MANUAL:SCRIPT-GLOSSARY-L1-TOOLS
 Utilidades y Herramientas de Sesión
-Qué hace: Capa de consulta en lenguaje natural sobre el índice de entidades — es el motor real detrás de vantage.py ask.
+agent_api.pyQué hace: Capa de consulta en lenguaje natural sobre el índice de entidades — es el motor real detrás de vantage.py ask.
 Uso: python3 agent_api.py "texto de consulta" — un solo argumento posicional, entre comillas.
 Caso de uso: Ejemplos reales soportados: 'show active roles', 'show archived history', 'show bugs', 'find candidates', 'compare TRACKER:H_xxx TRACKER:H_yyy'.
-Qué hace: Limpieza de cachés de aplicaciones en Mac (Chrome, Safari, Firefox, Edge, y otras) — no toca sesión/login ni LocalStorage, solo caché regenerable. Reporta espacio liberado por ruta.
+clean_caches.py (y su wrapper Raycast clean-caches-raycast.sh)Qué hace: Limpieza de cachés de aplicaciones en Mac (Chrome, Safari, Firefox, Edge, y otras) — no toca sesión/login ni LocalStorage, solo caché regenerable. Reporta espacio liberado por ruta.
 Uso: Sin flags — se corre directo.
 Caso de uso: Tu Mac se siente lento o con poco espacio y quieres liberar caché de navegadores sin riesgo de cerrar sesiones activas.
-Qué hace: Manejo de fallos y "resume operations" del pipeline — guarda checkpoints (save_checkpoint) para poder retomar una corrida de L1 que se interrumpió a medias.
+pipeline_recovery.pyQué hace: Manejo de fallos y "resume operations" del pipeline — guarda checkpoints (save_checkpoint) para poder retomar una corrida de L1 que se interrumpió a medias.
 Uso: Requiere NOTION_TOKEN.
 Caso de uso: Si layer_1_run.py se cae a la mitad de un batch grande (ej. por rate limit de Notion), este módulo es el que permite retomar desde el checkpoint en vez de reprocesar todo desde cero.
-Qué hace: Maneja cambios en la configuración/perfil del sistema (config/profile_config.yaml) — crea config default si no existe, actualiza progresión de perfil.
+profile_evolution.pyQué hace: Maneja cambios en la configuración/perfil del sistema (config/profile_config.yaml) — crea config default si no existe, actualiza progresión de perfil.
 Uso: python3 profile_evolution.py — sin flags, interactivo, requiere pyyaml instalado.
 Caso de uso: Cuando cambia tu rol objetivo o etapa de carrera (ej. de "Coordinador" a "Dirección") y quieres que el sistema actualice su configuración de perfil de forma guiada en vez de editar el YAML a mano.
-Qué hace: Arma los prompts semanales para los motores externos (L2) — trae Prompt A + Wrappers + Prompt E desde Notion, sustituye la fecha del día, concatena (A + Wrapper) y escribe archivos .md listos para pegar en Gemini/Grok/Perplexity/You.com.
+weekly_prompt_assembler.pyQué hace: Arma los prompts semanales para los motores externos (L2) — trae Prompt A + Wrappers + Prompt E desde Notion, sustituye la fecha del día, concatena (A + Wrapper) y escribe archivos .md listos para pegar en Gemini/Grok/Perplexity/You.com.
 Uso: Sin flags — se corre directo, genera archivos con fecha en el nombre (Prompt_{motor}_{fecha}.md).
 Caso de uso: Es el primer paso de tu ciclo semanal de L2 — antes de ir a copiar/pegar prompts a mano en cada motor externo, esto te los pre-arma con la fecha correcta ya sustituida.
-Qué hace: Patcher de un solo uso (ya ejecutado) que separó la entrada cheat_sheet de vsync_doc.py en dos entradas independientes (aliases y change_log) — mismo patrón que patch_new_scripts.py (backup automático + validación de sintaxis antes de escribir).
+patch_vsync_doc.pyQué hace: Patcher de un solo uso (ya ejecutado) que separó la entrada cheat_sheet de vsync_doc.py en dos entradas independientes (aliases y change_log) — mismo patrón que patch_new_scripts.py (backup automático + validación de sintaxis antes de escribir).
 Uso: python3 patch_vsync_doc.py — sin flags. Es idempotente por diseño de patcher (aunque no verifiqué si tiene el mismo guard explícito).
 Nota operativa: Como es un patcher de una sola aplicación histórica (ya corrido, ver ALIASES/CHANGE_LOG separados en tu vsync_doc.py actual), no debería necesitar correrse de nuevo. Considera moverlo junto con patch_new_scripts.py fuera del árbol activo si quieres que --new-scripts deje de detectarlo como pendiente.
 ⚠️ Hallazgo real — extract_score_distribution.py: este script parece ser un borrador abandonado, no una herramienta funcional. El propio código trae comentarios como "Simulación: voy a asumir que necesito procesar los datos reales" y "Por ahora, voy a mostrar el formato de análisis esperado" — usa datos de muestra hardcodeados (sample_data), no consulta Notion. extract_score_distribution.py parece ser una versión temprana/incompleta de extract_scores.py (que sí funciona). Documentado como hallazgo, no corregido — decide tú si vale la pena eliminarlo del árbol para que deje de aparecer en cada gap report.
 ---
 ### 22.3 MANUAL:SCRIPT-GLOSSARY-L4
 Layer 4 — Version Control & Sync Documental
-Qué hace: Wrapper de orquestación — decide dirección de sync (Notion↔local) y dispara vsync_doc.py + git_sync.py.
+vdoc.pyQué hace: Wrapper de orquestación — decide dirección de sync (Notion↔local) y dispara vsync_doc.py + git_sync.py.
 Uso (tokens posicionales, no flags tradicionales):
 | Token | Caso de uso |
 | --- | --- |
@@ -1116,19 +1116,19 @@ Uso (tokens posicionales, no flags tradicionales):
 | local | Fuerzas local→Notion (PATCH puntual). ⚠️ Nota real: pese a que el resto del sistema pide confirmación para direcciones forzadas, local tiene una excepción temporal en el código y NO pide confirmación — ejecuta directo. |
 | auto | Deja que el script decida por hash cuál lado está más reciente. |
 | <documento> (ej. kernel, brief) | Restringe el sync a un solo documento en vez de los 7. |
-Qué hace: Motor real de sincronización documento-por-documento (invocado por vdoc.py, no directo normalmente).
+vsync_doc.pyQué hace: Motor real de sincronización documento-por-documento (invocado por vdoc.py, no directo normalmente).
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --direction {notion,auto,local} | Igual lógica que los tokens de vdoc.py, pero si necesitas invocar el motor directo (debugging). |
 | --dry-run | Preview sin aplicar ni auto-commit. |
 | --doc {kernel,system_prompt,career_canon,manual,aliases,change_log,brief} | Nota real: maneja 7 documentos, incluyendo brief — aunque la documentación textual del Manual describe un catálogo de 6. |
-Qué hace: Genera commit y push del árbol VANTAGE hacia GitHub.
+git_sync.pyQué hace: Genera commit y push del árbol VANTAGE hacia GitHub.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --dry | Antes de un push automático, revisa qué archivos entrarían al commit sin ejecutar nada. |
-Qué hace: Genera resúmenes de archivos Markdown/texto vía Groq o Gemini.
+vsum.pyQué hace: Genera resúmenes de archivos Markdown/texto vía Groq o Gemini.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
@@ -1139,9 +1139,9 @@ Flags:
 ---
 ### 22.4 MANUAL:SCRIPT-GLOSSARY-DASHBOARD
 Dashboard — Servidor Local de Visualización
-Qué hace: Levanta el servidor local del Dashboard, corre smoke test, abre el navegador.
+dashboard_start.sh → dashboard_server.pyQué hace: Levanta el servidor local del Dashboard, corre smoke test, abre el navegador.
 Uso: Sin flags — un solo comando hace todo el ciclo (start → healthcheck → smoke test → abrir browser). Si el smoke test falla, no abre el navegador y te avisa por notificación de sistema.
-Qué hace: Variante de layer_1_run.py adaptada para ser invocada desde el Dashboard web en vez de Terminal.
+layer_1_run_dash.pyQué hace: Variante de layer_1_run.py adaptada para ser invocada desde el Dashboard web en vez de Terminal.
 Uso: Sin flags CLI propios — se invoca vía las rutas HTTP del Dashboard, no directo.
 ---
 ### 22.4a MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES
@@ -1154,7 +1154,7 @@ Módulos Internos del Dashboard (sin CLI — arquitectura, no scripts ejecutable
 | dashboard_notion.py | Cliente Notion del Dashboard — reutiliza NOTION_TOKEN/DATABASE_ID de dashboard_config.py, importa txt() de layer_1_run.py para parseo de propiedades. |
 | dashboard_routes.py | Rutas HTTP Flask (jsonify/request) — endpoints del Dashboard, consume dashboard_notion.py para las queries reales (ej. query_blocked_vacancies, write_patch_to_notion). |
 | dashboard_validation.py | Reutiliza validación core del pipeline (validate_url_pre_ingestion, calculate_score_v6, get_vm_scope, get_role_class, gate) directamente de layer_1_run.py — garantiza que el Dashboard aplique exactamente la misma lógica de scoring/gate que el pipeline CLI, no una copia paralela. |
-Qué hace: Smoke test del servidor Dashboard corriendo en http://127.0.0.1:8000 — verifica /health y /blocked-vacancies, imprime SMOKE PASSED/SMOKE FAILED.
+smoke_dashboard.pyQué hace: Smoke test del servidor Dashboard corriendo en http://127.0.0.1:8000 — verifica /health y /blocked-vacancies, imprime SMOKE PASSED/SMOKE FAILED.
 Uso: Sin flags — requiere que el Dashboard ya esté corriendo localmente (lo invoca dashboard_start.sh como parte de su ciclo de arranque).
 Caso de uso: Si el Dashboard se ve raro tras un cambio de código, corre esto antes de asumir que es un bug visual — confirma si el backend responde correctamente primero.
 ---
