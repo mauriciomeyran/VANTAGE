@@ -244,10 +244,19 @@ def validate_url_pre_ingestion(url, jd_text=""):
         if len(jd_clean) > 100:
             return True, "JD_ALREADY_EXISTS"
 
-    # PRIORIDAD 2: Agregador bypass v7.5.1 — NO hacer ningún request HTTP
-    # LinkedIn/Indeed/Computrabajo bloquean scrapers y pueden colgar indefinidamente
+    # PRIORIDAD 2: Agregador — verificación ligera, NO bypass ciego (BUG FIX)
+    # LinkedIn/Indeed/Computrabajo bloquean scrapers: usamos timeout corto
+    # para no colgar, pero ya no asumimos "Accesible" sin intentar nada.
     if is_agregador(url):
-        return True, "AGREGADOR_VALID"
+        try:
+            agg_response = requests.head(url, allow_redirects=True, timeout=6, headers={
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            })
+            if agg_response.status_code == 200:
+                return True, "AGREGADOR_VERIFIED"
+            return False, f"AGREGADOR_STATUS_{agg_response.status_code}"
+        except requests.exceptions.RequestException:
+            return True, "AGREGADOR_UNVERIFIED"
 
     try:
         headers = {
