@@ -37,6 +37,14 @@ Este sandbox no dispone de `NOTION_TOKEN` ni acceso a la API de Notion. Por tant
 - La **mitad Notion** del gap report (`--scripts` contra SCRIPT LIBRARY, data source `ea914544-338f-485e-ac1b-7f137a5c9cee`) no pudo ejecutarse en vivo. Las discrepancias del lado Notion se basan en los snapshots documentados: CSV export 2026-08-05 (70 filas, 100% con corrupción de auto-link) y los hallazgos registrados en `vantage-sync-script-library`.
 - Antes y después de aplicar la Propuesta de Deprecación, el operador debe correr `python3 Layer_1/scripts/verify_versions.py --scripts` (o el atajo Raycast `vantage-versions-scripts-gap.sh`) para obtener el gap report vivo. Este documento marca explícitamente cada afirmación como **verificado en disco** o **documentado en Notion** para que ninguna predicción se confunda con evidencia.
 
+**Resolución del límite (añadido 2026-08-13, misma sesión):**
+
+1. **Mitad local — CERRADA EN VIVO desde el sandbox.** `verify_versions.py --new-scripts` se ejecutó con env placeholder local (archivo gitignored, sin token real, sin llamadas de red): **86/86 assets documentados en el Glosario §22, 0 gaps**. Verificación análoga skills: **25/25 `.skill` en sync con `index.json`**. El Glosario local ya no es un límite.
+2. **Mitad Notion — handoffs operativos entregados en `handoffs/`:**
+   - `HANDOFF_TERMINAL_GAP_REPORT.md` — comandos exactos para el operador en la Mac: baseline `--scripts`/`--skills`, movimientos Tier A/B2 (`git mv`), retiro Tier C gateado, verificación post-movimiento (80 assets) y commit.
+   - `HANDOFF_CLAUDE_NOTION_SIDE.md` — misión S1–S5 para Claude Desktop con Notion MCP: remediación Script/Skill Library (DRY RUN + APROBAR_WRITE), batch de las ~70 filas con corrupción `http://`, PATCHs inline KERNEL:GATE-DECISION-007 y KERNEL:ARCHITECTURE-L4, resolución del ID colgante KERNEL:SKILL-ANNOUNCE-CONVENTION, y cierre documental con gate `vversions --sync` PASS.
+3. **Lo que no se hizo (y no debe hacerse):** el `NOTION_TOKEN` nunca se pidió ni se expuso en chat — el camino handoff cubre el 100% del cierre sin exponer el secreto.
+
 ---
 
 ## Directiva 1 — Grafo de dependencias reales
