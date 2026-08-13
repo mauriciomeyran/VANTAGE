@@ -33,12 +33,28 @@ try:
         gate as gate_layer1,
         evaluate_application_status,
         evaluate_rejection_status,
-        get_application_next_action
+        get_application_next_action,
+        txt,
+        validate_url_pre_ingestion
     )
     LAYER1_AVAILABLE = True
 except ImportError:
     LAYER1_AVAILABLE = False
     pytest.skip("layer_1_run module not available", allow_module_level=True)
+
+try:
+    from priority_logic import infer_prioridad, get_importancia_bucket, apply_importancia_matrix
+    PRIORITY_LOGIC_AVAILABLE = True
+except ImportError:
+    PRIORITY_LOGIC_AVAILABLE = False
+    pytest.skip("priority_logic module not available", allow_module_level=True)
+
+try:
+    from backfill_class_a import txt as txt_backfill
+    BACKFILL_AVAILABLE = True
+except ImportError:
+    BACKFILL_AVAILABLE = False
+    pytest.skip("backfill_class_a module not available", allow_module_level=True)
 
 
 # ============================================================================
@@ -452,6 +468,373 @@ class TestTerminalProtectionScoring:
         result = gate_logic(entry)
         assert result == "Expirada", \
             "Expirada Next_Action should be protected (terminal protection)"
+
+
+# ============================================================================
+# Rich Text Concatenation Tests (KERNEL:TXT-CONCAT-001)
+# ============================================================================
+# Fix for bug where txt() only read chunk[0] of rich_text arrays,
+# causing JD_ALREADY_EXISTS bypass to fail for multi-chunk JDs.
+
+class TestRichTextConcatenation:
+    """Test suite for txt() rich_text concatenation fix"""
+    
+    def test_txt_concatenates_rich_text_chunks(self):
+        """Test that txt() concatenates all rich_text chunks, not just chunk[0]"""
+        # Simulate Notion API response with multi-chunk rich_text
+        prop = {
+            "type": "rich_text",
+            "rich_text": [
+                {"plain_text": "Miguel Hidalgo, CDMX$15,000 por mes -  Tiempo completo&nbsp;"},
+                {"plain_text": "Buscamos Visual Merchandiser con experiencia en retail de lujo."},
+                {"plain_text": "Responsabilidades: - Desarrollar estrategias visuales en tienda"}
+            ]
+        }
+        
+        result = txt(prop)
+        expected = "Miguel Hidalgo, CDMX$15,000 por mes -  Tiempo completo&nbsp;Buscamos Visual Merchandiser con experiencia en retail de lujo.Responsabilidades: - Desarrollar estrategias visuales en tienda"
+        
+        assert result == expected, \
+            f"txt() should concatenate all chunks. Expected length {len(expected)}, got {len(result)}"
+    
+    def test_txt_single_chunk_rich_text(self):
+        """Test that txt() works correctly with single-chunk rich_text"""
+        prop = {
+            "type": "rich_text",
+            "rich_text": [
+                {"plain_text": "Single chunk text"}
+            ]
+        }
+        
+        result = txt(prop)
+        assert result == "Single chunk text", \
+            "txt() should handle single-chunk rich_text correctly"
+    
+    def test_txt_empty_rich_text(self):
+        """Test that txt() handles empty rich_text array"""
+        prop = {
+            "type": "rich_text",
+            "rich_text": []
+        }
+        
+        result = txt(prop)
+        assert result == "", \
+            "txt() should return empty string for empty rich_text array"
+    
+    def test_txt_concatenates_title_chunks(self):
+        """Test that txt() concatenates all title chunks, not just chunk[0]"""
+        prop = {
+            "type": "title",
+            "title": [
+                {"plain_text": "Visual "},
+                {"plain_text": "Merchandiser "},
+                {"plain_text": "Manager"}
+            ]
+        }
+        
+        result = txt(prop)
+        expected = "Visual Merchandiser Manager"
+        
+        assert result == expected, \
+            f"txt() should concatenate all title chunks. Expected '{expected}', got '{result}'"
+    
+    def test_validate_url_jd_bypass_with_concatenated_text(self):
+        """Test that validate_url_pre_ingestion correctly bypasses with concatenated JD > 100 chars"""
+        # Simulate JD that was previously truncated to 60 chars in chunk[0]
+        # but is now properly concatenated to > 100 chars
+        jd_text = "Miguel Hidalgo, CDMX$15,000 por mes -  Tiempo completo&nbsp;Buscamos Visual Merchandiser con experiencia en retail de lujo. Responsabilidades: - Desarrollar estrategias visuales en tienda - Implementar guidelines de marca - Capacitar al equipo de tienda - Mantener estándares visuales consistentes"
+        
+        assert len(jd_text) > 100, "Test JD should be > 100 chars"
+        
+        is_valid, reason = validate_url_pre_ingestion("https://indeed.com/job", jd_text)
+        
+        assert is_valid is True, \
+            f"JD > 100 chars should bypass URL validation. Got valid={is_valid}, reason={reason}"
+        assert reason == "JD_ALREADY_EXISTS", \
+            f"Reason should be JD_ALREADY_EXISTS. Got {reason}"
+    
+    def test_validate_url_jd_bypass_threshold(self):
+        """Test that JD <= 100 chars does NOT trigger bypass"""
+        jd_text = "Short JD text that is exactly 100 characters......................................................"
+        
+        assert len(jd_text) <= 100, "Test JD should be <= 100 chars"
+        
+        is_valid, reason = validate_url_pre_ingestion("https://indeed.com/job", jd_text)
+        
+        # Should NOT bypass with JD_ALREADY_EXISTS for short JD
+        assert reason != "JD_ALREADY_EXISTS", \
+            f"JD <= 100 chars should NOT trigger JD_ALREADY_EXISTS bypass. Got reason={reason}"
+    
+    def test_txt_handles_non_rich_text_types(self):
+        """Test that txt() still works correctly for non-rich_text types"""
+        # URL type
+        url_prop = {"type": "url", "url": "https://example.com"}
+        assert txt(url_prop) == "https://example.com"
+        
+        # Select type
+        select_prop = {"type": "select", "select": {"name": "Target"}}
+        assert txt(select_prop) == "Target"
+        
+        # Number type
+        number_prop = {"type": "number", "number": 42}
+        assert txt(number_prop) == 42
+        
+        # Date type
+        date_prop = {"type": "date", "date": {"start": "2026-08-13"}}
+        assert txt(date_prop) == "2026-08-13"
+        
+        # Empty prop
+        assert txt(None) == ""
+        assert txt({}) == ""
+
+
+# ============================================================================
+# Priority Logic Created Time Fix Tests (KERNEL:PRIORITY-CREATED-TIME-001)
+# ============================================================================
+# Fix for bug where infer_prioridad() read created_time from props instead of
+# item["created_time"], causing urgency to always be MEDIO (sin_fecha_creacion).
+
+class TestPriorityLogicCreatedTime:
+    """Test suite for infer_prioridad() created_time fix"""
+
+    def test_infer_prioridad_reads_created_time_from_item_root(self):
+        """Test that infer_prioridad reads created_time from item root, not props"""
+        from datetime import date, timedelta
+
+        # Create a mock item with created_time at root level (correct Notion API structure)
+        item = {
+            "id": "test-id",
+            "created_time": "2026-08-10T00:00:00.000Z",  # 3 days ago
+            "properties": {
+                "JD": {"type": "rich_text", "rich_text": [{"plain_text": "No deadline mentioned"}]},
+                "Source_Type ": {"type": "select", "select": {"name": "Vacante"}},
+                "Score": {"type": "number", "number": 60}
+            }
+        }
+
+        today = date(2026, 8, 13)  # Fixed date for consistent testing
+        prioridad, reason = infer_prioridad(item, today)
+
+        # Should calculate urgency based on created_time (3 days old = ALTO)
+        # not fall back to MEDIO with reason "sin_fecha_creacion"
+        assert "sin_fecha_creacion" not in reason, \
+            f"Should not use 'sin_fecha_creacion' reason when created_time exists. Got reason: {reason}"
+        assert "creado_" in reason, \
+            f"Should use 'creado_X_dias' reason when created_time exists. Got reason: {reason}"
+
+    def test_infer_prioridad_urgency_alto_for_recent_vacancies(self):
+        """Test that vacancies <= 3 days old get ALTO urgency"""
+        from datetime import date
+
+        item = {
+            "id": "test-id",
+            "created_time": "2026-08-10T00:00:00.000Z",  # 3 days ago
+            "properties": {
+                "JD": {"type": "rich_text", "rich_text": [{"plain_text": "No deadline"}]},
+                "Source_Type ": {"type": "select", "select": {"name": "Vacante"}},
+                "Score": {"type": "number", "number": 60}
+            }
+        }
+
+        today = date(2026, 8, 13)
+        prioridad, reason = infer_prioridad(item, today)
+
+        # 3 days old should be ALTO urgency
+        assert "creado_3_dias" in reason, \
+            f"3-day-old vacancy should have 'creado_3_dias' reason. Got: {reason}"
+
+    def test_infer_prioridad_urgency_medio_for_medium_age(self):
+        """Test that vacancies 4-14 days old get MEDIO urgency"""
+        from datetime import date
+
+        item = {
+            "id": "test-id",
+            "created_time": "2026-08-05T00:00:00.000Z",  # 8 days ago
+            "properties": {
+                "JD": {"type": "rich_text", "rich_text": [{"plain_text": "No deadline"}]},
+                "Source_Type ": {"type": "select", "select": {"name": "Vacante"}},
+                "Score": {"type": "number", "number": 60}
+            }
+        }
+
+        today = date(2026, 8, 13)
+        prioridad, reason = infer_prioridad(item, today)
+
+        # 8 days old should be MEDIO urgency
+        assert "creado_8_dias" in reason, \
+            f"8-day-old vacancy should have 'creado_8_dias' reason. Got: {reason}"
+
+    def test_infer_prioridad_urgency_bajo_for_old_vacancies(self):
+        """Test that vacancies > 14 days old get BAJO urgency"""
+        from datetime import date
+
+        item = {
+            "id": "test-id",
+            "created_time": "2026-07-20T00:00:00.000Z",  # 24 days ago
+            "properties": {
+                "JD": {"type": "rich_text", "rich_text": [{"plain_text": "No deadline"}]},
+                "Source_Type ": {"type": "select", "select": {"name": "Vacante"}},
+                "Score": {"type": "number", "number": 60}
+            }
+        }
+
+        today = date(2026, 8, 13)
+        prioridad, reason = infer_prioridad(item, today)
+
+        # 24 days old should be BAJO urgency
+        assert "creado_24_dias" in reason, \
+            f"24-day-old vacancy should have 'creado_24_dias' reason. Got: {reason}"
+
+    def test_infer_prioridad_critical_override_by_source_type(self):
+        """Test that Inbound/Referencia/Networking override urgency to CRÍTICO"""
+        from datetime import date
+
+        for source_type in ["Inbound", "Referencia", "Networking"]:
+            item = {
+                "id": "test-id",
+                "created_time": "2026-07-20T00:00:00.000Z",  # 24 days ago (would be BAJO normally)
+                "properties": {
+                    "JD": {"type": "rich_text", "rich_text": [{"plain_text": "No deadline"}]},
+                    "Source_Type ": {"type": "select", "select": {"name": source_type}},
+                    "Score": {"type": "number", "number": 60}
+                }
+            }
+
+            today = date(2026, 8, 13)
+            prioridad, reason = infer_prioridad(item, today)
+
+            # Should be CRÍTICO due to source_type, not BAJO from age
+            assert "source_type_" in reason, \
+                f"{source_type} should trigger source_type urgency. Got reason: {reason}"
+            assert prioridad == "4 CRÍTICO", \
+                f"{source_type} should result in CRÍTICO priority. Got: {prioridad}"
+
+    def test_infer_prioridad_critical_override_by_deadline(self):
+        """Test that deadline within 5 days overrides urgency to CRÍTICO"""
+        from datetime import date
+
+        item = {
+            "id": "test-id",
+            "created_time": "2026-07-20T00:00:00.000Z",  # 24 days ago (would be BAJO normally)
+            "properties": {
+                "JD": {"type": "rich_text", "rich_text": [{"plain_text": "Apply by 08/15/2026"}]},  # 2 days from test date
+                "Source_Type ": {"type": "select", "select": {"name": "Vacante"}},
+                "Score": {"type": "number", "number": 60}
+            }
+        }
+
+        today = date(2026, 8, 13)
+        prioridad, reason = infer_prioridad(item, today)
+
+        # Should be CRÍTICO due to deadline, not BAJO from age
+        assert "deadline_jd" in reason, \
+            f"Deadline within 5 days should trigger deadline_jd urgency. Got reason: {reason}"
+        assert prioridad == "4 CRÍTICO", \
+            f"Deadline within 5 days should result in CRÍTICO priority. Got: {prioridad}"
+
+    def test_infer_prioridad_missing_created_time_fallback(self):
+        """Test that missing created_time falls back to MEDIO with sin_fecha_creacion"""
+        from datetime import date
+
+        item = {
+            "id": "test-id",
+            # No created_time field
+            "properties": {
+                "JD": {"type": "rich_text", "rich_text": [{"plain_text": "No deadline"}]},
+                "Source_Type ": {"type": "select", "select": {"name": "Vacante"}},
+                "Score": {"type": "number", "number": 60}
+            }
+        }
+
+        today = date(2026, 8, 13)
+        prioridad, reason = infer_prioridad(item, today)
+
+        # Should fall back to MEDIO when created_time is missing
+        assert "sin_fecha_creacion" in reason, \
+            f"Missing created_time should trigger sin_fecha_creacion reason. Got: {reason}"
+
+
+# ============================================================================
+# Backfill Class A txt() Tests (KERNEL:BACKFILL-TXT-CONCAT-001)
+# ============================================================================
+# Fix for bug where backfill_class_a.py::txt() only read chunk[0] of
+# rich_text arrays, same class of bug as layer_1_run.py and priority_logic.py.
+
+class TestBackfillTxtConcatenation:
+    """Test suite for backfill_class_a.py::txt() rich_text concatenation fix"""
+
+    def test_backfill_txt_concatenates_rich_text_chunks(self):
+        """Test that backfill txt() concatenates all rich_text chunks, not just chunk[0]"""
+        # Simulate Notion API response with multi-chunk rich_text
+        prop = {
+            "type": "rich_text",
+            "rich_text": [
+                {"plain_text": "Miguel Hidalgo, CDMX$15,000 por mes -  Tiempo completo&nbsp;"},
+                {"plain_text": "Buscamos Visual Merchandiser con experiencia en retail de lujo."},
+                {"plain_text": "Responsabilidades: - Desarrollar estrategias visuales en tienda"}
+            ]
+        }
+
+        result = txt_backfill(prop)
+        expected = "Miguel Hidalgo, CDMX$15,000 por mes -  Tiempo completo&nbsp;Buscamos Visual Merchandiser con experiencia en retail de lujo.Responsabilidades: - Desarrollar estrategias visuales en tienda"
+
+        assert result == expected, \
+            f"backfill txt() should concatenate all chunks. Expected length {len(expected)}, got {len(result)}"
+
+    def test_backfill_txt_single_chunk_rich_text(self):
+        """Test that backfill txt() works correctly with single-chunk rich_text"""
+        prop = {
+            "type": "rich_text",
+            "rich_text": [
+                {"plain_text": "Single chunk text"}
+            ]
+        }
+
+        result = txt_backfill(prop)
+        assert result == "Single chunk text", \
+            "backfill txt() should handle single-chunk rich_text correctly"
+
+    def test_backfill_txt_empty_rich_text(self):
+        """Test that backfill txt() handles empty rich_text array"""
+        prop = {
+            "type": "rich_text",
+            "rich_text": []
+        }
+
+        result = txt_backfill(prop)
+        assert result == "", \
+            "backfill txt() should return empty string for empty rich_text array"
+
+    def test_backfill_txt_concatenates_title_chunks(self):
+        """Test that backfill txt() concatenates all title chunks, not just chunk[0]"""
+        prop = {
+            "type": "title",
+            "title": [
+                {"plain_text": "Visual "},
+                {"plain_text": "Merchandiser "},
+                {"plain_text": "Manager"}
+            ]
+        }
+
+        result = txt_backfill(prop)
+        expected = "Visual Merchandiser Manager"
+
+        assert result == expected, \
+            f"backfill txt() should concatenate all title chunks. Expected '{expected}', got '{result}'"
+
+    def test_backfill_txt_handles_non_rich_text_types(self):
+        """Test that backfill txt() still works correctly for non-rich_text types"""
+        # URL type
+        url_prop = {"type": "url", "url": "https://example.com"}
+        assert txt_backfill(url_prop) == "https://example.com"
+
+        # Select type
+        select_prop = {"type": "select", "select": {"name": "Target"}}
+        assert txt_backfill(select_prop) == "Target"
+
+        # Empty prop
+        assert txt_backfill(None) == ""
+        assert txt_backfill({}) == ""
 
 
 if __name__ == "__main__":

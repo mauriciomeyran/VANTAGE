@@ -25,11 +25,11 @@ def txt(prop: dict | None) -> str:
     if t == "url":
         return prop.get("url") or ""
     if t == "rich_text" and prop.get("rich_text"):
-        return prop["rich_text"][0]["plain_text"]
+        return "".join(chunk["plain_text"] for chunk in prop["rich_text"])
     if t == "select" and prop.get("select"):
         return prop["select"]["name"]
     if t == "title" and prop.get("title"):
-        return prop["title"][0]["plain_text"]
+        return "".join(chunk["plain_text"] for chunk in prop["title"])
     return ""
 
 
@@ -83,7 +83,7 @@ def apply_importancia_matrix(urgencia: str, importancia_bucket: str) -> str:
     return matrix.get((urgencia, importancia_bucket), "1 BAJO")  # fallback defensivo
 
 
-def infer_prioridad(props: dict, today: date) -> tuple[str, str]:
+def infer_prioridad(item: dict, today: date) -> tuple[str, str]:
     """
     Infiere Prioridad usando matriz Urgencia x Importancia.
 
@@ -100,7 +100,11 @@ def infer_prioridad(props: dict, today: date) -> tuple[str, str]:
     Referencia, Networking} -> Urgencia=CRÍTICO sin chequeo de antigüedad)
     se traslada intacto. Pendiente de decisión operador — no tocado en
     este patch.
+
+    FIX 2026-08-13: created_time se lee de item["created_time"] (raíz del objeto Notion)
+    en lugar de props["created_time"] (que no existe).
     """
+    props = item["properties"]
     jd_text = txt(props.get("JD")).lower()
 
     deadline_patterns = [
@@ -135,7 +139,7 @@ def infer_prioridad(props: dict, today: date) -> tuple[str, str]:
         urgencia = "CRÍTICO"
         urgencia_reason = "deadline_jd" if deadline_near else f"source_type_{source_type}"
     else:
-        created_time = props.get("created_time")
+        created_time = item.get("created_time")
         if created_time:
             try:
                 created_date = date.fromisoformat(created_time.replace("Z", "+00:00").split("T")[0])

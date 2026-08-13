@@ -72,7 +72,7 @@ El sistema se organiza en capas con responsabilidades separadas:
 ### Gate Decisions
 Este es uno de los conceptos que más se usa a lo largo de todo el ciclo operativo, así que conviene fijarlo aquí, antes de encontrarlo en Lunes, Martes o Miércoles sin previo aviso.
 El sistema evalúa cada vacante nueva en tres pasos, siempre en este orden:
-1. Link check — si la URL de la vacante no carga (404, 403, dominio caído, redirección rota), la vacante se archiva automáticamente con Score 0 y Status “Archivar”. No se calcula nada más sobre ella: un link muerto no tiene fit que evaluar. Esto es lo que el sistema llama internamente el “URL_GATE” — el primer filtro que cualquier vacante debe pasar antes de que Python invierta cómputo en analizarla.
+1. Link check — si la URL de la vacante no carga (404, 403, dominio caído, redirección rota), la vacante se archiva automáticamente con Score 0 y Status “Archivar”. No se calcula nada más sobre ella: un link muerto no tiene fit que evaluar. Esto es lo que el sistema llama internamente el “URL_GATE” — el primer filtro que cualquier vacante debe pasar antes de que Python invierta cómputo en analizarla. Para vacantes en agregadores conocidos, este chequeo ya no es una excepción sin verificar — se ejecuta con un timeout corto para evitar cuelgues, pero registra honestamente si no pudo confirmarse.
 1. Score (0–100) — si la URL funciona, Python calcula un puntaje numérico según qué tan bien encaja el rol con el perfil objetivo (Keywords de Visual Merchandising, sSctor, Seniority, Geografía). Este cálculo es determinista: mismos datos de entrada, mismo Score de salida, siempre.
 Dónde aterriza, según el Score obtenido:
 | SCORE | NEXT ACTION |
@@ -554,7 +554,7 @@ vl1 backfill --dry-run
 ```
 Sin --dry-run, solicita confirmación explícita (s) antes de cualquier escritura.
 - 
-- vversions — alias corto de verify_versions.py, el motor de verificación y sincronización de versión de los 9 documentos fundacionales (KERNEL:VERSION-CHECK-TOOL). No es un comando del Tracker de vacantes como los vl1 * de arriba — es infraestructura documental, y su uso está integrado al Ciclo de Sesión completo en MANUAL:SESSION-CYCLE, no como comando suelto. 
+- vversions — acepta --bootstrap, --sync, --scripts, --skills, --length (Sanity check de integridad estructural: conteo de bloques de texto extraíble vs. baseline. Read-only. Exit code 1 si ATENCIÓN REQUERIDA), --update-baseline (Actualiza length_baseline.json. Requiere --length y confirmación explícita del operador cuando el veredicto no es PASS). — alias corto de verify_versions.py, el motor de verificación y sincronización de versión de los 9 documentos fundacionales (KERNEL:VERSION-CHECK-TOOL). No es un comando del Tracker de vacantes como los vl1 * de arriba — es infraestructura documental, y su uso está integrado al Ciclo de Sesión completo en MANUAL:SESSION-CYCLE, no como comando suelto. 
 Acepta cuatro flags: 
 --bootstrap (dump read-only de apertura)
 --sync (único modo de escritura y verificación real, relee cada documento post-escritura)
@@ -857,11 +857,12 @@ Class A — Human-Primary (operador/feed_processor escriben):
 Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash
 Class B — System-Primary (Python únicamente, ningún otro componente escribe):
 Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente
+Fetch refleja verificación técnica real, incluso en agregadores — un valor Accesible ya no puede escribirse sin al menos un intento de request.
 Next_Action: select (10 valores operativos). Ver KERNEL:SCHEMA-008.
 Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida (KERNEL:SCHEMA-003).
 Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
 ---
-### HC-03 Verificación de Longitud (--length / --update-baseline)
+###  Verificación de Longitud (--length / --update-baseline)
 Contexto:
 Procedimiento de sanity check para validar que ningún documento fundacional haya sufrido pérdida silenciosa de contenido tras operaciones de sincronización, edición masiva o fallo en scripts de inyección.
 Procedimiento:

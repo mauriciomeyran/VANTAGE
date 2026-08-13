@@ -1,6 +1,97 @@
 # V | CHANGELOG
 
 ---
+---
+Tipo: [FIX] [CODE]
+Alcance:
+- Código: Layer_1/scripts/priority_logic.py (infer_prioridad()), Layer_1/scripts/layer_1_run.py (caller Fase 3.6), Layer_1/scripts/backfill_class_a.py (txt())
+Contexto: Verificación post-v9.20.1 detectó que infer_prioridad() nunca calculaba Urgencia por antigüedad real: leía props.get("created_time"), pero ese campo vive en la raíz del objeto de página de Notion (item["created_time"]), no dentro de properties. Todas las vacantes caían en el fallback urgencia="MEDIO", razon="sin_fecha_creacion" sin importar su antigüedad real. Auditoría de verificación de ese fix reveló además una tercera copia independiente de txt() en backfill_class_a.py sin el fix de concatenación de rich_text aplicado en v9.20.1 (Bug Tracker 3bb938be-fc42-8186-a551-d19cc3691d86).
+Cambios:
+- priority_logic.py::infer_prioridad() — firma cambiada de (props, today) a (item, today); lee item.get("created_time") en vez de props.get("created_time").
+- layer_1_run.py y backfill_class_a.py — callers actualizados para pasar item completo.
+- backfill_class_a.py::txt() — concatena todos los chunks de rich_text/title, igual que las otras dos instancias.
+- test_gate_logic.py — 7 tests nuevos (TestPriorityLogicCreatedTime) + 5 tests nuevos (TestBackfillTxtConcatenation).
+Validación: Corrida real de vl1 post-fix — 9 cambios de Prioridad reflejando antigüedad real (antes: fallback fijo a MEDIO). Fix de backfill_class_a.py::txt() verificado línea por línea contra el archivo real, no solo por resumen del agente.
+IDs afectados: Ninguno (fix de código, sin alta/baja de ID canónico).
+Write-Back Verification: Bug Tracker 3bb938be-fc42-8186-a551-d19cc3691d86 — Resuelto, verificado.
+Pendiente (fuera de esta entrada):
+- Evaluar ticket de Task Tracker para consolidar txt() en módulo compartido (notion_helpers.py) — no viable en este ciclo por hack de imports en backfill_class_a.py (ver Bug Tracker para detalle).
+- vversions --sync para propagar v9.20.2 al resto de los fundacionales.
+---
+Tipo: [FIX] [CODE]
+Alcance:
+- Código: Layer_1/scripts/layer_1_run.py (txt(), FASE 2 URL Gate línea ~693)
+- Kernel (KERNEL:GATE-DECISION-010 §09.10 — referencia de protección de terminalidad)
+Contexto:
+Operador verificó manualmente 17 vacantes activas (JD completo, accesibles, reciben postulaciones) marcándolas Status=Target, Fetch=Accesible, Gate_Decision=CREATE. Re-ejecución de vl1 revirtió las 17 a Bloqueado/Expirada/Archivar. Causa raíz aislada con evidencia directa de la API (no CSV, no hipótesis): txt() leía únicamente rich_text[0]["plain_text"]; la API de Notion fragmenta contenido largo en múltiples chunks (confirmado: 21 chunks para un JD de ENCANTO MÉXICO, chunk[0] de 60 caracteres frente a ~1750+ reales). Esto rompía JD_ALREADY_EXISTS (len(jd_clean) > 100), forzando la rama de HEAD en vivo contra agregadores con anti-scraping activo (403 reproducido en Indeed/OCC/LVMH), sin protección de terminalidad para Status=Target.
+Cambios:
+- layer_1_run.py::txt() — concatena todos los chunks de rich_text y title en vez de leer solo [0].
+- layer_1_run.py línea ~693 — nueva protección: Status=Target con JD concatenado >100 chars se salta el URL Gate (defensa en profundidad, además del fix de raíz).
+- test_gate_logic.py — nueva clase TestRichTextConcatenation, 7 tests, 7/7 passed.
+Validación: DRY_RUN sobre las 17 filas afectadas — 0/17 rechazos (antes: 17/17 reversiones erróneas).
+IDs afectados: Ninguno (fix de código, sin alta/baja de ID canónico).
+Write-Back Verification: Bug Tracker (ticket 3bb938be-fc42-813d-a253-ca2097f33957) creado y verificado en esta sesión.
+Pendiente (fuera de esta entrada):
+- Corrección manual/batch de las 17 filas ya dañadas en Notion (operación de datos separada, requiere DRY RUN + APROBAR_WRITE aparte).
+- vversions --sync para propagar v9.20.1 al resto de los fundacionales.
+---
+Tipo: [FIX] [CODE] [DOC]
+Alcance:
+- Código: Layer_1/scripts/layer_1_run.py (validate_url_pre_ingestion)
+- Kernel (KERNEL:GATE-DECISION-002 §09.2, KERNEL:GATE-DECISION-011 §09.11)
+- Manual (MANUAL:HOW-IT-WORKS §02, MANUAL:SCHEMA-FIELD-REF §21)
+- Aliases (ALIASES:L1L2-DISCOVERY §03)
+Contexto:
+Auditoría del Tracker (CSV export, 42 filas) detectó 19 vacantes con JD vacío pese a Fetch=Accesible y Score determinístico. Causa raíz: validate_url_pre_ingestion() tenía un bypass ciego para dominios agregadores (Computrabajo, Indeed, LinkedIn) — retornaba True sin ejecutar ningún request HTTP (AGREGADOR_VALID), y el flujo de FASE 2 escribía Fetch: Accesible sin verificación real. 13 de las 19 filas resultaron URLs sintéticas no indexadas (patrón [rol]-[marca]-2024 en computrabajo.com), consistente con orígen de agente L2 sin verificar, coladas por el bypass.
+Cambios:
+- layer_1_run.py::validate_url_pre_ingestion() — bypass ciego reemplazado por HEAD con timeout de 6s: 200 → AGREGADOR_VERIFIED; status ≠ 200 → rechazo (AGREGADOR_STATUS_XXX); timeout/excepción → AGREGADOR_UNVERIFIED (no confirma ni descarta, ya no asume Accesible).
+- KERNEL:§09.2 — Paso 1 (URL_GATE) re-especificado: HEAD 6s obligatorio para agregadores en vez de excepción sin verificar.
+- KERNEL:§09.11 — fila nueva en la matriz: [ENTRY] Agregador con HEAD fallido/timeout → REVIEW_NEEDED (Fetch=No_Verificado, no Accesible).
+- MANUAL:§02 — aclaración en "Gate Decisions", paso 1: el chequeo en agregadores ya no omite verificación, registra honestamente si no pudo confirmarse.
+- MANUAL:§21 — nota en campo Fetch: refleja verificación técnica real, incluso en agregadores.
+- ALIASES:§03 (vl1) — nota sobre validación activa de URLs de agregadores en Fase 2 de layer_1_run.py.
+Validación PATCH-QUALITY-001: ✅ Invisibilidad estructural (inline, sin secciones nuevas) · ✅ Continuidad de voz · ✅ Diff mínimo · ✅ Coherencia transversal (sin contradicción con GATE-DECISION-010/011 existentes).
+IDs afectados: Ninguno (sin alta/baja de ID canónico — extensiones de nodos existentes).
+Write-Back Verification: KERNEL, MANUAL y ALIASES re-fetched post-escritura — 4/4 bloques confirmados en posición correcta, sin mismatch.
+Pendiente (fuera de esta entrada):
+- Alta del select-option No_Verificado en el campo Fetch del Tracker de vacantes (Notion, Class B — requiere decisión del operador antes de propagar el reason diferenciado a FASE 2 de escritura).
+- Ticket Bug Tracker asociado (creación pendiente de APROBAR_WRITE separado).
+- vversions --sync para propagar v9.20.0 al resto de los fundacionales.
+---
+Tipo: [DOC] [GOVERNANCE] [INFRA]Alcance:
+- Kernel (KERNEL:DOCUMENTATION-007)
+- Manual (MANUAL:RUNTIME-002)
+- System Prompt (SP:VERSION-CHECK-TOOL)
+Contexto:
+El contrato de Length Check (verificación de integridad estructural) estaba definido en un adendum externo (### 007.3) bajo KERNEL:DOCUMENTATION-007, lo que violaba la Matriz Tipográfica Congelada (KERNEL:DOCUMENTATION-001) al introducir un heading ### no autorizado (NN.N.N). Este batch relocaliza el contrato como contenido *inline* bajo el nodo existente ### 03.7, eliminando el adendum y evitando:
+- Creación de un nuevo ID canónico (exime de CENSUS-SYNC Regla 1).
+- Violación de la jerarquía de headings (NN.N válido).
+- Fragmentación de la documentación transversal.
+Cambios:
+- KERNEL:§03.7:
+- Lista de Modos extendida: añadidos -length (Sanity check read-only) y -update-baseline (write explícito).
+- Cuerpo del contrato inyectado inline (propósito, mecanismo, umbrales, archivos asociados, flags).
+- Adendum ### 007.3 eliminado (evita colisión de headings).
+- Alias actualizado: vversions — acepta --bootstrap, --sync, --scripts, --skills, --length o --update-baseline, sin modo default.
+- MANUAL:9.2:
+- Bullet de vversions expandido con descripción operativa de -length (exit code 1 si ATENCIÓN REQUERIDA) y -update-baseline (requiere confirmación explícita).
+- Sección flotante "HC-03" eliminada (consolidación de contenido).
+- SP:§11.3:
+- Verificado alineado: Directivas vigentes ya reflejan umbrales (≥5.0%, ≥10 líneas) y bloqueo de -update-baseline no verificado. Sin parche requerido.
+Validación PATCH-QUALITY-001:
+✅ Matriz Tipográfica (001): Respeta niveles autorizados (### NN.N).
+✅ Invisibilidad estructural: Contenido vivo dentro de ### 03.7 sin alterar árbol de navegación.
+✅ Continuidad de voz: Tono técnico consistente con el estándar del Kernel.
+✅ Diff mínimo: Relocalización limpia (inyección + depuración de adendum).
+IDs afectados: Ninguno (sin alta/remoción de IDs canónicos).
+Write-Back Verification:
+- KERNEL, MANUAL y SP re-fetched post-escritura: 3/3 nodos confirmados en posición correcta.
+- KERNEL:§03.7: Modos, cuerpo del contrato y alias verificados.
+- MANUAL:9.2: Bullet de vversions expandido y "HC-03" eliminado.
+- SP:§11.3: Directivas alineadas (sin cambios requeridos).
+Pendientes (fuera de esta entrada):
+- vversions --sync para propagar v9.19.6 al resto de los fundacionales.
+---
 Tipo: [DOC] [GOVERNANCE]Alcance:
 - Kernel (KERNEL:DOCUMENTATION-001 §03.1, KERNEL:DOCUMENTATION-007 §03.7, KERNEL:SCHEMA-008 §007.3)
 - Manual (MANUAL:SESSION-CYCLE §06, MANUAL:SETUP §11)

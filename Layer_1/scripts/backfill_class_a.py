@@ -67,11 +67,11 @@ def txt(prop: dict | None) -> str:
     if t == "url":
         return prop.get("url") or ""
     if t == "rich_text" and prop.get("rich_text"):
-        return prop["rich_text"][0]["plain_text"]
+        return "".join(chunk["plain_text"] for chunk in prop["rich_text"])
     if t == "select" and prop.get("select"):
         return prop["select"]["name"]
     if t == "title" and prop.get("title"):
-        return prop["title"][0]["plain_text"]
+        return "".join(chunk["plain_text"] for chunk in prop["title"])
     return ""
 
 
@@ -161,9 +161,7 @@ def collect_backfill_rows(items: list[dict], schema: NotionSchema) -> list[Backf
 
     for item in items:
         props = item["properties"]
-        # Agregar created_time al props para infer_prioridad
-        props["created_time"] = item.get("created_time")
-        
+
         current_layer = txt(props.get(layer_prop)) if layer_prop else ""
         current_hash = txt(props.get(hash_prop)) if hash_prop else ""
 
@@ -197,7 +195,7 @@ def collect_backfill_rows(items: list[dict], schema: NotionSchema) -> list[Backf
         urgencia = ""
         
         if needs_prioridad:
-            prioridad, prioridad_reason = infer_prioridad(props, today)
+            prioridad, prioridad_reason = infer_prioridad(item, today)
             # Extraer Score para mostrar en dry-run
             score_val = props.get("Score", 40)
             if isinstance(score_val, dict):

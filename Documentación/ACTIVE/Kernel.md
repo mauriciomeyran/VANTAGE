@@ -136,8 +136,26 @@ Modos
 - --bootstrap (dump read-only de apertura de sesión)
 - --scripts (gap report read-only: cruza scripts .py/.sh del árbol activo contra SCRIPT LIBRARY en Notion)
 - --skills (gap report read-only: cruza archivos .skill del árbol activo contra SKILL LIBRARY en Notion)
-Modo Check eliminado en v9.6.2 — la verificación real vive íntegramente en --sync.
-Alias: vversions — acepta --bootstrap, --sync, --scripts o --skills, sin modo default.
+- --length (Sanity check de integridad estructural, read-only, exit code 1 si ATENCIÓN REQUERIDA)
+- --update-baseline (Actualiza length_baseline.json, requiere --length + confirmación explícita del operador)
+---
+Verificación de Integridad Estructural (Length Check)
+Propósito: Detectar truncamiento silencioso en los documentos fundacionales mediante comparación del conteo de líneas de texto extraíble contra un baseline predefinido.
+Mecanismo:
+- Alcance: Aplica a los 10 documentos fundacionales (CHANGELOG, KERNEL, MANUAL, CANON, SP, ALIASES, CENSUS, BRIEF, VANTAGE y CHANGELOG_ARCHIVO).
+- Métrica: Conteo de bloques con texto extraíble no vacío (paragraph, headings, list_item, toggle, quote, callout, code, table_row), excluyendo bloques estructurales (divider, table_of_contents, column_list, column) y bloques vacíos.
+- Umbrales de alerta:
+- Porcentual: ≥5.0% de caída vs. baseline (LENGTH_TRUNCATION_THRESHOLD_PCT).
+- Absoluto: ≥10 líneas de caída vs. baseline (LENGTH_TRUNCATION_THRESHOLD_ABS).
+- Salida:
+- Veredicto por documento: PASS o ATENCIÓN REQUERIDA.
+- Veredicto final: PASS (todos en PASS) o ATENCIÓN REQUERIDA (al menos uno en alerta).
+- Exit code: 1 si ATENCIÓN REQUERIDA.
+Archivos asociados:
+- length_baseline.json: Almacena el conteo de líneas por documento y timestamp captured_at. Si no existe, la primera ejecución de --length lo genera automáticamente.
+Flags de ejecución (vversions):
+- --length: Modo read-only. Ejecuta la verificación de longitud y genera el reporte.
+- --update-baseline: Modo write explícito. Requiere invocarse junto a --length. Sobrescribe length_baseline.json con los conteos actuales únicamente si el veredicto final es PASS o el operador confirma explícitamente que las diferencias son intencionales.
 ---
 ### 03.8 KERNEL:DOCUMENTATION-008
 Sincronización Obligatoria del ID Census
@@ -410,7 +428,7 @@ Bypasses: URL_GATE + Score threshold + Visual Signal detection.
 ### 09.2 KERNEL:GATE-DECISION-002
 Lógica Estándar
 Orden:
-1. URL_GATE (link muerto → Score=0, Status=Expirada)
+1. URL_GATE (link muerto → Score=0, Status=Expirada). Para agregadores (Computrabajo, Indeed, LinkedIn), el chequeo se ejecuta como HEAD con timeout de 6s en vez de bloqueo de bot ciego — respuesta 200 confirma, timeout/error marca no-verificado sin asumir accesibilidad.
 1. Score (0–100)
 1. Gate_Decision (≥60 CREATE · 40–59 REVIEW_NEEDED · <40 BLOCKED/Archivar).
 ### 09.3 KERNEL:GATE-DECISION-003
@@ -501,6 +519,7 @@ Referencia canónica para scripts y auditorías — no reemplaza la descripción
 | [ENTRY] | feed_processor.py ingesta JSON | URL muerta OR Score < 40 | BLOCKED | Python | Gate_Decision=BLOCKED, Score=0 (si URL muerta) |
 | [ENTRY] | feed_processor.py ingesta JSON | URL viva + Score 40–59 + Status=Target | REVIEW_NEEDED | Python | Gate_Decision=REVIEW_NEEDED, Score, VM_Scope, Role_Class, Next_Action |
 | [ENTRY] | feed_processor.py ingesta JSON | URL viva + Score ≥ 60 + Status=Target | READY_TO_APPLY | Python | Gate_Decision=CREATE, Score, VM_Scope, Role_Class, Next_Action |
+| [ENTRY] | Agregador con HEAD fallido/timeout | AGREGADOR_UNVERIFIED | REVIEW_NEEDED | Python | Fetch=No_Verificado (no Accesible) |
 | [ENTRY] | feed_processor.py ingesta JSON | Dedup match (hash/URL/brand+title) contra VANTAGE TRACKER activo, ventana 30d | REVIEW_NEEDED | Python | Status=REVIEW_NEEDED en el registro entrante; Dedup_Flag='Posible duplicado' (select) en el registro existente coincidente |
 | BLOCKED | vd — Dashboard RT-1 edita Class A | Patch válido → run_pipeline.py --dry PASS | PATCHED | Humano + Python | Score, Gate_Decision recalculados |
 | PATCHED | Operador acepta patch en Dashboard | Aceptar → vantage_pipeline.sh | READY_TO_APPLY OR BLOCKED | Python | Gate_Decision re-evaluado; si falla → regresa BLOCKED |
@@ -772,10 +791,9 @@ Linaje Histórico — Preservado, No Operacional
 GPT Atlas, Grok discovery, SEARCH-EXEC/SEARCH-SIGNAL, fórmulas de scoring pre-v5.0 — contexto histórico, no código activo.
 ---
 ---
-### 007.3 Verificación de Integridad Estructural (Length Check)
 Propósito: Detectar truncamiento silencioso en los documentos fundacionales mediante comparación del conteo de líneas de texto extraíble contra un baseline predefinido.
 Mecanismo:
-- Alcance: Aplica a los 9 documentos fundacionales (CHANGELOG, KERNEL, MANUAL, CANON, SP, ALIASES, CENSUS, BRIEF, VANTAGE).
+- Alcance: Aplica a los 10 documentos fundacionales (CHANGELOG, KERNEL, MANUAL, CANON, SP, ALIASES, CENSUS, BRIEF, VANTAGEyCHANGELOG_ARCHIVO).
 - Métrica: Conteo de bloques con texto extraíble no vacío (paragraph, headings, list_item, toggle, quote, callout, code, table_row), excluyendo bloques estructurales (divider, table_of_contents, column_list, column) y bloques vacíos.
 - Umbrales de alerta:
 - Porcentual: ≥5.0% de caída vs. baseline (LENGTH_TRUNCATION_THRESHOLD_PCT).

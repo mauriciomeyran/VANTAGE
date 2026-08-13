@@ -69,11 +69,11 @@ def txt(prop):
     t = prop.get("type")
     if t == "url": return prop.get("url") or ""
     if t == "rich_text" and prop.get("rich_text"):
-        return prop["rich_text"][0]["plain_text"]
+        return "".join(chunk["plain_text"] for chunk in prop["rich_text"])
     if t == "select" and prop.get("select"):
         return prop["select"]["name"]
     if t == "title" and prop.get("title"):
-        return prop["title"][0]["plain_text"]
+        return "".join(chunk["plain_text"] for chunk in prop["title"])
     if t == "number": return prop.get("number")
     if t == "date" and prop.get("date"):
         return prop["date"]["start"]
@@ -693,6 +693,11 @@ def main():
         if status in ["Expirada", "Rechazado", "Archivar", "Contratado"]:
             continue
 
+        # KERNEL:GATE-DECISION-010: Proteger Status=Target con JD ya presente
+        # Evita que fallos de red/parseo sobrescriban vacantes ya verificadas manualmente
+        if status == "Target" and jd_text and len(jd_text.strip()) > 100:
+            continue
+
         # JD tiene prioridad absoluta
         is_valid, reason = validate_url_pre_ingestion(url, jd_text)
 
@@ -947,7 +952,7 @@ def main():
         if protected is not None:
             continue  # Skip terminal/protected records
 
-        nuevo_prioridad, razon = infer_prioridad(props, today)
+        nuevo_prioridad, razon = infer_prioridad(item, today)
 
         if current_prioridad != nuevo_prioridad:
             if not DRY_RUN:
