@@ -3,7 +3,7 @@ name: vantage-sync-script-library
 description: Sincroniza la base SCRIPT LIBRARY de Notion contra el árbol de disco activo (Layer_1, Layer_3, Layer_4, Dashboard, Raycast) usando el gap report de verify_versions.py --scripts. Usar cuando el operador pida "sincronizar Script Library", "registrar scripts nuevos" o similar, o cuando un gap report reciente muestre entradas "SIN REGISTRAR EN NOTION" o huérfanos que requieran resolución. No aplica al Bug/Task Tracker (ver vantage-create-bug-task) ni al VANTAGE Tracker de vacantes — es exclusivo del inventario de scripts del propio sistema.
 ---
 
-## Convención de anuncio (KERNEL:SKILL-ANNOUNCE-CONVENTION)
+## Convención de anuncio (KERNEL:DOCUMENTATION-005)
 
 - Apertura: `SYNCING SCRIPT LIBRARY...`
 - Cierre: `SCRIPT LIBRARY SYNCED`

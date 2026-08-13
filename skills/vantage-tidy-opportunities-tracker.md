@@ -3,7 +3,7 @@ name: vantage-tidy-opportunities-tracker
 description: Identifica duplicados y vacantes expiradas en el VANTAGE Tracker (Opportunities DB) y marca Archivar = True en el registro original — sin crear copias ni tocar el Archivo Tracker. Usa los mecanismos de fingerprint y protección de estado terminal ya implementados en el pipeline Python y documentados en el Kernel. Requiere Dry Run y APROBAR_WRITE antes de cualquier escritura.
 ---
 
-## Convención de anuncio (KERNEL:SKILL-ANNOUNCE-CONVENTION)
+## Convención de anuncio (KERNEL:DOCUMENTATION-005)
 
 - Apertura: `TIDYING OPPORTUNITIES...`
 - Cierre: `OPPORTUNITIES TIDIED`
