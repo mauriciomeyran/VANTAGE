@@ -1,6 +1,18 @@
 # V | CHANGELOG
 
----
+Tipo: [DOC]
+Alcance:
+- Kernel (KERNEL:TRIGGER-002, 11.2)
+- Manual (MANUAL:SCRIPT-GLOSSARY-L1-MODULES — priority_logic.py; MANUAL:SCRIPT-GLOSSARY-L1 — backfill_class_a.py)
+Contexto: Cierre documental del fix de código v9.20.2 (created_time leído desde raíz del objeto Notion, no desde properties; duplicación de txt() sin fix de rich_text en backfill_class_a.py). Este batch deja precedente narrativo en Kernel/Manual para que la próxima función que asuma la forma del objeto Notion sin verificar schema tenga ancla de referencia.
+Cambios:
+- KERNEL:TRIGGER-002 (11.2) — nota de precedente: created_time vive en raíz del objeto página, no en properties; mismo patrón de riesgo que motivó el fix de txt()/rich_text (v9.20.1).
+- MANUAL:SCRIPT-GLOSSARY-L1-MODULES (priority_logic.py) — aclaración: txt() existe duplicada en 3 archivos (layer_1_run.py, priority_logic.py, backfill_class_a.py); consolidación evaluada y descartada por riesgo de import circular.
+- MANUAL:SCRIPT-GLOSSARY-L1 (backfill_class_a.py) — nota sobre hack de parsing local para propiedades top-level, con referencia cruzada a KERNEL:TRIGGER-002 (nodo aportado por Gemini, validado).
+IDs afectados: Ninguno (extensión de nodos existentes).
+Write-Back Verification: 3 parches inyectados y confirmados en sesión previa (KERNEL + MANUAL re-fetched byte-exactos contra v9.20.1 vivo).
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.20.3 al resto de los fundacionales.
 ---
 Tipo: [FIX] [CODE]
 Alcance:

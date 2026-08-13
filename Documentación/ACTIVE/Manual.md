@@ -954,7 +954,7 @@ Uso:
 | --- | --- |
 | Sin argumentos | Auditoría general — lo que corre dedup_audit.sh/Raycast. |
 | --clear <page_id> | Un registro quedó marcado erróneamente como "Posible duplicado" y quieres limpiar solo ese flag sin re-correr toda la auditoría. ⚠️ Solo accesible desde Terminal directo — el wrapper de Raycast (dedup_audit.sh) no lo expone. |
-backfill_class_a.pyQué hace: Backfill de campos Class A (layer, hash, Prioridad) en registros existentes del Tracker.
+backfill_class_a.pyQué hace: Backfill de campos Class A (layer, hash, Prioridad) en registros existentes del Tracker. Contiene su propio hack de parsing local para leer propiedades top-level del objeto Notion (mismo patrón de riesgo que created_time en priority_logic.py, ver KERNEL:TRIGGER-002) — depende de la estructura de chunks del objeto recibido, no de un parser compartido.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
@@ -1071,7 +1071,7 @@ Por qué existe: feed_processor.py ya filtra Class B por construcción, pero el 
 Por qué te sirve saberlo: si alguna vez ves un campo Class B escrito por mí (Claude) que no debería, este es el módulo que falló o que faltó invocar.
 priority_logic.pyQué hace: Lógica de Prioridad (Class A) compartida — extraída de backfill_class_a.py para romper un import circular con layer_1_run.py.
 Quién lo consume: layer_1_run.py (Fase 3.6, escritura primaria semanal) y backfill_class_a.py (catch-up de registros legacy).
-Por qué te sirve saberlo: si cambias la matriz de urgencia/importancia que define Prioridad, este es el único archivo que debes tocar — no hay lógica duplicada en otro lado.
+Por qué te sirve saberlo: si cambias la matriz de urgencia/importancia que define Prioridad, este es el único archivo que debes tocar. Nota: esto aplica solo a la matriz de Prioridad — la función auxiliar txt() (lectura de propiedades) sí existe duplicada en tres archivos (layer_1_run.py, priority_logic.py, backfill_class_a.py); consolidación evaluada y descartada por riesgo de import circular (mismo motivo por el que existe este módulo compartido).
 profile_fit.pyQué hace: Reglas de fit de perfil VM y exclusiones compartidas — detecta títulos de rol excluidos (vendedor, sales, planner sin "visual", store manager, etc.) vía regex.
 Quién lo consume: pipeline principal y scripts de cleanup.
 Por qué te sirve saberlo: si una vacante que debería excluirse se está colando (o viceversa, una válida se excluye), este archivo tiene el patrón regex responsable — no busques la lógica en otro lado.
