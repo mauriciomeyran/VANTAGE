@@ -9,7 +9,7 @@ description: **Marca** tickets del Bug Tracker o Task Tracker para archivado man
 
 ---
 
-## Convención de anuncio (KERNEL:SKILL-ANNOUNCE-CONVENTION)
+## Convención de anuncio (KERNEL:DOCUMENTATION-005)
 - Apertura: `TIDYING TRACKER...`
 - Cierre: `TRACKER TIDIED`
 

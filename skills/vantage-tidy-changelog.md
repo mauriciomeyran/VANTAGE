@@ -3,7 +3,7 @@ name: vantage-tidy-changelog
 description: Mantiene el Change Log de VANTAGE con las últimas 10 entradas visibles, moviendo el exceso al Archivo Changelog histórico. Usar cuando el Change Log activo supera 10 entradas o cuando se solicita housekeeping documental.
 ---
 
-## Convención de anuncio (KERNEL:SKILL-ANNOUNCE-CONVENTION)
+## Convención de anuncio (KERNEL:DOCUMENTATION-005)
 
 - Apertura: `TIDYING CHANGELOG...`
 - Cierre: `CHANGELOG TIDIED`

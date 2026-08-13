@@ -3,7 +3,7 @@ name: vantage-create-bug-task
 description: Crea un nuevo ticket en el Bug Tracker o Task Tracker de VANTAGE. Usar cuando el operador reporta un defecto de sistema (Bug Tracker) o una tarea pendiente/mejora (Task Tracker) durante cualquier sesión. Ambos trackers son DBs de Notion distintas — no se deben confundir sus IDs.
 ---
 
-## Convención de anuncio (KERNEL:SKILL-ANNOUNCE-CONVENTION)
+## Convención de anuncio (KERNEL:DOCUMENTATION-005)
 
 Esta skill declara su propio verbo en gerundio/participio al abrir y cerrar su protocolo — nunca un mensaje genérico compartido ni el lenguaje de cierre del Bootstrap (`BOOTLOADED`):
 - Apertura: `LOGGING TICKET...`
