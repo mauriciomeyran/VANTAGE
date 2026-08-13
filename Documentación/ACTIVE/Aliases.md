@@ -34,7 +34,7 @@ L1/L2 · Discovery (Lunes)
 L3 · Passive Intake
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
-| vl3 | Procesa manualmente el backlog de Gmail (.Jobs) si el ciclo automático no corrió. | Invoca layer_3_mail.sh — lee vía IMAP, extrae vacantes con Groq (máx. 5 correos/run), escribe Class A en el Tracker. |
+| vl3 | Procesa manualmente el backlog de Gmail (.Jobs) si el ciclo automático no corrió. | Invoca layer_3_mail.sh — lee vía IMAP, extrae vacantes con Groq (máx. 10 correos/run), escribe Class A en el Tracker. |
 | vl3app | Abre la app empaquetada de Layer 3. | open /Applications/Layer 2 (nombre de carpeta heredado, corresponde a L3). |
 ## 05 ALIASES:L4-VERSION-CONTROL
 L4 · Version Control & Documentación

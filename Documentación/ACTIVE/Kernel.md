@@ -790,22 +790,3 @@ Estabilidad de Arquitectura Central
 Linaje Histórico — Preservado, No Operacional
 GPT Atlas, Grok discovery, SEARCH-EXEC/SEARCH-SIGNAL, fórmulas de scoring pre-v5.0 — contexto histórico, no código activo.
 ---
----
-Propósito: Detectar truncamiento silencioso en los documentos fundacionales mediante comparación del conteo de líneas de texto extraíble contra un baseline predefinido.
-Mecanismo:
-- Alcance: Aplica a los 10 documentos fundacionales (CHANGELOG, KERNEL, MANUAL, CANON, SP, ALIASES, CENSUS, BRIEF, VANTAGEyCHANGELOG_ARCHIVO).
-- Métrica: Conteo de bloques con texto extraíble no vacío (paragraph, headings, list_item, toggle, quote, callout, code, table_row), excluyendo bloques estructurales (divider, table_of_contents, column_list, column) y bloques vacíos.
-- Umbrales de alerta:
-- Porcentual: ≥5.0% de caída vs. baseline (LENGTH_TRUNCATION_THRESHOLD_PCT).
-- Absoluto: ≥10 líneas de caída vs. baseline (LENGTH_TRUNCATION_THRESHOLD_ABS).
-- Salida:
-- Veredicto por documento: PASS o ATENCIÓN REQUERIDA.
-- Veredicto final: PASS (todos en PASS) o ATENCIÓN REQUERIDA (al menos uno en alerta).
-- Exit code: 1 si ATENCIÓN REQUERIDA.
-Archivos asociados:
-- length_baseline.json: Almacena el conteo de líneas por documento y timestamp captured_at. Si no existe, la primera ejecución de --length lo genera automáticamente.
-Flags de ejecución (vversions):
-- --length: Modo read-only. Ejecuta la verificación de longitud y genera el reporte.
-- --update-baseline: Modo write explícito. Requiere invocarse junto a --length. Sobrescribe length_baseline.json con los conteos actuales únicamente si:
-- El veredicto final es PASS, o
-- El operador confirma explícitamente que las diferencias son intencionales.
