@@ -452,6 +452,7 @@ El operador nunca escribe Gate_Decision directamente.
 Marcado Manual de Archivado
 Next_Action='Archivar' Y/O Dedup_Flag='Posible duplicado' (ambos Class B) son señales de candidatos a archivar — no disparan archivado automático. Decisión del operador (2026-08-01): se abandonó el enfoque de mover/copiar automáticamente vía auto_archive.py (deprecado, ver Archive/Legacy_Scripts/) por menor fricción, menor costo de tokens, y por desalineación de esquema con el Archivo Tracker (ver skill vantage-tidy-opportunities-tracker).
 El mecanismo vigente es la skill vantage-tidy-opportunities-tracker: identifica candidatos vía Dedup_Flag/Next_Action, marca Archivar = True en el registro original tras DRY RUN + APROBAR_WRITE — no crea copias ni toca el Archivo Tracker ni mueve páginas físicamente. El operador localiza visualmente los registros marcados y decide cuándo archivarlos manualmente.
+Consolidación prevista: la skill vantage-housekeeping-archive (propuesta, auditoría 2026-08-13) absorberá este ciclo de detección→marcado→verificación en un solo procedimiento; el reporte read-only status_report.py --archive-queue (aún no implementado) sustituirá el escaneo visual del Tracker sin añadir ninguna vía de escritura nueva.
 ### 09.8 KERNEL:GATE-DECISION-008
 Capas de Evaluación de Gate: Técnica vs. Negocio
 gate() (capa técnica, CREATE/BLOCKED puro) vs. gate_logic() (capa de negocio/workflow, protege estados terminales).
