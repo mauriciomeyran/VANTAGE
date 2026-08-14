@@ -11,10 +11,33 @@
 
 | # | Punto | Estado anterior | Estado real confirmado | Acción en este handoff |
 | --- | --- | --- | --- | --- |
-| V1 | `vantage-housekeeping-archive` | Propuesta de auditoría | 🔴 PENDING — no existía en disco ni Notion | **✅ Creada en disco** por el sandbox (`skills/vantage-housekeeping-archive.md` + `.skill` + `index.json` actualizado a 26). Falta solo el **alta en SKILL LIBRARY (Notion)** → tarea C2 |
+| V1 | `vantage-housekeeping-archive` | Propuesta de auditoría | 🔴 PENDING — no existía en disco ni Notion | **✅ Creada en disco** por el sandbox (`skills/vantage-housekeeping-archive.md` + `.skill` + `index.json` en sync). Falta solo el **alta en SKILL LIBRARY (Notion)** → tarea C2 |
 | V2 | Duplicados v9.14.2 en Archivo Changelog | Pendiente señalado por v9.14.5 | 🔴 ACTIVO — **3 bloques** distintos presentes en vivo | Dedupe vía `vantage-tidy-changelog` → tarea C5 |
 | V3 | Patch Kernel "máx. 5 correos" → 10 | Ancla sin localizar | ✅ Ancla localizada: §04.3 `KERNEL:ARCHITECTURE-L3`, párrafo "Campos inmutables". **Ancla #2 adicional en Manual** (ver tabla de PATCHs) | Incluido en batch de PATCHs → tarea C4 |
 | V4 | ID del Archivo Changelog | Único en docs | 🔴 **Drift nuevo detectado por este handoff**: `resolver_registry_v2.json` tiene DOS entradas — `CHANGELOG_ARCHIVE=39d938be-fc42-801c-94f6-f11bfe803633` y `CHANGELOG_ARCHIVO=3ba938be-fc42-8011-8947-fb4fa5d1f63f`. Claude fetché en vivo el segundo y ahí vio los 3 bloques | Usar el **ID vivo verificado** (3ba938be…) en C5; reportar el drift en el cierre (no corregir silenciosamente) |
+
+---
+
+## ✅ ESTADO POST-EJECUCIÓN F1 (verificado contra `origin/main`, 2026-08-14)
+
+Las tareas **1–9 (F0/F1, disco) están EJECUTADAS y verificadas** desde el sandbox contra el remoto. Evidencia: commit merge `3eeb3b8` en `main` (parents `ababcde` + `257fae5`), que integra el trabajo de arena + los movimientos del operador:
+
+| Verificación | Resultado |
+| --- | --- |
+| Merge arena → main | ✅ Integrado (`3eeb3b8 "housekeeping: sync arena + Tier A/B2/C"`) |
+| Tier A (6 movimientos) | ✅ 6/6 en `Archive/Legacy_Scripts/` |
+| Tier B2 (renombrado) | ✅ `DEPRECATED_apply_hyperlinks.py` + `DEPRECATED_vsync_doc_fast.py` (prefijo estándar verificado en disco) |
+| Tier C C1–C3, C6, B5 | ✅ Retirados (`.bak*`, patches, dumps, manifest backup, `.save`) — ~10,000 líneas fuera del árbol |
+| **Conteo de assets activos** | ✅ **80** (simulación fiel de `scan_committed_assets` sobre `origin/main`: L1 46 · L3 2 · L4 5 · Dashboard 9 · Raycast 18). El "79" reportado no corresponde al estado final verificado — re-correr `vversions --scripts` para confirmar en vivo |
+| `git_sync.py` | ✅ **INTACTO** en `Layer_4/scripts/` |
+| Skills | ✅ 28 `.skill` en disco, `index.json` en sync 28/28 |
+| C4 (stubs graph/backlinks) | ⏳ Pendiente por diseño — gateado tras fix Devin D1 |
+| C5 (docs duplicadas en `scripts/`) | ⏳ Pendiente — decisión de solapamiento con §22 |
+| Tier D (fuera de pipeline) | ⏳ Pendiente — decisiones del operador |
+
+**⚠️ Corrección crítica al reporte de cierre (00:27–00:29 CST):** el huérfano de Notion `git_sync.py` **NO es un script retirado** — nunca estuvo en Tier A/B2 y sigue activo en `Layer_4/scripts/` (es el motor de `vgit`/`vdoc`). Su aparición en "EN NOTION COMO 'Activo' PERO NO EN DISCO" es un **mismatch de título o fila corrupta (auto-link `http://`)** en Script Library. **Prohibido marcarlo `Deprecado`** — la tarea 10 debe investigar esa fila. Los otros dos huérfanos (`extract_score_distribution.py`, `patch_vsync_doc.py`) sí son los esperados post-movimiento → remediar a `Deprecado`/`Archivar`.
+
+**Consecuencia:** el "100% concluido" aplica solo a la **mitad disco (F0/F1)**. Toda la **mitad Notion (F2, tareas 10–15 y 21–23)** y la **mitad código (F3, Devin 16–20)** siguen pendientes. La tabla de abajo se recorre desde la tarea 10.
 
 ---
 
@@ -22,15 +45,15 @@
 
 | # | Fase | Tarea | Responsable | Script / Skill / Atajo | Salida esperada | Gate | Depende de |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | F0 | Sincronizar repo: traer artefactos del sandbox (skill + handoffs) | Operador | Terminal: `git fetch origin && git merge origin/arena/019ffb49-vantage` | Merge limpio | — | — |
-| 2 | F0 | Preflight: env + venv + token presente | Operador | Terminal (`test -f`, `grep -c`) | "ENV OK · VENV OK" | — | 1 |
-| 3 | F0 | Baseline gap report Scripts | Operador | `vversions --scripts` · Raycast: **VANTAGE Scripts Gap Report** | `vantage_scripts_gap_YYYYMMDD.txt` | — | 2 |
-| 4 | F0 | Baseline gap report Skills | Operador | `vversions --skills` (no hay atajo Raycast; Terminal) | `vantage_skills_gap_YYYYMMDD.txt` | — | 2 |
-| 5 | F1 | Tier A: mover 6 zombies a `Archive/Legacy_Scripts/` (`git mv`) | Operador | Terminal (bloque de comandos §C1) | `git status` con 6 renames | APROBAR_WRITE (confirmación) | 3 |
-| 6 | F1 | Tier B2: renombrar `DEPRECADO *` → `DEPRECATED_*` (2 archivos) | Operador | Terminal (§C1) | 2 renames | APROBAR_WRITE | 5 |
-| 7 | F1 | Tier C: retirar artefactos de proceso (C1–C3, C6, B5) | Operador | Terminal: `git rm` (§C2) | Archivos fuera del árbol | APROBAR_WRITE | 5 |
-| 8 | F1 | Verificación post-movimiento | Operador | `vversions --scripts` (espera **80**) + `vversions --new-scripts` (espera **0 gaps**) | 2 reportes | — | 5 |
-| 9 | F1 | Commit + push local | Operador | `vgit` (o git add/commit/push) | Push OK; `index.json` regenerado por git_sync si hay .skill nuevos | — | 8 |
+| 1 | F0 | ✅ Sincronizar repo (EJECUTADO — merge 3eeb3b8 en main) | Operador | Terminal: `git fetch origin && git merge origin/arena/019ffb49-vantage` | Merge limpio | — | — |
+| 2 | F0 | ✅ Preflight (EJECUTADO) | Operador | Terminal (`test -f`, `grep -c`) | "ENV OK · VENV OK" | — | 1 |
+| 3 | F0 | ✅ Baseline Scripts (EJECUTADO — guardar .txt como input de tarea 10) | Operador | `vversions --scripts` · Raycast: **VANTAGE Scripts Gap Report** | `vantage_scripts_gap_YYYYMMDD.txt` | — | 2 |
+| 4 | F0 | ✅ Baseline Skills (EJECUTADO) | Operador | `vversions --skills` (no hay atajo Raycast; Terminal) | `vantage_skills_gap_YYYYMMDD.txt` | — | 2 |
+| 5 | F1 | ✅ Tier A 6/6 (EJECUTADO — verificado en origin/main) | Operador | Terminal (bloque de comandos §C1) | `git status` con 6 renames | APROBAR_WRITE (confirmación) | 3 |
+| 6 | F1 | ✅ Tier B2 2/2 (EJECUTADO — prefijo verificado en disco) | Operador | Terminal (§C1) | 2 renames | APROBAR_WRITE | 5 |
+| 7 | F1 | ✅ Tier C C1–C3/C6/B5 (EJECUTADO — ~10,000 líneas retiradas) | Operador | Terminal: `git rm` (§C2) | Archivos fuera del árbol | APROBAR_WRITE | 5 |
+| 8 | F1 | ✅ Verificación post-movimiento (EJECUTADA — 80 assets, verificado por simulación en sandbox) | Operador | `vversions --scripts` (espera **80**) + `vversions --new-scripts` (espera **0 gaps**) | 2 reportes | — | 5 |
+| 9 | F1 | ✅ Commit + push (EJECUTADO — 3eeb3b8 en main) | Operador | `vgit` (o git add/commit/push) | Push OK; `index.json` regenerado por git_sync si hay .skill nuevos | — | 8 |
 | 10 | F2 | Consumir gap reports → remediación SCRIPT LIBRARY | Claude (MCP) | Skill `vantage-sync-script-library` | DRY RUN: tabla de filas a actualizar | APROBAR_WRITE | 3, 4, 8 |
 | 11 | F2 | Alta de `vantage-housekeeping-archive` en SKILL LIBRARY + sync | Claude (MCP) | Skill `vantage-sync-skill-library` + gap de `--skills` | DRY RUN: fila nueva (Skill/Capa/Estado) | APROBAR_WRITE | 4, 9 |
 | 12 | F2 | Batch limpieza auto-link `http://` (~70 filas) | Claude (MCP) | Operación aparte (fuera de alcance de la skill — DRY RUN propio) | DRY RUN: tabla fila→valor limpio | APROBAR_WRITE | 10 |
@@ -115,7 +138,7 @@ vgit    # o: git add -A && git commit -m "housekeeping: Tier A/B2/C (auditoría 
 - Huérfanos esperados `auto_archive.py`, `vsync_doc_fast.py`, `vantage-assign.sh`, `apply_hyperlinks.py` → deprecar o **update de título** (`apply_hyperlinks.py` → `apply_hyperlinks_notion.py`, mismo script renombrado — preguntar al operador primero).
 - Clasificar todo lo nuevo según la tabla de la skill. DRY RUN → APROBAR_WRITE → Write-Back Verification con fetch real.
 
-**C2 (tarea 11) — Skill Library.** Input: gap de `--skills` (26 `.skill` en disco). Alta de `vantage-housekeeping-archive` (Ruta `skills/vantage-housekeeping-archive.skill`, Estado `Activo`) + cualquier otro gap. DRY RUN + APROBAR_WRITE.
+**C2 (tarea 11) — Skill Library.** Input: gap de `--skills` (28 `.skill` en disco al momento del cierre F1 — verificar conteo vivo con `ls skills/*.skill | wc -l`). Alta de `vantage-housekeeping-archive` (Ruta `skills/vantage-housekeeping-archive.skill`, Estado `Activo`) + cualquier otro gap. DRY RUN + APROBAR_WRITE.
 
 **C3 (tarea 12) — Batch `http://`.** ~70 filas con `Script`/`Ruta` corrompidos. DRY RUN propio: tabla `Fila | valor corrupto | valor limpio`. Escribir como texto plano. ~70 updates — ofrecer lotes.
 
@@ -126,7 +149,7 @@ vgit    # o: git add -A && git commit -m "housekeeping: Tier A/B2/C (auditoría 
 | P1 | Kernel §04.3 `KERNEL:ARCHITECTURE-L3` | `máx. 5 correos por corrida` → `máx. 10 correos por corrida` (párrafo "Campos inmutables"; código real: `GROQ_MAX_EMAILS_PER_RUN=10`, `layer_3_mail.py` L40) | Inline, sin ID nuevo |
 | P2 | Manual (sección vl3) | `debe procesar hasta 5 correos` → `debe procesar hasta 10 correos` + marcar la nota de discrepancia del env-vars table y el hallazgo #7 de XREF como RESUELTO (batch saneamiento 2026-08-13) | Inline |
 | P3 | Kernel §09.7 `KERNEL:GATE-DECISION-007` | Añadir al párrafo del mecanismo vigente: referencia a `vantage-housekeeping-archive` (consolidación del ciclo) y a `status_report.py --archive-queue` (reporte, PENDIENTE de código) | Inline dentro del bloque existente, sin retitular |
-| P4 | Kernel §04.4 `KERNEL:ARCHITECTURE-L4` | (a) "riesgo conocido": quitar referencia colgante a `vsync_doc_fast.py` (deprecado) — citar solo `vsync_doc.py`; (b) skills "(actualmente 12)" → "(actualmente 26)" (verificar con `ls skills/*.skill | wc -l`) | Inline |
+| P4 | Kernel §04.4 `KERNEL:ARCHITECTURE-L4` | (a) "riesgo conocido": quitar referencia colgante a `vsync_doc_fast.py` (deprecado) — citar solo `vsync_doc.py`; (b) skills "(actualmente 12)" → "(actualmente N)" con N = `ls skills/*.skill | wc -l` en vivo (28 al cierre F1) | Inline |
 
 Validar contra PATCH-QUALITY-001 (invisibilidad estructural, continuidad de voz, diff mínimo, sin IDs nuevos). Decisión pendiente de operador: **`KERNEL:SKILL-ANNOUNCE-CONVENTION`** → Opción A (reanclar referencias al nodo del Manual que ya describe la convención; sin alta de ID, sin Census) recomendada; Opción B (alta formal) solo si el operador la elige — dispara CENSUS-SYNC R1.
 
@@ -187,14 +210,14 @@ Validar contra PATCH-QUALITY-001 (invisibilidad estructural, continuidad de voz,
 | ARCHIVO TRACKER (no tocar) | `674696fd-94b6-464a-ac1f-64b0cc917e15` |
 | Change Log / Archivo Changelog | `390938be-fc42-80e7-b429-d7d730339353` / **vivo: `3ba938be-fc42-8011-8947-fb4fa5d1f63f`** (drift V4 a reportar) |
 | Kernel / Manual / Aliases (páginas) | `377938be-fc42-805e-a408-c9ae518d4fe7` / `372938be-fc42-8050-9a67-e40857d7806e` / `37c938be-fc42-80d4-b9ae-f5969830331b` |
-| Artefactos del sandbox | rama `arena/019ffb49-vantage`: `skills/vantage-housekeeping-archive.md` + `.skill`, `skills/index.json` (26), `handoffs/HANDOFF_MAESTRO_SANEAMIENTO.md` |
+| Artefactos del sandbox | rama `arena/019ffb49-vantage`: `skills/vantage-housekeeping-archive.md` + `.skill`, `skills/index.json` (28, en sync), `handoffs/HANDOFF_MAESTRO_SANEAMIENTO.md` |
 
 ## Check de cierre global (cuando todo esté en verde)
 
 - [ ] `vversions --scripts` → 80 assets, 0 huérfanos críticos sin remediar
-- [ ] `vversions --skills` → 26 registradas, housekeeping-archive `Activo` en Notion
+- [ ] `vversions --skills` → 28 registradas, housekeeping-archive `Activo` en Notion
 - [ ] `vversions --new-scripts` → 0 gaps · `vversions --sync` → `[VEREDICTO FINAL] PASS`
 - [ ] Archivo Changelog: 1 solo bloque v9.14.2 consolidado (verificar fetch en vivo)
-- [ ] Kernel §04.3 dice 10 correos; §04.4 dice 26 skills y sin referencia a vsync_doc_fast
+- [ ] Kernel §04.3 dice 10 correos; §04.4 dice 28 skills y sin referencia a vsync_doc_fast
 - [ ] Change Log: entrada `[AUDIT]` cerrando v9.17.1 · Ledger `CLOSED` · git limpio y pusheado
 - [ ] `AUDIT_SANEAMIENTO_ESTRUCTURAL.md` actualizado con el estado final (opcional: nota de cierre)
