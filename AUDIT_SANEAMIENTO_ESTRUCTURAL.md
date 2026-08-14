@@ -39,11 +39,10 @@ Este sandbox no dispone de `NOTION_TOKEN` ni acceso a la API de Notion. Por tant
 
 **Resolución del límite (añadido 2026-08-13, misma sesión):**
 
-1. **Mitad local — CERRADA EN VIVO desde el sandbox.** `verify_versions.py --new-scripts` se ejecutó con env placeholder local (archivo gitignored, sin token real, sin llamadas de red): **86/86 assets documentados en el Glosario §22, 0 gaps**. Verificación análoga skills: **25/25 `.skill` en sync con `index.json`**. El Glosario local ya no es un límite.
-2. **Mitad Notion — handoffs operativos entregados en `handoffs/`:**
-   - `HANDOFF_TERMINAL_GAP_REPORT.md` — comandos exactos para el operador en la Mac: baseline `--scripts`/`--skills`, movimientos Tier A/B2 (`git mv`), retiro Tier C gateado, verificación post-movimiento (80 assets) y commit.
-   - `HANDOFF_CLAUDE_NOTION_SIDE.md` — misión S1–S5 para Claude Desktop con Notion MCP: remediación Script/Skill Library (DRY RUN + APROBAR_WRITE), batch de las ~70 filas con corrupción `http://`, PATCHs inline KERNEL:GATE-DECISION-007 y KERNEL:ARCHITECTURE-L4, resolución del ID colgante KERNEL:SKILL-ANNOUNCE-CONVENTION, y cierre documental con gate `vversions --sync` PASS.
-3. **Lo que no se hizo (y no debe hacerse):** el `NOTION_TOKEN` nunca se pidió ni se expuso en chat — el camino handoff cubre el 100% del cierre sin exponer el secreto.
+1. **Mitad local — CERRADA EN VIVO desde el sandbox.** `verify_versions.py --new-scripts` se ejecutó con env placeholder local (archivo gitignored, sin token real, sin llamadas de red): **86/86 assets documentados en el Glosario §22, 0 gaps**. Verificación análoga skills: **25/25 `.skill` en sync con `index.json`** al momento de la auditoría (posteriormente +1: `vantage-housekeeping-archive` creada en disco — ver Entregable 1).
+2. **Mitad Notion — handoff único consolidado entregado en `handoffs/HANDOFF_MAESTRO_SANEAMIENTO.md`** (reemplaza a los dos handoffs anteriores, eliminados por solicitud del operador): tabla maestra secuencial de 23 tareas con responsable/script/atajo/gate/dependencia, contratos de sesión por agente (Operador, Claude, Devin, Grok, Mistral), IDs y anclas exactas.
+3. **Estado de verdad actualizado (verificación de Claude en vivo, misma fecha):** `vantage-housekeeping-archive` estaba PENDING (no existía en disco ni Notion) — **creada en disco en este batch** (`skills/` + `index.json` 26), alta en SKILL LIBRARY pendiente de APROBAR_WRITE; duplicados v9.14.2 en Archivo Changelog **ACTIVOS (3 bloques)** — dedupe asignado a `vantage-tidy-changelog`; patch "máx. 5→10 correos" con ancla localizada en KERNEL:ARCHITECTURE-L3 §04.3 + segunda ancla en Manual; drift nuevo detectado: `resolver_registry_v2.json` tiene dos entradas para el Archivo Changelog (`CHANGELOG_ARCHIVE` vs `CHANGELOG_ARCHIVO`) — reportar, no corregir silenciosamente.
+4. **Lo que no se hizo (y no debe hacerse):** el `NOTION_TOKEN` nunca se pidió ni se expuso en chat — el camino handoff cubre el 100% del cierre sin exponer el secreto.
 
 ---
 
@@ -151,7 +150,7 @@ Verificado por escaneo completo de referencias: **ningún** archivo del árbol a
 1. **Corrupción masiva de auto-link** (fuente: `vantage-sync-script-library`, CSV export 2026-08-05): las 70 filas existentes tienen `Script`/`Ruta` corrompidos por Notion (`health_http://check.py`). La skill declara la limpieza retroactiva **fuera de su alcance** — sigue pendiente como batch de 70 updates con su propio DRY RUN. **Esta deuda degrada el matching del gap report**: títulos con `http://` incrustado no coinciden con nombres de disco → falsos "SIN REGISTRAR".
 2. **Mismatch de nombre conocido**: Notion `apply_hyperlinks.py` vs disco `apply_hyperlinks_notion.py` (renombrado) — patrón de remediación documentado en la misma skill (preguntar al operador, proponer `update` de título, no crear fila nueva).
 3. **Filas de scripts ya deprecados en disco** que, si siguen en `Estado=Activo`, aparecen hoy en el gap report como huérfanos de Notion. Candidatos predecibles: `auto_archive.py`, `vsync_doc_fast.py`, `apply_hyperlinks.py` (legacy), `vantage-assign.sh`. **Predicción, no evidencia** — confirmar con el reporte vivo.
-4. **Drift de conteo de skills**: KERNEL:ARCHITECTURE-L4 declara "(actualmente 12)" .skill files; el disco tiene **25**. Mismo nodo documenta la SSOT (`/skills/` + GitHub Pages) — el número en prosa quedó obsoleto sin mecanismo que lo detecte.
+4. **Drift de conteo de skills**: KERNEL:ARCHITECTURE-L4 declara "(actualmente 12)" .skill files; el disco tenía **25** al momento de la auditoría y **26** tras la creación de `vantage-housekeeping-archive` (este batch). Mismo nodo documenta la SSOT (`/skills/` + GitHub Pages) — el número en prosa quedó obsoleto sin mecanismo que lo detecte.
 5. **ID canónico colgante — `KERNEL:SKILL-ANNOUNCE-CONVENTION`** (hallazgo nuevo de esta auditoría): citado por `MANUAL.md` (§ skills) y por las 25 skills como convención de anuncio, pero **no existe bloque de definición en ningún fundacional** ni entrada en `resolver_registry_v2.json` (verificado). Remedio propuesto (sin violar la Matriz Tipográfica): Opción A — reanclar la referencia a un nodo existente (descripción de convención ya vive en Manual §skills); Opción B — alta formal del nodo `### NN.N KERNEL:SKILL-ANNOUNCE-CONVENTION` bajo §03 vía `vantage-documentacion-transversal-propuesta`, lo que **sí** dispara CENSUS-SYNC Regla 1 (KERNEL:DOCUMENTATION-008). Recomendación: Opción A en este ciclo.
 
 ### Regla de acoplamiento (derivada de la matriz de ciclo de vida)
@@ -243,6 +242,8 @@ Aun si se repararan A y B, el flujo escribiría páginas mensuales dentro de un 
 3. SP:CONSISTENCY 05 (invocado por KERNEL:GATE-DECISION-009): automatismos basados en inferencias no confirmadas están prohibidos. Cualquier automatización de archivado debe derivar de señales Class A/Class B ya calculadas por Python y pasar por gate explícito — el contrato correcto ya existe: es el de `vantage-tidy-opportunities-tracker`.
 
 ### Diseño propuesto — skill `vantage-housekeeping-archive` (nueva, 4 fases)
+
+> **Estado (2026-08-13):** creada en disco en este batch — `skills/vantage-housekeeping-archive.md` + `.skill` + entrada en `skills/index.json` (26 recursos). Pendiente: alta en SKILL LIBRARY (Notion) con DRY RUN + `APROBAR_WRITE` — asignada en `handoffs/HANDOFF_MAESTRO_SANEAMIENTO.md` (tarea 11).
 
 La skill **no escribe nada que hoy no se escriba**. Elimina la fricción consolidando el ciclo completo en un solo procedimiento con anuncio (`ARCHIVING HOUSEKEEPING...` / `ARCHIVE HOUSEKEPT`, según KERNEL:SKILL-ANNOUNCE-CONVENTION) y añade un reporte Python read-only que sustituye el escaneo visual del Tracker.
 

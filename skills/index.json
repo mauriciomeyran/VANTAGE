@@ -79,6 +79,12 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-housekeeping-archive.skill",
+      "name": "vantage-housekeeping-archive",
+      "description": "Consolida el ciclo de archivado del VANTAGE Tracker (detección, marcado y reporte)",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-hyperlink-loop.skill",
       "name": "vantage-hyperlink-loop",
       "description": "VANTAGE Skill: vantage-hyperlink-loop",
