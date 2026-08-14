@@ -93,7 +93,7 @@ Métricas mínimas: registros consolidados, duplicados eliminados, conflictos re
 Passive Intake
 Trigger: automático (continuo)
 Responsabilidades: leer backlog de correo, extraer vacantes, poblar Class A; Class B queda vacío — lo calcula Python en el siguiente run del pipeline.
-Campos inmutables: máx. 5 correos por corrida (ver ALIASES:L3-PASSIVE-INTAKE); Class B nunca se estima aquí.
+Campos inmutables: máx. 10 correos por corrida (ver ALIASES:L3-PASSIVE-INTAKE); Class B nunca se estima aquí.
 Reglas de dedup: L3 no deduplica — entra directo a feed_processor.py; la jerarquía L1>L2>L3 se resuelve en KERNEL:ARCHITECTURE-L4.
 Estados de error: fallo de IMAP o extracción → correo se omite del batch, sin reintento automático (ver KERNEL:FAIL-PHILOSOPHY).
 Version Control & Infrastructure
