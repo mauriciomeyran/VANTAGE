@@ -604,7 +604,7 @@ def render_scripts_gap_report(client: httpx.Client, headers: dict, extensions: t
     print(f"[FIN {label} — GAP REPORT]")
 
 
-def render_new_scripts_gap_report(extensions: tuple, glossary_path: Path) -> None:
+def render_new_scripts_gap_report(extensions: tuple, glossary_path: Path, label: str = "SCRIPT GLOSSARY") -> None:
     """Compara assets committeados en disco (árbol activo) contra el Glosario
     de Scripts local (Markdown, MANUAL:SCRIPT-GLOSSARY). 100% local — no llama
     a Notion. Detecta scripts nuevos sin entrada humana documentada, como
@@ -629,7 +629,7 @@ def render_new_scripts_gap_report(extensions: tuple, glossary_path: Path) -> Non
         else:
             missing.append((name, rel))
 
-    print("[SCRIPT GLOSSARY — GAP REPORT (local, sin Notion)]")
+    print(f"[{label} — GAP REPORT (local, sin Notion)]")
     print("-" * 60)
     print(f"Assets en árbol activo (disco): {len(disk_scripts)}")
     print(f"Documentados en Glosario: {len(documented)}")
@@ -640,7 +640,7 @@ def render_new_scripts_gap_report(extensions: tuple, glossary_path: Path) -> Non
     for name, rel in sorted(missing):
         print(f"  [-] {name}  ({rel})")
     print("-" * 60)
-    print(f"[FIN SCRIPT GLOSSARY — GAP REPORT]")
+    print(f"[FIN {label} — GAP REPORT]")
 
     # Exit code 1 si hay pendientes — permite usar esto como gate en un skill
     # o automatización (ej. vantage-sync-script-glossary corre solo si esto
@@ -693,6 +693,7 @@ def main():
     parser.add_argument("--scripts", action="store_true", help="Cruza los scripts .py/.sh (únicamente) del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SCRIPT LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     parser.add_argument("--skills", action="store_true", help="Cruza los archivos .skill del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SKILL LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     parser.add_argument("--new-scripts", action="store_true", help="Cruza los scripts .py/.sh del árbol activo contra el Glosario de Scripts LOCAL (MANUAL:SCRIPT-GLOSSARY), sin llamar a Notion. Exit 1 si hay scripts sin documentar — úsalo como gate para vantage-sync-script-glossary.")
+    parser.add_argument("--new-skills", action="store_true", help="Cruza los archivos .skill del árbol activo contra el Glosario de Skills LOCAL (MANUAL:SKILL-GLOSSARY), sin llamar a Notion. Exit 1 si hay skills sin documentar — úsalo como gate para vantage-sync-skill-glossary.")
     parser.add_argument("--length", action="store_true", help="Compara el conteo de líneas de contenido de los 10 documentos fundacionales contra el último baseline guardado, para detectar truncamiento silencioso. Read-only salvo --update-baseline.")
     parser.add_argument("--update-baseline", action="store_true", help="Usar junto a --length. Sobrescribe el baseline de longitud con el conteo actual tras confirmar que no hubo truncamiento (edición legítima).")
     args = parser.parse_args()
@@ -721,6 +722,10 @@ def main():
 
     if args.new_scripts:
         render_new_scripts_gap_report((".py", ".sh"), SCRIPT_GLOSSARY_PATH)
+        return
+
+    if args.new_skills:
+        render_new_scripts_gap_report((".skill",), SCRIPT_GLOSSARY_PATH, label="SKILL GLOSSARY")
         return
 
 

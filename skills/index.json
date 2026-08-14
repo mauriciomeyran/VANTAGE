@@ -109,6 +109,12 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-assets.skill",
+      "name": "vantage-sync-assets",
+      "description": "VANTAGE Skill: vantage-sync-assets",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-census-spec.skill",
       "name": "vantage-sync-census-spec",
       "description": "VANTAGE Skill: vantage-sync-census-spec",
