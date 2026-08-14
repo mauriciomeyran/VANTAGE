@@ -133,6 +133,12 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-skill-glossary.skill",
+      "name": "vantage-sync-skill-glossary",
+      "description": "VANTAGE Skill: vantage-sync-skill-glossary",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-skill-library.skill",
       "name": "vantage-sync-skill-library",
       "description": "VANTAGE Skill: vantage-sync-skill-library",
