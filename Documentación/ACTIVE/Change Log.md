@@ -1,6 +1,11 @@
 # V | CHANGELOG
 
 Tipo: [DOC]
+- Se restauró la versión de Kernel del 13 de agosto de 2026 (7:27 a.m.) para recuperar bloques críticos borrados en la versión LIVE (incluyendo contratos de ID canónicos, diagramas L1-L4, esquemas de Class A y la tabla de Tracker Schema).⚬	Se integraron los 3 diferenciales detectados del estado LIVE posterior:⚬	Actualización de L3 Passive Intake a un máximo de 10 correos por corrida.⚬	Actualización de Skills Distribution a 25 archivos .skill.⚬	Inserción del párrafo de consolidación prevista en KERNEL:GATE-DECISION-007 (vantage-housekeeping-archive).
+- Se completó la integración de la Sección 23 (MANUAL:SKILL-GLOSSARY) con sus 5 subsecciones (23.1 a 23.5) que estaban ausentes en la versión restaurada del Manual. Se restituyó el bullet faltante en MANUAL:SESSION-CYCLE referenciando explícitamente a la Sección 23 para el catálogo de skills.
+- Ejecución realizada mediante aprobar_write y actualización con el timestamp local solicitado de las 17:04.
+---
+Tipo: [DOC]
 Alcance:
 - Skill Library (Notion DB, alta de fila)
 - Manual (MANUAL:SKILL-GLOSSARY-HOUSEKEEPING §23.2 — fila nueva)
