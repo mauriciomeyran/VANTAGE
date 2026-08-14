@@ -94,6 +94,12 @@
 | [`MANUAL:SCRIPT-GLOSSARY-L4`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3bb938befc42813685a7cc941341a984 ) | 22.3 | Script Glossary — L4 |
 | [`MANUAL:SCRIPT-GLOSSARY-RAYCAST`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3bb938befc4281b99d28f7bacc3cd707 ) | 22.5 | Script Glossary — Raycast |
 | [`MANUAL:SCRIPT-GLOSSARY-XREF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3bb938befc4281ceaec7f31e7d32de60 ) | 22.6 | Script Glossary — Cross-Reference |
+| [`MANUAL:SKILL-GLOSSARY`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#93c489e1da3143559772e27e04355294 ) | 23 | Glosario de Skills — Referencia Operativa en Humano |
+| [`MANUAL:SKILL-GLOSSARY-CORE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3d2ce7d25d3c4a2fbf811c2850dca175 ) | 23.1 | Pipeline CV y Ciclo de Sesión |
+| [`MANUAL:SKILL-GLOSSARY-HOUSEKEEPING`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#0d3c25b2bcb9482eb5ec854c4d42fa1f ) | 23.2 | Sincronización y Mantenimiento Documental |
+| [`MANUAL:SKILL-GLOSSARY-AUDIT`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#0516379e0cc44af3ba93892b91222f7b ) | 23.3 | Auditoría y Continuidad |
+| [`MANUAL:SKILL-GLOSSARY-STYLE`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#95eeb5ac3f0d4934b9696020527df3e4 ) | 23.4 | Estilos de Escritura y Generación |
+| [`MANUAL:SKILL-GLOSSARY-XREF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#d1ee9849d01549349395225aea801523 ) | 23.5 | Gaps Abiertos |
 | [`CANON:PROFILE`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42815ebad8f33dc7b4a7aa ) | 01 | Professional Profile Canon |
 | [`CANON:PROFILE-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281048b8bfcb2ab76b16e ) | 01.1 | Professional Profile — ES |
 | [`CANON:PROFILE-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281178bc8cb6f121c0b29 ) | 01.2 | Professional Profile — EN |
