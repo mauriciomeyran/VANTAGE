@@ -2,6 +2,42 @@
 
 Tipo: [DOC]
 Alcance:
+- Skill Library (Notion DB, alta de fila)
+- Manual (MANUAL:SKILL-GLOSSARY-HOUSEKEEPING §23.2 — fila nueva)
+- /mnt/skills/user/vantage-sync-script-library/SKILL.md (local, corrección)
+- /mnt/skills/user/vantage-sync-assets/SKILL.md (local, instalación)
+Contexto: Propuesta de documentación transversal para vantage-sync-assets, meta-skill que orquesta las 4 skills de sincronización existentes (Script Library, Skill Library, Script Glossary §22, Skill Glossary §23) en orden fijo Libraries→Glossaries. Mapeo inicial (Notebook Gemini) proponía altas de ID nuevas en Kernel (KERNEL:ASSETS-SYNC, extensión de KERNEL:DOCUMENTATION-005/-010, trigger en SP:TRIGGERS) — descartadas tras verificación contra BRIEF:CONSULTATION-002 (catálogo de skills es responsabilidad del Manual, no del Kernel) y contra el contrato ya confirmado de vantage-sync-skill-library (que ya cita KERNEL:DOCUMENTATION-005 correctamente). Auditoría cruzada expuso que vantage-sync-script-library citaba un anchor inexistente (KERNEL:SKILL-ANNOUNCE-CONVENTION) para la misma convención — corregido en este batch.
+Cambios:
+- Skill Library (Notion) — alta de fila vantage-sync-assets (Estado: Activo, Ruta: /mnt/skills/user/vantage-sync-assets/SKILL.md, Dependencias: las 4 skills hijas).
+- MANUAL:SKILL-GLOSSARY-HOUSEKEEPING (23.2) — fila nueva insertada tras vantage-sync-skill-library, antes de vantage-sync-census-spec.
+- vantage-sync-script-library/SKILL.md (local) — anchor corregido: KERNEL:SKILL-ANNOUNCE-CONVENTION → KERNEL:DOCUMENTATION-005.
+- vantage-sync-assets/SKILL.md (local) — instalado, con nota de alcance frente a L4 (vdoc/vsync_doc.py) añadida en Reglas de oro (metadatos de inventario vs. contenido documental — dominios distintos).
+IDs afectados: Ninguno (sin alta/baja de KERNEL:ID/MANUAL:ID canónico — fila de tabla existente + archivo local).
+Write-Back Verification: Skill Library re-fetched post-escritura (fila confirmada). Manual re-fetched post-escritura — fila vantage-sync-assets confirmada en posición correcta dentro de §23.2. Archivos locales verificados por lectura directa post-escritura.
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.20.5 al resto de los fundacionales.
+- Gap heredado sin tocar: campo Capa de Skill Library sigue sin opción aplicable para meta-skills de housekeeping (dejado vacío en la fila nueva, consistente con el gap ya documentado en MANUAL:SKILL-GLOSSARY-XREF 23.5).
+---
+Tipo: [DOC]
+Alcance:
+- Manual (MANUAL:SKILL-GLOSSARY §23 y subsecciones 23.1–23.5)
+- Navigation Brief (BRIEF:AUTHORITY-MATRIX §02, BRIEF:CONSULTATION-002 §04.2)
+- Census Spec (Layer_1/scripts/generate_census.py, local)
+Contexto: Alta de §23 MANUAL:SKILL-GLOSSARY — catálogo operativo de las 19 skills de Claude (/mnt/skills/user/), contraparte de MANUAL:SCRIPT-GLOSSARY (§22) aplicada a skills en vez de scripts. Contrato validado contra los 6 filtros de MANUAL:PATCH-QUALITY-001. Escritura verificada en vivo vía notion-fetch en esta sesión (Manual y Brief re-fetched, contenido confirmado byte-exacto contra el patch propuesto).
+Cambios:
+- MANUAL:SKILL-GLOSSARY (23) — nodo nuevo, glosario de skills en 4 categorías (Core, Housekeeping, Audit, Style) + XREF de gaps abiertos.
+- MANUAL:SESSION-CYCLE — bullet nuevo referenciando §23.
+- BRIEF:AUTHORITY-MATRIX — fila nueva: Gobernanza de Skills IA → Manual §23.
+- BRIEF:CONSULTATION-002 — bullet nuevo: catálogo de skills.
+- CENSUS_SPEC (local) — alta de 6 IDs: MANUAL:SKILL-GLOSSARY, -CORE, -HOUSEKEEPING, -AUDIT, -STYLE, -XREF.
+IDs afectados: 6 altas (ver Census Spec arriba).
+Write-Back Verification: Manual y Navigation Brief re-fetched post-escritura — 4 nodos confirmados en posición correcta. vcensus re-ejecutado post-alta en CENSUS_SPEC: 196/196 IDs resueltos, 0 huérfanos. ID CENSUS (Notion) actualizado por el operador con el nuevo export.
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.20.4 al resto de los fundacionales.
+- Gaps documentados en MANUAL:SKILL-GLOSSARY-XREF (23.5): anuncio no especificado en 6 skills (vantage-cv-a, vantage-cv-b, vantage-qa, vantage-sync-script-glossary, vantage-audit-navigation-brief, cierre de vantage-documentacion-transversal-propuesta); campo Capa null en 24/25 filas de Skill Library.
+---
+Tipo: [DOC]
+Alcance:
 - Kernel (KERNEL:TRIGGER-002, 11.2)
 - Manual (MANUAL:SCRIPT-GLOSSARY-L1-MODULES — priority_logic.py; MANUAL:SCRIPT-GLOSSARY-L1 — backfill_class_a.py)
 Contexto: Cierre documental del fix de código v9.20.2 (created_time leído desde raíz del objeto Notion, no desde properties; duplicación de txt() sin fix de rich_text en backfill_class_a.py). Este batch deja precedente narrativo en Kernel/Manual para que la próxima función que asuma la forma del objeto Notion sin verificar schema tenga ancla de referencia.

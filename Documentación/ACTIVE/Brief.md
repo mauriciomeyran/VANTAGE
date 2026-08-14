@@ -38,6 +38,7 @@ Esta matriz define el documento autorizado para cada dominio del sistema.
 | Historial | Change Log | Auditoría |
 | Esquemas | Tracker Schema | Modelo de datos |
 | Verificación de integridad estructural | vversions | Herramienta de observabilidad (Lectura/Escritura) |
+| Gobernanza de Skills IA | Manual §23 (MANUAL:SKILL-GLOSSARY) | Catálogo operativo |
 ---
 ## 03 BRIEF:ECOSYSTEM
 Ecosistema Documental
@@ -77,6 +78,7 @@ Se utiliza para:
 - ejecución
 - troubleshooting
 - operación diaria
+- catálogo de skills
 ### 04.3 BRIEF:CONSULTATION-003
 Consulta Profesional
 Destino: Career Canon

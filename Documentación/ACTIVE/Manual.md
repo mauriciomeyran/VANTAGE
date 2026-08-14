@@ -1,433 +1,128 @@
 # V | MANUAL
 
-## 01 MANUAL:OBJECTIVE
-Objetivo
-### ¿Qué problema que resuelve?
-Una búsqueda laboral sin estructura produce cuatro fallas operativas concretas:
 - Oportunidades de alta señal desaparecen antes de ser procesadas.
 - Tiempo consumido en vacantes irrelevantes que no cumplen criterios mínimos.
 - Aplicaciones enviadas sin datos de fit — sin score, sin análisis de keywords, sin estrategia de CV.
 - Sin trazabilidad: qué se aplicó, cuándo, qué sigue.
-### ¿Qué hace diferente?
 - Convierte la búsqueda laboral en un pipeline con contratos de procesamiento definidos.
 - Filtra antes de evaluar: 
 - Links muertos → Score 0, Status Expirada. 
 - Roles sin componente visual → Gate BLOCKED. 
 - Empresas en lista negra → rechazadas en Discovery. 
-> Las empresas excluidas permanentemente (Hard Blocks) y las reglas de deduplicación están documentadas de forma completa en MANUAL:DATA-MANAGEMENT
 - Verifica antes de creer: 
 - Cada URL pasa un chequeo de enlace (lo que el sistema llama internamente “URL_GATE”) antes de cualquier cálculo de fit.
 - Si el link no funciona, la vacante no entra al pipeline activo. 
-> El mecanismo completo de este chequeo y los pasos que le siguen están explicados en MANUAL:HOW-IT-WORKS.
 - Centraliza en un solo lugar:
 - Notion es la fuente única de verdad — vacantes, aplicaciones, scores, seguimiento
 - Calcula con lógica determinista:
 - Score 0–100 calculado por Python.
 - La decisión de postulación se toma con datos, no con estimaciones.
-### ¿Cuáles son los KPIs del sistema?
-Métricas calculables directamente desde el Tracker, sin requerir instrumentación adicional:
 - Throughput semanal — vacantes nuevas ingresadas por ciclo de feed_processor.py.
 - Tasa de Gate CREATE — % de vacantes con Gate_Decision=CREATE sobre el total procesado.
 - Tasa de recuperación RT-1 — % de vacantes BLOCKED que alcanzan PATCHED → CREATE vía Dashboard.
 - Distribución por Positioning Mode — vacantes activas por N1–N4 (campo Positioning_Mode).
 - Score promedio de vacantes CREATE — calidad promedio del pipeline activo.
 Nota: el sistema no mantiene checkpoints de tiempo entre estados (ej. tiempo de ingesta a READY_TO_APPLY) — cualquier métrica de latencia queda fuera de esta lista hasta que exista un campo de timestamp dedicado.
-### ¿Qué no hace el sistema?
-- No busca cualquier empleo — solo roles visuales en sectores lujo, premium, cool DNA y agencias de experiencia.
 - No genera volumen masivo — calidad de señal sobre cantidad de resultados.
 - No aplica automáticamente — la decisión de postulación es siempre humana.
 - No adivina campos faltantes — si falta información, el campo queda pendiente y el sistema lo reporta.
-### ¿Qué tipo de vacantes busca?
 - Perfil Senior en:
-- Visual Merchandising
-- Brand Environment
-- Store Design
-- Retail Experience.
-- Geografía:
-- CDMX
-- LATAM.
-- Sectores target:
-- Lujo (LVMH, Kering, Richemont), 
-- Retail Premium (Nike, Apple, Inditex)
-- Cool DNA (Gentle Monster, Ben & Frank)
-- Agencias de experiencia.
----
-## 02 MANUAL:HOW-IT-WORKS
-¿Cómo funciona?
-### El Pipeline
-- El Pipeline opera secuencialmente.
 - Cada paso tiene un responsable (una capa del sistema: L1, L2, L3, Python, o el operador humano) y un output definido antes de pasar al siguiente paso.
-> El detalle operativo día por día de este flujo está en MANUAL:WEEKLY-FLOW aquí se explica la lógica que sostiene ese flujo.
-### Layers
-El sistema se organiza en capas con responsabilidades separadas:
 - L1 - Active Recon: Búsqueda activa vía prompts ejecutados en motores de búsqueda (Perplexity, Comet).
-- L2 - Strategic Search: Búsqueda activa complementaria vía Gemini, Grok, you.com.
 - L3 - Passive Intake: Lectura automática de correos etiquetados en Gmail.
-- L4 - Documentation: mantiene sincronizados en background el repositorio de código (git) y los documentos fundacionales del sistema entre Notion y disco local.
 ### Responsables
 - Python (Pipeline / Runtime): normaliza, deduplica, calcula Score y Gate_Decision, y expone comandos de consulta.
 - Agente IA (Claude): opera el Ciclo de Sesión (Open/Close), ejecuta CV-A/CV-B en el ciclo semanal (Miércoles), y mantiene documentos fundacionales y trackers vía parches — siempre bajo DRY RUN + APROBAR_WRITE, nunca escribe sin autorización explícita del operador.
 - El operador: Decide qué se postula, resuelve bloqueos recuperables vía Dashboard (Proponer Patch → Validar → Aceptar, sobre campos Class A del Tracker), autoriza escrituras y aprueba entregables.
-> Este reparto de trabajo se ve en acción completa en MANUAL:WEEKLY-FLOW
-### Gate Decisions
-Este es uno de los conceptos que más se usa a lo largo de todo el ciclo operativo, así que conviene fijarlo aquí, antes de encontrarlo en Lunes, Martes o Miércoles sin previo aviso.
 El sistema evalúa cada vacante nueva en tres pasos, siempre en este orden:
-1. Link check — si la URL de la vacante no carga (404, 403, dominio caído, redirección rota), la vacante se archiva automáticamente con Score 0 y Status “Archivar”. No se calcula nada más sobre ella: un link muerto no tiene fit que evaluar. Esto es lo que el sistema llama internamente el “URL_GATE” — el primer filtro que cualquier vacante debe pasar antes de que Python invierta cómputo en analizarla. Para vacantes en agregadores conocidos, este chequeo ya no es una excepción sin verificar — se ejecuta con un timeout corto para evitar cuelgues, pero registra honestamente si no pudo confirmarse.
-1. Score (0–100) — si la URL funciona, Python calcula un puntaje numérico según qué tan bien encaja el rol con el perfil objetivo (Keywords de Visual Merchandising, sSctor, Seniority, Geografía). Este cálculo es determinista: mismos datos de entrada, mismo Score de salida, siempre.
-Dónde aterriza, según el Score obtenido:
-| SCORE | NEXT ACTION |
-| --- | --- |
-| 60 o más | READY-TO-APPLY: Tu bandeja de trabajo diaria — de aquí sale todo lo que trabajas en CV Optimization. |
-| 40–59 | REVIEW_NEEDED: Zona gris: el sistema no descarta la vacante, pero tampoco la prioriza — la decisión de trabajarla o no es tuya. |
-| Menos de 40 | ARCHIVE¹ |
-- Excepción a los tres pasos: si la vacante llegó por contacto directo (Inbound, Referencia o Networking), se salta este proceso completo y entra directo como CREATE — un contacto humano pesa más que el algoritmo, porque la señal de calidad ya viene validada por una persona real, no por texto de un JD.
 - Este mismo mecanismo de Gate es el que determina si una vacante queda en estado BLOCKED cuando algo en sus datos de entrada (Class A: URL, JD, Source_Type, Prioridad) es inconsistente². 
-> 
-¹ ¿Por qué esto no es un error que debas corregir? ver MANUAL:FAILURE-PHILOSOPHY.
-² Para caso específico y cómo recuperarlo a través del Dashboard ver MANUAL:TUESDAY.**
-### Soft vs Hard Blocks
-El sistema aplica dos capas de exclusión para garantizar la calidad de la señal — ambas se explican con su lista completa y mecánica de recuperación en MANUAL:DATA-MANAGEMENT, pero conviene entender la diferencia conceptual desde ahora, porque ambos términos aparecen constantemente en el flujo semanal:
 - Hard Blocks: Empresas o roles que nunca entrarán al sistema (ej. L’Oréal, Levi’s). Se filtran en el origen, antes de que la vacante exista siquiera como registro en Notion, y no son recuperables bajo ninguna circunstancia.
 - Soft Blocks: Vacantes bloqueadas por inconsistencias en datos Class A (URL rota, JD parcial) o por Score insuficiente. A diferencia de los Hard Blocks, estas sí son recuperables — corrigiendo el dato erróneo a través del Dashboard MANUAL:WEEKLY-FLOW-002.
----
-## 03 MANUAL:FAILURE-PHILOSOPHY
-Filosofía de Fallo para Operadores
-Base KERNEL:FAIL-PHILOSOPHY
-Antes de entrar a Setup y al ciclo operativo, es necesario internalizar esto, porque vas a encontrarlo constantemente desde el primer Lunes que operes el sistema: Un “fallo” del sistema no es un bug — es el filtro operando correctamente. Los siguientes resultados son señales normales de funcionamiento, no errores que debas reparar manualmente ni forzar a que Claude “arregle”:
-| RESULTADO | QUE SIGNIFICA | QUE NO HACER | QUE SI HACER |
-| --- | --- | --- | --- |
-| URL dead / link roto | La vacante expiró — es normal del mercado laboral, las publicaciones caducan. | No repares manualmente el link ni intentes “revivir” la vacante. | Déjala archivada. Si te parece un error de captura (ej. la URL se guardó mal, no que la vacante haya expirado), eso sí es corregible — ver MANUAL:WEEKLY-FLOW-002, Dashboard. |
-| Score = 0 | El fit es débil, o el link estaba muerto (ver MANUAL:HOW-IT-WORKS, Gate Decisions, paso 1). | No subas el score a mano — es un campo Class B, calculado por Python, no editable directamente. | Si sospechas que el cálculo está mal por un dato de entrada erróneo (URL, JD), corrige el dato de entrada, no el resultado — ver MANUAL:WEEKLY-FLOW-002. |
-| Gate = BLOCKED | Los criterios Class A no se cumplieron (URL rota, JD parcial, fuente no reconocida). | No lo fuerces a CREATE manualmente en Notion. | Si es recuperable, usa el Dashboard (MANUAL:WEEKLY-FLOW-002) para corregir el dato de origen y dejar que el pipeline recalcule. |
-| Ready-to-Apply vacío | No hay oportunidades válidas esta semana — puede pasar, especialmente en semanas de baja actividad del mercado. | No fuerces un CREATE artificial para “llenar” la bandeja. | Espera al siguiente ciclo de discovery (Lunes), o revisa si el Prompt de búsqueda necesita ajuste (ver MANUAL:HEALTHCHECK, Red Flags). |
-| JSON vacío en el Feed de discovery | La búsqueda no encontró resultados relevantes esa ejecución. | No amplíes los criterios de búsqueda sin análisis previo — podrías bajar la calidad de la señal general. | Revisa el Viernes de Analytics (MANUAL:WEEKLY-FLOW-005) antes de decidir si el prompt necesita ajuste. |
-Ante cualquiera de estos casos, el sistema reporta el estado y espera tu instrucción dentro del flujo normal del PIpeline — no requiere, ni acepta bien, intervenciones manuales que intenten “corregir” el resultado en sí mismo en vez de corregir el dato de entrada que lo produjo.
----
-## 04 MANUAL:SETUP
 Setup
-Esta sección se ejecuta una sola vez, al instalar el sistema por primera vez (o al reinstalarlo desde cero). Si el sistema ya está instalado y solo llevas varios días sin usarlo, lo que necesitas es MANUAL:COLD-START, no este capítulo completo.
-### Prerrequisitos
 - Cuenta de Notion con base de datos VANTAGE TRACKER activa.
 - Python 3.8+ instalado en Mac.
 - Acceso a Claude.
 - Cuenta de Perplexity con modo Deep Research activo.
 - Acceso a Gemini con modo Deep Research o Search activo.
 - Acceso a You.com con modo Research o Agent activo.
-- Acceso a Grok con modo DeepSearch o Think activo.
-### Paso 1
-Verificar Notion
 - READY-TO-APPLY: Espacio de trabajo diario (Score ≥ 60, Gate_Decision=CREATE).
-- REVIEW_NEEDED: Vacantes en rango Score 40–59 (Gate_Decision=REVIEW_NEEDED, requieren revisión manual).
-- BLOCKED: Score < 40 o fail de scope/fetch (Gate_Decision=BLOCKED).
-- ARCHIVE: Score 0 o Status Expirada.
-- ALL: Administración general.
-### Paso 2
 Instalar Entorno Python
-```bash
-cd ~/Documents/03 Projects/VANTAGE/Layer_1
-source .venv/bin/activate
-# (el entorno ya existe; solo actívalo)
-```
 En Terminal, verifica la instalación, debe mostrar 3.8 o superior.
-```bash
-python3 --version 
-```
-### Paso 3 
 Bootloader con Claude
 Ya no es necesario realizar copy-paste manual del System Prompt maestro en cada actualización, en su lugar:
 1. Las instrucciones activas deben residir exclusivamente en las Project Instructions de la plataforma. Encontrarás la referencia documental en SP:BOOTLOADER. Este es el proceso para su configuración:
-Settings → Project → Project Instructions en la UI de Claude.
-1. Inicia un nuevo chat. El Agente  realizará un fetch automático del Bootloader  desde Notion.
 1. El Agente responde con “VANTAGE: SISTEMA SINCRONIZADO” (sin número de versión fijo — ver SP:BOOTLOADER) antes de enviar peticiones.
-Nota: este setup de Claude es de una sola vez por proyecto — no se repite en cada sesión de trabajo. Lo que sí se repite en cada sesión es el Ciclo de Sesión completo, explicado en MANUAL:SESSION-CYCLE.
-### Paso 4
-Verificar Archivos del Sistema y Permisos de Ejecución
 Confirma que los archivos del sistema existen en tu Mac en las rutas esperadas (Layer_1, Layer_3, Layer_4, Dashboard). Si reinstalas o mueves archivos, verifica permisos de ejecución:
-```bash
-chmod +x $LAYER_1_DIR/layer_1_pipeline.sh
-chmod +x $LAYER_1_DIR/wrappers/layer_1_wrapper.sh
-chmod +x $LAYER_3_DIR/wrappers/layer_3_mail.sh
-chmod +x $DASHBOARD_DIR/wrappers/dashboard_start.sh
-```
-### Paso 5
 Test Inicial del Pipeline
-```bash
-~/vantage_pipeline.sh tracker
-```
-Output esperado:
-```plain text
-=== VANTAGE PIPELINE STATUS ===
-Ready-to-Apply: [N] vacantes
-REVIEW_NEEDED: [N] vacantes
-…
-```
 Si falla: verifica que ~/vantage_notion_audit/.env existe y contiene tu token de Notion.
-### Paso 6
 Verificar Runtime
-El Runtime (explicado en detalle en MANUAL:RUNTIME) es el motor de lectura del sistema — permite consultar el estado de Notion desde Terminal sin abrir el navegador. Antes de operar, verifica que su índice interno (el “Entity Index”, el catálogo de todas las entidades que el Runtime sabe interpretar) esté cargado:
-```bash
-python vantage.py status
-```
 Resultado esperado: Status: READY (4,200+ blocks indexed).
 ### Paso 7
 Verificar Sync Documental
-```bash
-cd ~/Documents/03 Projects/VANTAGE/Layer_4/scripts
-source ../../Layer_1/.venv/bin/activate
-python vsync_doc.py --dry-run
-```
-Output esperado: 6 documentos listados con diff por documento, sin errores.
 Si falla: verificar que layer_1.env exista y que el token no tenga un salto de línea (\n) embebido por error de copy-paste.
-## 05 MANUAL:COLD-START
 Arranque Frío
 Usar cuando el sistema no ha sido operado por más de 5 días. A diferencia de MANUAL:SETUP, aquí no estás instalando nada nuevo — estás confirmando que todo lo que ya instalaste sigue funcionando después de un periodo de inactividad, antes de confiar en que el primer comando que corras te va a dar un resultado correcto.
-```plain text
-cd ~/Documents/03\ Projects/VANTAGE/Layer_1/scripts && \
-source ../.venv/bin/activate && \
-python3 --version && \
-cat ../.env | grep NOTION_TOKEN && \
-python3 vantage.py status && \
-python3 vantage.py sync && \
-vl3 && \
-cat ~/.vantage/l3_heartbeat.json && \
-python3 vantage.py ask "show active roles" && \
-python3 vantage.py ask "find candidates"
-```
-### Explicación por comando
 1. cd ... — te posiciona en Layer_1/scripts, donde viven vantage.py y todos los scripts del runtime.
-1. source ../.venv/bin/activate — activa el virtualenv correcto (un nivel arriba de scripts), asegurando que uses las dependencias instaladas del proyecto y no el Python global.
-1. python3 --version — confirma que el intérprete activo cumple el mínimo (3.8+); no bloquea el resto si falla, solo informa.
 1. cat ../.env | grep NOTION_TOKEN — verifica que el token de Notion esté presente en el .env; no valida si está vigente, solo que la variable existe.
-1. python3 vantage.py status — healthcheck de solo lectura: lee entity_index_v2.json y las métricas acumuladas de notion_utils, sin tocar la API.
 1. python3 vantage.py sync — regenera entity_index_v2.json, graph_v2.json y backlinks_v2.json consultando Notion en vivo; sí escribe.
 1. vl3 — corre layer_3_mail.py una vez, manualmente (asumiendo que vl3 es tu alias configurado para ese script).
 1. cat ~/.vantage/l3_heartbeat.json — confirma que L3 corrió y dejó su heartbeat; si el archivo no existe o el timestamp es viejo, L3 falló silenciosamente.
 1. python3 vantage.py ask "show active roles" — smoke test end-to-end contra el Tracker real vía resolver_layer_v1 — este es el que hoy falló por el archivo borrado en el commit 29fc7f0; seguirá fallando igual hasta que restauremos ese archivo.
 1. python3 vantage.py ask "find candidates" — mismo smoke test, distinto intent; mismo resultado esperado (falla) por la misma causa.
-Nota: con el && encadenado, si sync o cualquier paso previo falla con código de salida distinto de cero, los comandos posteriores no corren. Si quieres que seguridad no se detenga a medio camino (por ejemplo, si vl3 no es un alias válido en tu shell), dímelo y te paso la versión con ; en vez de &&.
-## 06 MANUAL:SESSION-CYCLE
 Ciclo de Sesión
-### ¿Cuándo se dispara esto?¿por qué es distinto del ciclo semanal?
-El ciclo semanal que se detalla en MANUAL:WEEKLY-FLOW asume que el sistema documental y el estado del Pipeline están sanos al momento de empezar a trabajar. Esa suposición no es gratuita: cada vez que abres una conversación nueva con Claude para operar VANTAGE, esa conversación pasa primero por su propio ciclo de vida — independiente del ciclo semanal, y que existe precisamente para que nunca operes sobre un supuesto sin verificar.
-Piensa en esto como el equivalente a revisar que las luces del tablero no tengan ninguna advertencia antes de arrancar el coche: no es el viaje en sí, es la condición para que el viaje no te sorprenda a medio camino.
-Este ciclo se dispara con dos comandos:
 - vantage-session-open al inicio de cada sesión
 - vantage-session-close al final
-Y hace tres cosas que ningún otro punto del sistema hace:
-1. Deja un registro de que la sesión existió y en qué estado terminó (el Session Ledger).
-1. Confirma que los 10 documentos fundacionales + el Census están todos en la misma versión (nunca uno adelantado y otro atrasado).
-1. Te recuerda, sin que tengas que preguntarlo, qué quedó pendiente de la sesión anterior.
-No necesitas invocarlo tú manualmente cada vez que se te ocurra — pero sí necesitas recordar que es el primer paso obligatorio: si acabas de abrir Claude para trabajar en VANTAGE hoy, el primer paso siempre es este ciclo, antes de tocar Tracker, Dashboard o cualquier trigger de CV descrito en MANUAL:WEEKLY-FLOW.
-### ¿Por qué existe esto?
-Antes de que este ciclo existiera, cada sesión de Claude arrancaba “en frío”: el agente asumía que el corpus de Notion (Kernel, Manual, System Prompt, Career Canon, Aliases, Changelog) estaba en la versión que recordaba de la sesión anterior.
+- Ver MANUAL:SKILL-GLOSSARY (§23) para el catálogo completo de skills, incluyendo la convención de anuncio de cada una.
 - No había ningún mecanismo que confirmara si una sesión había terminado bien o si Claude simplemente dejó de responder a medio trabajo — un timeout, un cierre accidental de pestaña, un crash.
 - El resultado era drift silencioso: un documento se actualizaba, otro no, y nadie se enteraba hasta que las contradicciones aparecían en producción (esto es, en parte, lo que motivó el Census — ver KERNEL:CENSUS-SYNC, y MANUAL:HEALTHCHECK, donde se detalla cómo se regenera el Census).
-Ambos skills viven en /mnt/skills/user/ y son deliberadamente cortos: cada token gastado en abrir/cerrar sesión es un token que no queda para la tarea real — relevante dado el tier de la cuenta.
-### Open Session Protocol
-1. ANNOUNCE: SESSION-OPENING...
-1. LEDGER: SQL directo vía MCP está bloqueado en este plan (query_data_sources no disponible en este workspace). Usar en su lugar:
 - notion-search sobre el data source del Ledger (collection://38324240-c686-47d0-8082-cee5e4409f88)
 - notion-fetch de la fila más reciente devuelta
 Si Status = OPEN o duplicados -> Reportar WARN. Crear fila nueva (Status: OPEN).
-1. HEALTH: Verificar System Prompt + ID Census vía MCP (ya cubierto por el Bootstrap universal, KERNEL:DOCUMENTATION-004).
-1. PENDING: Leer campo Pending Summary de la fila anterior. Si es CLOSED-COMPRIMIDO, priorizar resolución de deuda técnica.
-1. SNAPSHOT: Operador pega dump de -bootstrap. Si vacío -> "SNAPSHOT: 0 TAREAS CRÍTICAS". Terminal ya no es requisito bloqueante para abrir sesión.
 1. READY: SESSION-OPENED: VANTAGE READY (Version/Tier Mode).
-### Close Session Protocol
 1. ANNOUNCE: CLOSING SESSION...
 1.5 . TOKEN-GATE: Si hay alerta de tokens o instrucción "cierre rápido/comprimido", activar MODO COMPRIMIDO (omite pasos 3-4, activa 3'-5'). Default: MODO COMPLETO.
 1. INVENTORY: Operador declara si hubo cambios. Si NO hubo, saltar al paso 6.
 1. CENSUS: Si hubo cambios de ID, requiere output local de generate_census.py. Falla -> Blocked-Census.
 1. CHANGELOG & VERSION:
-- Completo: Draft texto plano -> APROBAR_WRITE.
-- Comprimido: Una línea: [COMPRIMIDO] resumen + "expandir en próxima sesión".
 1. VERIFY & SYNC: Gate Absoluto. Requiere output local de verify_versions.py --sync. Validar [VEREDICTO FINAL] PASS.
-- Comprimido: Si no hay output, marcar SYNC PENDIENTE en Ledger.
 1. SUMMARY: Bloque homologado (mismas 5 secciones de handoff).
-- Comprimido: Formato bullet de una línea por sección. Priorizar IDs y Pendientes.
 1. LEDGER: Update Notion -> Status: CLOSED o CLOSED-COMPRIMIDO, Closed At [now], Pending Summary [bloque paso 5].
 1. TERMINATE: SESSION CLOSED -> nuevo chat.
-### ¿Qué hacer si algo no cuadra?
-- Terminal no está disponible → Operación detenida (Fail-Fast). No existe bypass automatizado vía MCP para este chequeo — ni en apertura ni en cierre — con el fin de proteger la cuota de la API de Notion y evitar el desperdicio de tokens de contexto reconstruyendo estado desde bases de datos completas. El operador debe diagnosticar la conectividad o el entorno local antes de proceder con cualquier modificación de documentación.
-- El Ledger anterior quedó OPEN → esto lo verás reflejado directamente en el dump que genera --bootstrap. Revisa manualmente si algo quedó a medio escribir antes de seguir. El sistema te lo señala, pero la decisión de qué hacer con eso es tuya.
-- Drift de versión detectado y no es el documento que ibas a tocar hoy → se reporta, no bloquea. Puedes decidir resolverlo ahora o después.
-- Drift de versión detectado y SÍ es el documento que ibas a tocar → se resuelve el drift primero, antes de aplicar cualquier parche nuevo — de lo contrario terminarías escribiendo sobre una base que ya no coincide con lo que las otras piezas del sistema esperan.
-- Un cambio de código, schema o flujo operativo quedó sin reflejo en la documentación → esto no es parte del drift de versión que acabas de revisar arriba, es el caso que cubre KERNEL:DOCUMENTATION-001: el contrato que detecta contenido operativo nuevo sin ancla en Kernel, Manual, Canon o System Prompt, ya sea porque tú lo pides explícitamente ("documentación transversal", "parche orgánico") o porque el sistema lo señala como recordatorio no-bloqueante a media tarea, sin detener lo que estabas haciendo.
-- Un pendiente detectado durante la sesión necesita convertirse en ticket (o no) → esto lo gobierna KERNEL:GATE-DECISION-009 (3 niveles de escalamiento). En resumen: esfuerzo bajo y sin bloqueo confirmado se queda en pending_summary del Ledger
-- Nivel 1: Esfuerzo alto sin fuente dura de bloqueo se sugiere como ticket y espera tu APROBAR_WRITE
-- Nivel 2: Bloqueo o degradación confirmados por una fuente dura (dump de Terminal, Ledger, Changelog, o tu propia declaración explícita) disparan vantage-create-bug-task de forma automática
-- Nivel 3: Ver KERNEL:GATE-DECISION-009 para el detalle completo y las reglas de re-clasificación entre niveles.
-- Con la sesión abierta y sincronizada, el siguiente paso natural es abrir tu mapa de la semana el Checklist, explicado en MANUAL:CHECKLIST.
----
-## 07 MANUAL:CHECKLIST
 El Checklist
 El Checklist es la interfaz operativa de todo el ciclo semanal que se detalla en MANUAL:WEEKLY-FLOW Es un archivo HTML autocontenido con progreso persistente (localStorage), modo claro/oscuro y navegación por día. Ábrelo una vez al iniciar la semana y consúltalo a lo largo de las actividades de cada día — no es una herramienta puntual de un solo momento, es tu mapa de avance de lunes a viernes.
-- Ubicación: archivo local Checklist.html (abre en navegador).
-- Reset: botón “⟳ Reset semana” en el header para iniciar un nuevo ciclo.
-- Persistencia: el progreso NO persiste entre sesiones distintas del navegador si se limpia el localStorage.
-### ¿Dónde viven los archivos compartidos?
 Dashboard.html, Checklist.html, vantage-tokens.css y vantage-theme.js viven todos en Dashboard/.
-- vantage-tokens.css define colores y superficies compartidos por ambos HTML.
-- vantage-theme.js es el toggle de tema compartido, con persistencia y sincronía cross-tab.
 Esto importa porque el Dashboard (que verás en detalle MANUAL:WEEKLY-FLOW-002) usa exactamente esta misma infraestructura visual — no son dos sistemas de interfaz distintos, son la misma base compartida.
-### Aspecto
 El botón de aspecto (ícono sol/luna, arriba a la derecha en ambos HTML) persiste tu elección y se sincroniza automáticamente si tienes ambos HTML abiertos en pestañas distintas del mismo navegador — cambias el tema en uno, el otro se actualiza sin recargar. 
-### ¿Qué no hacer?
-- No copies/pegues código de un HTML al otro para “igualar” un color o componente — edita vantage-tokens.css o vantage-theme.js, que ambos ya leen. Editar directo en el HTML reintroduce el mismo drift que se corrigió.
-- Si algo se ve distinto entre los dos HTML, es señal de que alguien editó un color o estilo directo en el <style> inline de uno de los dos archivos en vez de en vantage-tokens.css. Revisa ahí primero.
-- Con el Checklist abierto y el ciclo de sesión ya confirmado (MANUAL:SESSION-CYCLE), estás listo para empezar el Lunes — el primer día del ciclo semanal, detallado a continuación.
----
-## 08 MANUAL:WEEKLY-FLOW
 Flujo Semanal de Operación
 Este es el ciclo completo de trabajo, de lunes a viernes. Asume que ya pasaste por MANUAL:SETUP o MANUAL:COLD-START según corresponda, que la sesión actual de Claude ya pasó por su MANUAL:SESSION-CYCLE, y que tienes el MANUAL:CHECKLIST abierto como guía de avance.
----
-### 8.1 MANUAL:WEEKLY-FLOW-001
 Lunes
 El lunes es el ciclo de búsqueda activa completo. Se dispara manualmente y cubre las dos capas de búsqueda humana (L1 y L2), más la revisión de lo que L3 recolectó de forma pasiva durante la semana.
 Contrato operativo completo de cada capa (Objetivo, Componentes, Campos inmutables, Estados de error, Métricas) — ver KERNEL:ARCHITECTURE-L1-002 (L1), KERNEL:ARCHITECTURE-L2-002 (L2), KERNEL:ARCHITECTURE-L3-002 (L3). Esta sección cubre únicamente el procedimiento paso a paso.
 El ciclo comienza con los prompts de búsqueda, los cuales no se copian de versiones anteriores — se materializan bajo demanda ejecutando el Weekly Prompt Assembler:
-```bash
-vassemble
-```
 El script hace fetch de Prompt A (base) y de cada Wrapper (Career Sites, LinkedIn, Aggregators, Gemini, Grok, You.com) y de Prompt E desde la PROMPT LIBRARY, sustituye [YYYY-MM-DD] por la fecha del día en cada componente, y genera 7 archivos .md listos para copiar directo a cada motor: Prompt_[Motor][Fecha].md y Prompt_E_Consolidation[Fecha].md.
-| # | Sesión | Archivo generado | Motor destino |
-| --- | --- | --- | --- |
-| 1 | Career Sites | Prompt_Career_Sites_[Fecha].md | Motor con crawler |
-| 2 | LinkedIn | Prompt_LinkedIn_[Fecha].md | Motor con crawler |
-| 3 | Aggregators | Prompt_Aggregators_[Fecha].md | Motor con crawler |
-| 4 | Gemini | Prompt_Gemini_[Fecha].md | Gemini |
-| 5 | Grok | Prompt_Grok_[Fecha].md | Grok |
-| 6 | You.com | Prompt_You_com_[Fecha].md | You.com |
-| 7 | Consolidación | Prompt_E_Consolidation_[Fecha].md | Perplexity |
-### ¿Por qué importa la fecha?
 TODAY’S DATE define la ventana de búsqueda activa (14 días preferente, hasta 21 con match fuerte). Un prompt con fecha incorrecta produce resultados fuera de ventana o advertencias innecesarias en todos los ítems.
-### ¿Cómo uso los archivos generados?
 Abre cada Prompt_[Motor]_[Fecha].md y pega su contenido en el motor correspondiente (Career Sites/LinkedIn/Aggregators vía Comet Desktop con control de navegador activo; Gemini/Grok/You.com directo en Deep Research). Los Prompts B y C pueden usarse en cualquiera de los tres motores L2. Cada ejecución produce un JSON independiente — compílalos para el paso de consolidación.
-### ¿Como los compilo?
 En preparación para entrar al Pipeline es necesario consolidar la información recopilada.
-- Regresarás a Perplexity Desktop y, usando como base el Prompt E, pegarás los JSONs de L1 + L2.
-- Perplexity aplicará dedup con clave compuesta brand+title+location siguiendo una jerarquía L1 > L2 (de las vacantes duplicadas persistirán las instancias de L1, tomando de L2 la información que pueda complementar sus propiedades para Class A).
-- Perplexity entregará como respuesta un Plain Array consolidado (JSON plano sin capas anidadas), listo para Python.
-- Guardarás el resultado en:
-```plain text
-~/Documents/03 Projects/VANTAGE/Layer_1/Feeds/YYYY-MM-DD_consolidated.json
-```
-### ¿Como corre L3?
-- L3 lee los correos no leídos de Gmail que tengan asignado el label .Jobs.
-- Extrae vacantes con Groq y las escribe directamente en el Tracker. 
-- Ejecuta manualmente para procesar backlog de Gmail antes del siguiente ciclo automático. 
-```bash
-vl3
-```
 Para este momento, los siguientes filtros ya habrán sido aplicados sin consumir cuota: 
-- Hard-blocked (L’Oréal · Levi’s/Dockers · El Palacio de Hierro — ver lista completa en MANUAL:DATA-MANAGEMENT)
-- Asuntos de agradecimiento
-- Newsletters
-- Confirmaciones de cuenta.
-Límites por ejecución:
-- Procesa máximo 10 correos por run (configurable en GROQ_MAX_EMAILS_PER_RUN).
-- Si hay backlog, el script reporta cuántos quedan.
-- Si L3 falla: verifica que LAYER_3/config/layer_3.env existe y contiene las credenciales de Gmail, Groq y Notion. El venv hereda de LAYER_1/.venv — si Layer 1 funciona, L3 tiene el entorno listo. (Para troubleshooting detallado de L3, ver MANUAL:TROUBLESHOOTING.)
 Abre la Terminal y procesa el JSON consolidado de L1+L2:
-```bash
-vl1 feed ~/Documents/03 Projects/VANTAGE/Feeds/YYYY-MM-DD_consolidated.json
-```
-### ¿Qué ocurre aquí?
-- Dispara: El script vantage_pipeline.sh actúa como wrapper: activa el entorno virtual (.venv), valida la estructura y dispara feed_processor.py para normaliar campos, aplicar dedup cross-layer (ventana 30 días — ver MANUAL:DATA-MANAGEMENT) y presentarte el DRY RUN antes de escribir en Notion.
-- Aprobar escritura: revisa el DRY RUN en terminal. El output muestra las propiedades Class A de cada instancia a crear. Las entradas duplicadas aparecen como SKIP. Las que requieren revisión aparecen como REVIEW_NEEDED. Confirma con y (yes) para escribir en Notion. Cualquier otra tecla cancela sin escribir.
-- Los registros con status REVIEW_NEEDED que se escriben en Notion se resuelven al día siguiente en el Dashboard MANUAL:WEEKLY-FLOW-002
-- Procesar con Python: Para este punto las propiedades Class A de cada instancia nueva se habrán poblado por L1, L2 o L3. 
-- Para poblar las propiedades Class B de todas las instancias pendientes en el Tracker, ejecutarás la app LAYER 1.app desde /Applications o usando Terminal:
-```bash
-vl1
-```
-- READY-TO-APPLY: abre la vista Ready-to-Apply en Notion. 
-- Vacantes con Score ≥ 60 están listas para CV Optimization en preparación para tu postulación — esto es lo que trabajarás el Miércoles MANUAL:WEEKLY-FLOW-003.
-### ¿Qué es L4?
 L4 mantiene dos cosas sincronizadas en background, sin intervención manual en el ciclo semanal normal:
-- El repositorio git del sistema (vgit)
-- Los 6 documentos fundacionales entre Notion y el disco local (vdoc). 
 Son dos herramientas separadas que se combinan: vdoc mueve contenido documental Notion ↔︎ ACTIVE/, y al terminar dispara automáticamente un git_sync — por eso casi nunca necesitas correr vgit a mano después de un vdoc.
-### ¿Qué es vgit?
-- Ejecuta vgit desde Terminal en cualquier momento para enviar un sync inmediato — útil si hiciste cambios locales fuera del ciclo automático y no quieres esperar al siguiente horario.
-- Verificar último run: cat /tmp/vantage_l4_gitsync.log — cada corrida (automática o manual) queda registrada ahí con timestamp, exit code y el output completo del sync, así puedes auditar qué pasó sin depender de las notificaciones del sistema.
-- Si el repo no existe o está corrupto, vgit ya no lo confunde con “sin cambios” — reporta el error explícitamente y la notificación del wrapper se ve roja (❌), no verde.
-- Archivos: 
-- Layer_4/scripts/git_sync.py 
-- Layer_4/wrappers/git_sync_wrapper.sh 
-- ~/Library/LaunchAgents/com.vantage.gitsync.plist
 Extensión reciente — Skills Distribution: vgit/git_sync.py además detecta cambios en /skills/ (archivos .skill nuevos o modificados) y, como parte del mismo commit+push, regenera index.json. No es un flujo separado de mantenimiento — es el mismo mecanismo de auto-sync ya descrito arriba, extendido a un directorio adicional. 
 Esto es lo que permite que Claude Desktop (MCP filesystem local sobre /skills/) y Devin Desktop (vía GitHub Pages en main) lean siempre la misma versión sin paso de sincronización manual entre ambos consumidores.
-### ¿Qué es vdoc?
-- Sincroniza los 6 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log) entre Notion y ACTIVE/ en disco.
-- Al terminar encadena un git_sync automático para que el commit quede reflejado en GitHub sin un paso adicional.
-- Tres direcciones posibles:
-- vdoc auto — compara la fecha de modificación de cada documento (local vs. Notion) y sincroniza en el sentido que corresponda, documento por documento. Es el modo por defecto y el más seguro para uso diario: nunca sobreescribe algo más reciente con algo más viejo.
-- vdoc notion — fuerza Notion → local para los 6 documentos, sin comparar fechas. Úsalo solo si sabes que Notion tiene la versión correcta y quieres descartar cualquier cambio local.
-- vdoc local — fuerza local → Notion para los 6 documentos, sin comparar fechas. Úsalo solo si editaste los .md directamente en disco (offline) y quieres que Notion adopte esa versión.
 Como notion y local sobreescriben sin comparar fechas, ambos son operaciones forzadas: antes de ejecutar nada, vdoc te muestra automáticamente un preview (equivalente a --dry-run) de lo que va a hacer, y te pide confirmación explícita en terminal (s para continuar, cualquier otra tecla cancela).
 Si por alguna razón corres el comando sin una terminal interactiva disponible, el script no asume que confirmaste — cancela por seguridad y no escribe nada. vdoc auto nunca pide esta confirmación porque nunca sobreescribe algo más reciente.
-- Modificador dry — se combina con cualquiera de los tres comandos anteriores y con cualquier documento específico, en cualquier orden, y siempre gana: nunca escribe en Notion, en disco ni hace commit, sin importar qué más hayas escrito en la misma línea.
-- vdoc dry — preview de auto (equivalente a vdoc auto dry)
-- vdoc notion dry — preview de lo que haría vdoc notion, sin ejecutar la escritura forzada
-- vdoc local dry — preview de lo que haría vdoc local
-- vdoc kernel dry — preview de solo Kernel en modo auto
-Recomendación operativa: corre siempre la variante dry primero cuando no estés seguro de qué dirección va a ganar — te cuesta segundos y evita sorpresas, especialmente antes de un notion o local forzado.
-### ¿Que es sync?
-- Sync quirúrgico por documento — cualquiera de los 6 nombres puede pasarse solo o combinado con dirección/dry:
-- vdoc kernel
-- vdoc system_prompt
-- vdoc career_canon
-- vdoc manual
-- vdoc aliases
-- vdoc change_log
-- Sin dirección explícita, cada uno corre en modo auto (gana el más reciente) solo para ese documento — los otros 5 no se tocan. 
-- Se puede combinar con notion/local (ej. vdoc notion kernel fuerza solo Kernel Notion→local) y con dry (ej. vdoc kernel dry).
----
-## 8.2 MANUAL:WEEKLY-FLOW-002
-Martes
-### ¿Qué resuelvo aquí?
-Antes de avanzar al miércoles, este es el momento de resolver lo que quedó bloqueado el lunes: REVIEW_NEEDED · BLOCKED recuperables · NADs vencidas. Las vacantes que recuperes aquí son las que estarán disponibles en Ready-to-Apply para trabajar mañana.
 Si el bloqueo es por un campo Class A corregible, usa el Dashboard: Proponer Patch → Validar → Aceptar. No uses el Dashboard para forzar un CREATE en vacantes que no cumplen score — úsalo solo para corregir datos erróneos. (Recuerda de MANUAL:HOW-IT-WORKS: un Gate BLOCKED no es un error del sistema a “saltarse”, es una vacante cuyos datos de entrada tienen un problema identificable y corregible.)
-### Partes del Dashboard
 Es una sola herramienta (dashboard.html + dashboard_server.py :8000), no hay pestañas ni vistas separadas. La pantalla es un panel de recuperación de vacantes bloqueadas, con una tira de estado del pipeline (L1 → RT-1 → Notion → Mail) como indicador visual — no una vista de navegación distinta. Comparte la infraestructura visual (vantage-tokens.css, vantage-theme.js) con el Checklist, descrita en MANUAL:CHECKLIST.
 Archivos: Dashboard/dashboard.html · Dashboard/scripts/dashboard_server.py.
 Abrir el Dashboard: ejecuta en terminal:
-```bash
-vd
-```
-El wrapper dashboard_start.sh arranca el servidor Flask en http://127.0.0.1:8000 (accesible también vía Tailscale desde otros dispositivos), ejecuta un smoke test automático y abre dashboard.html en el navegador. Output esperado en terminal: SMOKE PASSED — abriendo dashboard. Si el smoke falla, emite notificación sonora de error (Basso) y no abre la UI. El indicador “BACKEND OK/OFFLINE” en la esquina superior confirma la conexión en vivo.
-### Partes del Dashboard:
-- Sidebar (columna izquierda): estado de la instancia activa — instance_id, payload actual de la vacante (campos Class A como aparecen en Notion), capabilities disponibles en el estado actual (can_patch · can_validate · can_accept · can_archive) y Audit Log en tiempo real con cada evento registrado.
-- Panel principal (área derecha): cuatro secciones — selector de vacante (dropdown con todas las vacantes en Gate = BLOCKED, botón Crear instancia), máquina de estados FSM (visualiza el estado actual: BLOCKED → PATCHED → RETURNED_TO_CREATE), panel de patch (formulario con campos Class A editables: URL · JD · Source_Type · Prioridad), y área de resultado de validación (PASS verde o FAIL rojo con motivo).
-- Botones: Crear instancia · Proponer Patch · Validar · Aceptar Patch · Archivar · Sincronizar.
-### BLOCKED
 1. Selecciona la vacante del dropdown (muestra Marca · Rol · Score · VM_Scope).
-1. Crear instancia — abre una instancia en estado BLOCKED y carga el payload desde Notion. Audit Log registra domain.instance.created.
-1. Edita los campos incorrectos en el panel de patch — solo Class A (URL · JD · Source_Type · Prioridad). Los campos Class B no son editables.
 1. Proponer Patch — almacena la corrección. Audit Log registra domain.patch.proposed.
-1. Validar — el backend ejecuta run_pipeline.py con el patch y verifica si el resultado sería CREATE. Si pasa: estado → PATCHED, resultado verde. Si falla: estado permanece BLOCKED, resultado rojo con motivo.
-1. Aceptar Patch — escribe los campos Class A corregidos en Notion. Estado → RETURNED_TO_CREATE. Audit Log registra domain.patch.accepted.
-1. Corre el pipeline para que Python recalcule:
-```bash
-~/vantage_pipeline.sh
-```
-### FAILED
 Secuencia — vacante no recuperable: usa el botón Archivar. El Dashboard escribe Next_Action = Archivar en Notion y cierra la instancia en estado FAILED. No pasa por el pipeline.
-### REVIEW_NEEDED
 Las entradas con este status son escritas en Notion por feed_processor.py cuando no pudieron procesarse completamente: la URL era parcial o ambigua, la marca no resolvía contra el alias map, o el sistema detectó un semi-duplicate cross-layer que requiere revisión humana. Mientras el status permanezca en REVIEW_NEEDED, sus campos Class B (Score, Gate_Decision, VM_Scope, Role_Class) quedan bloqueados — Python no los calcula.
-Contrato de resolución — 4 pasos obligatorios:
-1. Abre la entrada en Notion e identifica el problema indicado en el campo Notas (ej. “URL parcial”, “alias no resuelto: Nike México”, “semi-duplicate”).
-1. Corrige el campo problemático directamente en Notion: reemplaza la URL parcial con la URL completa, o ajusta el nombre de la marca al valor que exista en el alias map.
-1. Cambia Status → Target. Este es el único valor que Python reconoce como señal de resolución. Cualquier otro valor (incluyendo dejar REVIEW_NEEDED) mantiene el bloqueo en el siguiente run.
 1. Corre el pipeline:
-```bash
-~/vantage_pipeline.sh
-```
 Python detecta Status = Target en entradas que tenían Gate vacío o REVIEW_NEEDED y procesa sus campos Class B normalmente — calcula Score, Gate_Decision y el resto.
 Por qué Target y no otro valor: Target es el estado operativo estándar de una vacante en espera de procesamiento. Usarlo como señal de resolución mantiene el contrato de estados consistente — no requiere un valor nuevo ni lógica adicional en Python.
 Nota importante: estas entradas no pasan por el Dashboard. El Dashboard es para vacantes con Gate = BLOCKED que ya tienen campos Class B calculados y necesitan corrección de inputs Class A. REVIEW_NEEDED es un estado previo — todavía no llegó a tener Gate calculado.
-## 8.3 MANUAL:WEEKLY-FLOW-003
 Miércoles
 Optimización de CV para vacantes priorizadas en Ready-to-Apply. Claude opera activamente en este ciclo — es el único día donde el AI Component tiene rol principal. L3 sigue corriendo en sus horarios habituales, en background.
 ### CV-A
@@ -690,7 +385,7 @@ Con el Census y su ciclo de regeneración ya cubiertos arriba, esta es la contra
 - vantage-tidy-opportunities-tracker — identifica duplicados y vacantes expiradas en el Tracker de vacantes para archivado, usando los mecanismos de fingerprint y protección de estado terminal ya implementados en feed_processor.py (ver MANUAL:DATA-MANAGEMENT). Requiere Dry Run + APROBAR_WRITE.
 - vantage-tidy-changelog — mantiene el Change Log con las últimas 10 entradas visibles, moviendo el exceso al Archivo Changelog histórico. Úsala cuando el Change Log activo supera 10 entradas o para housekeeping documental puntual.
 - vantage-present-handoff — genera el snapshot de contexto de sesión para continuidad en un chat nuevo. Es independiente y se puede invocar en cualquier momento; no requiere que la sesión esté cerrando (ver también MANUAL:SESSION-CYCLE, Cierre, donde vantage-session-close la invoca automáticamente como parte de su secuencia normal).
-Cada una declara su propio verbo de apertura/cierre (KERNEL:DOCUMENTATION-005) — nunca el lenguaje de Bootstrap ni de Session Ledger.
+Cada una declara su propio verbo de apertura/cierre (KERNEL:SKILL-ANNOUNCE-CONVENTION) — nunca el lenguaje de Bootstrap ni de Session Ledger.
 ---
 ## 12 MANUAL:TROUBLESHOOTING
 Problemas Comunes y Soluciones
@@ -804,7 +499,7 @@ Las Reglas de Oro (KERNEL:CV-GOLDEN-RULES) son restricciones de arquitectura, no
 | KERNEL:CV-GOLDEN-RULES-003 | No Cuestionar la Calidad de Datos del Usuario | Comentarios sobre volumen/calidad del JSON de búsqueda — estrategia es 100% humana |
 | KERNEL:CV-GOLDEN-RULES-004 | No Delegar Escritura al Usuario | "Copia esto y pégalo en Notion" — el sistema escribe directo, salvo export PDF/Drive |
 | KERNEL:CV-GOLDEN-RULES-005 | No Interpretar en SYNC | SYNC reporta datos puros, sin análisis ni recomendaciones |
-| KERNEL:CV-GOLDEN-RULES-006  | Invarianza del Gate | Prohibido que la IA re-evalúe o bloquee vacantes ya aprobadas |
+| KERNEL:CV-GOLDEN-RULES-006 | Invarianza del Gate | Prohibido que la IA re-evalúe o bloquee vacantes ya aprobadas |
 - Toda violación produce el Template Universal de Rechazo (ver Kernel): OPERACIÓN RECHAZADA → razón → alternativa operativa → confirmación SÍ/CANCELAR.
 - Para el detalle completo de cada regla (ejemplos de solicitudes que la activan, redacción exacta de la respuesta estandarizada), consultar directamente KERNEL:CV-GOLDEN-RULES en el Kernel — fuente única, no se replica aquí para evitar drift entre documentos.
 ## 19 MANUAL:POSITIONING-CRITERIA
@@ -862,7 +557,7 @@ Next_Action: select (10 valores operativos). Ver KERNEL:SCHEMA-008.
 Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida (KERNEL:SCHEMA-003).
 Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
 ---
-###  Verificación de Longitud (--length / --update-baseline)
+### Verificación de Longitud (--length / --update-baseline)
 Contexto:
 Procedimiento de sanity check para validar que ningún documento fundacional haya sufrido pérdida silenciosa de contenido tras operaciones de sincronización, edición masiva o fallo en scripts de inyección.
 Procedimiento:
@@ -1208,3 +903,59 @@ Hallazgos de discrepancia activos (heredados de auditoría arena.ia, verificados
 1. vsum.py --notion se parsea pero no tiene efecto — vestigial.
 1. cross_tracker_match.py --dry-run no puede desactivarse — default True sin opuesto.
 1. GROQ_MAX_EMAILS_PER_RUN: Manual/Aliases citan valores distintos entre sí; código usa 10.
+---
+## 23 MANUAL:SKILL-GLOSSARY
+Glosario de Skills — Referencia Operativa en Humano
+> Propósito: Traducir cada skill de Claude (/mnt/skills/user/) a lenguaje operativo — qué hace, qué la dispara, si requiere gate de escritura, y su convención de anuncio. Contraparte de MANUAL:SCRIPT-GLOSSARY (§22), aplicada a skills en vez de scripts. La Skill Library (Notion DB) es su índice corto y estructurado; se referencian entre sí.
+---
+### 23.1 MANUAL:SKILL-GLOSSARY-CORE
+Pipeline CV y Ciclo de Sesión
+| Skill | Propósito | Trigger | Gate | Anuncio |
+| --- | --- | --- | --- | --- |
+| vantage-session-open | Bootstrap de sesión (Ledger→Contexto) | Inicio de sesión / invocación explícita | ❌ (housekeeping, exento de APROBAR_WRITE) | SESSION-OPENING… / SESSION-OPENED |
+| vantage-session-close | Cierre de sesión (Changelog+Ledger+Sync) | Fin de sesión / invocación explícita | ✅ | CLOSING SESSION… / SESSION CLOSED |
+| vantage-cv-a | Analiza JD/URL, produce HANDOFF con Positioning Mode | CV-A [URL/JD] | ❌ | No especificado (gap, ver 23.5) |
+| vantage-cv-b | Construye CV final con Figma Tags desde HANDOFF | CV-B [HANDOFF] | ✅ | No especificado (gap, ver 23.5) |
+| vantage-qa | Audita PDF de CV final, veredicto GO/NO-GO | QA [PDF] | ❌ | No especificado (gap, ver 23.5) |
+| vantage-present-handoff | Handoff compacto de sesión para continuidad | Fin de sesión / cambio de chat | ❌ | HANDING OFF… / HANDOFF DELIVERED |
+---
+### 23.2 MANUAL:SKILL-GLOSSARY-HOUSEKEEPING
+Sincronización y Mantenimiento Documental
+| Skill | Propósito | Trigger | Gate | Anuncio |
+| --- | --- | --- | --- | --- |
+| vantage-sync-script-library | Sincroniza Script Library Notion vs disco | "sincronizar Script Library" / gap report | ✅ | SYNCING SCRIPT LIBRARY… / SCRIPT LIBRARY SYNCED |
+| vantage-sync-skill-library | Sincroniza Skill Library Notion vs disco .skill | "sincronizar Skill Library" / gap report | ✅ | SYNCING SKILL LIBRARY… / SKILL LIBRARY SYNCED |
+| vantage-sync-assets | Orquesta las 4 sync de Libraries/Glossaries en orden fijo | "sync assets" / "sincronizar assets" | ✅ | SYNCING ASSETS… / ASSETS SYNCED |
+| vantage-sync-script-glossary | Sincroniza apéndice §22 vs disco | "sincronizar Script Glossary" / gap --new-scripts | ✅ | No especificado (gap, ver 23.5) |
+| vantage-sync-census-spec | Da de alta IDs huérfanos en CENSUS_SPEC | "sincronizar Census Spec" / huérfanos en vcensus | ✅ | SYNCING CENSUS SPEC… / CENSUS SPEC SYNCED |
+| vantage-hyperlink-loop | Ciclo Census→Hyperlinks→Sync | Housekeeping de navegación / invocación explícita | ✅ | REGENERATING NAVIGATION LOOP… / NAVIGATION LOOP FINISHED |
+| vantage-create-bug-task | Crea ticket en Bug/Task Tracker | Reporte de defecto o tarea pendiente | ✅ | LOGGING TICKET… / TICKET LOGGED |
+| vantage-tidy-bug-task-tracker | Marca tickets resueltos como Archivar=True | Resolución directa o vía Change Log | ✅ | TIDYING TRACKER… / TRACKER TIDIED |
+| vantage-tidy-opportunities-tracker | Marca duplicados/expiradas en VANTAGE Tracker | Housekeeping de vacantes | ✅ | TIDYING OPPORTUNITIES… / OPPORTUNITIES TIDIED |
+| vantage-tidy-changelog | Recorta Change Log a últimas 10 entradas | Exceso >10 entradas / housekeeping | ✅ | TIDYING CHANGELOG… / CHANGELOG TIDIED |
+| vantage-documentacion-transversal-propuesta | Mapea nodos fundacionales afectados, sin escribir | "propuesta de documentación transversal" / gap estructural | ❌ | BEGINNING DOCUMENTATION MAPPING… / cierre no especificado (gap, ver 23.5) |
+| vantage-documentacion-transversal-implementacion | Ejecuta escritura de documentación ya autorizada | Post-APROBAR_WRITE de propuesta | ✅ | RESUMING DOCUMENTATION — IMPLEMENTATION PHASE… / DOCUMENTATION FINISHED |
+---
+### 23.3 MANUAL:SKILL-GLOSSARY-AUDIT
+Auditoría y Continuidad
+| Skill | Propósito | Trigger | Gate | Anuncio |
+| --- | --- | --- | --- | --- |
+| vantage-audit-navigation-brief | Audita si un cambio requiere parches en Navigation Brief | "audit brief" / post-write sin impact assessment | ❌ (solo lectura, nunca escribe Notion) | No especificado (gap, ver 23.5) |
+| extract-learnings | Extrae aprendizajes reutilizables tras un fumble | Post-fumble evitable o creación de skill nueva | ❌ | No aplica (housekeeping interno) |
+---
+### 23.4 MANUAL:SKILL-GLOSSARY-STYLE
+Estilos de Escritura y Generación (activación por invocación explícita, no por trigger operativo)
+| Skill | Propósito | Trigger |
+| --- | --- | --- |
+| critico-pensante-style | Reflexivo/analítico, cuestiona contradicciones | Invocación exacta por nombre |
+| retail-auditor-style | Auditoría sistemática de VM/retail multi-tienda | Invocación exacta por nombre |
+| socio-estrategico-style | Directo/eficiente para VM, sin rodeos | Invocación exacta por nombre |
+| corporate-communication-style | Cartas de recomendación formales | Invocación exacta por nombre |
+| prompt-master | Genera prompts optimizados para otras IAs | Pedido explícito de prompt para IA/Cursor/Midjourney/etc. |
+| tailored-resume-generator | Genera CVs adaptados a una vacante específica | Solicitud de CV a medida + JD |
+---
+### 23.5 MANUAL:SKILL-GLOSSARY-XREF
+Gaps Abiertos (hallazgos, no corregidos en esta pasada)
+- Capa null en 24/25 filas de Skill Library (Notion) — campo definido en schema, prácticamente sin uso.
+- Anuncio no especificado en 6 skills operativas que deberían tenerlo por [KERNEL:DOCUMENTATION-005](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281da00cefa2da3a2c79):
+vantage-cv-a, vantage-cv-b, vantage-qa, vantage-sync-script-glossary, vantage-audit-navigation-brief, y el cierre de vantage-documentacion-transversal-propuesta.
