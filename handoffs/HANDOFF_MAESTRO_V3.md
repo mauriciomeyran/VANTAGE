@@ -403,3 +403,19 @@ vgit
 ```
 
 **Restante tras esto:** T5c (Claude, tarjeta enviada) · D2 rework + D5 real (Devin, tickets con PR) · T20-T22 (cierre [AUDIT] + vversions --sync PASS + Ledger).
+
+---
+
+## Bitácora — 2026-08-15: cierre de pendientes + T20 (tarjeta final)
+
+**Verificación de estado (origin/main f5a0a1b, sin commits nuevos):**
+- Bloque Archive (Video/Outputs/.devin) SIN ejecutar — siguen en raíz.
+- Manual en espejo: los únicos `http://` son legítimos (127.0.0.1 x2 + doc del cleaner) → la corrupción de T5b NO está en el espejo; T5c no verificable desde espejo (auto-sync no ha bajado Notion reciente) → asignada a P-B con verificación en vivo.
+- D2-rework y D5-real: ausentes → **issues creados por el auditor: #8 (D2-rework) y #9 (D5-real)** con criterios de aceptación y PR obligatorio.
+- Index.html raíz: fue eliminado ANTES de la política cero-borrados (f5a0a1b) — recuperable desde historial git; registrar en T20.
+
+**Pendientes consolidados (orden de ejecución):**
+- **P-A (Operador, Terminal):** mover Video→Archive/Video, Outputs→Archive/Outputs, .devin/skills→Archive/devin-skills (git mv, cero borrados).
+- **P-B (Claude):** verificar T5c en vivo en §22.1b (si corrupción presente → patch; si limpio → confirmar y reportar).
+- **P-C (Devin):** issues #8 y #9 (links en tarjeta).
+- **P-D (Claude + Operador):** T20 — entrada [AUDIT] con registro completo → vversions --sync PASS → Ledger CLOSED.
