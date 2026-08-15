@@ -1,5 +1,20 @@
 # V | CHANGELOG
 
+Tipo: [DOC]
+Alcance:
+- Career Canon (CANON:POSITIONING-001 a -004, 11.1–11.4)
+Contexto: Brief del operador (BRIEF_Positioning_Modes_Enrichment.md) solicitaba enriquecer la sección CANON:POSITIONING con profundidad narrativa por modo (Propósito, Qué comunica, Evidencia priorizada, Cómo afecta el CV), sin tocar la arquitectura N1–N4 existente ni las anclas C01–C05. Auditoría previa del dry run del operador identificó 3 correcciones obligatorias antes de escribir: (1) header de N3 corregido a "Regional Brand Execution & Rollout" (nombre canónico exacto); (2) cada bloque N1–N4 ancla explícitamente a CANON:POSITIONING-005 (Anti-overselling/Anti-fragmentación); (3) N1 aclara que Levi's/Dockers, Palacio y Bisonte son evidencia secundaria de apoyo, ancla primaria inalterada en C01. Hallazgo adicional confirmado por el operador: el ancla canónica vigente de N4 es "C04/C05" (no solo C04) — se aplicó Opción B (coanclaje explícito, no silencioso) en vez de dejar la narrativa desmentir la mitad del ancla ya escrita en CANON:POSITIONING-004. Decisión de arquitectura ya resuelta por el operador: expansión directa in situ en 11.1–11.4, sin sub-sección nueva.
+Cambios:
+- CANON:POSITIONING-001 (11.1) — bloque enriquecido: Propósito, Qué comunica, Evidencia priorizada, Cómo afecta el CV, + anclaje a CANON:POSITIONING-005.
+- CANON:POSITIONING-002 (11.2) — idem.
+- CANON:POSITIONING-003 (11.3) — idem.
+- CANON:POSITIONING-004 (11.4) — idem, con coanclaje explícito C04/C05 (Opción B); Regla de Desempate – JDs Híbridos preservada intacta inmediatamente después.
+IDs afectados: Ninguno (extensión de contenido bajo nodos existentes, sin alta/baja de ID canónico — no dispara KERNEL:DOCUMENTATION-008 Regla 1).
+Write-Back Verification: Career Canon re-fetched post-escritura — 4/4 bloques confirmados en posición correcta, sin mismatch. Regla de Desempate confirmada intacta tras el bloque de N4.
+Pendiente (fuera de esta entrada):
+- Tabla comparativa final (N1–N4) del dry run del operador no se insertó — pertenece conceptualmente al nodo padre CANON:POSITIONING (11), fuera del alcance aprobado de 11.1–11.4. Queda como decisión aparte para el operador.
+- vversions --sync para propagar v9.21.2 al resto de los fundacionales.
+---
 Tipo: [DOC] [CODE] [INFRA]
 Alcance:
 - Local (skill): /skills/vantage-tidy-bug-task-tracker.skill — corrección de anchor

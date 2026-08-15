@@ -214,18 +214,48 @@ Coordination of Aéropostale's participation in AeroFest (Frontón México, 2018
 ## 11 CANON:POSITIONING
 Positioning Modes
 Cada modo funciona como una vista filtrada del Canon — una Matriz de Respaldo Estratégico que ancla narrativa, bullets y KPIs a un registro C01–C05 específico, sin reordenar ni alterar la experiencia subyacente.
+Vista comparativa de los cuatro modos:
+|  | N1 | N2 | N3 | N4 |
+| --- | --- | --- | --- | --- |
+| Centro | Marca | Espacio | Escala | Personas + negocio |
+| Principal evidencia | L'Oréal (C01) | Bisonte (C02) | Levi's/Dockers (C03) | Aéropostale + Palacio de Hierro/ALDO (C04/C05, coanclaje) |
+| Énfasis | Brand Execution | Store Design | Regional Rollout | Leadership |
+| Escala | Marca / canales | Proyecto / flagship | Países / POS | Tiendas / equipos |
+| KPIs | Eficiencia + impacto | Entrega / ejecución | Costos + productividad | Tráfico + conversión |
+| CV debe demostrar | Protección y ejecución de marca | Capacidad de proyecto físico | Capacidad de escalar | Capacidad de liderar |
+El Positioning Mode no cambia la experiencia profesional. Cambia qué aspectos de esa experiencia reciben mayor protagonismo dentro del CV.
 ### 11.1 CANON:POSITIONING-001
 N1 · Luxury Brand Execution
 Ancla canónica: C01 · 3 marcas lujo · CAPEX/OPEX · NPI
+Propósito: Posicionar al candidato como especialista en traducir identidad y lineamientos de marcas premium/luxury en ejecuciones visuales consistentes, comercialmente relevantes y operacionalmente viables. Énfasis en marca → estrategia visual → ejecución local → consistencia de experiencia.
+Qué comunica: Estratega de VM y Brand Execution capaz de operar dentro de estructuras de marca complejas y convertir lineamientos globales en ejecución local. C01 concentra manejo simultáneo de 3 marcas, lanzamientos, coordinación con Marketing/Trade Marketing, CAPEX/OPEX y gestión de proveedores. C02, C03 y C05 aportan evidencia secundaria de apoyo — la ancla primaria permanece en C01.
+Evidencia priorizada: Brand execution · Brand consistency · Global-to-local adaptation · Visual storytelling · Campaign execution · NPI · CAPEX/OPEX · Vendor management · Multi-channel execution · Regional guidelines · Commercial alignment.
+Cómo afecta el CV: Mayor espacio a experiencias con ownership de marca y ejecución estratégica. Verbos: Lead · Translate · Execute · Align · Standardize · Coordinate · Optimize. Los logros cuantitativos deben demostrar impacto comercial, no solo estética. Resultado narrativo: profesional de VM capaz de proteger la integridad de una marca y convertir su estrategia en ejecución local de alto nivel.
+Ver CANON:POSITIONING-005 — restringe los claims a la evidencia anclada en C01; la evidencia secundaria no habilita claims fuera de esa ancla.
 ### 11.2 CANON:POSITIONING-002
 N2 · Store Design & Flagship Execution
 Ancla canónica: C02 · Adidas Brand Center · KPI07 · blueprints
+Propósito: Posicionar al candidato como profesional capaz de llevar conceptos de marca y Store Design a ejecución física completa — coordinando producción, proveedores, materiales, instalación y apertura. Foco en el espacio físico como proyecto.
+Qué comunica: Perfil de Brand Environment / Store Design con capacidad de intervenir en proyectos complejos, coordinar múltiples actores y proteger la intención de diseño hasta la ejecución final. C02 (Adidas Brand Center Madero) es pieza central: rescate de la ejecución a 3 meses de apertura, coordinación de producción y logística, entrega en fecha con 17 observaciones menores, ninguna bloqueante.
+Evidencia priorizada: Store Design · Flagship Stores · Brand Environment · Openings · Remodeling · Production · Installation · Furniture & fixtures · Technical specifications · Vendor coordination · Quality control · Project deadlines · Rollouts.
+Cómo afecta el CV: Elevar experiencias de aperturas, espacios físicos, producción y coordinación técnica. Bullets: qué proyecto → qué responsabilidad → qué complejidad → qué resultado. Verbos: Execute · Deliver · Coordinate · Produce · Install · Supervise · Resolve · Open. Resultado narrativo: profesional capaz de convertir estándares de marca y Store Design en espacios ejecutados correctamente, incluso bajo presión de tiempo y complejidad operativa.
+Ver CANON:POSITIONING-005 — restringe los claims a la evidencia anclada en C02; no habilita claims fuera de esa ancla.
 ### 11.3 CANON:POSITIONING-003
 N3 · Regional Brand Execution & Rollout
 Ancla canónica: C03 · 270+ POS · 6 países · KPI03–06 · CF05
+Propósito: Posicionar al candidato como profesional capaz de escalar una estrategia visual y de marca a múltiples mercados, tiendas y equipos, manteniendo consistencia y eficiencia de ejecución.
+Qué comunica: Protagoniza la experiencia LATAM de C03 (Levi's/Dockers) — 6 países y 270+ puntos de venta, reducción de 74% en costos de campañas, reducción de 33% en tiempo de actualización de floorsets, creación de herramientas para field teams. El candidato construye mecanismos para que otros ejecuten correctamente.
+Evidencia priorizada: Regional scope · LATAM · Multi-country execution · Multi-store rollout · Standardization · Guidelines · Zoning & Mapping · Field tools · Training · Process optimization · Cost efficiency · Execution consistency.
+Cómo afecta el CV: Visibilizar países, puntos de venta, equipos, cobertura, ahorro, reducción de tiempos. Conceptos: Regional · Scale · Rollout · Standardize · Deploy · Optimize · Enable · Govern. Resultado narrativo: profesional capaz de convertir una estrategia de marca en un sistema de ejecución consistente y escalable.
+Ver CANON:POSITIONING-005 — restringe los claims a la evidencia anclada en C03; no habilita claims fuera de esa ancla.
 ### 11.4 CANON:POSITIONING-004
 N4 · Commercial VM & Field Leadership
 Ancla canónica: C04/C05 · +43% tráfico · +18% conversión · 21 reportes
+Propósito: Posicionar al candidato como líder de VM cuya responsabilidad trasciende la ejecución visual y se conecta con personas, operación y resultados comerciales.
+Qué comunica: Coanclaje explícito en C04 (Aéropostale) y C05 (Palacio de Hierro/ALDO) — ambos anclas primarias, no jerárquicas entre sí. C04: construcción del área de VM desde cero, 21 reportes directos, +43% tráfico, +18% conversión. C05: coordinación de 17 tiendas retail y 12 corners wholesale, liderazgo de aperturas y remodelaciones críticas, capacitación de personal de piso, gestión directa de una coordinadora Jr. (últimos 3 años del rol). C03 complementa con liderazgo regional y field enablement.
+Evidencia priorizada: VM leadership · Team management · Field leadership · Coaching · Training · Commercial KPIs · Traffic · Conversion · Store coverage · Wholesale coordination · Operational standardization · Performance · Team enablement.
+Cómo afecta el CV: Visibilidad de tamaño de equipo → alcance operativo → responsabilidad → resultado. Vocabulario: Lead · Manage · Build · Coach · Develop · Standardize · Improve · Drive. Resultado narrativo: líder de VM capaz de construir y dirigir equipos, estandarizar la operación y conectar la ejecución visual con resultados comerciales.
+Ver CANON:POSITIONING-005 — restringe los claims a la evidencia anclada en C04/C05; no habilita claims fuera de esa ancla.
 Regla de Desempate – JDs Híbridos
 Cuando un JD activa criterios de dos o más Positioning Modes simultáneamente, aplicar en orden de precedencia:
 1. El modo con mayor número de keywords del JD mapeados a su ancla canónica.
