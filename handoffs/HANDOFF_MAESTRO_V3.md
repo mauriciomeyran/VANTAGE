@@ -262,3 +262,20 @@ Cadena de evidencia: (1) son one-shots nacidos y muertos en una sola sesión —
 **Respuesta a la pregunta de Claude (patch_new_scripts.py):** SÍ — la cobertura orgánica vía patch #5 es la correcta. Crear heading nuevo violaría PATCH-QUALITY criterio 1 (no secciones nuevas) para un script que nunca tuvo fila ni heading. 6 scripts cubiertos con 5 escrituras. APROBADO.
 
 **Registro para T20 (acumulado):** (a) 4 one-shots Tier A sin fila en Script Library (solo Glosario §22.1) — sin deprecación posible, anotados en Glosario vía T5b; (b) drift V4 doble ID; (c) write silencioso T3 (patrón de indexado Notion); (d) hallazgo colateral: auto-linker corrompe también texto libre (Descripción) — D5 extiende el cleaner.
+
+---
+
+## Bitácora — 2026-08-15: T5b cerrado + corrección del borrador T20 + alcance del auto-linker
+
+**T5b ✅ cerrado** (write-back 5/5 de Claude). Verificación del auditor en espejo: ACTIVE limpio de corrupción histórica (el `health_http://check` de skills es la documentación intencional del bug, no corrupción); el sync 04:39 (3 archivos) aún no incluye G1/T5b → verificación de espejo pendiente del próximo ciclo (evidencia primaria: re-fetch de Claude, OK).
+
+**CORRECCIÓN al borrador T20 de Claude — el ítem (c) confla 2 eventos distintos.** Desglosar en 3 ítems:
+- (c) **Write silencioso T3**: `update_content` de Kernel §04.4 reportó éxito sin persistir (reintento OK). Lección: write-back con re-fetch en TODA escritura.
+- (d) **Auto-linker en campo libre de DB**: Descripción de `patch_vsync_doc.py` (T7/7c) corrompida al escribir (`vsync_[doc.py](http://doc.py)`).
+- (e) **Auto-linker en cuerpo de documento fundacional**: Manual §22.1b (T5b) — `patch_vsync_[doc.py](http://doc.py) y patch_new_[scripts.py](http://scripts.py)`. Primer caso confirmado fuera de DBs. El bug alcanza cualquier campo de texto libre en cualquier documento.
+
+**Respuesta a la pregunta de Claude (¿remedio más allá de Script Library?):** Sí hay que remediar la instancia del Manual (es glosario canónico), pero NO construir un cleaner general de fundacionales ahora. Respuesta SRE en 3 piezas: (1) **T5c** — PATCH dirigido del texto corrompido en §22.1b + re-fetch inmediato; si la capa de herramienta re-corrompe al guardar, STOP (no loop) y registrar como limitación de capa de tool; (2) **D6 (Devin)** — detector read-only del patrón en ACTIVE/*.md y skills/*.md (`_http://` y `[name.ext](http://…)` con URL igual al texto del link; excluir links externos legítimos), advisory en health_check.py; (3) un cleaner general solo si el detector muestra recurrencia real.
+
+**T9 pasada 1**: pendiente de confirmación del operador (¿corrió `clean_script_library_links.py` dry-run/--apply?). Pasada 2 (Descripción) espera D5.
+
+**Dependencias T20 (estado):** 6 ✅ · 7 ✅ · 10 ✅ · T5b ✅ · 13 ⏸ (espera merge D1/Devin) · 18 ⏸ (decisión operador C5-docs) · T5c (nueva) · 9 (pasada 1) · 11/19 (decisiones operador). El cierre `[AUDIT]` incorpora los ítems (a)–(e) corregidos + cierre v9.17.1 + aviso issue #4.
