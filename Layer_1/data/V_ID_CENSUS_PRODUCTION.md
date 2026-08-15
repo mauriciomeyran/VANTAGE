@@ -15,6 +15,7 @@
 | [`KERNEL:DOCUMENTATION-010`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42814ea9a3e9abd1b8e80e ) | 03.10 | Documentación Transversal |
 | [`KERNEL:DOCUMENTATION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e3ad72f7f5b13d2804 ) | 03.11 | Gate Decision Documentation |
 | [`KERNEL:DOCUMENTATION-012`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74 ) | 03.12 | Notebook Gemini — Auditor Documental Externo |
+| [`KERNEL:DOCUMENTATION-013`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#430a977f08b742dfa476a0840a909e51 ) | 03.13 | Protocolo Sandbox — Economía de Tokens Máxima |
 | [`KERNEL:ARCHITECTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810a8870dd1d384c1e7a ) | 04 | Arquitectura de Cuatro Capas |
 | [`KERNEL:ARCHITECTURE-L1`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f3825bd740b23ec959 ) | 04.1 | L1 — Active Search |
 | [`KERNEL:ARCHITECTURE-L2`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#73f6ec3692de4632a16d89313b91456d ) | 04.2 | L2 — Strategic Search |
@@ -272,6 +273,4 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-| ID | Documento | Link |
-|---|---|---|
-| `KERNEL:DOCUMENTATION-013` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#430a977f08b742dfa476a0840a909e51 ) |
+_Ninguno detectado en esta corrida._

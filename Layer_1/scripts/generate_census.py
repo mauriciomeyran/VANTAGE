@@ -70,6 +70,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:DOCUMENTATION-010", "seccion": "03.10", "nombre": "Documentación Transversal"},
             {"id": "KERNEL:DOCUMENTATION-011", "seccion": "03.11", "nombre": "Gate Decision Documentation"},
             {"id": "KERNEL:DOCUMENTATION-012", "seccion": "03.12", "nombre": "Notebook Gemini — Auditor Documental Externo"},
+            {"id": "KERNEL:DOCUMENTATION-013", "seccion": "03.13", "nombre": "Protocolo Sandbox — Economía de Tokens Máxima"},
             {"id": "KERNEL:ARCHITECTURE", "seccion": "04", "nombre": "Arquitectura de Cuatro Capas"},
             {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "04.1", "nombre": "L1 — Active Search"},
             {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "04.2", "nombre": "L2 — Strategic Search"},
