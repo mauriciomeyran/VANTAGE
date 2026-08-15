@@ -714,7 +714,7 @@ Problemas Comunes y Soluciones
 ### L3 No Procesa Correos
 - Verificar layer_3.env existe en Layer_3/config/.
 - Confirmar credenciales: IMAP (Gmail), GROQ_API_KEY.
-- Ejecutar manualmente: vl3 (debe procesar hasta 5 correos).
+- Ejecutar manualmente: vl3 (debe procesar hasta 10 correos).
 - Revisar heartbeat: cat ~/.vantage/l3_heartbeat.json (última ejecución exitosa).
 - Si falla autenticación IMAP: regenerar app password de Gmail.
 ### 12.1 MANUAL:FIGMA-SYNC-DIAGNOSTIC
@@ -1079,7 +1079,7 @@ Variables de entorno (todas ajustables sin tocar código):
 | GROQ_MIN_DELAY_SEC | 12 | Súbelo si estás pegando contra rate limits de Groq en corridas con muchos correos. |
 | GROQ_MAX_RETRIES | 8 | Ajusta si tu conexión es inestable. |
 | GROQ_BODY_MAX_CHARS | 3500 | Si tus alertas de correo traen JDs muy largos y se están truncando antes de lo útil, súbelo (cuidado con costo de tokens de Groq). |
-| GROQ_MAX_EMAILS_PER_RUN | 10 | Si tuviste una semana sin correr L3 y hay backlog, súbelo temporalmente para procesar todo de un jalón. ⚠️ Nota de discrepancia: Manual y Aliases citan valores distintos (10 vs 5) — el código real usa 10 como default; candidato prioritario para el punto B. |
+| GROQ_MAX_EMAILS_PER_RUN | 10 | Si tuviste una semana sin correr L3 y hay backlog, súbelo temporalmente para procesar todo de un jalón. ⚠️ Nota de discrepancia: Manual y Aliases citan valores distintos (10 vs 5) — RESUELTO (v9.21.x): Manual §12 corregido a 10; código real ya usaba 10 como default. |
 ---
 ### 22.1a MANUAL:SCRIPT-GLOSSARY-L1-MODULES
 Módulos Compartidos (sin CLI propia — se importan, no se ejecutan solos)
@@ -1228,7 +1228,7 @@ Hallazgos de discrepancia activos (heredados de auditoría arena.ia, verificados
 1. dedup_opportunities.py --clear requiere posición fija en sys.argv, no es un flag argparse real.
 1. vsum.py --notion se parsea pero no tiene efecto — vestigial.
 1. cross_tracker_match.py --dry-run no puede desactivarse — default True sin opuesto.
-1. GROQ_MAX_EMAILS_PER_RUN: Manual/Aliases citan valores distintos entre sí; código usa 10.
+1. GROQ_MAX_EMAILS_PER_RUN: Manual/Aliases citan valores distintos entre sí; código usa 10. — RESUELTO (v9.21.x, saneamiento estructural): Manual §12 alineado a 10 correos.
 ---
 ## 23 MANUAL:SKILL-GLOSSARY
 Glosario de Skills — Referencia Operativa en Humano
@@ -1256,6 +1256,7 @@ Sincronización y Mantenimiento Documental
 | vantage-sync-census-spec | Da de alta IDs huérfanos en CENSUS_SPEC | "sincronizar Census Spec" / huérfanos en vcensus | ✅ | SYNCING CENSUS SPEC… / CENSUS SPEC SYNCED |
 | vantage-hyperlink-loop | Ciclo Census→Hyperlinks→Sync | Housekeeping de navegación / invocación explícita | ✅ | REGENERATING NAVIGATION LOOP… / NAVIGATION LOOP FINISHED |
 | vantage-housekeeping-tracker | Orquesta housekeeping de trackers (Bug/Task → VANTAGE Tracker → Change Log) en orden fijo | "housekeeping trackers" / "tidy trackers" | ✅ | HOUSEKEEPING TRACKERS… / TRACKERS HOUSEKEPT |
+| vantage-housekeeping-archive | Consolida detección→marcado→verificación de candidatos a archivar (Dedup_Flag/Next_Action) en un solo procedimiento, absorbiendo el ciclo antes cubierto por escaneo visual (ver KERNEL:GATE-DECISION-007) | "housekeeping archive" / candidatos detectados vía Dedup_Flag/Next_Action | ✅ | ARCHIVING HOUSEKEEPING… / ARCHIVE HOUSEKEPT |
 | vantage-create-bug-task | Crea ticket en Bug/Task Tracker | Reporte de defecto o tarea pendiente | ✅ | LOGGING TICKET… / TICKET LOGGED |
 | vantage-tidy-bug-task-tracker | Marca tickets resueltos como Archivar=True | Resolución directa o vía Change Log | ✅ | TIDYING TRACKER… / TRACKER TIDIED |
 | vantage-tidy-opportunities-tracker | Marca duplicados/expiradas en VANTAGE Tracker | Housekeeping de vacantes | ✅ | TIDYING OPPORTUNITIES… / OPPORTUNITIES TIDIED |
