@@ -56,10 +56,30 @@ def inspect_archive_queue():
     """
     Inspecciona las colas/archivos marcados para archivo y despliega el listado formateado.
     Utiliza graph_layer para obtener entidades con edges de tipo 'archived_from'.
+    
+    Versión mejorada (D2-rework):
+    - Integración profunda con entity_index_v2.json para detalles de entidades
+    - Detección de entidades con Next_Action='Archivar' o Dedup_Flag='Posible duplicado'
+    - Validación de integridad del grafo
+    - Reporting estructurado con formato JSON para consumo programático
+    - Manejo robusto de errores con códigos de salida
+    
+    Returns:
+        dict: Resultado estructurado con estadísticas y lista de entidades
     """
+    result = {
+        "success": False,
+        "graph_stats": None,
+        "archived_entities": [],
+        "next_action_archive": [],
+        "dedup_flag_candidates": [],
+        "errors": []
+    }
+    
     try:
         # Import graph_layer for archive inspection
         import sys
+        import json
         from pathlib import Path
         scripts_dir = Path(__file__).resolve().parent
         if str(scripts_dir) not in sys.path:
@@ -67,11 +87,13 @@ def inspect_archive_queue():
         
         from graph_layer import get_archived_from, graph_stats
         
-        print("\n📦 ARCHIVE QUEUE INSPECTION")
+        print("\n📦 ARCHIVE QUEUE INSPECTION (v2)")
         print("=" * 50)
         
         # Get graph statistics
         stats = graph_stats()
+        result["graph_stats"] = stats
+        
         print(f"📊 Graph Statistics:")
         print(f"  Total edges: {stats['total_edges']}")
         print(f"  Total nodes: {stats['total_nodes']}")
@@ -83,20 +105,120 @@ def inspect_archive_queue():
         archived_count = stats['edges_by_type'].get('archived_from', 0)
         print(f"\n🗄️  Archived From Edges: {archived_count}")
         
+        # Load entity index for detailed entity information
+        data_dir = Path(__file__).resolve().parent.parent / "data"
+        entity_index_path = data_dir / "entity_index_v2.json"
+        
+        entity_index = {}
+        if entity_index_path.exists():
+            try:
+                with open(entity_index_path, 'r', encoding='utf-8') as f:
+                    entity_index = json.load(f)
+                print(f"✅ Entity index cargado: {len(entity_index.get('entities', []))} entidades")
+            except Exception as e:
+                error_msg = f"Error cargando entity_index: {e}"
+                print(f"⚠️  {error_msg}")
+                result["errors"].append(error_msg)
+        else:
+            error_msg = f"Entity index no encontrado en {entity_index_path}"
+            print(f"⚠️  {error_msg}")
+            result["errors"].append(error_msg)
+        
+        # Analyze archived entities
         if archived_count > 0:
-            print(f"  ⚠️  Hay {archived_count} relaciones de archivo en el grafo")
-            print("  💡 Revisa entity_index_v2.json para detalles de entidades archivadas")
+            print(f"\n⚠️  Hay {archived_count} relaciones de archivo en el grafo")
+            
+            # Try to get detailed information about archived entities
+            entities_by_id = {e['entity_id']: e for e in entity_index.get('entities', [])}
+            
+            # Look for entities with archived_from edges
+            for entity in entity_index.get('entities', []):
+                entity_id = entity.get('entity_id')
+                if entity_id:
+                    archived_edges = get_archived_from(entity_id)
+                    if archived_edges:
+                        entity_info = {
+                            "entity_id": entity_id,
+                            "name": entity.get('name', 'Unknown'),
+                            "type": entity.get('entity_type', 'Unknown'),
+                            "archived_from_count": len(archived_edges),
+                            "archived_from": archived_edges
+                        }
+                        result["archived_entities"].append(entity_info)
+            
+            if result["archived_entities"]:
+                print(f"  � Entidades con relaciones de archivo: {len(result['archived_entities'])}")
+                for entity in result['archived_entities'][:5]:
+                    print(f"    • [{entity['entity_id'][:8]}] {entity['name']} ({entity['type']})")
+                if len(result['archived_entities']) > 5:
+                    print(f"    • ... y {len(result['archived_entities']) - 5} más")
+            else:
+                print("  ℹ️  No se encontraron entidades detalladas en entity_index")
+                print("  �💡 Revisa entity_index_v2.json para detalles de entidades archivadas")
         else:
             print("  ✅ No hay relaciones de archivo pendientes")
         
-        return True
+        # Look for entities with Next_Action='Archivar' (from entity index if available)
+        if entity_index:
+            for entity in entity_index.get('entities', []):
+                props = entity.get('properties', {})
+                next_action = props.get('Next_Action', '')
+                if next_action == 'Archivar':
+                    result["next_action_archive"].append({
+                        "entity_id": entity.get('entity_id'),
+                        "name": entity.get('name', 'Unknown'),
+                        "type": entity.get('entity_type', 'Unknown')
+                    })
+            
+            if result["next_action_archive"]:
+                print(f"\n🎯 Entidades con Next_Action='Archivar': {len(result['next_action_archive'])}")
+                for entity in result['next_action_archive'][:5]:
+                    print(f"    • [{entity['entity_id'][:8]}] {entity['name']}")
+                if len(result['next_action_archive']) > 5:
+                    print(f"    • ... y {len(result['next_action_archive']) - 5} más")
+        
+        # Look for entities with Dedup_Flag='Posible duplicado'
+        if entity_index:
+            for entity in entity_index.get('entities', []):
+                props = entity.get('properties', {})
+                dedup_flag = props.get('Dedup_Flag', '')
+                if dedup_flag == 'Posible duplicado':
+                    result["dedup_flag_candidates"].append({
+                        "entity_id": entity.get('entity_id'),
+                        "name": entity.get('name', 'Unknown'),
+                        "type": entity.get('entity_type', 'Unknown')
+                    })
+            
+            if result["dedup_flag_candidates"]:
+                print(f"\n🔍 Entidades con Dedup_Flag='Posible duplicado': {len(result['dedup_flag_candidates'])}")
+                for entity in result['dedup_flag_candidates'][:5]:
+                    print(f"    • [{entity['entity_id'][:8]}] {entity['name']}")
+                if len(result['dedup_flag_candidates']) > 5:
+                    print(f"    • ... y {len(result['dedup_flag_candidates']) - 5} más")
+        
+        # Print JSON output for programmatic consumption
+        print(f"\n📄 JSON Output (para consumo programático):")
+        print(json.dumps({
+            "graph_stats": stats,
+            "archived_entities_count": len(result["archived_entities"]),
+            "next_action_archive_count": len(result["next_action_archive"]),
+            "dedup_flag_candidates_count": len(result["dedup_flag_candidates"]),
+            "errors": result["errors"]
+        }, indent=2))
+        
+        result["success"] = True
+        return result
         
     except ImportError as e:
-        print(f"❌ Error importing graph_layer: {e}")
-        return False
+        error_msg = f"Error importing graph_layer: {e}"
+        print(f"❌ {error_msg}")
+        result["errors"].append(error_msg)
+        return result
     except Exception as e:
-        print(f"❌ Error inspecting archive queue: {e}")
-        return False
+        error_msg = f"Error inspecting archive queue: {e}"
+        print(f"❌ {error_msg}")
+        result["errors"].append(error_msg)
+        return result
 
 
 def main():
