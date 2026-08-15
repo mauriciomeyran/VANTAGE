@@ -250,3 +250,15 @@ Cadena de evidencia: (1) son one-shots nacidos y muertos en una sola sesión —
 **T5b (nueva, pequeña):** las entradas del Glosario §22.1/22.1b de los 6 movidos siguen sin anotar (verificado en espejo L983/L1003/L1037) — Claude anota inline "— MOVIDO a Archive/Legacy_Scripts/ (saneamiento v9.21.x)" en las 6 (backfill_next_action_select, toggle_changelog_archive, backfill_archive_fingerprint, extract_score_distribution [22.1b hallazgo], patch_vsync_doc [22.1b], patch_new_scripts [22.1b nota]). Sin headings, sin IDs — puede ir en el mismo batch que T20.
 
 **Espejo GitHub:** sigue sin bajar las escrituras de G1 (último auto-sync 03:51, pre-G1) — evidencia primaria = re-fetch de Notion; el espejo se re-verificará en el próximo sync.
+
+---
+
+## Bitácora — 2026-08-15: T7 cerrado + aprobación T5b
+
+**T7 FINAL (consolidado):** 2/6 escrituras reales (`extract_score_distribution.py` y `patch_vsync_doc.py` → Deprecado/Archivar) + 4/6 "sin fila que deprecar" (`backfill_next_action_select.py`, `toggle_changelog_archive.py`, `backfill_archive_fingerprint.py`, `patch_new_scripts.py` — nunca registradas en Script Library, solo Glosario). `backfill_class_a.py` (ACTIVO) intacto. Los 4 casos se registran en T20.
+
+**T5b — APROBADO (verificación de anclas del auditor contra espejo origin/main):** las 5 anclas de Claude verificadas byte-exacto: (1) `backfill_next_action_select.pyQué hace: Migra el campo Next_Action de texto libre a select tipado.` (2) `toggle_changelog_archive.pyQué hace: Convierte el formato del Archivo Changelog exportado (toggle blocks Markdown).` (3) `backfill_archive_fingerprint.py` → "Uso: Sin flags CLI propios — se corre directo, solo requiere NOTION_TOKEN/NOTION_API_KEY en el entorno." (4) hallazgo extract_score_distribution → "...decide tú si vale la pena eliminarlo del árbol para que deje de aparecer en cada gap report." (5) `patch_vsync_doc.py` → "Considera moverlo junto con patch_new_scripts.py fuera del árbol activo si quieres que --new-scripts deje de detectarlo como pendiente." — reemplazo por "patch_vsync_doc.py y patch_new_scripts.py fueron MOVIDOS a Archive/Legacy_Scripts/ (saneamiento v9.21.x) — --new-scripts ya no debería detectarlos como pendientes."
+
+**Respuesta a la pregunta de Claude (patch_new_scripts.py):** SÍ — la cobertura orgánica vía patch #5 es la correcta. Crear heading nuevo violaría PATCH-QUALITY criterio 1 (no secciones nuevas) para un script que nunca tuvo fila ni heading. 6 scripts cubiertos con 5 escrituras. APROBADO.
+
+**Registro para T20 (acumulado):** (a) 4 one-shots Tier A sin fila en Script Library (solo Glosario §22.1) — sin deprecación posible, anotados en Glosario vía T5b; (b) drift V4 doble ID; (c) write silencioso T3 (patrón de indexado Notion); (d) hallazgo colateral: auto-linker corrompe también texto libre (Descripción) — D5 extiende el cleaner.
