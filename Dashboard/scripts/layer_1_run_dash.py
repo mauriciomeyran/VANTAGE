@@ -36,8 +36,29 @@ from notion_client import Client
 from difflib import SequenceMatcher
 
 # Import gate_logic para protección de terminales (H2 FIX)
-import sys, os
-sys.path.insert(0, os.path.expanduser("~/Documents/03 Projects/VANTAGE/Layer_1/scripts"))
+# Normalizar resolución de ruta Layer_1/scripts
+def get_layer_1_scripts_dir():
+    """
+    Obtiene el directorio de scripts de Layer_1 usando la variable de entorno
+    LAYER_1_DIR o un fallback razonable.
+    """
+    # Prioridad 1: Usar variable de entorno LAYER_1_DIR si está definida
+    if 'LAYER_1_DIR' in os.environ:
+        return os.path.join(os.environ['LAYER_1_DIR'], 'scripts')
+    
+    # Prioridad 2: Usar PYTHONPATH si Layer_1/scripts está en el path
+    for path in sys.path:
+        if 'Layer_1' in path and 'scripts' in path:
+            return path
+    
+    # Prioridad 3: Fallback a ruta relativa desde Dashboard
+    dashboard_dir = os.path.dirname(os.path.abspath(__file__))
+    vantage_root = os.path.dirname(os.path.dirname(dashboard_dir))
+    return os.path.join(vantage_root, 'Layer_1', 'scripts')
+
+layer_1_scripts = get_layer_1_scripts_dir()
+if layer_1_scripts not in sys.path:
+    sys.path.insert(0, layer_1_scripts)
 from gate_logic import gate_logic, TERMINAL_ACTIONS, STATUS_TERMINAL_MAP
 
 # ---------- Utilidades ----------
@@ -394,7 +415,6 @@ def get_match_level_v6(score):
         return "Bajo"  # Revisar
 
 def gate(fetch, vm_scope, role_class, source_type, score=None, rol="", marca=""):
-    import sys, os; sys.path.insert(0, os.path.expanduser("~/Documents/03 Projects/VANTAGE/Layer_1/scripts"))
     from profile_fit import has_vm_title_signal, is_role_excluded, resolve_alias_flags
 
     if is_role_excluded(rol) or resolve_alias_flags(marca)[0]:
@@ -701,7 +721,6 @@ def main():
 
     # ==================== PASO 1.5: LIMPIEZA POR FIT / EXCLUSIONES ====================
     print("\nPaso 1.5: Limpieza por fit de perfil y exclusiones...")
-    import sys, os; sys.path.insert(0, os.path.expanduser("~/Documents/03 Projects/VANTAGE/Layer_1/scripts"))
     from profile_fit import profile_misfit_reasons, should_auto_cleanup
 
     misfit_updates = 0

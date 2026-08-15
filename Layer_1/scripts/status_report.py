@@ -7,6 +7,7 @@ Actualizado para notion-client 3.1.0:
 """
 
 import os
+import argparse
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from notion_utils import Client
@@ -51,7 +52,62 @@ def query_database(client, database_id):
     return all_results
 
 
+def inspect_archive_queue():
+    """
+    Inspecciona las colas/archivos marcados para archivo y despliega el listado formateado.
+    Utiliza graph_layer para obtener entidades con edges de tipo 'archived_from'.
+    """
+    try:
+        # Import graph_layer for archive inspection
+        import sys
+        from pathlib import Path
+        scripts_dir = Path(__file__).resolve().parent
+        if str(scripts_dir) not in sys.path:
+            sys.path.insert(0, str(scripts_dir))
+        
+        from graph_layer import get_archived_from, graph_stats
+        
+        print("\n📦 ARCHIVE QUEUE INSPECTION")
+        print("=" * 50)
+        
+        # Get graph statistics
+        stats = graph_stats()
+        print(f"📊 Graph Statistics:")
+        print(f"  Total edges: {stats['total_edges']}")
+        print(f"  Total nodes: {stats['total_nodes']}")
+        print(f"  Edges by type:")
+        for edge_type, count in stats['edges_by_type'].items():
+            print(f"    - {edge_type}: {count}")
+        
+        # Get archived_from edges count
+        archived_count = stats['edges_by_type'].get('archived_from', 0)
+        print(f"\n🗄️  Archived From Edges: {archived_count}")
+        
+        if archived_count > 0:
+            print(f"  ⚠️  Hay {archived_count} relaciones de archivo en el grafo")
+            print("  💡 Revisa entity_index_v2.json para detalles de entidades archivadas")
+        else:
+            print("  ✅ No hay relaciones de archivo pendientes")
+        
+        return True
+        
+    except ImportError as e:
+        print(f"❌ Error importing graph_layer: {e}")
+        return False
+    except Exception as e:
+        print(f"❌ Error inspecting archive queue: {e}")
+        return False
+
+
 def main():
+    parser = argparse.ArgumentParser(description="VANTAGE Status Reporter")
+    parser.add_argument(
+        "--archive-queue",
+        action="store_true",
+        help="Inspeccionar colas/archivos marcados para archivo"
+    )
+    args = parser.parse_args()
+    
     load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
     client = Client(auth=os.environ["NOTION_TOKEN"])
     ds_id = "442938be-fc42-828f-b72e-076818d65a5b"
@@ -59,6 +115,11 @@ def main():
     print("📊 VANTAGE STATUS REPORT")
     print(f"🗓️  {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("=" * 50)
+    
+    # Handle --archive-queue flag
+    if args.archive_queue:
+        inspect_archive_queue()
+        return
 
     items = query_database(client, ds_id)
 

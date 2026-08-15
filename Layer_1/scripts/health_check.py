@@ -16,6 +16,7 @@ import sys
 import subprocess
 import time
 import json
+import re
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -523,6 +524,68 @@ def check_census_age():
 
     return True   # informativo, nunca bloquea arranque
 
+
+def check_auto_link_corruption():
+    """
+    Detector read-only de corrupción de auto-links.
+    Escanea patrones `_http://` y `[nombre.ext](http://nombre.ext)` 
+    (donde el texto del enlace coincide con la URL) sobre 
+    Documentación/ACTIVE/*.md y skills/*.md.
+    Ignora enlaces HTTP/HTTPS externos legítimos.
+    La salida es informativa/advisory (no bloqueante, sin exit code fatal).
+    """
+    corruption_count = 0
+    files_checked = 0
+    
+    # Patrones de corrupción a detectar
+    # 1. Guion bajo antes de http:// (_http://)
+    underscore_pattern = re.compile(r'_http://')
+    
+    # 2. Auto-links donde el texto coincide con la URL completa [texto](http://texto)
+    auto_link_pattern = re.compile(r'\[([^\]]+)\]\(http[s]?://\1\)')
+    
+    # Directorios a escanear
+    scan_dirs = [ACTIVE_DIR, REPO_ROOT / "skills"]
+    
+    for scan_dir in scan_dirs:
+        if not scan_dir.exists():
+            continue
+            
+        for md_file in scan_dir.glob("*.md"):
+            files_checked += 1
+            try:
+                content = md_file.read_text(encoding='utf-8')
+                filename = md_file.name
+                
+                # Buscar patrones de corrupción
+                underscore_matches = underscore_pattern.findall(content)
+                auto_link_matches = auto_link_pattern.findall(content)
+                
+                if underscore_matches or auto_link_matches:
+                    corruption_count += 1
+                    warn(f"auto-link — {filename} tiene patrones sospechosos:")
+                    
+                    if underscore_matches:
+                        print(f"    • {len(underscore_matches)} ocurrencias de '_http://'")
+                    
+                    if auto_link_matches:
+                        print(f"    • {len(auto_link_matches)} auto-links detectados:")
+                        for match in auto_link_matches[:3]:  # Mostrar máximo 3 ejemplos
+                            print(f"      - [{match}](http://{match})")
+                        if len(auto_link_matches) > 3:
+                            print(f"      ... y {len(auto_link_matches) - 3} más")
+                    
+            except Exception as e:
+                # Silencioso para no romper el health check por errores de lectura
+                pass
+    
+    if corruption_count == 0:
+        ok(f"auto-link — {files_checked} archivos verificados, sin corrupción detectada")
+    else:
+        warn(f"auto-link — {corruption_count}/{files_checked} archivos con patrones sospechosos")
+    
+    return True  # Siempre advisory, nunca bloquea
+
 # ── Runner ────────────────────────────────────────────────
 
 def main():
@@ -539,6 +602,7 @@ def main():
         ("layer3", check_layer3_heartbeat),
         ("census_age", check_census_age),
         ("pending_tickets", check_pending_tickets),
+        ("auto_link", check_auto_link_corruption),
     ]
 
     results = {}

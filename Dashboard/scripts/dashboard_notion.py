@@ -6,6 +6,26 @@ from dashboard_config import DATABASE_ID
 from layer_1_run import txt
 
 
+def get_layer_1_scripts_dir():
+    """
+    Obtiene el directorio de scripts de Layer_1 usando la variable de entorno
+    LAYER_1_DIR o un fallback razonable.
+    """
+    # Prioridad 1: Usar variable de entorno LAYER_1_DIR si está definida
+    if 'LAYER_1_DIR' in os.environ:
+        return os.path.join(os.environ['LAYER_1_DIR'], 'scripts')
+    
+    # Prioridad 2: Usar PYTHONPATH si Layer_1/scripts está en el path
+    for path in sys.path:
+        if 'Layer_1' in path and 'scripts' in path:
+            return path
+    
+    # Prioridad 3: Fallback a ruta relativa desde Dashboard
+    dashboard_dir = os.path.dirname(os.path.abspath(__file__))
+    vantage_root = os.path.dirname(os.path.dirname(dashboard_dir))
+    return os.path.join(vantage_root, 'Layer_1', 'scripts')
+
+
 def get_notion_client():
     return Client(auth=NOTION_TOKEN)
 
@@ -125,9 +145,10 @@ def write_patch_to_notion(page_id: str, patch: dict):
         return {'success': False, 'error': 'PATCH_EMPTY'}
 
     # D-002 FIX (GAP-003): Integrar class_b_guard como middleware antes de escritura
-    # Importar class_b_guard desde Layer_1/scripts
-    import sys, os
-    sys.path.insert(0, os.path.expanduser("~/Documents/03 Projects/VANTAGE/Layer_1/scripts"))
+    # Importar class_b_guard desde Layer_1/scripts usando función normalizada
+    layer_1_scripts = get_layer_1_scripts_dir()
+    if layer_1_scripts not in sys.path:
+        sys.path.insert(0, layer_1_scripts)
     from class_b_guard import guard_write_payload
 
     # Aplicar guard a las properties antes de enviar a Notion

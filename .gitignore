@@ -25,8 +25,7 @@ build/
 *.cache
 
 # Backup files
-*.bak
-*.bak-*
+*.bak*
 *_backup.*
 *.old
 *.orig
