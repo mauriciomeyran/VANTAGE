@@ -201,3 +201,30 @@ Claude entregó DRY RUNs verificados en vivo contra Notion. Revisión del audito
 - **Operador — G3 parcial (T11, T18, T19 listas):** T11 skills deprecadas (mover a Archive/Legacy_Scripts — recomendado, nunca borrar), T18 docs duplicadas C5 (mover a Archive), T19 Tier D por ítem (index.html raíz, Video/Outputs, inventario_output, .devin/skills, dirs archive, briefs raíz). **Bloqueadas:** T12 (tracker 3 copias) espera dictamen de T7; T13 (stubs C4) espera merge de T14.
 
 **Secuencia de cierre restante:** T20 (Claude, deps: 6✅, 7, 13, 18) → T21 (sync PASS, Operador) → T22 (Ledger, Claude).
+
+---
+
+## Bitácora — 2026-08-15: dictamen SRE del DRY RUN G2 (Claude T7–T10)
+
+**Respuestas a las 2 preguntas de Claude (resueltas por el auditor con evidencia de repo, no requieren espera del operador):**
+
+1. **Nombres de los 6 Tier A (7b)** — sí están nombrados en el plan (tarjeta T7 de esta bitácora) y verificados en `origin/main` `Archive/Legacy_Scripts/`: `backfill_next_action_select.py`, `toggle_changelog_archive.py`, `backfill_archive_fingerprint.py`, `patch_vsync_doc.py`, `patch_new_scripts.py`, `extract_score_distribution.py`. **Solapamiento**: 2 de esos 6 ya están cubiertos por 7c con row IDs (`patch_vsync_doc.py` 39f938be…, `extract_score_distribution.py` 3b3938be…) — aplicar una sola vez. Quedan 4 filas por localizar por título exacto: `backfill_next_action_select.py`, `toggle_changelog_archive.py`, `backfill_archive_fingerprint.py`, `patch_new_scripts.py` (template 7b).
+2. **Método T9 → Opción (c), herramienta determinista existente**: `Layer_1/scripts/clean_script_library_links.py` (verificado en origin/main; dry-run por default, `--apply` para escribir; detecta ambas variantes: anotación de link y `http://` literal; escribe con tipo correcto title/rich_text). Ejecución: **OPERADOR en Terminal** (dry-run → inspección de candidatos → `--apply`), **Claude verifica** después con re-fetch (filas `vprint.py` y `git_sync.py` dup) + gap report. Gate de seguridad: si el dry-run imprime algún residuo tipo `[x.py](x.py)` (mangle del replace literal), STOP y caer al plan CSV de Claude.
+
+**Correcciones al DRY RUN de Claude:**
+- **7a**: `Ruta` debe ser el archivo exacto `skills/vantage-housekeeping-archive.skill` (no `skills/vantage-housekeeping-archive/`). `Capa`: NO inventar "L4" — verificar la fila de un skill hermano (`vantage-tidy-opportunities-tracker` o `vantage-tidy-bug-task-tracker`) y replicar su convención.
+- **7b/7c**: aprobados con el desglose de nombres del punto 1.
+- **T8**: dictamen aprobado — duplicado creado en M1 (2026-08-13), ya Deprecado/Archivar, fila canónica `git_sync.py (L4)` intacta. La limpieza del dup se cubre en T9. Prohibición respetada.
+- **T10**: texto aprobado para incluirse en la entrada `[AUDIT]` de T20.
+
+**Siguiente acción (Operador):**
+1) Pegar a Claude: `APROBAR_WRITE T7 (7a con Ruta=skills/vantage-housekeeping-archive.skill y Capa espejo de hermanos; 7b con los 6 nombres confirmados por auditor: backfill_next_action_select.py, toggle_changelog_archive.py, backfill_archive_fingerprint.py, patch_vsync_doc.py, patch_new_scripts.py, extract_score_distribution.py — aplicar 7c una sola vez donde se solapa; 7c aprobado), T8 sin escritura adicional, T10 texto aprobado.`
+2) Ejecutar T9 en Terminal:
+```bash
+cd "$HOME/Documents/03 Projects/VANTAGE/Layer_1/scripts"
+source ../.venv/bin/activate
+python3 clean_script_library_links.py          # DRY RUN — inspeccionar candidatos
+# si la salida es limpia (sin residuos "[x.py](x.py)"):
+python3 clean_script_library_links.py --apply  # escribe de verdad
+```
+3) Claude verifica T9 con re-fetch + gap report; después cierra G2.
