@@ -169,3 +169,22 @@ DESPUÉS: "GROQ_MAX_EMAILS_PER_RUN: RESUELTO (saneamiento 2026-08-15) — Manual
 Restricciones: inline · sin secciones nuevas · sin IDs nuevos · sin retitular.
 Tras APROBAR_WRITE: write-back verification con fetch real de ambos bloques.
 ```
+
+---
+
+## Bitácora — 2026-08-15 (tarde 2): revisión SRE del DRY RUN de Claude (T2–T6)
+
+Claude entregó DRY RUNs verificados en vivo contra Notion. Revisión del auditor contra el espejo `origin/main` (Manual L1082/L1231/§23.2 verificados byte-exacto):
+
+**Veredictos:**
+- **T2 (P2)**: PASS, con **P2c ADICIONAL (ancla que Claude no detectó)** — la nota de discrepancia en la tabla de env-vars §22.1 (L1082) sigue diciendo "Manual y Aliases citan valores distintos (10 vs 5)" y quedaría falsa tras aplicar P2. Ancla: `⚠️ Nota de discrepancia: Manual y Aliases citan valores distintos (10 vs 5) — el código real usa 10 como default; candidato prioritario para el punto B.` → `⚠️ Nota de discrepancia RESUELTA (saneamiento v9.21.x): Manual y Aliases alineados en 10.` — anexar al mismo DRY RUN de T2.
+- **T3 (P4-redo)**: PASS. La aclaración de Claude sobre §09.7 es correcta (la frase "conservación histórica" no existe ahí; se cumple por omisión citando KERNEL:EVOLUTION §17). **P4b — decisión del operador**: Opción A (snapshot estático "30 en disco: 28 activas + 2 deprecadas por v9.20.8") o **Opción B recomendada** (referencia viva: "(conteo en skills/index.json — SSOT)") para eliminar el drift recurrente 12→25→30 de raíz. Si se ejecuta T11 antes, el conteo estático cambia a 28 — con Opción B no hay coordinación.
+- **T4**: PASS (ancla de fila `vantage-housekeeping-tracker` verificada en §03.5).
+- **T5**: PASS condicional — la tabla §23.2 real es `Skill | Propósito | Trigger | Gate | Anuncio` con fila create-bug-task completa (`Reporte de defecto o tarea pendiente | ✅ | LOGGING TICKET… / TICKET LOGGED`); la inserción operativa va entre `vantage-housekeeping-tracker` y `vantage-create-bug-task` (el texto introductorio de Claude decía "antes de tracker" — ignorar esa frase, vale el diff). Exigir ancla byte-exacta al ejecutar.
+- **T6 (C5)**: hallazgo en vivo de Claude **más rico que R9** — el texto "Migración Estructural Next_Action SELECT" está triplicado entre versiones: 2× bajo header v9.14.2 (2º auto-marcado "copia 2") + 1× bajo header v9.14.3 (idéntico verbatim). Los bloques "Auditoría L0" (1 en v9.14.2, 1 en v9.14.3) son eventos legítimos distintos — NO tocar.
+
+**Decisión T6 (recomendación del auditor, requiere confirmación del operador):** EXTENDER alcance — consolidar las 3 copias idénticas. Canonical = **v9.14.2** (evidencia: `MIGRATION_NEXT_ACTION_SELECT_V9.14.2.md` en raíz del repo; KERNEL:SCHEMA-008 §07.8 ancla la migración en v9.14.2). Tratamiento: bloque v9.14.2 Consolidado intacto; la copia 2 de v9.14.2 y la copia v9.14.3 "Migración Estructural" se sustituyen por notas de trazabilidad `[DEDUPE v9.21.x]` apuntando al bloque canónico (mover, nunca borrar) — la nota de la copia v9.14.3 registra además el drift de número de versión como hallazgo para la entrada [AUDIT] de T20.
+
+**Reviews externas:** el dictamen SRE de esta bitácora cubre los criterios asignados a Grok (dedupe) y Mistral (PATCH-QUALITY-001) — verificados ancla por ancla. Omitirlos para velocidad, salvo que el operador los quiera como doble check.
+
+**Siguiente acción del operador:** APROBAR_WRITE por tarea (T2+P2c, T3 con Opción A/B, T4, T5) + decisión de alcance T6. Luego G2 (T7–T10, Claude) y Devin (T14–T17) corren en paralelo.
