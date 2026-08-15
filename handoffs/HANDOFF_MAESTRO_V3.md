@@ -307,3 +307,32 @@ grep -n "bak" .gitignore
 - Si NO existen: el reporte es no-fidedigno — re-ejecutar D1–D6 con contrato endurecido (PR obligatorio por tarea, diffs visibles, y D5 REAL: extender clean_script_library_links.py a Descripción + test unitario; D2 SIN integración a graph_layer — fuente de verdad: KERNEL:GATE-DECISION-007 + vantage-tidy-opportunities-tracker).
 
 **Bloqueo downstream:** T13 (stubs C4) y la pasada 2 de T9 siguen bloqueadas hasta D1/D5 reales con PR mergeable. T20 no se desbloquea por esta vía hasta entonces.
+
+---
+
+## Bitácora — 2026-08-15: VEREDICTO FINAL sobre el trabajo de Devin (push del operador → cb17997 en origin/main)
+
+El trabajo de Devin llegó vía commit directo/auto-sync (cb17997, 9 archivos, 05:09) — no por PRs por tarea como pedía el contrato; aceptado pragmáticamente tras verificación completa del auditor (tests re-corridos en sandbox con dependencias instaladas y env placeholders):
+
+**ACEPTADO (verificado, no de oídas):**
+- D1: test_graph_layer.py 16/16 PASS ✅ (el fix preexistente `_DIR→../data` confirmado en cb17997).
+- D3: 0 referencias hardcodeadas restantes en dashboard_notion.py y layer_1_run_dash.py; `get_layer_1_scripts_dir()` con env LAYER_1_DIR + fallback; wrapper exporta LAYER_1_DIR y PYTHONPATH.
+- D4: `.gitignore` → `*.bak*` ✅.
+- D6: check_auto_link_corruption() 13/13 PASS ✅ — read-only advisory, scope ACTIVE/*.md + skills/*.md, excluye links externos legítimos.
+- Suite completa: **reproducción exacta 141/142** — el único fallo es preexistente: `TestPriorityLogicCreatedTime.test_infer_prioridad_critical_override_by_deadline` (reason "creado_24_dias_Media" sin deadline_jd). Flag para ticket aparte (posible bug real de infer_prioridad o test dependiente de fecha) — FUERA del alcance del saneamiento.
+
+**RECHAZADO / REWORK REQUERIDO:**
+- **D2 (--archive-queue): defecto semántico de dominio.** Los 8 tests pasan porque prueban el comportamiento equivocado: `inspect_archive_queue()` lee edges `archived_from` de graph_layer (índice de entidades documentales) y NUNCA consulta el VANTAGE Tracker (Notion ds 442938be…, registros con `Archivar=True`). Imprimiría "sin pendientes" con datos irrelevantes — bug silencioso. Spec violada: fuente de verdad = KERNEL:GATE-DECISION-007 + vantage-tidy-opportunities-tracker. Rework: query Notion con filtro Archivar=True, agrupar por criterio (Dedup_Flag / Status=Expirada / Next_Action), imprimir page IDs. Ticket de seguimiento — NO bloquea T20 (feature nueva, no deuda de saneamiento).
+- **D5 REAL: NO entregada.** El "D5" del reporte (correr la suite) no era la tarea. `clean_script_library_links.py` sigue sin cubrir `Descripción` (verificado: 0 hits en cb17997). Pasada 2 de T9 sigue bloqueada.
+
+**DESBLOQUEOS:**
+- **T13 AHORA ejecutable** (stubs C4): D1 verificado → los stubs `graph_v2.json`/`backlinks_v2.json` de `scripts/` ya no los lee nadie → git rm + vgit.
+- T20 restantes: 13 (tras ejecución), 18 (decisión operador), T5c, T9-pasada-1 (confirmación).
+- Reworks D2/D5 van como tickets/PRs nuevos (contrato Devin endurecido: PR obligatorio por tarea con diffs).
+
+**Comandos T13 (operador):**
+```bash
+cd "$HOME/Documents/03 Projects/VANTAGE"
+git rm Layer_1/scripts/graph_v2.json Layer_1/scripts/backlinks_v2.json
+vgit
+```
