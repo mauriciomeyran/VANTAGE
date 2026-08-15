@@ -228,3 +228,25 @@ python3 clean_script_library_links.py          # DRY RUN — inspeccionar candid
 python3 clean_script_library_links.py --apply  # escribe de verdad
 ```
 3) Claude verifica T9 con re-fetch + gap report; después cierra G2.
+
+---
+
+## Bitácora — 2026-08-15: veredicto sobre los 3 nombres faltantes (T7) + plan T9 extendido
+
+**Veredicto T7 (auditor, con evidencia): los 3 nombres NO existen en Script Library y NO deben crearse.**
+Cadena de evidencia: (1) son one-shots nacidos y muertos en una sola sesión — `backfill_next_action_select.py` (dry-run v9.14.2 → 0 huérfanos, nunca ejecutado), `backfill_archive_fingerprint.py` (batch GILSA cerrado v9.13.0), `toggle_changelog_archive.py` (formateo toggle ya aplicado); (2) quedaron en estado intermedio "solo Glosario" (XREF: DOCUMENTADO exige Glosario + Script Library); (3) el gap report del cierre F1 listó solo 3 huérfanos, ninguno de estos nombres → no hay filas Activo con esos títulos; (4) están fuera del árbol activo → el scan ya no los ve → la librería no necesita filas para ellos. Crear filas solo para deprecarlas viola la guía de vantage-sync-script-library. **Los candidatos cercanos NO son alias y NO se tocan**: `assign_next_action.py` (flujo legacy, ya archivado con su trío documental) y `backfill_class_a.py` (**ACTIVO** en Layer_1/scripts, vía layer_1_pipeline.sh backfill — tocarlo habría sido un incidente). Claude hizo bien en parar.
+
+**Registro para T20:** "3 one-shots de Tier A nunca registrados en Script Library (solo Glosario §22.1) — sin fila que deprecar; sin alta por estar fuera del árbol activo".
+
+**Pendiente de confirmación en el próximo write-back de Claude:** el 6º nombre `patch_new_scripts.py` no aparece en su tabla (2 confirmados + 3 faltantes = 5) — confirmar si su fila fue deprecada o tampoco existe.
+
+**T9 — plan en 2 pasadas (el hallazgo colateral de Claude es real y verificado):**
+`clean_script_library_links.py` SOLO cubre `Script` y `Ruta` (grep de Descripción = 0 hits). El auto-linker también corrompe texto libre (Descripción) — confirmado por la corrupción en vivo de la descripción de patch_vsync_doc.py durante 7c.
+- **Pasada 1 (YA, Operador):** correr el script actual (dry-run → --apply) — limpia Script/Ruta de ~70 filas.
+- **Devin D5 (nueva micro-tarea):** extender el script al campo `Descripción` (misma detección dual + limpieza), extrayendo función pura `clean_value()` con test unitario. PR.
+- **Pasada 2 (tras merge de D5, Operador):** dry-run → --apply cubre Descripción (incluye la descripción de patch_vsync_doc.py corrompida en 7c).
+- **Verificación (Claude):** re-fetch de vprint.py, git_sync.py (dup), patch_vsync_doc.py (Descripción) + gap report limpio. Si el auto-linker re-dispara sobre texto plano en Descripción, escalar como comportamiento de plataforma (no re-escribir en loop).
+
+**T5b (nueva, pequeña):** las entradas del Glosario §22.1/22.1b de los 6 movidos siguen sin anotar (verificado en espejo L983/L1003/L1037) — Claude anota inline "— MOVIDO a Archive/Legacy_Scripts/ (saneamiento v9.21.x)" en las 6 (backfill_next_action_select, toggle_changelog_archive, backfill_archive_fingerprint, extract_score_distribution [22.1b hallazgo], patch_vsync_doc [22.1b], patch_new_scripts [22.1b nota]). Sin headings, sin IDs — puede ir en el mismo batch que T20.
+
+**Espejo GitHub:** sigue sin bajar las escrituras de G1 (último auto-sync 03:51, pre-G1) — evidencia primaria = re-fetch de Notion; el espejo se re-verificará en el próximo sync.
