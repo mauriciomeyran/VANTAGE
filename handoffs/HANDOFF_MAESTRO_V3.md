@@ -279,3 +279,31 @@ Cadena de evidencia: (1) son one-shots nacidos y muertos en una sola sesión —
 **T9 pasada 1**: pendiente de confirmación del operador (¿corrió `clean_script_library_links.py` dry-run/--apply?). Pasada 2 (Descripción) espera D5.
 
 **Dependencias T20 (estado):** 6 ✅ · 7 ✅ · 10 ✅ · T5b ✅ · 13 ⏸ (espera merge D1/Devin) · 18 ⏸ (decisión operador C5-docs) · T5c (nueva) · 9 (pasada 1) · 11/19 (decisiones operador). El cierre `[AUDIT]` incorpora los ítems (a)–(e) corregidos + cierre v9.17.1 + aviso issue #4.
+
+---
+
+## Bitácora — 2026-08-15: AUDITORÍA DEL REPORTE DEVIN (D1–D6) — NO VERIFICABLE, SIN PRESENCIA EN REMOTO
+
+**Veredicto SRE: el trabajo de Devin NO existe en GitHub.** Verificado contra `origin/main` y `gh`:
+- 0 PRs nuevos (solo #5/#6/#7 del 08-13) · 0 ramas nuevas.
+- `Layer_1/tests/test_graph_layer.py`, `test_status_report.py`, `test_health_check.py`: AUSENTES en origin/main.
+- `--archive-queue` en status_report.py: 0 hits · `.gitignore` sigue con `*.bak`/`*.bak-*` (sin `*.bak*`) · `check_auto_link_corruption` en health_check.py: 0 hits.
+
+**Anomalías internas del propio reporte (refuerzan el veredicto de no-aceptación):**
+1. **"D5 — Suite Completa de Pruebas Locales" NO es la tarea D5** — la D5 real era extender `clean_script_library_links.py` al campo `Descripción`. Devin la sustituyó por una corrida de tests. La D5 real NO aparece en el reporte.
+2. **D2 "integración a graph_layer"** — `graph_layer.py` es el dominio del índice de entidades, no del VANTAGE Tracker (la cola de archivo vive en Notion: registros con `Archivar=True`). Esa integración es sospechosa y debe revisarse línea por línea si el código llega a existir.
+3. **141/142 con "1 test preexistente falla"** — main tenía 4 archivos de test; identificar cuál falla y si es regresión.
+
+**Acción requerida del operador (verificación en la Mac, 2 minutos):**
+```bash
+cd "$HOME/Documents/03 Projects/VANTAGE"
+git status --short | head -20          # ¿cambios sin commitear en la Mac?
+ls Layer_1/tests/                       # ¿existen los 3 test files nuevos?
+grep -n "archive_queue\|archive-queue" Layer_1/scripts/status_report.py
+grep -n "auto_link_corruption" Layer_1/scripts/health_check.py
+grep -n "bak" .gitignore
+```
+- Si los archivos EXISTEN en la Mac: pedir a Devin commit + PRs por tarea (D1..D6) hacia origin — **el contrato exigía PR, no trabajo local suelto**.
+- Si NO existen: el reporte es no-fidedigno — re-ejecutar D1–D6 con contrato endurecido (PR obligatorio por tarea, diffs visibles, y D5 REAL: extender clean_script_library_links.py a Descripción + test unitario; D2 SIN integración a graph_layer — fuente de verdad: KERNEL:GATE-DECISION-007 + vantage-tidy-opportunities-tracker).
+
+**Bloqueo downstream:** T13 (stubs C4) y la pasada 2 de T9 siguen bloqueadas hasta D1/D5 reales con PR mergeable. T20 no se desbloquea por esta vía hasta entonces.
