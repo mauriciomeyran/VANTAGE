@@ -141,11 +141,12 @@ class TestAutoLinkPatterns:
 # ============================================================================
 
 class TestCheckAutoLinkCorruption:
-    """Test suite for check_auto_link_corruption() function"""
+    """Test suite for check_auto_link_corruption() function (D5-real version)"""
     
     @patch("health_check.ACTIVE_DIR")
     @patch("health_check.REPO_ROOT")
-    def test_check_auto_link_with_underscore_corruption(self, mock_repo_root, mock_active_dir, 
+    @patch("health_check.DATA_DIR")
+    def test_check_auto_link_with_underscore_corruption(self, mock_data_dir, mock_repo_root, mock_active_dir, 
                                                           sample_md_with_underscore_http, tmp_path):
         """Test detection of _http:// corruption pattern"""
         import health_check
@@ -159,6 +160,7 @@ class TestCheckAutoLinkCorruption:
         mock_active_dir.glob.return_value = [test_file]
         
         mock_repo_root.__truediv__.return_value.exists.return_value = False
+        mock_data_dir.exists.return_value = False
         
         # Capture stdout
         captured_output = StringIO()
@@ -176,7 +178,8 @@ class TestCheckAutoLinkCorruption:
     
     @patch("health_check.ACTIVE_DIR")
     @patch("health_check.REPO_ROOT")
-    def test_check_auto_link_with_auto_link_corruption(self, mock_repo_root, mock_active_dir,
+    @patch("health_check.DATA_DIR")
+    def test_check_auto_link_with_auto_link_corruption(self, mock_data_dir, mock_repo_root, mock_active_dir,
                                                         sample_md_with_auto_links, tmp_path):
         """Test detection of auto-link corruption pattern"""
         import health_check
@@ -190,6 +193,7 @@ class TestCheckAutoLinkCorruption:
         mock_active_dir.glob.return_value = [test_file]
         
         mock_repo_root.__truediv__.return_value.exists.return_value = False
+        mock_data_dir.exists.return_value = False
         
         # Capture stdout
         captured_output = StringIO()
@@ -205,7 +209,8 @@ class TestCheckAutoLinkCorruption:
     
     @patch("health_check.ACTIVE_DIR")
     @patch("health_check.REPO_ROOT")
-    def test_check_auto_link_clean_content(self, mock_repo_root, mock_active_dir,
+    @patch("health_check.DATA_DIR")
+    def test_check_auto_link_clean_content(self, mock_data_dir, mock_repo_root, mock_active_dir,
                                            sample_md_clean, tmp_path):
         """Test with clean content (no corruption)"""
         import health_check
@@ -219,6 +224,7 @@ class TestCheckAutoLinkCorruption:
         mock_active_dir.glob.return_value = [test_file]
         
         mock_repo_root.__truediv__.return_value.exists.return_value = False
+        mock_data_dir.exists.return_value = False
         
         # Capture stdout
         captured_output = StringIO()
@@ -234,7 +240,8 @@ class TestCheckAutoLinkCorruption:
     
     @patch("health_check.ACTIVE_DIR")
     @patch("health_check.REPO_ROOT")
-    def test_check_auto_link_mixed_content(self, mock_repo_root, mock_active_dir,
+    @patch("health_check.DATA_DIR")
+    def test_check_auto_link_mixed_content(self, mock_data_dir, mock_repo_root, mock_active_dir,
                                             sample_md_mixed, tmp_path):
         """Test with mixed content (both good and bad patterns)"""
         import health_check
@@ -248,6 +255,7 @@ class TestCheckAutoLinkCorruption:
         mock_active_dir.glob.return_value = [test_file]
         
         mock_repo_root.__truediv__.return_value.exists.return_value = False
+        mock_data_dir.exists.return_value = False
         
         # Capture stdout
         captured_output = StringIO()
@@ -263,13 +271,15 @@ class TestCheckAutoLinkCorruption:
     
     @patch("health_check.ACTIVE_DIR")
     @patch("health_check.REPO_ROOT")
-    def test_check_auto_link_nonexistent_directory(self, mock_repo_root, mock_active_dir):
+    @patch("health_check.DATA_DIR")
+    def test_check_auto_link_nonexistent_directory(self, mock_data_dir, mock_repo_root, mock_active_dir):
         """Test handling of nonexistent directories"""
         import health_check
         
         # Mock directories as nonexistent
         mock_active_dir.exists.return_value = False
         mock_repo_root.__truediv__.return_value.exists.return_value = False
+        mock_data_dir.exists.return_value = False
         
         # Capture stdout
         captured_output = StringIO()
@@ -283,7 +293,33 @@ class TestCheckAutoLinkCorruption:
     
     @patch("health_check.ACTIVE_DIR")
     @patch("health_check.REPO_ROOT")
-    def test_check_auto_link_read_error_handling(self, mock_repo_root, mock_active_dir, tmp_path):
+    @patch("health_check.DATA_DIR")
+    def test_check_auto_link_entity_description_corruption(self, mock_data_dir, mock_repo_root, mock_active_dir):
+        """Test D5-real: detection of corruption in entity descriptions (simplified)"""
+        import health_check
+        
+        # Mock directories - only DATA_DIR exists to test the code path
+        mock_active_dir.exists.return_value = False
+        mock_repo_root.__truediv__.return_value.exists.return_value = False
+        mock_data_dir.exists.return_value = True
+        mock_data_dir.__truediv__.return_value.exists.return_value = False  # No entity_index file
+        
+        # Capture stdout
+        captured_output = StringIO()
+        with patch('sys.stdout', captured_output):
+            result = health_check.check_auto_link_corruption()
+        
+        output = captured_output.getvalue()
+        
+        assert result is True, \
+            "check_auto_link_corruption should return True (advisory)"
+        assert "entity_index_v2.json no encontrado" in output, \
+            "Output should report missing entity index file"
+    
+    @patch("health_check.ACTIVE_DIR")
+    @patch("health_check.REPO_ROOT")
+    @patch("health_check.DATA_DIR")
+    def test_check_auto_link_read_error_handling(self, mock_data_dir, mock_repo_root, mock_active_dir, tmp_path):
         """Test graceful handling of file read errors"""
         import health_check
         
@@ -303,6 +339,7 @@ class TestCheckAutoLinkCorruption:
         mock_active_dir.glob = mock_glob_error
         
         mock_repo_root.__truediv__.return_value.exists.return_value = False
+        mock_data_dir.exists.return_value = False
         
         # Should not raise exception, just handle gracefully
         result = health_check.check_auto_link_corruption()

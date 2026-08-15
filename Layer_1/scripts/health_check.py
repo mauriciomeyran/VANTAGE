@@ -527,15 +527,20 @@ def check_census_age():
 
 def check_auto_link_corruption():
     """
-    Detector read-only de corrupción de auto-links.
+    Detector read-only de corrupción de auto-links (D5-real).
+    
     Escanea patrones `_http://` y `[nombre.ext](http://nombre.ext)` 
-    (donde el texto del enlace coincide con la URL) sobre 
-    Documentación/ACTIVE/*.md y skills/*.md.
+    (donde el texto del enlace coincide con la URL) sobre:
+    - Documentación/ACTIVE/*.md
+    - skills/*.md  
+    - Campo Descripción en entity_index_v2.json (D5-real extensión)
+    
     Ignora enlaces HTTP/HTTPS externos legítimos.
     La salida es informativa/advisory (no bloqueante, sin exit code fatal).
     """
     corruption_count = 0
     files_checked = 0
+    entities_checked = 0
     
     # Patrones de corrupción a detectar
     # 1. Guion bajo antes de http:// (_http://)
@@ -544,7 +549,7 @@ def check_auto_link_corruption():
     # 2. Auto-links donde el texto coincide con la URL completa [texto](http://texto)
     auto_link_pattern = re.compile(r'\[([^\]]+)\]\(http[s]?://\1\)')
     
-    # Directorios a escanear
+    # Directorios a escanear (archivos markdown)
     scan_dirs = [ACTIVE_DIR, REPO_ROOT / "skills"]
     
     for scan_dir in scan_dirs:
@@ -579,10 +584,51 @@ def check_auto_link_corruption():
                 # Silencioso para no romper el health check por errores de lectura
                 pass
     
-    if corruption_count == 0:
-        ok(f"auto-link — {files_checked} archivos verificados, sin corrupción detectada")
+    # D5-real: Escanear campo Descripción en entity_index_v2.json
+    entity_index_path = DATA_DIR / "entity_index_v2.json"
+    if entity_index_path.exists():
+        try:
+            with open(entity_index_path, 'r', encoding='utf-8') as f:
+                entity_index = json.load(f)
+            
+            for entity in entity_index.get('entities', []):
+                entities_checked += 1
+                description = entity.get('properties', {}).get('Descripción', '')
+                
+                if description and isinstance(description, str):
+                    # Buscar patrones de corrupción en Descripción
+                    underscore_matches = underscore_pattern.findall(description)
+                    auto_link_matches = auto_link_pattern.findall(description)
+                    
+                    if underscore_matches or auto_link_matches:
+                        corruption_count += 1
+                        entity_name = entity.get('name', 'Unknown')
+                        entity_id = entity.get('entity_id', 'Unknown')[:8]
+                        warn(f"auto-link — Entidad [{entity_id}] {entity_name} (Descripción) tiene patrones sospechosos:")
+                        
+                        if underscore_matches:
+                            print(f"    • {len(underscore_matches)} ocurrencias de '_http://' en Descripción")
+                        
+                        if auto_link_matches:
+                            print(f"    • {len(auto_link_matches)} auto-links detectados en Descripción:")
+                            for match in auto_link_matches[:3]:
+                                print(f"      - [{match}](http://{match})")
+                            if len(auto_link_matches) > 3:
+                                print(f"      ... y {len(auto_link_matches) - 3} más")
+            
+            if entities_checked > 0:
+                print(f"  📋 {entities_checked} entidades verificadas en entity_index_v2.json")
+                
+        except Exception as e:
+            # Silencioso para no romper el health check por errores de lectura
+            pass
     else:
-        warn(f"auto-link — {corruption_count}/{files_checked} archivos con patrones sospechosos")
+        print(f"  ℹ️  entity_index_v2.json no encontrado, omitiendo escaneo de Descripciones")
+    
+    if corruption_count == 0:
+        ok(f"auto-link — {files_checked} archivos + {entities_checked} entidades verificadas, sin corrupción detectada")
+    else:
+        warn(f"auto-link — {corruption_count}/{files_checked + entities_checked} items con patrones sospechosos")
     
     return True  # Siempre advisory, nunca bloquea
 
