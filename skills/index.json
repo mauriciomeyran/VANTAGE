@@ -13,12 +13,6 @@
       "mimeType": "application/octet-stream"
     },
     {
-      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/extract-learnings.skill",
-      "name": "extract-learnings",
-      "description": "VANTAGE Skill: extract-learnings",
-      "mimeType": "application/octet-stream"
-    },
-    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/prompt-master.skill",
       "name": "prompt-master",
       "description": "Genera prompts optimizados para herramientas de IA",
@@ -40,12 +34,6 @@
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/tailored-resume-generator.skill",
       "name": "tailored-resume-generator",
       "description": "Genera currículums personalizados según descripciones de trabajo",
-      "mimeType": "application/octet-stream"
-    },
-    {
-      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-audit-navigation-brief.skill",
-      "name": "vantage-audit-navigation-brief",
-      "description": "VANTAGE Skill: vantage-audit-navigation-brief",
       "mimeType": "application/octet-stream"
     },
     {
