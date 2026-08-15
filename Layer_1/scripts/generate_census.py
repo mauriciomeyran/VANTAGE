@@ -57,48 +57,79 @@ CENSUS_SPEC = [
     {
         "name": "KERNEL",
         "rows": [
+            {"id": "KERNEL:DOCUMENTATION", "seccion": "03", "nombre": "Documentación y Gobernanza (L0)"},
             {"id": "KERNEL:DOCUMENTATION-001", "seccion": "03.1", "nombre": "Canonical Document ID Contract"},
+            {"id": "KERNEL:DOCUMENTATION-002", "seccion": "03.2", "nombre": "Nomenclatura de IDs Canónicos"},
             {"id": "KERNEL:DOCUMENTATION-003", "seccion": "03.3", "nombre": "L0 — VANTAGE Runtime"},
+            {"id": "KERNEL:DOCUMENTATION-004", "seccion": "03.4", "nombre": "Kernel vs Manual"},
+            {"id": "KERNEL:DOCUMENTATION-005", "seccion": "03.5", "nombre": "Convención de Anuncio de Skills"},
+            {"id": "KERNEL:DOCUMENTATION-006", "seccion": "03.6", "nombre": "Diffs y Write-Back Verification"},
             {"id": "KERNEL:DOCUMENTATION-007", "seccion": "03.7", "nombre": "Version-Check Tool (verify_versions.py)"},
+            {"id": "KERNEL:DOCUMENTATION-008", "seccion": "03.8", "nombre": "Sincronización de Versiones"},
+            {"id": "KERNEL:DOCUMENTATION-009", "seccion": "03.9", "nombre": "Census Sync"},
+            {"id": "KERNEL:DOCUMENTATION-010", "seccion": "03.10", "nombre": "Documentación Transversal"},
+            {"id": "KERNEL:DOCUMENTATION-011", "seccion": "03.11", "nombre": "Gate Decision Documentation"},
             {"id": "KERNEL:DOCUMENTATION-012", "seccion": "03.12", "nombre": "Notebook Gemini — Auditor Documental Externo"},
+            {"id": "KERNEL:ARCHITECTURE", "seccion": "04", "nombre": "Arquitectura de Cuatro Capas"},
+            {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "04.1", "nombre": "L1 — Active Search"},
+            {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "04.2", "nombre": "L2 — Strategic Search"},
+            {"id": "KERNEL:ARCHITECTURE-L3", "seccion": "04.3", "nombre": "L3 — Passive Intake"},
             {"id": "KERNEL:ARCHITECTURE-L4", "lookup_ids": ["KERNEL:ARCHITECTURE-004", "KERNEL:ARHITECTURE-L4", "KERNEL:ARCHITECTURE-L4"], "seccion": "04.4", "nombre": "L4 — Version Control & Infrastructure"},
+            {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH", "seccion": "04.5", "nombre": "Dashboard Checklist Architecture"},
+            {"id": "KERNEL:OWNERSHIP", "seccion": "05", "nombre": "División de Responsabilidades AI/Python"},
+            {"id": "KERNEL:OWNERSHIP-001", "seccion": "05.1", "nombre": "AI Component"},
             {"id": "KERNEL:OWNERSHIP-002", "seccion": "05.2", "nombre": "Python Component"},
+            {"id": "KERNEL:PURPOSE", "seccion": "06", "nombre": "Propósito del Sistema"},
+            {"id": "KERNEL:PURPOSE-001", "seccion": "06.1", "nombre": "Objetivo Principal"},
+            {"id": "KERNEL:SCHEMA", "seccion": "07", "nombre": "Modelo de Datos y Ownership"},
             {"id": "KERNEL:SCHEMA-001", "seccion": "07.1", "nombre": "Schema — Class A Fields"},
             {"id": "KERNEL:SCHEMA-002", "seccion": "07.2", "nombre": "Schema — Class B Fields"},
             {"id": "KERNEL:SCHEMA-003", "seccion": "07.3", "nombre": "Schema — Field Validation Rules"},
+            {"id": "KERNEL:SCHEMA-004", "seccion": "07.4", "nombre": "Schema — Class A vs Class B"},
+            {"id": "KERNEL:SCHEMA-005", "seccion": "07.5", "nombre": "Schema — Field Types"},
+            {"id": "KERNEL:SCHEMA-006", "seccion": "07.6", "nombre": "Schema — Validation Rules"},
+            {"id": "KERNEL:SCHEMA-007", "seccion": "07.7", "nombre": "Schema — Mutability Rules"},
             {"id": "KERNEL:SCHEMA-008", "seccion": "07.8", "nombre": "Valores Operativos — Next_Action (Tracker de Vacantes)"},
-            {"id": "KERNEL:GATE-DECISION-002", "seccion": "09.2", "nombre": "Lógica Estándar"},
-            {"id": "KERNEL:GATE-DECISION-003", "seccion": "09.3", "nombre": "Resolución de REVIEW_NEEDED"},
-            {"id": "KERNEL:GATE-DECISION-004", "seccion": "09.4", "nombre": "Por Qué los Gates Son Deterministas"},
-            {"id": "KERNEL:GATE-DECISION-005", "seccion": "09.5", "nombre": "Flujo de Recuperación BLOCKED"},
-            {"id": "KERNEL:GATE-DECISION-006", "seccion": "09.6", "nombre": "REJECTED (Post-Aplicación)"},
-            {"id": "KERNEL:GATE-DECISION-007", "seccion": "09.7", "nombre": "Ejecución Automática de Archivado"},
-            {"id": "KERNEL:GATE-DECISION-008", "seccion": "09.8", "nombre": "Capas de Evaluación de Gate: Técnica vs. Negocio"},
-            {"id": "KERNEL:GATE-DECISION-009", "seccion": "09.9", "nombre": "Escalamiento de Pendientes a Tickets"},
-            {"id": "KERNEL:GATE-DECISION-010", "seccion": "09.10", "nombre": "Gate Decision — Technical Review"},
-            {"id": "KERNEL:GATE-DECISION-011", "seccion": "09.11", "nombre": "Gate Decision — Business Review"},
-            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "10", "nombre": "Golden Rules — Límites de Ejecución"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "10", "nombre": "Regla de Oro #1"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "10", "nombre": "Regla de Oro #2"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-003", "seccion": "10", "nombre": "Regla de Oro #3"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-004", "seccion": "10", "nombre": "Regla de Oro #4"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-005", "seccion": "10", "nombre": "Regla de Oro #5"},
-                {"id": "KERNEL:CV-GOLDEN-RULES-006", "seccion": "10.6", "nombre": "Regla de Oro #6 — Invarianza de la Decisión de Gate"},
-            {"id": "KERNEL:TRIGGERS", "seccion": "11", "nombre": "Contratos de Ejecución del AI Component"},
-            {"id": "KERNEL:TRIGGER-001", "seccion": "11.1", "nombre": "Trigger — Discovery Request"},
-            {"id": "KERNEL:TRIGGER-002", "seccion": "11.2", "nombre": "Trigger — CV Optimization"},
-            {"id": "KERNEL:TRIGGER-003", "seccion": "11.3", "nombre": "Trigger — Recovery Request"},
-            {"id": "KERNEL:TRIGGER-004", "seccion": "11.4", "nombre": "Trigger — Documentation Update"},
-            {"id": "KERNEL:TRIGGER-005", "seccion": "11.5", "nombre": "Trigger — Schema Validation"},
-            {"id": "KERNEL:TRIGGER-006", "seccion": "11.6", "nombre": "Trigger — Gate Decision"},
-            {"id": "KERNEL:TRIGGER-007", "seccion": "11.7", "nombre": "Trigger — Archiving"},
-            {"id": "KERNEL:TRIGGER-008", "seccion": "11.8", "nombre": "Trigger — Health Check"},
-            {"id": "KERNEL:TRIGGER-009", "seccion": "11.9", "nombre": "Trigger — Version Check"},
-            {"id": "KERNEL:CV-PIPELINE", "seccion": "12", "nombre": "Pipeline de CV"},
-            {"id": "KERNEL:CV-PIPELINE-001", "seccion": "12.1", "nombre": "CV-A"},
-            {"id": "KERNEL:CV-PIPELINE-002", "seccion": "12.2", "nombre": "CV-B"},
-            {"id": "KERNEL:CANON-UPDATE", "seccion": "13", "nombre": "Actualización del Canon"},
-            {"id": "KERNEL:NAMING-CONVENTION", "seccion": "14", "nombre": "Convención de Nombres"},
+            {"id": "KERNEL:TRACKER-SCHEMA", "seccion": "08", "nombre": "Schema del Tracker de Vacantes"},
+            {"id": "KERNEL:TRACKER-SCHEMA-001", "seccion": "08.1", "nombre": "Tracker Schema — Campos Principales"},
+            {"id": "KERNEL:TRACKER-SCHEMA-002", "seccion": "08.2", "nombre": "Tracker Schema — Campos Derivados"},
+            {"id": "KERNEL:FAIL-PHILOSOPHY", "seccion": "09", "nombre": "Filosofía de Fallo"},
+            {"id": "KERNEL:FAIL-PHILOSOPHY-001", "seccion": "09.1", "nombre": "Fail-Fast vs Fail-Safe"},
+            {"id": "KERNEL:FAIL-PHILOSOPHY-002", "seccion": "09.2", "nombre": "Recovery Strategies"},
+            {"id": "KERNEL:GATE-DECISION", "seccion": "10", "nombre": "Lógica de Gate Decision"},
+            {"id": "KERNEL:GATE-DECISION-001", "seccion": "10.1", "nombre": "Gate Decision — Overview"},
+            {"id": "KERNEL:GATE-DECISION-002", "seccion": "10.2", "nombre": "Lógica Estándar"},
+            {"id": "KERNEL:GATE-DECISION-003", "seccion": "10.3", "nombre": "Resolución de REVIEW_NEEDED"},
+            {"id": "KERNEL:GATE-DECISION-004", "seccion": "10.4", "nombre": "Por Qué los Gates Son Deterministas"},
+            {"id": "KERNEL:GATE-DECISION-005", "seccion": "10.5", "nombre": "Flujo de Recuperación BLOCKED"},
+            {"id": "KERNEL:GATE-DECISION-006", "seccion": "10.6", "nombre": "REJECTED (Post-Aplicación)"},
+            {"id": "KERNEL:GATE-DECISION-007", "seccion": "10.7", "nombre": "Ejecución Automática de Archivado"},
+            {"id": "KERNEL:GATE-DECISION-008", "seccion": "10.8", "nombre": "Capas de Evaluación de Gate: Técnica vs. Negocio"},
+            {"id": "KERNEL:GATE-DECISION-009", "seccion": "10.9", "nombre": "Escalamiento de Pendientes a Tickets"},
+            {"id": "KERNEL:GATE-DECISION-010", "seccion": "10.10", "nombre": "Gate Decision — Technical Review"},
+            {"id": "KERNEL:GATE-DECISION-011", "seccion": "10.11", "nombre": "Gate Decision — Business Review"},
+            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "11", "nombre": "Golden Rules — Límites de Ejecución"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "11", "nombre": "Regla de Oro #1"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "11", "nombre": "Regla de Oro #2"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-003", "seccion": "11", "nombre": "Regla de Oro #3"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-004", "seccion": "11", "nombre": "Regla de Oro #4"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-005", "seccion": "11", "nombre": "Regla de Oro #5"},
+                {"id": "KERNEL:CV-GOLDEN-RULES-006", "seccion": "11.6", "nombre": "Regla de Oro #6 — Invarianza de la Decisión de Gate"},
+            {"id": "KERNEL:TRIGGERS", "seccion": "12", "nombre": "Contratos de Ejecución del AI Component"},
+            {"id": "KERNEL:TRIGGER-001", "seccion": "12.1", "nombre": "Trigger — Discovery Request"},
+            {"id": "KERNEL:TRIGGER-002", "seccion": "12.2", "nombre": "Trigger — CV Optimization"},
+            {"id": "KERNEL:TRIGGER-003", "seccion": "12.3", "nombre": "Trigger — Recovery Request"},
+            {"id": "KERNEL:TRIGGER-004", "seccion": "12.4", "nombre": "Trigger — Documentation Update"},
+            {"id": "KERNEL:TRIGGER-005", "seccion": "12.5", "nombre": "Trigger — Schema Validation"},
+            {"id": "KERNEL:TRIGGER-006", "seccion": "12.6", "nombre": "Trigger — Gate Decision"},
+            {"id": "KERNEL:TRIGGER-007", "seccion": "12.7", "nombre": "Trigger — Archiving"},
+            {"id": "KERNEL:TRIGGER-008", "seccion": "12.8", "nombre": "Trigger — Health Check"},
+            {"id": "KERNEL:TRIGGER-009", "seccion": "12.9", "nombre": "Trigger — Version Check"},
+            {"id": "KERNEL:CV-PIPELINE", "seccion": "13", "nombre": "Pipeline de CV"},
+            {"id": "KERNEL:CV-PIPELINE-001", "seccion": "13.1", "nombre": "CV-A"},
+            {"id": "KERNEL:CV-PIPELINE-002", "seccion": "13.2", "nombre": "CV-B"},
+            {"id": "KERNEL:CANON-UPDATE", "seccion": "14", "nombre": "Actualización del Canon"},
+            {"id": "KERNEL:NAMING-CONVENTION", "seccion": "15", "nombre": "Convención de Nombres"},
             {"id": "KERNEL:CONTEXT-INFRASTRUCTURE", "seccion": "16", "nombre": "Context Infrastructure"},
             {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-001", "seccion": "16.1", "nombre": "Context Infrastructure — Data Sources"},
             {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-002", "seccion": "16.2", "nombre": "Context Infrastructure — Integration Points"},
@@ -109,10 +140,20 @@ CENSUS_SPEC = [
     {
         "name": "MANUAL",
         "rows": [
+            {"id": "MANUAL:OBJECTIVE", "seccion": "01", "nombre": "Objetivo"},
+            {"id": "MANUAL:HOW-IT-WORKS", "seccion": "02", "nombre": "¿Cómo funciona?"},
+            {"id": "MANUAL:FAILURE-PHILOSOPHY", "seccion": "03", "nombre": "Filosofía de Fallo para Operadores"},
+            {"id": "MANUAL:SETUP", "seccion": "04", "nombre": "Setup"},
+            {"id": "MANUAL:COLD-START", "seccion": "05", "nombre": "Arranque Frío"},
+            {"id": "MANUAL:SESSION-CYCLE", "seccion": "06", "nombre": "Ciclo de Sesión"},
+            {"id": "MANUAL:CHECKLIST", "seccion": "07", "nombre": "El Checklist"},
+            {"id": "MANUAL:WEEKLY-FLOW", "seccion": "08", "nombre": "Flujo Semanal de Operación"},
             {"id": "MANUAL:WEEKLY-FLOW-001", "seccion": "08.1", "nombre": "Lunes — Búsqueda Activa"},
             {"id": "MANUAL:WEEKLY-FLOW-002", "seccion": "08.2", "nombre": "Dashboard — recuperación antes de CV Optimization"},
+            {"id": "MANUAL:WEEKLY-FLOW-003", "seccion": "08.3", "nombre": "Miércoles — Figma"},
             {"id": "MANUAL:WEEKLY-FLOW-004", "seccion": "08.4", "nombre": "Jueves"},
             {"id": "MANUAL:WEEKLY-FLOW-005", "seccion": "08.5", "nombre": "Viernes"},
+            {"id": "MANUAL:WEEKLY-FLOW-006", "seccion": "08.6", "nombre": "Cadence Matrix — Weekly Rhythm"},
             {"id": "MANUAL:RUNTIME", "seccion": "09", "nombre": "VANTAGE Runtime (Consulta Operativa)"},
             {"id": "MANUAL:RUNTIME-001", "seccion": "09.1", "nombre": "¿Qué es el Runtime?"},
             {"id": "MANUAL:RUNTIME-002", "seccion": "09.2", "nombre": "Comandos Principales"},
@@ -533,6 +574,289 @@ def find_orphan_ids(link_index: dict, known_ids: set) -> dict:
 
     return dict(sorted(orphans.items()))
 
+
+def infer_section_from_id(id_str: str) -> tuple:
+    """Infiere la sección y nombre a partir del ID huérfano."""
+    prefix = id_str.split(":")[0] if ":" in id_str else ""
+    
+    # Mapeo de prefijos a secciones del CENSUS_SPEC
+    section_map = {
+        "KERNEL": "KERNEL",
+        "MANUAL": "MANUAL",
+        "CANON": "CANON",
+        "CAREER_CANON": "CAREER_CANON",
+        "SP": "SP",
+        "ALIASES": "ALIASES",
+        "CHANGELOG": "CHANGELOG",
+        "CHANGELOG_ARCHIVE": "CHANGELOG_ARCHIVE",
+        "BRIEF": "BRIEF",
+    }
+    
+    section_name = section_map.get(prefix, "UNKNOWN")
+    
+    # Inferir sección numérica basado en el patrón del ID
+    seccion = ""
+    nombre = ""
+    
+    if "-" in id_str:
+        parts = id_str.split("-")
+        if len(parts) > 1:
+            # IDs con sufijo numérico
+            base = parts[0]
+            suffix = parts[1]
+            
+            # Intentar inferir sección numérica
+            if suffix.isdigit():
+                seccion = f"{seccion}.{suffix}" if seccion else suffix
+            
+            # Generar nombre descriptivo
+            if prefix == "KERNEL":
+                nombre = f"Subsección {suffix} de {base}"
+            elif prefix == "MANUAL":
+                nombre = f"Subsección {suffix} de {base}"
+            else:
+                nombre = f"{base} — {suffix}"
+    else:
+        # IDs sin sufijo numérico (encabezados principales)
+        if prefix == "KERNEL":
+            nombre = f"Sección principal de {id_str}"
+        elif prefix == "MANUAL":
+            nombre = f"Sección principal de {id_str}"
+        else:
+            nombre = id_str
+    
+    return section_name, seccion, nombre
+
+
+def generate_census_spec_additions(orphans: dict) -> str:
+    """Genera el código Python para agregar IDs huérfanos al CENSUS_SPEC."""
+    if not orphans:
+        return "# No hay IDs huérfanos para agregar\n"
+    
+    additions = []
+    additions.append("# IDs huérfanos detectados - agregar a CENSUS_SPEC")
+    additions.append("# Generado automáticamente por generate_census.py --auto-fix-orphans")
+    additions.append("")
+    
+    # Agrupar por sección
+    by_section = {}
+    for id_str, entry in orphans.items():
+        section_name, seccion, nombre = infer_section_from_id(id_str)
+        if section_name not in by_section:
+            by_section[section_name] = []
+        by_section[section_name].append({
+            "id": id_str,
+            "seccion": seccion,
+            "nombre": nombre,
+            "entry": entry
+        })
+    
+    for section_name, items in sorted(by_section.items()):
+        if section_name == "UNKNOWN":
+            continue
+        additions.append(f"# {section_name}")
+        for item in items:
+            additions.append(f'{{"id": "{item["id"]}", "seccion": "{item["seccion"]}", "nombre": "{item["nombre"]}"}},')
+        additions.append("")
+    
+    return "\n".join(additions)
+
+
+def auto_fix_orphans(orphans: dict) -> bool:
+    """Pregunta al usuario si quiere agregar IDs huérfanos al CENSUS_SPEC."""
+    if not orphans:
+        print("✓ No hay IDs huérfanos para corregir.")
+        return False
+    
+    print("\n" + "=" * 52)
+    print("  DETECCIÓN DE IDS HUÉRFANOS")
+    print("=" * 52)
+    print(f"  Se detectaron {len(orphans)} IDs huérfanos fuera del CENSUS_SPEC:")
+    print()
+    
+    for id_str, entry in orphans.items():
+        section_name, seccion, nombre = infer_section_from_id(id_str)
+        print(f"  - {id_str}")
+        print(f"    Documento: {entry['doc']}")
+        print(f"    Sección inferida: {section_name} -> {seccion}")
+        print(f"    Nombre inferido: {nombre}")
+        print()
+    
+    print("=" * 52)
+    print("  ¿Deseas agregar estos IDs al CENSUS_SPEC?")
+    print("  [Y/y] = Sí, agregar al archivo generate_census.py")
+    print("  [N/n] = No, solo mostrar el código generado")
+    print("  [C/c] = Cancelar, no hacer nada")
+    print("=" * 52)
+    
+    response = input("  Tu elección: ").strip().lower()
+    
+    if response in ['c']:
+        print("✓ Cancelado. No se realizaron cambios.")
+        return False
+    
+    # Generar el código para agregar
+    additions_code = generate_census_spec_additions(orphans)
+    
+    if response in ['n']:
+        print("\n--- Código generado (no aplicado) ---")
+        print(additions_code)
+        print("--- Fin del código ---")
+        return False
+    
+    if response in ['y']:
+        # Leer el archivo actual
+        script_path = Path(__file__).resolve()
+        current_content = script_path.read_text(encoding="utf-8")
+        
+        # Encontrar el final del CENSUS_SPEC
+        import re
+        census_spec_pattern = r'(CENSUS_SPEC = \[.*?\])'
+        match = re.search(census_spec_pattern, current_content, re.DOTALL)
+        
+        if match:
+            census_spec_end = match.end()
+            # Insertar el código antes del cierre del CENSUS_SPEC
+            # Necesitamos encontrar dónde insertar dentro de la sección correcta
+            new_content = current_content[:census_spec_end] + "\n    # Auto-generated orphan IDs\n" + additions_code + current_content[census_spec_end:]
+            
+            # Escribir el archivo
+            script_path.write_text(new_content, encoding="utf-8")
+            print(f"✓ IDs agregados a {script_path}")
+            print("  Revisa el archivo para verificar la inserción y ajustar secciones si es necesario.")
+            return True
+        else:
+            print("✗ Error: No se pudo encontrar el CENSUS_SPEC en el archivo.")
+            return False
+    
+    print("✗ Respuesta no reconocida. Cancelado.")
+    return False
+
+
+def update_notion_census_page(page_id: str, markdown_content: str) -> bool:
+    """Actualiza la página de Notion especificada con el contenido del census."""
+    try:
+        # Convertir el markdown a bloques de Notion
+        blocks = markdown_to_notion_blocks(markdown_content)
+        
+        # Primero obtener los bloques actuales para reemplazar
+        url = f"https://api.notion.com/v1/blocks/{page_id}/children"
+        response = requests.get(url, headers=HEADERS)
+        
+        if response.status_code != 200:
+            print(f"✗ Error al obtener bloques actuales: {response.status_code}")
+            return False
+        
+        current_blocks = response.json().get("results", [])
+        
+        # Si hay bloques, eliminarlos todos
+        if current_blocks:
+            for block in current_blocks:
+                delete_url = f"https://api.notion.com/v1/blocks/{block['id']}"
+                requests.delete(delete_url, headers=HEADERS)
+        
+        # Agregar los nuevos bloques
+        append_url = f"https://api.notion.com/v1/blocks/{page_id}/children"
+        
+        # Notion API tiene límite de 100 bloques por request
+        for i in range(0, len(blocks), 100):
+            batch = blocks[i:i+100]
+            payload = {"children": batch}
+            
+            response = requests.patch(append_url, headers=HEADERS, json=payload)
+            
+            if response.status_code != 200:
+                print(f"✗ Error al agregar bloques (batch {i//100 + 1}): {response.status_code}")
+                print(f"  Response: {response.text}")
+                return False
+        
+        print(f"✓ Página de Notion actualizada exitosamente")
+        return True
+        
+    except Exception as e:
+        print(f"✗ Error al actualizar Notion: {e}")
+        return False
+
+
+def markdown_to_notion_blocks(markdown: str) -> list:
+    """Convierte contenido markdown a bloques de Notion."""
+    blocks = []
+    lines = markdown.split('\n')
+    
+    for line in lines:
+        if not line.strip():
+            continue
+            
+        # Encabezados
+        if line.startswith('## '):
+            text = line[3:].strip()
+            blocks.append({
+                "object": "block",
+                "type": "heading_2",
+                "heading_2": {
+                    "rich_text": [{"type": "text", "text": {"content": text}}]
+                }
+            })
+        elif line.startswith('### '):
+            text = line[4:].strip()
+            blocks.append({
+                "object": "block",
+                "type": "heading_3",
+                "heading_3": {
+                    "rich_text": [{"type": "text", "text": {"content": text}}]
+                }
+            })
+        # Tablas (simplificado - Notion no soporta tablas nativamente en API)
+        elif line.startswith('|'):
+            # Para tablas, convertirlas a texto con formato
+            blocks.append({
+                "object": "block",
+                "type": "paragraph",
+                "paragraph": {
+                    "rich_text": [{"type": "text", "text": {"content": line}}]
+                }
+            })
+        # Separadores
+        elif line.strip() == '---':
+            blocks.append({
+                "object": "block",
+                "type": "divider",
+                "divider": {}
+            })
+        # Texto normal
+        else:
+            blocks.append({
+                "object": "block",
+                "type": "paragraph",
+                "paragraph": {
+                    "rich_text": [{"type": "text", "text": {"content": line}}]
+                }
+            })
+    
+    return blocks
+
+
+def sync_to_notion(page_id: str, markdown_content: str) -> bool:
+    """Sincroniza el census a Notion con confirmación del usuario."""
+    print("\n" + "=" * 52)
+    print("  SINCRONIZACIÓN A NOTION")
+    print("=" * 52)
+    print(f"  Página ID: {page_id}")
+    print(f"  Tamaño del contenido: {len(markdown_content)} caracteres")
+    print()
+    print("  ¿Deseas actualizar la página de Notion con el census actual?")
+    print("  [Y/y] = Sí, actualizar Notion")
+    print("  [N/n] = No, cancelar")
+    print("=" * 52)
+    
+    response = input("  Tu elección: ").strip().lower()
+    
+    if response in ['y']:
+        return update_notion_census_page(page_id, markdown_content)
+    else:
+        print("✓ Cancelado. No se actualizó Notion.")
+        return False
+
 # ─── RENDER ────────────────────────────────────────────────────────────────────
 
 def render_markdown(link_index: dict, orphans: dict) -> tuple:
@@ -601,6 +925,10 @@ def print_debug_ids(link_index: dict, ids_to_debug: list) -> None:
 
 if __name__ == "__main__":
     debug_ids = []
+    auto_fix_orphans_flag = False
+    sync_to_notion_flag = False
+    notion_page_id = "394938befc4281e6a381e3869e60d89d"  # ID default proporcionado
+    
     if "--debug-id" in sys.argv:
         idx = sys.argv.index("--debug-id")
         debug_ids = sys.argv[idx + 1:]
@@ -608,8 +936,17 @@ if __name__ == "__main__":
             print("[ERROR] --debug-id requiere al menos un ID después, ej.:")
             print("  python3 generate_census.py --debug-id KERNEL:GATE-DECISION-001 KERNEL:GATE-DECISION-004")
             sys.exit(1)
+    
+    if "--auto-fix-orphans" in sys.argv:
+        auto_fix_orphans_flag = True
+    
+    if "--sync-to-notion" in sys.argv:
+        sync_to_notion_flag = True
+        idx = sys.argv.index("--sync-to-notion")
+        if idx + 1 < len(sys.argv) and not sys.argv[idx + 1].startswith("--"):
+            notion_page_id = sys.argv[idx + 1]
 
-    print(f"\nV-ID-CENSUS Generator v3.0")
+    print(f"\nV-ID-CENSUS Generator v3.1")
     print(f"Generado: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("=" * 52)
 
@@ -649,6 +986,21 @@ if __name__ == "__main__":
         for uid in hardcoded_fallbacks:
             print(f"    - {uid}")
     print("=" * 52)
+    
+    # Auto-fix orphans si se solicita
+    if auto_fix_orphans_flag:
+        if auto_fix_orphans(orphans):
+            # Si se agregaron IDs, regenerar el census
+            print("\nRegenerando census con IDs actualizados...")
+            known_ids = known_ids_from_spec()
+            orphans = find_orphan_ids(link_index, known_ids)
+            md, unresolved, hardcoded_fallbacks = render_markdown(link_index, orphans)
+            output.write_text(md, encoding="utf-8")
+            print("✓ Census regenerado.")
+    
+    # Sync a Notion si se solicita
+    if sync_to_notion_flag:
+        sync_to_notion(notion_page_id, md)
 
     if incomplete_docs:
         print("\n  ⚠️  ADVERTENCIA: CENSUS INCOMPLETO")
