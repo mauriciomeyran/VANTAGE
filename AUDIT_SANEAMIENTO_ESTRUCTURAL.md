@@ -406,3 +406,13 @@ vsync_doc.py      → git_sync.py (auto_commit)
 - GitHub: issue #1 (CLOSED — drift KERNEL:GATE-DECISION-007/auto_archive), #2 (CLOSED — drift dedup), #3 y #4 (OPEN — gate()/terminalidad; fuera del alcance de este saneamiento, ya mapeados en `ISSUE_PROPOSALS.md`).
 - Skills fuente de decisiones: `vantage-tidy-opportunities-tracker`, `vantage-sync-script-library`, `vantage-sync-script-glossary`, `vantage-tidy-changelog`, `vantage-create-bug-task`.
 - Artefactos raíz relevantes: `MIGRATION_NEXT_ACTION_SELECT_V9.14.2.md` (reporte de la migración cerrada), `ISSUE_PROPOSALS.md` (issues abiertos de la auditoría previa).
+
+---
+
+## Re-auditoría 2026-08-15 (segunda pasada — estado del cierre reportado)
+
+Segunda auditoría ejecutada contra `origin/main` (auto-sync 02:45) y los PRs #5/#6/#7. Resultados consolidados en **`handoffs/HANDOFF_MAESTRO_V3.md`** (re-auditoría R1–R21 + plan secuencial v3 de 22 tareas + contratos por agente). Resumen:
+
+- **Verificado sólido:** F1 disco completo (Tier A 6/6, B2 2/2, Tier C) y **80 assets activos, 0 gaps de Glosario** (corrida en vivo de `--new-scripts` sobre el árbol actual — el "79" reportado no corresponde). M4 (GATE-DECISION-007) y M6 (re-anchor SKILL-ANNOUNCE-CONVENTION → KERNEL:DOCUMENTATION-005) completos y limpios. P1 (Kernel 10 correos) aplicado. Fix de `graph_layer.py` (lee `../data`) aplicado, sin tests.
+- **Drift nuevo detectado:** el PR #7 (M5, por Devin) parchó solo el archivo local y el ciclo de sync Notion **revirtió** la reformulación de `vsync_doc_fast.py` en §04.4 (referencia colgante activa); el conteo de skills quedó stale (dice 25; disco = 30: 28 activas + 2 deprecadas por v9.20.8). Lección: los PATCHs documentales deben escribirse en Notion, no solo en disco.
+- **Sigue pendiente:** P2 (Manual dice "5 correos" + hallazgo GROQ de XREF), dedupe v9.14.2 x3 en Archivo Changelog, alta de anuncio/glosario de `vantage-housekeeping-archive` (03.5 y Manual 23.x), remediación Script Library (filas Tier A, batch `http://` ~70, investigación de la fila `git_sync.py` — prohibido deprecar), stubs C4 (ya retirables), skills deprecadas aún en disco, reconciliación de las 3 copias divergentes de `vantage-housekeeping-tracker`, Tier D restante, drift V4 del registry (reportar), cierre v9.17.1 y entrada `[AUDIT]` única.
