@@ -336,3 +336,15 @@ cd "$HOME/Documents/03 Projects/VANTAGE"
 git rm Layer_1/scripts/graph_v2.json Layer_1/scripts/backlinks_v2.json
 vgit
 ```
+
+---
+
+## Bitácora — 2026-08-15: ejecutor final para el operador + tarjeta T5c
+
+**T13 ✅ EJECUTADA** (verificado en f0afd73, 05:13: stubs graph_v2.json/backlinks_v2.json fuera del árbol). Desbloquea la dependencia de T20.
+
+**Restante consolidado (verificado contra origin/main 05:13):**
+- T9 pasada 1 (Terminal) · T11 (4 archivos de skills deprecadas en `skills/`) · T18 (3 docs duplicadas en `Layer_1/scripts/`) · T19 (briefs x4 en raíz, index.html raíz, .devin/skills espejo, Video/Outputs decisión de retención; inventario_output YA vacío en main — nada que hacer) · T5c (Claude, Manual §22.1b corrompido).
+- Destino T18 y briefs: `Archive/Documentación/` (existe, sin colisiones de nombre; no son scripts → no Legacy_Scripts).
+- Post-T11: `vgit` regenera `index.json` (30→28); Kernel ya usa "(conteo vivo en skills/index.json — SSOT)" (T3 Opción B) → sin doc update.
+- Video/Outputs: recomendación SRE = `git rm -r --cached` (conserva archivos locales, saca ~240MB del seguimiento futuro) + entradas en .gitignore; limpieza profunda del historial solo con git filter-repo como opción separada de alto riesgo.
