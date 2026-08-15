@@ -379,3 +379,27 @@ git rm -r .devin/skills
 vgit
 ```
 Verificación post-vgit en sandbox: Video/Outputs/.devin fuera de origin/main, .gitignore con 3 entradas.
+
+---
+
+## Bitácora — 2026-08-15: política de operador — CERO BORRADOS, SOLO MOVIMIENTOS A ARCHIVE
+
+**Decisión del operador (vincultante):** ningún asset se elimina; todo lo retirado se mueve a su carpeta de Archive correspondiente. Anula el enfoque git rm/untrack para Video/Outputs.
+
+**Verificación de seguridad del auditor (evidencia):**
+- NINGÚN código escribe/lee `Outputs/` por ruta literal (grep completo de .py/.sh/skills: única coincidencia es el ID documental `CANON:DERIVED-OUTPUTS-ARCHIVE` en generate_census.py L253, y menciones no relacionadas en prompt-master).
+- KERNEL:NAMING-CONVENTION §14 gobierna el STEM de nombre, no la ruta física → mover la carpeta no viola contrato.
+- Ancla canónica para el destino: `CANON:DERIVED-OUTPUTS-ARCHIVE` (§13) → `Archive/Outputs`.
+- Archive/ actual: solo Documentación + Legacy_Scripts → sin colisiones de nombre.
+- Caveat registrado: `.devin/skills` es config local de Devin Desktop — puede regenerarse en el próximo arranque de Devin (esperado, inofensivo); si reaparece, decidir si convive fuera de git o se re-mueve.
+
+**Bloque final paste-proof (cero borrados, cero literales palabra.ext):**
+```bash
+cd "$HOME/Documents/03 Projects/VANTAGE"
+git mv Video "Archive/Video"
+git mv Outputs "Archive/Outputs"
+git mv .devin/skills "Archive/devin-skills"
+vgit
+```
+
+**Restante tras esto:** T5c (Claude, tarjeta enviada) · D2 rework + D5 real (Devin, tickets con PR) · T20-T22 (cierre [AUDIT] + vversions --sync PASS + Ledger).
