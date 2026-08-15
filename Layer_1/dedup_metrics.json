@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-08-15T02:24:21.766802",
+  "timestamp": "2026-08-15T07:02:41.317320",
   "window_days": 60,
   "window_label": "2 meses",
   "total_records_analyzed": 134,
   "active_records": 34,
   "archived_records": 100,
   "duplicate_groups_found": 22,
-  "dedup_flags_assigned": 10,
+  "dedup_flags_assigned": 0,
   "terminal_state_omitted": 2,
   "filter_metrics": {},
   "dry_run": false
