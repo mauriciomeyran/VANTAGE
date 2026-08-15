@@ -1,5 +1,89 @@
 # V | CHANGELOG
 
+Tipo: [DOC] [CODE] [INFRA]
+Alcance:
+- Local (skill): /skills/vantage-tidy-bug-task-tracker.skill — corrección de anchor
+- Código: Layer_1/scripts/verify_versions.py, resolver_registry_v2.json, length_baseline.json (local, ARCHIVEROS)
+- Kernel/Manual/System Prompt: SIN CAMBIOS (decisión explícita del operador)
+Contexto: Dos cambios ya implementados en filesystem sin contraparte documental cerrada. (1) vantage-tidy-bug-task-tracker se expandió con contexto operativo detallado, manejo de cero candidatos, whitelisting explícito del campo Archivar y validación post-escritura — mapeo confirmó que el contrato operativo ya vigente en Manual §23.2 no requiere modificación. Se detectó una referencia a un ID obsoleto (KERNEL:CENSUS-SYNC) dentro del archivo local de la skill, renombrado a KERNEL:DOCUMENTATION-008 — corregido en este batch. (2) ARCHIVEROS (página-índice de bases de archivo) se integra a verify_versions.py --sync exclusivamente para housekeeping de version-tracking; el operador confirmó que no se eleva a documento fundacional pleno — el conteo oficial permanece en 10, sin cambios en SP:SYNC-RULE, KERNEL:DOCUMENTATION-007 ni MANUAL:SETUP.
+Cambios:
+- vantage-tidy-bug-task-tracker.skill (local) — anchor corregido: KERNEL:CENSUS-SYNC → KERNEL:DOCUMENTATION-008.
+- verify_versions.py (local) — ARCHIVEROS agregado a DOC_KEYS con ARCHIVEROS_FALLBACK_ID = 3bb938befc4280cd8ea3fc8ba78f570c.
+- resolver_registry_v2.json (local) — entrada ARCHIVEROS agregada a document_registry.
+- length_baseline.json (local) — entrada ARCHIVEROS con baseline inicial.
+IDs afectados: Ninguno (sin alta/baja de ID canónico en Kernel/Manual/SP — no dispara KERNEL:DOCUMENTATION-008 Regla 1).
+Write-Back Verification: pendiente de confirmación tras escritura.
+Pendiente (fuera de esta entrada): Ninguno — drift de versión previamente detectado ya resuelto vía vversions --sync (todos los fundacionales en v9.21.0).
+---
+Tipo: [CODE] [DOC]
+Alcance:
+- Código: Layer_1/scripts/layer_1_run.py, Layer_1/scripts/dedup_opportunities.py
+- Kernel (KERNEL:ARCHITECTURE-L4)
+- Manual (MANUAL:DATA-MANAGEMENT, MANUAL:SCRIPT-GLOSSARY-L1)
+Contexto: El sistema ya contaba con dedup en tiempo real (ventana 30d, hash/URL/brand+title) para prevención de contaminación del Tracker al momento de ingesta. Este batch formaliza y automatiza el segundo mecanismo complementario: auditoria fuzzy post-ingesta con ventana configurable, cruce contra el Archivo Tracker y reglas anti-falsos positivos extensibles. Desde esta version corre automaticamente al finalizar layer_1_run.py mediante ENABLE_DEDUP_AUDIT=true (default), hereda --dry-run del pipeline principal y exporta metricas a dedup_metrics.json.
+Cambios:
+- layer_1_run.py — Fase final: subproceso de dedup_opportunities.py disparado automaticamente si ENABLE_DEDUP_AUDIT=true; timeout extendido a 10 min; herencia de --dry-run.
+- dedup_opportunities.py — flags nuevos: --window-days N (default 60), --dry-run; variable NOTION_ARCHIVE_DATA_SOURCE_ID para el cruce contra Archivo Tracker; reglas ANTI_FALSE_POSITIVE_RULES extensibles.
+- KERNEL:ARCHITECTURE-L4 — parrafo nuevo: "Mecanismos de Dedup — Distincion de Proposito", documenta coexistencia de dedup ingesta (30d) + auditoria post-ingesta (60d).
+- MANUAL:DATA-MANAGEMENT — seccion "Dedup" extendida: dos mecanismos complementarios, automatizacion v9.21.0, resolucion via vantage-tidy-opportunities-tracker.
+- MANUAL:SCRIPT-GLOSSARY-L1 — entradas layer_1_run.py y dedup_opportunities.py extendidas con tablas de flags y variables de entorno.
+IDs afectados: Ninguno — extensiones de nodos existentes, sin alta/baja de ID canonico (no dispara KERNEL:CENSUS-SYNC Regla 1).
+Validacion: DRY RUN sobre 117 registros del Tracker activo: 19 grupos detectados, 40 flags candidatos; metricas exportadas a dedup_metrics.json. Auditoria comparativa: 9.5x mas efectiva frente al baseline de 17 registros, 2 grupos y 1 flag.
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.21.0 al resto de los fundacionales.
+---
+Tipo: [DOC]
+Alcance:
+- Manual (MANUAL:SKILL-GLOSSARY-HOUSEKEEPING, 23.2 — 2 filas)
+- Manual (MANUAL:SKILL-GLOSSARY-AUDIT, 23.3 — 2 filas)
+- Manual (MANUAL:SKILL-GLOSSARY-XREF, 23.5 — gap corregido)
+- Kernel (KERNEL:DOCUMENTATION-005, 03.5 — lista de implementación)
+Contexto: Brief del operador reportaba 4 acciones de optimización del catálogo de skills ya implementadas en filesystem sin contraparte documental formal: expansión de vantage-sync-assets de 4 a 6 dominios sincronizados (altas: Census Spec, Hyperlinks), alta de la meta-skill vantage-housekeeping-tracker (orquesta vantage-tidy-bug-task-tracker → vantage-tidy-opportunities-tracker → vantage-tidy-changelog en orden fijo), y deprecación de vantage-audit-navigation-brief (funcionalidad absorbida por vantage-documentacion-transversal-propuesta desde Fase 1 de mapeo de nodos) y extract-learnings (actividad post-mortem esporádica, no skill operativa recurrente). Se descartó agregar vantage-housekeeping-tracker a la tabla de gobernanza de KERNEL:DOCUMENTATION-010 — mismo criterio ya aplicado a vantage-sync-assets: es orquestador puro sin escritura directa, cada hija conserva su propio gate independiente.
+Cambios:
+- MANUAL:SKILL-GLOSSARY-HOUSEKEEPING (23.2) — fila vantage-sync-assets actualizada (4→6 dominios); fila nueva vantage-housekeeping-tracker.
+- MANUAL:SKILL-GLOSSARY-AUDIT (23.3) — filas vantage-audit-navigation-brief y extract-learnings marcadas [DEPRECATED].
+- MANUAL:SKILL-GLOSSARY-XREF (23.5) — gap de anuncio no especificado corregido: 6→5 skills (vantage-audit-navigation-brief removida por deprecación).
+- KERNEL:DOCUMENTATION-005 (03.5) — alta de línea: vantage-housekeeping-tracker — HOUSEKEEPING TRACKERS… / TRACKERS HOUSEKEPT.
+IDs afectados: Ninguno — todas las ediciones reutilizan IDs existentes (sin alta/baja de ID canónico, no dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: pendiente de confirmación en esta misma sesión (Fase 4).
+Pendiente (fuera de esta entrada):
+- Skill Library (Notion) — alta de fila vantage-housekeeping-tracker, actualización de descripción de vantage-sync-assets (delegar a vantage-sync-skill-library).
+- vversions --sync para propagar v9.20.9 al resto de los fundacionales.
+---
+Tipo: [DOC]
+Alcance:
+- Kernel (KERNEL:DOCUMENTATION-005, 03.5 — lista de implementación)
+- Kernel (KERNEL:DOCUMENTATION-010, 03.10 — tabla Skills de Gobernanza Documental)
+- Kernel (KERNEL:DOCUMENTATION-013, 03.13 — nodo nuevo)
+- Manual (MANUAL:SKILL-GLOSSARY-AUDIT, 23.3 — fila nueva)
+Contexto: Brief del operador reportaba 4 skills modificadas/creadas sin contraparte documental formal (vantage-sync-assets, el split propuesta/implementación de documentación transversal con protocolo sandbox de economía de tokens, y vantage-skill-updater, nueva skill de meta-gobernanza). Mapeo confirmó que MANUAL §23.2 ya reflejaba correctamente vantage-sync-assets y el split propuesta/implementación (v9.20.4/v9.20.5) — el drift real estaba únicamente en KERNEL:DOCUMENTATION-005, que seguía listando una entrada única obsoleta ("vantage-documentacion-transversal") con banners incorrectos. Se descartó agregar vantage-sync-assets a la tabla de gobernanza de KERNEL:DOCUMENTATION-010 (decisión explícita del operador — esa tabla es exclusiva de skills que escriben Class A en trackers/changelog, no de orquestación de Library/Glossary). El patrón de protocolo sandbox (máx. 3 outputs visibles, procesos internos no renderizados) se identificó duplicado idénticamente en 4 skills sin ancla canónica — se formaliza como KERNEL:DOCUMENTATION-013 en vez de crear IDs separados por skill (KERNEL:SANDBOX-PROTOCOL, KERNEL:TOKEN-ECONOMY descartados por redundancia conceptual).
+Cambios:
+- KERNEL:DOCUMENTATION-005 (03.5) — lista "Implementación actual" corregida: entrada única obsoleta reemplazada por vantage-documentacion-transversal-propuesta y -implementacion (banners reales); altas de vantage-sync-assets y vantage-skill-updater.
+- KERNEL:DOCUMENTATION-010 (03.10) — tabla de Skills de Gobernanza Documental: 2 filas nuevas (propuesta/implementacion), que faltaban listarse a sí mismas pese a ser el motor del protocolo que la sección define.
+- KERNEL:DOCUMENTATION-013 (03.13) — nodo nuevo: "Protocolo Sandbox — Economía de Tokens Máxima", formaliza el patrón de máx. 3 outputs visibles compartido por 4 skills.
+- MANUAL:SKILL-GLOSSARY-AUDIT (23.3) — fila nueva: vantage-skill-updater (Propósito/Trigger/Gate/Anuncio).
+IDs afectados: 1 alta — KERNEL:DOCUMENTATION-013 (dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: Kernel y Manual re-fetched post-escritura — 4/4 nodos confirmados en posición correcta, sin mismatch.
+Pendiente (fuera de esta entrada):
+- vcensus para registrar KERNEL:DOCUMENTATION-013 en el Census (alta de ID canónico).
+- vversions --sync para propagar v9.20.8 al resto de los fundacionales.
+- Skill Library (Notion) — alta de fila vantage-skill-updater pendiente (fuera de alcance de esta entrada, delegar a vantage-sync-skill-library).
+---
+Tipo: [DOC]
+Alcance:
+- Kernel (KERNEL:DOCUMENTATION-008, 03.8)
+- Manual (MANUAL:RUNTIME-002, 9.2)
+- Manual (MANUAL:SCRIPT-GLOSSARY-L1, 22.1 — entrada generate_census.py)
+Contexto: Brief v9.21 del operador reportaba corrección de CENSUS_SPEC (40 IDs huérfanos) y dos flags nuevos de generate_census.py. Verificación contra el script subido confirmó que ambos cambios (los 40 IDs y los flags --auto-fix-orphans/--sync-to-notion) ya estaban en producción — el ID CENSUS recuperado en bootload de esta sesión mostró 0 huérfanos, confirmando el estado. La propuesta de mapeo de Notebook Gemini para esta parte (KERNEL:DOCUMENTATION-008, sin alta de ID nuevo) se retomó; su sugerencia de un ID nuevo KERNEL:ASSETS-SYNC y reapertura de KERNEL:DOCUMENTATION-005 correspondía a Cambio 1 (vantage-sync-assets), ya cerrado en v9.20.5 con decisión explícita de no tocar Kernel — se descartó por ser una reapertura de una decisión ya tomada. Gap real detectado en revisión posterior con el operador: la entrada de generate_census.py en el Script Glossary (22.1) tampoco reflejaba los flags nuevos.
+Cambios:
+- KERNEL:DOCUMENTATION-008 (03.8) — regla 6 nueva: --auto-fix-orphans y --sync-to-notion como mecanismo de resolución de huérfanos del Census.
+- MANUAL:RUNTIME-002 (9.2) — entrada vcensus extendida con descripción operativa de ambos flags.
+- MANUAL:SCRIPT-GLOSSARY-L1 (22.1) — "Qué hace" de generate_census.py actualizado + 2 filas nuevas en tabla de Flags.
+IDs afectados: Ninguno (extensión de nodos existentes, sin alta/baja de ID canónico — no dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: Kernel y Manual re-fetched post-escritura — 3/3 nodos confirmados en posición correcta, sin mismatch (re-fetch en vivo requerido en los tres casos por mismatch inicial de old_str contra contenido cacheado del upload local).
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.20.7 al resto de los fundacionales.
+---
 Tipo: [DOC]
 - Se restauró la versión de Kernel del 13 de agosto de 2026 (7:27 a.m.) para recuperar bloques críticos borrados en la versión LIVE (incluyendo contratos de ID canónicos, diagramas L1-L4, esquemas de Class A y la tabla de Tracker Schema).⚬	Se integraron los 3 diferenciales detectados del estado LIVE posterior:⚬	Actualización de L3 Passive Intake a un máximo de 10 correos por corrida.⚬	Actualización de Skills Distribution a 25 archivos .skill.⚬	Inserción del párrafo de consolidación prevista en KERNEL:GATE-DECISION-007 (vantage-housekeeping-archive).
 - Se completó la integración de la Sección 23 (MANUAL:SKILL-GLOSSARY) con sus 5 subsecciones (23.1 a 23.5) que estaban ausentes en la versión restaurada del Manual. Se restituyó el bullet faltante en MANUAL:SESSION-CYCLE referenciando explícitamente a la Sección 23 para el catálogo de skills.

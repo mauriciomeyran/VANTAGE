@@ -110,13 +110,17 @@ Todo skill de VANTAGE declara inicio y cierre de su protocolo con un verbo propi
 Implementación actual
 - vantage-session-open — SESSION-OPENING… / SESSION-OPENED
 - vantage-session-close — CLOSING SESSION… / SESSION CLOSED
-- vantage-documentacion-transversal — BEGINNING DOCUMENTATION… / DOCUMENTATION FINISHED
+- vantage-documentacion-transversal-propuesta — BEGINNING DOCUMENTATION MAPPING… / DOCUMENTATION MAPPING COMPLETE
+- vantage-documentacion-transversal-implementacion — RESUMING DOCUMENTATION — IMPLEMENTATION PHASE… / DOCUMENTATION FINISHED
+- vantage-sync-assets — SYNCING ASSETS… / ASSETS SYNCED
+- vantage-skill-updater — BEGINNING SKILL EVALUATION… / SKILL EVALUATION COMPLETE
 - prompt-master — PROMPTING… / PROMPT FINISHED
 - vantage-create-bug-task — LOGGING TICKET… / TICKET LOGGED
 - vantage-present-handoff — HANDING OFF… / HANDOFF DELIVERED
 - vantage-tidy-changelog — TIDYING CHANGELOG… / CHANGELOG TIDIED
 - vantage-tidy-bug-task-tracker — TIDYING TRACKER… / TRACKER TIDIED
 - vantage-tidy-opportunities-tracker — TIDYING OPPORTUNITIES… / OPPORTUNITIES TIDIED
+- vantage-housekeeping-tracker — HOUSEKEEPING TRACKERS… / TRACKERS HOUSEKEPT
 ---
 ### 03.6 KERNEL:DOCUMENTATION-006
 Contrato de health_check.py
@@ -166,6 +170,7 @@ Reglas
 1. El Census se regenera antes de que el Changelog registre el batch.
 1. Ninguna sesión con cambios cierra sin DRY RUN automático de lo modificado.
 1. health_check.py reporta antigüedad del Census (umbral 7 días) como advertencia informativa, no bloqueante.
+1. generate_census.py resuelve huérfanos por dos vías: --auto-fix-orphans (modo interactivo, agrega el ID faltante a CENSUS_SPEC con el comentario "# Generado automáticamente por generate_census.py --auto-fix-orphans") y --sync-to-notion [page_id] (empuja el export del Census generado directamente a la página de Notion indicada, sin paso manual del operador).
 ---
 ### 03.9 KERNEL:DOCUMENTATION-009
 Session Ledger
@@ -191,6 +196,8 @@ Skills de Gobernanza Documental
 | vantage-tidy-changelog | Append + edición de Change Log | ✅ Obligatorio |
 | vantage-tidy-bug-task-tracker | Limpieza de campos/normalización | ✅ Obligatorio |
 | vantage-tidy-opportunities-tracker | Duplicados/normalización Class A | ✅ Obligatorio |
+| vantage-documentacion-transversal-propuesta | Mapeo de nodos, sin escritura | ✅ Obligatorio |
+| vantage-documentacion-transversal-implementacion | DRY RUN + inyección + write-back | ✅ Obligatorio |
 ---
 ### 03.11 KERNEL:DOCUMENTATION-011
 Sistema de Cross-Reference Hyperlinks
@@ -217,6 +224,14 @@ Contrato de Cero Inferencia Silenciosa
 - No calcula Score, no redacta CVs, no crea reglas de negocio; su alcance es reportar lo ya escrito en el corpus.
 Uso preferente
 Consulta puntual de triaje/verificación documental (detección de drifts entre documentos) cuando no se requiere fetch estructural ni escritura en Notion — evita consumir fetch/tokens de Claude en preguntas de bajo riesgo.
+---
+### 03.13 KERNEL:DOCUMENTATION-013
+Protocolo Sandbox — Economía de Tokens Máxima
+Patrón operativo compartido por las skills de documentación transversal (propuesta/implementación), vantage-skill-updater y vantage-housekeeping-archive: todo proceso interno de análisis, validación y generación corre en sandbox sin renderizar al operador. El output visible se limita a un máximo de 3 bloques por invocación: apertura (declaración de inicio conforme KERNEL:DOCUMENTATION-005), resultado (propuesta/reporte/DRY RUN estructurado), cierre (declaración de fin).
+Regla de aplicación
+Cualquier skill nueva que adopte este patrón declara explícitamente qué pasos corren en sandbox interno y cuáles son output visible — no se asume por default; se declara en el cuerpo de la skill.
+No aplica a
+Skills cuyo output es inherentemente iterativo o requiere confirmación por ítem (ej. vantage-cv-b, procesamiento single-item) — ahí la economía de tokens se gestiona por otro mecanismo (Restricción de Lote, ver KERNEL:CV-PIPELINE-002).
 ---
 ## 04 KERNEL:ARCHITECTURE
 Arquitectura de Cuatro Capas
@@ -279,8 +294,8 @@ L1 > L2 > L3. Perplexity aplica esta jerarquía en Consolidación & Dedup; L3 en
 Mecanismos de Dedup — Distinción de Propósito
 El sistema tiene dos mecanismos de dedup complementarios con ventanas y propósitos distintos:
 1. Dedup en tiempo real (ingesta): hash exacto + URL exacta + brand+title (ventana 30d, feed_processor.py). Propósito: prevenir contaminación del Tracker con duplicados obvios al momento de ingesta.
-2. Dedup por auditoría post-ingesta: fuzzy matching (brand≥0.85, rol≥0.7) + fingerprint de contenido (ventana 60d, dedup_opportunities.py + Archive Tracker). Propósito: detectar duplicados sutiles que el hash exacto no captura (rotación de jk, reposts) y mantener limpieza del Tracker a través del tiempo.
-Ambos mecanismos coexisten legítimamente: el primero es gate preventivo de ingesta, el segundo es auditoría correctiva post-ingesta. No son mutuamente excluyentes ni redundantes.
+1. Dedup por auditoría post-ingesta: fuzzy matching (brand≥0.85, rol≥0.7) + fingerprint de contenido (ventana 60d, dedup_opportunities.py + Archive Tracker). Propósito: detectar duplicados sutiles que el hash exacto no captura (rotación de jk, reposts) y mantener limpieza del Tracker a través del tiempo.
+Ambos mecanismos coexisten legítimamente: el primero es gate preventivo de ingesta, el segundo es auditoría correctiva post-ingesta. No son mutuamente excluyentes ni redundantes. Automatización (v9.21.0): el mecanismo 2 se dispara automáticamente al final de layer_1_run.py vía ENABLE_DEDUP_AUDIT=true (default) — ya no requiere invocación manual separada; hereda el modo --dry-run del pipeline principal y exporta métricas estructuradas a dedup_metrics.json. El filtro anti-falso-positivo (antes hardcoded para "electrónica") se generalizó a ANTI_FALSE_POSITIVE_RULES, una lista extensible de reglas.
 Punto de Convergencia Único
 Las tres capas de búsqueda escriben a Notion. vantage-pipeline lee de Notion, no de outputs de capa directamente.
 Figma Sync — CV Output Layer

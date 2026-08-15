@@ -562,7 +562,7 @@ Acepta cuatro flags:
 --scripts (gap report read-only de scripts .py/.sh contra SCRIPT LIBRARY)
 --skills (gap report read-only de archivos .skill contra SKILL LIBRARY) 
 Estos dos últimos alimentan a vantage-sync-script-library y vantage-sync-skill-library respectivamente. El modo --check fue eliminado en Kernel v9.6.2.
-- vcensus — alias corto de generate_census.py. Regenera el V-ID-CENSUS y reporta IDs huérfanos detectados en los documentos fuente. Se corre en el paso 1 del Cierre de Sesión (MANUAL:SESSION-CYCLE) si algún ID cambió de estado durante la sesión — ver también MANUAL:HEALTH-CHECK, "¿Qué es el Census ID?", para el detalle completo de cuándo es obligatorio.
+- vcensus — alias corto de generate_census.py. Regenera el V-ID-CENSUS y reporta IDs huérfanos detectados en los documentos fuente. Se corre en el paso 1 del Cierre de Sesión (MANUAL:SESSION-CYCLE) si algún ID cambió de estado durante la sesión — ver también MANUAL:HEALTH-CHECK, "¿Qué es el Census ID?", para el detalle completo de cuándo es obligatorio. Acepta --auto-fix-orphans (corrige huérfanos de forma interactiva, dándolos de alta en CENSUS_SPEC sin editar el script a mano) y --sync-to-notion [page_id] (sincroniza el export del Census directo a la página de Notion indicada, sin paso manual de copiar/pegar).
 - vsum — alias corto de vsum.py. Resume transcripts de sesiones de trabajo (propias o de otra IA) a Markdown estructurado, orientado a continuidad entre chats sin pérdida de contexto. No es comando del Tracker de vacantes ni observabilidad de Notion como vversions/vcensus — es infraestructura de continuidad documental sobre transcripts externos.
 Acepta archivo .md, URL de Claude share. Acepta los siguientes flags:
 --batch para varios a la vez
@@ -613,6 +613,11 @@ Estas empresas o tipos de rol nunca entrarán al sistema. Se filtran en el orige
 ### Soft Blocks
 A diferencia de los Hard Blocks, estas vacantes sí pueden recuperarse: fueron bloqueadas por inconsistencias en datos Class A (URL rota, JD parcial) o por score insuficiente, no por pertenecer a una empresa vetada. Se recuperan corrigiendo el input incorrecto a través del Dashboard — el procedimiento completo está en MANUAL:WEEKLY-FLOW-002 (Martes).
 ### Dedup
+El sistema opera dos mecanismos complementarios de deduplicació¶¶¶n con propó¶¶¶sitos y ventanas distintas:
+- Dedup en tiempo real (ingesta): ventana de 30 dí­as, hash exacto + URL + brand+title. Previene contaminació¶¶¶n del Tracker con duplicados obvios al momento de ingesta (feed_processor.py).
+- Dedup por auditorí»¶ post-ingesta: ventana configurable de 60 dí­as por default, matching fuzzy (brand≥0.85, rol≥0.7) + fingerprint de contenido, contraste contra el Archivo Tracker y reglas anti-falsos positivos extensibles (ANTI_FALSE_POSITIVE_RULES). Desde v9.21.0 corre automá¶¶ticamente al finalizar layer_1_run.py mediante ENABLE_DEDUP_AUDIT=true, hereda --dry-run del pipeline principal y exporta métricas a dedup_metrics.json.
+- Jerarquí»¶ entre capas: L1 > L2 > L3. Cuando dos capas detectan la misma vacante, persiste la instancia de la capa de mayor jerarquí»¶, pero se toman de la capa de menor jerarquí»¶ los datos que puedan complementar sus propiedades Class A (esto es exactamente lo que ocurre en el paso de Consolidation & Dedup del Lunes, MANUAL:WEEKLY-FLOW-001).
+- Resolució¶¶¶n de flags: los registros marcados Dedup_Flag='Posible duplicado' por la auditorí»¶ post-ingesta son candidatos a archivado; su resolució¶¶¶n opera ví­a vantage-tidy-opportunities-tracker (DRY RUN + APROBAR_WRITE), no hay archivado automá¶¶tico.
 - Ventana: 30 días. Una vacante que ya existe en el Tracker no se vuelve a crear si aparece de nuevo dentro de esta ventana.
 - Clave compuesta: brand + title + location.
 - Jerarquía entre capas: L1 > L2 > L3. Cuando dos capas detectan la misma vacante, persiste la instancia de la capa de mayor jerarquía, pero se toman de la capa de menor jerarquía los datos que puedan complementar sus propiedades Class A (esto es exactamente lo que ocurre en el paso de Consolidation & Dedup del Lunes, MANUAL:WEEKLY-FLOW-001).
@@ -890,8 +895,12 @@ Glosario de Scripts — Referencia Operativa en Humano
 ---
 ### 22.1 MANUAL:SCRIPT-GLOSSARY-L1
 Layer 1 — Active Recon & Core Pipeline
-layer_1_run.pyQué hace: Motor principal del pipeline L1 — ejecuta las fases de scoring, gating y deduplicación sobre el Tracker.
-Flags:
+layer_1_run.py
+Variables de entorno (tuning silencioso):
+| Variable | Default | Caso de uso |
+| --- | --- | --- |
+| ENABLE_DEDUP_AUDIT | true | La auditorí¶¶a de duplicados corre automá¶¶ticamente al final del pipeline; usa false solo para desactivarla en una ejecució¶¶¶n puntual. El subproceso hereda --dry-run y opera con timeout de 10 minutos. |
+| DEDUP_WINDOW_DAYS | 60 | Ajusta la ventana temporal enviada al audit de dedup sin modificar código. |
 | Flag | Caso de uso |
 | --- | --- |
 | --dry-run | Antes de correr el pipeline completo en un día con muchos feeds nuevos, corre con --dry-run para ver qué escribiría sin comprometer el Tracker — útil si sospechas que un feed trae datos sucios. |
@@ -904,11 +913,13 @@ Flags:
 | --layer {1,2,3} | Si estás cargando un feed que viene de investigación manual en Perplexity (no de L1 automatizado), usa --layer 2 para que el Tracker lo etiquete correctamente como fuente estratégica. |
 | --fast | Encontraste UNA vacante urgente fuera de tu ciclo semanal (ej. alguien te la compartió por WhatsApp) — usa --fast para meterla sola sin esperar al batch de los lunes. Rechaza feeds con más de un item. |
 | --interactive | Cuando el feed trae vacantes de calidad mixta y quieres decidir una por una ([S]í/[O]mitir/[Q]uit) en vez de que todo se escriba automáticamente. Ojo: si eliges Quit a medio camino, lo ya escrito no se revierte. |
-generate_census.pyQué hace: Genera el ID Census — barrido completo de IDs canónicos en los 9 documentos fundacionales, detecta huérfanos.
+generate_census.pyQué hace: Genera el ID Census — barrido completo de IDs canónicos en los 9 documentos fundacionales, detecta huérfanos, y puede corregirlos o sincronizarlos a Notion sin intervención manual.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --debug-id <id1> <id2> … | Ya sabes que KERNEL:SCHEMA-008 está fallando en el census y no quieres esperar el barrido completo — pásalo directo y te da diagnóstico quirúrgico de esos IDs específicos. |
+| --auto-fix-orphans | El census te reportó 40 huérfanos y no quieres darlos de alta uno por uno en CENSUS_SPEC a mano — corre esto y te los agrega interactivamente con el comentario de auditoría ya insertado. |
+| --sync-to-notion <page_id> | Ya corriste el census y quieres que el export quede reflejado en el V-ID-CENSUS de Notion sin copiar/pegar manualmente — pásale el page_id destino. |
 generate_entity_index_v2.pyQué hace: Reconstruye el índice de entidades (entity_index_v2.json), el grafo de relaciones y los backlinks — la base de datos interna que usa vantage.py ask/query.
 Flags:
 | Flag | Caso de uso |
@@ -949,8 +960,17 @@ Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --dry-run | ⚠️ Importante: default es True vía store_true, y no existe forma de desactivarlo — este script siempre es solo-reporte, nunca ejecuta acciones. Si tu intención es que alguna vez actúe, hoy no puede — es candidato para el punto B (documentación transversal) si quieres dejarlo explícito en Kernel. |
-dedup_opportunities.pyQué hace: Auditoría fuzzy de duplicados y limpieza puntual del flag Dedup_Flag.
-Uso:
+dedup_opportunities.py
+Flags:
+| Flag | Caso de uso |
+| --- | --- |
+| --window-days N | Ajusta la ventana de comparació¶¶¶n fuzzy; default 60. |
+| --dry-run | Simula grupos y marcas candidatas sin escribir Dedup_Flag en Notion. |
+| --clear <page_id> | Un registro quedó marcado erró¶¶¶neamente como "Posible duplicado" y quieres limpiar solo ese flag sin re-correr toda la auditorí¶¶a. ⚠️ Solo accesible desde Terminal directo — el wrapper de Raycast (dedup_audit.sh) no lo expone. |
+Variables de entorno (tuning silencioso):
+| Variable | Default | Caso de uso |
+| --- | --- | --- |
+| NOTION_ARCHIVE_DATA_SOURCE_ID | 674696fd-94b6-464a-ac1f-64b0cc917e15 | Define el data source del Archivo Tracker usado por la auditorí¶¶a cruzada; solo se modifica si cambia dicho origen. |
 | Modo | Caso de uso |
 | --- | --- |
 | Sin argumentos | Auditoría general — lo que corre dedup_audit.sh/Raycast. |
@@ -1231,10 +1251,11 @@ Sincronización y Mantenimiento Documental
 | --- | --- | --- | --- | --- |
 | vantage-sync-script-library | Sincroniza Script Library Notion vs disco | "sincronizar Script Library" / gap report | ✅ | SYNCING SCRIPT LIBRARY… / SCRIPT LIBRARY SYNCED |
 | vantage-sync-skill-library | Sincroniza Skill Library Notion vs disco .skill | "sincronizar Skill Library" / gap report | ✅ | SYNCING SKILL LIBRARY… / SKILL LIBRARY SYNCED |
-| vantage-sync-assets | Orquesta las 4 sync de Libraries/Glossaries en orden fijo | "sync assets" / "sincronizar assets" | ✅ | SYNCING ASSETS… / ASSETS SYNCED |
+| vantage-sync-assets | Orquesta las 6 sync de Libraries/Glossaries/Census/Hyperlinks en orden fijo | "sync assets" / "sincronizar assets" | ✅ | SYNCING ASSETS… / ASSETS SYNCED |
 | vantage-sync-script-glossary | Sincroniza apéndice §22 vs disco | "sincronizar Script Glossary" / gap --new-scripts | ✅ | No especificado (gap, ver 23.5) |
 | vantage-sync-census-spec | Da de alta IDs huérfanos en CENSUS_SPEC | "sincronizar Census Spec" / huérfanos en vcensus | ✅ | SYNCING CENSUS SPEC… / CENSUS SPEC SYNCED |
 | vantage-hyperlink-loop | Ciclo Census→Hyperlinks→Sync | Housekeeping de navegación / invocación explícita | ✅ | REGENERATING NAVIGATION LOOP… / NAVIGATION LOOP FINISHED |
+| vantage-housekeeping-tracker | Orquesta housekeeping de trackers (Bug/Task → VANTAGE Tracker → Change Log) en orden fijo | "housekeeping trackers" / "tidy trackers" | ✅ | HOUSEKEEPING TRACKERS… / TRACKERS HOUSEKEPT |
 | vantage-create-bug-task | Crea ticket en Bug/Task Tracker | Reporte de defecto o tarea pendiente | ✅ | LOGGING TICKET… / TICKET LOGGED |
 | vantage-tidy-bug-task-tracker | Marca tickets resueltos como Archivar=True | Resolución directa o vía Change Log | ✅ | TIDYING TRACKER… / TRACKER TIDIED |
 | vantage-tidy-opportunities-tracker | Marca duplicados/expiradas en VANTAGE Tracker | Housekeeping de vacantes | ✅ | TIDYING OPPORTUNITIES… / OPPORTUNITIES TIDIED |
@@ -1246,8 +1267,9 @@ Sincronización y Mantenimiento Documental
 Auditoría y Continuidad
 | Skill | Propósito | Trigger | Gate | Anuncio |
 | --- | --- | --- | --- | --- |
-| vantage-audit-navigation-brief | Audita si un cambio requiere parches en Navigation Brief | "audit brief" / post-write sin impact assessment | ❌ (solo lectura, nunca escribe Notion) | No especificado (gap, ver 23.5) |
-| extract-learnings | Extrae aprendizajes reutilizables tras un fumble | Post-fumble evitable o creación de skill nueva | ❌ | No aplica (housekeeping interno) |
+| vantage-audit-navigation-brief | [DEPRECATED] Funcionalidad integrada en vantage-documentacion-transversal-propuesta | N/A — usar vantage-documentacion-transversal-propuesta | ❌ (solo lectura, nunca escribe Notion) | No aplica (deprecada) |
+| extract-learnings | [DEPRECATED] Actividad post-mortem esporádica, no skill operativa recurrente | Post-fumble evitable o creación de skill nueva | ❌ | No aplica (housekeeping interno) |
+| vantage-skill-updater | Evalúa compliance de skills contra KERNEL requirements, propone actualizaciones | "actualizar skills con requisitos VANTAGE" / "evaluar compliance de skills" | ✅ | BEGINNING SKILL EVALUATION… / SKILL EVALUATION COMPLETE |
 ---
 ### 23.4 MANUAL:SKILL-GLOSSARY-STYLE
 Estilos de Escritura y Generación (activación por invocación explícita, no por trigger operativo)
@@ -1263,5 +1285,5 @@ Estilos de Escritura y Generación (activación por invocación explícita, no p
 ### 23.5 MANUAL:SKILL-GLOSSARY-XREF
 Gaps Abiertos (hallazgos, no corregidos en esta pasada)
 - Capa null en 24/25 filas de Skill Library (Notion) — campo definido en schema, prácticamente sin uso.
-- Anuncio no especificado en 6 skills operativas que deberían tenerlo por KERNEL:DOCUMENTATION-005:
-vantage-cv-a, vantage-cv-b, vantage-qa, vantage-sync-script-glossary, vantage-audit-navigation-brief, y el cierre de vantage-documentacion-transversal-propuesta.
+- Anuncio no especificado en 5 skills operativas que deberían tenerlo por KERNEL:DOCUMENTATION-005:
+vantage-cv-a, vantage-cv-b, vantage-qa, vantage-sync-script-glossary, y el cierre de vantage-documentacion-transversal-propuesta.
