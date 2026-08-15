@@ -357,3 +357,25 @@ vgit
 **Hallazgo colateral:** la fila duplicada `git_[sync.py](http://sync.py)` (corrupción de texto literal, no solo anotación) NO aparece entre las 10 corregidas → pendiente un PATCH manual de 1 fila. Va en la tarjeta de verificación de Claude.
 **Incidente zsh:** los errores "number expected / unknown sort specifier / unknown file attribute: 3" provienen del comentario `(30 → 28)` pegado junto a `vgit` — el parser de zsh intentó interpretarlo como qualifiers/format. Inofensivo; NINGÚN comando de B/C llegó a ejecutarse (verificado en remoto: skills deprecadas, docs C5, briefs e index.html siguen en su lugar).
 **Regla nueva para tarjetas:** comandos SIN comentarios inline — comentarios solo en líneas propias.
+
+---
+
+## Bitácora — 2026-08-15: post-mortem del incidente de pegado + estado f5a0a1b
+
+**Diagnóstico del incidente (2 capas):** (1) Los errores "bad source" de `git mv` vinieron de CORRUPCIÓN EN TRÁNSITO: el medio por el que el operador copia chat→terminal auto-linkea `palabra.ext` → los comandos llegaron como `skills/[x.md](http://x.md)`. El disco de la Mac NUNCA tuvo nombres corrompidos (remoto verificado: 0 corrompidos). (2) El auto-sync de las 05:24 (f5a0a1b, `git add -A` de git_sync.py) commitó la segunda ejecución (limpia) de los movimientos.
+
+**EJECUTADO y verificado en f5a0a1b:** T11 ✅ (4 archivos skills deprecadas en Archive/Legacy_Scripts/), T18 ✅ (3 docs en Archive/Documentación/), T19 parcial ✅ (index.html eliminado; 4 briefs movidos a Archive/Documentación/; index.json 30→28).
+
+**ANULADO por el `add -A` del auto-sync (sin .gitignore, el rm --cached no persiste):** Video (15 archivos) y Outputs (41) SIGUEN trackeados en main; .devin/skills SIGUE presente (2 SKILL.md — Devin Desktop los regenera). Pendiente el bloque final con ignore primero.
+
+**Regla operativa nueva (evitar el medium corruption):** toda tarjeta de comandos debe evitar literales `palabra.ext` — usar globs (`m*`, `.*`, `*`) o printf con rutas sin extensión. Los comentarios van en línea propia o se omiten.
+
+**Bloque final paste-proof (operador):**
+```bash
+cd "$HOME/Documents/03 Projects/VANTAGE"
+printf '%s\n' 'Outputs/' 'Video/' '.devin/skills/' >> .gitignore
+git rm -r --cached Video Outputs
+git rm -r .devin/skills
+vgit
+```
+Verificación post-vgit en sandbox: Video/Outputs/.devin fuera de origin/main, .gitignore con 3 entradas.
