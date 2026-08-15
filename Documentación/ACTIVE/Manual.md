@@ -980,7 +980,7 @@ Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --dry-run | Antes de correr un backfill masivo tras un cambio de schema, revisa qué se llenaría. |
-backfill_next_action_select.pyQué hace: Migra el campo Next_Action de texto libre a select tipado.
+backfill_next_action_select.pyQué hace: Migra el campo Next_Action de texto libre a select tipado. — MOVIDO a Archive/Legacy_Scripts/ (saneamiento v9.21.x)
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
@@ -1001,7 +1001,7 @@ Flags:
 | --- | --- |
 | --apply | Detectaste links rotos en Script Library tras una migración — aplica la limpieza real. Sin el flag, solo lista candidatos. |
 backfill_archive_fingerprint.pyQué hace: Calcula y completa fingerprints de deduplicación en el Archivo Tracker.
-Uso: Sin flags CLI propios — se corre directo, solo requiere NOTION_TOKEN/NOTION_API_KEY en el entorno.
+Uso: Sin flags CLI propios — se corre directo, solo requiere NOTION_TOKEN/NOTION_API_KEY en el entorno. — MOVIDO a Archive/Legacy_Scripts/ (saneamiento v9.21.x)
 notion_utils.pyQué hace: Cliente HTTP compartido para todas las llamadas a Notion — caché, rate limiting, reintentos. No se invoca directo salvo para diagnóstico.
 Uso (comando posicional):
 | Comando | Caso de uso |
@@ -1034,7 +1034,7 @@ Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --json | Quieres pasar el output a otro script o graficarlo — output máquina-legible en vez del reporte de texto. |
-toggle_changelog_archive.pyQué hace: Convierte el formato del Archivo Changelog exportado (toggle blocks Markdown).
+toggle_changelog_archive.pyQué hace: Convierte el formato del Archivo Changelog exportado (toggle blocks Markdown). — MOVIDO a Archive/Legacy_Scripts/ (saneamiento v9.21.x)
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
@@ -1124,8 +1124,8 @@ Uso: Sin flags — se corre directo, genera archivos con fecha en el nombre (Pro
 Caso de uso: Es el primer paso de tu ciclo semanal de L2 — antes de ir a copiar/pegar prompts a mano en cada motor externo, esto te los pre-arma con la fecha correcta ya sustituida.
 patch_vsync_doc.pyQué hace: Patcher de un solo uso (ya ejecutado) que separó la entrada cheat_sheet de vsync_doc.py en dos entradas independientes (aliases y change_log) — mismo patrón que patch_new_scripts.py (backup automático + validación de sintaxis antes de escribir).
 Uso: python3 patch_vsync_doc.py — sin flags. Es idempotente por diseño de patcher (aunque no verifiqué si tiene el mismo guard explícito).
-Nota operativa: Como es un patcher de una sola aplicación histórica (ya corrido, ver ALIASES/CHANGE_LOG separados en tu vsync_doc.py actual), no debería necesitar correrse de nuevo. Considera moverlo junto con patch_new_scripts.py fuera del árbol activo si quieres que --new-scripts deje de detectarlo como pendiente.
-⚠️ Hallazgo real — extract_score_distribution.py: este script parece ser un borrador abandonado, no una herramienta funcional. El propio código trae comentarios como "Simulación: voy a asumir que necesito procesar los datos reales" y "Por ahora, voy a mostrar el formato de análisis esperado" — usa datos de muestra hardcodeados (sample_data), no consulta Notion. extract_score_distribution.py parece ser una versión temprana/incompleta de extract_scores.py (que sí funciona). Documentado como hallazgo, no corregido — decide tú si vale la pena eliminarlo del árbol para que deje de aparecer en cada gap report.
+Nota operativa: Como es un patcher de una sola aplicación histórica (ya corrido, ver ALIASES/CHANGE_LOG separados en tu vsync_doc.py actual), no debería necesitar correrse de nuevo. patch_vsync_doc.py y patch_new_scripts.py fueron MOVIDOS a Archive/Legacy_Scripts/ (saneamiento v9.21.x) — --new-scripts ya no debería detectarlos como pendientes.
+⚠️ Hallazgo real — extract_score_distribution.py: este script parece ser un borrador abandonado, no una herramienta funcional. El propio código trae comentarios como "Simulación: voy a asumir que necesito procesar los datos reales" y "Por ahora, voy a mostrar el formato de análisis esperado" — usa datos de muestra hardcodeados (sample_data), no consulta Notion. extract_score_distribution.py parece ser una versión temprana/incompleta de extract_scores.py (que sí funciona). Documentado como hallazgo, no corregido — decide tú si vale la pena eliminarlo del árbol para que deje de aparecer en cada gap report. — MOVIDO a Archive/Legacy_Scripts/ (saneamiento v9.21.x)
 ---
 ### 22.3 MANUAL:SCRIPT-GLOSSARY-L4
 Layer 4 — Version Control & Sync Documental

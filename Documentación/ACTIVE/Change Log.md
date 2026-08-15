@@ -1,5 +1,48 @@
 # V | CHANGELOG
 
+Tipo: [AUDIT]
+Alcance: Change Log (esta entrada); Script Library (hallazgo, sin escritura); GitHub issue #4 (comentado); index.html raíz (restaurado en repo).
+Contexto: Cierre de los 5 pendientes operativos listados tras v9.21.4.
+Cambios:
+- T9 pasada 2 (Script Library) — marcada obsoleta. Verificación en vivo confirmó que la fila duplicada de git_sync.py ya fue diagnosticada y marcada correctamente (Estado=Deprecado, Acción=Archivar, Descripción explícita) en el batch M1 — el pendiente en v9.21.3 estaba desactualizado respecto al estado real de Notion. Sin escritura requerida.
+- Duplicado git_sync.py — confirmado sin acción pendiente (ver punto anterior). Fila canónica (L4, Estado=Activo) intacta.
+- GitHub issue #4 — comentado confirmando que auto_archive.py permanece deprecado en Archive/Legacy_Scripts/ como referencia histórica, sin eliminación (decisión del operador 2026-08-01, KERNEL:GATE-DECISION-007). Referencia: https://github.com/mauriciomeyran/VANTAGE/issues/4#issuecomment-5302203383
+- index.html raíz — restaurado desde commit 7e92dcd (contenido: landing page GitHub Pages con documentación de skills MCP), aplicado en commit 2a3c7a1 sobre main. Decisión del operador tras confirmar propósito y ausencia de dependencias en el pipeline.
+- vversions --sync (v9.21.4) — ya ejecutado y verificado [VEREDICTO FINAL] PASS en sesión previa.
+IDs afectados: Ninguno (sin alta/baja de ID canónico — no dispara CENSUS-SYNC Regla 1).
+Write-Back Verification: re-fetch de esta entrada tras la escritura.
+Pendiente (fuera de esta entrada): Ninguno — ciclo de saneamiento v9.21.x cerrado en su totalidad.
+---
+Tipo: [AUDIT]
+Alcance: Change Log (esta entrada); GitHub issues #8, #9 (comentados y cerrados).
+Contexto: Cierre de los issues #8 y #9 dejados abiertos en v9.21.3. Se intentó remediar el incumplimiento del contrato PR-obligatorio (commits d3ba880 y 160337c fueron directo a main) creando branches retroactivas fix/d2-rework-archive-queue y fix/d5-real-descripcion-detector — descartado tras confirmar limitación estructural de Git: una branch creada desde main no puede mostrar diff contra main (GraphQL: "No commits between main and fix/..."). Se optó por registro de auditoría en vez de reescritura de main vía revert/reapply (evita alterar la secuencia limpia de main).
+Cambios:
+- Branches fix/d2-rework-archive-queue y fix/d5-real-descripcion-detector — creadas, confirmado sin diff, eliminadas de origin.
+- GitHub issue #8 — comentario con referencia a Changelog v9.21.3, cerrado.
+- GitHub issue #9 — comentario con referencia a Changelog v9.21.3, cerrado.
+IDs afectados: Ninguno (sin alta/baja de ID canónico — no dispara CENSUS-SYNC Regla 1).
+Write-Back Verification: re-fetch de esta entrada tras la escritura.
+Pendiente (fuera de esta entrada): pasada 2 de T9 (Script Library, tras merge de #9 — issue cerrado, verificar si pasada 2 sigue aplicando o queda obsoleta); patch manual de la fila duplicada git_sync.py; aviso en GitHub Issue #4 (auto_archive.py); vversions --sync para propagar v9.21.4 al resto de los fundacionales (arrastra también v9.21.3 aún no propagada).
+---
+Tipo: [AUDIT]
+Alcance: Change Log (entrada de cierre); Ledger (cierre de sesión); registros de trazabilidad ya aplicados en Kernel, Manual, Archivo Changelog, Script Library y Skill Library (G1/G2/T5b, write-back verificado en cada batch).
+Contexto: Cierre del saneamiento estructural originado en la auditoría arena.ia 2026-08-13 (AUDIT_SANEAMIENTO_ESTRUCTURAL.md, handoffs/HANDOFF_MAESTRO_V3.md). Batches ejecutados con write-back verificado en cada paso.
+Cambios (registro acumulado):
+- F1 disco: Tier A 6/6 y B2 2/2 movidos a Archive/Legacy_Scripts/; Tier C retirado (backups .bak*, patches aplicados, dumps, manifest backup, .save); verificación: 80 assets activos, 0 gaps de Glosario. Conteo de assets posterior al cierre: skills/index.json como SSOT (28 skills).
+- G1 documental: P1 (Kernel §04.3, máx. 10 correos); T2/P2 (Manual §12 + XREF + tabla env-vars, 3 sub-parches); T3/P4 (§04.4: vsync_doc_fast.py reformulado como variante deprecada en Archive + conteo de skills por referencia viva a index.json); T4 (anuncio vantage-housekeeping-archive en §03.5); T5 (fila en glosario §23.2); T6/C5 (dedupe extendido del Archivo Changelog: 3 copias verbatim de la migración Next_Action→select consolidadas bajo canonical v9.14.2; bloques Auditoría L0 intactos; copias sustituidas por notas [DEDUPE v9.21.x] — mover, nunca borrar).
+- T5b/T5c: Glosario §22.1/22.1b anotado con "MOVIDO a Archive/Legacy_Scripts/" para los 6 one-shots; corrupción de auto-link introducida en T5b reparada en T5c (ver P-B).
+- G2 datos: Script Library — extract_score_distribution.py y patch_vsync_doc.py → Deprecado/Archivar; 4 one-shots de Tier A confirmados SIN fila en Script Library (solo Glosario — sin deprecación posible); fila duplicada git_sync.py diagnosticada (creada en M1, Estado=Deprecado correcto, fila canónica git_sync.py (L4) intacta); T9 pasada 1: 10/10 filas con anotación corrupta limpiadas con clean_script_library_links.py (PASS verificado). Skill Library: alta vantage-housekeeping-archive (Activo/Keep).
+- Cierre de v9.17.1: auto_archive.py se CONSERVA en Archive/Legacy_Scripts/ como referencia histórica (KERNEL:EVOLUTION §17) — pendiente explícito de esa entrada cerrado; queda pendiente avisar en GitHub Issue #4.
+- Movimientos de archivo (política cero-borrados del operador): Video→Archive/Video, Outputs→Archive/Outputs (ancla CANON:DERIVED-OUTPUTS-ARCHIVE §13), .devin/skills→Archive/devin-skills. index.html raíz fue eliminado antes de adoptar la política cero-borrados — recuperable desde historial git (f5a0a1b) si se desea restaurar.
+- Devin: D1/D3/D4/D6 aceptados con verificación del auditor (suite 141/142; fallo único preexistente en TestPriorityLogicCreatedTime, ticket aparte); D2-rework y D5-real abiertos como GitHub issues #8 y #9 con contrato endurecido (PR obligatorio).
+Hallazgos registrados (sin remedio en este ciclo):
+- [DRIFT V4] Doble identificador de Archivo Changelog: CHANGELOG_ARCHIVE y CHANGELOG_ARCHIVO coexisten en resolver_registry_v2.json; ID vivo operativo confirmado 3ba938be-fc42-8011-8947-fb4fa5d1f63f. Resolución pendiente de gobernanza de nomenclatura.
+- Write silencioso en T3 (update_content reportó éxito sin persistir) — lección operativa: write-back con re-fetch en TODA escritura Notion.
+- Auto-linker de Notion corrompe cualquier campo de texto libre que mencione nombre.ext (DB y documentos fundacionales) — mitigación activa: detector D6 en health_check.py + extensión a Descripción en issue #9.
+IDs afectados: Ninguno (sin alta/baja de ID canónico — no dispara CENSUS-SYNC Regla 1).
+Write-Back Verification: re-fetch de esta entrada en el Change Log tras la escritura (mismatch detiene la operación).
+Pendiente (fuera de esta entrada): issues #8 y #9 (Devin) — D2-rework y D5-real remediados post-hoc vía commits directos a main (incumplimiento del contrato PR-obligatorio, branches/PRs retroactivos en curso); pasada 2 de T9 tras merge de #9; patch manual de la fila duplicada git_sync.py; aviso en GitHub Issue #4; vversions --sync para propagar la versión; posible restauración de index.html raíz (decisión del operador).
+---
 Tipo: [DOC]
 Alcance:
 - Career Canon (CANON:POSITIONING-001 a -004, 11.1–11.4)
