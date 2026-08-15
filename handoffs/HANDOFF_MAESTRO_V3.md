@@ -188,3 +188,16 @@ Claude entregó DRY RUNs verificados en vivo contra Notion. Revisión del audito
 **Reviews externas:** el dictamen SRE de esta bitácora cubre los criterios asignados a Grok (dedupe) y Mistral (PATCH-QUALITY-001) — verificados ancla por ancla. Omitirlos para velocidad, salvo que el operador los quiera como doble check.
 
 **Siguiente acción del operador:** APROBAR_WRITE por tarea (T2+P2c, T3 con Opción A/B, T4, T5) + decisión de alcance T6. Luego G2 (T7–T10, Claude) y Devin (T14–T17) corren en paralelo.
+
+---
+
+## Bitácora — 2026-08-15 (G1 COMPLETA): asignación de siguientes acciones
+
+**G1 cerrada por Claude con write-back verificado en Notion** (T2 3 sub-parches, T3 con Opción B + reintento tras write silencioso, T4, T5, T6 dedupe extendido 3→1 con canonical v9.14.2 y marcador [AUDIT DRIFT] para T20). **Verificación del espejo GitHub pendiente**: el último auto-sync (03:51) es anterior a las escrituras — confirmar en el próximo sync (no bloqueante; la evidencia primaria es el re-fetch de Notion del protocolo). Hallazgo operativo registrado: patrón de write silencioso en T3 → mantener write-back con re-fetch en toda escritura Notion.
+
+**Asignación siguiente (3 tracks en paralelo):**
+- **Claude — G2 (T7→T8→T9):** T7 Skill/Script Library (alta housekeeping-archive, filas Tier A → Deprecado/Archivar, huérfanos extract_score_distribution/patch_vsync_doc), T8 investigación fila git_sync.py (PROHIBIDO deprecar), T9 batch auto-link http://. T10 se absorbe en T20 (la entrada [AUDIT] ya incluye drift V4).
+- **Devin — G4 (T14–T17, sin dependencias, arranque inmediato):** T14 tests retro graph_layer.py (fix ya en main, solo faltan tests), T15 status_report.py --archive-queue, T16 sys.path Dashboard → LAYER_1_DIR (4 puntos), T17 .gitignore *.bak*. PRs hacia rama del saneamiento desde origin/main; prohibido Documentación/ACTIVE y Notion.
+- **Operador — G3 parcial (T11, T18, T19 listas):** T11 skills deprecadas (mover a Archive/Legacy_Scripts — recomendado, nunca borrar), T18 docs duplicadas C5 (mover a Archive), T19 Tier D por ítem (index.html raíz, Video/Outputs, inventario_output, .devin/skills, dirs archive, briefs raíz). **Bloqueadas:** T12 (tracker 3 copias) espera dictamen de T7; T13 (stubs C4) espera merge de T14.
+
+**Secuencia de cierre restante:** T20 (Claude, deps: 6✅, 7, 13, 18) → T21 (sync PASS, Operador) → T22 (Ledger, Claude).
