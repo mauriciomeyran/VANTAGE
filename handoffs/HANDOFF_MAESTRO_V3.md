@@ -348,3 +348,12 @@ vgit
 - Destino T18 y briefs: `Archive/Documentación/` (existe, sin colisiones de nombre; no son scripts → no Legacy_Scripts).
 - Post-T11: `vgit` regenera `index.json` (30→28); Kernel ya usa "(conteo vivo en skills/index.json — SSOT)" (T3 Opción B) → sin doc update.
 - Video/Outputs: recomendación SRE = `git rm -r --cached` (conserva archivos locales, saca ~240MB del seguimiento futuro) + entradas en .gitignore; limpieza profunda del historial solo con git filter-repo como opción separada de alto riesgo.
+
+---
+
+## Bitácora — 2026-08-15: T9 pasada 1 ✅ (10/10) + incidente zsh inofensivo + B/C pendientes
+
+**T9 pasada 1 EJECUTADA por el operador:** 100 filas en SCRIPT LIBRARY, 10 con corrupción detectada (todas "link-annotation corrupta, texto visible sin cambio" — el texto plano ya estaba limpio), 10/10 PASS con verificación por relectura del propio script. Gate de mangle `[x.py](x.py)` no se materializó. **Nota:** corrió directo con --apply (el primer intento falló por "command not found" al invocar sin python3); outcome seguro de todos modos — mantener disciplina dry-run-first en pasada 2.
+**Hallazgo colateral:** la fila duplicada `git_[sync.py](http://sync.py)` (corrupción de texto literal, no solo anotación) NO aparece entre las 10 corregidas → pendiente un PATCH manual de 1 fila. Va en la tarjeta de verificación de Claude.
+**Incidente zsh:** los errores "number expected / unknown sort specifier / unknown file attribute: 3" provienen del comentario `(30 → 28)` pegado junto a `vgit` — el parser de zsh intentó interpretarlo como qualifiers/format. Inofensivo; NINGÚN comando de B/C llegó a ejecutarse (verificado en remoto: skills deprecadas, docs C5, briefs e index.html siguen en su lugar).
+**Regla nueva para tarjetas:** comandos SIN comentarios inline — comentarios solo en líneas propias.
