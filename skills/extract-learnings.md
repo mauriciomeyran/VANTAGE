@@ -1,6 +1,6 @@
 ---
 name: extract-learnings
-description: Use when there are important reusable learnings to be extracted that can save time/frustration in future sessions, e.g. after an avoidable self-discovered or user-flagged fumble or when creating a new skill. Skip routine or rare tasks; most need nothing.
+description: [DEPRECATED] Esta skill ha sido deprecada. Es una actividad post-mortem esporádica, no una skill operativa recurrente. Se mantiene solo como referencia histórica de housekeeping interno.
 ---
 
 # Extract Learnings

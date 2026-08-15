@@ -7,6 +7,30 @@ description: Ejecuta la implementación completa de documentación transversal u
 
 Mitad de escritura del protocolo de documentación transversal. Requiere como insumo un mapeo de nodos ya autorizado (típicamente producido por `vantage-documentacion-transversal-propuesta`, o presentado directamente por el operador si el mapeo ya se hizo en otra sesión). Cubre desde el DRY RUN hasta el cierre verificado.
 
+## Alineación con KERNEL — Economía de Tokens Máxima
+
+**KERNEL:DOCUMENTATION-010** — Protocolo de 6 fases (Mapeo → DRY RUN → Inyección → Write-Back Verification → Changelog + versión → Binary Gate de salida)
+
+**KERNEL:DOCUMENTATION-005** — Convención de Anuncio de Skills: RESUMING DOCUMENTATION — IMPLEMENTATION PHASE... / DOCUMENTATION FINISHED
+
+**KERNEL:FAIL-PHILOSOPHY** — No sugiere workarounds, solo reporta estado y espera instrucción humana
+
+**KERNEL:DOCUMENTATION-012** — Contrato de Cero Inferencia Silenciosa: toda afirmación técnica requiere ancla exacta (PREFIX:KEY)
+
+## Protocolo de Ejecución Sandbox — Economía de Tokens Máxima
+
+**Regla fundamental:** Todos los procesos internos corren en sandbox sin renderizar al operador. Solo se output:
+1. `RESUMING DOCUMENTATION — IMPLEMENTATION PHASE...` (inicio)
+2. `DRY RUN PRESENTADO` + parches propuestos (para autorización)
+3. `DOCUMENTATION FINISHED` + resumen final (cierre)
+
+**Procesos silenciosos (sandbox interno):**
+- Validación de parches contra MANUAL:PATCH-QUALITY-001
+- Verificación de consistencia transversal
+- Write-Back Verification post-escritura
+- Validación de Census si aplica
+- Sincronización de versión
+
 ## Cuándo se activa
 
 - Inmediatamente después de que el operador autoriza una propuesta de nodos (Fase 1 completada, con tokens válidos: `APROBAR_WRITE`, `APROBAR`, `SÍ`, `sí`, `YEP`, `yep`).
@@ -26,53 +50,56 @@ Inyectar en el flujo de lectura (Kernel: prioridad operativa; Manual: narrativa 
 
 Si surge la tentación de definir un criterio de calidad nuevo, verificar primero si ya existe en `MANUAL:PATCH-QUALITY-001` — citarlo si existe, proponer su alta ahí si no, nunca crear un contrato paralelo.
 
-## Protocolo de ejecución
+## Protocolo de ejecución (sandbox interno)
 
 Al activarse, declarar: `RESUMING DOCUMENTATION — IMPLEMENTATION PHASE...`
 
-### Fase 2 — DRY RUN de parches + Aprobación
+### Fase 2 — DRY RUN de parches + Aprobación (sandbox interno + output visible)
 
-1. Con el mapeo de nodos ya autorizado como insumo, generar el DRY RUN real: contenido completo de cada parche, en su nodo ya autorizado, con los IDs nuevos (si aplica) ya definidos.
-2. Re-fetch condicional: si el mapeo de Fase 1 (Paso 2 de `vantage-documentacion-transversal-propuesta`) se ejecutó en esta misma sesión/chat — el fetch ya está en contexto activo y no hay handoff entre sesiones de por medio — omitir el re-fetch y declarar explícitamente `RE-FETCH OMITIDO — mapeo de Fase 1 vigente en este mismo chat`. Solo re-fetchear si: (a) el mapeo proviene de otra sesión (Tracker, Handoff, o mensaje pegado por el operador), (b) transcurrió una escritura a Notion sobre ese mismo documento entre Fase 1 y Fase 2 dentro de la sesión actual, o (c) el operador indica explícitamente que el documento pudo cambiar por fuera del chat (edición manual, otro agente).
-3. Validar cada parche contra los 5 filtros de `MANUAL:PATCH-QUALITY-001`.
-4. **No escribir nada a Notion sin `APROBAR_WRITE` explícito** (tokens válidos: `APROBAR_WRITE`, `APROBAR`, `SÍ`, `sí`, `YEP`, `yep` — inválidos: `Ok`, `Go`, `yes`, `YES`). Este es un gate distinto e independiente del de autorización de la propuesta (Fase 1) — aplica sin excepción, incluso si el operador ya vio un DRY RUN idéntico antes en la misma sesión. Puede aprobarse por parche individual o por lote completo; declarar cuál aplica antes de escribir.
+1. [Proceso interno] Con el mapeo de nodos ya autorizado como insumo, generar el DRY RUN real: contenido completo de cada parche, en su nodo ya autorizado, con los IDs nuevos (si aplica) ya definidos.
+2. [Proceso interno] Re-fetch condicional: si el mapeo de Fase 1 (Paso 2 de `vantage-documentacion-transversal-propuesta`) se ejecutó en esta misma sesión/chat — el fetch ya está en contexto activo y no hay handoff entre sesiones de por medio — omitir el re-fetch y declarar explícitamente `RE-FETCH OMITIDO — mapeo de Fase 1 vigente en este mismo chat`. Solo re-fetchear si: (a) el mapeo proviene de otra sesión (Tracker, Handoff, o mensaje pegado por el operador), (b) transcurrió una escritura a Notion sobre ese mismo documento entre Fase 1 y Fase 2 dentro de la sesión actual, o (c) el operador indica explícitamente que el documento pudo cambiar por fuera del chat (edición manual, otro agente).
+3. [Proceso interno] Validar cada parche contra los 5 filtros de `MANUAL:PATCH-QUALITY-001` (ancla exacta requerida).
+4. [OUTPUT VISIBLE] **No escribir nada a Notion sin `APROBAR_WRITE` explícito** (tokens válidos: `APROBAR_WRITE`, `APROBAR`, `SÍ`, `sí`, `YEP`, `yep` — inválidos: `Ok`, `Go`, `yes`, `YES`). Este es un gate distinto e independiente del de autorización de la propuesta (Fase 1) — aplica sin excepción, incluso si el operador ya vio un DRY RUN idéntico antes en la misma sesión. Puede aprobarse por parche individual o por lote completo; declarar cuál aplica antes de escribir.
 
-### Fase 3 — Inyección
+Declarar: `DRY RUN PRESENTADO`
 
-Escribir cada parche autorizado respetando:
-- Jerarquía tipográfica preexistente (H1/H2/H3).
-- Negritas para conceptos clave y KPIs, cursivas para roles/cargos — solo si el documento objetivo ya usa esa convención.
-- Transición lógica con el párrafo anterior y posterior (progresión narrativa) — el parche vive en su nodo, no se apila.
+### Fase 3 — Inyección (sandbox interno)
+
+[Proceso interno] Escribir cada parche autorizado respetando:
+- Jerarquía tipográfica preexistente (H1/H2/H3) — Matriz Tipográfica Congelada (KERNEL:DOCUMENTATION-001)
+- Negritas para conceptos clave y KPIs, cursivas para roles/cargos — solo si el documento objetivo ya usa esa convención
+- Transición lógica con el párrafo anterior y posterior (progresión narrativa) — el parche vive en su nodo, no se apila
 - `update_content` con `old_str`/`new_str` para páginas con column layout blocks (`replace_content` es poco fiable en esos casos). Si `old_str` no matchea, re-fetch en vivo antes de reintentar — nunca reintentar a ciegas sobre contenido cacheado.
 
-### Fase 4 — Write-Back Verification (obligatoria, no opcional)
+### Fase 4 — Write-Back Verification (obligatoria, sandbox interno)
 
-Después de cada escritura: **re-fetch de solo lectura** de la sección modificada, comparando contra el contenido esperado. Si hay mismatch → `WRITE-BACK MISMATCH`, reportar y no continuar sin resolución. Un Changelog o confirmación en chat de "ya se escribió" nunca es evidencia suficiente por sí sola (cache de Notion puede devolver estado pre-write en el primer fetch; doble-fetch es el patrón confiable).
+[Proceso interno] Después de cada escritura: **re-fetch de solo lectura** de la sección modificada, comparando contra el contenido esperado. Si hay mismatch → `WRITE-BACK MISMATCH`, reportar y no continuar sin resolución. Un Changelog o confirmación en chat de "ya se escribió" nunca es evidencia suficiente por sí sola (cache de Notion puede devolver estado pre-write en el primer fetch; doble-fetch es el patrón confiable).
 
-### Fase 5 — Changelog y versión
+### Fase 5 — Changelog y versión (sandbox interno)
 
+[Proceso interno]
 1. Generar la entrada correspondiente en el Change Log (`390938be-fc42-80e7-b429-d7d730339353`) — única fuente de historial de versión; nunca escribir changelog dentro de los documentos individuales.
 2. Actualizar la propiedad Versión del Change Log (referencia oficial del sistema) en la misma operación.
-3. Si el cambio dio de alta o baja un ID canónico, ejecutar/recordar `KERNEL:CENSUS-SYNC` Regla 1 (regenerar Census) antes de cerrar el ticket asociado.
+3. Si el cambio dio de alta o baja un ID canónico, ejecutar/recordar `KERNEL:CENSUS-SYNC` Regla 1 (KERNEL:DOCUMENTATION-008) — regenerar Census antes de cerrar el ticket asociado.
 4. Confirmar al operador que Changelog y versión están escritos y verificados, para que corra `--sync` en Terminal sobre el resto de los documentos fundacionales.
 
-### Fase 6 — Salida (Binary Gate)
+### Fase 6 — Salida (Binary Gate, output visible)
 
-Presentar al operador, para el resumen final de lo inyectado:
+[OUTPUT VISIBLE] Presentar al operador, para el resumen final de lo inyectado:
 - **Opción A — Full Data Dump:** documento(s) completo(s) ya parchado(s), de una vez.
 - **Opción B — Step-by-Step:** bloque por bloque, con explicación de cada cambio, esperando confirmación entre pasos.
 
 Al entregar el resumen de salida, declarar el cierre del protocolo respondiendo: `DOCUMENTATION FINISHED`
 
-## Checklist de validación pre-cierre
+## Checklist de validación pre-cierre (sandbox interno)
 
-Antes de considerar la implementación completa, verificar:
+[Proceso interno] Antes de considerar la implementación completa, verificar:
 
 - [ ] **Nodo:** cada bloque nuevo vive en el nodo autorizado en Fase 1, ningún adendum al final por default.
 - [ ] **Re-fetch previo al DRY RUN:** documentos objetivo releídos en vivo antes de redactar, O re-fetch omitido explícitamente por mapeo de Fase 1 vigente en la misma sesión (declarado en Paso 2).
 - [ ] **Changelog:** entrada generada, versión actualizada y coincidente en los documentos tocados.
-- [ ] **Census:** si se creó/eliminó un ID canónico, `KERNEL:CENSUS-SYNC` Regla 1 ejecutada o explícitamente delegada al operador.
-- [ ] **Consistencia:** el parche no contradice el System Prompt ni otro documento fundacional (`SP:CONSISTENCY`); no duplica contenido ya existente.
+- [ ] **Census:** si se creó/eliminó un ID canónico, `KERNEL:CENSUS-SYNC` Regla 1 ejecutada o explícitamente delegada al operador (KERNEL:DOCUMENTATION-008).
+- [ ] **Consistencia:** el parche no contradice el System Prompt ni otro documento fundacional (`SP:CONSISTENCY` con ancla exacta); no duplica contenido ya existente.
 - [ ] **Write-Back:** re-fetch de verificación (Fase 4) sin mismatch pendiente.
 - [ ] **Sync:** operador confirmado para correr `--sync` en Terminal.
 - [ ] **Binary Gate:** opción elegida (Full Data Dump / Step-by-Step) y confirmación recibida.

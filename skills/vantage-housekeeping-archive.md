@@ -1,12 +1,37 @@
 ---
 name: vantage-housekeeping-archive
-description: "Housekeeping de archivado del VANTAGE Tracker: detecta candidatos (Dedup_Flag, Status=Expirada, Next_Action Archivar/Post-Mortem), delega el marcado Archivar=True a vantage-tidy-opportunities-tracker (única vía de escritura, DRY RUN + APROBAR_WRITE) y entrega reporte de cola de archivo con IDs de página para localización visual del operador. No mueve páginas ni escribe en el Archivo Tracker."
+description: "Housekeeping de archivado del VANTAGE Tracker: detecta candidatos (Dedup_Flag, Status=Expirada, Next_Action Archivar/Post-Mortem), delega el marcado Archivar=True a vantage-tidy-opportunities-tracker (única vía de escritura, DRY RUN + APROBAR_WRITE) y entrega reporte de cola de archivo con IDs de página para localización visual del operador. No mueve páginas ni escribe en el Archivo Tracker. VANTAGE-ALIGNED: Integra KERNEL requirements (DOCUMENTATION-005, DOCUMENTATION-010, DOCUMENTATION-012, DOCUMENTATION-008, FAIL-PHILOSOPHY) y maximiza token economy via sandbox protocol."
 ---
 
-## Convención de anuncio (KERNEL:SKILL-ANNOUNCE-CONVENTION)
+## Convención de anuncio (KERNEL:DOCUMENTATION-005)
 
 - Apertura: `ARCHIVING HOUSEKEEPING...`
-- Cierre: `ARCHIVE HOUSEKEPT`
+- Cierre: `ARCHIVE HOUSEKEEPING COMPLETE`
+
+## Alineación con KERNEL — Economía de Tokens Máxima
+
+**KERNEL:DOCUMENTATION-010** — Protocolo de 6 fases (Fase 0 Detección → Fase 1 Marcado → Fase 2 Reporte)
+
+**KERNEL:DOCUMENTATION-005** — Convención de Anuncio de Skills
+
+**KERNEL:DOCUMENTATION-012** — Contrato de Cero Inferencia Silenciosa: toda afirmación técnica requiere ancla exacta (PREFIX:KEY)
+
+**KERNEL:DOCUMENTATION-008** — Census Compliance: no crea/modifica IDs canónicos, no requiere CENSUS-SYNC
+
+**KERNEL:FAIL-PHILOSOPHY** — No sugerir workarounds, solo reportar estado y esperar instrucción humana
+
+## Protocolo Sandbox — Economía de Tokens Máxima
+
+**Regla fundamental:** Todos los procesos internos corren en sandbox sin renderizar al operador. Solo se output:
+1. `ARCHIVING HOUSEKEEPING...` (inicio)
+2. `ARCHIVE REPORT` + resultados de detección/marcado (resultado final)
+3. `ARCHIVE HOUSEKEEPING COMPLETE` (cierre)
+
+**Procesos silenciosos (sandbox interno):**
+- Detección de candidatos (Fase 0)
+- Validación de guards obligatorios
+- Delegación a vantage-tidy-opportunities-tracker
+- Generación de reporte de cola de archivo
 
 ## Alcance (léase primero)
 
@@ -51,6 +76,20 @@ Objetivo: eliminar el escaneo visual del Tracker. En orden de preferencia:
 ## Cierre de sesión (KERNEL:CENSUS-SYNC, Regla 4)
 
 Reportar sin que el operador lo pida: total de candidatos detectados, marcados y excluidos por APPLIED, y confirmación de que ningún Class B fue escrito por esta vía.
+
+## Checklist de Validación Pre-Cierre (sandbox interno)
+
+[Proceso interno] Antes de declarar el cierre, verificar:
+- [ ] Todos los candidatos fueron evaluados contra guards obligatorios (KERNEL:GATE-DECISION-010)
+- [ ] Ningún Gate_Decision=APPLIED fue incluido en el batch
+- [ ] Todos los marcados tienen DRY RUN + APROBAR_WRITE previo
+- [ ] Delegación a vantage-tidy-opportunities-tracker se ejecutó correctamente
+- [ ] Reporte de cola de archivo incluye IDs de página para localización
+- [ ] Ningún Class B fue escrito por esta vía (confirmación explícita)
+- [ ] Protocolo sandbox respetado (solo 3 outputs visibles)
+- [ ] Convención de anuncio aplicada (KERNEL:DOCUMENTATION-005)
+
+Si algún punto falla, detener y reportar el gap — no declarar `ARCHIVE HOUSEKEEPING COMPLETE` a medias.
 
 ## Fuentes verificadas
 

@@ -1,11 +1,11 @@
 ---
 name: vantage-sync-assets
-description: Orquesta la sincronización de los cuatro dominios de assets de VANTAGE (Script Library + Script Glossary + Skill Library + Skill Glossary) en un solo punto de entrada.
+description: Orquesta la sincronización de los seis dominios de assets de VANTAGE (Script Library + Script Glossary + Skill Library + Skill Glossary + Census Spec + Hyperlinks) en un solo punto de entrada.
 ---
 
 # VANTAGE — Assets Sync Meta-Skill
 
-Orquesta de forma determinista la sincronización de los cuatro dominios de assets (Script Library + Script Glossary + Skill Library + Skill Glossary), reutilizando las skills hijas sin duplicar lógica.
+Orquesta de forma determinista la sincronización de los seis dominios de assets (Script Library + Script Glossary + Skill Library + Skill Glossary + Census Spec + Hyperlinks), reutilizando las skills hijas sin duplicar lógica.
 
 ## Convención de anuncio (KERNEL:DOCUMENTATION-005)
 
@@ -21,6 +21,8 @@ Esta skill orquesta las siguientes skills en orden fijo:
 2. `vantage-sync-skill-library` → SKILL LIBRARY (Notion, `2f1938be-fc42-83c8-8972-07300201136d`)
 3. `vantage-sync-script-glossary` → Script Glossary (Manual.md apéndice 22)
 4. `vantage-sync-skill-glossary` → Skill Glossary (Manual.md apéndice 23)
+5. `vantage-sync-census-spec` → CENSUS_SPEC (generate_census.py, alta IDs huérfanos)
+6. `vantage-hyperlink-loop` → Hyperlinks (Census→Hyperlinks→Sync loop)
 
 ## Trigger / Activación
 
@@ -36,11 +38,13 @@ También activable en modo selectivo:
 - `sync assets --skills-only`
 - `sync assets --libraries-only`
 - `sync assets --glossaries-only`
+- `sync assets --census-only`
+- `sync assets --hyperlinks-only`
 
 ## Contrato de entrada
 
 ```yaml
-scope: all | scripts | skills | libraries | glossaries   # default: all
+scope: all | scripts | skills | libraries | glossaries | census | hyperlinks   # default: all
 force_refresh_gaps: true | false                         # default: true
 skip_zero_gap: true                                      # no invocar hija si gap = 0
 dry_run_matrix: false                                    # modo planificación (vea sección específica)
@@ -60,6 +64,12 @@ dry_run_matrix: false                                    # modo planificación (
    B. **Glossaries después** (narrativa que referencia el inventario)
       3. `vantage-sync-script-glossary`
       4. `vantage-sync-skill-glossary`
+
+   C. **Census después** (depende de inventario y glosarios)
+      5. `vantage-sync-census-spec`
+
+   D. **Hyperlinks al final** (depende de Census actualizado)
+      6. `vantage-hyperlink-loop`
 
 5. **Cada hija mantiene su propio Dry Run + APROBAR_WRITE independiente**.
    La meta-skill NO agrupa los APROBAR_WRITE; solo secuencia y reporta.
@@ -93,6 +103,8 @@ ASSETS SYNC PLAN
 │ Skill Library        │    0     │ Skip            │
 │ Script Glossary      │    2     │ Ejecutar (DRY)  │
 │ Skill Glossary       │    0     │ Skip            │
+│ Census Spec          │    1     │ Ejecutar (DRY)  │
+│ Hyperlinks           │    0     │ Skip            │
 └─────────────────────┴──────────┴────────────────┘
 ```
 
@@ -109,6 +121,8 @@ ASSETS SYNCED
 │ Skill Library              │   n    │     n      │         n          │
 │ Script Glossary (ap. 22)   │   n    │     n      │         n          │
 │ Skill Glossary (ap. 23)    │   n    │     n      │         n          │
+│ Census Spec                │   n    │     n      │         n          │
+│ Hyperlinks                 │   n    │     n      │         n          │
 └────────────────────────────┴────────┴────────────┴────────────────────┘
 ```
 

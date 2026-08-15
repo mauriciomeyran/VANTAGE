@@ -85,6 +85,12 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-housekeeping-tracker.skill",
+      "name": "vantage-housekeeping-tracker",
+      "description": "VANTAGE Skill: vantage-housekeeping-tracker",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-hyperlink-loop.skill",
       "name": "vantage-hyperlink-loop",
       "description": "VANTAGE Skill: vantage-hyperlink-loop",
@@ -112,6 +118,12 @@
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-open.skill",
       "name": "vantage-session-open",
       "description": "Protocolo de apertura de sesión VANTAGE",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-skill-updater.skill",
+      "name": "vantage-skill-updater",
+      "description": "VANTAGE Skill: vantage-skill-updater",
       "mimeType": "application/octet-stream"
     },
     {

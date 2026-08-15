@@ -1,6 +1,6 @@
 ---
 name: vantage-audit-navigation-brief
-description: Audita si cambios documentales en fundacionales o altas/bajas de ID canónico requieren parches de armonía en el Navigation Brief u otros documentos, automatizando el Impact Assessment Contract (BRIEF:07.1). Activar ante peticiones de "audit brief" o tras confirmar un write (post APROBAR_WRITE) a fundacionales sin evaluación de impacto. Emite veredicto binario PASS o UPDATE REQUIRED con nodos afectados. Es de solo lectura; nunca escribe en Notion. Para ejecutar parches resultantes, invocar vantage-documentacion-transversal-propuesta. No usar para: auditoría de CV/PDF (vantage-qa), sincronizar Script/Skill Library, alta de IDs huérfanos en CENSUS_SPEC (vantage-sync-census-spec — esta skill solo señala cuándo invocarla), ni para verificar lockstep de versión (verify_versions.py).
+description: [DEPRECATED] Esta skill ha sido deprecada. Su funcionalidad ahora está integrada en vantage-documentacion-transversal-propuesta (Fase 1 de mapeo de nodos fundacionales). Usar vantage-documentacion-transversal-propuesta en su lugar. Esta skill se mantiene solo como referencia histórica.
 ---
 
 # VANTAGE — Audit Navigation Brief

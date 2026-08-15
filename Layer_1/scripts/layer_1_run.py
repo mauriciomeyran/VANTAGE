@@ -26,12 +26,18 @@ Cambios v8.1 (2026-08-03):
     backfill_class_a.py (manual, catch-up) a este run (automático, semanal).
     Ver KERNEL:TRIGGER-002 — pendiente de actualizar referencia post-patch.
 
-Uso: python3 scripts/layer_1_run.py [--dedup-audit]
+Uso: python3 scripts/layer_1_run.py [--dedup-audit] [--dry-run]
 
 Opciones:
   --dedup-audit  Ejecuta dedup_opportunities.py al final del run para marcar
                  duplicados detectados vía fuzzy matching (empresa >=0.85, rol >=0.7)
-  --dry-run      Modo diagnóstico: no escribe cambios a Notion
+                 Nota: También se ejecuta automáticamente si ENABLE_DEDUP_AUDIT=true
+  --dry-run      Modo diagnóstico: no escribe cambios a Notion (heredado por dedup audit)
+
+Variables de entorno:
+  ENABLE_DEDUP_AUDIT  Activar dedup audit automático (default: true)
+  DEDUP_WINDOW_DAYS   Ventana de días para búsqueda de duplicados (default: 60)
+  NOTION_ARCHIVE_DATA_SOURCE_ID ID del data source del Archive Tracker para búsqueda cruzada (opcional)
 """
 
 import os
@@ -62,6 +68,9 @@ if DRY_RUN:
     print("\n" + "="*60)
     print("DRY RUN MODE — No se escribirán cambios a Notion")
     print("="*60 + "\n")
+
+# ── Feature flags ─────────────────────────────────────────────────────────────
+ENABLE_DEDUP_AUDIT = os.environ.get("ENABLE_DEDUP_AUDIT", "true").lower() == "true"
 
 # ---------- Utilidades ----------
 def txt(prop):
@@ -1150,7 +1159,8 @@ def main():
                 print(f"    {company}: {rate:.0f}% rechazo ({total} aplicaciones)")
 
     # ==================== FASE 6: DEDUP AUDIT (opcional) ====================
-    if "--dedup-audit" in sys.argv:
+    # Se ejecuta si: (a) flag manual --dedup-audit, o (b) feature-flag ENABLE_DEDUP_AUDIT=true
+    if "--dedup-audit" in sys.argv or ENABLE_DEDUP_AUDIT:
         print("\nFase 6: Dedup audit (fuzzy matching)...")
         print("Ejecutando dedup_opportunities.py para detectar duplicados...")
         
@@ -1158,12 +1168,21 @@ def main():
             import subprocess
             dedup_script = script_dir / "dedup_opportunities.py"
             
-            # Ejecutar dedup_opportunities.py
+            # Ejecutar dedup_opportunities.py con herencia de DRY RUN
+            dedup_args = [sys.executable, str(dedup_script)]
+            if DRY_RUN:
+                dedup_args.append("--dry-run")
+                print("🔍 DEDUP AUDIT en modo DRY RUN (heredado del pipeline)")
+            
+            # Usar ventana de 60 días por defecto (configurable vía variable de entorno)
+            dedup_window_days = int(os.environ.get("DEDUP_WINDOW_DAYS", "60"))
+            dedup_args.extend(["--window-days", str(dedup_window_days)])
+            
             result = subprocess.run(
-                [sys.executable, str(dedup_script)],
+                dedup_args,
                 capture_output=True,
                 text=True,
-                timeout=300  # 5 minutos max
+                timeout=600  # 10 minutos max (aumentado de 5 para ventanas de tiempo)
             )
             
             if result.returncode == 0:

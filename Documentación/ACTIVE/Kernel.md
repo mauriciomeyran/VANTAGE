@@ -275,7 +275,12 @@ Consumidores:
 /skills/ local es la fuente primaria; GitHub Pages es espejo — ambos LLMs leen en última instancia de la misma raíz canónica.
 vsum.py (alias vsum) — herramienta de continuidad entre sesiones e IAs, no capa de búsqueda ni de pipeline: resume transcripts de sesiones (Claude, Gemini, ChatGPT, u otro) a Markdown estructurado (contexto, hallazgos, decisiones, pendientes), orientado a que la siguiente sesión o la siguiente IA no pierda continuidad. Escribe vía notion_client.Client directo (no MCP) como página hija del INBOX (ver Cédula Digital, SP:DIGITAL-ID-CARD). Mismo patrón de acceso directo a la API ya usado por vsync_doc.py. No lee ni escribe el Tracker de vacantes; su único contacto con Notion es de salida (push opcional del resumen), nunca de entrada.
 Jerarquía de Dedup
-L1 > L2 > L3. Perplexity aplica esta jerarquía en Consolidation & Dedup; L3 entra directo a feed_processor.py.
+L1 > L2 > L3. Perplexity aplica esta jerarquía en Consolidación & Dedup; L3 entra directo a feed_processor.py.
+Mecanismos de Dedup — Distinción de Propósito
+El sistema tiene dos mecanismos de dedup complementarios con ventanas y propósitos distintos:
+1. Dedup en tiempo real (ingesta): hash exacto + URL exacta + brand+title (ventana 30d, feed_processor.py). Propósito: prevenir contaminación del Tracker con duplicados obvios al momento de ingesta.
+2. Dedup por auditoría post-ingesta: fuzzy matching (brand≥0.85, rol≥0.7) + fingerprint de contenido (ventana 60d, dedup_opportunities.py + Archive Tracker). Propósito: detectar duplicados sutiles que el hash exacto no captura (rotación de jk, reposts) y mantener limpieza del Tracker a través del tiempo.
+Ambos mecanismos coexisten legítimamente: el primero es gate preventivo de ingesta, el segundo es auditoría correctiva post-ingesta. No son mutuamente excluyentes ni redundantes.
 Punto de Convergencia Único
 Las tres capas de búsqueda escriben a Notion. vantage-pipeline lee de Notion, no de outputs de capa directamente.
 Figma Sync — CV Output Layer

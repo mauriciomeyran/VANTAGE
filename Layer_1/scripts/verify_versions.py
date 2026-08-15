@@ -17,16 +17,17 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 ENV_PATH = SCRIPT_DIR.parent / "config" / "layer_1.env"
 REGISTRY_NAME = "resolver_registry_v2.json"
 
-# Nombres canónicos de los 9 puntos de supervisión (8 fundacionales + VANTAGE hub).
+# Nombres canónicos de los 11 puntos de supervisión (9 fundacionales + VANTAGE hub + ARCHIVEROS).
 # VANTAGE (página principal) se integró en modo idéntico a los demás — NO es
 # supervisión pasiva: participa en --sync y en el check de lectura con el
 # mismo veredicto PASS/FAIL que el resto.
-DOC_KEYS = ["CHANGELOG", "KERNEL", "MANUAL", "CANON", "SP", "ALIASES", "CENSUS", "BRIEF", "VANTAGE", "CHANGELOG_ARCHIVO"]
+# ARCHIVEROS (página de archiveros) también participa en --sync del mismo modo.
+DOC_KEYS = ["CHANGELOG", "KERNEL", "MANUAL", "CANON", "SP", "ALIASES", "CENSUS", "BRIEF", "VANTAGE", "CHANGELOG_ARCHIVO", "ARCHIVEROS"]
 
 # CENSUS no vive en resolver_registry_v2.json: no tiene prefijo propio en
 # KERNEL:DOC-CONTRACT (sus IDs internos usan KERNEL:/SP:/MANUAL:/CANON:/BRIEF:),
 # por lo que se declara aquí como fallback fijo.
-# BRIEF, VANTAGE y CHANGELOG_ARCHIVO SÍ viven ya en document_registry
+# BRIEF, VANTAGE, CHANGELOG_ARCHIVO y ARCHIVEROS SÍ viven ya en document_registry
 # (incorporados vía CENSUS-SYNC-R1 y actualización integración ARCHIVO) —
 # los fallbacks de abajo solo se usan como red de seguridad si el registro
 # llegara a perder la clave.
@@ -34,6 +35,7 @@ CENSUS_FALLBACK_ID = "394938be-fc42-81e6-a381-e3869e60d89d"
 BRIEF_FALLBACK_ID = "3a3938be-fc42-8008-9e90-ec435c01f50d"
 VANTAGE_FALLBACK_ID = "36e938be-fc42-81d6-bf40-dfe7dee782a5"
 CHANGELOG_ARCHIVO_FALLBACK_ID = "3ba938be-fc42-8011-8947-fb4fa5d1f63f"
+ARCHIVEROS_FALLBACK_ID = "3bb938befc4280cd8ea3fc8ba78f570c"
 
 # Infraestructura de sesión — no son documentos fundacionales, no participan de SP:SYNC-RULE
 # SESSION LEDGER es una DATABASE (no una página standalone) — corregido tras
@@ -143,6 +145,10 @@ def load_document_uuids(registry_path: Path) -> dict:
         if key == "CHANGELOG_ARCHIVO":
             val = doc_registry.get(key)
             uuids[key] = val.replace("-", "") if val else CHANGELOG_ARCHIVO_FALLBACK_ID.replace("-", "")
+            continue
+        if key == "ARCHIVEROS":
+            val = doc_registry.get(key)
+            uuids[key] = val.replace("-", "") if val else ARCHIVEROS_FALLBACK_ID.replace("-", "")
             continue
         val = doc_registry.get(key)
         if val:
