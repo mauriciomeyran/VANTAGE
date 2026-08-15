@@ -143,3 +143,29 @@ Criterios PATCH-QUALITY-001: jerarquía `## NN`/`### NN.N` sin `NN.N.N` · inlin
 - [ ] `skills/`: 28 activas + tracker reconciliado (1 copia) + deprecadas fuera del árbol · `index.json` en sync
 - [ ] Stubs C4 fuera · C5 docs resueltas · Tier D resuelto por ítem · briefs raíz con destino
 - [ ] Change Log: entrada `[AUDIT]` única de cierre con v9.17.1 cerrado y drift V4 reportado · git limpio y pusheado
+
+---
+
+## Bitácora de avance
+
+**2026-08-15 (tarde) — verificación de movimiento del remoto:** `origin/main` sin cambios desde 02:45 (sin PRs ni commits nuevos) → ninguna tarea avanzó desde la re-auditoría. **Tarea 1 RESUELTA:** el operador confirmó que el espejo GitHub de `Documentación/ACTIVE/` es la fuente; delta de adjuntos = **sin delta**.
+
+### Tarjeta de ejecución — Tarea 2 (P2, Manual) — lista para pegar en Claude
+
+```
+Misión P2 (HANDOFF_MAESTRO_V3, tarea 2): dos correcciones inline en la página
+Manual (372938be-fc42-8050-9a67-e40857d7806e), vía
+vantage-documentacion-transversal-propuesta, escribiendo en NOTION (no solo disco).
+Presentar DRY RUN con estos dos pares exactos:
+
+PAR 1 — sección de diagnóstico L3:
+ANTES: "Ejecutar manualmente: vl3 (debe procesar hasta 5 correos)."
+DESPUÉS: "Ejecutar manualmente: vl3 (debe procesar hasta 10 correos)."
+
+PAR 2 — lista de hallazgos de discrepancia al final de 22.6 XREF:
+ANTES: "GROQ_MAX_EMAILS_PER_RUN: Manual/Aliases citan valores distintos entre sí; código usa 10."
+DESPUÉS: "GROQ_MAX_EMAILS_PER_RUN: RESUELTO (saneamiento 2026-08-15) — Manual/Aliases alineados en 10; código usa 10."
+
+Restricciones: inline · sin secciones nuevas · sin IDs nuevos · sin retitular.
+Tras APROBAR_WRITE: write-back verification con fetch real de ambos bloques.
+```
