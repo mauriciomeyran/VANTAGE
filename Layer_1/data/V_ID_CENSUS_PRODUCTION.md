@@ -273,4 +273,6 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-_Ninguno detectado en esta corrida._
+| ID | Documento | Link |
+|---|---|---|
+| `MANUAL:SCRIPT-GLOSSARY-CV-PREP` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3aa2572b38e542d3bd4bd733a5910e15 ) |
