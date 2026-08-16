@@ -358,7 +358,7 @@ Son dos herramientas separadas que se combinan: vdoc mueve contenido documental 
 - Layer_4/wrappers/git_sync_wrapper.sh 
 - ~/Library/LaunchAgents/com.vantage.gitsync.plist
 Extensión reciente — Skills Distribution: además de vgit, el alias vtriggers (update_triggers_json.py) mantiene skills/triggers.json — el manifiesto SSOT que cruza cada skill contra su trigger, path y última modificación — y, al finalizar, ejecuta su propio commit+push automático sobre ese archivo (ver KERNEL:ARCHITECTURE-L4 para el detalle de escaneo y validación).
-Esto es lo que permite que Claude lea siempre la misma versión del manifiesto vía web_fetch a raw.githubusercontent.com, sin paso de sincronización manual ni intermediario MCP.
+Esto es lo que permite que Claude lea siempre la misma versión del manifiesto (vía web_fetch) y del contenido de cada skill (vía git clone --depth 1 local), sin paso de sincronización manual ni intermediario MCP.
 ### ¿Qué es vdoc?
 - Sincroniza los 6 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log) entre Notion y ACTIVE/ en disco.
 - Al terminar encadena un git_sync automático para que el commit quede reflejado en GitHub sin un paso adicional.

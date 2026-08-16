@@ -2,6 +2,63 @@
 
 Tipo: [DOC]
 Alcance:
+- Manual (MANUAL:SKILL-GLOSSARY-HOUSEKEEPING, 23.2 â 2 filas)
+- Manual (MANUAL:SKILL-GLOSSARY-AUDIT, 23.3 â 2 filas)
+- Manual (MANUAL:SKILL-GLOSSARY-XREF, 23.5 â gap corregido)
+- Kernel (KERNEL:DOCUMENTATION-005, 03.5 â lista de implementaciÃ³n)
+Contexto: Brief del operador reportaba 4 acciones de optimizaciÃ³n del catÃ¡logo de skills ya implementadas en filesystem sin contraparte documental formal: expansiÃ³n de vantage-sync-assets de 4 a 6 dominios sincronizados (altas: Census Spec, Hyperlinks), alta de la meta-skill vantage-housekeeping-tracker (orquesta vantage-tidy-bug-task-tracker â vantage-tidy-opportunities-tracker â vantage-tidy-changelog en orden fijo), y deprecaciÃ³n de vantage-audit-navigation-brief (funcionalidad absorbida por vantage-documentacion-transversal-propuesta desde Fase 1 de mapeo de nodos) y extract-learnings (actividad post-mortem esporÃ¡dica, no skill operativa recurrente). Se descartÃ³ agregar vantage-housekeeping-tracker a la tabla de gobernanza de KERNEL:DOCUMENTATION-010 â mismo criterio ya aplicado a vantage-sync-assets: es orquestador puro sin escritura directa, cada hija conserva su propio gate independiente.
+Cambios:
+- MANUAL:SKILL-GLOSSARY-HOUSEKEEPING (23.2) â fila vantage-sync-assets actualizada (4â¶¶6 dominios); fila nueva vantage-housekeeping-tracker.
+- MANUAL:SKILL-GLOSSARY-AUDIT (23.3) â filas vantage-audit-navigation-brief y extract-learnings marcadas [DEPRECATED].
+- MANUAL:SKILL-GLOSSARY-XREF (23.5) â gap de anuncio no especificado corregido: 6â¶¶5 skills (vantage-audit-navigation-brief removida por deprecaciÃ³n).
+- KERNEL:DOCUMENTATION-005 (03.5) â alta de lÃ¬nea: vantage-housekeeping-tracker â HOUSEKEEPING TRACKERSâ¦¦ / TRACKERS HOUSEKEPT.
+IDs afectados: Ninguno â todas las ediciones reutilizan IDs existentes (sin alta/baja de ID canÃ³nico, no dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: pendiente de confirmaciÃ³n en esta misma sesiÃ³n (Fase 4).
+Pendiente (fuera de esta entrada):
+- Skill Library (Notion) â alta de fila vantage-housekeeping-tracker, actualizaciÃ³n de descripciÃ³n de vantage-sync-assets (delegar a vantage-sync-skill-library).
+- vversions --sync para propagar v9.20.9 al resto de los fundacionales.
+---
+Tipo: [DOC]
+Alcance:
+- Kernel (KERNEL:DOCUMENTATION-005, 03.5 â lista de implementaciÃ³n)
+- Kernel (KERNEL:DOCUMENTATION-010, 03.10 â tabla Skills de Gobernanza Documental)
+- Kernel (KERNEL:DOCUMENTATION-013, 03.13 â nodo nuevo)
+- Manual (MANUAL:SKILL-GLOSSARY-AUDIT, 23.3 â fila nueva)
+Contexto: Brief del operador reportaba 4 skills modificadas/creadas sin contraparte documental formal (vantage-sync-assets, el split propuesta/implementaciÃ³n de documentaciÃ³n transversal con protocolo sandbox de economÃ¬a de tokens, y vantage-skill-updater, nueva skill de meta-gobernanza). Mapeo confirmÃ³ que MANUAL Â23.2 ya reflejaba correctamente vantage-sync-assets y el split propuesta/implementaciÃ³n (v9.20.4/v9.20.5) â el drift real estaba Ãnicamente en KERNEL:DOCUMENTATION-005, que seguÃ¬a listando una entrada Ãnica obsoleta ("vantage-documentacion-transversal") con banners incorrectos. Se descartÃ³ agregar vantage-sync-assets a la tabla de gobernanza de KERNEL:DOCUMENTATION-010 (decisiÃ³n explÃ¬cita del operador â esa tabla es exclusiva de skills que escriben Class A en trackers/changelog, no de orquestaciÃ³n de Library/Glossary). El patrÃ³n de protocolo sandbox (mÃ¡x. 3 outputs visibles, procesos internos no renderizados) se identificÃ³ duplicado idÃ©nticamente en 4 skills sin ancla canÃ³nica â se formaliza como KERNEL:DOCUMENTATION-013 en vez de crear IDs separados por skill (KERNEL:SANDBOX-PROTOCOL, KERNEL:TOKEN-ECONOMY descartados por redundancia conceptual).
+Cambios:
+- KERNEL:DOCUMENTATION-005 (03.5) â lista "ImplementaciÃ³n actual" corregida: entrada Ãnica obsoleta reemplazada por vantage-documentacion-transversal-propuesta y -implementacion (banners reales); altas de vantage-sync-assets y vantage-skill-updater.
+- KERNEL:DOCUMENTATION-010 (03.10) â tabla de Skills de Gobernanza Documental: 2 filas nuevas (propuesta/implementacion), que faltaban listarse a sÃ¬ mismas pese a ser el motor del protocolo que la secciÃ³n define.
+- KERNEL:DOCUMENTATION-013 (03.13) â nodo nuevo: "Protocolo Sandbox â EconomÃ¬a de Tokens MÃ¡xima", formaliza el patrÃ³n de mÃ¡x. 3 outputs visibles compartido por 4 skills.
+- MANUAL:SKILL-GLOSSARY-AUDIT (23.3) â fila nueva: vantage-skill-updater (PropÃ³sito/Trigger/Gate/Anuncio).
+IDs afectados: 1 alta â KERNEL:DOCUMENTATION-013 (dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: Kernel y Manual re-fetched post-escritura â 4/4 nodos confirmados en posiciÃ³n correcta, sin mismatch.
+Pendiente (fuera de esta entrada):
+- vcensus para registrar KERNEL:DOCUMENTATION-013 en el Census (alta de ID canÃ³nico).
+- vversions --sync para propagar v9.20.8 al resto de los fundacionales.
+- Skill Library (Notion) â alta de fila vantage-skill-updater pendiente (fuera de alcance de esta entrada, delegar a vantage-sync-skill-library).
+---
+Tipo: [DOC]
+Alcance:
+- Kernel (KERNEL:DOCUMENTATION-008, 03.8)
+- Manual (MANUAL:RUNTIME-002, 9.2)
+- Manual (MANUAL:SCRIPT-GLOSSARY-L1, 22.1 â entrada generate_census.py)
+Contexto: Brief v9.21 del operador reportaba correcciÃ³n de CENSUS_SPEC (40 IDs huÃ©rfanos) y dos flags nuevos de generate_census.py. VerificaciÃ³n contra el script subido confirmÃ³ que ambos cambios (los 40 IDs y los flags --auto-fix-orphans/--sync-to-notion) ya estaban en producciÃ³n â el ID CENSUS recuperado en bootload de esta sesiÃ³n mostrÃ³ 0 huÃ©rfanos, confirmando el estado. La propuesta de mapeo de Notebook Gemini para esta parte (KERNEL:DOCUMENTATION-008, sin alta de ID nuevo) se retomÃ³; su sugerencia de un ID nuevo KERNEL:ASSETS-SYNC y reapertura de KERNEL:DOCUMENTATION-005 correspondÃ¬a a Cambio 1 (vantage-sync-assets), ya cerrado en v9.20.5 con decisiÃ³n explÃ¬cita de no tocar Kernel â se descartÃ³ por ser una reapertura de una decisiÃ³n ya tomada. Gap real detectado en revisiÃ³n posterior con el operador: la entrada de generate_census.py en el Script Glossary (22.1) tampoco reflejaba los flags nuevos.
+Cambios:
+- KERNEL:DOCUMENTATION-008 (03.8) â regla 6 nueva: --auto-fix-orphans y --sync-to-notion como mecanismo de resoluciÃ³n de huÃ©rfanos del Census.
+- MANUAL:RUNTIME-002 (9.2) â entrada vcensus extendida con descripciÃ³n operativa de ambos flags.
+- MANUAL:SCRIPT-GLOSSARY-L1 (22.1) â "QuÃ© hace" de generate_census.py actualizado + 2 filas nuevas en tabla de Flags.
+IDs afectados: Ninguno (extensiÃ³n de nodos existentes, sin alta/baja de ID canÃ³nico â no dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: Kernel y Manual re-fetched post-escritura â 3/3 nodos confirmados en posiciÃ³n correcta, sin mismatch (re-fetch en vivo requerido en los tres casos por mismatch inicial de old_str contra contenido cacheado del upload local).
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.20.7 al resto de los fundacionales.
+---
+Tipo: [DOC]
+- Se restaurÃ³ la versiÃ³n de Kernel del 13 de agosto de 2026 (7:27 a.m.) para recuperar bloques crÃ¬ticos borrados en la versiÃ³n LIVE (incluyendo contratos de ID canÃ³nicos, diagramas L1-L4, esquemas de Class A y la tabla de Tracker Schema).â¬¢	Se integraron los 3 diferenciales detectados del estado LIVE posterior:â¬¢	ActualizaciÃ³n de L3 Passive Intake a un mÃ¡ximo de 10 correos por corrida.â¬¢	ActualizaciÃ³n de Skills Distribution a 25 archivos .skill.â¬¢	InserciÃ³n del pÃ¡rrafo de consolidaciÃ³n prevista en KERNEL:GATE-DECISION-007 (vantage-housekeeping-archive).
+- Se completÃ³ la integraciÃ³n de la SecciÃ³n 23 (MANUAL:SKILL-GLOSSARY) con sus 5 subsecciones (23.1 a 23.5) que estaban ausentes en la versiÃ³n restaurada del Manual. Se restituyÃ³ el bullet faltante en MANUAL:SESSION-CYCLE referenciando explÃ¬citamente a la SecciÃ³n 23 para el catÃ¡logo de skills.
+- EjecuciÃ³n realizada mediante aprobar_write y actualizaciÃ³n con el timestamp local solicitado de las 17:04.
+---
+Tipo: [DOC]
+Alcance:
 - Skill Library (Notion DB, alta de fila)
 - Manual (MANUAL:SKILL-GLOSSARY-HOUSEKEEPING §23.2 — fila nueva)
 - /mnt/skills/user/vantage-sync-script-library/SKILL.md (local, corrección)

@@ -425,6 +425,31 @@ class _Databases:
         return _notion_post(f"/v1/databases/{database_id}/query", payload)
 
 
+class _BlocksChildren:
+    """Emula client.blocks.children de notion-client."""
+
+    def list(
+        self,
+        block_id: str,
+        start_cursor: Optional[str] = None,
+        page_size: int = 100,
+        **kwargs: Any,
+    ) -> Dict[str, Any]:
+        """Lista los bloques hijos de un bloque/página."""
+        payload: Dict[str, Any] = {"page_size": page_size}
+        if start_cursor:
+            payload["start_cursor"] = start_cursor
+        payload.update(kwargs)
+        return _notion_post(f"/v1/blocks/{block_id}/children", payload)
+
+
+class _Blocks:
+    """Emula client.blocks de notion-client."""
+
+    def __init__(self):
+        self.children = _BlocksChildren()
+
+
 # --- Client ----------------------------------------------------------------------
 
 class Client:
@@ -437,6 +462,7 @@ class Client:
       - client.pages.create(parent=..., properties=...)
       - client.databases.retrieve(database_id=...)
       - client.databases.query(database_id=..., **kwargs)
+      - client.blocks.children.list(block_id=..., **kwargs)
     """
 
     def __init__(self, auth: Optional[str] = None, token: Optional[str] = None):
@@ -447,6 +473,7 @@ class Client:
         self.data_sources = _DataSources()
         self.pages = _Pages()
         self.databases = _Databases()
+        self.blocks = _Blocks()
 
     def get_metrics(self) -> Dict[str, Any]:
         return get_metrics()

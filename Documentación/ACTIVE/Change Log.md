@@ -2,6 +2,34 @@
 
 Tipo: [DOC]
 Alcance:
+- Kernel (KERNEL:DOCUMENTATION-010, 03.10 — nodo nuevo: Timestamp Obligatorio en Changelog)
+- System Prompt (SP:CONSISTENCY, 10 — regla 3 nueva)
+Contexto: El operador solicitó que, a partir de ahora, cada entrada nueva del Change Log declare fecha y hora local (CDMX) en el título. Como Claude no tiene reloj de sistema fiable dentro de la sesión, se fijó como regla que el operador provea el timestamp explícitamente al autorizar la escritura; si no lo hace, Claude pregunta antes de escribir — nunca infiere ni aproxima. Formato adoptado: {Mes} {DD}, {AA} {HH.MM} (ej. "Ago 16, 26 06.22"), confirmado por el operador en esta misma entrada.
+Cambios:
+- KERNEL:DOCUMENTATION-010 (03.10) — nodo nuevo "Timestamp Obligatorio en Changelog": formato, fuente del dato (operador, no Claude), protocolo ante ausencia (preguntar, no inferir).
+- SP:CONSISTENCY (10) — regla 3 nueva, referencia cruzada al nodo Kernel.
+- Esta misma entrada (v9.21.9) es la primera en aplicar el formato de título con timestamp.
+IDs afectados: Ninguno (contenido nuevo bajo IDs existentes — no dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: Kernel y System Prompt re-fetched post-escritura — 2/2 confirmados en posición correcta, sin mismatch.
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.21.9 al resto de los fundacionales.
+---
+Tipo: [DOC]
+Alcance:
+- Kernel (KERNEL:ARCHITECTURE-L4, 04.4 — párrafo Consumidor corregido)
+- Manual (MANUAL:WEEKLY-FLOW-001, 8.1 — línea final corregida)
+- System Prompt (SP:BOOTLOADER, 01) y (SP:CONTEXT-INFRASTRUCTURE, 04) — ya reflejaban el mecanismo correcto al momento de esta entrada (aplicado en paralelo a esta sesión, sin intervención de escritura de Claude en este batch)
+Contexto: v9.21.7 documentó el consumo del manifiesto de skills exclusivamente vía web_fetch a raw.githubusercontent.com. El operador reportó una restricción estructural no contemplada: web_fetch de Claude sobre raw.githubusercontent.com está bloqueado salvo que la URL ya haya aparecido en la sesión (vía web_search/web_fetch previo) — condición que no se cumple para los paths individuales de SKILL.md construidos dinámicamente desde el manifiesto. Corrección: git clone --depth 1 (bash_tool, github.com whitelisted) pasa a ser la vía primaria y estable para leer el contenido de cada skill; web_fetch queda como fallback solo si el clone falla, y se mantiene como vía única para el fetch inicial del manifiesto (triggers.json), cuya URL sí proviene de SP:BOOTLOADER ya cargado en la sesión. Al escribir, se detectó que SP:BOOTLOADER y SP:CONTEXT-INFRASTRUCTURE ya reflejaban el mecanismo corregido en Notion — no hubo mismatch de old_str porque el contenido vivo ya coincidía con el texto propuesto por el operador.
+Cambios:
+- KERNEL:ARCHITECTURE-L4 (04.4) — párrafo Consumidor: el manifiesto se recupera vía web_fetch (fetch inicial, URL ya en sesión); el contenido de cada skill se lee vía git clone --depth 1 + lectura local, vía primaria y estable dado el bloqueo estructural de web_fetch sobre raw.githubusercontent.com para URLs no vistas previamente; web_fetch queda como fallback.
+- MANUAL:WEEKLY-FLOW-001 (8.1) — línea de cierre del párrafo "Extensión reciente" corregida para reflejar el doble mecanismo (manifiesto vía web_fetch, contenido de skill vía git clone local).
+IDs afectados: Ninguno (todas las ediciones reutilizan IDs existentes — no dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: KERNEL y MANUAL re-fetched post-escritura — 2/2 confirmados en posición correcta, sin mismatch. SP:BOOTLOADER y SP:CONTEXT-INFRASTRUCTURE verificados en vivo ya conformes, sin escritura requerida en este batch.
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.21.8 al resto de los fundacionales.
+---
+Tipo: [DOC]
+Alcance:
 - Kernel (KERNEL:ARCHITECTURE-L4, 04.4 — sección Skills Distribution reescrita)
 - System Prompt (SP:BOOTLOADER, 01 — paso 2 ampliado + paso 2.1 nuevo)
 - Manual (MANUAL:WEEKLY-FLOW-001, 8.1 — párrafo "Extensión reciente — Skills Distribution" reescrito)

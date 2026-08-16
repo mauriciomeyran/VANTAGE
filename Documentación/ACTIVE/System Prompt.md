@@ -13,10 +13,12 @@ Al iniciar una nueva sesión:
 1. Recupera vía notion-fetch:
 - SYSTEM PROMPT → id: 37b938be-fc42-8001-9b9b-fcf81130d274
 - ID CENSUS → id: 394938be-fc42-81e6-a381-e3869e60d89d
-- SKILLS MANIFEST → web_fetch:
+- SKILLS MANIFEST → web_fetch/git clone
 - https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/triggers.json (ver KERNEL:ARCHITECTURE-L4). Falla de este tercer fetch no degrada el Bootstrap — el manifiesto solo condiciona el lazy-load de skills, no la carga de contexto operativo (SYSTEM PROMPT/ID CENSUS).
+- Método de acceso a skills: Vía preferente y estable: git clone --depth 1 https://github.com/mauriciomeyran/VANTAGE.git en bash_tool (dominio github.com está whitelisted), y view/find local sobre el árbol clonado para leer el SKILL.md correspondiente. Reusar el clon si ya existe en la sesión (git pull en vez de clone nuevo). web_fetch queda como fallback solo si git clone falla.
+- Para Claude web_fetch sobre raw.githubusercontent.com está bloqueado salvo que la URL haya salido de un web_search/web_fetch previo en la misma sesión.
+- Lazy-load por trigger: en cada turno, cruzar el mensaje del operador contra el array trigger[] del manifiesto. Ante match, leer el SKILL.md correspondiente antes de proceder — nunca cargar el contenido de las 28 skills de forma masiva en el boot.
 - Si el operador indica que el manifiesto fue actualizado recientemente y el contenido fetcheado no lo refleja, reintentar con cache-busting (?t={timestamp}) antes de reportar discrepancia — ver KERNEL:ARCHITECTURE-L4, riesgo conocido de caché de fetch dentro de sesión.
-- Lazy-load por trigger: en cada turno, cruzar el mensaje del operador contra el array trigger[] del manifiesto. Ante match, hacer web_fetch del SKILL.md en el path correspondiente antes de proceder — nunca cargar el contenido de las 28 skills de forma masiva en el boot.
 1. Si los documentos se recuperan correctamente, úsalos como referencia operativa de la sesión.
 1. Si alguno falla:
 - Reintenta una sola vez, inmediatamente.
@@ -86,6 +88,7 @@ Economía de Contexto y Rutas de Carga
 La lógica principal de VANTAGE reside en la documentación del proyecto y en los componentes locales.
 - Terminal (lazy_loader.py): Ruta preferente para operaciones estructurales.
 - Notion MCP: Uso exclusivo para lectura, DRY RUN y actualización documental ante instrucción explícita del operador.
+- Repo GitHub (bash_tool): git clone/git pull sobre github.com y codeload.github.com (whitelisted) para lectura de skills, scripts y árbol de disco activo cuando no exista vía local directa (ver SP:BOOTLOADER). Solo lectura — no usar para escritura al repo remoto.
 Consultar en KERNEL:CONTEXT-INFRASTRUCTURE.
 ---
 ## 05 SP:DATA-FLOW
@@ -151,6 +154,7 @@ Notas de Ruteo MCP
 Consistencia del Sistema
 1. Ante discrepancias entre documentos, esquemas o versiones: reportar y esperar confirmación antes de modificar documentación.
 1. Prohibido inferir mecanismos de Scripts o Skills sin confirmación en la fuente real; la inferencia no confirmada contamina la fuente de verdad.
+1. Ante cualquier escritura de Changelog, si el operador no ha dado fecha/hora en el mensaje, Claude pregunta antes de escribir — nunca asume ni interpola (ver KERNEL:DOCUMENTATION-010, Timestamp Obligatorio en Changelog).
 ### 10.1 SP:CONSISTENCY-002
 Triaje vía Notebook Gemini
 Ante una discrepancia o duda de gobernanza documental cubierta por los puntos 1-2, Claude puede validar su plan contra un reporte de Notebook Gemini (ver KERNEL:DOCUMENTATION-012, MANUAL:RUNTIME-005) antes de escribir en Notion. El reporte de Notebook Gemini no sustituye APROBAR_WRITE ni el DRY RUN obligatorio.

@@ -3,17 +3,24 @@
 Script para exportar las páginas del bootloader de VANTAGE a Markdown y opcionalmente a Google Drive.
 
 Las páginas del bootloader son:
-- SYSTEM PROMPT (id: 37b938be-fc42-8001-9b9b-fcf81130d274)
-- ID CENSUS (id: 394938be-fc42-81e6-a381-e3869e60d89d)
+- SYSTEM PROMPT (id: 37b938be-fc42-8001-9b9b-fcf81130d274) - Notion
+- ID CENSUS (id: 394938be-fc42-81e6-a381-e3869e60d89d) - Notion
+
+Nota: El SKILLS MANIFEST se maneja por separado en update_triggers_json.py con su propia lógica de Google Drive.
 
 Uso:
     python export_bootloader_pages.py                    # Exportar a local
-    python export_bootloader_pages.py --drive             # Exportar a Google Drive (requiere configuración)
+    python export_bootloader_pages.py --drive             # Exportar a Google Drive (requiere configuración OAuth)
     python export_bootloader_pages.py --output ./backups  # Directorio personalizado
 
 Requisitos:
     - NOTION_TOKEN: Token de integración de Notion (variable de entorno)
-    - Para Google Drive: google-api-python-client y credenciales configuradas
+    - Para Google Drive OAuth 2.0:
+      * pip install google-api-python-client google-auth-oauthlib
+      * export GOOGLE_OAUTH_CREDENTIALS_PATH='ruta/a/client_secret_...json'
+      * Primera ejecución: Autenticación interactiva en navegador
+      * Ejecuciones posteriores: Usa token guardado automáticamente
+    - Las variables de entorno se pueden configurar en Layer_1/.env
 """
 
 import os
@@ -23,6 +30,20 @@ import logging
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any, Optional
+
+# Cargar variables de entorno desde .env si existe
+def load_env():
+    """Carga variables de entorno desde archivo .env si existe."""
+    env_path = Path(__file__).resolve().parent.parent / ".env"
+    if env_path.exists():
+        with open(env_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    os.environ[key.strip()] = value.strip()
+
+load_env()
 
 # Añadir el directorio de scripts al path para importar notion_utils
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -199,26 +220,11 @@ class BootloaderExporter:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.converter = NotionToMarkdownConverter()
         self.client = Client()
+        self.token_file = "token_drive.json"  # Para OAuth 2.0
+        self.drive_folder = os.environ.get("GOOGLE_DRIVE_FOLDER_BOOTLOADER", "VANTAGE_Bootloader_Exports")
         
     def fetch_page_blocks(self, page_id: str) -> Dict[str, Any]:
         """Recupera todos los bloques de una página de Notion."""
-        if self.use_mcp:
-            return self._fetch_page_blocks_mcp(page_id)
-        else:
-            return self._fetch_page_blocks_api(page_id)
-
-    def _fetch_page_blocks_mcp(self, page_id: str) -> Dict[str, Any]:
-        """Recupera bloques usando MCP."""
-        try:
-            # Implementación MCP placeholder - requiere configuración MCP real
-            logger.warning("MCP mode requiere configuración MCP. Usando fallback...")
-            return self._fetch_page_blocks_api(page_id)
-        except Exception as e:
-            logger.error(f"Error fetching blocks via MCP for page {page_id}: {e}")
-            return {"blocks": []}
-
-    def _fetch_page_blocks_api(self, page_id: str) -> Dict[str, Any]:
-        """Recupera bloques usando API de Notion directo."""
         blocks = []
         start_cursor = None
         has_more = True
@@ -252,11 +258,8 @@ class BootloaderExporter:
         try:
             logger.info(f"Exportando {page_name} (ID: {page_id})...")
             
-            if self.use_mcp:
-                page_data = self._fetch_page_mcp(page_id)
-            else:
-                # Recuperar datos de la página
-                page_data = self.client.pages.retrieve(page_id)
+            # Recuperar datos de la página
+            page_data = self.client.pages.retrieve(page_id)
             
             # Recuperar bloques de contenido
             blocks_data = self.fetch_page_blocks(page_id)
@@ -283,22 +286,14 @@ class BootloaderExporter:
             logger.error(f"✗ Error inesperado exportando {page_name}: {e}")
             return None
 
-    def _fetch_page_mcp(self, page_id: str) -> Dict[str, Any]:
-        """Recupera página usando MCP."""
-        try:
-            # Implementación MCP placeholder
-            logger.warning("MCP mode requiere configuración MCP. Usando fallback...")
-            return self.client.pages.retrieve(page_id)
-        except Exception as e:
-            logger.error(f"Error fetching page via MCP for {page_id}: {e}")
-            return {}
-
     def export_all_bootloader_pages(self) -> Dict[str, Optional[Path]]:
         """Exporta todas las páginas del bootloader."""
         logger.info("Iniciando exportación de páginas del bootloader...")
         logger.info(f"Directorio de salida: {self.output_dir}")
         
         results = {}
+        
+        # Exportar páginas de Notion
         for page_name, page_id in BOOTLOADER_PAGES.items():
             results[page_name] = self.export_page(page_name, page_id)
         
@@ -309,25 +304,47 @@ class BootloaderExporter:
         return results
 
     def export_to_google_drive(self, results: Dict[str, Optional[Path]]) -> bool:
-        """Exporta los archivos a Google Drive (requiere configuración)."""
+        """Exporta los archivos a Google Drive usando OAuth 2.0 (requiere configuración)."""
         try:
             from googleapiclient.discovery import build
-            from google.oauth2.service_account import Credentials
+            from google_auth_oauthlib.flow import InstalledAppFlow
+            from google.auth.transport.requests import Request
+            from google.oauth2.credentials import Credentials
             from googleapiclient.http import MediaFileUpload
             
-            # Verificar credenciales
-            credentials_path = os.environ.get("GOOGLE_CREDENTIALS_PATH")
+            # Verificar credenciales OAuth
+            credentials_path = os.environ.get("GOOGLE_OAUTH_CREDENTIALS_PATH")
             if not credentials_path or not Path(credentials_path).exists():
-                logger.error("Google Drive no configurado. Set GOOGLE_CREDENTIALS_PATH")
+                logger.error("Google Drive OAuth no configurado. Set GOOGLE_OAUTH_CREDENTIALS_PATH")
                 return False
             
-            # Autenticar
-            credentials = Credentials.from_service_account_file(credentials_path)
+            # Scope necesario para Google Drive
+            SCOPES = ['https://www.googleapis.com/auth/drive.file']
+            
+            # Cargar o refresh token existente
+            credentials = None
+            token_path = Path(self.token_file)
+            
+            if token_path.exists():
+                credentials = Credentials.from_authorized_user_file(str(token_path), SCOPES)
+            
+            # Si no hay credenciales válidas, iniciar flow OAuth
+            if not credentials or not credentials.valid:
+                if credentials and credentials.expired and credentials.refresh_token:
+                    credentials.refresh(Request())
+                else:
+                    flow = InstalledAppFlow.from_client_secrets_file(credentials_path, SCOPES)
+                    credentials = flow.run_local_server(port=0)
+                
+                # Guardar credenciales para futuro uso
+                with open(token_path, 'w') as token:
+                    token.write(credentials.to_json())
+            
+            # Crear servicio de Drive
             service = build('drive', 'v3', credentials=credentials)
             
             # Crear carpeta si no existe
-            folder_name = "VANTAGE_Bootloader_Exports"
-            folder_id = self._get_or_create_folder(service, folder_name)
+            folder_id = self._get_or_create_folder(service, self.drive_folder)
             
             # Subir archivos
             for page_name, file_path in results.items():
@@ -339,7 +356,7 @@ class BootloaderExporter:
             
         except ImportError:
             logger.error("Librerías de Google Drive no instaladas.")
-            logger.info("Instala con: pip install google-api-python-client google-auth")
+            logger.info("Instala con: pip install google-api-python-client google-auth-oauthlib")
             return False
         except Exception as e:
             logger.error(f"Error exportando a Google Drive: {e}")
@@ -391,21 +408,21 @@ def main():
         help="Directorio de salida (default: ./bootloader_exports)"
     )
     parser.add_argument(
-        "--api", "-a",
-        action="store_true",
-        help="Usar API de Notion directo (requiere NOTION_TOKEN)"
-    )
-    parser.add_argument(
         "--drive", "-d",
         action="store_true",
-        help="Exportar también a Google Drive (requiere configuración)"
+        help="Exportar también a Google Drive (requiere configuración OAuth)"
     )
     
     args = parser.parse_args()
     
-    # Crear exportador (por defecto usa MCP si está disponible)
-    use_mcp = not args.api
-    exporter = BootloaderExporter(output_dir=args.output, use_mcp=use_mcp)
+    # Verificar token de Notion
+    if not os.environ.get("NOTION_TOKEN"):
+        logger.error("ERROR: NOTION_TOKEN no está configurado en las variables de entorno")
+        logger.info("Setea la variable: export NOTION_TOKEN='tu_token_aqui'")
+        sys.exit(1)
+    
+    # Crear exportador
+    exporter = BootloaderExporter(output_dir=args.output)
     
     # Exportar páginas
     results = exporter.export_all_bootloader_pages()
@@ -413,7 +430,11 @@ def main():
     # Exportar a Google Drive si se solicita
     if args.drive:
         logger.info("\nIniciando exportación a Google Drive...")
-        exporter.export_to_google_drive(results)
+        if not os.environ.get("GOOGLE_OAUTH_CREDENTIALS_PATH"):
+            logger.warning("GOOGLE_OAUTH_CREDENTIALS_PATH no configurado. Usando exportación local solamente.")
+            logger.info("Para habilitar Google Drive: export GOOGLE_OAUTH_CREDENTIALS_PATH='ruta/a/client_secret_...json'")
+        else:
+            exporter.export_to_google_drive(results)
     
     # Exit code basado en éxito
     successful = sum(1 for path in results.values() if path is not None)
