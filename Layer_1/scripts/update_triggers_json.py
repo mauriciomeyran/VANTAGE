@@ -14,6 +14,12 @@ DEFAULT_TRIGGERS_TEMPLATES = [
     "{skill_name_clean}"
 ]
 
+def get_github_raw_url(skill_name, branch="main"):
+    """
+    Genera la GitHub raw URL para un skill.
+    """
+    return f"https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/{branch}/skills/{skill_name}/SKILL.md"
+
 def get_skill_metadata(skill_path):
     """
     Extrae metadatos de un skill.
@@ -72,6 +78,7 @@ def get_skill_metadata(skill_path):
         "name": skill_name,
         "description": skill_description,
         "path": f"skills/{skill_name}/SKILL.md",
+        "url": get_github_raw_url(skill_name),
         "last_modified": last_modified
     }
 
@@ -129,15 +136,17 @@ def update_triggers_json():
                 triggers["skills"][skill_name] = {
                     "trigger": generate_triggers(skill_name),
                     "path": metadata["path"],
+                    "url": metadata["url"],
                     "description": metadata["description"],
                     "last_modified": metadata["last_modified"]
                 }
                 print(f"✅ Añadido: {skill_name}")
                 added_count += 1
             else:
-                # Update last_modified for existing entries
+                # Update last_modified and url for existing entries
                 metadata = get_skill_metadata(skill_dir)
                 triggers["skills"][skill_name]["last_modified"] = metadata["last_modified"]
+                triggers["skills"][skill_name]["url"] = metadata["url"]
                 print(f"⏭️  Ya existe: {skill_name}")
                 skipped_count += 1
 
