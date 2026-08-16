@@ -44,6 +44,7 @@ L4 · Version Control & Documentación
 | vsync-doc | Invocación directa del motor de sync documental (uso interno/depuración). | Corre vsync_doc.py sin el wrapper de comandos — requiere pasar flags manualmente. |
 | vdoc | Sincroniza los 6 documentos fundacionales desde Notion hacia el disco local (Read Only): Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log. | Corre vdoc.py (wrapper de comandos) → invoca vsync_doc.py con la dirección y documento pedidos (notion/auto (equivalente), dry (previsualización limitada)). |
 | vhyperlinks | Aplica hipervínculos cross-reference DIRECTO sobre bloques de Notion (PATCH puntual, preserva block-ID), a partir de cada mención de un ID canónico (PREFIX:KEY). apply_hyperlinks.py (variante anterior, sobre .md locales) queda DEPRECATED. | Corre apply_hyperlinks_notion.py --all. Sin --apply es dry-run (reporta cuántos links propuestos por documento, no escribe). Agregar --apply para escribir de verdad. |
+| vtriggers | Mantiene el manifiesto SSOT de skills (skills/triggers.json) que consume el Bootloader para lazy-load por trigger. | Corre update_triggers_json.py — escanea /skills/, valida SKILL.md por entrada, detecta huérfanos (reporta, no borra), actualiza last_modified, y ejecuta git add+commit+push automático sobre triggers.json. |
 | vsum | Resume transcripts de sesiones
 ---
 #### Flags de vversions para Verificación de Longitud

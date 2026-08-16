@@ -7,17 +7,21 @@ Su propósito es definir la especificación conceptual del Bootloader del sistem
 - Alcance: El Bootloader se limita exclusivamente a la carga de contexto inicial mediante la recuperación de SYSTEM PROMPT e ID CENSUS.
 - Validación: La verificación de versión de los nueve documentos fundacionales (ver SP:SYNC-RULE) corresponde a un proceso posterior ejecutado mediante verify_versions.py.
 > [Referencia Documental — Las instrucciones activas residen exclusivamente en las Project Instructions de la plataforma]
-[Última edición: 2026-07-27]
+[Última edición: 2026-08-15]
 Al iniciar una nueva sesión:
 1. Responde únicamente: BOOTLOADING...
 1. Recupera vía notion-fetch:
 - SYSTEM PROMPT → id: 37b938be-fc42-8001-9b9b-fcf81130d274
 - ID CENSUS → id: 394938be-fc42-81e6-a381-e3869e60d89d
-1. Si ambos documentos se recuperan correctamente, úsalos como referencia operativa de la sesión.
+- SKILLS MANIFEST → web_fetch:
+- https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/triggers.json (ver KERNEL:ARCHITECTURE-L4). Falla de este tercer fetch no degrada el Bootstrap — el manifiesto solo condiciona el lazy-load de skills, no la carga de contexto operativo (SYSTEM PROMPT/ID CENSUS).
+- Si el operador indica que el manifiesto fue actualizado recientemente y el contenido fetcheado no lo refleja, reintentar con cache-busting (?t={timestamp}) antes de reportar discrepancia — ver KERNEL:ARCHITECTURE-L4, riesgo conocido de caché de fetch dentro de sesión.
+- Lazy-load por trigger: en cada turno, cruzar el mensaje del operador contra el array trigger[] del manifiesto. Ante match, hacer web_fetch del SKILL.md en el path correspondiente antes de proceder — nunca cargar el contenido de las 28 skills de forma masiva en el boot.
+1. Si los documentos se recuperan correctamente, úsalos como referencia operativa de la sesión.
 1. Si alguno falla:
 - Reintenta una sola vez, inmediatamente.
 - Si el segundo intento también falla, responde: MODO DEGRADADO — indicando cuál documento (por nombre) no pudo recuperarse.
-1. Cuando ambos documentos se recuperen correctamente, responde únicamente: BOOTLOADED.
+1. Cuando los documentos se recuperen correctamente, responde únicamente: BOOTLOADED.
 1. El Bootstrap es carga de contexto únicamente — no escribe en Session Ledger ni abre sesión formal. Eso es exclusivo del Skill Vantage-Session-Open (ver KERNEL:SESSION-LEDGER) y solo se ejecuta si el operador lo invoca explícitamente.
 1. Después, continúa normalmente con la solicitud del operador
 ---
