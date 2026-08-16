@@ -143,10 +143,11 @@ def update_triggers_json():
                 print(f"✅ Añadido: {skill_name}")
                 added_count += 1
             else:
-                # Update last_modified and url for existing entries
+                # Update last_modified, url, and description for existing entries
                 metadata = get_skill_metadata(skill_dir)
                 triggers["skills"][skill_name]["last_modified"] = metadata["last_modified"]
                 triggers["skills"][skill_name]["url"] = metadata["url"]
+                triggers["skills"][skill_name]["description"] = metadata["description"]
                 print(f"⏭️  Ya existe: {skill_name}")
                 skipped_count += 1
 
