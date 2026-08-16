@@ -1,5 +1,26 @@
 # V | CHANGELOG
 
+Título (toggle Notion): v9.21.10 — Ago 16, 26 10.27
+Tipo: [DOC]
+Alcance:
+- Kernel (KERNEL:GATE-DECISION-007, 09.7 — párrafo nuevo: Guard de anotación en ingesta) y (KERNEL:GATE-DECISION-011, 09.11 — fila dedup match de la matriz condicionada al guard)
+- Manual (MANUAL:DATA-MANAGEMENT § Dedup — bullet nuevo: Guard de anotación PR #10) y (Glosario §22 — feed_processor.py, profile_fit.py, backfill_class_a.py actualizados)
+Contexto: PR #10 (arena/01a00b06-vantage → main, merge dec979ad, 2026-08-16) implementó el batch autorizado en FEEDBACK_DEVIN_MATRIZ_DEDUP (Fase 1 recortada, APROBAR_WRITE previo): fix infer_layer L2→L2 en backfill_class_a.py; _extract_text_prop consolidado como helper único a nivel de módulo en feed_processor.py (cierra NameError en _check_historical_rejected_status y TypeError en el fingerprint path con location_prop seteado, unifica _extract_title_text); guard should_annotate_existing (profile_fit.py, reutiliza _PROTECTED_STATUSES | _TERMINAL_STATUSES) aplicado vía should_mutate_existing_page a Dedup_Flag (Class B, candidato a archivo) y a upgrade de layer (Class A, procedencia — bloqueado para no reescribir origen de postulación viva, no por ser Class B); comentario GAP-03 actualizado (write path Class A por construcción vía NotionSchema, guard no-Python en dashboard_notion.py, FX-1 cerrado). El código llegó a main sin su contraparte documental — esta entrada la cierra. Parches aplicados en sandbox Arena (branch arena/01a00b58-vantage) sobre ACTIVE/ local; escritura a Notion pendiente vía vdoc local (el sandbox no tiene token, correctamente).
+Cambios:
+- KERNEL:GATE-DECISION-007 (09.7) — párrafo nuevo "Guard de anotación en ingesta (PR #10)": predicado compartido, sets exactos (_PROTECTED_STATUSES: Postulado, Postulando, En proceso, Negociando, Sin respuesta, Contratado; _TERMINAL_STATUSES: Expirada, Rechazado, Archivar, Retirado), lectura de Status desde el page object de Notion, distinción explícita vs gate_logic(), inbound REVIEW_NEEDED intacto.
+- KERNEL:GATE-DECISION-011 (09.11) — fila [ENTRY] dedup match: efecto Class B condicionado a should_annotate_existing(Status).
+- MANUAL:DATA-MANAGEMENT § Dedup — bullet nuevo "Guard de anotación (PR #10)" entre resolución de flags y ventana, con reporte en consola (⏭️ Dedup_Flag omitido / Layer upgrade omitido).
+- Manual Glosario §22 — feed_processor.py (párrafo Hardening PR #10), profile_fit.py (should_annotate_existing + consumidor nuevo), backfill_class_a.py (fix infer_layer L2 documentado).
+IDs afectados: Ninguno (todas las ediciones reutilizan IDs existentes — no dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: N/A en esta entrada — parches aplicados solo en ACTIVE/ local (sandbox); la verificación post-escritura en Notion corresponde al paso vdoc local del operador.
+Referencia: Archive/Documentación/brief_doc_transversal_pr10_dedup_guard.md (nodos N1–N6, matriz aprobada, checklist operador).
+Pendiente (fuera de esta entrada):
+- vdoc kernel dry + vdoc manual dry → vdoc local kernel + vdoc local manual (operador, con APROBAR_WRITE).
+- Alta de esta entrada en el Change Log de Notion (toggle v9.21.10 — Ago 16, 26 10.27).
+- vversions --sync para propagar v9.21.10 al resto de los fundacionales.
+- Decisión campo a campo class_b_guard / Positioning_Mode (backlog, FEEDBACK_DEVIN_HALLAZGOS_V2 §3).
+- Ticket de Manual para pipeline_recovery (vl1 recovery hoy es consistency check, no resume).
+---
 Tipo: [DOC]
 Alcance:
 - Kernel (KERNEL:DOCUMENTATION-010, 03.10 — nodo nuevo: Timestamp Obligatorio en Changelog)

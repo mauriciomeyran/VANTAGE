@@ -39,7 +39,7 @@ Explícitamente FUERA de este batch (no documentar como hecho): cambios a `class
 
 Anclas conforme al contra-feedback: `KERNEL:GATE-DECISION-007` + `profile_fit` protected/terminal (NO GATE-DECISION-010 como si fuera recálculo de Score); `infer_layer` anclado a ARCHITECTURE-L1/L2/L3 + SCHEMA-001 (layer es Class A), no a CV-PIPELINE-001.
 
-## Draft de entrada Change Log (pendiente timestamp del operador — KERNEL:DOCUMENTATION-010)
+## Draft de entrada Change Log — RESUELTO: timestamp provisto por el operador (Ago 16, 26 10.27), entrada v9.21.10 ya escrita en ACTIVE/Change Log.md local (pendiente alta en Notion)
 
 ```
 Tipo: [DOC]
