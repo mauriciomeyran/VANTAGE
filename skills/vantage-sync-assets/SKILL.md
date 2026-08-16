@@ -1,11 +1,11 @@
 ---
 name: vantage-sync-assets
-description: Orquesta la sincronización de los cuatro dominios de assets de VANTAGE (Script Library + Script Glossary + Skill Library + Skill Glossary) en un solo punto de entrada. Usar cuando el operador pida "sincronizar assets", "sync assets", "sincronizar libraries y glosarios", o cuando quiera ejecutar todas las syncs de scripts y skills en orden determinista. Soporta modo selectivo con flags (--scripts-only, --skills-only, --libraries-only, --glossaries-only). Esta skill no reimplementa lógica de clasificación, shapes o schema de las skills hijas; solo secuencia y reporta. No aplica a vantage-sync-census-spec, Bug/Task Tracker ni escritura fuera de los cuatro dominios definidos.
+description: Orquesta la sincronización de los seis dominios de assets de VANTAGE (Script Library + Script Glossary + Skill Library + Skill Glossary + Census Spec + Hyperlinks) en un solo punto de entrada. Usar cuando el operador pida "sincronizar assets", "sync assets", "sincronizar libraries y glosarios", o cuando quiera ejecutar todas las syncs de scripts y skills en orden determinista. Soporta modo selectivo con flags (--scripts-only, --skills-only, --libraries-only, --glossaries-only, --census-only, --hyperlinks-only). Esta skill no reimplementa lógica de clasificación, shapes o schema de las skills hijas; solo secuencia y reporta. No aplica a Bug/Task Tracker ni escritura fuera de los seis dominios definidos.
 ---
 
 # VANTAGE — Assets Sync Meta-Skill
 
-Orquesta de forma determinista la sincronización de los cuatro dominios de assets (Script Library + Script Glossary + Skill Library + Skill Glossary), reutilizando las skills hijas sin duplicar lógica.
+Orquesta de forma determinista la sincronización de los seis dominios de assets (Script Library + Script Glossary + Skill Library + Skill Glossary + Census Spec + Hyperlinks), reutilizando las skills hijas sin duplicar lógica.
 
 ## Convención de anuncio (KERNEL:DOCUMENTATION-005)
 
@@ -21,6 +21,8 @@ Esta skill orquesta las siguientes skills en orden fijo:
 2. `vantage-sync-skill-library` → SKILL LIBRARY (Notion, `2f1938be-fc42-83c8-8972-07300201136d`)
 3. `vantage-sync-script-glossary` → Script Glossary (Manual.md apéndice 22)
 4. `vantage-sync-skill-glossary` → Skill Glossary (Manual.md apéndice 23)
+5. `vantage-sync-census-spec` → Census Spec (CENSUS_SPEC interno de `generate_census.py`)
+6. `vantage-hyperlink-loop` → Hyperlinks (Ciclo de integridad Navigation/Cross-Reference)
 
 ## Trigger / Activación
 
@@ -36,11 +38,13 @@ También activable en modo selectivo:
 - `sync assets --skills-only`
 - `sync assets --libraries-only`
 - `sync assets --glossaries-only`
+- `sync assets --census-only`
+- `sync assets --hyperlinks-only`
 
 ## Contrato de entrada
 
 ```yaml
-scope: all | scripts | skills | libraries | glossaries   # default: all
+scope: all | scripts | skills | libraries | glossaries | census | hyperlinks   # default: all
 force_refresh_gaps: true | false                         # default: true
 skip_zero_gap: true                                      # no invocar hija si gap = 0
 dry_run_matrix: false                                    # modo planificación (vea sección específica)
@@ -60,6 +64,12 @@ dry_run_matrix: false                                    # modo planificación (
    B. **Glossaries después** (narrativa que referencia el inventario)
       3. `vantage-sync-script-glossary`
       4. `vantage-sync-skill-glossary`
+
+   C. **Census Spec** (actualización de estructura interna basada en docs)
+      5. `vantage-sync-census-spec`
+
+   D. **Hyperlinks** (integridad de navegación/cross-reference)
+      6. `vantage-hyperlink-loop`
 
 5. **Cada hija mantiene su propio Dry Run + APROBAR_WRITE independiente**.
    La meta-skill NO agrupa los APROBAR_WRITE; solo secuencia y reporta.
@@ -93,6 +103,8 @@ ASSETS SYNC PLAN
 │ Skill Library        │    0     │ Skip            │
 │ Script Glossary      │    2     │ Ejecutar (DRY)  │
 │ Skill Glossary       │    0     │ Skip            │
+│ Census Spec          │    1     │ Ejecutar (DRY)  │
+│ Hyperlinks           │    0     │ Skip            │
 └─────────────────────┴──────────┴────────────────┘
 ```
 
@@ -109,6 +121,8 @@ ASSETS SYNCED
 │ Skill Library              │   n    │     n      │         n          │
 │ Script Glossary (ap. 22)   │   n    │     n      │         n          │
 │ Skill Glossary (ap. 23)    │   n    │     n      │         n          │
+│ Census Spec                │   n    │     n      │         n          │
+│ Hyperlinks                 │   n    │     n      │         n          │
 └────────────────────────────┴────────┴────────────┴────────────────────┘
 ```
 
@@ -116,7 +130,7 @@ ASSETS SYNCED
 
 La primera vez que se active `vantage-sync-assets`, es probable que ella misma no esté registrada en Skill Library/Glossary. En ese caso:
 
-1. Ejecutar las 4 hijas normalmente
+1. Ejecutar las 6 hijas normalmente
 2. Al final, si la meta-skill carece de registro, ofrecer ejecutar `vantage-sync-skill-library` + `vantage-sync-skill-glossary` para autorregistrarse
 3. Esto es un ciclo de una sola vez; posteriores syncs no lo requieren
 
@@ -134,16 +148,17 @@ Este ciclo es aceptable porque es un paso de bootstrap manual que no afecta la o
 
 ## No aplica a
 
-- `vantage-sync-census-spec` (CENSUS_SPEC interno de `generate_census.py`)
 - Bug/Task Tracker
-- Cualquier escritura fuera de los cuatro dominios definidos (Script Library, Script Glossary, Skill Library, Skill Glossary)
+- Cualquier escritura fuera de los seis dominios definidos (Script Library, Script Glossary, Skill Library, Skill Glossary, Census Spec, Hyperlinks)
 
 ## Fuentes verificadas
 
-Contratos de las cuatro skills hijas confirmados por lectura directa de sus archivos .md (sesión 2026-08-13):
+Contratos de las seis skills hijas confirmados por lectura directa de sus archivos .md (sesión 2026-08-13):
 - `vantage-sync-script-library.md` (schema SCRIPT LIBRARY, bug auto-link `http://`, convención APROBAR_WRITE)
 - `vantage-sync-script-glossary.md` (3 shapes A/B/C, estructura apéndice 22, separación de dominios)
 - `vantage-sync-skill-library.md` (schema SKILL LIBRARY, protección auto-link en `Descripción`, extracción de frontmatter)
 - `vantage-sync-skill-glossary.md` (shape único narrativo, estructura apéndice 23, flag `--new-skills`)
+- `vantage-sync-census-spec.md` (CENSUS_SPEC interno de `generate_census.py`, Contrato de Cero Inferencia)
+- `vantage-hyperlink-loop.md` (Ciclo de integridad Navigation/Cross-Reference, Census Gate → Permisos & Hyperlinks → Notion Sync → Version Sync)
 
-Orden de ejecución (Libraries → Glossaries) basado en dependencia semántica: el inventario (Notion) es fuente de verdad, el glosario (Manual) es narrativa que referencia ese inventario.
+Orden de ejecución (Libraries → Glossaries → Census Spec → Hyperlinks) basado en dependencia semántica: el inventario (Notion) es fuente de verdad, el glosario (Manual) es narrativa que referencia ese inventario, Census Spec actualiza estructura interna basada en docs, y Hyperlinks asegura integridad de navegación/cross-reference.
