@@ -249,7 +249,7 @@
         "vantage sync assets"
       ],
       "path": "skills/vantage-sync-assets/SKILL.md",
-      "description": "Orquesta la sincronización de los cuatro dominios de assets de VANTAGE (Script Library + Script Glossary + Skill Library + Skill Glossary) en un solo punto de entrada. Usar cuando el operador pida \"sincronizar assets\", \"sync assets\", \"sincronizar libraries y glosarios\", o cuando quiera ejecutar todas las syncs de scripts y skills en orden determinista. Soporta modo selectivo con flags (--scripts-only, --skills-only, --libraries-only, --glossaries-only). Esta skill no reimplementa lógica de clasificación, shapes o schema de las skills hijas; solo secuencia y reporta. No aplica a vantage-sync-census-spec, Bug/Task Tracker ni escritura fuera de los cuatro dominios definidos.",
+      "description": "Orquesta la sincronización de los seis dominios de assets de VANTAGE (Script Library + Script Glossary + Skill Library + Skill Glossary + Census Spec + Hyperlinks) en un solo punto de entrada. Usar cuando el operador pida \"sincronizar assets\", \"sync assets\", \"sincronizar libraries y glosarios\", o cuando quiera ejecutar todas las syncs de scripts y skills en orden determinista. Soporta modo selectivo con flags (--scripts-only, --skills-only, --libraries-only, --glossaries-only, --census-only, --hyperlinks-only). Esta skill no reimplementa lógica de clasificación, shapes o schema de las skills hijas; solo secuencia y reporta. No aplica a Bug/Task Tracker ni escritura fuera de los seis dominios definidos.",
       "last_modified": "2026-08-16T01:50:29.073601",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-sync-assets/SKILL.md"
     },
