@@ -128,3 +128,22 @@ def should_auto_cleanup(status: str, reasons: list[str]) -> bool:
     if status in _PROTECTED_STATUSES or status in _TERMINAL_STATUSES:
         return False
     return bool(reasons)
+
+
+def should_annotate_existing(status: str) -> bool:
+    """
+    KERNEL:GATE-DECISION-007 — ¿se puede anotar un registro existente?
+
+    Dedup_Flag (Class B, candidato a archivo) y upgrade de layer (Class A,
+    procedencia) solo aplican si el existente NO es postulación viva ni
+    terminal. No es gate_logic(): ese protege recálculo de Score/Gate y
+    no cubre En proceso / Negociando / Postulando.
+
+    True  → Target, Exploratorio, REVIEW_NEEDED, vacío, u otro operativo.
+    False → _PROTECTED_STATUSES | _TERMINAL_STATUSES.
+    """
+    normalized = (status or "").strip()
+    return (
+        normalized not in _PROTECTED_STATUSES
+        and normalized not in _TERMINAL_STATUSES
+    )

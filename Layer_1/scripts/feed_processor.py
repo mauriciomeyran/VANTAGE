@@ -43,7 +43,7 @@ if str(_SCRIPTS_DIR) not in sys.path:
 
 # URL gate (HEAD+GET, agregadores sin CTA) — misma lógica que layer_1_run
 from layer_1_run import is_agregador, validate_url_pre_ingestion
-from profile_fit import is_role_excluded
+from profile_fit import is_role_excluded, should_annotate_existing
 
 _LAYER_1_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(_LAYER_1_ROOT / ".env", override=True)
@@ -465,6 +465,46 @@ def query_notion_db(
 
 
 # ──────────────────────────────────────────
+# Lectura de propiedades Notion (módulo — no anidar)
+# ──────────────────────────────────────────
+def _extract_text_prop(row: dict, prop_name: str, default: str = "") -> str:
+    """Texto plano de title / rich_text / select / url. Firma de 3 args a propósito:
+    los call sites históricos pasan default='' y no deben TypeError."""
+    if not prop_name:
+        return default
+    prop = (row.get("properties") or {}).get(prop_name) or {}
+    ptype = prop.get("type")
+    if ptype == "rich_text":
+        text = "".join(t.get("plain_text", "") for t in prop.get("rich_text", []))
+        return text if text else default
+    if ptype == "title":
+        text = "".join(t.get("plain_text", "") for t in prop.get("title", []))
+        return text if text else default
+    if ptype == "select":
+        return (prop.get("select") or {}).get("name", "") or default
+    if ptype == "url":
+        return (prop.get("url") or "") or default
+    return default
+
+
+def _page_status(page: dict, schema: NotionSchema) -> str:
+    return _extract_text_prop(page, schema.status_prop)
+
+
+def should_mutate_existing_page(page: dict, schema: NotionSchema) -> bool:
+    """
+    Predicado compartido para mutar un registro YA existente en dedup.
+
+    Dedup_Flag = candidato a archivo (Class B, KERNEL:GATE-DECISION-007).
+    layer upgrade = procedencia (Class A, KERNEL:SCHEMA-001) — se bloquea
+    para no reescribir origen de una postulación viva, no porque layer sea Class B.
+
+    Lee Status del page object de Notion, no de un dict plano tipo gate_logic().
+    """
+    return should_annotate_existing(_page_status(page, schema))
+
+
+# ──────────────────────────────────────────
 # Paso 3: dedup_cross_layer
 # ──────────────────────────────────────────
 def _get_existing_layer(page: dict, schema: NotionSchema) -> str | None:
@@ -482,7 +522,18 @@ def _upgrade_layer_if_needed(
     notion_utils: Client,
     schema: NotionSchema,
 ) -> None:
-    """Si el registro entrante tiene mayor prioridad (menor número), actualiza el layer en Notion."""
+    """Si el registro entrante tiene mayor prioridad (menor número), actualiza el layer en Notion.
+
+    layer es Class A (KERNEL:SCHEMA-001). El mismo predicado de Status que
+    Dedup_Flag aplica aquí para no reescribir procedencia de una postulación
+    viva — no porque layer sea Class B. La jerarquía L1>L2>L3 del inbound
+    queda en Notas del REVIEW_NEEDED nuevo.
+    """
+    if not should_mutate_existing_page(existing_page, schema):
+        page_id = existing_page.get("id", "")[:8]
+        status = _page_status(existing_page, schema)
+        print(f"  ⏭️  Layer upgrade omitido ({page_id}... Status={status or 'vacío'})")
+        return
     existing_layer = _get_existing_layer(existing_page, schema)
     if not existing_layer or not schema.layer_prop:
         return
@@ -520,7 +571,13 @@ def _set_dedup_flag_if_needed(
     
     if not dedup_flag_prop:
         return
-    
+
+    if not should_mutate_existing_page(page, schema):
+        page_id = page.get("id", "")[:8]
+        status = _page_status(page, schema)
+        print(f"  ⏭️  Dedup_Flag omitido ({page_id}... Status={status or 'vacío'})")
+        return
+
     page_id = page["id"]
     props = page.get("properties", {})
     current_dedup_flag = None
@@ -631,13 +688,6 @@ def dedup_cross_layer(
     if not brand or not title:
         return False
 
-    def _extract_title_text(row: dict, prop_name: str) -> str:
-        """Extrae el texto plano de una propiedad title/rich_text de una fila Notion ya devuelta."""
-        prop = row.get("properties", {}).get(prop_name, {})
-        ptype = prop.get("type")
-        texts = prop.get(ptype, []) if ptype in ("title", "rich_text") else []
-        return "".join(t.get("plain_text", "") for t in texts)
-
     time_filter = {"past_month": {}} if window_days >= 28 else {"past_week": {}}
     candidates = query_notion_db(
         notion_utils,
@@ -652,7 +702,7 @@ def dedup_cross_layer(
     title_norm = title.strip().lower()
     recent = [
         row for row in candidates
-        if _extract_title_text(row, schema.title_prop).strip().lower() == title_norm
+        if _extract_text_prop(row, schema.title_prop).strip().lower() == title_norm
     ]
     if recent:
         _upgrade_layer_if_needed(recent[0], incoming_layer, notion_utils, schema)
@@ -697,19 +747,7 @@ def dedup_by_content_fingerprint(
     
     if not brand or not title:
         return False
-    
-    def _extract_text_prop(row: dict, prop_name: str) -> str:
-        """Extrae texto plano de una propiedad Notion."""
-        prop = row.get("properties", {}).get(prop_name, {})
-        ptype = prop.get("type")
-        if ptype == "rich_text":
-            return "".join(t.get("plain_text", "") for t in prop.get("rich_text", []))
-        if ptype == "title":
-            return "".join(t.get("plain_text", "") for t in prop.get("title", []))
-        if ptype == "select":
-            return (prop.get("select") or {}).get("name", "")
-        return ""
-    
+
     time_filter = {"past_month": {}} if window_days >= 28 else {"past_week": {}}
     candidates = query_notion_db(
         notion_utils,
@@ -1041,12 +1079,11 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
 
 
 def write_to_notion(
-# ── GAP-03 · ALCANCE DE COBERTURA ──────────────────────────────────────────
-# Este guard opera SOLO en el pipeline Python (feed_processor.py).
-# Escritura directa vía MCP (notion-create-pages / notion-update-page) no
-# tiene guard equivalente — puede escribir campos Class B sin bloqueo.
-# Implementar class_b_guard.py como módulo compartido (FX-1 open).
-# ── fin nota ────────────────────────────────────────────────────────────────
+# GAP-03 CERRADO (v9.19.2 / KERNEL:GATE-DECISION-003):
+# Este write path es Class A por construcción (NotionSchema solo resuelve
+# propiedades Class A nombradas). El guard para actores no-Python (MCP / RT-1)
+# vive en dashboard_notion.py vía class_b_guard.guard_write_payload().
+# FX-1 ya no está abierto.
     notion_utils: Client,
     processed: list[ProcessedRecord],
     schema: NotionSchema,
