@@ -358,6 +358,7 @@ SYNTHETIC_CT_PATTERNS = [
     re.compile(r'/jobs/\d{10,}$'),                    # numeric ID largo inventado
     re.compile(r'\d{4}-\d{4}-\d{4}'),                 # year chain
     re.compile(r'-(12345|67890|23456|34567|89012)'),  # IDs plantilla conocidos
+    re.compile(r'/jobs/[^/]+-\d{4}$'),                # rol-marca-2024 (bug fix ticket 3be938be-fc42-8195-a602-d3a8c1bf0adf)
 ]
 
 
@@ -374,8 +375,12 @@ def canonicalize_url(url: str) -> tuple[str, str]:
 
     # 1. Detectar URLs sintéticas de Computrabajo (alucinadas por Groq)
     if "computrabajo" in domain:
+        # Decodificar URL para manejar acentos/encoding (ej. galer%C3%ADas → galerías)
+        # solo para matching del regex - la URL original se retorna intacta
+        from urllib.parse import unquote
+        decoded_url = unquote(url)
         for pat in SYNTHETIC_CT_PATTERNS:
-            if pat.search(parsed.path) or pat.search(url):
+            if pat.search(parsed.path) or pat.search(url) or pat.search(decoded_url):
                 return url, "SYNTHETIC_AGGREGATOR_URL"
 
     # 2. Resolver redirects de Indeed (son tracking links, no canónicos)
