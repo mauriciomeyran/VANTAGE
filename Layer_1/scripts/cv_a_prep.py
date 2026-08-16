@@ -24,9 +24,12 @@ y reportarlo, no generar HANDOFF").
 
 import argparse
 import datetime
+import hashlib
+import os
 import re
 import sys
 import urllib.request
+from pathlib import Path
 
 # --- KERNEL:CV-PIPELINE-001 / MANUAL:DATA-MANAGEMENT §10 — Hard Blocks ---
 # Empleadores con bloqueo total de recontratación. Mantener sincronizado
@@ -40,19 +43,81 @@ HARD_BLOCK_EMPLOYERS = [
 
 # Nota: Aéropostale NO es Hard Block (confirmado con el operador 2026-08-07).
 
+# --- Cache Configuration ---
+CACHE_DIR = Path.home() / ".vantage_cache" / "jd_cache"
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+CACHE_EXPIRY_HOURS = 24  # JDs cacheados expiran después de 24 horas
+
+
+def get_cache_key(url: str) -> str:
+    """Genera un hash único para la URL como clave de cache."""
+    return hashlib.md5(url.encode()).hexdigest()
+
+
+def is_cache_valid(cache_path: Path) -> bool:
+    """Verifica si el cache aún es válido basado en la edad del archivo."""
+    if not cache_path.exists():
+        return False
+    age_hours = (datetime.datetime.now() - datetime.datetime.fromtimestamp(cache_path.stat().st_mtime)).total_seconds() / 3600
+    return age_hours < CACHE_EXPIRY_HOURS
+
+
+def detect_language(text: str) -> str:
+    """Detecta el idioma del texto basado en heurísticas simples."""
+    if not text:
+        return "UNKNOWN"
+    
+    # Palabras clave comunes en español e inglés
+    spanish_keywords = ['y', 'en', 'de', 'para', 'con', 'por', 'una', 'el', 'la', 'los', 'las', 'un', 'una', 'es', 'son', 'se', 'su', 'sus', 'que', 'quien', 'cual', 'donde', 'cuando', 'como', 'hasta', 'hacia', 'desde', 'entre', 'sobre', 'tras', 'durante', 'mediante', 'según', 'contra', 'sin', 'excepto', 'salvo', 'incluso', 'aunque', 'mientras', 'donde', 'cuando', 'como', 'porque', 'para', 'que']
+    
+    english_keywords = ['and', 'in', 'of', 'for', 'with', 'by', 'from', 'at', 'on', 'to', 'the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'shall', 'can', 'need', 'dare', 'ought', 'used', 'to', 'about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'before', 'behind', 'below', 'beneath', 'beside', 'between', 'beyond', 'during', 'except', 'inside', 'into', 'near', 'outside', 'over', 'past', 'since', 'through', 'throughout', 'till', 'toward', 'under', 'underneath', 'until', 'upon', 'within', 'without']
+    
+    # Convertir a minúsculas y tokenizar
+    words = text.lower().split()
+    
+    # Contar coincidencias
+    spanish_count = sum(1 for word in words if word in spanish_keywords)
+    english_count = sum(1 for word in words if word in english_keywords)
+    
+    # Decidir basado en el conteo
+    if spanish_count > english_count:
+        return "ES"
+    elif english_count > spanish_count:
+        return "EN"
+    else:
+        return "UNKNOWN"
+
 
 def fetch_jd(url: str) -> str:
-    """Descarga el HTML de la vacante y extrae texto plano básico.
+    """Descarga el HTML de la vacante y extrae texto plano básico con cache.
 
     Extracción cruda: quita tags, scripts y estilos. No es un parser de
     JD estructurado — Claude sigue siendo responsable de interpretar el
     texto resultante durante el análisis real.
+    
+    Usa cache local para evitar re-descargas de la misma URL.
     """
+    cache_key = get_cache_key(url)
+    cache_path = CACHE_DIR / f"{cache_key}.txt"
+    
+    # Verificar cache válido
+    if is_cache_valid(cache_path):
+        with open(cache_path, "r", encoding="utf-8") as f:
+            return f.read()
+    
+    # Descargar fresh
     req = urllib.request.Request(
         url, headers={"User-Agent": "Mozilla/5.0 (VANTAGE cv_a_prep.py)"}
     )
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        raw = resp.read().decode("utf-8", errors="ignore")
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            raw = resp.read().decode("utf-8", errors="ignore")
+    except Exception as e:
+        print(f"AVISO: error descargando URL ({e}). Intentando cache si existe...", file=sys.stderr)
+        if cache_path.exists():
+            with open(cache_path, "r", encoding="utf-8") as f:
+                return f.read()
+        raise
 
     # Strip script/style blocks
     raw = re.sub(r"<(script|style)[^>]*>.*?</\1>", "", raw, flags=re.DOTALL | re.IGNORECASE)
@@ -60,6 +125,11 @@ def fetch_jd(url: str) -> str:
     text = re.sub(r"<[^>]+>", " ", raw)
     # Collapse whitespace
     text = re.sub(r"\s+", " ", text).strip()
+    
+    # Guardar en cache
+    with open(cache_path, "w", encoding="utf-8") as f:
+        f.write(text)
+    
     return text
 
 
@@ -94,13 +164,16 @@ JD, no el empleador contratante), revisar manualmente antes de descartar.
 def build_scaffold(url: str, empresa: str, rol: str, jd_text: str) -> str:
     fecha = datetime.date.today().isoformat()
     jd_block = jd_text if jd_text else "[JD no provisto — pegar aquí antes de correr el análisis]"
+    
+    # Detectar idioma automáticamente
+    detected_lang = detect_language(jd_text) if jd_text else "UNKNOWN"
 
     return f"""# HANDOFF CV-A — {empresa or '[Nombre de la empresa / vacante]'}
 
 ## Metadata
 - URL vacante: {url or '[pendiente]'}
 - Fecha de análisis: {fecha}
-- Idioma detectado (ES/EN): [pendiente — Claude]
+- Idioma detectado (ES/EN): {detected_lang}
 - Positioning Mode seleccionado: [pendiente — Claude, N1-N4 o EMPATE]
 
 ## Hard Block Check (determinista — cv_a_prep.py)
@@ -148,7 +221,22 @@ def main():
         default=None,
         help="Ruta de salida (default: HANDOFF_scaffold_<fecha>.md)",
     )
+    parser.add_argument(
+        "--clear-cache",
+        action="store_true",
+        help="Limpiar cache de JDs expirados antes de procesar"
+    )
     args = parser.parse_args()
+    
+    # Limpiar cache si se solicita
+    if args.clear_cache:
+        print("Limpiando cache de JDs expirados...")
+        cleaned = 0
+        for cache_file in CACHE_DIR.glob("*.txt"):
+            if not is_cache_valid(cache_file):
+                cache_file.unlink()
+                cleaned += 1
+        print(f"Cache limpiado: {cleaned} archivos expirados eliminados.")
 
     if not args.url and not args.jd_file:
         print("ERROR: provee --url y/o --jd-file", file=sys.stderr)

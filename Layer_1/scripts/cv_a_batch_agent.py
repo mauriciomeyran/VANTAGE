@@ -25,11 +25,70 @@ Filtro: procesa únicamente filas con Next_Action == "Optimizar"
 import argparse
 import csv
 import datetime
+import json
 import subprocess
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 TARGET_NEXT_ACTION = "Optimizar"
+MAX_WORKERS = 3  # Número máximo de procesos paralelos (rate limiting)
+CHECKPOINT_FILE = "cv_a_batch_checkpoint.json"
+
+
+def load_checkpoint(checkpoint_path: Path) -> set:
+    """Carga IDs de vacantes ya procesadas desde un checkpoint."""
+    if not checkpoint_path.exists():
+        return set()
+    
+    try:
+        with open(checkpoint_path, "r") as f:
+            data = json.load(f)
+            return set(data.get("processed_ids", []))
+    except Exception as e:
+        print(f"AVISO: Error leyendo checkpoint ({e}). Iniciando desde cero.", file=sys.stderr)
+        return set()
+
+
+def save_checkpoint(checkpoint_path: Path, processed_id: str):
+    """Guarda un ID de vacante procesada en el checkpoint."""
+    try:
+        if checkpoint_path.exists():
+            with open(checkpoint_path, "r") as f:
+                data = json.load(f)
+        else:
+            data = {"processed_ids": []}
+        
+        if processed_id not in data["processed_ids"]:
+            data["processed_ids"].append(processed_id)
+        
+        with open(checkpoint_path, "w") as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"AVISO: Error guardando checkpoint ({e}).", file=sys.stderr)
+
+
+def show_progress(current: int, total: int, start_time: float):
+    """Muestra una barra de progreso simple en consola."""
+    if total == 0:
+        return
+    
+    percent = (current / total) * 100
+    bar_length = 40
+    filled = int(bar_length * current / total)
+    bar = "█" * filled + "░" * (bar_length - filled)
+    
+    elapsed = time.time() - start_time
+    if current > 0:
+        eta = (elapsed / current) * (total - current)
+        eta_str = f"{int(eta // 60)}m {int(eta % 60)}s"
+    else:
+        eta_str = "N/A"
+    
+    print(f"\r[{bar}] {current}/{total} ({percent:.1f}%) | ETA: {eta_str}", end="", flush=True)
+    if current == total:
+        print()  # Nueva línea al completar
 
 
 def load_rows(csv_path: str) -> list[dict]:
@@ -98,11 +157,33 @@ def run_cv_a_prep(cv_a_prep_path: str, row: dict, out_dir: Path) -> dict:
     }
 
 
+def run_cv_a_prep_with_retry(cv_a_prep_path: str, row: dict, out_dir: Path, max_retries: int = 2) -> dict:
+    """Ejecuta cv_a_prep con reintentos para fallas temporales."""
+    for attempt in range(max_retries + 1):
+        result = run_cv_a_prep(cv_a_prep_path, row, out_dir)
+        
+        # Si el resultado es exitoso o es un error permanente, no reintentar
+        if result["resultado"] in ["SCAFFOLD_OK", "BLOCKED"]:
+            return result
+        if "Sin URL ni JD_File" in result["detalle"]:
+            return result  # Error permanente
+        
+        # Reintentar solo para errores temporales
+        if attempt < max_retries:
+            print(f"  ⚠️  Reintento {attempt + 1}/{max_retries} para {row['ID_Vacante']}")
+            time.sleep(2)  # Espera antes de reintentar
+    
+    return result  # Último intento fallido
+
+
 def main():
     parser = argparse.ArgumentParser(description="Batch runner local para cv_a_prep.py (sin escritura a Notion)")
     parser.add_argument("--csv", required=True, help="CSV export del Opportunities Tracker")
     parser.add_argument("--cv-a-prep", default="./cv_a_prep.py", help="Ruta a cv_a_prep.py")
     parser.add_argument("--out-dir", default=".", help="Directorio de salida para scaffolds")
+    parser.add_argument("--workers", type=int, default=MAX_WORKERS, help=f"Número de workers paralelos (default: {MAX_WORKERS})")
+    parser.add_argument("--resume", action="store_true", help="Continuar desde checkpoint previo")
+    parser.add_argument("--no-progress", action="store_true", help="Desactivar barra de progreso")
     args = parser.parse_args()
 
     if not Path(args.cv_a_prep).exists():
@@ -111,19 +192,73 @@ def main():
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+    
+    checkpoint_path = out_dir / CHECKPOINT_FILE
 
     rows = load_rows(args.csv)
     elegibles = [r for r in rows if r.get("Next_Action", "").strip() == TARGET_NEXT_ACTION]
 
-    print(f"Total filas en CSV: {len(rows)}")
-    print(f"Elegibles (Next_Action == '{TARGET_NEXT_ACTION}'): {len(elegibles)}")
+    print(f"📊 Total filas en CSV: {len(rows)}")
+    print(f"🎯 Elegibles (Next_Action == '{TARGET_NEXT_ACTION}'): {len(elegibles)}")
+    
+    # Filtrar ya procesados si resume está activo
+    processed_ids = set()
+    if args.resume:
+        processed_ids = load_checkpoint(checkpoint_path)
+        if processed_ids:
+            elegibles = [r for r in elegibles if r["ID_Vacante"] not in processed_ids]
+            print(f"🔄 Resume mode: {len(processed_ids)} ya procesados, {len(elegibles)} pendientes")
+        else:
+            print("ℹ️  Resume mode activo pero no hay checkpoint previo. Procesando todo.")
 
+    if not elegibles:
+        print("✅ No hay vacantes elegibles pendientes de procesar.")
+        return
+
+    print(f"🚀 Iniciando procesamiento con {args.workers} workers paralelos...")
+    start_time = time.time()
+    
     results = []
-    for row in elegibles:
-        res = run_cv_a_prep(args.cv_a_prep, row, out_dir)
-        results.append(res)
-        print(f"  [{res['resultado']}] {res['Empresa']} — {res['Rol']} ({res['ID_Vacante']})")
+    completed_count = 0
+    
+    # Usar ThreadPoolExecutor para procesamiento paralelo
+    with ThreadPoolExecutor(max_workers=args.workers) as executor:
+        # Enviar todas las tareas
+        future_to_row = {
+            executor.submit(run_cv_a_prep_with_retry, args.cv_a_prep, row, out_dir): row 
+            for row in elegibles
+        }
+        
+        # Procesar resultados a medida que completan
+        for future in as_completed(future_to_row):
+            row = future_to_row[future]
+            try:
+                result = future.result()
+                results.append(result)
+                
+                # Guardar checkpoint
+                save_checkpoint(checkpoint_path, result["ID_Vacante"])
+                
+                # Mostrar progreso
+                completed_count += 1
+                if not args.no_progress:
+                    show_progress(completed_count, len(elegibles), start_time)
+                else:
+                    print(f"  [{result['resultado']}] {result['Empresa']} — {result['Rol']} ({result['ID_Vacante']})")
+                    
+            except Exception as e:
+                print(f"\n❌ Error procesando {row['ID_Vacante']}: {e}", file=sys.stderr)
+                results.append({
+                    "ID_Vacante": row["ID_Vacante"],
+                    "Empresa": row["Empresa"],
+                    "Rol": row["Rol"],
+                    "resultado": "ERROR",
+                    "detalle": f"Excepción: {str(e)}",
+                    "scaffold_path": "",
+                })
 
+    elapsed = time.time() - start_time
+    
     fecha = datetime.date.today().isoformat()
     report_path = out_dir / f"cv_a_batch_report_{fecha}.csv"
     with open(report_path, "w", encoding="utf-8", newline="") as f:
@@ -135,12 +270,25 @@ def main():
     blocked = sum(1 for r in results if r["resultado"] == "BLOCKED")
     errors = sum(1 for r in results if r["resultado"] == "ERROR")
 
-    print("\n--- Resumen ---")
-    print(f"Procesados: {len(results)} | Scaffolds OK: {ok} | Bloqueados: {blocked} | Errores: {errors}")
-    print(f"Reporte: {report_path}")
+    print(f"\n{'='*60}")
+    print(f"📋 RESUMEN FINAL")
+    print(f"{'='*60}")
+    print(f"⏱️  Tiempo total: {int(elapsed // 60)}m {int(elapsed % 60)}s")
+    print(f"📊 Procesados: {len(results)}")
+    print(f"✅ Scaffolds OK: {ok}")
+    print(f"🚫 Bloqueados: {blocked}")
+    print(f"❌ Errores: {errors}")
+    print(f"📄 Reporte: {report_path}")
+    print(f"{'='*60}")
     print("\nCERO escritura a Notion realizada por este script.")
     print("Siguiente paso: pasar este reporte a Claude en sesión para Fase 2")
     print("(DRY RUN -> APROBAR_WRITE -> actualización gobernada del Tracker).")
+    
+    # Limpiar checkpoint si todo fue exitoso
+    if errors == 0 and blocked == 0:
+        if checkpoint_path.exists():
+            checkpoint_path.unlink()
+            print("✨ Checkpoint limpiado (procesamiento completo exitoso).")
 
 
 if __name__ == "__main__":
