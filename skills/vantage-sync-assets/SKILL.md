@@ -78,7 +78,7 @@ dry_run_matrix: false                                    # modo planificación (
 
 ### Validación de gap reports
 
-Cada hija valida su propio gap report internamente (≤ 5 min de antigüedad). La meta-skill NO coordina el timing de los reports — cada hija corre su `verify_versions.py` correspondiente según su contrato. Esto evita estados inconsistentes si el árbol de disco cambia entre los 4 reports.
+Cada hija valida su propio gap report internamente (≤ 5 min de antigüedad). La meta-skill NO coordina el timing de los reports — cada hija corre su `verify_versions.py` correspondiente según su contrato. Esto evita estados inconsistentes si el árbol de disco cambia entre los 6 reports.
 
 ### Manejo de error en hija interrumpida
 
