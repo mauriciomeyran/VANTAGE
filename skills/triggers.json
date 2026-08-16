@@ -251,16 +251,6 @@
       "path": "skills/vantage-tidy-opportunities-tracker/SKILL.md",
       "description": "Identifica duplicados y vacantes expiradas en el VANTAGE Tracker (Opportunities DB) y marca Archivar = True en el registro original — sin crear copias ni tocar el Archivo Tracker. Usa los mecanismos de fingerprint y protección de estado terminal ya implementados en el pipeline Python y documentados en el Kernel. Requiere Dry Run y APROBAR_WRITE antes de cualquier escritura.",
       "last_modified": "2026-08-13T15:50:42.933824"
-    },
-    "test-new-skill": {
-      "trigger": [
-        "ejecuta test new skill",
-        "activa test new skill",
-        "test new skill"
-      ],
-      "path": "skills/test-new-skill/SKILL.md",
-      "description": "VANTAGE Skill: test-new-skill",
-      "last_modified": "2026-08-15T22:33:39.513805"
     }
   }
 }
