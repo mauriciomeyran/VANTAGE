@@ -1,6 +1,8 @@
 ---
 name: vantage-tidy-bug-task-tracker
-description: **Marca** tickets del Bug Tracker o Task Tracker para archivado manual, en dos escenarios confirmados por el operador — resolución directa o resolución detectada indirectamente vía Change Log. Requiere Dry Run y APROBAR_WRITE antes de cualquier marcado.
+description: "Marca tickets del Bug Tracker o Task Tracker para archivado manual, en dos escenarios confirmados por el operador — resolución directa o resolución detectada indirectamente vía Change Log. Requiere Dry Run y APROBAR_WRITE antes de cualquier marcado."
+---
+
 ---
 
 ## Convención de anuncio (KERNEL:DOCUMENTATION-005)

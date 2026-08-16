@@ -1,0 +1,144 @@
+{
+  "skills": {
+    "corporate-communication-style": {
+      "trigger": ["usa estilo comunicación corporativa", "activa estilo corporate"],
+      "path": "skills/corporate-communication-style/SKILL.md",
+      "description": "VANTAGE Skill: Estilo de comunicación corporativa."
+    },
+    "critico-pensante-style": {
+      "trigger": ["usa estilo crítico pensante", "activa modo crítico"],
+      "path": "skills/critico-pensante-style/SKILL.md",
+      "description": "VANTAGE Skill: Estilo de pensamiento crítico."
+    },
+    "prompt-master": {
+      "trigger": ["genera prompt optimizado", "prompt master"],
+      "path": "skills/prompt-master/SKILL.md",
+      "description": "Genera prompts optimizados para herramientas de IA."
+    },
+    "retail-auditor-style": {
+      "trigger": ["usa estilo auditor retail", "modo auditor"],
+      "path": "skills/retail-auditor-style/SKILL.md",
+      "description": "VANTAGE Skill: Estilo de auditoría para retail."
+    },
+    "socio-estrategico-style": {
+      "trigger": ["usa estilo socio estratégico", "modo socio estratégico"],
+      "path": "skills/socio-estrategico-style/SKILL.md",
+      "description": "VANTAGE Skill: Estilo de socio estratégico."
+    },
+    "tailored-resume-generator": {
+      "trigger": ["genera CV personalizado", "crea CV para vacante"],
+      "path": "skills/tailored-resume-generator/SKILL.md",
+      "description": "Genera currículums personalizados según descripciones de trabajo."
+    },
+    "vantage-create-bug-task": {
+      "trigger": ["crea ticket de bug", "nuevo bug en VANTAGE"],
+      "path": "skills/vantage-create-bug-task/SKILL.md",
+      "description": "Crea tickets en Bug Tracker o Task Tracker de VANTAGE."
+    },
+    "vantage-cv-a": {
+      "trigger": ["genera CV versión A", "CV A"],
+      "path": "skills/vantage-cv-a/SKILL.md",
+      "description": "VANTAGE Skill: Generador de CV versión A."
+    },
+    "vantage-cv-b": {
+      "trigger": ["genera CV versión B", "CV B"],
+      "path": "skills/vantage-cv-b/SKILL.md",
+      "description": "VANTAGE Skill: Generador de CV versión B."
+    },
+    "vantage-documentacion-transversal-implementacion": {
+      "trigger": ["implementa documentación transversal", "doc transversal"],
+      "path": "skills/vantage-documentacion-transversal-implementacion/SKILL.md",
+      "description": "Implementa documentación transversal en VANTAGE."
+    },
+    "vantage-documentacion-transversal-propuesta": {
+      "trigger": ["genera propuesta de documentación", "propón documentación"],
+      "path": "skills/vantage-documentacion-transversal-propuesta/SKILL.md",
+      "description": "Genera propuestas de documentación transversal."
+    },
+    "vantage-housekeeping-archive": {
+      "trigger": ["archiva elementos en VANTAGE", "housekeeping archive"],
+      "path": "skills/vantage-housekeeping-archive/SKILL.md",
+      "description": "VANTAGE Skill: Archiva elementos según reglas de housekeeping."
+    },
+    "vantage-housekeeping-tracker": {
+      "trigger": ["limpia tracker de VANTAGE", "housekeeping tracker"],
+      "path": "skills/vantage-housekeeping-tracker/SKILL.md",
+      "description": "VANTAGE Skill: Limpieza de tracker según reglas."
+    },
+    "vantage-hyperlink-loop": {
+      "trigger": ["revisa hipervínculos en VANTAGE", "check hyperlinks"],
+      "path": "skills/vantage-hyperlink-loop/SKILL.md",
+      "description": "VANTAGE Skill: Revisa y corrige hipervínculos en documentación."
+    },
+    "vantage-present-handoff": {
+      "trigger": ["genera handoff de sesión", "snapshot de contexto"],
+      "path": "skills/vantage-present-handoff/SKILL.md",
+      "description": "Genera snapshot de contexto de sesión para continuidad."
+    },
+    "vantage-qa": {
+      "trigger": ["modo QA VANTAGE", "responde preguntas"],
+      "path": "skills/vantage-qa/SKILL.md",
+      "description": "VANTAGE Skill: Protocolo de preguntas y respuestas."
+    },
+    "vantage-session-close": {
+      "trigger": ["cierra sesión VANTAGE", "finaliza sesión"],
+      "path": "skills/vantage-session-close/SKILL.md",
+      "description": "Protocolo de cierre de sesión VANTAGE."
+    },
+    "vantage-session-open": {
+      "trigger": ["abre sesión VANTAGE", "inicia sesión"],
+      "path": "skills/vantage-session-open/SKILL.md",
+      "description": "Protocolo de apertura de sesión VANTAGE."
+    },
+    "vantage-skill-updater": {
+      "trigger": ["actualiza skills de VANTAGE", "sync skills"],
+      "path": "skills/vantage-skill-updater/SKILL.md",
+      "description": "VANTAGE Skill: Actualiza y sincroniza skills."
+    },
+    "vantage-sync-assets": {
+      "trigger": ["sincroniza assets de VANTAGE", "sync assets"],
+      "path": "skills/vantage-sync-assets/SKILL.md",
+      "description": "VANTAGE Skill: Sincroniza assets (imágenes, documentos)."
+    },
+    "vantage-sync-census-spec": {
+      "trigger": ["sincroniza census spec", "actualiza spec de census"],
+      "path": "skills/vantage-sync-census-spec/SKILL.md",
+      "description": "VANTAGE Skill: Sincroniza especificaciones de census."
+    },
+    "vantage-sync-script-glossary": {
+      "trigger": ["sincroniza glosario de scripts", "update script glossary"],
+      "path": "skills/vantage-sync-script-glossary/SKILL.md",
+      "description": "VANTAGE Skill: Sincroniza glosario de scripts."
+    },
+    "vantage-sync-script-library": {
+      "trigger": ["sincroniza librería de scripts", "update script library"],
+      "path": "skills/vantage-sync-script-library/SKILL.md",
+      "description": "VANTAGE Skill: Sincroniza librería de scripts."
+    },
+    "vantage-sync-skill-glossary": {
+      "trigger": ["sincroniza glosario de skills", "update skill glossary"],
+      "path": "skills/vantage-sync-skill-glossary/SKILL.md",
+      "description": "VANTAGE Skill: Sincroniza glosario de skills."
+    },
+    "vantage-sync-skill-library": {
+      "trigger": ["sincroniza librería de skills", "update skill library"],
+      "path": "skills/vantage-sync-skill-library/SKILL.md",
+      "description": "VANTAGE Skill: Sincroniza librería de skills."
+    },
+    "vantage-tidy-bug-task-tracker": {
+      "trigger": ["limpia tracker de bugs", "archiva tickets resueltos"],
+      "path": "skills/vantage-tidy-bug-task-tracker/SKILL.md",
+      "description": "Marca tickets para archivo en Bug/Task Tracker."
+    },
+    "vantage-tidy-changelog": {
+      "trigger": ["limpia changelog", "mantén changelog"],
+      "path": "skills/vantage-tidy-changelog/SKILL.md",
+      "description": "Mantiene el Change Log con las últimas 10 entradas."
+    },
+    "vantage-tidy-opportunities-tracker": {
+      "trigger": ["limpia tracker de oportunidades", "elimina vacantes expiradas"],
+      "path": "skills/vantage-tidy-opportunities-tracker/SKILL.md",
+      "description": "Identifica duplicados y vacantes expiradas en VANTAGE Tracker."
+    }
+  }
+}

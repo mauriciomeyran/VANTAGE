@@ -1,6 +1,6 @@
 ---
 name: vantage-housekeeping-tracker
-description: Orquesta el housekeeping de trackers (Bug/Task Tracker, VANTAGE Tracker, Change Log) en un solo punto de entrada. Ejecuta en orden lógico: Bug/Task Tracker (prioridad CRÍTICO/ALTO) → VANTAGE Tracker (housekeeping de vacantes) → Change Log (recorte a últimas 10 entradas). VANTAGE-ALIGNED: Integra KERNEL requirements (DOCUMENTATION-005, DOCUMENTATION-010, DOCUMENTATION-012, DOCUMENTATION-008, FAIL-PHILOSOPHY) y maximiza token economy via sandbox protocol.
+description: "Orquesta el housekeeping de trackers (Bug/Task Tracker, VANTAGE Tracker, Change Log) en un solo punto de entrada. Ejecuta en orden lógico: Bug/Task Tracker (prioridad CRÍTICO/ALTO) → VANTAGE Tracker (housekeeping de vacantes) → Change Log (recorte a últimas 10 entradas). VANTAGE-ALIGNED: Integra KERNEL requirements (DOCUMENTATION-005, DOCUMENTATION-010, DOCUMENTATION-012, DOCUMENTATION-008, FAIL-PHILOSOPHY) y maximiza token economy via sandbox protocol."
 ---
 
 # VANTAGE — Housekeeping Tracker Meta-Skill
