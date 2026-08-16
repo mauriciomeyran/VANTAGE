@@ -10,6 +10,10 @@ Uso:
     python export_bootloader_pages.py                    # Exportar a local
     python export_bootloader_pages.py --drive             # Exportar a Google Drive (requiere configuración)
     python export_bootloader_pages.py --output ./backups  # Directorio personalizado
+
+Requisitos:
+    - NOTION_TOKEN: Token de integración de Notion (variable de entorno)
+    - Para Google Drive: google-api-python-client y credenciales configuradas
 """
 
 import os
@@ -198,6 +202,23 @@ class BootloaderExporter:
         
     def fetch_page_blocks(self, page_id: str) -> Dict[str, Any]:
         """Recupera todos los bloques de una página de Notion."""
+        if self.use_mcp:
+            return self._fetch_page_blocks_mcp(page_id)
+        else:
+            return self._fetch_page_blocks_api(page_id)
+
+    def _fetch_page_blocks_mcp(self, page_id: str) -> Dict[str, Any]:
+        """Recupera bloques usando MCP."""
+        try:
+            # Implementación MCP placeholder - requiere configuración MCP real
+            logger.warning("MCP mode requiere configuración MCP. Usando fallback...")
+            return self._fetch_page_blocks_api(page_id)
+        except Exception as e:
+            logger.error(f"Error fetching blocks via MCP for page {page_id}: {e}")
+            return {"blocks": []}
+
+    def _fetch_page_blocks_api(self, page_id: str) -> Dict[str, Any]:
+        """Recupera bloques usando API de Notion directo."""
         blocks = []
         start_cursor = None
         has_more = True
@@ -231,8 +252,11 @@ class BootloaderExporter:
         try:
             logger.info(f"Exportando {page_name} (ID: {page_id})...")
             
-            # Recuperar datos de la página
-            page_data = self.client.pages.retrieve(page_id)
+            if self.use_mcp:
+                page_data = self._fetch_page_mcp(page_id)
+            else:
+                # Recuperar datos de la página
+                page_data = self.client.pages.retrieve(page_id)
             
             # Recuperar bloques de contenido
             blocks_data = self.fetch_page_blocks(page_id)
@@ -258,6 +282,16 @@ class BootloaderExporter:
         except Exception as e:
             logger.error(f"✗ Error inesperado exportando {page_name}: {e}")
             return None
+
+    def _fetch_page_mcp(self, page_id: str) -> Dict[str, Any]:
+        """Recupera página usando MCP."""
+        try:
+            # Implementación MCP placeholder
+            logger.warning("MCP mode requiere configuración MCP. Usando fallback...")
+            return self.client.pages.retrieve(page_id)
+        except Exception as e:
+            logger.error(f"Error fetching page via MCP for {page_id}: {e}")
+            return {}
 
     def export_all_bootloader_pages(self) -> Dict[str, Optional[Path]]:
         """Exporta todas las páginas del bootloader."""
@@ -357,6 +391,11 @@ def main():
         help="Directorio de salida (default: ./bootloader_exports)"
     )
     parser.add_argument(
+        "--api", "-a",
+        action="store_true",
+        help="Usar API de Notion directo (requiere NOTION_TOKEN)"
+    )
+    parser.add_argument(
         "--drive", "-d",
         action="store_true",
         help="Exportar también a Google Drive (requiere configuración)"
@@ -364,8 +403,9 @@ def main():
     
     args = parser.parse_args()
     
-    # Crear exportador
-    exporter = BootloaderExporter(output_dir=args.output)
+    # Crear exportador (por defecto usa MCP si está disponible)
+    use_mcp = not args.api
+    exporter = BootloaderExporter(output_dir=args.output, use_mcp=use_mcp)
     
     # Exportar páginas
     results = exporter.export_all_bootloader_pages()
