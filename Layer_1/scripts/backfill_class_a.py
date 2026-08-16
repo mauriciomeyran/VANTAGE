@@ -114,7 +114,7 @@ def infer_layer(props: dict) -> tuple[str, str]:
         if "layer: l3" in notas:
             return "L3", "notas_layer"
         if "layer: l2" in notas:
-            return "L3", "notas_layer"
+            return "L2", "notas_layer"
         return "L1", "notas_feed"
 
     url = (txt(props.get("URL")) or txt(props.get("apply_url"))).lower()
