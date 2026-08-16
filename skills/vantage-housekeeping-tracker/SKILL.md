@@ -125,19 +125,14 @@ El operador puede entonces aprobar el plan antes de ejecutar las hijas reales.
 
 ```
 TRACKERS HOUSEKEPT
-┌────────────────────────────┬────────────┬──────────────────┬────────────────┐
-│ Tracker                    │ Archivados│ Recortados       │ Validación     │
-├────────────────────────────┼────────────┼──────────────────┼────────────────┤
-│ Bug/Task Tracker           │     n      │        -         │ X/Y/Z         │
-│ VANTAGE Tracker            │     n      │        -         │ -              │
-│ Change Log                 │     -      │        n         │ -              │
-└────────────────────────────┴────────────┴──────────────────┴────────────────┘
+┌────────────────────────────┬────────────┬──────────────────┐
+│ Tracker                    │ Archivados│ Recortados       │
+├────────────────────────────┼────────────┼──────────────────┤
+│ Bug/Task Tracker           │     n      │        -         │
+│ VANTAGE Tracker            │     n      │        -         │
+│ Change Log                 │     -      │        n         │
+└────────────────────────────┴────────────┴──────────────────┘
 ```
-
-**Notas de validación:**
-- Bug/Task Tracker: X tickets marcados exitosamente, Y tickets fallaron, Z requieren Census re-run (si aplica KERNEL:CENSUS-SYNC §20)
-- VANTAGE Tracker: Validación según contrato de vantage-tidy-opportunities-tracker
-- Change Log: Validación según contrato de vantage-tidy-changelog
 
 ## Reglas de oro
 
