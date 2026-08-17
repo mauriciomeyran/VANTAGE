@@ -1274,6 +1274,7 @@ Hallazgos de discrepancia activos (heredados de auditoría arena.ia, verificados
 ## 23 MANUAL:SKILL-GLOSSARY
 Glosario de Skills — Referencia Operativa en Humano
 > Propósito: Traducir cada skill de Claude (/mnt/skills/user/) a lenguaje operativo — qué hace, qué la dispara, si requiere gate de escritura, y su convención de anuncio. Contraparte de MANUAL:SCRIPT-GLOSSARY (§22), aplicada a skills en vez de scripts. La Skill Library (Notion DB) es su índice corto y estructurado; se referencian entre sí.
+> Desde 2026-08-17, este glosario también respalda el consumo multi-agente del manifiesto skills/triggers.json (ver SP:BOOTLOADER-001, KERNEL:ARCHITECTURE-L4) — cada fila de Skill Library es la fuente de notion_id para agentes con MCP Notion.
 ---
 ### 23.1 MANUAL:SKILL-GLOSSARY-CORE
 Pipeline CV y Ciclo de Sesión

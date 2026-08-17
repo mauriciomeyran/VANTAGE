@@ -1,5 +1,22 @@
 # V | CHANGELOG
 
+Tipo: [DOC]
+Alcance:
+- System Prompt (SP:BOOTLOADER-001, 01.1 — nodo nuevo)
+- Kernel (KERNEL:ARCHITECTURE-L4, 04.4 — párrafo Consumidor reescrito con matriz multi-agente)
+- Manual (MANUAL:SKILL-GLOSSARY, 23 — nota breve añadida)
+Contexto: Handoff de sesión previa (auditoría de 8 agentes/12 cuentas activas) confirmó que skills/triggers.json ahora incluye notion_id por skill junto a url, resuelto por fetch_notion_skill_library() en update_triggers_json.py. Faltaba la especificación formal de qué familia de agente resuelve por cuál campo. Decisión de diseño: fetch_priority vive como lógica fija en el Bootloader (SP:BOOTLOADER-001), no como campo repetido en las 28 filas del manifiesto — la matriz de capacidades es propiedad del agente, no del skill.
+Cambios:
+- SP:BOOTLOADER-001 (01.1) — nodo nuevo: regla de enrutamiento por familia de agente (MCP-Notion → notion_id; GitHub-only → url; Gemini fuera de flujo).
+- KERNEL:ARCHITECTURE-L4 (04.4) — párrafo Consumidor reescrito: matriz de 8 agentes auditados, campo notion_id documentado, consumidor original de Claude preservado como sub-párrafo.
+- MANUAL:SKILL-GLOSSARY (23) — nota de una línea señalando el respaldo multi-agente del glosario, con referencia cruzada.
+IDs afectados: Ninguno — extensión de nodos existentes (SP:BOOTLOADER, KERNEL:ARCHITECTURE-L4, MANUAL:SKILL-GLOSSARY) más un ID nuevo de subsección (SP:BOOTLOADER-001) bajo el nodo padre ya censado. No dispara KERNEL:DOCUMENTATION-008 Regla 1 (alta de subsección bajo prefijo/nodo existente, no de documento nuevo) — pendiente registrar SP:BOOTLOADER-001 en próxima corrida de vcensus.
+Write-Back Verification: los 3 nodos re-fetched post-escritura en esta misma sesión — 3/3 confirmados en posición correcta, sin mismatch.
+Pendiente (fuera de esta entrada):
+- vcensus para registrar SP:BOOTLOADER-001 como ID nuevo.
+- vversions --sync para propagar v9.21.13 al resto de los fundacionales.
+- Verificación de ALIASES:L4-VERSION-CONTROL (señalada como susceptible en el mapeo de Fase 1, no confirmada en este batch).
+---
 ---
 - Corrección: Typo en infer_layer L2 (backfill_class_a.py).
 - Cierre: GAP-03/FX-1 en feed_processor.py (comentario stale).
@@ -154,3 +171,16 @@ Pendiente (fuera de esta entrada): pasada 2 de T9 (Script Library, tras merge de
 ---
 ---
 > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
+---
+Tipo: [DOC]
+Alcance:
+- VANTAGE_SKILLS_COMPILED (Notion, pagina 3bf938befc4280ba80adf3d136cffc41) — 28 headings ### inyectados
+Contexto: El compilado de Skills Library (generado por script local desde /skills/) carecia de IDs canonicos en su estructura Notion — cada skill viva como ## nombre-skill sin el heading ### SKILL:PREFIX-KEY — nombre-skill requerido por la Matriz Tipografica Congelada (KERNEL:DOCUMENTATION-001). Esta inyeccion no altera el contenido de las skills, solo anade el heading canonico como subseccion inmediata antes de cada ## existente.
+Cambios:
+- 28 headings ### anadidos en orden de aparicion: 4 CV (TAILLORED-RESUME, VANTAGE-CV-A/B, QA), 3 DOC (TRANSVERSAL-IMP/PROP, HYPERLINK-LOOP), 3 SESSION (HANDOFF, CLOSE, OPEN), 4 STYLE (CORPORATE, CRITICO, RETAIL, SOCIO), 6 SYNC (ASSETS, CENSUS-SPEC, SCRIPT-GLOSSARY/LIBRARY, SKILL-GLOSSARY/LIBRARY), 5 TIDY (HOUSEKEEPING-ARCHIVE/TRACKER, BUG-TASK, CHANGELOG, OPPORTUNITIES), 3 CORE (PROMPT-MASTER, CREATE-BUG-TASK, SKILL-UPDATER).
+- Formato: ### SKILL:PREFIX-KEY — nombre-skill seguido de linea en blanco, luego ## nombre-skill original intacto.
+IDs afectados: Ninguno (inyeccion de headings bajo IDs existentes — no dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: notion-fetch post-escritura — 28/28 headings confirmados en posicion correcta, sin mismatch.
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.21.11 al resto de los fundacionales (Kernel, Manual, SP, Aliases, Brief, Census).
+---

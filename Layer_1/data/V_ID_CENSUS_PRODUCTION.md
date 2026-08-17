@@ -276,3 +276,4 @@
 | ID | Documento | Link |
 |---|---|---|
 | `MANUAL:SCRIPT-GLOSSARY-CV-PREP` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3aa2572b38e542d3bd4bd733a5910e15 ) |
+| `SP:BOOTLOADER-001` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#fb6f76f090524f82bec8e297b6ccd65a ) |

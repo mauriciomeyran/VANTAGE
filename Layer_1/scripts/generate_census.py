@@ -75,7 +75,17 @@ CENSUS_SPEC = [
             {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "04.1", "nombre": "L1 — Active Search"},
             {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "04.2", "nombre": "L2 — Strategic Search"},
             {"id": "KERNEL:ARCHITECTURE-L3", "seccion": "04.3", "nombre": "L3 — Passive Intake"},
-            {"id": "KERNEL:ARCHITECTURE-L4", "lookup_ids": ["KERNEL:ARCHITECTURE-004", "KERNEL:ARHITECTURE-L4", "KERNEL:ARCHITECTURE-L4"], "seccion": "04.4", "nombre": "L4 — Version Control & Infrastructure"},
+            {"id": "KERNEL:ARCHITECTURE-L4", "lookup_ids": ["KERNEL:ARCHITECTURE-004", "KERNEL:ARHITECTURE-L4", "KERNEL:ARCHITECTURE-L4"]
+    # Auto-generated orphan IDs
+# IDs huérfanos detectados - agregar a CENSUS_SPEC
+# Generado automáticamente por generate_census.py --auto-fix-orphans
+
+# MANUAL
+{"id": "MANUAL:SCRIPT-GLOSSARY-CV-PREP", "seccion": "", "nombre": "Subsección GLOSSARY de MANUAL:SCRIPT"},
+
+# SP
+{"id": "SP:BOOTLOADER-001", "seccion": "001", "nombre": "SP:BOOTLOADER — 001"},
+, "seccion": "04.4", "nombre": "L4 — Version Control & Infrastructure"},
             {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH", "seccion": "04.5", "nombre": "Dashboard Checklist Architecture"},
             {"id": "KERNEL:OWNERSHIP", "seccion": "05", "nombre": "División de Responsabilidades AI/Python"},
             {"id": "KERNEL:OWNERSHIP-001", "seccion": "05.1", "nombre": "AI Component"},
