@@ -1,5 +1,51 @@
 # V | CHANGELOG
 
+Tipo: [CODE] [DOC]
+Alcance:
+- Script nuevo: bulk_upload_skill_bodies.py (Layer_1/scripts)
+- Skill Library (Notion) — 28 bodies escritos
+- Skill: vantage-sync-skill-library — extensión para escribir body completo en altas futuras
+Contexto: Las páginas de Skill Library tenían solo metadata; el body estaba vacío. Se entregó script local (API directa, sin MCP) que descubre skills hasta 2 niveles, matchea contra la data source y escribe el SKILL.md completo como bloques Notion. Dry-run → 28/28 match. Ejecución --write → 28 bodies OK, 0 fallidos. Paralelamente se actualizó la skill de sync para que las altas futuras ya salgan con body desde el primer alta.
+Cambios:
+- bulk_upload_skill_bodies.py — creado (dry-run default, --write, --only, --force).
+- Skill Library — 28 páginas con lógica completa cargada.
+- vantage-sync-skill-library — procedimiento + reglas de oro actualizados para body writing; referencia explícita al script para carga histórica.
+IDs afectados: Ninguno.
+Write-Back Verification: Change Log re-fetched implícito; versión → v9.21.17.
+Pendiente:
+- vversions --sync para propagar v9.21.17.
+- Operador: mover las 2 filas Deprecado al archivo (ya marcadas).
+---
+Tipo: [AUDIT] [DOC]
+Alcance:
+- Skill Library (Notion) — 2 filas deprecadas ya marcadas
+- generate_census.py / CENSUS_SPEC — drift de 65 secciones hardcodeadas (script ejecutado, vcensus final limpio)
+Contexto: Sesión de confirmación post-handoff. Las 2 filas deprecadas (extract-learnings.skill, vantage-audit-navigation-brief.skill) ya tenían Estado=Deprecado + Acción=Archivar; re-fetch confirmó estado. Operador moverá manualmente a archivo. Por separado, el script fix_seccion_drift.sh se ejecutó (pasadas parciales 60/65 + 5/65 por diferencias de estado intermedio); vcensus post-ejecución: 240/240 IDs, 0 huérfanos, 0 sin link, 0 secciones hardcodeadas sin heading detectables en vivo. El drift hardcodeado era fallback silencioso (nunca afectó exports reales).
+Cambios:
+- Skill Library: confirmación de marcaje (sin escritura adicional requerida).
+- CENSUS_SPEC local: higiene de secciones hardcodeadas alineada vía script + verificación vcensus.
+IDs afectados: Ninguno.
+Write-Back Verification: Change Log re-fetched implícito en esta pasada; versión bumpeada a v9.21.16.
+Pendiente (fuera de esta entrada):
+- Movimiento manual de las 2 filas deprecadas al archivo (operador).
+- vversions --sync para propagar v9.21.16 al resto de fundacionales.
+---
+Bootloader unificado como fuente única: SP:BOOTLOADER (01) pasa de instrucción única (notion-fetch) a bifurcación explícita por familia de agente — Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok) vía notion-fetch; Familia GitHub-only (Perplexity, Mistral/Vibe) vía fetch raw sobre raw.githubusercontent.com, apuntando a Documentación/ACTIVE/System Prompt.md e Layer_1/data/V_ID_CENSUS_PRODUCTION.md — ambas URLs verificadas en vivo (200 OK) antes de escribir. Elimina la necesidad de un bootloader separado para Vibe/Mistral; una sola fuente de verdad para ambas familias.nnBug confirmado y parcheado en generate_census.py — auto_fix_orphans(): el regex CENSUS_SPEC = \\[.*?\\] (non-greedy, DOTALL) cortaba en el primer ] encontrado, no en el cierre real de la lista — reproducido en sandbox, causante de la corrupción de KERNEL:ARCHITECTURE-L4 documentada en el handoff previo (campo anidado lookup_ids disparaba el corte prematuro). Reemplazado por find_census_spec_end(), balanceo de profundidad de corchetes en vez de regex de patrón. Verificado en producción: vcensus post-parche → 240/240 IDs resueltos, 0 huérfanos, 0 sin link, KERNEL:ARCHITECTURE-L4 intacto.nnAuditoría completa de CENSUS_SPEC hardcodeado vs. export en vivo verificado: 65/225 entradas (~26%) con seccion desactualizada — no solo las 3 originalmente reportadas (MANUAL:SCRIPT-GLOSSARY-L1 y relacionadas). Concentrado en dos bloques: KERNEL completo desde PURPOSE en adelante (37 entradas, corrimiento de numeración por reestructuración del documento no reflejada en el script) y el bloque MANUAL:SCRIPT-GLOSSARY-* completo (8 entradas, reordenamiento de §22). Incluye bug adicional aislado: KERNEL:CV-GOLDEN-RULES-001 a 005 con seccion="11" sin sub-número (vs. -006 que sí tiene 11.6 correcto). Entregado script de reparación masiva (fix_seccion_drift.sh) para aplicar los 65 fixes de una sola pasada, con verificación exacta por ID+valor-viejo antes de escribir (no aplica si el archivo cambió desde la auditoría). Nota: el drift no afectó ningún export real porque el script prioriza detección de heading en vivo sobre el valor hardcodeado — el hardcoded solo actúa como fallback silencioso, por eso el drift pasó inadvertido hasta esta auditoría.nn---n
+---
+Tipo: [CODE] [DOC]
+Alcance:
+- verify_versions.py (local, scripts) — CHANGELOG_ARCHIVO excluido de escritura en --sync, tracking de solo lectura (SKIP)
+- generate_census.py (local, scripts) — reparación de corrupción de sintaxis introducida por --auto-fix-orphans; alta correcta de 2 IDs huérfanos
+Contexto: CHANGELOG_ARCHIVO fue movido bajo V | ARCHIVEROS (página-hija, no fila de data source) — no tiene ni puede tener propiedad Versión nativa. Se descartó convertirlo en fila de data source (riesgo estructural desproporcionado, sin precedente de diseño) a favor de excluirlo de la escritura de --sync, replicando el criterio ya usado para ARCHIVEROS (housekeeping ligero, sin elevarlo a fundacional pleno). Por separado, generate_census.py --auto-fix-orphans insertó las 2 entradas huérfanas en medio de la definición del diccionario KERNEL:ARCHITECTURE-L4, rompiendo la sintaxis del archivo — bug de la función auto_fix_orphans(), no error de operador.
+Cambios:
+- verify_versions.py: rama CHANGELOG_ARCHIVO en el loop de --sync ahora hace lectura sin intento de escritura; veredicto SKIP no bloquea all_pass.
+- generate_census.py: sintaxis de KERNEL:ARCHITECTURE-L4 restaurada; alta de SP:BOOTLOADER-001 (01.1) y MANUAL:SCRIPT-GLOSSARY-CV-PREP (22.2) con sección/nombre verificados contra Notion en vivo.
+IDs afectados: Ninguno nuevo a nivel Kernel/Manual/SP/Canon (los 2 IDs ya existían en Notion; esta entrada documenta su alta correcta en el Census local, no una creación de nodo).
+Write-Back Verification: pendiente — se ejecuta tras la escritura, en esta misma sesión.
+Pendiente (fuera de esta entrada):
+- Drift de numeración local vs. live en MANUAL:SCRIPT-GLOSSARY-L1 (local=22.3, Notion=22.1) — sin tocar, señalado para revisión aparte.
+- vversions --sync ya ejecutado y verificado [VEREDICTO FINAL] PASS en esta misma sesión.
+---
 Tipo: [DOC]
 Alcance:
 - System Prompt (SP:BOOTLOADER-001, 01.1 — nodo nuevo)
@@ -16,7 +62,17 @@ Pendiente (fuera de esta entrada):
 - vcensus para registrar SP:BOOTLOADER-001 como ID nuevo.
 - vversions --sync para propagar v9.21.13 al resto de los fundacionales.
 - Verificación de ALIASES:L4-VERSION-CONTROL (señalada como susceptible en el mapeo de Fase 1, no confirmada en este batch).
----
+Tipo: [DOC]
+Alcance:
+- VANTAGE_SKILLS_COMPILED (Notion, pagina 3bf938befc4280ba80adf3d136cffc41) — 28 headings ### inyectados
+Contexto: El compilado de Skills Library (generado por script local desde /skills/) carecia de IDs canonicos en su estructura Notion — cada skill viva como ## nombre-skill sin el heading ### SKILL:PREFIX-KEY — nombre-skill requerido por la Matriz Tipografica Congelada (KERNEL:DOCUMENTATION-001). Esta inyeccion no altera el contenido de las skills, solo anade el heading canonico como subseccion inmediata antes de cada ## existente.
+Cambios:
+- 28 headings ### anadidos en orden de aparicion: 4 CV (TAILLORED-RESUME, VANTAGE-CV-A/B, QA), 3 DOC (TRANSVERSAL-IMP/PROP, HYPERLINK-LOOP), 3 SESSION (HANDOFF, CLOSE, OPEN), 4 STYLE (CORPORATE, CRITICO, RETAIL, SOCIO), 6 SYNC (ASSETS, CENSUS-SPEC, SCRIPT-GLOSSARY/LIBRARY, SKILL-GLOSSARY/LIBRARY), 5 TIDY (HOUSEKEEPING-ARCHIVE/TRACKER, BUG-TASK, CHANGELOG, OPPORTUNITIES), 3 CORE (PROMPT-MASTER, CREATE-BUG-TASK, SKILL-UPDATER).
+- Formato: ### SKILL:PREFIX-KEY — nombre-skill seguido de linea en blanco, luego ## nombre-skill original intacto.
+IDs afectados: Ninguno (inyeccion de headings bajo IDs existentes — no dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: notion-fetch post-escritura — 28/28 headings confirmados en posicion correcta, sin mismatch.
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.21.11 al resto de los fundacionales (Kernel, Manual, SP, Aliases, Brief, Census).
 ---
 - Corrección: Typo en infer_layer L2 (backfill_class_a.py).
 - Cierre: GAP-03/FX-1 en feed_processor.py (comentario stale).
@@ -84,103 +140,4 @@ Pendiente (fuera de esta entrada):
 - Suite de tests de regresión (Layer_3/tests/test_layer_3_mail.py, reportada por Devin) — no confirmada presente en el archivo local subido; verificar tras el push.
 - vversions --sync para propagar v9.21.10 al resto de los fundacionales.
 ---
-Tipo: [DOC]
-Alcance:
-- Skill Library (Notion) — alta de fila nueva
-Contexto: Auditoría completa solicitada por el operador — cruce de las 28 skills de skills/triggers.json contra las filas existentes en Skill Library. 27/28 presentes; único gap: vantage-sync-skill-glossary (sincroniza Manual §23, distinta de vantage-sync-script-glossary que sincroniza §22 y sí existía). Verificadas también las dos filas deprecadas (extract-learnings.skill, vantage-audit-navigation-brief.skill) — ambas correctamente marcadas Estado=Deprecado / Acción=Archivar, no son gaps. Sin duplicados detectados entre las 29 filas resultantes.
-Cambios:
-- Skill Library — fila nueva: vantage-sync-skill-glossary (Capa L4, Estado Activo, Acción Keep, Ruta /skills/vantage-sync-skill-glossary/SKILL.md).
-IDs afectados: Ninguno (fila de tabla existente — no dispara KERNEL:CENSUS-SYNC Regla 1).
-Write-Back Verification: página creada y confirmada en respuesta de notion-create-pages (id 3be938be-fc42-81b6-9f5f-d64272bdd6c9).
-Pendiente (fuera de esta entrada):
-- vversions --sync para propagar v9.21.10 (arrastra v9.21.7–v9.21.9 también pendientes) al resto de los fundacionales.
----
-Tipo: [DOC]
-Alcance:
-- Kernel (KERNEL:DOCUMENTATION-010, 03.10 — nodo nuevo: Timestamp Obligatorio en Changelog)
-- System Prompt (SP:CONSISTENCY, 10 — regla 3 nueva)
-Contexto: El operador solicitó que, a partir de ahora, cada entrada nueva del Change Log declare fecha y hora local (CDMX) en el título. Como Claude no tiene reloj de sistema fiable dentro de la sesión, se fijó como regla que el operador provea el timestamp explícitamente al autorizar la escritura; si no lo hace, Claude pregunta antes de escribir — nunca infiere ni aproxima. Formato adoptado: {Mes} {DD}, {AA} {HH.MM} (ej. "Ago 16, 26 06.22"), confirmado por el operador en esta misma entrada.
-Cambios:
-- KERNEL:DOCUMENTATION-010 (03.10) — nodo nuevo "Timestamp Obligatorio en Changelog": formato, fuente del dato (operador, no Claude), protocolo ante ausencia (preguntar, no inferir).
-- SP:CONSISTENCY (10) — regla 3 nueva, referencia cruzada al nodo Kernel.
-- Esta misma entrada (v9.21.9) es la primera en aplicar el formato de título con timestamp.
-IDs afectados: Ninguno (contenido nuevo bajo IDs existentes — no dispara KERNEL:CENSUS-SYNC Regla 1).
-Write-Back Verification: Kernel y System Prompt re-fetched post-escritura — 2/2 confirmados en posición correcta, sin mismatch.
-Pendiente (fuera de esta entrada):
-- vversions --sync para propagar v9.21.9 al resto de los fundacionales.
----
-Tipo: [DOC]
-Alcance:
-- Kernel (KERNEL:ARCHITECTURE-L4, 04.4 — párrafo Consumidor corregido)
-- Manual (MANUAL:WEEKLY-FLOW-001, 8.1 — línea final corregida)
-- System Prompt (SP:BOOTLOADER, 01) y (SP:CONTEXT-INFRASTRUCTURE, 04) — ya reflejaban el mecanismo correcto al momento de esta entrada (aplicado en paralelo a esta sesión, sin intervención de escritura de Claude en este batch)
-Contexto: v9.21.7 documentó el consumo del manifiesto de skills exclusivamente vía web_fetch a raw.githubusercontent.com. El operador reportó una restricción estructural no contemplada: web_fetch de Claude sobre raw.githubusercontent.com está bloqueado salvo que la URL ya haya aparecido en la sesión (vía web_search/web_fetch previo) — condición que no se cumple para los paths individuales de SKILL.md construidos dinámicamente desde el manifiesto. Corrección: git clone --depth 1 (bash_tool, github.com whitelisted) pasa a ser la vía primaria y estable para leer el contenido de cada skill; web_fetch queda como fallback solo si el clone falla, y se mantiene como vía única para el fetch inicial del manifiesto (triggers.json), cuya URL sí proviene de SP:BOOTLOADER ya cargado en la sesión. Al escribir, se detectó que SP:BOOTLOADER y SP:CONTEXT-INFRASTRUCTURE ya reflejaban el mecanismo corregido en Notion — no hubo mismatch de old_str porque el contenido vivo ya coincidía con el texto propuesto por el operador.
-Cambios:
-- KERNEL:ARCHITECTURE-L4 (04.4) — párrafo Consumidor: el manifiesto se recupera vía web_fetch (fetch inicial, URL ya en sesión); el contenido de cada skill se lee vía git clone --depth 1 + lectura local, vía primaria y estable dado el bloqueo estructural de web_fetch sobre raw.githubusercontent.com para URLs no vistas previamente; web_fetch queda como fallback.
-- MANUAL:WEEKLY-FLOW-001 (8.1) — línea de cierre del párrafo "Extensión reciente" corregida para reflejar el doble mecanismo (manifiesto vía web_fetch, contenido de skill vía git clone local).
-IDs afectados: Ninguno (todas las ediciones reutilizan IDs existentes — no dispara KERNEL:CENSUS-SYNC Regla 1).
-Write-Back Verification: KERNEL y MANUAL re-fetched post-escritura — 2/2 confirmados en posición correcta, sin mismatch. SP:BOOTLOADER y SP:CONTEXT-INFRASTRUCTURE verificados en vivo ya conformes, sin escritura requerida en este batch.
-Pendiente (fuera de esta entrada):
-- vversions --sync para propagar v9.21.8 al resto de los fundacionales.
----
-Tipo: [DOC]
-Alcance:
-- Kernel (KERNEL:ARCHITECTURE-L4, 04.4 — sección Skills Distribution reescrita)
-- System Prompt (SP:BOOTLOADER, 01 — paso 2 ampliado + paso 2.1 nuevo)
-- Manual (MANUAL:WEEKLY-FLOW-001, 8.1 — párrafo "Extensión reciente — Skills Distribution" reescrito)
-- Aliases (ALIASES:L4-VERSION-CONTROL, 05 — fila nueva: vtriggers)
-Contexto: Sesión previa implementó update_triggers_json.py (alias vtriggers) generando skills/triggers.json como manifiesto SSOT de skills, con auto-push a git — reemplazando de facto el mecanismo documentado (GitHub Pages + MCP filesystem local para Claude Desktop + Devin vía devin mcp add), que nunca llegó a operar (GitHub Pages no puede responder el handshake JSON-RPC que requiere MCP). Mapeo de documentación transversal (esta sesión) confirmó 4 nodos con referencia directa al mecanismo obsoleto — 3 no contemplados originalmente en el handoff de la sesión anterior (MANUAL:WEEKLY-FLOW-001 y la fila faltante en ALIASES). Confirmado por el operador: el manifiesto se consume vía web_fetch directo a raw.githubusercontent.com (no MCP), con lazy-load por trigger en cada turno — nunca carga masiva de las 28 skills en boot. Devin no consume el manifiesto — solo Claude y Mistral.
-Cambios:
-- KERNEL:ARCHITECTURE-L4 (04.4) — párrafo "Skills Distribution — Single Source of Truth" reescrito: describe triggers.json (estructura, generador, validaciones, auto-push), consumidor único (Claude vía web_fetch), y descontinuación explícita de GitHub Pages/index.json/Devin MCP.
-- SP:BOOTLOADER (01) — paso 2 ampliado con tercer fetch (SKILLS MANIFEST vía web_fetch, no bloqueante para el Bootstrap); paso 2.1 nuevo: lazy-load por trigger en cada turno.
-- MANUAL:WEEKLY-FLOW-001 (8.1, "¿Qué es vgit?") — párrafo "Extensión reciente — Skills Distribution" reescrito: reemplaza referencia a Claude Desktop MCP filesystem + Devin/GitHub Pages por vtriggers + web_fetch.
-- ALIASES:L4-VERSION-CONTROL (05) — fila nueva: vtriggers (update_triggers_json.py).
-IDs afectados: Ninguno (todas las ediciones reutilizan IDs existentes o son alta de fila dentro de tabla ya censada — no dispara KERNEL:CENSUS-SYNC Regla 1).
-Write-Back Verification: los 4 nodos re-fetched post-escritura — 4/4 confirmados en posición correcta, sin mismatch.
-Discrepancia detectada (no remediada en esta entrada): la propiedad Versión de esta página permanecía en v9.21.5 pese al toggle v9.21.6 ya presente (marcado [COMPRIMIDO], pendiente de expandir) — drift pre-existente a esta sesión, reportado aquí conforme SP:CONSISTENCY; no bloqueó esta escritura.
-Pendiente (fuera de esta entrada):
-- Expansión de la entrada v9.21.6 [COMPRIMIDO] (Fase G1 saneamiento v3), aún no resuelta.
-- vversions --sync para propagar v9.21.7 al resto de los fundacionales.
----
-Tipo: [DOC]
-T2 (Manual P2a/b/c: correos 5→10 + hallazgo GROQ + nota §22.1 resueltos) · T3 (Kernel §04.4: vsync_doc_fast.py deprecado + conteo skills a Opción B SSOT vivo, reintento tras fallo silencioso 1er intento) · T4 (Kernel §03.5: anuncio vantage-housekeeping-archive) · T5 (Manual §23.2: fila glosario housekeeping-archive) · T6 (Archivo Changelog: dedupe extendido v9.14.2×2+v9.14.3×1 → 1 canonical + 2 notas [DEDUPE v9.21.x], drift de versión registrado para T20). IDs afectados: Ninguno. Pendiente: G2 (Tareas 7–10) sin iniciar; vversions --sync para propagar; SYNC PENDIENTE.
----
-Tipo: [AUDIT]
-Alcance: Change Log (esta entrada); Script Library (hallazgo, sin escritura); GitHub issue #4 (comentado); index.html raíz (restaurado en repo).
-Contexto: Cierre de los 5 pendientes operativos listados tras v9.21.4.
-Cambios:
-- T9 pasada 2 (Script Library) — marcada obsoleta. Verificación en vivo confirmó que la fila duplicada de git_sync.py ya fue diagnosticada y marcada correctamente (Estado=Deprecado, Acción=Archivar, Descripción explícita) en el batch M1 — el pendiente en v9.21.3 estaba desactualizado respecto al estado real de Notion. Sin escritura requerida.
-- Duplicado git_sync.py — confirmado sin acción pendiente (ver punto anterior). Fila canónica (L4, Estado=Activo) intacta.
-- GitHub issue #4 — comentado confirmando que auto_archive.py permanece deprecado en Archive/Legacy_Scripts/ como referencia histórica, sin eliminación (decisión del operador 2026-08-01, KERNEL:GATE-DECISION-007). Referencia: https://github.com/mauriciomeyran/VANTAGE/issues/4#issuecomment-5302203383
-- index.html raíz — restaurado desde commit 7e92dcd (contenido: landing page GitHub Pages con documentación de skills MCP), aplicado en commit 2a3c7a1 sobre main. Decisión del operador tras confirmar propósito y ausencia de dependencias en el pipeline.
-- vversions --sync (v9.21.4) — ya ejecutado y verificado [VEREDICTO FINAL] PASS en sesión previa.
-IDs afectados: Ninguno (sin alta/baja de ID canónico — no dispara CENSUS-SYNC Regla 1).
-Write-Back Verification: re-fetch de esta entrada tras la escritura.
-Pendiente (fuera de esta entrada): Ninguno — ciclo de saneamiento v9.21.x cerrado en su totalidad.
----
-Tipo: [AUDIT]
-Alcance: Change Log (esta entrada); GitHub issues #8, #9 (comentados y cerrados).
-Contexto: Cierre de los issues #8 y #9 dejados abiertos en v9.21.3. Se intentó remediar el incumplimiento del contrato PR-obligatorio (commits d3ba880 y 160337c fueron directo a main) creando branches retroactivas fix/d2-rework-archive-queue y fix/d5-real-descripcion-detector — descartado tras confirmar limitación estructural de Git: una branch creada desde main no puede mostrar diff contra main (GraphQL: "No commits between main and fix/..."). Se optó por registro de auditoría en vez de reescritura de main vía revert/reapply (evita alterar la secuencia limpia de main).
-Cambios:
-- Branches fix/d2-rework-archive-queue y fix/d5-real-descripcion-detector — creadas, confirmado sin diff, eliminadas de origin.
-- GitHub issue #8 — comentario con referencia a Changelog v9.21.3, cerrado.
-- GitHub issue #9 — comentario con referencia a Changelog v9.21.3, cerrado.
-IDs afectados: Ninguno (sin alta/baja de ID canónico — no dispara CENSUS-SYNC Regla 1).
-Write-Back Verification: re-fetch de esta entrada tras la escritura.
-Pendiente (fuera de esta entrada): pasada 2 de T9 (Script Library, tras merge de #9 — issue cerrado, verificar si pasada 2 sigue aplicando o queda obsoleta); patch manual de la fila duplicada git_sync.py; aviso en GitHub Issue #4 (auto_archive.py); vversions --sync para propagar v9.21.4 al resto de los fundacionales (arrastra también v9.21.3 aún no propagada).
----
----
 > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
----
-Tipo: [DOC]
-Alcance:
-- VANTAGE_SKILLS_COMPILED (Notion, pagina 3bf938befc4280ba80adf3d136cffc41) — 28 headings ### inyectados
-Contexto: El compilado de Skills Library (generado por script local desde /skills/) carecia de IDs canonicos en su estructura Notion — cada skill viva como ## nombre-skill sin el heading ### SKILL:PREFIX-KEY — nombre-skill requerido por la Matriz Tipografica Congelada (KERNEL:DOCUMENTATION-001). Esta inyeccion no altera el contenido de las skills, solo anade el heading canonico como subseccion inmediata antes de cada ## existente.
-Cambios:
-- 28 headings ### anadidos en orden de aparicion: 4 CV (TAILLORED-RESUME, VANTAGE-CV-A/B, QA), 3 DOC (TRANSVERSAL-IMP/PROP, HYPERLINK-LOOP), 3 SESSION (HANDOFF, CLOSE, OPEN), 4 STYLE (CORPORATE, CRITICO, RETAIL, SOCIO), 6 SYNC (ASSETS, CENSUS-SPEC, SCRIPT-GLOSSARY/LIBRARY, SKILL-GLOSSARY/LIBRARY), 5 TIDY (HOUSEKEEPING-ARCHIVE/TRACKER, BUG-TASK, CHANGELOG, OPPORTUNITIES), 3 CORE (PROMPT-MASTER, CREATE-BUG-TASK, SKILL-UPDATER).
-- Formato: ### SKILL:PREFIX-KEY — nombre-skill seguido de linea en blanco, luego ## nombre-skill original intacto.
-IDs afectados: Ninguno (inyeccion de headings bajo IDs existentes — no dispara KERNEL:CENSUS-SYNC Regla 1).
-Write-Back Verification: notion-fetch post-escritura — 28/28 headings confirmados en posicion correcta, sin mismatch.
-Pendiente (fuera de esta entrada):
-- vversions --sync para propagar v9.21.11 al resto de los fundacionales (Kernel, Manual, SP, Aliases, Brief, Census).
----

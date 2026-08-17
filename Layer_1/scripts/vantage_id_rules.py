@@ -42,7 +42,7 @@ import re
 
 VALID_PREFIXES = (
     "KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:",
-    "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVE:", "BRIEF:",
+    "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVO:", "BRIEF:",
 )
 
 # ─── Patrón de ID genérico (idéntico en los 4 scripts previos, sin cambio) ───

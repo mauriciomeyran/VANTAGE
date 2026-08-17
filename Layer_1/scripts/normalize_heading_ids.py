@@ -67,7 +67,7 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVE:")
+VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVO:")
 
 DOCUMENTS = {
     "System Prompt": "37b938be-fc42-8001-9b9b-fcf81130d274",

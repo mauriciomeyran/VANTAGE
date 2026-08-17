@@ -782,6 +782,13 @@ def main():
                     results.append((doc, "N/A", "N/A", "FAIL: ID no resuelto"))
                     continue
 
+                if doc == "CHANGELOG_ARCHIVO":
+                    # Pagina-hija sin schema de propiedad Version (no es fila de data source).
+                    # Tracking de solo lectura -- no participa en la escritura de --sync.
+                    read_version = get_page_version(client, page_id, headers)
+                    results.append((doc, master_version, read_version, "SKIP (solo lectura, sin propiedad Version)"))
+                    continue
+
                 prop_name = "Versión " if doc == "VANTAGE" else "Versión"
                 write_ok = update_page_version(client, page_id, master_version, headers, prop_name=prop_name)
                 if not write_ok:
@@ -802,7 +809,7 @@ def main():
             print("-" * 75)
             all_pass = True
             for doc, expected, confirmed, status in results:
-                if not status.startswith("PASS"):
+                if not status.startswith("PASS") and not status.startswith("SKIP"):
                     all_pass = False
                 print(f"{doc:<15} | {expected:<12} | {confirmed:<12} | {status:<25}")
             print("-" * 75)

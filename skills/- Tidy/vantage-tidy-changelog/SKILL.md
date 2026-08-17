@@ -11,7 +11,7 @@ description: Mantiene el Change Log de VANTAGE con las últimas 10 entradas visi
 ## IDs confirmados
 
 - Change Log (activo): `CHANGELOG:` (resuelve vía `resolver_registry_v2.json`, UUID `390938be-fc42-80e7-b429-d7d730339353`)
-- Archivo Changelog (histórico completo): `CHANGELOG_ARCHIVE:` (resuelve vía `resolver_registry_v2.json`, UUID `39d938be-fc42-801c-94f6-f11bfe803633`)
+- Archivo Changelog (histórico completo): `CHANGELOG_ARCHIVO:` (resuelve vía `resolver_registry_v2.json`, UUID `3ba938be-fc42-8011-8947-fb4fa5d1f63f`)
 
 ## Mecanismo confirmado
 

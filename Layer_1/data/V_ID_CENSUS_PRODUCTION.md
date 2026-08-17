@@ -131,6 +131,7 @@
 | [`MANUAL:SCRIPT-GLOSSARY-DASHBOARD`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280978eaccec1c0f3b28e ) | 22.4 | Script Glossary — Dashboard |
 | [`MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280f9bb7aec01efe805be ) | 22.4a | Script Glossary — Dashboard Modules |
 | [`MANUAL:SCRIPT-GLOSSARY-L1`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc42800abcede97904b535f9 ) | 22.1 | Script Glossary — L1 |
+| [`MANUAL:SCRIPT-GLOSSARY-CV-PREP`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3aa2572b38e542d3bd4bd733a5910e15 ) | 22.2 | CV Pipeline — Preparación Mecánica (Miércoles) |
 | [`MANUAL:SCRIPT-GLOSSARY-L1-MODULES`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280e6b469f114f00d1cb8 ) | 22.1a | Script Glossary — L1 Modules |
 | [`MANUAL:SCRIPT-GLOSSARY-L1-TOOLS`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc428066b256f75d0faafcc3 ) | 22.1b | Script Glossary — L1 Tools |
 | [`MANUAL:SCRIPT-GLOSSARY-L4`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc42808f819cf573211f33a2 ) | 22.3 | Script Glossary — L4 |
@@ -242,6 +243,7 @@
 | ID | Sección | Nombre |
 |---|---|---|
 | [`SP:BOOTLOADER`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428197ba0dc11cda45db3d ) | 01 | Operating Specification — Bootstrap de Sesión |
+| [`SP:BOOTLOADER-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#fb6f76f090524f82bec8e297b6ccd65a ) | 01.1 | Consumo de Skills por Familia de Agente |
 | [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281328031dd488f1aea06 ) | 02 | Sincronización Inicial y Verificación de Versión |
 | [`SP:CONTEXT-INFRASTRUCTURE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428147bd85e68499246777 ) | 04 | Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE) |
 | [`SP:DIGITAL-ID-CARD`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42819a919cc80ec56ad76c ) | 03 | Cédula Digital — rutas de operación y UUIDs |
@@ -273,7 +275,4 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-| ID | Documento | Link |
-|---|---|---|
-| `MANUAL:SCRIPT-GLOSSARY-CV-PREP` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3aa2572b38e542d3bd4bd733a5910e15 ) |
-| `SP:BOOTLOADER-001` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#fb6f76f090524f82bec8e297b6ccd65a ) |
+_Ninguno detectado en esta corrida._

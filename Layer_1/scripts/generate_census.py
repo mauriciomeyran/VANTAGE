@@ -29,7 +29,7 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVE:", "BRIEF:")
+VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVO:", "BRIEF:")
 
 DOCUMENTS = {
     "System Prompt": "37b938be-fc42-8001-9b9b-fcf81130d274",
@@ -75,23 +75,13 @@ CENSUS_SPEC = [
             {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "04.1", "nombre": "L1 — Active Search"},
             {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "04.2", "nombre": "L2 — Strategic Search"},
             {"id": "KERNEL:ARCHITECTURE-L3", "seccion": "04.3", "nombre": "L3 — Passive Intake"},
-            {"id": "KERNEL:ARCHITECTURE-L4", "lookup_ids": ["KERNEL:ARCHITECTURE-004", "KERNEL:ARHITECTURE-L4", "KERNEL:ARCHITECTURE-L4"]
-    # Auto-generated orphan IDs
-# IDs huérfanos detectados - agregar a CENSUS_SPEC
-# Generado automáticamente por generate_census.py --auto-fix-orphans
-
-# MANUAL
-{"id": "MANUAL:SCRIPT-GLOSSARY-CV-PREP", "seccion": "", "nombre": "Subsección GLOSSARY de MANUAL:SCRIPT"},
-
-# SP
-{"id": "SP:BOOTLOADER-001", "seccion": "001", "nombre": "SP:BOOTLOADER — 001"},
-, "seccion": "04.4", "nombre": "L4 — Version Control & Infrastructure"},
-            {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH", "seccion": "04.5", "nombre": "Dashboard Checklist Architecture"},
+            {"id": "KERNEL:ARCHITECTURE-L4", "lookup_ids": ["KERNEL:ARCHITECTURE-004", "KERNEL:ARHITECTURE-L4", "KERNEL:ARCHITECTURE-L4"], "seccion": "04.4", "nombre": "L4 — Version Control & Infrastructure"},
+            {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH", "seccion": "06", "nombre": "Dashboard Checklist Architecture"},
             {"id": "KERNEL:OWNERSHIP", "seccion": "05", "nombre": "División de Responsabilidades AI/Python"},
             {"id": "KERNEL:OWNERSHIP-001", "seccion": "05.1", "nombre": "AI Component"},
             {"id": "KERNEL:OWNERSHIP-002", "seccion": "05.2", "nombre": "Python Component"},
-            {"id": "KERNEL:PURPOSE", "seccion": "06", "nombre": "Propósito del Sistema"},
-            {"id": "KERNEL:PURPOSE-001", "seccion": "06.1", "nombre": "Objetivo Principal"},
+            {"id": "KERNEL:PURPOSE", "seccion": "01", "nombre": "Propósito del Sistema"},
+            {"id": "KERNEL:PURPOSE-001", "seccion": "01.1", "nombre": "Objetivo Principal"},
             {"id": "KERNEL:SCHEMA", "seccion": "07", "nombre": "Modelo de Datos y Ownership"},
             {"id": "KERNEL:SCHEMA-001", "seccion": "07.1", "nombre": "Schema — Class A Fields"},
             {"id": "KERNEL:SCHEMA-002", "seccion": "07.2", "nombre": "Schema — Class B Fields"},
@@ -104,48 +94,48 @@ CENSUS_SPEC = [
             {"id": "KERNEL:TRACKER-SCHEMA", "seccion": "08", "nombre": "Schema del Tracker de Vacantes"},
             {"id": "KERNEL:TRACKER-SCHEMA-001", "seccion": "08.1", "nombre": "Tracker Schema — Campos Principales"},
             {"id": "KERNEL:TRACKER-SCHEMA-002", "seccion": "08.2", "nombre": "Tracker Schema — Campos Derivados"},
-            {"id": "KERNEL:FAIL-PHILOSOPHY", "seccion": "09", "nombre": "Filosofía de Fallo"},
-            {"id": "KERNEL:FAIL-PHILOSOPHY-001", "seccion": "09.1", "nombre": "Fail-Fast vs Fail-Safe"},
-            {"id": "KERNEL:FAIL-PHILOSOPHY-002", "seccion": "09.2", "nombre": "Recovery Strategies"},
-            {"id": "KERNEL:GATE-DECISION", "seccion": "10", "nombre": "Lógica de Gate Decision"},
-            {"id": "KERNEL:GATE-DECISION-001", "seccion": "10.1", "nombre": "Gate Decision — Overview"},
-            {"id": "KERNEL:GATE-DECISION-002", "seccion": "10.2", "nombre": "Lógica Estándar"},
-            {"id": "KERNEL:GATE-DECISION-003", "seccion": "10.3", "nombre": "Resolución de REVIEW_NEEDED"},
-            {"id": "KERNEL:GATE-DECISION-004", "seccion": "10.4", "nombre": "Por Qué los Gates Son Deterministas"},
-            {"id": "KERNEL:GATE-DECISION-005", "seccion": "10.5", "nombre": "Flujo de Recuperación BLOCKED"},
-            {"id": "KERNEL:GATE-DECISION-006", "seccion": "10.6", "nombre": "REJECTED (Post-Aplicación)"},
-            {"id": "KERNEL:GATE-DECISION-007", "seccion": "10.7", "nombre": "Ejecución Automática de Archivado"},
-            {"id": "KERNEL:GATE-DECISION-008", "seccion": "10.8", "nombre": "Capas de Evaluación de Gate: Técnica vs. Negocio"},
-            {"id": "KERNEL:GATE-DECISION-009", "seccion": "10.9", "nombre": "Escalamiento de Pendientes a Tickets"},
-            {"id": "KERNEL:GATE-DECISION-010", "seccion": "10.10", "nombre": "Gate Decision — Technical Review"},
-            {"id": "KERNEL:GATE-DECISION-011", "seccion": "10.11", "nombre": "Gate Decision — Business Review"},
-            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "11", "nombre": "Golden Rules — Límites de Ejecución"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "11", "nombre": "Regla de Oro #1"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "11", "nombre": "Regla de Oro #2"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-003", "seccion": "11", "nombre": "Regla de Oro #3"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-004", "seccion": "11", "nombre": "Regla de Oro #4"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-005", "seccion": "11", "nombre": "Regla de Oro #5"},
-                {"id": "KERNEL:CV-GOLDEN-RULES-006", "seccion": "11.6", "nombre": "Regla de Oro #6 — Invarianza de la Decisión de Gate"},
-            {"id": "KERNEL:TRIGGERS", "seccion": "12", "nombre": "Contratos de Ejecución del AI Component"},
-            {"id": "KERNEL:TRIGGER-001", "seccion": "12.1", "nombre": "Trigger — Discovery Request"},
-            {"id": "KERNEL:TRIGGER-002", "seccion": "12.2", "nombre": "Trigger — CV Optimization"},
-            {"id": "KERNEL:TRIGGER-003", "seccion": "12.3", "nombre": "Trigger — Recovery Request"},
-            {"id": "KERNEL:TRIGGER-004", "seccion": "12.4", "nombre": "Trigger — Documentation Update"},
-            {"id": "KERNEL:TRIGGER-005", "seccion": "12.5", "nombre": "Trigger — Schema Validation"},
-            {"id": "KERNEL:TRIGGER-006", "seccion": "12.6", "nombre": "Trigger — Gate Decision"},
-            {"id": "KERNEL:TRIGGER-007", "seccion": "12.7", "nombre": "Trigger — Archiving"},
-            {"id": "KERNEL:TRIGGER-008", "seccion": "12.8", "nombre": "Trigger — Health Check"},
-            {"id": "KERNEL:TRIGGER-009", "seccion": "12.9", "nombre": "Trigger — Version Check"},
-            {"id": "KERNEL:CV-PIPELINE", "seccion": "13", "nombre": "Pipeline de CV"},
-            {"id": "KERNEL:CV-PIPELINE-001", "seccion": "13.1", "nombre": "CV-A"},
-            {"id": "KERNEL:CV-PIPELINE-002", "seccion": "13.2", "nombre": "CV-B"},
-            {"id": "KERNEL:CANON-UPDATE", "seccion": "14", "nombre": "Actualización del Canon"},
-            {"id": "KERNEL:NAMING-CONVENTION", "seccion": "15", "nombre": "Convención de Nombres"},
-            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE", "seccion": "16", "nombre": "Context Infrastructure"},
-            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-001", "seccion": "16.1", "nombre": "Context Infrastructure — Data Sources"},
-            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-002", "seccion": "16.2", "nombre": "Context Infrastructure — Integration Points"},
-            {"id": "KERNEL:DATA-FLOW", "seccion": "17", "nombre": "Flujo de Datos"},
-            {"id": "KERNEL:EVOLUTION", "seccion": "18", "nombre": "Evolución del Sistema"},
+            {"id": "KERNEL:FAIL-PHILOSOPHY", "seccion": "02", "nombre": "Filosofía de Fallo"},
+            {"id": "KERNEL:FAIL-PHILOSOPHY-001", "seccion": "02.1", "nombre": "Fail-Fast vs Fail-Safe"},
+            {"id": "KERNEL:FAIL-PHILOSOPHY-002", "seccion": "02.2", "nombre": "Recovery Strategies"},
+            {"id": "KERNEL:GATE-DECISION", "seccion": "09", "nombre": "Lógica de Gate Decision"},
+            {"id": "KERNEL:GATE-DECISION-001", "seccion": "09.1", "nombre": "Gate Decision — Overview"},
+            {"id": "KERNEL:GATE-DECISION-002", "seccion": "09.2", "nombre": "Lógica Estándar"},
+            {"id": "KERNEL:GATE-DECISION-003", "seccion": "09.3", "nombre": "Resolución de REVIEW_NEEDED"},
+            {"id": "KERNEL:GATE-DECISION-004", "seccion": "09.4", "nombre": "Por Qué los Gates Son Deterministas"},
+            {"id": "KERNEL:GATE-DECISION-005", "seccion": "09.5", "nombre": "Flujo de Recuperación BLOCKED"},
+            {"id": "KERNEL:GATE-DECISION-006", "seccion": "09.6", "nombre": "REJECTED (Post-Aplicación)"},
+            {"id": "KERNEL:GATE-DECISION-007", "seccion": "09.7", "nombre": "Ejecución Automática de Archivado"},
+            {"id": "KERNEL:GATE-DECISION-008", "seccion": "09.8", "nombre": "Capas de Evaluación de Gate: Técnica vs. Negocio"},
+            {"id": "KERNEL:GATE-DECISION-009", "seccion": "09.9", "nombre": "Escalamiento de Pendientes a Tickets"},
+            {"id": "KERNEL:GATE-DECISION-010", "seccion": "09.10", "nombre": "Gate Decision — Technical Review"},
+            {"id": "KERNEL:GATE-DECISION-011", "seccion": "09.11", "nombre": "Gate Decision — Business Review"},
+            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "10", "nombre": "Golden Rules — Límites de Ejecución"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "10.1", "nombre": "Regla de Oro #1"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "10.2", "nombre": "Regla de Oro #2"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-003", "seccion": "10.3", "nombre": "Regla de Oro #3"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-004", "seccion": "10.4", "nombre": "Regla de Oro #4"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-005", "seccion": "10.5", "nombre": "Regla de Oro #5"},
+                {"id": "KERNEL:CV-GOLDEN-RULES-006", "seccion": "10.6", "nombre": "Regla de Oro #6 — Invarianza de la Decisión de Gate"},
+            {"id": "KERNEL:TRIGGERS", "seccion": "11", "nombre": "Contratos de Ejecución del AI Component"},
+            {"id": "KERNEL:TRIGGER-001", "seccion": "11.1", "nombre": "Trigger — Discovery Request"},
+            {"id": "KERNEL:TRIGGER-002", "seccion": "11.2", "nombre": "Trigger — CV Optimization"},
+            {"id": "KERNEL:TRIGGER-003", "seccion": "11.3", "nombre": "Trigger — Recovery Request"},
+            {"id": "KERNEL:TRIGGER-004", "seccion": "11.4", "nombre": "Trigger — Documentation Update"},
+            {"id": "KERNEL:TRIGGER-005", "seccion": "11.5", "nombre": "Trigger — Schema Validation"},
+            {"id": "KERNEL:TRIGGER-006", "seccion": "11.6", "nombre": "Trigger — Gate Decision"},
+            {"id": "KERNEL:TRIGGER-007", "seccion": "11.7", "nombre": "Trigger — Archiving"},
+            {"id": "KERNEL:TRIGGER-008", "seccion": "11.8", "nombre": "Trigger — Health Check"},
+            {"id": "KERNEL:TRIGGER-009", "seccion": "11.9", "nombre": "Trigger — Version Check"},
+            {"id": "KERNEL:CV-PIPELINE", "seccion": "12", "nombre": "Pipeline de CV"},
+            {"id": "KERNEL:CV-PIPELINE-001", "seccion": "12.1", "nombre": "CV-A"},
+            {"id": "KERNEL:CV-PIPELINE-002", "seccion": "12.2", "nombre": "CV-B"},
+            {"id": "KERNEL:CANON-UPDATE", "seccion": "13", "nombre": "Actualización del Canon"},
+            {"id": "KERNEL:NAMING-CONVENTION", "seccion": "14", "nombre": "Convención de Nombres"},
+            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE", "seccion": "15", "nombre": "Context Infrastructure"},
+            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-001", "seccion": "15.1", "nombre": "Context Infrastructure — Data Sources"},
+            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-002", "seccion": "15.2", "nombre": "Context Infrastructure — Integration Points"},
+            {"id": "KERNEL:DATA-FLOW", "seccion": "16", "nombre": "Flujo de Datos"},
+            {"id": "KERNEL:EVOLUTION", "seccion": "17", "nombre": "Evolución del Sistema"},
         ],
     },
     {
@@ -159,18 +149,18 @@ CENSUS_SPEC = [
             {"id": "MANUAL:SESSION-CYCLE", "seccion": "06", "nombre": "Ciclo de Sesión"},
             {"id": "MANUAL:CHECKLIST", "seccion": "07", "nombre": "El Checklist"},
             {"id": "MANUAL:WEEKLY-FLOW", "seccion": "08", "nombre": "Flujo Semanal de Operación"},
-            {"id": "MANUAL:WEEKLY-FLOW-001", "seccion": "08.1", "nombre": "Lunes — Búsqueda Activa"},
-            {"id": "MANUAL:WEEKLY-FLOW-002", "seccion": "08.2", "nombre": "Dashboard — recuperación antes de CV Optimization"},
-            {"id": "MANUAL:WEEKLY-FLOW-003", "seccion": "08.3", "nombre": "Miércoles — Figma"},
+            {"id": "MANUAL:WEEKLY-FLOW-001", "seccion": "8.1", "nombre": "Lunes — Búsqueda Activa"},
+            {"id": "MANUAL:WEEKLY-FLOW-002", "seccion": "8.2", "nombre": "Dashboard — recuperación antes de CV Optimization"},
+            {"id": "MANUAL:WEEKLY-FLOW-003", "seccion": "8.3", "nombre": "Miércoles — Figma"},
             {"id": "MANUAL:WEEKLY-FLOW-004", "seccion": "08.4", "nombre": "Jueves"},
             {"id": "MANUAL:WEEKLY-FLOW-005", "seccion": "08.5", "nombre": "Viernes"},
             {"id": "MANUAL:WEEKLY-FLOW-006", "seccion": "08.6", "nombre": "Cadence Matrix — Weekly Rhythm"},
             {"id": "MANUAL:RUNTIME", "seccion": "09", "nombre": "VANTAGE Runtime (Consulta Operativa)"},
-            {"id": "MANUAL:RUNTIME-001", "seccion": "09.1", "nombre": "¿Qué es el Runtime?"},
-            {"id": "MANUAL:RUNTIME-002", "seccion": "09.2", "nombre": "Comandos Principales"},
-            {"id": "MANUAL:RUNTIME-003", "seccion": "09.3", "nombre": "Cuándo Correr Sync"},
-            {"id": "MANUAL:RUNTIME-004", "seccion": "09.4", "nombre": "Runtime Build"},
-            {"id": "MANUAL:RUNTIME-005", "seccion": "09.5", "nombre": "Notebook Gemini — Triaje de Consultas Documentales"},
+            {"id": "MANUAL:RUNTIME-001", "seccion": "9.1", "nombre": "¿Qué es el Runtime?"},
+            {"id": "MANUAL:RUNTIME-002", "seccion": "9.2", "nombre": "Comandos Principales"},
+            {"id": "MANUAL:RUNTIME-003", "seccion": "9.3", "nombre": "Cuándo Correr Sync"},
+            {"id": "MANUAL:RUNTIME-004", "seccion": "9.4", "nombre": "Runtime Build"},
+            {"id": "MANUAL:RUNTIME-005", "seccion": "9.5", "nombre": "Notebook Gemini — Triaje de Consultas Documentales"},
             {"id": "MANUAL:DATA-MANAGEMENT", "seccion": "10", "nombre": "Gestión de Datos"},
             {"id": "MANUAL:MONITOR", "lookup_ids": ["MANUAL:HEALTHCHECK", "MANUAL:MONITOR"], "seccion": "11", "nombre": "Health Check"},
             {"id": "MANUAL:TROUBLESHOOTING", "seccion": "12", "nombre": "Troubleshooting"},
@@ -191,14 +181,15 @@ CENSUS_SPEC = [
             {"id": "MANUAL:FIGMA-SYNC-005", "seccion": "20.5", "nombre": "Regla de Reemplazo Total"},
             {"id": "MANUAL:SCHEMA-FIELD-REF", "seccion": "21", "nombre": "Schema Class A/B — Referencia de Campos"},
             {"id": "MANUAL:SCRIPT-GLOSSARY", "seccion": "22", "nombre": "Script Glossary"},
-            {"id": "MANUAL:SCRIPT-GLOSSARY-DASHBOARD", "seccion": "22.1", "nombre": "Script Glossary — Dashboard"},
-            {"id": "MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES", "seccion": "22.2", "nombre": "Script Glossary — Dashboard Modules"},
-            {"id": "MANUAL:SCRIPT-GLOSSARY-L1", "seccion": "22.3", "nombre": "Script Glossary — L1"},
-            {"id": "MANUAL:SCRIPT-GLOSSARY-L1-MODULES", "seccion": "22.4", "nombre": "Script Glossary — L1 Modules"},
-            {"id": "MANUAL:SCRIPT-GLOSSARY-L1-TOOLS", "seccion": "22.5", "nombre": "Script Glossary — L1 Tools"},
-            {"id": "MANUAL:SCRIPT-GLOSSARY-L4", "seccion": "22.6", "nombre": "Script Glossary — L4"},
-            {"id": "MANUAL:SCRIPT-GLOSSARY-RAYCAST", "seccion": "22.7", "nombre": "Script Glossary — Raycast"},
-            {"id": "MANUAL:SCRIPT-GLOSSARY-XREF", "seccion": "22.8", "nombre": "Script Glossary — Cross-Reference"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-DASHBOARD", "seccion": "22.4", "nombre": "Script Glossary — Dashboard"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES", "seccion": "22.4a", "nombre": "Script Glossary — Dashboard Modules"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-L1", "seccion": "22.1", "nombre": "Script Glossary — L1"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-CV-PREP", "seccion": "22.2", "nombre": "CV Pipeline — Preparación Mecánica (Miércoles)"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-L1-MODULES", "seccion": "22.1a", "nombre": "Script Glossary — L1 Modules"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-L1-TOOLS", "seccion": "22.1b", "nombre": "Script Glossary — L1 Tools"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-L4", "seccion": "22.3", "nombre": "Script Glossary — L4"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-RAYCAST", "seccion": "22.5", "nombre": "Script Glossary — Raycast"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-XREF", "seccion": "22.6", "nombre": "Script Glossary — Cross-Reference"},
             {"id": "MANUAL:SKILL-GLOSSARY", "seccion": "23", "nombre": "Glosario de Skills — Referencia Operativa en Humano"},
             {"id": "MANUAL:SKILL-GLOSSARY-CORE", "seccion": "23.1", "nombre": "Pipeline CV y Ciclo de Sesión"},
             {"id": "MANUAL:SKILL-GLOSSARY-HOUSEKEEPING", "seccion": "23.2", "nombre": "Sincronización y Mantenimiento Documental"},
@@ -301,6 +292,7 @@ CENSUS_SPEC = [
         "name": "SYSTEM PROMPT",
         "rows": [
             {"id": "SP:BOOTLOADER", "seccion": "01", "nombre": "Operating Specification — Bootstrap de Sesión"},
+            {"id": "SP:BOOTLOADER-001", "seccion": "01.1", "nombre": "Consumo de Skills por Familia de Agente"},
             {"id": "SP:SYNC-RULE", "seccion": "02", "nombre": "Sincronización Inicial y Verificación de Versión"},
             {"id": "SP:CONTEXT-INFRASTRUCTURE", "seccion": "04", "nombre": "Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE)"},
             {
@@ -314,9 +306,9 @@ CENSUS_SPEC = [
             {"id": "SP:CV-GOLDEN-RULES-REF", "seccion": "07", "nombre": "Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES)"},
             {"id": "SP:SCHEMA", "seccion": "08", "nombre": "Schema — Trackers (Class A/B)"},
             {"id": "SP:MCP-ROUTING-NOTES", "seccion": "09", "nombre": "Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY)"},
-            {"id": "SP:CONSISTENCY", "seccion": "11", "nombre": "Regla de Consistencia Documental"},
+            {"id": "SP:CONSISTENCY", "seccion": "10", "nombre": "Regla de Consistencia Documental"},
             {"id": "SP:CONSISTENCY-002", "seccion": "10.1", "nombre": "Triaje vía Notebook Gemini"},
-            {"id": "SP:VERSION-CHECK-TOOL", "seccion": "12", "nombre": "Herramienta de Verificación de Versión de Bajo Costo"},
+            {"id": "SP:VERSION-CHECK-TOOL", "seccion": "11", "nombre": "Herramienta de Verificación de Versión de Bajo Costo"},
         ],
     },
     {
@@ -599,7 +591,7 @@ def infer_section_from_id(id_str: str) -> tuple:
         "SP": "SP",
         "ALIASES": "ALIASES",
         "CHANGELOG": "CHANGELOG",
-        "CHANGELOG_ARCHIVE": "CHANGELOG_ARCHIVE",
+        "CHANGELOG_ARCHIVO": "CHANGELOG_ARCHIVO",
         "BRIEF": "BRIEF",
     }
     
@@ -673,6 +665,26 @@ def generate_census_spec_additions(orphans: dict) -> str:
     return "\n".join(additions)
 
 
+def find_census_spec_end(content: str) -> int | None:
+    """Encuentra el índice del ']' que cierra CENSUS_SPEC balanceando profundidad,
+    inmune a corchetes anidados (ej. campos tipo 'lookup_ids': [...])."""
+    start_marker = "CENSUS_SPEC = ["
+    start = content.find(start_marker)
+    if start == -1:
+        return None
+    bracket_start = start + len(start_marker) - 1
+    depth = 0
+    for i in range(bracket_start, len(content)):
+        ch = content[i]
+        if ch == "[":
+            depth += 1
+        elif ch == "]":
+            depth -= 1
+            if depth == 0:
+                return i + 1
+    return None
+
+
 def auto_fix_orphans(orphans: dict) -> bool:
     """Pregunta al usuario si quiere agregar IDs huérfanos al CENSUS_SPEC."""
     if not orphans:
@@ -720,24 +732,18 @@ def auto_fix_orphans(orphans: dict) -> bool:
         script_path = Path(__file__).resolve()
         current_content = script_path.read_text(encoding="utf-8")
         
-        # Encontrar el final del CENSUS_SPEC
-        import re
-        census_spec_pattern = r'(CENSUS_SPEC = \[.*?\])'
-        match = re.search(census_spec_pattern, current_content, re.DOTALL)
+        # Encontrar el final real del CENSUS_SPEC (balanceo de corchetes, no regex)
+        census_spec_end = find_census_spec_end(current_content)
         
-        if match:
-            census_spec_end = match.end()
-            # Insertar el código antes del cierre del CENSUS_SPEC
-            # Necesitamos encontrar dónde insertar dentro de la sección correcta
+        if census_spec_end is not None:
             new_content = current_content[:census_spec_end] + "\n    # Auto-generated orphan IDs\n" + additions_code + current_content[census_spec_end:]
             
-            # Escribir el archivo
             script_path.write_text(new_content, encoding="utf-8")
             print(f"✓ IDs agregados a {script_path}")
             print("  Revisa el archivo para verificar la inserción y ajustar secciones si es necesario.")
             return True
         else:
-            print("✗ Error: No se pudo encontrar el CENSUS_SPEC en el archivo.")
+            print("✗ Error: No se pudo encontrar el cierre real de CENSUS_SPEC en el archivo.")
             return False
     
     print("✗ Respuesta no reconocida. Cancelado.")
