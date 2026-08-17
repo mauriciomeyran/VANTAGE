@@ -60,7 +60,13 @@ Dashboard (Martes — Recuperación)
 | vdapp | Abre la app empaquetada del Dashboard. | open /Applications/Dashboard. |
 ## 07 ALIASES:CV-PIPELINE
 CV Pipeline (Miércoles)
-Sin alias de Terminal — CV-A, CV-B y QA se disparan directamente en el chat de Claude (ver Manual 08.3).
+CV-A, CV-B y QA se disparan directamente en el chat de Claude — sin alias propio (ver Manual 08.3). La preparación mecánica previa (scaffold batch, opcional) sí corre en Terminal:
+| Alias | Qué hace | Procedimiento interno |
+| --- | --- | --- |
+| (sin alias corto asignado) | Normaliza el export de Notion para el batch de CV-A. | python3 adapt_tracker_export.py --in <export.csv> |
+| (sin alias corto asignado) | Genera scaffolds HANDOFF en paralelo para vacantes Optimizar. | python3 cv_a_batch_agent.py --csv tracker_adapted.csv |
+| (sin alias corto asignado) | Prepara un scaffold individual (cache, Hard Block, idioma). | python3 cv_a_prep.py --url <URL> |
+Ver MANUAL:SCRIPT-GLOSSARY-CV-PREP para el detalle completo de flags.
 ## 08 ALIASES:DEDUP
 Dedup & Oportunidades
 | Alias | Qué hace | Procedimiento interno |

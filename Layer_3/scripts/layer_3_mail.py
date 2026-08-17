@@ -11,6 +11,7 @@ import json
 import re
 import os
 import random
+import sys
 import unicodedata
 from datetime import datetime, timezone
 from email.header import decode_header
@@ -33,7 +34,7 @@ GMAIL_LABEL    = os.environ.get("GMAIL_LABEL", ".Jobs")
 
 GROQ_API_KEY   = os.environ["GROQ_API_KEY"]
 # 8b-instant: más RPM/TPM en tier gratuito; 70b agota cuota rápido con varios correos
-GROQ_MODEL     = os.environ.get("GROQ_MODEL", "llama-3.1-8b-instant")
+GROQ_MODEL     = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
 GROQ_MIN_DELAY = float(os.environ.get("GROQ_MIN_DELAY_SEC", "12"))
 GROQ_MAX_RETRY = int(os.environ.get("GROQ_MAX_RETRIES", "8"))
 GROQ_BODY_MAX  = int(os.environ.get("GROQ_BODY_MAX_CHARS", "3500"))
@@ -43,6 +44,10 @@ NOTION_TOKEN   = os.environ["NOTION_TOKEN"]
 NOTION_DB_ID   = os.environ["NOTION_DB_ID"]
 
 _last_groq_call = 0.0
+
+
+class GroqFatalError(Exception):
+    """Error de Groq que no se arregla reintentando (VPN, credenciales, modelo inválido)."""
 
 # Fuentes reconocidas en el TRACKER
 RAW_SOURCE_MAP = {
@@ -284,7 +289,24 @@ def extract_jobs_with_groq(email_body, retries=None):
             print(f"  ⏳ Groq rate limit ({attempt + 1}/{retries}), esperando {wait:.0f}s...")
             time.sleep(wait)
             continue
-        if resp.status_code != 200: print(f"  🔴 Groq raw error: {resp.text}")
+        if resp.status_code == 403:
+            print(f"  🔴 Groq raw error: {resp.text}")
+            raise GroqFatalError(
+                "Groq acceso denegado (403). Si usas VPN, desactívala e intenta de nuevo. "
+                "Si persiste: revisa API key, créditos y permisos del modelo en console.groq.com"
+            )
+        if resp.status_code == 404 or (
+            resp.status_code == 400
+            and "model_not_found" in resp.text
+        ):
+            print(f"  🔴 Groq raw error: {resp.text}")
+            raise GroqFatalError(
+                f"Modelo Groq '{GROQ_MODEL}' no existe o fue retirado. "
+                f"Actualiza GROQ_MODEL en config/layer_3.env (recomendado: openai/gpt-oss-20b). "
+                f"Ver console.groq.com/docs/deprecations"
+            )
+        if resp.status_code != 200:
+            print(f"  🔴 Groq raw error: {resp.text}")
         resp.raise_for_status()
         break
     else:
@@ -695,6 +717,17 @@ def main():
             _set_seen(mail, em["id"], False)
             groq_failed += 1
             continue
+        except GroqFatalError as e:
+            print(f"  ❌ {e}")
+            print("  ↩️  Correos dejados como no leídos")
+            _set_seen(mail, em["id"], False)
+            groq_failed += len(emails) - idx + 1
+            mail.logout()
+            print(f"\n{'─'*40}")
+            print(f"🛑 ABORT: Groq no disponible — corrige configuración antes de reintentar")
+            print(f"✅ Creadas: {total_created}  |  ❌ Notion: {total_failed}  |  ⏸️ Groq pendientes: {groq_failed}")
+            print("─"*40 + "\n")
+            sys.exit(1)
         except Exception as e:
             print(f"  ❌ Groq error: {e}")
             print("  ↩️  Dejado como no leído para reintentar en la próxima ejecución")

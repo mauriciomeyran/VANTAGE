@@ -45,11 +45,19 @@ fi
 
 # Bucle de procesamiento: corre hasta que no queden correos
 while true; do
-    out=$("$VENV_PY" scripts/layer_3_mail.py 2>&1 | tee /dev/tty)
+    tmp=$(mktemp)
+    "$VENV_PY" scripts/layer_3_mail.py 2>&1 | tee "$tmp"
+    out=$(<"$tmp")
+    rm -f "$tmp"
     if echo "$out" | grep -qE "No hay correos nuevos|Quedan ~0"; then
         echo "🏁 VL3 terminó — no quedan correos pendientes"
         notify_success "LAYER 3" "🏁 VL3 terminó — no quedan correos pendientes"
         break
+    fi
+    if echo "$out" | grep -qE "ABORT: Groq|Groq acceso denegado|Modelo Groq"; then
+        echo "🛑 VL3 detenido — error de configuración Groq"
+        notify_error "LAYER 3" "Groq error — revisa modelo/VPN/créditos"
+        exit 1
     fi
     sleep 5
 done
