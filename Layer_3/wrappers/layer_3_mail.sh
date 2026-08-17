@@ -1,5 +1,6 @@
 #!/bin/bash
 # LAYER 3 mail script con notificaciones de sistema CON SONIDO
+export PYTHONUNBUFFERED=1
 
 notify() {
     osascript -e "display notification \"$2\" with title \"$1\""
@@ -42,11 +43,15 @@ if [ ! -f "config/layer_3.env" ]; then
     exit 1
 fi
 
-# Ejecutar script Python
-if "$VENV_PY" scripts/layer_3_mail.py; then
-    notify_success "LAYER 3" "✅ Procesamiento de mail exitoso"
-    exit 0
-else
-    notify_error "LAYER 3" "Falló procesamiento de mail ($?)"
-    exit $?
-fi
+# Bucle de procesamiento: corre hasta que no queden correos
+while true; do
+    out=$("$VENV_PY" scripts/layer_3_mail.py 2>&1 | tee /dev/tty)
+    if echo "$out" | grep -qE "No hay correos nuevos|Quedan ~0"; then
+        echo "🏁 VL3 terminó — no quedan correos pendientes"
+        notify_success "LAYER 3" "🏁 VL3 terminó — no quedan correos pendientes"
+        break
+    fi
+    sleep 5
+done
+notify_success "LAYER 3" "✅ Procesamiento de mail exitoso"
+exit 0
