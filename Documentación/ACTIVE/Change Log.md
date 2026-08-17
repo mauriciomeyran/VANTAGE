@@ -1,5 +1,12 @@
 # V | CHANGELOG
 
+---
+- Corrección: Typo en infer_layer L2 (backfill_class_a.py).
+- Cierre: GAP-03/FX-1 en feed_processor.py (comentario stale).
+- Refactor: _extract_text_prop a módulo en feed_processor.py.
+- Nuevo guard contractual: KERNEL:GATE-DECISION-012 (Dedup_Flag/layer en existentes).
+- Impacto: vantage-tidy-opportunities-tracker ahora excluye postulaciones vivas/terminales como candidatos a archivo.
+---
 Tipo: [DOC]
 Alcance:
 - Kernel (KERNEL:ARCHITECTURE-L4, 04.4 — párrafo de riesgo añadido)

@@ -364,6 +364,7 @@ Cualquier cambio a color de estado semántico o toggle de tema se hace en vantag
 Modelo de Datos y Ownership
 Aclaración terminológica: "el Tracker" sin calificativo se refiere siempre a la base de datos principal donde L1/L2/L3 escriben cada vacante — distinta del Bug Tracker y Tasks Tracker (08).
 ### 07.1 KERNEL:SCHEMA-001
+> Aclaración (2026-08-17): El upgrade de layer en dedup respeta el guard de KERNEL:GATE-DECISION-012 — no reescribe procedencia de una postulación viva.
 Class A vs Class B
 El schema define ownership. Cada campo pertenece a exactamente un componente.
 Class A — Human-Primary
@@ -477,6 +478,7 @@ Python traduce vía evaluate_rejection_status().
 El operador nunca escribe Gate_Decision directamente.
 > [Corrección aplicada] Este ID ya existía en el cuerpo del Kernel pero faltaba en la TOC — agregado como sub-ítem de 09.
 ### 09.7 KERNEL:GATE-DECISION-007
+> Nota (2026-08-17): El marcado de Dedup_Flag/candidato a archivo está sujeto al guard de KERNEL:GATE-DECISION-012 — una postulación viva o terminal nunca se marca como candidata.
 Marcado Manual de Archivado
 Next_Action='Archivar' Y/O Dedup_Flag='Posible duplicado' (ambos Class B) son señales de candidatos a archivar — no disparan archivado automático. Decisión del operador (2026-08-01): se abandonó el enfoque de mover/copiar automáticamente vía auto_archive.py (deprecado, ver Archive/Legacy_Scripts/) por menor fricción, menor costo de tokens, y por desalineación de esquema con el Archivo Tracker (ver skill vantage-tidy-opportunities-tracker).
 El mecanismo vigente es la skill vantage-tidy-opportunities-tracker: identifica candidatos vía Dedup_Flag/Next_Action, marca Archivar = True en el registro original tras DRY RUN + APROBAR_WRITE — no crea copias ni toca el Archivo Tracker ni mueve páginas físicamente. El operador localiza visualmente los registros marcados y decide cuándo archivarlos manualmente.
@@ -540,6 +542,7 @@ Referencias
 - Atomicidad RT-1: Dashboard/scripts/dashboard_routes.py (/accept), dashboard_notion.py — la escritura en esta vía pasa por el guard class_b_guard.guard_write_payload() (ver KERNEL:GATE-DECISION-003, GAP-03 cerrado v9.19.2), que bloquea fail-closed cualquier campo Class B o desconocido antes de client.pages.update().
 - Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002
 ### 09.11 KERNEL:GATE-DECISION-011
+> Matiz (2026-08-17): La fila de la matriz de transición para "Dedup match en existente" se ajusta a: Dedup_Flag='Posible duplicado' solo si el Status del existente no está en el guard de KERNEL:GATE-DECISION-012.
 Matriz de Transición de Estados (Referencia Técnica)
 Vista tabular consolidada de todas las reglas Gate (09.1–09.10).
 Referencia canónica para scripts y auditorías — no reemplaza la descripción en prosa de cada sección; la complementa con indexación de estados.
@@ -819,3 +822,35 @@ Estabilidad de Arquitectura Central
 Linaje Histórico — Preservado, No Operacional
 GPT Atlas, Grok discovery, SEARCH-EXEC/SEARCH-SIGNAL, fórmulas de scoring pre-v5.0 — contexto histórico, no código activo.
 ---
+---
+### 09.12 — Guard de Mutación en Existentes — Dedup/Layer Upgrade
+Contexto:
+Gobierna la mutación de registros existentes durante la ingesta (vía feed_processor.py), no el marcado post-hoc por skills de operador.
+Fuente de verdad: profile_fit._PROTECTED_STATUSES ∪ _TERMINAL_STATUSES.
+| Status del existente | ¿Dedup_Flag? | ¿Upgrade layer? |
+| --- | --- | --- |
+| Target / Exploratorio / REVIEW_NEEDED / vacío / otro operativo | Sí | Sí |
+| Postulado / Postulando / En proceso / Negociando / Sin respuesta / Contratado | No | No |
+| Rechazado / Expirada / Archivar / Retirado | No | No |
+Notas:
+- El inbound sigue entrando como REVIEW_NEEDED aunque el existente no se mute.
+- No confundir con gate_logic() (protege recálculo de Score/Gate, no anotación de archivo — ver KERNEL:GATE-DECISION-010).
+- Referencias cruzadas:
+- KERNEL:GATE-DECISION-007 (candidatos a archivo).
+- KERNEL:GATE-DECISION-011 (matriz de transición).
+---
+### 09.12 — Guard de Mutación en Existentes — Dedup/Layer Upgrade
+Contexto:
+Gobierna la mutación de registros existentes durante la ingesta (vía feed_processor.py), no el marcado post-hoc por skills de operador.
+Fuente de verdad: profile_fit._PROTECTED_STATUSES ∪ _TERMINAL_STATUSES.
+| Status del existente | ¿Dedup_Flag? | ¿Upgrade layer? |
+| --- | --- | --- |
+| Target / Exploratorio / REVIEW_NEEDED / vacío / otro operativo | Sí | Sí |
+| Postulado / Postulando / En proceso / Negociando / Sin respuesta / Contratado | No | No |
+| Rechazado / Expirada / Archivar / Retirado | No | No |
+Notas:
+- El inbound sigue entrando como REVIEW_NEEDED aunque el existente no se mute.
+- No confundir con gate_logic() (protege recálculo de Score/Gate, no anotación de archivo — ver KERNEL:GATE-DECISION-010).
+- Referencias cruzadas:
+- KERNEL:GATE-DECISION-007 (candidatos a archivo).
+- KERNEL:GATE-DECISION-011 (matriz de transición).

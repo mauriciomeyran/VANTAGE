@@ -603,7 +603,11 @@ Qué resuelve: dudas de gobernanza documental con ancla verificable (PREFIX:KEY)
 Qué no resuelve: evaluación de fit, cálculo de Score/Class B, redacción de CV, creación de reglas de negocio — fuera de su contrato de solo-lectura (ver KERNEL:DOCUMENTATION-012).
 ---
 ## 10 MANUAL:DATA-MANAGEMENT
-Gestión de Datos
+Matriz de Guard de Mutación (PR #10):
+| Status |
+| --- |
+| Ver tabla completa en KERNEL:GATE-DECISION-012.
+Gestión de Datos |
 Esta sección consolida en un solo lugar todo lo relacionado con exclusiones y deduplicación de vacantes — conceptos que se mencionan a lo largo de MANUAL:OBJECTIVE, MANUAL:HOW-IT-WORKS y MANUAL:WEEKLY-FLOW, y que aquí tienen su definición completa y única.
 ### Hard Blocks
 Estas empresas o tipos de rol nunca entrarán al sistema. Se filtran en el origen (antes de que la vacante exista como registro en Notion) y no son recuperables bajo ninguna circunstancia, ni siquiera vía Dashboard:
@@ -890,6 +894,10 @@ Casos de uso clave:
 - Post-incidente: Diagnóstico rápido ante sospechas de truncamiento por falla de API o timeout.
 ---
 ## 22 MANUAL:SCRIPT-GLOSSARY
+- feed_processor.py:
+- should_mutate_existing_page(page, schema): Usado por _set_dedup_flag_if_needed y _upgrade_layer_if_needed para validar mutación según el guard de KERNEL:GATE-DECISION-012.
+- profile_fit.py:
+- should_annotate_existing(status): Determina si un registro existente puede ser anotado (Dedup_Flag/layer) según su Status.
 Glosario de Scripts — Referencia Operativa en Humano
 > Propósito: traducir cada script/wrapper del árbol activo (Layer_1, Layer_3, Layer_4, Dashboard, Raycast) a lenguaje operativo — qué hace, por qué existe, y un caso de uso concreto por cada flag disponible. Este documento es el "manual de instrucciones" legible; la Script Library (Notion DB) es su índice corto y estructurado. Se referencian entre sí — ver MANUAL:SCRIPT-GLOSSARY-XREF al final.
 > Nodo padre de [KERNEL:DOMAIN-ARCHITECTURE] — organizado por capa, no alfabéticamente, para que la lectura secuencial siga el flujo real del sistema (L1 → L3 → L4 → Dashboard → Raycast).
