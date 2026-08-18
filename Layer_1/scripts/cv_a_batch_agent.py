@@ -26,11 +26,20 @@ import argparse
 import csv
 import datetime
 import json
+import logging
 import subprocess
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    datefmt='%H:%M:%S'
+)
+logger = logging.getLogger(__name__)
 
 TARGET_NEXT_ACTION = "Optimizar"
 MAX_WORKERS = 3  # Número máximo de procesos paralelos (rate limiting)
@@ -92,22 +101,61 @@ def show_progress(current: int, total: int, start_time: float):
 
 
 def load_rows(csv_path: str) -> list[dict]:
-    with open(csv_path, "r", encoding="utf-8-sig", newline="") as f:
-        reader = csv.DictReader(f)
-        required = {"ID_Vacante", "Empresa", "Rol", "URL", "Next_Action"}
-        missing = required - set(reader.fieldnames or [])
-        if missing:
-            print(f"ERROR: columnas faltantes en el CSV: {missing}", file=sys.stderr)
-            sys.exit(1)
-        return list(reader)
+    """Carga y valida filas del CSV con mejor manejo de errores."""
+    try:
+        with open(csv_path, "r", encoding="utf-8-sig", newline="") as f:
+            reader = csv.DictReader(f)
+            required = {"ID_Vacante", "Empresa", "Rol", "URL", "Next_Action"}
+            missing = required - set(reader.fieldnames or [])
+            if missing:
+                logger.error(f"Columnas faltantes en el CSV: {missing}")
+                sys.exit(1)
+            
+            rows = list(reader)
+            logger.info(f"CSV cargado exitosamente: {len(rows)} filas")
+            return rows
+    except FileNotFoundError:
+        logger.error(f"Archivo CSV no encontrado: {csv_path}")
+        sys.exit(1)
+    except Exception as e:
+        logger.error(f"Error leyendo CSV: {e}")
+        sys.exit(1)
 
 
 def run_cv_a_prep(cv_a_prep_path: str, row: dict, out_dir: Path) -> dict:
+    """Ejecuta cv_a_prep.py con validación mejorada de inputs."""
     id_vac = row["ID_Vacante"].strip()
     empresa = row["Empresa"].strip()
     rol = row["Rol"].strip()
     url = row.get("URL", "").strip()
     jd_file = row.get("JD_File", "").strip()
+
+    # Validaciones adicionales
+    if not id_vac:
+        return {
+            "ID_Vacante": "N/A",
+            "Empresa": empresa,
+            "Rol": rol,
+            "resultado": "ERROR",
+            "detalle": "ID_Vacante vacío — no procesable",
+            "scaffold_path": "",
+        }
+
+    if not empresa:
+        logger.warning(f"Empresa vacía para {id_vac}, procesando de todas formas")
+
+    if not rol:
+        logger.warning(f"Rol vacío para {id_vac}, procesando de todas formas")
+
+    # Validar URL si está presente
+    if url and not (url.startswith(("http://", "https://"))):
+        logger.warning(f"URL sin esquema para {id_vac}: {url}, normalizando a https://")
+        url = "https://" + url
+
+    # Validar JD file si está presente
+    if jd_file and not Path(jd_file).exists():
+        logger.warning(f"JD file no existe para {id_vac}: {jd_file}, continuando sin JD")
+        jd_file = ""
 
     out_path = out_dir / f"HANDOFF_scaffold_{id_vac}.md"
 
@@ -130,6 +178,7 @@ def run_cv_a_prep(cv_a_prep_path: str, row: dict, out_dir: Path) -> dict:
     try:
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
     except subprocess.TimeoutExpired:
+        logger.error(f"Timeout ejecutando cv_a_prep.py para {id_vac}")
         return {
             "ID_Vacante": id_vac,
             "Empresa": empresa,
@@ -142,10 +191,13 @@ def run_cv_a_prep(cv_a_prep_path: str, row: dict, out_dir: Path) -> dict:
     stdout = proc.stdout.strip()
     if "HARD BLOCK" in stdout:
         resultado = "BLOCKED"
+        logger.info(f"HARD BLOCK detectado para {id_vac}")
     elif proc.returncode == 0:
         resultado = "SCAFFOLD_OK"
+        logger.debug(f"Scaffold OK para {id_vac}")
     else:
         resultado = "ERROR"
+        logger.error(f"Error en cv_a_prep.py para {id_vac}: {proc.stderr.strip()}")
 
     return {
         "ID_Vacante": id_vac,

@@ -472,6 +472,18 @@ def calculate_score_v6(entry):
 
 
 
+def generate_archive_notes(reason: str, details: str = "") -> str:
+    """
+    Genera mensaje estandarizado para campo Notas cuando se archiva una vacante.
+    Formato: [ARCHIVO] Razón: {razón_determinista}
+    {detalles_específicos_si_aplica}
+    """
+    message = f"[ARCHIVO] Razón: {reason}"
+    if details:
+        message += f"\n{details}"
+    return message
+
+
 def gate(fetch, vm_scope, role_class, source_type, score=None, rol="", marca=""):
     from profile_fit import has_vm_title_signal, is_role_excluded, resolve_alias_flags
 
@@ -716,20 +728,37 @@ def main():
             rol = txt(props.get("Rol")) or "Sin rol"
             print(f"X [{item['id'][:8]}] {empresa} - {rol[:30]}...")
             print(f"   URL Gate fallo: {reason}")
+            
+            # Generar nota determinista para archivado
+            archive_note = generate_archive_notes(
+                reason=f"URL Gate rechazada ({reason})",
+                details=f"Validación de URL falló: {reason}"
+            )
+            
             if not DRY_RUN:
                 try:
+                    # Obtener notas existentes para append
+                    existing_notes = txt(props.get("Notas")) or ""
+                    final_notes = f"{existing_notes}\n\n{archive_note}" if existing_notes else archive_note
+                    
                     client.pages.update(
                         page_id=item["id"],
                         properties={
                             "Fetch": {"select": {"name": "Bloqueado"}},
                             "Status": {"select": {"name": "Expirada"}},
                             "Next_Action": {"select": {"name": "Archivar"}},
+                            "Notas": {
+                                "rich_text": [{
+                                    "type": "text",
+                                    "text": {"content": final_notes}
+                                }]
+                            }
                         }
                     )
                 except Exception as e:
                     print(f"WARNING: Error actualizando {item['id'][:8]}: {e}")
             else:
-                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Fetch', 'Status', 'Next_Action'] -> Bloqueado / Expirada / Archivar")
+                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Fetch', 'Status', 'Next_Action', 'Notas'] -> Bloqueado / Expirada / Archivar + nota: {archive_note[:50]}...")
         else:
             url_gate_updates += 1
             if reason == "JD_ALREADY_EXISTS":
@@ -855,22 +884,40 @@ def main():
         )
         if not should_auto_cleanup(status, reasons):
             continue
+        
+        # Generar nota determinista para archivado por misfit
+        reason_text = reasons[0] if reasons else "Misfit de perfil genérico"
+        archive_note = generate_archive_notes(
+            reason="Expirada por misfit de perfil",
+            details=f"Criterio: {reason_text}"
+        )
+        
         if not DRY_RUN:
             try:
+                # Obtener notas existentes para append
+                existing_notes = txt(props.get("Notas")) or ""
+                final_notes = f"{existing_notes}\n\n{archive_note}" if existing_notes else archive_note
+                
                 client.pages.update(
                     page_id=item["id"],
                     properties={
                         "Status": {"select": {"name": "Expirada"}},
                         "Next_Action": {"select": {"name": "Archivar"}},
+                        "Notas": {
+                            "rich_text": [{
+                                "type": "text",
+                                "text": {"content": final_notes}
+                            }]
+                        }
                     },
                 )
                 misfit_updates += 1
-                print(f"  X [{item['id'][:8]}] {marca[:20]} | {rol[:35]} -> Expirada ({reasons[0]})")
+                print(f"  X [{item['id'][:8]}] {marca[:20]} | {rol[:35]} -> Expirada ({reasons[0]}) + nota")
             except Exception as e:
                 print(f"WARNING: Error limpiando {item['id'][:8]}: {e}")
         else:
             misfit_updates += 1
-            print(f"  [DRY-RUN] {item['id'][:8]}: actualizaría ['Status', 'Next_Action'] -> Expirada / Archivar ({reasons[0]})")
+            print(f"  [DRY-RUN] {item['id'][:8]}: actualizaría ['Status', 'Next_Action', 'Notas'] -> Expirada / Archivar ({reasons[0]}) + nota: {archive_note[:50]}...")
     if misfit_updates:
         print(f"OK {misfit_updates} vacantes fuera de perfil marcadas Expirada")
     else:
@@ -905,27 +952,42 @@ def main():
             from datetime import datetime
             nad_date = datetime.strptime(nad_value, "%Y-%m-%d").date()
             if nad_date < today:
-                # NAD vencido - marcar como Expirada
+                # NAD vencido - marcar como Expirada con nota determinista
+                archive_note = generate_archive_notes(
+                    reason="Expirada por NAD vencido",
+                    details=f"NAD original: {nad_value} (vencido el {nad_date})"
+                )
+                
                 if not DRY_RUN:
                     try:
+                        # Obtener notas existentes para append
+                        existing_notes = txt(props.get("Notas")) or ""
+                        final_notes = f"{existing_notes}\n\n{archive_note}" if existing_notes else archive_note
+                        
                         client.pages.update(
                             page_id=item["id"],
                             properties={
                                 "Status": {"select": {"name": "Expirada"}},
                                 "Next_Action": {"select": {"name": "Archivar"}},
+                                "Notas": {
+                                    "rich_text": [{
+                                        "type": "text",
+                                        "text": {"content": final_notes}
+                                    }]
+                                }
                             },
                         )
                         nad_expiry_updates += 1
                         marca = txt(props.get("Marca"))
                         rol = txt(props.get("Rol"))
-                        print(f"  ⏰ [{item['id'][:8]}] {marca[:20]} | {rol[:35]} -> Expirada (NAD vencido: {nad_value})")
+                        print(f"  ⏰ [{item['id'][:8]}] {marca[:20]} | {rol[:35]} -> Expirada (NAD vencido: {nad_value}) + nota")
                     except Exception as e:
                         print(f"WARNING: Error expirando por NAD {item['id'][:8]}: {e}")
                 else:
                     nad_expiry_updates += 1
                     marca = txt(props.get("Marca"))
                     rol = txt(props.get("Rol"))
-                    print(f"  [DRY-RUN] {item['id'][:8]}: actualizaría ['Status', 'Next_Action'] -> Expirada / Archivar (NAD vencido: {nad_value})")
+                    print(f"  [DRY-RUN] {item['id'][:8]}: actualizaría ['Status', 'Next_Action', 'Notas'] -> Expirada / Archivar (NAD vencido: {nad_value}) + nota: {archive_note[:50]}...")
         except ValueError:
             # Formato de fecha inválido - skip
             continue

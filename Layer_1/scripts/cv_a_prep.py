@@ -25,21 +25,45 @@ y reportarlo, no generar HANDOFF").
 import argparse
 import datetime
 import hashlib
+import json
+import logging
 import os
 import re
 import sys
 import urllib.request
 from pathlib import Path
 
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    datefmt='%H:%M:%S'
+)
+logger = logging.getLogger(__name__)
+
 # --- KERNEL:CV-PIPELINE-001 / MANUAL:DATA-MANAGEMENT §10 — Hard Blocks ---
-# Empleadores con bloqueo total de recontratación. Mantener sincronizado
-# manualmente con la fuente canónica (Career Canon / Manual §10). Este
-# script NO es la fuente de verdad — solo aplica la regla ya documentada.
-HARD_BLOCK_EMPLOYERS = [
-    "l'oreal", "loreal", "l'oréal",
-    "levi's", "levis", "dockers",
-    "palacio de hierro", "el palacio de hierro",
-]
+# Empleadores con bloqueo total de recontratación. Cargados desde config
+# para mejor mantenibilidad. Este script NO es la fuente de verdad — solo
+# aplica la regla ya documentada en Career Canon / Manual §10.
+
+HARD_BLOCK_CONFIG_PATH = Path(__file__).parent.parent / "config" / "hard_blocks.json"
+
+def load_hard_blocks() -> list[str]:
+    """Carga la lista de empleadores con hard block desde config."""
+    try:
+        if HARD_BLOCK_CONFIG_PATH.exists():
+            with open(HARD_BLOCK_CONFIG_PATH, "r", encoding="utf-8") as f:
+                config = json.load(f)
+                return config.get("hard_block_employers", [])
+        else:
+            logger.warning(f"Config de hard blocks no encontrado en {HARD_BLOCK_CONFIG_PATH}, usando fallback")
+            # Fallback hardcodeado por seguridad
+            return ["l'oreal", "loreal", "l'oréal", "levi's", "levis", "dockers", "palacio de hierro", "el palacio de hierro"]
+    except Exception as e:
+        logger.error(f"Error cargando config de hard blocks: {e}, usando fallback")
+        return ["l'oreal", "loreal", "l'oréal", "levi's", "levis", "dockers", "palacio de hierro", "el palacio de hierro"]
+
+HARD_BLOCK_EMPLOYERS = load_hard_blocks()
 
 # Nota: Aéropostale NO es Hard Block (confirmado con el operador 2026-08-07).
 
@@ -58,8 +82,12 @@ def is_cache_valid(cache_path: Path) -> bool:
     """Verifica si el cache aún es válido basado en la edad del archivo."""
     if not cache_path.exists():
         return False
-    age_hours = (datetime.datetime.now() - datetime.datetime.fromtimestamp(cache_path.stat().st_mtime)).total_seconds() / 3600
-    return age_hours < CACHE_EXPIRY_HOURS
+    try:
+        age_hours = (datetime.datetime.now() - datetime.datetime.fromtimestamp(cache_path.stat().st_mtime)).total_seconds() / 3600
+        return age_hours < CACHE_EXPIRY_HOURS
+    except Exception as e:
+        logger.warning(f"Error verificando validez de cache {cache_path}: {e}")
+        return False
 
 
 def detect_language(text: str) -> str:
@@ -102,6 +130,7 @@ def fetch_jd(url: str) -> str:
     
     # Verificar cache válido
     if is_cache_valid(cache_path):
+        logger.info(f"Usando cache para {url}")
         with open(cache_path, "r", encoding="utf-8") as f:
             return f.read()
     
@@ -112,9 +141,25 @@ def fetch_jd(url: str) -> str:
     try:
         with urllib.request.urlopen(req, timeout=15) as resp:
             raw = resp.read().decode("utf-8", errors="ignore")
-    except Exception as e:
-        print(f"AVISO: error descargando URL ({e}). Intentando cache si existe...", file=sys.stderr)
+            logger.info(f"JD descargado exitosamente para {url}")
+    except urllib.error.HTTPError as e:
+        logger.error(f"Error HTTP descargando URL {url}: {e.code}")
         if cache_path.exists():
+            logger.info("Usando cache existente como fallback")
+            with open(cache_path, "r", encoding="utf-8") as f:
+                return f.read()
+        raise
+    except urllib.error.URLError as e:
+        logger.error(f"Error de URL descargando {url}: {e}")
+        if cache_path.exists():
+            logger.info("Usando cache existente como fallback")
+            with open(cache_path, "r", encoding="utf-8") as f:
+                return f.read()
+        raise
+    except Exception as e:
+        logger.error(f"Error inesperado descargando {url}: {e}")
+        if cache_path.exists():
+            logger.info("Usando cache existente como fallback")
             with open(cache_path, "r", encoding="utf-8") as f:
                 return f.read()
         raise
@@ -127,8 +172,12 @@ def fetch_jd(url: str) -> str:
     text = re.sub(r"\s+", " ", text).strip()
     
     # Guardar en cache
-    with open(cache_path, "w", encoding="utf-8") as f:
-        f.write(text)
+    try:
+        with open(cache_path, "w", encoding="utf-8") as f:
+            f.write(text)
+        logger.debug(f"Cache guardado para {url}")
+    except Exception as e:
+        logger.warning(f"Error guardando cache para {url}: {e}")
     
     return text
 
@@ -210,6 +259,21 @@ def build_scaffold(url: str, empresa: str, rol: str, jd_text: str) -> str:
 """
 
 
+def auto_clean_cache() -> int:
+    """Limpia automáticamente cache expirado. Retorna cantidad de archivos eliminados."""
+    cleaned = 0
+    try:
+        for cache_file in CACHE_DIR.glob("*.txt"):
+            if not is_cache_valid(cache_file):
+                cache_file.unlink()
+                cleaned += 1
+        if cleaned > 0:
+            logger.info(f"Auto-limpieza de cache: {cleaned} archivos expirados eliminados")
+    except Exception as e:
+        logger.warning(f"Error en auto-limpieza de cache: {e}")
+    return cleaned
+
+
 def main():
     parser = argparse.ArgumentParser(description="Preparación mecánica para CV-A")
     parser.add_argument("--url", help="URL de la vacante")
@@ -226,17 +290,26 @@ def main():
         action="store_true",
         help="Limpiar cache de JDs expirados antes de procesar"
     )
+    parser.add_argument(
+        "--no-auto-clean",
+        action="store_true",
+        help="Desactivar limpieza automática de cache expirado"
+    )
     args = parser.parse_args()
     
-    # Limpiar cache si se solicita
+    # Limpieza automática de cache (por defecto activa)
+    if not args.no_auto_clean:
+        auto_clean_cache()
+    
+    # Limpiar cache si se solicita explícitamente
     if args.clear_cache:
-        print("Limpiando cache de JDs expirados...")
+        logger.info("Limpiando cache de JDs expirados manualmente...")
         cleaned = 0
         for cache_file in CACHE_DIR.glob("*.txt"):
             if not is_cache_valid(cache_file):
                 cache_file.unlink()
                 cleaned += 1
-        print(f"Cache limpiado: {cleaned} archivos expirados eliminados.")
+        logger.info(f"Cache limpiado manualmente: {cleaned} archivos expirados eliminados.")
 
     if not args.url and not args.jd_file:
         print("ERROR: provee --url y/o --jd-file", file=sys.stderr)

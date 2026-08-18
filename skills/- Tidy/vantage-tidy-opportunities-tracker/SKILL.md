@@ -1,6 +1,6 @@
 ---
 name: vantage-tidy-opportunities-tracker
-description: Identifica duplicados y vacantes expiradas en el VANTAGE Tracker (Opportunities DB) y marca Archivar = True en el registro original — sin crear copias ni tocar el Archivo Tracker. Usa los mecanismos de fingerprint y protección de estado terminal ya implementados en el pipeline Python y documentados en el Kernel. Requiere Dry Run y APROBAR_WRITE antes de cualquier escritura.
+description: Identifica duplicados y vacantes expiradas en el VANTAGE Tracker (Opportunities DB) y marca Archivar = True en el registro original — sin crear copias ni tocar el Archivo Tracker. La documentación de razones deterministas en campo Notas es responsabilidad de VL1 (layer_1_run.py) en el momento de la decisión. Esta skill solo se encarga del marcado de Archivar=True para housekeeping de mantenimiento. Usa los mecanismos de fingerprint y protección de estado terminal ya implementados en el pipeline Python y documentados en el Kernel. Requiere Dry Run y APROBAR_WRITE antes de cualquier escritura.
 ---
 
 ## Convención de anuncio (KERNEL:DOCUMENTATION-005)
@@ -10,7 +10,7 @@ description: Identifica duplicados y vacantes expiradas en el VANTAGE Tracker (O
 
 ## Alcance de esta skill (léase primero)
 
-Esta skill **solo marca la casilla `Archivar = True`** en el registro original del VANTAGE Tracker. No crea copias, no toca el Archivo Tracker, no mueve ni archiva físicamente ninguna página (`archived: true` a nivel Notion). Es el mismo modelo que `vantage-tidy-bug-task-tracker`: marcar para que el operador localice visualmente qué mandar a su archivo, cuando él decida hacerlo manualmente.
+Esta skill **marca la casilla `Archivar = True`** y **documenta la razón determinista en el campo `Notas`** en el registro original del VANTAGE Tracker. No crea copias, no toca el Archivo Tracker, no mueve ni archiva físicamente ninguna página (`archived: true` a nivel Notion). Es el mismo modelo que `vantage-tidy-bug-task-tracker`: marcar para que el operador localice visualmente qué mandar a su archivo, cuando él decida hacerlo manualmente.
 
 Decisión del operador (2026-08-01): se abandona el enfoque de mover/copiar automáticamente vía `auto_archive.py` o vía creación de páginas en el Archivo Tracker. Motivo: menor fricción, menos tokens, y evita depender de que el esquema del Archivo Tracker esté alineado 1:1 con el Tracker principal (hallazgo de esta misma fecha: el Archivo Tracker tiene propiedades duplicadas/corruptas — `Next_Action 1` con opciones de Bug/Task Tracker en vez de las propias, `Fetch`/`Fuente`/`VM_Scope`/`Status` duplicadas con tipos inconsistentes, y falta `Score_Method` — sin resolver a la fecha). Esta skill ya no depende de ese esquema para nada.
 
@@ -47,6 +47,31 @@ También confirmado en esa fecha: 27 registros con `Status=Expirada` tenían `Ga
 
 `should_auto_cleanup()` nunca aplica este auto-marcado si `Status` ya está en `_PROTECTED_STATUSES` (`Postulado`, `En proceso`, `Negociando`, `Sin respuesta`, `Contratado`) o `_TERMINAL_STATUSES` (`Expirada`, `Rechazado`, `Archivar`, `Retirado`). Esta skill hereda la misma protección.
 
+## Documentación de razones deterministas en campo Notas
+
+Al marcar `Archivar=True`, esta skill también documenta la razón determinista en el campo `Notas` usando el siguiente formato estandarizado:
+
+**Formato de mensaje en Notas:**
+```
+[ARCHIVO] Razón: {razón_determinista}
+{detalles_específicos_si_aplica}
+```
+
+**Razones deterministas documentadas:**
+
+| Razón | Criterio | Mensaje en Notas |
+|---|---|---|
+| Duplicado | `Dedup_Flag = "Posible duplicado"` | `[ARCHIVO] Razón: Duplicado detectado por hash/fingerprint` |
+| Expirada - Misfit perfil | `Status = "Expirada"` + misfit de perfil | `[ARCHIVO] Razón: Expirada por misfit de perfil - {razón_específica}` |
+| Expirada - Genérica | `Status = "Expirada"` sin misfit específico identificado | `[ARCHIVO] Razón: Expirada (criterio genérico)` |
+
+**Detalles específicos para misfit de perfil (según `profile_fit.py`):**
+- `Exclusión por título de rol` - si aplicó `is_role_excluded()`
+- `Hard-block por marca` - si aplicó `resolve_alias_flags()`
+- `Combinación scope/score bajo` - si cumplió alguna combinación de `VM_Scope=Bajo` + `Role_Class=Otro/Pivote` o `Score<45`
+
+Si ya existe contenido en `Notas`, se **adjunta** el nuevo mensaje (no sobrescribe), separado por línea vacía.
+
 ## Protección de estado terminal — PROTECCIÓN TOTAL (KERNEL:GATE-DECISION-006 + gate_logic.py)
 
 Registros con `Next_Action` ya poblado quedan protegidos y no reciben re-evaluación retroactiva sin limpieza manual explícita del campo. En código (`gate_logic.py`), los valores permanentemente inmutables son `Next_Action ∈ {"Archivar", "Expirada"}`.
@@ -65,13 +90,28 @@ El único valor de `Status` que libera un registro bloqueado para reprocesamient
 4. **Antes de proponer cualquier candidato**: verificar `Gate_Decision`. Si es `APPLIED`, excluir del batch y reportarlo aparte como "aplicación activa, requiere revisión manual" — sin importar `Next_Action`/`Dedup_Flag`/`Status`.
 5. **Si un candidato ya tiene `Archivar=True`**: omitirlo del Dry Run (ya está marcado, nada que hacer).
 6. **Si no hay candidatos**: informar "sin candidatos de marcado en esta corrida" y terminar — no generar Dry Run vacío.
-7. Presentar **Dry Run**: tabla con columnas `Vacante | Marca | Criterio (Dedup_Flag / Status=Expirada) | Evidencia (hash/fingerprint) | Gate_Decision`.
+7. Presentar **Dry Run**: tabla con columnas `Vacante | Marca | Criterio (Dedup_Flag / Status=Expirada) | Evidencia (hash/fingerprint) | Gate_Decision | Mensaje Notas propuesto`.
 8. Esperar variante válida de `APROBAR_WRITE`.
-9. **Ejecutar marcado** — para cada candidato aprobado, `notion-update-page` con payload mínimo:
+9. **Ejecutar marcado** — para cada candidato aprobado, `notion-update-page` con payload:
    ```json
-   {"properties": {"Archivar": {"checkbox": true}}}
+   {
+     "properties": {
+       "Archivar": {"checkbox": true},
+       "Notas": {
+         "rich_text": [
+           {
+             "type": "text",
+             "text": {
+               "content": "{mensaje_determinista_generado}"
+             }
+           }
+         ]
+       }
+     }
+   }
    ```
-10. **Verificación**: fetch de confirmación por cada página para validar que `Archivar == true`.
+   **Si ya existe contenido en Notas**: adjuntar el nuevo mensaje separado por línea vacía (no sobrescribir).
+10. **Verificación**: fetch de confirmación por cada página para validar que `Archivar == true` y que el mensaje se escribió en Notas.
 
 ## Gaps que siguen abiertos (no resueltos por código ni Kernel, fuera del alcance de esta skill)
 

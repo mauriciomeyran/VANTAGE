@@ -1,6 +1,6 @@
 ---
 name: vantage-housekeeping-archive
-description: "Housekeeping de archivado del VANTAGE Tracker: detecta candidatos (Dedup_Flag, Status=Expirada, Next_Action Archivar/Post-Mortem), delega el marcado Archivar=True a vantage-tidy-opportunities-tracker (única vía de escritura, DRY RUN + APROBAR_WRITE) y entrega reporte de cola de archivo con IDs de página para localización visual del operador. No mueve páginas ni escribe en el Archivo Tracker. VANTAGE-ALIGNED: Integra KERNEL requirements (DOCUMENTATION-005, DOCUMENTATION-010, DOCUMENTATION-012, DOCUMENTATION-008, FAIL-PHILOSOPHY) y maximiza token economy via sandbox protocol."
+description: "Housekeeping de archivado del VANTAGE Tracker: detecta candidatos (Dedup_Flag, Status=Expirada, Next_Action Archivar/Post-Mortem), delega el marcado Archivar=True + documentación de razón determinista en Notas a vantage-tidy-opportunities-tracker (única vía de escritura, DRY RUN + APROBAR_WRITE) y entrega reporte de cola de archivo con IDs de página para localización visual del operador. No mueve páginas ni escribe en el Archivo Tracker. VANTAGE-ALIGNED: Integra KERNEL requirements (DOCUMENTATION-005, DOCUMENTATION-010, DOCUMENTATION-012, DOCUMENTATION-008, FAIL-PHILOSOPHY) y maximiza token economy via sandbox protocol."
 ---
 
 ## Convención de anuncio (KERNEL:DOCUMENTATION-005)

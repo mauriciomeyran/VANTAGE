@@ -22,8 +22,17 @@ Uso:
 import argparse
 import csv
 import hashlib
+import logging
 import sys
 from pathlib import Path
+
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    datefmt='%H:%M:%S'
+)
+logger = logging.getLogger(__name__)
 
 
 def build_id(row: dict, idx: int) -> str:
@@ -44,14 +53,21 @@ def validate_url(url: str) -> bool:
     if not url.startswith(("http://", "https://")):
         return False
     # Validación básica de formato
-    if "." not in url.split("//")[1]:
+    parts = url.split("//", 1)
+    if len(parts) < 2:
+        return False
+    domain_part = parts[1].split("/")[0]  # Extraer dominio
+    if "." not in domain_part:
+        return False
+    # Validación adicional: debe tener al menos un carácter después del último punto
+    if len(domain_part.split(".")[-1]) < 2:
         return False
     return True
 
 
 def generate_url_hash(url: str) -> str:
-    """Genera un hash único para una URL para detección de duplicados."""
-    return hashlib.md5(url.strip().lower().encode()).hexdigest()
+    """Genera un hash único para una URL para detección de duplicados (SHA256)."""
+    return hashlib.sha256(url.strip().lower().encode()).hexdigest()
 
 
 def detect_duplicates(rows: list[dict]) -> tuple[list[dict], list[str]]:

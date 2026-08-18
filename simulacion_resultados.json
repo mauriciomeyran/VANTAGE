@@ -1,0 +1,47 @@
+{
+  "simulacion": "Documentaci\u00f3n de notas en archivado",
+  "fecha": "2026-08-17T17:26:01.364173",
+  "vacantes": [
+    {
+      "id": "vac001",
+      "marca": "Nike",
+      "rol": "Visual Merchandising Manager",
+      "url": "https://jobs.nike.com/invalid-url",
+      "status": "Expirada",
+      "notas": "Nota previa: candidato interesante\n\n[ARCHIVO] Raz\u00f3n: URL Gate rechazada (STATUS_404)\nValidaci\u00f3n de URL fall\u00f3: STATUS_404",
+      "nad": "",
+      "archivada": true
+    },
+    {
+      "id": "vac002",
+      "marca": "Zara",
+      "rol": "Store Manager",
+      "url": "https://zara.com/jobs/store-manager",
+      "status": "Expirada",
+      "notas": "[ARCHIVO] Raz\u00f3n: Expirada por misfit de perfil\nCriterio: Exclusi\u00f3n por t\u00edtulo de rol (no VM)",
+      "nad": "",
+      "archivada": true
+    },
+    {
+      "id": "vac003",
+      "marca": "LVMH",
+      "rol": "Marketing Coordinator",
+      "url": "https://lvmh.com/careers",
+      "status": "Expirada",
+      "notas": "Nota previa: referencia interna\n\n[ARCHIVO] Raz\u00f3n: Expirada por NAD vencido\nNAD original: 2026-08-12 (vencido el 2026-08-12)",
+      "nad": "2026-08-12",
+      "archivada": true
+    },
+    {
+      "id": "vac004",
+      "marca": "Adidas",
+      "rol": "Logistics Manager",
+      "url": "https://adidas.com/jobs",
+      "status": "Target",
+      "notas": "",
+      "nad": "",
+      "archivada": false
+    }
+  ],
+  "conclusion": "Validaci\u00f3n exitosa desde perspectiva humana"
+}
