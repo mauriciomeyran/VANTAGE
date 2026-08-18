@@ -2,6 +2,25 @@
 
 Tipo: [DOC]
 Alcance:
+- Script Library (Notion) — 1 corrección de campo (Acción), 2 Descripciones enriquecidas
+- Aliases (ALIASES:L0-RUNTIME, 02 — 4 filas nuevas)
+- Aliases (ALIASES:L4-VERSION-CONTROL, 05 — 2 filas nuevas)
+- Aliases (ALIASES:DEDUP, 08 — 1 fila nueva)
+Contexto: Ejecución de vantage-sync-script-library sobre gap report --scripts (2 sin registrar, skip por decisión del operador; 2 huérfanos resueltos — export_bootloader_pages.py confirmado ausente real → Archivar; git_sync.py L4 confirmado falso positivo de scan-root, Ruta ya correcta). Cruce posterior de Script Library vs. documento ALIASES contra .zshrc real reveló 8 scripts/flags activos sin fila en ALIASES: vlength/vupdatebaseline (flags de verify_versions.py sin alias propio documentado), vunlock/vlock (chmod sobre ACTIVE/*.md, no documentados en absoluto), vdigest (script sin alias en .zshrc — operador creó el alias en esta sesión), cleancaches y vprint (aliases reales confirmados en .zshrc, sin fila previa), y dedup_audit.sh (inicialmente sospechado huérfano/redundante con vopport — operador aportó guía completa confirmando que es la Opción 1 de auditoría manual recomendada, con capacidades adicionales --clear y --dedup-audit no documentadas). Descripciones de dedup_opportunities.py y dedup_audit.sh en Script Library enriquecidas con el mismo contexto.
+Cambios:
+- Script Library export_bootloader_pages.py — Acción: Keep → Archivar.
+- Script Library dedup_opportunities.py, dedup_audit.sh — Descripción poblada (fuzzy matching, --clear, integración --dedup-audit Fase 6).
+- ALIASES:L0-RUNTIME (02) — altas: vlength, vupdatebaseline, vunlock/vlock, vdigest.
+- ALIASES:L4-VERSION-CONTROL (05) — altas: cleancaches, vprint.
+- ALIASES:DEDUP (08) — alta: dedup_audit.sh.
+IDs afectados: Ninguno — filas de tabla bajo secciones ALIASES ya censadas, sin alta de nodo canonico nuevo (no dispara KERNEL:DOCUMENTATION-008 Regla 1).
+Write-Back Verification: Script Library (3 páginas) y Aliases (3 tablas, 7 filas) re-fetched post-escritura en esta misma sesión — confirmados sin mismatch.
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.21.22 al resto de los fundacionales.
+- skill2md en .zshrc apunta a path muerto (Layer_1/scripts/skill_to_md.py → real: Archive/Legacy_Scripts/skill_to_md.py) — alias roto, decisión de reparar/dar de baja pendiente del operador.
+---
+Tipo: [DOC]
+Alcance:
 - Kernel (KERNEL:GATE-DECISION-013, 09.13 — nodo nuevo)
 - Kernel (KERNEL:CV-PIPELINE-003, 12.3 — nodo nuevo, restaurado tras drift; corrección de corrupción de encoding en 12.1)
 - Manual (MANUAL:DATA-MANAGEMENT-001, 10.1 — nodo nuevo)
