@@ -203,6 +203,37 @@ Timestamp Obligatorio en Changelog
 Toda entrada nueva del Change Log declara fecha y hora local (CDMX) en el título de la entrada, formato {Mes} {DD}, {AA} {HH.MM} (ej. "Ago 16, 26 06.17"). Claude no tiene acceso a reloj de sistema ni herramienta de tiempo real fiable dentro de la sesión — la hora la provee el operador explícitamente en el mensaje que autoriza la escritura. Si el operador no la incluye, Claude la solicita antes de escribir la entrada; no infiere ni aproxima.
 ---
 ### 03.11 KERNEL:DOCUMENTATION-011
+Impact Assessment Contract
+Toda modificación que afecte un documento con dependencias registradas deberá generar una Evaluación de Impacto antes del cierre de la operación.
+La evaluación debe responder:
+- Qué documentos pueden verse afectados.
+- Qué contratos deben verificarse.
+- Si es necesaria una actualización documental.
+- Si debe regenerarse algún artefacto de Runtime.
+- Si debe ejecutarse una validación adicional.
+- Si se requiere sincronización mediante vcensus, vhyperlinks o vversions.
+---
+### 03.16 KERNEL:DOCUMENTATION-016
+Mandatory Change Reporting
+Cuando una evaluación de impacto determine que existe afectación sobre otro documento o artefacto, la afectación debe registrarse en el Change Log.
+La entrada debe incluir:
+- Documento modificado.
+- Documentos potencialmente afectados.
+- Tipo de impacto: Normativo, Operativo, Runtime o Navegación.
+- Acción correctiva ejecutada.
+- Estado final de la validación.
+---
+### 03.17 KERNEL:DOCUMENTATION-017
+Sistema de Cross-Reference Hyperlinks
+El sistema convierte las menciones de IDs canónicos en hipervínculos reales hacia sus bloques de definición, preservando el block-ID mediante parches puntuales y evitando operaciones destructivas de reconstrucción.
+El heading de definición no se autoenlaza; las menciones posteriores sí pueden recibir hipervínculo.
+---
+### 03.14 KERNEL:DOCUMENTATION-014
+External Configuration Contract
+Los scripts operativos deben externalizar la configuración mutable cuando esta pueda cambiar sin alterar la lógica del pipeline.
+Para CV-A, Layer_1/config/hard_blocks.json es la fuente externa de la lista de Hard Blocks; si el archivo no existe, el código utiliza fallback interno. La configuración debe versionarse, validarse y mantener compatibilidad con el comportamiento determinista del pipeline.
+---
+### 03.15 KERNEL:DOCUMENTATION-015
 Sistema de Cross-Reference Hyperlinks
 Propósito: convertir cada mención de un ID canónico (PREFIX:KEY) en los 6 documentos fundamentales en un hipervínculo real al bloque de definición, en vez de texto plano — para que el sistema sea navegable y auditable, no solo nombrado.
 Piezas
@@ -218,7 +249,7 @@ Estado de adopción (2026-08-01)
 - generate_id_inventory.py y normalize_heading_ids.py ya fueron migrados 
 Ver MANUAL:HEALTHCHECK para el procedimiento operativo de cuándo correr cada script.
 ---
-### 03.12 KERNEL:DOCUMENTATION-012
+### 03.16 KERNEL:DOCUMENTATION-016
 Notebook Gemini — Auditor Documental Externo
 Tipo: Capa de Consulta ReadOnly externa (Google Gemini, ventana de contexto sin límite de tokens equivalente), complementaria al fetch nativo de Claude sobre el corpus fundacional — no es un script ni un alias de Terminal.
 Contrato de Cero Inferencia Silenciosa
@@ -228,7 +259,7 @@ Contrato de Cero Inferencia Silenciosa
 Uso preferente
 Consulta puntual de triaje/verificación documental (detección de drifts entre documentos) cuando no se requiere fetch estructural ni escritura en Notion — evita consumir fetch/tokens de Claude en preguntas de bajo riesgo.
 ---
-### 03.13 KERNEL:DOCUMENTATION-013
+### 03.17 KERNEL:DOCUMENTATION-017
 Protocolo Sandbox — Economía de Tokens Máxima
 Patrón operativo compartido por las skills de documentación transversal (propuesta/implementación), vantage-skill-updater y vantage-housekeeping-archive: todo proceso interno de análisis, validación y generación corre en sandbox sin renderizar al operador. El output visible se limita a un máximo de 3 bloques por invocación: apertura (declaración de inicio conforme KERNEL:DOCUMENTATION-005), resultado (propuesta/reporte/DRY RUN estructurado), cierre (declaración de fin).
 Regla de aplicación
@@ -376,6 +407,7 @@ Class A — Human-Primary
 AI Component escribe en CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_processor.py escribe en FEED L1/L3:
 - Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash.
 Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Archivar · Repetida.
+Notas recibe, entre otros usos, el texto determinista de auditoría de archivado escrito por VL1 (ver KERNEL:GATE-DECISION-013) — es trazabilidad de decisión, no un campo Class B pese a ser escrito por un comando Python.
 Class B — System-Primary
 Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Next_Action · Fetch · Fuente · Dedup_Flag · Score_Method · Last_Gate_Run.
 ### 07.2 KERNEL:SCHEMA-002
@@ -487,7 +519,8 @@ El operador nunca escribe Gate_Decision directamente.
 Marcado Manual de Archivado
 Next_Action='Archivar' Y/O Dedup_Flag='Posible duplicado' (ambos Class B) son señales de candidatos a archivar — no disparan archivado automático. Decisión del operador (2026-08-01): se abandonó el enfoque de mover/copiar automáticamente vía auto_archive.py (deprecado, ver Archive/Legacy_Scripts/) por menor fricción, menor costo de tokens, y por desalineación de esquema con el Archivo Tracker (ver skill vantage-tidy-opportunities-tracker).
 El mecanismo vigente es la skill vantage-tidy-opportunities-tracker: identifica candidatos vía Dedup_Flag/Next_Action, marca Archivar = True en el registro original tras DRY RUN + APROBAR_WRITE — no crea copias ni toca el Archivo Tracker ni mueve páginas físicamente. El operador localiza visualmente los registros marcados y decide cuándo archivarlos manualmente.
-Consolidación prevista: la skill vantage-housekeeping-archive (propuesta, auditoría 2026-08-13) absorberá este ciclo de detección→marcado→verificación en un solo procedimiento; el reporte read-only status_report.py --archive-queue (aún no implementado) sustituirá el escaneo visual del Tracker sin añadir ninguna vía de escritura nueva.
+Consolidación prevista: la skill vantage-housekeeping-archive (propuesta, auditoría 2026-08-13) absorberá este ciclo de
+La razón textual que motiva el candidato a archivo no se origina aquí — la escribe VL1 en el momento de la decisión (ver KERNEL:GATE-DECISION-013). Este nodo cubre el marcado del candidato, no la redacción de su causa. detección→marcado→verificación en un solo procedimiento; el reporte read-only status_report.py --archive-queue (aún no implementado) sustituirá el escaneo visual del Tracker sin añadir ninguna vía de escritura nueva.
 ### 09.8 KERNEL:GATE-DECISION-008
 Capas de Evaluación de Gate: Técnica vs. Negocio
 gate() (capa técnica, CREATE/BLOCKED puro) vs. gate_logic() (capa de negocio/workflow, protege estados terminales).
@@ -572,6 +605,29 @@ gate_logic() debe ejecutarse ANTES que gate() como filtro de mutabilidad.
 Si Status ∈ {Postulado, Rechazado, Expirada} → pipeline termina aquí, sin invocar gate(). Previene regresión de estado en terminales.
 → Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), KERNEL:GATE-DECISION-005 (RT-1).
 ---
+### 09.12 — Guard de Mutación en Existentes — Dedup/Layer Upgrade
+Contexto:
+Gobierna la mutación de registros existentes durante la ingesta (vía feed_processor.py), no el marcado post-hoc por skills de operador.
+Fuente de verdad: profile_fit._PROTECTED_STATUSES ∪ _TERMINAL_STATUSES.
+| Status del existente | ¿Dedup_Flag? | ¿Upgrade layer? |
+| --- | --- | --- |
+| Target / Exploratorio / REVIEW_NEEDED / vacío / otro operativo | Sí | Sí |
+| Postulado / Postulando / En proceso / Negociando / Sin respuesta / Contratado | No | No |
+| Rechazado / Expirada / Archivar / Retirado | No | No |
+Notas:
+- El inbound sigue entrando como REVIEW_NEEDED aunque el existente no se mute.
+- No confundir con gate_logic() (protege recálculo de Score/Gate, no anotación de archivo — ver KERNEL:GATE-DECISION-010).
+- Referencias cruzadas:
+- KERNEL:GATE-DECISION-007 (candidatos a archivo).
+- KERNEL:GATE-DECISION-011 (matriz de transición).
+---
+### 09.13 KERNEL:GATE-DECISION-013
+Auditoría de Archivado en Tiempo Real
+Distinto del guard de mutación (09.12, protege registros existentes durante ingesta): gobierna la generación de evidencia textual cuando VL1 ejecuta una decisión de archivado.
+Función: generate_archive_notes(), invocada desde layer_1_run.py en tres puntos deterministas: URL Gate bloqueado (Fase 2), Misfit de perfil (Fase 3.5), NAD vencido.
+Contrato de escritura: el mensaje se escribe en Notas (Class A) — nunca sobrescribe, agrega (append) separado por línea vacía. Soporta modo dry-run — el corpus disponible no confirma si hereda el flag del pipeline padre o lo declara independiente; pendiente de verificar contra código fuente.
+Distinción de ownership: VL1 documenta la razón en el momento de la decisión. vantage-tidy-opportunities-tracker y vantage-housekeeping-archive (ver MANUAL:SKILL-GLOSSARY-HOUSEKEEPING) no generan esta nota — operan sobre el registro ya marcado.
+---
 ## 10 KERNEL:CV-GOLDEN-RULES
 Golden Rules — Límites de Ejecución
 Restricciones de arquitectura formales, no preferencias. Cada violación genera respuesta estandarizada de rechazo.
@@ -628,7 +684,8 @@ Comandos de mantenimiento del Tracker — no son triggers del AI Component, son 
 | MEDIO (4–14 días) | BAJO | MEDIO | ALTO | CRÍTICO |
 | BAJO (>14 días) | BAJO | BAJO | MEDIO | ALTO |
 Implementación: priority_logic.py (matriz compartida) — invocado por layer_1_run.py Fase 3.6 (escritura primaria) y por backfill_class_a.py::apply_importancia_matrix() (catch-up).
-- VL1 batch — modifica Status (Class A) en batch. Guardia: ausencia de execute hace el comando permanentemente read-only; nunca usa input() interactivo.
+- VL1 batch — modifica Status (Class A) en batch. Guardia: ausencia de execute hace el comando permanentemente
+- VL1 archivado — al ejecutar una decisión de archivado (URL Gate, misfit de perfil, NAD vencido), escribe simultáneamente la nota determinista correspondiente en Notas vía generate_archive_notes() (ver KERNEL:GATE-DECISION-013). Ningún comando VL1 escribe campos Class B — este tampoco es excepción. read-only; nunca usa input() interactivo.
 ### 11.3 KERNEL:TRIGGER-003
 QA
 Validación de Formato de CV Exportado. No evalúa fit, oportunidad, score ni conveniencia de aplicar.
@@ -676,11 +733,18 @@ Lectura del estado general del sistema. Solo lectura, no interpreta si el sistem
 ---
 ## 12 KERNEL:CV-PIPELINE
 CV Pipeline — Arquitectura de Dos Sesiones Obligatorias
-La preparación mecá¹¹nica previa a CV-A (scaffold, batch opcional) vive en KERNEL:CV-PIPELINE-003 (12.3) — no es una tercera sesión de IA, es tooling de Terminal.
+La preparación mecánica previa a CV-A (scaffold, batch opcional) vive en KERNEL:CV-PIPELINE-003 (12.3) — no es una tercera sesión de IA, es tooling de Terminal.
+### 12.3 KERNEL:CV-PIPELINE-003
+Preparación Mecánica de Batch (Terminal)
+Tooling de Terminal, no sesión de IA — extracción de keywords/gaps y selección de Positioning Mode siguen siendo exclusivas de CV-A (12.1).
+Cadena: adapt_tracker_export.py → cv_a_batch_agent.py → cv_a_prep.py (flags en MANUAL:SCRIPT-GLOSSARY-CV-PREP; sin alias corto, ver ALIASES:CV-PIPELINE).
+Qué hace: genera un HANDOFF_scaffold_<ID>.md por vacante Ready-to-Apply en un solo paso de Terminal.
+Qué no hace: no reemplaza CV-A — cada scaffold sigue requiriendo su propia invocación CV-A [scaffold], una vacante a la vez (Restricción de Lote, KERNEL:CV-PIPELINE-002).
+Robustez (2026-08): los 3 scripts externalizan configuración (Layer_1/config/hard_blocks.json), generan logging estructurado, validan inputs y manejan errores HTTP granularmente — detalle en MANUAL:SCRIPT-GLOSSARY-CV-PREP.
 ### 12.1 KERNEL:CV-PIPELINE-001
 CV-A
 Input
-URL o JD — opcionalmente pre-poblado por el HANDOFF scaffold mecá¹¹nico (ver KERNEL:CV-PIPELINE-003, 12.3).
+URL o JD — opcionalmente pre-poblado por el HANDOFF scaffold mecánico (ver KERNEL:CV-PIPELINE-003, 12.3).
 Process
 Extrae keywords + gaps + tono de marca. Determina el Positioning Mode aplicable mediante el Algoritmo de Selección N1–N4 (4 pasos, determinista):
 1. Keywords — extraer JD_keywords_top6 del JD.
@@ -826,36 +890,3 @@ Estabilidad de Arquitectura Central
 - La arquitectura de tres capas, el URL_GATE como primer filtro y la división AI/Python son invariantes del sistema.
 Linaje Histórico — Preservado, No Operacional
 GPT Atlas, Grok discovery, SEARCH-EXEC/SEARCH-SIGNAL, fórmulas de scoring pre-v5.0 — contexto histórico, no código activo.
----
----
-### 09.12 — Guard de Mutación en Existentes — Dedup/Layer Upgrade
-Contexto:
-Gobierna la mutación de registros existentes durante la ingesta (vía feed_processor.py), no el marcado post-hoc por skills de operador.
-Fuente de verdad: profile_fit._PROTECTED_STATUSES ∪ _TERMINAL_STATUSES.
-| Status del existente | ¿Dedup_Flag? | ¿Upgrade layer? |
-| --- | --- | --- |
-| Target / Exploratorio / REVIEW_NEEDED / vacío / otro operativo | Sí | Sí |
-| Postulado / Postulando / En proceso / Negociando / Sin respuesta / Contratado | No | No |
-| Rechazado / Expirada / Archivar / Retirado | No | No |
-Notas:
-- El inbound sigue entrando como REVIEW_NEEDED aunque el existente no se mute.
-- No confundir con gate_logic() (protege recálculo de Score/Gate, no anotación de archivo — ver KERNEL:GATE-DECISION-010).
-- Referencias cruzadas:
-- KERNEL:GATE-DECISION-007 (candidatos a archivo).
-- KERNEL:GATE-DECISION-011 (matriz de transición).
----
-### 09.12 — Guard de Mutación en Existentes — Dedup/Layer Upgrade
-Contexto:
-Gobierna la mutación de registros existentes durante la ingesta (vía feed_processor.py), no el marcado post-hoc por skills de operador.
-Fuente de verdad: profile_fit._PROTECTED_STATUSES ∪ _TERMINAL_STATUSES.
-| Status del existente | ¿Dedup_Flag? | ¿Upgrade layer? |
-| --- | --- | --- |
-| Target / Exploratorio / REVIEW_NEEDED / vacío / otro operativo | Sí | Sí |
-| Postulado / Postulando / En proceso / Negociando / Sin respuesta / Contratado | No | No |
-| Rechazado / Expirada / Archivar / Retirado | No | No |
-Notas:
-- El inbound sigue entrando como REVIEW_NEEDED aunque el existente no se mute.
-- No confundir con gate_logic() (protege recálculo de Score/Gate, no anotación de archivo — ver KERNEL:GATE-DECISION-010).
-- Referencias cruzadas:
-- KERNEL:GATE-DECISION-007 (candidatos a archivo).
-- KERNEL:GATE-DECISION-011 (matriz de transición).

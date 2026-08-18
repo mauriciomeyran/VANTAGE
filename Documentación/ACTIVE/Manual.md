@@ -609,6 +609,12 @@ Matriz de Guard de Mutación (PR #10):
 | Ver tabla completa en KERNEL:GATE-DECISION-012.
 Gestión de Datos |
 Esta sección consolida en un solo lugar todo lo relacionado con exclusiones y deduplicación de vacantes — conceptos que se mencionan a lo largo de MANUAL:OBJECTIVE, MANUAL:HOW-IT-WORKS y MANUAL:WEEKLY-FLOW, y que aquí tienen su definición completa y única.
+### 10.1 MANUAL:DATA-MANAGEMENT-001
+Notas de Archivado
+Cuando VL1 ejecuta una decisión de archivado, no solo la marca — también documenta por qué, en el momento exacto de la decisión (ver KERNEL:GATE-DECISION-013).
+Escenarios: URL Gate bloqueado, Misfit de perfil, NAD vencido.
+Cómo se escribe: nunca sobrescribe Notas — agrega separado por línea vacía. Soporta modo dry-run.
+Qué no hace: no gobierna quién marca el candidato — eso es vantage-tidy-opportunities-tracker/vantage-housekeeping-archive (MANUAL:SKILL-GLOSSARY-HOUSEKEEPING), que operan sobre el registro ya documentado.
 ### Hard Blocks
 Estas empresas o tipos de rol nunca entrarán al sistema. Se filtran en el origen (antes de que la vacante exista como registro en Notion) y no son recuperables bajo ninguna circunstancia, ni siquiera vía Dashboard:
 - L’Oréal (todas las divisiones)
@@ -946,6 +952,7 @@ Variables de entorno (tuning silencioso):
 | --- | --- |
 | --dry-run | Antes de correr el pipeline completo en un día con muchos feeds nuevos, corre con --dry-run para ver qué escribiría sin comprometer el Tracker — útil si sospechas que un feed trae datos sucios. |
 | --dedup-audit | Al cerrar el ciclo semanal de L1, agrégalo para que el mismo comando dispare dedup_opportunities.py como subproceso y te dé el reporte fuzzy sin correr dos comandos separados. |
+generate_archive_notes() — función interna, sin CLI propia. Invocada desde 3 puntos de layer_1_run.py (URL Gate, misfit de perfil, NAD vencido) para escribir la nota determinista de archivado en Notas (ver KERNEL:GATE-DECISION-013, MANUAL:DATA-MANAGEMENT-001). Mecanismo de herencia de --dry-run pendiente de verificar contra código fuente.
 feed_processor.pyQué hace: Ingiere un JSON de feed (L1/L2/L3) y crea/actualiza registros en el Tracker.
 Flags:
 | Flag | Caso de uso |
@@ -1301,7 +1308,7 @@ Sincronización y Mantenimiento Documental
 | vantage-housekeeping-archive | Consolida detección→marcado→verificación de candidatos a archivar (Dedup_Flag/Next_Action) en un solo procedimiento, absorbiendo el ciclo antes cubierto por escaneo visual (ver KERNEL:GATE-DECISION-007) | "housekeeping archive" / candidatos detectados vía Dedup_Flag/Next_Action | ✅ | ARCHIVING HOUSEKEEPING… / ARCHIVE HOUSEKEPT |
 | vantage-create-bug-task | Crea ticket en Bug/Task Tracker | Reporte de defecto o tarea pendiente | ✅ | LOGGING TICKET… / TICKET LOGGED |
 | vantage-tidy-bug-task-tracker | Marca tickets resueltos como Archivar=True | Resolución directa o vía Change Log | ✅ | TIDYING TRACKER… / TRACKER TIDIED |
-| vantage-tidy-opportunities-tracker | Marca duplicados/expiradas en VANTAGE Tracker | Housekeeping de vacantes | ✅ | TIDYING OPPORTUNITIES… / OPPORTUNITIES TIDIED |
+| vantage-tidy-opportunities-tracker | Marca duplicados/expiradas en VANTAGE Tracker — no redacta la causa (ver KERNEL:GATE-DECISION-013): opera sobre registros donde VL1 ya documentó la razón | Housekeeping de vacantes | ✅ | TIDYING OPPORTUNITIES… / OPPORTUNITIES TIDIED |
 | vantage-tidy-changelog | Recorta Change Log a últimas 10 entradas | Exceso >10 entradas / housekeeping | ✅ | TIDYING CHANGELOG… / CHANGELOG TIDIED |
 | vantage-documentacion-transversal-propuesta | Mapea nodos fundacionales afectados, sin escribir | "propuesta de documentación transversal" / gap estructural | ❌ | BEGINNING DOCUMENTATION MAPPING… / cierre no especificado (gap, ver 23.5) |
 | vantage-documentacion-transversal-implementacion | Ejecuta escritura de documentación ya autorizada | Post-APROBAR_WRITE de propuesta | ✅ | RESUMING DOCUMENTATION — IMPLEMENTATION PHASE… / DOCUMENTATION FINISHED |

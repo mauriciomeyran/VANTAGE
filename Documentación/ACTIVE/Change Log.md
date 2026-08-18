@@ -1,5 +1,26 @@
 # V | CHANGELOG
 
+Tipo: [DOC]
+Alcance:
+- Kernel (KERNEL:GATE-DECISION-013, 09.13 — nodo nuevo)
+- Kernel (KERNEL:CV-PIPELINE-003, 12.3 — nodo nuevo, restaurado tras drift; corrección de corrupción de encoding en 12.1)
+- Manual (MANUAL:DATA-MANAGEMENT-001, 10.1 — nodo nuevo)
+- Manual (MANUAL:SCRIPT-GLOSSARY-CV-PREP, 22.2 — párrafo Robustez añadido)
+- Manual (MANUAL:SCRIPT-GLOSSARY-L1, 22.1 — generate_archive_notes() documentado)
+- Manual (MANUAL:SKILL-GLOSSARY-HOUSEKEEPING, 23.2 — nota de no-redacción de causa en vantage-tidy-opportunities-tracker)
+Contexto: Brief de Devin sobre mejoras de scripts CV-A (hard_blocks.json externalizado, logging estructurado, SHA256) y nueva función generate_archive_notes() en VL1 (trazabilidad de decisiones de archivado en tiempo real). Dos propuestas de mapeo (Claude/Perplexity) auditadas por Littlebird — batch consolidado tras re-fetch en vivo, que reveló que la mayoría de nodos complementarios (GATE-DECISION-007, SCHEMA-001/Notas, TRIGGER-002/VL1 archivado, DOCUMENTATION-014/External Config) ya estaban escritos de sesiones previas. Pendiente real reducido a 2 altas de ID + 4 complementos. Se detectó y corrigió además corrupción de encoding real en KERNEL 12.1 ("mecá¹¹nico"→"mecánico").
+Cambios:
+- KERNEL:GATE-DECISION-013 (09.13) — nodo nuevo: contrato de generate_archive_notes(), 3 puntos de integración VL1, distinción de ownership vs. skills de housekeeping.
+- KERNEL:CV-PIPELINE-003 (12.3) — nodo nuevo: preparación mecánica de batch (Terminal), cadena de 3 scripts, robustez 2026-08.
+- MANUAL:DATA-MANAGEMENT-001 (10.1) — nodo nuevo: Notas de Archivado.
+- MANUAL:SCRIPT-GLOSSARY-CV-PREP (22.2), MANUAL:SCRIPT-GLOSSARY-L1 (22.1), MANUAL:SKILL-GLOSSARY-HOUSEKEEPING (23.2) — complementos de robustez y trazabilidad.
+IDs afectados: 2 altas — KERNEL:GATE-DECISION-013, KERNEL:CV-PIPELINE-003 — dispara KERNEL:DOCUMENTATION-008 Regla 1 (CENSUS-SYNC).
+Write-Back Verification: pendiente — ejecutar re-fetch de los 6 nodos en próxima sesión o vía Terminal.
+Pendiente (fuera de esta entrada):
+- vcensus para registrar los 2 IDs nuevos.
+- vversions --sync para propagar v9.21.21 al resto de los fundacionales.
+- Nota aparte: bloque 09.12 del Kernel fue reordenado manualmente por el operador (duplicado eliminado) — fuera de este batch, sin acción adicional requerida.
+---
 Tipo: [CODE] [DOC]
 Alcance:
 - Script nuevo: bulk_upload_skill_bodies.py (Layer_1/scripts)
