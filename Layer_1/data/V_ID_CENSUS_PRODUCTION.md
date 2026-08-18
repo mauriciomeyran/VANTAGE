@@ -14,8 +14,8 @@
 | [`KERNEL:DOCUMENTATION-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42816f80dec85df01a673b ) | 03.9 | Census Sync |
 | [`KERNEL:DOCUMENTATION-010`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42814ea9a3e9abd1b8e80e ) | 03.10 | Documentación Transversal |
 | [`KERNEL:DOCUMENTATION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e3ad72f7f5b13d2804 ) | 03.11 | Gate Decision Documentation |
-| [`KERNEL:DOCUMENTATION-012`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74 ) | 03.12 | Notebook Gemini — Auditor Documental Externo |
-| [`KERNEL:DOCUMENTATION-013`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#430a977f08b742dfa476a0840a909e51 ) | 03.13 | Protocolo Sandbox — Economía de Tokens Máxima |
+| [`KERNEL:DOCUMENTATION-012`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#400076f9b13644009ee357dcebb2227b ) | 03.12 ⚠︎sin verificar en vivo | Notebook Gemini — Auditor Documental Externo |
+| `KERNEL:DOCUMENTATION-013` | 03.13 | Protocolo Sandbox — Economía de Tokens Máxima |
 | [`KERNEL:ARCHITECTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810a8870dd1d384c1e7a ) | 04 | Arquitectura de Cuatro Capas |
 | [`KERNEL:ARCHITECTURE-L1`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f3825bd740b23ec959 ) | 04.1 | L1 — Active Search |
 | [`KERNEL:ARCHITECTURE-L2`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#73f6ec3692de4632a16d89313b91456d ) | 04.2 | L2 — Strategic Search |
@@ -275,4 +275,12 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-_Ninguno detectado en esta corrida._
+| ID | Documento | Link |
+|---|---|---|
+| `KERNEL:CV-PIPELINE-003` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5e4b693d0439469fb29f8f2687e4d401 ) |
+| `KERNEL:DOCUMENTATION-014` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#1fc298d1a0eb4e04bf287df831f21ee1 ) |
+| `KERNEL:DOCUMENTATION-015` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#030ab36cb5524618b8ead54575555b47 ) |
+| `KERNEL:DOCUMENTATION-016` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74 ) |
+| `KERNEL:DOCUMENTATION-017` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#430a977f08b742dfa476a0840a909e51 ) |
+| `KERNEL:GATE-DECISION-013` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#78eb917493444f2db0c00fa5c4594e08 ) |
+| `MANUAL:DATA-MANAGEMENT-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#2ccaaf3922a74e8f8447a6a174b0df28 ) |
