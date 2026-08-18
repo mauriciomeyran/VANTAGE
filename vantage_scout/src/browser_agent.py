@@ -17,32 +17,98 @@ from vantage_scout.src.validator import (
 
 JsonDict = dict[str, Any]
 
+SUPPORTED_LLM_PROVIDERS: frozenset[str] = frozenset(
+    {
+        "gemini",
+        "openai",
+        "anthropic",
+        "ollama",
+        "openrouter",
+        "openai_compatible",
+    }
+)
+
+
+def _chat_openai(
+    *,
+    model: str,
+    api_key: str,
+    base_url: str | None = None,
+) -> Any:
+    from langchain_openai import ChatOpenAI
+
+    kwargs: dict[str, Any] = {
+        "model": model,
+        "api_key": api_key,
+        "temperature": 0,
+    }
+    if base_url:
+        kwargs["base_url"] = base_url
+    return ChatOpenAI(**kwargs)
+
 
 def build_llm(settings: Settings | None = None) -> Any:
-    """Instantiate Gemini or OpenAI chat model from env."""
+    """Instantiate a LangChain chat model from LLM_PROVIDER.
+
+    Supported: gemini, openai, anthropic, ollama, openrouter, openai_compatible.
+    Kernel rules are independent of this factory.
+    """
     cfg = settings or get_settings()
     provider = cfg.provider()
-    if provider == "openai":
-        from langchain_openai import ChatOpenAI
+    if provider not in SUPPORTED_LLM_PROVIDERS:
+        allowed = ", ".join(sorted(SUPPORTED_LLM_PROVIDERS))
+        raise ValueError(f"Unsupported LLM_PROVIDER='{cfg.llm_provider}'. Use one of: {allowed}.")
 
+    if provider == "openai":
         if not cfg.openai_api_key:
             raise RuntimeError("OPENAI_API_KEY is required when LLM_PROVIDER=openai")
-        return ChatOpenAI(
-            model=cfg.openai_model,
-            api_key=cfg.openai_api_key,
-            temperature=0,
-        )
-    if provider == "gemini":
-        from langchain_google_genai import ChatGoogleGenerativeAI
+        return _chat_openai(model=cfg.openai_model, api_key=cfg.openai_api_key)
 
+    if provider == "gemini":
         if not cfg.gemini_api_key:
             raise RuntimeError("GEMINI_API_KEY is required when LLM_PROVIDER=gemini")
+        from langchain_google_genai import ChatGoogleGenerativeAI
+
         return ChatGoogleGenerativeAI(
             model=cfg.gemini_model,
             google_api_key=cfg.gemini_api_key,
             temperature=0,
         )
-    raise ValueError(f"Unsupported LLM_PROVIDER='{cfg.llm_provider}'. Use gemini or openai.")
+
+    if provider == "anthropic":
+        if not cfg.anthropic_api_key:
+            raise RuntimeError("ANTHROPIC_API_KEY is required when LLM_PROVIDER=anthropic")
+        from langchain_anthropic import ChatAnthropic
+
+        return ChatAnthropic(
+            model=cfg.anthropic_model,
+            api_key=cfg.anthropic_api_key,
+            temperature=0,
+        )
+
+    if provider == "ollama":
+        from langchain_ollama import ChatOllama
+
+        return ChatOllama(
+            model=cfg.ollama_model,
+            base_url=cfg.ollama_base_url,
+            temperature=0,
+        )
+
+    if provider == "openrouter":
+        if not cfg.openrouter_api_key:
+            raise RuntimeError("OPENROUTER_API_KEY is required when LLM_PROVIDER=openrouter")
+        return _chat_openai(
+            model=cfg.openrouter_model,
+            api_key=cfg.openrouter_api_key,
+            base_url=cfg.openrouter_base_url,
+        )
+
+    if not cfg.llm_base_url:
+        raise RuntimeError("LLM_BASE_URL is required when LLM_PROVIDER=openai_compatible")
+    model = cfg.llm_model or cfg.openai_model
+    api_key = cfg.llm_api_key or cfg.openai_api_key or "not-needed"
+    return _chat_openai(model=model, api_key=api_key, base_url=cfg.llm_base_url)
 
 
 def _browser_config(cfg: Settings) -> Any:
