@@ -35,7 +35,7 @@ _domain_last_request: defaultdict[str, float] = defaultdict(float)
 # Symptoms observed: agent.run() returns truncated history, JSON with trailing garbage,
 # or a loop stuck on a single UI action. Retrying the whole agent run is the practical
 # mitigation until upstream resolves the watchdog deadlock.
-MAX_AGENT_RETRIES = 3
+MAX_AGENT_RETRIES = 1  # Reduced from 3 to avoid long wait times during testing
 RETRY_BACKOFF_SECONDS = 5.0
 MIN_VALID_RAW_LENGTH = 150  # below this, treat as a truncated/failed run (see 111-char case)
 
@@ -61,31 +61,8 @@ SUPPORTED_LLM_PROVIDERS: frozenset[str] = frozenset(
 )
 
 
-def _chat_openai(
-    *,
-    model: str,
-    api_key: str,
-    base_url: str | None = None,
-    provider: str = "openai",
-) -> Any:
-    from langchain_openai import ChatOpenAI
-
-    kwargs: dict[str, Any] = {
-        "model": model,
-        "api_key": api_key,
-        "temperature": 0,
-    }
-    if base_url:
-        kwargs["base_url"] = base_url
-    llm = ChatOpenAI(**kwargs)
-    # Add provider and model attributes for browser-use compatibility
-    object.__setattr__(llm, 'provider', provider)
-    object.__setattr__(llm, 'model', model)
-    return llm
-
-
 def build_llm(settings: Settings | None = None) -> Any:
-    """Instantiate a LangChain chat model from LLM_PROVIDER."""
+    """Instantiate a chat model from LLM_PROVIDER using browser-use native implementations."""
     cfg = settings or get_settings()
     provider = cfg.provider()
     if provider not in SUPPORTED_LLM_PROVIDERS:
@@ -95,67 +72,74 @@ def build_llm(settings: Settings | None = None) -> Any:
     if provider == "openai":
         if not cfg.openai_api_key:
             raise RuntimeError("OPENAI_API_KEY is required when LLM_PROVIDER=openai")
+        from browser_use.llm.openai import ChatOpenAI
+
         model = cfg.openai_model
         if cfg.use_cheap_fallback and cfg.llm_cost_limit < 1.0:
             model = "gpt-4o-mini"
-        return _chat_openai(model=model, api_key=cfg.openai_api_key, provider="openai")
+        return ChatOpenAI(
+            model=model,
+            api_key=cfg.openai_api_key,
+            temperature=0,
+        )
 
     if provider == "gemini":
         if not cfg.gemini_api_key:
             raise RuntimeError("GEMINI_API_KEY is required when LLM_PROVIDER=gemini")
-        from browser_use.llm import ChatGoogle
+        from browser_use.llm.google import ChatGoogle
 
         model = cfg.gemini_model
         if cfg.use_cheap_fallback and cfg.llm_cost_limit < 1.0:
             model = "gemini-1.5-flash"
-        llm = ChatGoogle(
+        return ChatGoogle(
             model=model,
             api_key=cfg.gemini_api_key,
             temperature=0,
         )
-        return llm
 
     if provider == "anthropic":
         if not cfg.anthropic_api_key:
             raise RuntimeError("ANTHROPIC_API_KEY is required when LLM_PROVIDER=anthropic")
-        from langchain_anthropic import ChatAnthropic
+        from browser_use.llm.anthropic import ChatAnthropic
 
-        llm = ChatAnthropic(
+        return ChatAnthropic(
             model=cfg.anthropic_model,
             api_key=cfg.anthropic_api_key,
             temperature=0,
         )
-        object.__setattr__(llm, 'provider', "anthropic")
-        object.__setattr__(llm, 'model', cfg.anthropic_model)
-        return llm
 
     if provider == "ollama":
-        from langchain_ollama import ChatOllama
+        from browser_use.llm.ollama import ChatOllama
 
-        llm = ChatOllama(
+        return ChatOllama(
             model=cfg.ollama_model,
             base_url=cfg.ollama_base_url,
             temperature=0,
         )
-        object.__setattr__(llm, 'provider', "ollama")
-        object.__setattr__(llm, 'model', cfg.ollama_model)
-        return llm
 
     if provider == "openrouter":
         if not cfg.openrouter_api_key or not cfg.openrouter_api_key.strip():
             raise RuntimeError("OPENROUTER_API_KEY is required when LLM_PROVIDER=openrouter")
-        return _chat_openai(
+        from browser_use.llm.openrouter.chat import ChatOpenRouter
+
+        return ChatOpenRouter(
             model=cfg.openrouter_model,
             api_key=cfg.openrouter_api_key,
             base_url=cfg.openrouter_base_url,
-            provider="openrouter",
+            temperature=0,
         )
 
     if not cfg.llm_base_url:
         raise RuntimeError("LLM_BASE_URL is required when LLM_PROVIDER=openai_compatible")
     model = cfg.llm_model or cfg.openai_model
     api_key = cfg.llm_api_key or cfg.openai_api_key or "not-needed"
-    return _chat_openai(model=model, api_key=api_key, base_url=cfg.llm_base_url, provider="openai_compatible")
+    from browser_use.llm.openai import ChatOpenAI
+    return ChatOpenAI(
+        model=model,
+        api_key=api_key,
+        base_url=cfg.llm_base_url,
+        temperature=0,
+    )
 
 
 def _browser_config(cfg: Settings) -> dict[str, Any]:
