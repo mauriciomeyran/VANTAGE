@@ -48,7 +48,10 @@ class Settings(BaseSettings):
         populate_by_name=True,
     )
 
-    llm_provider: str = Field(default="gemini", alias="LLM_PROVIDER")
+    # Default provider is local Ollama: no cloud API key, no per-run cost, and no
+    # dependency on a hosted model name staying valid (a stale cloud model name was
+    # the root cause of the "truncated history" dead end).
+    llm_provider: str = Field(default="ollama", alias="LLM_PROVIDER")
     gemini_api_key: str = Field(default="", alias="GEMINI_API_KEY")
     gemini_model: str = Field(default="gemini-3.6-flash", alias="GEMINI_MODEL")
     openai_api_key: str = Field(default="", alias="OPENAI_API_KEY")
@@ -57,6 +60,9 @@ class Settings(BaseSettings):
     anthropic_model: str = Field(default="claude-sonnet-4-5", alias="ANTHROPIC_MODEL")
     ollama_base_url: str = Field(default="http://127.0.0.1:11434", alias="OLLAMA_BASE_URL")
     ollama_model: str = Field(default="qwen2.5vl:7b", alias="OLLAMA_MODEL")
+    # Local vision models are far slower than a cloud endpoint; the default httpx
+    # timeout will abort a legitimate step mid-inference.
+    ollama_timeout: float = Field(default=300.0, alias="OLLAMA_TIMEOUT")
     openrouter_api_key: str = Field(default="", alias="OPENROUTER_API_KEY")
     openrouter_model: str = Field(
         default="qwen/qwen-2.5-vl-7b-instruct",

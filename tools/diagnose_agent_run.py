@@ -60,9 +60,14 @@ async def _main(wrapper: str, config_only: bool) -> int:
     _rule("EFFECTIVE CONFIGURATION")
     print(f"wrapper            : {stem}")
     print(f"today              : {iso}")
-    print(f"llm_provider       : {cfg.provider()}")
-    print(f"gemini_model       : {cfg.gemini_model}")
-    print(f"ollama_model       : {cfg.ollama_model}")
+    provider = cfg.provider()
+    print(f"llm_provider       : {provider}")
+    if provider == "ollama":
+        print(f"ollama_model       : {cfg.ollama_model}")
+        print(f"ollama_base_url    : {cfg.ollama_base_url}")
+        print(f"ollama_timeout     : {cfg.ollama_timeout}s")
+    else:
+        print(f"gemini_model       : {cfg.gemini_model}")
     print(f"browser_max_steps  : {cfg.browser_max_steps}")
     print(f"browser_headless   : {cfg.browser_headless}")
     print(f"use_cheap_fallback : {cfg.use_cheap_fallback}")

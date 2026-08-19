@@ -123,12 +123,18 @@ def build_llm(settings: Settings | None = None) -> Any:
         )
 
     if provider == "ollama":
-        from browser_use.llm.ollama import ChatOllama
+        from browser_use.llm.ollama.chat import ChatOllama
 
+        # browser-use 0.11.13's ChatOllama is a dataclass with exactly:
+        # (model, host, timeout, client_params, ollama_options).
+        # It has NO `base_url` and NO `temperature` kwarg — passing either raises
+        # TypeError before the browser ever launches. Temperature goes inside
+        # ollama_options; the host URL is `host`.
         return ChatOllama(
             model=cfg.ollama_model,
-            base_url=cfg.ollama_base_url,
-            temperature=0,
+            host=cfg.ollama_base_url,
+            timeout=cfg.ollama_timeout,
+            ollama_options={"temperature": 0},
         )
 
     if provider == "openrouter":
@@ -175,11 +181,21 @@ async def preflight_llm(llm: Any) -> None:
         await llm.ainvoke([UserMessage(content="Reply with the single word: ok")])
     except Exception as exc:  # noqa: BLE001 — re-raised with actionable context
         model = getattr(llm, "model", "<unknown>")
-        raise LLMPreflightError(
-            f"LLM preflight failed for model '{model}': {exc}. "
+        provider = getattr(llm, "provider", "<unknown>")
+        hint = (
             "Verify the model name is currently served by the provider and that the "
             "API key is valid — browser-use does not validate this itself, it just "
             "fails every step until the agent gives up."
+        )
+        if provider == "ollama":
+            host = getattr(llm, "host", None) or "http://127.0.0.1:11434"
+            hint = (
+                f"Check that the Ollama server is running at {host} "
+                f"(`ollama serve`) and that the model is pulled (`ollama pull {model}`). "
+                f"List what is available with `ollama list`."
+            )
+        raise LLMPreflightError(
+            f"LLM preflight failed for provider '{provider}' model '{model}': {exc}. {hint}"
         ) from exc
 
 

@@ -143,13 +143,62 @@ las clases nativas de `browser-use`; y una ruta hardcodeada `vantage_scout/` en
 
 ---
 
+## Adenda — Ollama local (pendiente del handoff original)
+
+El handoff pedía dejar el proveedor en **Ollama local** y en la primera pasada
+quedó en Gemini. Corregido, y al hacerlo apareció un bug adicional:
+
+**La rama de Ollama nunca habría funcionado.** `build_llm()` llamaba:
+
+```python
+ChatOllama(model=..., base_url=..., temperature=0)
+```
+
+Pero en `browser-use` 0.11.13 `ChatOllama` es un `@dataclass` con exactamente
+`(model, host, timeout, client_params, ollama_options)`. Verificado:
+
+```
+current repo call FAILS -> ChatOllama.__init__() got an unexpected keyword argument 'base_url'
+```
+
+No existe `base_url` ni `temperature`. El primer intento de usar Ollama habría
+muerto con `TypeError` antes de abrir el navegador. Además el import era
+`from browser_use.llm.ollama import ChatOllama`, que tampoco resuelve — la clase
+vive en `browser_use.llm.ollama.chat`.
+
+Correcciones:
+
+- `LLM_PROVIDER` default → `ollama` (antes `gemini`).
+- `ChatOllama(model=..., host=..., timeout=..., ollama_options={"temperature": 0})`.
+- Nuevo `OLLAMA_TIMEOUT` (default 300s): la inferencia local es lenta y el timeout
+  por defecto de httpx aborta pasos legítimos a medio camino.
+- El preflight, si el proveedor es Ollama, indica `ollama serve` / `ollama pull`
+  en vez de hablar de API keys.
+- `requirements.txt`: se añade el SDK `ollama` (que es lo que importa `ChatOllama`)
+  y se retiran los paquetes `langchain-*`, que ya no se usan tras migrar a las
+  clases nativas de `browser-use`. `browser-use` queda pineado a `==0.11.13`.
+
+4 tests nuevos corren contra la librería real y fallarían si alguien reintroduce
+`base_url=`/`temperature=`.
+
+**Nota sobre el modelo:** `qwen2.5vl:7b` es de visión, que es lo correcto —
+el agente navega a partir de screenshots (`use_vision=True`). Si se cambia a un
+modelo sin visión, el agente queda ciego. Confirma con `ollama list` que lo
+tienes descargado.
+
+---
+
 ## Siguiente paso para el operador
 
 ```bash
+ollama serve                      # en otra terminal, si no corre ya
+ollama list                       # confirma que qwen2.5vl:7b está descargado
 python3 tools/diagnose_agent_run.py --wrapper Prompt_LinkedIn --config-only
 ```
 
-No abre el navegador. Imprime `browser_max_steps`, el modelo efectivo, y prueba
-el LLM con un prompt trivial. Si el preflight falla, ese es el bug completo:
-corregir `GEMINI_MODEL` en `.env` a un modelo servido actualmente. Luego correr
-sin `--config-only` para la corrida real con logs visibles.
+No abre el navegador. Imprime `browser_max_steps`, el proveedor y modelo
+efectivos, y prueba el LLM con un prompt trivial. Si el preflight pasa, corre sin
+`--config-only` para la corrida real con logs visibles.
+
+Si tu `.env` tiene `LLM_PROVIDER=gemini` escrito explícitamente, sobreescribe el
+nuevo default — cámbialo a `ollama` (o bórralo) para usar el modelo local.
