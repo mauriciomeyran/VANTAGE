@@ -211,3 +211,83 @@ def test_preflight_failure_aborts_immediately_without_retrying() -> None:
 
 if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(pytest.main([__file__, "-v"]))
+
+
+# ---------------------------------------------------------------------------
+# Ollama (local) provider wiring
+# ---------------------------------------------------------------------------
+
+
+def test_default_provider_is_local_ollama() -> None:
+    """Scout must default to local Ollama, not a paid cloud endpoint."""
+    from src.config import Settings
+
+    cfg = Settings(_env_file=None)  # type: ignore[call-arg]
+    assert cfg.provider() == "ollama"
+    assert cfg.ollama_base_url == "http://127.0.0.1:11434"
+
+
+def test_build_llm_ollama_uses_real_chatollama_signature() -> None:
+    """Regression: ChatOllama takes `host`, not `base_url`, and has no `temperature`.
+
+    The previous call passed base_url= and temperature=, which raises TypeError
+    before the browser ever launches.
+    """
+    pytest.importorskip("browser_use.llm.ollama.chat")
+    import dataclasses
+
+    from browser_use.llm.ollama.chat import ChatOllama
+
+    from src.browser_agent import build_llm
+    from src.config import Settings
+
+    field_names = {f.name for f in dataclasses.fields(ChatOllama)}
+    assert "base_url" not in field_names
+    assert "temperature" not in field_names
+
+    llm = build_llm(
+        Settings(_env_file=None, llm_provider="ollama", ollama_model="qwen2.5vl:7b")  # type: ignore[call-arg]
+    )
+    assert isinstance(llm, ChatOllama)
+    assert llm.model == "qwen2.5vl:7b"
+    assert llm.host == "http://127.0.0.1:11434"
+    assert llm.provider == "ollama"
+
+
+def test_ollama_needs_no_api_key() -> None:
+    """Local provider must build with no credentials configured at all."""
+    pytest.importorskip("browser_use.llm.ollama.chat")
+    from src.browser_agent import build_llm
+    from src.config import Settings
+
+    llm = build_llm(
+        Settings(  # type: ignore[call-arg]
+            _env_file=None,
+            llm_provider="ollama",
+            gemini_api_key="",
+            openai_api_key="",
+            anthropic_api_key="",
+        )
+    )
+    assert llm.model
+
+
+def test_ollama_preflight_error_mentions_server_and_pull() -> None:
+    """A local failure should point at `ollama serve` / `ollama pull`, not an API key."""
+    from src.browser_agent import LLMPreflightError, preflight_llm
+
+    class DeadOllama:
+        model = "qwen2.5vl:7b"
+        provider = "ollama"
+        host = "http://127.0.0.1:11434"
+
+        async def ainvoke(self, messages: Any) -> Any:
+            raise ConnectionError("connection refused")
+
+    with pytest.raises(LLMPreflightError) as excinfo:
+        asyncio.run(preflight_llm(DeadOllama()))
+
+    msg = str(excinfo.value)
+    assert "ollama serve" in msg
+    assert "ollama pull qwen2.5vl:7b" in msg
+    assert "API key" not in msg
