@@ -30,6 +30,15 @@ JsonDict = dict[str, Any]
 
 _domain_last_request: defaultdict[str, float] = defaultdict(float)
 
+# Known browser-use issue (bubus event bus watchdogs hang/timeout non-deterministically,
+# see browser-use GitHub issues #3069, #3196, #2808, #3489 — no fix confirmed as of 0.11.13).
+# Symptoms observed: agent.run() returns truncated history, JSON with trailing garbage,
+# or a loop stuck on a single UI action. Retrying the whole agent run is the practical
+# mitigation until upstream resolves the watchdog deadlock.
+MAX_AGENT_RETRIES = 3
+RETRY_BACKOFF_SECONDS = 5.0
+MIN_VALID_RAW_LENGTH = 150  # below this, treat as a truncated/failed run (see 111-char case)
+
 
 async def rate_limit_domain(domain: str, min_delay: float = 3.0) -> None:
     """Rate limit requests to specific domain."""
@@ -180,6 +189,37 @@ def classify_block(text: str) -> str | None:
     return None
 
 
+async def _run_agent_once(
+    task: str,
+    cfg: Settings,
+    agent_factory: Callable[..., Any] | None,
+) -> tuple[Any | None, Exception | None]:
+    """Single browser-use Agent run. Returns (history, exception)."""
+    browser = None
+    try:
+        if agent_factory is None:
+            from browser_use import Agent, Browser
+
+            llm = build_llm(cfg)
+            browser = Browser(**_browser_config(cfg))
+            agent = Agent(
+                task=task,
+                llm=llm,
+                browser=browser,
+                use_vision=True,
+            )
+        else:
+            agent = agent_factory(task=task, use_vision=True)
+
+        history = await agent.run(max_steps=cfg.browser_max_steps)
+        return history, None
+    except Exception as exc:  # noqa: BLE001 — surfaced by caller
+        return None, exc
+    finally:
+        if browser:
+            await browser.stop()
+
+
 async def run_browser_agent(
     task: str,
     *,
@@ -192,10 +232,14 @@ async def run_browser_agent(
     output_dir: Path | None = None,
     enable_layer1_integration: bool = True,
 ) -> PromptAPayload:
-    """Run browser-use Agent with Layer_1 integration."""
+    """Run browser-use Agent with Layer_1 integration.
+
+    Retries up to MAX_AGENT_RETRIES times on: agent exceptions, truncated/empty
+    history (below MIN_VALID_RAW_LENGTH), or unparseable JSON output. This is a
+    mitigation for a known browser-use watchdog non-determinism bug (see module
+    docstring comment above MAX_AGENT_RETRIES) — not a fix to the underlying issue.
+    """
     cfg = settings or get_settings()
-    browser = None
-    history = None
 
     # Initialize Layer_1 components if enabled
     dedup = None
@@ -220,96 +264,114 @@ async def run_browser_agent(
     # Initial delay to avoid rate limiting
     await asyncio.sleep(2)
 
-    try:
-        if agent_factory is None:
-            from browser_use import Agent, Browser
+    payload: PromptAPayload | None = None
+    retry_audit: list[AuditLogEntry] = []
+    last_failure_audit: AuditLogEntry | None = None
+    last_failure_warning: DataQualityWarning | None = None
 
-            llm = build_llm(cfg)
-            browser = Browser(**_browser_config(cfg))
-            agent = Agent(
-                task=task,
-                llm=llm,
-                browser=browser,
-                use_vision=True,
+    for attempt in range(1, MAX_AGENT_RETRIES + 1):
+        history, exc = await _run_agent_once(task, cfg, agent_factory)
+
+        if exc is not None:
+            tag = classify_block(str(exc)) or "HTTP"
+            last_failure_audit = AuditLogEntry(
+                type=tag,
+                source=wrapper_name,
+                message=f"[attempt {attempt}/{MAX_AGENT_RETRIES}] {exc}",
             )
-        else:
-            agent = agent_factory(task=task, use_vision=True)
+            last_failure_warning = DataQualityWarning(
+                code="NAVIGATION_BLOCKED",
+                severity="high",
+                cause=str(exc),
+                impact="Zero items extracted",
+                message="Insurmountable browser block; no invented data.",
+                origin_wrapper=wrapper_name,
+            )
+            retry_audit.append(last_failure_audit)
+            if attempt < MAX_AGENT_RETRIES:
+                await asyncio.sleep(RETRY_BACKOFF_SECONDS)
+                continue
+            break
 
-        history = await agent.run(max_steps=cfg.browser_max_steps)
-    except Exception as exc:  # noqa: BLE001 — surface as audit, never invent jobs
-        tag = classify_block(str(exc)) or "HTTP"
-        return empty_payload(
-            prompt_variant=prompt_variant,
-            prompt_version=prompt_version,
-            today_date=today_date,
-            audit=[
-                AuditLogEntry(
-                    type=tag,
-                    source=wrapper_name,
-                    message=str(exc),
-                )
-            ],
-            warnings=[
-                DataQualityWarning(
-                    code="NAVIGATION_BLOCKED",
-                    severity="high",
-                    cause=str(exc),
-                    impact="Zero items extracted",
-                    message="Insurmountable browser block; no invented data.",
-                    origin_wrapper=wrapper_name,
-                )
-            ],
-        )
-    finally:
-        if browser:
-            await browser.stop()
+        raw = _history_to_text(history)
 
-    raw = _history_to_text(history)
-    block = classify_block(raw)
-    if block and _looks_like_failure_only(raw):
+        # Truncated/near-empty history — known watchdog symptom, not a real result.
+        if len(raw.strip()) < MIN_VALID_RAW_LENGTH:
+            last_failure_audit = AuditLogEntry(
+                type="Timeout",
+                source=wrapper_name,
+                message=f"[attempt {attempt}/{MAX_AGENT_RETRIES}] Truncated agent history ({len(raw)} chars): {raw[:200]}",
+            )
+            last_failure_warning = DataQualityWarning(
+                code="TRUNCATED_AGENT_RUN",
+                severity="high",
+                cause=f"History length {len(raw)} < {MIN_VALID_RAW_LENGTH} char threshold",
+                impact="Zero items extracted",
+                message="Agent run ended early (known browser-use watchdog issue); retried.",
+                origin_wrapper=wrapper_name,
+            )
+            retry_audit.append(last_failure_audit)
+            if attempt < MAX_AGENT_RETRIES:
+                await asyncio.sleep(RETRY_BACKOFF_SECONDS)
+                continue
+            break
+
+        block = classify_block(raw)
+        if block and _looks_like_failure_only(raw):
+            last_failure_audit = AuditLogEntry(
+                type=block,
+                source=wrapper_name,
+                message=f"[attempt {attempt}/{MAX_AGENT_RETRIES}] {raw[:2000]}",
+            )
+            retry_audit.append(last_failure_audit)
+            if attempt < MAX_AGENT_RETRIES:
+                await asyncio.sleep(RETRY_BACKOFF_SECONDS)
+                continue
+            break
+
+        try:
+            payload = validate_raw(
+                raw,
+                prompt_variant=prompt_variant,
+                prompt_version=prompt_version,
+                today_date=today_date,
+                wrapper_name=wrapper_name,
+            )
+            # Success — stop retrying.
+            break
+        except Exception as exc:  # noqa: BLE001
+            last_failure_audit = AuditLogEntry(
+                type="HTTP",
+                source=wrapper_name,
+                message=f"[attempt {attempt}/{MAX_AGENT_RETRIES}] Unparseable agent output: {exc}",
+            )
+            last_failure_warning = DataQualityWarning(
+                code="INVALID_AGENT_OUTPUT",
+                severity="high",
+                cause=str(exc),
+                impact="Zero items extracted",
+                message="Agent did not return valid PromptA JSON; no invented data.",
+                origin_wrapper=wrapper_name,
+            )
+            retry_audit.append(last_failure_audit)
+            if attempt < MAX_AGENT_RETRIES:
+                await asyncio.sleep(RETRY_BACKOFF_SECONDS)
+                continue
+            break
+
+    if payload is None:
+        # Exhausted all retries without a valid payload.
         return empty_payload(
             prompt_variant=prompt_variant,
             prompt_version=prompt_version,
             today_date=today_date,
-            audit=[
-                AuditLogEntry(
-                    type=block,
-                    source=wrapper_name,
-                    message=raw[:2000],
-                )
-            ],
+            audit=retry_audit or ([last_failure_audit] if last_failure_audit else []),
+            warnings=[last_failure_warning] if last_failure_warning else [],
         )
-    try:
-        payload = validate_raw(
-            raw,
-            prompt_variant=prompt_variant,
-            prompt_version=prompt_version,
-            today_date=today_date,
-            wrapper_name=wrapper_name,
-        )
-    except Exception as exc:  # noqa: BLE001
-        return empty_payload(
-            prompt_variant=prompt_variant,
-            prompt_version=prompt_version,
-            today_date=today_date,
-            audit=[
-                AuditLogEntry(
-                    type="HTTP",
-                    source=wrapper_name,
-                    message=f"Unparseable agent output: {exc}",
-                )
-            ],
-            warnings=[
-                DataQualityWarning(
-                    code="INVALID_AGENT_OUTPUT",
-                    severity="high",
-                    cause=str(exc),
-                    impact="Zero items extracted",
-                    message="Agent did not return valid PromptA JSON; no invented data.",
-                    origin_wrapper=wrapper_name,
-                )
-            ],
-        )
+
+    # Record retry history even on eventual success, for observability.
+    if len(retry_audit) > 0:
+        payload.audit_log = retry_audit + payload.audit_log
 
     # Apply Layer_1 integrations if enabled
     if enable_layer1_integration:
