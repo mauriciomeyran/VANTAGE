@@ -1,4 +1,4 @@
-"""Orchestrate browser-use + LLM for VANTAGE Scout Layer 1."""
+"""Enhanced browser agent for VANTAGE Scout with Layer_1 integration."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ import re
 import time
 from collections import defaultdict
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 from vantage_scout.src.config import Settings, get_settings
@@ -18,11 +19,17 @@ from vantage_scout.src.validator import (
     empty_payload,
     validate_raw,
 )
+from vantage_scout.src.dedup import ScoutDedup
+from vantage_scout.src.gate_logic import ScoutGate
+from vantage_scout.src.profile_filter import ProfileFilter
+from vantage_scout.src.url_validator import URLValidator
+from vantage_scout.src.notion_sync import NotionSync
+from vantage_scout.src.analytics import ScoutAnalytics
 
 JsonDict = dict[str, Any]
 
-# Domain rate limiting
 _domain_last_request: defaultdict[str, float] = defaultdict(float)
+
 
 async def rate_limit_domain(domain: str, min_delay: float = 3.0) -> None:
     """Rate limit requests to specific domain."""
@@ -31,6 +38,7 @@ async def rate_limit_domain(domain: str, min_delay: float = 3.0) -> None:
     if elapsed < min_delay:
         await asyncio.sleep(min_delay - elapsed)
     _domain_last_request[domain] = time.time()
+
 
 SUPPORTED_LLM_PROVIDERS: frozenset[str] = frozenset(
     {
@@ -61,18 +69,14 @@ def _chat_openai(
     if base_url:
         kwargs["base_url"] = base_url
     llm = ChatOpenAI(**kwargs)
-    # Add provider and model attributes for browser-use compatibility (bypass Pydantic validation)
+    # Add provider and model attributes for browser-use compatibility
     object.__setattr__(llm, 'provider', provider)
     object.__setattr__(llm, 'model', model)
     return llm
 
 
 def build_llm(settings: Settings | None = None) -> Any:
-    """Instantiate a LangChain chat model from LLM_PROVIDER.
-
-    Supported: gemini, openai, anthropic, ollama, openrouter, openai_compatible.
-    Kernel rules are independent of this factory.
-    """
+    """Instantiate a LangChain chat model from LLM_PROVIDER."""
     cfg = settings or get_settings()
     provider = cfg.provider()
     if provider not in SUPPORTED_LLM_PROVIDERS:
@@ -83,7 +87,6 @@ def build_llm(settings: Settings | None = None) -> Any:
         if not cfg.openai_api_key:
             raise RuntimeError("OPENAI_API_KEY is required when LLM_PROVIDER=openai")
         model = cfg.openai_model
-        # Cost control: fallback to cheaper model if limit is low
         if cfg.use_cheap_fallback and cfg.llm_cost_limit < 1.0:
             model = "gpt-4o-mini"
         return _chat_openai(model=model, api_key=cfg.openai_api_key, provider="openai")
@@ -94,7 +97,6 @@ def build_llm(settings: Settings | None = None) -> Any:
         from langchain_google_genai import ChatGoogleGenerativeAI
 
         model = cfg.gemini_model
-        # Cost control: fallback to cheaper model if limit is low
         if cfg.use_cheap_fallback and cfg.llm_cost_limit < 1.0:
             model = "gemini-1.5-flash"
         llm = ChatGoogleGenerativeAI(
@@ -155,7 +157,7 @@ def _browser_config(cfg: Settings) -> dict[str, Any]:
         "headless": cfg.browser_headless,
         "viewport": {"width": 1920, "height": 1080},
         "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-        "disable_security": True,  # Bypass Content Security Policy
+        "disable_security": True,
     }
     user_dir = cfg.chrome_user_data_dir.strip()
     if user_dir:
@@ -185,25 +187,37 @@ async def run_browser_agent(
     today_date: str,
     wrapper_name: str,
     agent_factory: Callable[..., Any] | None = None,
+    output_dir: Path | None = None,
+    enable_layer1_integration: bool = True,
 ) -> PromptAPayload:
-    """Run browser-use Agent with vision enabled.
-
-    ``agent_factory`` is injectable for dry-run / unit tests.
-    """
+    """Run browser-use Agent with Layer_1 integration."""
     cfg = settings or get_settings()
     browser = None
     history = None
-    
+
+    # Initialize Layer_1 components if enabled
+    dedup = None
+    profile_filter = None
+    url_validator = None
+    notion_sync = None
+    analytics = None
+
+    if enable_layer1_integration and output_dir:
+        dedup = ScoutDedup(output_dir)
+        profile_filter = ProfileFilter()
+        url_validator = URLValidator()
+        notion_sync = NotionSync()
+        analytics = ScoutAnalytics(output_dir)
+
     # Extract domains from task for rate limiting
-    import re
     domains = set(re.findall(r'https?://([^\s/]+)', task))
     if domains:
         for domain in domains:
             await rate_limit_domain(domain, cfg.domain_min_delay)
-    
+
     # Initial delay to avoid rate limiting
     await asyncio.sleep(2)
-    
+
     try:
         if agent_factory is None:
             from browser_use import Agent, Browser
@@ -264,7 +278,7 @@ async def run_browser_agent(
             ],
         )
     try:
-        return validate_raw(
+        payload = validate_raw(
             raw,
             prompt_variant=prompt_variant,
             prompt_version=prompt_version,
@@ -295,52 +309,61 @@ async def run_browser_agent(
             ],
         )
 
-    raw = _history_to_text(history)
-    block = classify_block(raw)
-    if block and _looks_like_failure_only(raw):
-        return empty_payload(
-            prompt_variant=prompt_variant,
-            prompt_version=prompt_version,
-            today_date=today_date,
-            audit=[
+    # Apply Layer_1 integrations if enabled
+    if enable_layer1_integration:
+        if dedup:
+            dedup_stats = dedup.get_duplicate_stats(payload.items)
+            payload.items = dedup.filter_duplicates(payload.items)
+            payload.audit_log.append(
                 AuditLogEntry(
-                    type=block,
+                    type="DEDUP",
                     source=wrapper_name,
-                    message=raw[:2000],
+                    message=f"Dedup stats: {dedup_stats}"
                 )
-            ],
-        )
-    try:
-        return validate_raw(
-            raw,
-            prompt_variant=prompt_variant,
-            prompt_version=prompt_version,
-            today_date=today_date,
-            wrapper_name=wrapper_name,
-        )
-    except Exception as exc:  # noqa: BLE001
-        return empty_payload(
-            prompt_variant=prompt_variant,
-            prompt_version=prompt_version,
-            today_date=today_date,
-            audit=[
+            )
+
+        if profile_filter:
+            gate_stats = ScoutGate.get_gate_stats(payload.items)
+            payload.items = ScoutGate.filter_terminal_items(payload.items)
+            payload.audit_log.append(
                 AuditLogEntry(
-                    type="HTTP",
+                    type="GATE",
                     source=wrapper_name,
-                    message=f"Unparseable agent output: {exc}",
+                    message=f"Gate stats: {gate_stats}"
                 )
-            ],
-            warnings=[
-                DataQualityWarning(
-                    code="INVALID_AGENT_OUTPUT",
-                    severity="high",
-                    cause=str(exc),
-                    impact="Zero items extracted",
-                    message="Agent did not return valid PromptA JSON; no invented data.",
-                    origin_wrapper=wrapper_name,
+            )
+
+            filtered_items, filter_stats = profile_filter.filter_items(payload.items)
+            payload.items = filtered_items
+            payload.audit_log.append(
+                AuditLogEntry(
+                    type="PROFILE_FILTER",
+                    source=wrapper_name,
+                    message=f"Profile filter stats: {filter_stats}"
                 )
-            ],
-        )
+            )
+
+        if notion_sync and notion_sync.is_available():
+            sync_stats = notion_sync.sync_to_notion(payload.model_dump())
+            payload.audit_log.append(
+                AuditLogEntry(
+                    type="NOTION_SYNC",
+                    source=wrapper_name,
+                    message=f"Notion sync stats: {sync_stats}"
+                )
+            )
+
+        if analytics:
+            analytics_report = analytics.generate_comprehensive_report()
+            payload.audit_log.append(
+                AuditLogEntry(
+                    type="ANALYTICS",
+                    source=wrapper_name,
+                    message=f"Analytics generated: {len(analytics_report.get('source_effectiveness', {}))} sources analyzed"
+                )
+            )
+
+    return payload
 
 
 def _history_to_text(history: Any) -> str:

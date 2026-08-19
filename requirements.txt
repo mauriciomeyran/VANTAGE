@@ -1,11 +1,27 @@
-browser-use>=0.1.40
-playwright>=1.49.0
-langchain-google-genai>=2.0.0
-langchain-openai>=0.3.0
-langchain-anthropic>=0.3.0
-langchain-ollama>=0.2.0
-langchain-core>=0.3.0
+# VANTAGE Scout Layer 1 - Requirements
+# Core dependencies
+python-dotenv>=1.0.1
 pydantic>=2.9.0
 pydantic-settings>=2.6.0
-python-dotenv>=1.0.1
+
+# LLM providers
+langchain-core>=0.3.0
+langchain-openai>=0.3.0
+langchain-google-genai>=2.0.0
+langchain-anthropic>=0.3.0
+langchain-ollama>=0.2.0
+
+# Browser automation
+playwright>=1.49.0
+browser-use>=0.1.40
+
+# Layer 1 integration dependencies
+httpx>=0.25.0
+notion-client>=2.0.0
+
+# Testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+
+# Web UI (optional)
 flask>=3.0.0
