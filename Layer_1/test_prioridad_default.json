@@ -1,0 +1,27 @@
+{
+  "consolidated_results": [
+    {
+      "job_id": "TEST-001",
+      "title": "Test Role",
+      "brand": "Nike",
+      "holding": null,
+      "location": "Test Location",
+      "posted_date": "2026-08-01",
+      "industry_tier": "Fashion",
+      "seniority_level": "Manager",
+      "apply_url": "https://www.occ.com.mx/empleos/test",
+      "source_type": "aggregator",
+      "source_name": "OCC",
+      "source_query": "A",
+      "fetch_status": "direct_apply",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "notes": "Test sin campo Prioridad",
+      "jd": "Test JD content with more than 100 characters to bypass URL validation as per the logic in validate_url_pre_ingestion function that requires JD > 100 chars to skip URL validation when the URL might be invalid or the domain might block scrapers",
+      "prompt_version": "Test-v1.0",
+      "layer": "L1",
+      "source_bucket": "occ"
+    }
+  ]
+}

@@ -1,0 +1,500 @@
+id,kind,file,section,line_no,line_text
+ALIASES:SESSION-CYCLE,REF,Aliases.md,V | ALIASES,8,| 01 | ALIASES:SESSION-CYCLE | Session Cycle |  |
+ALIASES:L0-RUNTIME,REF,Aliases.md,V | ALIASES,9,| 02 | ALIASES:L0-RUNTIME | L0 · VANTAGE Runtime |  |
+ALIASES:L1L2-DISCOVERY,REF,Aliases.md,V | ALIASES,10,| 03 | ALIASES:L1L2-DISCOVERY | L1/L2 · Discovery |  |
+ALIASES:L3-PASSIVE-INTAKE,REF,Aliases.md,V | ALIASES,11,| 04 | ALIASES:L3-PASSIVE-INTAKE | L3 · Passive Intake |  |
+ALIASES:L4-VERSION-CONTROL,REF,Aliases.md,V | ALIASES,12,| 05 | ALIASES:L4-VERSION-CONTROL | L4 · Version Control |  |
+ALIASES:DASHBOARD,REF,Aliases.md,V | ALIASES,13,| 06 | ALIASES:DASHBOARD | Dashboard |  |
+ALIASES:CV-PIPELINE,REF,Aliases.md,V | ALIASES,14,| 07 | ALIASES:CV-PIPELINE | CV Pipeline |  |
+ALIASES:DEDUP,REF,Aliases.md,V | ALIASES,15,| 08 | ALIASES:DEDUP | Dedup & Oportunidades |  |
+ALIASES:SESSION-CYCLE,DEF,Aliases.md,01 ALIASES:SESSION-CYCLE,16,## 01 ALIASES:SESSION-CYCLE
+ALIASES:L0-RUNTIME,DEF,Aliases.md,02 ALIASES:L0-RUNTIME,23,## 02 ALIASES:L0-RUNTIME
+ALIASES:L1L2-DISCOVERY,DEF,Aliases.md,03 ALIASES:L1L2-DISCOVERY,38,## 03 ALIASES:L1L2-DISCOVERY
+ALIASES:L3-PASSIVE-INTAKE,DEF,Aliases.md,04 ALIASES:L3-PASSIVE-INTAKE,45,## 04 ALIASES:L3-PASSIVE-INTAKE
+ALIASES:L4-VERSION-CONTROL,DEF,Aliases.md,05 ALIASES:L4-VERSION-CONTROL,51,## 05 ALIASES:L4-VERSION-CONTROL
+ALIASES:DASHBOARD,DEF,Aliases.md,06 ALIASES:DASHBOARD,60,## 06 ALIASES:DASHBOARD
+ALIASES:CV-PIPELINE,DEF,Aliases.md,07 ALIASES:CV-PIPELINE,66,## 07 ALIASES:CV-PIPELINE
+ALIASES:DEDUP,DEF,Aliases.md,08 ALIASES:DEDUP,69,## 08 ALIASES:DEDUP
+BRIEF:PURPOSE-SCOPE,REF,Brief.md,V | BRIEF,8,| 01 | BRIEF:PURPOSE-SCOPE | Propósito y Alcance |  |
+BRIEF:AUTHORITY-MATRIX,REF,Brief.md,V | BRIEF,9,| 02 | BRIEF:AUTHORITY-MATRIX | Matriz de Autoridad Documental |  |
+BRIEF:ECOSYSTEM,REF,Brief.md,V | BRIEF,10,| 03 | BRIEF:ECOSYSTEM | Ecosistema Documental |  |
+BRIEF:NAV-CONTRACTS,REF,Brief.md,V | BRIEF,11,| 04 | BRIEF:NAV-CONTRACTS | Contratos de Navegación |  |
+BRIEF:DOMAIN-ARCHITECTURE,REF,Brief.md,V | BRIEF,12,| 05 | BRIEF:DOMAIN-ARCHITECTURE | Dominios |  |
+BRIEF:VERIFICATION-DEPTH,REF,Brief.md,V | BRIEF,13,| 06 | BRIEF:VERIFICATION-DEPTH | Contratos de Verificación |  |
+BRIEF:CROSS-DEPENDENCIES,REF,Brief.md,V | BRIEF,14,| 07 | BRIEF:CROSS-DEPENDENCIES | Dependencias entre Documentos |  |
+BRIEF:MAINTENANCE-CONTRACT,REF,Brief.md,V | BRIEF,15,| 08 | BRIEF:MAINTENANCE-CONTRACT | Contrato de Mantenimiento |  |
+BRIEF:DECISION-TREE,REF,Brief.md,V | BRIEF,16,| 09 | BRIEF:DECISION-TREE | Árbol de Decisiones |  |
+BRIEF:NAV-PRINCIPLES,REF,Brief.md,V | BRIEF,17,| 10 | BRIEF:NAV-PRINCIPLES | Principios de Navegación |  |
+BRIEF:EXPECTED-OUTCOME,REF,Brief.md,V | BRIEF,18,| 11 | BRIEF:EXPECTED-OUTCOME | Resultado Esperado |  |
+BRIEF:PURPOSE-SCOPE,DEF,Brief.md,01 BRIEF:PURPOSE-SCOPE,19,## 01 BRIEF:PURPOSE-SCOPE
+BRIEF:PURPOSE-SCOPE-001,DEF,Brief.md,01.1 BRIEF:PURPOSE-SCOPE-001,21,### 01.1 BRIEF:PURPOSE-SCOPE-001
+BRIEF:PURPOSE-SCOPE-002,DEF,Brief.md,01.2 BRIEF:PURPOSE-SCOPE-002,26,### 01.2 BRIEF:PURPOSE-SCOPE-002
+BRIEF:PURPOSE-SCOPE-003,DEF,Brief.md,01.3 BRIEF:PURPOSE-SCOPE-003,33,### 01.3 BRIEF:PURPOSE-SCOPE-003
+BRIEF:AUTHORITY-MATRIX,DEF,Brief.md,02 BRIEF:AUTHORITY-MATRIX,42,## 02 BRIEF:AUTHORITY-MATRIX
+BRIEF:ECOSYSTEM,DEF,Brief.md,03 BRIEF:ECOSYSTEM,58,## 03 BRIEF:ECOSYSTEM
+BRIEF:NAV-CONTRACTS,DEF,Brief.md,04 BRIEF:NAV-CONTRACTS,74,## 04 BRIEF:NAV-CONTRACTS
+BRIEF:CONSULTATION-001,DEF,Brief.md,04.1 BRIEF:CONSULTATION-001,76,### 04.1 BRIEF:CONSULTATION-001
+BRIEF:CONSULTATION-002,DEF,Brief.md,04.2 BRIEF:CONSULTATION-002,87,### 04.2 BRIEF:CONSULTATION-002
+BRIEF:CONSULTATION-003,DEF,Brief.md,04.3 BRIEF:CONSULTATION-003,96,### 04.3 BRIEF:CONSULTATION-003
+BRIEF:CONSULTATION-004,DEF,Brief.md,04.4 BRIEF:CONSULTATION-004,106,### 04.4 BRIEF:CONSULTATION-004
+BRIEF:CONSULTATION-005,DEF,Brief.md,04.5 BRIEF:CONSULTATION-005,113,### 04.5 BRIEF:CONSULTATION-005
+BRIEF:CONSULTATION-006,DEF,Brief.md,04.6 BRIEF:CONSULTATION-006,122,### 04.6 BRIEF:CONSULTATION-006
+BRIEF:DOMAIN-ARCHITECTURE,DEF,Brief.md,05 BRIEF:DOMAIN-ARCHITECTURE,130,## 05 BRIEF:DOMAIN-ARCHITECTURE
+BRIEF:HOUSEKEEPING-001,DEF,Brief.md,05.1 BRIEF:HOUSEKEEPING-001,132,### 05.1 BRIEF:HOUSEKEEPING-001
+BRIEF:CORE-ASSETS-001,DEF,Brief.md,05.2 BRIEF:CORE-ASSETS-001,143,### 05.2 BRIEF:CORE-ASSETS-001
+BRIEF:DISCOVERY-001,DEF,Brief.md,05.3 BRIEF:DISCOVERY-001,154,### 05.3 BRIEF:DISCOVERY-001
+BRIEF:GATE-LOGIC-001,DEF,Brief.md,05.4 BRIEF:GATE-LOGIC-001,163,### 05.4 BRIEF:GATE-LOGIC-001
+BRIEF:CV-PIPELINE-001,DEF,Brief.md,05.5 BRIEF:CV-PIPELINE-001,172,### 05.5 BRIEF:CV-PIPELINE-001
+BRIEF:VERIFICATION-DEPTH,DEF,Brief.md,06 BRIEF:VERIFICATION-DEPTH,183,## 06 BRIEF:VERIFICATION-DEPTH
+BRIEF:CROSS-DEPENDENCIES,DEF,Brief.md,07 BRIEF:CROSS-DEPENDENCIES,195,## 07 BRIEF:CROSS-DEPENDENCIES
+BRIEF:CROSS-DEPENDENCIES-001,DEF,Brief.md,07.1 BRIEF:CROSS-DEPENDENCIES-001,210,### 07.1 BRIEF:CROSS-DEPENDENCIES-001
+BRIEF:CROSS-DEPENDENCIES-002,DEF,Brief.md,07.2 BRIEF:CROSS-DEPENDENCIES-002,220,### 07.2 BRIEF:CROSS-DEPENDENCIES-002
+BRIEF:CROSS-DEPENDENCIES-003,DEF,Brief.md,07.3 BRIEF:CROSS-DEPENDENCIES-003,229,### 07.3 BRIEF:CROSS-DEPENDENCIES-003
+BRIEF:MAINTENANCE-CONTRACT,DEF,Brief.md,08 BRIEF:MAINTENANCE-CONTRACT,234,## 08 BRIEF:MAINTENANCE-CONTRACT
+BRIEF:AUTHORITY-001,DEF,Brief.md,08.1 BRIEF:AUTHORITY-001,237,### 08.1 BRIEF:AUTHORITY-001
+BRIEF:DECISION-TREE,DEF,Brief.md,09 BRIEF:DECISION-TREE,252,## 09 BRIEF:DECISION-TREE
+BRIEF:NAV-PRINCIPLES,DEF,Brief.md,10 BRIEF:NAV-PRINCIPLES,269,## 10 BRIEF:NAV-PRINCIPLES
+BRIEF:EXPECTED-OUTCOME,DEF,Brief.md,11 BRIEF:EXPECTED-OUTCOME,279,## 11 BRIEF:EXPECTED-OUTCOME
+CANON:ARCHIVO-VANTAGE,REF,Career Canon.md,V | CAREER CANON,5,"- Alcance: Este documento es el CAREER_CANON_RUNTIME, que contiene la fuente de verdad profesional activa: perfil, skills, historial de carrera, KPIs validados, facts canónicos, educación, certificaci"
+CANON:PROFILE,REF,Career Canon.md,V | CAREER CANON,8,| 01 | CANON:PROFILE | PROFESSIONAL PROFILE |  |
+CANON:SKILLS,REF,Career Canon.md,V | CAREER CANON,9,| 02 | CANON:SKILLS | SKILLS CANON |  |
+CANON:EXPERIENCE,REF,Career Canon.md,V | CAREER CANON,10,| 03 | CANON:EXPERIENCE | EXPERIENCE RECORDS |  |
+CANON:CAREER-TIMELINE,REF,Career Canon.md,V | CAREER CANON,11,| 04 | CANON:CAREER-TIMELINE | CAREER TIMELINE |  |
+CANON:ACHIEVEMENTS,REF,Career Canon.md,V | CAREER CANON,12,| 05 | CANON:ACHIEVEMENTS | ACHIEVEMENT LIBRARY |  |
+CANON:KPIS,REF,Career Canon.md,V | CAREER CANON,13,| 06 | CANON:KPIS | CORE KPIS |  |
+CANON:FACTS,REF,Career Canon.md,V | CAREER CANON,14,| 07 | CANON:FACTS | CANONICAL FACTS |  |
+CANON:EDUCATION,REF,Career Canon.md,V | CAREER CANON,15,| 08 | CANON:EDUCATION | EDUCATION |  |
+CANON:CERTIFICATIONS,REF,Career Canon.md,V | CAREER CANON,16,| 09 | CANON:CERTIFICATIONS | CERTIFICATIONS |  |
+CANON:MAJOR-PROJECTS,REF,Career Canon.md,V | CAREER CANON,17,| 10 | CANON:MAJOR-PROJECTS | MAJOR PROJECTS |  |
+CANON:POSITIONING,REF,Career Canon.md,V | CAREER CANON,18,| 11 | CANON:POSITIONING | POSITIONING MODES |  |
+CANON:OUTPUT-CONTRACT,REF,Career Canon.md,V | CAREER CANON,19,| 12 | CANON:OUTPUT-CONTRACT | OUTPUT CONTRACT |  |
+CANON:DERIVED-OUTPUTS-ARCHIVE,REF,Career Canon.md,V | CAREER CANON,20,| 13 | CANON:DERIVED-OUTPUTS-ARCHIVE | DERIVED OUTPUTS ARCHIVE (Historial) |  |
+CANON:PROFILE,DEF,Career Canon.md,01 CANON:PROFILE,21,## 01 CANON:PROFILE
+CANON:PROFILE-001,DEF,Career Canon.md,01.1 CANON:PROFILE-001,23,### 01.1 CANON:PROFILE-001
+CANON:PROFILE-002,DEF,Career Canon.md,01.2 CANON:PROFILE-002,26,### 01.2 CANON:PROFILE-002
+CANON:SKILLS,DEF,Career Canon.md,02 CANON:SKILLS,30,## 02 CANON:SKILLS
+CANON:EXPERIENCE,DEF,Career Canon.md,03 CANON:EXPERIENCE,40,## 03 CANON:EXPERIENCE
+CANON:EXPERIENCE-C01,DEF,Career Canon.md,03.1 CANON:EXPERIENCE-C01,42,### 03.1 CANON:EXPERIENCE-C01
+CANON:EXPERIENCE-C02,DEF,Career Canon.md,03.2 CANON:EXPERIENCE-C02,57,### 03.2 CANON:EXPERIENCE-C02
+CANON:EXPERIENCE-C03,DEF,Career Canon.md,03.3 CANON:EXPERIENCE-C03,68,### 03.3 CANON:EXPERIENCE-C03
+CANON:EXPERIENCE-C04,DEF,Career Canon.md,03.4 CANON:EXPERIENCE-C04,81,### 03.4 CANON:EXPERIENCE-C04
+CANON:EXPERIENCE-C05,DEF,Career Canon.md,03.5 CANON:EXPERIENCE-C05,92,### 03.5 CANON:EXPERIENCE-C05
+CANON:CAREER-TIMELINE,DEF,Career Canon.md,04 CANON:CAREER-TIMELINE,106,## 04 CANON:CAREER-TIMELINE
+CANON:ACHIEVEMENTS,DEF,Career Canon.md,05 CANON:ACHIEVEMENTS,117,## 05 CANON:ACHIEVEMENTS
+CANON:KPIS,DEF,Career Canon.md,06 CANON:KPIS,134,## 06 CANON:KPIS
+CANON:KPI-001,DEF,Career Canon.md,06.1 CANON:KPI-001,137,### 06.1 CANON:KPI-001
+CANON:KPI-002,DEF,Career Canon.md,06.2 CANON:KPI-002,140,### 06.2 CANON:KPI-002
+CANON:KPI-003,DEF,Career Canon.md,06.3 CANON:KPI-003,143,### 06.3 CANON:KPI-003
+CANON:KPI-004,DEF,Career Canon.md,06.4 CANON:KPI-004,146,### 06.4 CANON:KPI-004
+CANON:KPI-005,DEF,Career Canon.md,06.5 CANON:KPI-005,149,### 06.5 CANON:KPI-005
+CANON:KPI-006,DEF,Career Canon.md,06.6 CANON:KPI-006,152,### 06.6 CANON:KPI-006
+CANON:KPI-007,DEF,Career Canon.md,06.7 CANON:KPI-007,155,### 06.7 CANON:KPI-007
+CANON:KPI-008,DEF,Career Canon.md,06.8 CANON:KPI-008,158,### 06.8 CANON:KPI-008
+CANON:FACTS,DEF,Career Canon.md,07 CANON:FACTS,162,## 07 CANON:FACTS
+CANON:FACT-001,DEF,Career Canon.md,07.1 CANON:FACT-001,164,### 07.1 CANON:FACT-001
+CANON:FACT-002,DEF,Career Canon.md,07.2 CANON:FACT-002,166,### 07.2 CANON:FACT-002
+CANON:FACT-003,DEF,Career Canon.md,07.3 CANON:FACT-003,168,### 07.3 CANON:FACT-003
+CANON:FACT-004,DEF,Career Canon.md,07.4 CANON:FACT-004,170,### 07.4 CANON:FACT-004
+CANON:FACT-005,DEF,Career Canon.md,07.5 CANON:FACT-005,172,### 07.5 CANON:FACT-005
+CANON:FACT-006,DEF,Career Canon.md,07.6 CANON:FACT-006,174,### 07.6 CANON:FACT-006
+CANON:FACT-007,DEF,Career Canon.md,07.7 CANON:FACT-007,176,### 07.7 CANON:FACT-007
+CANON:FACT-008,DEF,Career Canon.md,07.8 CANON:FACT-008,178,### 07.8 CANON:FACT-008
+CANON:UF-001,DEF,Career Canon.md,07.9 CANON:UF-001,180,### 07.9 CANON:UF-001
+CANON:UF-002,DEF,Career Canon.md,07.10 CANON:UF-002,182,### 07.10 CANON:UF-002
+CANON:UF-003,DEF,Career Canon.md,07.11 CANON:UF-003,184,### 07.11 CANON:UF-003
+CANON:EDUCATION,DEF,Career Canon.md,08 CANON:EDUCATION,187,## 08 CANON:EDUCATION
+CANON:EDUCATION-001,DEF,Career Canon.md,08.1 CANON:EDUCATION-001,190,### 08.1 CANON:EDUCATION-001
+CANON:EDUCATION-002,DEF,Career Canon.md,08.2 CANON:EDUCATION-002,193,### 08.2 CANON:EDUCATION-002
+CANON:CERTIFICATIONS,DEF,Career Canon.md,09 CANON:CERTIFICATIONS,197,## 09 CANON:CERTIFICATIONS
+CANON:UF-003,REF,Career Canon.md,09 CANON:CERTIFICATIONS,199,"> Reintegrada desde CAREER CANON (DEPRECATED) — v9.11.0. Coincide exactamente con CANON:UF-003 (07.11), que ya exigía este set cerrado de certificaciones como único válido."
+CANON:CERTIFICATION-001,DEF,Career Canon.md,09.1 CANON:CERTIFICATION-001,200,### 09.1 CANON:CERTIFICATION-001
+CANON:CERTIFICATION-002,DEF,Career Canon.md,09.2 CANON:CERTIFICATION-002,203,### 09.2 CANON:CERTIFICATION-002
+CANON:MAJOR-PROJECTS,DEF,Career Canon.md,10 CANON:MAJOR-PROJECTS,207,## 10 CANON:MAJOR-PROJECTS
+CANON:POSITIONING-N2,REF,Career Canon.md,10 CANON:MAJOR-PROJECTS,209,> Reintegrada desde CAREER CANON (DEPRECATED) — v9.11.0. P01 ya se referenciaba de forma implícita en CANON:POSITIONING-N2 sin registro formal detrás; esta sección lo formaliza.
+CANON:MAJOR-PROJECT-001,DEF,Career Canon.md,10.1 CANON:MAJOR-PROJECT-001,210,### 10.1 CANON:MAJOR-PROJECT-001
+CANON:MAJOR-PROJECT-002,DEF,Career Canon.md,10.2 CANON:MAJOR-PROJECT-002,217,### 10.2 CANON:MAJOR-PROJECT-002
+CANON:MAJOR-PROJECT-003,DEF,Career Canon.md,10.3 CANON:MAJOR-PROJECT-003,224,### 10.3 CANON:MAJOR-PROJECT-003
+CANON:POSITIONING,DEF,Career Canon.md,11 CANON:POSITIONING,232,## 11 CANON:POSITIONING
+CANON:POSITIONING-N1,DEF,Career Canon.md,11.1 CANON:POSITIONING-N1,234,### 11.1 CANON:POSITIONING-N1
+CANON:POSITIONING-N2,DEF,Career Canon.md,11.2 CANON:POSITIONING-N2,237,### 11.2 CANON:POSITIONING-N2
+CANON:POSITIONING-N3,DEF,Career Canon.md,11.3 CANON:POSITIONING-N3,240,### 11.3 CANON:POSITIONING-N3
+CANON:POSITIONING-N4,DEF,Career Canon.md,11.4 CANON:POSITIONING-N4,243,### 11.4 CANON:POSITIONING-N4
+CANON:OUTPUT-CONTRACT,DEF,Career Canon.md,12 CANON:OUTPUT-CONTRACT,253,## 12 CANON:OUTPUT-CONTRACT
+CANON:OUTPUT-CONTRACT-001,DEF,Career Canon.md,12.1 CANON:OUTPUT-CONTRACT-001,255,### 12.1 CANON:OUTPUT-CONTRACT-001
+CANON:OUTPUT-CONTRACT-002,DEF,Career Canon.md,12.2 CANON:OUTPUT-CONTRACT-002,261,### 12.2 CANON:OUTPUT-CONTRACT-002
+CANON:OUTPUT-CONTRACT-003,DEF,Career Canon.md,12.3 CANON:OUTPUT-CONTRACT-003,278,### 12.3 CANON:OUTPUT-CONTRACT-003
+CANON:OUTPUT-CONTRACT-004,DEF,Career Canon.md,12.4 CANON:OUTPUT-CONTRACT-004,282,### 12.4 CANON:OUTPUT-CONTRACT-004
+CANON:OUTPUT-CONTRACT-005,DEF,Career Canon.md,12.5 CANON:OUTPUT-CONTRACT-005,296,### 12.5 CANON:OUTPUT-CONTRACT-005
+CANON:DERIVED-OUTPUTS-ARCHIVE,DEF,Career Canon.md,13 CANON:DERIVED-OUTPUTS-ARCHIVE,304,## 13 CANON:DERIVED-OUTPUTS-ARCHIVE
+CANON:MAJOR-PROJECTS,REF,Change Log.md,v9.11.8 — Fix Raíz: PATCH Puntual Reemplaza Destroy/Rebuild para Hyperlinks (apply_hyperlinks_notion.py) · 2026-08-01,5,"Alcance: Layer_1/scripts/apply_hyperlinks_notion.py (nuevo, local); Career Canon (2 bloques quote, sección 10 CANON:MAJOR-PROJECTS)."
+CANON:MAJOR-PROJECTS,REF,Change Log.md,v9.11.8 — Fix Raíz: PATCH Puntual Reemplaza Destroy/Rebuild para Hyperlinks (apply_hyperlinks_notion.py) · 2026-08-01,10,"- Validado en producción: --doc career_canon --apply, 2 bloques patcheados (quote, sección CANON:MAJOR-PROJECTS), 0 errores. Confirmado por el operador en Notion: link clickeable, block-ID preservado "
+CANON:OUTPUT-CONTRACT-002,REF,Change Log.md,v9.11.8 — Fix Raíz: PATCH Puntual Reemplaza Destroy/Rebuild para Hyperlinks (apply_hyperlinks_notion.py) · 2026-08-01,11,IDs afectados: ninguno — ambos bloques ya contenían los IDs CANON:OUTPUT-CONTRACT-002 y CANON:POSITIONING-N2 en texto plano; el cambio fue solo la conversión a hipervínculo real. Census no requiere re
+CANON:POSITIONING-N2,REF,Change Log.md,v9.11.8 — Fix Raíz: PATCH Puntual Reemplaza Destroy/Rebuild para Hyperlinks (apply_hyperlinks_notion.py) · 2026-08-01,11,IDs afectados: ninguno — ambos bloques ya contenían los IDs CANON:OUTPUT-CONTRACT-002 y CANON:POSITIONING-N2 en texto plano; el cambio fue solo la conversión a hipervínculo real. Census no requiere re
+MANUAL:COLD-START-001,REF,Change Log.md,v9.11.8 — Fix Raíz: PATCH Puntual Reemplaza Destroy/Rebuild para Hyperlinks (apply_hyperlinks_notion.py) · 2026-08-01,14,"- 3 anchors sin DEF resuelto en la spec (MANUAL:COLD-START-001, ALIASES:DEDUP, SP:CONSISTENCY §9 legacy) — no se resuelven en este fix, quedan sin link igual que hoy en vcensus."
+ALIASES:DEDUP,REF,Change Log.md,v9.11.8 — Fix Raíz: PATCH Puntual Reemplaza Destroy/Rebuild para Hyperlinks (apply_hyperlinks_notion.py) · 2026-08-01,14,"- 3 anchors sin DEF resuelto en la spec (MANUAL:COLD-START-001, ALIASES:DEDUP, SP:CONSISTENCY §9 legacy) — no se resuelven en este fix, quedan sin link igual que hoy en vcensus."
+SP:CONSISTENCY,REF,Change Log.md,v9.11.8 — Fix Raíz: PATCH Puntual Reemplaza Destroy/Rebuild para Hyperlinks (apply_hyperlinks_notion.py) · 2026-08-01,14,"- 3 anchors sin DEF resuelto en la spec (MANUAL:COLD-START-001, ALIASES:DEDUP, SP:CONSISTENCY §9 legacy) — no se resuelven en este fix, quedan sin link igual que hoy en vcensus."
+KERNEL:ARCHITECTURE-L4,REF,Change Log.md,v9.11.8 — Fix Raíz: PATCH Puntual Reemplaza Destroy/Rebuild para Hyperlinks (apply_hyperlinks_notion.py) · 2026-08-01,17,"- Documentación transversal formal de este hallazgo (KERNEL:ARCHITECTURE-L4, KERNEL:DOCUMENTATION-011, posible actualización del skill vantage-hyperlink-loop) — decisión del operador: diferida a sesió"
+KERNEL:DOCUMENTATION-011,REF,Change Log.md,v9.11.8 — Fix Raíz: PATCH Puntual Reemplaza Destroy/Rebuild para Hyperlinks (apply_hyperlinks_notion.py) · 2026-08-01,17,"- Documentación transversal formal de este hallazgo (KERNEL:ARCHITECTURE-L4, KERNEL:DOCUMENTATION-011, posible actualización del skill vantage-hyperlink-loop) — decisión del operador: diferida a sesió"
+KERNEL:GATE-DECISION-007,REF,Change Log.md,"v9.11.7 — Registro Retroactivo: Fix Protección Terminal gate_logic() (commit ca5f1a8, 2026-07-29) · 2026-08-01",30,Nota de alcance — no confundir con B3: este fix resuelve únicamente la capa de PROTECCIÓN de estados terminales (qué registros NO se re-evalúan). Es distinto y no desbloquea automáticamente el bug de 
+MANUAL:SESSION-CYCLE,REF,Change Log.md,v9.11.6 — Manual §6 Sincronizado + Fix normalize_heading_ids.py (ok_legacy_sectioned) · 2026-08-01,41,"Alcance: Manual (MANUAL:SESSION-CYCLE, §6); Layer_1/scripts/normalize_heading_ids.py (local)."
+SP:SYNC-RULE,REF,Change Log.md,v9.11.6 — Manual §6 Sincronizado + Fix normalize_heading_ids.py (ok_legacy_sectioned) · 2026-08-01,42,"Contexto: Dos hallazgos independientes en la misma sesión. (1) Manual §6 seguía documentando ""6 documentos fundacionales + el Census"" pese a la expansión a 9 fundacionales vigente desde v9.11.x — drif"
+MANUAL:SESSION-CYCLE,REF,Change Log.md,v9.11.6 — Manual §6 Sincronizado + Fix normalize_heading_ids.py (ok_legacy_sectioned) · 2026-08-01,44,"- Manual — MANUAL:SESSION-CYCLE (§6): ""Confirma que los 6 documentos fundacionales + el Census..."" corregido a ""9 documentos fundacionales + el Census"". Ejecutado vía contrato determinista (Mistral, p"
+KERNEL:DOCUMENTATION-001,REF,Change Log.md,v9.11.5 — Kernel: Regla de Bloque Único Formalizada en KERNEL:DOCUMENTATION-001 · 2026-08-01,55,### v9.11.5 — Kernel: Regla de Bloque Único Formalizada en KERNEL:DOCUMENTATION-001 · 2026-08-01
+KERNEL:DOCUMENTATION-001,REF,Change Log.md,v9.11.5 — Kernel: Regla de Bloque Único Formalizada en KERNEL:DOCUMENTATION-001 · 2026-08-01,57,Alcance: Kernel (sección 03.1 KERNEL:DOCUMENTATION-001).
+KERNEL:DOCUMENTATION-001,REF,Change Log.md,v9.11.5 — Kernel: Regla de Bloque Único Formalizada en KERNEL:DOCUMENTATION-001 · 2026-08-01,60,"- Kernel — KERNEL:DOCUMENTATION-001 (§03.1): nuevo párrafo ""Regla de Bloque Único"", insertado entre ""Matriz Tipográfica Congelada"" y ""Reglas de Migración"" — formaliza que todo heading ### declara su I"
+KERNEL:DOCUMENTATION-001,REF,Change Log.md,v9.11.5 — Kernel: Regla de Bloque Único Formalizada en KERNEL:DOCUMENTATION-001 · 2026-08-01,61,"IDs afectados: ninguno — extensión de contenido sobre KERNEL:DOCUMENTATION-001, ID ya existente. Census no requiere regeneración."
+CANON:POSITIONING-N2,REF,Change Log.md,v9.11.4 — Patch de Debug (--debug-id / campo plain) Declarado Permanente en generate_census.py · 2026-07-31,69,Contexto: El flag --debug-id y el campo plain agregado a cada entrada del link_index se introdujeron ad-hoc en esta sesión para diagnosticar CANON:POSITIONING-N2/N3/N4 y KERNEL:CV-GOLDEN-RULES-001..00
+KERNEL:CV-GOLDEN-RULES-001,REF,Change Log.md,v9.11.4 — Patch de Debug (--debug-id / campo plain) Declarado Permanente en generate_census.py · 2026-07-31,69,Contexto: El flag --debug-id y el campo plain agregado a cada entrada del link_index se introdujeron ad-hoc en esta sesión para diagnosticar CANON:POSITIONING-N2/N3/N4 y KERNEL:CV-GOLDEN-RULES-001..00
+KERNEL:CV-GOLDEN-RULES-001,REF,Change Log.md,v9.11.3 — Fix: KERNEL:CV-GOLDEN-RULES-001..005 Sin Heading Propio (Deuda desde v9.9.1) · 2026-07-31,77,### v9.11.3 — Fix: KERNEL:CV-GOLDEN-RULES-001..005 Sin Heading Propio (Deuda desde v9.9.1) · 2026-07-31
+KERNEL:CV-GOLDEN-RULES,REF,Change Log.md,v9.11.3 — Fix: KERNEL:CV-GOLDEN-RULES-001..005 Sin Heading Propio (Deuda desde v9.9.1) · 2026-07-31,79,Alcance: Kernel (sección 10 KERNEL:CV-GOLDEN-RULES).
+MANUAL:CV-GOLDEN-RULES-INDEX,REF,Change Log.md,v9.11.3 — Fix: KERNEL:CV-GOLDEN-RULES-001..005 Sin Heading Propio (Deuda desde v9.9.1) · 2026-07-31,80,"Contexto: Los 5 IDs llevaban desde v9.9.1 resolviendo con ""sección hardcodeada"" en el Census, diagnosticado entonces como posible problema de regex del script. --debug-id confirmó la causa real: las 5"
+CANON:POSITIONING-N2,REF,Change Log.md,v9.11.3 — Fix: KERNEL:CV-GOLDEN-RULES-001..005 Sin Heading Propio (Deuda desde v9.9.1) · 2026-07-31,80,"Contexto: Los 5 IDs llevaban desde v9.9.1 resolviendo con ""sección hardcodeada"" en el Census, diagnosticado entonces como posible problema de regex del script. --debug-id confirmó la causa real: las 5"
+KERNEL:CV-GOLDEN-RULES-00N,REF,Change Log.md,v9.11.3 — Fix: KERNEL:CV-GOLDEN-RULES-001..005 Sin Heading Propio (Deuda desde v9.9.1) · 2026-07-31,82,"- Kernel — sección 10: la lista numerada 1–5 convertida a 5 headings propios (### 10.N KERNEL:CV-GOLDEN-RULES-00N / título), cada uno con su contenido original preservado tal cual. Template Universal "
+CANON:PROFILE-001,REF,Change Log.md,v9.11.2 — CENSUS_SPEC: Resolución de 9 TBD + Alta de 14 IDs (Homologación v9.11.0/v9.11.1) · 2026-07-31,95,- CENSUS_SPEC — Career Canon: alta de CANON:PROFILE-001/002 (§01.1/§01.2) y CANON:OUTPUT-CONTRACT-005 (§12.5).
+CANON:OUTPUT-CONTRACT-005,REF,Change Log.md,v9.11.2 — CENSUS_SPEC: Resolución de 9 TBD + Alta de 14 IDs (Homologación v9.11.0/v9.11.1) · 2026-07-31,95,- CENSUS_SPEC — Career Canon: alta de CANON:PROFILE-001/002 (§01.1/§01.2) y CANON:OUTPUT-CONTRACT-005 (§12.5).
+KERNEL:PURPOSE-001,REF,Change Log.md,v9.11.2 — CENSUS_SPEC: Resolución de 9 TBD + Alta de 14 IDs (Homologación v9.11.0/v9.11.1) · 2026-07-31,96,"- CENSUS_SPEC — Kernel: alta de KERNEL:PURPOSE-001 (§01.1), KERNEL:FAIL-PHILOSOPHY-001/002 (§02.1/§02.2), KERNEL:CV-PIPELINE-001/002 (§12.1/§12.2)."
+KERNEL:FAIL-PHILOSOPHY-001,REF,Change Log.md,v9.11.2 — CENSUS_SPEC: Resolución de 9 TBD + Alta de 14 IDs (Homologación v9.11.0/v9.11.1) · 2026-07-31,96,"- CENSUS_SPEC — Kernel: alta de KERNEL:PURPOSE-001 (§01.1), KERNEL:FAIL-PHILOSOPHY-001/002 (§02.1/§02.2), KERNEL:CV-PIPELINE-001/002 (§12.1/§12.2)."
+KERNEL:CV-PIPELINE-001,REF,Change Log.md,v9.11.2 — CENSUS_SPEC: Resolución de 9 TBD + Alta de 14 IDs (Homologación v9.11.0/v9.11.1) · 2026-07-31,96,"- CENSUS_SPEC — Kernel: alta de KERNEL:PURPOSE-001 (§01.1), KERNEL:FAIL-PHILOSOPHY-001/002 (§02.1/§02.2), KERNEL:CV-PIPELINE-001/002 (§12.1/§12.2)."
+BRIEF:CONSULTATION-002,REF,Change Log.md,v9.11.2 — CENSUS_SPEC: Resolución de 9 TBD + Alta de 14 IDs (Homologación v9.11.0/v9.11.1) · 2026-07-31,97,"- CENSUS_SPEC — Navigation Brief: alta de BRIEF:CONSULTATION-002..006, CORE-ASSETS-001, DISCOVERY-001, GATE-LOGIC-001, CV-PIPELINE-001 (9 IDs, huérfanos desde la atomización v9.11.1)."
+KERNEL:CV-GOLDEN-RULES-001,REF,Change Log.md,v9.11.2 — CENSUS_SPEC: Resolución de 9 TBD + Alta de 14 IDs (Homologación v9.11.0/v9.11.1) · 2026-07-31,102,"- 5 KERNEL:CV-GOLDEN-RULES-001..005 con sección hardcodeada — heredado desde v9.9.1, bajo investigación en esta misma sesión."
+KERNEL:PURPOSE-001,REF,Change Log.md,v9.11.1 — Homologación Arquitectónica y Atomización (Aliases + Navigation Brief + Career Canon) · 2026-07-31,128,"- Altas: KERNEL:PURPOSE-001, KERNEL:FAIL-PHILOSOPHY-001/002, KERNEL:CV-PIPELINE-001/002 (5 IDs nuevos en Kernel, derivados de la atomización)."
+KERNEL:FAIL-PHILOSOPHY-001,REF,Change Log.md,v9.11.1 — Homologación Arquitectónica y Atomización (Aliases + Navigation Brief + Career Canon) · 2026-07-31,128,"- Altas: KERNEL:PURPOSE-001, KERNEL:FAIL-PHILOSOPHY-001/002, KERNEL:CV-PIPELINE-001/002 (5 IDs nuevos en Kernel, derivados de la atomización)."
+KERNEL:CV-PIPELINE-001,REF,Change Log.md,v9.11.1 — Homologación Arquitectónica y Atomización (Aliases + Navigation Brief + Career Canon) · 2026-07-31,128,"- Altas: KERNEL:PURPOSE-001, KERNEL:FAIL-PHILOSOPHY-001/002, KERNEL:CV-PIPELINE-001/002 (5 IDs nuevos en Kernel, derivados de la atomización)."
+CANON:KPIS,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",144,Contexto: El operador identificó que CANON:KPIS (sección I) nunca tenía contenido real en el Runtime — confirmado no como un defecto de formato sino como contenido nunca migrado desde CAREER CANON (DE
+CANON:CAREER-TIMELINE,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",147,"- Career Canon — nueva sección 04 CANON:CAREER-TIMELINE: tabla de 5 filas (C01–C05) con período y país por compañía, ausente en el Runtime desde su consolidación. Reintegrada desde la versión deprecad"
+CANON:ACHIEVEMENTS,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",148,- Career Canon — CANON:ACHIEVEMENTS renumerada de §04 a §05 (sin cambio de contenido).
+CANON:KPIS,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",149,"- Career Canon — nueva sección 06 CANON:KPIS (06.1–06.8, KPI-001–008): resuelve las 8 referencias [KPI01]–[KPI08] previamente rotas. Reintegrada desde la versión deprecada."
+CANON:FACTS,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",150,"- Career Canon — CANON:FACTS renumerada de §06 a §07 (11 subsecciones renumeradas 06.1–06.11 → 07.1–07.11, sin cambio de contenido)."
+CANON:EDUCATION,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",151,"- Career Canon — nueva sección 08 CANON:EDUCATION (ED01, ED02) y nueva sección 09 CANON:CERTIFICATIONS (CERT01, CERT02) — esta última coincide exactamente con el set cerrado ya exigido por CANON:UF-00"
+CANON:CERTIFICATIONS,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",151,"- Career Canon — nueva sección 08 CANON:EDUCATION (ED01, ED02) y nueva sección 09 CANON:CERTIFICATIONS (CERT01, CERT02) — esta última coincide exactamente con el set cerrado ya exigido por CANON:UF-00"
+CANON:UF-003,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",151,"- Career Canon — nueva sección 08 CANON:EDUCATION (ED01, ED02) y nueva sección 09 CANON:CERTIFICATIONS (CERT01, CERT02) — esta última coincide exactamente con el set cerrado ya exigido por CANON:UF-00"
+CANON:MAJOR-PROJECTS,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",152,- Career Canon — nueva sección 10 CANON:MAJOR-PROJECTS (P01–P03) — formaliza la referencia implícita a P01 (Adidas Brand Center) que ya existía sin registro en CANON:POSITIONING-N2. Reintegrada desde 
+CANON:POSITIONING-N2,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",152,- Career Canon — nueva sección 10 CANON:MAJOR-PROJECTS (P01–P03) — formaliza la referencia implícita a P01 (Adidas Brand Center) que ya existía sin registro en CANON:POSITIONING-N2. Reintegrada desde 
+CANON:POSITIONING,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",153,"- Career Canon — CANON:POSITIONING renumerada de §07 a §11 y CANON:OUTPUT-CONTRACT de §08 a §12 (sin cambio de contenido — ambas versiones Live conservadas tal cual, superiores a la deprecada: tie-bre"
+CANON:OUTPUT-CONTRACT,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",153,"- Career Canon — CANON:POSITIONING renumerada de §07 a §11 y CANON:OUTPUT-CONTRACT de §08 a §12 (sin cambio de contenido — ambas versiones Live conservadas tal cual, superiores a la deprecada: tie-bre"
+CANON:DERIVED-OUTPUTS-ARCHIVE,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",154,"- Career Canon — nueva sección 13 CANON:DERIVED-OUTPUTS-ARCHIVE: tabla histórica de 15 CVs derivados, reintegrada con valor de trazabilidad (no es fuente de verdad)."
+CANON:CAREER-TIMELINE,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",156,"IDs afectados: Altas — CANON:CAREER-TIMELINE, CANON:KPIS (+ KPI-001..008), CANON:EDUCATION (+ EDUCATION-001/002), CANON:CERTIFICATIONS (+ CERTIFICATION-001/002), CANON:MAJOR-PROJECTS (+ MAJOR-PROJECT-"
+CANON:KPIS,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",156,"IDs afectados: Altas — CANON:CAREER-TIMELINE, CANON:KPIS (+ KPI-001..008), CANON:EDUCATION (+ EDUCATION-001/002), CANON:CERTIFICATIONS (+ CERTIFICATION-001/002), CANON:MAJOR-PROJECTS (+ MAJOR-PROJECT-"
+CANON:EDUCATION,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",156,"IDs afectados: Altas — CANON:CAREER-TIMELINE, CANON:KPIS (+ KPI-001..008), CANON:EDUCATION (+ EDUCATION-001/002), CANON:CERTIFICATIONS (+ CERTIFICATION-001/002), CANON:MAJOR-PROJECTS (+ MAJOR-PROJECT-"
+CANON:CERTIFICATIONS,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",156,"IDs afectados: Altas — CANON:CAREER-TIMELINE, CANON:KPIS (+ KPI-001..008), CANON:EDUCATION (+ EDUCATION-001/002), CANON:CERTIFICATIONS (+ CERTIFICATION-001/002), CANON:MAJOR-PROJECTS (+ MAJOR-PROJECT-"
+CANON:MAJOR-PROJECTS,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",156,"IDs afectados: Altas — CANON:CAREER-TIMELINE, CANON:KPIS (+ KPI-001..008), CANON:EDUCATION (+ EDUCATION-001/002), CANON:CERTIFICATIONS (+ CERTIFICATION-001/002), CANON:MAJOR-PROJECTS (+ MAJOR-PROJECT-"
+CANON:DERIVED-OUTPUTS-ARCHIVE,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",156,"IDs afectados: Altas — CANON:CAREER-TIMELINE, CANON:KPIS (+ KPI-001..008), CANON:EDUCATION (+ EDUCATION-001/002), CANON:CERTIFICATIONS (+ CERTIFICATION-001/002), CANON:MAJOR-PROJECTS (+ MAJOR-PROJECT-"
+CANON:ACHIEVEMENTS,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",156,"IDs afectados: Altas — CANON:CAREER-TIMELINE, CANON:KPIS (+ KPI-001..008), CANON:EDUCATION (+ EDUCATION-001/002), CANON:CERTIFICATIONS (+ CERTIFICATION-001/002), CANON:MAJOR-PROJECTS (+ MAJOR-PROJECT-"
+CANON:FACTS,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",156,"IDs afectados: Altas — CANON:CAREER-TIMELINE, CANON:KPIS (+ KPI-001..008), CANON:EDUCATION (+ EDUCATION-001/002), CANON:CERTIFICATIONS (+ CERTIFICATION-001/002), CANON:MAJOR-PROJECTS (+ MAJOR-PROJECT-"
+CANON:POSITIONING,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",156,"IDs afectados: Altas — CANON:CAREER-TIMELINE, CANON:KPIS (+ KPI-001..008), CANON:EDUCATION (+ EDUCATION-001/002), CANON:CERTIFICATIONS (+ CERTIFICATION-001/002), CANON:MAJOR-PROJECTS (+ MAJOR-PROJECT-"
+CANON:OUTPUT-CONTRACT,REF,Change Log.md,"v9.11.0 — Reintegración de Career Canon (Deprecated → Runtime): KPIs, Timeline, Education, Certifications, Major Projects, Derived Outputs Archive · 2026-07-31",156,"IDs afectados: Altas — CANON:CAREER-TIMELINE, CANON:KPIS (+ KPI-001..008), CANON:EDUCATION (+ EDUCATION-001/002), CANON:CERTIFICATIONS (+ CERTIFICATION-001/002), CANON:MAJOR-PROJECTS (+ MAJOR-PROJECT-"
+CANON:POSITIONING-N2,REF,Change Log.md,v9.10.6 — Fix: Reconstrucción de CANON:POSITIONING-N2/N3/N4 (Bloque Roto y Fuera de Lugar) · 2026-07-31,164,### v9.10.6 — Fix: Reconstrucción de CANON:POSITIONING-N2/N3/N4 (Bloque Roto y Fuera de Lugar) · 2026-07-31
+CANON:POSITIONING,REF,Change Log.md,v9.10.6 — Fix: Reconstrucción de CANON:POSITIONING-N2/N3/N4 (Bloque Roto y Fuera de Lugar) · 2026-07-31,166,Alcance: Career Canon (sección 07 CANON:POSITIONING).
+CANON:POSITIONING-N2,REF,Change Log.md,v9.10.6 — Fix: Reconstrucción de CANON:POSITIONING-N2/N3/N4 (Bloque Roto y Fuera de Lugar) · 2026-07-31,167,"Contexto: generate_census.py (patch local de debug --debug-id, agregando plain al link_index) reveló que CANON:POSITIONING-N2, N3 y N4 no eran headings reales en Notion — vivían como texto plano (### "
+CANON:EXPERIENCE-C05,REF,Change Log.md,v9.10.6 — Fix: Reconstrucción de CANON:POSITIONING-N2/N3/N4 (Bloque Roto y Fuera de Lugar) · 2026-07-31,167,"Contexto: generate_census.py (patch local de debug --debug-id, agregando plain al link_index) reveló que CANON:POSITIONING-N2, N3 y N4 no eran headings reales en Notion — vivían como texto plano (### "
+CANON:EXPERIENCE-C05,REF,Change Log.md,v9.10.6 — Fix: Reconstrucción de CANON:POSITIONING-N2/N3/N4 (Bloque Roto y Fuera de Lugar) · 2026-07-31,169,"- Career Canon — bullet EN de CANON:EXPERIENCE-C05 (03.5): removido el contenido fusionado de N2/N3/N4 + Ancla canónica C01 + intro de Regla de Desempate. El bullet ahora cierra limpio en ""...directly"
+CANON:POSITIONING,REF,Change Log.md,v9.10.6 — Fix: Reconstrucción de CANON:POSITIONING-N2/N3/N4 (Bloque Roto y Fuera de Lugar) · 2026-07-31,170,"- Career Canon — sección 07 (CANON:POSITIONING): reconstruida con N1, N2, N3 y N4 como headings propios (### 07.N CANON:POSITIONING-NN / ### NN · Título), cada uno con su línea ""Ancla canónica"" corres"
+CANON:POSITIONING-NN,REF,Change Log.md,v9.10.6 — Fix: Reconstrucción de CANON:POSITIONING-N2/N3/N4 (Bloque Roto y Fuera de Lugar) · 2026-07-31,170,"- Career Canon — sección 07 (CANON:POSITIONING): reconstruida con N1, N2, N3 y N4 como headings propios (### 07.N CANON:POSITIONING-NN / ### NN · Título), cada uno con su línea ""Ancla canónica"" corres"
+CANON:POSITIONING-N1,REF,Change Log.md,v9.10.6 — Fix: Reconstrucción de CANON:POSITIONING-N2/N3/N4 (Bloque Roto y Fuera de Lugar) · 2026-07-31,172,IDs afectados: ninguna alta/baja — los 4 IDs (CANON:POSITIONING-N1..N4) ya existían en CENSUS_SPEC; se corrigió su representación estructural en Notion. Census sí requiere regeneración para reflejar s
+CANON:POSITIONING-N1,REF,Change Log.md,v9.10.6 — Fix: Reconstrucción de CANON:POSITIONING-N2/N3/N4 (Bloque Roto y Fuera de Lugar) · 2026-07-31,174,"Post-fix confirmado por operador vía vcensus: CANON:POSITIONING-N1/N2/N3/N4 fuera de la lista de ""Sección hardcodeada"" (19 → 15 IDs restantes con el mismo patrón, sin verificar individualmente aún)."
+CANON:KPI-001,REF,Change Log.md,v9.10.6 — Fix: Reconstrucción de CANON:POSITIONING-N2/N3/N4 (Bloque Roto y Fuera de Lugar) · 2026-07-31,176,"- 8 CANON:KPI-001..008 sin resolver — contenido nunca creado en Career Canon (confirmado, no es defecto de formato)."
+SP:SCHEMA,REF,Change Log.md,v9.10.4 — Documentación Transversal: SP:SCHEMA Alineado con Schema Vivo de Notion · 2026-07-31,183,### v9.10.4 — Documentación Transversal: SP:SCHEMA Alineado con Schema Vivo de Notion · 2026-07-31
+SP:SCHEMA,REF,Change Log.md,v9.10.4 — Documentación Transversal: SP:SCHEMA Alineado con Schema Vivo de Notion · 2026-07-31,185,"Alcance: System Prompt (SP:SCHEMA, sección 08)."
+SP:SCHEMA,REF,Change Log.md,v9.10.4 — Documentación Transversal: SP:SCHEMA Alineado con Schema Vivo de Notion · 2026-07-31,186,Contexto: SP:SCHEMA documentaba solo 7 de 13 campos reales del Bug Tracker y 7 de 10 del Tasks Tracker (confirmado vía fetch directo de ambos data sources). Gap detectado al intentar llenar Fecha_Reso
+SP:SCHEMA,REF,Change Log.md,v9.10.4 — Documentación Transversal: SP:SCHEMA Alineado con Schema Vivo de Notion · 2026-07-31,188,"- SP:SCHEMA — Bug Tracker: alta de Fecha_Resolución, Solución, Etiquetas, Archivar, Mantener, Creado."
+SP:SCHEMA,REF,Change Log.md,v9.10.4 — Documentación Transversal: SP:SCHEMA Alineado con Schema Vivo de Notion · 2026-07-31,189,"- SP:SCHEMA — Tasks Tracker: alta de Fecha_Cierre, Archivar, Mantener, Creado."
+SP:SCHEMA,REF,Change Log.md,v9.10.4 — Documentación Transversal: SP:SCHEMA Alineado con Schema Vivo de Notion · 2026-07-31,190,"IDs afectados: ninguno — extensión de contenido sobre SP:SCHEMA existente, no alta de ID nuevo. Census no requiere regeneración."
+MANUAL:CADENCE-MATRIX,REF,Change Log.md,v9.10.3 — TOC del Manual y Tabla 08.6 Convertidas a Bloques de Tabla Reales · 2026-07-30,197,"Alcance: Manual (TOC / DECLARACIÓN DE AUDIENCIA Y ALCANCE, MANUAL:CADENCE-MATRIX)."
+MANUAL:PATCH-QUALITY,REF,Change Log.md,v9.10.2 — Corrección de Terminología (Bloque vs. Línea) + Alta de Criterio 6: Concreción de Títulos · 2026-07-30,213,Alcance: Manual (MANUAL:PATCH-QUALITY).
+MANUAL:PATCH-QUALITY,REF,Change Log.md,v9.10.2 — Corrección de Terminología (Bloque vs. Línea) + Alta de Criterio 6: Concreción de Títulos · 2026-07-30,218,"- Manual — MANUAL:PATCH-QUALITY (§15), criterio 1: redacción corregida de ""líneas contiguas"" a ""un único bloque de heading... unión por"
+MANUAL:PATCH-QUALITY,REF,Change Log.md,v9.10.2 — Corrección de Terminología (Bloque vs. Línea) + Alta de Criterio 6: Concreción de Títulos · 2026-07-30,220,"- Manual — MANUAL:PATCH-QUALITY (§15), alta de criterio 6 (Concreción de títulos): títulos deben ser ilustrativos/concretos, no construcciones semánticas compuestas."
+MANUAL:PATCH-QUALITY,REF,Change Log.md,v9.10.2 — Corrección de Terminología (Bloque vs. Línea) + Alta de Criterio 6: Concreción de Títulos · 2026-07-30,222,"IDs afectados: ninguna alta/baja — extensión de contenido sobre MANUAL:PATCH-QUALITY, ID ya existente. Census no requiere regeneración."
+KERNEL:PURPOSE,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,12,| 01 | KERNEL:PURPOSE | FUNDAMENTO | FUNDAMENTO |
+KERNEL:FAIL-PHILOSOPHY,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,13,| 02 | KERNEL:FAIL-PHILOSOPHY | FILOSOFÍA DE FALLO | FUNDAMENTO |
+KERNEL:DOCUMENTATION,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,14,| 03 | KERNEL:DOCUMENTATION | DOCUMENTACIÓN (L0) | FUNDAMENTO |
+KERNEL:ARCHITECTURE,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,15,| 04 | KERNEL:ARCHITECTURE | ARQUITECTURA | FUNDAMENTO |
+KERNEL:OWNERSHIP,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,16,| 05 | KERNEL:OWNERSHIP | OWNERSHIP | FUNDAMENTO |
+KERNEL:DASHBOARD-CHECKLIST-ARCH,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,17,| 06 | KERNEL:DASHBOARD-CHECKLIST-ARCH | DASHBOARD CHECKLIST | FUNDAMENTO |
+KERNEL:SCHEMA,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,18,"| 07 | KERNEL:SCHEMA | SCHEMA | DATOS, ESQUEMAS Y REGLAS |"
+KERNEL:TRACKER-SCHEMA,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,19,"| 08 | KERNEL:TRACKER-SCHEMA | TRACKER SCHEMA | DATOS, ESQUEMAS Y REGLAS |"
+KERNEL:GATE-DECISION,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,20,"| 09 | KERNEL:GATE-DECISION | GATE DECISION | DATOS, ESQUEMAS Y REGLAS |"
+KERNEL:CV-GOLDEN-RULES,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,21,"| 10 | KERNEL:CV-GOLDEN-RULES | CV GOLDEN RULES | DATOS, ESQUEMAS Y REGLAS |"
+KERNEL:TRIGGERS,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,22,| 11 | KERNEL:TRIGGERS | TRIGGERS | EJECUCIÓN |
+KERNEL:CV-PIPELINE,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,23,| 12 | KERNEL:CV-PIPELINE | CV PIPELINE | EJECUCIÓN |
+KERNEL:CANON-UPDATE,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,24,| 13 | KERNEL:CANON-UPDATE | CANON UPDATE | EJECUCIÓN |
+KERNEL:NAMING-CONVENTION,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,25,| 14 | KERNEL:NAMING-CONVENTION | NAMING CONVENTION | EJECUCIÓN |
+KERNEL:CONTEXT-INFRASTRUCTURE,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,26,| 15 | KERNEL:CONTEXT-INFRASTRUCTURE | CONTEXT INFRASTRUCTURE | INFRAESTRUCTURA DE CONTEXTO |
+KERNEL:DATA-FLOW,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,27,| 16 | KERNEL:DATA-FLOW | DATA FLOW | INFRAESTRUCTURA DE CONTEXTO |
+KERNEL:EVOLUTION,REF,Kernel.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,28,| 17 | KERNEL:EVOLUTION | EVOLUTION | INFRAESTRUCTURA DE CONTEXTO |
+KERNEL:PURPOSE,DEF,Kernel.md,01 KERNEL:PURPOSE,30,## 01 KERNEL:PURPOSE
+KERNEL:PURPOSE-001,DEF,Kernel.md,01.1 KERNEL:PURPOSE-001,34,### 01.1 KERNEL:PURPOSE-001
+KERNEL:FAIL-PHILOSOPHY,DEF,Kernel.md,02 KERNEL:FAIL-PHILOSOPHY,46,## 02 KERNEL:FAIL-PHILOSOPHY
+KERNEL:FAIL-PHILOSOPHY-001,DEF,Kernel.md,02.1 KERNEL:FAIL-PHILOSOPHY-001,49,### 02.1 KERNEL:FAIL-PHILOSOPHY-001
+KERNEL:FAIL-PHILOSOPHY-002,DEF,Kernel.md,02.2 KERNEL:FAIL-PHILOSOPHY-002,55,### 02.2 KERNEL:FAIL-PHILOSOPHY-002
+KERNEL:DOCUMENTATION,DEF,Kernel.md,03 KERNEL:DOCUMENTATION,59,## 03 KERNEL:DOCUMENTATION
+KERNEL:DOCUMENTATION-001,DEF,Kernel.md,03.1 KERNEL:DOCUMENTATION-001,61,### 03.1 KERNEL:DOCUMENTATION-001
+KERNEL:DOCUMENTATION-002,DEF,Kernel.md,03.2 KERNEL:DOCUMENTATION-002,92,### 03.2 KERNEL:DOCUMENTATION-002
+KERNEL:DOCUMENTATION-003,DEF,Kernel.md,03.3 KERNEL:DOCUMENTATION-003,100,### 03.3 KERNEL:DOCUMENTATION-003
+KERNEL:DOCUMENTATION-004,DEF,Kernel.md,03.4 KERNEL:DOCUMENTATION-004,117,### 03.4 KERNEL:DOCUMENTATION-004
+SP:BOOTSTRAP-001,REF,Kernel.md,03.4 KERNEL:DOCUMENTATION-004,122,"Ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de SP:BOOTSTRAP-001 y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática pr"
+KERNEL:DOCUMENTATION-005,DEF,Kernel.md,03.5 KERNEL:DOCUMENTATION-005,133,### 03.5 KERNEL:DOCUMENTATION-005
+KERNEL:DOCUMENTATION-006,DEF,Kernel.md,03.6 KERNEL:DOCUMENTATION-006,147,### 03.6 KERNEL:DOCUMENTATION-006
+KERNEL:DOCUMENTATION-007,DEF,Kernel.md,03.7 KERNEL:DOCUMENTATION-007,157,### 03.7 KERNEL:DOCUMENTATION-007
+KERNEL:DOCUMENTATION-008,DEF,Kernel.md,03.8 KERNEL:DOCUMENTATION-008,166,### 03.8 KERNEL:DOCUMENTATION-008
+KERNEL:DOCUMENTATION-009,DEF,Kernel.md,03.9 KERNEL:DOCUMENTATION-009,176,### 03.9 KERNEL:DOCUMENTATION-009
+KERNEL:DOCUMENTATION-010,DEF,Kernel.md,03.10 KERNEL:DOCUMENTATION-010,188,### 03.10 KERNEL:DOCUMENTATION-010
+KERNEL:DOCUMENTATION-011,DEF,Kernel.md,03.11 KERNEL:DOCUMENTATION-011,201,### 03.11 KERNEL:DOCUMENTATION-011
+MANUAL:HEALTHCHECK,REF,Kernel.md,03.11 KERNEL:DOCUMENTATION-011,214,Ver MANUAL:HEALTHCHECK para el procedimiento operativo de cuándo correr cada script.
+KERNEL:ARCHITECTURE,DEF,Kernel.md,04 KERNEL:ARCHITECTURE,216,## 04 KERNEL:ARCHITECTURE
+KERNEL:ARCHITECTURE-L1,DEF,Kernel.md,04.1 KERNEL:ARCHITECTURE-L1,218,### 04.1 KERNEL:ARCHITECTURE-L1
+KERNEL:ARCHITECTURE-L2,DEF,Kernel.md,04.2 KERNEL:ARCHITECTURE-L2,225,### 04.2 KERNEL:ARCHITECTURE-L2
+KERNEL:ARCHITECTURE-L3,DEF,Kernel.md,04.3 KERNEL:ARCHITECTURE-L3,232,### 04.3 KERNEL:ARCHITECTURE-L3
+KERNEL:ARCHITECTURE-L4,DEF,Kernel.md,04.4 KERNEL:ARCHITECTURE-L4,238,### 04.4 KERNEL:ARCHITECTURE-L4
+SP:DIGITAL-ID-CARD,REF,Kernel.md,04.4 KERNEL:ARCHITECTURE-L4,250,"vsum.py (alias vsum) — herramienta de continuidad entre sesiones e IAs, no capa de búsqueda ni de pipeline: resume transcripts de sesiones (Claude, Gemini, ChatGPT, u otro) a Markdown estructurado (co"
+KERNEL:OWNERSHIP,DEF,Kernel.md,05 KERNEL:OWNERSHIP,266,## 05 KERNEL:OWNERSHIP
+KERNEL:OWNERSHIP-001,DEF,Kernel.md,05.1 KERNEL:OWNERSHIP-001,268,### 05.1 KERNEL:OWNERSHIP-001
+KERNEL:OWNERSHIP-002,DEF,Kernel.md,05.2 KERNEL:OWNERSHIP-002,283,### 05.2 KERNEL:OWNERSHIP-002
+KERNEL:DASHBOARD-CHECKLIST-ARCH,DEF,Kernel.md,06 KERNEL:DASHBOARD-CHECKLIST-ARCH,293,## 06 KERNEL:DASHBOARD-CHECKLIST-ARCH
+KERNEL:SCHEMA,DEF,Kernel.md,07 KERNEL:SCHEMA,303,## 07 KERNEL:SCHEMA
+KERNEL:SCHEMA-001,DEF,Kernel.md,07.1 KERNEL:SCHEMA-001,306,### 07.1 KERNEL:SCHEMA-001
+KERNEL:SCHEMA-002,DEF,Kernel.md,07.2 KERNEL:SCHEMA-002,315,### 07.2 KERNEL:SCHEMA-002
+KERNEL:SCHEMA-003,DEF,Kernel.md,07.3 KERNEL:SCHEMA-003,318,### 07.3 KERNEL:SCHEMA-003
+KERNEL:SCHEMA-004,DEF,Kernel.md,07.4 KERNEL:SCHEMA-004,321,### 07.4 KERNEL:SCHEMA-004
+KERNEL:DOCUMENTATION-003,REF,Kernel.md,07.4 KERNEL:SCHEMA-004,326,Ver 03.3 (KERNEL:DOCUMENTATION-003 — L0 Runtime) para el mecanismo de resolución que consume este contrato.
+KERNEL:SCHEMA-005,DEF,Kernel.md,07.5 KERNEL:SCHEMA-005,327,### 07.5 KERNEL:SCHEMA-005
+KERNEL:DOCUMENTATION-003,REF,Kernel.md,07.5 KERNEL:SCHEMA-005,330,Ver 03.3 (KERNEL:DOCUMENTATION-003 — L0 Runtime) — este contrato es la contraparte de datos del Runtime Build descrito ahí.
+KERNEL:SCHEMA-006,DEF,Kernel.md,07.6 KERNEL:SCHEMA-006,331,### 07.6 KERNEL:SCHEMA-006
+KERNEL:SCHEMA-007,DEF,Kernel.md,07.7 KERNEL:SCHEMA-007,336,### 07.7 KERNEL:SCHEMA-007
+KERNEL:TRACKER-SCHEMA,DEF,Kernel.md,08 KERNEL:TRACKER-SCHEMA,350,## 08 KERNEL:TRACKER-SCHEMA
+KERNEL:TRACKER-SCHEMA-001,DEF,Kernel.md,08.1 KERNEL:TRACKER-SCHEMA-001,353,### 08.1 KERNEL:TRACKER-SCHEMA-001
+KERNEL:TRACKER-SCHEMA-002,DEF,Kernel.md,08.2 KERNEL:TRACKER-SCHEMA-002,362,### 08.2 KERNEL:TRACKER-SCHEMA-002
+KERNEL:GATE-DECISION,DEF,Kernel.md,09 KERNEL:GATE-DECISION,371,## 09 KERNEL:GATE-DECISION
+KERNEL:GATE-DECISION-001,DEF,Kernel.md,09.1 KERNEL:GATE-DECISION-001,374,### 09.1 KERNEL:GATE-DECISION-001
+KERNEL:GATE-DECISION-002,DEF,Kernel.md,09.2 KERNEL:GATE-DECISION-002,378,### 09.2 KERNEL:GATE-DECISION-002
+KERNEL:GATE-DECISION-003,DEF,Kernel.md,09.3 KERNEL:GATE-DECISION-003,384,### 09.3 KERNEL:GATE-DECISION-003
+KERNEL:GATE-DECISION-004,DEF,Kernel.md,09.4 KERNEL:GATE-DECISION-004,389,### 09.4 KERNEL:GATE-DECISION-004
+KERNEL:GATE-DECISION-005,DEF,Kernel.md,09.5 KERNEL:GATE-DECISION-005,392,### 09.5 KERNEL:GATE-DECISION-005
+KERNEL:GATE-DECISION-006,DEF,Kernel.md,09.6 KERNEL:GATE-DECISION-006,396,### 09.6 KERNEL:GATE-DECISION-006
+KERNEL:GATE-DECISION-007,DEF,Kernel.md,09.7 KERNEL:GATE-DECISION-007,402,### 09.7 KERNEL:GATE-DECISION-007
+KERNEL:GATE-DECISION-008,DEF,Kernel.md,09.8 KERNEL:GATE-DECISION-008,406,### 09.8 KERNEL:GATE-DECISION-008
+KERNEL:GATE-DECISION-009,DEF,Kernel.md,09.9 KERNEL:GATE-DECISION-009,409,### 09.9 KERNEL:GATE-DECISION-009
+SP:CONSISTENCY,REF,Kernel.md,09.9 KERNEL:GATE-DECISION-009,434,- Prohibido por SP:CONSISTENCY 05: Automatismos basados en inferencias no confirmadas.
+SP:CONSISTENCY,REF,Kernel.md,09.9 KERNEL:GATE-DECISION-009,440,| Choque con SP:CONSISTENCY 05 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
+MANUAL:SESSION-CYCLE,REF,Kernel.md,09.9 KERNEL:GATE-DECISION-009,441,Referencia cruzada Manual: Ver MANUAL:SESSION-CYCLE — Ciclo de Sesión para la implementación práctica de este escalamiento dentro del flujo operador.
+KERNEL:GATE-DECISION-010,DEF,Kernel.md,09.10 KERNEL:GATE-DECISION-010,442,### 09.10 KERNEL:GATE-DECISION-010
+KERNEL:OWNERSHIP-002,REF,Kernel.md,09.10 KERNEL:GATE-DECISION-010,456,"- Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con KERNEL:OWNERSHIP-002."
+KERNEL:GATE-DECISION-005,REF,Kernel.md,09.10 KERNEL:GATE-DECISION-010,460,"- Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002"
+KERNEL:GATE-DECISION-006,REF,Kernel.md,09.10 KERNEL:GATE-DECISION-010,460,"- Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002"
+KERNEL:GATE-DECISION-008,REF,Kernel.md,09.10 KERNEL:GATE-DECISION-010,460,"- Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002"
+KERNEL:OWNERSHIP-002,REF,Kernel.md,09.10 KERNEL:GATE-DECISION-010,460,"- Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002"
+KERNEL:GATE-DECISION-011,DEF,Kernel.md,09.11 KERNEL:GATE-DECISION-011,461,### 09.11 KERNEL:GATE-DECISION-011
+KERNEL:GATE-DECISION-010,REF,Kernel.md,09.11 KERNEL:GATE-DECISION-011,483,"→ Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), KERNEL:GATE-DECISION-005 (RT-1)."
+KERNEL:GATE-DECISION-005,REF,Kernel.md,09.11 KERNEL:GATE-DECISION-011,483,"→ Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), KERNEL:GATE-DECISION-005 (RT-1)."
+KERNEL:CV-GOLDEN-RULES,DEF,Kernel.md,10 KERNEL:CV-GOLDEN-RULES,485,## 10 KERNEL:CV-GOLDEN-RULES
+KERNEL:CV-GOLDEN-RULES-001,DEF,Kernel.md,10.1 KERNEL:CV-GOLDEN-RULES-001,488,### 10.1 KERNEL:CV-GOLDEN-RULES-001
+KERNEL:CV-GOLDEN-RULES-002,DEF,Kernel.md,10.2 KERNEL:CV-GOLDEN-RULES-002,491,### 10.2 KERNEL:CV-GOLDEN-RULES-002
+KERNEL:CV-GOLDEN-RULES-003,DEF,Kernel.md,10.3 KERNEL:CV-GOLDEN-RULES-003,494,### 10.3 KERNEL:CV-GOLDEN-RULES-003
+KERNEL:CV-GOLDEN-RULES-004,DEF,Kernel.md,10.4 KERNEL:CV-GOLDEN-RULES-004,497,### 10.4 KERNEL:CV-GOLDEN-RULES-004
+KERNEL:CV-GOLDEN-RULES-005,DEF,Kernel.md,10.5 KERNEL:CV-GOLDEN-RULES-005,500,### 10.5 KERNEL:CV-GOLDEN-RULES-005
+KERNEL:TRIGGERS,DEF,Kernel.md,11 KERNEL:TRIGGERS,513,## 11 KERNEL:TRIGGERS
+KERNEL:TRIGGER-001,DEF,Kernel.md,11.1 KERNEL:TRIGGER-001,518,### 11.1 KERNEL:TRIGGER-001
+KERNEL:TRIGGER-002,DEF,Kernel.md,11.2 KERNEL:TRIGGER-002,527,### 11.2 KERNEL:TRIGGER-002
+KERNEL:TRIGGER-003,DEF,Kernel.md,11.3 KERNEL:TRIGGER-003,532,### 11.3 KERNEL:TRIGGER-003
+KERNEL:TRIGGER-004,DEF,Kernel.md,11.4 KERNEL:TRIGGER-004,543,### 11.4 KERNEL:TRIGGER-004
+KERNEL:TRIGGER-005,DEF,Kernel.md,11.5 KERNEL:TRIGGER-005,551,### 11.5 KERNEL:TRIGGER-005
+KERNEL:TRIGGER-006,DEF,Kernel.md,11.6 KERNEL:TRIGGER-006,561,### 11.6 KERNEL:TRIGGER-006
+KERNEL:TRIGGER-007,DEF,Kernel.md,11.7 KERNEL:TRIGGER-007,566,### 11.7 KERNEL:TRIGGER-007
+KERNEL:TRIGGER-008,DEF,Kernel.md,11.8 KERNEL:TRIGGER-008,569,### 11.8 KERNEL:TRIGGER-008
+KERNEL:TRIGGER-009,DEF,Kernel.md,11.9 KERNEL:TRIGGER-009,573,### 11.9 KERNEL:TRIGGER-009
+KERNEL:CV-PIPELINE,DEF,Kernel.md,12 KERNEL:CV-PIPELINE,577,## 12 KERNEL:CV-PIPELINE
+KERNEL:CV-PIPELINE-001,DEF,Kernel.md,12.1 KERNEL:CV-PIPELINE-001,579,### 12.1 KERNEL:CV-PIPELINE-001
+KERNEL:CV-PIPELINE-002,DEF,Kernel.md,12.2 KERNEL:CV-PIPELINE-002,602,### 12.2 KERNEL:CV-PIPELINE-002
+KERNEL:CANON-UPDATE,DEF,Kernel.md,13 KERNEL:CANON-UPDATE,621,## 13 KERNEL:CANON-UPDATE
+KERNEL:NAMING-CONVENTION,DEF,Kernel.md,14 KERNEL:NAMING-CONVENTION,652,## 14 KERNEL:NAMING-CONVENTION
+CANON:OUTPUT-CONTRACT,REF,Kernel.md,14 KERNEL:NAMING-CONVENTION,669,Relación con CANON:OUTPUT-CONTRACT
+KERNEL:CONTEXT-INFRASTRUCTURE,DEF,Kernel.md,15 KERNEL:CONTEXT-INFRASTRUCTURE,673,## 15 KERNEL:CONTEXT-INFRASTRUCTURE
+KERNEL:CONTEXT-INFRASTRUCTURE-001,DEF,Kernel.md,15.1 KERNEL:CONTEXT-INFRASTRUCTURE-001,675,### 15.1 KERNEL:CONTEXT-INFRASTRUCTURE-001
+KERNEL:CONTEXT-INFRASTRUCTURE-002,DEF,Kernel.md,15.2 KERNEL:CONTEXT-INFRASTRUCTURE-002,682,### 15.2 KERNEL:CONTEXT-INFRASTRUCTURE-002
+KERNEL:DATA-FLOW,DEF,Kernel.md,16 KERNEL:DATA-FLOW,691,## 16 KERNEL:DATA-FLOW
+KERNEL:EVOLUTION,DEF,Kernel.md,17 KERNEL:EVOLUTION,700,## 17 KERNEL:EVOLUTION
+MANUAL:OBJECTIVE,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,10,| 01 | MANUAL:OBJECTIVE | Objetivo de VANTAGE |  |
+MANUAL:HOW-IT-WORKS,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,11,| 02 | MANUAL:HOW-IT-WORKS | Cómo Funciona |  |
+MANUAL:FAILURE-PHILOSOPHY,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,12,| 03 | MANUAL:FAILURE-PHILOSOPHY | Filosofía de Fallo |  |
+MANUAL:COLD-START,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,14,| 05 | MANUAL:COLD-START | Arranque Frío |  |
+MANUAL:SESSION-CYCLE,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,15,| 06 | MANUAL:SESSION-CYCLE | Ciclo de Sesión |  |
+MANUAL:CHECKLIST,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,16,| 07 | MANUAL:CHECKLIST | El Checklist |  |
+MANUAL:WEEKLY-FLOW,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,17,| 08 | MANUAL:WEEKLY-FLOW | Flujo Semanal |  |
+MANUAL:RUNTIME,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,18,| 09 | MANUAL:RUNTIME | Runtime VANTAGE |  |
+MANUAL:DATA-MANAGEMENT,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,19,| 10 | MANUAL:DATA-MANAGEMENT | Gestión de Datos |  |
+MANUAL:HEALTHCHECK,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,20,| 11 | MANUAL:HEALTHCHECK | Health Check |  |
+MANUAL:TROUBLESHOOTING,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,21,| 12 | MANUAL:TROUBLESHOOTING | Troubleshooting |  |
+MANUAL:PROMPTS-WRAPPERS,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,22,| 13 | MANUAL:PROMPTS-WRAPPERS | Prompts & Wrappers |  |
+MANUAL:LAZY-LOAD,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,23,| 14 | MANUAL:LAZY-LOAD | Lazy Load |  |
+MANUAL:PATCH-QUALITY,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,24,| 15 | MANUAL:PATCH-QUALITY | Calidad de Parches |  |
+MANUAL:GOLDEN-RULES,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,25,| 16 | MANUAL:GOLDEN-RULES | Reglas de Oro |  |
+MANUAL:SLA,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,26,| 17 | MANUAL:SLA | SLA de Latencia |  |
+MANUAL:CV-GOLDEN-RULES-INDEX,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,27,| 18 | MANUAL:CV-GOLDEN-RULES-INDEX | Reglas de Oro CV |  |
+MANUAL:POSITIONING-CRITERIA,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,28,| 19 | MANUAL:POSITIONING-CRITERIA | Positioning Criteria |  |
+MANUAL:GOLDEN-SKELETON-REF,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,29,| 20 | MANUAL:GOLDEN-SKELETON-REF | Golden Skeleton |  |
+MANUAL:SCHEMA-FIELD-REF,REF,Manual.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,30,| 21 | MANUAL:SCHEMA-FIELD-REF | Schema Class A/B |  |
+MANUAL:OBJECTIVE,DEF,Manual.md,01 MANUAL:OBJECTIVE,31,## 01 MANUAL:OBJECTIVE
+MANUAL:DATA-MANAGEMENT,REF,Manual.md,¿Qué hace diferente?,45,> Las empresas excluidas permanentemente (Hard Blocks) y las reglas de deduplicación están documentadas de forma completa en MANUAL:DATA-MANAGEMENT
+MANUAL:HOW-IT-WORKS,REF,Manual.md,¿Qué hace diferente?,49,> El mecanismo completo de este chequeo y los pasos que le siguen están explicados en MANUAL:HOW-IT-WORKS.
+MANUAL:HOW-IT-WORKS,DEF,Manual.md,02 MANUAL:HOW-IT-WORKS,83,## 02 MANUAL:HOW-IT-WORKS
+MANUAL:WEEKLY-FLOW,REF,Manual.md,El Pipeline,88,> El detalle operativo día por día de este flujo está en MANUAL:WEEKLY-FLOW aquí se explica la lógica que sostiene ese flujo.
+MANUAL:WEEKLY-FLOW,REF,Manual.md,Responsables,99,> Este reparto de trabajo se ve en acción completa en MANUAL:WEEKLY-FLOW
+MANUAL:FAILURE-PHILOSOPHY,REF,Manual.md,Gate Decisions,113,> \ ¿Por qué esto no es un error que debas corregir? ver MANUAL:FAILURE-PHILOSOPHY.
+MANUAL:TUESDAY,REF,Manual.md,Gate Decisions,114,** Para caso específico y cómo recuperarlo a través del Dashboard ver MANUAL:TUESDAY.**
+MANUAL:DATA-MANAGEMENT,REF,Manual.md,Soft vs Hard Blocks,116,"El sistema aplica dos capas de exclusión para garantizar la calidad de la señal — ambas se explican con su lista completa y mecánica de recuperación en MANUAL:DATA-MANAGEMENT, pero conviene entender l"
+MANUAL:WEEKLY-FLOW-002,REF,Manual.md,Soft vs Hard Blocks,118,"- Soft Blocks: Vacantes bloqueadas por inconsistencias en datos Class A (URL rota, JD parcial) o por Score insuficiente. A diferencia de los Hard Blocks, estas sí son recuperables — corrigiendo el dat"
+MANUAL:FAILURE-PHILOSOPHY,DEF,Manual.md,03 MANUAL:FAILURE-PHILOSOPHY,120,## 03 MANUAL:FAILURE-PHILOSOPHY
+KERNEL:FAIL-PHILOSOPHY,REF,Manual.md,03 MANUAL:FAILURE-PHILOSOPHY,122,Base KERNEL:FAIL-PHILOSOPHY
+MANUAL:WEEKLY-FLOW-002,REF,Manual.md,03 MANUAL:FAILURE-PHILOSOPHY,126,"| URL dead / link roto | La vacante expiró — es normal del mercado laboral, las publicaciones caducan. | No repares manualmente el link ni intentes “revivir” la vacante. | Déjala archivada. Si te pare"
+MANUAL:HOW-IT-WORKS,REF,Manual.md,03 MANUAL:FAILURE-PHILOSOPHY,127,"| Score = 0 | El fit es débil, o el link estaba muerto (ver MANUAL:HOW-IT-WORKS, Gate Decisions, paso 1). | No subas el score a mano — es un campo Class B, calculado por Python, no editable directamen"
+MANUAL:WEEKLY-FLOW-002,REF,Manual.md,03 MANUAL:FAILURE-PHILOSOPHY,127,"| Score = 0 | El fit es débil, o el link estaba muerto (ver MANUAL:HOW-IT-WORKS, Gate Decisions, paso 1). | No subas el score a mano — es un campo Class B, calculado por Python, no editable directamen"
+MANUAL:WEEKLY-FLOW-002,REF,Manual.md,03 MANUAL:FAILURE-PHILOSOPHY,128,"| Gate = BLOCKED | Los criterios Class A no se cumplieron (URL rota, JD parcial, fuente no reconocida). | No lo fuerces a CREATE manualmente en Notion. | Si es recuperable, usa el Dashboard (MANUAL:WE"
+MANUAL:HEALTHCHECK,REF,Manual.md,03 MANUAL:FAILURE-PHILOSOPHY,129,"| Ready-to-Apply vacío | No hay oportunidades válidas esta semana — puede pasar, especialmente en semanas de baja actividad del mercado. | No fuerces un CREATE artificial para “llenar” la bandeja. | E"
+MANUAL:WEEKLY-FLOW-005,REF,Manual.md,03 MANUAL:FAILURE-PHILOSOPHY,130,| JSON vacío en el Feed de discovery | La búsqueda no encontró resultados relevantes esa ejecución. | No amplíes los criterios de búsqueda sin análisis previo — podrías bajar la calidad de la señal ge
+MANUAL:COLD-START,REF,Manual.md,04 MANUAL:SETUP,135,"Esta sección se ejecuta una sola vez, al instalar el sistema por primera vez (o al reinstalarlo desde cero). Si el sistema ya está instalado y solo llevas varios días sin usarlo, lo que necesitas es M"
+SP:BOOTLOADER,REF,Manual.md,Paso 3 —  Bootloader en Claude,161,1. Las instrucciones activas deben residir exclusivamente en las Project Instructions de la plataforma. Encontrarás la referencia documental en SP:BOOTLOADER. Este es el proceso para su configuración:
+SP:BOOTLOADER,REF,Manual.md,Paso 3 —  Bootloader en Claude,164,1. El Agente responde con “VANTAGE: SISTEMA SINCRONIZADO” (sin número de versión fijo — ver SP:BOOTLOADER) antes de enviar peticiones.
+MANUAL:SESSION-CYCLE,REF,Manual.md,Paso 3 —  Bootloader en Claude,165,"Nota: este setup de Claude es de una sola vez por proyecto — no se repite en cada sesión de trabajo. Lo que sí se repite en cada sesión es el Ciclo de Sesión completo, explicado en MANUAL:SESSION-CYCL"
+MANUAL:RUNTIME,REF,Manual.md,Paso 6 — Verificar Runtime,187,"El Runtime (explicado en detalle en MANUAL:RUNTIME) es el motor de lectura del sistema — permite consultar el estado de Notion desde Terminal sin abrir el navegador. Antes de operar, verifica que su í"
+MANUAL:COLD-START,DEF,Manual.md,05 MANUAL:COLD-START,200,## 05 MANUAL:COLD-START
+MANUAL:SESSION-CYCLE,DEF,Manual.md,06 MANUAL:SESSION-CYCLE,227,## 06 MANUAL:SESSION-CYCLE
+MANUAL:WEEKLY-FLOW,REF,Manual.md,¿Cuándo se dispara esto?¿por qué es distinto del ciclo semanal?,230,El ciclo semanal que se detalla en MANUAL:WEEKLY-FLOW asume que el sistema documental y el estado del Pipeline están sanos al momento de empezar a trabajar. Esa suposición no es gratuita: cada vez que
+MANUAL:WEEKLY-FLOW,REF,Manual.md,¿Cuándo se dispara esto?¿por qué es distinto del ciclo semanal?,239,"No necesitas invocarlo tú manualmente cada vez que se te ocurra — pero sí necesitas recordar que es el primer paso obligatorio: si acabas de abrir Claude para trabajar en VANTAGE hoy, el primer paso s"
+KERNEL:CENSUS-SYNC,REF,Manual.md,¿Por qué existe esto?,243,"- El resultado era drift silencioso: un documento se actualizaba, otro no, y nadie se enteraba hasta que las contradicciones aparecían en producción (esto es, en parte, lo que motivó el Census — ver K"
+MANUAL:HEALTHCHECK,REF,Manual.md,¿Por qué existe esto?,243,"- El resultado era drift silencioso: un documento se actualizaba, otro no, y nadie se enteraba hasta que las contradicciones aparecían en producción (esto es, en parte, lo que motivó el Census — ver K"
+KERNEL:DOCUMENTATION-004,REF,Manual.md,Open Protocol,253,"universal, KERNEL:DOCUMENTATION-004)."
+KERNEL:DOCUMENTATION-001,REF,Manual.md,¿Qué hacer si algo no cuadra?,278,"- Un cambio de código, schema o flujo operativo quedó sin reflejo en la documentación → esto no es parte del drift de versión que acabas de revisar arriba, es el caso que cubre KERNEL:DOCUMENTATION-00"
+KERNEL:GATE-DECISION-009,REF,Manual.md,¿Qué hacer si algo no cuadra?,279,- Un pendiente detectado durante la sesión necesita convertirse en ticket (o no) → esto lo gobierna KERNEL:GATE-DECISION-009 (3 niveles de escalamiento). En resumen: esfuerzo bajo y sin bloqueo confir
+KERNEL:GATE-DECISION-009,REF,Manual.md,¿Qué hacer si algo no cuadra?,282,- Nivel 3: Ver KERNEL:GATE-DECISION-009 para el detalle completo y las reglas de re-clasificación entre niveles.
+MANUAL:CHECKLIST,REF,Manual.md,¿Qué hacer si algo no cuadra?,283,"- Con la sesión abierta y sincronizada, el siguiente paso natural es abrir tu mapa de la semana el Checklist, explicado en MANUAL:CHECKLIST."
+MANUAL:CHECKLIST,DEF,Manual.md,07 MANUAL:CHECKLIST,285,## 07 MANUAL:CHECKLIST
+MANUAL:WEEKLY-FLOW,REF,Manual.md,07 MANUAL:CHECKLIST,287,"El Checklist es la interfaz operativa de todo el ciclo semanal que se detalla en MANUAL:WEEKLY-FLOW Es un archivo HTML autocontenido con progreso persistente (localStorage), modo claro/oscuro y navega"
+MANUAL:WEEKLY-FLOW-002,REF,Manual.md,¿Dónde viven los archivos compartidos?,295,"Esto importa porque el Dashboard (que verás en detalle MANUAL:WEEKLY-FLOW-002) usa exactamente esta misma infraestructura visual — no son dos sistemas de interfaz distintos, son la misma base comparti"
+MANUAL:SESSION-CYCLE,REF,Manual.md,¿Qué no hacer?,301,"- Con el Checklist abierto y el ciclo de sesión ya confirmado (MANUAL:SESSION-CYCLE), estás listo para empezar el Lunes — el primer día del ciclo semanal, detallado a continuación."
+MANUAL:WEEKLY-FLOW,DEF,Manual.md,08 MANUAL:WEEKLY-FLOW,303,## 08 MANUAL:WEEKLY-FLOW
+MANUAL:COLD-START,REF,Manual.md,08 MANUAL:WEEKLY-FLOW,305,"Este es el ciclo completo de trabajo, de lunes a viernes. Asume que ya pasaste por MANUAL:SETUP o MANUAL:COLD-START según corresponda, que la sesión actual de Claude ya pasó por su MANUAL:SESSION-CYCL"
+MANUAL:SESSION-CYCLE,REF,Manual.md,08 MANUAL:WEEKLY-FLOW,305,"Este es el ciclo completo de trabajo, de lunes a viernes. Asume que ya pasaste por MANUAL:SETUP o MANUAL:COLD-START según corresponda, que la sesión actual de Claude ya pasó por su MANUAL:SESSION-CYCL"
+MANUAL:CHECKLIST,REF,Manual.md,08 MANUAL:WEEKLY-FLOW,305,"Este es el ciclo completo de trabajo, de lunes a viernes. Asume que ya pasaste por MANUAL:SETUP o MANUAL:COLD-START según corresponda, que la sesión actual de Claude ya pasó por su MANUAL:SESSION-CYCL"
+MANUAL:WEEKLY-FLOW-001,DEF,Manual.md,8.1 MANUAL:WEEKLY-FLOW-001,307,### 8.1 MANUAL:WEEKLY-FLOW-001
+MANUAL:DATA-MANAGEMENT,REF,Manual.md,¿Como corre L3?,400,- Hard-blocked (L’Oréal · Levi’s/Dockers · El Palacio de Hierro — ver lista completa en MANUAL:DATA-MANAGEMENT)
+MANUAL:TROUBLESHOOTING,REF,Manual.md,¿Como corre L3?,407,"- Si L3 falla: verifica que LAYER_3/config/layer_3.env existe y contiene las credenciales de Gmail, Groq y Notion. El venv hereda de LAYER_1/.venv — si Layer 1 funciona, L3 tiene el entorno listo. (Pa"
+MANUAL:DATA-MANAGEMENT,REF,Manual.md,¿Qué ocurre aquí?,413,"- Dispara: El script vantage_pipeline.sh actúa como wrapper: activa el entorno virtual (.venv), valida la estructura y dispara feed_processor.py para normaliar campos, aplicar dedup cross-layer (venta"
+MANUAL:WEEKLY-FLOW-002,REF,Manual.md,¿Qué ocurre aquí?,415,- Los registros con status REVIEW_NEEDED que se escriben en Notion se resuelven al día siguiente en el Dashboard MANUAL:WEEKLY-FLOW-002
+MANUAL:WEEKLY-FLOW-003,REF,Manual.md,¿Qué ocurre aquí?,422,- Vacantes con Score ≥ 60 están listas para CV Optimization en preparación para tu postulación — esto es lo que trabajarás el Miércoles MANUAL:WEEKLY-FLOW-003.
+MANUAL:WEEKLY-FLOW-002,DEF,Manual.md,8.2 MANUAL:WEEKLY-FLOW-002,464,### 8.2 MANUAL:WEEKLY-FLOW-002
+MANUAL:HOW-IT-WORKS,REF,Manual.md,¿Qué resuelvo aquí?,468,"Si el bloqueo es por un campo Class A corregible, usa el Dashboard: Proponer Patch → Validar → Aceptar. No uses el Dashboard para forzar un CREATE en vacantes que no cumplen score — úsalo solo para co"
+MANUAL:CHECKLIST,REF,Manual.md,Partes del Dashboard,470,"Es una sola herramienta (dashboard.html + dashboard_server.py :8000), no hay pestañas ni vistas separadas. La pantalla es un panel de recuperación de vacantes bloqueadas, con una tira de estado del pi"
+MANUAL:WEEKLY-FLOW-003,DEF,Manual.md,8.3 MANUAL:WEEKLY-FLOW-003,508,### 8.3 MANUAL:WEEKLY-FLOW-003
+MANUAL:SESSION-CYCLE,REF,Manual.md,CV-A — Análisis,512,Abre Ready-to-Apply en Notion y elige la vacante a trabajar. Copia la URL del campo URL (career page oficial) o el texto del JD. Abre una nueva sesión de Claude (recuerda: esto significa pasar primero
+MANUAL:TROUBLESHOOTING,REF,Manual.md,Flujo hacia Figma,570,"Si el plugin reporta Keys sin resolver, revisa la entrada correspondiente en MANUAL:TROUBLESHOOTING (“Figma plugin no resuelve IDs”)."
+MANUAL:WEEKLY-FLOW-004,DEF,Manual.md,08.4 MANUAL:WEEKLY-FLOW-004,581,### 08.4 MANUAL:WEEKLY-FLOW-004
+MANUAL:WEEKLY-FLOW-001,REF,Manual.md,08.4 MANUAL:WEEKLY-FLOW-004,587,"Script: ~/vantage_pipeline.sh. Este día no tiene un procedimiento distinto al ya descrito en el Lunes (MANUAL:WEEKLY-FLOW-001) — es simplemente una repetición ligera del paso de procesamiento, para no"
+MANUAL:WEEKLY-FLOW-005,DEF,Manual.md,08.5 MANUAL:WEEKLY-FLOW-005,588,### 08.5 MANUAL:WEEKLY-FLOW-005
+MANUAL:PROMPTS-WRAPPERS,REF,Manual.md,08.5 MANUAL:WEEKLY-FLOW-005,594,"Acción concreta: si career pages producen menos de 5 resultados relevantes en la semana, ajusta el Prompt A (ver MANUAL:PROMPTS-WRAPPERS) — no el threshold de Score. (Recuerda MANUAL:FAILURE-PHILOSOPH"
+MANUAL:FAILURE-PHILOSOPHY,REF,Manual.md,08.5 MANUAL:WEEKLY-FLOW-005,594,"Acción concreta: si career pages producen menos de 5 resultados relevantes en la semana, ajusta el Prompt A (ver MANUAL:PROMPTS-WRAPPERS) — no el threshold de Score. (Recuerda MANUAL:FAILURE-PHILOSOPH"
+MANUAL:SESSION-CYCLE,REF,Manual.md,08.5 MANUAL:WEEKLY-FLOW-005,595,"Con esto se cierra el ciclo semanal. La siguiente vez que abras Claude para trabajar en VANTAGE, el ciclo completo empieza de nuevo desde MANUAL:SESSION-CYCLE."
+MANUAL:WEEKLY-FLOW-006,DEF,Manual.md,08.6 MANUAL:WEEKLY-FLOW-006,596,### 08.6 MANUAL:WEEKLY-FLOW-006
+KERNEL:SCHEMA-002,REF,Manual.md,08.6 MANUAL:WEEKLY-FLOW-006,601,calculados por Python — no escritura manual (ver KERNEL:SCHEMA-002).
+KERNEL:TRIGGER-001,REF,Manual.md,08.6 MANUAL:WEEKLY-FLOW-006,604,| feed_processor.py  • APROBAR_WRITE | Lunes (o cualquier día con nuevas vacantes) — operador revisa output de L1/L2/L3 | Ingresar vacantes nuevas al SSOT con Class A poblado | Filas nuevas con Status
+KERNEL:SCHEMA-002,REF,Manual.md,08.6 MANUAL:WEEKLY-FLOW-006,604,| feed_processor.py  • APROBAR_WRITE | Lunes (o cualquier día con nuevas vacantes) — operador revisa output de L1/L2/L3 | Ingresar vacantes nuevas al SSOT con Class A poblado | Filas nuevas con Status
+KERNEL:GATE-DECISION-010,REF,Manual.md,08.6 MANUAL:WEEKLY-FLOW-006,605,"| ~/vantage_pipeline.sh (run completo) | Después de cada APROBAR_WRITE de feed | Calcular Score, Gate_Decision, Next_Action sobre entradas Class A | Gate_Decision=CREATE/BLOCKED, Score, VM_Scope, Role"
+KERNEL:GATE-DECISION-005,REF,Manual.md,08.6 MANUAL:WEEKLY-FLOW-006,606,| vd (:8000) — Dashboard RT-1 | Condicional: solo si existen vacantes con Gate=BLOCKED recuperables | Corregir Class A de vacantes bloqueadas y re-ingresar al pipeline | PATCHED → re-evaluación → CREA
+KERNEL:GATE-DECISION-011,REF,Manual.md,08.6 MANUAL:WEEKLY-FLOW-006,606,| vd (:8000) — Dashboard RT-1 | Condicional: solo si existen vacantes con Gate=BLOCKED recuperables | Corregir Class A de vacantes bloqueadas y re-ingresar al pipeline | PATCHED → re-evaluación → CREA
+KERNEL:CV-GOLDEN-RULES,REF,Manual.md,08.6 MANUAL:WEEKLY-FLOW-006,607,| CV-A [URL/JD] | Miércoles (o cuando vacante alcanza READY_TO_APPLY) | Generar artefacto CV-A adaptado a la vacante | Artefacto en Figma Sync; sin cambio en Tracker | KERNEL:CV-GOLDEN-RULES |
+SP:TRIGGERS,REF,Manual.md,08.6 MANUAL:WEEKLY-FLOW-006,608,| STATUS [SYSTEM] | Cualquier momento — auditoría ad-hoc | Verificar estado global del sistema y detectar huérfanos/inconsistencias | Sin escritura — reporte en sesión | SP:TRIGGERS |
+KERNEL:GATE-DECISION-011,REF,Manual.md,08.6 MANUAL:WEEKLY-FLOW-006,609,"Nota operativa: los días de semana en 8.1–8.5 son metadato de cadencia del operador, no guard conditions de ningún gate. Una vacante con Score ≥ 60 puede alcanzar READY_TO_APPLY el mismo día de su ing"
+MANUAL:RUNTIME,DEF,Manual.md,09 MANUAL:RUNTIME,611,## 09 MANUAL:RUNTIME
+MANUAL:WEEKLY-FLOW,REF,Manual.md,09 MANUAL:RUNTIME,613,"Ya viste varios de estos comandos en acción durante el flujo semanal (MANUAL:WEEKLY-FLOW) — esta sección los reúne como catálogo de referencia completo, junto con el detalle de cuándo y por qué correr"
+MANUAL:RUNTIME-001,DEF,Manual.md,9.1 MANUAL:RUNTIME-001,614,### 9.1 MANUAL:RUNTIME-001
+MANUAL:RUNTIME,REF,Manual.md,¿Por qué vversions y vcensus viven aquí?,618,Version Check Tool (vversions) y Census (vcensus) —ya documentados como comandos en MANUAL:RUNTIME (9.2) y en uso durante el Ciclo de Sesión (MANUAL:SESSION-CYCLE)— pertenecen a esta misma capa: inter
+MANUAL:SESSION-CYCLE,REF,Manual.md,¿Por qué vversions y vcensus viven aquí?,618,Version Check Tool (vversions) y Census (vcensus) —ya documentados como comandos en MANUAL:RUNTIME (9.2) y en uso durante el Ciclo de Sesión (MANUAL:SESSION-CYCLE)— pertenecen a esta misma capa: inter
+MANUAL:RUNTIME-002,DEF,Manual.md,9.2 MANUAL:RUNTIME-002,619,### 9.2 MANUAL:RUNTIME-002
+MANUAL:WEEKLY-FLOW-005,REF,Manual.md,9.2 MANUAL:RUNTIME-002,623,"- vl1 analytics — analiza la efectividad de las fuentes de discovery: qué canales producen más entradas CREATE, qué ratio de URLs funcionales tienen, cuál es el score promedio por fuente, y qué método"
+KERNEL:VERSION-CHECK-TOOL,REF,Manual.md,9.2 MANUAL:RUNTIME-002,636,"- vversions — alias corto de verify_versions.py, el motor de verificación y sincronización de versión de los 9 documentos fundacionales ([KERNEL:VERSION-CHECK-TOOL](V | KERNEL)). No es un comando del "
+MANUAL:SESSION-CYCLE,REF,Manual.md,9.2 MANUAL:RUNTIME-002,636,"- vversions — alias corto de verify_versions.py, el motor de verificación y sincronización de versión de los 9 documentos fundacionales ([KERNEL:VERSION-CHECK-TOOL](V | KERNEL)). No es un comando del "
+MANUAL:SESSION-CYCLE,REF,Manual.md,9.2 MANUAL:RUNTIME-002,637,- vcensus — alias corto de generate_census.py. Regenera el V-ID-CENSUS y reporta IDs huérfanos detectados en los documentos fuente. Se corre en el paso 1 del Cierre de Sesión (MANUAL:SESSION-CYCLE) si
+MANUAL:HEALTH-CHECK,REF,Manual.md,9.2 MANUAL:RUNTIME-002,637,- vcensus — alias corto de generate_census.py. Regenera el V-ID-CENSUS y reporta IDs huérfanos detectados en los documentos fuente. Se corre en el paso 1 del Cierre de Sesión (MANUAL:SESSION-CYCLE) si
+MANUAL:RUNTIME-003,DEF,Manual.md,9.3 MANUAL:RUNTIME-003,639,### 9.3 MANUAL:RUNTIME-003
+MANUAL:WEEKLY-FLOW-002,REF,Manual.md,9.3 MANUAL:RUNTIME-003,643,- Después de resolver entradas REVIEW_NEEDED en el Tracker (ver MANUAL:WEEKLY-FLOW-002).
+MANUAL:RUNTIME-004,DEF,Manual.md,9.4 MANUAL:RUNTIME-004,647,### 9.4 MANUAL:RUNTIME-004
+MANUAL:DATA-MANAGEMENT,DEF,Manual.md,10 MANUAL:DATA-MANAGEMENT,666,## 10 MANUAL:DATA-MANAGEMENT
+MANUAL:OBJECTIVE,REF,Manual.md,10 MANUAL:DATA-MANAGEMENT,668,"Esta sección consolida en un solo lugar todo lo relacionado con exclusiones y deduplicación de vacantes — conceptos que se mencionan a lo largo de MANUAL:OBJECTIVE, MANUAL:HOW-IT-WORKS y MANUAL:WEEKLY"
+MANUAL:HOW-IT-WORKS,REF,Manual.md,10 MANUAL:DATA-MANAGEMENT,668,"Esta sección consolida en un solo lugar todo lo relacionado con exclusiones y deduplicación de vacantes — conceptos que se mencionan a lo largo de MANUAL:OBJECTIVE, MANUAL:HOW-IT-WORKS y MANUAL:WEEKLY"
+MANUAL:WEEKLY-FLOW,REF,Manual.md,10 MANUAL:DATA-MANAGEMENT,668,"Esta sección consolida en un solo lugar todo lo relacionado con exclusiones y deduplicación de vacantes — conceptos que se mencionan a lo largo de MANUAL:OBJECTIVE, MANUAL:HOW-IT-WORKS y MANUAL:WEEKLY"
+MANUAL:WEEKLY-FLOW-002,REF,Manual.md,Soft Blocks — Bloqueos Recuperables,676,"A diferencia de los Hard Blocks, estas vacantes sí pueden recuperarse: fueron bloqueadas por inconsistencias en datos Class A (URL rota, JD parcial) o por score insuficiente, no por pertenecer a una e"
+MANUAL:WEEKLY-FLOW-001,REF,Manual.md,Deduplicación,680,"- Jerarquía entre capas: L1 > L2 > L3. Cuando dos capas detectan la misma vacante, persiste la instancia de la capa de mayor jerarquía, pero se toman de la capa de menor jerarquía los datos que puedan"
+MANUAL:HEALTHCHECK,DEF,Manual.md,11 MANUAL:HEALTHCHECK,682,## 11 MANUAL:HEALTHCHECK
+MANUAL:PROMPTS-WRAPPERS,REF,Manual.md,"Red Flags — Ajustar Inputs, No Sistema",685,"- Ready-to-Apply vacío por más de 3 días → ajustar Prompt A (ver MANUAL:PROMPTS-WRAPPERS), no el threshold. (Ver también MANUAL:FAILURE-PHILOSOPHY.)"
+MANUAL:FAILURE-PHILOSOPHY,REF,Manual.md,"Red Flags — Ajustar Inputs, No Sistema",685,"- Ready-to-Apply vacío por más de 3 días → ajustar Prompt A (ver MANUAL:PROMPTS-WRAPPERS), no el threshold. (Ver también MANUAL:FAILURE-PHILOSOPHY.)"
+MANUAL:FAILURE-PHILOSOPHY,REF,Manual.md,Qué es y qué lee,704,"Comportamiento del auto-sync (desde v8.7.9): si algún índice supera 24 horas sin actualizarse, health_check.py dispara automáticamente python3 vantage.py sync (housekeeping de rutina — no requiere apr"
+MANUAL:SESSION-CYCLE,REF,Manual.md,¿Qué es el Census ID?,722,"Es tu mapa de navegación — te dice en qué documento y en qué bloque exacto vive cada ID del sistema, con link directo. Pero es un mapa, no el territorio: si el Kernel cambia y el Census no se actualiz"
+MANUAL:SESSION-CYCLE,REF,Manual.md,¿Qué es el Census ID?,736,"Nunca al revés (esto es exactamente el paso 2 del Cierre de Sesión, MANUAL:SESSION-CYCLE)."
+MANUAL:DATA-MANAGEMENT,REF,Manual.md,Skills de Mantenimiento del Tracker (VANTAGE),752,"- vantage-tidy-opportunities-tracker — identifica duplicados y vacantes expiradas en el Tracker de vacantes para archivado, usando los mecanismos de fingerprint y protección de estado terminal ya impl"
+MANUAL:SESSION-CYCLE,REF,Manual.md,Skills de Mantenimiento del Tracker (VANTAGE),754,- vantage-present-handoff — genera el snapshot de contexto de sesión para continuidad en un chat nuevo. Es independiente y se puede invocar en cualquier momento; no requiere que la sesión esté cerrand
+KERNEL:SKILL-ANNOUNCE-CONVENTION,REF,Manual.md,Skills de Mantenimiento del Tracker (VANTAGE),755,Cada una declara su propio verbo de apertura/cierre (KERNEL:SKILL-ANNOUNCE-CONVENTION) — nunca el lenguaje de Bootstrap ni de Session Ledger.
+MANUAL:TROUBLESHOOTING,DEF,Manual.md,12 MANUAL:TROUBLESHOOTING,757,## 12 MANUAL:TROUBLESHOOTING
+KERNEL:FAIL-PHILOSOPHY,REF,Manual.md,Referencias a documentación adicional,815,- Filosofía de fallo: [KERNEL:FAIL-PHILOSOPHY](V | KERNEL) (ver también MANUAL:FAILURE-PHILOSOPHY de este Manual).
+MANUAL:FAILURE-PHILOSOPHY,REF,Manual.md,Referencias a documentación adicional,815,- Filosofía de fallo: [KERNEL:FAIL-PHILOSOPHY](V | KERNEL) (ver también MANUAL:FAILURE-PHILOSOPHY de este Manual).
+KERNEL:CV-GOLDEN-RULES,REF,Manual.md,Referencias a documentación adicional,816,- Reglas de Oro: KERNEL:CV-GOLDEN-RULES (ver también MANUAL:CV-GOLDEN-RULES-INDEX de este Manual).
+MANUAL:CV-GOLDEN-RULES-INDEX,REF,Manual.md,Referencias a documentación adicional,816,- Reglas de Oro: KERNEL:CV-GOLDEN-RULES (ver también MANUAL:CV-GOLDEN-RULES-INDEX de este Manual).
+KERNEL:SCHEMA,REF,Manual.md,Referencias a documentación adicional,817,- Schema de datos: KERNEL:SCHEMA.
+KERNEL:GATE-DECISION,REF,Manual.md,Referencias a documentación adicional,818,- Gate Decisions: KERNEL:GATE-DECISION (ver también MANUAL:HOW-IT-WORKS de este Manual).
+MANUAL:HOW-IT-WORKS,REF,Manual.md,Referencias a documentación adicional,818,- Gate Decisions: KERNEL:GATE-DECISION (ver también MANUAL:HOW-IT-WORKS de este Manual).
+MANUAL:PROMPTS-WRAPPERS,DEF,Manual.md,13 MANUAL:PROMPTS-WRAPPERS,820,## 13 MANUAL:PROMPTS-WRAPPERS
+MANUAL:WEEKLY-FLOW-001,REF,Manual.md,13 MANUAL:PROMPTS-WRAPPERS,822,Se consultan vía MCP desde la PROMPT LIBRARY en Notion — es Claude quien hace fetch de cada componente por su ID (no Perplexity Desktop directamente); Perplexity Desktop solo recibe el texto ya ensamb
+MANUAL:LAZY-LOAD,DEF,Manual.md,14 MANUAL:LAZY-LOAD,826,## 14 MANUAL:LAZY-LOAD
+MANUAL:PATCH-QUALITY,DEF,Manual.md,15 MANUAL:PATCH-QUALITY,832,## 15 MANUAL:PATCH-QUALITY
+KERNEL:DOCUMENTATION-001,REF,Manual.md,15 MANUAL:PATCH-QUALITY,835,"1. Invisibilidad estructural — no crea secciones nuevas si el contenido cabe en una existente. Nota: la invisibilidad estructural incluye el nivel de heading Markdown, no solo el contenido — una subse"
+MANUAL:GOLDEN-RULES,DEF,Manual.md,16 MANUAL:GOLDEN-RULES,844,## 16 MANUAL:GOLDEN-RULES
+KERNEL:CV-GOLDEN-RULES,REF,Manual.md,16 MANUAL:GOLDEN-RULES,846,Base: KERNEL:CV-GOLDEN-RULES.
+MANUAL:SLA,DEF,Manual.md,17 MANUAL:SLA,849,## 17 MANUAL:SLA
+MANUAL:WEEKLY-FLOW-001,REF,Manual.md,17 MANUAL:SLA,851,> Nota: el SLA “< 45 minutos” cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejec
+MANUAL:CV-GOLDEN-RULES-INDEX,DEF,Manual.md,18 MANUAL:CV-GOLDEN-RULES-INDEX,852,## 18 MANUAL:CV-GOLDEN-RULES-INDEX
+KERNEL:CV-GOLDEN-RULES,REF,Manual.md,18 MANUAL:CV-GOLDEN-RULES-INDEX,854,"Las Reglas de Oro (KERNEL:CV-GOLDEN-RULES) son restricciones de arquitectura, no preferencias. Viven íntegras en el Kernel — esta sección es un índice de navegación, no una copia."
+KERNEL:CV-GOLDEN-RULES-001,REF,Manual.md,18 MANUAL:CV-GOLDEN-RULES-INDEX,857,"| KERNEL:CV-GOLDEN-RULES-001 | No Evaluar Fit Antes de Escribir | Preguntas de ""¿me conviene esta vacante?"" — el fit lo decide Score (Python) + el operador |"
+KERNEL:CV-GOLDEN-RULES-002,REF,Manual.md,18 MANUAL:CV-GOLDEN-RULES-INDEX,858,"| KERNEL:CV-GOLDEN-RULES-002 | No Calcular ni Estimar Campos Class B | Estimar Score, Gate_Decision, VM_Scope, etc. — son Python-only |"
+KERNEL:CV-GOLDEN-RULES-003,REF,Manual.md,18 MANUAL:CV-GOLDEN-RULES-INDEX,859,| KERNEL:CV-GOLDEN-RULES-003 | No Cuestionar la Calidad de Datos del Usuario | Comentarios sobre volumen/calidad del JSON de búsqueda — estrategia es 100% humana |
+KERNEL:CV-GOLDEN-RULES-004,REF,Manual.md,18 MANUAL:CV-GOLDEN-RULES-INDEX,860,"| KERNEL:CV-GOLDEN-RULES-004 | No Delegar Escritura al Usuario | ""Copia esto y pégalo en Notion"" — el sistema escribe directo, salvo export PDF/Drive |"
+KERNEL:CV-GOLDEN-RULES-005,REF,Manual.md,18 MANUAL:CV-GOLDEN-RULES-INDEX,861,"| KERNEL:CV-GOLDEN-RULES-005 | No Interpretar en SYNC | SYNC reporta datos puros, sin análisis ni recomendaciones |"
+KERNEL:CV-GOLDEN-RULES,REF,Manual.md,18 MANUAL:CV-GOLDEN-RULES-INDEX,863,"| Para el detalle completo de cada regla (ejemplos de solicitudes que la activan, redacción exacta de la respuesta estandarizada), consultar directamente KERNEL:CV-GOLDEN-RULES en el Kernel — fuente ú"
+MANUAL:POSITIONING-CRITERIA,DEF,Manual.md,19 MANUAL:POSITIONING-CRITERIA,864,## 19 MANUAL:POSITIONING-CRITERIA
+CANON:POSITIONING-001,REF,Manual.md,19 MANUAL:POSITIONING-CRITERIA,866,CANON:POSITIONING-001 define 4 modos de posicionamiento para CV-B. Esta sección resuelve el gap operativo: con qué criterio elegir uno.
+CANON:POSITIONING-N1,REF,Manual.md,19 MANUAL:POSITIONING-CRITERIA,869,"| N1 | CANON:POSITIONING-N1 | C01 · 3 marcas lujo · CAPEX/OPEX · NPI | JD enfatiza gestión multi-marca de lujo, presupuesto, lanzamientos de producto |"
+CANON:POSITIONING-N2,REF,Manual.md,19 MANUAL:POSITIONING-CRITERIA,870,"| N2 | CANON:POSITIONING-N2 | C02 · Adidas Brand Center · KPI07 · blueprints | JD enfatiza Store Design, Flagship, construcción/remodelación física |"
+CANON:POSITIONING-N3,REF,Manual.md,19 MANUAL:POSITIONING-CRITERIA,871,"| N3 | CANON:POSITIONING-N3 | C03 · 270+ POS · 6 países · KPI03–06 · CF05 | JD enfatiza rollout regional multi-país, estandarización, eficiencia operativa |"
+CANON:POSITIONING-N4,REF,Manual.md,19 MANUAL:POSITIONING-CRITERIA,872,"| N4 | CANON:POSITIONING-N4 | C04/C05 · +43% tráfico · +18% conversión · 21 reportes | JD enfatiza liderazgo de campo comercial, KPIs de tráfico/conversión, gestión de equipos directos |"
+CANON:POSITIONING-001,REF,Manual.md,19 MANUAL:POSITIONING-CRITERIA,873,"| Regla de desempate (JDs híbridos) — ver CANON:POSITIONING-001 para el texto completo: (1) más keywords mapeados al ancla, (2) empate → mayor seniority (N2>N1, N4>N3 con presupuesto regional explícit"
+MANUAL:GOLDEN-SKELETON-REF,DEF,Manual.md,20 MANUAL:GOLDEN-SKELETON-REF,874,## 20 MANUAL:GOLDEN-SKELETON-REF
+CANON:OUTPUT-CONTRACT-002,REF,Manual.md,20 MANUAL:GOLDEN-SKELETON-REF,876,"El ""Golden Skeleton"" (CANON:OUTPUT-CONTRACT-002) es la secuencia fija de bloques ###### figma_text_id que todo CV-B debe replicar exactamente — mismo conteo, mismo orden, solo cambia el contenido text"
+CANON:OUTPUT-CONTRACT-002,REF,Manual.md,20 MANUAL:GOLDEN-SKELETON-REF,880,"- Detalle completo del protocolo (immutability, slot integrity, null-fill rule) vive en CANON:OUTPUT-CONTRACT-002 — no se replica aquí."
+MANUAL:SCHEMA-FIELD-REF,DEF,Manual.md,21 MANUAL:SCHEMA-FIELD-REF,881,## 21 MANUAL:SCHEMA-FIELD-REF
+KERNEL:SCHEMA-001,REF,Manual.md,21 MANUAL:SCHEMA-FIELD-REF,883,"KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel."
+KERNEL:SCHEMA-003,REF,Manual.md,21 MANUAL:SCHEMA-FIELD-REF,888,Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida (KERNEL:SCHEMA-003).
+KERNEL:GATE-DECISION-002,REF,Manual.md,21 MANUAL:SCHEMA-FIELD-REF,889,"Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DE"
+SP:BOOTLOADER,REF,System Prompt.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,10,| 01 | SP:BOOTLOADER | Especificación del Bootloader |  |
+SP:SYNC-RULE,REF,System Prompt.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,11,| 02 | SP:SYNC-RULE | Sincronización Inicial |  |
+SP:DIGITAL-ID-CARD,REF,System Prompt.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,12,| 03 | SP:DIGITAL-ID-CARD | Cédula Digital |  |
+SP:CONTEXT-INFRASTRUCTURE,REF,System Prompt.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,13,| 04 | SP:CONTEXT-INFRASTRUCTURE | Alcance del Kernel |  |
+SP:DATA-FLOW,REF,System Prompt.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,14,| 05 | SP:DATA-FLOW | Flujo de Datos |  |
+SP:TRIGGERS,REF,System Prompt.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,15,| 06 | SP:TRIGGERS | Triggers Operativos |  |
+SP:CV-GOLDEN-RULES,REF,System Prompt.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,16,| 07 | SP:CV-GOLDEN-RULES | Reglas de Oro del CV |  |
+SP:SCHEMA,REF,System Prompt.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,17,| 08 | SP:SCHEMA | Esquema de Trackers |  |
+SP:MCP-ROUTING-NOTES,REF,System Prompt.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,18,| 09 | SP:MCP-ROUTING-NOTES | Notas de Ruteo MCP |  |
+SP:CONSISTENCY,REF,System Prompt.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,19,| 10 | SP:CONSISTENCY | Consistencia del Sistema |  |
+SP:VERSION-CHECK-TOOL,REF,System Prompt.md,DECLARACIÓN DE AUDIENCIA Y ALCANCE,20,| 11 | SP:VERSION-CHECK-TOOL | Herramienta de Verificación |  |
+SP:BOOTLOADER,DEF,System Prompt.md,01 SP:BOOTLOADER,22,## 01 SP:BOOTLOADER
+SP:SYNC-RULE,REF,System Prompt.md,01 SP:BOOTLOADER,26,- Validación: La verificación de versión de los nueve documentos fundacionales (ver SP:SYNC-RULE) corresponde a un proceso posterior ejecutado mediante verify_versions.py.
+KERNEL:SESSION-LEDGER,REF,System Prompt.md,01 SP:BOOTLOADER,39,1. El Bootstrap es carga de contexto únicamente — no escribe en Session Ledger ni abre sesión formal. Eso es exclusivo del Skill Vantage-Session-Open (ver KERNEL:SESSION-LEDGER) y solo se ejecuta si e
+SP:SYNC-RULE,DEF,System Prompt.md,02 SP:SYNC-RULE,42,## 02 SP:SYNC-RULE
+SP:CONSISTENCY,REF,System Prompt.md,Regla de Versión Única,57,"- Discrepancia: Reportar de inmediato al operador, listando documentos y versiones, y esperar confirmación antes de continuar con escrituras (conforme a SP:CONSISTENCY)."
+SP:DIGITAL-ID-CARD,DEF,System Prompt.md,03 SP:DIGITAL-ID-CARD,60,## 03 SP:DIGITAL-ID-CARD
+SP:CONTEXT-INFRASTRUCTURE,DEF,System Prompt.md,04 SP:CONTEXT-INFRASTRUCTURE,95,## 04 SP:CONTEXT-INFRASTRUCTURE
+KERNEL:CONTEXT-INFRASTRUCTURE,REF,System Prompt.md,04 SP:CONTEXT-INFRASTRUCTURE,100,Consultar en KERNEL:CONTEXT-INFRASTRUCTURE.
+SP:DATA-FLOW,DEF,System Prompt.md,05 SP:DATA-FLOW,102,## 05 SP:DATA-FLOW
+KERNEL:DATA-FLOW,REF,System Prompt.md,05 SP:DATA-FLOW,104,Referencia — consultar en KERNEL:DATA-FLOW.
+SP:TRIGGERS,DEF,System Prompt.md,06 SP:TRIGGERS,106,## 06 SP:TRIGGERS
+SP:CV-GOLDEN-RULES,DEF,System Prompt.md,07 SP:CV-GOLDEN-RULES,118,## 07 SP:CV-GOLDEN-RULES
+KERNEL:CV-GOLDEN-RULES,REF,System Prompt.md,07 SP:CV-GOLDEN-RULES,120,Referencia — consultar KERNEL:CV-GOLDEN-RULES.
+SP:SCHEMA,DEF,System Prompt.md,08 SP:SCHEMA,122,## 08 SP:SCHEMA
+SP:MCP-ROUTING-NOTES,DEF,System Prompt.md,09 SP:MCP-ROUTING-NOTES,152,## 09 SP:MCP-ROUTING-NOTES
+SP:CONSISTENCY,DEF,System Prompt.md,10 SP:CONSISTENCY,157,## 10 SP:CONSISTENCY
+SP:VERSION-CHECK-TOOL,DEF,System Prompt.md,11 SP:VERSION-CHECK-TOOL,162,## 11 SP:VERSION-CHECK-TOOL

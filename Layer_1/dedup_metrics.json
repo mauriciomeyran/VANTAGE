@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-08-15T18:24:43.285021",
+  "window_days": 60,
+  "window_label": "2 meses",
+  "total_records_analyzed": 155,
+  "active_records": 55,
+  "archived_records": 100,
+  "duplicate_groups_found": 31,
+  "dedup_flags_assigned": 10,
+  "terminal_state_omitted": 20,
+  "filter_metrics": {},
+  "dry_run": false
+}

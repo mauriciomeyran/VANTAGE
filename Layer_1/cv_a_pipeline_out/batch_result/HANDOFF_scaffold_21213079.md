@@ -1,0 +1,80 @@
+# HANDOFF CV-A — Carter's
+
+## Metadata
+- URL vacante: https://occ.com.mx/empleo/oferta/21213079-assistant-visual-merchandasing/
+- Fecha de análisis: 2026-08-15
+- Idioma detectado (ES/EN): [pendiente — Claude]
+- Positioning Mode seleccionado: [pendiente — Claude, N1-N4 o EMPATE]
+
+## Hard Block Check (determinista — cv_a_prep.py)
+- Empleador: Carter's — PASA (sin coincidencias en lista Hard Block)
+- Nota: este check es un primer filtro por string-match contra nombres de
+  empleador. No sustituye la verificación de alcance store-level (soft,
+  requiere juicio) que hace Claude en el paso de Validación de exclusiones.
+
+## JD crudo (input para Claude)
+Sobre el empleoCategoría: https://www.occ.com.mx/empleos/trabajo-en-mercadotecnia-publicidad-relaciones-publicasSubcategoría: https://www.occ.com.mx/empleos/trabajo-en-mercadotecnia-publicidad-relaciones-publicasEducación mínima requerida: https://www.occ.com.mx/empleos/trabajo-en-mercadotecnia-publicidad-relaciones-publicas
+Detalles
+Contratación:Tiempo completo
+Horario:https://www.occ.com.mx/empleos/tiempo-completo
+Espacio de trabajo:https://www.occ.com.mx/empleos/tipo-home-office-mixto
+Descripción
+En Carter's se siente la energía positiva y las posibilidades de innovar y crecer. Seguramente te sentirías orgulloso(a) de formar parte de nuestra empresa, ya que contamos con la vitalidad de una compañía en constante renovación, en busca de personas que nos ayuden a construir un futuro tan increíble como nuestro pasado.
+Si tienes talento para innovar, ganas de colaborar y disfrutas celebrar los logros, ¡este es el lugar para ti!
+Carter's es una empresa con una sólida trayectoria desde 1865. Somos el mayor comercializador de ropa de bebé y niños con marcas reconocidas en Estados Unidos, y el segundo más grande en México, a través de dos de las marcas más queridas y perdurables: Carter's y OshKosh B'gosh.
+ACTIVIDADES PRINCIPALES
+1.Desarrollo y ejecución de estrategias de Visual Merchandising
+Diseñar lineamientos visuales y asegurar su correcta implementación en tienda, alineados con los estándares de marca.
+2.Supervisión y cumplimiento en tienda
+Monitorear la ejecución visual en puntos de venta, garantizando consistencia, calidad y apego a las guías establecidas.
+3.Planeación y ejecución de campañas visuales
+Crear y desplegar presentaciones visuales para lanzamientos, campañas comerciales y eventos corporativos.
+4.Soporte operativo y colaboración cross-functional
+Trabajar con Marketing, Ventas y Operaciones para alinear prioridades, implementar ajustes y asegurar impacto en negocio.
+5.Comunicación, capacitación y mejora continua
+Capacitar equipos de tienda, desarrollar materiales visuales y dar seguimiento a reportes y oportunidades de mejora.
+REQUISITOS
+• 1 a 2 años en visual merchandising
+• Lic. Diseño Gráfico, Marketing o similar
+• Análisis de desempeño en tienda (KPIs, ventas, tráfico)
+• Gestión de proyectos visuales (campañas, lanzamientos)
+• Herramientas de diseño (Adobe Suite, Canva, etc.)
+• Excel intermedio
+• Inglés intemedio
+BENEFICIOS SUPERIORES A LA LEY
+• Fondo de Ahorro
+• Seguro de Vida y Gastos Médicos Mayores
+• Vacaciones Premium
+• Vales de despensa
+ MODELO HÍBRIDO: Oficinas Corporativas en Antara, Polanco
+En Carter's promovemos una cultura de inclusión y un entorno de igualdad y respeto. Por ello, nuestro proceso de Atracción de Talento está alineado a una política de equidad y no discriminación, con un firme compromiso de atraer, retener, desarrollar y motivar a nuestro talento humano con base en sus competencias y habilidades.
+Carter's ofrece igualdad de oportunidades a todas las personas candidatas, sin distinción de raza, religión, género, orientación sexual, estado civil o conyugal, nacionalidad o cualquier otra condición protegida por las leyes federales, estatales o locales. Asimismo, no solicitamos certificados médicos de no embarazo ni de Virus de Inmunodeficiencia Humana (VIH) como requisitos para el ingreso, permanencia o promoción en el empleo.
+Lo que busca la empresa
+• Tiempo de experiencia 1 año
+• Estudios Universitarios - no titulado
+• Disponibilidad para viajar.
+Competencias clave para el puesto
+• Inglés - Intermedio
+
+## Positioning Mode — Justificación
+[PENDIENTE — Claude: mapear JD_keywords_top6 contra CANON:POSITIONING]
+
+## Gap Analysis
+### Matches directos
+- [PENDIENTE — Claude]
+
+### Matches parciales
+- [PENDIENTE — Claude]
+
+### Gaps (fit_gaps)
+- [PENDIENTE — Claude]
+
+## Validación de exclusiones
+- Empleador: Carter's — PASA (Hard Block determinista, ver arriba)
+- Alcance del rol: [PENDIENTE — Claude, requiere juicio store-level vs estratégico]
+
+## Observaciones
+[PENDIENTE — Claude, opcional]
+
+## Próximo paso
+[PENDIENTE — Claude: Listo para CV-B, o BLOQUEADO — razón]

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JHS — Exception Resolution Runtime v8</title>
+<style>
+  :root {
+    --bg-app: #fdfbf7;
+    --text-primary: #37352f;
+    --accent: #2383e2;
+    --border: rgba(55,53,47,0.12);
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg-app); color: var(--text-primary); padding: 20px; line-height: 1.5; }
+  .container { max-width: 900px; margin: 0 auto; }
+  .runtime-box { background: #fff; border: 1px solid var(--border); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  h1 { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  pre { background: #f0f0f0; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 0.85rem; }
+  .status-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; background: #e0e0e0; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="runtime-box">
+    <h1>JHS — Exception Resolution Runtime v8</h1>
+    <p>Motor de estados transaccional para procesos HITL.</p>
+    <pre id="runtime-code">
+/* ── JHS RUNTIME — DETERMINISTIC STATE MACHINE ── */
+
+const JHS_RUNTIME = (() => {
+  const STATES = {
+    BLOCKED: 'BLOCKED',
+    PATCHED: 'PATCHED',
+    IN_REVIEW: 'IN_REVIEW',
+    VERSION_CONFLICT: 'VERSION_CONFLICT'
+  };
+
+  const TRANSITIONS = {
+    [STATES.BLOCKED]: {
+      [STATES.PATCHED]: { actor: 'HUMAN', requires: ['VALID_PATCH'] },
+      [STATES.REJECTED]: { actor: 'HUMAN' }
+    },
+    [STATES.PATCHED]: {
+      [STATES.IN_REVIEW]: { actor: 'SYSTEM', requires: ['PYTHON_ACK'] },
+      [STATES.VERSION_CONFLICT]: { actor: 'SYSTEM' }
+    }
+  };
+
+  const validatePatch = (patch, surface) => {
+    const violations = Object.keys(patch)
+      .filter(f => !surface.includes(f))
+      .map(f => ({ field: f, code: 'UNAUTHORIZED_FIELD' }));
+    return { valid: violations.length === 0, violations };
+  };
+
+  return { STATES, TRANSITIONS, validatePatch };
+})();
+    </pre>
+  </div>
+</div>
+</body>
+</html>

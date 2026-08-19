@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JHS RT-1 / MVO-A — Replayable Transaction Runtime</title>
+<style>
+  :root {
+    --bg: #0e0e0f;
+    --bg2: #141415;
+    --bg3: #1a1a1c;
+    --bg4: #222224;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8e8e4;
+    --text2: #9a9994;
+    --text3: #5a5955;
+    --accent: #4f8ef7;
+    --accent-dim: rgba(79,142,247,0.12);
+    --green: #3ecf8e;
+    --green-dim: rgba(62,207,142,0.12);
+    --amber: #f4a942;
+    --amber-dim: rgba(244,169,66,0.12);
+    --red: #f05252;
+    --red-dim: rgba(240,82,82,0.12);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.12);
+    --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --radius: 6px;
+    --radius-lg: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── Layout ── */
+  .app { display: flex; height: 100vh; overflow: hidden; }
+
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Topbar ── */
+  .topbar {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg2);
+    flex-shrink: 0;
+  }
+
+  .topbar-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: .05em;
+  }
+
+  .topbar-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -.01em;
+  }
+
+  .topbar-sep { flex: 1; }
+
+  .cert {
+    font-size: 10px;
+    font-family: var(--mono);
+    padding: 3px 8px;
+    border-radius: 99px;
+    border: 1px solid var(--border2);
+    color: var(--text3);
+    transition: all .3s;
+  }
+  .cert.ok { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+
+  .state-badge {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--mono);
+    padding: 3px 10px;
+    border-radius: 99px;
+    transition: all .25s;
+  }
+  .s-BLOCKED          { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(244,169,66,.3); }
+  .s-PATCHED          { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(79,142,247,.3); }
+  .s-IN_REVIEW        { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,.3); }
+  .s-RETURNED_TO_CREATE { background: var(--green-dim); color: var(--green); border: 1px solid rgba(62,207,142,.3); }
+  .s-VERSION_CONFLICT { background: var(--red-dim); color: var(--red); border: 1px solid rgba(240,82,82,.3); }
+  .s-FAILED           { background: var(--red-dim); color: var(--red); border: 1px solid rgba(240,82,82,.3); }
+
+  /* ── Sidebar ── */
+  .sidebar-section {
+    padding: 12px 14px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text3);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; }
+  .kv-k { color: var(--text3); font-family: var(--mono); font-size: 11px; white-space: nowrap; }
+  .kv-v { color: var(--text); font-family: var(--mono); font-size: 11px; word-break: break-all; }
+  .kv-v.muted { color: var(--text3); }
+  .kv-v.ok { color: var(--green); }
+  .kv-v.warn { color: var(--amber); }
+  .kv-v.danger { color: var(--red); }
+  .kv-v.info { color: var(--accent); }
+
+  .cap-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+  .cap-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .cap-dot.on { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .cap-dot.off { background: var(--text3); }
+  .cap-name { color: var(--text2); font-family: var(--mono); font-size: 11px; flex: 1; }
+  .cap-val-t { color: var(--green); font-size: 11px; font-family: var(--mono); }
+  .cap-val-f { color: var(--text3); font-size: 11px; font-family: var(--mono); }
+
+  .payload-box {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text2);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 7px 9px;
+    white-space: pre;
+    overflow-x: auto;
+    line-height: 1.6;
+  }
+
+  /* ── Audit log (sidebar scroll) ── */
+  .audit-scroll { flex: 1; overflow-y: auto; padding: 0; }
+  .audit-scroll::-webkit-scrollbar { width: 4px; }
+  .audit-scroll::-webkit-scrollbar-track { background: transparent; }
+  .audit-scroll::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .audit-entry {
+    display: flex;
+    gap: 10px;
+    padding: 7px 14px;
+    border-bottom: 1px solid var(--border);
+    transition: background .1s;
+    align-items: flex-start;
+  }
+  .audit-entry:first-child { background: rgba(79,142,247,.06); }
+  .audit-entry:hover { background: var(--bg3); }
+
+  .audit-seq {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    padding-top: 1px;
+    min-width: 20px;
+  }
+
+  .audit-dot-col { display: flex; flex-direction: column; align-items: center; padding-top: 4px; }
+  .audit-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    border: 1.5px solid var(--text3);
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+  .audit-dot.domain { border-color: var(--accent); }
+  .audit-dot.domain.latest { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+  .audit-dot.system { border-color: var(--text2); }
+  .audit-dot.err    { border-color: var(--red); background: var(--red); }
+
+  .audit-info { flex: 1; min-width: 0; }
+  .audit-type {
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.4;
+    word-break: break-all;
+  }
+  .audit-ns { color: var(--text3); }
+  .audit-name { color: var(--text); }
+  .audit-ts { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-top: 1px; }
+
+  /* ── Main content ── */
+  .main-scroll { flex: 1; overflow-y: auto; padding: 20px 24px; }
+  .main-scroll::-webkit-scrollbar { width: 4px; }
+  .main-scroll::-webkit-scrollbar-track { background: transparent; }
+  .main-scroll::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  /* ── State machine diagram ── */
+  .fsm-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 16px; }
+  .fsm-title { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 14px; }
+
+  .fsm-states {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .fsm-node {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 5px 11px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border2);
+    color: var(--text3);
+    transition: all .25s;
+    white-space: nowrap;
+    position: relative;
+  }
+  .fsm-node.current {
+    font-weight: 700;
+    transform: scale(1.05);
+  }
+  .fsm-node.n-BLOCKED.current          { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); box-shadow: 0 0 12px rgba(244,169,66,.2); }
+  .fsm-node.n-PATCHED.current          { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); box-shadow: 0 0 12px rgba(79,142,247,.2); }
+  .fsm-node.n-IN_REVIEW.current        { border-color: var(--purple); color: var(--purple); background: var(--purple-dim); box-shadow: 0 0 12px rgba(167,139,250,.2); }
+  .fsm-node.n-RETURNED_TO_CREATE.current { border-color: var(--green); color: var(--green); background: var(--green-dim); box-shadow: 0 0 12px rgba(62,207,142,.2); }
+  .fsm-node.n-VERSION_CONFLICT.current { border-color: var(--red); color: var(--red); background: var(--red-dim); box-shadow: 0 0 12px rgba(240,82,82,.2); }
+  .fsm-node.n-FAILED.current           { border-color: var(--red); color: var(--red); background: var(--red-dim); box-shadow: 0 0 12px rgba(240,82,82,.2); }
+
+  .fsm-flow {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+  }
+  .fsm-arrow { color: var(--border2); }
+
+  /* ── Dispatch panel ── */
+  .dispatch-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 16px; }
+  .dispatch-title { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 14px; }
+
+  .evt-group { margin-bottom: 12px; }
+  .evt-group-label { font-size: 10px; color: var(--text3); margin-bottom: 6px; letter-spacing: .04em; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .evt-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 11px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    color: var(--text2);
+    cursor: pointer;
+    transition: background .1s, border-color .1s, color .1s;
+    white-space: nowrap;
+  }
+  .evt-btn:hover { background: var(--bg4); border-color: rgba(255,255,255,.18); color: var(--text); }
+  .evt-btn:active { transform: scale(.97); }
+
+  .evt-btn.danger:hover { border-color: var(--red); color: var(--red); background: var(--red-dim); }
+  .evt-btn.warn:hover   { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); }
+  .evt-btn.sys:hover    { border-color: var(--text2); }
+
+  /* ── Controls ── */
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+
+  .ctrl-btn {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border2);
+    background: var(--bg3);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all .1s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ctrl-btn:hover { background: var(--bg4); color: var(--text); border-color: rgba(255,255,255,.18); }
+  .ctrl-btn.primary { border-color: rgba(79,142,247,.4); color: var(--accent); }
+  .ctrl-btn.primary:hover { background: var(--accent-dim); border-color: var(--accent); }
+  .ctrl-btn.success { border-color: rgba(62,207,142,.4); color: var(--green); }
+  .ctrl-btn.success:hover { background: var(--green-dim); border-color: var(--green); }
+
+  /* ── Queue alert ── */
+  .queue-alert {
+    display: none;
+    background: var(--red-dim);
+    border: 1px solid rgba(240,82,82,.3);
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--red);
+    margin-top: 10px;
+  }
+  .queue-alert.visible { display: flex; align-items: center; gap: 8px; }
+
+  /* ── Smoke result ── */
+  .smoke-result {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-top: 10px;
+    display: none;
+  }
+  .smoke-result.ok   { display: block; background: var(--green-dim); color: var(--green); border: 1px solid rgba(62,207,142,.3); }
+  .smoke-result.fail { display: block; background: var(--red-dim); color: var(--red); border: 1px solid rgba(240,82,82,.3); }
+
+  /* ── Replay progress ── */
+  .replay-bar {
+    height: 2px;
+    background: var(--border);
+    border-radius: 1px;
+    margin-top: 12px;
+    overflow: hidden;
+    display: none;
+  }
+  .replay-bar.visible { display: block; }
+  .replay-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 1px;
+    transition: width .3s;
+    width: 0%;
+  }
+
+  /* ── Custom payload input ── */
+  .custom-area { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .custom-label { font-size: 10px; color: var(--text3); margin-bottom: 6px; letter-spacing: .04em; }
+  .custom-row { display: flex; gap: 8px; align-items: stretch; }
+  .custom-input {
+    flex: 1;
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    color: var(--text);
+    padding: 6px 10px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .custom-input:focus { border-color: var(--accent); }
+  .custom-input::placeholder { color: var(--text3); }
+
+  .err-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--bg3);
+    border: 1px solid rgba(240,82,82,.4);
+    border-radius: var(--radius);
+    color: var(--red);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 10px 14px;
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all .2s;
+    pointer-events: none;
+    max-width: 340px;
+  }
+  .err-toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="section-label">Instance</div>
+      <div class="kv" id="kv-instance"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">Raw payload</div>
+      <div class="payload-box" id="payload-box"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">Capabilities</div>
+      <div id="caps"></div>
+    </div>
+
+    <div class="sidebar-section" style="border-bottom:none; padding-bottom:4px;">
+      <div class="section-label">Audit log</div>
+    </div>
+    <div class="audit-scroll" id="audit-scroll"></div>
+
+  </div>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+
+    <div class="topbar">
+      <div>
+        <div class="topbar-id">JHS RT-1 / MVO-A</div>
+        <div class="topbar-title">Replayable Transaction Runtime</div>
+      </div>
+      <div class="topbar-sep"></div>
+      <span class="state-badge" id="state-badge">BLOCKED</span>
+      <span class="cert" id="cert-badge">UNCERTIFIED</span>
+    </div>
+
+    <div class="main-scroll">
+
+      <!-- FSM Diagram -->
+      <div class="fsm-wrap">
+        <div class="fsm-title">State machine</div>
+        <div class="fsm-states" id="fsm-states"></div>
+        <div class="fsm-flow">
+          <span>BLOCKED</span><span class="fsm-arrow">→</span>
+          <span>PATCHED</span><span class="fsm-arrow">→</span>
+          <span>IN_REVIEW</span><span class="fsm-arrow">→</span>
+          <span>RETURNED_TO_CREATE</span>
+          <span class="fsm-arrow" style="margin:0 4px;">|</span>
+          <span style="color:var(--red)">FAILED</span>
+          <span class="fsm-arrow" style="margin:0 4px;">|</span>
+          <span style="color:var(--red)">VERSION_CONFLICT</span>
+        </div>
+      </div>
+
+      <!-- Dispatch panel -->
+      <div class="dispatch-wrap">
+        <div class="dispatch-title">Dispatch</div>
+
+        <div class="evt-group">
+          <div class="evt-group-label">Domain — patch flow</div>
+          <div class="btn-row">
+            <button class="evt-btn" onclick="doDispatch('PATCH_PROPOSED')">patch.proposed</button>
+            <button class="evt-btn" onclick="doDispatch('PATCH_VALIDATION_COMPLETED_OK')">validation.completed ✓</button>
+            <button class="evt-btn warn" onclick="doDispatch('PATCH_VALIDATION_COMPLETED_FAIL')">validation.completed ✗</button>
+            <button class="evt-btn" onclick="doDispatch('PATCH_ACCEPTED')">patch.accepted</button>
+          </div>
+        </div>
+
+        <div class="evt-group">
+          <div class="evt-group-label">Domain — python validation</div>
+          <div class="btn-row">
+            <button class="evt-btn" onclick="doDispatch('PYTHON_VALIDATION_REQUESTED')">py.validation.requested</button>
+            <button class="evt-btn" onclick="doDispatch('PYTHON_VALIDATION_SUCCEEDED')">py.validation.succeeded</button>
+            <button class="evt-btn danger" onclick="doDispatch('PYTHON_VALIDATION_REJECTED')">py.validation.rejected</button>
+          </div>
+        </div>
+
+        <div class="evt-group">
+          <div class="evt-group-label">Domain — terminal</div>
+          <div class="btn-row">
+            <button class="evt-btn" onclick="doDispatch('CREATE_RETURNED')">create.returned</button>
+            <button class="evt-btn danger" onclick="doDispatch('VERSION_CONFLICT_DETECTED')">version.conflict.detected</button>
+          </div>
+        </div>
+
+        <div class="evt-group">
+          <div class="evt-group-label">System</div>
+          <div class="btn-row">
+            <button class="evt-btn sys" onclick="doDispatch('TRANSPORT_RESPONSE_RECEIVED')">transport.response.received</button>
+          </div>
+        </div>
+
+        <div class="custom-area">
+          <div class="custom-label">Custom patch title</div>
+          <div class="custom-row">
+            <input class="custom-input" id="custom-title" type="text" placeholder="e.g. Visual Merchandising Manager" value="Senior Designer">
+          </div>
+        </div>
+
+        <div class="queue-alert" id="queue-alert">
+          ⚠ Exception queue:&nbsp;<span id="queue-msg"></span>
+        </div>
+        <div class="smoke-result" id="smoke-result"></div>
+        <div class="replay-bar" id="replay-bar"><div class="replay-fill" id="replay-fill"></div></div>
+
+        <div class="controls">
+          <button class="ctrl-btn primary" onclick="runReplay()">↺ Run full trace</button>
+          <button class="ctrl-btn" onclick="resetRuntime()">⊘ Reset</button>
+          <button class="ctrl-btn success" onclick="runSmoke()">✓ Smoke test</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="err-toast" id="err-toast"></div>
+
+<script>
+// ── RUNTIME ──────────────────────────────────────────────────────────────────
+
+const STATES = Object.freeze({
+  BLOCKED:'BLOCKED', PATCHED:'PATCHED', IN_REVIEW:'IN_REVIEW',
+  RETURNED_TO_CREATE:'RETURNED_TO_CREATE', VERSION_CONFLICT:'VERSION_CONFLICT', FAILED:'FAILED'
+});
+
+const DOMAIN_EVENTS = Object.freeze({
+  PATCH_PROPOSED:'domain.patch.proposed',
+  PATCH_VALIDATION_COMPLETED:'domain.patch.validation.completed',
+  PATCH_ACCEPTED:'domain.patch.accepted',
+  PYTHON_VALIDATION_REQUESTED:'domain.python.validation.requested',
+  PYTHON_VALIDATION_SUCCEEDED:'domain.python.validation.succeeded',
+  PYTHON_VALIDATION_REJECTED:'domain.python.validation.rejected',
+  VERSION_CONFLICT_DETECTED:'domain.version.conflict.detected',
+  CREATE_RETURNED:'domain.create.returned'
+});
+
+const SYSTEM_EVENTS = Object.freeze({
+  TRANSPORT_RESPONSE_RECEIVED:'system.transport.response.received',
+  DISPATCH_REJECTED:'system.dispatch.rejected'
+});
+
+const deepFreeze = obj => {
+  Object.freeze(obj);
+  for (const k of Object.keys(obj)) {
+    const v = obj[k];
+    if (v && typeof v === 'object' && !Object.isFrozen(v)) deepFreeze(v);
+  }
+  return obj;
+};
+
+const immutableEvent = e => deepFreeze(structuredClone(e));
+
+const createInitialState = () => ({
+  instance_id:'inst_001', correlation_id:'corr_001',
+  state: STATES.BLOCKED, version_id:4, checksum:'sha256_hash',
+  operator_id:'operator_001', event_sequence:0, last_timestamp:0,
+  last_domain_event_id:null,
+  raw_payload:{ brand:'Nike', title:null },
+  proposed_patch:null,
+  diagnostics:{ last_system_event:null, last_error:null },
+  processed_event_ids:[], audit_log:[]
+});
+
+const validateEventStructure = event => {
+  for (const k of ['id','sequence','correlation_id','type','payload','timestamp'])
+    if (!(k in event)) throw new Error(`INVALID_EVENT_STRUCTURE:${k}`);
+  return true;
+};
+
+const validateCausation = (prev, cur) => {
+  if (cur.sequence === 1 && cur.causation_id !== null) throw new Error('INVALID_ROOT_CAUSATION');
+  if (cur.sequence > 1 && !cur.causation_id) throw new Error('MISSING_CAUSATION_ID');
+  if (prev && cur.sequence !== prev.sequence + 1) throw new Error('INVALID_EVENT_SEQUENCE');
+  return true;
+};
+
+const appendAuditLog = (state, event) => ([
+  { event_id:event.id, type:event.type, sequence:event.sequence, timestamp:event.timestamp },
+  ...state.audit_log
+]);
+
+const domainReducer = (state, event) => {
+  if (state.processed_event_ids.includes(event.id)) return { state, handled:true };
+  const mark = (s, extra = {}) => ({
+    ...s, ...extra,
+    event_sequence: event.sequence, last_timestamp: event.timestamp,
+    last_domain_event_id: event.id,
+    processed_event_ids: [...s.processed_event_ids, event.id],
+    audit_log: appendAuditLog(s, event)
+  });
+  switch(event.type) {
+    case DOMAIN_EVENTS.PATCH_PROPOSED:
+      if (state.state !== STATES.BLOCKED) return { state, handled:false };
+      return { state: mark(state, { proposed_patch: immutableEvent(event.payload.patch) }), handled:true };
+    case DOMAIN_EVENTS.PATCH_VALIDATION_COMPLETED:
+      if (state.state !== STATES.BLOCKED || !event.payload.valid) return { state, handled:false };
+      return { state: mark(state, { state: STATES.PATCHED }), handled:true };
+    case DOMAIN_EVENTS.PATCH_ACCEPTED:
+      if (state.state !== STATES.PATCHED) return { state, handled:false };
+      return { state: mark(state), handled:true };
+    case DOMAIN_EVENTS.PYTHON_VALIDATION_REQUESTED:
+      if (state.state !== STATES.PATCHED) return { state, handled:false };
+      return { state: mark(state, { state: STATES.IN_REVIEW }), handled:true };
+    case DOMAIN_EVENTS.PYTHON_VALIDATION_SUCCEEDED:
+      if (state.state !== STATES.IN_REVIEW) return { state, handled:false };
+      return { state: mark(state, {
+        state: STATES.RETURNED_TO_CREATE,
+        version_id: event.payload.next_version_id,
+        raw_payload: { ...state.raw_payload, ...state.proposed_patch },
+        proposed_patch: null
+      }), handled:true };
+    case DOMAIN_EVENTS.PYTHON_VALIDATION_REJECTED:
+      return { state: mark(state, { state: STATES.FAILED }), handled:true };
+    case DOMAIN_EVENTS.VERSION_CONFLICT_DETECTED:
+      return { state: mark(state, { state: STATES.VERSION_CONFLICT }), handled:true };
+    case DOMAIN_EVENTS.CREATE_RETURNED:
+      if (state.state !== STATES.RETURNED_TO_CREATE) return { state, handled:false };
+      return { state: mark(state), handled:true };
+    default:
+      return { state, handled:false };
+  }
+};
+
+const systemReducer = (state, event) => {
+  if (state.processed_event_ids.includes(event.id)) return { state, handled:true };
+  return { state: {
+    ...state, event_sequence: event.sequence, last_timestamp: event.timestamp,
+    diagnostics: { ...state.diagnostics, last_system_event: event.type, last_error: event.payload?.message ?? null },
+    processed_event_ids: [...state.processed_event_ids, event.id],
+    audit_log: appendAuditLog(state, event)
+  }, handled:true };
+};
+
+const eventRouter = (state, event) => {
+  validateEventStructure(event);
+  const isDomain = event.type.startsWith('domain.');
+  const isSys = event.type.startsWith('system.');
+  if (!isDomain && !isSys) throw new Error('UNKNOWN_EVENT_NAMESPACE');
+  const result = isDomain ? domainReducer(state, event) : systemReducer(state, event);
+  if (isDomain && !result.handled) throw new Error(`INVALID_EVENT_FOR_STATE:${event.type}`);
+  return deepFreeze(result.state);
+};
+
+const BLOCKING_TYPES = new Set([
+  DOMAIN_EVENTS.PYTHON_VALIDATION_REJECTED,
+  DOMAIN_EVENTS.VERSION_CONFLICT_DETECTED,
+  SYSTEM_EVENTS.DISPATCH_REJECTED
+]);
+
+const createProjection = state => {
+  const blockingEvent = state.audit_log.find(e => BLOCKING_TYPES.has(e.type));
+  return {
+    status: state.state,
+    context: { brand: state.raw_payload.brand, title: state.raw_payload.title, proposed_patch: state.proposed_patch ? structuredClone(state.proposed_patch) : null },
+    queue: blockingEvent ? [blockingEvent] : [],
+    metadata: { version: state.version_id, last_event: state.diagnostics.last_system_event, last_error: state.diagnostics.last_error },
+    capabilities: { can_patch: state.state === STATES.BLOCKED, can_retry: state.state === STATES.FAILED, can_resolve_conflict: state.state === STATES.VERSION_CONFLICT }
+  };
+};
+
+const PATCH_SUCCESS_TRACE = [
+  { id:'evt_001', sequence:1, correlation_id:'corr_001', causation_id:null,    type:DOMAIN_EVENTS.PATCH_PROPOSED,               timestamp:1, payload:{ patch:{ title:'Senior Designer' } } },
+  { id:'evt_002', sequence:2, correlation_id:'corr_001', causation_id:'evt_001', type:DOMAIN_EVENTS.PATCH_VALIDATION_COMPLETED, timestamp:2, payload:{ valid:true } },
+  { id:'evt_003', sequence:3, correlation_id:'corr_001', causation_id:'evt_002', type:DOMAIN_EVENTS.PATCH_ACCEPTED,             timestamp:3, payload:{} },
+  { id:'evt_004', sequence:4, correlation_id:'corr_001', causation_id:'evt_003', type:DOMAIN_EVENTS.PYTHON_VALIDATION_REQUESTED,timestamp:4, payload:{} },
+  { id:'evt_005', sequence:5, correlation_id:'corr_001', causation_id:'evt_004', type:SYSTEM_EVENTS.TRANSPORT_RESPONSE_RECEIVED,timestamp:5, payload:{ status:200 } },
+  { id:'evt_006', sequence:6, correlation_id:'corr_001', causation_id:'evt_004', type:DOMAIN_EVENTS.PYTHON_VALIDATION_SUCCEEDED,timestamp:6, payload:{ next_version_id:5 } },
+  { id:'evt_007', sequence:7, correlation_id:'corr_001', causation_id:'evt_006', type:DOMAIN_EVENTS.CREATE_RETURNED,            timestamp:7, payload:{} }
+];
+
+let canonicalState = deepFreeze(createInitialState());
+
+const constructEnvelope = intent => ({
+  id: `evt_${canonicalState.event_sequence + 1}`,
+  sequence: canonicalState.event_sequence + 1,
+  correlation_id: canonicalState.correlation_id,
+  causation_id: canonicalState.last_domain_event_id ?? null,
+  type: intent.type,
+  payload: intent.payload,
+  timestamp: canonicalState.last_timestamp + 1
+});
+
+const dispatchIntent = intent => {
+  try {
+    const event = constructEnvelope(intent);
+    canonicalState = eventRouter(canonicalState, event);
+  } catch(err) {
+    const rej = {
+      id: `rej_${canonicalState.event_sequence + 1}`,
+      sequence: canonicalState.event_sequence + 1,
+      correlation_id: canonicalState.correlation_id,
+      causation_id: canonicalState.last_domain_event_id,
+      type: SYSTEM_EVENTS.DISPATCH_REJECTED,
+      payload: { message: err.message },
+      timestamp: canonicalState.last_timestamp + 1
+    };
+    canonicalState = eventRouter(canonicalState, rej);
+    showToast(err.message);
+  }
+  renderUI();
+};
+
+const replayTrace = (events, initState) => {
+  let prev = null;
+  return events.reduce((cur, raw) => {
+    const event = immutableEvent(raw);
+    validateCausation(prev, event);
+    prev = event;
+    return eventRouter(cur, event);
+  }, deepFreeze(structuredClone(initState)));
+};
+
+const verifyImmutability = state => {
+  const check = obj => {
+    if (obj !== null && typeof obj === 'object') {
+      if (!Object.isFrozen(obj)) throw new Error('MUTABLE_STATE_LEAK');
+      Object.values(obj).forEach(check);
+    }
+  };
+  check(state);
+};
+
+// ── UI ───────────────────────────────────────────────────────────────────────
+
+const ALL_STATES = ['BLOCKED','PATCHED','IN_REVIEW','RETURNED_TO_CREATE','VERSION_CONFLICT','FAILED'];
+
+const renderUI = () => {
+  const s = canonicalState;
+  const p = createProjection(s);
+
+  // Topbar
+  document.getElementById('state-badge').textContent = p.status;
+  document.getElementById('state-badge').className = `state-badge s-${p.status}`;
+
+  // FSM nodes
+  document.getElementById('fsm-states').innerHTML = ALL_STATES.map(st =>
+    `<div class="fsm-node n-${st}${p.status === st ? ' current' : ''}">${st}</div>`
+  ).join('');
+
+  // Instance KV
+  document.getElementById('kv-instance').innerHTML = `
+    <span class="kv-k">instance_id</span><span class="kv-v">${s.instance_id}</span>
+    <span class="kv-k">version_id</span><span class="kv-v info">${s.version_id}</span>
+    <span class="kv-k">sequence</span><span class="kv-v">${s.event_sequence}</span>
+    <span class="kv-k">operator_id</span><span class="kv-v muted">${s.operator_id}</span>
+    <span class="kv-k">last_error</span><span class="kv-v ${s.diagnostics.last_error ? 'danger' : 'muted'}">${s.diagnostics.last_error || '—'}</span>
+  `;
+
+  // Payload
+  const patch = p.context.proposed_patch ? `\nproposed_patch:\n  ${JSON.stringify(p.context.proposed_patch)}` : '';
+  document.getElementById('payload-box').textContent =
+    `brand: ${p.context.brand}\ntitle: ${p.context.title ?? 'null'}${patch}`;
+
+  // Capabilities
+  document.getElementById('caps').innerHTML = Object.entries(p.capabilities).map(([k,v]) =>
+    `<div class="cap-row">
+      <div class="cap-dot ${v ? 'on' : 'off'}"></div>
+      <span class="cap-name">${k}</span>
+      <span class="${v ? 'cap-val-t' : 'cap-val-f'}">${v}</span>
+    </div>`
+  ).join('');
+
+  // Audit log
+  const log = s.audit_log;
+  if (!log.length) {
+    document.getElementById('audit-scroll').innerHTML =
+      '<div style="padding:12px 14px;font-size:11px;color:var(--text3)">No events</div>';
+  } else {
+    document.getElementById('audit-scroll').innerHTML = log.map((e, i) => {
+      const isDomain = e.type.startsWith('domain.');
+      const isErr = e.type === SYSTEM_EVENTS.DISPATCH_REJECTED;
+      const cls = isErr ? 'err' : (isDomain ? 'domain' : 'system');
+      const [ns, ...rest] = e.type.split('.');
+      return `<div class="audit-entry">
+        <span class="audit-seq">${e.sequence}</span>
+        <div class="audit-dot-col">
+          <div class="audit-dot ${cls}${i === 0 ? ' latest' : ''}"></div>
+        </div>
+        <div class="audit-info">
+          <div class="audit-type"><span class="audit-ns">${ns}.</span><span class="audit-name">${rest.join('.')}</span></div>
+          <div class="audit-ts">ts:${e.timestamp}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Queue alert
+  const qa = document.getElementById('queue-alert');
+  if (p.queue.length) {
+    qa.classList.add('visible');
+    document.getElementById('queue-msg').textContent = p.queue.map(e => `${e.type} (seq:${e.sequence})`).join(', ');
+  } else {
+    qa.classList.remove('visible');
+  }
+};
+
+// ── Dispatch map ─────────────────────────────────────────────────────────────
+
+const getCustomTitle = () =>
+  document.getElementById('custom-title').value.trim() || 'Senior Designer';
+
+const DISPATCH_MAP = {
+  PATCH_PROPOSED:                () => ({ type: DOMAIN_EVENTS.PATCH_PROPOSED, payload: { patch: { title: getCustomTitle() } } }),
+  PATCH_VALIDATION_COMPLETED_OK: () => ({ type: DOMAIN_EVENTS.PATCH_VALIDATION_COMPLETED, payload: { valid: true } }),
+  PATCH_VALIDATION_COMPLETED_FAIL: () => ({ type: DOMAIN_EVENTS.PATCH_VALIDATION_COMPLETED, payload: { valid: false } }),
+  PATCH_ACCEPTED:                () => ({ type: DOMAIN_EVENTS.PATCH_ACCEPTED, payload: {} }),
+  PYTHON_VALIDATION_REQUESTED:   () => ({ type: DOMAIN_EVENTS.PYTHON_VALIDATION_REQUESTED, payload: {} }),
+  PYTHON_VALIDATION_SUCCEEDED:   () => ({ type: DOMAIN_EVENTS.PYTHON_VALIDATION_SUCCEEDED, payload: { next_version_id: canonicalState.version_id + 1 } }),
+  PYTHON_VALIDATION_REJECTED:    () => ({ type: DOMAIN_EVENTS.PYTHON_VALIDATION_REJECTED, payload: {} }),
+  VERSION_CONFLICT_DETECTED:     () => ({ type: DOMAIN_EVENTS.VERSION_CONFLICT_DETECTED, payload: {} }),
+  CREATE_RETURNED:               () => ({ type: DOMAIN_EVENTS.CREATE_RETURNED, payload: {} }),
+  TRANSPORT_RESPONSE_RECEIVED:   () => ({ type: SYSTEM_EVENTS.TRANSPORT_RESPONSE_RECEIVED, payload: { status: 200 } }),
+};
+
+window.doDispatch = key => {
+  const factory = DISPATCH_MAP[key];
+  if (!factory) return;
+  dispatchIntent(factory());
+};
+
+// ── Controls ─────────────────────────────────────────────────────────────────
+
+window.runReplay = async () => {
+  canonicalState = deepFreeze(createInitialState());
+  document.getElementById('cert-badge').textContent = 'REPLAYING…';
+  document.getElementById('cert-badge').className = 'cert';
+  document.getElementById('smoke-result').className = 'smoke-result';
+  renderUI();
+
+  const bar = document.getElementById('replay-bar');
+  const fill = document.getElementById('replay-fill');
+  bar.classList.add('visible');
+
+  for (let i = 0; i < PATCH_SUCCESS_TRACE.length; i++) {
+    await new Promise(r => setTimeout(r, 340));
+    canonicalState = eventRouter(canonicalState, immutableEvent(PATCH_SUCCESS_TRACE[i]));
+    fill.style.width = `${Math.round(((i + 1) / PATCH_SUCCESS_TRACE.length) * 100)}%`;
+    renderUI();
+  }
+
+  setTimeout(() => { bar.classList.remove('visible'); fill.style.width = '0%'; }, 600);
+  const cert = document.getElementById('cert-badge');
+  cert.textContent = 'RT-1_CERTIFIED';
+  cert.classList.add('ok');
+};
+
+window.resetRuntime = () => {
+  canonicalState = deepFreeze(createInitialState());
+  const cert = document.getElementById('cert-badge');
+  cert.textContent = 'UNCERTIFIED';
+  cert.className = 'cert';
+  document.getElementById('smoke-result').className = 'smoke-result';
+  renderUI();
+};
+
+window.runSmoke = () => {
+  const el = document.getElementById('smoke-result');
+  try {
+    const run = () => {
+      const s = replayTrace(PATCH_SUCCESS_TRACE, createInitialState());
+      if (s.audit_log[0].sequence !== 7) throw new Error('AUDIT_ORDERING_FAILURE');
+      verifyImmutability(s);
+      return s;
+    };
+    const r1 = run(), r2 = run(), r3 = run();
+    if (JSON.stringify(r1) !== JSON.stringify(r2)) throw new Error('NON_DETERMINISTIC_R1_R2');
+    if (JSON.stringify(r2) !== JSON.stringify(r3)) throw new Error('NON_DETERMINISTIC_R2_R3');
+    el.textContent = '✓ RT-1_CERTIFIED — 3× deterministic replay · immutability verified · audit ordering confirmed';
+    el.className = 'smoke-result ok';
+    document.getElementById('cert-badge').textContent = 'RT-1_CERTIFIED';
+    document.getElementById('cert-badge').classList.add('ok');
+  } catch(err) {
+    el.textContent = `✗ SMOKE_FAILED: ${err.message}`;
+    el.className = 'smoke-result fail';
+  }
+};
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+
+let toastTimer;
+const showToast = msg => {
+  const t = document.getElementById('err-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+};
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+renderUI();
+</script>
+</body>
+</html>

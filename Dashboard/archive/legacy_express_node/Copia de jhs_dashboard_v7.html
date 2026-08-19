@@ -1,0 +1,2988 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JHS — Operational Dashboard v3</title>
+<style>
+/* ============================================================
+   JHS DASHBOARD v3 — TYPOGRAPHY + COLOR SYSTEM CALIBRATION
+   Reference: Notion desktop · warm graphite dark · calm editorial
+   Pass: Typography scale ↑ · Color warmth ↑ · Contrast moderated
+   ============================================================ */
+
+/* ── THEME: LIGHT ────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg-app:          #191919;
+  --bg-nav:          #ffffff;
+  --bg-surface-01:   #ffffff;
+  --bg-surface-02:   #f7f6f3;
+  --bg-surface-03:   #efede8;
+  --bg-surface-04:   #e8e5de;
+  --bg-surface-05:   #dedad2;
+  --bg-surface-06:   #ccc9be;
+
+  --border-subtle:   rgba(55,53,47,0.06);
+  --border-default:  rgba(55,53,47,0.12);
+  --border-strong:   rgba(55,53,47,0.22);
+  --border-focus:    rgba(35,131,226,0.40);
+
+  --text-primary:    rgba(25,23,17,0.90);
+  --text-secondary:  rgba(25,23,17,0.65);
+  --text-tertiary:   rgba(25,23,17,0.40);
+  --text-faint:      rgba(25,23,17,0.25);
+  --text-bright:     rgba(25,23,17,0.95);
+
+  --color-critical:     #c03535;
+  --color-critical-bg:  rgba(192,53,53,0.07);
+  --color-critical-bdr: rgba(192,53,53,0.20);
+  --color-high:         #b55c1a;
+  --color-high-bg:      rgba(181,92,26,0.07);
+  --color-high-bdr:     rgba(181,92,26,0.20);
+  --color-warning:      #8e6e15;
+  --color-warning-bg:   rgba(142,110,21,0.07);
+  --color-warning-bdr:  rgba(142,110,21,0.20);
+  --color-healthy:      #1d7a56;
+  --color-healthy-bg:   rgba(29,122,86,0.07);
+  --color-healthy-bdr:  rgba(29,122,86,0.20);
+  --color-info:         #2563a8;
+  --color-info-bg:      rgba(37,99,168,0.07);
+  --color-info-bdr:     rgba(37,99,168,0.20);
+
+  --shadow-card:     0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-drawer:   -8px 0 32px rgba(0,0,0,0.08);
+  --shadow-toast:    0 8px 32px rgba(0,0,0,0.12);
+}
+
+/* ── THEME: DARK (default) ───────────────────────────────── */
+[data-theme="dark"], :root {
+  /* Warm graphite — Notion dark mode reference */
+  --bg-app:          #191919;
+  --bg-nav:          #202020;
+  --bg-surface-01:   #202020;
+  --bg-surface-02:   #282828;
+  --bg-surface-03:   #303030;
+  --bg-surface-04:   #373737;
+  --bg-surface-05:   #424242;
+  --bg-surface-06:   #525252;
+
+  /* Soft white translucent borders — Notion style */
+  --border-subtle:   rgba(255,255,255,0.040);
+  --border-default:  rgba(255,255,255,0.075);
+  --border-strong:   rgba(255,255,255,0.130);
+  --border-focus:    rgba(100,152,212,0.50);
+
+  /* Notion dark typography — warm white, not cold grey */
+  --text-primary:    rgba(255,255,255,0.82);
+  --text-secondary:  rgba(255,255,255,0.55);
+  --text-tertiary:   rgba(255,255,255,0.35);
+  --text-faint:      rgba(255,255,255,0.20);
+  --text-bright:     rgba(255,255,255,0.92);
+
+  /* De-saturated semantic — warm, readable, not neon */
+  --color-critical:     #e05555;
+  --color-critical-bg:  rgba(224,85,85,0.10);
+  --color-critical-bdr: rgba(224,85,85,0.22);
+  --color-high:         #d4763a;
+  --color-high-bg:      rgba(212,118,58,0.10);
+  --color-high-bdr:     rgba(212,118,58,0.22);
+  --color-warning:      #c09a35;
+  --color-warning-bg:   rgba(192,154,53,0.10);
+  --color-warning-bdr:  rgba(192,154,53,0.22);
+  --color-healthy:      #3dab79;
+  --color-healthy-bg:   rgba(61,171,121,0.10);
+  --color-healthy-bdr:  rgba(61,171,121,0.22);
+  --color-info:         #5b8ec4;
+  --color-info-bg:      rgba(91,142,196,0.10);
+  --color-info-bdr:     rgba(91,142,196,0.22);
+
+  --shadow-card:     0 1px 3px rgba(0,0,0,0.35);
+  --shadow-drawer:   -12px 0 48px rgba(0,0,0,0.50);
+  --shadow-toast:    0 12px 40px rgba(0,0,0,0.60);
+}
+
+/* ── LEGACY SURFACE ALIASES (preserve existing selectors) ── */
+:root {
+  --surface-base:    var(--bg-app);
+  --surface-00:      var(--bg-app);
+  --surface-01:      var(--bg-surface-01);
+  --surface-02:      var(--bg-surface-02);
+  --surface-03:      var(--bg-surface-03);
+  --surface-04:      var(--bg-surface-04);
+  --surface-05:      var(--bg-surface-05);
+  --surface-06:      var(--bg-surface-06);
+
+  --color-neutral:      var(--text-secondary);
+  --color-muted:        var(--text-tertiary);
+
+  /* Legacy color aliases */
+  --color-critical-dim: var(--color-critical-bg);
+  --color-high-dim:     var(--color-high-bg);
+  --color-warning-dim:  var(--color-warning-bg);
+  --color-healthy-dim:  var(--color-healthy-bg);
+  --color-info-dim:     var(--color-info-bg);
+
+  /* ── TYPOGRAPHY SCALE — Notion-calibrated, +1 step larger ── */
+  /* Notion uses 14px base, we increase slightly for operational density */
+  --text-2xs:  11px;   /* was 10 — metadata, timestamps */
+  --text-xs:   12px;   /* was 11 — secondary labels */
+  --text-sm:   13px;   /* was 12 — standard body */
+  --text-base: 14px;   /* was 12.5 — primary reading */
+  --text-md:   14px;   /* was 13.5 — section titles */
+  --text-lg:   16px;   /* was 15 — card headings */
+  --text-xl:   20px;   /* was 18 — metric values */
+  --text-2xl:  26px;   /* was 24 — large numbers */
+  --text-3xl:  32px;   /* was 30 — hero numbers */
+
+  --weight-normal:   400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* Generous editorial spacing */
+  --space-1:  2px;
+  --space-2:  4px;
+  --space-3:  6px;
+  --space-4:  8px;
+  --space-5:  10px;
+  --space-6:  12px;
+  --space-7:  14px;
+  --space-8:  16px;
+  --space-10: 20px;
+  --space-12: 24px;
+  --space-16: 32px;
+  --space-20: 40px;
+  --space-24: 48px;
+
+  --radius-sm:  4px;
+  --radius-md:  6px;
+  --radius-lg:  8px;
+  --radius-xl:  12px;
+
+  /* Notion uses system sans — slightly warmer/wider than Inter */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'SF Mono', 'SFMono-Regular', 'IBM Plex Mono', 'Fira Code', ui-monospace, monospace;
+
+  --nav-height:     48px;
+  --metrics-height: 80px;
+  --sidebar-width:  256px;
+  --panel-width:    360px;
+
+  --transition-fast: 100ms cubic-bezier(0.4,0,0.2,1);
+  --transition-base: 160ms cubic-bezier(0.4,0,0.2,1);
+  --transition-slow: 240ms cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── RESET ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.005em;
+}
+
+/* Notion-style minimal scrollbars */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+/* ── GLOBAL NO GLOW ──────────────────────────────────────── */
+* { text-shadow: none; box-shadow: none; }
+.batch-toast-container { box-shadow: var(--shadow-toast) !important; }
+.command-panel { box-shadow: var(--shadow-drawer) !important; }
+
+/* ── TYPOGRAPHY UTILITIES ───────────────────────────────── */
+.t-2xs { font-size: var(--text-2xs); }
+.t-xs  { font-size: var(--text-xs); }
+.t-sm  { font-size: var(--text-sm); }
+.t-md  { font-size: var(--text-md); }
+.mono  { font-family: var(--font-mono); letter-spacing: -0.01em; }
+
+/* Notion semantic text colors */
+.text-muted    { color: var(--text-tertiary); }
+.text-neutral  { color: var(--text-secondary); }
+.text-primary  { color: var(--text-primary); }
+.text-bright   { color: var(--text-bright); }
+.text-critical { color: var(--color-critical); }
+.text-warning  { color: var(--color-warning); }
+.text-healthy  { color: var(--color-healthy); }
+.text-info     { color: var(--color-info); }
+
+/* ── APP ROOT ────────────────────────────────────────────── */
+#app {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100vh !important;
+  width: 100vw !important;
+  overflow: hidden !important;
+  background: var(--bg-app) !important;
+}
+
+/* ── THEME TOGGLE BUTTON ─────────────────────────────────── */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  height: 26px;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.theme-toggle:hover { background: var(--bg-surface-02); color: var(--text-primary); border-color: var(--border-strong); }
+
+/* ── TOP NAVIGATION ──────────────────────────────────────── */
+#top-nav {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  height: var(--nav-height) !important;
+  min-height: var(--nav-height) !important;
+  width: 100% !important;
+  background: var(--bg-nav) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+  padding: 0 var(--space-8) !important;
+  gap: var(--space-6) !important;
+  z-index: 100 !important;
+  flex-shrink: 0 !important;
+}
+
+.nav-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--space-5) !important;
+}
+
+.nav-brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--text-bright);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--bg-app);
+  font-family: var(--font-mono);
+  letter-spacing: 0;
+  flex-shrink: 0;
+}
+
+.nav-brand-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-bright);
+  letter-spacing: -0.01em;
+}
+
+.nav-brand-version {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--text-tertiary);
+  background: var(--bg-surface-03);
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+}
+
+.nav-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--border-default);
+  flex-shrink: 0;
+}
+
+.nav-status-cluster {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--space-8) !important;
+  margin-left: auto !important;
+}
+
+.nav-system-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--text-tertiary);
+}
+
+.status-pulse {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-healthy);
+  flex-shrink: 0;
+}
+
+.nav-timestamp {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--text-tertiary);
+}
+
+/* ── METRICS HEADER — Notion-style contained cards ───────── */
+#metrics-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--space-4) !important;
+  height: auto !important;
+  min-height: auto !important;
+  padding: var(--space-5) var(--space-8) !important;
+  background: var(--bg-app) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  flex-shrink: 0 !important;
+  overflow: hidden !important;
+}
+
+.metric-cell {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  padding: var(--space-5) var(--space-7) !important;
+  gap: var(--space-2) !important;
+  background: var(--bg-surface-01) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-lg) !important;
+  height: 68px !important;
+  position: relative !important;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.metric-cell:hover {
+  background: var(--bg-surface-02) !important;
+  border-color: var(--border-strong) !important;
+}
+
+.metric-cell.state-critical {
+  background: var(--color-critical-bg) !important;
+  border-color: var(--color-critical-bdr) !important;
+}
+.metric-cell.state-warning {
+  background: var(--color-warning-bg) !important;
+  border-color: var(--color-warning-bdr) !important;
+}
+.metric-cell.state-healthy {
+  background: var(--color-healthy-bg) !important;
+  border-color: var(--color-healthy-bdr) !important;
+}
+
+/* Notion: small caps label with proper breathing */
+.metric-label {
+  font-size: var(--text-xs) !important;
+  font-weight: var(--weight-medium) !important;
+  color: var(--text-secondary) !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+/* Notion: big, clean number — not mono by default */
+.metric-value {
+  font-size: 24px;
+  line-height: 1 !important;
+  font-weight: 600;
+  font-family: var(--font-mono) !important;
+  letter-spacing: -0.02em !important;
+  color: var(--text-bright) !important;
+}
+
+.metric-value.critical { color: var(--color-critical) !important; }
+.metric-value.warning  { color: var(--color-high) !important; }
+.metric-value.healthy  { color: var(--color-healthy) !important; }
+.metric-value.info     { color: var(--color-info) !important; }
+.metric-value.muted    { color: var(--text-secondary) !important; }
+
+.metric-sub {
+  font-size: var(--text-xs) !important;
+  color: var(--text-tertiary) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 0 !important;
+  line-height: 1;
+}
+
+.metric-indicator { display: none !important; }
+
+/* ── BODY LAYOUT GRID ────────────────────────────────────── */
+#body-layout {
+  display: grid !important;
+  grid-template-columns: var(--sidebar-width) 1fr !important;
+  grid-template-rows: 1fr !important;
+  flex: 1 !important;
+  width: 100% !important;
+  height: calc(100vh - var(--nav-height) - 88px) !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: var(--bg-app) !important;
+}
+
+/* ── WORKSPACE SIDEBAR ───────────────────────────────────── */
+.workspace-sidebar {
+  grid-column: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: var(--sidebar-width) !important;
+  min-width: var(--sidebar-width) !important;
+  max-width: var(--sidebar-width) !important;
+  height: 100% !important;
+  background: var(--bg-surface-01) !important;
+  border-right: 1px solid var(--border-default) !important;
+  flex-shrink: 0 !important;
+  overflow: hidden !important;
+  z-index: 10 !important;
+}
+
+.sidebar-nav-container {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: var(--space-5) var(--space-4) !important;
+  gap: var(--space-1) !important;
+  flex: 1 !important;
+  overflow-y: auto !important;
+}
+
+.sidebar-section-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-tertiary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: var(--space-5) var(--space-4) var(--space-2);
+}
+
+/* Notion sidebar nav: larger, warmer, editorial */
+.workspace-sidebar .nav-tab {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 34px !important;
+  padding: 0 var(--space-5) !important;
+  gap: var(--space-4) !important;
+  border-radius: var(--radius-md) !important;
+  font-size: var(--text-sm) !important;
+  font-weight: var(--weight-medium) !important;
+  color: var(--text-secondary) !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.workspace-sidebar .nav-tab:hover {
+  background: var(--bg-surface-02) !important;
+  color: var(--text-bright) !important;
+}
+
+.workspace-sidebar .nav-tab.active {
+  background: rgba(255,255,255,0.06) !important;
+  color: var(--text-bright) !important;
+  font-weight: var(--weight-semibold) !important;
+}
+
+.workspace-sidebar .nav-tab-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  flex-shrink: 0;
+  transition: background var(--transition-fast);
+}
+
+.workspace-sidebar .nav-tab.active .nav-tab-dot,
+.workspace-sidebar .nav-tab[data-section="pipeline"] .nav-tab-dot  { background: var(--color-info); }
+.workspace-sidebar .nav-tab[data-section="resolution"] .nav-tab-dot { background: var(--color-critical); }
+.workspace-sidebar .nav-tab[data-section="cv-queue"] .nav-tab-dot   { background: var(--color-healthy); }
+.workspace-sidebar .nav-tab[data-section="log"] .nav-tab-dot        { background: var(--text-secondary); }
+
+.sidebar-footer {
+  padding: var(--space-5) var(--space-6) !important;
+  border-top: 1px solid var(--border-subtle) !important;
+  background: var(--bg-surface-01) !important;
+}
+
+/* ── CENTER CONTENT AREA ─────────────────────────────────── */
+#content-area {
+  grid-column: 2 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: var(--bg-app) !important;
+}
+
+/* ── DRAWER PANEL — Slide-in overlay ────────────────────── */
+.command-panel {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: var(--panel-width) !important;
+  min-width: var(--panel-width) !important;
+  max-width: var(--panel-width) !important;
+  height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  background: var(--bg-surface-01) !important;
+  border-left: 1px solid var(--border-default) !important;
+  z-index: 200 !important;
+  transform: translateX(100%) !important;
+  transition: transform var(--transition-slow) !important;
+}
+
+.command-panel.drawer-open {
+  transform: translateX(0) !important;
+}
+
+/* ── SECTION VIEWS ───────────────────────────────────────── */
+.section-view {
+  display: none !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+.section-view.active { display: flex !important; }
+
+/* ── SECTION TOOLBAR — Notion page header feel ───────────── */
+.section-toolbar {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-8);
+  height: 50px;
+  min-height: 50px;
+  background: var(--bg-surface-01);
+  border-bottom: 1px solid var(--border-default);
+  gap: var(--space-5);
+  flex-shrink: 0;
+}
+
+/* Notion: page titles are calm, confident, not all-caps */
+.toolbar-title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-bright);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.toolbar-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  background: var(--bg-surface-03);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-3);
+  height: 20px;
+  min-width: 26px;
+}
+
+.toolbar-sep { width: 1px; height: 14px; background: var(--border-default); flex-shrink: 0; }
+.toolbar-actions { display: flex; align-items: center; gap: var(--space-3); margin-left: auto; }
+
+/* ── SEARCH BAR ──────────────────────────────────────────── */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--bg-surface-02);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-5);
+  height: 30px;
+  min-width: 230px;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.search-container:focus-within {
+  border-color: var(--border-strong);
+  background: var(--bg-surface-03);
+}
+
+.search-icon { color: var(--text-tertiary); font-size: var(--text-sm); flex-shrink: 0; }
+
+.search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-family: var(--font-sans);
+  width: 100%;
+  min-width: 0;
+}
+.search-input::placeholder { color: var(--text-tertiary); }
+
+/* ── FILTER BAR ──────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-8);
+  height: 40px;
+  min-height: 40px;
+  background: var(--bg-app);
+  border-bottom: 1px solid var(--border-subtle);
+  gap: var(--space-4);
+  flex-shrink: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.filter-bar::-webkit-scrollbar { height: 0; }
+
+/* Notion: filter labels are readable, not screaming */
+.filter-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.filter-chips { display: flex; align-items: center; gap: var(--space-2); flex-shrink: 0; }
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  height: 24px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.filter-chip:hover { background: var(--bg-surface-02); color: var(--text-bright); }
+.filter-chip.active { background: var(--bg-surface-03); border-color: var(--border-strong); color: var(--text-bright); }
+.filter-chip.chip-critical.active { background: var(--color-critical-bg); border-color: var(--color-critical-bdr); color: var(--color-critical); }
+.filter-chip.chip-warning.active  { background: var(--color-high-bg);     border-color: var(--color-high-bdr);     color: var(--color-high); }
+.filter-chip.chip-healthy.active  { background: var(--color-healthy-bg);  border-color: var(--color-healthy-bdr);  color: var(--color-healthy); }
+
+/* ── TABLE CONTAINER — Notion database view feel ─────────── */
+.table-container {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background: #191919;
+  padding: 20px 24px 24px;
+}
+
+/* Notion database table: clean, separated, contained */
+.pipeline-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  background: var(--bg-surface-01);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.05);
+  overflow: hidden;
+}
+
+.pipeline-table thead { position: sticky; top: 0; z-index: 10; }
+
+.pipeline-table thead tr {
+  background: var(--bg-surface-02);
+}
+
+/* Notion: table headers are readable, not all-caps micro text */
+.pipeline-table th {
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: var(--weight-semibold);
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+  text-transform: none;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  transition: color var(--transition-fast), background var(--transition-fast);
+  background: var(--bg-surface-02);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.pipeline-table th:hover { color: var(--text-bright); background: var(--bg-surface-03); }
+
+.th-sort-indicator { display: inline-block; margin-left: var(--space-1); opacity: 0; font-size: 8px; font-family: var(--font-mono); }
+.pipeline-table th:hover .th-sort-indicator { opacity: 0.4; }
+.pipeline-table th.sorted .th-sort-indicator { opacity: 1; color: var(--color-info); }
+
+.pipeline-table tbody tr {
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: background var(--transition-fast);
+  background: var(--bg-surface-01);
+}
+
+.pipeline-table tbody tr:last-child { border-bottom: none; }
+.pipeline-table tbody tr:hover { background: var(--bg-surface-02); }
+
+/* Notion: table rows are readable, generous line height */
+.pipeline-table td {
+  padding: 14px 18px;
+  font-size: 14px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  line-height: 1.5;
+}
+
+.pipeline-table tbody tr.row-critical { border-left: 2px solid rgba(224,85,85,0.55); }
+.pipeline-table tbody tr.row-high     { border-left: 2px solid rgba(212,118,58,0.45); }
+.pipeline-table tbody tr.row-warning  { border-left: 2px solid rgba(192,154,53,0.40); }
+.pipeline-table tbody tr.row-healthy  { border-left: 2px solid transparent; }
+.pipeline-table tbody tr.row-expired  { opacity: 0.32; }
+.pipeline-table tbody tr.row-score-zero { opacity: 0.40; }
+.pipeline-table tbody tr.row-expanded { background: var(--bg-surface-03) !important; }
+.pipeline-table tbody tr.tr-expanded-detail { background: var(--bg-surface-02) !important; cursor: default; }
+.pipeline-table tbody tr.tr-expanded-detail:hover { background: var(--bg-surface-02) !important; }
+
+/* Column widths */
+.col-severity { width: 30px; }
+.col-brand    { width: 130px; }
+.col-role     { min-width: 200px; }
+.col-status   { width: 115px; }
+.col-score    { width: 60px; text-align: right; }
+.col-priority { width: 78px; }
+.col-match    { width: 70px; text-align: right; }
+.col-scope    { width: 84px; }
+.col-nad      { width: 96px; }
+.col-blockers { width: 78px; text-align: center; }
+.col-entropy  { width: 94px; }
+.col-actions  { width: 82px; text-align: right; }
+
+/* ── SEVERITY DOT ────────────────────────────────────────── */
+.severity-dot {
+  display: inline-flex;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.severity-dot.critical { background: var(--color-critical); }
+.severity-dot.high     { background: var(--color-high); }
+.severity-dot.warning  { background: var(--color-warning); }
+.severity-dot.healthy  { background: var(--text-tertiary); }
+
+/* ── STATUS BADGE — Notion tag style ────────────────────── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-4);
+  height: 20px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.01em;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.status-badge.target        { background: var(--color-info-bg);     color: var(--color-info);     border: 1px solid var(--color-info-bdr); }
+.status-badge.exploratorio  { background: var(--bg-surface-03);     color: var(--text-secondary); border: 1px solid var(--border-default); }
+.status-badge.create        { background: var(--color-warning-bg);  color: var(--color-warning);  border: 1px solid var(--color-warning-bdr); }
+.status-badge.ready         { background: var(--color-healthy-bg);  color: var(--color-healthy);  border: 1px solid var(--color-healthy-bdr); }
+.status-badge.postulado     { background: var(--color-info-bg);     color: var(--color-info);     border: 1px solid var(--color-info-bdr); }
+.status-badge.blocked       { background: var(--color-critical-bg); color: var(--color-critical); border: 1px solid var(--color-critical-bdr); }
+.status-badge.expired       { background: var(--bg-surface-03);     color: var(--text-tertiary);  border: 1px solid var(--border-subtle); }
+.status-badge.followup      { background: var(--color-high-bg);     color: var(--color-high);     border: 1px solid var(--color-high-bdr); }
+.status-badge.enproceso     { background: var(--color-info-bg);     color: var(--color-info);     border: 1px solid var(--color-info-bdr); }
+.status-badge.sinrespuesta  { background: var(--color-high-bg);     color: var(--color-high);     border: 1px solid var(--color-high-bdr); }
+
+/* ── SCORE ───────────────────────────────────────────────── */
+.score-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-align: right;
+}
+.score-value.score-high { color: var(--color-healthy); }
+.score-value.score-mid  { color: var(--color-warning); }
+.score-value.score-low  { color: var(--text-secondary); }
+.score-value.score-zero { color: var(--text-tertiary); }
+
+/* ── BLOCKER COUNT ───────────────────────────────────────── */
+.blocker-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-semibold);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-3);
+  height: 20px;
+  min-width: 26px;
+}
+.blocker-count.bc-critical { background: var(--color-critical-bg); color: var(--color-critical); border: 1px solid var(--color-critical-bdr); }
+.blocker-count.bc-high     { background: var(--color-high-bg);     color: var(--color-high);     border: 1px solid var(--color-high-bdr); }
+.blocker-count.bc-none     { color: var(--text-tertiary); font-weight: var(--weight-normal); }
+
+/* ── ENTROPY BADGE ───────────────────────────────────────── */
+.entropy-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.01em;
+  text-transform: none;
+  padding: 0 var(--space-3);
+  height: 20px;
+  border-radius: var(--radius-sm);
+}
+.entropy-badge.stable    { color: var(--text-tertiary); }
+.entropy-badge.elevated  { color: var(--color-warning); background: var(--color-warning-bg); }
+.entropy-badge.degrading { color: var(--color-high);    background: var(--color-high-bg); }
+.entropy-badge.critical  { color: var(--color-critical); background: var(--color-critical-bg); animation: critical-blink 2.5s ease-in-out infinite; }
+
+@keyframes critical-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+
+/* ── CRITICAL STALL ──────────────────────────────────────── */
+.critical-stall {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-semibold);
+  color: var(--color-critical);
+  background: var(--color-critical-bg);
+  border: 1px solid var(--color-critical-bdr);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-3);
+  height: 20px;
+  letter-spacing: 0.01em;
+}
+
+/* ── NAD DISPLAY ─────────────────────────────────────────── */
+.nad-display { font-family: var(--font-mono); font-size: var(--text-xs); }
+.nad-display.nad-overdue { color: var(--color-critical); font-weight: var(--weight-semibold); }
+.nad-display.nad-today   { color: var(--color-high); }
+.nad-display.nad-soon    { color: var(--color-info); }
+.nad-display.nad-normal  { color: var(--text-secondary); }
+
+/* ── PRIORITY BADGE ──────────────────────────────────────── */
+.priority-badge {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.01em;
+  color: var(--text-secondary);
+}
+.priority-badge.p1 { color: var(--color-critical); font-weight: var(--weight-semibold); }
+.priority-badge.p2 { color: var(--color-high); }
+.priority-badge.p3 { color: var(--color-warning); }
+.priority-badge.p4 { color: var(--text-tertiary); }
+
+/* ── MATCH DISPLAY ───────────────────────────────────────── */
+.match-display { font-family: var(--font-mono); font-size: var(--text-xs); text-align: right; }
+.match-display.match-high { color: var(--color-healthy); }
+.match-display.match-mid  { color: var(--color-warning); }
+.match-display.match-low  { color: var(--text-secondary); }
+
+/* ── BUTTONS — Notion button style ──────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+.btn-icon:hover { background: var(--bg-surface-03); border-color: var(--border-strong); color: var(--text-bright); }
+
+.btn-sm {
+  padding: 0 var(--space-4);
+  height: 28px;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-03);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+}
+.btn-sm:hover { background: var(--bg-surface-04); border-color: var(--border-strong); color: var(--text-bright); }
+.btn-sm.btn-primary { background: var(--color-info-bg); border-color: var(--color-info-bdr); color: var(--color-info); }
+.btn-sm.btn-primary:hover { background: var(--color-info-bg); border-color: var(--color-info); }
+.btn-sm.btn-critical { background: var(--color-critical-bg); border-color: var(--color-critical-bdr); color: var(--color-critical); }
+.btn-sm.btn-healthy  { background: var(--color-healthy-bg);  border-color: var(--color-healthy-bdr);  color: var(--color-healthy); }
+
+/* ── EMPTY STATE ─────────────────────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: var(--space-5);
+  padding: var(--space-20);
+  color: var(--text-tertiary);
+}
+.empty-state-icon { font-size: var(--text-xl); opacity: 0.25; font-family: var(--font-mono); }
+.empty-state-title { font-size: var(--text-base); font-weight: var(--weight-medium); color: var(--text-secondary); }
+.empty-state-sub { font-size: var(--text-sm); color: var(--text-tertiary); text-align: center; max-width: 290px; line-height: 1.6; }
+
+/* ── ROW EXPANDED ────────────────────────────────────────── */
+.row-expanded-content { background: var(--bg-app); border-bottom: 1px solid var(--border-default); }
+
+.row-expanded-inner {
+  padding: var(--space-8) var(--space-10);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-6) var(--space-10);
+  background: var(--bg-surface-01);
+  border-top: 1px solid var(--border-default);
+}
+
+.expanded-section { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.expanded-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-tertiary);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-1);
+}
+
+.expanded-text { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.6; white-space: normal; }
+
+.expanded-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.expanded-blocker-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  padding: var(--space-1) 0;
+}
+
+.expanded-blocker-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.expanded-blocker-dot.critical { background: var(--color-critical); }
+.expanded-blocker-dot.high     { background: var(--color-high); }
+.expanded-blocker-dot.medium   { background: var(--color-warning); }
+.expanded-blocker-dot.low      { background: var(--text-tertiary); }
+
+/* ── RESOLUTION QUEUE ────────────────────────────────────── */
+.resolution-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--bg-app);
+}
+
+
+/* ── CONFLICT ENGINE — Card Styles ──────────────────────── */
+.conflict-card {
+  background: var(--bg-surface-01);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  margin-bottom: var(--space-4);
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.conflict-card:hover { border-color: var(--border-strong); }
+.conflict-card.temp-critical { border-left: 3px solid var(--color-critical); }
+.conflict-card.temp-high     { border-left: 3px solid var(--color-high); }
+.conflict-card.temp-medium   { border-left: 3px solid var(--color-warning); }
+.conflict-card.temp-low      { border-left: 3px solid var(--border-default); }
+
+.conflict-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--border-default);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.conflict-card-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 13px;
+}
+.conflict-card-title strong { color: var(--text-primary); }
+.conflict-card-role { color: var(--text-secondary); font-size: 12px; }
+
+.temp-indicator {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.temp-indicator.critical { background: var(--color-critical); box-shadow: 0 0 6px var(--color-critical); animation: critical-blink 2s ease-in-out infinite; }
+.temp-indicator.high     { background: var(--color-high); }
+.temp-indicator.medium   { background: var(--color-warning); }
+.temp-indicator.low, .temp-indicator.stable { background: var(--border-strong); }
+
+.conflict-card-meta {
+  display: flex; gap: var(--space-2); flex-wrap: wrap;
+}
+.ccm-tag {
+  font-size: 10px; font-family: var(--font-mono);
+  background: var(--bg-surface-02);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+.ccm-tag.nad-overdue { color: var(--color-critical); border-color: var(--color-critical); }
+.ccm-tag.nad-warning { color: var(--color-warning); border-color: var(--color-warning); }
+
+.conflict-list { padding: var(--space-3) var(--space-5); }
+
+.conflict-row {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-default);
+}
+.conflict-row:last-child { border-bottom: none; }
+
+.conflict-row-header {
+  display: flex; align-items: center; gap: var(--space-3); margin-bottom: 4px;
+}
+.conflict-tier-badge {
+  font-size: 9px; font-family: var(--font-mono); font-weight: 700;
+  padding: 2px 5px; border-radius: 3px; text-transform: uppercase; flex-shrink: 0;
+}
+.conflict-tier-badge.t1 { background: var(--color-critical-bg); color: var(--color-critical); }
+.conflict-tier-badge.t2 { background: var(--color-high-bg);     color: var(--color-high); }
+.conflict-tier-badge.t3 { background: var(--color-warning-bg);  color: var(--color-warning); }
+.conflict-tier-badge.t4 { background: var(--bg-surface-02);     color: var(--text-tertiary); }
+
+.conflict-label { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.conflict-detail { font-size: 11px; color: var(--text-secondary); margin-bottom: 6px; padding-left: 2px; }
+
+.conflict-actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.btn-conflict-action {
+  font-size: 10px; font-family: var(--font-mono);
+  background: var(--bg-surface-02);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  padding: 4px 10px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-conflict-action:hover {
+  background: var(--accent-primary);
+  color: #000;
+  border-color: var(--accent-primary);
+}
+.btn-conflict-action.btn-depurar:hover {
+  background: var(--color-critical-bg);
+  color: var(--color-critical);
+  border-color: var(--color-critical);
+}
+.btn-conflict-action:disabled { opacity: .4; cursor: not-allowed; }
+
+.resolution-card {
+  background: var(--bg-surface-01);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+.resolution-card:hover { background: var(--bg-surface-02); border-color: var(--border-strong); }
+.resolution-card.sev-critical { border-left: 3px solid var(--color-critical); }
+.resolution-card.sev-high     { border-left: 3px solid var(--color-high); }
+.resolution-card.sev-medium   { border-left: 3px solid var(--color-warning); }
+.resolution-card.sev-low      { border-left: 3px solid var(--border-default); }
+
+.resolution-card-header { display: flex; align-items: center; gap: var(--space-4); }
+
+.resolution-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-3);
+  height: 20px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
+}
+.resolution-badge.critical { background: var(--color-critical-bg); color: var(--color-critical); border: 1px solid var(--color-critical-bdr); }
+.resolution-badge.high     { background: var(--color-high-bg);     color: var(--color-high);     border: 1px solid var(--color-high-bdr); }
+.resolution-badge.medium   { background: var(--color-warning-bg);  color: var(--color-warning);  border: 1px solid var(--color-warning-bdr); }
+.resolution-badge.low      { background: var(--bg-surface-03);     color: var(--text-secondary); border: 1px solid var(--border-default); }
+
+.resolution-title { font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--text-bright); }
+.resolution-meta  { font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); margin-left: auto; white-space: nowrap; }
+
+.resolution-card-body { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4) var(--space-8); }
+.resolution-field { display: flex; flex-direction: column; gap: 3px; }
+.resolution-field-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--text-tertiary); letter-spacing: 0.03em; text-transform: uppercase; }
+.resolution-field-value { font-size: var(--text-sm); color: var(--text-primary); line-height: 1.5; }
+
+.resolution-card-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* ── CV QUEUE ────────────────────────────────────────────── */
+.cv-queue-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-8);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-5);
+  align-content: start;
+  background: var(--bg-app);
+}
+
+.cv-card {
+  background: var(--bg-surface-01);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+  cursor: pointer;
+}
+.cv-card:hover { background: var(--bg-surface-02); border-color: var(--border-strong); }
+.cv-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); }
+.cv-card-brand { font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--text-bright); }
+.cv-card-role { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 2px; line-height: 1.45; }
+.cv-score-ring { display: flex; flex-direction: column; align-items: center; gap: 1px; flex-shrink: 0; }
+.cv-score-val { font-family: var(--font-mono); font-size: var(--text-xl); font-weight: var(--weight-bold); color: var(--color-healthy); line-height: 1; }
+.cv-score-label { font-size: var(--text-xs); color: var(--text-tertiary); letter-spacing: 0.02em; text-transform: uppercase; }
+.cv-keywords { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.cv-keyword-tag { padding: 2px var(--space-3); background: var(--bg-surface-03); border: 1px solid var(--border-default); border-radius: var(--radius-sm); font-size: var(--text-xs); color: var(--text-secondary); font-family: var(--font-mono); }
+.cv-meta-row { display: flex; align-items: center; gap: var(--space-6); }
+.cv-meta-item { display: flex; flex-direction: column; gap: 2px; }
+.cv-meta-label { font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+.cv-meta-val { font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-primary); }
+.cv-card-actions { display: flex; gap: var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); }
+
+/* ── ACTIVITY LOG ────────────────────────────────────────── */
+.log-container { flex: 1; display: flex; overflow: hidden; background: var(--bg-app); }
+.log-entries {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.log-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-6);
+  background: var(--bg-surface-01);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+.log-entry-track { display: flex; flex-direction: column; align-items: center; height: 100%; }
+.log-entry-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-tertiary); margin-top: var(--space-3); }
+.log-entry-line { width: 1px; flex: 1; background: var(--border-default); margin: var(--space-2) 0; }
+.log-entry:last-child .log-entry-line { display: none; }
+.log-entry-timestamp { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-tertiary); white-space: nowrap; padding-top: 1px; min-width: 110px; }
+.log-entry-icon { font-size: var(--text-sm); flex-shrink: 0; margin-top: 1px; }
+.log-entry-content { flex: 1; min-width: 0; }
+.log-entry-action { font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--text-primary); }
+.log-entry-detail { font-size: var(--text-xs); color: var(--text-secondary); margin-top: 2px; font-family: var(--font-mono); }
+.log-entry.log-command  { border-left: 2px solid var(--color-info); }
+.log-entry.log-critical { border-left: 2px solid var(--color-critical); }
+.log-entry.log-action   { border-left: 2px solid var(--color-healthy); }
+
+/* ── DRAWER / COMMAND PANEL ──────────────────────────────── */
+.drawer-container { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface-01); }
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-7) var(--space-8);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.drawer-title-block { display: flex; flex-direction: column; gap: 3px; }
+
+/* Notion drawer titles: calm, editorial */
+.drawer-title { font-size: var(--text-lg); font-weight: var(--weight-semibold); color: var(--text-bright); letter-spacing: -0.01em; }
+.drawer-subtitle { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.4; }
+
+.drawer-body { flex: 1; overflow-y: auto; padding: var(--space-7) var(--space-8); display: flex; flex-direction: column; gap: var(--space-7); }
+.drawer-section { display: flex; flex-direction: column; gap: var(--space-4); }
+
+/* Notion section titles: small but readable */
+.drawer-section-title {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: var(--space-3);
+}
+
+.drawer-meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-5); }
+.drawer-meta-cell { display: flex; flex-direction: column; gap: 4px; }
+.drawer-meta-label { font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+.drawer-meta-value { font-size: var(--text-sm); color: var(--text-primary); }
+.drawer-meta-value.mono { font-family: var(--font-mono); }
+
+.drawer-blocker-box {
+  background: var(--bg-surface-02);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.drawer-blocker-header { display: flex; align-items: center; gap: var(--space-3); }
+.drawer-blocker-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--text-bright); }
+.drawer-blocker-desc { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.55; }
+
+.drawer-log-item { display: flex; flex-direction: column; gap: 3px; padding: var(--space-3) 0; border-bottom: 1px solid var(--border-subtle); }
+.drawer-log-item:last-child { border-bottom: none; }
+.drawer-log-meta { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-tertiary); }
+.drawer-log-text { font-size: var(--text-sm); color: var(--text-secondary); }
+
+.drawer-footer {
+  padding: var(--space-6) var(--space-8);
+  border-top: 1px solid var(--border-default);
+  background: var(--bg-surface-02);
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* ── STATE INDICATOR DOTS ────────────────────────────────── */
+.state-indicator-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.state-indicator-dot.active  { background: var(--color-healthy); }
+.state-indicator-dot.stalled { background: var(--color-warning); }
+.state-indicator-dot.dead    { background: var(--color-critical); }
+
+/* ── BATCH SELECTION TOAST ───────────────────────────────── */
+.batch-toast-container {
+  position: fixed;
+  bottom: var(--space-8);
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--bg-surface-04);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-8);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  z-index: 1000;
+  transition: transform var(--transition-base), opacity var(--transition-base);
+  opacity: 0;
+  pointer-events: none;
+}
+.batch-toast-container.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.batch-count-display { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--text-bright); }
+.batch-count-num { font-family: var(--font-mono); color: var(--color-info); font-size: var(--text-base); margin-right: var(--space-2); }
+
+    /* ... Código CSS previo existente en v4 ... */
+
+    /* ============================================================
+       JHS DASHBOARD v4 — SURGICAL REFINEMENT PASS
+       ============================================================ */
+    .table-container {
+      background: #111111 !important; 
+      border: 1px solid rgba(255, 255, 255, 0.03) !important;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+    }
+
+    .pipeline-table thead tr {
+      background: #161616 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    }
+
+    .pipeline-table th {
+      background: #161616 !important;
+    }
+
+    .pipeline-table tbody tr {
+      background: #111111 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02) !important;
+    }
+
+    .pipeline-table tbody tr:hover {
+      background: #151515 !important;
+    }
+
+    @keyframes critical-blink {
+      0%, 100% { 
+        background-color: rgba(214, 74, 74, 0.08); 
+        border-left-color: rgba(214, 74, 74, 0.8);
+      }
+      50% { 
+        background-color: rgba(214, 74, 74, 0.02); 
+        border-left-color: rgba(214, 74, 74, 0.3);
+      }
+    }
+
+    .row-critical {
+      animation: critical-blink 4s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+    }
+
+    .search-container {
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+      border: 1px solid rgba(255, 255, 255, 0.05) !important;
+      background: #141414 !important;
+    }
+
+    .search-container:focus-within {
+      border-color: var(--border-focus) !important;
+      background: #161616 !important;
+    }
+
+    .resolution-card {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.02) !important;
+      background: #161616 !important;
+    }
+
+    .resolution-card:hover {
+      background: #1c1c1c !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    #body-layout {
+      height: calc(100vh - var(--nav-height) - 48px) !important;
+      overflow: hidden !important;
+    }
+
+    .main-content-viewport {
+      overflow-y: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <nav id="top-nav">
+    <div class="nav-brand">
+      <div class="nav-brand-mark">J</div>
+      <span class="nav-brand-name">JHS Operational Console</span>
+      <span class="nav-brand-version">v3.0</span>
+    </div>
+    
+    <div class="nav-divider"></div>
+
+    <div class="nav-status-cluster">
+      <div class="nav-system-status">
+        <div class="status-pulse"></div>
+        <span>SYS_LIVE_PROXY</span>
+      </div>
+      <div class="nav-timestamp mono" id="runtime-clock">2026-05-15 23:36:00</div>
+      <button class="theme-toggle" id="btn-theme-toggle">☽ Dark</button>
+    </div>
+  </nav>
+
+  <header id="metrics-header">
+    <div class="metric-cell" id="m-cell-total" data-metric="total">
+      <span class="metric-label">Vacantes Activas</span>
+      <span class="metric-value info" id="m-val-total">0</span>
+      <span class="metric-sub" id="m-sub-total">Carga Operativa Total</span>
+      <div class="metric-indicator info"></div>
+    </div>
+    <div class="metric-cell" id="m-cell-critical" data-metric="critical">
+      <span class="metric-label">Bloqueos Críticos</span>
+      <span class="metric-value critical" id="m-val-critical">0</span>
+      <span class="metric-sub" id="m-sub-critical">Acción Inmediata Requerida</span>
+      <div class="metric-indicator critical"></div>
+    </div>
+    <div class="metric-cell" id="m-cell-warning" data-metric="warning">
+      <span class="metric-label">Riesgo / Fricción</span>
+      <span class="metric-value warning" id="m-val-warning">0</span>
+      <span class="metric-sub" id="m-sub-warning">Estancamiento Detectado</span>
+      <div class="metric-indicator warning"></div>
+    </div>
+    <div class="metric-cell" id="m-cell-healthy" data-metric="healthy">
+      <span class="metric-label">Pipeline Fluido</span>
+      <span class="metric-value healthy" id="m-val-healthy">0</span>
+      <span class="metric-sub" id="m-sub-healthy">Estatus activos sin fricción</span>
+      <div class="metric-indicator healthy"></div>
+    </div>
+    <div class="metric-cell" id="m-cell-fluid" data-metric="fluid">
+      <span class="metric-label">Tránsito READY → APPLY</span>
+      <span class="metric-value info" id="m-val-fluid">0</span>
+      <span class="metric-sub" id="m-sub-fluid">En cola de postulación activa</span>
+      <div class="metric-indicator info"></div>
+    </div>
+  </header>
+
+  <div id="body-layout">
+    
+    <aside class="workspace-sidebar">
+      <div class="sidebar-nav-container nav-tabs">
+        <button class="nav-tab active" data-section="pipeline">
+          <div class="nav-tab-dot"></div>
+          <span>Pipeline</span>
+        </button>
+        <button class="nav-tab" data-section="resolution">
+          <div class="nav-tab-dot"></div>
+          <span>Resolution</span>
+        </button>
+        <button class="nav-tab" data-section="cv-queue">
+          <div class="nav-tab-dot"></div>
+          <span>CV Queue</span>
+        </button>
+        <button class="nav-tab" data-section="log">
+          <div class="nav-tab-dot"></div>
+          <span>Logs</span>
+        </button>
+      </div>
+      <div class="sidebar-footer">
+        <div class="t-2xs mono text-muted">CONSOLE // TRIAGE_MODE</div>
+      </div>
+    </aside>
+
+    <main id="content-area">
+
+      <section id="section-pipeline" class="section-view active">
+        <div class="section-toolbar">
+          <span class="toolbar-title">Consola de Control del Pipeline</span>
+          <div class="toolbar-count" id="count-pipeline">0</div>
+          <div class="toolbar-sep"></div>
+          <div class="search-container">
+            <span class="search-icon">&mldr;</span>
+            <input type="text" id="search-pipeline" class="search-input" placeholder="Filtrar por marca o posición...">
+          </div>
+          <div class="toolbar-actions">
+            <button class="btn btn-sm btn-primary" id="btn-sync-notion">Sincronizar con Notion</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <span class="filter-label">Severidad:</span>
+          <div class="filter-chips" id="filter-severity-container">
+            <button class="filter-chip active" data-filter="all">Todos</button>
+            <button class="filter-chip chip-critical" data-filter="critical">Crítico</button>
+            <button class="filter-chip chip-warning" data-filter="high">Alto</button>
+            <button class="filter-chip chip-warning" data-filter="medium">Medio</button>
+            <button class="filter-chip" data-filter="low">Bajo</button>
+          </div>
+          <div class="toolbar-sep"></div>
+          <span class="filter-label">Estado Técnico:</span>
+          <div class="filter-chips" id="filter-status-container">
+            </div>
+        </div>
+
+        <div class="table-container">
+          <table class="pipeline-table" id="table-pipeline">
+            <thead>
+              <tr>
+                <th class="col-severity" data-sort="severity">S<span class="th-sort-indicator">▲</span></th>
+                <th class="col-brand" data-sort="brand">Brand<span class="th-sort-indicator">▲</span></th>
+                <th class="col-role" data-sort="role">Role Position<span class="th-sort-indicator">▲</span></th>
+                <th class="col-status" data-sort="status">Status<span class="th-sort-indicator">▲</span></th>
+                <th class="col-score" data-sort="score">Score<span class="th-sort-indicator">▲</span></th>
+                <th class="col-priority" data-sort="priority">Priority<span class="th-sort-indicator">▲</span></th>
+                <th class="col-match" data-sort="match">Match<span class="th-sort-indicator">▲</span></th>
+                <th class="col-scope" data-sort="scope">Scope<span class="th-sort-indicator">▲</span></th>
+                <th class="col-nad" data-sort="nad">NAD<span class="th-sort-indicator">▲</span></th>
+                <th class="col-blockers">Blockers</th>
+                <th class="col-entropy" data-sort="entropy">Entropy<span class="th-sort-indicator">▲</span></th>
+                <th class="col-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-pipeline">
+              </tbody>
+          </table>
+          <div class="empty-state" id="empty-pipeline" style="display: none;">
+            <div class="empty-state-icon">//</div>
+            <div class="empty-state-title">No se detectaron entidades de vacantes</div>
+            <div class="empty-state-sub">Modifique los filtros activos o verifique la conectividad del proxy local con el repositorio Notion.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="section-resolution" class="section-view">
+        <div class="section-toolbar">
+          <span class="toolbar-title">Cola de Resolución de Fricciones</span>
+          <div class="toolbar-count" id="count-resolution">0</div>
+          <div class="toolbar-sep"></div>
+          <div class="search-container">
+            <span class="search-icon">&mldr;</span>
+            <input type="text" id="search-resolution" class="search-input" placeholder="Filtrar cola de bloqueos...">
+          </div>
+        </div>
+        <div class="resolution-list" id="list-resolution">
+          </div>
+        <div class="empty-state" id="empty-resolution" style="display: none;">
+          <div class="empty-state-icon">OK</div>
+          <div class="empty-state-title">Fricción Operativa Cero</div>
+          <div class="empty-state-sub">No hay bloqueadores activos en el pipeline. Todas las vacantes fluyen libremente.</div>
+        </div>
+      </section>
+
+      <section id="section-cv-queue" class="section-view">
+        <div class="section-toolbar">
+          <span class="toolbar-title">Cola de Postulación Extensiva (CV)</span>
+          <div class="toolbar-count" id="count-cv-queue">0</div>
+          <div class="toolbar-sep"></div>
+          <div class="search-container">
+            <span class="search-icon">&mldr;</span>
+            <input type="text" id="search-cv" class="search-input" placeholder="Filtrar perfiles candidatos...">
+          </div>
+        </div>
+        <div class="cv-queue-grid" id="grid-cv-queue">
+          </div>
+        <div class="empty-state" id="empty-cv-queue" style="display: none;">
+          <div class="empty-state-icon">..</div>
+          <div class="empty-state-title">Cola de CVs Vacía</div>
+          <div class="empty-state-sub">Ninguna vacante se encuentra actualmente en estado de screening técnico o recolección de perfiles.</div>
+        </div>
+      </section>
+
+      <section id="section-log" class="section-view">
+        <div class="section-toolbar">
+          <span class="toolbar-title">Registro Técnico de Operaciones</span>
+          <div class="toolbar-count" id="count-log">0</div>
+          <div class="toolbar-actions">
+            <button class="btn btn-sm" id="btn-clear-logs">Limpiar Consola</button>
+          </div>
+        </div>
+        <div class="log-container">
+          <div class="log-entries" id="container-log-entries">
+            </div>
+        </div>
+      </section>
+
+    </main>
+
+    <aside class="command-panel" id="drawer-panel">
+      <div class="drawer-container" id="drawer-empty-state">
+        <div class="empty-state">
+          <div class="empty-state-icon">&target;</div>
+          <div class="empty-state-title">Ninguna Entidad Seleccionada</div>
+          <div class="empty-state-sub">Haga clic en el control detallado de cualquier fila del pipeline operativo para inspeccionar su payload de contexto completo.</div>
+        </div>
+      </div>
+      <div class="drawer-container" id="drawer-active-content" style="display: none;">
+        </div>
+    </aside>
+
+  </div>
+
+</div>
+
+<div class="batch-toast-container" id="batch-toast">
+  <div class="batch-count-display">
+    <span class="batch-count-num" id="batch-selected-count">0</span> vacantes seleccionadas
+  </div>
+  <div class="toolbar-sep"></div>
+  <div class="cv-card-actions" style="padding-top:0; border-top:none;">
+    <button class="btn btn-sm btn-primary" id="batch-action-ready">Marcar READY</button>
+    <button class="btn btn-sm btn-healthy" id="batch-action-apply">Mover a APPLY</button>
+    <button class="btn btn-sm btn-critical" id="batch-action-clear">Cancelar</button>
+  </div>
+</div>
+
+<script>
+/* ── SEED DATA — Offline demo dataset (activado cuando proxy offline) ── */
+const SEED_DATA = [
+  {
+    id: "v-001", brand: "NETFLIX", role: "Senior Product Designer — Content UX",
+    status: "postulado", score: 88, priority: 1, match: "muy bueno",
+    scope: "Global", nad: "2026-05-18", lastTouch: "2026-05-10", lastSeen: "2026-05-01",
+    contact: "Sarah K.", jd: "Diseñador senior para experiencia de contenido en plataformas streaming globales. Requiere dominio de sistemas de diseño, investigación de usuario, y liderazgo de sprints en entornos remotos con equipos distribuidos. Experiencia con A/B testing en productos de alto tráfico es indispensable. Portfolio con casos de impacto medible requerido.",
+    applied: true, entropy: "estable", visual_signal: "none", url: "#",
+    blockers: [{ id: "b1", type: "FOLLOW_UP_PENDING", desc: "Reclutador no ha respondido en 5 días. Requiere follow-up estratégico.", severity: "medium", age: 5 }],
+    historical_logs: [
+      { timestamp: "2026-05-10 14:30", action: "APLICACIÓN_ENVIADA", detail: "CV optimizado enviado vía portal LinkedIn." },
+      { timestamp: "2026-05-01 09:00", action: "VACANTE_DETECTADA", detail: "Vacante identificada con score 88. Prioridad P1 asignada." }
+    ]
+  },
+  {
+    id: "v-002", brand: "NOTION", role: "Staff Product Manager — Developer Platform",
+    status: "target", score: 92, priority: 1, match: "muy bueno",
+    scope: "Remote", nad: "2026-05-16", lastTouch: "", lastSeen: "2026-04-28",
+    contact: "", jd: "PM Staff para plataforma de desarrolladores. Gestión de roadmap de APIs públicas, integraciones MCP, y ecosistema de extensiones. Se requiere background técnico sólido y experiencia liderando equipos en productos de infraestructura. Inglés fluido indispensable.",
+    applied: false, entropy: "degradando", visual_signal: "none", url: "#",
+    blockers: [
+      { id: "b2", type: "NAD_VENCIDA", desc: "La fecha objetivo de próxima acción ya venció. Acción inmediata requerida para no perder ventana de aplicación.", severity: "critical", age: 1 },
+      { id: "b3", type: "SIN_CONTACTO", desc: "No se ha identificado reclutador o punto de contacto en la empresa.", severity: "high", age: 18 }
+    ],
+    historical_logs: [
+      { timestamp: "2026-04-28 11:00", action: "VACANTE_DETECTADA", detail: "Identificada en Notion Jobs. Score 92 — prioridad máxima." }
+    ]
+  },
+  {
+    id: "v-003", brand: "FIGMA", role: "Design System Lead",
+    status: "enproceso", score: 79, priority: 2, match: "bueno",
+    scope: "Hybrid", nad: "2026-05-22", lastTouch: "2026-05-12", lastSeen: "2026-05-10",
+    contact: "Marco D.", jd: "Liderazgo del sistema de diseño corporativo. Definición de tokens, componentes y documentación técnica. Colaboración estrecha con ingeniería. Experiencia con Figma nativo y storybook requerida. Mínimo 5 años en roles similares con evidencia de escala.",
+    applied: true, entropy: "estable", visual_signal: "none", url: "#",
+    blockers: [],
+    historical_logs: [
+      { timestamp: "2026-05-12 16:00", action: "ENTREVISTA_TÉCNICA", detail: "Primera entrevista técnica completada. Feedback positivo." },
+      { timestamp: "2026-05-05 09:30", action: "SCREENING_INICIAL", detail: "Call de 30min con HR. Avanzó a etapa técnica." }
+    ]
+  },
+  {
+    id: "v-004", brand: "LINEAR", role: "Head of Product Design",
+    status: "ready", score: 95, priority: 1, match: "muy bueno",
+    scope: "Remote", nad: "2026-05-17", lastTouch: "2026-05-14", lastSeen: "2026-05-14",
+    contact: "Karri S.", jd: "Liderazgo total de la función de diseño de producto. Visión de UX a largo plazo, gestión de equipo de 6 diseñadores, y ownership del design system. Buscamos a alguien obsesionado con la calidad del software y la experiencia del desarrollador. Portafolio con trabajo en herramientas de productividad es un plus muy valorado.",
+    applied: false, entropy: "estable", visual_signal: "none", url: "#",
+    blockers: [],
+    historical_logs: [
+      { timestamp: "2026-05-14 10:00", action: "VACANTE_CONFIRMADA", detail: "Vacante verificada. CV listo para enviar. Prioridad máxima." }
+    ]
+  },
+  {
+    id: "v-005", brand: "VERCEL", role: "Senior UX Engineer",
+    status: "blocked", score: 71, priority: 2, match: "bueno",
+    scope: "Remote", nad: "", lastTouch: "2026-04-20", lastSeen: "2026-04-15",
+    contact: "", jd: "Ingeniería UX para plataforma de deploy y observabilidad. Dominio de React, TypeScript y sistemas de componentes. Colaboración directa con PM y diseño. Experiencia con dashboards de infraestructura valorada.",
+    applied: false, entropy: "bloqueado", visual_signal: "none", url: "#",
+    blockers: [
+      { id: "b4", type: "SIN_URL_VERIFICABLE", desc: "El enlace original de la vacante fue removido. No se puede confirmar si sigue activa.", severity: "critical", age: 30 },
+      { id: "b5", type: "SIN_NAD", desc: "No hay fecha objetivo asignada. La vacante lleva 26 días sin acción definida.", severity: "high", age: 26 }
+    ],
+    historical_logs: [
+      { timestamp: "2026-04-20 08:00", action: "VACANTE_DETECTADA", detail: "Identificada. URL caducó al día siguiente del descubrimiento." }
+    ]
+  },
+  {
+    id: "v-006", brand: "ANTHROPIC", role: "Product Designer — Claude UX",
+    status: "target", score: 83, priority: 1, match: "muy bueno",
+    scope: "Hybrid", nad: "2026-05-19", lastTouch: "", lastSeen: "2026-05-13",
+    contact: "", jd: "Diseñador de producto para la experiencia de usuario de Claude. Trabajo en interfaces conversacionales, flujos de onboarding, y design system de IA. Sensibilidad por la seguridad y ética del diseño es un requisito no negociable. Experiencia con productos de consumo de alto impacto requerida.",
+    applied: false, entropy: "elevado", visual_signal: "none", url: "#",
+    blockers: [
+      { id: "b6", type: "SIN_CONTACTO", desc: "No se ha identificado reclutador ni punto de entrada para aplicación directa.", severity: "high", age: 3 }
+    ],
+    historical_logs: [
+      { timestamp: "2026-05-13 12:00", action: "VACANTE_DETECTADA", detail: "Vacante detectada en careers.anthropic.com. Prioridad P1." }
+    ]
+  },
+  {
+    id: "v-007", brand: "STRIPE", role: "Design Infrastructure Engineer",
+    status: "sinrespuesta", score: 66, priority: 3, match: "regular",
+    scope: "Remote", nad: "2026-05-20", lastTouch: "2026-04-10", lastSeen: "2026-04-08",
+    contact: "Alex P.", jd: "Infraestructura de diseño, herramientas internas y automatización de tokens de diseño. Node.js y scripting requerido. Bonus si has trabajado con Style Dictionary o Theo.",
+    applied: true, entropy: "degradando", visual_signal: "none", url: "#",
+    blockers: [
+      { id: "b7", type: "SILENCIO_RECLUTADOR", desc: "Sin respuesta desde el 10 de Abril. 36 días de silencio post-aplicación.", severity: "critical", age: 36 }
+    ],
+    historical_logs: [
+      { timestamp: "2026-04-10 15:00", action: "APLICACIÓN_ENVIADA", detail: "Aplicación enviada vía portal interno Stripe." },
+      { timestamp: "2026-04-08 09:00", action: "VACANTE_DETECTADA", detail: "Score 66. Postulación decidida por fit cultural." }
+    ]
+  }
+];
+
+/* ── VACANCY REPOSITORY — DATA LAYER ────────────────────── */
+class VacancyRepository {
+  constructor() {
+    this.proxyUrl = '/api/vacancies';
+    this.vacancies = [];
+  }
+
+  async fetchAll() {
+    Logger.log("SYS_COMMAND", "Iniciando descarga desde repositorio...", "VacancyRepository.fetchAll");
+    try {
+      const response = await fetch(this.proxyUrl);
+      if (!response.ok) throw new Error(`HTTP_ERROR_${response.status}`);
+      const data = await response.json();
+      this.vacancies = this.normalizeCollection(data);
+      Logger.log("SYS_OK", `Sincronizados ${this.vacancies.length} registros desde proxy Notion`, "VacancyRepository.fetchAll");
+    } catch (err) {
+      Logger.log("SYS_CRITICAL", `Proxy offline (${err.message}). Cargando dataset local de demostración.`, "VacancyRepository.fetchAll");
+      this.vacancies = this.normalizeCollection(SEED_DATA);
+      Logger.log("SYS_INFO", `Dataset seed: ${this.vacancies.length} vacantes en modo offline.`, "VacancyRepository.fetchAll");
+    }
+    return this.vacancies;
+  }
+
+  normalizeCollection(data) {
+    let entries;
+
+    if (Array.isArray(data)) {
+      entries = data;
+
+    } else if (data && Array.isArray(data.vacancies)) {
+
+      Logger.log(
+        "SYS_INFO",
+        `Payload proxy detectado. source=${data.source || 'unknown'}, count=${data.count ?? data.vacancies.length}`,
+        "normalizeCollection"
+      );
+
+      entries = data.vacancies;
+
+    } else {
+
+      Logger.log(
+        "SYS_CRITICAL",
+        `normalizeCollection: estructura desconocida`,
+        "normalizeCollection"
+      );
+
+      return [];
+    }
+
+    return entries.map(item => this.normalizeEntity(item));
+  }
+
+  normalizeEntity(raw) {
+    const normalizeStatus = (status) => {
+      if (!status || typeof status !== 'string') return 'target';
+      const statusMap = {
+        'target': 'target', 'create': 'create', 'ready': 'ready',
+        'postulado': 'postulado', 'blocked': 'blocked', 'exploratorio': 'exploratorio',
+        'followup': 'followup', 'enproceso': 'enproceso', 'sinrespuesta': 'sinrespuesta',
+        'expired': 'expired'
+      };
+      const normalized = status.toLowerCase().trim().replace(/\s+/g, '');
+      return statusMap[normalized] || normalized;
+    };
+
+    const normalizeBlockers = (blockers) => {
+      if (!Array.isArray(blockers)) return [];
+      return blockers.map(b => ({
+        id: b.id || `b-${Math.random().toString(36).substr(2, 9)}`,
+        type: (b.type || 'UNKNOWN').trim(),
+        desc: (b.desc || '').trim(),
+        severity: this.normalizeSeverity(b.severity),
+        age: parseInt(b.age) || 0
+      }));
+    };
+
+    return {
+      id: raw.id || `v-${Math.random().toString(36).substr(2, 9)}`,
+      brand: (raw.brand || "BRAND_UNKNOWN").trim(),
+      role: (raw.role || "POSITION_NOT_SPECIFIED").trim(),
+      status: normalizeStatus(raw.status),
+      score: parseInt(raw.score) || 0,
+      priority: (typeof raw.priority === 'number') ? `P${raw.priority}` : ((raw.priority || "P4").toString().toUpperCase()).trim(),
+      match: (() => {
+        if (typeof raw.match === 'number') return raw.match;
+        const matchMap = { 'muy bueno': 90, 'bueno': 75, 'regular': 55, 'bajo': 35, 'muy bajo': 15 };
+        return matchMap[(raw.match || '').toLowerCase().trim()] ?? 0;
+      })(),
+      scope: (raw.scope || "Local").trim(),
+      nad: (raw.nad || "").trim(),
+      lastTouch: (raw.lastTouch || "").trim(),
+      lastSeen: (raw.lastSeen || "").trim(),
+      contact: (raw.contact || "").trim(),
+      jd: (raw.jd || "").trim(),
+      applied: !!raw.applied,
+      entropy: (() => {
+        const entropyMap = { 'bloqueado': 'critical', 'degradando': 'degrading', 'elevado': 'elevated', 'accesible': 'stable', 'estable': 'stable' };
+        const raw_e = (raw.entropy || '').toLowerCase().trim();
+        return entropyMap[raw_e] || raw_e || 'stable';
+      })(),
+      visual_signal: (raw.visual_signal || "none").toLowerCase().trim(),
+      url: (raw.url || "#").trim(),
+      blockers: normalizeBlockers(raw.blockers),
+      historical_logs: Array.isArray(raw.historical_logs) ? raw.historical_logs : []
+    };
+  }
+
+  normalizeSeverity(sev) {
+    if (!sev || typeof sev !== 'string') return 'low';
+    const normalized = sev.toLowerCase().trim();
+    const validSeverities = ['critical', 'high', 'medium', 'low'];
+    return validSeverities.includes(normalized) ? normalized : 'low';
+  }
+
+  async updateStatusBatch(ids, newStatus) {
+    Logger.log("SYS_COMMAND", `Batch transition requests para ${ids.length} entidades -> [${newStatus}]`, "VacancyRepository.updateStatusBatch");
+    this.vacancies.forEach(v => {
+      if (ids.includes(v.id)) {
+        const oldStatus = v.status;
+        v.status = newStatus;
+        v.historical_logs.unshift({
+          timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16),
+          action: "STATUS_TRANSITION",
+          detail: `Batch execution update: ${oldStatus} -> ${newStatus}`
+        });
+      }
+    });
+    return true;
+  }
+}
+
+
+/* ── CONFLICT ENGINE — Pipeline Intelligence Layer ───────── */
+const ConflictEngine = {
+
+  today() {
+    return new Date().toISOString().split('T')[0];
+  },
+
+  daysSince(dateStr) {
+    if (!dateStr) return null;
+    const diff = new Date(this.today()) - new Date(dateStr);
+    return Math.floor(diff / 86400000);
+  },
+
+  daysUntil(dateStr) {
+    if (!dateStr) return null;
+    const diff = new Date(dateStr) - new Date(this.today());
+    return Math.ceil(diff / 86400000);
+  },
+
+  // Master blocker detection — returns array of active blockers
+  detectBlockers(v) {
+    const blockers = [];
+    const today = this.today();
+    const nadDays  = v.nad ? this.daysUntil(v.nad) : null;
+    const touchAge = v.lastTouch ? this.daysSince(v.lastTouch) : null;
+    const seenAge  = v.lastSeen  ? this.daysSince(v.lastSeen)  : null;
+    const status   = v.status || '';
+    const active   = ['target','create','ready','postulado','enproceso','followup','sinrespuesta'];
+    const isActive = active.includes(status);
+
+    // TIER 1 — CRÍTICO
+    if (nadDays !== null && nadDays < 0 && ['target','postulado','enproceso','followup'].includes(status)) {
+      blockers.push({ id: 'NAD_OVERDUE', tier: 1, label: 'NAD Vencida', detail: `Vencida hace ${Math.abs(nadDays)}d — requiere acción inmediata`, action: 'set_nad', actionLabel: 'Reprogramar NAD' });
+    }
+    if (touchAge !== null && touchAge > 7 && status === 'postulado') {
+      blockers.push({ id: 'RECRUITER_SILENCE', tier: 1, label: 'Silencio del Reclutador', detail: `Sin contacto hace ${touchAge}d`, action: 'copy_followup', actionLabel: 'Copiar Follow-up' });
+    }
+    if (seenAge !== null && seenAge > 14 && status === 'enproceso') {
+      blockers.push({ id: 'PROCESS_STALLED', tier: 1, label: 'Proceso Detenido', detail: `Sin actividad hace ${seenAge}d en proceso activo`, action: 'depurar', actionLabel: 'Archivar Vacante' });
+    }
+    if ((!v.url || v.url === '#') && isActive) {
+      blockers.push({ id: 'DEAD_URL', tier: 1, label: 'Sin URL de Vacante', detail: 'No hay enlace verificable a la convocatoria', action: 'open_notion', actionLabel: 'Ver en Notion' });
+    }
+
+    // TIER 2 — ALTO
+    if ((!v.contact || v.contact.trim() === '') && ['target','postulado'].includes(status)) {
+      blockers.push({ id: 'NO_CONTACT', tier: 2, label: 'Sin Contacto Identificado', detail: 'No hay reclutador asociado a esta vacante', action: 'open_notion', actionLabel: 'Agregar Contacto' });
+    }
+    if (nadDays !== null && nadDays >= 0 && nadDays <= 2 && status === 'postulado') {
+      blockers.push({ id: 'FOLLOW_UP_OVERDUE', tier: 2, label: 'Follow-up Urgente', detail: `NAD en ${nadDays}d — preparar mensaje ahora`, action: 'copy_followup', actionLabel: 'Copiar Follow-up' });
+    }
+    if ((!v.jd || v.jd.trim().length < 80) && ['target','create'].includes(status)) {
+      blockers.push({ id: 'WEAK_JD', tier: 2, label: 'JD Incompleto', detail: 'Descripción insuficiente para optimizar CV', action: 'open_notion', actionLabel: 'Completar JD' });
+    }
+    if (seenAge !== null && seenAge > 21 && status === 'target') {
+      blockers.push({ id: 'STALE_POSTING', tier: 2, label: 'Vacante Posiblemente Muerta', detail: `Sin actividad hace ${seenAge}d`, action: 'depurar', actionLabel: 'Archivar' });
+    }
+
+    // TIER 3 — MEDIO
+    if (v.score < 60 && ['p1','p2'].includes((v.priority||'').toLowerCase())) {
+      blockers.push({ id: 'LOW_SCORE', tier: 3, label: 'Score Bajo para Prioridad', detail: `Score ${v.score} en ${v.priority} — revisar fit real`, action: 'open_notion', actionLabel: 'Revisar Fit' });
+    }
+    if (v.applied && (!v.jd || v.jd.trim().length < 80)) {
+      blockers.push({ id: 'NO_JD_APPLIED', tier: 3, label: 'Aplicó sin JD Completo', detail: 'Riesgo ATS elevado — CV sin optimizar contra JD', action: 'open_notion', actionLabel: 'Ver Ficha' });
+    }
+    if (['critical','degrading'].includes(v.entropy) && status !== 'blocked') {
+      blockers.push({ id: 'ENTROPY_DEGRADING', tier: 3, label: 'Pipeline Enfriándose', detail: `Entropy: ${v.entropy} — requiere acción en 48h`, action: 'set_nad', actionLabel: 'Programar Acción' });
+    }
+
+    // TIER 4 — RADAR
+    if (seenAge !== null && seenAge > 30 && status === 'exploratorio') {
+      blockers.push({ id: 'EXPLORATORY_AGING', tier: 4, label: 'Exploratoria Sin Avanzar', detail: `${seenAge}d sin actividad`, action: 'depurar', actionLabel: 'Depurar o Activar' });
+    }
+    if (v.score >= 80 && status === 'target' && !v.nad) {
+      blockers.push({ id: 'HIGH_SCORE_NO_ACTION', tier: 4, label: 'Score Alto Sin Movimiento', detail: `Score ${v.score} sin NAD definida — priorizar ahora`, action: 'set_nad', actionLabel: 'Programar NAD' });
+    }
+    if (touchAge !== null && touchAge > 21 && status === 'sinrespuesta') {
+      blockers.push({ id: 'SINRESPUESTA_AGING', tier: 4, label: 'Sin Respuesta Crónica', detail: `${touchAge}d sin respuesta — archivar o reactivar`, action: 'depurar', actionLabel: 'Archivar' });
+    }
+
+    return blockers;
+  },
+
+  // Pipeline temperature from blockers
+  temperature(blockers) {
+    if (!blockers.length) return 'stable';
+    const minTier = Math.min(...blockers.map(b => b.tier));
+    if (minTier === 1) return 'critical';
+    if (minTier === 2) return 'hot';
+    if (minTier === 3) return 'warm';
+    return 'dormant';
+  },
+
+  // Enrich all items with conflict data
+  enrich(items) {
+    return items.map(v => {
+      const conflicts = this.detectBlockers(v);
+      return { ...v, conflicts, temperature: this.temperature(conflicts) };
+    });
+  },
+
+  // Items that need action NOW (tier 1+2)
+  getActionQueue(items) {
+    return items
+      .filter(v => v.conflicts && v.conflicts.some(c => c.tier <= 2))
+      .sort((a, b) => {
+        const aMin = Math.min(...a.conflicts.map(c => c.tier));
+        const bMin = Math.min(...b.conflicts.map(c => c.tier));
+        return aMin - bMin || b.score - a.score;
+      });
+  }
+};
+
+/* ── API DISPATCHER — Conflict Resolution Actions ────────── */
+const ConflictAPI = {
+
+  async patchStatus(id, status) {
+    const r = await fetch(`/api/vacancies/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    return r.json();
+  },
+
+  async patchNAD(id, nad) {
+    const r = await fetch(`/api/vacancies/${id}/nad`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nad })
+    });
+    return r.json();
+  },
+
+  async depurar(id) {
+    const r = await fetch(`/api/vacancies/${id}/depurar`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return r.json();
+  },
+
+  copyFollowup(v) {
+    const msg = `Hola, me contacto para dar seguimiento a mi postulación como ${v.role} en ${v.brand}. ¿Podrían orientarme sobre el estado del proceso? Quedo a su disposición.`;
+    navigator.clipboard.writeText(msg).then(() => {
+      Logger.log('SYS_OK', `Follow-up copiado para ${v.brand}`, 'ConflictAPI');
+      showToast(`Follow-up copiado — ${v.brand}`);
+    });
+  }
+};
+
+/* ── RUNTIME CORE APP STATE ────────────────────────────── */
+const AppState = {
+  repository: new VacancyRepository(),
+  items: [],
+  filters: {
+    severity: "all",
+    status: "all",
+    search: ""
+  },
+  sorting: {
+    column: "severity",
+    asc: false
+  },
+  selectedSection: "pipeline",
+  activeDrawerId: null,
+  batchSelectedIds: new Set(),
+  clockInterval: null,
+
+  async initialize() {
+    const raw = await this.repository.fetchAll();
+    this.items = ConflictEngine.enrich(raw);
+    this.computeGlobalMetrics();
+    Renderer.hydrateStatusFilterChips(this.items);
+    Renderer.renderAll();
+    this.startClock();
+  },
+
+  computeGlobalMetrics() {
+    const metrics = { total: this.items.length, critical: 0, warning: 0, healthy: 0, fluid: 0 };
+    this.items.forEach(v => {
+      const temp = v.temperature || 'stable';
+      if (temp === 'critical') metrics.critical++;
+      else if (temp === 'hot') metrics.warning++;
+      else if (['postulado','enproceso','ready'].includes(v.status)) metrics.healthy++;
+    });
+    metrics.fluid = this.items.filter(v =>
+      ['ready','postulado','enproceso'].includes(v.status)
+    ).length;
+    Renderer.updateMetricsStrip(metrics);
+  },
+
+  setSection(sectionId) {
+    this.selectedSection = sectionId;
+    Renderer.syncActiveTabs(sectionId);
+  },
+
+  toggleBatchSelection(id) {
+    if (this.batchSelectedIds.has(id)) this.batchSelectedIds.delete(id);
+    else this.batchSelectedIds.add(id);
+    Renderer.renderBatchToast(this.batchSelectedIds.size);
+  },
+
+  clearBatchSelection() {
+    this.batchSelectedIds.clear();
+    Renderer.renderBatchToast(0);
+    const checkboxes = document.querySelectorAll('.row-batch-checkbox');
+    checkboxes.forEach(c => c.checked = false);
+  },
+
+  startClock() {
+    if (this.clockInterval) {
+      clearInterval(this.clockInterval);
+    }
+    this.clockInterval = setInterval(() => {
+      const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
+      const clockNode = document.getElementById('runtime-clock');
+      if (clockNode) clockNode.textContent = now;
+    }, 1000);
+  }
+};
+
+/* ── OPERATIONAL TECHNICAL SYSTEM LOGGER ─────────────────── */
+const Logger = {
+  entries: [],
+  log(action, detail, context = "Runtime") {
+    const entry = {
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      action, detail, context
+    };
+    this.entries.unshift(entry);
+    Renderer.appendLogEntry(entry);
+  }
+};
+
+/* ── RUNTIME CORE RE-DETERMINISTIC RENDERER ──────────────── */
+const Renderer = {
+  renderAll() {
+    this.renderPipelineTable();
+    this.renderResolutionQueue();
+    this.renderCVQueue();
+    this.updateSectionCounts();
+  },
+
+  updateMetricsStrip(m) {
+    const safeSetText = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
+
+    safeSetText('m-val-total', m.total);
+    safeSetText('m-val-critical', m.critical);
+    safeSetText('m-val-warning', m.warning);
+    safeSetText('m-val-healthy', m.healthy);
+    safeSetText('m-val-fluid', m.fluid);
+
+    // Severity state classes on metric cells
+    const critCell = document.getElementById('m-cell-critical');
+    if (critCell) critCell.classList.toggle('state-critical', m.critical > 0);
+    const warnCell = document.getElementById('m-cell-warning');
+    if (warnCell) warnCell.classList.toggle('state-warning', m.warning > 0 && m.critical === 0);
+    const healthyCell = document.getElementById('m-cell-healthy');
+    if (healthyCell) healthyCell.classList.toggle('state-healthy', m.healthy > 0 && m.critical === 0);
+  },
+
+  syncActiveTabs(sectionId) {
+    document.querySelectorAll('.nav-tab').forEach(btn => {
+      if (btn.getAttribute('data-section') === sectionId) btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+    document.querySelectorAll('.section-view').forEach(view => {
+      if (view.id === `section-${sectionId}`) view.classList.add('active');
+      else view.classList.remove('active');
+    });
+  },
+
+  hydrateStatusFilterChips(items) {
+    const container = document.getElementById('filter-status-container');
+    if (!container) return;
+    const statuses = ['all', ...new Set(items.map(i => i.status))];
+    
+    const fragment = document.createDocumentFragment();
+    statuses.forEach(status => {
+      const chip = document.createElement('button');
+      chip.className = `filter-chip ${AppState.filters.status === status ? 'active' : ''}`;
+      chip.setAttribute('data-filter', status);
+      chip.textContent = status.toUpperCase();
+      fragment.appendChild(chip);
+    });
+    
+    container.innerHTML = '';
+    container.appendChild(fragment);
+  },
+
+  getFilteredAndSortedItems() {
+    let result = [...AppState.items];
+
+    if (AppState.filters.search) {
+      const q = AppState.filters.search.toLowerCase();
+      result = result.filter(i => i.brand.toLowerCase().includes(q) || i.role.toLowerCase().includes(q));
+    }
+
+    if (AppState.filters.severity !== 'all') {
+      // Map chip filter values to temperature field set by ConflictEngine.enrich
+      const sevToTemp = { 'critical': 'critical', 'high': 'hot', 'medium': 'warm', 'low': 'dormant', 'healthy': 'stable' };
+      const targetTemp = sevToTemp[AppState.filters.severity] || AppState.filters.severity;
+      result = result.filter(i => (i.temperature || getHighestSeverity(i.blockers)) === targetTemp);
+    }
+
+    if (AppState.filters.status !== 'all') {
+      result = result.filter(i => i.status === AppState.filters.status);
+    }
+
+    const col = AppState.sorting.column;
+    const asc = AppState.sorting.asc ? 1 : -1;
+    result.sort((a, b) => {
+      if (col === 'severity') return (getSeverityWeight(getHighestSeverity(a.blockers)) - getSeverityWeight(getHighestSeverity(b.blockers))) * asc;
+      if (col === 'score' || col === 'match') return (a[col] - b[col]) * asc;
+      if (col === 'brand' || col === 'role' || col === 'status' || col === 'priority' || col === 'nad' || col === 'entropy') {
+        return a[col].localeCompare(b[col]) * asc;
+      }
+      return 0;
+    });
+
+    return result;
+  },
+
+  renderPipelineTable() {
+    const tbody = document.getElementById('tbody-pipeline');
+    const emptyState = document.getElementById('empty-pipeline');
+    if (!tbody) return;
+
+    const dataset = this.getFilteredAndSortedItems();
+    if (dataset.length === 0) {
+      tbody.innerHTML = '';
+      emptyState.style.display = 'flex';
+      return;
+    }
+    emptyState.style.display = 'none';
+
+    const escapeHtml = (str) => {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    };
+
+    const fragment = document.createDocumentFragment();
+    
+    dataset.forEach(v => {
+      const highestSev = getHighestSeverity(v.blockers);
+      const rowClass = `row-${highestSev} row-score-${v.score === 0 ? 'zero' : 'normal'}`;
+      const nadClass = getNADClass(v.nad);
+
+      const tr = document.createElement('tr');
+      tr.className = rowClass;
+      tr.setAttribute('data-id', v.id);
+
+      tr.innerHTML = `
+        <td class="col-severity">
+          <div class="severity-dot ${escapeHtml(highestSev)}"></div>
+        </td>
+        <td class="col-brand mono" style="font-weight:600;">${escapeHtml(v.brand)}</td>
+        <td class="col-role" title="${escapeHtml(v.role)}">${escapeHtml(v.role)}</td>
+        <td class="col-status">
+          <span class="status-badge ${escapeHtml(v.status)}">${escapeHtml(v.status)}</span>
+        </td>
+        <td class="col-score">
+          <span class="score-value ${getScoreClass(v.score)}">${v.score}</span>
+        </td>
+        <td class="col-priority">
+          <span class="priority-badge ${escapeHtml(v.priority.toLowerCase())}">${escapeHtml(v.priority)}</span>
+        </td>
+        <td class="col-match">
+          <span class="match-display ${getMatchClass(v.match)}">${v.match}%</span>
+        </td>
+        <td class="col-scope text-neutral">${escapeHtml(v.scope)}</td>
+        <td class="col-nad">
+          <span class="nad-display ${nadClass}">${escapeHtml(v.nad || 'N/A')}</span>
+        </td>
+        <td class="col-blockers">
+          <span class="blocker-count ${v.blockers.length > 0 ? 'bc-' + highestSev : 'bc-none'}">${v.blockers.length}</span>
+        </td>
+        <td class="col-entropy">
+          <span class="entropy-badge ${escapeHtml(v.entropy)}">${escapeHtml(v.entropy)}</span>
+        </td>
+        <td class="col-actions">
+          <input type="checkbox" class="row-batch-checkbox" data-id="${escapeHtml(v.id)}" ${AppState.batchSelectedIds.has(v.id) ? 'checked' : ''} style="margin-right: var(--space-3); vertical-align:middle;">
+          <button class="btn btn-icon btn-inspect-row" data-id="${escapeHtml(v.id)}">&rarr;</button>
+        </td>
+      `;
+      
+      fragment.appendChild(tr);
+    });
+
+    tbody.innerHTML = '';
+    tbody.appendChild(fragment);
+  },
+
+  renderResolutionQueue() {
+    const container = document.getElementById('list-resolution');
+    const emptyState = document.getElementById('empty-resolution');
+    if (!container) return;
+
+    const actionQueue = ConflictEngine.getActionQueue(AppState.items);
+    if (actionQueue.length === 0) {
+      container.innerHTML = '';
+      if (emptyState) emptyState.style.display = 'flex';
+      return;
+    }
+    if (emptyState) emptyState.style.display = 'none';
+
+    const escapeHtml = (str) => {
+      const div = document.createElement('div');
+      div.textContent = String(str || '');
+      return div.innerHTML;
+    };
+
+    const tierLabel = { 1: 'CRÍTICO', 2: 'ALTO', 3: 'MEDIO', 4: 'RADAR' };
+    const tierClass = { 1: 'critical', 2: 'high', 3: 'medium', 4: 'low' };
+
+    const fragment = document.createDocumentFragment();
+
+    actionQueue.forEach(v => {
+      const topTier = Math.min(...v.conflicts.map(c => c.tier));
+      const tempClass = tierClass[topTier] || 'low';
+
+      const conflictsHtml = v.conflicts.map(c => `
+        <div class="conflict-row tier-${c.tier}">
+          <div class="conflict-row-header">
+            <span class="conflict-tier-badge t${c.tier}">${tierLabel[c.tier] || 'RADAR'}</span>
+            <span class="conflict-label">${escapeHtml(c.label)}</span>
+          </div>
+          <div class="conflict-detail">${escapeHtml(c.detail)}</div>
+          <div class="conflict-actions">
+            ${c.action === 'copy_followup' ? `<button class="btn-conflict-action" data-action="copy_followup" data-id="${escapeHtml(v.id)}" data-brand="${escapeHtml(v.brand)}" data-role="${escapeHtml(v.role)}">📋 ${escapeHtml(c.actionLabel)}</button>` : ''}
+            ${c.action === 'set_nad' ? `<button class="btn-conflict-action" data-action="set_nad" data-id="${escapeHtml(v.id)}" data-brand="${escapeHtml(v.brand)}">📅 ${escapeHtml(c.actionLabel)}</button>` : ''}
+            ${c.action === 'depurar' ? `<button class="btn-conflict-action btn-depurar" data-action="depurar" data-id="${escapeHtml(v.id)}" data-brand="${escapeHtml(v.brand)}">🗄 ${escapeHtml(c.actionLabel)}</button>` : ''}
+            ${c.action === 'open_notion' ? `<button class="btn-conflict-action" data-action="open_notion" data-url="${escapeHtml(v.url || '#')}">↗ ${escapeHtml(c.actionLabel)}</button>` : ''}
+          </div>
+        </div>
+      `).join('');
+
+      const card = document.createElement('div');
+      card.className = `conflict-card temp-${tempClass}`;
+      card.innerHTML = `
+        <div class="conflict-card-header">
+          <div class="conflict-card-title">
+            <span class="temp-indicator ${tempClass}"></span>
+            <strong>${escapeHtml(v.brand)}</strong>
+            <span class="conflict-card-role">${escapeHtml(v.role)}</span>
+          </div>
+          <div class="conflict-card-meta">
+            <span class="ccm-tag">${escapeHtml(v.status)}</span>
+            <span class="ccm-tag">${escapeHtml(v.priority)}</span>
+            <span class="ccm-tag score-${getScoreClass(v.score)}">${v.score}pts</span>
+            ${v.nad ? `<span class="ccm-tag nad-${getNADClass(v.nad)}">NAD ${escapeHtml(v.nad)}</span>` : '<span class="ccm-tag nad-overdue">SIN NAD</span>'}
+          </div>
+        </div>
+        <div class="conflict-list">${conflictsHtml}</div>
+      `;
+      fragment.appendChild(card);
+    });
+
+    container.innerHTML = '';
+    container.appendChild(fragment);
+  },
+
+  renderCVQueue() {
+    const container = document.getElementById('grid-cv-queue');
+    const emptyState = document.getElementById('empty-cv-queue');
+    if (!container) return;
+
+    const cvItems = AppState.items.filter(i => i.status === 'ready' || i.status === 'postulado' || i.status === 'enproceso');
+    if (cvItems.length === 0) {
+      container.innerHTML = '';
+      emptyState.style.display = 'flex';
+      return;
+    }
+    emptyState.style.display = 'none';
+
+    const escapeHtml = (str) => {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    };
+
+    const fragment = document.createDocumentFragment();
+
+    cvItems.forEach(v => {
+      const card = document.createElement('div');
+      card.className = 'cv-card btn-inspect-row';
+      card.setAttribute('data-id', v.id);
+      
+      card.innerHTML = `
+        <div class="cv-card-header">
+          <div>
+            <div class="cv-card-brand mono">${escapeHtml(v.brand)}</div>
+            <div class="cv-card-role">${escapeHtml(v.role)}</div>
+          </div>
+          <div class="cv-score-ring">
+            <span class="cv-score-val">${v.match}%</span>
+            <span class="cv-score-label">Match</span>
+          </div>
+        </div>
+        <div class="cv-meta-row">
+          <div class="cv-meta-item">
+            <span class="cv-meta-label">Priority</span>
+            <span class="cv-meta-val text-warning">${escapeHtml(v.priority)}</span>
+          </div>
+          <div class="cv-meta-item">
+            <span class="cv-meta-label">Scope</span>
+            <span class="cv-meta-val">${escapeHtml(v.scope)}</span>
+          </div>
+          <div class="cv-meta-item">
+            <span class="cv-meta-label">Target NAD</span>
+            <span class="cv-meta-val mono">${escapeHtml(v.nad || 'N/A')}</span>
+          </div>
+        </div>
+        <div class="cv-card-actions">
+          <button class="btn btn-sm btn-primary btn-open-notion-cv" data-url="${escapeHtml(v.url)}">Notion Ficha</button>
+          <span class="status-badge ${escapeHtml(v.status)}" style="margin-left:auto;">${escapeHtml(v.status)}</span>
+        </div>
+      `;
+      
+      fragment.appendChild(card);
+    });
+
+    container.innerHTML = '';
+    container.appendChild(fragment);
+  },
+
+  updateSectionCounts() {
+    const safeSetText = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
+
+    safeSetText('count-pipeline', this.getFilteredAndSortedItems().length);
+    safeSetText('count-resolution', AppState.items.filter(i => i.status === 'blocked').length);
+    safeSetText('count-cv-queue', AppState.items.filter(i => i.status === 'ready' || i.status === 'postulado' || i.status === 'enproceso').length);
+    safeSetText('count-log', Logger.entries.length);
+  },
+
+  appendLogEntry(e) {
+    const container = document.getElementById('container-log-entries');
+    if (!container) return;
+    
+    const escapeHtml = (str) => {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    };
+
+    const item = document.createElement('div');
+    item.className = `log-entry log-${e.action.toLowerCase().includes('critical') ? 'critical' : e.action.toLowerCase().includes('ok') ? 'action' : 'command'}`;
+    item.innerHTML = `
+      <span class="log-entry-timestamp">${escapeHtml(e.timestamp)}</span>
+      <span class="log-entry-content">
+        <div class="log-entry-action">[${escapeHtml(e.action)}] <span class="text-neutral" style="font-family:var(--font-mono); font-size:11px;">${escapeHtml(e.context)}</span></div>
+        <div class="log-entry-detail">${escapeHtml(e.detail)}</div>
+      </span>
+    `;
+    container.insertBefore(item, container.firstChild);
+    this.updateSectionCounts();
+  },
+
+  renderBatchToast(count) {
+    const toast = document.getElementById('batch-toast');
+    const countDisplay = document.getElementById('batch-selected-count');
+    if (!toast) return;
+    
+    if (count > 0) {
+      if (countDisplay) countDisplay.textContent = count;
+      toast.classList.add('active');
+    } else {
+      toast.classList.remove('active');
+    }
+  },
+
+  hydrateDrawer(id) {
+    const emptyShell = document.getElementById('drawer-empty-state');
+    const activeShell = document.getElementById('drawer-active-content');
+    const drawerPanel = document.getElementById('drawer-panel');
+
+    if (!id) {
+      emptyShell.style.display = 'flex';
+      activeShell.style.display = 'none';
+      drawerPanel.classList.remove('drawer-open');
+      return;
+    }
+    emptyShell.style.display = 'none';
+    activeShell.style.display = 'flex';
+    drawerPanel.classList.add('drawer-open');
+
+    const v = AppState.items.find(item => item.id === id);
+    if (!v) {
+      activeShell.innerHTML = '<div class="empty-state"><div class="empty-state-title">Entidad no encontrada</div></div>';
+      return;
+    }
+
+    const escapeHtml = (str) => {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    };
+
+    const blockersHtml = v.blockers.length === 0 
+      ? '<div class="t-xs text-muted">No se registran bloqueadores activos.</div>' 
+      : v.blockers.map(b => `
+          <div class="drawer-blocker-box">
+            <div class="drawer-blocker-header">
+              <span class="resolution-badge ${escapeHtml(b.severity)}">${escapeHtml(b.severity)}</span>
+              <span class="drawer-blocker-title">${escapeHtml(b.type)}</span>
+            </div>
+            <p class="drawer-blocker-desc">${escapeHtml(b.desc)}</p>
+          </div>
+        `).join('');
+
+    const logsHtml = v.historical_logs.map(hl => `
+      <div class="drawer-log-item">
+        <div class="drawer-log-meta">
+          <span>${escapeHtml(hl.action)}</span>
+          <span>${escapeHtml(hl.timestamp)}</span>
+        </div>
+        <div class="drawer-log-text">${escapeHtml(hl.detail)}</div>
+      </div>
+    `).join('');
+
+    const resolveButton = v.status === 'blocked' 
+      ? `<button class="btn btn-sm btn-healthy btn-drawer-action-resolve" data-id="${escapeHtml(v.id)}">Resolver</button>` 
+      : '';
+
+    activeShell.innerHTML = `
+      <div class="drawer-header">
+        <div class="drawer-title-block">
+          <span class="drawer-title">${escapeHtml(v.brand)}</span>
+          <span class="drawer-subtitle">${escapeHtml(v.role)}</span>
+        </div>
+        <button class="btn btn-icon" id="btn-close-drawer">&times;</button>
+      </div>
+      <div class="drawer-body">
+        <div class="drawer-section">
+          <span class="drawer-section-title">Estatus Operativo Core</span>
+          <div class="drawer-meta-grid">
+            <div class="drawer-meta-cell">
+              <span class="drawer-meta-label">Pipeline Status</span>
+              <span class="status-badge ${escapeHtml(v.status)}">${escapeHtml(v.status)}</span>
+            </div>
+            <div class="drawer-meta-cell">
+              <span class="drawer-meta-label">Prioridad Triage</span>
+              <span class="priority-badge ${escapeHtml(v.priority.toLowerCase())}">${escapeHtml(v.priority)}</span>
+            </div>
+            <div class="drawer-meta-cell">
+              <span class="drawer-meta-label">Technical Score</span>
+              <span class="score-value ${getScoreClass(v.score)}" style="text-align:left; font-size:var(--text-base);">${v.score}/100</span>
+            </div>
+            <div class="drawer-meta-cell">
+              <span class="drawer-meta-label">Target NAD</span>
+              <span class="drawer-meta-value mono">${escapeHtml(v.nad || 'SIN ASIGNAR')}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="drawer-section">
+          <span class="drawer-section-title">Fricciones y Bloqueos (${v.blockers.length})</span>
+          ${blockersHtml}
+        </div>
+
+        <div class="drawer-section">
+          <span class="drawer-section-title">Historial de Transiciones</span>
+          <div class="drawer-log-list">
+            ${logsHtml}
+          </div>
+        </div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn btn-sm btn-primary btn-open-notion-drawer" data-url="${escapeHtml(v.url)}" style="flex:1;">Abrir Payload Notion</button>
+        ${resolveButton}
+      </div>
+    `;
+  }
+};
+
+/* ── TOAST UTILITY ──────────────────────────────────────── */
+function showToast(msg, duration = 3000) {
+  let toast = document.getElementById('jhs-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'jhs-toast';
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--accent-primary,#00ff9d);color:#000;padding:10px 18px;border-radius:6px;font-size:12px;font-family:monospace;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:opacity .3s;pointer-events:none;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { toast.style.opacity = '0'; }, duration);
+}
+
+/* ── RUNTIME CONTROLLER AND DOM INTERFACES ───────────────── */
+function setupEventListeners() {
+  // Navigation Routing Switch Interface
+  document.querySelectorAll('.nav-tabs').forEach(container => {
+    container.addEventListener('click', e => {
+      const tab = e.target.closest('.nav-tab');
+      if (!tab) return;
+      const targetSection = tab.getAttribute('data-section');
+      AppState.setSection(targetSection);
+    });
+  });
+
+  // Table Sorters Interface
+  const tableHeader = document.querySelector('.pipeline-table thead');
+  if (tableHeader) {
+    tableHeader.addEventListener('click', e => {
+      const th = e.target.closest('th');
+      if (!th || !th.hasAttribute('data-sort')) return;
+      const col = th.getAttribute('data-sort');
+      
+      if (AppState.sorting.column === col) {
+        AppState.sorting.asc = !AppState.sorting.asc;
+      } else {
+        AppState.sorting.column = col;
+        AppState.sorting.asc = true;
+      }
+
+      document.querySelectorAll('.pipeline-table th').forEach(el => el.classList.remove('sorted'));
+      th.classList.add('sorted');
+      const indicator = th.querySelector('.th-sort-indicator');
+      if (indicator) {
+        indicator.textContent = AppState.sorting.asc ? '▲' : '▼';
+      }
+
+      Renderer.renderPipelineTable();
+      Renderer.updateSectionCounts();
+    });
+  }
+
+  // Conflict Resolution Action Dispatcher
+  document.addEventListener('click', async e => {
+    const btn = e.target.closest('.btn-conflict-action');
+    if (!btn) return;
+    e.stopPropagation();
+    const action = btn.getAttribute('data-action');
+    const id     = btn.getAttribute('data-id');
+    const brand  = btn.getAttribute('data-brand');
+    const role   = btn.getAttribute('data-role');
+    const url    = btn.getAttribute('data-url');
+
+    if (action === 'copy_followup') {
+      const v = AppState.items.find(x => x.id === id);
+      if (v) ConflictAPI.copyFollowup(v);
+
+    } else if (action === 'set_nad') {
+      const dateStr = prompt(`Nueva NAD para ${brand} (YYYY-MM-DD):`, new Date(Date.now() + 86400000*3).toISOString().split('T')[0]);
+      if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) { showToast('Fecha inválida'); return; }
+      btn.disabled = true;
+      const r = await ConflictAPI.patchNAD(id, dateStr);
+      if (r.ok) {
+        const v = AppState.items.find(x => x.id === id);
+        if (v) { v.nad = dateStr; v.conflicts = ConflictEngine.detectBlockers(v); v.temperature = ConflictEngine.temperature(v.conflicts); }
+        showToast(`NAD actualizada → ${dateStr} (${brand})`);
+        Logger.log('SYS_OK', `NAD → ${dateStr} para ${brand}`, 'ConflictAction');
+        Renderer.renderResolutionQueue();
+        Renderer.renderPipelineTable();
+      } else {
+        showToast(`Error al actualizar NAD: ${r.error}`);
+      }
+      btn.disabled = false;
+
+    } else if (action === 'depurar') {
+      if (!confirm(`¿Archivar "${brand}"? Esto marcará la vacante como Expirada en Notion.`)) return;
+      btn.disabled = true;
+      const r = await ConflictAPI.depurar(id);
+      if (r.ok) {
+        const v = AppState.items.find(x => x.id === id);
+        if (v) { v.status = 'expired'; v.conflicts = []; v.temperature = 'dormant'; }
+        showToast(`Archivada: ${brand}`);
+        Logger.log('SYS_OK', `Depurada: ${brand}`, 'ConflictAction');
+        Renderer.renderResolutionQueue();
+        Renderer.renderPipelineTable();
+        AppState.computeGlobalMetrics();
+      } else {
+        showToast(`Error al archivar: ${r.error}`);
+      }
+      btn.disabled = false;
+
+    } else if (action === 'open_notion') {
+      if (url && url !== '#') window.open(url, '_blank');
+      else showToast('Sin URL disponible para esta vacante');
+    }
+  });
+
+  // Row click — toggle expanded content
+  const tbodyForRowClick = document.getElementById('tbody-pipeline');
+  if (tbodyForRowClick) {
+    tbodyForRowClick.addEventListener('click', e => {
+      // Don't expand if clicking action buttons or checkboxes
+      if (e.target.closest('.btn-inspect-row, .row-batch-checkbox')) return;
+      const row = e.target.closest('tr');
+      if (!row) return;
+      const id = row.getAttribute('data-id');
+      if (!id) return;
+      const v = AppState.items.find(item => item.id === id);
+      if (!v) return;
+
+      // Remove expanded state from other rows
+      tbodyForRowClick.querySelectorAll('tr.row-expanded').forEach(r => {
+        if (r !== row) {
+          r.classList.remove('row-expanded');
+          const existing = r.nextElementSibling;
+          if (existing && existing.classList.contains('tr-expanded-detail')) existing.remove();
+        }
+      });
+
+      const isExpanded = row.classList.toggle('row-expanded');
+      const nextRow = row.nextElementSibling;
+      if (nextRow && nextRow.classList.contains('tr-expanded-detail')) {
+        nextRow.remove();
+      } else if (isExpanded) {
+        const detailRow = document.createElement('tr');
+        detailRow.className = 'tr-expanded-detail';
+        const colCount = row.cells.length;
+        const detailTd = document.createElement('td');
+        detailTd.colSpan = colCount;
+        detailTd.style.cssText = 'padding:0; background: var(--bg-surface-02); border-top: 1px solid var(--border-default);';
+
+        const escapeHtml = (str) => {
+          const div = document.createElement('div');
+          div.textContent = String(str || '');
+          return div.innerHTML;
+        };
+
+        const blockersHtml = v.blockers.length === 0
+          ? '<span style="color:var(--color-healthy); font-size:12px;">✓ Sin bloqueadores activos</span>'
+          : v.blockers.map(b => `<div style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:4px;background:var(--color-${escapeHtml(b.severity)}-bg);border:1px solid var(--color-${escapeHtml(b.severity)}-bdr);font-size:11px;color:var(--color-${escapeHtml(b.severity)});margin-right:6px;margin-bottom:4px;"><strong>[${escapeHtml(b.severity.toUpperCase())}]</strong> ${escapeHtml(b.type)} — ${escapeHtml(b.desc)}</div>`).join('');
+
+        detailTd.innerHTML = `
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;padding:16px 20px;">
+            <div style="padding-right:20px;border-right:1px solid var(--border-default);">
+              <div style="font-size:11px;font-weight:600;color:var(--text-tertiary);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;">Descripción del Rol</div>
+              <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;white-space:normal;">${escapeHtml(v.jd || 'Sin descripción registrada en el sistema.')}</div>
+            </div>
+            <div style="padding:0 20px;border-right:1px solid var(--border-default);">
+              <div style="font-size:11px;font-weight:600;color:var(--text-tertiary);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;">Métricas Operativas</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;">
+                <div><span style="color:var(--text-tertiary);">Scope:</span> <strong>${escapeHtml(v.scope)}</strong></div>
+                <div><span style="color:var(--text-tertiary);">Match:</span> <strong>${v.match}%</strong></div>
+                <div><span style="color:var(--text-tertiary);">Entropy:</span> <strong>${escapeHtml(v.entropy)}</strong></div>
+                <div><span style="color:var(--text-tertiary);">Contacto:</span> <strong>${escapeHtml(v.contact || 'N/A')}</strong></div>
+                <div><span style="color:var(--text-tertiary);">Last Touch:</span> <strong class="mono">${escapeHtml(v.lastTouch || 'N/A')}</strong></div>
+                <div><span style="color:var(--text-tertiary);">Last Seen:</span> <strong class="mono">${escapeHtml(v.lastSeen || 'N/A')}</strong></div>
+              </div>
+            </div>
+            <div style="padding-left:20px;">
+              <div style="font-size:11px;font-weight:600;color:var(--text-tertiary);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;">Fricciones Activas (${v.blockers.length})</div>
+              <div style="white-space:normal;">${blockersHtml}</div>
+            </div>
+          </div>
+        `;
+        detailRow.appendChild(detailTd);
+        row.insertAdjacentElement('afterend', detailRow);
+      }
+    });
+  }
+
+  // Row inspection injection hooks — drawer button (→)
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.btn-inspect-row');
+    if (btn) {
+      e.stopPropagation();
+      const id = btn.getAttribute('data-id');
+      AppState.activeDrawerId = id;
+      Renderer.hydrateDrawer(id);
+    }
+
+    // Drawer closing handling
+    if (e.target.closest('#btn-close-drawer')) {
+      AppState.activeDrawerId = null;
+      Renderer.hydrateDrawer(null);
+    }
+
+    // Direct resolution hook inside card or drawer viewports
+    const resolveBtn = e.target.closest('.btn-resolve-blocker, .btn-drawer-action-resolve');
+    if (resolveBtn) {
+      const id = resolveBtn.getAttribute('data-id');
+      executeResolutionLifecycle(id);
+    }
+
+    // Safe external URL navigation
+    const notionBtn = e.target.closest('.btn-open-notion, .btn-open-notion-cv, .btn-open-notion-drawer');
+    if (notionBtn) {
+      e.stopPropagation();
+      const url = notionBtn.getAttribute('data-url');
+      if (url && url !== '#') {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    }
+  });
+
+  // Inline table checkboxes matrix control logic
+  const tbodyPipeline = document.getElementById('tbody-pipeline');
+  if (tbodyPipeline) {
+    tbodyPipeline.addEventListener('change', e => {
+      const cb = e.target.closest('.row-batch-checkbox');
+      if (cb) {
+        AppState.toggleBatchSelection(cb.getAttribute('data-id'));
+      }
+    });
+  }
+
+  // Real-time text filter interfaces
+  const searchPipeline = document.getElementById('search-pipeline');
+  if (searchPipeline) {
+    searchPipeline.addEventListener('input', e => {
+      AppState.filters.search = e.target.value;
+      Renderer.renderPipelineTable();
+      Renderer.updateSectionCounts();
+    });
+  }
+
+  const searchResolution = document.getElementById('search-resolution');
+  if (searchResolution) {
+    searchResolution.addEventListener('input', e => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('.resolution-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(q) ? 'flex' : 'none';
+      });
+    });
+  }
+
+  const searchCV = document.getElementById('search-cv');
+  if (searchCV) {
+    searchCV.addEventListener('input', e => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('.cv-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(q) ? 'flex' : 'none';
+      });
+    });
+  }
+
+  // Filtering matrices interface mappings
+  const filterSeverityContainer = document.getElementById('filter-severity-container');
+  if (filterSeverityContainer) {
+    filterSeverityContainer.addEventListener('click', e => {
+      const chip = e.target.closest('.filter-chip');
+      if (!chip) return;
+      document.querySelectorAll('#filter-severity-container .filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      AppState.filters.severity = chip.getAttribute('data-filter');
+      Renderer.renderPipelineTable();
+      Renderer.updateSectionCounts();
+    });
+  }
+
+  const filterStatusContainer = document.getElementById('filter-status-container');
+  if (filterStatusContainer) {
+    filterStatusContainer.addEventListener('click', e => {
+      const chip = e.target.closest('.filter-chip');
+      if (!chip) return;
+      document.querySelectorAll('#filter-status-container .filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      AppState.filters.status = chip.getAttribute('data-filter');
+      Renderer.renderPipelineTable();
+      Renderer.updateSectionCounts();
+    });
+  }
+
+  // Action components triggers
+  const btnSyncNotion = document.getElementById('btn-sync-notion');
+  if (btnSyncNotion) {
+    btnSyncNotion.addEventListener('click', async () => {
+      btnSyncNotion.textContent = "Sincronizando...";
+      btnSyncNotion.disabled = true;
+      await AppState.initialize();
+      btnSyncNotion.textContent = "Sincronizar con Notion";
+      btnSyncNotion.disabled = false;
+    });
+  }
+
+  const btnClearLogs = document.getElementById('btn-clear-logs');
+  if (btnClearLogs) {
+    btnClearLogs.addEventListener('click', () => {
+      Logger.entries = [];
+      const container = document.getElementById('container-log-entries');
+      if (container) container.innerHTML = '';
+      Renderer.updateSectionCounts();
+    });
+  }
+
+  // Batch system execution bindings
+  const batchActionClear = document.getElementById('batch-action-clear');
+  if (batchActionClear) {
+    batchActionClear.addEventListener('click', () => AppState.clearBatchSelection());
+  }
+  
+  const batchActionReady = document.getElementById('batch-action-ready');
+  if (batchActionReady) {
+    batchActionReady.addEventListener('click', async () => {
+      const ids = Array.from(AppState.batchSelectedIds);
+      await AppState.repository.updateStatusBatch(ids, 'ready');
+      AppState.clearBatchSelection();
+      AppState.computeGlobalMetrics();
+      Renderer.renderAll();
+    });
+  }
+
+  const batchActionApply = document.getElementById('batch-action-apply');
+  if (batchActionApply) {
+    batchActionApply.addEventListener('click', async () => {
+      const ids = Array.from(AppState.batchSelectedIds);
+      await AppState.repository.updateStatusBatch(ids, 'postulado');
+      AppState.clearBatchSelection();
+      AppState.computeGlobalMetrics();
+      Renderer.renderAll();
+    });
+  }
+
+  // Theme toggle
+  const btnThemeToggle = document.getElementById('btn-theme-toggle');
+  if (btnThemeToggle) {
+    btnThemeToggle.addEventListener('click', () => {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      btnThemeToggle.textContent = next === 'dark' ? '☽ Dark' : '☀ Light';
+    });
+  }
+}
+
+async function executeResolutionLifecycle(id) {
+  const target = AppState.items.find(item => item.id === id);
+  if (!target) return;
+  
+  Logger.log("SYS_COMMAND", `Fricciones resueltas para ${target.brand}. Re-entrando al pipeline operativo.`, "Lifecycle.Resolve");
+  target.status = "ready";
+  target.blockers = [];
+  target.historical_logs.unshift({
+    timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16),
+    action: "RESOLUTION_QUEUE",
+    detail: "Fricciones liberadas. Estatus transicionado a READY"
+  });
+
+  if (AppState.activeDrawerId === id) Renderer.hydrateDrawer(id);
+  AppState.computeGlobalMetrics();
+  Renderer.renderAll();
+}
+
+/* ── STRUCTURAL UTILITY FUNCTIONS ───────────────────────── */
+function getHighestSeverity(blockers) {
+  if (!blockers || blockers.length === 0) return 'healthy';
+  if (blockers.some(b => b.severity === 'critical')) return 'critical';
+  if (blockers.some(b => b.severity === 'high')) return 'high';
+  if (blockers.some(b => b.severity === 'medium')) return 'medium';
+  return 'low';
+}
+
+function getSeverityWeight(sev) {
+  const weights = { 'critical': 4, 'high': 3, 'medium': 2, 'low': 1, 'healthy': 0 };
+  return weights[sev] || 0;
+}
+
+function getScoreClass(score) {
+  if (score >= 85) return 'score-high';
+  if (score >= 60) return 'score-mid';
+  if (score > 0) return 'score-low';
+  return 'score-zero';
+}
+
+function getMatchClass(match) {
+  if (match >= 90) return 'match-high';
+  if (match >= 75) return 'match-mid';
+  return 'match-low';
+}
+
+function getNADClass(nadStr) {
+  if (!nadStr) return 'nad-normal';
+  const today = new Date().toISOString().split('T')[0];
+  if (nadStr < today) return 'nad-overdue';
+  if (nadStr === today) return 'nad-today';
+  
+  const targetDate = new Date(nadStr);
+  const diffTime = targetDate - new Date(today);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  if (diffDays <= 3) return 'nad-soon';
+  
+  return 'nad-normal';
+}
+
+/* ── DOM HYDRATION LIFE-CYCLE CORE START ────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  setupEventListeners();
+  AppState.initialize();
+});
+</script>
+
+</body>
+</html>

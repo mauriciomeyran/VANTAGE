@@ -1,0 +1,587 @@
+{
+  "consolidated_results": [
+    {
+      "id": "OCC-21097362",
+      "title": "Senior Visual Merchandising - Sector fashion retail",
+      "brand": "PRADA SA DE CV",
+      "holding": null,
+      "location": {
+        "city": "Ciudad de México",
+        "borough": null,
+        "state": "CDMX",
+        "country": "MX"
+      },
+      "salary": {
+        "min": 26000,
+        "max": 30000,
+        "currency": "MXN",
+        "period": "monthly",
+        "includes_commissions": false
+      },
+      "contract_type": "Tiempo completo",
+      "modality": "Presencial",
+      "seniority": "Senior",
+      "apply_url": "https://www.occ.com.mx/empleo/oferta/21097362-senior-visual-merchandising-sector-fashion-retail",
+      "posted_date": null,
+      "posted_date_relative": "Hace 1 mes",
+      "active": true,
+      "visual_signal": true,
+      "innovation_dna": true,
+      "source_name": "OCC",
+      "source_type": "aggregator",
+      "fetch_status": null,
+      "description_summary": "Desarrollo e implementación de estrategia nacional de VM por temporada/cápsula. Traducción de dirección creativa en manuales, guidelines y planogramas. Administración de checklist nacional VM, auditorías periódicas, análisis de indicadores comerciales y liderazgo de equipos VM en tiendas.",
+      "requirements": {
+        "education": "Licenciatura en Diseño de Moda, Diseño Visual, Arquitectura Comercial, Comunicación Visual o afín",
+        "experience_years_min": 3,
+        "languages": [],
+        "technical_skills": ["Illustrator", "Photoshop", "PowerPoint", "Excel"],
+        "other": ["Disponibilidad para viajes nacionales", "Flexibilidad horaria en fechas comerciales estratégicas"]
+      },
+      "jd": null,
+      "notes": null,
+      "source_layer": "L1"
+    },
+    {
+      "id": "OCC-21111366",
+      "title": "Coordinador Sr. de Visual Merchandising",
+      "brand": "Empresa confidencial",
+      "holding": null,
+      "location": {
+        "city": "Ciudad de México",
+        "borough": null,
+        "state": "CDMX",
+        "country": "MX"
+      },
+      "salary": {
+        "min": null,
+        "max": null,
+        "currency": "MXN",
+        "period": "monthly",
+        "includes_commissions": false,
+        "note": "Sueldo no mostrado por la empresa"
+      },
+      "contract_type": "No especificado",
+      "modality": "Presencial",
+      "seniority": "Senior Coordinator",
+      "apply_url": "https://www.occ.com.mx/empleos/de-visual-merchandising/en-ciudad-de-mexico/?jobid=21111366",
+      "posted_date": null,
+      "posted_date_relative": "Hace 1 mes",
+      "active": true,
+      "visual_signal": true,
+      "innovation_dna": true,
+      "source_name": "OCC",
+      "source_type": "aggregator",
+      "fetch_status": null,
+      "description_summary": "Liderazgo de ejecución de VM en tiendas asignadas. Implementación de aparadores, layouts y exhibiciones alineadas a tendencias y KPIs. Gestión y capacitación de equipos en punto de venta. Análisis de indicadores clave (venta por m², rotación, inventarios).",
+      "requirements": {
+        "education": "Licenciatura en Arquitectura, Diseño, Comunicación Visual o afín",
+        "experience_years_min": 6,
+        "experience_years_max": 8,
+        "languages": ["Inglés avanzado"],
+        "technical_skills": [],
+        "other": ["Alta disponibilidad para viajar"]
+      },
+      "jd": null,
+      "notes": null,
+      "source_layer": "L1"
+    },
+    {
+      "id": "OCC-21223176",
+      "title": "Responsable de Visual Merchandising y Ejecución en Tiendas",
+      "brand": "VINOS LA NAVAL SA DE CV",
+      "holding": null,
+      "location": {
+        "city": "Álvaro Obregón",
+        "borough": "Álvaro Obregón",
+        "state": "CDMX",
+        "country": "MX"
+      },
+      "salary": {
+        "min": 20000,
+        "max": 26000,
+        "currency": "MXN",
+        "period": "monthly",
+        "includes_commissions": false
+      },
+      "contract_type": "Tiempo completo",
+      "modality": "Presencial",
+      "seniority": "Coordinator/Specialist",
+      "apply_url": "https://www.occ.com.mx/empleos/de-visual-merchandising/en-ciudad-de-mexico/?jobid=21223176",
+      "posted_date": null,
+      "posted_date_relative": "Hace 2 días",
+      "active": true,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "source_name": "OCC",
+      "source_type": "aggregator",
+      "fetch_status": null,
+      "description_summary": "Diseño y ejecución de planogramas por categoría, tienda y temporada. Implementación de exhibiciones y promociones en piso de venta. Supervisión de imagen, orden y señalización. Análisis de resultados y propuesta de mejoras.",
+      "requirements": {
+        "education": "Universitario titulado",
+        "experience_years_min": 3,
+        "experience_years_max": 5,
+        "languages": [],
+        "technical_skills": ["Excel intermedio-avanzado"],
+        "other": ["Disponibilidad para trabajo en campo y traslados"]
+      },
+      "jd": null,
+      "notes": null,
+      "source_layer": "L1"
+    },
+    {
+      "id": "OCC-21188401",
+      "title": "Subgerente de Visual Merchandising NIKE Artz Pedregal CDMX",
+      "brand": "SERVICIOS DE CAPITAL HUMANO AXO",
+      "holding": null,
+      "location": {
+        "city": "Álvaro Obregón",
+        "borough": "Artz Pedregal",
+        "state": "CDMX",
+        "country": "MX"
+      },
+      "salary": {
+        "min": 13100,
+        "max": 18000,
+        "currency": "MXN",
+        "period": "monthly",
+        "includes_commissions": true
+      },
+      "contract_type": "Tiempo completo",
+      "modality": "Presencial",
+      "seniority": "Subgerente",
+      "apply_url": "https://www.occ.com.mx/empleo/oferta/21188401-subgerente-de-visual-merchandising-nike-artz-pedregal-cdmx",
+      "posted_date": null,
+      "posted_date_relative": "Hace 1 mes",
+      "active": true,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "source_name": "OCC",
+      "source_type": "aggregator",
+      "fetch_status": null,
+      "description_summary": "Liderazgo en tienda enfocado en imagen de marca, visual merchandising y análisis de KPIs. Gestión de equipos, cumplimiento de imagen de tienda Nike.",
+      "requirements": {
+        "education": "Preparatoria concluida o licenciatura trunca/terminada",
+        "experience_years_min": null,
+        "languages": [],
+        "technical_skills": [],
+        "other": ["Experiencia obligatoria en retail", "Manejo de KPIs", "Conocimiento de la marca Nike", "Vivir cerca del área de trabajo"]
+      },
+      "jd": null,
+      "notes": null,
+      "source_layer": "L1"
+    },
+    {
+      "id": "CT-18500D43304AC00661373E686DCF3405",
+      "title": "Coordinador de Visual Merchandising giro electrónica - inglés intermedio",
+      "brand": "Importante empresa del sector",
+      "holding": null,
+      "location": {
+        "city": "Miguel Hidalgo",
+        "borough": "Miguel Hidalgo",
+        "state": "CDMX",
+        "country": "MX"
+      },
+      "salary": {
+        "min": 32000,
+        "max": 32000,
+        "currency": "MXN",
+        "period": "monthly",
+        "includes_commissions": false
+      },
+      "contract_type": "Otro tipo de contrato",
+      "modality": "Presencial",
+      "seniority": "Coordinator",
+      "apply_url": "https://mx.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-coordinador-de-visual-merchandising-giro-electronica-ingles-intermedio-en-miguel-hidalgo-18500d43304ac00661373e686dcf3405",
+      "posted_date": null,
+      "posted_date_relative": "No especificado",
+      "active": true,
+      "visual_signal": true,
+      "innovation_dna": true,
+      "source_name": "Computrabajo",
+      "source_type": "aggregator",
+      "fetch_status": null,
+      "description_summary": "Planeación, diseño y ejecución de estrategias visuales y exhibiciones para puntos de venta de electrónica de consumo. Coordinación de producción de material POP y muebles. Control de presupuesto y pagos a proveedores.",
+      "requirements": {
+        "education": "Licenciatura en Mercadotecnia o Publicidad",
+        "experience_years_min": 3,
+        "languages": ["Inglés intermedio"],
+        "technical_skills": ["Excel intermedio", "Manejo de algún ERP"],
+        "other": ["Experiencia en electrónica de consumo"]
+      },
+      "jd": null,
+      "notes": null,
+      "source_layer": "L1"
+    },
+    {
+      "id": "CT-PETCO-CUAUHTEMOC-VM",
+      "title": "Líder visual merchandising",
+      "brand": "Petco",
+      "holding": null,
+      "location": {
+        "city": "Cuauhtémoc",
+        "borough": "Cuauhtémoc",
+        "state": "CDMX",
+        "country": "MX"
+      },
+      "salary": {
+        "min": 23000,
+        "max": 23000,
+        "currency": "MXN",
+        "period": "monthly",
+        "includes_commissions": true
+      },
+      "contract_type": "Contrato por tiempo indeterminado",
+      "modality": "Presencial",
+      "seniority": "Líder",
+      "apply_url": "https://mx.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-lider-visual-merchandising-en-cuauhtemoc-0b8b59df0dd49fef61373e686dcf3405",
+      "posted_date": "2026-06-21",
+      "posted_date_relative": "No especificado",
+      "active": true,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "source_name": "Computrabajo",
+      "source_type": "aggregator",
+      "fetch_status": "direct_apply",
+      "description_summary": "Garantizar la correcta ejecución operativa de planogramas y exhibiciones en tienda Petco. Trabajo 70% campo, 30% administrativo. Zona CDMX.",
+      "requirements": {
+        "education": "Licenciatura concluida o trunca en Mercadotecnia, Administración, Negocios, Comunicación, Diseño Industrial o afín",
+        "experience_years_min": 2,
+        "languages": [],
+        "technical_skills": [],
+        "other": ["Disponibilidad para viajar y trasladarse entre tiendas"]
+      },
+      "jd": "Líder visual merchandising\nEmpresa: Petco\nUbicación: Cuauhtémoc, Ciudad de México DF\nSalario: $23,000 MXN mensuales + comisiones. Contrato indeterminado, tiempo completo. Trabajo 70% en campo, 30% administrativo.\n\nObjetivo del puesto: Garantizar la correcta ejecución operativa de planogramas y exhibiciones en tienda.\n\nRequisitos del puesto:\nLicenciatura (concluida o trunca) en Mercadotecnia, Administración, Negocios, Comunicación, Diseño Industrial o afín.\nExperiencia mínima de 2 años en merchandising retail, planogramas y supervisión de punto de venta.\nDisponibilidad para viajar y trasladarse entre tiendas asignadas en CDMX.\n\nResponsabilidades:\nVisitas a tiendas para validar POGs (planogramas).\nAcomodo, actualización de planogramas y montaje de cabeceras, mobiliario y exhibiciones especiales.\nVerificación de inventario, flexeo y apoyo en aperturas de tiendas.\n\nPrestaciones: Sueldo base, prestaciones de ley (PL), seguro de gastos médicos mayores, seguro de vida, vales de despensa, caja de ahorro, descuentos en marcas Petco/Grupo Gigante.",
+      "notes": "ATS: Computrabajo. Fecha inferida: 2026-06-21. JD accesible completo. Enriched from Career Pages wrapper (job_id: 0B8B59DF0DD49FEF61373E686DCF3405).",
+      "source_layer": "L1_enriched_by_L2"
+    },
+    {
+      "id": "IND-83EA07ECBFF7897D",
+      "title": "Supervisor Visual Merchandising",
+      "brand": "ENCANTO MÉXICO (Mobica)",
+      "holding": null,
+      "location": {
+        "city": "Miguel Hidalgo",
+        "borough": "Miguel Hidalgo",
+        "state": "CDMX",
+        "country": "MX"
+      },
+      "salary": {
+        "min": 15000,
+        "max": 15000,
+        "currency": "MXN",
+        "period": "monthly",
+        "includes_commissions": false
+      },
+      "contract_type": "Tiempo completo",
+      "modality": "Presencial",
+      "seniority": "Supervisor",
+      "apply_url": "https://mx.indeed.com/viewjob?jk=83ea07ecbff7897d",
+      "posted_date": null,
+      "posted_date_relative": "No especificado",
+      "active": true,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "source_name": "Indeed",
+      "source_type": "aggregator",
+      "fetch_status": null,
+      "description_summary": "Supervisión y coordinación de exhibición de productos en sucursales Mobica. Diseño y adaptación de espacios comerciales. Liderazgo y capacitación de equipo de VM.",
+      "requirements": {
+        "education": "Carrera superior terminada o trunca en diseño, arquitectura o afín",
+        "experience_years_min": null,
+        "languages": [],
+        "technical_skills": [],
+        "other": ["Experiencia como supervisor/a o especialista en VM", "Conocimiento avanzado en tendencias de diseño interior y retail"]
+      },
+      "jd": null,
+      "notes": null,
+      "source_layer": "L1"
+    },
+    {
+      "id": "CT-B5B69750D286FC3561373E686DCF3405",
+      "title": "Supervisor Visual Merchandising",
+      "brand": "Multicont",
+      "holding": null,
+      "location": {
+        "city": "Cuauhtémoc",
+        "borough": null,
+        "state": "CDMX",
+        "country": "MX"
+      },
+      "salary": {
+        "min": 22000,
+        "max": 22000,
+        "currency": "MXN",
+        "period": "monthly",
+        "includes_commissions": false,
+        "breakdown": {
+          "base": 18374.48,
+          "vales": 1665,
+          "bono_desempeno": 4995,
+          "bono_transporte": 1110
+        }
+      },
+      "contract_type": "Tiempo indeterminado",
+      "modality": "Presencial",
+      "seniority": "Supervisor",
+      "apply_url": "https://mx.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-supervisor-visual-merchandising-cdmx-en-cuauhtemoc-b5b69750d286fc3561373e686dcf3405",
+      "posted_date": "2026-06-25",
+      "posted_date_relative": null,
+      "active": true,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "source_name": "Computrabajo",
+      "source_type": "career_page_via_aggregator",
+      "fetch_status": "direct_apply",
+      "description_summary": "Liderar y desarrollar al equipo de Visual Merchandising en tiendas departamentales y cuentas wholesale. Supervisar implementación de campañas, exhibiciones y lineamientos de marca. Analizar ventas y KPIs.",
+      "requirements": {
+        "education": "Educación media superior (Bachillerato General)",
+        "experience_years_min": 2,
+        "languages": [],
+        "technical_skills": [],
+        "other": ["Trabajo en campo y rutas", "Liderazgo de 8 a 12 Visual Merchandisers"]
+      },
+      "jd": "Supervisor Visual Merchandising\nEmpresa: Multicont\nUbicación: Cuauhtémoc, Ciudad de México DF\nSalario: $22,000.00 mensuales totales (Sueldo base: $18,374.48 + Vales: $1,665 + Bono desempeño: $4,995 + Bono transporte: $1,110)\n\nObjetivo del puesto\nLiderar y desarrollar al equipo de Visual Merchandising en tiendas departamentales y cuentas wholesale, asegurando la ejecución visual y comercial, el cumplimiento de campañas y lineamientos de marca.\n\nFunciones principales\nGestión de equipo: Coordinar y liderar de 8 a 12 Visual Merchandisers; elaborar rutas semanales y asegurar cobertura.\nEjecución operativa: Supervisar la implementación de campañas, exhibiciones y lineamientos de marca.\nAnálisis y reporte: Analizar ventas, desplazamiento de producto y KPIs; elaborar reportes administrativos y fotográficos.\nRelaciones comerciales: Negociar espacios adicionales y mantener relación con personal clave de tienda.\nDesarrollo: Capacitar al personal de nuevo ingreso y resolver incidencias operativas.\nProyectos: Coordinar aperturas de tiendas y proyectos especiales.\n\nRequisitos\nExperiencia: Mínima de 2 años como Supervisor de Visual Merchandising en retail, moda o industria textil.\nCondiciones adicionales: Contrato tiempo indeterminado, jornada completa, prestaciones de ley con cotización al 100% ante IMSS.",
+      "notes": "ATS: Computrabajo. Fecha inferida: 2026-06-25. JD accesible completo. Source: Career Pages wrapper.",
+      "source_layer": "L2"
+    },
+    {
+      "id": "LI-4427870811",
+      "title": "Coordinador de Presentación Visual",
+      "brand": "Scappino",
+      "holding": null,
+      "location": {
+        "city": "Benito Juárez",
+        "borough": null,
+        "state": "CDMX",
+        "country": "MX"
+      },
+      "salary": null,
+      "contract_type": "Full-time",
+      "modality": "Presencial",
+      "seniority": "Coordinator",
+      "apply_url": "https://www.linkedin.com/jobs/view/4427870811",
+      "posted_date": "2026-06-19",
+      "posted_date_relative": "1 week ago",
+      "active": true,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "source_name": "LinkedIn",
+      "source_type": "linkedin",
+      "fetch_status": "direct_apply",
+      "platform_signals": {
+        "on_site": true,
+        "full_time": true,
+        "easy_apply": false,
+        "applicants_count": "Over 100",
+        "responses_managed_off_linkedin": true
+      },
+      "description_summary": "Montaje de escaparates en tiendas de CDMX, Edo. Méx, Querétaro y Morelia. Ejecución de exhibición de producto bajo pautas de marca. Rotación de producto con análisis de inventario.",
+      "requirements": {
+        "education": null,
+        "experience_years_min": 2,
+        "experience_years_max": 3,
+        "languages": [],
+        "technical_skills": [],
+        "other": ["Conocimientos en colorización, simetría y balance para montajes de escaparates", "Disponibilidad de horario y para viajar"]
+      },
+      "jd": "Scappino, inspirado en el lujo italiano con más de 80 años de experiencia en el mercado minorista, se posiciona como líder en el sector moda para caballero a nivel nacional.\n\nBUSCAMOS: COORDINADOR DE PRESENTACION VISUAL\n\nRequisitos:\n- Experiencia comprobable de 2 a 3 años en el giro RETAIL, moda, accesorios y/o ropa (reciente).\n- Conocimientos en colorización, simetría y balance para montajes de escaparates.\n- Conocimiento de tendencias de moda actuales.\n- Disponibilidad de horario y para viajar.\n\nTus Retos serán:\n- Montaje de escaparates en tiendas de CDMX, Edo. Méx, Querétaro y Morelia.\n- Ejecución de exhibición de producto bajo pautas de la marca.\n- Análisis, comprensión y ejecución de archivos de montajes.\n- Trabajo colaborativo con Gerentes de Boutiques y capacitación de personal en tienda.\n- Rotación de producto basada en análisis de inventario y nuevas colecciones.\n- Generación de reportes fotográficos.\n\nBeneficios: Sueldo base y prestaciones de ley, seguro de vida, capacitación constante, contratación directa, descuentos en la marca.",
+      "notes": "JD accesible directamente desde LinkedIn. Fecha inferida: ~2026-06-19. Respuestas gestionadas fuera de LinkedIn.",
+      "source_layer": "L1"
+    }
+  ],
+
+  "reroute_candidates_history": [
+    {
+      "title": "Project Manager for Store Planning and Construction",
+      "brand": "Tiffany & Co. (Link-Worldwide)",
+      "platform": "JobLeads",
+      "salary_range": "$1,376,000 - $1,893,000 MXN anual",
+      "source_wrapper": "Gemini"
+    },
+    {
+      "title": "Retail Instore Visual Merchandiser",
+      "brand": "Puma México",
+      "platform": "FashionJobs",
+      "location": "Tlalpan, CDMX",
+      "source_wrapper": "Gemini"
+    },
+    {
+      "title": "Visual Merchandising Specialist | Mexico",
+      "brand": "Lululemon",
+      "url_detectada": "https://careers.lululemon.com/es_MX/careers/JobDetail/Visual-Merchandising-Specialist-Mexico/58164",
+      "wrapper_destino_sugerido": "linkedin",
+      "confidence": "high",
+      "motivo": "Vacante activa confirmada en LinkedIn (publicada 2026-06-09). Career page URL devuelve HTTP 404 (Page not found).",
+      "source_wrapper": "Career Pages"
+    },
+    {
+      "title": "Senior Visual Merchandising",
+      "brand": "Prada Mx",
+      "url_detectada": "https://www.simplyhired.mx/job/bg24XH2IcmgXKO2hBOqfjpDmFzPTioxqBQ1KAA-beVz4kDiXard-yA",
+      "wrapper_destino_sugerido": "linkedin",
+      "confidence": "medium",
+      "motivo": "Vacante expirada en SimplyHired. Publicación original en LinkedIn (2026-06-12). Revisar wrapper LinkedIn para estado actual.",
+      "source_wrapper": "Career Pages"
+    },
+    {
+      "title": "Visual Merchandising",
+      "brand": "Dolce & Gabbana",
+      "url_detectada": "https://jobs.dolcegabbana.com/job/Ciudad-de-M%C3%A9xico-Visual-Merchandising-CMX/1394680033/",
+      "wrapper_destino_sugerido": "linkedin",
+      "confidence": "high",
+      "motivo": "Vacante en career page oficial con estado Filled. Verificar en LinkedIn si se reabre o reemplaza.",
+      "source_wrapper": "Career Pages"
+    }
+  ],
+
+  "conflict_log": [
+    {
+      "key": "Petco | Líder visual merchandising | Cuauhtémoc | computrabajo",
+      "winner": "L1",
+      "loser": "L2",
+      "reason": "priority_rule — L1 (Aggregators, CT-PETCO-CUAUHTEMOC-VM) conservado como registro base. L2 (Career Pages, job_id 0B8B59DF0DD49FEF61373E686DCF3405) aporta posted_date, jd y notes no presentes en L1. Enriquecimiento parcial aplicado: posted_date, jd, notes y fetch_status tomados de L2. apply_url de L1 sobrescrito por URL canónica de L2 (más específica). source_name y source_type preservados de L1."
+    },
+    {
+      "key": "Multicont | Supervisor Visual Merchandising | Cuauhtémoc | computrabajo",
+      "winner": "L2",
+      "loser": "L1",
+      "reason": "duplicate — Gemini reporta 'Supervisor Visual Merchandising / Multicont / Cuauhtémoc / $22,000 MXN' sin apply_url ni job_id canónico. Career Pages wrapper provee registro completo con job_id, apply_url, posted_date, jd y fetch_status. L2 conservado como único registro. Registro Gemini descartado."
+    },
+    {
+      "key": "ENCANTO MÉXICO (Mobica) | Supervisor Visual Merchandising | Miguel Hidalgo",
+      "winner": "L1",
+      "loser": "L2",
+      "reason": "priority_rule — L1 (Indeed, IND-83EA07ECBFF7897D) tiene apply_url verificable y salary. Gemini reporta misma vacante ('Supervisor de Visual Merchandising / Encanto México / Miguel Hidalgo') sin URL ni salary. L1 conservado; Gemini descartado."
+    },
+    {
+      "key": "Petco | Líder visual merchandising | Cuauhtémoc | apply_url resolution",
+      "winner": "L2",
+      "loser": "L1",
+      "reason": "better_evidence — URL de Aggregators (CT-PETCO-CUAUHTEMOC-VM) es una query URL de búsqueda genérica. URL de Career Pages wrapper incluye job_id canónico (0B8B59DF0DD49FEF61373E686DCF3405). apply_url canónica de L2 adoptada para registro consolidado."
+    }
+  ],
+
+  "pipeline_metrics": {
+    "input_items": 22,
+    "output_items": 9,
+    "duplicates_removed": 7,
+    "reroute_total": 5,
+    "warnings_total": 8,
+    "merge_statistics": {
+      "l1_kept": 7,
+      "l2_kept": 1,
+      "l1_enriched_by_l2": 1,
+      "conflicts_resolved": 4
+    }
+  },
+
+  "processing_log": [
+    {
+      "step": "input_validation",
+      "status": "warning",
+      "detail": "6 wrappers esperados. Recibidos: Aggregators (L1), Gemini (L2), Career Pages (L2), LinkedIn (L1), You.com (L2), Grok (L2). You.com y Grok retornan 0 items. L3 no presente. Ningún JSON inválido."
+    },
+    {
+      "step": "input_validation",
+      "status": "warning",
+      "detail": "LinkedIn wrapper recibido dos veces con contenido idéntico (job_id 4427870811 / Scappino). Segunda instancia descartada. Primera instancia conservada."
+    },
+    {
+      "step": "input_validation",
+      "status": "warning",
+      "detail": "Gemini y Career Pages contienen campos prompt_variant y prompt_version propios de wrappers. Campos ignorados en consolidación per rol spec."
+    },
+    {
+      "step": "dedup",
+      "status": "ok",
+      "detail": "Dedup ejecutado sobre clave compuesta brand + title + location + normalize(apply_url). 7 duplicados identificados y eliminados: Petco/Cuauhtémoc (L1 vs L2), Multicont/Cuauhtémoc (Gemini vs Career Pages), Encanto México/Miguel Hidalgo (Indeed vs Gemini), Vinos La Naval/Álvaro Obregón (Aggregators vs Gemini), Nike/Artz Pedregal (Aggregators vs Gemini/Computrabajo), Victoria's Secret x2 (Gemini únicamente, sin L1 correspondiente — excluido por falta de apply_url), Puma/Mitikah (Gemini reroute vs main results)."
+    },
+    {
+      "step": "merge",
+      "status": "ok",
+      "detail": "Petco/Cuauhtémoc: L1 enriquecido con posted_date, jd, notes y fetch_status de L2 (Career Pages). apply_url canónica de L2 adoptada. Multicont/Cuauhtémoc: L2 (Career Pages) conservado como único registro por ausencia de L1 con job_id canónico."
+    },
+    {
+      "step": "conflict_resolution",
+      "status": "ok",
+      "detail": "4 conflictos resueltos. Ver conflict_log para detalle completo."
+    },
+    {
+      "step": "output",
+      "status": "ok",
+      "detail": "9 registros consolidados emitidos. 5 reroute_candidates unificados en reroute_candidates_history. 8 data_quality_warnings agregadas de todos los wrappers."
+    }
+  ],
+
+  "retry_required": false,
+  "fallback_wrapper": null,
+  "recoverable": true,
+
+  "data_quality_warnings": [
+    {
+      "code": "ZERO_RESULTS_WRAPPER",
+      "severity": "medium",
+      "cause": "You.com wrapper retornó 0 items. Cobertura limitada a career_pages únicamente per configuración del wrapper.",
+      "impact": "Sin cobertura de career pages directas esta semana desde You.com.",
+      "message": "You.com wrapper ejecutó correctamente pero sin resultados válidos para el perfil VM/CDMX.",
+      "recommendation": "Verificar configuración de fuentes en wrapper You.com para habilitar fuentes adicionales si se requiere mayor cobertura."
+    },
+    {
+      "code": "ZERO_RESULTS_WRAPPER",
+      "severity": "low",
+      "cause": "Grok wrapper retornó 0 items sin data_quality_warnings propias.",
+      "impact": "Sin cobertura adicional desde Grok esta semana.",
+      "message": "Grok wrapper ejecutó correctamente pero sin resultados válidos.",
+      "recommendation": "Monitorear en siguiente ciclo. Si persiste, revisar queries del wrapper Grok."
+    },
+    {
+      "code": "LOW_VOLUME",
+      "severity": "medium",
+      "cause": "Solo 1 resultado válido encontrado en LinkedIn tras 5 queries distintas (A, B, C, D, E).",
+      "impact": "Baja cobertura de vacantes activas para perfil VM en CDMX esta semana desde LinkedIn.",
+      "message": "Baja densidad de vacantes VM en LinkedIn para CDMX en ventana de 14 días.",
+      "recommendation": "Ampliar ventana temporal a 21 días o activar wrapper additional_search para cubrir fuentes adicionales."
+    },
+    {
+      "code": "CAREER_PAGE_UNREACHABLE",
+      "severity": "high",
+      "cause": "Lululemon career page (https://careers.lululemon.com/es_MX/careers/JobDetail/Visual-Merchandising-Specialist-Mexico/58164) retorna HTTP 404.",
+      "impact": "No se pudo verificar fetch_status ni extraer JD directamente desde career page. Vacante reportada en reroute_candidates_history.",
+      "message": "Career page URL de Lululemon no accesible (HTTP 404). Vacante activa confirmada en LinkedIn pero no accesible desde career page.",
+      "recommendation": "Revisar en siguiente ciclo con wrapper LinkedIn para obtener URL actualizada y JD completo."
+    },
+    {
+      "code": "CAREER_PAGE_FILLED",
+      "severity": "medium",
+      "cause": "D&G career page (https://jobs.dolcegabbana.com/job/Ciudad-de-M%C3%A9xico-Visual-Merchandising-CMX/1394680033/) muestra estado Filled.",
+      "impact": "No se pudo extraer JD ni verificar fecha exacta. Vacante excluida de consolidated_results.",
+      "message": "Career page de D&G devuelve estado Filled. Vacante excluida por no estar activa.",
+      "recommendation": "Monitorear en siguiente ciclo para detectar reapertura o nueva publicación."
+    },
+    {
+      "code": "CAREER_PAGE_UNREACHABLE",
+      "severity": "medium",
+      "cause": "Career page de Prada MX no accesible directamente. Vacante Senior Visual Merchandising expirada en agregadores (SimplyHired).",
+      "impact": "No se pudo verificar estado actual ni extraer JD desde career page.",
+      "message": "Career page de Prada MX no accesible. Vacante Senior VM expirada en agregadores. OCC-21097362 (Aggregators) conservado como registro L1 disponible.",
+      "recommendation": "Revisar en siguiente ciclo para confirmar estado actual de la vacante Prada."
+    },
+    {
+      "code": "AGGREGATOR_FILTER_FAILURE",
+      "severity": "medium",
+      "cause": "OCC (www.occ.com.mx) no filtra correctamente la búsqueda por 'visual merchandising'. Muestra 61,415 resultados sin filtrar.",
+      "impact": "Posibles vacantes VM relevantes no capturadas desde OCC en este ciclo.",
+      "message": "OCC no aplicó filtro de búsqueda correctamente. Solo 4 resultados OCC capturados vía Aggregators wrapper.",
+      "recommendation": "Revisar query string y parámetros de filtrado en wrapper OCC para siguiente ciclo."
+    },
+    {
+      "code": "EXCLUSION_JR",
+      "severity": "high",
+      "cause": "Keyword matching en wrapper Gemini.",
+      "impact": "Vacantes con 'Jr.' o 'Asesor' excluidas para mantener alineación con roles senior.",
+      "message": "Vacantes con términos 'Jr.' o 'Asesor' removidas por wrapper Gemini para mantener seniority profesional.",
+      "recommendation": "Mantener filtros actuales para asegurar alineación con roles de liderazgo senior."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "VANTAGE CV Sync",
+  "id": "vantage-cv-sync",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "editorType": ["figma"]
+}

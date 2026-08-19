@@ -1,0 +1,10 @@
+{
+  "entities": [],
+  "metrics": {
+    "total_entities": 0,
+    "tracker_entities": 0,
+    "archive_entities": 0,
+    "hash_coverage": 0.0,
+    "orphan_candidates": 0
+  }
+}

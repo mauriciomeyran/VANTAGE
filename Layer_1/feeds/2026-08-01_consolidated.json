@@ -1,0 +1,474 @@
+{ 
+  "consolidated_results": [
+    {
+      "job_id": "occ-21273657",
+      "title": "Lead Visual Merchandising",
+      "brand": "Grupo Mc Tree S.A. de C.V.",
+      "holding": null,
+      "location": "Benito Juárez, Ciudad de México",
+      "posted_date": "2026-07-30",
+      "industry_tier": "Sportswear",
+      "seniority_level": "Lead",
+      "apply_url": "https://www.occ.com.mx/empleos/de-visual-merchandising/en-ciudad-de-mexico/?jobid=21273657",
+      "source_type": "aggregator",
+      "source_name": "OCC",
+      "source_query": "A",
+      "fetch_status": "direct_apply",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "notes": "ATS detected: OCC native. Postularme CTA present.",
+      "jd": "Requisitos: Licenciatura concluida en Diseño de Modas, Diseño de Interiores, Comunicación Visual, Mercadotecnia o afín. Experiencia: 3 a 5 años como Lead Visual, Supervisor Visual o Coordinador de Visual Merchandising. Industria: Retail deportivo, moda o tiendas departamentales. Liderazgo: Experiencia liderando equipos.",
+      "prompt_version": "PromptA-v1.0+aggregators",
+      "layer": "L1",
+      "source_bucket": "occ"
+    },
+    {
+      "job_id": "occ-21265675",
+      "title": "Coordinador de visual merchandising",
+      "brand": "Milano Operadora",
+      "holding": null,
+      "location": "Ciudad de México",
+      "posted_date": "2026-07-31",
+      "industry_tier": "Fashion",
+      "seniority_level": "Coordinator",
+      "apply_url": "https://www.occ.com.mx/empleos/de-visual-merchandising/en-ciudad-de-mexico/?jobid=21265675",
+      "source_type": "aggregator",
+      "source_name": "OCC",
+      "source_query": "A",
+      "fetch_status": "direct_apply",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "notes": "ATS detected: OCC native. Postularme CTA present.",
+      "jd": null,
+      "prompt_version": "PromptA-v1.0+aggregators",
+      "layer": "L1",
+      "source_bucket": "occ"
+    },
+    {
+      "job_id": "MEDILUD-BDEC-2026",
+      "title": "Brand Digital Experience Coordinator",
+      "brand": "Medilud",
+      "holding": null,
+      "location": "Ciudad de México, CDMX",
+      "posted_date": null,
+      "industry_tier": "Beauty",
+      "seniority_level": "Coordinator",
+      "apply_url": "https://mx.indeed.com/q-brand-coordinator-l-ciudad-de-m%C3%A9xico-empleos.html",
+      "source_type": "career_pages",
+      "source_name": "Medilud Careers",
+      "source_query": "C",
+      "fetch_status": "direct_apply",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": true,
+      "notes": "ATS detected",
+      "jd": "Esta posición es para alguien con criterio estético formado y sensibilidad por las marcas premium, que pueda tomar decisiones creativas con autonomía.",
+      "prompt_version": "PromptA-v1.0+gemini",
+      "layer": "L2",
+      "source_bucket": "career_pages"
+    },
+    {
+      "job_id": "MAC-CM-2026",
+      "title": "Counter Manager",
+      "brand": "MAC",
+      "holding": "Estée Lauder Companies",
+      "location": "Mexico City",
+      "posted_date": null,
+      "industry_tier": "Beauty",
+      "seniority_level": "Manager",
+      "apply_url": "https://mx.fashionjobs.com/city/Mexico%20city.html",
+      "source_type": "career_pages",
+      "source_name": "MAC Cosmetics Careers",
+      "source_query": "B",
+      "fetch_status": "needs_verification",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "notes": "Date inferred",
+      "jd": "We are looking for a dynamic and inspirational Counter Manager to lead, coach and develop our team of Sales Associates to achieve all sales, customer service and operational targets.",
+      "prompt_version": "PromptA-v1.0+gemini",
+      "layer": "L2",
+      "source_bucket": "career_pages"
+    },
+    {
+      "job_id": "DTC-AM-2026",
+      "title": "DTC Associate Manager Latin America",
+      "brand": "DTC Brand",
+      "holding": null,
+      "location": "Ciudad de México, CDMX",
+      "posted_date": null,
+      "industry_tier": "Fashion",
+      "seniority_level": "Assistant Manager",
+      "apply_url": "https://fashionunited.mx/ofertas-trabajo-moda/en/ciudad-de-mexico",
+      "source_type": "career_pages",
+      "source_name": "FashionUnited Careers Portal",
+      "source_query": "A",
+      "fetch_status": "direct_apply",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": true,
+      "notes": "ATS detected",
+      "jd": "Join our team as a DTC Associate Manager for Latin America, leading commercial performance and elevating brand experience across 120+ retail and 8+ ecommerce sites.",
+      "prompt_version": "PromptA-v1.0+gemini",
+      "layer": "L2",
+      "source_bucket": "career_pages"
+    },
+    {
+      "job_id": "jr124797",
+      "title": "Visual Merchandising Coordinator",
+      "brand": "Richemont",
+      "holding": null,
+      "location": "Mexico City, Mexico",
+      "posted_date": null,
+      "industry_tier": "Luxury",
+      "seniority_level": "Coordinator",
+      "apply_url": "https://careers.richemont.com/en/jobs/jr124797/visual-merchandising-coordinator/",
+      "source_type": "career_page",
+      "source_name": "Richemont Careers",
+      "source_query": "direct",
+      "fetch_status": "needs_verification",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "notes": "ATS detected; posted_date not visible on job detail page; apply CTA present; full JD extracted.",
+      "jd": "Excellence in Visual Merchandising Implementation\nSupport the implementation of visual merchandising strategy in boutiques and points of sales following the VM Global guidelines aligned to the local strategy through teamwork with VM Ambassadors and VM POS partners by visiting the points of sale and giving training and coaching under the supervision and responsibility of the VM Manager. Coordinate and supervise external agencies and suppliers ensuring excellence in execution during installation and dismantling phases.\n\nCoordinate the flow of materials between international and local suppliers, warehouse, and points of sale (6 boutiques/32 watch corners). Ensure the correct and timely delivery of visual merchandising material and tools to the points of sale. Supervise the correct installation and removal of visual merchandising material and tools in the points of sale.\n\nSupport the VM Manager in the preparation and execution of visual merchandising projects, events, and campaigns. Prepare and update visual merchandising guidelines and manuals for the points of sale. Ensure the correct implementation of visual merchandising guidelines and standards in the points of sale.\n\nMonitor and report on the status of visual merchandising in the points of sale. Identify and propose improvements to visual merchandising processes and tools. Support the VM Manager in the training and development of the VM Ambassadors and POS partners.\n\nProfile\nBachelor’s degree in Marketing, Design, Architecture, or related field. Minimum 3 years of experience in visual merchandising, preferably in the luxury retail sector. Strong organizational and project management skills. Excellent communication and interpersonal skills. Ability to work in a team and under pressure. Availability to travel. Fluent in English and Spanish.",
+      "prompt_version": "PromptA-v1.0+you",
+      "layer": "L2",
+      "source_bucket": "career_pages"
+    },
+    {
+      "job_id": "4446509446",
+      "title": "Store and Display Specialist Latinoamerica",
+      "brand": "HONOR",
+      "holding": null,
+      "location": "Mexico City, Mexico",
+      "posted_date": "2026-07-28",
+      "industry_tier": "Sportswear",
+      "seniority_level": "Specialist",
+      "apply_url": "https://www.linkedin.com/jobs/view/4446509446/",
+      "source_type": "linkedin",
+      "source_name": "LinkedIn Jobs",
+      "source_query": "A",
+      "fetch_status": "direct_apply",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": true,
+      "notes": "Easy Apply detected via LinkedIn ATS. JD explicitly mentions Visual Merchandising and 'immersive' shopping experiences.",
+      "jd": null,
+      "prompt_version": "PromptA-v1.0+linkedin",
+      "layer": "L1",
+      "source_bucket": "linkedin"
+    },
+    {
+      "job_id": "4436905367",
+      "title": "Visual Merchandiser LATAM",
+      "brand": "Zegna",
+      "holding": "Ermenegildo Zegna Group",
+      "location": "Mexico City, Mexico (Polanco)",
+      "posted_date": "2026-07-25",
+      "industry_tier": "Luxury",
+      "seniority_level": "Coordinator",
+      "apply_url": "https://www.linkedin.com/jobs/view/4436905367/",
+      "source_type": "linkedin",
+      "source_name": "LinkedIn Jobs",
+      "source_query": "A",
+      "fetch_status": "direct_apply",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "notes": "External apply (responses managed off LinkedIn); redirect expected on Apply click.",
+      "jd": null,
+      "prompt_version": "PromptA-v1.0+linkedin",
+      "layer": "L1",
+      "source_bucket": "linkedin"
+    },
+    {
+      "job_id": "4445518977",
+      "title": "Retail Merchandiser Woman",
+      "brand": "DOLCE&GABBANA",
+      "holding": null,
+      "location": "Mexico City, Mexico",
+      "posted_date": "2026-07-31",
+      "industry_tier": "Luxury",
+      "seniority_level": "not specified",
+      "apply_url": "https://www.linkedin.com/jobs/view/4445518977/",
+      "source_type": "linkedin",
+      "source_name": "LinkedIn Jobs",
+      "source_query": "B",
+      "fetch_status": "direct_apply",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "notes": "External apply (responses managed off LinkedIn). JD requires cross-functional collaboration with Visual Merchandising team.",
+      "jd": null,
+      "prompt_version": "PromptA-v1.0+linkedin",
+      "layer": "L1",
+      "source_bucket": "linkedin"
+    },
+    {
+      "job_id": "4447554897",
+      "title": "Visual Merchandiser- Parque Duraznos",
+      "brand": "Massimo Dutti",
+      "holding": "Grupo Inditex",
+      "location": "Mexico City, Mexico",
+      "posted_date": "2026-07-31",
+      "industry_tier": "Fashion",
+      "seniority_level": "not specified",
+      "apply_url": "https://www.linkedin.com/jobs/view/4447554897/",
+      "source_type": "linkedin",
+      "source_name": "LinkedIn Jobs",
+      "source_query": "A",
+      "fetch_status": "direct_apply",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "notes": "Easy Apply detected via LinkedIn ATS.",
+      "jd": null,
+      "prompt_version": "PromptA-v1.0+linkedin",
+      "layer": "L1",
+      "source_bucket": "linkedin"
+    },
+    {
+      "job_id": "4437257516",
+      "title": "Merchandiser LATAM",
+      "brand": "Camper",
+      "holding": null,
+      "location": "Mexico City, Mexico",
+      "posted_date": "2026-07-17",
+      "industry_tier": "Fashion",
+      "seniority_level": "not specified",
+      "apply_url": "https://www.linkedin.com/jobs/view/4437257516/",
+      "source_type": "linkedin",
+      "source_name": "LinkedIn Jobs",
+      "source_query": "B",
+      "fetch_status": "direct_apply",
+      "error_log": null,
+      "visual_signal": true,
+      "innovation_dna": false,
+      "notes": "Date inferred from '2 weeks ago' label; borderline at 14-day preferred threshold. Easy Apply detected.",
+      "jd": null,
+      "prompt_version": "PromptA-v1.0+linkedin",
+      "layer": "L1",
+      "source_bucket": "linkedin"
+    }
+  ],
+  "reroute_candidates_history": [
+    {
+      "title": "Asesor de Ventas - Liverpool Mitikah, CDMX",
+      "brand": "Swarovski",
+      "url_detectada": "https://swarovski.wd3.myworkdayjobs.com/en-US/swarovski/job/Benito-Juarez-MXN/Asesor-de-Ventas---Liverpool-Mitikah--CDMX_R-112102-1",
+      "wrapper_destino_sugerido": "not_applicable_excluded_title",
+      "confidence": "high",
+      "motivo": "Title contains excluded term 'Asesor Comercial/Vendedor' equivalent (Asesor de Ventas); no visual merchandising signal in title"
+    },
+    {
+      "title": "Sales Manager",
+      "brand": "Cartier",
+      "url_detectada": "https://careers.richemont.com/en/jobs/",
+      "wrapper_destino_sugerido": "not_applicable_excluded_signal",
+      "confidence": "medium",
+      "motivo": "No explicit visual_signal in title; role is sales-focused, not Visual Merchandising career family"
+    },
+    {
+      "title": "Client Advisor",
+      "brand": "Cartier",
+      "url_detectada": "https://careers.richemont.com/en/jobs/",
+      "wrapper_destino_sugerido": "not_applicable_excluded_title",
+      "confidence": "high",
+      "motivo": "Title excluded per hard exclusions equivalent (Sales Advisor/Asesor Comercial category)"
+    },
+    {
+      "title": "Retail Support Manager - Ciudad de México",
+      "brand": "Louis Vuitton",
+      "url_detectada": "https://www.lvmh.com/en/join-us/our-job-offers/LVM33137",
+      "wrapper_destino_sugerido": "not_applicable_excluded_signal",
+      "confidence": "high",
+      "motivo": "JD verified as Facilities & Maintenance role, not Visual Merchandising; no visual_signal present"
+    },
+    {
+      "title": "Jr. Visual Merchandising Operations",
+      "brand": "Hugo Boss México",
+      "url_detectada": "https://careers.hugoboss.com/global/en/job/142454/Jr-Visual-Merchandising-Operations",
+      "wrapper_destino_sugerido": "not_applicable_excluded_title",
+      "confidence": "high",
+      "motivo": "Title contains excluded term 'Jr.'"
+    },
+    {
+      "title": "Jr. Visual Merchandiser",
+      "brand": "Hugo Boss México",
+      "url_detectada": "https://careers.hugoboss.com/global/en/job/138051/Jr-Visual-Merchandiser",
+      "wrapper_destino_sugerido": "not_applicable_excluded_title",
+      "confidence": "high",
+      "motivo": "Title contains excluded term 'Jr.'"
+    },
+    {
+      "title": "Visual Merchandiser LATAM",
+      "brand": "Empresa por Verificar",
+      "url_detectada": "https://mx.indeed.com/q-legacy-l-ciudad-de-m%C3%A9xico-empleos.html",
+      "wrapper_destino_sugerido": "career_pages",
+      "confidence": "high",
+      "motivo": "Ubicado en Polanco, CDMX. Requiere verificación de la empresa corporativa final y URL del ATS directo."
+    },
+    {
+      "title": "Visual Merchandiser",
+      "brand": "PUMA",
+      "url_detectada": "https://about.puma.com/en/careers",
+      "wrapper_destino_sugerido": "PUMA-official-career-page",
+      "confidence": "high",
+      "motivo": "Discovered via aggregator and open web, but could not confirm active posting or extract full JD from official PUMA careers portal at this time."
+    },
+    {
+      "title": "Coordinador de Estándares Visuales y Diseño de Tiendas",
+      "brand": "MODATELAS",
+      "url_detectada": "https://modatelas.com/careers",
+      "wrapper_destino_sugerido": "MODATELAS-official-career-page",
+      "confidence": "high",
+      "motivo": "Discovered via aggregator and open web, but could not confirm active posting or extract full JD from official MODATELAS careers portal at this time."
+    },
+    {
+      "title": "Distrital Visual Merchandising",
+      "brand": "Cuidado con el Perro",
+      "url_detectada": "https://cuidadoconelperro.com.mx/careers",
+      "wrapper_destino_sugerido": "CuidadoConElPerro-official-career-page",
+      "confidence": "high",
+      "motivo": "Discovered via aggregator and open web, but could not confirm active posting or extract full JD from official Cuidado con el Perro careers portal at this time."
+    },
+    {
+      "title": "Coordinador de Diseño Creativo",
+      "brand": "Multiplica",
+      "url_detectada": "https://www.linkedin.com/jobs/view/4447182690/",
+      "wrapper_destino_sugerido": "N/A - digital design agency, not visual merchandising",
+      "confidence": "medium",
+      "motivo": "Role focuses on digital/graphic creative design, not retail visual merchandising"
+    },
+    {
+      "title": "Visual Specialist",
+      "brand": "Wizeline",
+      "url_detectada": "https://www.linkedin.com/jobs/view/4445756787/",
+      "wrapper_destino_sugerido": "N/A - digital design role, not retail visual merchandising",
+      "confidence": "high",
+      "motivo": "Role is digital/print graphic design for tech company, not retail visual merchandising"
+    }
+  ],
+  "conflict_log": [],
+  "states": {
+    "today_date": "2026-08-01",
+    "inputs_received": {
+      "L1": {
+        "career_pages": true,
+        "linkedin": true,
+        "aggregators": true
+      },
+      "L2": {
+        "gemini": true,
+        "you.com": true,
+        "grok": true
+      }
+    },
+    "invalid_inputs_detected": [],
+    "excluded_L3_inputs": [],
+    "deduplication": {
+      "total_items_before_dedup": 11,
+      "total_items_after_dedup": 11,
+      "duplicate_sets": 0
+    }
+  },
+  "data_quality_warnings": [
+    {
+      "code": "NO_RESULTS_FOUND",
+      "severity": "medium",
+      "cause": "Exhaustive search across LVMH, Kering, Richemont, Swarovski, Hugo Boss, and Estée Lauder Companies official career pages/ATS within the ≤21-day posting window yielded no Visual Merchandising postings in CDMX matching all inclusion, seniority, and title-exclusion criteria",
+      "impact": "Zero qualifying items returned in career_pages bucket for L1 career_pages",
+      "message": "All Visual Merchandising-titled roles found in Mexico were either Jr./Intern level (hard excluded), located outside CDMX, or lacked an explicit visual_signal in the title/JD. Non-VM titled roles (Client Advisor, Sales Manager, Sales Associate, Retail Support Manager) were rerouted as candidates but do not satisfy career-family or inclusion rules.",
+      "recommendation": "Consider widening query patterns to include Spanish-language terms (Coordinador Visual, Líder Visual, Supervisor Visual) directly on ATS search fields, and re-run in 7-14 days as posting cadence for this niche role is low in CDMX luxury retail.",
+      "origin_layer": "L1",
+      "origin_wrapper": "career_pages"
+    },
+    {
+      "code": "ATS_ACCESS_LIMITED",
+      "severity": "low",
+      "cause": "Adidas Workday instance (adidas.wd3.myworkdayjobs.com) returned a platform maintenance page during this run",
+      "impact": "Could not verify potential Visual Merchandising postings at Adidas Mexico",
+      "message": "Workday service interruption prevented searching Adidas career site",
+      "recommendation": "Retry Adidas Workday search in a subsequent run",
+      "origin_layer": "L1",
+      "origin_wrapper": "career_pages"
+    },
+    {
+      "code": "WARN_DATE_MISSING",
+      "severity": "low",
+      "cause": "No explicit ISO posted_date found in source metadata",
+      "impact": "fetch_status set to needs_verification",
+      "message": "Date missing from extraction target",
+      "recommendation": "Verify posted date on career page",
+      "origin_layer": "L2",
+      "origin_wrapper": "gemini"
+    },
+    {
+      "code": "WARN_AGGREGATOR_DISCOVERY_ONLY",
+      "severity": "info",
+      "cause": "Aggregators used for market discovery",
+      "impact": "None",
+      "message": "Aggregator discovery converted to career page validation",
+      "recommendation": "Follow direct ATS link",
+      "origin_layer": "L2",
+      "origin_wrapper": "gemini"
+    },
+    {
+      "code": "NO_QUALIFYING_ACTIVE_POSTINGS",
+      "severity": "info",
+      "cause": "Search across allowed discovery sources and subsequent navigation to official/ATS pages yielded no postings that simultaneously satisfied: active status (posted ≤21 days from 2026-07-31 with verifiable CTA), named company (non-confidential), CDMX/on-site-or-hybrid location, accepted seniority, explicit visual signal, absence of hard title exclusions, and final data extractable only from career_pages/ATS.",
+      "impact": "total_items remains 0 in grok wrapper",
+      "message": "No items met full inclusion + schema + source-final rules after verification attempts.",
+      "recommendation": "Re-run discovery on subsequent cycle; expand L1/L2 queries or add specific luxury brand career-site direct crawls if wrapper permits.",
+      "origin_layer": "L2",
+      "origin_wrapper": "grok"
+    },
+    {
+      "code": "missing_posted_date",
+      "severity": "medium",
+      "cause": "Richemont job detail page does not display posted_date.",
+      "impact": "Cannot confirm posting age for strict inclusion rule; fetch_status set to needs_verification.",
+      "message": "Posted date not visible for Richemont Visual Merchandising Coordinator.",
+      "recommendation": "Manual verification or contact Richemont HR for posting date.",
+      "origin_layer": "L2",
+      "origin_wrapper": "you.com"
+    }
+  ],
+  "final_metrics": {
+    "inputs": {
+      "L1": {
+        "career_pages_total_items": 0,
+        "aggregators_total_items": 2,
+        "linkedin_total_items": 5
+      },
+      "L2": {
+        "gemini_total_items": 3,
+        "you_total_items": 1,
+        "grok_total_items": 0
+      }
+    },
+    "consolidated": {
+      "total_consolidated_items": 11,
+      "by_layer": {
+        "L1": 7,
+        "L2": 4
+      },
+      "by_source_bucket": {
+        "career_pages": 4,
+        "occ": 2,
+        "linkedin": 5
+      }
+    },
+    "deduplication": {
+      "duplicate_groups_detected": 0,
+      "items_enriched_from_L2": 0,
+      "apply_url_canonicalization_events": 0
+    },
+    "reroute": {
+      "total_reroute_candidates": 13
+    }
+  }
+}
