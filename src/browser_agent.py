@@ -35,7 +35,7 @@ _domain_last_request: defaultdict[str, float] = defaultdict(float)
 # Symptoms observed: agent.run() returns truncated history, JSON with trailing garbage,
 # or a loop stuck on a single UI action. Retrying the whole agent run is the practical
 # mitigation until upstream resolves the watchdog deadlock.
-MAX_AGENT_RETRIES = 1  # Reduced from 3 to avoid long wait times during testing
+MAX_AGENT_RETRIES = 2  # Temporarily increased to diagnose consistency
 RETRY_BACKOFF_SECONDS = 5.0
 MIN_VALID_RAW_LENGTH = 150  # below this, treat as a truncated/failed run (see 111-char case)
 

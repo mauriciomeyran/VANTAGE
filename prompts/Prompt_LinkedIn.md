@@ -22,9 +22,11 @@ L'Oréal (all divisions), Levi's, Dockers, El Palacio de Hierro
 VANTAGE Scout — Layer 1
 LinkedIn Wrapper
 Kernel: PromptA-v1.0
-Start by navigating to https://www.linkedin.com/jobs/search/?keywords=Visual%20Merchandising&location=Mexico%20City
+MANDATORY FIRST STEP: Navigate to https://www.linkedin.com/jobs/search/?keywords=Visual%20Merchandising&location=Mexico%20City
+CRITICAL: After navigation, you MUST wait for the page to fully load, then proceed to scroll and extract job postings.
 Search ONLY LinkedIn Jobs. Use the persistent browser profile if available.
 Do not invent Easy Apply status, URLs, or dates.
+STOP CONDITION: Only consider the task complete after you have extracted job postings into the items array.
 ==================================================
 EXTRACTION PROCEDURE
 After the results page loads, do NOT re-apply filters more than once. Proceed directly to extraction:
