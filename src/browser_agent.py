@@ -154,12 +154,16 @@ def _browser_config(cfg: Settings) -> dict[str, Any]:
     kwargs: dict[str, Any] = {
         "headless": cfg.browser_headless,
         "viewport": {"width": 1920, "height": 1080},
-        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-        "disable_security": True,
     }
     user_dir = cfg.chrome_user_data_dir.strip()
     if user_dir:
+        # Real profile in use: let the browser present its native fingerprint.
+        # A spoofed user_agent + disable_security on top of real session cookies
+        # triggers LinkedIn's anti-hijack re-auth (mismatched UA vs. real Chrome).
         kwargs["user_data_dir"] = user_dir
+    else:
+        kwargs["user_agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        kwargs["disable_security"] = True
     return kwargs
 
 

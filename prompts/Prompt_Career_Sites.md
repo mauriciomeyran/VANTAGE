@@ -127,10 +127,18 @@ Visit these specific career pages in order:
 30. https://www.esteelauder.com/careers
 Forbidden: LinkedIn, Indeed, OCC, Computrabajo, Bumeran, any aggregator.
 ==================================================
+EXTRACTION PROCEDURE
+For each career page visited, do NOT re-apply search filters more than once. Proceed directly to extraction:
+1. Search or browse the page's open positions for roles matching the Career Family and Location above.
+2. For each matching posting, extract: title, company, url, location, work_mode, date_posted (if visible), easy_apply (set false — not applicable to career sites unless the site itself uses that term).
+3. Stop extraction per site after evaluating up to 25 postings or reaching the end of the visible list, whichever comes first.
+4. Move to the next career page in the list only after completing extraction (or confirming zero/no results, or the page being unreachable) on the current one.
+5. Populate the "items" array in the output JSON with all postings that pass HARD EXCLUSIONS above. If zero postings pass across all 30 sites, return items: [] — do not retry any search.
+==================================================
 OUTPUT
 Return ONLY the Prompt A JSON schema.
 Set prompt_variant to "A-weekly-unified-careersites"
 Set prompt_version to "PromptA-v1.0+careersites"
 Never output text outside JSON.
 If blocked (CAPTCHA, Cloudflare, HTTP 403), do not invent data.
-Record the event in audit_log with allowed tags: DNS, HTTP, Timeout, Filled, Expired, Redirect, Cloudflare.
+Record the event in audit_log as an object with fields "type" (one of: DNS, HTTP, Timeout, Filled, Expired, Redirect, Cloudflare) and "message" (free text description). Do not use any other field name for the tag value.
