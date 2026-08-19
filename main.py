@@ -99,6 +99,7 @@ async def _async_main(args: argparse.Namespace) -> int:
         prompt_version=version,
         today_date=iso,
         wrapper_name=stem,
+        output_dir=OUTPUT_DIR,
     )
     write_output(payload, stem, today)
     emit(payload)
