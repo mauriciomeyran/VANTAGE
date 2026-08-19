@@ -1,0 +1,39 @@
+# HANDOFF CV-A — Inditex
+
+## Metadata
+- URL vacante: https://www.inditexpeople.com/ww/en/joinus/offers/MXAGTT6609
+- Fecha de análisis: 2026-08-19
+- Idioma detectado (ES/EN): ES
+- Positioning Mode seleccionado: [pendiente — Claude, N1-N4 o EMPATE]
+
+## Hard Block Check (determinista — cv_a_prep.py)
+- Empleador: Inditex — PASA (sin coincidencias en lista Hard Block)
+- Nota: este check es un primer filtro por string-match contra nombres de
+  empleador. No sustituye la verificación de alcance store-level (soft,
+  requiere juicio) que hace Claude en el paso de Validación de exclusiones.
+
+## JD crudo (input para Claude)
+VISUAL MERCHADISING   Tu papel es conectar el producto con las personas. Es el principal responsable de ejecutar la estrategia comercial manteniendo una imagen atractiva y enfocada al cliente.   Cada decisión tuya tiene intención. Interpretas. Provocas. guías la mirada y defines cómo se vive cada colección.   Sabes que una buena exposición vende, pero, sobre todo, inspira.   Estás al día de lo que pasa: en la moda, en la tienda, en la calle. Conoces bien lo que vendemos, lees el espacio, entiendes el ritmo comercial y reaccionas.   Coordinas el equipo, compartes criterios, acompañas decisiones.   Tu visión transforma el producto en algo vivo.   Te ofrecemos un salario competitivo. Formación desde el primer día y oportunidades reales para crecer.   Aquí vas a encontrar el espacio y el equipo para seguir creciendo con visión propia. Ofrecemos un entorno donde aprender es parte del día a día, y donde hay espacio para aportar, equivocarse, y evolucionar.   Este puede ser el comienzo de tu historia con nosotros    Responsabilidades   Producto: Sigue y ejecuta todas las estrategias comerciales marcadas por la http://xn--campaa-0wa.se/ responsabiliza de hacer el mejor matching entre espacio de tienda y producto.  Cliente: Lidera los estándares de atención al cliente en su tienda.  Personas Comunicación y feedback continuo con su supervisor y todos los equipos de gestión en tienda. Adicional debe ser una persona que asegure la formación del equipo comercia así como de sus coequiperos.   Adicional  Vales de despensa Vacaciones cada 6 meses 25% de descuento para comprar lo último tendencias en cualquiera de nuestras marcas   • BASICOS  • 2 días de descanso semanales • Seguro Social  • Prima dominical 25% • Prima vacacional 25%  • Aguinaldo (15 días) proporcional a fecha de ingreso • Reparto de Utilidades SALUD Y BIENESTRAR  Seguro de vida a partir de los 6m • Seguro de Gastos Médicos Mayores (asegurar a conyugue e hijos) • Seguro Dental a partir de los 6m • Servicio Médico (CMDX presencial / foráneas en línea) • Asistencia Psicológica a partir de los 6m COMUNIDAD   INET – Aplicación corporativa Instories – Instagram corporativo  InHeatlh – Bienestar corporativo
+
+## Positioning Mode — Justificación
+[PENDIENTE — Claude: mapear JD_keywords_top6 contra CANON:POSITIONING]
+
+## Gap Analysis
+### Matches directos
+- [PENDIENTE — Claude]
+
+### Matches parciales
+- [PENDIENTE — Claude]
+
+### Gaps (fit_gaps)
+- [PENDIENTE — Claude]
+
+## Validación de exclusiones
+- Empleador: Inditex — PASA (Hard Block determinista, ver arriba)
+- Alcance del rol: [PENDIENTE — Claude, requiere juicio store-level vs estratégico]
+
+## Observaciones
+[PENDIENTE — Claude, opcional]
+
+## Próximo paso
+[PENDIENTE — Claude: Listo para CV-B, o BLOQUEADO — razón]

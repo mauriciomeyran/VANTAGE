@@ -4,19 +4,19 @@ adapt_tracker_export.py — Adapta un export crudo de Notion (Opportunities
 Tracker) al formato que consume cv_a_batch_agent.py.
 
 Mapeo de columnas (Notion nativo -> cv_a_batch_agent.py):
-  Marca            -> Empresa
-  Rol              -> Rol
-  URL              -> URL
-  Next_Action      -> Next_Action
-  JD               -> se escribe a un .txt por fila -> JD_File
-  ID_Vacante       -> JOB_ID si existe; si no, hash[:12]; si no, índice de fila
+Marca -> Empresa
+Rol -> Rol
+URL -> URL
+Next_Action -> Next_Action
+JD -> se escribe a un .txt por fila -> JD_File
+ID_Vacante -> JOB_ID si existe; si no, hash[:12]; si no, índice de fila
 
 No modifica ni interpreta Next_Action ni ningún campo Class B — solo
 renombra/reestructura columnas y externaliza el JD ya presente en el
 export a archivos de texto. Cero llamadas de red, cero escritura a Notion.
 
 Uso:
-    python3 adapt_tracker_export.py --in TRACKER_export.csv --out-dir ./adapted
+python3 adapt_tracker_export.py --in TRACKER_export.csv
 """
 
 import argparse
@@ -26,12 +26,16 @@ import logging
 import sys
 from pathlib import Path
 
+# Directorio de salida centralizado
+DEFAULT_OUTPUT_DIR = Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/output")
+
 # Configurar logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s',
     datefmt='%H:%M:%S'
 )
+
 logger = logging.getLogger(__name__)
 
 
@@ -52,27 +56,25 @@ def validate_url(url: str) -> bool:
     url = url.strip()
     if not url.startswith(("http://", "https://")):
         return False
-    # Validación básica de formato
     parts = url.split("//", 1)
     if len(parts) < 2:
         return False
-    domain_part = parts[1].split("/")[0]  # Extraer dominio
+    domain_part = parts[1].split("/")[0]
     if "." not in domain_part:
         return False
-    # Validación adicional: debe tener al menos un carácter después del último punto
     if len(domain_part.split(".")[-1]) < 2:
         return False
     return True
 
 
 def generate_url_hash(url: str) -> str:
-    """Genera un hash único para una URL para detección de duplicados (SHA256)."""
+    """Genera un hash único para una URL para deteccion de duplicados (SHA256)."""
     return hashlib.sha256(url.strip().lower().encode()).hexdigest()
 
 
 def detect_duplicates(rows: list[dict]) -> tuple[list[dict], list[str]]:
     """Detecta filas duplicadas basadas en URL o hash.
-    
+
     Returns:
         tuple: (filas únicas, lista de IDs duplicados eliminados)
     """
@@ -80,25 +82,23 @@ def detect_duplicates(rows: list[dict]) -> tuple[list[dict], list[str]]:
     seen_hashes = set()
     unique_rows = []
     duplicate_ids = []
-    
+
     for row in rows:
         url = (row.get("URL") or "").strip()
         row_hash = (row.get("hash") or "").strip()
-        
-        # Generar hash de URL para comparación
+
         url_hash = generate_url_hash(url) if url else None
-        
-        # Verificar duplicados
+
         is_duplicate = False
         duplicate_reason = ""
-        
+
         if url and url_hash in seen_urls:
             is_duplicate = True
             duplicate_reason = f"URL duplicada: {url}"
         elif row_hash and row_hash in seen_hashes:
             is_duplicate = True
             duplicate_reason = f"Hash duplicado: {row_hash[:12]}"
-        
+
         if is_duplicate:
             id_vac = build_id(row, rows.index(row))
             duplicate_ids.append(f"{id_vac} ({duplicate_reason})")
@@ -108,18 +108,23 @@ def detect_duplicates(rows: list[dict]) -> tuple[list[dict], list[str]]:
                 seen_urls.add(url_hash)
             if row_hash:
                 seen_hashes.add(row_hash)
-    
+
     return unique_rows, duplicate_ids
 
 
 def main():
     parser = argparse.ArgumentParser(description="Adapta export crudo de Notion al formato de cv_a_batch_agent.py")
     parser.add_argument("--in", dest="in_csv", required=True, help="CSV export crudo del Opportunities Tracker")
-    parser.add_argument("--out-dir", default="./adapted", help="Directorio de salida (CSV adaptado + JD .txt)")
-    parser.add_argument("--skip-dup-check", action="store_true", help="Saltar detección de duplicados")
+    parser.add_argument(
+        "--out-dir",
+        default=str(DEFAULT_OUTPUT_DIR),
+        help=f"Directorio de salida (default: {DEFAULT_OUTPUT_DIR})"
+    )
+    parser.add_argument("--skip-dup-check", action="store_true", help="Saltar deteccion de duplicados")
     args = parser.parse_args()
 
     out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
     jd_dir = out_dir / "jd_files"
     jd_dir.mkdir(parents=True, exist_ok=True)
 
@@ -132,37 +137,34 @@ def main():
             sys.exit(1)
         rows = list(reader)
 
-    # Detección de duplicados
     if not args.skip_dup_check:
         original_count = len(rows)
         rows, duplicate_ids = detect_duplicates(rows)
         if duplicate_ids:
-            print(f"⚠️  Duplicados detectados y eliminados: {len(duplicate_ids)}")
-            for dup_id in duplicate_ids[:5]:  # Mostrar primeros 5
-                print(f"   - {dup_id}")
+            print(f"⚠️ Duplicados detectados y eliminados: {len(duplicate_ids)}")
+            for dup_id in duplicate_ids[:5]:
+                print(f" - {dup_id}")
             if len(duplicate_ids) > 5:
-                print(f"   ... y {len(duplicate_ids) - 5} más")
-            print(f"   Filas originales: {original_count} → Filas únicas: {len(rows)}")
+                print(f" ... y {len(duplicate_ids) - 5} más")
+            print(f" Filas originales: {original_count} → Filas únicas: {len(rows)}")
 
     adapted_rows = []
     invalid_urls = []
     missing_rols = []
-    
+
     for idx, row in enumerate(rows):
         id_vac = build_id(row, idx)
-        
-        # Validaciones
+
         rol = (row.get("Rol") or "").strip()
         if not rol:
             missing_rols.append(id_vac)
-            
+
         url_val = (row.get("URL") or "").strip()
         if url_val and not validate_url(url_val):
             invalid_urls.append(f"{id_vac}: {url_val}")
-            # Normalizar URLs sin esquema (Notion a veces las guarda sin https://)
-            if url_val and not url_val.startswith(("http://", "https://")):
-                url_val = "https://" + url_val
-        
+        if url_val and not url_val.startswith(("http://", "https://")):
+            url_val = "https://" + url_val
+
         jd_text = (row.get("JD") or "").strip()
         jd_file_path = ""
         if jd_text:
@@ -192,22 +194,21 @@ def main():
     print(f"📄 CSV adaptado: {out_csv}")
     print(f"📁 JD files: {jd_dir} ({len(adapted_rows) - sin_jd} generados, {sin_jd} sin JD)")
     print(f"🎯 Elegibles (Next_Action == 'Optimizar'): {elegibles}")
-    
-    # Reporte de validaciones
+
     if invalid_urls:
-        print(f"⚠️  URLs inválidas detectadas: {len(invalid_urls)}")
+        print(f"⚠️ URLs inv alidas detectadas: {len(invalid_urls)}")
         for inv_url in invalid_urls[:3]:
-            print(f"   - {inv_url}")
+            print(f" - {inv_url}")
         if len(invalid_urls) > 3:
-            print(f"   ... y {len(invalid_urls) - 3} más")
-    
+            print(f" ... y {len(invalid_urls) - 3} más")
+
     if missing_rols:
-        print(f"⚠️  Filas sin Rol: {len(missing_rols)}")
+        print(f"⚠️ Filas sin Rol: {len(missing_rols)}")
         if len(missing_rols) <= 3:
             for missing_id in missing_rols:
-                print(f"   - {missing_id}")
+                print(f" - {missing_id}")
         else:
-            print(f"   - {missing_rols[0]}, {missing_rols[1]}, ... y {len(missing_rols) - 2} más")
+            print(f" - {missing_rols[0]}, {missing_rols[1]}, ... y {len(missing_rols) - 2} más")
 
 
 if __name__ == "__main__":
