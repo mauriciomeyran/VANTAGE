@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import re
 import time
 from collections import defaultdict
@@ -28,14 +29,15 @@ from src.analytics import ScoutAnalytics
 
 JsonDict = dict[str, Any]
 
+logger = logging.getLogger(__name__)
+
 _domain_last_request: defaultdict[str, float] = defaultdict(float)
 
-# Known browser-use issue (bubus event bus watchdogs hang/timeout non-deterministically,
-# see browser-use GitHub issues #3069, #3196, #2808, #3489 — no fix confirmed as of 0.11.13).
-# Symptoms observed: agent.run() returns truncated history, JSON with trailing garbage,
-# or a loop stuck on a single UI action. Retrying the whole agent run is the practical
-# mitigation until upstream resolves the watchdog deadlock.
-MAX_AGENT_RETRIES = 2  # Temporarily increased to diagnose consistency
+# Retry is a mitigation for genuinely non-deterministic browser-use watchdog stalls
+# (upstream issues #3069, #3196, #2808, #3489). It is NOT a fix for deterministic
+# failures — see `summarize_history()` / `preflight_llm()`, which exist to make the
+# difference visible instead of retrying the same broken run three times.
+MAX_AGENT_RETRIES = 3
 RETRY_BACKOFF_SECONDS = 5.0
 MIN_VALID_RAW_LENGTH = 150  # below this, treat as a truncated/failed run (see 111-char case)
 
@@ -90,7 +92,19 @@ def build_llm(settings: Settings | None = None) -> Any:
 
         model = cfg.gemini_model
         if cfg.use_cheap_fallback and cfg.llm_cost_limit < 1.0:
+            # WARNING: gemini-1.5-flash is discontinued. If this branch ever fires,
+            # every agent step will 404 and the run will end with only the initial
+            # navigation in history — the exact deterministic failure this module
+            # now preflights for. Log loudly rather than swapping models silently.
             model = "gemini-1.5-flash"
+            logger.warning(
+                "LLM_COST_LIMIT=%s < 1.0 forced a fallback to '%s' instead of the "
+                "configured '%s'. That fallback model is discontinued and will fail; "
+                "raise LLM_COST_LIMIT or set USE_CHEAP_FALLBACK=false.",
+                cfg.llm_cost_limit,
+                model,
+                cfg.gemini_model,
+            )
         return ChatGoogle(
             model=model,
             api_key=cfg.gemini_api_key,
@@ -142,6 +156,33 @@ def build_llm(settings: Settings | None = None) -> Any:
     )
 
 
+class LLMPreflightError(RuntimeError):
+    """The configured LLM rejected a trivial request — no point launching a browser."""
+
+
+async def preflight_llm(llm: Any) -> None:
+    """Send one cheap prompt to prove the model exists and the key works.
+
+    browser-use 0.11.13's `Agent._verify_and_setup_llm()` is a no-op stub, so an
+    invalid model name (e.g. a hallucinated `gemini-3.6-flash`) is not caught at
+    startup. Instead every reasoning step fails with a 404 and the agent burns
+    through max_failures, ending with only the initial navigation in history.
+    Failing here converts a silent 5-minute dead end into an instant, clear error.
+    """
+    from browser_use.llm.messages import UserMessage
+
+    try:
+        await llm.ainvoke([UserMessage(content="Reply with the single word: ok")])
+    except Exception as exc:  # noqa: BLE001 — re-raised with actionable context
+        model = getattr(llm, "model", "<unknown>")
+        raise LLMPreflightError(
+            f"LLM preflight failed for model '{model}': {exc}. "
+            "Verify the model name is currently served by the provider and that the "
+            "API key is valid — browser-use does not validate this itself, it just "
+            "fails every step until the agent gives up."
+        ) from exc
+
+
 def _browser_config(cfg: Settings) -> dict[str, Any]:
     """Build browser configuration dict for browser-use v0.13+."""
     kwargs: dict[str, Any] = {
@@ -185,6 +226,7 @@ async def _run_agent_once(
             from browser_use import Agent, Browser
 
             llm = build_llm(cfg)
+            await preflight_llm(llm)
             browser = Browser(**_browser_config(cfg))
             agent = Agent(
                 task=task,
@@ -256,6 +298,26 @@ async def run_browser_agent(
     for attempt in range(1, MAX_AGENT_RETRIES + 1):
         history, exc = await _run_agent_once(task, cfg, agent_factory)
 
+        if isinstance(exc, LLMPreflightError):
+            # Deterministic misconfiguration: retrying cannot help. Fail fast and loudly.
+            logger.error("LLM preflight failed; aborting without retries: %s", exc)
+            retry_audit.append(
+                AuditLogEntry(
+                    type="HTTP",
+                    source=wrapper_name,
+                    message=f"[attempt {attempt}/{MAX_AGENT_RETRIES}] {exc}",
+                )
+            )
+            last_failure_warning = DataQualityWarning(
+                code="LLM_PREFLIGHT_FAILED",
+                severity="high",
+                cause=str(exc),
+                impact="Zero items extracted; browser never launched",
+                message="LLM rejected a trivial request — check LLM_PROVIDER / model name / API key.",
+                origin_wrapper=wrapper_name,
+            )
+            break
+
         if exc is not None:
             tag = classify_block(str(exc)) or "HTTP"
             last_failure_audit = AuditLogEntry(
@@ -278,20 +340,41 @@ async def run_browser_agent(
             break
 
         raw = _history_to_text(history)
+        summary = summarize_history(history)
+        diagnostics = _format_history_diagnostics(summary)
+        logger.info("Agent attempt %s/%s finished — %s", attempt, MAX_AGENT_RETRIES, diagnostics)
 
-        # Truncated/near-empty history — known watchdog symptom, not a real result.
+        # No final answer: the agent never called `done`. The step-level errors from
+        # browser-use are the actual cause, so record them instead of the old opaque
+        # "truncated history" message (which reported the navigation log as if it were output).
         if len(raw.strip()) < MIN_VALID_RAW_LENGTH:
+            step_errors = summary.get("errors") or []
+            if step_errors:
+                cause = f"Agent produced no final result; {len(step_errors)} step error(s). {diagnostics}"
+                message = (
+                    "Agent never completed the task — every step failed. "
+                    "This is a deterministic failure, not a watchdog stall; see errors."
+                )
+            else:
+                cause = f"Agent produced no final result and reported no step errors. {diagnostics}"
+                message = (
+                    "Agent ended without calling done() and without errors — "
+                    "likely a browser-use watchdog stall or exhausted steps."
+                )
             last_failure_audit = AuditLogEntry(
                 type="Timeout",
                 source=wrapper_name,
-                message=f"[attempt {attempt}/{MAX_AGENT_RETRIES}] Truncated agent history ({len(raw)} chars): {raw[:200]}",
+                message=(
+                    f"[attempt {attempt}/{MAX_AGENT_RETRIES}] No final result "
+                    f"({len(raw)} chars). {diagnostics}"
+                ),
             )
             last_failure_warning = DataQualityWarning(
-                code="TRUNCATED_AGENT_RUN",
+                code="AGENT_NO_FINAL_RESULT",
                 severity="high",
-                cause=f"History length {len(raw)} < {MIN_VALID_RAW_LENGTH} char threshold",
+                cause=cause,
                 impact="Zero items extracted",
-                message="Agent run ended early (known browser-use watchdog issue); retried.",
+                message=message,
                 origin_wrapper=wrapper_name,
             )
             retry_audit.append(last_failure_audit)
@@ -414,20 +497,90 @@ async def run_browser_agent(
     return payload
 
 
+def summarize_history(history: Any) -> dict[str, Any]:
+    """Extract browser-use's own verdict on the run.
+
+    `final_result()` returns None unless the agent called `done`, so a run where
+    every LLM step errored still yields a plausible-looking string once
+    `_history_to_text` falls through to `extracted_content()`. That fallback is
+    what turned "the model name is invalid, all 7 steps failed" into the opaque
+    111-char `['🔗 Navigated to ...']`. This surfaces the real verdict instead.
+    """
+    summary: dict[str, Any] = {
+        "is_done": None,
+        "is_successful": None,
+        "has_errors": None,
+        "errors": [],
+        "number_of_steps": None,
+        "urls": [],
+        "final_result": None,
+    }
+    if history is None:
+        return summary
+
+    def _call(name: str) -> Any:
+        getter = getattr(history, name, None)
+        if callable(getter):
+            try:
+                return getter()
+            except Exception:  # noqa: BLE001 — diagnostics must never mask the real failure
+                return None
+        return getter
+
+    summary["is_done"] = _call("is_done")
+    summary["is_successful"] = _call("is_successful")
+    summary["has_errors"] = _call("has_errors")
+    summary["number_of_steps"] = _call("number_of_steps")
+    summary["final_result"] = _call("final_result")
+    errors = _call("errors")
+    if isinstance(errors, list):
+        summary["errors"] = [str(e) for e in errors if e]
+    urls = _call("urls")
+    if isinstance(urls, list):
+        summary["urls"] = [str(u) for u in urls if u]
+    return summary
+
+
+def _format_history_diagnostics(summary: dict[str, Any]) -> str:
+    """Render a history summary into a compact, log-friendly one-liner."""
+    errors = summary.get("errors") or []
+    unique_errors: list[str] = []
+    for err in errors:
+        if err not in unique_errors:
+            unique_errors.append(err)
+    parts = [
+        f"steps={summary.get('number_of_steps')}",
+        f"is_done={summary.get('is_done')}",
+        f"is_successful={summary.get('is_successful')}",
+        f"has_errors={summary.get('has_errors')}",
+    ]
+    if unique_errors:
+        shown = "; ".join(e[:300] for e in unique_errors[:3])
+        parts.append(f"errors[{len(errors)}]={shown}")
+    else:
+        parts.append("errors=none")
+    return " | ".join(parts)
+
+
 def _history_to_text(history: Any) -> str:
+    """Return the agent's *final* answer only.
+
+    Deliberately does NOT fall back to `extracted_content()`: that returns the
+    running log of every intermediate action (navigations, scrolls), which is not
+    a result and cannot be parsed as PromptA JSON. Falling back to it silently
+    converts a hard failure into a confusing "truncated history" symptom.
+    """
     try:
         if history is None:
             return ""
         if isinstance(history, str):
             return history
-        for attr in ("final_result", "extracted_content"):
-            getter = getattr(history, attr, None)
-            if callable(getter):
-                value = getter()
-                if value:
-                    return str(value)
-            elif getter:
-                return str(getter)
+        getter = getattr(history, "final_result", None)
+        if callable(getter):
+            value = getter()
+            return str(value) if value else ""
+        if isinstance(getter, str):
+            return getter
         if hasattr(history, "model_dump"):
             return json.dumps(history.model_dump(), ensure_ascii=False)
         return str(history)
