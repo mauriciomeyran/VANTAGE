@@ -37,29 +37,43 @@ Regla adicional: mantener el escaping de `(` y `)` para compatibilidad con el pl
 
 ## Estructura — Golden Skeleton
 
-Referencia: `CANON:OUTPUT-CONTRACT-002`. Secuencia exacta de slots para cualquier output destinado a Figma:
+Referencia: `CANON:OUTPUT-CONTRACT-002`. El SSOT de IDs de nodo es `registry_seed.json`
+en `04-Vantage_CV/Figma Sync/`. **Obligatorio: leer este archivo antes de generar
+cualquier output** — nunca usar una tabla de IDs memorizada o hardcodeada en este
+skill, porque el Skeleton puede cambiar en Figma sin que este documento se actualice.
 
-| Slot | Contenido |
-|---|---|
-| 2055:9 | Name |
-| 2055:10 | Headline / Tagline |
-| 2043:51 | Profile (párrafo 1) |
-| 2043:52 | Profile (párrafo 2) |
-| 2043:56–58 | Skills (1–3) |
-| 2043:64+ | Experience |
+El registry mapea `slot_name` → `figma_text_id`. Las llaves ya están ordenadas
+C01→C05 (L'Oréal → Bisonte → Levi's/Dockers → Aéropostale → Palacio de Hierro) —
+ese orden de llaves en el JSON es la referencia física de secuencia, además de la
+regla explícita en `CANON:OUTPUT-CONTRACT-005`.
 
-Si el Skeleton cambia en Figma, `registry_seed.json` debe actualizarse antes del siguiente run de CV-B — si detectas una inconsistencia entre lo que produces y lo que el registry indica, repórtalo al operador antes de continuar, no lo resuelvas por inferencia (`SP:CONSISTENCY`).
+Si `registry_seed.json` no está disponible o no se puede leer, detener la generación
+y solicitar el archivo al operador — no inventar ni asumir IDs.
+
+Si detectas una inconsistencia entre lo que produces y lo que el registry indica,
+repórtalo al operador antes de continuar, no lo resuelvas por inferencia (`SP:CONSISTENCY`).
+
+## Contenido de Skills — Mapeo Obligatorio
+
+Los 5 slots de Skills (2:14–2:18, o los que indique el registry) deben mapear a las 5 categorías de `CANON:SKILLS`: Estrategia Visual, Operaciones & Finanzas, Liderazgo & Training, Stack Técnico, Idiomas. No es opcional cubrir las 5 — la Null-Fill Rule 
+(`[PENDING DATA]`) aplica solo cuando el Canon carece de contenido para una categoría, nunca como default por no haber consultado la categoría. Priorizar orden y densidad por Positioning Mode activo, pero las 5 categorías deben tener contenido antes de considerar el CV-B completo.
 
 ## Aplicación del Positioning Mode en el output
 
-Referencia: `CANON:OUTPUT-CONTRACT-005`. Los siguientes slots son variables según el modo activo (N1–N4) declarado en el HANDOFF:
+Referencia: `CANON:OUTPUT-CONTRACT-005`. Los siguientes slots son variables según el modo activo (N1–N4) declarado en el HANDOFF (IDs de referencia según Golden Skeleton actual — verificar siempre contra `registry_seed.json`, ver sección anterior):
 
-- `2055:10` — tagline
-- `2043:51` / `2043:52` — párrafos de perfil 1–2
-- `2043:56` / `2043:57` / `2043:58` — skills 1–3
+- `2:5` — tagline
+- `2:9` / `3:13` — párrafos de perfil 1–2
+- `2:14` / `2:15` / `2:16` — skills 1–3
 - Bullets de C01–C05 (Experience Records) — priorizados según el modo activado
 
 **No mezclar bullets de dos Positioning Modes distintos en un mismo CV-B.**
+
+**Experience conserva siempre la secuencia C01–C05, sin excepción.** "Priorizado según
+el modo" significa mayor densidad narrativa, mayor extensión de bullets, o mayor peso
+de keywords estratégicos en las compañías ancladas del modo activo — nunca significa
+reordenar las compañías. El orden cronológico C01→C05 es inmutable independientemente
+del Positioning Mode (`CANON:OUTPUT-CONTRACT-005`).
 
 ## Reglas de Serialización
 
@@ -89,3 +103,11 @@ Antes de emitir el Markdown, verificar que ningún bullet de Experience coincide
 No generes el archivo `.md` (artefacto 2) hasta que el operador confirme el bloque de código (artefacto 1) — el contrato exige "presentado y autorizado". Si el operador ya indicó de antemano que quiere ambos sin pausa (ej. usando `APROBAR_WRITE` o equivalente en el mismo turno), puedes generar ambos directamente.
 
 Entrega el `.md` con `create_file` en `/mnt/user-data/outputs/` y `present_files`.
+
+### Verificación de Encoding (post-escritura)
+
+Después de `create_file`, releer el archivo con `view` antes de `present_files` y
+confirmar visualmente que los caracteres acentuados y ñ se muestran correctamente
+(ej. "MEYRÁN", "L'ORÉAL", "AÉROPOSTALE" — no "MEYRÃ¡N" ni secuencias con Â).
+Si se detecta corrupción, no entregar el archivo — reportar al operador antes de
+reintentar.
