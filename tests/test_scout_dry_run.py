@@ -13,9 +13,9 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from vantage_scout.main import main  # noqa: E402
-from vantage_scout.src.prompt_loader import DATE_PLACEHOLDER, load_prompt  # noqa: E402
-from vantage_scout.src.validator import (  # noqa: E402
+from main import main  # noqa: E402
+from src.prompt_loader import DATE_PLACEHOLDER, load_prompt  # noqa: E402
+from src.validator import (  # noqa: E402
     company_is_blocked,
     title_is_hard_excluded,
     validate_raw,

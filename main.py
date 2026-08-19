@@ -20,14 +20,14 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from vantage_scout.src.config import (  # noqa: E402
+from src.config import (  # noqa: E402
     OUTPUT_DIR,
     PROMPT_VARIANT_BY_WRAPPER,
     PROMPT_VERSION_BY_WRAPPER,
     get_settings,
 )
-from vantage_scout.src.prompt_loader import load_prompt  # noqa: E402
-from vantage_scout.src.validator import PromptAPayload, empty_payload  # noqa: E402
+from src.prompt_loader import load_prompt  # noqa: E402
+from src.validator import PromptAPayload, empty_payload  # noqa: E402
 
 # Suppress all logging to stdout (critical for JSON-only contract)
 logging.basicConfig(level=logging.CRITICAL, force=True)
@@ -90,7 +90,7 @@ async def _async_main(args: argparse.Namespace) -> int:
         emit(payload)
         return 0
 
-    from vantage_scout.src.browser_agent import run_browser_agent
+    from src.browser_agent import run_browser_agent
 
     payload = await run_browser_agent(
         rendered,

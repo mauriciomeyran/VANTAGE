@@ -11,20 +11,20 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from vantage_scout.src.config import Settings, get_settings
-from vantage_scout.src.validator import (
+from src.config import Settings, get_settings
+from src.validator import (
     AuditLogEntry,
     DataQualityWarning,
     PromptAPayload,
     empty_payload,
     validate_raw,
 )
-from vantage_scout.src.dedup import ScoutDedup
-from vantage_scout.src.gate_logic import ScoutGate
-from vantage_scout.src.profile_filter import ProfileFilter
-from vantage_scout.src.url_validator import URLValidator
-from vantage_scout.src.notion_sync import NotionSync
-from vantage_scout.src.analytics import ScoutAnalytics
+from src.dedup import ScoutDedup
+from src.gate_logic import ScoutGate
+from src.profile_filter import ProfileFilter
+from src.url_validator import URLValidator
+from src.notion_sync import NotionSync
+from src.analytics import ScoutAnalytics
 
 JsonDict = dict[str, Any]
 
