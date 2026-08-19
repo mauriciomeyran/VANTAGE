@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VANTAGE Scout Layer 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #1a202c;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            color: #1a202c;
+            font-size: 20px;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+        }
+
+        .wrapper-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .wrapper-item {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .wrapper-item:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+
+        .wrapper-item.selected {
+            border-color: #667eea;
+            background: #e6fffa;
+        }
+
+        .wrapper-item h3 {
+            color: #1a202c;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .wrapper-item p {
+            color: #718096;
+            font-size: 13px;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        button.secondary {
+            background: #48bb78;
+        }
+
+        button.secondary:hover {
+            background: #38a169;
+        }
+
+        .status {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .status.running {
+            background: #fef3c7;
+            color: #92400e;
+            display: block;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            display: block;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            display: block;
+        }
+
+        .results-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .result-item h4 {
+            color: #1a202c;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .result-item p {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        .result-item .stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .result-item .stat {
+            background: #edf2f7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #4a5568;
+        }
+
+        .config-status {
+            margin-top: 16px;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .config-status .item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .config-status .item:last-child {
+            margin-bottom: 0;
+        }
+
+        .config-status .label {
+            color: #718096;
+        }
+
+        .config-status .value {
+            color: #1a202c;
+            font-weight: 600;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 VANTAGE Scout Layer 1</h1>
+            <p>Sistema automatizado de búsqueda de empleo para Mauricio Meyrán</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>🚀 Ejecutar Scout</h2>
+                <div class="wrapper-list" id="wrapperList">
+                    <div class="wrapper-item" data-wrapper="Prompt_Career_Sites">
+                        <h3>Career Sites</h3>
+                        <p>Sitios de carrera oficiales y plataformas ATS</p>
+                    </div>
+                    <div class="wrapper-item" data-wrapper="Prompt_LinkedIn">
+                        <h3>LinkedIn</h3>
+                        <p>LinkedIn Jobs exclusivamente</p>
+                    </div>
+                    <div class="wrapper-item" data-wrapper="Prompt_Aggregators">
+                        <h3>Aggregators</h3>
+                        <p>OCC, Indeed, Computrabajo, Bumeran, etc.</p>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="runBtn" disabled>▶ Ejecutar</button>
+                    <button id="dryRunBtn" class="secondary" disabled>🧪 Dry Run</button>
+                </div>
+
+                <div id="status" class="status"></div>
+            </div>
+
+            <div class="card">
+                <h2>📊 Resultados Recientes</h2>
+                <div class="results-list" id="resultsList">
+                    <p style="color: #718096; font-size: 14px;">Cargando resultados...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 24px;">
+            <h2>⚙️ Estado de Configuración</h2>
+            <div class="config-status" id="configStatus">
+                <p style="color: #718096; font-size: 14px;">Cargando configuración...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedWrapper = null;
+
+        // Wrapper selection
+        document.querySelectorAll('.wrapper-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.wrapper-item').forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                selectedWrapper = item.dataset.wrapper;
+                document.getElementById('runBtn').disabled = false;
+                document.getElementById('dryRunBtn').disabled = false;
+            });
+        });
+
+        // Run scout
+        document.getElementById('runBtn').addEventListener('click', () => {
+            if (selectedWrapper) {
+                runScout(selectedWrapper, false);
+            }
+        });
+
+        document.getElementById('dryRunBtn').addEventListener('click', () => {
+            if (selectedWrapper) {
+                runScout(selectedWrapper, true);
+            }
+        });
+
+        async function runScout(wrapper, dryRun) {
+            const status = document.getElementById('status');
+            const runBtn = document.getElementById('runBtn');
+            const dryRunBtn = document.getElementById('dryRunBtn');
+
+            status.className = 'status running';
+            status.innerHTML = '<span class="loading"></span>Ejecutando ' + wrapper + (dryRun ? ' (Dry Run)' : '') + '...';
+            runBtn.disabled = true;
+            dryRunBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/run', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ wrapper, dryRun })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    status.className = 'status success';
+                    const itemsCount = result.data.items ? result.data.items.length : 0;
+                    status.innerHTML = '✅ Completado: ' + itemsCount + ' jobs encontrados';
+                    loadResults();
+                } else {
+                    status.className = 'status error';
+                    status.innerHTML = '❌ Error: ' + (result.error || 'Unknown error');
+                }
+            } catch (error) {
+                status.className = 'status error';
+                status.innerHTML = '❌ Error de conexión: ' + error.message;
+            }
+
+            runBtn.disabled = false;
+            dryRunBtn.disabled = false;
+        }
+
+        // Load results
+        async function loadResults() {
+            const resultsList = document.getElementById('resultsList');
+            
+            try {
+                const response = await fetch('/api/results');
+                const data = await response.json();
+
+                if (data.results.length === 0) {
+                    resultsList.innerHTML = '<p style="color: #718096; font-size: 14px;">No hay resultados aún</p>';
+                    return;
+                }
+
+                resultsList.innerHTML = data.results.map(result => `
+                    <div class="result-item">
+                        <h4>${result.wrapper}</h4>
+                        <p>${new Date(result.date * 1000).toLocaleString()}</p>
+                        <div class="stats">
+                            <span class="stat">📋 ${result.items_count} jobs</span>
+                            <span class="stat">📁 ${result.filename}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                resultsList.innerHTML = '<p style="color: #e53e3e; font-size: 14px;">Error cargando resultados</p>';
+            }
+        }
+
+        // Load config
+        async function loadConfig() {
+            const configStatus = document.getElementById('configStatus');
+            
+            try {
+                const response = await fetch('/api/config');
+                const config = await response.json();
+
+                configStatus.innerHTML = `
+                    <div class="item">
+                        <span class="label">LLM Provider:</span>
+                        <span class="value">${config.llm_provider}</span>
+                    </div>
+                    <div class="item">
+                        <span class="label">Browser Headless:</span>
+                        <span class="value">${config.browser_headless}</span>
+                    </div>
+                    <div class="item">
+                        <span class="label">Cost Limit:</span>
+                        <span class="value">$${config.cost_limit} USD</span>
+                    </div>
+                    <div class="item">
+                        <span class="label">Config File:</span>
+                        <span class="value">${config.env_exists ? '✅ Configurado' : '❌ No configurado'}</span>
+                    </div>
+                `;
+            } catch (error) {
+                configStatus.innerHTML = '<p style="color: #e53e3e; font-size: 14px;">Error cargando configuración</p>';
+            }
+        }
+
+        // Initial load
+        loadResults();
+        loadConfig();
+
+        // Auto-refresh results every 30 seconds
+        setInterval(loadResults, 30000);
+    </script>
+</body>
+</html>
