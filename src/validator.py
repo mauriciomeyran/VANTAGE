@@ -10,7 +10,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 ALLOWED_AUDIT_TYPES = frozenset(
-    {"DNS", "HTTP", "Timeout", "Filled", "Expired", "Redirect", "Cloudflare"}
+    {"DNS", "HTTP", "Timeout", "Filled", "Expired", "Redirect", "Cloudflare", "DEDUP", "GATE", "PROFILE_FILTER", "NOTION_SYNC", "ANALYTICS"}
 )
 
 HARD_TITLE_EXCLUSIONS: tuple[str, ...] = (
