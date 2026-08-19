@@ -1,0 +1,27 @@
+# VANTAGE Scout Layer 1 - Requirements
+# Core dependencies
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# LLM providers
+langchain>=0.1.0
+langchain-openai>=0.1.0
+langchain-google-genai>=0.1.0
+langchain-anthropic>=0.1.0
+langchain-ollama>=0.1.0
+
+# Browser automation
+playwright>=1.40.0
+browser-use>=0.1.0
+
+# Layer 1 integration dependencies
+httpx>=0.25.0  # For URL validation
+notion-client>=2.0.0  # For Notion sync (optional)
+
+# Testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+
+# Web UI (optional)
+flask>=3.0.0
