@@ -9,7 +9,7 @@ class ScoutGate:
     """Gate logic system following Layer_1 terminal state protection patterns."""
     
     # Terminal statuses that should never be overwritten
-    TERMINAL_STATUSES = {"Postulado", "Rechazado", "Archivar", "Expirada"}
+    TERMINAL_STATUSES = {"Postulado", "Rechazado", "Expirada"}  # Archivar es Next_Action, no Status — KERNEL:GATE-DECISION-010
     
     # Terminal next actions that should never be overwritten
     TERMINAL_ACTIONS = {"Archivar", "Expirada"}
