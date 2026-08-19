@@ -94,18 +94,16 @@ def build_llm(settings: Settings | None = None) -> Any:
     if provider == "gemini":
         if not cfg.gemini_api_key:
             raise RuntimeError("GEMINI_API_KEY is required when LLM_PROVIDER=gemini")
-        from langchain_google_genai import ChatGoogleGenerativeAI
+        from browser_use.llm import ChatGoogle
 
         model = cfg.gemini_model
         if cfg.use_cheap_fallback and cfg.llm_cost_limit < 1.0:
             model = "gemini-1.5-flash"
-        llm = ChatGoogleGenerativeAI(
+        llm = ChatGoogle(
             model=model,
-            google_api_key=cfg.gemini_api_key,
+            api_key=cfg.gemini_api_key,
             temperature=0,
         )
-        object.__setattr__(llm, 'provider', "gemini")
-        object.__setattr__(llm, 'model', model)
         return llm
 
     if provider == "anthropic":
@@ -260,7 +258,7 @@ async def run_browser_agent(
         )
     finally:
         if browser:
-            await browser.close()
+            await browser.stop()
 
     raw = _history_to_text(history)
     block = classify_block(raw)
