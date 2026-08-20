@@ -30,6 +30,7 @@ import logging
 import subprocess
 import sys
 import time
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -48,6 +49,7 @@ logger = logging.getLogger(__name__)
 TARGET_NEXT_ACTION = "Optimizar"
 MAX_WORKERS = 3
 CHECKPOINT_FILE = "cv_a_batch_checkpoint.json"
+_checkpoint_lock = threading.Lock()
 
 
 def load_checkpoint(checkpoint_path: Path) -> set:
@@ -64,21 +66,28 @@ def load_checkpoint(checkpoint_path: Path) -> set:
 
 
 def save_checkpoint(checkpoint_path: Path, processed_id: str):
-    """Guarda un ID de vacante procesada en el checkpoint."""
-    try:
-        if checkpoint_path.exists():
-            with open(checkpoint_path, "r") as f:
-                data = json.load(f)
-        else:
-            data = {"processed_ids": []}
+    """Guarda un ID de vacante procesada en el checkpoint.
 
-        if processed_id not in data["processed_ids"]:
-            data["processed_ids"].append(processed_id)
+    Thread-safe: usa un lock global porque multiples workers de
+    ThreadPoolExecutor pueden llamar esta funcion casi simultaneamente,
+    y el read-modify-write sin lock puede perder IDs procesados
+    (BUG detectado 2026-08-19 — ver Bug Tracker).
+    """
+    with _checkpoint_lock:
+        try:
+            if checkpoint_path.exists():
+                with open(checkpoint_path, "r") as f:
+                    data = json.load(f)
+            else:
+                data = {"processed_ids": []}
 
-        with open(checkpoint_path, "w") as f:
-            json.dump(data, f, indent=2)
-    except Exception as e:
-        print(f"AVISO: Error guardando checkpoint ({e}).", file=sys.stderr)
+            if processed_id not in data["processed_ids"]:
+                data["processed_ids"].append(processed_id)
+
+            with open(checkpoint_path, "w") as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            print(f"AVISO: Error guardando checkpoint ({e}).", file=sys.stderr)
 
 
 def show_progress(current: int, total: int, start_time: float):

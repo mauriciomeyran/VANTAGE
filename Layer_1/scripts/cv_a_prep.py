@@ -58,10 +58,10 @@ def load_hard_blocks() -> list[str]:
             return config.get("hard_block_employers", [])
         else:
             logger.warning(f"Config de hard blocks no encontrado en {HARD_BLOCK_CONFIG_PATH}, usando fallback")
-            return ["l'oreal", "loreal", "l'oré¡±", "levi's", "levis", "dockers", "palacio de hierro", "el palacio de hierro"]
+            return ["l'oreal", "loreal", "levi's", "levis", "dockers", "palacio de hierro", "el palacio de hierro"]
     except Exception as e:
         logger.error(f"Error cargando config de hard blocks: {e}, usando fallback")
-        return ["l'oreal", "loreal", "l'oré¡±", "levi's", "levis", "dockers", "palacio de hierro", "el palacio de hierro"]
+        return ["l'oreal", "loreal", "levi's", "levis", "dockers", "palacio de hierro", "el palacio de hierro"]
 
 
 HARD_BLOCK_EMPLOYERS = load_hard_blocks()
@@ -303,6 +303,11 @@ def main():
     elif args.url:
         try:
             jd_text = fetch_jd(args.url)
+            if len(jd_text.strip()) < 300:
+                print(f"AVISO: JD extraido de {args.url} tiene solo {len(jd_text.strip())} caracteres (<300).", file=sys.stderr)
+                print("Probable JD incompleto (sitio con render JS, bloqueo, o solo nav/footer).", file=sys.stderr)
+                print("Generando scaffold con JD parcial marcado — verificar manualmente antes de correr Positioning Mode.", file=sys.stderr)
+                jd_text = f"[JD_SOSPECHOSO — solo {len(jd_text.strip())} caracteres extraidos, posible fetch incompleto. Verificar manualmente:]\n\n{jd_text}"
         except Exception as e:
             print(f"AVISO: no se pudo hacer fetch automatico de la URL ({e}).", file=sys.stderr)
             print("Generando scaffold sin JD — pegar manualmente.", file=sys.stderr)

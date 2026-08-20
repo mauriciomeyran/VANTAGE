@@ -72,7 +72,35 @@ def generate_url_hash(url: str) -> str:
     return hashlib.sha256(url.strip().lower().encode()).hexdigest()
 
 
-def detect_duplicates(rows: list[dict]) -> tuple[list[dict], list[str]]:
+def load_notion_existing(notion_export_path: str) -> tuple[set, set]:
+    """Carga URLs y hashes ya existentes en el Tracker de Notion desde un
+    CSV exportado por separado (ej. via notion-query-data-sources en sesion
+    con Claude). No hace red — solo lee un archivo local.
+
+    Formato esperado: CSV con columnas 'URL' y/o 'hash' (mismos nombres
+    que el export nativo del Tracker).
+    """
+    urls, hashes = set(), set()
+    if not notion_export_path:
+        return urls, hashes
+    p = Path(notion_export_path)
+    if not p.exists():
+        logger.warning(f"--notion-export apunta a un archivo inexistente: {notion_export_path}. Saltando cross-check.")
+        return urls, hashes
+    with open(p, "r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            url = (row.get("URL") or "").strip()
+            h = (row.get("hash") or "").strip()
+            if url:
+                urls.add(generate_url_hash(url))
+            if h:
+                hashes.add(h)
+    logger.info(f"Cross-check Notion cargado: {len(urls)} URLs, {len(hashes)} hashes existentes.")
+    return urls, hashes
+
+
+def detect_duplicates(rows: list[dict], notion_urls: set = None, notion_hashes: set = None) -> tuple[list[dict], list[str]]:
     """Detecta filas duplicadas basadas en URL o hash.
 
     Returns:
@@ -80,6 +108,8 @@ def detect_duplicates(rows: list[dict]) -> tuple[list[dict], list[str]]:
     """
     seen_urls = set()
     seen_hashes = set()
+    notion_urls = notion_urls or set()
+    notion_hashes = notion_hashes or set()
     unique_rows = []
     duplicate_ids = []
 
@@ -94,10 +124,16 @@ def detect_duplicates(rows: list[dict]) -> tuple[list[dict], list[str]]:
 
         if url and url_hash in seen_urls:
             is_duplicate = True
-            duplicate_reason = f"URL duplicada: {url}"
+            duplicate_reason = f"URL duplicada (dentro del export): {url}"
         elif row_hash and row_hash in seen_hashes:
             is_duplicate = True
-            duplicate_reason = f"Hash duplicado: {row_hash[:12]}"
+            duplicate_reason = f"Hash duplicado (dentro del export): {row_hash[:12]}"
+        elif url and url_hash in notion_urls:
+            is_duplicate = True
+            duplicate_reason = f"URL ya existe en Notion Tracker: {url}"
+        elif row_hash and row_hash in notion_hashes:
+            is_duplicate = True
+            duplicate_reason = f"Hash ya existe en Notion Tracker: {row_hash[:12]}"
 
         if is_duplicate:
             id_vac = build_id(row, rows.index(row))
@@ -121,6 +157,7 @@ def main():
         help=f"Directorio de salida (default: {DEFAULT_OUTPUT_DIR})"
     )
     parser.add_argument("--skip-dup-check", action="store_true", help="Saltar deteccion de duplicados")
+    parser.add_argument("--notion-export", default="", help="CSV con URLs/hashes ya existentes en el Tracker de Notion, para cross-check adicional (ver load_notion_existing)")
     args = parser.parse_args()
 
     out_dir = Path(args.out_dir)
@@ -139,7 +176,8 @@ def main():
 
     if not args.skip_dup_check:
         original_count = len(rows)
-        rows, duplicate_ids = detect_duplicates(rows)
+        notion_urls, notion_hashes = load_notion_existing(args.notion_export)
+        rows, duplicate_ids = detect_duplicates(rows, notion_urls, notion_hashes)
         if duplicate_ids:
             print(f"⚠️ Duplicados detectados y eliminados: {len(duplicate_ids)}")
             for dup_id in duplicate_ids[:5]:
