@@ -1,5 +1,29 @@
 # V | CHANGELOG
 
+Tipo: [DOC] [AUDIT]
+Alcance:
+- Manual (MANUAL:SESSION-CYCLE, 06 — conteo de docs fundacionales corregido a 9)
+- Manual (MANUAL:COLD-START, 05 — alcance de 7 vs 6 docs clarificado)
+- Manual (MANUAL:WEEKLY-FLOW-001, 8.1 — contradicción vdoc notion/local resuelta + riesgos de vdoc local documentados; dedup consolidado con referencia a DATA-MANAGEMENT)
+- Manual (MANUAL:HOW-IT-WORKS, 02 — definición Class A/B insertada antes de Gate Decisions)
+- Manual (MANUAL:COLD-START, 05 — nota de debugging de sesión específica reemplazada por smoke test genérico)
+- Manual (MANUAL:WEEKLY-FLOW, 08 — Matriz de Cadencia reposicionada al inicio de la sección; operador)
+Contexto: Auditoría externa (documento adjunto por el operador) reportaba duplicidades, brechas narrativas y 6 hallazgos técnicos (HAL-01 a HAL-06) sobre el Manual. Verificación zero-trust contra el live confirmó HAL-01 (peor de lo reportado: 4 cifras distintas, no 3), HAL-03 (contradicción activa no detectada por el auditor original), HAL-05; descartó HAL-02, HAL-04, HAL-06 por no confirmarse contra el texto real. De las 8 duplicidades reportadas (D-01 a D-08) solo D-03 (dedup) resultó duplicación real; el resto ya tenía cross-reference correcto. De las 6 brechas narrativas (BN-01 a BN-06) solo BN-03 y BN-05 se confirmaron accionables.
+Cambios:
+- MANUAL:SESSION-CYCLE — "10 documentos fundacionales + el Census" → "9 documentos fundacionales (incluyendo el Census)".
+- MANUAL:COLD-START — clarificado que 7 = 8 archivos ACTIVE/ menos Changelog Archivo; 6 = alcance de vdoc, excluye Brief.
+- MANUAL:WEEKLY-FLOW-001 — vdoc notion marcado como vía preferida; vdoc local documentado con riesgos (sin confirmación, más lento, riesgo de corrupción/truncado, elimina hipervínculos).
+- MANUAL:WEEKLY-FLOW-001 — regla de dedup consolidada, remite a DATA-MANAGEMENT en vez de repetir el mecanismo completo.
+- MANUAL:HOW-IT-WORKS — nodo corto Class A/B insertado antes de Gate Decisions, remite a SCHEMA-FIELD-REF.
+- MANUAL:COLD-START — referencia a commit específico (29fc7f0) eliminada del smoke test.
+- MANUAL:WEEKLY-FLOW (08) — Matriz de Cadencia (antes 08.6, al final) movida al inicio de la sección, ID técnico WEEKLY-FLOW-006 retirado por el operador (sin dependencias activas confirmadas); CENSUS_SPEC, Census markdown y Census Notion corregidos en consecuencia por el operador.
+IDs afectados: 1 baja — MANUAL:WEEKLY-FLOW-006 (retirado, sin dependencias activas). Ya reflejado en CENSUS_SPEC/Census por el operador — sin acción pendiente de vcensus.
+Write-Back Verification: los 5 patches vía Notion MCP re-fetched post-escritura, uno por uno, en esta misma sesión — confirmados sin mismatch (un intento fallido de match por carácter escapado en D-03, corregido y reverificado).
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar v9.21.23 al resto de los fundacionales.
+- Auditoría Parte I: D-05, D-08, BN-04, BN-06 quedan identificados como de bajo impacto, sin acción.
+- Auditoría Parte II (refactor completo de arquitectura, 23 filas) y Parte III (extensión de voz consciente al resto del Manual) no iniciadas — alcance mayor, pendiente de decisión del operador sobre si abrir como proyecto aparte.
+---
 Tipo: [DOC]
 Alcance:
 - Script Library (Notion) — 1 corrección de campo (Acción), 2 Descripciones enriquecidas

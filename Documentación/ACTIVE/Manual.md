@@ -69,6 +69,8 @@ Responsables
 - Agente IA (Claude): opera el Ciclo de Sesión (Open/Close), ejecuta CV-A/CV-B en el ciclo semanal (Miércoles), y mantiene documentos fundacionales y trackers vía parches — siempre bajo DRY RUN + APROBAR_WRITE, nunca escribe sin autorización explícita del operador.
 - El operador: Decide qué se postula, resuelve bloqueos recuperables vía Dashboard (Proponer Patch → Validar → Aceptar, sobre campos Class A del Tracker), autoriza escrituras y aprueba entregables.
 > Este reparto de trabajo se ve en acción completa en MANUAL:WEEKLY-FLOW
+Class A y Class B: los dos tipos de campos
+Antes de entrar a Gate Decisions, una distinción que vas a encontrar constantemente: los campos Class A (Human-Primary) los escribe el operador o feed_processor.py — URL, JD, Marca, Source_Type, Prioridad. Los campos Class B (System-Primary) los calcula Python únicamente — Score, Gate_Decision, VM_Scope. La tabla completa vive en MANUAL:SCHEMA-FIELD-REF.
 Gate Decisions
 Este es uno de los conceptos que más se usa a lo largo de todo el ciclo operativo, así que conviene fijarlo aquí, antes de encontrarlo en Lunes, Martes o Miércoles sin previo aviso.
 El sistema evalúa cada vacante nueva en tres pasos, siempre en este orden:
@@ -215,7 +217,7 @@ vantage-session-open al inicio de cada sesión
 vantage-session-close al final
 Y hace tres cosas que ningún otro punto del sistema hace:
 Deja un registro de que la sesión existió y en qué estado terminó (el Session Ledger).
-Confirma que los 10 documentos fundacionales + el Census están todos en la misma versión (nunca uno adelantado y otro atrasado).
+Confirma que los 9 documentos fundacionales (incluyendo el Census) están todos en la misma versión (nunca uno adelantado y otro atrasado).
 Te recuerda, sin que tengas que preguntarlo, qué quedó pendiente de la sesión anterior.
 No necesitas invocarlo tú manualmente cada vez que se te ocurra — pero sí necesitas recordar que es el primer paso obligatorio: si acabas de abrir Claude para trabajar en VANTAGE hoy, el primer paso siempre es este ciclo, antes de tocar Tracker, Dashboard o cualquier trigger de CV descrito en MANUAL:WEEKLY-FLOW.
 ¿Por qué existe esto?
@@ -281,7 +283,17 @@ Si algo se ve distinto entre los dos HTML, es señal de que alguien editó un co
 ## 08 MANUAL:WEEKLY-FLOW
 Flujo Semanal de Operación
 Este es el ciclo completo de trabajo, de lunes a viernes. Asume que ya pasaste por MANUAL:SETUP o MANUAL:COLD-START según corresponda, que la sesión actual de Claude ya pasó por su MANUAL:SESSION-CYCLE, y que tienes el MANUAL:CHECKLIST abierto como guía de avance.
----
+A continuacion una matriz que complementa la narrativa día-por-día donde podrás encontrara:
+- Trigger → resultado desacoplada del calendario.
+- Las entradas del Tracker reflejadas en la columna “Resultado” son siempre campos Class B calculados por Python — no escritura manual (ver KERNEL:SCHEMA-002).
+| Contexto de Invocación | Trigger | Objetivo | Resultado en Tracker | Referencia |
+| --- | --- | --- | --- | --- |
+| Lunes (o cualquier día con nuevas vacantes) — operador revisa output de L1/L2/L3 | feed_processor.py  • APROBAR_WRITE | Ingresar vacantes nuevas al SSOT con Class A poblado | Filas nuevas con Status=RAW → pipeline calcula Class B inmediatamente | KERNEL:TRIGGER-001, KERNEL:SCHEMA-002 |
+| Después de cada APROBAR_WRITE de feed | ~/vantage_pipeline.sh (run completo) | Calcular Score, Gate_Decision, Next_Action sobre entradas Class A | Gate_Decision=CREATE/BLOCKED, Score, VM_Scope, Role_Class actualizados | KERNEL:GATE-DECISION-010 |
+| Condicional: solo si existen vacantes con Gate=BLOCKED recuperables | vd (:8000) — Dashboard RT-1 | Corregir Class A de vacantes bloqueadas y re-ingresar al pipeline | PATCHED → re-evaluación → CREATE o BLOCKED renovado | KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-011 |
+| Miércoles (o cuando vacante alcanza READY_TO_APPLY) | CV-A [URL/JD] | Generar artefacto CV-A adaptado a la vacante | Artefacto en Figma Sync; sin cambio en Tracker | KERNEL:CV-GOLDEN-RULES |
+| Cualquier momento — auditoría ad-hoc | STATUS [SYSTEM] | Verificar estado global del sistema y detectar huérfanos/inconsistencias | Sin escritura — reporte en sesión | SP:TRIGGERS |
+> Nota operativa: los días de semana en 8.1–8.5 son metadato de cadencia del operador, no guard conditions de ningún gate. Una vacante con Score ≥ 60 puede alcanzar READY_TO_APPLY el mismo día de su ingesta, sin esperar al ciclo siguiente. → Ver KERNEL:GATE-DECISION-011 para vista completa de transiciones.
 ### 8.1 MANUAL:WEEKLY-FLOW-001
 Lunes
 El lunes es el ciclo de búsqueda activa completo. Se dispara manualmente y cubre las dos capas de búsqueda humana (L1 y L2), más la revisión de lo que L3 recolectó de forma pasiva durante la semana.
@@ -307,7 +319,7 @@ Abre cada Prompt_[Motor]_[Fecha].md y pega su contenido en el motor correspondie
 ¿Como los compilo?
 En preparación para entrar al Pipeline es necesario consolidar la información recopilada.
 Regresarás a Perplexity Desktop y, usando como base el Prompt E, pegarás los JSONs de L1 + L2.
-Perplexity aplicará dedup con clave compuesta brand+title+location siguiendo una jerarquía L1 > L2 (de las vacantes duplicadas persistirán las instancias de L1, tomando de L2 la información que pueda complementar sus propiedades para Class A).
+Perplexity aplicará dedup en esta consolidación — reglas completas (clave compuesta, jerarquía entre capas) en MANUAL:DATA-MANAGEMENT.
 Perplexity entregará como respuesta un Plain Array consolidado (JSON plano sin capas anidadas), listo para Python.
 Guardarás el resultado en:
 ~/Documents/03 Projects/VANTAGE/Layer_1/Feeds/YYYY-MM-DD_consolidated.json
@@ -358,7 +370,7 @@ Tres direcciones posibles:
 vdoc auto — compara la fecha de modificación de cada documento (local vs. Notion) y sincroniza en el sentido que corresponda, documento por documento. Es el modo por defecto y el más seguro para uso diario: nunca sobreescribe algo más reciente con algo más viejo.
 vdoc notion — fuerza Notion → local para los 6 documentos, sin comparar fechas. Úsalo solo si sabes que Notion tiene la versión correcta y quieres descartar cualquier cambio local.
 vdoc local — fuerza local → Notion para los 6 documentos, sin comparar fechas. Úsalo solo si editaste los .md directamente en disco (offline) y quieres que Notion adopte esa versión.
-Como notion y local sobreescriben sin comparar fechas, ambos son operaciones forzadas: antes de ejecutar nada, vdoc te muestra automáticamente un preview (equivalente a --dry-run) de lo que va a hacer, y te pide confirmación explícita en terminal (s para continuar, cualquier otra tecla cancela).
+notion y local sobreescriben sin comparar fechas, así que ambas son operaciones forzadas: antes de ejecutar nada, vdoc te muestra automáticamente un preview (equivalente a --dry-run). vdoc notion es la vía preferida — sí espera tu confirmación explícita en terminal (s para continuar, cualquier otra tecla cancela). ⚠️ vdoc local es la excepción: por una excepción temporal en el código, ejecuta directo sin pedir confirmación, es más lenta, y conlleva mayor riesgo de corrupción o truncado — además de eliminar los hipervínculos cross-reference ya escritos (ver MANUAL:MONITOR, riesgo de destroy/rebuild). Úsala solo cuando sepas que editaste offline y necesitas forzar esa dirección; revisa siempre el preview con vdoc local dry antes de correrla en serio.
 Si por alguna razón corres el comando sin una terminal interactiva disponible, el script no asume que confirmaste — cancela por seguridad y no escribe nada. vdoc auto nunca pide esta confirmación porque nunca sobreescribe algo más reciente.
 Modificador dry — se combina con cualquiera de los tres comandos anteriores y con cualquier documento específico, en cualquier orden, y siempre gana: nunca escribe en Notion, en disco ni hace commit, sin importar qué más hayas escrito en la misma línea.
 vdoc dry — preview de auto (equivalente a vdoc auto dry)
@@ -491,20 +503,6 @@ Viernes
 Output: efectividad por fuente, tasa de links muertos por tipo de URL, ratio career pages vs. aggregators.
 Acción concreta: si career pages producen menos de 5 resultados relevantes en la semana, ajusta el Prompt A (ver MANUAL:PROMPTS-WRAPPERS) — no el threshold de Score. (Recuerda MANUAL:FAILURE-PHILOSOPHY: el Score bajo no es el problema a corregir, el input de búsqueda sí lo es.)
 Con esto se cierra el ciclo semanal. La siguiente vez que abras Claude para trabajar en VANTAGE, el ciclo completo empieza de nuevo desde MANUAL:SESSION-CYCLE.
-### 08.6 MANUAL:WEEKLY-FLOW-006
-Matriz de Cadencia Operativa
-Complementa la narrativa día-por-día con una vista de:
-- Trigger → resultado desacoplada del calendario.
-- Las entradas del Tracker reflejadas en la columna “Resultado” son siempre campos Class B
-calculados por Python — no escritura manual (ver KERNEL:SCHEMA-002).
-| Trigger | Contexto de Invocación | Objetivo | Resultado en Tracker | Referencia |
-| --- | --- | --- | --- | --- |
-| feed_processor.py  • APROBAR_WRITE | Lunes (o cualquier día con nuevas vacantes) — operador revisa output de L1/L2/L3 | Ingresar vacantes nuevas al SSOT con Class A poblado | Filas nuevas con Status=RAW → pipeline calcula Class B inmediatamente | KERNEL:TRIGGER-001, KERNEL:SCHEMA-002 |
-| ~/vantage_pipeline.sh (run completo) | Después de cada APROBAR_WRITE de feed | Calcular Score, Gate_Decision, Next_Action sobre entradas Class A | Gate_Decision=CREATE/BLOCKED, Score, VM_Scope, Role_Class actualizados | KERNEL:GATE-DECISION-010 |
-| vd (:8000) — Dashboard RT-1 | Condicional: solo si existen vacantes con Gate=BLOCKED recuperables | Corregir Class A de vacantes bloqueadas y re-ingresar al pipeline | PATCHED → re-evaluación → CREATE o BLOCKED renovado | KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-011 |
-| CV-A [URL/JD] | Miércoles (o cuando vacante alcanza READY_TO_APPLY) | Generar artefacto CV-A adaptado a la vacante | Artefacto en Figma Sync; sin cambio en Tracker | KERNEL:CV-GOLDEN-RULES |
-| STATUS [SYSTEM] | Cualquier momento — auditoría ad-hoc | Verificar estado global del sistema y detectar huérfanos/inconsistencias | Sin escritura — reporte en sesión | SP:TRIGGERS |
-Nota operativa: los días de semana en 8.1–8.5 son metadato de cadencia del operador, no guard conditions de ningún gate. Una vacante con Score ≥ 60 puede alcanzar READY_TO_APPLY el mismo día de su ingesta, sin esperar al ciclo siguiente. → Ver KERNEL:GATE-DECISION-011 para vista completa de transiciones.
 ---
 ## 09 MANUAL:RUNTIME
 Runtime
@@ -626,8 +624,8 @@ Entorno (.env) — verifica que NOTION_TOKEN y demás vars requeridas existan.
 Git — git status --porcelain; reporta si hay archivos sin commitear.
 Último commit (vgit) — git log -1 para timestamp de referencia.
 Notion reachable — fetch mínimo a V-SYSTEM-PROMPT para confirmar conectividad y token válido.
-Docs fundacionales — confirma que los 7 documentos existen localmente en ACTIVE/.
-Último vdoc sync — cuál de los 6 docs locales tiene el mtime más reciente, y hace cuánto.
+Docs fundacionales — confirma que los 7 documentos existen localmente en ACTIVE/ (los 8 archivos del directorio, sin contar Changelog Archivo, excluido de --sync).
+Último vdoc sync — cuál de los 6 docs locales sincronizados por vdoc (excluye Brief, que no forma parte de su alcance) tiene el mtime más reciente, y hace cuánto.
 Antigüedad de índices (index_age) — ver detalle abajo. Única sección con capacidad de escritura (auto-sync condicional).
 Tickets pendientes — Bug Tracker y Task Tracker, agrupados por prioridad.
 Índices monitoreados: graph_v2.json y entity_index_v2.json, ambos en Layer_1/scripts/.
