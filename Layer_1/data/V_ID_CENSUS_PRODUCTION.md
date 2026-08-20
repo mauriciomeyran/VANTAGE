@@ -101,7 +101,6 @@
 | [`MANUAL:WEEKLY-FLOW-003`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281a3b68aec7ee2e3fc2f ) | 8.3 | Miércoles — Figma |
 | [`MANUAL:WEEKLY-FLOW-004`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428128a07ceed0d35be0c0 ) | 08.4 | Jueves |
 | [`MANUAL:WEEKLY-FLOW-005`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281c89750c1311511906f ) | 08.5 | Viernes |
-| [`MANUAL:WEEKLY-FLOW-006`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42819f9217f1150e0619a2 ) | 08.6 | Cadence Matrix — Weekly Rhythm |
 | [`MANUAL:RUNTIME`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815caab0cd6a045d5113 ) | 09 | VANTAGE Runtime (Consulta Operativa) |
 | [`MANUAL:RUNTIME-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428105bd12de308c4e8871 ) | 9.1 | ¿Qué es el Runtime? |
 | [`MANUAL:RUNTIME-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281c3a7a8def378bdf338 ) | 9.2 | Comandos Principales |

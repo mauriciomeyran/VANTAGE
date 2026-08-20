@@ -154,7 +154,6 @@ CENSUS_SPEC = [
             {"id": "MANUAL:WEEKLY-FLOW-003", "seccion": "8.3", "nombre": "Miércoles — Figma"},
             {"id": "MANUAL:WEEKLY-FLOW-004", "seccion": "08.4", "nombre": "Jueves"},
             {"id": "MANUAL:WEEKLY-FLOW-005", "seccion": "08.5", "nombre": "Viernes"},
-            {"id": "MANUAL:WEEKLY-FLOW-006", "seccion": "08.6", "nombre": "Cadence Matrix — Weekly Rhythm"},
             {"id": "MANUAL:RUNTIME", "seccion": "09", "nombre": "VANTAGE Runtime (Consulta Operativa)"},
             {"id": "MANUAL:RUNTIME-001", "seccion": "9.1", "nombre": "¿Qué es el Runtime?"},
             {"id": "MANUAL:RUNTIME-002", "seccion": "9.2", "nombre": "Comandos Principales"},

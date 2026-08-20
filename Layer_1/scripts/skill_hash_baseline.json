@@ -1,0 +1,114 @@
+{
+  "skills/- Style Skills/corporate-communication-style/SKILL.md": {
+    "hash": "a397a6c9f9850e2e4b3a91260f4c46edadb8cf5eaed85afbcd30d254335eba2e",
+    "captured_at": "2026-08-20T10:22:33.608310+00:00"
+  },
+  "skills/- Style Skills/critico-pensante-style/SKILL.md": {
+    "hash": "5919435fb276d51a1ecdbb14920182e9b85bcf0fc892b93a55eaed3a323e277c",
+    "captured_at": "2026-08-20T10:22:33.608555+00:00"
+  },
+  "skills/prompt-master/SKILL.md": {
+    "hash": "34475726debdb4514edb3bad3109df1005666b32fa3abc5f486952824b331ff3",
+    "captured_at": "2026-08-20T10:22:33.608774+00:00"
+  },
+  "skills/- Style Skills/retail-auditor-style/SKILL.md": {
+    "hash": "0b9b36833c337cd7a8d6de1f9253a61c7835f73fce401c017a0beb7fd50bf028",
+    "captured_at": "2026-08-20T10:22:33.608958+00:00"
+  },
+  "skills/- Style Skills/socio-estrategico-style/SKILL.md": {
+    "hash": "da0d7f1a4beea70f12cb070c413461246390c9c72045625f841a4fdb335f9a16",
+    "captured_at": "2026-08-20T10:22:33.609120+00:00"
+  },
+  "skills/- CV/tailored-resume-generator/SKILL.md": {
+    "hash": "5b7b36d0d4f47426e0223f90d8fa8812a0b5c2466661b7a8991c9f56bc4b0ba2",
+    "captured_at": "2026-08-20T10:22:33.609299+00:00"
+  },
+  "skills/vantage-create-bug-task/SKILL.md": {
+    "hash": "61b0ff5f1dd89da32d4219da0a10053d6dfdef9ffcadc0b464269b602ae74a8d",
+    "captured_at": "2026-08-20T10:22:33.609466+00:00"
+  },
+  "skills/- CV/vantage-cv-a/SKILL.md": {
+    "hash": "0fd1b22bfae80f844541a9ef02c1f74e817d2f0ed07b773536e981a9401cc521",
+    "captured_at": "2026-08-20T10:22:33.609641+00:00"
+  },
+  "skills/- CV/vantage-cv-b/SKILL.md": {
+    "hash": "3076ae26faff7d945df5e647470a2ed1f0d06da05353d4b89133c932e390ecc8",
+    "captured_at": "2026-08-20T10:22:33.609816+00:00"
+  },
+  "skills/- Documentation Skills/vantage-documentacion-transversal-implementacion/SKILL.md": {
+    "hash": "ddd79c20cadd0efce2031821a47488c3312ab32415aa1606b4ec8f02b3867390",
+    "captured_at": "2026-08-20T10:22:33.609957+00:00"
+  },
+  "skills/- Documentation Skills/vantage-documentacion-transversal-propuesta/SKILL.md": {
+    "hash": "180477a06e9c709a00656891c0327b250b415da86de26fd16f341caf6598e390",
+    "captured_at": "2026-08-20T10:22:33.610114+00:00"
+  },
+  "skills/- Tidy/vantage-housekeeping-archive/SKILL.md": {
+    "hash": "16335a5e5e5e91a5cdc9d61d6895504077c6d69b51cfe53cda554cce9e84c875",
+    "captured_at": "2026-08-20T10:22:33.610289+00:00"
+  },
+  "skills/- Tidy/vantage-housekeeping-tracker/SKILL.md": {
+    "hash": "31f4fa6b9015a57a57ecfc524e6060db46f3eb0d6554fb4e9c1d267baf4d1b17",
+    "captured_at": "2026-08-20T10:22:33.610455+00:00"
+  },
+  "skills/- Documentation Skills/vantage-hyperlink-loop/SKILL.md": {
+    "hash": "2303a53866ca012ed9714acc7a8660788a8f9ca762fbb43155cd9caee2ffc34b",
+    "captured_at": "2026-08-20T10:22:33.610578+00:00"
+  },
+  "skills/- Session Skills/vantage-present-handoff/SKILL.md": {
+    "hash": "c96a4225b09c73fdea8c7b54112f939d479997c85a2f658a2e4c8e627017e285",
+    "captured_at": "2026-08-20T10:22:33.610732+00:00"
+  },
+  "skills/- CV/vantage-qa/SKILL.md": {
+    "hash": "03b7cb1c672830cdee3d960e9165b118db63b38127dcb0e1bafb34f0c283ff99",
+    "captured_at": "2026-08-20T10:22:33.610913+00:00"
+  },
+  "skills/- Session Skills/vantage-session-close/SKILL.md": {
+    "hash": "ac496ceadbe23418f192a6a6e5ed47d5da08235673941dbc7b8c49bd5f903388",
+    "captured_at": "2026-08-20T10:22:33.611067+00:00"
+  },
+  "skills/- Session Skills/vantage-session-open/SKILL.md": {
+    "hash": "4be307b67fafb04c3622ecaa5229d5f45387493bd269e5427fa4e0b23a167d45",
+    "captured_at": "2026-08-20T10:22:33.611228+00:00"
+  },
+  "skills/vantage-skill-updater/SKILL.md": {
+    "hash": "230a0b304d10822cb6e269ab65f5232f79973a78daf2e3562750a4ba2df0b5c6",
+    "captured_at": "2026-08-20T10:22:33.611402+00:00"
+  },
+  "skills/- Sync Assets/vantage-sync-assets/SKILL.md": {
+    "hash": "0770d38f2cfe651896bad69d27b1a85e296f5a8c540f4c3a0d20275b2597f292",
+    "captured_at": "2026-08-20T10:22:33.611582+00:00"
+  },
+  "skills/- Sync Assets/vantage-sync-census-spec/SKILL.md": {
+    "hash": "4e404b58b383f1f4c188f0afb2b8087178da544b96fe75571fc7de0af72c4a46",
+    "captured_at": "2026-08-20T10:22:33.611755+00:00"
+  },
+  "skills/- Sync Assets/vantage-sync-script-glossary/SKILL.md": {
+    "hash": "01c7df5f7a1c69875613a4175a3c008f7932ff900298edc6809cee0460aab868",
+    "captured_at": "2026-08-20T10:22:33.611919+00:00"
+  },
+  "skills/- Sync Assets/vantage-sync-script-library/SKILL.md": {
+    "hash": "2b9d4ac833b15841c4968ee0f3086a2498077dfd61a0923c6b1a3bbbc6e64fe5",
+    "captured_at": "2026-08-20T10:22:33.612086+00:00"
+  },
+  "skills/- Sync Assets/vantage-sync-skill-glossary/SKILL.md": {
+    "hash": "f0e43035afb3d4bc3547828fe01931a1dc61206595f728dcd4127181459d4eb9",
+    "captured_at": "2026-08-20T10:22:33.612214+00:00"
+  },
+  "skills/- Sync Assets/vantage-sync-skill-library/SKILL.md": {
+    "hash": "8cc33e2a27c0238a1e99fdbeb43945c6076577321a3fdee7be4c6551905dc9c3",
+    "captured_at": "2026-08-20T10:22:33.612350+00:00"
+  },
+  "skills/- Tidy/vantage-tidy-bug-task-tracker/SKILL.md": {
+    "hash": "d151c070edf8b8972f831c6e6eab37eabb8e11f74048b22588fc8313068af84d",
+    "captured_at": "2026-08-20T10:22:33.612519+00:00"
+  },
+  "skills/- Tidy/vantage-tidy-changelog/SKILL.md": {
+    "hash": "8a34bcf8f429d5845535a49e611991837110c0a17658f1cd2055f66832871baa",
+    "captured_at": "2026-08-20T10:22:33.612675+00:00"
+  },
+  "skills/- Tidy/vantage-tidy-opportunities-tracker/SKILL.md": {
+    "hash": "173150dfab249b896ee87118bd34c9dbbb69dfd812754ce45e2794b7a11fb2ea",
+    "captured_at": "2026-08-20T10:22:33.612820+00:00"
+  }
+}
