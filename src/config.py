@@ -63,6 +63,7 @@ class Settings(BaseSettings):
     # Local vision models are far slower than a cloud endpoint; the default httpx
     # timeout will abort a legitimate step mid-inference.
     ollama_timeout: float = Field(default=300.0, alias="OLLAMA_TIMEOUT")
+    ollama_num_ctx: int = Field(default=16384, alias="OLLAMA_NUM_CTX")
     openrouter_api_key: str = Field(default="", alias="OPENROUTER_API_KEY")
     openrouter_model: str = Field(
         default="qwen/qwen-2.5-vl-7b-instruct",
@@ -81,6 +82,7 @@ class Settings(BaseSettings):
     llm_cost_limit: float = Field(default=5.0, alias="LLM_COST_LIMIT")
     use_cheap_fallback: bool = Field(default=True, alias="USE_CHEAP_FALLBACK")
     domain_min_delay: float = Field(default=3.0, alias="DOMAIN_MIN_DELAY")
+    agent_llm_timeout: int = Field(default=180, alias="AGENT_LLM_TIMEOUT")
 
     def provider(self) -> str:
         return self.llm_provider.strip().lower()

@@ -134,7 +134,7 @@ def build_llm(settings: Settings | None = None) -> Any:
             model=cfg.ollama_model,
             host=cfg.ollama_base_url,
             timeout=cfg.ollama_timeout,
-            ollama_options={"temperature": 0},
+            ollama_options={"temperature": 0, "num_ctx": cfg.ollama_num_ctx},
         )
 
     if provider == "openrouter":
@@ -249,6 +249,7 @@ async def _run_agent_once(
                 llm=llm,
                 browser=browser,
                 use_vision=True,
+                llm_timeout=cfg.agent_llm_timeout,
             )
         else:
             agent = agent_factory(task=task, use_vision=True)
