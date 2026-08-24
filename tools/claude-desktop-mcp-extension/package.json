@@ -1,0 +1,12 @@
+{
+  "name": "vantage-serial-mcp-extension",
+  "version": "1.0.0",
+  "description": "VANTAGE Serial Allocation MCP Extension for Claude Desktop",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}
