@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VANTAGE — Health Check de Arranque
+VANTAGE â€” Health Check de Arranque
 Corre antes de L1/L2/L3. Lectura estricta, cero escritura.
 
 Uso:
@@ -8,7 +8,7 @@ Uso:
 
 Exit codes:
     0 = todo OK
-    1 = algo falló (ver output)
+    1 = algo fallÃ³ (ver output)
 """
 
 import os
@@ -17,13 +17,14 @@ import subprocess
 import time
 import json
 import re
+import requests
 from pathlib import Path
 from datetime import datetime, timezone
 
-# ── Config ────────────────────────────────────────────────
+# â”€â”€ Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 REQUIRED_ENV_VARS = [
     "NOTION_TOKEN",
-    # agrega aquí las que realmente usa layer_1.env
+    # agrega aquÃ­ las que realmente usa layer_1.env
 ]
 
 DOCS_FUNDACIONALES = {
@@ -37,7 +38,7 @@ DOCS_FUNDACIONALES = {
     "V-CHANGELOG-ARCHIVO": ("3ba938be-fc42-8011-8947-fb4fa5d1f63f", "Changelog Archivo.md"),
 }
 
-ACTIVE_DIR = Path(__file__).resolve().parent.parent.parent / "Documentación" / "ACTIVE"
+ACTIVE_DIR = Path(__file__).resolve().parent.parent.parent / "DocumentaciÃ³n" / "ACTIVE"
 SCRIPTS_DIR = Path(__file__).resolve().parent
 DATA_DIR   = Path(__file__).resolve().parent.parent / "data"
 REPO_ROOT   = Path(__file__).resolve().parent.parent.parent
@@ -49,13 +50,13 @@ INDEX_FILES = [
 
 CHANGELOG_PAGE_ID = "390938be-fc42-80e7-b429-d7d730339353"
 
-# Trackers — Reactivo (Bug) vs Proactivo (Task). Ver KERNEL:SCHEMA en System Prompt.
+# Trackers â€” Reactivo (Bug) vs Proactivo (Task). Ver KERNEL:SCHEMA en System Prompt.
 TRACKERS = {
     "BUG": {
         "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",  # COL
         "title_prop": "Bug",
         "status_prop": "Status",
-        "open_statuses": ["Abierto", "En revisión"],
+        "open_statuses": ["Abierto", "En revisiÃ³n"],
     },
     "TASK": {
         "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",  # COL
@@ -72,64 +73,64 @@ YELLOW = "\033[93m"
 
 
 def ok(msg):
-    print(f"{GREEN}✓{RESET} {msg}")
+    print(f"{GREEN}âœ“{RESET} {msg}")
 
 
 def fail(msg):
-    print(f"{RED}✗{RESET} {msg}")
+    print(f"{RED}âœ—{RESET} {msg}")
 
 
 def warn(msg):
     print(f"{YELLOW}!{RESET} {msg}")
 
 
-# ── Checks ────────────────────────────────────────────────
+# â”€â”€ Checks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def check_env():
-    """Valida que las vars requeridas existan y no estén vacías."""
+    """Valida que las vars requeridas existan y no estÃ©n vacÃ­as."""
     missing = [v for v in REQUIRED_ENV_VARS if not os.environ.get(v)]
     if missing:
-        fail(f".env — faltan vars: {', '.join(missing)}")
+        fail(f".env â€” faltan vars: {', '.join(missing)}")
         return False
     ok(".env cargado correctamente")
     return True
 
 
 def check_git():
-    """Valida que el repo esté limpio (sin cambios sin commitear)."""
+    """Valida que el repo estÃ© limpio (sin cambios sin commitear)."""
     try:
         result = subprocess.run(
             ["git", "status", "--porcelain"],
             capture_output=True, text=True, timeout=10
         )
         if result.returncode != 0:
-            fail("git — no se pudo leer status (¿estás en el repo?)")
+            fail("git â€” no se pudo leer status (Â¿estÃ¡s en el repo?)")
             return False
         if result.stdout.strip():
             n = len(result.stdout.strip().splitlines())
-            warn(f"git — {n} archivo(s) sin commitear")
+            warn(f"git â€” {n} archivo(s) sin commitear")
             return False
         ok("git limpio")
         return True
     except FileNotFoundError:
-        fail("git — comando no encontrado")
+        fail("git â€” comando no encontrado")
         return False
     except subprocess.TimeoutExpired:
-        fail("git — timeout")
+        fail("git â€” timeout")
         return False
 
 
 def check_notion_reachable():
     """
     Valida que Notion API responda. Requiere notion_client instalado
-    y NOTION_TOKEN en env. Fetch mínimo a un doc ancla (V-SYSTEM-PROMPT).
+    y NOTION_TOKEN en env. Fetch mÃ­nimo a un doc ancla (V-SYSTEM-PROMPT).
     """
     token = os.environ.get("NOTION_TOKEN")
     if not token:
-        fail("Notion — NOTION_TOKEN no configurado, skip")
+        fail("Notion â€” NOTION_TOKEN no configurado, skip")
         return False
     try:
-        # import tardío para no romper el script si falta la lib
+        # import tardÃ­o para no romper el script si falta la lib
         import sys as _sys
         import glob as _glob
         # aseguro que cargue el SDK real, no el notion_client.py local que hace shadow
@@ -145,22 +146,22 @@ def check_notion_reachable():
         ok("Notion reachable (fetch a V-SYSTEM-PROMPT OK)")
         return True
     except ImportError:
-        fail("Notion — notion_client no instalado en .venv")
+        fail("Notion â€” notion_client no instalado en .venv")
         return False
     except Exception as e:
-        fail(f"Notion — error de conexión: {e}")
+        fail(f"Notion â€” error de conexiÃ³n: {e}")
         return False
 
 
 def check_docs_sync():
     """
     Compara timestamp/hash local (ACTIVE/*.md) vs lo que se tiene
-    registrado como última sync. Placeholder: solo valida que existan
-    los 5 archivos locales — el diff de contenido real requiere que
-    vsync_doc.py esté sano primero (bug de parser pendiente).
+    registrado como Ãºltima sync. Placeholder: solo valida que existan
+    los 5 archivos locales â€” el diff de contenido real requiere que
+    vsync_doc.py estÃ© sano primero (bug de parser pendiente).
     """
     if not ACTIVE_DIR.exists():
-        warn(f"docs sync — carpeta {ACTIVE_DIR} no existe, skip")
+        warn(f"docs sync â€” carpeta {ACTIVE_DIR} no existe, skip")
         return False
 
     missing = []
@@ -170,16 +171,16 @@ def check_docs_sync():
             missing.append(name)
 
     if missing:
-        fail(f"docs sync — faltan localmente: {', '.join(missing)}")
+        fail(f"docs sync â€” faltan localmente: {', '.join(missing)}")
         return False
 
     ok(f"{len(DOCS_FUNDACIONALES)} docs fundacionales presentes en ACTIVE/")
     return True
 
 
-PRIORITY_ORDER = ["CRÍTICO", "ALTO", "MEDIO", "BAJO"]
+PRIORITY_ORDER = ["CRÃTICO", "ALTO", "MEDIO", "BAJO"]
 PRIORITY_COLOR = {
-    "CRÍTICO": "\033[91m",   # rojo
+    "CRÃTICO": "\033[91m",   # rojo
     "ALTO":    "\033[93m",   # amarillo
     "MEDIO":   "\033[94m",   # azul
     "BAJO":    "\033[37m",   # gris
@@ -189,12 +190,12 @@ PRIORITY_COLOR = {
 def check_pending_tickets():
     """
     Lista tickets abiertos en BUG TRACKER y TASKS TRACKER,
-    agrupados por prioridad (CRÍTICO → ALTO → MEDIO → BAJO → Sin Prioridad).
-    Informativo — nunca marca el health check como fallido.
+    agrupados por prioridad (CRÃTICO â†’ ALTO â†’ MEDIO â†’ BAJO â†’ Sin Prioridad).
+    Informativo â€” nunca marca el health check como fallido.
     """
     token = os.environ.get("NOTION_TOKEN")
     if not token:
-        warn("Tickets — NOTION_TOKEN no configurado, skip")
+        warn("Tickets â€” NOTION_TOKEN no configurado, skip")
         return True
     try:
         import sys as _sys
@@ -223,7 +224,7 @@ def check_pending_tickets():
                 total_open += len(results)
 
                 if not results:
-                    ok(f"{label} — sin tickets abiertos")
+                    ok(f"{label} â€” sin tickets abiertos")
                     continue
 
                 # Agrupar por prioridad
@@ -234,13 +235,13 @@ def check_pending_tickets():
                     props = page.get("properties", {})
                     title_prop = props.get(cfg["title_prop"], {})
                     title_parts = title_prop.get("title", [])
-                    title = title_parts[0]["plain_text"] if title_parts else "(sin título)"
+                    title = title_parts[0]["plain_text"] if title_parts else "(sin tÃ­tulo)"
                     prioridad = props.get("Prioridad", {}).get("select", {})
                     prioridad_name = prioridad.get("name", "") if prioridad else ""
                     bucket = prioridad_name if prioridad_name in PRIORITY_ORDER else "Sin Prioridad"
                     groups[bucket].append(title)
 
-                # Resumen en una línea
+                # Resumen en una lÃ­nea
                 resumen = []
                 for p in PRIORITY_ORDER:
                     if groups[p]:
@@ -249,41 +250,41 @@ def check_pending_tickets():
                 if groups["Sin Prioridad"]:
                     resumen.append(f"Sin Prioridad: {len(groups['Sin Prioridad'])}")
 
-                warn(f"{label} — {len(results)} abierto(s)  [{' · '.join(resumen)}]")
+                warn(f"{label} â€” {len(results)} abierto(s)  [{' Â· '.join(resumen)}]")
 
-                # Detalle: solo CRÍTICO y ALTO se listan explícitamente
-                for p in ["CRÍTICO", "ALTO"]:
+                # Detalle: solo CRÃTICO y ALTO se listan explÃ­citamente
+                for p in ["CRÃTICO", "ALTO"]:
                     for title in groups[p]:
                         color = PRIORITY_COLOR[p]
-                        print(f"    {color}▲ [{p}]{RESET} {title}")
+                        print(f"    {color}â–² [{p}]{RESET} {title}")
 
                 # MEDIO y BAJO: solo conteo
                 for p in ["MEDIO", "BAJO"]:
                     if groups[p]:
-                        print(f"    · {p}: {len(groups[p])} ticket(s) — ver Notion")
+                        print(f"    Â· {p}: {len(groups[p])} ticket(s) â€” ver Notion")
 
                 if groups["Sin Prioridad"]:
-                    print(f"    · Sin Prioridad: {len(groups['Sin Prioridad'])} ticket(s) — requieren clasificación")
+                    print(f"    Â· Sin Prioridad: {len(groups['Sin Prioridad'])} ticket(s) â€” requieren clasificaciÃ³n")
 
             except Exception as e:
-                fail(f"{label} — error al consultar: {e}")
+                fail(f"{label} â€” error al consultar: {e}")
 
         if total_open == 0:
             ok("Sin pendientes en trackers")
         return True
     except ImportError:
-        fail("Tickets — notion_client no instalado en .venv")
+        fail("Tickets â€” notion_client no instalado en .venv")
         return True
     except Exception as e:
-        fail(f"Tickets — error de conexión: {e}")
+        fail(f"Tickets â€” error de conexiÃ³n: {e}")
         return True
 
 
 def check_system_version():
-    """Fetchea versión del sistema desde la propiedad Versión de V-CHANGELOG."""
+    """Fetchea versiÃ³n del sistema desde la propiedad VersiÃ³n de V-CHANGELOG."""
     token = os.environ.get("NOTION_TOKEN")
     if not token:
-        warn("versión — NOTION_TOKEN no configurado, skip")
+        warn("versiÃ³n â€” NOTION_TOKEN no configurado, skip")
         return True
     try:
         import glob as _glob
@@ -301,18 +302,18 @@ def check_system_version():
                 if parts:
                     version = parts[0].get("plain_text", "")
                     break
-        # propiedad "Versión" directa
-        version_prop = meta.get("properties", {}).get("Versión", {})
+        # propiedad "VersiÃ³n" directa
+        version_prop = meta.get("properties", {}).get("VersiÃ³n", {})
         if version_prop.get("type") == "rich_text":
             parts = version_prop.get("rich_text", [])
             version = parts[0].get("plain_text", "") if parts else ""
         if version:
             ok(f"Sistema v{version}")
         else:
-            warn("versión — no encontrada en V-CHANGELOG")
+            warn("versiÃ³n â€” no encontrada en V-CHANGELOG")
         return True
     except Exception as e:
-        warn(f"versión — error: {e}")
+        warn(f"versiÃ³n â€” error: {e}")
         return True
 
 
@@ -323,8 +324,8 @@ VANTAGE_RUNTIME_SCRIPT = SCRIPTS_DIR / "vantage.py"
 def _summarize_sync_output(stdout):
     """
     Extrae un resumen legible del stdout de `vantage.py sync`.
-    Intenta parsear JSON (busca el último objeto {...} en el output);
-    si falla, cae a la última línea de texto no vacía.
+    Intenta parsear JSON (busca el Ãºltimo objeto {...} en el output);
+    si falla, cae a la Ãºltima lÃ­nea de texto no vacÃ­a.
     """
     text = stdout.strip()
     if not text:
@@ -333,7 +334,7 @@ def _summarize_sync_output(stdout):
     import json as _json
     import re as _re
 
-    # Busca el último bloque {...} en el stdout (tolerante a logs previos)
+    # Busca el Ãºltimo bloque {...} en el stdout (tolerante a logs previos)
     matches = _re.findall(r"\{.*\}", text, flags=_re.DOTALL)
     if matches:
         try:
@@ -342,12 +343,12 @@ def _summarize_sync_output(stdout):
             before = data.get("entities_before")
             after = data.get("entities_after")
             if before is not None and after is not None:
-                return f"status: {status}, entities: {before} → {after}"
+                return f"status: {status}, entities: {before} â†’ {after}"
             return f"status: {status}"
         except (ValueError, _json.JSONDecodeError):
             pass
 
-    # Fallback: última línea no vacía del stdout
+    # Fallback: Ãºltima lÃ­nea no vacÃ­a del stdout
     lines = [l.strip() for l in text.splitlines() if l.strip()]
     return lines[-1] if lines else "sin output"
 
@@ -355,12 +356,12 @@ def _summarize_sync_output(stdout):
 def _run_vantage_sync():
     """
     Dispara `python3 vantage.py sync` para refrescar el Entity Index.
-    Housekeeping de rutina, no remediación de un fallo del sistema
-    (ver KERNEL:FAIL-PHILOSOPHY — un índice stale no es un fallo,
-    es mantenimiento esperado). Best-effort: nunca propaga excepción.
+    Housekeeping de rutina, no remediaciÃ³n de un fallo del sistema
+    (ver KERNEL:FAIL-PHILOSOPHY â€” un Ã­ndice stale no es un fallo,
+    es mantenimiento esperado). Best-effort: nunca propaga excepciÃ³n.
     """
     if not VANTAGE_RUNTIME_SCRIPT.exists():
-        fail(f"index — {VANTAGE_RUNTIME_SCRIPT.name} no encontrado en {SCRIPTS_DIR}, auto-sync omitido")
+        fail(f"index â€” {VANTAGE_RUNTIME_SCRIPT.name} no encontrado en {SCRIPTS_DIR}, auto-sync omitido")
         return False
     try:
         result = subprocess.run(
@@ -369,26 +370,26 @@ def _run_vantage_sync():
             cwd=str(SCRIPTS_DIR)
         )
         if result.returncode != 0:
-            fail(f"index — auto-sync falló: {result.stderr.strip()[:200]}")
+            fail(f"index â€” auto-sync fallÃ³: {result.stderr.strip()[:200]}")
             return False
         summary = _summarize_sync_output(result.stdout)
-        ok(f"index — auto-sync ejecutado ({summary})")
+        ok(f"index â€” auto-sync ejecutado ({summary})")
         return True
     except subprocess.TimeoutExpired:
-        fail("index — auto-sync timeout (>120s)")
+        fail("index â€” auto-sync timeout (>120s)")
         return False
     except Exception as e:
-        fail(f"index — auto-sync error: {e}")
+        fail(f"index â€” auto-sync error: {e}")
         return False
 
 
 def check_index_age():
     """
-    Muestra antigüedad de los índices del runtime.
-    Si algún índice cruza INDEX_STALE_THRESHOLD_HOURS, dispara sync
-    automático vía `vantage.py sync` — condicional, no en cada corrida.
+    Muestra antigÃ¼edad de los Ã­ndices del runtime.
+    Si algÃºn Ã­ndice cruza INDEX_STALE_THRESHOLD_HOURS, dispara sync
+    automÃ¡tico vÃ­a `vantage.py sync` â€” condicional, no en cada corrida.
     Si el auto-sync falla, se reporta y NO se reintenta (Golden Rules:
-    reportar el estado, esperar instrucción — esto sí es un fallo real).
+    reportar el estado, esperar instrucciÃ³n â€” esto sÃ­ es un fallo real).
     """
     now = time.time()
     all_ok = True
@@ -397,18 +398,18 @@ def check_index_age():
     for name in INDEX_FILES:
         path = DATA_DIR / name
         if not path.exists():
-            warn(f"index — {name} no encontrado")
+            warn(f"index â€” {name} no encontrado")
             all_ok = False
         else:
             age_hours = (now - path.stat().st_mtime) / 3600
             if age_hours > INDEX_STALE_THRESHOLD_HOURS:
-                warn(f"index — {name}: {age_hours:.0f}h sin actualizar (umbral: {INDEX_STALE_THRESHOLD_HOURS}h)")
+                warn(f"index â€” {name}: {age_hours:.0f}h sin actualizar (umbral: {INDEX_STALE_THRESHOLD_HOURS}h)")
                 stale_detected = True
             else:
-                ok(f"index — {name}: actualizado hace {age_hours:.1f}h")
+                ok(f"index â€” {name}: actualizado hace {age_hours:.1f}h")
 
     if stale_detected:
-        warn("index — umbral cruzado, disparando auto-sync...")
+        warn("index â€” umbral cruzado, disparando auto-sync...")
         synced = _run_vantage_sync()
         all_ok = all_ok and synced
 
@@ -416,7 +417,7 @@ def check_index_age():
 
 
 def check_vgit_last():
-    """Muestra timestamp del último commit en el repo."""
+    """Muestra timestamp del Ãºltimo commit en el repo."""
     try:
         result = subprocess.run(
             ["git", "log", "-1", "--format=%ci"],
@@ -424,20 +425,20 @@ def check_vgit_last():
             cwd=str(REPO_ROOT)
         )
         if result.returncode != 0 or not result.stdout.strip():
-            warn("vgit — no se pudo leer último commit")
+            warn("vgit â€” no se pudo leer Ãºltimo commit")
             return True
         last = result.stdout.strip()
-        ok(f"vgit — último commit: {last}")
+        ok(f"vgit â€” Ãºltimo commit: {last}")
         return True
     except Exception as e:
-        warn(f"vgit — error: {e}")
+        warn(f"vgit â€” error: {e}")
         return True
 
 
 def check_vdoc_last():
-    """Muestra el doc más recientemente sincronizado en ACTIVE/."""
+    """Muestra el doc mÃ¡s recientemente sincronizado en ACTIVE/."""
     if not ACTIVE_DIR.exists():
-        warn("vdoc — carpeta ACTIVE/ no existe")
+        warn("vdoc â€” carpeta ACTIVE/ no existe")
         return True
     now = datetime.now(tz=timezone.utc)
     latest_file = None
@@ -458,9 +459,9 @@ def check_vdoc_last():
             age_str = f"hace {hours:.1f}h"
         else:
             age_str = f"hace {int(hours / 24)}d"
-        ok(f"vdoc — último sync: {latest_file} ({age_str})")
+        ok(f"vdoc â€” Ãºltimo sync: {latest_file} ({age_str})")
     else:
-        warn("vdoc — sin docs en ACTIVE/")
+        warn("vdoc â€” sin docs en ACTIVE/")
     return True
 
 
@@ -471,13 +472,13 @@ L3_STALE_THRESHOLD_H = 48
 def check_layer3_heartbeat():
     """Verifica que Layer 3 haya corrido recientemente."""
     if not L3_HEARTBEAT_PATH.exists():
-        warn("layer3 — heartbeat no encontrado (\u00bfL3 nunca ha corrido?)")
+        warn("layer3 â€” heartbeat no encontrado (\u00bfL3 nunca ha corrido?)")
         return True
     try:
         data = json.loads(L3_HEARTBEAT_PATH.read_text())
         last_run_str = data.get("last_run", "")
         if not last_run_str:
-            warn("layer3 — heartbeat sin campo last_run")
+            warn("layer3 â€” heartbeat sin campo last_run")
             return True
         last_run = datetime.fromisoformat(last_run_str.replace("Z", "+00:00"))
         now      = datetime.now(tz=timezone.utc)
@@ -485,64 +486,66 @@ def check_layer3_heartbeat():
         created  = data.get("total_created", "?")
         failed   = data.get("total_failed", "?")
         if age_h > L3_STALE_THRESHOLD_H:
-            warn(f"layer3 — {age_h:.0f}h sin correr (umbral: {L3_STALE_THRESHOLD_H}h) | created={created} failed={failed}")
+            warn(f"layer3 â€” {age_h:.0f}h sin correr (umbral: {L3_STALE_THRESHOLD_H}h) | created={created} failed={failed}")
         else:
-            ok(f"layer3 — {age_h:.1f}h | created={created} failed={failed}")
+            ok(f"layer3 â€” {age_h:.1f}h | created={created} failed={failed}")
     except Exception as e:
-        warn(f"layer3 — error leyendo heartbeat: {e}")
+        warn(f"layer3 â€” error leyendo heartbeat: {e}")
     return True
 
 
 CENSUS_OUTPUT_PATH     = Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/data/V_ID_CENSUS_PRODUCTION.md")
-CENSUS_STALE_THRESHOLD_H = 24 * 7   # 7 días — el Census cambia con cierre de tickets, no con cada sync
+CENSUS_STALE_THRESHOLD_H = 24 * 7   # 7 dÃ­as â€” el Census cambia con cierre de tickets, no con cada sync
+
+SERIAL_SERVICE_URL = os.getenv("VANTAGE_SERIAL_SERVICE_URL", "http://localhost:8787")
 
 
 def check_census_age():
     """
-    Chequeo informativo de antigüedad del V-ID-CENSUS (KERNEL:CENSUS-SYNC).
+    Chequeo informativo de antigÃ¼edad del V-ID-CENSUS (KERNEL:CENSUS-SYNC).
     NO auto-regenera: generate_census.py pega directo a la API de Notion
-    con paginación y rate-limit real — puede tardar minutos, lo cual rompe
-    el contrato de health_check.py como lectura estricta y rápida.
-    Solo reporta estado; nunca marca el health check como fallido —
+    con paginaciÃ³n y rate-limit real â€” puede tardar minutos, lo cual rompe
+    el contrato de health_check.py como lectura estricta y rÃ¡pida.
+    Solo reporta estado; nunca marca el health check como fallido â€”
     el gate real vive en el cierre de tickets (Regla 1 de KERNEL:CENSUS-SYNC),
-    no en el arranque de sesión.
+    no en el arranque de sesiÃ³n.
     """
     if not CENSUS_OUTPUT_PATH.exists():
-        warn("census — V_ID_CENSUS_PRODUCTION.md no encontrado (¿nunca se ha generado?)")
+        warn("census â€” V_ID_CENSUS_PRODUCTION.md no encontrado (Â¿nunca se ha generado?)")
         return True
 
     age_h = (time.time() - CENSUS_OUTPUT_PATH.stat().st_mtime) / 3600
 
     if age_h > CENSUS_STALE_THRESHOLD_H:
         warn(
-            f"census — {age_h/24:.1f}d sin regenerar "
-            f"(umbral: {CENSUS_STALE_THRESHOLD_H/24:.0f}d) — "
+            f"census â€” {age_h/24:.1f}d sin regenerar "
+            f"(umbral: {CENSUS_STALE_THRESHOLD_H/24:.0f}d) â€” "
             f"correr generate_census.py si cerraste tickets con cambio de estado de ID"
         )
     else:
-        ok(f"census — actualizado hace {age_h/24:.1f}d")
+        ok(f"census â€” actualizado hace {age_h/24:.1f}d")
 
     return True   # informativo, nunca bloquea arranque
 
 
 def check_auto_link_corruption():
     """
-    Detector read-only de corrupción de auto-links (D5-real).
+    Detector read-only de corrupciÃ³n de auto-links (D5-real).
     
     Escanea patrones `_http://` y `[nombre.ext](http://nombre.ext)` 
     (donde el texto del enlace coincide con la URL) sobre:
-    - Documentación/ACTIVE/*.md
+    - DocumentaciÃ³n/ACTIVE/*.md
     - skills/*.md  
-    - Campo Descripción en entity_index_v2.json (D5-real extensión)
+    - Campo DescripciÃ³n en entity_index_v2.json (D5-real extensiÃ³n)
     
-    Ignora enlaces HTTP/HTTPS externos legítimos.
+    Ignora enlaces HTTP/HTTPS externos legÃ­timos.
     La salida es informativa/advisory (no bloqueante, sin exit code fatal).
     """
     corruption_count = 0
     files_checked = 0
     entities_checked = 0
     
-    # Patrones de corrupción a detectar
+    # Patrones de corrupciÃ³n a detectar
     # 1. Guion bajo antes de http:// (_http://)
     underscore_pattern = re.compile(r'_http://')
     
@@ -562,29 +565,29 @@ def check_auto_link_corruption():
                 content = md_file.read_text(encoding='utf-8')
                 filename = md_file.name
                 
-                # Buscar patrones de corrupción
+                # Buscar patrones de corrupciÃ³n
                 underscore_matches = underscore_pattern.findall(content)
                 auto_link_matches = auto_link_pattern.findall(content)
                 
                 if underscore_matches or auto_link_matches:
                     corruption_count += 1
-                    warn(f"auto-link — {filename} tiene patrones sospechosos:")
+                    warn(f"auto-link â€” {filename} tiene patrones sospechosos:")
                     
                     if underscore_matches:
-                        print(f"    • {len(underscore_matches)} ocurrencias de '_http://'")
+                        print(f"    â€¢ {len(underscore_matches)} ocurrencias de '_http://'")
                     
                     if auto_link_matches:
-                        print(f"    • {len(auto_link_matches)} auto-links detectados:")
-                        for match in auto_link_matches[:3]:  # Mostrar máximo 3 ejemplos
+                        print(f"    â€¢ {len(auto_link_matches)} auto-links detectados:")
+                        for match in auto_link_matches[:3]:  # Mostrar mÃ¡ximo 3 ejemplos
                             print(f"      - [{match}](http://{match})")
                         if len(auto_link_matches) > 3:
-                            print(f"      ... y {len(auto_link_matches) - 3} más")
+                            print(f"      ... y {len(auto_link_matches) - 3} mÃ¡s")
                     
             except Exception as e:
                 # Silencioso para no romper el health check por errores de lectura
                 pass
     
-    # D5-real: Escanear campo Descripción en entity_index_v2.json
+    # D5-real: Escanear campo DescripciÃ³n en entity_index_v2.json
     entity_index_path = DATA_DIR / "entity_index_v2.json"
     if entity_index_path.exists():
         try:
@@ -593,10 +596,10 @@ def check_auto_link_corruption():
             
             for entity in entity_index.get('entities', []):
                 entities_checked += 1
-                description = entity.get('properties', {}).get('Descripción', '')
+                description = entity.get('properties', {}).get('DescripciÃ³n', '')
                 
                 if description and isinstance(description, str):
-                    # Buscar patrones de corrupción en Descripción
+                    # Buscar patrones de corrupciÃ³n en DescripciÃ³n
                     underscore_matches = underscore_pattern.findall(description)
                     auto_link_matches = auto_link_pattern.findall(description)
                     
@@ -604,35 +607,58 @@ def check_auto_link_corruption():
                         corruption_count += 1
                         entity_name = entity.get('name', 'Unknown')
                         entity_id = entity.get('entity_id', 'Unknown')[:8]
-                        warn(f"auto-link — Entidad [{entity_id}] {entity_name} (Descripción) tiene patrones sospechosos:")
+                        warn(f"auto-link â€” Entidad [{entity_id}] {entity_name} (DescripciÃ³n) tiene patrones sospechosos:")
                         
                         if underscore_matches:
-                            print(f"    • {len(underscore_matches)} ocurrencias de '_http://' en Descripción")
+                            print(f"    â€¢ {len(underscore_matches)} ocurrencias de '_http://' en DescripciÃ³n")
                         
                         if auto_link_matches:
-                            print(f"    • {len(auto_link_matches)} auto-links detectados en Descripción:")
+                            print(f"    â€¢ {len(auto_link_matches)} auto-links detectados en DescripciÃ³n:")
                             for match in auto_link_matches[:3]:
                                 print(f"      - [{match}](http://{match})")
                             if len(auto_link_matches) > 3:
-                                print(f"      ... y {len(auto_link_matches) - 3} más")
+                                print(f"      ... y {len(auto_link_matches) - 3} mÃ¡s")
             
             if entities_checked > 0:
-                print(f"  📋 {entities_checked} entidades verificadas en entity_index_v2.json")
+                print(f"  ðŸ“‹ {entities_checked} entidades verificadas en entity_index_v2.json")
                 
         except Exception as e:
             # Silencioso para no romper el health check por errores de lectura
             pass
     else:
-        print(f"  ℹ️  entity_index_v2.json no encontrado, omitiendo escaneo de Descripciones")
+        print(f"  â„¹ï¸  entity_index_v2.json no encontrado, omitiendo escaneo de Descripciones")
     
     if corruption_count == 0:
-        ok(f"auto-link — {files_checked} archivos + {entities_checked} entidades verificadas, sin corrupción detectada")
+        ok(f"auto-link â€” {files_checked} archivos + {entities_checked} entidades verificadas, sin corrupciÃ³n detectada")
     else:
-        warn(f"auto-link — {corruption_count}/{files_checked + entities_checked} items con patrones sospechosos")
+        warn(f"auto-link â€” {corruption_count}/{files_checked + entities_checked} items con patrones sospechosos")
     
     return True  # Siempre advisory, nunca bloquea
 
-# ── Runner ────────────────────────────────────────────────
+
+def check_serial_service():
+    """
+    Verifica que el servicio de seriales VANTAGE esté disponible.
+    Informativo — no bloquea el health check si el servicio no está corriendo.
+    """
+    try:
+        response = requests.get(f"{SERIAL_SERVICE_URL}/health", timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            authority = data.get("authority", "unknown")
+            ok(f"serial service — disponible (authority: {authority})")
+            return True
+        else:
+            warn(f"serial service — responde con status {response.status_code}")
+            return True
+    except requests.exceptions.RequestException as e:
+        warn(f"serial service — no disponible ({e.__class__.__name__})")
+        return True
+    except Exception as e:
+        warn(f"serial service — error inesperado: {e}")
+        return True
+
+# â”€â”€ Runner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def main():
     print("VANTAGE Health Check\n" + "-" * 30)
@@ -649,6 +675,7 @@ def main():
         ("census_age", check_census_age),
         ("pending_tickets", check_pending_tickets),
         ("auto_link", check_auto_link_corruption),
+        ("serial_service", check_serial_service),
     ]
 
     results = {}
@@ -657,7 +684,7 @@ def main():
 
     print("-" * 30)
     if all(results.values()):
-        print(f"{GREEN}Sistema OK — listo para L1/L2/L3{RESET}")
+        print(f"{GREEN}Sistema OK â€” listo para L1/L2/L3{RESET}")
         sys.exit(0)
     else:
         failed = [k for k, v in results.items() if not v]
