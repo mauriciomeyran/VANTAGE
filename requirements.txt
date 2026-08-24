@@ -1,11 +1,32 @@
-browser-use>=0.1.40
-playwright>=1.49.0
-langchain-google-genai>=2.0.0
-langchain-openai>=0.3.0
-langchain-anthropic>=0.3.0
-langchain-ollama>=0.2.0
-langchain-core>=0.3.0
+# VANTAGE Scout Layer 1 - Requirements
+# Core dependencies
+python-dotenv>=1.0.1
 pydantic>=2.9.0
 pydantic-settings>=2.6.0
-python-dotenv>=1.0.1
+
+# LLM providers
+# Chat models come from browser-use's native `browser_use.llm.*` classes, not
+# LangChain. Each provider only needs its own SDK.
+# Default provider is local Ollama; `browser_use.llm.ollama.chat` imports `ollama`.
+ollama>=0.4.0
+# Optional cloud providers (install as needed):
+# google-genai>=1.0.0        # LLM_PROVIDER=gemini
+# openai>=1.60.0             # LLM_PROVIDER=openai / openrouter / openai_compatible
+# anthropic>=0.45.0          # LLM_PROVIDER=anthropic
+
+# Browser automation
+playwright>=1.49.0
+# Pinned: the agent history API (final_result/errors) and ChatOllama's dataclass
+# signature are version-sensitive — see handoffs/DIAGNOSTICO_TRUNCATED_HISTORY.md
+browser-use==0.11.13
+
+# Layer 1 integration dependencies
+httpx>=0.25.0
+notion-client>=2.0.0
+
+# Testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+
+# Web UI (optional)
 flask>=3.0.0

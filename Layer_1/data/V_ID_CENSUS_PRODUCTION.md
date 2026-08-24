@@ -14,8 +14,8 @@
 | [`KERNEL:DOCUMENTATION-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42816f80dec85df01a673b ) | 03.9 | Census Sync |
 | [`KERNEL:DOCUMENTATION-010`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42814ea9a3e9abd1b8e80e ) | 03.10 | Documentación Transversal |
 | [`KERNEL:DOCUMENTATION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e3ad72f7f5b13d2804 ) | 03.11 | Gate Decision Documentation |
-| [`KERNEL:DOCUMENTATION-012`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#400076f9b13644009ee357dcebb2227b ) | 03.12 ⚠︎sin verificar en vivo | Notebook Gemini — Auditor Documental Externo |
-| `KERNEL:DOCUMENTATION-013` | 03.13 | Protocolo Sandbox — Economía de Tokens Máxima |
+| [`KERNEL:DOCUMENTATION-012`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#1fc298d1a0eb4e04bf287df831f21ee1 ) | 03.12 | Notebook Gemini — Auditor Documental Externo |
+| [`KERNEL:DOCUMENTATION-013`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#030ab36cb5524618b8ead54575555b47 ) | 03.13 | Protocolo Sandbox — Economía de Tokens Máxima |
 | [`KERNEL:ARCHITECTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810a8870dd1d384c1e7a ) | 04 | Arquitectura de Cuatro Capas |
 | [`KERNEL:ARCHITECTURE-L1`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f3825bd740b23ec959 ) | 04.1 | L1 — Active Search |
 | [`KERNEL:ARCHITECTURE-L2`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#73f6ec3692de4632a16d89313b91456d ) | 04.2 | L2 — Strategic Search |
@@ -101,7 +101,6 @@
 | [`MANUAL:WEEKLY-FLOW-003`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281a3b68aec7ee2e3fc2f ) | 8.3 | Miércoles — Figma |
 | [`MANUAL:WEEKLY-FLOW-004`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428128a07ceed0d35be0c0 ) | 08.4 | Jueves |
 | [`MANUAL:WEEKLY-FLOW-005`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281c89750c1311511906f ) | 08.5 | Viernes |
-| [`MANUAL:WEEKLY-FLOW-006`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42819f9217f1150e0619a2 ) | 08.6 | Cadence Matrix — Weekly Rhythm |
 | [`MANUAL:RUNTIME`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815caab0cd6a045d5113 ) | 09 | VANTAGE Runtime (Consulta Operativa) |
 | [`MANUAL:RUNTIME-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428105bd12de308c4e8871 ) | 9.1 | ¿Qué es el Runtime? |
 | [`MANUAL:RUNTIME-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281c3a7a8def378bdf338 ) | 9.2 | Comandos Principales |
@@ -119,7 +118,7 @@
 | [`MANUAL:SLA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281549e1ee72e3240a9df ) | 17 | SLA de Latencia Post-Ingesta |
 | [`MANUAL:CV-GOLDEN-RULES-INDEX`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815592e9ecb6df06e21a ) | 18 | Reglas de Oro CV — Referencia Operativa |
 | [`MANUAL:POSITIONING-CRITERIA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815db277e3bcd24efda1 ) | 19 | Positioning Modes (N1–N4) — Criterio de Selección |
-| [`MANUAL:WEEKLY-FLOW-006`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42819f9217f1150e0619a2 ) | 08.6 | Cadence Matrix — Weekly Rhythm |
+| [`MANUAL:WEEKLY-FLOW-006`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#532b177cdcb6489a9b83f895cf8fe52e ) | 08.6 ⚠︎sin verificar en vivo | Cadence Matrix — Weekly Rhythm |
 | [`MANUAL:GOLDEN-SKELETON-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42810ea45dde6c4a0cb7e0 ) | 20 | Figma Sync & Golden Skeleton |
 | [`MANUAL:FIGMA-SYNC-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#9d42e3fbc953459f8457043565e7e884 ) | 20.1 | Arquitectura del Ecosistema |
 | [`MANUAL:FIGMA-SYNC-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#b805f3abb9f04c85992df278612f567c ) | 20.2 | Contrato de Bloque |
@@ -278,9 +277,12 @@
 | ID | Documento | Link |
 |---|---|---|
 | `KERNEL:CV-PIPELINE-003` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5e4b693d0439469fb29f8f2687e4d401 ) |
-| `KERNEL:DOCUMENTATION-014` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#1fc298d1a0eb4e04bf287df831f21ee1 ) |
-| `KERNEL:DOCUMENTATION-015` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#030ab36cb5524618b8ead54575555b47 ) |
+| `KERNEL:DEDUP-LAYER-UPGRADE` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f8e1105ad1284258b05bb8576b35c4e0 ) |
+| `KERNEL:DOCUMENTATION-014` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f6874261bf2744c78caa79222a0b5120 ) |
+| `KERNEL:DOCUMENTATION-015` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#9cfab84c738f4a53abe6fe9f244a31ae ) |
 | `KERNEL:DOCUMENTATION-016` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74 ) |
 | `KERNEL:DOCUMENTATION-017` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#430a977f08b742dfa476a0840a909e51 ) |
 | `KERNEL:GATE-DECISION-013` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#78eb917493444f2db0c00fa5c4594e08 ) |
+| `KERNEL:HANDOFF-SERIAL` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5a99326b9a124e89a2fd575eda5fd2b9 ) |
 | `MANUAL:DATA-MANAGEMENT-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#2ccaaf3922a74e8f8447a6a174b0df28 ) |
+| `SP:BOOTLOADER-002` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#398b224e9b0e4d10868f1a05a55dc3d0 ) |

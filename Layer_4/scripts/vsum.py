@@ -5,20 +5,18 @@ import sys
 import time
 import argparse
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv
 
-# Cargar variables de entorno desde .env si existe
-env_path = Path(__file__).resolve().parent.parent / ".env"
-if env_path.exists():
-    load_dotenv(dotenv_path=env_path)
+# Cargar variables de entorno desde .env usando find_dotenv para resolución dinámica
+load_dotenv(find_dotenv())
 
 # --- CONFIGURACIÓN Y CONSTANTES ---
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 DEFAULT_MODEL = "groq"
-GROQ_MODEL = "llama-3.3-70b-versatile"
-GEMINI_MODEL = "gemini-2.0-flash"
+GROQ_MODEL = os.getenv("GROQ_MODEL", "qwen/qwen3.6-27b")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 
 # Reducido a 10000 para garantizar staying power bajo el límite de 12,000 TPM en Groq Tier Gratis
 MAX_CHARS_PER_CHUNK = 10000

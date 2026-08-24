@@ -1,50 +1,350 @@
-{
-  "HEADER_NAME": "2:4",
-  "HEADER_SUBTITLE": "2:5",
-  "SEC_PERFIL_PROFESIONAL_TITLE": "2:7",
-  "SEC_PERFIL_PROFESIONAL_BULLET_1": "2:9",
-  "SEC_PERFIL_PROFESIONAL_BULLET_2": "3:13",
-  "SEC_PERFIL_PROFESIONAL_BULLET_3": "2:10",
-  "SEC_HABILIDADES_CLAVE_TITLE": "2:12",
-  "SEC_HABILIDADES_CLAVE_BULLET_1": "2:14",
-  "SEC_HABILIDADES_CLAVE_BULLET_2": "2:15",
-  "SEC_HABILIDADES_CLAVE_BULLET_3": "2:16",
-  "SEC_HABILIDADES_CLAVE_BULLET_4": "2:17",
-  "SEC_HABILIDADES_CLAVE_BULLET_5": "2:18",
-  "SEC_EXPERIENCIA_PROFESIONAL_TITLE": "2:20",
-  "EXP_L_OR_AL_LUXE_M_XICO_COMPANY": "2:22",
-  "EXP_L_OR_AL_LUXE_M_XICO_ROLE": "2:23",
-  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_1": "2:25",
-  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_2": "2:26",
-  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_3": "2:27",
-  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_4": "2:28",
-  "EXP_BISONTE_EXPERIENTIAL_MARKETING_COMPANY": "2:32",
-  "EXP_BISONTE_EXPERIENTIAL_MARKETING_ROLE": "2:33",
-  "EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_1": "2:35",
-  "EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_2": "2:36",
-  "EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_3": "2:37",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__COMPANY": "2:39",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__ROLE": "2:40",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_1": "2:42",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_2": "2:43",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_3": "2:44",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_4": "3:9",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_5": "3:2",
-  "EXP_A_ROPOSTALE_COMPANY": "2:46",
-  "EXP_A_ROPOSTALE_ROLE": "2:47",
-  "EXP_A_ROPOSTALE_BULLET_1": "2:49",
-  "EXP_A_ROPOSTALE_BULLET_2": "2:50",
-  "EXP_A_ROPOSTALE_BULLET_3": "2:51",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__COMPANY": "2:54",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__ROLE": "2:55",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_1": "2:57",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_2": "2:58",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_3": "2:59",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_4": "2:60",
-  "SEC_FORMACION_ACADEMICA_TITLE": "2:62",
-  "EDU_UNAM_ARTES": "2:64",
-  "EDU_UNAM_DIPLOMADO": "2:65",
-  "SEC_CURSOS_Y_CERTIFICACIONES_TITLE": "2:67",
-  "CERT_AUTOCAD": "2:69",
-  "CERT_ALDO": "2:70"
-}
+[
+  {
+    "page": "Page 1",
+    "total_nodes": 57,
+    "nodes": [
+      {
+        "id": "2:54",
+        "name": "[VANTAGE] EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__COMPANY",
+        "parent_frame": "EL PALACIO DE HIERRO (ALDO GROUP)",
+        "characters": "EL PALACIO DE HIERRO (ALDO GROUP)"
+      },
+      {
+        "id": "4:29",
+        "name": "[VANTAGE] EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__ROLE 1",
+        "parent_frame": "Items",
+        "characters": "Coordinador de Visual Merchandising & Marketing"
+      },
+      {
+        "id": "4:30",
+        "name": "[VANTAGE] EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__YEARS 1",
+        "parent_frame": "Items",
+        "characters": "| 2012 - 2017"
+      },
+      {
+        "id": "2:57",
+        "name": "[VANTAGE] EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_1",
+        "parent_frame": "Bullets",
+        "characters": "Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá."
+      },
+      {
+        "id": "2:58",
+        "name": "[VANTAGE] EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_2",
+        "parent_frame": "Bullets",
+        "characters": "Supervised the implementation of global campaigns, adapting Canadian headquarters guidelines for the Mexican market to ensure consistent brand messaging."
+      },
+      {
+        "id": "2:59",
+        "name": "[VANTAGE] EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_3",
+        "parent_frame": "Bullets",
+        "characters": "Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos 3 años del rol tuve a cargo una coordinadora Jr. con reporte directo."
+      },
+      {
+        "id": "4:33",
+        "name": "[VANTAGE] EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__ROLE 2",
+        "parent_frame": "Items",
+        "characters": "Coordinador de Visual Merchandising – División de Lujo"
+      },
+      {
+        "id": "4:34",
+        "name": "[VANTAGE] EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__YEARS 2",
+        "parent_frame": "Items",
+        "characters": "| Febrero 2025 - Actualidad"
+      },
+      {
+        "id": "4:9",
+        "name": "[VANTAGE] EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_4",
+        "parent_frame": "Bullets",
+        "characters": "Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá."
+      },
+      {
+        "id": "2:62",
+        "name": "[VANTAGE] SEC_FORMACION_ACADEMICA_TITLE",
+        "parent_frame": "FORMACIÓN ACADÉMICA",
+        "characters": "ACADEMIC BACKGROUND"
+      },
+      {
+        "id": "2:64",
+        "name": "[VANTAGE] EDU_UNAM_ARTES",
+        "parent_frame": "Items",
+        "characters": "Licenciatura en Artes Visuales 2008 - 2012\nEscuela Nacional de Artes Plásticas, UNAM"
+      },
+      {
+        "id": "2:65",
+        "name": "[VANTAGE] EDU_UNAM_DIPLOMADO",
+        "parent_frame": "Items",
+        "characters": "Diplomado en Museos y Exposiciones 2014\nFacultad de Artes y Diseño, UNAM"
+      },
+      {
+        "id": "2:67",
+        "name": "[VANTAGE] SEC_CURSOS_Y_CERTIFICACIONES_TITLE",
+        "parent_frame": "CURSOS Y CERTIFICACIONES",
+        "characters": "COURSES & CERTIFICATIONS"
+      },
+      {
+        "id": "2:69",
+        "name": "[VANTAGE] CERT_AUTOCAD",
+        "parent_frame": "Items",
+        "characters": "AutoCAD & SketchUp Essentials | *2024*\nLinkedIn Learning"
+      },
+      {
+        "id": "2:70",
+        "name": "[VANTAGE] CERT_ALDO",
+        "parent_frame": "Items",
+        "characters": "Store Operations Leaders Orientation (VM, Sales & Ops) | *2014*\nALDO Group, Montréal, Canada"
+      },
+      {
+        "id": "2:32",
+        "name": "[VANTAGE] EXP_BISONTE_EXPERIENTIAL_MARKETING_COMPANY",
+        "parent_frame": "BISONTE EXPERIENTIAL MARKETING",
+        "characters": "BISONTE EXPERIENTIAL MARKETING"
+      },
+      {
+        "id": "4:17",
+        "name": "[VANTAGE] EXP_BISONTE_EXPERIENTIAL_MARKETING_ROLE",
+        "parent_frame": "Items",
+        "characters": "Coordinador de Brand Environment y Store Design"
+      },
+      {
+        "id": "4:18",
+        "name": "[VANTAGE] EXP_BISONTE_EXPERIENTIAL_MARKETING_YERAS",
+        "parent_frame": "Items",
+        "characters": "| 2022 - 2023"
+      },
+      {
+        "id": "2:35",
+        "name": "[VANTAGE] EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_1",
+        "parent_frame": "Bullets",
+        "characters": "Lidero la implementación visual y técnica para la apertura del Adidas Brand Center Madero (Flagship Store), coordinando proveedores locales e instalaciones bajo estándares globales de Store Design — entrega sin observaciones bloqueantes para apertura por parte de la marca."
+      },
+      {
+        "id": "2:36",
+        "name": "[VANTAGE] EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_2",
+        "parent_frame": "Bullets",
+        "characters": "Supervised production and logistics for Store Design materials on a project rescued three months before opening, achieving on-time delivery with 17 minor punch list observations — none blocking the opening."
+      },
+      {
+        "id": "2:37",
+        "name": "[VANTAGE] EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_3",
+        "parent_frame": "Bullets",
+        "characters": "Coordinated specialized vendors for production and supply, ensuring quality in finishes and furniture and safeguarding architectural and visual design integrity."
+      },
+      {
+        "id": "2:39",
+        "name": "[VANTAGE] EXP_LEVI_STRAUSS___CO___DOCKERS__COMPANY",
+        "parent_frame": "LEVI STRAUSS & CO. (DOCKERS)",
+        "characters": "LEVI STRAUSS & CO. (DOCKERS)"
+      },
+      {
+        "id": "4:21",
+        "name": "[VANTAGE] EXP_LEVI_STRAUSS___CO___DOCKERS__ROLE",
+        "parent_frame": "Items",
+        "characters": "Coordinador Senior de Brand Environment – LATAM"
+      },
+      {
+        "id": "4:22",
+        "name": "[VANTAGE] EXP_LEVI_STRAUSS___CO___DOCKERS__YEARS",
+        "parent_frame": "Items",
+        "characters": "| 2018 - 2021"
+      },
+      {
+        "id": "2:42",
+        "name": "[VANTAGE] EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_1",
+        "parent_frame": "Bullets",
+        "characters": "Gestioné la estrategia visual para 6 países en LATAM y 270+ puntos de venta nacionales, asegurando la estandarización regional de la marca y reportando mejores prácticas de mercado al equipo de Trade Marketing."
+      },
+      {
+        "id": "2:43",
+        "name": "[VANTAGE] EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_2",
+        "parent_frame": "Bullets",
+        "characters": "Diseñé una estrategia de producción local que generó un ahorro del -74% en costos de campañas nacionales, manteniendo los estándares globales de exhibición en todas las categorías de producto."
+      },
+      {
+        "id": "2:44",
+        "name": "[VANTAGE] EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_3",
+        "parent_frame": "Bullets",
+        "characters": "Reduje en un -33% el tiempo de actualización de floorsets mediante manuales de Zoning & Mapping y herramientas digitales para field teams, facilitando la ejecución consistente en red propia y franquicias."
+      },
+      {
+        "id": "3:9",
+        "name": "[VANTAGE] EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_4",
+        "parent_frame": "Bullets",
+        "characters": "Led a team of 3 national coordinators with direct reporting, plus 3 dotted-line collaborators in other markets, acting as the regional liaison for the Americas."
+      },
+      {
+        "id": "3:2",
+        "name": "[VANTAGE] EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_5",
+        "parent_frame": "Bullets",
+        "characters": "Managed visual strategy across 6 LATAM countries and 270+ points of sale (own boutiques, franchises, wholesale corners), ensuring regional brand image standardization and reporting best practices to the corporate team."
+      },
+      {
+        "id": "2:46",
+        "name": "[VANTAGE] EXP_A_ROPOSTALE_COMPANY",
+        "parent_frame": "AÉROPOSTALE",
+        "characters": "AÉROPOSTALE"
+      },
+      {
+        "id": "4:25",
+        "name": "[VANTAGE] EXP_L_OR_AL_LUXE_M_XICO_ROLE",
+        "parent_frame": "Items",
+        "characters": "Gerente de Visual Merchandising"
+      },
+      {
+        "id": "4:26",
+        "name": "[VANTAGE] EXP_L_OR_AL_LUXE_M_XICO_ROLE",
+        "parent_frame": "Items",
+        "characters": "| 2017 - 2018"
+      },
+      {
+        "id": "2:49",
+        "name": "[VANTAGE] EXP_A_ROPOSTALE_BULLET_1",
+        "parent_frame": "Bullets",
+        "characters": "Construí el área de VM desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona; implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional."
+      },
+      {
+        "id": "2:50",
+        "name": "[VANTAGE] EXP_A_ROPOSTALE_BULLET_2",
+        "parent_frame": "Bullets",
+        "characters": "Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales."
+      },
+      {
+        "id": "2:51",
+        "name": "[VANTAGE] EXP_A_ROPOSTALE_BULLET_3",
+        "parent_frame": "Bullets",
+        "characters": "Estandaricé los planogramas de categorías clave (Denim & Lifestyle), generando retroalimentación sistemática a dirección sobre desempeño visual y oportunidades de mejora en piso."
+      },
+      {
+        "id": "2:4",
+        "name": "[VANTAGE] HEADER",
+        "parent_frame": "HEADER",
+        "characters": "MAURICIO MEYRÁN"
+      },
+      {
+        "id": "2:5",
+        "name": "[VANTAGE] HEADER_BRIEF",
+        "parent_frame": "Bullets",
+        "characters": "Visual Merchandising Coordinator · Luxury Brand Execution"
+      },
+      {
+        "id": "4:39",
+        "name": "[VANTAGE] HEADER_CONTACT",
+        "parent_frame": "Bullets",
+        "characters": "Miguel Hidalgo, CDMX  |  +52 1 56 4383 8125  |  mauricio.meyran@icloud.com"
+      },
+      {
+        "id": "4:40",
+        "name": "[VANTAGE] HEADER_LINK",
+        "parent_frame": "Bullets",
+        "characters": "LinkedIn  |  Portafolio"
+      },
+      {
+        "id": "2:7",
+        "name": "[VANTAGE] SEC_PERFIL_PROFESIONAL_TITLE",
+        "parent_frame": "PERFIL PROFESIONAL",
+        "characters": "PROFESSIONAL PROFILE"
+      },
+      {
+        "id": "2:9",
+        "name": "[VANTAGE] SEC_PERFIL_PROFESIONAL_BULLET_1",
+        "parent_frame": "Bullets",
+        "characters": "Estratega de Visual Merchandising con más de 10 años de trayectoria en retail de lujo, moda premium y entornos multitienda. Especialista en traducir lineamientos globales de HQ en ejecuciones de marca impecables y consistentes a escala regional: boutiques monomarca, corners wholesale, flagship openings y campañas estacionales en entornos de ultra-lujo."
+      },
+      {
+        "id": "3:13",
+        "name": "[VANTAGE] SEC_PERFIL_PROFESIONAL_BULLET_2",
+        "parent_frame": "Bullets",
+        "characters": "Con experiencia comprobada en 6 países LATAM y 270+ puntos de venta, domino la coordinación de proveedores locales e internacionales, la gestión de presupuestos CAPEX/OPEX y la generación de retroalimentación fotográfica y cualitativa para equipos corporativos. Historial cuantificado: +43% tráfico · +18% conversión · -74% costos operativos."
+      },
+      {
+        "id": "2:10",
+        "name": "[VANTAGE] SEC_PERFIL_PROFESIONAL_BULLET_3",
+        "parent_frame": "Bullets",
+        "characters": "Cross-functional leadership focused on connecting commercial operations with brand visual identity, coordinating multidisciplinary teams and external agencies for store openings and critical events."
+      },
+      {
+        "id": "2:12",
+        "name": "[VANTAGE] SEC_HABILIDADES_CLAVE_TITLE",
+        "parent_frame": "HABILIDADES CLAVE",
+        "characters": "KEY SKILLS"
+      },
+      {
+        "id": "2:14",
+        "name": "[VANTAGE] SEC_HABILIDADES_CLAVE_BULLET_1",
+        "parent_frame": "Bullets",
+        "characters": "Estrategia Visual: Window installations, store zoning, boutique & wholesale VM execution, seasonal campaigns, planogramas, HQ alignment & brand consistency."
+      },
+      {
+        "id": "2:15",
+        "name": "[VANTAGE] SEC_HABILIDADES_CLAVE_BULLET_2",
+        "parent_frame": "Bullets",
+        "characters": "Operaciones & Finanzas: CAPEX/OPEX management, coordinación de proveedores locales e internacionales, flagship store openings, field audits, multi-country LATAM scope."
+      },
+      {
+        "id": "2:16",
+        "name": "[VANTAGE] SEC_HABILIDADES_CLAVE_BULLET_3",
+        "parent_frame": "Bullets",
+        "characters": "Liderazgo & Training: Gestión de equipos directos e indirectos, coaching de alto desempeño, auditorías visuales de campo, reporte de mejores prácticas a corporativos regionales."
+      },
+      {
+        "id": "2:17",
+        "name": "[VANTAGE] SEC_HABILIDADES_CLAVE_BULLET_4",
+        "parent_frame": "Bullets",
+        "characters": "Stack Técnico: Adobe Creative Cloud (Illustrator, Photoshop, InDesign), AutoCAD, SketchUp, IWD, Keynote, IA Generativa (visualizaciones, planogramas y reportes)."
+      },
+      {
+        "id": "2:18",
+        "name": "[VANTAGE] SEC_HABILIDADES_CLAVE_BULLET_5",
+        "parent_frame": "Bullets",
+        "characters": "Idiomas: Español (Nativo) | Inglés (Profesional Corporativo)."
+      },
+      {
+        "id": "2:20",
+        "name": "[VANTAGE] SEC_EXPERIENCIA_PROFESIONAL_TITLE",
+        "parent_frame": "EXPERIENCIA PROFESIONAL",
+        "characters": "PROFESSIONAL EXPERIENCE"
+      },
+      {
+        "id": "2:22",
+        "name": "[VANTAGE] EXP_L_OR_AL_LUXE_M_XICO_COMPANY",
+        "parent_frame": "L'ORÉAL LUXE MÉXICO",
+        "characters": "L'ORÉAL LUXE MÉXICO"
+      },
+      {
+        "id": "2:23",
+        "name": "[VANTAGE] EXP_L_OR_AL_LUXE_M_XICO_ROLE",
+        "parent_frame": "Items",
+        "characters": "Visual Merchandising Coordinator – Luxury Division | *February 2025 – March 2026*"
+      },
+      {
+        "id": "4:14",
+        "name": "[VANTAGE] EXP_L_OR_AL_LUXE_M_XICO_YEARS",
+        "parent_frame": "Items",
+        "characters": "| Febrero 2025 - Actualidad"
+      },
+      {
+        "id": "2:25",
+        "name": "[VANTAGE] EXP_L_OR_AL_LUXE_M_XICO_BULLET_1",
+        "parent_frame": "Bullets",
+        "characters": "Lidero la estrategia visual y el storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias), garantizando que cada exhibición refleje los estándares de sofisticación y coherencia de marca en entornos de luxury retail bajo lineamientos globales de HQ."
+      },
+      {
+        "id": "2:26",
+        "name": "[VANTAGE] EXP_L_OR_AL_LUXE_M_XICO_BULLET_2",
+        "parent_frame": "Bullets",
+        "characters": "Coordino proveedores locales para la producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados, mantenimiento de mobiliario y cumplimiento de lineamientos globales de la división."
+      },
+      {
+        "id": "2:27",
+        "name": "[VANTAGE] EXP_L_OR_AL_LUXE_M_XICO_BULLET_3",
+        "parent_frame": "Bullets",
+        "characters": "Manage budget and deadline management, including administrative processes: administer the division's national CAPEX/OPEX budget, optimizing investment in POP materials, displays, and window fixtures for launches and seasonal campaigns."
+      },
+      {
+        "id": "2:28",
+        "name": "[VANTAGE] EXP_L_OR_AL_LUXE_M_XICO_BULLET_4",
+        "parent_frame": "Bullets",
+        "characters": "Colaboro con equipos de Marketing, Trade y Operaciones para alinear el calendario comercial con la ejecución visual, actuando como embajador de marca y referente de estándares en cada cuenta clave."
+      }
+    ]
+  }
+]

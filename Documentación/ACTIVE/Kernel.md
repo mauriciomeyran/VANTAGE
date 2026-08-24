@@ -27,7 +27,7 @@ Qué hace el Sistema cuando falla
 - No escala urgencia.
 - Reporta el estado y espera instrucción humana.
 ### 02.2 KERNEL:FAIL-PHILOSOPHY-002
-Excepción — Gate BLOCKED Recuperable vía RT-1
+Dashboard
 El AI informa la opción pero no la ejecuta sin instrucción explícita.
 ---
 ## 03 KERNEL:DOCUMENTATION
@@ -124,7 +124,7 @@ Implementación actual
 - vantage-housekeeping-archive — ARCHIVING HOUSEKEEPING… / ARCHIVE HOUSEKEPT
 ---
 ### 03.6 KERNEL:DOCUMENTATION-006
-Contrato de health_check.py
+Health Check
 Naturaleza: lectura estricta por defecto. Única excepción: auto-sync condicional del Entity Index.
 Checks ejecutados (orden fijo)
 version → env → git → vgit → notion → docs_sync → vdoc → index_age → pending_tickets.
@@ -134,7 +134,7 @@ Reporte de Tickets
 Agrupación por Prioridad (CRÍTICO / ALTO / MEDIO / BAJO) sobre Bug Tracker y Task Tracker. Detalle explícito solo para CRÍTICO y ALTO.
 ---
 ### 03.7 KERNEL:DOCUMENTATION-007
-Herramienta de Verificación de Versión
+Verificación de Versión
 Propósito: ruta de bajo costo para verificar y sincronizar la Versión de los 10 documentos fundacionales sin pagar el costo de un fetch completo por documento.
 Modos
 - --sync (único modo de escritura y verificación real, relee cada documento post-escritura)
@@ -163,7 +163,7 @@ Flags de ejecución (vversions):
 - --update-baseline: Modo write explícito. Requiere invocarse junto a --length. Sobrescribe length_baseline.json con los conteos actuales únicamente si el veredicto final es PASS o el operador confirma explícitamente que las diferencias son intencionales.
 ---
 ### 03.8 KERNEL:DOCUMENTATION-008
-Sincronización Obligatoria del ID Census
+ID Census
 El V-ID-CENSUS es el noveno documento fundacional, derivado — su fuente de verdad son los IDs reales de los otros ocho documentos.
 Reglas
 1. [CENSUS-SYNC-R1]: ningún ticket que implique cambio de estado de un ID se marca Done sin Census regenerado. Si no puede ejecutarse, el ticket queda Blocked-Census.
@@ -186,7 +186,7 @@ Escritura autorizada
 Solo SKILL-OPEN paso 0 (→ OPEN) y SKILL-CLOSE paso 6 (→ CLOSED + pending_summary).
 ---
 ### 03.10 KERNEL:DOCUMENTATION-010
-Documentación Transversal — Contrato de Integridad Documental
+Documentación Transversal
 Protocolo (seis fases)
 Mapeo → DRY RUN → Inyección → Write-Back Verification → Changelog + versión → Binary Gate de salida.
 Skills de Gobernanza Documental
@@ -199,8 +199,6 @@ Skills de Gobernanza Documental
 | vantage-tidy-opportunities-tracker | Duplicados/normalización Class A | ✅ Obligatorio |
 | vantage-documentacion-transversal-propuesta | Mapeo de nodos, sin escritura | ✅ Obligatorio |
 | vantage-documentacion-transversal-implementacion | DRY RUN + inyección + write-back | ✅ Obligatorio |
-Timestamp Obligatorio en Changelog
-Toda entrada nueva del Change Log declara fecha y hora local (CDMX) en el título de la entrada, formato {Mes} {DD}, {AA} {HH.MM} (ej. "Ago 16, 26 06.17"). Claude no tiene acceso a reloj de sistema ni herramienta de tiempo real fiable dentro de la sesión — la hora la provee el operador explícitamente en el mensaje que autoriza la escritura. Si el operador no la incluye, Claude la solicita antes de escribir la entrada; no infiere ni aproxima.
 ---
 ### 03.11 KERNEL:DOCUMENTATION-011
 Impact Assessment Contract
@@ -212,28 +210,12 @@ La evaluación debe responder:
 - Si debe regenerarse algún artefacto de Runtime.
 - Si debe ejecutarse una validación adicional.
 - Si se requiere sincronización mediante vcensus, vhyperlinks o vversions.
----
-### 03.16 KERNEL:DOCUMENTATION-016
-Mandatory Change Reporting
-Cuando una evaluación de impacto determine que existe afectación sobre otro documento o artefacto, la afectación debe registrarse en el Change Log.
-La entrada debe incluir:
-- Documento modificado.
-- Documentos potencialmente afectados.
-- Tipo de impacto: Normativo, Operativo, Runtime o Navegación.
-- Acción correctiva ejecutada.
-- Estado final de la validación.
----
-### 03.17 KERNEL:DOCUMENTATION-017
-Sistema de Cross-Reference Hyperlinks
-El sistema convierte las menciones de IDs canónicos en hipervínculos reales hacia sus bloques de definición, preservando el block-ID mediante parches puntuales y evitando operaciones destructivas de reconstrucción.
-El heading de definición no se autoenlaza; las menciones posteriores sí pueden recibir hipervínculo.
----
-### 03.14 KERNEL:DOCUMENTATION-014
+### 03.12 KERNEL:DOCUMENTATION-012
 External Configuration Contract
 Los scripts operativos deben externalizar la configuración mutable cuando esta pueda cambiar sin alterar la lógica del pipeline.
 Para CV-A, Layer_1/config/hard_blocks.json es la fuente externa de la lista de Hard Blocks; si el archivo no existe, el código utiliza fallback interno. La configuración debe versionarse, validarse y mantener compatibilidad con el comportamiento determinista del pipeline.
 ---
-### 03.15 KERNEL:DOCUMENTATION-015
+### 03.13 KERNEL:DOCUMENTATION-013
 Sistema de Cross-Reference Hyperlinks
 Propósito: convertir cada mención de un ID canónico (PREFIX:KEY) en los 6 documentos fundamentales en un hipervínculo real al bloque de definición, en vez de texto plano — para que el sistema sea navegable y auditable, no solo nombrado.
 Piezas
@@ -249,8 +231,26 @@ Estado de adopción (2026-08-01)
 - generate_id_inventory.py y normalize_heading_ids.py ya fueron migrados 
 Ver MANUAL:HEALTHCHECK para el procedimiento operativo de cuándo correr cada script.
 ---
+### 03.14 KERNEL:DOCUMENTATION-014
+Change Log
+Cuando una evaluación de impacto determine que existe afectación sobre otro documento o artefacto, la afectación debe registrarse en el Change Log.
+La entrada debe incluir:
+- Documento modificado.
+- Documentos potencialmente afectados.
+- Tipo de impacto: Normativo, Operativo, Runtime o Navegación.
+- Acción correctiva ejecutada.
+- Estado final de la validación.
+Timestamp Obligatorio en Changelog
+Toda entrada nueva del Change Log declara fecha y hora local (CDMX) en el título de la entrada, formato {Mes} {DD}, {AA} {HH.MM} (ej. "Ago 16, 26 06.17"). Claude no tiene acceso a reloj de sistema ni herramienta de tiempo real fiable dentro de la sesión — la hora la provee el operador explícitamente en el mensaje que autoriza la escritura. Si el operador no la incluye, Claude la solicita antes de escribir la entrada; no infiere ni aproxima.
+---
+### 03.15 KERNEL:DOCUMENTATION-015
+Cross-Reference Hyperlinks
+El sistema convierte las menciones de IDs canónicos en hipervínculos reales hacia sus bloques de definición, preservando el block-ID mediante parches puntuales y evitando operaciones destructivas de reconstrucción.
+El heading de definición no se autoenlaza; las menciones posteriores sí pueden recibir hipervínculo.
+---
+---
 ### 03.16 KERNEL:DOCUMENTATION-016
-Notebook Gemini — Auditor Documental Externo
+Notebook Gemini
 Tipo: Capa de Consulta ReadOnly externa (Google Gemini, ventana de contexto sin límite de tokens equivalente), complementaria al fetch nativo de Claude sobre el corpus fundacional — no es un script ni un alias de Terminal.
 Contrato de Cero Inferencia Silenciosa
 - Toda afirmación técnica requiere ancla exacta (PREFIX:KEY).
@@ -260,7 +260,7 @@ Uso preferente
 Consulta puntual de triaje/verificación documental (detección de drifts entre documentos) cuando no se requiere fetch estructural ni escritura en Notion — evita consumir fetch/tokens de Claude en preguntas de bajo riesgo.
 ---
 ### 03.17 KERNEL:DOCUMENTATION-017
-Protocolo Sandbox — Economía de Tokens Máxima
+Sandbox
 Patrón operativo compartido por las skills de documentación transversal (propuesta/implementación), vantage-skill-updater y vantage-housekeeping-archive: todo proceso interno de análisis, validación y generación corre en sandbox sin renderizar al operador. El output visible se limita a un máximo de 3 bloques por invocación: apertura (declaración de inicio conforme KERNEL:DOCUMENTATION-005), resultado (propuesta/reporte/DRY RUN estructurado), cierre (declaración de fin).
 Regla de aplicación
 Cualquier skill nueva que adopte este patrón declara explícitamente qué pasos corren en sandbox interno y cuáles son output visible — no se asume por default; se declara en el cuerpo de la skill.
@@ -605,7 +605,8 @@ gate_logic() debe ejecutarse ANTES que gate() como filtro de mutabilidad.
 Si Status ∈ {Postulado, Rechazado, Expirada} → pipeline termina aquí, sin invocar gate(). Previene regresión de estado en terminales.
 → Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), KERNEL:GATE-DECISION-005 (RT-1).
 ---
-### 09.12 — Guard de Mutación en Existentes — Dedup/Layer Upgrade
+### 09.12 KERNEL:DEDUP-LAYER-UPGRADE 
+— Guard de Mutación en Existentes 
 Contexto:
 Gobierna la mutación de registros existentes durante la ingesta (vía feed_processor.py), no el marcado post-hoc por skills de operador.
 Fuente de verdad: profile_fit._PROTECTED_STATUSES ∪ _TERMINAL_STATUSES.
@@ -629,7 +630,7 @@ Contrato de escritura: el mensaje se escribe en Notas (Class A) — nunca sobres
 Distinción de ownership: VL1 documenta la razón en el momento de la decisión. vantage-tidy-opportunities-tracker y vantage-housekeeping-archive (ver MANUAL:SKILL-GLOSSARY-HOUSEKEEPING) no generan esta nota — operan sobre el registro ya marcado.
 ---
 ## 10 KERNEL:CV-GOLDEN-RULES
-Golden Rules — Límites de Ejecución
+Golden Rules
 Restricciones de arquitectura formales, no preferencias. Cada violación genera respuesta estandarizada de rechazo.
 ### 10.1 KERNEL:CV-GOLDEN-RULES-001
 Regla #1 — No Evaluar Fit Antes de Escribir

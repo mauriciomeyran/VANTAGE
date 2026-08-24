@@ -154,7 +154,6 @@ CENSUS_SPEC = [
             {"id": "MANUAL:WEEKLY-FLOW-003", "seccion": "8.3", "nombre": "Miércoles — Figma"},
             {"id": "MANUAL:WEEKLY-FLOW-004", "seccion": "08.4", "nombre": "Jueves"},
             {"id": "MANUAL:WEEKLY-FLOW-005", "seccion": "08.5", "nombre": "Viernes"},
-            {"id": "MANUAL:WEEKLY-FLOW-006", "seccion": "08.6", "nombre": "Cadence Matrix — Weekly Rhythm"},
             {"id": "MANUAL:RUNTIME", "seccion": "09", "nombre": "VANTAGE Runtime (Consulta Operativa)"},
             {"id": "MANUAL:RUNTIME-001", "seccion": "9.1", "nombre": "¿Qué es el Runtime?"},
             {"id": "MANUAL:RUNTIME-002", "seccion": "9.2", "nombre": "Comandos Principales"},
@@ -325,6 +324,37 @@ CENSUS_SPEC = [
         ],
     },
 ]
+    # Auto-generated orphan IDs
+# IDs huérfanos detectados - agregar a CENSUS_SPEC
+# Generado automáticamente por generate_census.py --auto-fix-orphans
+
+# KERNEL
+{"id": "KERNEL:CV-PIPELINE-003", "seccion": "", "nombre": "Subsección PIPELINE de KERNEL:CV"},
+{"id": "KERNEL:DEDUP-LAYER-UPGRADE", "seccion": "", "nombre": "Subsección LAYER de KERNEL:DEDUP"},
+{"id": "KERNEL:DOCUMENTATION-014", "seccion": "014", "nombre": "Subsección 014 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:DOCUMENTATION-015", "seccion": "015", "nombre": "Subsección 015 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:DOCUMENTATION-016", "seccion": "016", "nombre": "Subsección 016 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:DOCUMENTATION-017", "seccion": "017", "nombre": "Subsección 017 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:GATE-DECISION-013", "seccion": "", "nombre": "Subsección DECISION de KERNEL:GATE"},
+
+# MANUAL
+{"id": "MANUAL:DATA-MANAGEMENT-001", "seccion": "", "nombre": "Subsección MANAGEMENT de MANUAL:DATA"},
+
+    # Auto-generated orphan IDs
+# IDs huérfanos detectados - agregar a CENSUS_SPEC
+# Generado automáticamente por generate_census.py --auto-fix-orphans
+
+# KERNEL
+{"id": "KERNEL:CV-PIPELINE-003", "seccion": "", "nombre": "Subsección PIPELINE de KERNEL:CV"},
+{"id": "KERNEL:DOCUMENTATION-014", "seccion": "014", "nombre": "Subsección 014 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:DOCUMENTATION-015", "seccion": "015", "nombre": "Subsección 015 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:DOCUMENTATION-016", "seccion": "016", "nombre": "Subsección 016 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:DOCUMENTATION-017", "seccion": "017", "nombre": "Subsección 017 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:GATE-DECISION-013", "seccion": "", "nombre": "Subsección DECISION de KERNEL:GATE"},
+
+# MANUAL
+{"id": "MANUAL:DATA-MANAGEMENT-001", "seccion": "", "nombre": "Subsección MANAGEMENT de MANUAL:DATA"},
+
     # Auto-generated orphan IDs
 # IDs huérfanos detectados - agregar a CENSUS_SPEC
 # Generado automáticamente por generate_census.py --auto-fix-orphans

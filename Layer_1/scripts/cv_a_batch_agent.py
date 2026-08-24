@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 """
-cv_a_batch_agent.py — Fase 1 (agente local): loop mecánico sobre un export
+cv_a_batch_agent.py — Fase 1 (agente local): loop mecanico sobre un export
 del Opportunities Tracker, corriendo cv_a_prep.py por cada fila elegible.
 
 CERO escritura a Notion. Este script opera exclusivamente sobre un CSV
-local (export manual o vía notion-query-data-sources) y produce:
-  1. Un scaffold .md por vacante elegible (o reporte BLOCKED_...).
-  2. Un reporte CSV de resultados (`cv_a_batch_report_<fecha>.csv`) que
-     Claude usa como input para la Fase 2 (DRY RUN -> APROBAR_WRITE ->
-     escritura gobernada a Notion). Este script NUNCA decide valores de
-     schema ni escribe Next_Action — eso es exclusivo de Fase 2, con
-     operador y Claude en el loop.
+local (export manual o via notion-query-data-sources) y produce:
+1. Un scaffold .md por vacante elegible (o reporte BLOCKED_...).
+2. Un reporte CSV de resultados (`cv_a_batch_report_.csv`) que
+Claude usa como input para la Fase 2 (DRY RUN -> APROBAR_WRITE ->
+escritura gobernada a Notion). Este script NUNCA decide valores de
+schema ni escribe Next_Action — eso es exclusivo de Fase 2, con
+operador y Claude en el loop.
 
-Requisitos del CSV de entrada (columnas mínimas, nombres exactos):
-  ID_Vacante, Empresa, Rol, URL, Next_Action, JD_File (opcional)
+Requisitos del CSV de entrada (columnas minimas, nombres exactos):
+ID_Vacante, Empresa, Rol, URL, Next_Action, JD_File (opcional)
 
 Uso:
-    python3 cv_a_batch_agent.py --csv tracker_export.csv --cv-a-prep ./cv_a_prep.py
+python3 cv_a_batch_agent.py --csv tracker_export.csv --cv-a-prep ./cv_a_prep.py
 
-Filtro: procesa únicamente filas con Next_Action == "Optimizar"
-(exacto, sensible a mayúsculas — consistente con SP:SCHEMA).
+Filtro: procesa unicamente filas con Next_Action == "Optimizar"
+(exacto, sensible a mayusculas — consistente con SP:SCHEMA).
 """
 
 import argparse
@@ -30,8 +30,12 @@ import logging
 import subprocess
 import sys
 import time
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+
+# Directorio de salida centralizado
+DEFAULT_OUTPUT_DIR = Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/output")
 
 # Configurar logging
 logging.basicConfig(
@@ -39,65 +43,73 @@ logging.basicConfig(
     format='%(asctime)s [%(levelname)s] %(message)s',
     datefmt='%H:%M:%S'
 )
+
 logger = logging.getLogger(__name__)
 
 TARGET_NEXT_ACTION = "Optimizar"
-MAX_WORKERS = 3  # Número máximo de procesos paralelos (rate limiting)
+MAX_WORKERS = 3
 CHECKPOINT_FILE = "cv_a_batch_checkpoint.json"
+_checkpoint_lock = threading.Lock()
 
 
 def load_checkpoint(checkpoint_path: Path) -> set:
     """Carga IDs de vacantes ya procesadas desde un checkpoint."""
     if not checkpoint_path.exists():
         return set()
-    
     try:
         with open(checkpoint_path, "r") as f:
             data = json.load(f)
-            return set(data.get("processed_ids", []))
+        return set(data.get("processed_ids", []))
     except Exception as e:
         print(f"AVISO: Error leyendo checkpoint ({e}). Iniciando desde cero.", file=sys.stderr)
         return set()
 
 
 def save_checkpoint(checkpoint_path: Path, processed_id: str):
-    """Guarda un ID de vacante procesada en el checkpoint."""
-    try:
-        if checkpoint_path.exists():
-            with open(checkpoint_path, "r") as f:
-                data = json.load(f)
-        else:
-            data = {"processed_ids": []}
-        
-        if processed_id not in data["processed_ids"]:
-            data["processed_ids"].append(processed_id)
-        
-        with open(checkpoint_path, "w") as f:
-            json.dump(data, f, indent=2)
-    except Exception as e:
-        print(f"AVISO: Error guardando checkpoint ({e}).", file=sys.stderr)
+    """Guarda un ID de vacante procesada en el checkpoint.
+
+    Thread-safe: usa un lock global porque multiples workers de
+    ThreadPoolExecutor pueden llamar esta funcion casi simultaneamente,
+    y el read-modify-write sin lock puede perder IDs procesados
+    (BUG detectado 2026-08-19 — ver Bug Tracker).
+    """
+    with _checkpoint_lock:
+        try:
+            if checkpoint_path.exists():
+                with open(checkpoint_path, "r") as f:
+                    data = json.load(f)
+            else:
+                data = {"processed_ids": []}
+
+            if processed_id not in data["processed_ids"]:
+                data["processed_ids"].append(processed_id)
+
+            with open(checkpoint_path, "w") as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            print(f"AVISO: Error guardando checkpoint ({e}).", file=sys.stderr)
 
 
 def show_progress(current: int, total: int, start_time: float):
     """Muestra una barra de progreso simple en consola."""
     if total == 0:
         return
-    
+
     percent = (current / total) * 100
     bar_length = 40
     filled = int(bar_length * current / total)
     bar = "█" * filled + "░" * (bar_length - filled)
-    
+
     elapsed = time.time() - start_time
     if current > 0:
         eta = (elapsed / current) * (total - current)
         eta_str = f"{int(eta // 60)}m {int(eta % 60)}s"
     else:
         eta_str = "N/A"
-    
+
     print(f"\r[{bar}] {current}/{total} ({percent:.1f}%) | ETA: {eta_str}", end="", flush=True)
     if current == total:
-        print()  # Nueva línea al completar
+        print()
 
 
 def load_rows(csv_path: str) -> list[dict]:
@@ -110,7 +122,7 @@ def load_rows(csv_path: str) -> list[dict]:
             if missing:
                 logger.error(f"Columnas faltantes en el CSV: {missing}")
                 sys.exit(1)
-            
+
             rows = list(reader)
             logger.info(f"CSV cargado exitosamente: {len(rows)} filas")
             return rows
@@ -123,36 +135,33 @@ def load_rows(csv_path: str) -> list[dict]:
 
 
 def run_cv_a_prep(cv_a_prep_path: str, row: dict, out_dir: Path) -> dict:
-    """Ejecuta cv_a_prep.py con validación mejorada de inputs."""
+    """Ejecuta cv_a_prep.py con validacion mejorada de inputs."""
     id_vac = row["ID_Vacante"].strip()
     empresa = row["Empresa"].strip()
     rol = row["Rol"].strip()
     url = row.get("URL", "").strip()
     jd_file = row.get("JD_File", "").strip()
 
-    # Validaciones adicionales
     if not id_vac:
         return {
             "ID_Vacante": "N/A",
             "Empresa": empresa,
             "Rol": rol,
             "resultado": "ERROR",
-            "detalle": "ID_Vacante vacío — no procesable",
+            "detalle": "ID_Vacante vacio — no procesable",
             "scaffold_path": "",
         }
 
     if not empresa:
-        logger.warning(f"Empresa vacía para {id_vac}, procesando de todas formas")
+        logger.warning(f"Empresa vacia para {id_vac}, procesando de todas formas")
 
     if not rol:
-        logger.warning(f"Rol vacío para {id_vac}, procesando de todas formas")
+        logger.warning(f"Rol vacio para {id_vac}, procesando de todas formas")
 
-    # Validar URL si está presente
     if url and not (url.startswith(("http://", "https://"))):
         logger.warning(f"URL sin esquema para {id_vac}: {url}, normalizando a https://")
         url = "https://" + url
 
-    # Validar JD file si está presente
     if jd_file and not Path(jd_file).exists():
         logger.warning(f"JD file no existe para {id_vac}: {jd_file}, continuando sin JD")
         jd_file = ""
@@ -213,27 +222,29 @@ def run_cv_a_prep_with_retry(cv_a_prep_path: str, row: dict, out_dir: Path, max_
     """Ejecuta cv_a_prep con reintentos para fallas temporales."""
     for attempt in range(max_retries + 1):
         result = run_cv_a_prep(cv_a_prep_path, row, out_dir)
-        
-        # Si el resultado es exitoso o es un error permanente, no reintentar
+
         if result["resultado"] in ["SCAFFOLD_OK", "BLOCKED"]:
             return result
         if "Sin URL ni JD_File" in result["detalle"]:
-            return result  # Error permanente
-        
-        # Reintentar solo para errores temporales
+            return result
+
         if attempt < max_retries:
-            print(f"  ⚠️  Reintento {attempt + 1}/{max_retries} para {row['ID_Vacante']}")
-            time.sleep(2)  # Espera antes de reintentar
-    
-    return result  # Último intento fallido
+            print(f" ⚠️ Reintento {attempt + 1}/{max_retries} para {row['ID_Vacante']}")
+            time.sleep(2)
+
+    return result
 
 
 def main():
     parser = argparse.ArgumentParser(description="Batch runner local para cv_a_prep.py (sin escritura a Notion)")
     parser.add_argument("--csv", required=True, help="CSV export del Opportunities Tracker")
     parser.add_argument("--cv-a-prep", default="./cv_a_prep.py", help="Ruta a cv_a_prep.py")
-    parser.add_argument("--out-dir", default=".", help="Directorio de salida para scaffolds")
-    parser.add_argument("--workers", type=int, default=MAX_WORKERS, help=f"Número de workers paralelos (default: {MAX_WORKERS})")
+    parser.add_argument(
+        "--out-dir",
+        default=str(DEFAULT_OUTPUT_DIR),
+        help=f"Directorio de salida para scaffolds (default: {DEFAULT_OUTPUT_DIR})"
+    )
+    parser.add_argument("--workers", type=int, default=MAX_WORKERS, help=f"Numero de workers paralelos (default: {MAX_WORKERS})")
     parser.add_argument("--resume", action="store_true", help="Continuar desde checkpoint previo")
     parser.add_argument("--no-progress", action="store_true", help="Desactivar barra de progreso")
     args = parser.parse_args()
@@ -244,7 +255,7 @@ def main():
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    
+
     checkpoint_path = out_dir / CHECKPOINT_FILE
 
     rows = load_rows(args.csv)
@@ -252,8 +263,7 @@ def main():
 
     print(f"📊 Total filas en CSV: {len(rows)}")
     print(f"🎯 Elegibles (Next_Action == '{TARGET_NEXT_ACTION}'): {len(elegibles)}")
-    
-    # Filtrar ya procesados si resume está activo
+
     processed_ids = set()
     if args.resume:
         processed_ids = load_checkpoint(checkpoint_path)
@@ -261,7 +271,7 @@ def main():
             elegibles = [r for r in elegibles if r["ID_Vacante"] not in processed_ids]
             print(f"🔄 Resume mode: {len(processed_ids)} ya procesados, {len(elegibles)} pendientes")
         else:
-            print("ℹ️  Resume mode activo pero no hay checkpoint previo. Procesando todo.")
+            print("ℹ️ Resume mode activo pero no hay checkpoint previo. Procesando todo.")
 
     if not elegibles:
         print("✅ No hay vacantes elegibles pendientes de procesar.")
@@ -269,35 +279,30 @@ def main():
 
     print(f"🚀 Iniciando procesamiento con {args.workers} workers paralelos...")
     start_time = time.time()
-    
+
     results = []
     completed_count = 0
-    
-    # Usar ThreadPoolExecutor para procesamiento paralelo
+
     with ThreadPoolExecutor(max_workers=args.workers) as executor:
-        # Enviar todas las tareas
         future_to_row = {
-            executor.submit(run_cv_a_prep_with_retry, args.cv_a_prep, row, out_dir): row 
+            executor.submit(run_cv_a_prep_with_retry, args.cv_a_prep, row, out_dir): row
             for row in elegibles
         }
-        
-        # Procesar resultados a medida que completan
+
         for future in as_completed(future_to_row):
             row = future_to_row[future]
             try:
                 result = future.result()
                 results.append(result)
-                
-                # Guardar checkpoint
+
                 save_checkpoint(checkpoint_path, result["ID_Vacante"])
-                
-                # Mostrar progreso
+
                 completed_count += 1
                 if not args.no_progress:
                     show_progress(completed_count, len(elegibles), start_time)
                 else:
-                    print(f"  [{result['resultado']}] {result['Empresa']} — {result['Rol']} ({result['ID_Vacante']})")
-                    
+                    print(f" [{result['resultado']}] {result['Empresa']} — {result['Rol']} ({result['ID_Vacante']})")
+
             except Exception as e:
                 print(f"\n❌ Error procesando {row['ID_Vacante']}: {e}", file=sys.stderr)
                 results.append({
@@ -305,12 +310,12 @@ def main():
                     "Empresa": row["Empresa"],
                     "Rol": row["Rol"],
                     "resultado": "ERROR",
-                    "detalle": f"Excepción: {str(e)}",
+                    "detalle": f"Excepcion: {str(e)}",
                     "scaffold_path": "",
                 })
 
     elapsed = time.time() - start_time
-    
+
     fecha = datetime.date.today().isoformat()
     report_path = out_dir / f"cv_a_batch_report_{fecha}.csv"
     with open(report_path, "w", encoding="utf-8", newline="") as f:
@@ -325,7 +330,7 @@ def main():
     print(f"\n{'='*60}")
     print(f"📋 RESUMEN FINAL")
     print(f"{'='*60}")
-    print(f"⏱️  Tiempo total: {int(elapsed // 60)}m {int(elapsed % 60)}s")
+    print(f"⏱️ Tiempo total: {int(elapsed // 60)}m {int(elapsed % 60)}s")
     print(f"📊 Procesados: {len(results)}")
     print(f"✅ Scaffolds OK: {ok}")
     print(f"🚫 Bloqueados: {blocked}")
@@ -333,10 +338,9 @@ def main():
     print(f"📄 Reporte: {report_path}")
     print(f"{'='*60}")
     print("\nCERO escritura a Notion realizada por este script.")
-    print("Siguiente paso: pasar este reporte a Claude en sesión para Fase 2")
-    print("(DRY RUN -> APROBAR_WRITE -> actualización gobernada del Tracker).")
-    
-    # Limpiar checkpoint si todo fue exitoso
+    print("Siguiente paso: pasar este reporte a Claude en sesion para Fase 2")
+    print("(DRY RUN -> APROBAR_WRITE -> actualizacion gobernada del Tracker).")
+
     if errors == 0 and blocked == 0:
         if checkpoint_path.exists():
             checkpoint_path.unlink()

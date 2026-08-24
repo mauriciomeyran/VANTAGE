@@ -12,11 +12,11 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from vantage_scout.src.browser_agent import (  # noqa: E402
+from src.browser_agent import (  # noqa: E402
     SUPPORTED_LLM_PROVIDERS,
     build_llm,
 )
-from vantage_scout.src.config import Settings  # noqa: E402
+from src.config import Settings  # noqa: E402
 
 
 def test_supported_set() -> None:
@@ -58,7 +58,7 @@ def test_openrouter_uses_openai_compatible_base(monkeypatch: pytest.MonkeyPatch)
         return "llm"
 
     monkeypatch.setattr(
-        "vantage_scout.src.browser_agent._chat_openai",
+        "src.browser_agent._chat_openai",
         fake_chat_openai,
     )
     llm = build_llm(
@@ -82,7 +82,7 @@ def test_openai_compatible_generic(monkeypatch: pytest.MonkeyPatch) -> None:
         return "compat"
 
     monkeypatch.setattr(
-        "vantage_scout.src.browser_agent._chat_openai",
+        "src.browser_agent._chat_openai",
         fake_chat_openai,
     )
     llm = build_llm(
@@ -107,7 +107,7 @@ def test_cost_control_fallback_openai(monkeypatch: pytest.MonkeyPatch) -> None:
         return "llm"
 
     monkeypatch.setattr(
-        "vantage_scout.src.browser_agent._chat_openai",
+        "src.browser_agent._chat_openai",
         fake_chat_openai,
     )
     # With low cost limit, should fallback to gpt-4o-mini

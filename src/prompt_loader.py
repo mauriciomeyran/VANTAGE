@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import date
 from pathlib import Path
 
-from vantage_scout.src.config import PROMPTS_DIR, resolve_wrapper_filename
+from src.config import PROMPTS_DIR, resolve_wrapper_filename
 
 DATE_PLACEHOLDER = "{injected_by_wrapper}"
 

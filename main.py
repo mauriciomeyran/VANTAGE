@@ -20,17 +20,27 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from vantage_scout.src.config import (  # noqa: E402
+from src.config import (  # noqa: E402
     OUTPUT_DIR,
     PROMPT_VARIANT_BY_WRAPPER,
     PROMPT_VERSION_BY_WRAPPER,
     get_settings,
 )
-from vantage_scout.src.prompt_loader import load_prompt  # noqa: E402
-from vantage_scout.src.validator import PromptAPayload, empty_payload  # noqa: E402
+from src.prompt_loader import load_prompt  # noqa: E402
+from src.validator import PromptAPayload, empty_payload  # noqa: E402
 
-# Suppress all logging to stdout (critical for JSON-only contract)
-logging.basicConfig(level=logging.CRITICAL, force=True)
+# Keep stdout exclusively PromptA JSON, but send logs to stderr rather than
+# discarding them. The previous CRITICAL-level root logger silenced browser-use
+# entirely (it logs under the root logger), so real failures — invalid model
+# names, per-step 404s, watchdog stalls — left no trace at all and made the
+# system look like it "ran clean and stopped".
+_LOG_LEVEL = os.getenv("SCOUT_LOG_LEVEL", "INFO").upper()
+logging.basicConfig(
+    level=getattr(logging, _LOG_LEVEL, logging.INFO),
+    stream=sys.stderr,
+    format="%(levelname)-8s [%(name)s] %(message)s",
+    force=True,
+)
 
 
 def _meta_for(wrapper_stem: str) -> tuple[str, str]:
@@ -90,7 +100,7 @@ async def _async_main(args: argparse.Namespace) -> int:
         emit(payload)
         return 0
 
-    from vantage_scout.src.browser_agent import run_browser_agent
+    from src.browser_agent import run_browser_agent
 
     payload = await run_browser_agent(
         rendered,
@@ -99,6 +109,7 @@ async def _async_main(args: argparse.Namespace) -> int:
         prompt_version=version,
         today_date=iso,
         wrapper_name=stem,
+        output_dir=OUTPUT_DIR,
     )
     write_output(payload, stem, today)
     emit(payload)
@@ -106,8 +117,12 @@ async def _async_main(args: argparse.Namespace) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    # Redirect stderr to devnull to prevent pollution (critical for JSON-only contract)
-    sys.stderr = open(os.devnull, 'w')
+    # NOTE: stderr is intentionally NOT redirected to /dev/null. The JSON-only
+    # contract applies to stdout; muting stderr also muted every diagnostic
+    # browser-use emits, which is why `2>&1 | tee` and BROWSER_USE_LOGGING_LEVEL=debug
+    # both appeared to produce "no logs". Set SCOUT_QUIET=1 to restore silencing.
+    if os.getenv("SCOUT_QUIET", "").strip().lower() in {"1", "true", "yes", "on"}:
+        sys.stderr = open(os.devnull, "w")  # noqa: SIM115
     args = parse_args(argv)
     return asyncio.run(_async_main(args))
 

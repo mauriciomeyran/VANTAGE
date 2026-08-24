@@ -116,7 +116,7 @@
       ],
       "path": "skills/- CV/vantage-cv-b/SKILL.md",
       "description": "Fase 2 del pipeline de CV de VANTAGE (KERNEL:CV-PIPELINE-002) — construye el CV final aplicando el Output Contract Framework para integración directa con Figma, a partir de un HANDOFF generado por vantage-cv-a. Usar cuando el operador invoque el trigger \"CV-B [HANDOFF]\", pegue o adjunte un HANDOFF de CV-A y pida construir el CV, o pida generar el Markdown con Figma Tags para una vacante ya analizada. También activar si el operador pide \"serializar\" un CV para Figma o menciona figma_text_id, Golden Skeleton, o Figma Sync Protocol. No usar sin un HANDOFF previo de vantage-cv-a — si no existe, redirigir primero a esa skill. No usar para el análisis inicial de la vacante (eso es vantage-cv-a) ni para la auditoría final del PDF (eso es vantage-qa).",
-      "last_modified": "2026-08-10T03:04:44.888938",
+      "last_modified": "2026-08-19T23:33:41.911291",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/- CV/vantage-cv-b/SKILL.md",
       "notion_id": "3b6938be-fc42-8180-b24f-d8d9df4c4b8e"
     },
@@ -176,7 +176,7 @@
       ],
       "path": "skills/- Tidy/vantage-tidy-changelog/SKILL.md",
       "description": "Mantiene el Change Log de VANTAGE con las últimas 10 entradas visibles, moviendo el exceso al Archivo Changelog histórico. Usar cuando el Change Log activo supera 10 entradas o cuando se solicita housekeeping documental.",
-      "last_modified": "2026-08-13T15:50:42.933276",
+      "last_modified": "2026-08-17T15:27:28.420189",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/- Tidy/vantage-tidy-changelog/SKILL.md",
       "notion_id": "3b6938be-fc42-8170-843a-c7520403bd59"
     },
@@ -235,8 +235,8 @@
         "vantage sync skill library"
       ],
       "path": "skills/- Sync Assets/vantage-sync-skill-library/SKILL.md",
-      "description": "Sincroniza el inventario de habilidades (.skill) de VANTAGE en Notion contra el árbol de disco activo, usando el gap report extendido de verify_versions.py --skills. Usar cuando el operador pida \"sincronizar Skill Library\", \"registrar skills nuevas\" o similar, o cuando un gap report reciente muestre archivos .skill sin registrar en Notion o entradas huérfanas sin archivo físico correspondiente. No aplica al Bug/Task Tracker (ver vantage-create-bug-task), al VANTAGE Tracker de vacantes, ni al inventario de scripts .py/.sh (ver vantage-sync-script-library) — es exclusivo del inventario de archivos .skill del propio sistema.",
-      "last_modified": "2026-08-12T05:26:49.254927",
+      "description": "Sincroniza el inventario de habilidades (.skill) de VANTAGE en Notion contra el árbol de disco activo, usando el gap report extendido de verify_versions.py --skills. Además, en cada alta o actualización escribe el contenido completo del SKILL.md como body de la página Notion. Usar cuando el operador pida \"sincronizar Skill Library\", \"registrar skills nuevas\" o similar, o cuando un gap report reciente muestre archivos .skill sin registrar en Notion o entradas huérfanas sin archivo físico correspondiente. No aplica al Bug/Task Tracker (ver vantage-create-bug-task), al VANTAGE Tracker de vacantes, ni al inventario de scripts .py/.sh (ver vantage-sync-script-library) — es exclusivo del inventario de archivos .skill del propio sistema.",
+      "last_modified": "2026-08-17T15:08:01.483449",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/- Sync Assets/vantage-sync-skill-library/SKILL.md",
       "notion_id": "3b6938be-fc42-813d-84c0-fd2642937365"
     },
@@ -283,8 +283,8 @@
         "vantage tidy opportunities tracker"
       ],
       "path": "skills/- Tidy/vantage-tidy-opportunities-tracker/SKILL.md",
-      "description": "Identifica duplicados y vacantes expiradas en el VANTAGE Tracker (Opportunities DB) y marca Archivar = True en el registro original — sin crear copias ni tocar el Archivo Tracker. Usa los mecanismos de fingerprint y protección de estado terminal ya implementados en el pipeline Python y documentados en el Kernel. Requiere Dry Run y APROBAR_WRITE antes de cualquier escritura.",
-      "last_modified": "2026-08-13T15:50:42.933824",
+      "description": "Identifica duplicados y vacantes expiradas en el VANTAGE Tracker (Opportunities DB) y marca Archivar = True en el registro original — sin crear copias ni tocar el Archivo Tracker. La documentación de razones deterministas en campo Notas es responsabilidad de VL1 (layer_1_run.py) en el momento de la decisión. Esta skill solo se encarga del marcado de Archivar=True para housekeeping de mantenimiento. Usa los mecanismos de fingerprint y protección de estado terminal ya implementados en el pipeline Python y documentados en el Kernel. Requiere Dry Run y APROBAR_WRITE antes de cualquier escritura.",
+      "last_modified": "2026-08-17T17:26:32.513693",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/- Tidy/vantage-tidy-opportunities-tracker/SKILL.md",
       "notion_id": "3b6938be-fc42-81c6-8b38-ca674deaabf1"
     },
@@ -307,8 +307,8 @@
         "vantage housekeeping archive"
       ],
       "path": "skills/- Tidy/vantage-housekeeping-archive/SKILL.md",
-      "description": "Housekeeping de archivado del VANTAGE Tracker: detecta candidatos (Dedup_Flag, Status=Expirada, Next_Action Archivar/Post-Mortem), delega el marcado Archivar=True a vantage-tidy-opportunities-tracker (única vía de escritura, DRY RUN + APROBAR_WRITE) y entrega reporte de cola de archivo con IDs de página para localización visual del operador. No mueve páginas ni escribe en el Archivo Tracker. VANTAGE-ALIGNED: Integra KERNEL requirements (DOCUMENTATION-005, DOCUMENTATION-010, DOCUMENTATION-012, DOCUMENTATION-008, FAIL-PHILOSOPHY) y maximiza token economy via sandbox protocol.",
-      "last_modified": "2026-08-14T19:01:20.961718",
+      "description": "Housekeeping de archivado del VANTAGE Tracker: detecta candidatos (Dedup_Flag, Status=Expirada, Next_Action Archivar/Post-Mortem), delega el marcado Archivar=True + documentación de razón determinista en Notas a vantage-tidy-opportunities-tracker (única vía de escritura, DRY RUN + APROBAR_WRITE) y entrega reporte de cola de archivo con IDs de página para localización visual del operador. No mueve páginas ni escribe en el Archivo Tracker. VANTAGE-ALIGNED: Integra KERNEL requirements (DOCUMENTATION-005, DOCUMENTATION-010, DOCUMENTATION-012, DOCUMENTATION-008, FAIL-PHILOSOPHY) y maximiza token economy via sandbox protocol.",
+      "last_modified": "2026-08-17T17:14:56.635741",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/- Tidy/vantage-housekeeping-archive/SKILL.md",
       "notion_id": "3bd938be-fc42-81f5-9507-c220d4846028"
     },
@@ -332,7 +332,7 @@
       ],
       "path": "skills/- CV/vantage-qa/SKILL.md",
       "description": "Auditoría de calidad final canónica de VANTAGE (KERNEL:TRIGGER-003) sobre un CV en PDF antes de postularlo. Usar cuando el operador invoque el trigger \"QA [PDF]\", adjunte un PDF de CV pidiendo revisión final, o pida verificar que un CV ya construido cumple con el Career Canon antes de enviarlo a una vacante. Emite un veredicto binario GO/NO-GO. No usar para el análisis inicial de vacante (eso es vantage-cv-a) ni para construir el CV (eso es vantage-cv-b) — esta skill solo audita un PDF ya terminado.",
-      "last_modified": "2026-08-10T03:04:44.890987",
+      "last_modified": "2026-08-19T23:33:46.000960",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/- CV/vantage-qa/SKILL.md",
       "notion_id": "3b6938be-fc42-8105-8c47-fc6fdb144883"
     }

@@ -201,7 +201,7 @@ def _first_nonempty(record: dict, *keys: str) -> str:
 def normalize_record_fields(record: dict) -> dict:
     title = _first_nonempty(record, "title", "rol", "role", "Rol")
     brand_raw = _first_nonempty(record, "brand", "marca", "company", "Marca")
-    apply_url = _first_nonempty(record, "apply_url", "url", "URL")
+    apply_url = _first_nonempty(record, "apply_url", "url", "URL", "apply_path")
     location = _first_nonempty(record, "location", "ubicacion", "city")
     job_id = _first_nonempty(record, "job_id", "JOB_ID")
     jd = _first_nonempty(record, "jd", "jd_snippet", "description", "JD")

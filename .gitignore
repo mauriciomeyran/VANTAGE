@@ -72,3 +72,6 @@ Thumbs.db
 
 # Imagen GPT
 GPT.png
+# Config local (secrets, no versionar)
+config/*.env
+config/*.env.bak

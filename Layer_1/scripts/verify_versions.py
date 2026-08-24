@@ -7,6 +7,7 @@ Path: Layer_1/scripts/verify_versions.py
 import os
 import sys
 import json
+import hashlib
 import argparse
 from pathlib import Path
 from datetime import datetime, timezone
@@ -363,6 +364,37 @@ def scan_committed_assets(project_root: Path, extensions: tuple) -> list:
     found.sort(key=lambda t: t[0])
     return found
 
+def scan_skill_folders(project_root: Path) -> list:
+    """Escanea el árbol activo buscando carpetas que contienen un SKILL.md
+    (convención real de skills en disco: carpeta con SKILL.md adentro, no
+    archivos sueltos con extensión .skill -- esa extensión solo existe como
+    convención de nombre en el título de Notion, ej. 'vantage-cv-b.skill',
+    nunca como archivo físico). Devuelve lista de (nombre_virtual, ruta
+    relativa al SKILL.md) ordenada por nombre -- mismo shape de retorno que
+    scan_committed_assets, para reuso directo en los consumidores existentes
+    (--skills, --new-skills, --skills-drift)."""
+    found = []
+    for top in sorted(ACTIVE_TOP_LEVEL_DIRS):
+        top_path = project_root / top
+        if not top_path.exists():
+            continue
+        for path in top_path.rglob("SKILL.md"):
+            if not path.is_file():
+                continue
+            folder_name = path.parent.name
+            if folder_name.startswith(EXCLUDED_FILE_PREFIXES):
+                continue
+            rel = path.relative_to(project_root)
+            parts_lower = {p.lower() for p in rel.parts}
+            if parts_lower & EXCLUDED_DIR_NAMES:
+                continue
+            if any(sub in p.lower() for p in rel.parts for sub in EXCLUDED_DIR_SUBSTRINGS):
+                continue
+            virtual_name = f"{folder_name}.skill"
+            found.append((virtual_name, str(rel)))
+    found.sort(key=lambda t: t[0])
+    return found
+
 def get_script_library_titles(client: httpx.Client, data_source_id: str, headers: dict, title_property: str = "Script") -> dict:
     """Pagina completo el data source (SCRIPT LIBRARY o SKILL LIBRARY) y
     devuelve {titulo: estado} para cada fila. 'title_property' es el nombre
@@ -568,12 +600,91 @@ def render_length_report(client: httpx.Client, uuids: dict, headers: dict, basel
     if attention_required:
         sys.exit(1)
 
+def render_skill_drift_report(project_root: Path, baseline_path: Path, update_baseline: bool = False) -> None:
+    """Detecta drift de CONTENIDO en archivos .skill ya registrados (nombre
+    presente en disco Y en el baseline previo, pero hash distinto). No
+    reemplaza a --skills/--new-skills (que detectan altas/bajas por nombre)
+    -- cubre el caso complementario: mismo nombre, contenido modificado
+    in-place, invisible a una comparación de sets de nombres.
+    Mismo patrón que render_length_report: baseline JSON local, sin llamar
+    a Notion, exit 1 si hay drift sin reconciliar. Si update_baseline=True,
+    sobrescribe el baseline tras el reporte (solo tras confirmar que el
+    drift ya fue documentado en Skill Library / Skill Glossary)."""
+    if baseline_path.exists():
+        with open(baseline_path, "r", encoding="utf-8") as f:
+            baseline = json.load(f)
+    else:
+        baseline = {}
+
+    disk_skills = scan_skill_folders(project_root)
+    results = []
+    drift_detected = False
+    new_baseline_created = not baseline_path.exists()
+    new_entries_added = False
+
+    for name, rel_path in disk_skills:
+        full_path = project_root / rel_path
+        current_hash = hashlib.sha256(full_path.read_bytes()).hexdigest()
+
+        entry = baseline.get(rel_path)
+        if entry is None:
+            baseline[rel_path] = {
+                "hash": current_hash,
+                "captured_at": datetime.now(timezone.utc).isoformat()
+            }
+            new_entries_added = True
+            results.append((name, "-", "[BASELINE INICIAL]"))
+        else:
+            baseline_hash = entry.get("hash")
+            if baseline_hash != current_hash:
+                drift_detected = True
+                results.append((name, rel_path, "⚠️ CONTENIDO MODIFICADO (sin reconciliar)"))
+                if update_baseline:
+                    baseline[rel_path] = {
+                        "hash": current_hash,
+                        "captured_at": datetime.now(timezone.utc).isoformat()
+                    }
+            else:
+                results.append((name, rel_path, "OK"))
+
+    # Detectar entradas en baseline sin archivo correspondiente en disco
+    # (huérfanos de drift-tracking -- no confundir con huérfanos de --skills,
+    # que comparan contra Notion; este caso es baseline vs disco local).
+    disk_rel_paths = {rel for _, rel in disk_skills}
+    for rel_path in baseline:
+        if rel_path not in disk_rel_paths:
+            results.append((rel_path, "-", "[BASELINE SIN ARCHIVO EN DISCO]"))
+
+    print("[VERIFICACIÓN DE DRIFT DE CONTENIDO — SKILL DRIFT CHECK]")
+    print("-" * 75)
+    print(f"{'SKILL':<40} | {'RUTA':<20} | {'VEREDICTO':<30}")
+    print("-" * 75)
+    for name, rel, verdict in results:
+        rel_str = rel if rel != "-" else "-"
+        print(f"{name:<40} | {rel_str:<20} | {verdict:<30}")
+    print("-" * 75)
+    print(f"[VEREDICTO FINAL] {'PASS' if not drift_detected else 'ATENCIÓN REQUERIDA — DRIFT SIN RECONCILIAR'}")
+    print("[FIN SKILL DRIFT CHECK]")
+
+    if new_baseline_created or new_entries_added or update_baseline:
+        with open(baseline_path, "w", encoding="utf-8") as f:
+            json.dump(baseline, f, indent=2)
+        if new_baseline_created:
+            print(f"[BASELINE INICIAL CREADO — {len(disk_skills)} skills]")
+        elif new_entries_added:
+            print(f"[BASELINE ACTUALIZADO — skills nuevas agregadas]")
+        elif update_baseline:
+            print(f"[BASELINE ACTUALIZADO — hashes regrabados tras reconciliación confirmada]")
+
+    if drift_detected and not update_baseline:
+        sys.exit(1)
+
 def render_scripts_gap_report(client: httpx.Client, headers: dict, extensions: tuple, data_source_id: str, label: str, title_property: str = "Script") -> None:
     """Cruza assets committeados en disco (árbol activo) contra la base de
     Notion correspondiente (SCRIPT LIBRARY o SKILL LIBRARY). Read-only en
     ambos lados — no escribe ni crea filas automáticamente, solo reporta
     para que el operador decida el alta."""
-    disk_scripts = scan_committed_assets(PROJECT_ROOT, extensions)
+    disk_scripts = scan_skill_folders(PROJECT_ROOT) if extensions == (".skill",) else scan_committed_assets(PROJECT_ROOT, extensions)
     library_titles = get_script_library_titles(client, data_source_id, headers, title_property)
 
     disk_names = {name for name, _ in disk_scripts}
@@ -615,7 +726,7 @@ def render_new_scripts_gap_report(extensions: tuple, glossary_path: Path, label:
     de Scripts local (Markdown, MANUAL:SCRIPT-GLOSSARY). 100% local — no llama
     a Notion. Detecta scripts nuevos sin entrada humana documentada, como
     señal de entrada para el skill vantage-sync-script-glossary."""
-    disk_scripts = scan_committed_assets(PROJECT_ROOT, extensions)
+    disk_scripts = scan_skill_folders(PROJECT_ROOT) if extensions == (".skill",) else scan_committed_assets(PROJECT_ROOT, extensions)
 
     if not glossary_path.exists():
         print(f"[-] Error: Glosario no encontrado en {glossary_path}", file=sys.stderr)
@@ -702,6 +813,8 @@ def main():
     parser.add_argument("--new-skills", action="store_true", help="Cruza los archivos .skill del árbol activo contra el Glosario de Skills LOCAL (MANUAL:SKILL-GLOSSARY), sin llamar a Notion. Exit 1 si hay skills sin documentar — úsalo como gate para vantage-sync-skill-glossary.")
     parser.add_argument("--length", action="store_true", help="Compara el conteo de líneas de contenido de los 10 documentos fundacionales contra el último baseline guardado, para detectar truncamiento silencioso. Read-only salvo --update-baseline.")
     parser.add_argument("--update-baseline", action="store_true", help="Usar junto a --length. Sobrescribe el baseline de longitud con el conteo actual tras confirmar que no hubo truncamiento (edición legítima).")
+    parser.add_argument("--skills-drift", action="store_true", help="Detecta drift de CONTENIDO en archivos .skill ya registrados (mismo nombre, hash distinto respecto al último baseline) -- complementario a --skills/--new-skills, que solo detectan altas/bajas por nombre. Read-only salvo --update-skill-baseline. Exit 1 si hay drift sin reconciliar.")
+    parser.add_argument("--update-skill-baseline", action="store_true", help="Usar junto a --skills-drift. Sobrescribe el baseline de hashes tras confirmar que el drift ya fue reconciliado en Skill Library (Notion) y Skill Glossary (Manual apéndice 23).")
     args = parser.parse_args()
 
     # 1. Inicialización de Entorno e Infraestructura
@@ -734,6 +847,17 @@ def main():
         render_new_scripts_gap_report((".skill",), SCRIPT_GLOSSARY_PATH, label="SKILL GLOSSARY")
         return
 
+    # --update-skill-baseline requiere --skills-drift (mismo guard que
+    # --update-baseline/--length más abajo, pero validado aquí porque
+    # --skills-drift retorna temprano sin pasar por resolución de registry).
+    if args.update_skill_baseline and not args.skills_drift:
+        print("[-] Error: --update-skill-baseline requiere --skills-drift", file=sys.stderr)
+        sys.exit(1)
+
+    if args.skills_drift:
+        baseline_path = SCRIPT_DIR / "skill_hash_baseline.json"
+        render_skill_drift_report(PROJECT_ROOT, baseline_path, update_baseline=args.update_skill_baseline)
+        return
 
     registry_path = find_registry_file(SCRIPT_DIR)
     uuids = load_document_uuids(registry_path)
