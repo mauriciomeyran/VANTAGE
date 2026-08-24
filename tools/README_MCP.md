@@ -26,7 +26,7 @@ Servidor MCP que expone la funcionalidad de asignación de seriales VANTAGE como
   "vantage-serial": {
     "command": "python3",
     "args": [
-      "/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/tools/mcp_vantage_serial_server.py"
+      "/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/scripts/mcp_vantage_serial_server.py"
     ],
     "env": {
       "VANTAGE_SERIAL_DB": "/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/state/vantage_handoff_counter.sqlite3"
@@ -42,7 +42,7 @@ Servidor MCP que expone la funcionalidad de asignación de seriales VANTAGE como
 ### Comando de Arranque
 
 ```bash
-python3 /Users/mauriciomeyran/Documents/03 Projects/VANTAGE/tools/mcp_vantage_serial_server.py
+python3 /Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/scripts/mcp_vantage_serial_server.py
 ```
 
 El servidor se inicia automáticamente cuando Claude carga la configuración MCP.
@@ -108,7 +108,7 @@ mcp_list_tools("vantage-serial")
 
 ```bash
 # Ejecutar test dry run (sin consumo real)
-cd /Users/mauriciomeyran/Documents/03 Projects/VANTAGE/tools
+cd /Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/scripts
 python3 test_mcp_dry_run.py
 ```
 
@@ -120,8 +120,8 @@ sqlite3 /Users/mauriciomeyran/Documents/03\ Projects/VANTAGE/state/vantage_hando
 
 ## Archivos
 
-- **Servidor:** `tools/mcp_vantage_serial_server.py` - Implementación MCP usando FastMCP
-- **Test:** `tools/test_mcp_dry_run.py` - Test sin consumo real
+- **Servidor:** `Layer_1/scripts/mcp_vantage_serial_server.py` - Implementación MCP usando FastMCP
+- **Test:** `Layer_1/scripts/test_mcp_dry_run.py` - Test sin consumo real
 - **Lógica original:** `Layer_1/scripts/allocate_vantage_serial.py` - NO MODIFICADO
 - **Base de datos:** `state/vantage_handoff_counter.sqlite3` - NO MODIFICADO
 

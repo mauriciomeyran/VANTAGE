@@ -8,31 +8,22 @@ Se ha implementado un servidor MCP (Model Context Protocol) para exponer la func
 
 ### Archivos Creados (5 nuevos)
 
-1. **`tools/mcp_vantage_serial_server.py`** (144 líneas)
+1. **`Layer_1/scripts/mcp_vantage_serial_server.py`** (144 líneas)
    - Servidor MCP completo que implementa la herramienta `allocate_vantage_serial`
    - Reutiliza la lógica existente de `Layer_1/scripts/allocate_vantage_serial.py`
    - Usa transporte stdio para comunicación MCP
    - Manejo de errores con `HANDOFF_SERIAL_UNAVAILABLE`
 
-2. **`tools/requirements_mcp.txt`** (4 líneas)
-   - Dependencia: `mcp>=0.1.0`
-   - SDK de Python para implementación de servidores MCP
+2. **`Layer_1/scripts/test_mcp_dry_run.py`** (102 líneas)
+   - Script de prueba con base de datos temporal
+   - Verifica funcionalidad sin consumir seriales reales
+   - Todos los tests pasados exitosamente
 
 3. **`tools/README_MCP.md`** (154 líneas)
    - Documentación completa de instalación y uso
    - Guía de integración con skills
    - Lógica de fallback documentada
    - Troubleshooting y configuración
-
-4. **`tools/test_mcp_dry_run.py`** (102 líneas)
-   - Script de prueba con base de datos temporal
-   - Verifica funcionalidad sin consumir seriales reales
-   - Todos los tests pasados exitosamente
-
-5. **`tools/test_mcp_real.py`** (96 líneas)
-   - Script de prueba con base de datos real
-   - Verifica funcionamiento con `state/vantage_handoff_counter.sqlite3`
-   - Test pasado: HO-000005 asignado exitosamente
 
 ### Archivos Modificados (1 fuera del repo)
 
