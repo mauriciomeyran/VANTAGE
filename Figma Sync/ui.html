@@ -21,85 +21,131 @@
       errorDisplay.style.display = 'none';
       errorDisplay.innerText = '';
       
-      if (rawText.includes('figma_text_id')) {
+      try {
+        // Try to parse as JSON array (new format)
+        let payload;
         try {
-          const parsedData = {};
-          const duplicateIds = [];
-          const blockRegex = /######\s+\[figma_text_id\]\(([^)]+)\)\s*([\s\S]*?)(?=######\s+\[figma_text_id\]|\s*$)/g;
-          let match;
-
-          while ((match = blockRegex.exec(rawText)) !== null) {
-            const nodeId = match[1].trim();
-            let content = match[2].trim();
-
-            if (nodeId in parsedData) {
-              duplicateIds.push(nodeId);
+          payload = JSON.parse(rawText);
+          
+          // Convert to flat array if wrapped
+          if (!Array.isArray(payload) && payload.nodes) {
+            payload = payload.nodes;
+          } else if (Array.isArray(payload) && payload[0]?.nodes) {
+            payload = payload[0].nodes;
+          }
+          
+          // Validate structure
+          if (!Array.isArray(payload)) {
+            throw new Error('Payload must be an array');
+          }
+          
+          for (const item of payload) {
+            if (!item.id || item.characters === undefined) {
+              throw new Error('Each item must have id and characters fields');
             }
+          }
+          
+          // Send new sync-nodes message
+          parent.postMessage({ pluginMessage: { type: 'sync-nodes', payload: payload } }, '*');
+          
+        } catch (jsonError) {
+          // Fallback to old format for backward compatibility
+          if (rawText.includes('figma_text_id')) {
+            const parsedData = {};
+            const duplicateIds = [];
+            const blockRegex = /######\s+\[figma_text_id\]\(([^)]+)\)\s*([\s\S]*?)(?=######\s+\[figma_text_id\]|\s*$)/g;
+            let match;
 
-            // Sanitización de entidades HTML y Markdown secundario
-            content = content
-              .replace(/&amp;/g, '&')
-              .replace(/&lt;/g, '<')
-              .replace(/&gt;/g, '>')
-              .replace(/_([^_]+)_/g, '$1') 
-              .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') 
-              .replace(/\\/g, ''); 
+            while ((match = blockRegex.exec(rawText)) !== null) {
+              const nodeId = match[1].trim();
+              let content = match[2].trim();
 
-            // Motor de extracción de rangos dinámicos para negritas (**)
-            let cleanContent = "";
-            let boldRanges = [];
-            let i = 0;
-            let isBold = false;
-            let boldStart = 0;
-
-            while (i < content.length) {
-              if (content.substr(i, 2) === "**") {
-                if (!isBold) {
-                  boldStart = cleanContent.length;
-                  isBold = true;
-                } else {
-                  boldRanges.push({ start: boldStart, end: cleanContent.length });
-                  isBold = false;
-                }
-                i += 2;
-              } else {
-                cleanContent += content[i];
-                i++;
+              if (nodeId in parsedData) {
+                duplicateIds.push(nodeId);
               }
+
+              // Sanitización de entidades HTML y Markdown secundario
+              content = content
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/_([^_]+)_/g, '$1') 
+                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') 
+                .replace(/\\/g, ''); 
+
+              // Motor de extracción de rangos dinámicos para negritas (**)
+              let cleanContent = "";
+              let boldRanges = [];
+              let i = 0;
+              let isBold = false;
+              let boldStart = 0;
+
+              while (i < content.length) {
+                if (content.substr(i, 2) === "**") {
+                  if (!isBold) {
+                    boldStart = cleanContent.length;
+                    isBold = true;
+                  } else {
+                    boldRanges.push({ start: boldStart, end: cleanContent.length });
+                    isBold = false;
+                  }
+                  i += 2;
+                } else {
+                  cleanContent += content[i];
+                  i++;
+                }
+              }
+
+              parsedData[nodeId] = {
+                text: cleanContent,
+                boldRanges: boldRanges
+              };
             }
 
-            parsedData[nodeId] = {
-              text: cleanContent,
-              boldRanges: boldRanges
-            };
-          }
+            if (duplicateIds.length > 0) {
+              const uniqueDupes = [...new Set(duplicateIds)];
+              errorDisplay.innerText = `Fricción Estructural: IDs duplicados: ${uniqueDupes.join(', ')}`;
+              errorDisplay.style.display = 'block';
+              return;
+            }
 
-          if (duplicateIds.length > 0) {
-            const uniqueDupes = [...new Set(duplicateIds)];
-            errorDisplay.innerText = `Fricción Estructural: IDs duplicados: ${uniqueDupes.join(', ')}`;
-            errorDisplay.style.display = 'block';
-            return;
-          }
+            if (Object.keys(parsedData).length === 0) {
+              alert('No se detectaron bloques válidos de figma_text_id.');
+              return;
+            }
 
-          if (Object.keys(parsedData).length === 0) {
-            alert('No se detectaron bloques válidos de figma_text_id.');
-            return;
+            // Convert old format to new format
+            const newPayload = Object.entries(parsedData).map(([id, data]) => ({
+              id: id,
+              characters: data.text
+            }));
+            
+            parent.postMessage({ pluginMessage: { type: 'sync-nodes', payload: newPayload } }, '*');
+          } else {
+            // Try old JSON format
+            const parsed = JSON.parse(rawText);
+            const newPayload = Object.entries(parsed).map(([id, data]) => ({
+              id: id,
+              characters: typeof data === 'string' ? data : data.text
+            }));
+            
+            parent.postMessage({ pluginMessage: { type: 'sync-nodes', payload: newPayload } }, '*');
           }
-
-          parent.postMessage({ pluginMessage: { type: 'execute-sync', data: parsedData } }, '*');
-        } catch (e) {
-          alert('Error crítico en el motor analítico de Markdown.');
         }
-      } else {
-        try {
-          const parsed = JSON.parse(rawText);
-          const normalizedData = {};
-          for (const [k, v] of Object.entries(parsed)) {
-            normalizedData[k] = typeof v === 'string' ? { text: v, boldRanges: [] } : v;
-          }
-          parent.postMessage({ pluginMessage: { type: 'execute-sync', data: normalizedData } }, '*');
-        } catch (e) {
-          alert('Sintaxis inválida. Verifica el árbol de datos.');
+        
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    };
+    
+    // Listen for sync results
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+      if (msg.type === 'sync-result') {
+        if (msg.errors.length > 0) {
+          alert(`Sincronización completada con errores: ${msg.count} nodos actualizados. Errores: ${msg.errors.join(', ')}`);
+        } else {
+          alert(`Sincronización finalizada: ${msg.count} nodos actualizados`);
         }
       }
     };

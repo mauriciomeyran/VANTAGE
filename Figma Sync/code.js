@@ -1,135 +1,59 @@
-// VANTAGE Registry V2 — Resolver Layer V1
-// Resolución por ID crudo O(1) vía registry_seed.json
-// Deprecado: búsqueda semántica por nombre de capa (findAll)
-
-const REGISTRY = {
-  "HEADER_NAME": "2:4",
-  "HEADER_SUBTITLE": "2:5",
-  "SEC_PERFIL_PROFESIONAL_TITLE": "2:7",
-  "SEC_PERFIL_PROFESIONAL_BULLET_1": "2:9",
-  "SEC_PERFIL_PROFESIONAL_BULLET_2": "3:13",
-  "SEC_PERFIL_PROFESIONAL_BULLET_3": "2:10",
-  "SEC_HABILIDADES_CLAVE_TITLE": "2:12",
-  "SEC_HABILIDADES_CLAVE_BULLET_1": "2:14",
-  "SEC_HABILIDADES_CLAVE_BULLET_2": "2:15",
-  "SEC_HABILIDADES_CLAVE_BULLET_3": "2:16",
-  "SEC_HABILIDADES_CLAVE_BULLET_4": "2:17",
-  "SEC_HABILIDADES_CLAVE_BULLET_5": "2:18",
-  "SEC_EXPERIENCIA_PROFESIONAL_TITLE": "2:20",
-  "EXP_L_OR_AL_LUXE_M_XICO_COMPANY": "2:22",
-  "EXP_L_OR_AL_LUXE_M_XICO_ROLE": "2:23",
-  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_1": "2:25",
-  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_2": "2:26",
-  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_3": "2:27",
-  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_4": "2:28",
-  "EXP_BISONTE_EXPERIENTIAL_MARKETING_COMPANY": "2:32",
-  "EXP_BISONTE_EXPERIENTIAL_MARKETING_ROLE": "2:33",
-  "EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_1": "2:35",
-  "EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_2": "2:36",
-  "EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_3": "2:37",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__COMPANY": "2:39",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__ROLE": "2:40",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_1": "2:42",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_2": "2:43",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_3": "2:44",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_4": "3:9",
-  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_5": "3:2",
-  "EXP_A_ROPOSTALE_COMPANY": "2:46",
-  "EXP_A_ROPOSTALE_ROLE": "2:47",
-  "EXP_A_ROPOSTALE_BULLET_1": "2:49",
-  "EXP_A_ROPOSTALE_BULLET_2": "2:50",
-  "EXP_A_ROPOSTALE_BULLET_3": "2:51",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__COMPANY": "2:54",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__ROLE": "2:55",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_1": "2:57",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_2": "2:58",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_3": "2:59",
-  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_4": "2:60",
-  "SEC_FORMACION_ACADEMICA_TITLE": "2:62",
-  "EDU_UNAM_ARTES": "2:64",
-  "EDU_UNAM_DIPLOMADO": "2:65",
-  "SEC_CURSOS_Y_CERTIFICACIONES_TITLE": "2:67",
-  "CERT_AUTOCAD": "2:69",
-  "CERT_ALDO": "2:70"
+"use strict";
+// VANTAGE CV Sync - Improved Font Loading & Payload Handling
+// Fix for Figma Plugin Sync & Script Automation
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
-
-figma.showUI(__html__, { width: 400, height: 280 });
-
-figma.ui.onmessage = async (msg) => {
-  if (msg.type === 'execute-sync') {
-    const data = msg.data;
-    let successCount = 0;
-    let missingNodes = [];
-
-    for (const [key, item] of Object.entries(data)) {
-      const rawId = REGISTRY[key] || key;
-      const node = figma.getNodeById(rawId);
-
-      if (!node || node.type !== 'TEXT') {
-        missingNodes.push(key);
-        continue;
-      }
-
-      try {
-        let baseFont;
-        if (node.fontName === figma.mixed) {
-          const firstFont = node.getRangeFontName(0, 1);
-          baseFont = { family: firstFont.family, style: "Regular" };
-        } else {
-          baseFont = node.fontName;
-          if (baseFont && (baseFont.style === "Bold" || baseFont.style === "Medium" || baseFont.style === "SemiBold") && item.boldRanges && item.boldRanges.length > 0) {
-            baseFont = { family: baseFont.family, style: "Regular" };
-          }
+figma.ui.onmessage = (msg) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    if (msg.type === 'sync-nodes') {
+        let nodesToUpdate = msg.payload;
+        // Handle wrapped payload if passed
+        if (!Array.isArray(nodesToUpdate) && nodesToUpdate.nodes) {
+            nodesToUpdate = nodesToUpdate.nodes;
         }
-
-        try {
-          await figma.loadFontAsync(baseFont);
-        } catch (fontErr) {
-          const backupFont = node.fontName === figma.mixed ? node.getRangeFontName(0, 1) : node.fontName;
-          baseFont = backupFont;
-          await figma.loadFontAsync(baseFont);
+        else if (Array.isArray(nodesToUpdate) && ((_a = nodesToUpdate[0]) === null || _a === void 0 ? void 0 : _a.nodes)) {
+            nodesToUpdate = nodesToUpdate[0].nodes;
         }
-
-        // VANTAGE FIX: Se fuerza la asignación tipográfica global al contenedor completo. 
-        // Esto destruye el estado 'figma.mixed' previo y previene el bloqueo nativo del motor de renderizado.
-        node.fontName = baseFont;
-        node.characters = item.text;
-        
-        // Formateo quirúrgico de rangos en negrita
-        if (item.boldRanges && item.boldRanges.length > 0) {
-          const boldFont = { family: baseFont.family, style: "Bold" };
-          try {
-            await figma.loadFontAsync(boldFont);
-            for (const range of item.boldRanges) {
-              if (range.start < node.characters.length && range.end <= node.characters.length) {
-                node.setRangeFontName(range.start, range.end, boldFont);
-              }
-            }
-          } catch (err) {
-            try {
-              const mediumFont = { family: baseFont.family, style: "Medium" };
-              await figma.loadFontAsync(mediumFont);
-              for (const range of item.boldRanges) {
-                if (range.start < node.characters.length && range.end <= node.characters.length) {
-                  node.setRangeFontName(range.start, range.end, mediumFont);
+        let updatedCount = 0;
+        let errors = [];
+        for (const item of nodesToUpdate) {
+            if (!item.id || item.characters === undefined)
+                continue;
+            const node = figma.getNodeById(item.id);
+            if (node && node.type === "TEXT") {
+                try {
+                    // Handle font loading per character segment or root fontName
+                    if (node.fontName !== figma.mixed) {
+                        yield figma.loadFontAsync(node.fontName);
+                    }
+                    else {
+                        // If node has mixed fonts, load all unique fonts in range
+                        const len = node.characters.length;
+                        for (let i = 0; i < len; i++) {
+                            yield figma.loadFontAsync(node.getRangeFontName(i, i + 1));
+                        }
+                    }
+                    // Update text content cleanly
+                    node.characters = item.characters;
+                    updatedCount++;
                 }
-              }
-            } catch (innerErr) {
-              console.error(`Error de asignación de peso en: ${baseFont.family}`);
+                catch (err) {
+                    const errorMessage = err instanceof Error ? err.message : String(err);
+                    errors.push(`Failed node ${item.id}: ${errorMessage}`);
+                }
             }
-          }
         }
-        successCount++;
-      } catch (err) {
-        console.error(`Fallo crítico en nodo semántico ${key}:`, err);
-      }
+        figma.ui.postMessage({
+            type: 'sync-result',
+            count: updatedCount,
+            errors: errors
+        });
     }
-
-    if (missingNodes.length > 0) {
-      console.warn("Keys no encontradas en el lienzo actual:", missingNodes);
-    }
-
-    figma.notify(`VANTAGE Sync: ${successCount} nodos actualizados vía Registry V2 (ID crudo).${missingNodes.length > 0 ? ` Keys sin resolver: ${missingNodes.length}` : ''}`);
-    figma.closePlugin();
-  }
-};
+});
