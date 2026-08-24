@@ -38,7 +38,7 @@ DOCS_FUNDACIONALES = {
     "V-CHANGELOG-ARCHIVO": ("3ba938be-fc42-8011-8947-fb4fa5d1f63f", "Changelog Archivo.md"),
 }
 
-ACTIVE_DIR = Path(__file__).resolve().parent.parent.parent / "Documentacion" / "ACTIVE"
+ACTIVE_DIR = Path(__file__).resolve().parent.parent.parent / "Documentación" / "ACTIVE"
 SCRIPTS_DIR = Path(__file__).resolve().parent
 DATA_DIR   = Path(__file__).resolve().parent.parent / "data"
 REPO_ROOT   = Path(__file__).resolve().parent.parent.parent
