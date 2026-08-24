@@ -283,4 +283,6 @@
 | `KERNEL:DOCUMENTATION-016` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74 ) |
 | `KERNEL:DOCUMENTATION-017` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#430a977f08b742dfa476a0840a909e51 ) |
 | `KERNEL:GATE-DECISION-013` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#78eb917493444f2db0c00fa5c4594e08 ) |
+| `KERNEL:HANDOFF-SERIAL` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5a99326b9a124e89a2fd575eda5fd2b9 ) |
 | `MANUAL:DATA-MANAGEMENT-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#2ccaaf3922a74e8f8447a6a174b0df28 ) |
+| `SP:BOOTLOADER-002` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#398b224e9b0e4d10868f1a05a55dc3d0 ) |
