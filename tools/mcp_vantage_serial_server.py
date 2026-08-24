@@ -2,7 +2,7 @@
 """
 VANTAGE Serial Allocation MCP Server
 
-Exposes allocate_vantage_serial functionality as an MCP tool.
+Exposes allocate_vantage_serial functionality as an MCP tool for Claude.
 Reuses existing logic from Layer_1/scripts/allocate_vantage_serial.py
 """
 from __future__ import annotations
@@ -19,16 +19,11 @@ layer1_scripts = Path(__file__).parent.parent / "Layer_1" / "scripts"
 sys.path.insert(0, str(layer1_scripts))
 
 try:
-    from mcp.server import Server
-    from mcp.server.stdio import stdio_server
-    from mcp.types import Tool, TextContent
+    from mcp.server.fastmcp import FastMCP
     MCP_AVAILABLE = True
 except ImportError:
     MCP_AVAILABLE = False
-    Server = None
-    stdio_server = None
-    Tool = None
-    TextContent = None
+    FastMCP = None
 
 # Constants from allocate_vantage_serial.py
 DB_PATH = Path(os.environ.get("VANTAGE_SERIAL_DB", 
@@ -73,58 +68,30 @@ def allocate_serial() -> str:
 
 
 def create_mcp_server() -> Any:
-    """Create and configure the MCP server."""
+    """Create and configure the MCP server using FastMCP."""
     if not MCP_AVAILABLE:
         raise RuntimeError("MCP SDK not installed. Install with: pip install mcp")
 
-    server = Server("vantage-serial")
+    mcp = FastMCP("vantage-serial")
 
-    @server.list_tools()
-    async def list_tools() -> list[Tool]:
-        """List available tools."""
-        return [
-            Tool(
-                name="allocate_vantage_serial",
-                description="Allocate the next VANTAGE handoff serial number from GLOBAL_VANTAGE_COUNTER",
-                inputSchema={
-                    "type": "object",
-                    "properties": {},
-                    "required": [],
-                },
-            )
-        ]
+    @mcp.tool()
+    def allocate_vantage_serial() -> str:
+        """Allocate the next VANTAGE handoff serial number from GLOBAL_VANTAGE_COUNTER."""
+        try:
+            serial = allocate_serial()
+            return json.dumps({
+                "serial": serial,
+                "authority": COUNTER_NAME,
+                "status": "ALLOCATED"
+            })
+        except Exception as exc:
+            return json.dumps({
+                "error": "HANDOFF_SERIAL_UNAVAILABLE",
+                "status": "UNAVAILABLE",
+                "detail": str(exc)
+            })
 
-    @server.call_tool()
-    async def call_tool(name: str, arguments: Any) -> list[TextContent]:
-        """Handle tool calls."""
-        if name == "allocate_vantage_serial":
-            try:
-                serial = allocate_serial()
-                return [
-                    TextContent(
-                        type="text",
-                        text=json.dumps({
-                            "serial": serial,
-                            "authority": COUNTER_NAME,
-                            "status": "ALLOCATED"
-                        })
-                    )
-                ]
-            except Exception as exc:
-                return [
-                    TextContent(
-                        type="text",
-                        text=json.dumps({
-                            "error": "HANDOFF_SERIAL_UNAVAILABLE",
-                            "status": "UNAVAILABLE",
-                            "detail": str(exc)
-                        })
-                    )
-                ]
-        else:
-            raise ValueError(f"Unknown tool: {name}")
-
-    return server
+    return mcp
 
 
 def main():
@@ -134,11 +101,8 @@ def main():
         print("Install with: pip install mcp", file=sys.stderr)
         sys.exit(1)
 
-    server = create_mcp_server()
-    
-    # Run using stdio transport
-    import asyncio
-    asyncio.run(stdio_server(server))
+    mcp = create_mcp_server()
+    mcp.run()
 
 
 if __name__ == "__main__":

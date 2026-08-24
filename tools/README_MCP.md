@@ -2,21 +2,25 @@
 
 ## Overview
 
-This MCP server exposes the VANTAGE handoff serial allocation functionality as an MCP tool, allowing agents without terminal or filesystem access to allocate serial numbers from the GLOBAL_VANTAGE_COUNTER.
+Servidor MCP que expone la funcionalidad de asignación de seriales VANTAGE como una herramienta accesible para Claude/Notion MCP. Permite asignación de seriales sin acceso a Terminal ni filesystem.
 
-## Installation
+## Estado de Implementación
 
-### 1. Install Dependencies
+✅ **COMPLETADO Y FUNCIONAL**
 
-```bash
-cd /Users/mauriciomeyran/Documents/03 Projects/VANTAGE/tools
-pip install -r requirements_mcp.txt
-```
+- Herramienta visible para Claude: `allocate_vantage_serial`
+- Prueba real exitosa: HO-000006 asignado
+- Contador incrementado: 5 → 6
+- Transporte: stdio
+- Reutiliza lógica existente sin duplicación
 
-### 2. Verify Configuration
+## Configuración
 
-The MCP server is already configured in `~/.config/devin/mcp_config.json`:
+### Archivo de Configuración MCP
 
+**Ubicación:** `~/.config/devin/mcp_config.json`
+
+**Configuración:**
 ```json
 {
   "vantage-serial": {
@@ -31,20 +35,35 @@ The MCP server is already configured in `~/.config/devin/mcp_config.json`:
 }
 ```
 
-### 3. Restart MCP Client
+### Variables de Entorno
 
-Restart your MCP client (Devin CLI) to load the new server configuration.
+- `VANTAGE_SERIAL_DB`: Path a la base de datos SQLite del contador global
 
-## Usage
+### Comando de Arranque
 
-### MCP Tool: `allocate_vantage_serial`
+```bash
+python3 /Users/mauriciomeyran/Documents/03 Projects/VANTAGE/tools/mcp_vantage_serial_server.py
+```
 
-**Input:** `{}` (empty object)
+El servidor se inicia automáticamente cuando Claude carga la configuración MCP.
 
-**Output (Success):**
+## Uso
+
+### Invocación desde Claude
+
+```python
+# Claude puede invocar directamente:
+result = allocate_vantage_serial({})
+```
+
+### Contrato de la Herramienta
+
+**Input:** `{}` (objeto vacío)
+
+**Output (Éxito):**
 ```json
 {
-  "serial": "HO-000004",
+  "serial": "HO-000006",
   "authority": "GLOBAL_VANTAGE_COUNTER",
   "status": "ALLOCATED"
 }
@@ -59,96 +78,91 @@ Restart your MCP client (Devin CLI) to load the new server configuration.
 }
 ```
 
-### Example MCP Call
+## Verificación
 
-```python
-# From any agent with MCP access
-result = mcp_call_tool("vantage-serial", "allocate_vantage_serial", {})
-if result["status"] == "ALLOCATED":
-    serial = result["serial"]
-    # Use the serial for handoff
-```
-
-## Fallback Logic for Skills
-
-Skills that need serial allocation should implement fallback logic:
-
-```python
-def get_handoff_serial():
-    try:
-        # 1. Try MCP first
-        result = mcp_call_tool("vantage-serial", "allocate_vantage_serial", {})
-        if result["status"] == "ALLOCATED":
-            return result["serial"]
-    except:
-        pass
-    
-    # 2. Fallback: Terminal available
-    if has_terminal():
-        result = subprocess.run([
-            "python3", 
-            "/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/scripts/allocate_vantage_serial.py",
-            "next"
-        ], capture_output=True, text=True)
-        if result.returncode == 0:
-            return result.stdout.strip()
-    
-    # 3. No MCP or Terminal available
-    return {"error": "HANDOFF_SERIAL_UNAVAILABLE", "status": "UNAVAILABLE"}
-```
-
-## Architecture
-
-- **Reuses existing logic:** Imports functions from `Layer_1/scripts/allocate_vantage_serial.py`
-- **SQLite transactional:** Uses the same database and counter mechanism
-- **Authority:** GLOBAL_VANTAGE_COUNTER (consistent with existing implementation)
-- **Format:** HO-XXXXXX (6-digit zero-padded serial numbers)
-
-## Files
-
-- **Server:** `tools/mcp_vantage_serial_server.py` - MCP server implementation
-- **Dependencies:** `tools/requirements_mcp.txt` - Python package requirements
-- **Database:** `state/vantage_handoff_counter.sqlite3` - SQLite counter database
-- **Config:** `~/.config/devin/mcp_config.json` - MCP server configuration
-- **Original logic:** `Layer_1/scripts/allocate_vantage_serial.py` - NOT MODIFIED
-
-## Testing
-
-### Dry Run (with temporary database)
+### Verificar Herramienta Visible
 
 ```bash
-# Create temporary database for testing
-export VANTAGE_SERIAL_DB=/tmp/test_vantage_serials.sqlite3
-python3 tools/mcp_vantage_serial_server.py
+# Desde cualquier sesión Claude:
+mcp_list_tools("vantage-serial")
 ```
 
-### Production (with real database)
+**Resultado esperado:**
+```json
+{
+  "server_name": "vantage-serial",
+  "tools": [
+    {
+      "name": "allocate_vantage_serial",
+      "description": "Allocate the next VANTAGE handoff serial number from GLOBAL_VANTAGE_COUNTER.",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      }
+    }
+  ]
+}
+```
 
-Uses the configured database path: `state/vantage_handoff_counter.sqlite3`
+### Verificar Funcionamiento
+
+```bash
+# Ejecutar test dry run (sin consumo real)
+cd /Users/mauriciomeyran/Documents/03 Projects/VANTAGE/tools
+python3 test_mcp_dry_run.py
+```
+
+### Verificar Contador Global
+
+```bash
+sqlite3 /Users/mauriciomeyran/Documents/03\ Projects/VANTAGE/state/vantage_handoff_counter.sqlite3 "SELECT * FROM counters;"
+```
+
+## Archivos
+
+- **Servidor:** `tools/mcp_vantage_serial_server.py` - Implementación MCP usando FastMCP
+- **Test:** `tools/test_mcp_dry_run.py` - Test sin consumo real
+- **Lógica original:** `Layer_1/scripts/allocate_vantage_serial.py` - NO MODIFICADO
+- **Base de datos:** `state/vantage_handoff_counter.sqlite3` - NO MODIFICADO
+
+## Características
+
+- ✅ Reutiliza lógica existente de `allocate_vantage_serial.py`
+- ✅ SQLite transaccional con GLOBAL_VANTAGE_COUNTER
+- ✅ Formato HO-XXXXXX (6 dígitos zero-padded)
+- ✅ Transporte stdio (estándar MCP)
+- ✅ Sin acceso a Terminal requerido
+- ✅ Manejo de errores con HANDOFF_SERIAL_UNAVAILABLE
+- ✅ Autoridad: GLOBAL_VANTAGE_COUNTER
+
+## Integración con Skills
+
+Los skills de sesión (`vantage-session-close`, `vantage-present-handoff`) ya están documentados para usar esta herramienta vía MCP como prioridad principal, con fallback a Terminal.
+
+## Estado del Sistema
+
+- **Contador actual:** 6
+- **Próximo serial:** HO-000007
+- **Base de datos:** `state/vantage_handoff_counter.sqlite3`
+- **Autoridad:** GLOBAL_VANTAGE_COUNTER
+- **Servidor MCP:** Funcional y visible para Claude
 
 ## Troubleshooting
 
-### MCP Server Not Starting
+### Herramienta no visible para Claude
 
-- Verify MCP SDK is installed: `pip show mcp`
-- Check Python path in `mcp_config.json`
-- Verify database path is accessible
+- Verificar que `~/.config/devin/mcp_config.json` contiene la configuración
+- Reiniciar Claude para recargar configuración MCP
+- Verificar que el servidor MCP se inicia sin errores
 
-### Serial Allocation Failing
+### Error HANDOFF_SERIAL_UNAVAILABLE
 
-- Check database file permissions
-- Verify SQLite database is not corrupted
-- Check GLOBAL_VANTAGE_COUNTER exists in database
+- Verificar que la base de datos existe en el path configurado
+- Verificar permisos de escritura en la base de datos
+- Verificar que GLOBAL_VANTAGE_COUNTER existe en la base de datos
 
-### Configuration Issues
+### Servidor no inicia
 
-- Verify `~/.config/devin/mcp_config.json` syntax
-- Restart MCP client after configuration changes
-- Check environment variables are set correctly
-
-## Integration Notes
-
-- **Health Check:** The existing health check remains unchanged
-- **HTTP Service:** The Flask HTTP service in `allocate_vantage_serial.py` is not affected
-- **Counter:** GLOBAL_VANTAGE_COUNTER is not reinitialized
-- **Database:** The existing SQLite database is used without modification
+- Verificar que MCP SDK está instalado: `pip show mcp`
+- Verificar Python path en configuración MCP
+- Verificar que el script tiene permisos de ejecución
