@@ -330,6 +330,22 @@ CENSUS_SPEC = [
 
 # KERNEL
 {"id": "KERNEL:CV-PIPELINE-003", "seccion": "", "nombre": "Subsección PIPELINE de KERNEL:CV"},
+{"id": "KERNEL:DEDUP-LAYER-UPGRADE", "seccion": "", "nombre": "Subsección LAYER de KERNEL:DEDUP"},
+{"id": "KERNEL:DOCUMENTATION-014", "seccion": "014", "nombre": "Subsección 014 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:DOCUMENTATION-015", "seccion": "015", "nombre": "Subsección 015 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:DOCUMENTATION-016", "seccion": "016", "nombre": "Subsección 016 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:DOCUMENTATION-017", "seccion": "017", "nombre": "Subsección 017 de KERNEL:DOCUMENTATION"},
+{"id": "KERNEL:GATE-DECISION-013", "seccion": "", "nombre": "Subsección DECISION de KERNEL:GATE"},
+
+# MANUAL
+{"id": "MANUAL:DATA-MANAGEMENT-001", "seccion": "", "nombre": "Subsección MANAGEMENT de MANUAL:DATA"},
+
+    # Auto-generated orphan IDs
+# IDs huérfanos detectados - agregar a CENSUS_SPEC
+# Generado automáticamente por generate_census.py --auto-fix-orphans
+
+# KERNEL
+{"id": "KERNEL:CV-PIPELINE-003", "seccion": "", "nombre": "Subsección PIPELINE de KERNEL:CV"},
 {"id": "KERNEL:DOCUMENTATION-014", "seccion": "014", "nombre": "Subsección 014 de KERNEL:DOCUMENTATION"},
 {"id": "KERNEL:DOCUMENTATION-015", "seccion": "015", "nombre": "Subsección 015 de KERNEL:DOCUMENTATION"},
 {"id": "KERNEL:DOCUMENTATION-016", "seccion": "016", "nombre": "Subsección 016 de KERNEL:DOCUMENTATION"},
