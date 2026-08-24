@@ -1,0 +1,4 @@
+# VANTAGE MCP Server Requirements
+# Python dependencies for the VANTAGE Serial Allocation MCP Server
+
+mcp>=0.1.0
