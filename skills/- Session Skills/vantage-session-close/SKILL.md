@@ -12,7 +12,7 @@ description: Cierre Lite de baja latencia con handoff serializado, identidad, ti
 CLOSING SESSION — LITE...
 ```
 
-3. Obtener el siguiente serial de `GLOBAL_VANTAGE_COUNTER` con formato `HO-######`.
+3. Obtener el siguiente serial de `GLOBAL_VANTAGE_COUNTER` con formato `HO-######`, prioridad de resolución (ver `KERNEL:HANDOFF-SERIAL`): (1) Servidor MCP `allocate_vantage_serial` — vía preferente si disponible. (2) Terminal `allocate_vantage_serial.py next` — fallback. (3) Si ninguno disponible: declarar `HANDOFF_SERIAL_UNAVAILABLE` y detener — nunca inventar ni interpolar.
 4. Usar fecha y hora exactas de Ciudad de México.
 5. Si falta identidad, declarar `IDENTITY_CONFIGURATION_REVIEW_NEEDED` y detener.
 6. Si falta serial, declarar `HANDOFF_SERIAL_UNAVAILABLE` y detener.

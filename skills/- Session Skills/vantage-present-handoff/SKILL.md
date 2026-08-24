@@ -6,7 +6,7 @@ description: Handoff Lite de emisión inmediata con identidad, serial global, ti
 # VANTAGE: HANDOFF LITE
 
 1. Leer `agent.family` y `agent.instance` desde Project Instructions. No pedir confirmación.
-2. Obtener el siguiente serial de `GLOBAL_VANTAGE_COUNTER` con formato `HO-######`.
+2. Obtener el siguiente serial de `GLOBAL_VANTAGE_COUNTER` con formato `HO-######`, prioridad de resolución (ver `KERNEL:HANDOFF-SERIAL`): (1) Servidor MCP `allocate_vantage_serial` — vía preferente si disponible. (2) Terminal `allocate_vantage_serial.py next` — fallback. (3) Si ninguno disponible: declarar `HANDOFF_SERIAL_UNAVAILABLE` y detener — nunca inventar ni interpolar.
 3. Usar fecha y hora exactas de Ciudad de México.
 4. Si falta identidad, declarar `IDENTITY_CONFIGURATION_REVIEW_NEEDED` y detener.
 5. Si falta serial, declarar `HANDOFF_SERIAL_UNAVAILABLE` y detener.
