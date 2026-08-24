@@ -56,7 +56,7 @@ TRACKERS = {
         "data_source_id": "36e938be-fc42-81f8-8c6f-000b6769ba03",  # COL
         "title_prop": "Bug",
         "status_prop": "Status",
-        "open_statuses": ["Abierto", "En revision"],
+        "open_statuses": ["Abierto", "En revisión"],
     },
     "TASK": {
         "data_source_id": "aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8",  # COL
