@@ -23,11 +23,11 @@ cd "$SCRIPT_DIR"
 nohup python3 "$HTTP_SERVER" > "$LOG_FILE" 2>&1 &
 echo $! > "$PID_FILE"
 
-echo "Server started with PID: $(cat $PID_FILE)"
+echo "Server started with PID: $(cat "$PID_FILE")"
 echo "HTTP API available at: http://$VANTAGE_SERIAL_HOST:$VANTAGE_SERIAL_PORT"
 echo ""
 echo "Endpoints:"
 echo "  POST http://$VANTAGE_SERIAL_HOST:$VANTAGE_SERIAL_PORT/allocate - Allocate serial"
 echo "  GET  http://$VANTAGE_SERIAL_HOST:$VANTAGE_SERIAL_PORT/health - Get status"
 echo ""
-echo "To stop the server: kill $(cat $PID_FILE)"
+echo "To stop the server: kill $(cat "$PID_FILE")"
