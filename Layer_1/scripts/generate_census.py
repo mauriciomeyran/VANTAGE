@@ -71,6 +71,10 @@ CENSUS_SPEC = [
             {"id": "KERNEL:DOCUMENTATION-011", "seccion": "03.11", "nombre": "Gate Decision Documentation"},
             {"id": "KERNEL:DOCUMENTATION-012", "seccion": "03.12", "nombre": "Notebook Gemini — Auditor Documental Externo"},
             {"id": "KERNEL:DOCUMENTATION-013", "seccion": "03.13", "nombre": "Protocolo Sandbox — Economía de Tokens Máxima"},
+            {"id": "KERNEL:DOCUMENTATION-014", "seccion": "03.14", "nombre": "Subsección 014 de KERNEL:DOCUMENTATION"},
+            {"id": "KERNEL:DOCUMENTATION-015", "seccion": "03.15", "nombre": "Subsección 015 de KERNEL:DOCUMENTATION"},
+            {"id": "KERNEL:DOCUMENTATION-016", "seccion": "03.16", "nombre": "Subsección 016 de KERNEL:DOCUMENTATION"},
+            {"id": "KERNEL:DOCUMENTATION-017", "seccion": "03.17", "nombre": "Subsección 017 de KERNEL:DOCUMENTATION"},
             {"id": "KERNEL:ARCHITECTURE", "seccion": "04", "nombre": "Arquitectura de Cuatro Capas"},
             {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "04.1", "nombre": "L1 — Active Search"},
             {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "04.2", "nombre": "L2 — Strategic Search"},
@@ -109,6 +113,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:GATE-DECISION-009", "seccion": "09.9", "nombre": "Escalamiento de Pendientes a Tickets"},
             {"id": "KERNEL:GATE-DECISION-010", "seccion": "09.10", "nombre": "Gate Decision — Technical Review"},
             {"id": "KERNEL:GATE-DECISION-011", "seccion": "09.11", "nombre": "Gate Decision — Business Review"},
+            {"id": "KERNEL:GATE-DECISION-013", "seccion": "09.12", "nombre": "Gate Decision — Subsección 013"},
             {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "10", "nombre": "Golden Rules — Límites de Ejecución"},
             {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "10.1", "nombre": "Regla de Oro #1"},
             {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "10.2", "nombre": "Regla de Oro #2"},
@@ -129,6 +134,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:CV-PIPELINE", "seccion": "12", "nombre": "Pipeline de CV"},
             {"id": "KERNEL:CV-PIPELINE-001", "seccion": "12.1", "nombre": "CV-A"},
             {"id": "KERNEL:CV-PIPELINE-002", "seccion": "12.2", "nombre": "CV-B"},
+            {"id": "KERNEL:CV-PIPELINE-003", "seccion": "12.3", "nombre": "CV-C"},
             {"id": "KERNEL:CANON-UPDATE", "seccion": "13", "nombre": "Actualización del Canon"},
             {"id": "KERNEL:NAMING-CONVENTION", "seccion": "14", "nombre": "Convención de Nombres"},
             {"id": "KERNEL:CONTEXT-INFRASTRUCTURE", "seccion": "15", "nombre": "Context Infrastructure"},
@@ -136,6 +142,8 @@ CENSUS_SPEC = [
             {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-002", "seccion": "15.2", "nombre": "Context Infrastructure — Integration Points"},
             {"id": "KERNEL:DATA-FLOW", "seccion": "16", "nombre": "Flujo de Datos"},
             {"id": "KERNEL:EVOLUTION", "seccion": "17", "nombre": "Evolución del Sistema"},
+            {"id": "KERNEL:DEDUP-LAYER-UPGRADE", "seccion": "18", "nombre": "Dedup Layer Upgrade"},
+            {"id": "KERNEL:HANDOFF-SERIAL", "seccion": "19", "nombre": "Handoff Serial"},
         ],
     },
     {
@@ -161,6 +169,7 @@ CENSUS_SPEC = [
             {"id": "MANUAL:RUNTIME-004", "seccion": "9.4", "nombre": "Runtime Build"},
             {"id": "MANUAL:RUNTIME-005", "seccion": "9.5", "nombre": "Notebook Gemini — Triaje de Consultas Documentales"},
             {"id": "MANUAL:DATA-MANAGEMENT", "seccion": "10", "nombre": "Gestión de Datos"},
+            {"id": "MANUAL:DATA-MANAGEMENT-001", "seccion": "10.1", "nombre": "Gestión de Datos — Subsección 001"},
             {"id": "MANUAL:MONITOR", "lookup_ids": ["MANUAL:HEALTHCHECK", "MANUAL:MONITOR"], "seccion": "11", "nombre": "Health Check"},
             {"id": "MANUAL:TROUBLESHOOTING", "seccion": "12", "nombre": "Troubleshooting"},
             {"id": "MANUAL:FIGMA-SYNC-DIAGNOSTIC", "seccion": "12.1", "nombre": "Matriz de Errores — Figma Sync"},
@@ -292,6 +301,7 @@ CENSUS_SPEC = [
         "rows": [
             {"id": "SP:BOOTLOADER", "seccion": "01", "nombre": "Operating Specification — Bootstrap de Sesión"},
             {"id": "SP:BOOTLOADER-001", "seccion": "01.1", "nombre": "Consumo de Skills por Familia de Agente"},
+            {"id": "SP:BOOTLOADER-002", "seccion": "01.2", "nombre": "Bootstrap de Sesión — Subsección 002"},
             {"id": "SP:SYNC-RULE", "seccion": "02", "nombre": "Sincronización Inicial y Verificación de Versión"},
             {"id": "SP:CONTEXT-INFRASTRUCTURE", "seccion": "04", "nombre": "Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE)"},
             {
@@ -324,51 +334,6 @@ CENSUS_SPEC = [
         ],
     },
 ]
-    # Auto-generated orphan IDs
-# IDs huérfanos detectados - agregar a CENSUS_SPEC
-# Generado automáticamente por generate_census.py --auto-fix-orphans
-
-# KERNEL
-{"id": "KERNEL:CV-PIPELINE-003", "seccion": "", "nombre": "Subsección PIPELINE de KERNEL:CV"},
-{"id": "KERNEL:DEDUP-LAYER-UPGRADE", "seccion": "", "nombre": "Subsección LAYER de KERNEL:DEDUP"},
-{"id": "KERNEL:DOCUMENTATION-014", "seccion": "014", "nombre": "Subsección 014 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:DOCUMENTATION-015", "seccion": "015", "nombre": "Subsección 015 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:DOCUMENTATION-016", "seccion": "016", "nombre": "Subsección 016 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:DOCUMENTATION-017", "seccion": "017", "nombre": "Subsección 017 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:GATE-DECISION-013", "seccion": "", "nombre": "Subsección DECISION de KERNEL:GATE"},
-
-# MANUAL
-{"id": "MANUAL:DATA-MANAGEMENT-001", "seccion": "", "nombre": "Subsección MANAGEMENT de MANUAL:DATA"},
-
-    # Auto-generated orphan IDs
-# IDs huérfanos detectados - agregar a CENSUS_SPEC
-# Generado automáticamente por generate_census.py --auto-fix-orphans
-
-# KERNEL
-{"id": "KERNEL:CV-PIPELINE-003", "seccion": "", "nombre": "Subsección PIPELINE de KERNEL:CV"},
-{"id": "KERNEL:DOCUMENTATION-014", "seccion": "014", "nombre": "Subsección 014 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:DOCUMENTATION-015", "seccion": "015", "nombre": "Subsección 015 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:DOCUMENTATION-016", "seccion": "016", "nombre": "Subsección 016 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:DOCUMENTATION-017", "seccion": "017", "nombre": "Subsección 017 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:GATE-DECISION-013", "seccion": "", "nombre": "Subsección DECISION de KERNEL:GATE"},
-
-# MANUAL
-{"id": "MANUAL:DATA-MANAGEMENT-001", "seccion": "", "nombre": "Subsección MANAGEMENT de MANUAL:DATA"},
-
-    # Auto-generated orphan IDs
-# IDs huérfanos detectados - agregar a CENSUS_SPEC
-# Generado automáticamente por generate_census.py --auto-fix-orphans
-
-# KERNEL
-{"id": "KERNEL:CV-PIPELINE-003", "seccion": "", "nombre": "Subsección PIPELINE de KERNEL:CV"},
-{"id": "KERNEL:DOCUMENTATION-014", "seccion": "014", "nombre": "Subsección 014 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:DOCUMENTATION-015", "seccion": "015", "nombre": "Subsección 015 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:DOCUMENTATION-016", "seccion": "016", "nombre": "Subsección 016 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:DOCUMENTATION-017", "seccion": "017", "nombre": "Subsección 017 de KERNEL:DOCUMENTATION"},
-{"id": "KERNEL:GATE-DECISION-013", "seccion": "", "nombre": "Subsección DECISION de KERNEL:GATE"},
-
-# MANUAL
-{"id": "MANUAL:DATA-MANAGEMENT-001", "seccion": "", "nombre": "Subsección MANAGEMENT de MANUAL:DATA"},
 
 
 # ─── CAPA DE RED ──────────────────────────────────────────────────────────────

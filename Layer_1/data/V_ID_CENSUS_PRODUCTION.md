@@ -16,6 +16,10 @@
 | [`KERNEL:DOCUMENTATION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e3ad72f7f5b13d2804 ) | 03.11 | Gate Decision Documentation |
 | [`KERNEL:DOCUMENTATION-012`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#1fc298d1a0eb4e04bf287df831f21ee1 ) | 03.12 | Notebook Gemini — Auditor Documental Externo |
 | [`KERNEL:DOCUMENTATION-013`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#030ab36cb5524618b8ead54575555b47 ) | 03.13 | Protocolo Sandbox — Economía de Tokens Máxima |
+| [`KERNEL:DOCUMENTATION-014`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f6874261bf2744c78caa79222a0b5120 ) | 03.14 | Subsección 014 de KERNEL:DOCUMENTATION |
+| [`KERNEL:DOCUMENTATION-015`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#9cfab84c738f4a53abe6fe9f244a31ae ) | 03.15 | Subsección 015 de KERNEL:DOCUMENTATION |
+| [`KERNEL:DOCUMENTATION-016`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74 ) | 03.16 | Subsección 016 de KERNEL:DOCUMENTATION |
+| [`KERNEL:DOCUMENTATION-017`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#430a977f08b742dfa476a0840a909e51 ) | 03.17 | Subsección 017 de KERNEL:DOCUMENTATION |
 | [`KERNEL:ARCHITECTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810a8870dd1d384c1e7a ) | 04 | Arquitectura de Cuatro Capas |
 | [`KERNEL:ARCHITECTURE-L1`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f3825bd740b23ec959 ) | 04.1 | L1 — Active Search |
 | [`KERNEL:ARCHITECTURE-L2`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#73f6ec3692de4632a16d89313b91456d ) | 04.2 | L2 — Strategic Search |
@@ -54,6 +58,7 @@
 | [`KERNEL:GATE-DECISION-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428117ab7eff03acdc8c7e ) | 09.9 | Escalamiento de Pendientes a Tickets |
 | [`KERNEL:GATE-DECISION-010`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281d89366e9fd53916cca ) | 09.10 | Gate Decision — Technical Review |
 | [`KERNEL:GATE-DECISION-011`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428192a026efbb6e5024e0 ) | 09.11 | Gate Decision — Business Review |
+| [`KERNEL:GATE-DECISION-013`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#78eb917493444f2db0c00fa5c4594e08 ) | 09.13 | Gate Decision — Subsección 013 |
 | [`KERNEL:CV-GOLDEN-RULES`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428187abded6a06ac3a4cf ) | 10 | Golden Rules — Límites de Ejecución |
 | [`KERNEL:CV-GOLDEN-RULES-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42816a9186e8f054105519 ) | 10.1 | Regla de Oro #1 |
 | [`KERNEL:CV-GOLDEN-RULES-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281cabd78cea71f10af0d ) | 10.2 | Regla de Oro #2 |
@@ -74,6 +79,7 @@
 | [`KERNEL:CV-PIPELINE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281fca6b5d07b17e3e5eb ) | 12 | Pipeline de CV |
 | [`KERNEL:CV-PIPELINE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281ef8d6adc3a4f9a4a42 ) | 12.1 | CV-A |
 | [`KERNEL:CV-PIPELINE-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281ecad30fc4dfd15db6c ) | 12.2 | CV-B |
+| [`KERNEL:CV-PIPELINE-003`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5e4b693d0439469fb29f8f2687e4d401 ) | 12.3 | CV-C |
 | [`KERNEL:CANON-UPDATE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f2aed4f6bf584787b0 ) | 13 | Actualización del Canon |
 | [`KERNEL:NAMING-CONVENTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42819385a1d069583bfeeb ) | 14 | Convención de Nombres |
 | [`KERNEL:CONTEXT-INFRASTRUCTURE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42815993f0dc1d08c956f0 ) | 15 | Context Infrastructure |
@@ -81,6 +87,8 @@
 | [`KERNEL:CONTEXT-INFRASTRUCTURE-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42818391f2ecc693b59a2a ) | 15.2 | Context Infrastructure — Integration Points |
 | [`KERNEL:DATA-FLOW`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428178be4dec4fc6423c14 ) | 16 | Flujo de Datos |
 | [`KERNEL:EVOLUTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42812ca85ac71f34eaa9c9 ) | 17 | Evolución del Sistema |
+| [`KERNEL:DEDUP-LAYER-UPGRADE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f8e1105ad1284258b05bb8576b35c4e0 ) | 09.12 | Dedup Layer Upgrade |
+| [`KERNEL:HANDOFF-SERIAL`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5a99326b9a124e89a2fd575eda5fd2b9 ) | 03.18 | Handoff Serial |
 
 ---
 
@@ -108,6 +116,7 @@
 | [`MANUAL:RUNTIME-004`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281998641d184b08c7f9b ) | 9.4 | Runtime Build |
 | [`MANUAL:RUNTIME-005`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#340ca4f2fad44035bd64f487f4af10f5 ) | 9.5 | Notebook Gemini — Triaje de Consultas Documentales |
 | [`MANUAL:DATA-MANAGEMENT`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281b7846ffb025d561130 ) | 10 | Gestión de Datos |
+| [`MANUAL:DATA-MANAGEMENT-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#2ccaaf3922a74e8f8447a6a174b0df28 ) | 10.1 | Gestión de Datos — Subsección 001 |
 | [`MANUAL:MONITOR`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428154adfeea50d386ac78 ) | 11 | Health Check |
 | [`MANUAL:TROUBLESHOOTING`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42813ab8c1d308d4f5d97e ) | 12 | Troubleshooting |
 | [`MANUAL:FIGMA-SYNC-DIAGNOSTIC`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42816aaafcee86ee368a49 ) | 12.1 | Matriz de Errores — Figma Sync |
@@ -243,6 +252,7 @@
 |---|---|---|
 | [`SP:BOOTLOADER`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428197ba0dc11cda45db3d ) | 01 | Operating Specification — Bootstrap de Sesión |
 | [`SP:BOOTLOADER-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#fb6f76f090524f82bec8e297b6ccd65a ) | 01.1 | Consumo de Skills por Familia de Agente |
+| [`SP:BOOTLOADER-002`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#398b224e9b0e4d10868f1a05a55dc3d0 ) | 01.2 | Bootstrap de Sesión — Subsección 002 |
 | [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281328031dd488f1aea06 ) | 02 | Sincronización Inicial y Verificación de Versión |
 | [`SP:CONTEXT-INFRASTRUCTURE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428147bd85e68499246777 ) | 04 | Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE) |
 | [`SP:DIGITAL-ID-CARD`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42819a919cc80ec56ad76c ) | 03 | Cédula Digital — rutas de operación y UUIDs |
@@ -274,15 +284,4 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-| ID | Documento | Link |
-|---|---|---|
-| `KERNEL:CV-PIPELINE-003` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5e4b693d0439469fb29f8f2687e4d401 ) |
-| `KERNEL:DEDUP-LAYER-UPGRADE` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f8e1105ad1284258b05bb8576b35c4e0 ) |
-| `KERNEL:DOCUMENTATION-014` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f6874261bf2744c78caa79222a0b5120 ) |
-| `KERNEL:DOCUMENTATION-015` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#9cfab84c738f4a53abe6fe9f244a31ae ) |
-| `KERNEL:DOCUMENTATION-016` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74 ) |
-| `KERNEL:DOCUMENTATION-017` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#430a977f08b742dfa476a0840a909e51 ) |
-| `KERNEL:GATE-DECISION-013` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#78eb917493444f2db0c00fa5c4594e08 ) |
-| `KERNEL:HANDOFF-SERIAL` | Kernel | [link]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5a99326b9a124e89a2fd575eda5fd2b9 ) |
-| `MANUAL:DATA-MANAGEMENT-001` | Manual | [link]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#2ccaaf3922a74e8f8447a6a174b0df28 ) |
-| `SP:BOOTLOADER-002` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#398b224e9b0e4d10868f1a05a55dc3d0 ) |
+_Ninguno detectado en esta corrida._
