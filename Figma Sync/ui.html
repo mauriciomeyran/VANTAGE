@@ -73,12 +73,16 @@
                 .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') 
                 .replace(/\\/g, ''); 
 
-              // Motor de extracción de rangos dinámicos para negritas (**)
+              // Motor de extracción de rangos dinámicos: negritas (**texto**) e itálicas
+              // (*texto*, convención del skill para períodos: "*February 2025 – March 2026*").
+              // Debe distinguir "**" (bold, 2 caracteres) de "*" simple (italic, 1 carácter)
+              // en la misma pasada, sin que uno sea leído como parte del otro.
               let cleanContent = "";
               let boldRanges = [];
+              let italicRanges = [];
               let i = 0;
-              let isBold = false;
-              let boldStart = 0;
+              let isBold = false, boldStart = 0;
+              let isItalic = false, italicStart = 0;
 
               while (i < content.length) {
                 if (content.substr(i, 2) === "**") {
@@ -90,6 +94,15 @@
                     isBold = false;
                   }
                   i += 2;
+                } else if (content[i] === "*") {
+                  if (!isItalic) {
+                    italicStart = cleanContent.length;
+                    isItalic = true;
+                  } else {
+                    italicRanges.push({ start: italicStart, end: cleanContent.length });
+                    isItalic = false;
+                  }
+                  i += 1;
                 } else {
                   cleanContent += content[i];
                   i++;
@@ -98,7 +111,8 @@
 
               parsedData[nodeId] = {
                 text: cleanContent,
-                boldRanges: boldRanges
+                boldRanges: boldRanges,
+                italicRanges: italicRanges
               };
             }
 
@@ -114,10 +128,14 @@
               return;
             }
 
-            // Convert old format to new format
+            // Convert old format to new format — boldRanges e italicRanges incluidos
+            // (antes se descartaban; causa raíz de ambos bugs: los rangos se calculaban
+            // aquí pero nunca llegaban a code.js).
             const newPayload = Object.entries(parsedData).map(([id, data]) => ({
               id: id,
-              characters: data.text
+              characters: data.text,
+              boldRanges: data.boldRanges,
+              italicRanges: data.italicRanges
             }));
             
             parent.postMessage({ pluginMessage: { type: 'sync-nodes', payload: newPayload } }, '*');
