@@ -276,6 +276,10 @@ FIGMA SYNC PROTOCOL (STRICT)
 1. NULL-FILL RULE: Si el Canon Career no tiene información suficiente para un slot específico del Skeleton, el slot debe mantenerse con su ID original y el texto "[PENDING DATA]" o quedar vacío, pero NUNCA eliminarse.
 1. MARKDOWN ESCAPING: Mantener el uso de ( y ) para compatibilidad con el plugin de Figma si se detecta en el Skeleton original.
 1. DISTINCTIVENESS RULE: El lenguaje de cada bullet de Experience responde al Gap Analysis específico del HANDOFF activo (fit_gaps, JD_keywords_top6), no a una plantilla fija por Positioning Mode.
+1. MATCH TRANSFERIBLE OBLIGATORIO: Antes de marcar un slot como "[PENDING DATA]", el output debe intentar reencuadrar un hecho disponible del Career Canon bajo terminología relevante al JD activo, aunque no exista coincidencia literal con JD_keywords_top6. "[PENDING DATA]" solo aplica cuando ningún hecho del Canon, ni siquiera reencuadrado, es transferible al eje temático de la vacante (ej. un JD 100% ajeno a disciplina VM, como Data Analytics/Space Planning digital). Anti-overselling sigue gobernando por separado: un hecho no se reencuadra ni se sintetiza si afirma una responsabilidad que el JD contradice activamente (ej. liderazgo de equipo en rol individual contributor). La combinación de reencuadre (este punto) más síntesis multi-hecho por slot es el comportamiento default — no una excepción condicionada a Score, Tier o Positioning Mode.
+Ejemplos de referencia:
+- Válido: hecho "coordiné ejecución visual 17 tiendas + 12 corners" (C05) reencuadrado como "coordinación de ejecución visual multi-punto de venta" para un JD regional sin mención literal de Palacio de Hierro — mismo hecho, terminología transferible, sin contradicción.
+- Inválido: hecho "lideré 3 coordinadoras directas" (C03) reencuadrado de cualquier forma para un JD individual contributor explícito — Anti-overselling bloquea independientemente del reencuadre.
 ### 12.2 CANON:OUTPUT-CONTRACT-002
 Golden Skeleton
 Use this exact sequence of IDs for any Figma-destined output.
@@ -283,257 +287,186 @@ Use this exact sequence of IDs for any Figma-destined output.
 - KeySlots: 2:4 (Name), 2:5 (Headline), 2:9 (Profile), 2:14-18 (Skills), 2:22+ (Experience).
 - Rule: If the skeleton changes in Figma, this record must be updated before the next CV-B run.
 ---
-```plain text
+```json
 ###### [figma_text_id](2:4)
-
 **MAURICIO MEYRÁN**
 
-
 ###### [figma_text_id](2:5)
+**Coordinador de Visual Merchandising · Desarrollo de Tienda & Store Design**
 
-**Visual Merchandising Coordinator · Brand Execution & Retail Operations**
-Miguel Hidalgo, CDMX | mauricio.meyran@icloud.com
+###### [figma_text_id](4:39)
+Miguel Hidalgo, CDMX | +52 1 56 4383 8125 | mauricio.meyran@icloud.com
+
+###### [figma_text_id](4:40)
 LinkedIn | Portafolio
 
-
 ###### [figma_text_id](2:7)
-
 **PROFESSIONAL PROFILE**
 
-
 ###### [figma_text_id](2:9)
-
-**Visual Merchandising Strategist** with over 10 years of experience in luxury and fashion retail, specializing in leading brand directive execution, commercial space design, and in-store KPI optimization.
-
+Coordinador de Visual Merchandising y Desarrollo de Tienda con más de 10 años liderando la ejecución física de proyectos retail — desde el rescate y apertura de flagship stores hasta el montaje de escaparates, exhibiciones y conceptos visuales de temporada en entornos premium y lifestyle.
 
 ###### [figma_text_id](3:13)
-
-**Cross-functional leadership** focused on connecting commercial operations with brand visual identity, coordinating multidisciplinary teams and external agencies for store openings and critical events.
-
+Experiencia comprobada coordinando proveedores especializados, producción, logística e instalación de materiales bajo estándares internacionales de Store Design, con dominio de herramientas técnicas \(AutoCAD, SketchUp, Adobe Creative Cloud\) para moodboards, colorimetría y visualización de conceptos comerciales.
 
 ###### [figma_text_id](2:10)
-
-**Cross-functional leadership** focused on connecting commercial operations with brand visual identity, coordinating multidisciplinary teams and external agencies for store openings and critical events.
-
+Perfil cross-funcional que conecta operaciones comerciales, identidad visual de marca y ejecución en piso, coordinando equipos multidisciplinarios y agencias externas para aperturas de tienda y lanzamientos de producto.
 
 ###### [figma_text_id](2:12)
-
 **KEY SKILLS**
 
-
 ###### [figma_text_id](2:14)
-
-• **VM Strategy & Direction:** Planogramming, commercial zoning, and layout adaptability based on sales KPIs.
-
+**Estrategia Visual:** Escaparatismo y exhibición de producto, zoning y planeación de espacio, planogramas por categoría, conceptos visuales para lanzamientos y temporadas, colorimetría aplicada vía herramientas de diseño \(Illustrator, Figma\).
 
 ###### [figma_text_id](2:15)
-
-• **Luxury Project Management:** Budget coordination, fixture procurement \(visual merchandising\), and vendor control.
-
+**Operaciones & Finanzas:** Desarrollo de tienda y apertura de sucursales, gestión de presupuesto CAPEX/OPEX, coordinación de proveedores locales e internacionales, logística de importación e instalación de mobiliario y displays.
 
 ###### [figma_text_id](2:16)
-
-• **Advanced Technical Tools:** Expert-level Notion for database management, Figma for spatial mock-ups, AutoCAD and SketchUp.
-
+**Liderazgo & Training:** Gestión de equipos directos e indirectos, capacitación de personal de piso, coordinación con Marketing y Trade Marketing, estandarización de procesos operativos.
 
 ###### [figma_text_id](2:17)
-
-• **Retail Operations:** Analysis of commercial KPIs \(conversion, average ticket, sell-out\) to drive visual decisions.
-
+**Stack Técnico:** Adobe Creative Cloud \(Illustrator, Photoshop, InDesign\), AutoCAD, SketchUp, Figma, IWD, Keynote, IA Generativa \(ChatGPT, Perplexity, Claude\).
 
 ###### [figma_text_id](2:18)
-
-• **Team Leadership:** Supervision, training, and mentoring of in-house visual merchandising teams and sales forces.
-
+**Idiomas:** Español \(Nativo\) · Inglés \(Profesional Corporativo\).
 
 ###### [figma_text_id](2:20)
-
 **PROFESSIONAL EXPERIENCE**
 
-
 ###### [figma_text_id](2:22)
-
 **L'ORÉAL LUXE MÉXICO**
 
-
 ###### [figma_text_id](2:23)
+**Coordinador de Visual Merchandising & Brand Execution – División de Lujo**
 
-**Visual Merchandising Coordinator – Luxury Division** | February 2025 – March 2026
-
+###### [figma_text_id](4:14)
+*Febrero 2025 – Marzo 2026*
 
 ###### [figma_text_id](2:25)
-
-• **Led the visual strategy** for luxury division brands in the Mexican market, ensuring global brand identity alignment at key points of sale.
-
-
-###### [figma_text_id](2:26)
-
-• **Optimized operational control** by digitalizing physical execution tracking through interconnected Notion databases.
-
+Ejecución de lanzamientos NPI: coordiné el despliegue nacional de campañas clave 2025 \(Born in Roma, Stronger With You\) para Valentino, Giorgio Armani y Ralph Lauren, gestionando producción y montaje con agencias externas dentro del presupuesto asignado.
 
 ###### [figma_text_id](2:27)
+Coordiné proveedores locales e internacionales para producción, importación e instalación de materiales, supervisando calidad de acabados y cumplimiento de especificaciones técnicas.
 
-• **Coordinated the development and installation** of high-impact window displays and commercial animations with local fixture vendors.
-
+###### [figma_text_id](2:26)
+Administré el presupuesto nacional de la división \(CAPEX/OPEX\), optimizando inversión en materiales POP, displays y mobiliario de vitrinas para lanzamientos y campañas estacionales.
 
 ###### [figma_text_id](2:28)
-
-• **Trained over 50 sales advisors** in product presentation guidelines, maintaining a 95% visual consistency score in audits.
-
+Colaboré con Marketing y Trade Marketing para alinear el calendario comercial con la ejecución visual, actuando como referente de marca en cuentas clave.
 
 ###### [figma_text_id](2:32)
-
 **BISONTE EXPERIENTIAL MARKETING**
 
+###### [figma_text_id](4:17)
+**Coordinador de Brand Environment y Store Design**
 
-###### [figma_text_id](2:33)
-
-**Brand Environment & Store Design Coordinator** | 2022 – 2023
-
+###### [figma_text_id](4:18)
+*2022 – 2023*
 
 ###### [figma_text_id](2:35)
-
-• **Designed and oversaw the production** of experiential environments for premium brands, managing projects from graphic concept through final installation.
-
+Apertura de flagship store: lideré la implementación visual y técnica para la apertura del Adidas Brand Center Madero, un proyecto rescatado a 3 meses de la fecha de apertura, cumpliendo con los estándares globales de Store Design de la marca.
 
 ###### [figma_text_id](2:36)
-
-• **Developed technical drawings and 3D renders** for layout approval by corporate client executive committees.
-
+Supervisé la producción y logística de materiales de Store Design, logrando entrega en fecha con 17 observaciones menores en punch list — ninguna bloqueante para la apertura ni la experiencia del consumidor.
 
 ###### [figma_text_id](2:37)
-
-• **Managed production budgets**, achieving a 15% efficiency margin through strategic negotiations with workshops and contractors.
-
+Coordiné proveedores especializados para garantizar la calidad en acabados y mobiliario, asegurando la integridad del diseño arquitectónico y visual del espacio.
 
 ###### [figma_text_id](2:39)
-
 **LEVI STRAUSS & CO. \(DOCKERS\)**
 
+###### [figma_text_id](4:21)
+**Coordinador Senior de Brand Environment – LATAM**
 
-###### [figma_text_id](2:40)
-
-**Senior Brand Environment Coordinator – LATAM** | 2018 – 2021
-
+###### [figma_text_id](4:22)
+*2018 – 2021*
 
 ###### [figma_text_id](2:42)
-
-• **Oversaw brand visual consistency** across the Latin American region, adapting global VM playbooks to local market realities.
-
-
-###### [figma_text_id](2:43)
-
-• **Directed layout mock-ups** for over 30 own-store openings and department store corners across the region.
-
-
-###### [figma_text_id](2:44)
-
-• **Created simplified regional style guides** that reduced floor display discrepancies by 35%.
-
+Gestión de red regional: administré la estrategia visual para 6 países en LATAM y 270+ puntos de venta \(tiendas propias, franquicias y corners wholesale\), asegurando la estandarización regional de la marca.
 
 ###### [figma_text_id](3:9)
+Lideré un equipo de 3 coordinadoras directas y 3 indirectas, garantizando el 100% de cobertura POP durante la contingencia COVID-19 mediante coordinación remota.
 
-• Led a team of 3 national coordinators with direct reporting, plus 3 dotted-line collaborators in other markets, acting as the regional liaison for the Americas.
+###### [figma_text_id](2:43)
+Diseñé una estrategia de producción local que generó un ahorro del 74% en costos de campañas nacionales en México, manteniendo los estándares globales de exhibición.
 
+###### [figma_text_id](2:44)
+Reduje en un 33% el tiempo de actualización de floorsets mediante manuales de Zoning & Mapping y herramientas digitales para field teams.
 
 ###### [figma_text_id](3:2)
-
-• Managed visual strategy across 6 LATAM countries and 270+ points of sale \(own boutiques, franchises, wholesale corners\), ensuring regional brand image standardization and reporting best practices to the corporate team.
-
+Gestión de red mixta: responsable del estándar visual en tiendas propias, franquicias y corners wholesale a lo largo de los 6 países LATAM, coordinando la ejecución consistente de aperturas y remodelaciones en la red regional.
 
 ###### [figma_text_id](2:46)
-
 **AÉROPOSTALE**
 
+###### [figma_text_id](4:25)
+**Gerente de Visual Merchandising**
 
-###### [figma_text_id](2:47)
-
-**Visual Merchandising Manager** | 2017 – 2018
-
+###### [figma_text_id](4:26)
+*2017 – 2018*
 
 ###### [figma_text_id](2:49)
-
-• **Coordinated the commercial presentation** of seasonal collections at the flagship store and oversaw nationwide implementation across branches.
-
+Construcción de función VM: construí el área de Visual Merchandising desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona \(21 reportes directos\), implementando vitrinas piloto y lineamientos replicados a nivel nacional.
 
 ###### [figma_text_id](2:50)
-
-• **Analyzed weekly sell-out reports** to restructure displays in high-traffic store zones, boosting underperforming categories.
-
+Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión estratégica, mediante zoning y alineación visual con objetivos comerciales.
 
 ###### [figma_text_id](2:51)
-
-• **Trained the in-house VM team** in mannequin styling and commercial display techniques aligned with the brand's youth target.
-
+Estandaricé los planogramas de categorías clave \(Denim & Lifestyle\), alineando la exhibición con los objetivos de ventas mensuales.
 
 ###### [figma_text_id](2:54)
-
 **EL PALACIO DE HIERRO \(ALDO GROUP\)**
 
+###### [figma_text_id](4:29)
+**Coordinador de Visual Merchandising & Marketing**
 
-###### [figma_text_id](2:55)
-
-**Visual Merchandising & Marketing Coordinator** | 2012 – 2017
-
+###### [figma_text_id](4:30)
+*2012 – 2017*
 
 ###### [figma_text_id](2:57)
-
-• **Managed ALDO's visual image** within El Palacio de Hierro department stores, upholding the Canadian group's international standards.
-
-
-###### [figma_text_id](2:58)
-
-• **Designed exclusive window displays** for El Palacio de Hierro institutional campaigns, increasing foot traffic to the footwear and accessories category.
-
+Coordinación multi-punto de venta: coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas y remodelaciones críticas bajo lineamientos de la casa matriz en Canadá.
 
 ###### [figma_text_id](2:59)
+Durante los últimos 3 años del rol, gestioné una coordinadora Jr. con reporte directo, supervisando su desarrollo dentro del equipo.
 
-• **Supervised fixture maintenance**, managing repair and renovation orders with in-house maintenance teams.
+###### [figma_text_id](2:58)
+Desarrollé programas de capacitación para el personal de piso, elevando el estándar de mantenimiento visual y ejecución de lanzamientos.
 
+###### [figma_text_id](4:33) 
+**Supervisor de Visual Merchandising**
 
-###### [figma_text_id](2:60)
+###### [figma_text_id](4:34) 
+*2012 - 2014*
 
-• **Supported the execution of PR events** and in-store fashion shows, ensuring correct brand presence throughout.
-
+###### [figma_text_id](4:9) 
+Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](2:62)
-
 **ACADEMIC BACKGROUND**
 
-
 ###### [figma_text_id](2:64)
-
-**Bachelor's Degree in Visual Arts** | _2008 – 2012_
+**Licenciatura en Artes Visuales** *2008 – 2012*
 Escuela Nacional de Artes Plásticas, UNAM
 
-
 ###### [figma_text_id](2:65)
-
-**Diploma in Museums and Exhibitions** | _2014_
+**Diplomado en Museos y Exposiciones** *2014*
 Facultad de Artes y Diseño, UNAM
 
-
 ###### [figma_text_id](2:67)
-
 **COURSES & CERTIFICATIONS**
 
-
 ###### [figma_text_id](2:69)
-
-AutoCAD & SketchUp Essentials | _2024_
+AutoCAD & SketchUp Essentials | *2024*
 LinkedIn Learning
 
-
 ###### [figma_text_id](2:70)
-
-Store Operations Leaders Orientation \(VM, Sales & Ops\) | _2014_
+Store Operations Leaders Orientation \(VM, Sales & Ops\) | *2014*
 ALDO Group, Montréal, Canada
-
 ```
 ### 12.3 CANON:OUTPUT-CONTRACT-003
 Figma Tags
 > Formato base obligatorio para todos los Derived Outputs generados desde el Career Canon. Aplica ES + EN.
-> SSOT de IDs de nodos: registry_seed.json en 04-Vantage_CV/Figma Sync/ es la fuente única de verdad para los IDs numéricos de nodo Figma. Si hay discrepancia entre un figma_text_id en un output CV-B y el registry, el registry gana. Ante cualquier cambio en la estructura del lienzo Figma, actualizar registry_seed.json antes de generar nuevos CV-B.
+> SSOT de IDs de nodos: registry_seed.json en /03 Projects/VANTAGE/Figma Sync/ es la fuente única de verdad para los IDs numéricos de nodo Figma. Si hay discrepancia entre un figma_text_id en un output CV-B y el registry, el registry gana. Ante cualquier cambio en la estructura del lienzo Figma, actualizar registry_seed.json antes de generar nuevos CV-B.
 > El plugin de inyección resuelve exclusivamente por ID de nodo (búsqueda O(1) vía figma.getNodeById) — nunca por nombre de capa. Renombrar una capa en Figma no afecta ni repara la resolución; ver MANUAL:FIGMA-SYNC-003.
 ### 12.4 CANON:OUTPUT-CONTRACT-004
 Tag Registry
@@ -545,7 +478,8 @@ Reglas de Serialización
 - Cada tag = párrafo independiente (sin listas, sin guiones)
 - Bold = keywords estratégicos dentro del párrafo
 - Empresa = bold standalone en su propio tag
-- Rol = bold rol italic período
+- Rol (nodo dedicado de puesto) = bold 12pt
+- Years (nodo dedicado de período: 4:14, 4:18, 4:22, 4:26, 4:30, 4:34) = italic 10pt
 - Skills = Categoría: texto plano
 - Tagline 2:5 = [Título · Subtítulo] · Ciudad | Tel | Email | LinkedIn | Portfolio
 - & en nombres de empresa → &
@@ -554,7 +488,7 @@ Positioning Modes (Aplicación en Output)
 El Positioning Mode activo funciona como preset narrativo sobre el Canon (ver KERNEL:CV-PIPELINE-001, Algoritmo de Selección N1–N4): la decisión determinística ahí definida es la que fija qué subconjunto del Canon llena estos slots variables — Experience conserva siempre la secuencia C01–C05. Los slots Variable por modo se derivan del Positioning Mode activo (sección 11 · N1–N4):
 - 2:5 tagline
 - 2:9 / 3:13 párrafos de perfil 1–2
-- 2:14 / 2:15 / 2:16 skills 1–3
+- 2:14 / 2:15 / 2:16 / 2:17 / 2:18 skills 1–5
 - Bullets C01–C05 priorizados según el modo activado
 ---
 ## 13 CANON:DERIVED-OUTPUTS-ARCHIVE

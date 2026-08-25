@@ -122,6 +122,7 @@ Implementación actual
 - vantage-tidy-opportunities-tracker — TIDYING OPPORTUNITIES… / OPPORTUNITIES TIDIED
 - vantage-housekeeping-tracker — HOUSEKEEPING TRACKERS… / TRACKERS HOUSEKEPT
 - vantage-housekeeping-archive — ARCHIVING HOUSEKEEPING… / ARCHIVE HOUSEKEPT
+Nota — Contrato de Handoff: vantage-present-handoff, vantage-session-open y vantage-session-close incorporan cabecera de identidad de agente y serial de handoff cuando el Contrato de Sesión y Handoff (ver SP:BOOTLOADER-002) esté implementado — la convención de anuncio de esta sección no cambia, solo el cuerpo del output.
 ---
 ### 03.6 KERNEL:DOCUMENTATION-006
 Health Check
@@ -182,6 +183,12 @@ Database Notion (data_source_id 8d736032-eef9-4e6e-a05a-df8b8079ebff) con:
 - status (OPEN / CLOSED)
 - opened_at
 - pending_summary
+Campos de trazabilidad de Handoff (alta 2026-08-23, Contrato de Sesión y Handoff, ver SP:BOOTLOADER-002):
+- Opening Handoff Serial (text)
+- Opening Agent Family / Opening Agent Instance (text)
+- Last Handoff Serial (text)
+- Parent Session ID (text)
+- Trace Status (select: LINKED / ORPHAN / REVIEW_NEEDED)
 Escritura autorizada
 Solo SKILL-OPEN paso 0 (→ OPEN) y SKILL-CLOSE paso 6 (→ CLOSED + pending_summary).
 ---
@@ -266,6 +273,14 @@ Regla de aplicación
 Cualquier skill nueva que adopte este patrón declara explícitamente qué pasos corren en sandbox interno y cuáles son output visible — no se asume por default; se declara en el cuerpo de la skill.
 No aplica a
 Skills cuyo output es inherentemente iterativo o requiere confirmación por ítem (ej. vantage-cv-b, procesamiento single-item) — ahí la economía de tokens se gestiona por otro mecanismo (Restricción de Lote, ver KERNEL:CV-PIPELINE-002).
+---
+### 03.18 KERNEL:HANDOFF-SERIAL
+Contrato de Serial Global de Handoff
+Autoridad única: GLOBAL_VANTAGE_COUNTER — contador persistente local (Terminal/SQLite o equivalente con bloqueo transaccional contra concurrencia), nunca dependiente de memoria conversacional ni de un agente específico.
+Formato: HO-######, monotónico — no se reinicia por sesión, agente, cuenta ni skill; no se reutiliza tras rechazo o corrección.
+Corrección: un handoff emitido no se edita silenciosamente — una corrección genera un nuevo serial referenciando el anterior vía correction_of.
+Identidad del emisor: ver SP:BOOTLOADER-002 para el registro de agentes autorizados a emitir handoffs serializados. Agentes sin Project Instructions (Arena, Cursor, Devin) no emiten serial propio.
+Vía de acceso — Servidor MCP: además de Terminal (allocate_vantage_serial.py), el contador es accesible vía servidor MCP (mcp_vantage_serial_server.py, transporte stdio, herramienta allocate_vantage_serial) para agentes sin acceso a filesystem/terminal. Reutiliza la misma lógica de allocate_serial() sobre la misma base SQLite — no es una segunda autoridad, es un segundo canal hacia GLOBAL_VANTAGE_COUNTER. Contrato de salida: éxito → {"serial": "HO-######", "authority": "GLOBAL_VANTAGE_COUNTER", "status": "ALLOCATED"}; fallo → {"error": "HANDOFF_SERIAL_UNAVAILABLE", "status": "UNAVAILABLE"}. Orden de resolución para cualquier skill que requiera serial: MCP → Terminal → HANDOFF_SERIAL_UNAVAILABLE (detener, no inventar serial).
 ---
 ## 04 KERNEL:ARCHITECTURE
 Arquitectura de Cuatro Capas
@@ -606,7 +621,7 @@ Si Status ∈ {Postulado, Rechazado, Expirada} → pipeline termina aquí, sin i
 → Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), KERNEL:GATE-DECISION-005 (RT-1).
 ---
 ### 09.12 KERNEL:DEDUP-LAYER-UPGRADE 
-— Guard de Mutación en Existentes 
+— Guard de Mutación en Existentes
 Contexto:
 Gobierna la mutación de registros existentes durante la ingesta (vía feed_processor.py), no el marcado post-hoc por skills de operador.
 Fuente de verdad: profile_fit._PROTECTED_STATUSES ∪ _TERMINAL_STATUSES.

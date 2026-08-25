@@ -32,6 +32,25 @@ Regla de enrutamiento (lógica fija, no campo por skill en el manifiesto)
 - Familia GitHub-only (Perplexity, Mistral) → trigger match → resuelve url de la misma entrada → fetch raw sobre raw.githubusercontent.com.
 - Gemini → fuera de este flujo — no consume el manifiesto; requiere Gem con Knowledge pre-cargado, mantenido manualmente por el operador.
 fetch_priority no es un campo del manifiesto — es propiedad del agente, no del skill, y vive como esta lógica fija. Un cambio en la matriz de capacidades de un agente se resuelve editando esta subsección, no las 28 filas de Skill Library.
+### 01.2 SP:BOOTLOADER-002
+Identidad de Agente y Serial de Handoff
+Distinto de 01.1 (enrutamiento de skills) — esta subsección gobierna la identidad declarada de cada agente y la serialización de handoffs entre sesiones/cuentas/agentes. Fuente de verdad canónica del Contrato de Sesión y Handoff (v1.0, 2026-08-23); las skills locales (vantage-present-handoff, vantage-session-open/close) implementan este contrato, no lo duplican.
+Registro de identidad (10 agentes con Project Instructions configuradas):
+| family | instance |
+| --- | --- |
+| CLAUDE | MAIN |
+| CLAUDE | KM |
+| CLAUDE | MP |
+| CLAUDE | MM |
+| GEMINI | DEFAULT |
+| CHATGPT | DEFAULT |
+| LITTLEBIRD | DEFAULT |
+| MISTRAL | DEFAULT |
+| PERPLEXITY | DEFAULT |
+| GROK | DEFAULT |
+Fuera del registro por diseño: Arena, Cursor, Devin — no tienen Project Instructions configurables, no pueden satisfacer el contrato de identidad declarada. Cualquier handoff derivado de su trabajo debe re-emitirse a través de un agente con cédula (parent_handoff referencia el origen).
+Regla de confirmación: la identidad se lee de Project Instructions al cargar el proyecto; el agente no re-pregunta identidad en cada handoff (CONFIGURED_NO_REPROMPT). Si Project Instructions está ausente o contradice este registro, declarar IDENTITY_CONFIGURATION_REVIEW_NEEDED y no emitir handoff canónico.
+Serial de handoff: autoridad única GLOBAL_VANTAGE_COUNTER (ver KERNEL:HANDOFF-SERIAL) — formato HO-######, monotónico, nunca reiniciado ni reutilizado tras rechazo.
 ---
 ## 02 SP:SYNC-RULE
 Sincronización Inicial

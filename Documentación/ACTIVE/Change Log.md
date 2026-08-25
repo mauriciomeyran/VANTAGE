@@ -1,5 +1,58 @@
 # V | CHANGELOG
 
+Tipo: [CODE] [DOC]
+Alcance:
+- Kernel (KERNEL:HANDOFF-SERIAL, 03.18 — párrafo nuevo, vía de acceso MCP)
+- Código nuevo: tools/mcp_vantage_serial_server.py, tools/requirements_mcp.txt, tools/README_MCP.md, tools/test_mcp_dry_run.py, tools/test_mcp_real.py (Devin)
+- Skills locales (fuera de Notion, verificadas por el operador vía sed + grep): vantage-session-close (paso 3), vantage-present-handoff (paso 2) — lógica de fallback MCP → Terminal → HANDOFF_SERIAL_UNAVAILABLE aplicada y confirmada. vantage-session-open sin cambio (no obtiene serial, solo valida entrante).
+Contexto: v9.21.25 dejó pendiente la integración MCP/fallback en vantage-session-close y vantage-present-handoff tras abrir el Contrato de Sesión y Handoff. Devin implementó el servidor MCP que cierra ese pendiente — reutiliza allocate_serial() existente sin duplicar lógica, transporte stdio, misma base SQLite/GLOBAL_VANTAGE_COUNTER. Push confirmado por el operador vía vgit (commits 6b4bc72, db1b918) — existencia del código verificada; verificación funcional del servidor (asignación real vía MCP en producción) queda pendiente, no confirmada en esta sesión.
+Cambios:
+- KERNEL:HANDOFF-SERIAL (03.18) — párrafo nuevo: servidor MCP como segundo canal (no segunda autoridad) hacia GLOBAL_VANTAGE_COUNTER, contrato de salida, orden de resolución MCP→Terminal→error.
+- vantage-session-close (SKILL.md, paso 3) — lógica de 3 niveles aplicada in-place vía sed, verificada por grep.
+- vantage-present-handoff (SKILL.md, paso 2) — misma lógica aplicada y verificada.
+IDs afectados: Ninguno — extensión de nodo existente. No dispara KERNEL:DOCUMENTATION-008 Regla 1.
+Write-Back Verification: Kernel re-fetched post-escritura en esta misma sesión — párrafo confirmado en posición correcta, sin mismatch. Skills locales verificadas por el operador vía grep (output pegado en chat, coincide byte-a-byte con el DRY RUN).
+Pendiente (fuera de esta entrada):
+- Verificación funcional del servidor MCP en producción (asignación real de un HO-###### vía MCP, no solo existencia del código).
+- vversions --sync para propagar v9.21.26 al resto de los fundacionales.
+- Script Library (Notion) — alta de mcp_vantage_serial_server.py, delegada a vantage-sync-script-library.
+---
+Tipo: [DOC]
+Alcance:
+- System Prompt (SP:BOOTLOADER-002, 01.2 — nodo nuevo)
+- Kernel (KERNEL:DOCUMENTATION-005, 03.5 — nota de referencia añadida)
+- Kernel (KERNEL:DOCUMENTATION-009, 03.9 — Session Ledger, 6 campos de trazabilidad añadidos)
+- Kernel (KERNEL:HANDOFF-SERIAL, 03.18 — nodo nuevo)
+- Session Ledger (Notion, data_source_id 8d736032-eef9-4e6e-a05a-df8b8079ebff) — alta real de 6 propiedades de schema
+Contexto: El operador presentó el Contrato de Sesión y Handoff (v1.0) para dar identidad persistente a cada agente/cuenta de VANTAGE (Claude MAIN/KM/MP/MM, Gemini, ChatGPT, Littlebird, Mistral, Perplexity, Grok — 10 registros) y serializar handoffs entre sesiones vía GLOBAL_VANTAGE_COUNTER (formato HO-######). Arena, Cursor y Devin quedan fuera del registro de identidad por diseño — no tienen Project Instructions configurables. Fase 1 (mapeo) identificó precedente directo en SP:BOOTLOADER-001/KERNEL:ARCHITECTURE-L4 (matriz de ruteo multi-agente ya existente) — se extendió el mismo patrón en vez de reinventar. Fase 2 ejecutó 4 parches documentales + 1 alta de schema real en Notion (los 6 campos de Session Ledger se crearon en la base viva, no solo se documentaron como propuesta).
+Cambios:
+- SP:BOOTLOADER-002 (01.2) — nodo nuevo: registro de identidad de 10 agentes (family/instance), regla CONFIGURED_NO_REPROMPT, exclusión de Arena/Cursor/Devin, referencia a GLOBAL_VANTAGE_COUNTER.
+- KERNEL:DOCUMENTATION-005 (03.5) — nota de una línea: vantage-present-handoff/session-open/session-close incorporarán cabecera de identidad/serial.
+- KERNEL:DOCUMENTATION-009 (03.9) — 6 campos de trazabilidad documentados: Opening Handoff Serial, Opening Agent Family/Instance, Last Handoff Serial, Parent Session ID, Trace Status.
+- KERNEL:HANDOFF-SERIAL (03.18) — nodo nuevo: contrato de GLOBAL_VANTAGE_COUNTER, formato HO-######, regla de no reutilización tras rechazo/corrección.
+- Session Ledger (Notion, schema real) — 6 propiedades añadidas vía ADD COLUMN: Opening Handoff Serial, Opening Agent Family, Opening Agent Instance, Last Handoff Serial, Parent Session ID (rich_text), Trace Status (select: LINKED/ORPHAN/REVIEW_NEEDED).
+IDs afectados: 2 altas — SP:BOOTLOADER-002, KERNEL:HANDOFF-SERIAL — dispara KERNEL:DOCUMENTATION-008 Regla 1 (CENSUS-SYNC). Nota: vcensus corrido en esta sesión (22:35–22:37) no detecta estas 2 altas porque generate_census.py indexa ACTIVE/ local, no Notion en vivo — requiere vdoc (Notion→local) antes de que vcensus las reporte como huérfanas para agregarlas al spec.
+Write-Back Verification: System Prompt y Kernel re-fetched post-escritura en esta misma sesión — 4/4 nodos confirmados en posición correcta, sin mismatch. Session Ledger schema re-fetched — 6/6 columnas confirmadas.
+Pendiente (fuera de esta entrada):
+- vdoc (Notion→local) para sincronizar ACTIVE/Kernel.md y ACTIVE/System Prompt.md con las 2 altas de hoy.
+- vcensus tras el vdoc — para registrar SP:BOOTLOADER-002 y KERNEL:HANDOFF-SERIAL en CENSUS_SPEC.
+- vversions --sync para propagar v9.21.25 al resto de los fundacionales.
+- vantage-present-handoff, vantage-session-open, vantage-session-close — actualización de sus SKILL.md para implementar la cabecera de identidad/serial (referenciado, no ejecutado en este batch).
+- MANUAL:WEEKLY-FLOW-006 (sección hardcodeada) — deuda pre-existente señalada por vcensus, no relacionada con este batch.
+---
+Tipo: [DOC]
+Alcance:
+- Career Canon (CANON:OUTPUT-CONTRACT-004, 12.4 — Reglas de Serialización)
+Contexto: El operador solicitó fijar como canon que los nodos YEARS de Experience (nodos dedicados de período, separados del Rol) deben inyectarse en italic 10pt, y que Rol (nodo dedicado de puesto) va en bold 12pt — reemplazando la regla previa combinada "Rol = bold rol italic período". Verificación contra captura de capas Figma reveló que Aéropostale (previamente sin nodo YEARS confirmado en el registry) sí tiene Items/Role/Years como nodos separados, aunque mal etiquetados en Figma (nombre de capa heredado de L'Oréal por copy-paste sin renombrar) — el operador confirmó los IDs reales vía registry_seed.json actualizado (EXP_A_ROPOSTALE_ROLE: 4:25, EXP_A_ROPOSTALE_YEARS: 4:26). Plugin de inyección resuelve por ID de nodo, no por nombre de capa, por lo que el mislabeling no bloquea el pipeline pero queda señalado para renombrado cosmético por el operador.
+Cambios:
+- CANON:OUTPUT-CONTRACT-004 (12.4) — línea "Rol = bold rol italic período" reemplazada por dos líneas: "Rol (nodo dedicado de puesto) = bold 12pt" y "Years (nodo dedicado de período: 4:14, 4:18, 4:22, 4:26, 4:30, 4:34) = italic 10pt".
+IDs afectados: Ninguno — edición de regla existente dentro de nodo ya censado (CANON:OUTPUT-CONTRACT-004). No dispara KERNEL:DOCUMENTATION-008 Regla 1.
+Write-Back Verification: Career Canon re-fetched post-escritura en esta misma sesión — confirmado sin mismatch.
+Pendiente (fuera de esta entrada):
+- registry_seed.json local — patch de EXP_A_ROPOSTALE_ROLE/YEARS (4:25/4:26) ya confirmado por el operador vía archivo actualizado, aplicación en filesystem local pendiente de verificación en próxima sesión.
+- Renombrado cosmético de capas Figma de Aéropostale (actualmente heredan nombre "EXP_L_OR_AL_LUXE_M_XICO_ROLE/YEARS" pese a tener el ID correcto) — no bloqueante, señalado al operador.
+- vversions --sync para propagar v9.21.24 al resto de los fundacionales.
+---
 Tipo: [DOC] [AUDIT]
 Alcance:
 - Manual (MANUAL:SESSION-CYCLE, 06 — conteo de docs fundacionales corregido a 9)
