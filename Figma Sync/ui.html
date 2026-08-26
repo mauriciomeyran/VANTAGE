@@ -64,28 +64,43 @@
                 duplicateIds.push(nodeId);
               }
 
-              // Sanitización de entidades HTML y Markdown secundario
+              // Sanitización de entidades HTML (el markdown de link [texto](url) se procesa
+              // aparte, ANTES de esto, para no perder la URL — ver extracción de linkRanges).
               content = content
                 .replace(/&amp;/g, '&')
                 .replace(/&lt;/g, '<')
                 .replace(/&gt;/g, '>')
-                .replace(/_([^_]+)_/g, '$1') 
-                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') 
-                .replace(/\\/g, ''); 
+                .replace(/_([^_]+)_/g, '$1')
+                .replace(/\\/g, '');
 
-              // Motor de extracción de rangos dinámicos: negritas (**texto**) e itálicas
-              // (*texto*, convención del skill para períodos: "*February 2025 – March 2026*").
+              // Motor de extracción de rangos dinámicos: negritas (**texto**), itálicas
+              // (*texto*, convención del skill para períodos: "*February 2025 – March 2026*"),
+              // y links ([texto](url), para LinkedIn/Portfolio — antes se descartaba la URL
+              // aquí mismo por la sanitización de figma_text_id, dejando solo el texto plano).
               // Debe distinguir "**" (bold, 2 caracteres) de "*" simple (italic, 1 carácter)
-              // en la misma pasada, sin que uno sea leído como parte del otro.
+              // en la misma pasada, sin que uno sea leído como parte del otro, y reconocer
+              // [texto](url) como una unidad — NO como itálica con asteriscos accidentales.
               let cleanContent = "";
               let boldRanges = [];
               let italicRanges = [];
+              let linkRanges = [];
               let i = 0;
               let isBold = false, boldStart = 0;
               let isItalic = false, italicStart = 0;
 
+              const linkRegex = /^\[([^\]]+)\]\(([^)]+)\)/;
+
               while (i < content.length) {
-                if (content.substr(i, 2) === "**") {
+                const remaining = content.slice(i);
+                const linkMatch = remaining.match(linkRegex);
+                if (linkMatch) {
+                  const linkText = linkMatch[1];
+                  const linkUrl = linkMatch[2];
+                  const start = cleanContent.length;
+                  cleanContent += linkText;
+                  linkRanges.push({ start: start, end: cleanContent.length, url: linkUrl });
+                  i += linkMatch[0].length;
+                } else if (content.substr(i, 2) === "**") {
                   if (!isBold) {
                     boldStart = cleanContent.length;
                     isBold = true;
@@ -112,7 +127,8 @@
               parsedData[nodeId] = {
                 text: cleanContent,
                 boldRanges: boldRanges,
-                italicRanges: italicRanges
+                italicRanges: italicRanges,
+                linkRanges: linkRanges
               };
             }
 
@@ -128,14 +144,15 @@
               return;
             }
 
-            // Convert old format to new format — boldRanges e italicRanges incluidos
-            // (antes se descartaban; causa raíz de ambos bugs: los rangos se calculaban
-            // aquí pero nunca llegaban a code.js).
+            // Convert old format to new format — boldRanges, italicRanges y linkRanges
+            // incluidos (antes se descartaban; causa raíz de los tres bugs: los rangos se
+            // calculaban aquí pero nunca llegaban a code.js).
             const newPayload = Object.entries(parsedData).map(([id, data]) => ({
               id: id,
               characters: data.text,
               boldRanges: data.boldRanges,
-              italicRanges: data.italicRanges
+              italicRanges: data.italicRanges,
+              linkRanges: data.linkRanges
             }));
             
             parent.postMessage({ pluginMessage: { type: 'sync-nodes', payload: newPayload } }, '*');

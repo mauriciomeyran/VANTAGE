@@ -152,8 +152,8 @@ figma.ui.onmessage = (msg) => __awaiter(void 0, void 0, void 0, function* () {
             }
             const nodesToUpdate = Array.isArray(rawData) ? rawData : (rawData.nodes || []);
 
-            // 1. Recolectar referencias a nodos válidos — boldRanges e italicRanges opcionales,
-            //    compatible con payloads que no los traigan (camino JSON-nuevo o formatos previos).
+            // 1. Recolectar referencias a nodos válidos — boldRanges, italicRanges y
+            //    linkRanges opcionales, compatible con payloads que no los traigan.
             const targetNodes = [];
             for (const item of nodesToUpdate) {
                 if (!item.id || item.characters === undefined)
@@ -164,7 +164,8 @@ figma.ui.onmessage = (msg) => __awaiter(void 0, void 0, void 0, function* () {
                         node: node,
                         characters: item.characters,
                         boldRanges: Array.isArray(item.boldRanges) ? item.boldRanges : [],
-                        italicRanges: Array.isArray(item.italicRanges) ? item.italicRanges : []
+                        italicRanges: Array.isArray(item.italicRanges) ? item.italicRanges : [],
+                        linkRanges: Array.isArray(item.linkRanges) ? item.linkRanges : []
                     });
                 }
             }
@@ -176,7 +177,7 @@ figma.ui.onmessage = (msg) => __awaiter(void 0, void 0, void 0, function* () {
             let updatedCount = 0;
             const warnings = [];
 
-            for (const { node, characters, boldRanges, italicRanges } of targetNodes) {
+            for (const { node, characters, boldRanges, italicRanges, linkRanges } of targetNodes) {
                 // Familia base del nodo ANTES de reasignar characters (fontName puede ser
                 // figma.mixed si el nodo ya traía bold/italic heredado de un run previo).
                 const baseFamily = node.fontName !== figma.mixed
@@ -236,6 +237,16 @@ figma.ui.onmessage = (msg) => __awaiter(void 0, void 0, void 0, function* () {
                                 node.setRangeFontName(segStart, idx, targetFont);
                             }
                             segStart = idx;
+                        }
+                    }
+
+                    // Aplicar hyperlinks reales (LinkedIn, Portfolio, etc.) — antes se
+                    // descartaba la URL en ui.html y solo llegaba el texto plano.
+                    for (const link of linkRanges) {
+                        const start = Math.max(0, link.start);
+                        const end = Math.min(len, link.end);
+                        if (start < end && link.url) {
+                            node.setRangeHyperlink(start, end, { type: "URL", value: link.url });
                         }
                     }
                 } else {

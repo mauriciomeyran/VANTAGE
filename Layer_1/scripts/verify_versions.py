@@ -687,13 +687,23 @@ def render_scripts_gap_report(client: httpx.Client, headers: dict, extensions: t
     disk_scripts = scan_skill_folders(PROJECT_ROOT) if extensions == (".skill",) else scan_committed_assets(PROJECT_ROOT, extensions)
     library_titles = get_script_library_titles(client, data_source_id, headers, title_property)
 
+    def _norm(n: str) -> str:
+        # Normaliza comparación de nombres de skill ignorando el sufijo
+        # ".skill" -- esa extensión nunca existió como archivo físico (es
+        # convención de título en Notion) y 6/28 filas reales se desviaron
+        # de la convención sin sufijo, produciendo falsos gaps/huérfanos.
+        # No-op para extensiones reales (.py/.sh), donde el sufijo sí importa.
+        return n[:-6] if extensions == (".skill",) and n.endswith(".skill") else n
+
     disk_names = {name for name, _ in disk_scripts}
-    missing = sorted(name for name in disk_names if name not in library_titles)
-    registered = sorted(name for name in disk_names if name in library_titles)
-    # Filas en Notion marcadas Activo cuyo nombre no aparece en el árbol activo de disco.
+    library_names_norm = {_norm(t): t for t in library_titles}
+    missing = sorted(name for name in disk_names if _norm(name) not in library_names_norm)
+    registered = sorted(name for name in disk_names if _norm(name) in library_names_norm)
+    # Filas en Notion marcadas Activo cuyo nombre (normalizado) no aparece en el árbol activo de disco.
+    disk_names_norm = {_norm(n) for n in disk_names}
     orphan_notion = sorted(
         title for title, estado in library_titles.items()
-        if estado == "Activo" and title not in disk_names
+        if estado == "Activo" and _norm(title) not in disk_names_norm
     )
 
     print(f"[{label} — GAP REPORT]")
@@ -738,10 +748,16 @@ def render_new_scripts_gap_report(extensions: tuple, glossary_path: Path, label:
     missing = []
     documented = []
     for name, rel in disk_scripts:
-        # Match simple por nombre de archivo como string literal dentro del
-        # Glosario (ej. "`feed_processor.py`"). Suficiente porque el Glosario
-        # usa el nombre exacto de archivo como encabezado de cada entrada.
-        if name in glossary_text:
+        # Match simple por nombre como string literal dentro del Glosario.
+        # Para scripts (.py/.sh), el Glosario usa el nombre exacto de archivo
+        # como encabezado -- match directo. Para skills (.skill), el apéndice
+        # 23 documenta por TABLA (columnas Skill|Propósito|Trigger|Gate|
+        # Anuncio) con el nombre SIN el sufijo ".skill" -- ese sufijo nunca
+        # existió como archivo físico, es convención de título en Notion.
+        # Buscar "nombre.skill" ahí nunca matchea aunque la skill sí esté
+        # documentada -- se normaliza quitando el sufijo antes de buscar.
+        match_key = name[:-6] if extensions == (".skill",) and name.endswith(".skill") else name
+        if match_key in glossary_text:
             documented.append(name)
         else:
             missing.append((name, rel))
