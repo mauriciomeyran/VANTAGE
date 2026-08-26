@@ -72,8 +72,13 @@ EN
 - Contributed directly to a +43% increase in traffic and +18% in conversion across the 17 stores under strategic supervision. [KPI01] · [KPI02] · [CF07]
 - Standardized planograms for key categories (Denim & Lifestyle), aligning display with monthly sales objectives.
 ### 03.5 CANON:EXPERIENCE-005
-C05 · El Palacio de Hierro (ALDO Group)
-Coordinador de Visual Merchandising & Marketing · [CF02: 2012–2017]
+C05 · El Palacio de Hierro (ALDO Group) · [CF02: 2012–2017]
+Asesor de Visual Merchandising · 2012–2014
+ES
+- Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+EN
+- Coordinated visual and marketing execution for 17 retail stores and 12 wholesale corners, leading openings, remodels, and window rotations with specialized vendors under the Canadian headquarters' global standards.
+Coordinador de Visual Merchandising & Marketing · 2014–2017
 ES
 - Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas y remodelaciones críticas.
 - Supervisé la implementación de campañas globales, adaptando los lineamientos de la casa matriz en Canadá para el mercado mexicano.
@@ -94,7 +99,8 @@ Career Timeline
 | C02 | Bisonte Experiential Marketing | Brand Environment & Store Design Coordinator | 2022 – 2023 | México |
 | C03 | Levi Strauss & Co. (Dockers) | Senior Brand Environment Coordinator – LATAM | 2018 – 2021 | México / LATAM |
 | C04 | Aéropostale México | Visual Merchandising Manager | 2017 – 2018 | México |
-| C05 | El Palacio de Hierro (ALDO Group) | VM & Marketing Coordinator | 2012 – 2017 [CF02] | México |
+| C05 | El Palacio de Hierro (ALDO Group) | VM Advisor | 2012 – 2014 | México |
+| C05 | El Palacio de Hierro (ALDO Group) | VM & Marketing Coordinator | 2014 – 2017 [CF02] | México |
 ---
 ## 05 CANON:ACHIEVEMENTS
 Achievement Library

@@ -1,5 +1,14 @@
 # V | CHANGELOG
 
+## Ago 25, 26 19.30 — v9.21.27
+Documento modificado: CANON:EXPERIENCE-005, CANON:CAREER-TIMELINE (V | CAREER CANON)
+Documentos potencialmente afectados: CANON:OUTPUT-CONTRACT-002 (Golden Skeleton) — sin cambio, ya contenía los bloques 4:33/4:34/4:9 como referencia huérfana; este cambio los formaliza como fuente.
+Tipo de impacto: Normativo (Career Canon)
+Acción correctiva ejecutada: División de C05 (El Palacio de Hierro / ALDO Group) en dos roles, resolviendo discrepancia entre Golden Skeleton y Experience Records/Timeline:
+- Asesor de Visual Merchandising · 2012–2014 (1 bullet)
+- Coordinador de Visual Merchandising & Marketing · 2014–2017 (3 bullets, sin cambio de contenido)
+Título "Asesor" confirmado por el operador (no "Supervisor", que era la etiqueta previa en el Golden Skeleton — corregido).
+Estado final de la validación: Write-back verificado vía doble re-fetch — sin mismatch pendiente. Sin alta de ID canónico (se reutilizó CANON:EXPERIENCE-005); no dispara CENSUS-SYNC Regla 1.
 Tipo: [CODE] [DOC]
 Alcance:
 - Kernel (KERNEL:HANDOFF-SERIAL, 03.18 — párrafo nuevo, vía de acceso MCP)

@@ -5,7 +5,7 @@ from pathlib import Path
 
 # Ruta absoluta a tu archivo .env
 ENV_PATH = Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/config/layer_1.env")
-FILE_KEY = "ga1c5atiei7v0wVNmBhtqD"
+FILE_KEY = "L0lCL5ryXjt3MdIUssJwSp"
 
 def load_env_file(filepath):
     env_vars = {}
