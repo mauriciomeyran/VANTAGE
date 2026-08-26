@@ -1,5 +1,11 @@
 # V | CHANGELOG
 
+## Ago 25, 26 20.05 — v9.21.28
+Documento modificado: CANON:OUTPUT-CONTRACT-002 (Golden Skeleton, V | CAREER CANON)
+Documentos potencialmente afectados: Ninguno adicional — Experience Records (03.5) y Career Timeline (04.0) ya estaban alineados desde v9.21.27.
+Tipo de impacto: Normativo (Career Canon) + Runtime (Figma Sync)
+Acción correctiva ejecutada: Reescritura completa del Golden Skeleton en orden narrativo (Compañía → Rol → Fecha → Bullets, más reciente primero) reemplazando el orden de escritura del registry. Headline, contacto, perfil y skills actualizados al positioning "Visual Merchandising Manager · Luxury Brand Execution & LATAM Strategy" (CV en optimización activa). 68/68 nodos de registry_seed.json mapeados, incluyendo split C05 (Asesor 2012–2014 / Coordinador 2014–2017) con IDs 10:1xx. IDs huérfanos 4:33/4:34/4:9 eliminados.
+Estado final de la validación: Inyección manual por el operador (fuera de MCP). Write-back no verificado por Claude — pendiente confirmación del operador tras pegar en Notion.
 ## Ago 25, 26 19.30 — v9.21.27
 Documento modificado: CANON:EXPERIENCE-005, CANON:CAREER-TIMELINE (V | CAREER CANON)
 Documentos potencialmente afectados: CANON:OUTPUT-CONTRACT-002 (Golden Skeleton) — sin cambio, ya contenía los bloques 4:33/4:34/4:9 como referencia huérfana; este cambio los formaliza como fuente.
