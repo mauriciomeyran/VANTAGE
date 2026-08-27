@@ -1,0 +1,402 @@
+{
+  "Layer_1/scripts/adapt_tracker_export.py": {
+    "hash": "100a3ae1784649e1c4771756f766755c5cbd6a2506515394baf6972e5d50a329",
+    "captured_at": "2026-08-27T20:46:59.953454+00:00"
+  },
+  "Layer_1/scripts/agent_api.py": {
+    "hash": "6de974f280bce897c01490f2585f919395211ebf5d427541523e3cfb4d9fa9c6",
+    "captured_at": "2026-08-27T20:46:59.953868+00:00"
+  },
+  "Layer_1/scripts/allocate_vantage_serial.py": {
+    "hash": "5321d9b90408e5e84565f4d27625f35741fedf3d8484077bfa589559d7425648",
+    "captured_at": "2026-08-27T20:46:59.954083+00:00"
+  },
+  "Layer_1/scripts/apply_hyperlinks_notion.py": {
+    "hash": "8e3077d923a72556061f68afcfa345b264e9792ddc45c40fe3e918e0ce8143cf",
+    "captured_at": "2026-08-27T20:46:59.954272+00:00"
+  },
+  "Layer_1/scripts/backfill_class_a.py": {
+    "hash": "9f86df435b16e6927de6faa0d53905b7c957d44daeee2d74a09d796cb32b8eab",
+    "captured_at": "2026-08-27T20:46:59.954481+00:00"
+  },
+  "Layer_1/scripts/batch_operations.py": {
+    "hash": "4183649b61d58728a6ead8b48a56958c77c1e4e03bfece34488cb21f3e772355",
+    "captured_at": "2026-08-27T20:46:59.954661+00:00"
+  },
+  "Layer_1/scripts/class_b_guard.py": {
+    "hash": "910fe078d2c79819d853989e5d24e53dc7cf584c3434c68a8f9adf0c78db8ca2",
+    "captured_at": "2026-08-27T20:46:59.954869+00:00"
+  },
+  "Raycast/clean-caches-raycast.sh": {
+    "hash": "8c9c60bf622c349c28a3f34f7e95b053b722f5e87127faf3a301bc091007ec61",
+    "captured_at": "2026-08-27T20:46:59.954917+00:00"
+  },
+  "Layer_1/scripts/clean_caches.py": {
+    "hash": "318ff6a0fd43e5cba4c48c0cdb93e15380cf1ef94efd90c27c22fdb023cff2dd",
+    "captured_at": "2026-08-27T20:46:59.955083+00:00"
+  },
+  "Layer_1/scripts/clean_caches.sh": {
+    "hash": "6d911a1dbe24da4861bb43d01630cb55c14da52d9951986a993289eed3302c2a",
+    "captured_at": "2026-08-27T20:46:59.955239+00:00"
+  },
+  "Layer_1/scripts/clean_script_library_links.py": {
+    "hash": "a16d3e024ad79497e818fa4e52d2cea51994b3d9ccfac9e0bca42ddacc8993b3",
+    "captured_at": "2026-08-27T20:46:59.955443+00:00"
+  },
+  "Layer_1/scripts/compile_skills.py": {
+    "hash": "2c8baba3baaf0f5401a6307d105888c952cbc984d020c2808ad0911cde317cb3",
+    "captured_at": "2026-08-27T20:46:59.955658+00:00"
+  },
+  "Layer_1/scripts/consolidate_duplicates.py": {
+    "hash": "60091bfe5dfd65a89cd3cbbcaf53ab52135ab46e744494825a2c474e426e671a",
+    "captured_at": "2026-08-27T20:46:59.955897+00:00"
+  },
+  "Layer_1/scripts/context_layer.py": {
+    "hash": "40a1647702c0ed9d4eba3372d854a54cfd100619d0f7ca24aad59fe953c90abe",
+    "captured_at": "2026-08-27T20:46:59.956097+00:00"
+  },
+  "Layer_1/scripts/cross_tracker_match.py": {
+    "hash": "42d0a7c8ee97868496251c587e756fd1292917554f6cb2cad275d49cb9595aac",
+    "captured_at": "2026-08-27T20:46:59.956306+00:00"
+  },
+  "Layer_1/scripts/cv_a_batch_agent.py": {
+    "hash": "3c7e8b11c5a84e26066807d5dd5021cfb5009f3f32e08a3440ba742e4113a2fc",
+    "captured_at": "2026-08-27T20:46:59.956512+00:00"
+  },
+  "Layer_1/scripts/cv_a_prep.py": {
+    "hash": "1196e2db6e4cdcf37753cbc6da3efcf7c45a51c0e76410c117b8900ab5dfac01",
+    "captured_at": "2026-08-27T20:46:59.956703+00:00"
+  },
+  "Dashboard/scripts/dashboard_config.py": {
+    "hash": "9f9beda333be90b1aef019dcce14aaf35bfb4fae9c95d07b83c386c6e0503a9f",
+    "captured_at": "2026-08-27T20:46:59.956877+00:00"
+  },
+  "Dashboard/scripts/dashboard_db.py": {
+    "hash": "0aa078059bbe556cf95b5fe286fc5dd343b5b9c8dbcc242bc5ebba0ef6c1228c",
+    "captured_at": "2026-08-27T20:46:59.957045+00:00"
+  },
+  "Dashboard/scripts/dashboard_notion.py": {
+    "hash": "61bc8e27fb406977f0ca60eb7a9d720b23817f2ec3d9caf61b220c33811d89f8",
+    "captured_at": "2026-08-27T20:46:59.957215+00:00"
+  },
+  "Dashboard/scripts/dashboard_routes.py": {
+    "hash": "31fbcc7d9b5a103434e030b1dccd07d10c21bf4781f84623df9e9926467e5ac5",
+    "captured_at": "2026-08-27T20:46:59.957400+00:00"
+  },
+  "Dashboard/scripts/dashboard_server.py": {
+    "hash": "da6d6d0e57c07a2915dd1acf069a12d874cc29f1121dc3e6f3504931c62ad7ac",
+    "captured_at": "2026-08-27T20:46:59.957558+00:00"
+  },
+  "Dashboard/wrappers/dashboard_start.sh": {
+    "hash": "a838098c0abf195b67a61f3ef034d7e997b797daf8f6841f09eeaff772a581b7",
+    "captured_at": "2026-08-27T20:46:59.957718+00:00"
+  },
+  "Dashboard/scripts/dashboard_validation.py": {
+    "hash": "379d95c156d656118244bc4af321d3b0383105cd465a351a679dd71a5111fa02",
+    "captured_at": "2026-08-27T20:46:59.957881+00:00"
+  },
+  "Layer_1/scripts/dedup_audit.sh": {
+    "hash": "723e61cd12d525c2b4c007dfe0f631ac24d61d7ee539898afed8d7692f400a83",
+    "captured_at": "2026-08-27T20:46:59.958036+00:00"
+  },
+  "Layer_1/scripts/dedup_opportunities.py": {
+    "hash": "bf008b40798b2c8af0a4210276c3a3b23d46884c1a15d85cef0cf9ee9b3145e0",
+    "captured_at": "2026-08-27T20:46:59.958213+00:00"
+  },
+  "Layer_1/scripts/diagnose_agent_run.py": {
+    "hash": "bdeab0f7155ce736b9e9611ddc9f065781628a8b53e89ecb90997bdde019cbec",
+    "captured_at": "2026-08-27T20:46:59.958377+00:00"
+  },
+  "Layer_1/scripts/extract_scores.py": {
+    "hash": "91d93b26208dedfa281fc611e5c460dfdd31a093d1b3331d4244f0750812f807",
+    "captured_at": "2026-08-27T20:46:59.958543+00:00"
+  },
+  "Layer_1/scripts/extract_scores_detailed.py": {
+    "hash": "80147f34a41a56ea3ed471955163406180126bfd57e7c6dde371719a800ec9a6",
+    "captured_at": "2026-08-27T20:46:59.958681+00:00"
+  },
+  "Layer_1/scripts/feed_processor.py": {
+    "hash": "c3981f4e77f7943b210702d7a8924ab856831b03cc132a9623043e93122fb611",
+    "captured_at": "2026-08-27T20:46:59.958746+00:00"
+  },
+  "Layer_1/scripts/feedback_loop.py": {
+    "hash": "e5a43518d4ac9ecc1663f920fc06595179046c67738d10d350413344dd341975",
+    "captured_at": "2026-08-27T20:46:59.958890+00:00"
+  },
+  "Layer_1/scripts/fix_seccion_drift.sh": {
+    "hash": "4453d4182bf52a2854b02b08f2b638b39ddb3fa9a1e7c49f0baba17ec363e8d3",
+    "captured_at": "2026-08-27T20:46:59.959058+00:00"
+  },
+  "Layer_1/scripts/gate_logic.py": {
+    "hash": "e15745680a134e188c4efbd3c10f7cbc3d4fe1cdcffc8d2144e08a7e5ff1eece",
+    "captured_at": "2026-08-27T20:46:59.959217+00:00"
+  },
+  "Layer_1/scripts/generate_census.py": {
+    "hash": "09fb2fb3468982f518773b3bd2336986fd15c89d458af71ca830625ae7a02bed",
+    "captured_at": "2026-08-27T20:46:59.959279+00:00"
+  },
+  "Layer_1/scripts/generate_entity_index_v2.py": {
+    "hash": "b5aa6099720a0ff61c0e89c15b0f6d9bf33dcbbc49127bfccf78084931c6bffe",
+    "captured_at": "2026-08-27T20:46:59.959435+00:00"
+  },
+  "Layer_1/scripts/generate_id_inventory.py": {
+    "hash": "b5b67d58ced5ccd6224bc3dd625119f94fd48c13d08de4d8e44fbf2381f2d047",
+    "captured_at": "2026-08-27T20:46:59.959639+00:00"
+  },
+  "Layer_1/scripts/generate_registry.py": {
+    "hash": "82715dd90d2b7204de1b775d6b1ccef9d4288c9155cfa1dc20fd9d6484253349",
+    "captured_at": "2026-08-27T20:46:59.959676+00:00"
+  },
+  "Layer_1/scripts/get_vantage_digest.sh": {
+    "hash": "1c4b355548e2beb4c7c03582d78972e56b6299688aea104d2b3ca29e9132589a",
+    "captured_at": "2026-08-27T20:46:59.959810+00:00"
+  },
+  "Layer_4/scripts/git_sync.py": {
+    "hash": "cb0279062dfd4b487b8ccc4360c6bb837e17a28991f0dc7402ce851620ad23cb",
+    "captured_at": "2026-08-27T20:46:59.959848+00:00"
+  },
+  "Layer_4/wrappers/git_sync_wrapper.sh": {
+    "hash": "fe24dd190c55374678fb322e1feafba754960a16216cea8c818f159a516fd9f3",
+    "captured_at": "2026-08-27T20:46:59.959883+00:00"
+  },
+  "Layer_1/scripts/graph_layer.py": {
+    "hash": "73e43101bcad74bf959d19bdf710b48605602aa486c4c147bc45e54a2f46d61e",
+    "captured_at": "2026-08-27T20:46:59.960040+00:00"
+  },
+  "Layer_1/scripts/handoff_counter.py": {
+    "hash": "67d9317359d123fd86614b6e9aaabe3db667f20c577ee0f6ab25a7c22e988549",
+    "captured_at": "2026-08-27T20:46:59.960171+00:00"
+  },
+  "Layer_1/scripts/health_check.py": {
+    "hash": "0c4ad0d59fe57f8cb5294e400494a96b2ca2e35dd443c1528951e85d9ba822f1",
+    "captured_at": "2026-08-27T20:46:59.960219+00:00"
+  },
+  "Layer_1/scripts/health_check_unicode_backup.py": {
+    "hash": "4cf077853a2f655340ad47f983594efa3f5e700c33ba48451364f1d956e6dcc0",
+    "captured_at": "2026-08-27T20:46:59.960387+00:00"
+  },
+  "Layer_1/layer_1_pipeline.sh": {
+    "hash": "81e07db84bf9523133d00c3c5d4474c294fb1c72e0be122053c2aac6a91e749f",
+    "captured_at": "2026-08-27T20:46:59.960519+00:00"
+  },
+  "Layer_1/scripts/layer_1_run.py": {
+    "hash": "aa6d387da3abf3ab3ec409a1975ec4fadc3e35392206282ed3627d70f0d7667b",
+    "captured_at": "2026-08-27T20:46:59.960750+00:00"
+  },
+  "Dashboard/scripts/layer_1_run_dash.py": {
+    "hash": "cf0299c52bd68b5244203bbed59781003d4140f4724316be229b21a560c89c6f",
+    "captured_at": "2026-08-27T20:46:59.960980+00:00"
+  },
+  "Layer_1/wrappers/layer_1_wrapper.sh": {
+    "hash": "d1391a3907091d6e6ffe6e852b417b4ec0e32e6a304be8b25d8973784b605bcc",
+    "captured_at": "2026-08-27T20:46:59.961166+00:00"
+  },
+  "Layer_3/scripts/layer_3_mail.py": {
+    "hash": "8fb2d36d90904c1e0c247865d1c98ec59d44a35917c34159cb9f242a61d99ee8",
+    "captured_at": "2026-08-27T20:46:59.961375+00:00"
+  },
+  "Layer_3/wrappers/layer_3_mail.sh": {
+    "hash": "a9caa44ad593f83dc6d4aa6fbcdf5b6c7a1a0f40cc21ddc698c08156d748f2cd",
+    "captured_at": "2026-08-27T20:46:59.961537+00:00"
+  },
+  "Layer_1/scripts/lazy_loader.py": {
+    "hash": "1e531522b74b99d436f0ed3d3eb4fc274a3804345be70f91fa7e547a0836a692",
+    "captured_at": "2026-08-27T20:46:59.961709+00:00"
+  },
+  "Layer_1/scripts/mcp_vantage_serial_server.py": {
+    "hash": "4ea0ee1ef2c9d22f765c00e3e64c99f8be0ed98d696ff36a8cd4c3e252369dac",
+    "captured_at": "2026-08-27T20:46:59.961870+00:00"
+  },
+  "Layer_1/scripts/normalize_heading_ids.py": {
+    "hash": "3f611c058e27faceb3ab58d15d26bf869ab2acab3c850eb366d26471eb4eca6b",
+    "captured_at": "2026-08-27T20:46:59.962018+00:00"
+  },
+  "Layer_1/scripts/notion_utils.py": {
+    "hash": "3962a837442b2d727172b85d2c6c4909fba745de7c03afb393f817c7d362416b",
+    "captured_at": "2026-08-27T20:46:59.962166+00:00"
+  },
+  "Raycast/open-figma-template.sh": {
+    "hash": "39fc8773df7ad824503384dc681d3364ca2d962bff07876e5ce6d3a28c2eca14",
+    "captured_at": "2026-08-27T20:46:59.962201+00:00"
+  },
+  "Layer_1/scripts/pipeline_recovery.py": {
+    "hash": "eea2850c0b085e82fff0eba2e4bdaae824d6547ab80260d38aae33a55baae115",
+    "captured_at": "2026-08-27T20:46:59.962360+00:00"
+  },
+  "Layer_1/scripts/priority_logic.py": {
+    "hash": "fba27c805a828fe405096a69585395ef65864b2d4f16b0131e01112b7d457654",
+    "captured_at": "2026-08-27T20:46:59.962496+00:00"
+  },
+  "Layer_1/scripts/profile_evolution.py": {
+    "hash": "135e7aa43b098a3db46ad4cb0690cc3b25c7570e55aef21c3150faa8d6808b86",
+    "captured_at": "2026-08-27T20:46:59.962661+00:00"
+  },
+  "Layer_1/scripts/profile_fit.py": {
+    "hash": "fa732b410f2dfea5861c902562cc0c532542a6b2c04e4c129f8a3fc4c3800e0d",
+    "captured_at": "2026-08-27T20:46:59.962817+00:00"
+  },
+  "Layer_1/scripts/query_layer.py": {
+    "hash": "3761555d5b6058bcc7ec061152c0e57a11af35a04fa66d7123ae075455b3a7b6",
+    "captured_at": "2026-08-27T20:46:59.962956+00:00"
+  },
+  "Layer_1/scripts/registry_extractor.py": {
+    "hash": "f2bc8d5ca5793b9aa18e0829aca3320b36f2594524e783e487f8aa1f4a485394",
+    "captured_at": "2026-08-27T20:46:59.963114+00:00"
+  },
+  "Layer_1/scripts/resolver_layer_v1.py": {
+    "hash": "a3f0e084c0e565389a74c08f4296843ea81b73d9b9dde8d69738363a3487f426",
+    "captured_at": "2026-08-27T20:46:59.963253+00:00"
+  },
+  "Layer_1/scripts/runtime_identity.py": {
+    "hash": "d68fc7b0aadab4dc219ff4e25880045def6f9212b66efc4dd2601db87b42a268",
+    "captured_at": "2026-08-27T20:46:59.963384+00:00"
+  },
+  "Dashboard/scripts/smoke_dashboard.py": {
+    "hash": "5747293285090867b83b67814561cd8513903f9dc309327244bcee98041e8ad9",
+    "captured_at": "2026-08-27T20:46:59.963532+00:00"
+  },
+  "Layer_1/scripts/source_analytics.py": {
+    "hash": "f9c750a07625f7ad5b09d16ee4d990405132db180db31d862ad1dc92cacd33ad",
+    "captured_at": "2026-08-27T20:46:59.963696+00:00"
+  },
+  "Layer_1/scripts/start_vantage_serial_server.sh": {
+    "hash": "ca101a44b05c13dd29521a0f4a52732bd69882a678ebac3a1656f290400c45ff",
+    "captured_at": "2026-08-27T20:46:59.963849+00:00"
+  },
+  "Layer_1/scripts/status_report.py": {
+    "hash": "7cfd38215333cf4013de7457cb7a9fd0032c42dc0f9ccdaafa1bcf74c92f6dde",
+    "captured_at": "2026-08-27T20:46:59.963987+00:00"
+  },
+  "Layer_1/scripts/test_mcp_dry_run.py": {
+    "hash": "4ec6908618876cdacbd50b835225c1676a71e9f85e03b63bda43f650afd36613",
+    "captured_at": "2026-08-27T20:46:59.964148+00:00"
+  },
+  "Layer_1/scripts/test_mcp_real.py": {
+    "hash": "fc2719e93878e9ce1e70e6ebb6318c9f76e2d0df46ce9cc7eeaf6cec92ff515a",
+    "captured_at": "2026-08-27T20:46:59.964305+00:00"
+  },
+  "Layer_1/scripts/update_canvas.py": {
+    "hash": "8afd9201d4a10347a85e4863ba173b788987dab0a789bb27fe8a9fde622b1ea6",
+    "captured_at": "2026-08-27T20:46:59.964444+00:00"
+  },
+  "Layer_1/scripts/update_triggers_json.py": {
+    "hash": "bd6f7c611ca8e13f1837c02b58f6c9c1861e39fe9f1c71d58ecb89d2fb8eb04a",
+    "captured_at": "2026-08-27T20:46:59.964600+00:00"
+  },
+  "Raycast/vantage-census.sh": {
+    "hash": "13bdcf4933156eb9a226998f597629336b8f4416f7caeb244acda14170994d16",
+    "captured_at": "2026-08-27T20:46:59.964634+00:00"
+  },
+  "Raycast/vantage-dedup.sh": {
+    "hash": "269a23fcdae7d21cef9cffd2622b1d53059e34d1310b85ef64781868ef0f3a8d",
+    "captured_at": "2026-08-27T20:46:59.964668+00:00"
+  },
+  "Layer_1/scripts/vantage-health.sh": {
+    "hash": "8137b6145211b0c126b61486abc6e6aa4a8a274967dc9591a373912cf448b4d9",
+    "captured_at": "2026-08-27T20:46:59.964821+00:00"
+  },
+  "Raycast/vantage-health.sh": {
+    "hash": "60df2630e3ea65c96d4563a85009ecdd73001b5afba2175673047e85f43bcc5c",
+    "captured_at": "2026-08-27T20:46:59.964853+00:00"
+  },
+  "Raycast/vantage-hyperlinks-apply.sh": {
+    "hash": "b48ff0eb64c9002efeb1790e9ae671901d10ed015dc88a5f7c9117dacb997fb2",
+    "captured_at": "2026-08-27T20:46:59.964890+00:00"
+  },
+  "Raycast/vantage-hyperlinks-dry.sh": {
+    "hash": "e238751062f41f2b8ee66b8137bcfd31db698504bacf4555c25e001b13e84e33",
+    "captured_at": "2026-08-27T20:46:59.964922+00:00"
+  },
+  "Raycast/vantage-opport-dedup.sh": {
+    "hash": "fcc032692a1327cfb1aec36bc37699be36fc0fff9ff452ba0ad6edd8fd236f7b",
+    "captured_at": "2026-08-27T20:46:59.964953+00:00"
+  },
+  "Raycast/vantage-status.sh": {
+    "hash": "17b00df511fe1ee3622c4303c1e03c73146c980ed1c52723a6f0c32824b1c134",
+    "captured_at": "2026-08-27T20:46:59.964985+00:00"
+  },
+  "Raycast/vantage-sync.sh": {
+    "hash": "84ddd1cb9c064a7c98310461298aafb15e43ffb456d69bac1fcec5e7ced1dfe2",
+    "captured_at": "2026-08-27T20:46:59.965016+00:00"
+  },
+  "Raycast/vantage-vd.sh": {
+    "hash": "0b7028d010213e629ba47540ff196f92a8dd661a7011c6b4f7d1982f8018364e",
+    "captured_at": "2026-08-27T20:46:59.965050+00:00"
+  },
+  "Raycast/vantage-vdoc-dry.sh": {
+    "hash": "b0b1896176b0ad63f5aadd73647c823339dbcb1113be2b73fefa8f0b8f8bfd76",
+    "captured_at": "2026-08-27T20:46:59.965081+00:00"
+  },
+  "Raycast/vantage-vdoc-notion.sh": {
+    "hash": "b9846ec2faffa48e117a968d121b047d1e274a754163b8dced282f98b9a3a644",
+    "captured_at": "2026-08-27T20:46:59.965114+00:00"
+  },
+  "Raycast/vantage-versions-bootstrap.sh": {
+    "hash": "4329e8c93690d21cf451378d3b872decc0d0984aa61acabc4d42073106805178",
+    "captured_at": "2026-08-27T20:46:59.965145+00:00"
+  },
+  "Raycast/vantage-versions-scripts-gap.sh": {
+    "hash": "1be41f6e8b45e8b079191fefb1e1d15fac5edc3ca8fa318426263b661f681268",
+    "captured_at": "2026-08-27T20:46:59.965176+00:00"
+  },
+  "Raycast/vantage-versions-sync.sh": {
+    "hash": "5f45e52eba2ae8fa3b902cfaf649f8954f4fdc2ad8fa380bb625ee9a478cc079",
+    "captured_at": "2026-08-27T20:46:59.965207+00:00"
+  },
+  "Raycast/vantage-vgit.sh": {
+    "hash": "61a273a222a78e458d8ab7969e8c684b58b8d38c2b20700812bda8ca89d31012",
+    "captured_at": "2026-08-27T20:46:59.965238+00:00"
+  },
+  "Raycast/vantage-vl1.sh": {
+    "hash": "018012d5659b1cfecf97c713acb9980fa893fe1737608a060c32f8766922ce29",
+    "captured_at": "2026-08-27T20:46:59.965269+00:00"
+  },
+  "Raycast/vantage-vl3.sh": {
+    "hash": "6e91d94b1195a2607b1dd56ae0b08fa84a1aac6d2f0f77a04305f94e465593c9",
+    "captured_at": "2026-08-27T20:46:59.965299+00:00"
+  },
+  "Layer_1/scripts/vantage.py": {
+    "hash": "3406e795217379fb4287c93837deca3d24e5fd4e55e73571daad7690a7c12664",
+    "captured_at": "2026-08-27T20:46:59.965475+00:00"
+  },
+  "Layer_1/scripts/vantage_id_rules.py": {
+    "hash": "03a5c9fd2fd76ef8c8ef52d74b88231957c8b6f296bd3ce7de8d019945639e3b",
+    "captured_at": "2026-08-27T20:46:59.965655+00:00"
+  },
+  "Layer_1/scripts/vantage_serial_http_server.py": {
+    "hash": "88dc252e522c1ba5361e57ece826595904003dfa6daf487094d9d6f5362879bb",
+    "captured_at": "2026-08-27T20:46:59.965828+00:00"
+  },
+  "Layer_1/scripts/vantage_serial_mcp_bridge.py": {
+    "hash": "828101341b2d1c9743710191cab22b38a9d666c419434ac66369775c435cedea",
+    "captured_at": "2026-08-27T20:46:59.965863+00:00"
+  },
+  "Layer_4/scripts/vdoc.py": {
+    "hash": "3bbc93039fbbdfd7e526151a20cb14f720c85482bd9c79bf1144e7629bc275b3",
+    "captured_at": "2026-08-27T20:46:59.966031+00:00"
+  },
+  "Layer_1/scripts/verify_versions.py": {
+    "hash": "26eb6a3ba99e49e80105bc4b9dce15ce09f0b73eba31408ce44bf74ad8525ed3",
+    "captured_at": "2026-08-27T20:46:59.966079+00:00"
+  },
+  "Layer_1/scripts/vprint.py": {
+    "hash": "6e264f4a25ea25a0fa6d537b4959157e7169527d37cfea085f5473c7e6668617",
+    "captured_at": "2026-08-27T20:46:59.966204+00:00"
+  },
+  "Layer_1/scripts/vprint.sh": {
+    "hash": "aa18518623e070eddcd6aab8205b601a2b4402685a84bdc49c1231c0ea36b6c0",
+    "captured_at": "2026-08-27T20:46:59.966341+00:00"
+  },
+  "Layer_4/scripts/vsum.py": {
+    "hash": "fe0f860f452de802452e7920000e0cbfb98f5d52adae71774a036b973528abaa",
+    "captured_at": "2026-08-27T20:46:59.966497+00:00"
+  },
+  "Layer_4/scripts/vsync_doc.py": {
+    "hash": "02e8dc6f158b84bc35adba3b0a56a9e2976d630b4f4378b1f7cf429261acc1af",
+    "captured_at": "2026-08-27T20:46:59.966704+00:00"
+  },
+  "Layer_1/scripts/weekly_prompt_assembler.py": {
+    "hash": "bb552ecc9970e42c551aabab556a4cb7bd630c81f15504e038bd081d85a0b777",
+    "captured_at": "2026-08-27T20:46:59.966877+00:00"
+  }
+}

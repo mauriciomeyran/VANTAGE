@@ -600,29 +600,30 @@ def render_length_report(client: httpx.Client, uuids: dict, headers: dict, basel
     if attention_required:
         sys.exit(1)
 
-def render_skill_drift_report(project_root: Path, baseline_path: Path, update_baseline: bool = False) -> None:
-    """Detecta drift de CONTENIDO en archivos .skill ya registrados (nombre
-    presente en disco Y en el baseline previo, pero hash distinto). No
-    reemplaza a --skills/--new-skills (que detectan altas/bajas por nombre)
-    -- cubre el caso complementario: mismo nombre, contenido modificado
-    in-place, invisible a una comparación de sets de nombres.
+def render_drift_report(project_root: Path, baseline_path: Path, scan_fn, label: str, asset_col: str, update_baseline: bool = False) -> None:
+    """Detecta drift de CONTENIDO en assets ya registrados (nombre presente
+    en disco Y en el baseline previo, pero hash distinto). No reemplaza a
+    --skills/--new-skills o --scripts/--new-scripts (que detectan altas/bajas
+    por nombre) -- cubre el caso complementario: mismo nombre, contenido
+    modificado in-place, invisible a una comparación de sets de nombres.
     Mismo patrón que render_length_report: baseline JSON local, sin llamar
     a Notion, exit 1 si hay drift sin reconciliar. Si update_baseline=True,
     sobrescribe el baseline tras el reporte (solo tras confirmar que el
-    drift ya fue documentado en Skill Library / Skill Glossary)."""
+    drift ya fue documentado en la Library/Glossary correspondiente).
+    scan_fn(project_root) debe devolver una lista de (nombre, ruta_relativa)."""
     if baseline_path.exists():
         with open(baseline_path, "r", encoding="utf-8") as f:
             baseline = json.load(f)
     else:
         baseline = {}
 
-    disk_skills = scan_skill_folders(project_root)
+    disk_assets = scan_fn(project_root)
     results = []
     drift_detected = False
     new_baseline_created = not baseline_path.exists()
     new_entries_added = False
 
-    for name, rel_path in disk_skills:
+    for name, rel_path in disk_assets:
         full_path = project_root / rel_path
         current_hash = hashlib.sha256(full_path.read_bytes()).hexdigest()
 
@@ -648,31 +649,31 @@ def render_skill_drift_report(project_root: Path, baseline_path: Path, update_ba
                 results.append((name, rel_path, "OK"))
 
     # Detectar entradas en baseline sin archivo correspondiente en disco
-    # (huérfanos de drift-tracking -- no confundir con huérfanos de --skills,
-    # que comparan contra Notion; este caso es baseline vs disco local).
-    disk_rel_paths = {rel for _, rel in disk_skills}
+    # (huérfanos de drift-tracking -- no confundir con huérfanos de --skills/
+    # --scripts, que comparan contra Notion; este caso es baseline vs disco local).
+    disk_rel_paths = {rel for _, rel in disk_assets}
     for rel_path in baseline:
         if rel_path not in disk_rel_paths:
             results.append((rel_path, "-", "[BASELINE SIN ARCHIVO EN DISCO]"))
 
-    print("[VERIFICACIÓN DE DRIFT DE CONTENIDO — SKILL DRIFT CHECK]")
+    print(f"[VERIFICACIÓN DE DRIFT DE CONTENIDO — {label}]")
     print("-" * 75)
-    print(f"{'SKILL':<40} | {'RUTA':<20} | {'VEREDICTO':<30}")
+    print(f"{asset_col:<40} | {'RUTA':<20} | {'VEREDICTO':<30}")
     print("-" * 75)
     for name, rel, verdict in results:
         rel_str = rel if rel != "-" else "-"
         print(f"{name:<40} | {rel_str:<20} | {verdict:<30}")
     print("-" * 75)
     print(f"[VEREDICTO FINAL] {'PASS' if not drift_detected else 'ATENCIÓN REQUERIDA — DRIFT SIN RECONCILIAR'}")
-    print("[FIN SKILL DRIFT CHECK]")
+    print(f"[FIN {label}]")
 
     if new_baseline_created or new_entries_added or update_baseline:
         with open(baseline_path, "w", encoding="utf-8") as f:
             json.dump(baseline, f, indent=2)
         if new_baseline_created:
-            print(f"[BASELINE INICIAL CREADO — {len(disk_skills)} skills]")
+            print(f"[BASELINE INICIAL CREADO — {len(disk_assets)} entradas ({asset_col.lower()})]")
         elif new_entries_added:
-            print(f"[BASELINE ACTUALIZADO — skills nuevas agregadas]")
+            print(f"[BASELINE ACTUALIZADO — entradas nuevas agregadas]")
         elif update_baseline:
             print(f"[BASELINE ACTUALIZADO — hashes regrabados tras reconciliación confirmada]")
 
@@ -831,6 +832,8 @@ def main():
     parser.add_argument("--update-baseline", action="store_true", help="Usar junto a --length. Sobrescribe el baseline de longitud con el conteo actual tras confirmar que no hubo truncamiento (edición legítima).")
     parser.add_argument("--skills-drift", action="store_true", help="Detecta drift de CONTENIDO en archivos .skill ya registrados (mismo nombre, hash distinto respecto al último baseline) -- complementario a --skills/--new-skills, que solo detectan altas/bajas por nombre. Read-only salvo --update-skill-baseline. Exit 1 si hay drift sin reconciliar.")
     parser.add_argument("--update-skill-baseline", action="store_true", help="Usar junto a --skills-drift. Sobrescribe el baseline de hashes tras confirmar que el drift ya fue reconciliado en Skill Library (Notion) y Skill Glossary (Manual apéndice 23).")
+    parser.add_argument("--scripts-drift", action="store_true", help="Detecta drift de CONTENIDO en scripts .py/.sh ya registrados (mismo nombre, hash distinto respecto al último baseline) -- complementario a --scripts/--new-scripts, que solo detectan altas/bajas por nombre. Read-only salvo --update-script-baseline. Exit 1 si hay drift sin reconciliar.")
+    parser.add_argument("--update-script-baseline", action="store_true", help="Usar junto a --scripts-drift. Sobrescribe el baseline de hashes tras confirmar que el drift ya fue reconciliado en Script Library (Notion) y Script Glossary (Manual apéndice 22).")
     args = parser.parse_args()
 
     # 1. Inicialización de Entorno e Infraestructura
@@ -863,16 +866,27 @@ def main():
         render_new_scripts_gap_report((".skill",), SCRIPT_GLOSSARY_PATH, label="SKILL GLOSSARY")
         return
 
-    # --update-skill-baseline requiere --skills-drift (mismo guard que
-    # --update-baseline/--length más abajo, pero validado aquí porque
-    # --skills-drift retorna temprano sin pasar por resolución de registry).
+    # --update-skill-baseline requiere --skills-drift; --update-script-baseline
+    # requiere --scripts-drift (mismo guard que --update-baseline/--length más
+    # abajo, pero validado aquí porque ambos flags retornan temprano sin pasar
+    # por resolución de registry).
     if args.update_skill_baseline and not args.skills_drift:
         print("[-] Error: --update-skill-baseline requiere --skills-drift", file=sys.stderr)
         sys.exit(1)
 
+    if args.update_script_baseline and not args.scripts_drift:
+        print("[-] Error: --update-script-baseline requiere --scripts-drift", file=sys.stderr)
+        sys.exit(1)
+
     if args.skills_drift:
         baseline_path = SCRIPT_DIR / "skill_hash_baseline.json"
-        render_skill_drift_report(PROJECT_ROOT, baseline_path, update_baseline=args.update_skill_baseline)
+        render_drift_report(PROJECT_ROOT, baseline_path, scan_skill_folders, "SKILL DRIFT CHECK", "SKILL", update_baseline=args.update_skill_baseline)
+        return
+
+    if args.scripts_drift:
+        baseline_path = SCRIPT_DIR / "script_hash_baseline.json"
+        scan_fn = lambda pr: scan_committed_assets(pr, (".py", ".sh"))
+        render_drift_report(PROJECT_ROOT, baseline_path, scan_fn, "SCRIPT DRIFT CHECK", "SCRIPT", update_baseline=args.update_script_baseline)
         return
 
     registry_path = find_registry_file(SCRIPT_DIR)
