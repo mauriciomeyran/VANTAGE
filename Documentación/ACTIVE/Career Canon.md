@@ -116,8 +116,8 @@ Achievement Library
 | +43% tráfico en red de 17 tiendas | C04 | KPI01 |
 | +18% conversión en red de 17 tiendas | C04 | KPI02 |
 | Construcción área de VM desde cero · 21 reportes directos | C04 | CF06 |
-| Coordinación de 17 tiendas retail + 12 corners wholesale | C05 | – |
-| Liderazgo de coordinadora Jr. con reporte directo (últimos 3 años en rol) | C05 | – |
+| Coordinación de ejecución visual y marketing para 17 tiendas retail + 12 corners wholesale bajo estándares de casa matriz (Canadá) | C05 · Asesor 2012–2014 | – |
+| Liderazgo de coordinadora Jr. con reporte directo (últimos 3 años del rol) + desarrollo de programas de capacitación para personal de piso | C05 · Coordinador 2014–2017 | – |
 ---
 ## 06 CANON:KPIS
 Core KPIs

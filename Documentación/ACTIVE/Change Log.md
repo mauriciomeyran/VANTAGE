@@ -1,5 +1,17 @@
 # V | CHANGELOG
 
+## Ago 27, 26 15.10 — v9.21.30
+Documento modificado: CANON:ACHIEVEMENTS (V | CAREER CANON)
+Documentos potencialmente afectados: Ninguno — Experience Records (03.5), Career Timeline (04) y Golden Skeleton (12.2) ya reflejaban el split C05 desde v9.21.27/28.
+Tipo de impacto: Normativo (Career Canon)
+Acción correctiva ejecutada: División de la fila única C05 en Achievement Library (05) en dos filas ancladas por rol — Asesor 2012–2014 y Coordinador 2014–2017 — cerrando el pendiente #4 heredado de HO-000002 (drift entre Achievements y Experience/Timeline/Skeleton, ya divididos desde v9.21.27).
+Estado final de la validación: Write-back verificado por Claude vía re-fetch en vivo — confirmado.
+## Ago 27, 26 14.54 — v9.21.29
+Documento modificado: Skill Library (Notion) — vantage-cv-b, vantage-qa, vantage-present-handoff, vantage-session-close, vantage-session-open, prompt-master. Script local verify_versions.py (Layer_1/scripts).
+Documentos potencialmente afectados: Manual §23.2 (Skill Glossary Housekeeping) — gap real detectado, vantage-sync-skill-glossary sin fila propia (no corregido en este batch).
+Tipo de impacto: [CODE] [DOC] — Herramienta de detección de drift + reconciliación de contenido desincronizado en Skill Library.
+Acción correctiva ejecutada: (1) Diagnosticado y corregido bug de raíz en --skills/--new-skills: escaneaban archivos .skill literales, que nunca existieron en disco (convención real es carpeta + SKILL.md) — nueva función scan_skill_folders(), aplicada a los tres flags. (2) Corregido mismatch de nombre en 6 filas de Skill Library sin sufijo .skill vía normalización de comparación (no se tocó Notion). (3) Corregido match de --new-skills contra Manual §23 (documentado por nombre sin sufijo, no nombre.skill). (4) Nuevo flag --skills-drift + --update-skill-baseline (hash sha256, mismo patrón que --length). (5) Reconciliado drift real detectado en 5 skills (CV-B v9.17.0→v10.0.0 refactor completo Match Transferible Obligatorio + Síntesis Multi-Hecho; QA v9.17.0 Regla Anti-Ambigüedad + Separación QA↔CV-B; present-handoff/session-close/session-open — protocolo Lite con handoff serializado HO-######, YAML block, identidad de agente). (6) Reformateado prompt-master a convención estructural VANTAGE (ID Canónico, Trigger, Responsabilidad — contenido técnico en inglés preservado por decisión del operador); corregidas 2 corrupciones de auto-link (doble-guión Midjourney, 3 links rotos a references/*.md). (7) Generalizada render_skill_drift_report → render_drift_report, extendida a --scripts-drift/--update-script-baseline (scripts .py/.sh) — bug de variable no renombrada (disk_skills) detectado en producción por el operador y corregido, validado con ejecución real (no solo py_compile).
+Estado final de la validación: Write-Back Verification vía re-fetch en 6/6 páginas de Skill Library. --skills-drift: 28/28 PASS tras --update-skill-baseline. --scripts-drift: baseline capturado (86 assets), drift de verify_versions.py sobre sí mismo reconciliado por el operador vía --update-script-baseline. Gap reports (--skills, --new-skills, --scripts, --new-scripts) corridos post-fix — hallazgos reales documentados en Pendiente.
 ## Ago 25, 26 20.05 — v9.21.28
 Documento modificado: CANON:OUTPUT-CONTRACT-002 (Golden Skeleton, V | CAREER CANON)
 Documentos potencialmente afectados: Ninguno adicional — Experience Records (03.5) y Career Timeline (04.0) ya estaban alineados desde v9.21.27.
