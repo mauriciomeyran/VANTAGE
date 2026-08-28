@@ -778,6 +778,9 @@ def main():
 
     mail.logout()
 
+    _write_heartbeat(total_created, total_failed)
+    print("💾 Heartbeat → ~/.vantage/l3_heartbeat.json")
+
     remaining = max(0, total_inbox - len(emails))
     print(f"\n{'─'*40}")
     print(f"✅ Creadas: {total_created}  |  ❌ Notion: {total_failed}  |  ⏸️ Groq pendientes: {groq_failed}")
