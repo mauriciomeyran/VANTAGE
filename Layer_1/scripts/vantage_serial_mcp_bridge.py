@@ -1,16 +1,28 @@
 #!/usr/bin/env python3
 """
 VANTAGE Serial Allocation MCP Bridge for Claude Desktop
-
-MCP server that acts as a bridge between Claude Desktop and the central HTTP server.
-Allows Claude Desktop to allocate serials via HTTP API.
 """
 from __future__ import annotations
 
 import os
+import sys
+
+# Resolver dinámicamente la carpeta site-packages del .venv actual
+venv_site_packages = os.path.abspath(
+    os.path.join(
+        os.path.dirname(sys.executable),
+        "..",
+        "lib",
+        f"python{sys.version_info.major}.{sys.version_info.minor}",
+        "site-packages",
+    )
+)
+if venv_site_packages not in sys.path:
+    sys.path.insert(0, venv_site_packages)
+
 import json
-import requests
 from typing import Any
+import requests
 
 try:
     from mcp.server.fastmcp import FastMCP
@@ -36,39 +48,36 @@ def create_mcp_server() -> Any:
         """Allocate the next VANTAGE handoff serial number via central HTTP server."""
         try:
             response = requests.post(
-                f"{HTTP_SERVER_URL}/allocate",
-                timeout=TIMEOUT
+                f"{HTTP_SERVER_URL}/allocate", timeout=TIMEOUT
             )
             response.raise_for_status()
             return json.dumps(response.json())
         except requests.exceptions.RequestException as exc:
-            return json.dumps({
-                "error": "HANDOFF_SERIAL_UNAVAILABLE",
-                "status": "UNAVAILABLE",
-                "detail": f"HTTP request failed: {str(exc)}"
-            })
+            return json.dumps(
+                {
+                    "error": "HANDOFF_SERIAL_UNAVAILABLE",
+                    "status": "UNAVAILABLE",
+                    "detail": f"HTTP request failed: {str(exc)}",
+                }
+            )
         except Exception as exc:
-            return json.dumps({
-                "error": "HANDOFF_SERIAL_UNAVAILABLE",
-                "status": "UNAVAILABLE",
-                "detail": str(exc)
-            })
+            return json.dumps(
+                {
+                    "error": "HANDOFF_SERIAL_UNAVAILABLE",
+                    "status": "UNAVAILABLE",
+                    "detail": str(exc),
+                }
+            )
 
     @mcp.tool()
     def vantage_serial_status() -> str:
         """Get the status of the VANTAGE serial allocation service."""
         try:
-            response = requests.get(
-                f"{HTTP_SERVER_URL}/health",
-                timeout=TIMEOUT
-            )
+            response = requests.get(f"{HTTP_SERVER_URL}/health", timeout=TIMEOUT)
             response.raise_for_status()
             return json.dumps(response.json())
         except Exception as exc:
-            return json.dumps({
-                "error": "STATUS_UNAVAILABLE",
-                "detail": str(exc)
-            })
+            return json.dumps({"error": "STATUS_UNAVAILABLE", "detail": str(exc)})
 
     return mcp
 
@@ -80,15 +89,13 @@ def main():
         print("Install with: pip install mcp", file=sys.stderr)
         sys.exit(1)
 
-    print(f"VANTAGE Serial MCP Bridge")
-    print(f"HTTP Server URL: {HTTP_SERVER_URL}")
-    print(f"Timeout: {TIMEOUT}s")
-    print(f"\nBridging Claude Desktop to central HTTP server...")
-    
+    # Redirección estricta de telemetría a stderr para proteger el canal stdout de JSON-RPC
+    print(f"[vantage-bridge] HTTP Server URL: {HTTP_SERVER_URL}", file=sys.stderr)
+    print(f"[vantage-bridge] Timeout: {TIMEOUT}s", file=sys.stderr)
+
     mcp = create_mcp_server()
     mcp.run()
 
 
 if __name__ == "__main__":
-    import sys
     main()
