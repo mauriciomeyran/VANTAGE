@@ -18,7 +18,10 @@ except ImportError:
     Flask = None
     jsonify = None
 
-DB_PATH = Path(os.environ.get("VANTAGE_SERIAL_DB", "vantage_serials.sqlite3"))
+DB_PATH = Path(os.environ.get(
+    "VANTAGE_SERIAL_DB",
+    str(Path(__file__).resolve().parent.parent.parent / "state" / "vantage_handoff_counter.sqlite3"),
+))
 COUNTER_NAME = "GLOBAL_VANTAGE_COUNTER"
 
 

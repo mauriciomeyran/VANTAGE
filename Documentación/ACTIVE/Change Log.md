@@ -1,5 +1,12 @@
 # V | CHANGELOG
 
+## Ago 28, 26 02.43 — v9.21.32
+Documento modificado: Bug Tracker (8 filas)
+Documentos potencialmente afectados: Ninguno adicional.
+Tipo de impacto: [FIX] [OPS] — Continuación de Pendientes Sweep (HO-000022 → HO-000025, SESSION-20260828-A).
+Acción correctiva ejecutada: (1) Split-brain GLOBAL_VANTAGE_COUNTER resuelto — causa raíz: allocate_vantage_serial.py resolvía DB_PATH relativo a cwd (4 bases SQLite físicas divergentes: state/=6, Layer_1/=22 autoridad real, dos huérfanos=1 y 2); migrado value=22 a state/vantage_handoff_counter.sqlite3, ambos scripts (Terminal + HTTP) parcheados a Path(file).resolve().parent.parent.parent, VANTAGE_SERIAL_DB exportado en .zshrc, 3 archivos huérfanos eliminados. Verificado: Terminal→HO-000023, HTTP→HO-000024. (2) Canal MCP auditado — vantage_serial_mcp_bridge.py limpio; mcp_vantage_serial_server.py tenía mismo bug (.parent.parent en vez de .parent.parent.parent), corregido. (3) Rotación de credenciales — confirmada ejecutada por el operador. (4) Claude Desktop mcpServers — clave ausente en claude_desktop_config.json, añadido registro de vantage-serial-bridge, backup creado, JSON validado (pendiente reinicio de Desktop). (5) Alias skill2md — confirmado ya no existe en .zshrc, dado de baja de facto. (6) start_vantage_serial_server.sh — auditado, sin bug (ya usaba ruta correcta). (7) Kerning/espaciado PDF Dior (QA NO-GO previo) — revisado contra PDF real con el operador: tracking de título es decisión de diseño intencional, email coincide con Canon vivo, orden cronológico confirmado correcto. Sin correcciones. (8) Layer3 heartbeat, drift v10.2.0, Devin HO-000021 — actualizados con evidencia dura disponible en sesión (74h no 104h; sin confirmación de drift; sin revisar por límite de tokens), quedan abiertos/en revisión para sesión siguiente.
+Estado final de la validación: Write-back verificado — 4 canales de serial (Terminal, HTTP, MCP server, MCP bridge) confirmados sobre autoridad única tras fix. Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens, sesión con presupuesto ajustado).
+
 ## Ago 27, 26 22.37 — v9.21.31
 Documento modificado: V | PENDIENTES SWEEP (página de plan + data source Sweep)
 Documentos potencialmente afectados: Ninguno adicional — solo escritura de estado en Sweep y cierre de fases del plan de trabajo.

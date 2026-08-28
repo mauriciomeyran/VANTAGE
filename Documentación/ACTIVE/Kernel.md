@@ -705,14 +705,15 @@ Implementación: priority_logic.py (matriz compartida) — invocado por layer_1_
 ### 11.3 KERNEL:TRIGGER-003
 QA
 Validación de Formato de CV Exportado. No evalúa fit, oportunidad, score ni conveniencia de aplicar.
-Checklist Canónico de 6 ítems
-- identidad y contacto
-- estructura de secciones
-- orden de experiencia (C01→C05)
-- completitud de contenido
-- integridad visual
-- consistencia de exportación
-Output: GO/NO-GO por ítem; cualquier FAIL → NO-GO final.
+Checklist Canónico de 7 ítems (fuente de verdad: skill vantage-qa, vigente desde v9.16.0 — Anti-cloning agregado como ítem 7)
+1. Invarianza estructural
+1. Orden cronológico (C01→C05)
+1. Cobertura JD
+1. Hard Blocks — exclusiones de marcas protegidas
+1. No inferencia / Canon
+1. Formato y completitud
+1. Diferenciación de Contenido (Anti-cloning)
+Output: GO/NO-GO por ítem; cualquier FAIL → NO-GO final. Detalle operativo completo de cada ítem vive en el skill, no se duplica aquí.
 ### 11.4 KERNEL:TRIGGER-004
 DRY RUN
 Preview Obligatorio de Escritura. No hay escritura sin DRY RUN previo.

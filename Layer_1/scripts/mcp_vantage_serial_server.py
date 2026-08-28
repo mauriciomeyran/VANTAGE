@@ -70,7 +70,7 @@ except ImportError:
 
 # Constants from allocate_vantage_serial.py
 DB_PATH = Path(os.environ.get("VANTAGE_SERIAL_DB", 
-           Path(__file__).parent.parent / "state" / "vantage_handoff_counter.sqlite3"))
+           str(Path(__file__).resolve().parent.parent.parent / "state" / "vantage_handoff_counter.sqlite3")))
 COUNTER_NAME = "GLOBAL_VANTAGE_COUNTER"
 
 

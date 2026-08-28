@@ -17,7 +17,7 @@ import urllib.parse
 
 # Constants
 DB_PATH = Path(os.environ.get("VANTAGE_SERIAL_DB", 
-           Path(__file__).parent.parent.parent / "state" / "vantage_handoff_counter.sqlite3"))
+           str(Path(__file__).resolve().parent.parent.parent / "state" / "vantage_handoff_counter.sqlite3")))
 COUNTER_NAME = "GLOBAL_VANTAGE_COUNTER"
 DEFAULT_PORT = int(os.environ.get("VANTAGE_SERIAL_PORT", "8787"))
 DEFAULT_HOST = os.environ.get("VANTAGE_SERIAL_HOST", "localhost")
