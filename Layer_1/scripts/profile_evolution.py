@@ -6,12 +6,17 @@ JHS Profile Evolution - Manejo de cambios en perfil y configuración del sistema
 import os
 import json
 import yaml
+from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
 
+# Absolute path, independiente del cwd desde donde se invoque el script
+BASE_DIR = Path(__file__).resolve().parent.parent
+CONFIG_DIR = BASE_DIR / "config"
+
 def load_current_config():
     """Load current system configuration"""
-    config_file = "config/profile_config.yaml"
+    config_file = str(CONFIG_DIR / "profile_config.yaml")
     
     if not os.path.exists(config_file):
         # Create default config
@@ -59,7 +64,7 @@ def save_config(config):
     """Save updated configuration"""
     config["profile"]["last_updated"] = datetime.now().isoformat()
     
-    with open("config/profile_config.yaml", "w") as f:
+    with open(CONFIG_DIR / "profile_config.yaml", "w") as f:
         yaml.dump(config, f, indent=2)
 
 def update_profile_progression():
