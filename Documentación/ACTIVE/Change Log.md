@@ -1,5 +1,12 @@
 # V | CHANGELOG
 
+## Ago 27, 26 22.37 — v9.21.31
+Documento modificado: V | PENDIENTES SWEEP (página de plan + data source Sweep)
+Documentos potencialmente afectados: Ninguno adicional — solo escritura de estado en Sweep y cierre de fases del plan de trabajo.
+Tipo de impacto: [OPS] — Cierre de fases de Pendientes Sweep (HO-000022 / SESSION-20260828-A).
+Acción correctiva ejecutada: (1) Fase 0 cerrada — hallazgos de registry/código HO-000021 escritos como Resuelto (citas 9b9ced7 / a58a678). (2) Fase 0.5 cerrada — discrepancia crítica vantage-cv-b v10.0.0 resuelta: refactor confirmado vigente en Notion Skill Library + sincronizado local/Git; densidad esperada alcanzada y markdown de inyección Figma correcto (confirmado por operador). Todas las filas HO-000010 actualizadas a Resuelto. (3) Fase 1 cerrada — confirmaciones de un solo mensaje: solo se generó CV-B de Dior (Andrei Moygo/Multicont no subidos); SESSION-2026-07-19-A eliminada; prueba de inyección Dior confirmada vía PDF; extensión Claude Desktop MCP no registrada (claude_desktop_config.json sin clave mcpServers). (4) Version bump a v9.21.31.
+Estado final de la validación: Write-back ejecutado en esta misma sesión (update_properties + update_content sobre Sweep y plan). Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
+
 ## Ago 27, 26 15.10 — v9.21.30
 Documento modificado: CANON:ACHIEVEMENTS (V | CAREER CANON)
 Documentos potencialmente afectados: Ninguno — Experience Records (03.5), Career Timeline (04) y Golden Skeleton (12.2) ya reflejaban el split C05 desde v9.21.27/28.
