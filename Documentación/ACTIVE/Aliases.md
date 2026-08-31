@@ -1,5 +1,6 @@
 # V | ALIASES
 
+# V | ALIASES
 ## 01 ALIASES:SESSION-CYCLE
 Session Cycle
 | Alias | Qué hace | Procedimiento interno |
@@ -51,14 +52,13 @@ L4 · Version Control & Documentación
 | cleancaches | Limpia cachés regenerables de apps Mac (Chrome/Safari/Firefox/Edge, WhatsApp/WeChat/Telegram, ChatGPT/Ollama/LM Studio, npm, Cursor) sin tocar sesiones activas. | Corre clean_caches.py. Wrapper Raycast equivalente: clean-caches-raycast.sh (🧹 "Limpiar Cachés de Apps"). |
 | vprint | Lista vacantes con Gate_Decision = CREATE (conteo + IDs/URLs) vía query directo a Notion. | Corre vprint.py, cargando .env inline (vprint.sh en disco es un wrapper alterno no usado por este alias). |
 | vtriggers | Mantiene el manifiesto SSOT de skills (skills/triggers.json) que consume el Bootloader para lazy-load por trigger. | Corre update_triggers_json.py — escanea /skills/, valida SKILL.md por entrada, detecta huérfanos (reporta, no borra), actualiza last_modified, y ejecuta git add+commit+push automático sobre triggers.json. |
-|| vserial | Genera un nuevo serial de handoff VANTAGE (formato HO-######) y lo imprime en terminal. | Corre allocate_vantage_serial.py next — invoca allocate_serial() sobre state/vantage_handoff_counter.sqlite3, incrementa el contador GLOBAL_VANTAGE_COUNTER atómicamente y devuelve el siguiente serial disponible. Wrapper Raycast equivalente: vantage-serial.sh (🔢 "VANTAGE Serial Generator"). |
-| vsum | Resume transcripts de sesiones
+|  | vserial | Genera un nuevo serial de handoff VANTAGE (formato HO-######) y lo imprime en terminal. |
+| vsum | Resume transcripts de sesiones |  |
 ---
-#### Flags de vversions para Verificación de Longitud
 | Flag / Comando | Modo | Descripción | Efecto Secundario | Requisitos / Condición |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | --length | Read-only | Verifica el conteo de líneas de texto extraíble vs. length_baseline.json. | Genera length_baseline.json si no existe. | Ninguno. |
-| --update-baseline | Write | Sobrescribe el baseline con las métricas del conteo actual. | Actualiza timestamp captured_at. | Requiere --length. Veredicto PASS o confirmación del operador. | (propias o de otra IA) a Markdown estructurado, para continuidad entre chats sin pérdida de contexto. | Corre vsum.py: parsea el transcript (.md o URL de Claude share), lo resume vía Groq o Gemini (fallback automático), y opcionalmente crea la página de resumen como hija del INBOX en Notion (–notion) vía notion_client directo. |
+| --update-baseline | Write | Sobrescribe el baseline con las métricas del conteo actual. | Actualiza timestamp captured_at. | Requiere --length. Veredicto PASS o confirmación del operador. |
 ## 06 ALIASES:DASHBOARD
 Dashboard (Martes — Recuperación)
 | Alias | Qué hace | Procedimiento interno |
@@ -73,7 +73,7 @@ CV-A, CV-B y QA se disparan directamente en el chat de Claude — sin alias prop
 | (sin alias corto asignado) | Normaliza el export de Notion para el batch de CV-A. | python3 adapt_tracker_export.py --in <export.csv> |
 | (sin alias corto asignado) | Genera scaffolds HANDOFF en paralelo para vacantes Optimizar. | python3 cv_a_batch_agent.py --csv tracker_adapted.csv |
 | (sin alias corto asignado) | Prepara un scaffold individual (cache, Hard Block, idioma). | python3 cv_a_prep.py --url <URL> |
-Ver MANUAL:SCRIPT-GLOSSARY-CV-PREP para el detalle completo de flags.
+| Ver MANUAL:SCRIPT-GLOSSARY-CV-PREP para el detalle completo de flags. |  |  |
 ## 08 ALIASES:DEDUP
 Dedup & Oportunidades
 | Alias | Qué hace | Procedimiento interno |
@@ -81,4 +81,4 @@ Dedup & Oportunidades
 | vdedup | Consolida entradas duplicadas detectadas en el Tracker. | Corre consolidate_duplicates.py sobre la clave compuesta brand+title+location. |
 | vopport | Limpia duplicados específicamente en oportunidades ya calificadas. | Corre dedup_opportunities.py. |
 | dedup_audit.sh <em>(sin alias corto en .zshrc — se invoca por ruta)</em> | Auditoría manual semanal recomendada de duplicados en Oportunidades — mismo motor que vopport, pensado como recordatorio de cadencia fija. | ./scripts/dedup_audit.sh → dedup_opportunities.py sin flags. Soporta también --clear <page_id> (falsos positivos) y layer_1_run.py --dedup-audit (integración automática Fase 6, +1-2 min al pipeline). |
-Figma Sync (plugin CV, 04-Vantage_CV/Figma Sync/) no tiene alias de Terminal propio — se opera desde Figma Desktop, ver Manual 08.3.
+| Figma Sync (plugin CV, 04-Vantage_CV/Figma Sync/) no tiene alias de Terminal propio — se opera desde Figma Desktop, ver Manual 08.3. |  |  |
