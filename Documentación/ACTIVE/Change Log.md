@@ -1,301 +1,114 @@
 # V | CHANGELOG
 
-## Ago 28, 26 02.43 — v9.21.32
+Tipo: [DOC]
+Documento modificado: V | ALIASES (§05 fila vserial), V | MANUAL (§02, §08.1, §22.5), V | KERNEL (§04.4, §07.8, §09.2, §09.11)
+Documentos potencialmente afectados: Ninguno adicional — System Prompt y Career Canon no referencian estos contratos.
+Tipo de impacto: Normativo + Operativo — cierre del pendiente declarado en v9.21.40 ("Documentación transversal: KERNEL (arquitectura seriales, URL Gate), Manual (shortcuts, cron jobs)").
+Acción correctiva ejecutada:
+1. ALIASES:L4-VERSION-CONTROL — corregido bug de formato en la fila vserial (estaba corrida una columna, celda Alias vacía) + referencia a vantage-serial.sh.
+1. MANUAL:SCRIPT-GLOSSARY-RAYCAST (§22.5) — alta de fila vantage-serial.sh → allocate_vantage_serial.py next.
+1. MANUAL:HOW-IT-WORKS (§02) y KERNEL:GATE-DECISION-002 (09.2) — documentado el tratamiento diferenciado de fallo HEAD en agregadores (Fetch=Accesible/Status=Target/Next_Action=Reparar URL) vs. sitios directos (Bloqueado/Expirada/Archivar), fix v9.21.40.
+1. KERNEL:GATE-DECISION-011 (09.11) — corregida fila de matriz "Agregador con HEAD fallido/timeout": Estado Destino REVIEW_NEEDED→Target, Efecto Class B actualizado a Fetch=Accesible/Next_Action=Reparar URL (estaba desactualizada respecto al fix real).
+1. KERNEL:SCHEMA-008 (07.8) — condición de "Reparar URL" ampliada para cubrir el caso de agregador con Fetch=Accesible sin confirmar (antes solo cubría Fetch=Bloqueado).
+1. KERNEL:ARCHITECTURE-L4 (04.4) y MANUAL:WEEKLY-FLOW-001 (§8.1, ¿Qué es L4?) — documentados los 3 cron jobs (vantage.py sync, notion_backup.py, vl3 · 00:00/08:00/16:00) y el fix de ruta directa al Python del venv.
+IDs afectados: Ninguno (sin alta/baja de ID canónico — todas las ediciones extienden nodos existentes).
+Estado final de la validación: Write-Back Verification PASS — 8/8 parches confirmados vía re-fetch en los 3 documentos, cero mismatch. Census no aplica (sin altas/bajas de ID).
+---
+Tipo: [INFRA] [CODE] [FIX]
+Alcance:
+- state/vantage_handoff_counter.sqlite3 (counter corregido)
+- .zshrc (alias vserial nuevo)
+- Raycast/vantage-serial.sh (script nuevo)
+- Layer_1/scripts/layer_1_run.py (fix URL Gate agregadores)
+- crontab (arreglo de permisos + nuevo vl3)
+Contexto:
+1. Counter drift: Auditoría de arquitectura de seriales detectó discrepancia entre counter vivo (27) y Changelog v9.21.35 (documentaba emisión de HO-000028). Se corrigió a 28 para sincronizar con realidad documentada.
+1. URL Gate agresivo: 6 vacantes de Indeed se marcaron como "Bloqueado" y archivadas automáticamente aunque eran accesibles manualmente. El sistema archivaba agregadores por fallos temporales de HEAD request (timeout/rate-limiting).
+1. Cron jobs rotos: Los cron jobs existentes (vantage sync, notion backup) fallaban con "Operation not permitted" por usar source .venv/bin/activate en entorno limitado de cron. Se arreglaron usando ruta directa al Python del venv.
+1. vl3 sin automatización: vl3 nunca tuvo cron job configurado, se agregó ejecución automatizada a las 12am, 8am, 4pm.
+Cambios:
+- Counter fix: UPDATE directo a SQLite: UPDATE counters SET value = 28 WHERE name = 'GLOBAL_VANTAGE_COUNTER'
+- Alias terminal: .zshrc: alias vserial='cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/allocate_vantage_serial.py next'
+- Script Raycast: /Raycast/vantage-serial.sh creado (genera serial, copia al clipboard, notificación éxito)
+- URL Gate fix (layer_1_run.py):
+- Lógica agregadores modificada: fallo HEAD request retorna AGREGADOR_RETRY_... en vez de bloqueo
+- Tratamiento diferenciado: agregadores con fallo → Fetch: "Accesible", Status: "Target", Next_Action: "Reparar URL"; sitios directos → comportamiento original Bloqueado/Expirada/Archivar
+- Cron jobs arreglados:
+- vantage.py sync: source .venv/bin/activate → ruta directa Python
+- notion_backup.py: mismo fix
+- Nuevo vl3: 0 0,8,16 * * * (12am, 8am, 4pm) con ruta directa Python
+- Mailbox limpiado: 111 mensajes de error cron eliminados
+IDs afectados: Ninguno (sin alta/baja de ID canónico en Kernel/Manual/SP)
+Write-Back Verification: Aliases.md sync desde Notion (operador confirmó); Notion Changelog v9.21.40 pendiente de escritura por operador
+Pendiente:
+- Documentación transversal: KERNEL (arquitectura seriales, URL Gate), Manual (shortcuts, cron jobs), brief separado para solicitudes específicas
+Tipo: [INFRA]
+Alcance:
+- state/vantage_handoff_counter.sqlite3
+- Aliases.md (vserial)
+- Raycast (vantage-serial.sh)
+Contexto: Auditoría de arquitectura de seriales detectó drift entre Changelog (HO-000028 documentado) y counter vivo (HO-000027). Se corrigió el counter a 28 para sincronizar con la realidad documentada. Se agregó alias vserial a .zshrc y script Raycast vantage-serial.sh para facilitar generación de seriales desde terminal y Raycast.
+Cambios:
+- GLOBAL_VANTAGE_COUNTER: 27 → 28 (UPDATE directo a SQLite)
+- .zshrc: alias vserial='cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/allocate_vantage_serial.py next'
+- Aliases.md: fila vserial agregada en sección L4-VERSION-CONTROL
+- Raycast/vantage-serial.sh: script nuevo (genera serial, copia al clipboard, notifica éxito)
+Versión: 9.21.36
+Documento modificado: GitHub VANTAGE (repo raíz) — Dashboard/ (2 archivos movidos), página Notion GITHUB (tabla de reconciliación)
+Documentos potencialmente afectados: Ninguno adicional.
+Tipo de impacto: [OPS] [DOC] — Cierre de Fase 3 de GitHub Housekeeping (continuación de v9.21.37).
+Acción correctiva ejecutada: (1) vantage_serials.sqlite3 en raíz — confirmado inexistente en ninguna ruta del repo vía clone fresco; ítem del audit original de Devin ya obsoleto (probable resultado de la migración de autoridad a state/vantage_handoff_counter.sqlite3 en v9.21.32), sin duplicado real que eliminar. (2) Dashboard/dashboard.backup.html y Dashboard/Checklist.backup.html movidos a Archive/Legacy_Scripts/ vía git mv (commit c4b8a77) por el operador. (3) Lección de proceso repetida: vgit (alias local) ejecutó commit pero no push — confirmado por clone fresco sin el commit, replicando el patrón ya documentado en v9.21.11 con Devin. Operador ejecutó git push origin main explícito tras el hallazgo (03713ad..c4b8a77). (4) Página Notion GITHUB — tabla de reconciliación (añadida en v9.21.37 vía sesión previa) actualizada: ambos ítems pendientes marcados ✅ RESUELTO.
+Estado final de la validación: Write-back verificado vía clone fresco de origin/main post-push — commit c4b8a77 presente, backups confirmados en Archive/Legacy_Scripts/, vantage_serials.sqlite3 confirmado ausente en todo el árbol. Página GITHUB re-fetched post-escritura — tabla de reconciliación confirmada 7/7 ítems en ✅ RESUELTO, 0 pendientes. GitHub Housekeeping (Fases 1-3) cerrado por completo. Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
+
+Documento modificado: GitHub VANTAGE (repo raíz) — Layer_1/scripts (9 archivos), Figma Sync (1 archivo), config/ (3 archivos eliminados), Layer_1/feeds (21 archivos), output (19 archivos), Layer_1/scripts/profile_evolution.py (2 líneas de código)
+Documentos potencialmente afectados: Ninguno en Notion — housekeeping de infraestructura de repo, sin escritura a Career Canon/Kernel/Manual.
+Tipo de impacto: [OPS] [CODE] — Housekeeping de repositorio GitHub VANTAGE (Fase 1–2 de plan de trabajo, auditoría de scripts huérfanos y duplicados).
+Acción correctiva ejecutada: (1) Auditoría cruzada (grep) de 62 scripts en Layer_1/scripts/ contra Raycast, wrappers, triggers.json, .vscode/mcp.json, .devin/config.json, Figma Sync/code.js — 10 huérfanos confirmados sin referencias, archivados a Archive/Legacy_Scripts/DEPRECATED_. (2) update_canvas.py duplicado (Figma Sync/ vs Layer_1/scripts/) resuelto por recencia de commit — versión de Layer_1/scripts/ (commit eab0978, más reciente y más robusta) queda canónica; copia de Figma Sync/ archivada. (3) config/ raíz (alias_map.json, hard_blocks.json, profile_config.yaml) confirmado idéntico byte-a-byte a Layer_1/config/ — eliminado, unificado a Layer_1/config/ como fuente única; import relativo roto en profile_evolution.py corregido a path absoluto (BASE_DIR). (4) Layer_1/feeds/ pre-2026-08 (21 archivos) y output/HANDOFF_scaffold_ (19 archivos debug) archivados a Archive/. Commit dc33dcf pusheado por el operador vía git am + vgit.
+Estado final de la validación: Write-back verificado vía clone fresco de origin/main post-push (no memoria de sesión) — 10/10 huérfanos presentes en Archive, config/ raíz confirmado eliminado, Layer_1/config/ intacto, fix de path confirmado en archivo, update_canvas.py único en Layer_1/scripts/, conteos de feeds/output coinciden con lo esperado. Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
+
+### Patch Fix: Persistencia de Heartbeat L3: Contexto & Causa Raíz
+- Bug: health_check.py reportaba [WARN] layer3 - 81h sin correr aun después de ejecutar Layer 3.
+- Causa: layer_3_mail.py solo invocaba _write_heartbeat() cuando la bandeja .Jobs no tenía correos pendientes (if not emails). Al procesar lotes de correos, el flujo salía sin ejecutar la rutina de persistencia al cierre de main().
+### Cambios Aplicados
+- Core (layer_3_mail.py): Se reubicó la llamada _write_heartbeat(total_created, total_failed) para ejecutarse incondicionalmente tras el procesamiento de correos y logout de IMAP.
+- Runtime: Actualización y reset de timestamp en ~/.vantage/l3_heartbeat.json.
+### Impacto en Sistema
+- Eliminación del falso positivo [WARN] en el VANTAGE Health Check (start).
+- Contrato de lectura/escritura de telemetría L1/L3 normalizado.
+Documento modificado: Tasks Tracker (1 ticket) · Bug Tracker (9 tickets) · Tasks Tracker (1 ticket adicional, marcado)
+Documentos potencialmente afectados: Ninguno adicional.
+Tipo de impacto: [OPS] — Ticket VANTAGE Scout creado + tidy de Bug/Task Tracker (HO-000027 → HO-000028, SESSION-20260828-A).
+Acción correctiva ejecutada: (1) Ticket nuevo en Tasks Tracker: "VANTAGE Scout — resolver venv, decidir modelo (Ollama 16GB vs cloud) y rate-limit OpenRouter", Prioridad 2 MEDIO, Next_Action Decidir — único pendiente abierto de Fase 7 (V|PENDIENTES SWEEP). (2) Ejecutado vantage-tidy-bug-task-tracker: 9 Bugs + 1 Task marcados Archivar=true (Escenario 1, Status terminal) — 3× 4 CRÍTICO, 2× 3 ALTO, 3× 2 MEDIO, 3× 1 BAJO. Ningún ticket tenía tag [CENSUS-SYNC-R1] — sin disparo de generate_census.py.
+Estado final de la validación: Write-back verificado vía re-fetch del ticket Scout (Archivar=false) y query SQL post-marcado de los 10 tickets tidied (Archivar=true 10/10). Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
+
+Documento modificado: V | CAREER CANON (CANON:OUTPUT-CONTRACT-002 · CANON:SKILLS · CANON:FACT-005 · CANON:PROFILE-001/002 · CANON:KPI-008 · CANON:EXPERIENCE-003) · V | MANUAL (§8.3 WEEKLY-FLOW-003) · V | PENDIENTES SWEEP (Fase 6 completa, Fase 7 parcial) · Tasks Tracker (1 ticket)
+Documentos potencialmente afectados: Ninguno adicional.
+Tipo de impacto: [DOC] — Cierre de Fase 6 y 7.2 de Pendientes Sweep (HO-000026 → HO-000027, SESSION-20260828-A).
+Acción correctiva ejecutada: (1) 6.4/6.5 — CANON:OUTPUT-CONTRACT-002 (Golden Skeleton) ampliado con dos reglas: orden narrativo del Skeleton = estándar de lectura; Golden Skeleton = snapshot del CV en optimización activa (no archivo estático). (2) 6.6 — Manual §8.3 corregido de "checklist de 6 ítems" a "7 ítems", con referencia a KERNEL:TRIGGER-003/skill vantage-qa (Kernel ya estaba correcto). (3) 6.1 — Canon actualizado con hallazgos de FINDINGS.md confirmados por el operador como reales (no alucinados): CANON:SKILLS añade Concur y Adobe Premiere Pro (Stack Técnico, 10 y 7 CVs de recurrencia respectivamente); CF05 amplía con desglose México (22 PDV: 10 O&O, 6 comisionadas, 6 franquicias); PROFILE-001/002 y KPI08 actualizados de "10+ años" a "14+ años" (corrección de canon, no error de CV); CANON:EXPERIENCE-003 (C03) gana bullet ES/EN de PR activities (Market Weeks, Press Days, ponencia Nissan Connect representando Dockers). (4) 6.2 — decisión registrada: Dior/Zegna/Andrei Moygo se regeneran vía CV-A explícito por vacante (Restricción de Lote, no ejecutable en la misma pasada). (5) 6.3 — drift v10.0.0 vs. v10.2.0 de vantage-cv-b resuelto como falso positivo: git log + grep de "Versión de alineación" en SKILL.md local confirma v10.0.0, idéntico a Notion. Sweep actualizado. (6) 7.2 — ticket creado en Tasks Tracker (Documentar Lote v2 Documentation Drift) y cerrado en la misma sesión tras resolución directa de ambos puntos (PR activities canonizado; "Golden Rules expansion" cerrado sin acción por falta de alcance real en fuentes disponibles).
+Estado final de la validación: Write-back verificado vía re-fetch en Career Canon (5/5 ediciones de 6.1 confirmadas + bullet C03 confirmado) y en Sweep (6.3 confirmado). Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
+
+Documento modificado: V | PENDIENTES SWEEP (Fase 3, 4, 5 completa, 6.6) · KERNEL:TRIGGER-003 (11.3) · KERNEL:HANDOFF-SERIAL (03.18)
+Documentos potencialmente afectados: Ninguno adicional.
+Tipo de impacto: [DOC] [OPS] — Continuación de Pendientes Sweep (HO-000025 → HO-000026, SESSION-20260828-A).
+Acción correctiva ejecutada: (1) Fase 3 cerrada — fuga LLM_PROVIDER=openrouter cerrada por decisión del operador, sin auditoría. (2) KERNEL:TRIGGER-003 corregido — checklist de 6 ítems genéricos (drift vs. skill real) reemplazado por los 7 ítems canónicos del skill vantage-qa, con referencia explícita a la fuente. (3) Fase 4 cerrada por completo: 4.2 (vdoc→vcensus→vversions --sync) ejecutado por el operador en Terminal, PASS 10/10 fundacionales; 4.1 verificado vía CSV — 0/28 bugs y 0/4 tasks sin prioridad; 4.3 (Dior) cerrado sin acción — path original ya no existe; 4.4 (Skill Library) cerrado sin acción — los 4 candidatos aparentes (script/skill × library/glossary) son skills legítimos y distintos. (4) Fase 5 cerrada por completo: 5.1 (heartbeat L3) cerrado — operador confirma VL3 corriendo activamente; 5.2 (handshake vantage_serial_status :8787) auditado vía código GitHub y verificado en vivo — curl localhost:8787/health responde status:ok, current_value:26, DB en ruta migrada correcta; 5.4 (doc formal arquitectura HTTP) resuelto — párrafo nuevo agregado a KERNEL:HANDOFF-SERIAL (03.18) describiendo endpoints /allocate y /health, resolución de DB_PATH, aislamiento de canal HTTP vs. Terminal/MCP stdio; 5.5 (bloque vacío Littlebird, HO-000008) cerrado por decisión del operador — sin URL/page_id rastreable; 5.6 (discrepancia figma_text_id) auditado vía GitHub — sin discrepancia, formato consistente entre registry_seed.json y Golden Skeleton; 5.7 (criterio síntesis multi-hecho) auditado — alineado con CANON:OUTPUT-CONTRACT-001, sin discrepancia.
+Estado final de la validación: Write-back verificado vía re-fetch en Sweep y Kernel. Verificación en vivo del servidor HTTP confirmada por el operador. Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
+
 Documento modificado: Bug Tracker (8 filas)
 Documentos potencialmente afectados: Ninguno adicional.
 Tipo de impacto: [FIX] [OPS] — Continuación de Pendientes Sweep (HO-000022 → HO-000025, SESSION-20260828-A).
 Acción correctiva ejecutada: (1) Split-brain GLOBAL_VANTAGE_COUNTER resuelto — causa raíz: allocate_vantage_serial.py resolvía DB_PATH relativo a cwd (4 bases SQLite físicas divergentes: state/=6, Layer_1/=22 autoridad real, dos huérfanos=1 y 2); migrado value=22 a state/vantage_handoff_counter.sqlite3, ambos scripts (Terminal + HTTP) parcheados a Path(file).resolve().parent.parent.parent, VANTAGE_SERIAL_DB exportado en .zshrc, 3 archivos huérfanos eliminados. Verificado: Terminal→HO-000023, HTTP→HO-000024. (2) Canal MCP auditado — vantage_serial_mcp_bridge.py limpio; mcp_vantage_serial_server.py tenía mismo bug (.parent.parent en vez de .parent.parent.parent), corregido. (3) Rotación de credenciales — confirmada ejecutada por el operador. (4) Claude Desktop mcpServers — clave ausente en claude_desktop_config.json, añadido registro de vantage-serial-bridge, backup creado, JSON validado (pendiente reinicio de Desktop). (5) Alias skill2md — confirmado ya no existe en .zshrc, dado de baja de facto. (6) start_vantage_serial_server.sh — auditado, sin bug (ya usaba ruta correcta). (7) Kerning/espaciado PDF Dior (QA NO-GO previo) — revisado contra PDF real con el operador: tracking de título es decisión de diseño intencional, email coincide con Canon vivo, orden cronológico confirmado correcto. Sin correcciones. (8) Layer3 heartbeat, drift v10.2.0, Devin HO-000021 — actualizados con evidencia dura disponible en sesión (74h no 104h; sin confirmación de drift; sin revisar por límite de tokens), quedan abiertos/en revisión para sesión siguiente.
 Estado final de la validación: Write-back verificado — 4 canales de serial (Terminal, HTTP, MCP server, MCP bridge) confirmados sobre autoridad única tras fix. Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens, sesión con presupuesto ajustado).
 
-## Ago 27, 26 22.37 — v9.21.31
 Documento modificado: V | PENDIENTES SWEEP (página de plan + data source Sweep)
 Documentos potencialmente afectados: Ninguno adicional — solo escritura de estado en Sweep y cierre de fases del plan de trabajo.
 Tipo de impacto: [OPS] — Cierre de fases de Pendientes Sweep (HO-000022 / SESSION-20260828-A).
 Acción correctiva ejecutada: (1) Fase 0 cerrada — hallazgos de registry/código HO-000021 escritos como Resuelto (citas 9b9ced7 / a58a678). (2) Fase 0.5 cerrada — discrepancia crítica vantage-cv-b v10.0.0 resuelta: refactor confirmado vigente en Notion Skill Library + sincronizado local/Git; densidad esperada alcanzada y markdown de inyección Figma correcto (confirmado por operador). Todas las filas HO-000010 actualizadas a Resuelto. (3) Fase 1 cerrada — confirmaciones de un solo mensaje: solo se generó CV-B de Dior (Andrei Moygo/Multicont no subidos); SESSION-2026-07-19-A eliminada; prueba de inyección Dior confirmada vía PDF; extensión Claude Desktop MCP no registrada (claude_desktop_config.json sin clave mcpServers). (4) Version bump a v9.21.31.
 Estado final de la validación: Write-back ejecutado en esta misma sesión (update_properties + update_content sobre Sweep y plan). Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
 
-## Ago 27, 26 15.10 — v9.21.30
 Documento modificado: CANON:ACHIEVEMENTS (V | CAREER CANON)
 Documentos potencialmente afectados: Ninguno — Experience Records (03.5), Career Timeline (04) y Golden Skeleton (12.2) ya reflejaban el split C05 desde v9.21.27/28.
 Tipo de impacto: Normativo (Career Canon)
 Acción correctiva ejecutada: División de la fila única C05 en Achievement Library (05) en dos filas ancladas por rol — Asesor 2012–2014 y Coordinador 2014–2017 — cerrando el pendiente #4 heredado de HO-000002 (drift entre Achievements y Experience/Timeline/Skeleton, ya divididos desde v9.21.27).
 Estado final de la validación: Write-back verificado por Claude vía re-fetch en vivo — confirmado.
-## Ago 27, 26 14.54 — v9.21.29
-Documento modificado: Skill Library (Notion) — vantage-cv-b, vantage-qa, vantage-present-handoff, vantage-session-close, vantage-session-open, prompt-master. Script local verify_versions.py (Layer_1/scripts).
-Documentos potencialmente afectados: Manual §23.2 (Skill Glossary Housekeeping) — gap real detectado, vantage-sync-skill-glossary sin fila propia (no corregido en este batch).
-Tipo de impacto: [CODE] [DOC] — Herramienta de detección de drift + reconciliación de contenido desincronizado en Skill Library.
-Acción correctiva ejecutada: (1) Diagnosticado y corregido bug de raíz en --skills/--new-skills: escaneaban archivos .skill literales, que nunca existieron en disco (convención real es carpeta + SKILL.md) — nueva función scan_skill_folders(), aplicada a los tres flags. (2) Corregido mismatch de nombre en 6 filas de Skill Library sin sufijo .skill vía normalización de comparación (no se tocó Notion). (3) Corregido match de --new-skills contra Manual §23 (documentado por nombre sin sufijo, no nombre.skill). (4) Nuevo flag --skills-drift + --update-skill-baseline (hash sha256, mismo patrón que --length). (5) Reconciliado drift real detectado en 5 skills (CV-B v9.17.0→v10.0.0 refactor completo Match Transferible Obligatorio + Síntesis Multi-Hecho; QA v9.17.0 Regla Anti-Ambigüedad + Separación QA↔CV-B; present-handoff/session-close/session-open — protocolo Lite con handoff serializado HO-######, YAML block, identidad de agente). (6) Reformateado prompt-master a convención estructural VANTAGE (ID Canónico, Trigger, Responsabilidad — contenido técnico en inglés preservado por decisión del operador); corregidas 2 corrupciones de auto-link (doble-guión Midjourney, 3 links rotos a references/*.md). (7) Generalizada render_skill_drift_report → render_drift_report, extendida a --scripts-drift/--update-script-baseline (scripts .py/.sh) — bug de variable no renombrada (disk_skills) detectado en producción por el operador y corregido, validado con ejecución real (no solo py_compile).
-Estado final de la validación: Write-Back Verification vía re-fetch en 6/6 páginas de Skill Library. --skills-drift: 28/28 PASS tras --update-skill-baseline. --scripts-drift: baseline capturado (86 assets), drift de verify_versions.py sobre sí mismo reconciliado por el operador vía --update-script-baseline. Gap reports (--skills, --new-skills, --scripts, --new-scripts) corridos post-fix — hallazgos reales documentados en Pendiente.
-## Ago 25, 26 20.05 — v9.21.28
-Documento modificado: CANON:OUTPUT-CONTRACT-002 (Golden Skeleton, V | CAREER CANON)
-Documentos potencialmente afectados: Ninguno adicional — Experience Records (03.5) y Career Timeline (04.0) ya estaban alineados desde v9.21.27.
-Tipo de impacto: Normativo (Career Canon) + Runtime (Figma Sync)
-Acción correctiva ejecutada: Reescritura completa del Golden Skeleton en orden narrativo (Compañía → Rol → Fecha → Bullets, más reciente primero) reemplazando el orden de escritura del registry. Headline, contacto, perfil y skills actualizados al positioning "Visual Merchandising Manager · Luxury Brand Execution & LATAM Strategy" (CV en optimización activa). 68/68 nodos de registry_seed.json mapeados, incluyendo split C05 (Asesor 2012–2014 / Coordinador 2014–2017) con IDs 10:1xx. IDs huérfanos 4:33/4:34/4:9 eliminados.
-Estado final de la validación: Inyección manual por el operador (fuera de MCP). Write-back no verificado por Claude — pendiente confirmación del operador tras pegar en Notion.
-## Ago 25, 26 19.30 — v9.21.27
-Documento modificado: CANON:EXPERIENCE-005, CANON:CAREER-TIMELINE (V | CAREER CANON)
-Documentos potencialmente afectados: CANON:OUTPUT-CONTRACT-002 (Golden Skeleton) — sin cambio, ya contenía los bloques 4:33/4:34/4:9 como referencia huérfana; este cambio los formaliza como fuente.
-Tipo de impacto: Normativo (Career Canon)
-Acción correctiva ejecutada: División de C05 (El Palacio de Hierro / ALDO Group) en dos roles, resolviendo discrepancia entre Golden Skeleton y Experience Records/Timeline:
-- Asesor de Visual Merchandising · 2012–2014 (1 bullet)
-- Coordinador de Visual Merchandising & Marketing · 2014–2017 (3 bullets, sin cambio de contenido)
-Título "Asesor" confirmado por el operador (no "Supervisor", que era la etiqueta previa en el Golden Skeleton — corregido).
-Estado final de la validación: Write-back verificado vía doble re-fetch — sin mismatch pendiente. Sin alta de ID canónico (se reutilizó CANON:EXPERIENCE-005); no dispara CENSUS-SYNC Regla 1.
-Tipo: [CODE] [DOC]
-Alcance:
-- Kernel (KERNEL:HANDOFF-SERIAL, 03.18 — párrafo nuevo, vía de acceso MCP)
-- Código nuevo: tools/mcp_vantage_serial_server.py, tools/requirements_mcp.txt, tools/README_MCP.md, tools/test_mcp_dry_run.py, tools/test_mcp_real.py (Devin)
-- Skills locales (fuera de Notion, verificadas por el operador vía sed + grep): vantage-session-close (paso 3), vantage-present-handoff (paso 2) — lógica de fallback MCP → Terminal → HANDOFF_SERIAL_UNAVAILABLE aplicada y confirmada. vantage-session-open sin cambio (no obtiene serial, solo valida entrante).
-Contexto: v9.21.25 dejó pendiente la integración MCP/fallback en vantage-session-close y vantage-present-handoff tras abrir el Contrato de Sesión y Handoff. Devin implementó el servidor MCP que cierra ese pendiente — reutiliza allocate_serial() existente sin duplicar lógica, transporte stdio, misma base SQLite/GLOBAL_VANTAGE_COUNTER. Push confirmado por el operador vía vgit (commits 6b4bc72, db1b918) — existencia del código verificada; verificación funcional del servidor (asignación real vía MCP en producción) queda pendiente, no confirmada en esta sesión.
-Cambios:
-- KERNEL:HANDOFF-SERIAL (03.18) — párrafo nuevo: servidor MCP como segundo canal (no segunda autoridad) hacia GLOBAL_VANTAGE_COUNTER, contrato de salida, orden de resolución MCP→Terminal→error.
-- vantage-session-close (SKILL.md, paso 3) — lógica de 3 niveles aplicada in-place vía sed, verificada por grep.
-- vantage-present-handoff (SKILL.md, paso 2) — misma lógica aplicada y verificada.
-IDs afectados: Ninguno — extensión de nodo existente. No dispara KERNEL:DOCUMENTATION-008 Regla 1.
-Write-Back Verification: Kernel re-fetched post-escritura en esta misma sesión — párrafo confirmado en posición correcta, sin mismatch. Skills locales verificadas por el operador vía grep (output pegado en chat, coincide byte-a-byte con el DRY RUN).
-Pendiente (fuera de esta entrada):
-- Verificación funcional del servidor MCP en producción (asignación real de un HO-###### vía MCP, no solo existencia del código).
-- vversions --sync para propagar v9.21.26 al resto de los fundacionales.
-- Script Library (Notion) — alta de mcp_vantage_serial_server.py, delegada a vantage-sync-script-library.
----
-Tipo: [DOC]
-Alcance:
-- System Prompt (SP:BOOTLOADER-002, 01.2 — nodo nuevo)
-- Kernel (KERNEL:DOCUMENTATION-005, 03.5 — nota de referencia añadida)
-- Kernel (KERNEL:DOCUMENTATION-009, 03.9 — Session Ledger, 6 campos de trazabilidad añadidos)
-- Kernel (KERNEL:HANDOFF-SERIAL, 03.18 — nodo nuevo)
-- Session Ledger (Notion, data_source_id 8d736032-eef9-4e6e-a05a-df8b8079ebff) — alta real de 6 propiedades de schema
-Contexto: El operador presentó el Contrato de Sesión y Handoff (v1.0) para dar identidad persistente a cada agente/cuenta de VANTAGE (Claude MAIN/KM/MP/MM, Gemini, ChatGPT, Littlebird, Mistral, Perplexity, Grok — 10 registros) y serializar handoffs entre sesiones vía GLOBAL_VANTAGE_COUNTER (formato HO-######). Arena, Cursor y Devin quedan fuera del registro de identidad por diseño — no tienen Project Instructions configurables. Fase 1 (mapeo) identificó precedente directo en SP:BOOTLOADER-001/KERNEL:ARCHITECTURE-L4 (matriz de ruteo multi-agente ya existente) — se extendió el mismo patrón en vez de reinventar. Fase 2 ejecutó 4 parches documentales + 1 alta de schema real en Notion (los 6 campos de Session Ledger se crearon en la base viva, no solo se documentaron como propuesta).
-Cambios:
-- SP:BOOTLOADER-002 (01.2) — nodo nuevo: registro de identidad de 10 agentes (family/instance), regla CONFIGURED_NO_REPROMPT, exclusión de Arena/Cursor/Devin, referencia a GLOBAL_VANTAGE_COUNTER.
-- KERNEL:DOCUMENTATION-005 (03.5) — nota de una línea: vantage-present-handoff/session-open/session-close incorporarán cabecera de identidad/serial.
-- KERNEL:DOCUMENTATION-009 (03.9) — 6 campos de trazabilidad documentados: Opening Handoff Serial, Opening Agent Family/Instance, Last Handoff Serial, Parent Session ID, Trace Status.
-- KERNEL:HANDOFF-SERIAL (03.18) — nodo nuevo: contrato de GLOBAL_VANTAGE_COUNTER, formato HO-######, regla de no reutilización tras rechazo/corrección.
-- Session Ledger (Notion, schema real) — 6 propiedades añadidas vía ADD COLUMN: Opening Handoff Serial, Opening Agent Family, Opening Agent Instance, Last Handoff Serial, Parent Session ID (rich_text), Trace Status (select: LINKED/ORPHAN/REVIEW_NEEDED).
-IDs afectados: 2 altas — SP:BOOTLOADER-002, KERNEL:HANDOFF-SERIAL — dispara KERNEL:DOCUMENTATION-008 Regla 1 (CENSUS-SYNC). Nota: vcensus corrido en esta sesión (22:35–22:37) no detecta estas 2 altas porque generate_census.py indexa ACTIVE/ local, no Notion en vivo — requiere vdoc (Notion→local) antes de que vcensus las reporte como huérfanas para agregarlas al spec.
-Write-Back Verification: System Prompt y Kernel re-fetched post-escritura en esta misma sesión — 4/4 nodos confirmados en posición correcta, sin mismatch. Session Ledger schema re-fetched — 6/6 columnas confirmadas.
-Pendiente (fuera de esta entrada):
-- vdoc (Notion→local) para sincronizar ACTIVE/Kernel.md y ACTIVE/System Prompt.md con las 2 altas de hoy.
-- vcensus tras el vdoc — para registrar SP:BOOTLOADER-002 y KERNEL:HANDOFF-SERIAL en CENSUS_SPEC.
-- vversions --sync para propagar v9.21.25 al resto de los fundacionales.
-- vantage-present-handoff, vantage-session-open, vantage-session-close — actualización de sus SKILL.md para implementar la cabecera de identidad/serial (referenciado, no ejecutado en este batch).
-- MANUAL:WEEKLY-FLOW-006 (sección hardcodeada) — deuda pre-existente señalada por vcensus, no relacionada con este batch.
----
-Tipo: [DOC]
-Alcance:
-- Career Canon (CANON:OUTPUT-CONTRACT-004, 12.4 — Reglas de Serialización)
-Contexto: El operador solicitó fijar como canon que los nodos YEARS de Experience (nodos dedicados de período, separados del Rol) deben inyectarse en italic 10pt, y que Rol (nodo dedicado de puesto) va en bold 12pt — reemplazando la regla previa combinada "Rol = bold rol italic período". Verificación contra captura de capas Figma reveló que Aéropostale (previamente sin nodo YEARS confirmado en el registry) sí tiene Items/Role/Years como nodos separados, aunque mal etiquetados en Figma (nombre de capa heredado de L'Oréal por copy-paste sin renombrar) — el operador confirmó los IDs reales vía registry_seed.json actualizado (EXP_A_ROPOSTALE_ROLE: 4:25, EXP_A_ROPOSTALE_YEARS: 4:26). Plugin de inyección resuelve por ID de nodo, no por nombre de capa, por lo que el mislabeling no bloquea el pipeline pero queda señalado para renombrado cosmético por el operador.
-Cambios:
-- CANON:OUTPUT-CONTRACT-004 (12.4) — línea "Rol = bold rol italic período" reemplazada por dos líneas: "Rol (nodo dedicado de puesto) = bold 12pt" y "Years (nodo dedicado de período: 4:14, 4:18, 4:22, 4:26, 4:30, 4:34) = italic 10pt".
-IDs afectados: Ninguno — edición de regla existente dentro de nodo ya censado (CANON:OUTPUT-CONTRACT-004). No dispara KERNEL:DOCUMENTATION-008 Regla 1.
-Write-Back Verification: Career Canon re-fetched post-escritura en esta misma sesión — confirmado sin mismatch.
-Pendiente (fuera de esta entrada):
-- registry_seed.json local — patch de EXP_A_ROPOSTALE_ROLE/YEARS (4:25/4:26) ya confirmado por el operador vía archivo actualizado, aplicación en filesystem local pendiente de verificación en próxima sesión.
-- Renombrado cosmético de capas Figma de Aéropostale (actualmente heredan nombre "EXP_L_OR_AL_LUXE_M_XICO_ROLE/YEARS" pese a tener el ID correcto) — no bloqueante, señalado al operador.
-- vversions --sync para propagar v9.21.24 al resto de los fundacionales.
----
-Tipo: [DOC] [AUDIT]
-Alcance:
-- Manual (MANUAL:SESSION-CYCLE, 06 — conteo de docs fundacionales corregido a 9)
-- Manual (MANUAL:COLD-START, 05 — alcance de 7 vs 6 docs clarificado)
-- Manual (MANUAL:WEEKLY-FLOW-001, 8.1 — contradicción vdoc notion/local resuelta + riesgos de vdoc local documentados; dedup consolidado con referencia a DATA-MANAGEMENT)
-- Manual (MANUAL:HOW-IT-WORKS, 02 — definición Class A/B insertada antes de Gate Decisions)
-- Manual (MANUAL:COLD-START, 05 — nota de debugging de sesión específica reemplazada por smoke test genérico)
-- Manual (MANUAL:WEEKLY-FLOW, 08 — Matriz de Cadencia reposicionada al inicio de la sección; operador)
-Contexto: Auditoría externa (documento adjunto por el operador) reportaba duplicidades, brechas narrativas y 6 hallazgos técnicos (HAL-01 a HAL-06) sobre el Manual. Verificación zero-trust contra el live confirmó HAL-01 (peor de lo reportado: 4 cifras distintas, no 3), HAL-03 (contradicción activa no detectada por el auditor original), HAL-05; descartó HAL-02, HAL-04, HAL-06 por no confirmarse contra el texto real. De las 8 duplicidades reportadas (D-01 a D-08) solo D-03 (dedup) resultó duplicación real; el resto ya tenía cross-reference correcto. De las 6 brechas narrativas (BN-01 a BN-06) solo BN-03 y BN-05 se confirmaron accionables.
-Cambios:
-- MANUAL:SESSION-CYCLE — "10 documentos fundacionales + el Census" → "9 documentos fundacionales (incluyendo el Census)".
-- MANUAL:COLD-START — clarificado que 7 = 8 archivos ACTIVE/ menos Changelog Archivo; 6 = alcance de vdoc, excluye Brief.
-- MANUAL:WEEKLY-FLOW-001 — vdoc notion marcado como vía preferida; vdoc local documentado con riesgos (sin confirmación, más lento, riesgo de corrupción/truncado, elimina hipervínculos).
-- MANUAL:WEEKLY-FLOW-001 — regla de dedup consolidada, remite a DATA-MANAGEMENT en vez de repetir el mecanismo completo.
-- MANUAL:HOW-IT-WORKS — nodo corto Class A/B insertado antes de Gate Decisions, remite a SCHEMA-FIELD-REF.
-- MANUAL:COLD-START — referencia a commit específico (29fc7f0) eliminada del smoke test.
-- MANUAL:WEEKLY-FLOW (08) — Matriz de Cadencia (antes 08.6, al final) movida al inicio de la sección, ID técnico WEEKLY-FLOW-006 retirado por el operador (sin dependencias activas confirmadas); CENSUS_SPEC, Census markdown y Census Notion corregidos en consecuencia por el operador.
-IDs afectados: 1 baja — MANUAL:WEEKLY-FLOW-006 (retirado, sin dependencias activas). Ya reflejado en CENSUS_SPEC/Census por el operador — sin acción pendiente de vcensus.
-Write-Back Verification: los 5 patches vía Notion MCP re-fetched post-escritura, uno por uno, en esta misma sesión — confirmados sin mismatch (un intento fallido de match por carácter escapado en D-03, corregido y reverificado).
-Pendiente (fuera de esta entrada):
-- vversions --sync para propagar v9.21.23 al resto de los fundacionales.
-- Auditoría Parte I: D-05, D-08, BN-04, BN-06 quedan identificados como de bajo impacto, sin acción.
-- Auditoría Parte II (refactor completo de arquitectura, 23 filas) y Parte III (extensión de voz consciente al resto del Manual) no iniciadas — alcance mayor, pendiente de decisión del operador sobre si abrir como proyecto aparte.
----
-Tipo: [DOC]
-Alcance:
-- Script Library (Notion) — 1 corrección de campo (Acción), 2 Descripciones enriquecidas
-- Aliases (ALIASES:L0-RUNTIME, 02 — 4 filas nuevas)
-- Aliases (ALIASES:L4-VERSION-CONTROL, 05 — 2 filas nuevas)
-- Aliases (ALIASES:DEDUP, 08 — 1 fila nueva)
-Contexto: Ejecución de vantage-sync-script-library sobre gap report --scripts (2 sin registrar, skip por decisión del operador; 2 huérfanos resueltos — export_bootloader_pages.py confirmado ausente real → Archivar; git_sync.py L4 confirmado falso positivo de scan-root, Ruta ya correcta). Cruce posterior de Script Library vs. documento ALIASES contra .zshrc real reveló 8 scripts/flags activos sin fila en ALIASES: vlength/vupdatebaseline (flags de verify_versions.py sin alias propio documentado), vunlock/vlock (chmod sobre ACTIVE/*.md, no documentados en absoluto), vdigest (script sin alias en .zshrc — operador creó el alias en esta sesión), cleancaches y vprint (aliases reales confirmados en .zshrc, sin fila previa), y dedup_audit.sh (inicialmente sospechado huérfano/redundante con vopport — operador aportó guía completa confirmando que es la Opción 1 de auditoría manual recomendada, con capacidades adicionales --clear y --dedup-audit no documentadas). Descripciones de dedup_opportunities.py y dedup_audit.sh en Script Library enriquecidas con el mismo contexto.
-Cambios:
-- Script Library export_bootloader_pages.py — Acción: Keep → Archivar.
-- Script Library dedup_opportunities.py, dedup_audit.sh — Descripción poblada (fuzzy matching, --clear, integración --dedup-audit Fase 6).
-- ALIASES:L0-RUNTIME (02) — altas: vlength, vupdatebaseline, vunlock/vlock, vdigest.
-- ALIASES:L4-VERSION-CONTROL (05) — altas: cleancaches, vprint.
-- ALIASES:DEDUP (08) — alta: dedup_audit.sh.
-IDs afectados: Ninguno — filas de tabla bajo secciones ALIASES ya censadas, sin alta de nodo canonico nuevo (no dispara KERNEL:DOCUMENTATION-008 Regla 1).
-Write-Back Verification: Script Library (3 páginas) y Aliases (3 tablas, 7 filas) re-fetched post-escritura en esta misma sesión — confirmados sin mismatch.
-Pendiente (fuera de esta entrada):
-- vversions --sync para propagar v9.21.22 al resto de los fundacionales.
-- skill2md en .zshrc apunta a path muerto (Layer_1/scripts/skill_to_md.py → real: Archive/Legacy_Scripts/skill_to_md.py) — alias roto, decisión de reparar/dar de baja pendiente del operador.
----
-Tipo: [DOC]
-Alcance:
-- Kernel (KERNEL:GATE-DECISION-013, 09.13 — nodo nuevo)
-- Kernel (KERNEL:CV-PIPELINE-003, 12.3 — nodo nuevo, restaurado tras drift; corrección de corrupción de encoding en 12.1)
-- Manual (MANUAL:DATA-MANAGEMENT-001, 10.1 — nodo nuevo)
-- Manual (MANUAL:SCRIPT-GLOSSARY-CV-PREP, 22.2 — párrafo Robustez añadido)
-- Manual (MANUAL:SCRIPT-GLOSSARY-L1, 22.1 — generate_archive_notes() documentado)
-- Manual (MANUAL:SKILL-GLOSSARY-HOUSEKEEPING, 23.2 — nota de no-redacción de causa en vantage-tidy-opportunities-tracker)
-Contexto: Brief de Devin sobre mejoras de scripts CV-A (hard_blocks.json externalizado, logging estructurado, SHA256) y nueva función generate_archive_notes() en VL1 (trazabilidad de decisiones de archivado en tiempo real). Dos propuestas de mapeo (Claude/Perplexity) auditadas por Littlebird — batch consolidado tras re-fetch en vivo, que reveló que la mayoría de nodos complementarios (GATE-DECISION-007, SCHEMA-001/Notas, TRIGGER-002/VL1 archivado, DOCUMENTATION-014/External Config) ya estaban escritos de sesiones previas. Pendiente real reducido a 2 altas de ID + 4 complementos. Se detectó y corrigió además corrupción de encoding real en KERNEL 12.1 ("mecá¹¹nico"→"mecánico").
-Cambios:
-- KERNEL:GATE-DECISION-013 (09.13) — nodo nuevo: contrato de generate_archive_notes(), 3 puntos de integración VL1, distinción de ownership vs. skills de housekeeping.
-- KERNEL:CV-PIPELINE-003 (12.3) — nodo nuevo: preparación mecánica de batch (Terminal), cadena de 3 scripts, robustez 2026-08.
-- MANUAL:DATA-MANAGEMENT-001 (10.1) — nodo nuevo: Notas de Archivado.
-- MANUAL:SCRIPT-GLOSSARY-CV-PREP (22.2), MANUAL:SCRIPT-GLOSSARY-L1 (22.1), MANUAL:SKILL-GLOSSARY-HOUSEKEEPING (23.2) — complementos de robustez y trazabilidad.
-IDs afectados: 2 altas — KERNEL:GATE-DECISION-013, KERNEL:CV-PIPELINE-003 — dispara KERNEL:DOCUMENTATION-008 Regla 1 (CENSUS-SYNC).
-Write-Back Verification: pendiente — ejecutar re-fetch de los 6 nodos en próxima sesión o vía Terminal.
-Pendiente (fuera de esta entrada):
-- vcensus para registrar los 2 IDs nuevos.
-- vversions --sync para propagar v9.21.21 al resto de los fundacionales.
-- Nota aparte: bloque 09.12 del Kernel fue reordenado manualmente por el operador (duplicado eliminado) — fuera de este batch, sin acción adicional requerida.
----
-Tipo: [CODE] [DOC]
-Alcance:
-- Script nuevo: bulk_upload_skill_bodies.py (Layer_1/scripts)
-- Skill Library (Notion) — 28 bodies escritos
-- Skill: vantage-sync-skill-library — extensión para escribir body completo en altas futuras
-Contexto: Las páginas de Skill Library tenían solo metadata; el body estaba vacío. Se entregó script local (API directa, sin MCP) que descubre skills hasta 2 niveles, matchea contra la data source y escribe el SKILL.md completo como bloques Notion. Dry-run → 28/28 match. Ejecución --write → 28 bodies OK, 0 fallidos. Paralelamente se actualizó la skill de sync para que las altas futuras ya salgan con body desde el primer alta.
-Cambios:
-- bulk_upload_skill_bodies.py — creado (dry-run default, --write, --only, --force).
-- Skill Library — 28 páginas con lógica completa cargada.
-- vantage-sync-skill-library — procedimiento + reglas de oro actualizados para body writing; referencia explícita al script para carga histórica.
-IDs afectados: Ninguno.
-Write-Back Verification: Change Log re-fetched implícito; versión → v9.21.17.
-Pendiente:
-- vversions --sync para propagar v9.21.17.
-- Operador: mover las 2 filas Deprecado al archivo (ya marcadas).
----
-Tipo: [AUDIT] [DOC]
-Alcance:
-- Skill Library (Notion) — 2 filas deprecadas ya marcadas
-- generate_census.py / CENSUS_SPEC — drift de 65 secciones hardcodeadas (script ejecutado, vcensus final limpio)
-Contexto: Sesión de confirmación post-handoff. Las 2 filas deprecadas (extract-learnings.skill, vantage-audit-navigation-brief.skill) ya tenían Estado=Deprecado + Acción=Archivar; re-fetch confirmó estado. Operador moverá manualmente a archivo. Por separado, el script fix_seccion_drift.sh se ejecutó (pasadas parciales 60/65 + 5/65 por diferencias de estado intermedio); vcensus post-ejecución: 240/240 IDs, 0 huérfanos, 0 sin link, 0 secciones hardcodeadas sin heading detectables en vivo. El drift hardcodeado era fallback silencioso (nunca afectó exports reales).
-Cambios:
-- Skill Library: confirmación de marcaje (sin escritura adicional requerida).
-- CENSUS_SPEC local: higiene de secciones hardcodeadas alineada vía script + verificación vcensus.
-IDs afectados: Ninguno.
-Write-Back Verification: Change Log re-fetched implícito en esta pasada; versión bumpeada a v9.21.16.
-Pendiente (fuera de esta entrada):
-- Movimiento manual de las 2 filas deprecadas al archivo (operador).
-- vversions --sync para propagar v9.21.16 al resto de fundacionales.
----
-Bootloader unificado como fuente única: SP:BOOTLOADER (01) pasa de instrucción única (notion-fetch) a bifurcación explícita por familia de agente — Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok) vía notion-fetch; Familia GitHub-only (Perplexity, Mistral/Vibe) vía fetch raw sobre raw.githubusercontent.com, apuntando a Documentación/ACTIVE/System Prompt.md e Layer_1/data/V_ID_CENSUS_PRODUCTION.md — ambas URLs verificadas en vivo (200 OK) antes de escribir. Elimina la necesidad de un bootloader separado para Vibe/Mistral; una sola fuente de verdad para ambas familias.nnBug confirmado y parcheado en generate_census.py — auto_fix_orphans(): el regex CENSUS_SPEC = \\[.*?\\] (non-greedy, DOTALL) cortaba en el primer ] encontrado, no en el cierre real de la lista — reproducido en sandbox, causante de la corrupción de KERNEL:ARCHITECTURE-L4 documentada en el handoff previo (campo anidado lookup_ids disparaba el corte prematuro). Reemplazado por find_census_spec_end(), balanceo de profundidad de corchetes en vez de regex de patrón. Verificado en producción: vcensus post-parche → 240/240 IDs resueltos, 0 huérfanos, 0 sin link, KERNEL:ARCHITECTURE-L4 intacto.nnAuditoría completa de CENSUS_SPEC hardcodeado vs. export en vivo verificado: 65/225 entradas (~26%) con seccion desactualizada — no solo las 3 originalmente reportadas (MANUAL:SCRIPT-GLOSSARY-L1 y relacionadas). Concentrado en dos bloques: KERNEL completo desde PURPOSE en adelante (37 entradas, corrimiento de numeración por reestructuración del documento no reflejada en el script) y el bloque MANUAL:SCRIPT-GLOSSARY-* completo (8 entradas, reordenamiento de §22). Incluye bug adicional aislado: KERNEL:CV-GOLDEN-RULES-001 a 005 con seccion="11" sin sub-número (vs. -006 que sí tiene 11.6 correcto). Entregado script de reparación masiva (fix_seccion_drift.sh) para aplicar los 65 fixes de una sola pasada, con verificación exacta por ID+valor-viejo antes de escribir (no aplica si el archivo cambió desde la auditoría). Nota: el drift no afectó ningún export real porque el script prioriza detección de heading en vivo sobre el valor hardcodeado — el hardcoded solo actúa como fallback silencioso, por eso el drift pasó inadvertido hasta esta auditoría.nn---n
----
-Tipo: [CODE] [DOC]
-Alcance:
-- verify_versions.py (local, scripts) — CHANGELOG_ARCHIVO excluido de escritura en --sync, tracking de solo lectura (SKIP)
-- generate_census.py (local, scripts) — reparación de corrupción de sintaxis introducida por --auto-fix-orphans; alta correcta de 2 IDs huérfanos
-Contexto: CHANGELOG_ARCHIVO fue movido bajo V | ARCHIVEROS (página-hija, no fila de data source) — no tiene ni puede tener propiedad Versión nativa. Se descartó convertirlo en fila de data source (riesgo estructural desproporcionado, sin precedente de diseño) a favor de excluirlo de la escritura de --sync, replicando el criterio ya usado para ARCHIVEROS (housekeeping ligero, sin elevarlo a fundacional pleno). Por separado, generate_census.py --auto-fix-orphans insertó las 2 entradas huérfanas en medio de la definición del diccionario KERNEL:ARCHITECTURE-L4, rompiendo la sintaxis del archivo — bug de la función auto_fix_orphans(), no error de operador.
-Cambios:
-- verify_versions.py: rama CHANGELOG_ARCHIVO en el loop de --sync ahora hace lectura sin intento de escritura; veredicto SKIP no bloquea all_pass.
-- generate_census.py: sintaxis de KERNEL:ARCHITECTURE-L4 restaurada; alta de SP:BOOTLOADER-001 (01.1) y MANUAL:SCRIPT-GLOSSARY-CV-PREP (22.2) con sección/nombre verificados contra Notion en vivo.
-IDs afectados: Ninguno nuevo a nivel Kernel/Manual/SP/Canon (los 2 IDs ya existían en Notion; esta entrada documenta su alta correcta en el Census local, no una creación de nodo).
-Write-Back Verification: pendiente — se ejecuta tras la escritura, en esta misma sesión.
-Pendiente (fuera de esta entrada):
-- Drift de numeración local vs. live en MANUAL:SCRIPT-GLOSSARY-L1 (local=22.3, Notion=22.1) — sin tocar, señalado para revisión aparte.
-- vversions --sync ya ejecutado y verificado [VEREDICTO FINAL] PASS en esta misma sesión.
----
-Tipo: [DOC]
-Alcance:
-- System Prompt (SP:BOOTLOADER-001, 01.1 — nodo nuevo)
-- Kernel (KERNEL:ARCHITECTURE-L4, 04.4 — párrafo Consumidor reescrito con matriz multi-agente)
-- Manual (MANUAL:SKILL-GLOSSARY, 23 — nota breve añadida)
-Contexto: Handoff de sesión previa (auditoría de 8 agentes/12 cuentas activas) confirmó que skills/triggers.json ahora incluye notion_id por skill junto a url, resuelto por fetch_notion_skill_library() en update_triggers_json.py. Faltaba la especificación formal de qué familia de agente resuelve por cuál campo. Decisión de diseño: fetch_priority vive como lógica fija en el Bootloader (SP:BOOTLOADER-001), no como campo repetido en las 28 filas del manifiesto — la matriz de capacidades es propiedad del agente, no del skill.
-Cambios:
-- SP:BOOTLOADER-001 (01.1) — nodo nuevo: regla de enrutamiento por familia de agente (MCP-Notion → notion_id; GitHub-only → url; Gemini fuera de flujo).
-- KERNEL:ARCHITECTURE-L4 (04.4) — párrafo Consumidor reescrito: matriz de 8 agentes auditados, campo notion_id documentado, consumidor original de Claude preservado como sub-párrafo.
-- MANUAL:SKILL-GLOSSARY (23) — nota de una línea señalando el respaldo multi-agente del glosario, con referencia cruzada.
-IDs afectados: Ninguno — extensión de nodos existentes (SP:BOOTLOADER, KERNEL:ARCHITECTURE-L4, MANUAL:SKILL-GLOSSARY) más un ID nuevo de subsección (SP:BOOTLOADER-001) bajo el nodo padre ya censado. No dispara KERNEL:DOCUMENTATION-008 Regla 1 (alta de subsección bajo prefijo/nodo existente, no de documento nuevo) — pendiente registrar SP:BOOTLOADER-001 en próxima corrida de vcensus.
-Write-Back Verification: los 3 nodos re-fetched post-escritura en esta misma sesión — 3/3 confirmados en posición correcta, sin mismatch.
-Pendiente (fuera de esta entrada):
-- vcensus para registrar SP:BOOTLOADER-001 como ID nuevo.
-- vversions --sync para propagar v9.21.13 al resto de los fundacionales.
-- Verificación de ALIASES:L4-VERSION-CONTROL (señalada como susceptible en el mapeo de Fase 1, no confirmada en este batch).
-Tipo: [DOC]
-Alcance:
-- VANTAGE_SKILLS_COMPILED (Notion, pagina 3bf938befc4280ba80adf3d136cffc41) — 28 headings ### inyectados
-Contexto: El compilado de Skills Library (generado por script local desde /skills/) carecia de IDs canonicos en su estructura Notion — cada skill viva como ## nombre-skill sin el heading ### SKILL:PREFIX-KEY — nombre-skill requerido por la Matriz Tipografica Congelada (KERNEL:DOCUMENTATION-001). Esta inyeccion no altera el contenido de las skills, solo anade el heading canonico como subseccion inmediata antes de cada ## existente.
-Cambios:
-- 28 headings ### anadidos en orden de aparicion: 4 CV (TAILLORED-RESUME, VANTAGE-CV-A/B, QA), 3 DOC (TRANSVERSAL-IMP/PROP, HYPERLINK-LOOP), 3 SESSION (HANDOFF, CLOSE, OPEN), 4 STYLE (CORPORATE, CRITICO, RETAIL, SOCIO), 6 SYNC (ASSETS, CENSUS-SPEC, SCRIPT-GLOSSARY/LIBRARY, SKILL-GLOSSARY/LIBRARY), 5 TIDY (HOUSEKEEPING-ARCHIVE/TRACKER, BUG-TASK, CHANGELOG, OPPORTUNITIES), 3 CORE (PROMPT-MASTER, CREATE-BUG-TASK, SKILL-UPDATER).
-- Formato: ### SKILL:PREFIX-KEY — nombre-skill seguido de linea en blanco, luego ## nombre-skill original intacto.
-IDs afectados: Ninguno (inyeccion de headings bajo IDs existentes — no dispara KERNEL:CENSUS-SYNC Regla 1).
-Write-Back Verification: notion-fetch post-escritura — 28/28 headings confirmados en posicion correcta, sin mismatch.
-Pendiente (fuera de esta entrada):
-- vversions --sync para propagar v9.21.11 al resto de los fundacionales (Kernel, Manual, SP, Aliases, Brief, Census).
----
-- Corrección: Typo en infer_layer L2 (backfill_class_a.py).
-- Cierre: GAP-03/FX-1 en feed_processor.py (comentario stale).
-- Refactor: _extract_text_prop a módulo en feed_processor.py.
-- Nuevo guard contractual: KERNEL:GATE-DECISION-012 (Dedup_Flag/layer en existentes).
-- Impacto: vantage-tidy-opportunities-tracker ahora excluye postulaciones vivas/terminales como candidatos a archivo.
----
-Tipo: [DOC]
-Alcance:
-- Kernel (KERNEL:ARCHITECTURE-L4, 04.4 — párrafo de riesgo añadido)
-- System Prompt (SP:BOOTLOADER, 01, paso 2 — sub-punto de cache-busting añadido)
-Contexto: Durante diagnóstico de una discrepancia reportada por el operador (triggers.json actualizado en GitHub con campo url por skill, no reflejado en fetch de Claude), se confirmó empíricamente que web_fetch puede servir contenido cacheado de una URL ya fetcheada en la misma sesión — dos fetches separados por un commit real (5b7c48c) devolvieron contenido idéntico byte-a-byte. Se documenta el riesgo y se instruye reintento con cache-busting (?t={timestamp}) ante reporte de discrepancia del operador, antes de asumir fallo del repo o de su solución.
-Cambios:
-- KERNEL:ARCHITECTURE-L4 (04.4) — párrafo nuevo "Riesgo conocido — caché de fetch dentro de sesión".
-- SP:BOOTLOADER (01, paso 2) — sub-punto nuevo: reintentar con cache-busting ante discrepancia reportada.
-IDs afectados: Ninguno (extensión de nodos existentes — no dispara KERNEL:DOCUMENTATION-008 Regla 1).
-Write-Back Verification: Kernel y System Prompt re-fetched post-escritura en esta misma sesión — 2/2 confirmados en posición correcta, sin mismatch.
-Pendiente (fuera de esta entrada):
-- vversions --sync para propagar v9.21.12 al resto de los fundacionales (arrastra también v9.21.8–v9.21.11, ya escritas pero no propagadas según sus propias entradas).
----
-Tipo: [DOC]
-Alcance:
-- Kernel (KERNEL:CV-PIPELINE-003, 12.3 — nodo nuevo)
-- Kernel (KERNEL:CV-PIPELINE, 12 — intro extendida)
-- Kernel (KERNEL:CV-PIPELINE-001, 12.1 — Input extendido)
-- Manual (MANUAL:SCRIPT-GLOSSARY-CV-PREP, 22.2 — nodo nuevo)
-- Manual (MANUAL:WEEKLY-FLOW-003, 8.3 — CV-A extendido)
-- Aliases (ALIASES:CV-PIPELINE, 07 — correccion de enunciado obsoleto)
-Contexto: Brief del operador reportaba 3 scripts de Terminal (adapt_tracker_export.py, cv_a_batch_agent.py, cv_a_prep.py) que generan HANDOFF scaffolds en batch antes de CV-A, sin contraparte documental en ningun fundacional. Fase 1 (mapeo) y Fase 2 (DRY RUN) confirmaron 4 parches: alta de KERNEL:CV-PIPELINE-003 (12.3) con tabla-í¦¬ndice de 7 nodos (N1–N7) como version "dinamica" del diagrama de Devin, alta de MANUAL:SCRIPT-GLOSSARY-CV-PREP (22.2) ocupando hueco numerico reservado, extension de MANUAL:WEEKLY-FLOW-003 (8.3) y correccion de ALIASES:CV-PIPELINE (07) que contenia una contradiccion activa ("Sin alias de Terminal" pese a la existencia de la cadena de 3 scripts). Script Library delegada a vantage-sync-script-library (no escrita en este lote).
-Cambios:
-- KERNEL:CV-PIPELINE-003 (12.3) — nodo nuevo: "Preparacion Mecanica — Scaffold Batch", describe cadena de 3 scripts, clausula de invarianza (scaffold es metadata mecanica unica, no autoriza batch analisis) y tabla-í¦¬ndice de 7 nodos (N1–N7) con referencias cruzadas a MANUAL:SCRIPT-GLOSSARY-CV-PREP, KERNEL:CV-PIPELINE-001/002, KERNEL:TRIGGER-003 y KERNEL:SCHEMA-008.
-- KERNEL:CV-PIPELINE (12) — intro extendida con puente narrativo apuntando a 12.3.
-- KERNEL:CV-PIPELINE-001 (12.1) — Input extendido mencionando scaffold mecanico opcional.
-- MANUAL:SCRIPT-GLOSSARY-CV-PREP (22.2) — nodo nuevo: 3 entradas con tablas de flags por script (adapt_tracker_export.py, cv_a_batch_agent.py, cv_a_prep.py).
-- MANUAL:WEEKLY-FLOW-003 (8.3) — CV-A extendido con parrafo de ruta alterna (batch, opcional).
-- ALIASES:CV-PIPELINE (07) — correccion de enunciado obsoleto: ahora documenta la preparacion mecanica opcional en Terminal con tabla de 3 filas (sin alias corto asignado).
-IDs afectados: 2 altas — KERNEL:CV-PIPELINE-003 (12.3) y MANUAL:SCRIPT-GLOSSARY-CV-PREP (22.2) — dispara KERNEL:DOCUMENTATION-008 Regla 1 (CENSUS-SYNC).
-Write-Back Verification: Kernel, Manual y Aliases re-fetched post-escritura — 3/3 confirmados en posicion correcta, sin mismatch.
-Pendiente (fuera de esta entrada):
-- vcensus para registrar los 2 IDs nuevos en el Census.
-- vversions --sync para propagar v9.21.11 al resto de los fundacionales.
-- Script Library (Notion) — alta de 3 filas delegada a vantage-sync-script-library.
----
-Tipo: [FIX] [CODE]
-Alcance:
-- Código: Layer_3/scripts/layer_3_mail.py (SYNTHETIC_CT_PATTERNS, canonicalize_url())
-- Bug Tracker (ticket 3be938be-fc42-8195-a602-d3a8c1bf0adf, Resuelto)
-Contexto: 21 registros creados por L3 (Gmail→Groq) el 15-ago 17:09–17:16 con Status=Target, layer=L3, Fuente=Computrabajo/Indeed/LinkedIn, sin JD, fueron archivados automáticamente (Next_Action=Archivar) por Fase 2 de vl1 (layer_1_run.py::validate_url_pre_ingestion), sin pasar por Fase 3/4 (Gate_Decision y Score quedaron vacíos en 20/21 filas). Diagnóstico inicial (Claude, sesión previa) descartó reingesta duplicada (hash/URL únicos por fila) e identificó el mecanismo de escritura (Fase 2, rama AGREGADOR_STATUS_XXX vía HEAD 6s) como responsable directo — inicialmente atribuido a bloqueo anti-scraping de agregadores, mismo patrón que el ticket ya resuelto 3bb938be-fc42-813d-a253-ca2097f33957 (truncamiento de rich_text), pero confirmado como insuficiente para cubrir este caso: aquel ticket protegía registros YA verificados con JD poblado; estos 21 nacían sin JD en absoluto.
-Sesión de diagnóstico con Devin (contrato de sesión separado) atravesó 3 iteraciones antes de aislar la causa raíz real:
-1. Primera hipótesis (Devin) — B1 (validación inline en L3): experimento inicial probó páginas HOME de los agregadores (no las URLs reales del incidente), concluyendo erróneamente que Computrabajo/LinkedIn respondían 200 sin problema y que solo Indeed bloqueaba. Rechazado por el operador — metodológicamente inválido (Devin mismo señaló la limitación sin que le impidiera recomendar código).
-1. Verificación cruzada (Claude) — invalidada también: intento de confirmar el hallazgo de Devin vía curl directo devolvió 403 en las URLs reales, pero se determinó post-hoc que ese 403 provenía del propio sandbox de Claude (x-deny-reason: host_not_allowed — computrabajo.com/indeed.com no están en la whitelist de red del entorno), no del servidor real. Corrección reportada explícitamente al operador y a Devin en la misma sesión.
-1. Segunda hipótesis (Devin) — causa raíz real confirmada: re-ejecución del experimento contra las 21 URLs reales del incidente (provistas explícitamente por el operador) reveló 404 real (no 403 anti-bot) en las 18 URLs de Computrabajo, con HTML de "página no encontrada" — nunca existieron como recursos reales. El patrón de esas URLs ([rol]-[marca]-2024, ej. visual-merchandiser-hm-2024) coincide exactamente con un patrón de URLs sintéticas ya documentado en un incidente histórico no relacionado (Changelog, bypass ciego de agregadores, ~19 filas con 13 URLs sintéticas del mismo patrón). Causa raíz aislada: Groq (motor de extracción de L3) alucina URLs de Computrabajo con este patrón; el código YA contenía un mecanismo de detección (SYNTHETIC_CT_PATTERNS, 4 regexes, comentario explícito "URLs sintéticas de Computrabajo (alucinadas por Groq)") y el prompt de Groq prohíbe explícitamente "URL fabricada con año" (línea 213), pero ninguno de los 4 patrones existentes cubría la forma [rol]-[marca]-2024.
-Verificación independiente de Claude contra el fix propuesto por Devin: primer intento de cierre reportado por Devin ("implementado y verificado") no reflejaba cambios reales en el repo remoto (git pull sin diffs) — Devin no había ejecutado vgit/push, el commit vivía solo en su entorno local. Operador proveyó el archivo layer_3_mail.py directamente vía upload; Claude confirmó el fix presente en el archivo local y lo validó de forma independiente (script Python propio, no reutilizando el reporte de Devin) contra las 21 URLs reales del incidente: 18/18 URLs de Computrabajo correctamente detectadas como SYNTHETIC_AGGREGATOR_URL, 0 falsos positivos en las 2 URLs de Indeed/LinkedIn (fuera del alcance del patrón), incluyendo los 2 casos con acentos/URL-encoding (galer%C3%ADas, auerrer%C3%A1) vía unquote().
-Cambios:
-- layer_3_mail.py::SYNTHETIC_CT_PATTERNS — 5to patrón añadido: re.compile(r'/jobs/[^/]+-\d{4}$'), cubre el patrón [rol]-[marca]-2024 no capturado por los 4 patrones previos (numeric ID corto/largo, year chain, IDs plantilla).
-- layer_3_mail.py::canonicalize_url() — decodificación vía unquote() añadida antes del matching de patrones, para detectar variantes con acentos/URL-encoding; la URL canónica retornada permanece intacta (sin alterar el valor guardado en Notion).
-- Bug Tracker 3be938be-fc42-8195-a602-d3a8c1bf0adf — creado, diagnosticado en 3 iteraciones, resuelto con Solución documentada.
-Validación: Script de verificación independiente de Claude (no el reporte de Devin) contra las 21 URLs reales del incidente — 18/18 Computrabajo detectadas, 0 falsos positivos, casos de encoding cubiertos.
-IDs afectados: Ninguno (fix de código, sin alta/baja de ID canónico — no dispara KERNEL:CENSUS-SYNC Regla 1).
-Write-Back Verification: Bug Tracker 3be938be-fc42-8195-a602-d3a8c1bf0adf actualizado (Status=Resuelto) y re-fetched — confirmado. Fix verificado contra archivo local subido por el operador (no contra repo remoto — ver Pendiente).
-Lección de proceso (aplicable a futuras sesiones con Devin u otros agentes): nunca aceptar un reporte de "implementado y verificado" al valor nominal sin re-fetch/re-verificación independiente contra la fuente real — en esta sesión ocurrió dos veces en direcciones opuestas: (1) Devin reportó éxito sin push real, detectado por git pull sin diffs; (2) Claude mismo reportó una "contradicción empírica" que resultó ser una falsa alarma de su propio sandbox de red, corregida solo tras inspeccionar los headers de respuesta en vez de confiar en el status code aislado.
-Pendiente (fuera de esta entrada):
-- Commit con el fix aún no pusheado a GitHub por Devin (vgit no ejecutado) — el fix existe en archivo local confirmado por el operador, pero no está activo en el repo remoto ni en producción hasta que se ejecute el push.
-- Corrección manual/batch de las 21 filas ya dañadas en Notion (Status=Expirada, Next_Action=Archivar incorrecto) — operación de datos separada, requiere DRY RUN + APROBAR_WRITE aparte.
-- Suite de tests de regresión (Layer_3/tests/test_layer_3_mail.py, reportada por Devin) — no confirmada presente en el archivo local subido; verificar tras el push.
-- vversions --sync para propagar v9.21.10 al resto de los fundacionales.
 ---
 > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.

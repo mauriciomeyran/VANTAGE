@@ -52,7 +52,7 @@ L4 · Version Control & Documentación
 | cleancaches | Limpia cachés regenerables de apps Mac (Chrome/Safari/Firefox/Edge, WhatsApp/WeChat/Telegram, ChatGPT/Ollama/LM Studio, npm, Cursor) sin tocar sesiones activas. | Corre clean_caches.py. Wrapper Raycast equivalente: clean-caches-raycast.sh (🧹 "Limpiar Cachés de Apps"). |
 | vprint | Lista vacantes con Gate_Decision = CREATE (conteo + IDs/URLs) vía query directo a Notion. | Corre vprint.py, cargando .env inline (vprint.sh en disco es un wrapper alterno no usado por este alias). |
 | vtriggers | Mantiene el manifiesto SSOT de skills (skills/triggers.json) que consume el Bootloader para lazy-load por trigger. | Corre update_triggers_json.py — escanea /skills/, valida SKILL.md por entrada, detecta huérfanos (reporta, no borra), actualiza last_modified, y ejecuta git add+commit+push automático sobre triggers.json. |
-|  | vserial | Genera un nuevo serial de handoff VANTAGE (formato HO-######) y lo imprime en terminal. |
+| vserial | Genera un nuevo serial de handoff VANTAGE (formato HO-######), lo imprime en terminal y lo copia al portapapeles. | Ejecuta allocate_vantage_serial.py next contra GLOBAL_VANTAGE_COUNTER (ver KERNEL:HANDOFF-SERIAL). Alterno vía Raycast: vantage-serial.sh replica el mismo comando y agrega notificación de éxito. |
 | vsum | Resume transcripts de sesiones |  |
 ---
 | Flag / Comando | Modo | Descripción | Efecto Secundario | Requisitos / Condición |

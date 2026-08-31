@@ -256,6 +256,7 @@ def validate_url_pre_ingestion(url, jd_text=""):
     # PRIORIDAD 2: Agregador — verificación ligera, NO bypass ciego (BUG FIX)
     # LinkedIn/Indeed/Computrabajo bloquean scrapers: usamos timeout corto
     # para no colgar, pero ya no asumimos "Accesible" sin intentar nada.
+    # FIX v9.21.36: Si agregador falla HEAD, marca para retry en vez de bloqueo
     if is_agregador(url):
         try:
             agg_response = requests.head(url, allow_redirects=True, timeout=6, headers={
@@ -263,9 +264,11 @@ def validate_url_pre_ingestion(url, jd_text=""):
             })
             if agg_response.status_code == 200:
                 return True, "AGREGADOR_VERIFIED"
-            return False, f"AGREGADOR_STATUS_{agg_response.status_code}"
+            # En lugar de marcar como inválido, marca para retry si es agregador
+            return True, f"AGREGADOR_RETRY_STATUS_{agg_response.status_code}"
         except requests.exceptions.RequestException:
-            return True, "AGREGADOR_UNVERIFIED"
+            # Timeout u otros errores de red en agregador = retry, no bloqueo
+            return True, "AGREGADOR_RETRY_TIMEOUT"
 
     try:
         headers = {
@@ -729,36 +732,69 @@ def main():
             print(f"X [{item['id'][:8]}] {empresa} - {rol[:30]}...")
             print(f"   URL Gate fallo: {reason}")
             
-            # Generar nota determinista para archivado
-            archive_note = generate_archive_notes(
-                reason=f"URL Gate rechazada ({reason})",
-                details=f"Validación de URL falló: {reason}"
-            )
+            # FIX v9.21.36: Tratamiento diferenciado para agregadores vs sitios directos
+            is_agregador_fail = reason.startswith("AGREGADOR_RETRY_")
             
-            if not DRY_RUN:
-                try:
-                    # Obtener notas existentes para append
-                    existing_notes = txt(props.get("Notas")) or ""
-                    final_notes = f"{existing_notes}\n\n{archive_note}" if existing_notes else archive_note
-                    
-                    client.pages.update(
-                        page_id=item["id"],
-                        properties={
-                            "Fetch": {"select": {"name": "Bloqueado"}},
-                            "Status": {"select": {"name": "Expirada"}},
-                            "Next_Action": {"select": {"name": "Archivar"}},
-                            "Notas": {
-                                "rich_text": [{
-                                    "type": "text",
-                                    "text": {"content": final_notes}
-                                }]
+            if is_agregador_fail:
+                # Agregadores con fallo temporal = marcar como Accesible con nota, no archivar
+                retry_note = generate_archive_notes(
+                    reason=f"URL Gate agregador fallo temporal ({reason})",
+                    details=f"Agregador (Indeed/LinkedIn/Computrabajo) falló HEAD request temporalmente (timeout/rate-limiting). URL manualmente accesible - marcada como Accesible para continuar pipeline."
+                )
+                
+                if not DRY_RUN:
+                    try:
+                        existing_notes = txt(props.get("Notas")) or ""
+                        final_notes = f"{existing_notes}\n\n{retry_note}" if existing_notes else retry_note
+                        
+                        client.pages.update(
+                            page_id=item["id"],
+                            properties={
+                                "Fetch": {"select": {"name": "Accesible"}},
+                                "Status": {"select": {"name": "Target"}},  # Mantener como Target para review manual
+                                "Next_Action": {"select": {"name": "Reparar URL"}},
+                                "Notas": {
+                                    "rich_text": [{
+                                        "type": "text",
+                                        "text": {"content": final_notes}
+                                    }]
+                                }
                             }
-                        }
-                    )
-                except Exception as e:
-                    print(f"WARNING: Error actualizando {item['id'][:8]}: {e}")
+                        )
+                    except Exception as e:
+                        print(f"WARNING: Error actualizando {item['id'][:8]}: {e}")
+                else:
+                    print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Fetch': 'Accesible', 'Status': 'Target', 'Next_Action': 'Reparar URL']")
             else:
-                print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Fetch', 'Status', 'Next_Action', 'Notas'] -> Bloqueado / Expirada / Archivar + nota: {archive_note[:50]}...")
+                # Sitios directos con fallo = archivar como antes
+                archive_note = generate_archive_notes(
+                    reason=f"URL Gate rechazada ({reason})",
+                    details=f"Validación de URL falló: {reason}"
+                )
+                
+                if not DRY_RUN:
+                    try:
+                        existing_notes = txt(props.get("Notas")) or ""
+                        final_notes = f"{existing_notes}\n\n{archive_note}" if existing_notes else archive_note
+                        
+                        client.pages.update(
+                            page_id=item["id"],
+                            properties={
+                                "Fetch": {"select": {"name": "Bloqueado"}},
+                                "Status": {"select": {"name": "Expirada"}},
+                                "Next_Action": {"select": {"name": "Archivar"}},
+                                "Notas": {
+                                    "rich_text": [{
+                                        "type": "text",
+                                        "text": {"content": final_notes}
+                                    }]
+                                }
+                            }
+                        )
+                    except Exception as e:
+                        print(f"WARNING: Error actualizando {item['id'][:8]}: {e}")
+                else:
+                    print(f"[DRY-RUN] {item['id'][:8]}: actualizaría ['Fetch', 'Status', 'Next_Action', 'Notas'] -> Bloqueado / Expirada / Archivar + nota: {archive_note[:50]}...")
         else:
             url_gate_updates += 1
             if reason == "JD_ALREADY_EXISTS":

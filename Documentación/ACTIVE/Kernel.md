@@ -281,6 +281,7 @@ Formato: HO-######, monotónico — no se reinicia por sesión, agente, cuenta n
 Corrección: un handoff emitido no se edita silenciosamente — una corrección genera un nuevo serial referenciando el anterior vía correction_of.
 Identidad del emisor: ver SP:BOOTLOADER-002 para el registro de agentes autorizados a emitir handoffs serializados. Agentes sin Project Instructions (Arena, Cursor, Devin) no emiten serial propio.
 Vía de acceso — Servidor MCP: además de Terminal (allocate_vantage_serial.py), el contador es accesible vía servidor MCP (mcp_vantage_serial_server.py, transporte stdio, herramienta allocate_vantage_serial) para agentes sin acceso a filesystem/terminal. Reutiliza la misma lógica de allocate_serial() sobre la misma base SQLite — no es una segunda autoridad, es un segundo canal hacia GLOBAL_VANTAGE_COUNTER. Contrato de salida: éxito → {"serial": "HO-######", "authority": "GLOBAL_VANTAGE_COUNTER", "status": "ALLOCATED"}; fallo → {"error": "HANDOFF_SERIAL_UNAVAILABLE", "status": "UNAVAILABLE"}. Orden de resolución para cualquier skill que requiera serial: MCP → Terminal → HANDOFF_SERIAL_UNAVAILABLE (detener, no inventar serial).
+Arquitectura HTTP centralizada (vantage_serial_http_server.py): pieza intermedia entre el bridge MCP de Claude Desktop y GLOBAL_VANTAGE_COUNTER — servidor HTTP local (host/puerto configurables vía VANTAGE_SERIAL_HOST/VANTAGE_SERIAL_PORT, default localhost:8787) que expone dos endpoints: POST /allocate (asigna el siguiente serial) y GET /health (status: authority, current_value, next_serial, database). vantage_serial_mcp_bridge.py (herramientas allocate_vantage_serial / vantage_serial_status) consume estos endpoints vía HTTP en vez de invocar allocate_serial() directo — permite que Claude Desktop use el contador sin acceso directo a filesystem/SQLite. DB_PATH se resuelve vía VANTAGE_SERIAL_DB (env) o, en su ausencia, Path(file).resolve().parent.parent.parent / "state" / "vantage_handoff_counter.sqlite3" — mismo patrón de resolución aplicado a allocate_vantage_serial.py tras el fix de split-brain de 2026-08-28 (ver Changelog v9.21.32). Canal aislado: un fallo del servidor HTTP no afecta Terminal ni el servidor MCP stdio directo — ambos acceden la misma base SQLite sin pasar por HTTP.
 ---
 ## 04 KERNEL:ARCHITECTURE
 Arquitectura de Cuatro Capas
@@ -328,6 +329,7 @@ Métricas mínimas: correos procesados, vacantes extraídas, Class A poblado / C
 Version Control & Infrastructure
 No es capa de búsqueda — infraestructura documental.
 - Auto-commit + push cuando hay cambios en el repo. Alias: vgit · 09:00/15:00/21:00.
+- Cron jobs adicionales (ruta directa al Python del venv — source .venv/bin/activate falla con "Operation not permitted" en entorno cron): vantage.py sync y notion_backup.py, y vl3 nuevo · 00:00/08:00/16:00.
 - Repo: github.com/mauriciomeyran/VANTAGE.
 - vsync_doc.py — sync bidireccional Notion → ACTIVE/ para los 6 fundacionales editables (Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log). Alias: vdoc · Flags: dry | notion | local | auto.
 Riesgo conocido — vdoc local sobre documentos con hyperlinks aplicados: push_local_to_notion() (vsync_doc.py) hace delete-all + create-all de bloques en cada corrida — cualquier anchor #block-id generado por el sistema de hyperlinks (KERNEL:DOCUMENTATION-011) queda huérfano al recrearse el bloque con ID nuevo. La variante vsync_doc_fast.py quedó deprecada en Archive/Legacy_Scripts/ (ver KERNEL:EVOLUTION §17, Linaje Histórico) — no forma parte del riesgo activo. apply_hyperlinks_notion.py evita este riesgo (PATCH puntual, preserva block-ID), pero vdoc local sigue sin guard equivalente — evitarlo sobre documentos con hyperlinks recién aplicados hasta que se decida su reemplazo formal.
@@ -474,7 +476,7 @@ Valores confirmados en código activo (10), rediseño v9.14.6 (KERNEL:GATE-DECIS
 | Follow-up | Status ∈ {Postulado, Negociando, Sin respuesta} |
 | Interview prep | Status=En proceso |
 | Re-check | Gate_Decision=CREATE (Source_Type=Vacante), o Source_Type=Inbound (unifica Referencia/Networking, v9.14.5) |
-| Reparar URL | Source_Type=Vacante AND Fetch=Bloqueado |
+| Reparar URL | Source_Type=Vacante AND Fetch=Bloqueado (sitios directos) O agregador con HEAD fallido (Fetch=Accesible sin confirmar, fix v9.21.40 — ver KERNEL:GATE-DECISION-011) |
 | Verificar JD | Source_Type=Vacante AND Fetch=Parcial |
 Historial de tipo de campo: v9.13.7 introdujo escritura select; v9.13.11 documentó (erróneamente) rich_text tras una auditoría desactualizada; v9.14.2/v9.14.3 (Changelog) confirmaron y ejecutaron la migración real a select — esta sección se corrige en v9.14.5 para alinearse con el Changelog, tras detectarse el drift por fetch directo del schema vivo de Notion.
 ---
@@ -509,7 +511,7 @@ Bypasses: URL_GATE + Score threshold + Visual Signal detection.
 ### 09.2 KERNEL:GATE-DECISION-002
 Lógica Estándar
 Orden:
-1. URL_GATE (link muerto → Score=0, Status=Expirada). Para agregadores (Computrabajo, Indeed, LinkedIn), el chequeo se ejecuta como HEAD con timeout de 6s en vez de bloqueo de bot ciego — respuesta 200 confirma, timeout/error marca no-verificado sin asumir accesibilidad.
+1. URL_GATE (link muerto → Score=0, Status=Expirada). Para agregadores (Computrabajo, Indeed, LinkedIn), el chequeo se ejecuta como HEAD con timeout de 6s en vez de bloqueo de bot ciego — respuesta 200 confirma, timeout/error marca no-verificado sin asumir accesibilidad. Ante fallo del HEAD check en agregadores, el sistema no archiva automáticamente: escribe Fetch=Accesible, Status=Target, Next_Action=Reparar URL, dejando la verificación manual como siguiente paso — comportamiento distinto al de sitios directos, donde el fallo de URL_GATE mantiene Score=0/Status=Expirada/Next_Action=Archivar (fix v9.21.40).
 1. Score (0–100)
 1. Gate_Decision (≥60 CREATE · 40–59 REVIEW_NEEDED · <40 BLOCKED/Archivar).
 ### 09.3 KERNEL:GATE-DECISION-003
@@ -604,7 +606,7 @@ Referencia canónica para scripts y auditorías — no reemplaza la descripción
 | [ENTRY] | feed_processor.py ingesta JSON | URL muerta OR Score < 40 | BLOCKED | Python | Gate_Decision=BLOCKED, Score=0 (si URL muerta) |
 | [ENTRY] | feed_processor.py ingesta JSON | URL viva + Score 40–59 + Status=Target | REVIEW_NEEDED | Python | Gate_Decision=REVIEW_NEEDED, Score, VM_Scope, Role_Class, Next_Action |
 | [ENTRY] | feed_processor.py ingesta JSON | URL viva + Score ≥ 60 + Status=Target | READY_TO_APPLY | Python | Gate_Decision=CREATE, Score, VM_Scope, Role_Class, Next_Action |
-| [ENTRY] | Agregador con HEAD fallido/timeout | AGREGADOR_UNVERIFIED | REVIEW_NEEDED | Python | Fetch=No_Verificado (no Accesible) |
+| [ENTRY] | Agregador con HEAD fallido/timeout | AGREGADOR_UNVERIFIED | Target | Python | Fetch=Accesible, Next_Action=Reparar URL (fix v9.21.40 — reemplaza el tratamiento previo de bloqueo por defecto) |
 | [ENTRY] | feed_processor.py ingesta JSON | Dedup match (hash/URL/brand+title) contra VANTAGE TRACKER activo, ventana 30d | REVIEW_NEEDED | Python | Status=REVIEW_NEEDED en el registro entrante; Dedup_Flag='Posible duplicado' (select) en el registro existente coincidente |
 | BLOCKED | vd — Dashboard RT-1 edita Class A | Patch válido → run_pipeline.py --dry PASS | PATCHED | Humano + Python | Score, Gate_Decision recalculados |
 | PATCHED | Operador acepta patch en Dashboard | Aceptar → vantage_pipeline.sh | READY_TO_APPLY OR BLOCKED | Python | Gate_Decision re-evaluado; si falla → regresa BLOCKED |

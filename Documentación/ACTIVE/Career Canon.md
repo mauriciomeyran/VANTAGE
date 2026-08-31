@@ -4,10 +4,10 @@
 Professional Profile
 ### 01.1 CANON:PROFILE-001
 ES
-Estratega de Visual Merchandising & Brand Execution con más de 10 años de trayectoria en retail de lujo, moda y alto rendimiento. Especialista en traducir lineamientos globales en ejecuciones locales de alto impacto, liderando estrategias regionales en LATAM y gestionando presupuestos CAPEX/OPEX nacionales. Experto en storytelling visual, lanzamientos de producto (NPI) y habilitación de equipos de campo, con un historial probado en la optimización de KPIs comerciales (+43% tráfico) y eficiencia operativa (-74% costos). Perfil con alta capacidad analítica y técnica, enfocado en elevar la experiencia del consumidor y la coherencia de marca en redes propias, franquicias y wholesale.
+Estratega de Visual Merchandising & Brand Execution con más de 14 años de trayectoria en retail de lujo, moda y alto rendimiento. Especialista en traducir lineamientos globales en ejecuciones locales de alto impacto, liderando estrategias regionales en LATAM y gestionando presupuestos CAPEX/OPEX nacionales. Experto en storytelling visual, lanzamientos de producto (NPI) y habilitación de equipos de campo, con un historial probado en la optimización de KPIs comerciales (+43% tráfico) y eficiencia operativa (-74% costos). Perfil con alta capacidad analítica y técnica, enfocado en elevar la experiencia del consumidor y la coherencia de marca en redes propias, franquicias y wholesale.
 ### 01.2 CANON:PROFILE-002
 EN
-Visual Merchandising & Brand Execution strategist with over 10 years of experience in luxury, fashion, and high-performance retail. Expert in translating global brand guidelines into high-impact local executions, leading LATAM regional strategies, and managing national CAPEX/OPEX budgets. Specialist in visual storytelling, new product introductions (NPI), and field team enablement, with a proven track record of optimizing commercial KPIs (+43% traffic) and operational efficiency (-74% costs). Highly analytical and technical profile, focused on elevating consumer experience and brand coherence across own stores, franchises, and wholesale channels.
+Visual Merchandising & Brand Execution strategist with over 14 years of experience in luxury, fashion, and high-performance retail. Expert in translating global brand guidelines into high-impact local executions, leading LATAM regional strategies, and managing national CAPEX/OPEX budgets. Specialist in visual storytelling, new product introductions (NPI), and field team enablement, with a proven track record of optimizing commercial KPIs (+43% traffic) and operational efficiency (-74% costs). Highly analytical and technical profile, focused on elevating consumer experience and brand coherence across own stores, franchises, and wholesale channels.
 ---
 ## 02 CANON:SKILLS
 Skills Canon
@@ -16,7 +16,7 @@ Skills Canon
 | Estrategia Visual | Planeación estacional, Consumer-centric storytelling, Zoning & Mapping tools, manuales de ejecución regional | Seasonal planning, Consumer-centric storytelling, Zoning & Mapping tools, regional execution manuals |
 | Operaciones & Finanzas | Control de presupuesto CAPEX/OPEX, negociación con proveedores, aperturas de Flagship Stores, remodelaciones y rollouts | CAPEX/OPEX budget control, vendor negotiation, Flagship Store openings, remodeling, and rollouts |
 | Liderazgo & Training | Gestión de equipos directos e indirectos, coaching de alto desempeño, estandarización de procesos operativos y auditorías de campo | Direct and indirect team management, high-performance coaching, operational process standardization, and field audits |
-| Stack Técnico | Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, IA Generativa (ChatGPT, Perplexity, Claude) | Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, Generative AI (ChatGPT, Perplexity, Claude) |
+| Stack Técnico | Adobe Creative Cloud (Illustrator, Photoshop, Premiere Pro, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, SAP Concur, IA Generativa (ChatGPT, Perplexity, Claude) | Adobe Creative Cloud (Illustrator, Photoshop, Premiere Pro, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, SAP Concur, Generative AI (ChatGPT, Perplexity, Claude) |
 | Idiomas | Español (Nativo) · Inglés (Profesional Corporativo / Fluidez regional) | Spanish (Native) · English (Corporate Professional / Regional Fluency) |
 ---
 ## 03 CANON:EXPERIENCE
@@ -55,11 +55,13 @@ ES
 - Diseñé una estrategia de producción local que generó un ahorro del 74% en costos de campañas nacionales en México. [KPI03]
 - Reduje en un 33% el tiempo de actualización de floorsets mediante la creación de manuales de Zoning & Mapping y herramientas digitales para field teams. [KPI04]
 - Lideré un equipo de 3 coordinadoras directas y 3 indirectas, garantizando el 100% de cobertura POP durante la contingencia COVID-19 mediante coordinación remota. [KPI05]
+- Coordiné Market Weeks y Press Days; fui ponente en Nissan Connect representando a Dockers.
 EN
 - Managed the visual strategy for 6 countries in LATAM and 270+ points of sale, ensuring regional brand standardization. [CF05]
 - Designed a local production strategy that generated 74% cost savings on national campaigns in Mexico. [KPI03]
 - Reduced floorset update time by 33% through the creation of Zoning & Mapping manuals and digital tools for field teams. [KPI04]
 - Led a team of 3 direct coordinators and 3 indirect reports, ensuring 100% POP coverage during the COVID-19 contingency through remote coordination. [KPI05]
+- Coordinated Market Weeks and Press Days; spoke at Nissan Connect representing Dockers.
 ### 03.4 CANON:EXPERIENCE-004
 C04 · Aéropostale México
 Gerente de Visual Merchandising · [CF06: 21 reportes directos] · [CF07: 17 tiendas]
@@ -144,7 +146,7 @@ Compañía: C03 · Contexto: Levi's/Dockers · red nacional México · en tiempo
 KPI07 · Adidas Punch List Count (17)
 Compañía: C02 · Contexto: Adidas Brand Center Madero · CF03 · CF04
 ### 06.8 CANON:KPI-008
-KPI08 · Years Experience (10+ Canonical)
+KPI08 · Years Experience (14+ Canonical)
 Compañía: — · Contexto: Canónico
 ---
 ## 07 CANON:FACTS
@@ -158,7 +160,7 @@ CF03 · Adidas Punch List = 17 Minor Observations
 ### 07.4 CANON:FACT-004
 CF04 · Adidas Punch List Severity = Non-Blocking
 ### 07.5 CANON:FACT-005
-CF05 · Levi's Coverage = 270+ POS / 6 LATAM Countries
+CF05 · Levi's Coverage = 270+ POS / 6 LATAM Countries. Desglose México: 22 PDV (10 O&O, 6 comisionadas, 6 franquicias).
 ### 07.6 CANON:FACT-006
 CF06 · Aéropostale Team = 21 Direct Reports
 ### 07.7 CANON:FACT-007
@@ -292,6 +294,8 @@ Use this exact sequence of IDs for any Figma-destined output.
 - ID Header Sample: ###### figma_text_id
 - KeySlots: 2:4 (Name), 2:5 (Headline), 2:9 (Profile), 2:14-18 (Skills), 2:22+ (Experience).
 - Rule: If the skeleton changes in Figma, this record must be updated before the next CV-B run.
+Estándar de lectura: el orden narrativo del Golden Skeleton (secuencia de figma_text_id tal como aparece arriba) es el estándar de lectura para cualquier auditoría, QA o regeneración de output — ningún proceso reordena bloques para "optimizar" lectura sin alterar antes el Skeleton mismo en Figma.
+Definición de estado: el Golden Skeleton representa el snapshot del CV en optimización activa — no es un archivo, es el estado vigente del lienzo Figma en el momento de cada CV-B run. Cambios al lienzo hacen obsoleto el snapshot aquí documentado hasta la siguiente actualización (ver Rule arriba).
 ---
 ```json
 ###### [figma_text_id](2:4)
