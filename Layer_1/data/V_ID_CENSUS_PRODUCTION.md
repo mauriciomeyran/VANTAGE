@@ -127,7 +127,7 @@
 | [`MANUAL:SLA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281549e1ee72e3240a9df ) | 17 | SLA de Latencia Post-Ingesta |
 | [`MANUAL:CV-GOLDEN-RULES-INDEX`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815592e9ecb6df06e21a ) | 18 | Reglas de Oro CV — Referencia Operativa |
 | [`MANUAL:POSITIONING-CRITERIA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815db277e3bcd24efda1 ) | 19 | Positioning Modes (N1–N4) — Criterio de Selección |
-| [`MANUAL:WEEKLY-FLOW-006`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#532b177cdcb6489a9b83f895cf8fe52e ) | 08.6 ⚠︎sin verificar en vivo | Cadence Matrix — Weekly Rhythm |
+| `MANUAL:WEEKLY-FLOW-006` | 08.6 | Cadence Matrix — Weekly Rhythm |
 | [`MANUAL:GOLDEN-SKELETON-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42810ea45dde6c4a0cb7e0 ) | 20 | Figma Sync & Golden Skeleton |
 | [`MANUAL:FIGMA-SYNC-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#9d42e3fbc953459f8457043565e7e884 ) | 20.1 | Arquitectura del Ecosistema |
 | [`MANUAL:FIGMA-SYNC-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#b805f3abb9f04c85992df278612f567c ) | 20.2 | Contrato de Bloque |
@@ -271,14 +271,14 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`ALIASES:SESSION-CYCLE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3af938befc42817292a7c33818837ff9 ) | 01 | Session Cycle |
-| [`ALIASES:L0-RUNTIME`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3af938befc428126aa67d58a9618be5a ) | 02 | L0 · VANTAGE Runtime |
-| [`ALIASES:L1L2-DISCOVERY`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3af938befc4281088f61c6eb480028ae ) | 03 | L1/L2 · Discovery (Lunes) |
-| [`ALIASES:L3-PASSIVE-INTAKE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3af938befc428161ac95c6f197d09693 ) | 04 | L3 · Passive Intake |
-| [`ALIASES:L4-VERSION-CONTROL`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3af938befc428154a740f9cd418503d4 ) | 05 | L4 · Version Control & Documentación |
-| [`ALIASES:DASHBOARD`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3af938befc4281a185ccef004757bc8a ) | 06 | Dashboard (Martes — Recuperación) |
-| [`ALIASES:CV-PIPELINE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3af938befc4281da95d8e15a89ca0e14 ) | 07 | CV Pipeline (Miércoles) |
-| [`ALIASES:DEDUP`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3af938befc4281248305c2c58232f217 ) | 08 | Dedup & Oportunidades |
+| [`ALIASES:SESSION-CYCLE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3cd938befc42800d961dfc74da44c883 ) | 01 | Session Cycle |
+| [`ALIASES:L0-RUNTIME`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3cd938befc42805287baf0dcf604cf11 ) | 02 | L0 · VANTAGE Runtime |
+| [`ALIASES:L1L2-DISCOVERY`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3cd938befc42801482ace9a1788f0a29 ) | 03 | L1/L2 · Discovery (Lunes) |
+| [`ALIASES:L3-PASSIVE-INTAKE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3cd938befc428055a2b8e57c133e8bac ) | 04 | L3 · Passive Intake |
+| [`ALIASES:L4-VERSION-CONTROL`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3cd938befc4280f59a85eeae058c2518 ) | 05 | L4 · Version Control & Documentación |
+| [`ALIASES:DASHBOARD`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3cd938befc4280e5a2f2ee2eca37d620 ) | 06 | Dashboard (Martes — Recuperación) |
+| [`ALIASES:CV-PIPELINE`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3cd938befc428078a149c53e4a40a547 ) | 07 | CV Pipeline (Miércoles) |
+| [`ALIASES:DEDUP`]( https://app.notion.com/p/37c938befc4280d4b9aef5969830331b#3cd938befc4280c7aca2dc2627c0a56a ) | 08 | Dedup & Oportunidades |
 
 ---
 
