@@ -130,6 +130,7 @@ def _extract_body(msg):
                 body = re.sub(r"\s+", " ", body).strip()
     else:
         body = _decode_part(msg)
+    body = body.replace("\ufffd", "")  # quita bytes corruptos (fix loop Groq 400 json_validate_failed)
     return body[:GROQ_BODY_MAX]
 
 
@@ -269,7 +270,7 @@ def extract_jobs_with_groq(email_body, retries=None):
             {"role": "user",   "content": email_body + "\n\nResponde en formato json."},
         ],
         "temperature": 0.0,
-        "max_tokens": 2500,
+        "max_tokens": 6000,
         "response_format": {"type": "json_object"},
     }
 
