@@ -59,6 +59,7 @@ SUPPORTED_LLM_PROVIDERS: frozenset[str] = frozenset(
         "ollama",
         "openrouter",
         "openai_compatible",
+        "groq",
     }
 )
 
@@ -74,7 +75,7 @@ def build_llm(settings: Settings | None = None) -> Any:
     if provider == "openai":
         if not cfg.openai_api_key:
             raise RuntimeError("OPENAI_API_KEY is required when LLM_PROVIDER=openai")
-        from browser_use.llm.openai import ChatOpenAI
+        from browser_use.llm.openai.chat import ChatOpenAI
 
         model = cfg.openai_model
         if cfg.use_cheap_fallback and cfg.llm_cost_limit < 1.0:
@@ -109,6 +110,7 @@ def build_llm(settings: Settings | None = None) -> Any:
             model=model,
             api_key=cfg.gemini_api_key,
             temperature=0,
+            max_output_tokens=16384,
         )
 
     if provider == "anthropic":
@@ -149,11 +151,23 @@ def build_llm(settings: Settings | None = None) -> Any:
             temperature=0,
         )
 
+    if provider == "groq":
+        if not cfg.groq_api_key:
+            raise RuntimeError("GROQ_API_KEY is required when LLM_PROVIDER=groq")
+        from browser_use.llm.openai.chat import ChatOpenAI
+
+        return ChatOpenAI(
+            model=cfg.groq_model,
+            api_key=cfg.groq_api_key,
+            base_url="https://api.groq.com/openai/v1",
+            temperature=0,
+        )
+
     if not cfg.llm_base_url:
         raise RuntimeError("LLM_BASE_URL is required when LLM_PROVIDER=openai_compatible")
     model = cfg.llm_model or cfg.openai_model
     api_key = cfg.llm_api_key or cfg.openai_api_key or "not-needed"
-    from browser_use.llm.openai import ChatOpenAI
+    from browser_use.llm.openai.chat import ChatOpenAI
     return ChatOpenAI(
         model=model,
         api_key=api_key,

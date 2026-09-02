@@ -73,6 +73,8 @@ class Settings(BaseSettings):
         default="https://openrouter.ai/api/v1",
         alias="OPENROUTER_BASE_URL",
     )
+    groq_api_key: str = Field(default="", alias="GROQ_API_KEY")
+    groq_model: str = Field(default="qwen/qwen3.6-27b", alias="GROQ_MODEL")
     llm_api_key: str = Field(default="", alias="LLM_API_KEY")
     llm_base_url: str = Field(default="", alias="LLM_BASE_URL")
     llm_model: str = Field(default="", alias="LLM_MODEL")
