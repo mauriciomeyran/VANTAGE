@@ -6,7 +6,7 @@ description: Fase 2 del pipeline de CV de VANTAGE (KERNEL:CV-PIPELINE-002) — c
 # VANTAGE — Skill CV-B (Construcción y Contrato de Salida)
 
 ID Canónico: `KERNEL:CV-PIPELINE-002` · Trigger: `CV-B [HANDOFF]`
-Versión de alineación: v10.0.0 — **REFACTOR COMPLETO, no parche incremental** (2026-08-21)
+Versión de alineación: v10.1.0 — **SANDBOX-ONLY REFACTOR** (2026-09-03)
 
 ## Nota de refactor (por qué existe esta versión)
 
@@ -30,11 +30,26 @@ unificadas, ambas ya ratificadas en `CANON:OUTPUT-CONTRACT-001` (puntos 5 y 6):
 Síntesis Multi-Hecho (densidad por slot) y Match Transferible Obligatorio
 (cuándo un slot puede tener contenido).
 
+v10.1.0 añade el modo sandbox-only: todo el procesamiento corre internamente
+y el único output es el archivo `.md` descargable, sin render intermedio en chat.
+
 ## Responsabilidad
 
 Segunda fase del pipeline de CV. Toma el HANDOFF de `vantage-cv-a` y construye
 el CV final serializado en Markdown con Figma Tags, listo para sincronizar con
 el archivo Figma vía el Output Contract Framework (`CANON:OUTPUT-CONTRACT`).
+
+## Invariante de Sesión — Sandbox-only
+
+**Cero prosa en el chat.** Esta skill no conversa sobre la construcción del CV
+en el cuerpo del mensaje. El único output permitido es un archivo `.md`
+descargable que contenga el CV completo. Cualquier explicación, aclaración o
+duda va dentro del propio archivo, no como texto de chat adicional.
+
+Excepción: si el HANDOFF está incompleto, el Positioning Mode no está resuelto,
+o la Verificación Pre-Entrega detecta un bloqueo que requiere input humano, sí se
+puede preguntar al operador — pero una vez resuelto, el resultado sigue siendo
+solo el archivo.
 
 ## Fuera de Scope — Explícito
 
@@ -81,7 +96,7 @@ Mantener el escaping de `(` y `)` para compatibilidad con el plugin de Figma si 
 ### 5. Distinctiveness Rule
 El lenguaje de cada bullet de Experience responde al Gap Analysis específico del HANDOFF activo (`fit_gaps`, `JD_keywords_top6`), no a una plantilla fija por Positioning Mode.
 
-### 6. Match Transferible Obligatorio (nuevo, v10.0.0 — `CANON:OUTPUT-CONTRACT-001` punto 6)
+### 6. Match Transferible Obligatorio (v10.0.0 — `CANON:OUTPUT-CONTRACT-001` punto 6)
 Antes de marcar un slot como `[PENDING DATA]`, **intentar reencuadrar** un hecho disponible del Career Canon bajo terminología relevante al JD activo, aunque no exista coincidencia literal con `JD_keywords_top6`. `[PENDING DATA]` solo aplica cuando ningún hecho del Canon, ni siquiera reencuadrado, es transferible al eje temático de la vacante (ej. un JD 100% ajeno a disciplina VM, como Data Analytics/Space Planning digital sin ningún paralelo de ejecución visual).
 
 **Anti-overselling sigue gobernando por separado y tiene prioridad:** un hecho no se reencuadra ni se sintetiza si afirma una responsabilidad que el JD contradice activamente (ej. liderazgo de equipo en un JD individual contributor explícito). Match Transferible no es licencia para sobrevender — es licencia para expresar un hecho real bajo otro ángulo.
@@ -125,7 +140,7 @@ Ejemplo real (Levi's/Dockers, aprobado en Figma):
 > directo y 3 con línea punteada.
 
 Este es **comportamiento default**: cuando el Canon tiene múltiples datos
-disponibles y relacionados (directos o transferibles vía la regla 6) para el
+ disponidos y relacionados (directos o transferibles vía la regla 6) para el
 slot de una compañía, se sintetizan en un solo bullet denso bajo una
 etiqueta temática — en vez de repartirlos en fragmentos separados o dejarlos
 fuera.
@@ -177,9 +192,12 @@ Referencia: `CANON:OUTPUT-CONTRACT-004`.
 - Escaping de paréntesis en texto: replicar exactamente lo que muestre el
   Golden Skeleton vigente para ese slot
 
-## Verificación Pre-Entrega — Obligatoria
+## Verificación Pre-Entrega — Obligatoria (Sandbox)
 
-Antes de presentar el `.md`, correr y no proceder si falla:
+Esta verificación corre internamente en sandbox antes de la escritura del
+archivo. No se presenta como output intermedio en chat.
+
+Antes de escribir el `.md`, correr y no proceder si falla:
 
 1. **Formato de tag:** cada línea de tag matchea exactamente
    `###### [figma_text_id](N:N)` contra el formato confirmado en el Golden
@@ -216,19 +234,21 @@ del HANDOFF activo, o desde el mismo pool de match transferible con distinto
 mismo dato subyacente del Canon (Tier 1/match literal) — el Anti-cloning
 Guard exige diferenciación de *redacción*, no prohíbe reusar el mismo hecho.
 
-## Output — Formato de Entrega Obligatorio (dos artefactos)
+## Output — Formato de Entrega (único artefacto)
 
-1. **Markdown en chat**, en bloque de código `markdown`, con footer de
-   metadata: versión del Output Contract, Positioning Mode activo,
-   referencia canónica al Canon usado, y detalle de Verificación Pre-Entrega
-   punto 3 para cada `[PENDING DATA]`.
-2. **Archivo `.md` descargable**, idéntico al bloque autorizado por el
-   operador.
+**Un único artefacto:** archivo `.md` descargable, generado directamente tras
+la Verificación Pre-Entrega interna. No se presenta markdown en chat ni se
+espera confirmación del operador antes de escribir el archivo — el único output
+de chat es la notificación de entrega.
 
-No generar el archivo `.md` hasta que el operador confirme el bloque de
-código, salvo `APROBAR_WRITE` o equivalente explícito en el mismo turno.
+El archivo debe incluir el footer de metadata obligatorio: versión del Output
+Contract, Positioning Mode activo, referencia canónica al Canon usado, y
+detalle de Verificación Pre-Entrega punto 3 para cada `[PENDING DATA]`.
 
-Entregar con `create_file` en `/mnt/user-data/outputs/` y `present_files`.
+Generar el archivo con `create_file`, guardarlo en `/mnt/user-data/outputs/`, y
+presentarlo con `present_files`. No agregues explicación adicional en el chat
+fuera del propio archivo — el mensaje de chat que acompaña la entrega debe ser
+mínimo (una línea, sin resumen del contenido).
 
 ### Verificación de Encoding (post-escritura)
 
