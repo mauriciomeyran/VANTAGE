@@ -1,188 +1,600 @@
-# VANTAGE Scout Layer 1 - Guía Rápida
+# VANTAGE
 
-## 🚀 Formas de Ejecutar el Sistema
+Sistema operativo personal para Discovery, evaluación determinista y producción documental de oportunidades profesionales.
 
-### Opción 1: Línea de Comandos (CLI) - Recomendado para Producción
+VANTAGE integra Runtime, Discovery, Gate Logic, CV Pipeline, Version Control e infraestructura documental alrededor de una fuente de verdad canona.
 
-#### Instalación
-```bash
-cd vantage_scout
-pip install -r requirements.txt
-playwright install chromium
-cp .env.example .env
-# Editar .env con tus API keys
-```
-
-#### Ejecución Básica
-```bash
-# Career Sites
-python main.py --wrapper Prompt_Career_Sites
-
-# LinkedIn  
-python main.py --wrapper linkedin
-
-# Aggregators
-python main.py --wrapper aggregators
-
-# Dry Run (testing)
-python main.py --wrapper Prompt_Career_Sites --dry-run
-```
-
-#### Ver Manual Completo
-```bash
-cat MANUAL.md
-```
+> **README = mapa operativo.**
+>
+> El detalle normativo vive en Kernel, Manual, Brief, Aliases y Career Canon.
 
 ---
 
-### Opción 2: Interfaz Web (UI) - Recomendado para Uso Interactivo
+## 01 · SESSION CYCLE
 
-#### Instalación UI
+Inicio del entorno:
+
 ```bash
-cd vantage_scout
-pip install flask
+start
 ```
 
-#### Ejecutar UI
+Bootstrap del contexto operativo:
+
 ```bash
-python web_ui.py
+vversions --bootstrap
 ```
 
-#### Acceder a la UI
-- Abre tu navegador en: http://127.0.0.1:5000
-- Selecciona el wrapper deseado
-- Click en "Ejecutar" o "Dry Run"
-- Los resultados se muestran en tiempo real
+Sincronizacin de versiones:
 
-#### Características de la UI
-- ✅ Selección visual de wrappers
-- ✅ Monitoreo de estado en tiempo real
-- ✅ Visualización de resultados históricos
-- ✅ Estado de configuración
-- ✅ Auto-refresh cada 30 segundos
-
----
-
-## 📋 Comparación: CLI vs UI
-
-| Característica | CLI | UI |
-|----------------|-----|-----|
-| **Producción** | ✅ Ideal | ⚠️ Requiere servidor |
-| **Testing** | ✅ Rápido | ✅ Visual |
-| **Monitoreo** | ⚠️ Manual | ✅ Automático |
-| **Programación** | ✅ Cron/Scripts | ❌ Manual |
-| **Facilidad de uso** | ⚠️ Técnico | ✅ Intuitivo |
-| **Recursos** | ✅ Ligero | ⚠️ Flask server |
-
----
-
-## 🎯 Flujo de Trabajo Recomendado
-
-### Para Desarrollo/Testing
-1. Usa la **UI Web** para pruebas interactivas
-2. Ejecuta **dry runs** para validar configuración
-3. Revisa resultados en la interfaz visual
-
-### Para Producción
-1. Usa **CLI** para ejecución programada
-2. Configura **cron jobs** para ejecución automática
-3. Monitorea archivos JSON en `output/` directory
-
----
-
-## 📁 Archivos de Salida
-
-Los resultados se guardan en `vantage_scout/output/`:
-```
-vantage_scout_Prompt_Career_Sites_20260818.json
-vantage_scout_LinkedIn_20260818.json
-vantage_scout_Aggregators_20260818.json
-```
-
----
-
-## 🔄 Integración Automatizada
-
-### Script de Ejecución Completa
 ```bash
-#!/bin/bash
-# run_all_scouts.sh
-
-cd /ruta/a/VANTAGE/vantage_scout
-
-echo "🔍 Running Career Sites Scout..."
-python main.py --wrapper Prompt_Career_Sites
-
-echo "🔍 Running LinkedIn Scout..."
-python main.py --wrapper linkedin
-
-echo "🔍 Running Aggregators Scout..."
-python main.py --wrapper aggregators
-
-echo "✅ All scouts completed!"
+vversions --sync
 ```
 
-### Configuración Cron (Ejecución Diaria)
+Modos adicionales de `vversions`:
+
 ```bash
-# Editar crontab: crontab -e
-# Ejecutar todos los scouts diariamente a las 9 AM
-0 9 * * * cd /ruta/a/VANTAGE/vantage_scout && python main.py --wrapper Prompt_Career_Sites
-0 10 * * * cd /ruta/a/VANTAGE/vantage_scout && python main.py --wrapper linkedin
-0 11 * * * cd /ruta/a/VANTAGE/vantage_scout && python main.py --wrapper aggregators
+vversions --scripts
+vversions --skills
+vversions --length
+vversions --update-baseline
 ```
+
+`--update-baseline` requiere `--length` y confirmacin explcita cuando corresponde. El catlogo completo de modos y sus contratos vive en `Aliases.md`.
+
+**Bootstrap ≠ Session Open.**
+
+El Bootstrap carga contexto operativo. La apertura formal del Session Ledger es una operacin distinta y opt-in.
 
 ---
 
-## 🆘 Ayuda Rápida
+## 02 · SYSTEM MAP
 
-### Problemas Comunes
-- **Error de dependencias**: `pip install -r requirements.txt`
-- **Error de Playwright**: `playwright install chromium`
-- **Error de API key**: Configurar `.env` correctamente
-- **Timeout**: Aumentar `BROWSER_MAX_STEPS` en `.env`
+```text
+                              VANTAGE
+                                 │
+                         ┌───────┴───────┐
+                         │   L0 Runtime  │
+                         └───────┬───────┘
+                                 │
+              ┌──────────────────┼──────────────────┐
+              │                  │                  │
+             L1                 L2                 L3
+          Active             Strategic           Passive
+          Search              Search              Intake
+              │                  │                  │
+              └──────────────────┼──────────────────┘
+                                 │
+                            Gate Logic
+                                 │
+                           CV Pipeline
+                                 │
+                       CV-A → Handoff → CV-B
+                                 │
+                                QA
+                                 │
+                              Export
+                                 │
+              L4 · Version Control & Infrastructure
+              └── documentacin · Git · sync · assets
+```
 
-### Ver Logs
+L1, L2 y L3 alimentan Discovery y convergen antes de Gate Logic.
+
+**L4 es infraestructura transversal, no una etapa de bsqueda.**
+
+---
+
+## 03 · L0 · VANTAGE RUNTIME
+
+L0 es la capa de Runtime, consulta y observabilidad.
+
+### Consulta y contexto
+
+```text
+vload
+vask
+vquery
+vresolve
+vcontext
+```
+
+### Estado y observabilidad
+
+```text
+vstatus
+vcensus
+vdigest
+vsource
+```
+
+### Versiones e integridad
+
+```text
+vversions
+vlength
+vupdatebaseline
+```
+
+### Runtime / navegacin
+
+```text
+vtrig
+vgolden
+vcheat
+vscope
+vdataflow
+vrouting
+```
+
+### Control
+
+```text
+vunlock
+vlock
+```
+
+Runtime, Version Check y Census son mecanismos de observabilidad y consulta ReadOnly sobre la infraestructura documental.
+
+---
+
+## 04 · L1 / L2 · DISCOVERY
+
+Discovery captura y consolida oportunidades para alimentar Gate Logic.
+
+### L1 · Active Search
+
+```text
+vl1
+vl1status
+vl1analytics
+vl1batch
+vl1recovery
+vl1profile
+vl1feed
+vl1backfill
+vl1app
+```
+
+L1 procesa el resultado consolidado del ciclo de Active Recon y lo incorpora al Tracker mediante el pipeline correspondiente.
+
+### L2 · Strategic Search
+
+L2 opera como bsqueda estratgica semanal.
+
+```text
+Gemini · You.com · Grok
+          ↓
+     Perplexity
+ Consolidation & Dedup
+          ↓
+         FEED
+          ↓
+   feed_processor.py
+          ↓
+       Notion
+```
+
+Su funcin es reconciliar resultados de mltiples motores y reducir ruido antes de alimentar el pipeline.
+
+### Assembly
+
+```text
+vassemble
+```
+
+Materializa los prompts semanales desde la Prompt Library para los motores de Discovery.
+
+---
+
+## 05 · L3 · PASSIVE INTAKE
+
+```text
+vl3
+vl3app
+```
+
+Flujo:
+
+```text
+Gmail / .Jobs
+      ↓
+Layer 3
+      ↓
+Notion
+      ↓
+Pipeline
+```
+
+L3 no deduplica por s mismo. Entra al punto de convergencia del pipeline, donde se resuelve la jerarqua entre capas.
+
+---
+
+## 06 · GATE LOGIC
+
+Gate Logic realiza la evaluacin determinista del pipeline.
+
+```text
+URL Gate
+   ↓
+Gate Decision
+   ↓
+Next Action
+   ↓
+Recovery RT-1
+```
+
+Gate Logic es independiente de Discovery y del CV Pipeline.
+
+CV-A comienza despus del Gate y no sustituye ni reevala la decisin determinista del pipeline.
+
+---
+
+## 07 · L4 · VERSION CONTROL & DOCUMENTATION
+
+L4 es infraestructura transversal para control de versiones, sincronizacin documental y mantenimiento de activos.
+
+### Git
+
+```text
+vgit
+```
+
+Sincroniza el repositorio mediante el mecanismo de Git de VANTAGE.
+
+### Documentacin
+
+```text
+vdoc
+vsync-doc
+vhyperlinks
+```
+
+- `vdoc` → orquesta la sincronizacin documental.
+- `vsync-doc` → motor de sincronizacin documento por documento.
+- `vhyperlinks` → aplica cross-references sobre bloques de Notion preservando sus IDs.
+
+### Skills / Runtime
+
+```text
+vtriggers
+```
+
+Mantiene `skills/triggers.json`, utilizado por el Bootloader para resolver triggers y cargar skills.
+
+### Utilities
+
+```text
+vserial
+vsum
+vprint
+cleancaches
+```
+
+- `vserial` → genera seriales de handoff.
+- `vsum` → utilidad de gestin de transcripts / Inbox.
+- `vprint` → lista oportunidades con `Gate_Decision = CREATE`.
+- `cleancaches` → limpia cachs regenerables.
+
+---
+
+## 08 · DASHBOARD
+
+```text
+vd
+vdapp
+```
+
+Se utiliza como herramienta operativa de recuperacin para oportunidades bloqueadas.
+
+---
+
+## 09 · CV PIPELINE
+
+```text
+Gate
+ ↓
+CV-A
+ ↓
+Handoff
+ ↓
+CV-B
+ ↓
+QA
+ ↓
+Export
+```
+
+### CV-A · Analysis
+
+```text
+CV-A [URL/JD]
+```
+
+CV-A:
+
+- procesa la vacante;
+- extrae keywords y gaps;
+- analiza tono de marca;
+- determina Positioning Mode N1–N4;
+- genera el HANDOFF para CV-B.
+
+Algoritmo de Positioning Mode:
+
+```text
+keywords
+   ↓
+mapping
+   ↓
+counting
+   ↓
+tie-break
+```
+
+El HANDOFF requiere `positioning_rationale`.
+
+### CV-B · Construction
+
+```text
+CV-B [HANDOFF]
+```
+
+CV-B construye el CV final a partir del HANDOFF de CV-A.
+
+**No ejecutar CV-B sin HANDOFF previo.**
+
+### QA
+
+```text
+QA [PDF]
+```
+
+QA audita el PDF terminado.
+
+Si QA falla:
+
+```text
+QA FAIL
+   ↓
+correcciones
+   ↓
+invocacin separada de CV-B
+```
+
+QA y regeneracin de CV-B son operaciones separadas.
+
+### Preparacin mecnica
+
+```text
+adapt_tracker_export.py
+cv_a_batch_agent.py
+cv_a_prep.py
+```
+
+No tienen alias corto.
+
+Este tooling prepara scaffolds, pero no sustituye CV-A. Cada vacante sigue requiriendo su propia invocacin de CV-A.
+
+---
+
+## 10 · DEDUP & OPPORTUNITIES
+
+```text
+vdedup
+vopport
+```
+
+Auditora manual:
+
 ```bash
-# Ver último resultado
-cat output/vantage_scout_*.json | jq .
-
-# Contar jobs encontrados
-cat output/vantage_scout_*.json | jq '.items | length'
+./scripts/dedup_audit.sh
 ```
 
-### Ejecutar Tests
+Jerarqua de convergencia:
+
+```text
+L1 > L2 > L3
+      ↓
+punto nico de convergencia
+```
+
+L1 y L3 no realizan la deduplicacin final de forma independiente.
+
+---
+
+## 11 · WEEKLY OPERATING RHYTHM
+
+### Lunes
+
+```text
+L1 + L2
+  ↓
+Feed
+  ↓
+Pipeline
+```
+
+### Martes
+
+```text
+vd
+```
+
+### Mircoles
+
+```text
+CV-A
+ ↓
+CV-B
+ ↓
+QA
+```
+
+### Jueves
+
 ```bash
-pytest tests/ -v
+~/vantage_pipeline.sh
 ```
 
----
+### Viernes
 
-## 📚 Documentación Adicional
+```bash
+~/vantage_pipeline.sh analytics
+```
 
-- **Manual Completo**: `MANUAL.md`
-- **Configuración**: `.env.example`
-- **Tests**: `tests/` directory
-- **Prompts**: `prompts/` directory
-
----
-
-## 🎓 Recomendaciones de Uso
-
-### LinkedIn
-- Configura `CHROME_USER_DATA_DIR` con tu perfil
-- Mantén sesión activa en LinkedIn
-- Usa `BROWSER_HEADLESS=false` inicialmente
-
-### Career Sites
-- No requiere perfil persistente
-- Headless mode funciona bien
-- Menos detección anti-bot
-
-### Agregadores
-- Requiere más tiempo
-- Aumenta `BROWSER_MAX_STEPS` si timeout
-- Rate limiting es importante
+La cadencia organiza el trabajo del operador. No constituye una condicin adicional del Gate.
 
 ---
 
-**¡El sistema está listo para usar! Elige CLI para producción o UI para desarrollo interactivo.** 🚀
+## 12 · DOCUMENTATION MAP
+
+| Fuente | Consulta para |
+|---|---|
+| `System Prompt.md` | gobernanza y comportamiento de la IA |
+| `Kernel.md` | arquitectura, contratos e invariantes |
+| `Manual.md` | procedimientos, operacin y troubleshooting |
+| `Brief.md` | navegacin y routing documental |
+| `Master Index` | localizar documentos y estructura documental |
+| `ID Census` | resolver IDs, referencias y namespaces |
+| `Aliases.md` | interfaz Terminal y nomenclatura |
+| `Career Canon.md` | verdad y posicionamiento profesional |
+| `Change Log.md` | historial y auditora de cambios |
+| `Changelog Archivo.md` | historial archivado |
+
+Regla prctica:
+
+```text
+Dnde est?
+      ↓
+Brief / Master Index
+
+Qu regla aplica?
+      ↓
+Kernel
+
+Cmo se ejecuta?
+      ↓
+Manual
+
+Qu comando uso?
+      ↓
+Aliases
+
+Qu dato profesional es cannico?
+      ↓
+Career Canon
+
+Qu ID / referencia?
+      ↓
+ID Census
+
+Cundo cambi?
+      ↓
+Change Log
+```
+
+El Brief establece explcitamente esta separacin de responsabilidades.
+
+---
+
+## 13 · REPOSITORY MAP
+
+```text
+VANTAGE/
+├── Documentacin/
+│   └── ACTIVE/
+├── Layer_1/
+├── Layer_3/
+├── Layer_4/
+├── Dashboard/
+├── skills/
+├── tools/
+├── src/
+├── tests/
+├── Raycast/
+├── templates/
+├── prompts/
+├── state/
+├── handoffs/
+└── Archive/
+```
+
+| Directorio | Funcin |
+|---|---|
+| `Documentacin/ACTIVE/` | documentacin normativa activa |
+| `Layer_1/` | implementacin L1 |
+| `Layer_3/` | implementacin L3 |
+| `Layer_4/` | infraestructura L4 |
+| `skills/` | skills + triggers |
+| `Dashboard/` | recovery tooling |
+| `Archive/` | material histrico |
+
+---
+
+## 14 · CORE RULES
+
+- Notion es la fuente documental de verdad.
+- Kernel define contratos y arquitectura.
+- Manual define procedimientos.
+- Brief define navegacin.
+- Aliases define la interfaz Terminal.
+- Career Canon define la verdad profesional.
+- Runtime observa, consulta y resuelve.
+- Census verifica referencias e IDs.
+- Version Check verifica versiones e integridad documental.
+- Discovery alimenta Gate Logic.
+- Gate precede al CV Pipeline.
+- CV-A y CV-B son sesiones separadas.
+- QA y regeneracin de CV-B son operaciones separadas.
+- L4 mantiene infraestructura, no constituye una etapa de bsqueda.
+
+---
+
+## 15 · WHEN IN DOUBT
+
+Primero verificar:
+
+```text
+vstatus
+vversions
+vcensus
+```
+
+Despus consultar la fuente documental apropiada:
+
+```text
+Brief / Master Index
+        ↓
+Kernel / Manual / Aliases / Career Canon / ID Census
+        ↓
+Execution
+```
+
+No reconstruir contratos desde memoria.
+
+No asumir que la existencia histrica de un script implica que sigue siendo la interfaz vigente.
+
+---
+
+## 16 · VERSION... La versin operativa se consulta desde VANTAGE:
+
+```bash
+vversions
+```
+
+No hardcodear aqu una versin que pueda quedar obsoleta.
+
+---
+
+# VANTAGE
+
+**Personal operating map.**
+
+README = orientacin.
+
+Kernel = contrato.
+
+Manual = procedimiento.
+
+Aliases = interfaz.
+
+Career Canon = verdad profesional.
