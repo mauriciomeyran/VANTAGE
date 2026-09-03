@@ -852,6 +852,7 @@ Reglas de normalización
 - Sin acentos ni caracteres especiales
 - Sin símbolos de puntuación
 - Guión bajo como único separador (no CamelCase)
+- Cada componente del stem (Marca_normalizada, Vacante_normalizada) se separa internamente por guión bajo entre cada palabra — no es un solo token concatenado. El guión bajo es el único separador, tanto entre componentes del stem como dentro de cada componente.
 Ejemplo
 "Gucci — VM Coordinator, LATAM (2026)" → 2026_Mauricio_Meyran_Gucci_VM_Coordinator_LATAM
 Aplica a

@@ -125,15 +125,26 @@ ARCHIVE: Score 0 o Status Expirada.
 ALL: Administración general.
 Paso 2
 Instalar Entorno Python
+Si el entorno ya existe (reinstalación o retoma tras inactividad):
 ```bash
 cd ~/Documents/03 Projects/VANTAGE/Layer_1
 source .venv/bin/activate
-# (el entorno ya existe; solo actívalo)
+```
+Si es la primera instalación (no existe .venv):
+```bash
+cd ~/Documents/03 Projects/VANTAGE/Layer_1
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+playwright install chromium
+cp .env.example .env
+# Editar .env con tus API keys (Notion, Groq, credenciales de Gmail)
 ```
 En Terminal, verifica la instalación, debe mostrar 3.8 o superior.
 ```bash
 python3 --version 
 ```
+Modos de ejecución: además de la CLI (main.py --wrapper ...), Scout Layer 1 puede operarse desde una UI web local — pip install flask && python web_ui.py, accesible en http://127.0.0.1:5000 con selección visual de wrappers y monitoreo en tiempo real. Usa la UI para testing interactivo y la CLI para ejecución programada vía cron.
 Paso 3 
 Bootloader con Claude
 Ya no es necesario realizar copy-paste manual del System Prompt maestro en cada actualización, en su lugar:
@@ -703,6 +714,12 @@ Confirmar credenciales: IMAP (Gmail), GROQ_API_KEY.
 Ejecutar manualmente: vl3 (debe procesar hasta 10 correos).
 Revisar heartbeat: cat ~/.vantage/l3_heartbeat.json (última ejecución exitosa).
 Si falla autenticación IMAP: regenerar app password de Gmail.
+Scraping L1 No Corre (Playwright)
+Error de dependencias al arrancar: pip install -r requirements.txt dentro del venv activo.
+Browser no encontrado / error de Playwright: playwright install chromium.
+Error de API key: verificar .env contra .env.example, confirmar que la key esté vigente.
+Timeout en Aggregators: aumentar BROWSER_MAX_STEPS en .env.
+Rate limiting o bloqueo anti-bot: espaciar corridas vía cron, evitar re-ejecutar el mismo wrapper en ventanas cortas.
 ### 12.1 MANUAL:FIGMA-SYNC-DIAGNOSTIC
 Matriz de Errores — Figma Sync
 "Keys sin resolver" tiene dos causas distintas:

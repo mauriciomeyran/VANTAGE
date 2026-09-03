@@ -1,6 +1,39 @@
 # V | CHANGELOG
 
 Tipo: [DOC]
+Documento modificado: V | MANUAL (§04 MANUAL:SETUP Paso 2, §12 MANUAL:TROUBLESHOOTING)
+Documentos potencialmente afectados: Ninguno adicional — Kernel, System Prompt y Career Canon no referencian este contrato; MANUAL:SCRIPT-GLOSSARY-L1 (§22.1) queda con gap paralelo (web_ui.py no documentado), no incluido en este parche.
+Tipo de impacto: Normativo — cierre de gap detectado entre el README de Scout Layer 1 (candidato a reemplazo) y el Manual, que no documentaba instalación desde cero (venv, pip install, Playwright, .env) ni el modo de ejecución vía UI web.
+Acción correctiva ejecutada:
+1. MANUAL:SETUP (Paso 2) — agregada ruta de primera instalación (python3 -m venv .venv, pip install -r requirements.txt, playwright install chromium, cp .env.example .env) junto a la ruta existente de reinstalación; agregada mención del modo de ejecución vía UI web (web_ui.py/Flask) como alterno a la CLI.
+1. MANUAL:TROUBLESHOOTING (§12) — agregada entrada "Scraping L1 No Corre (Playwright)" con 5 síntomas/soluciones (dependencias, Playwright, API key, timeout BROWSER_MAX_STEPS, rate limiting), en el mismo formato plano que las entradas vecinas.
+IDs afectados: Ninguno (sin alta/baja de ID canónico — ambas ediciones extienden nodos existentes, MANUAL:SETUP y MANUAL:TROUBLESHOOTING, por decisión explícita de invisibilidad estructural sobre alta de subsección nueva).
+Estado final de la validación: Write-Back Verification PASS — confirmado vía re-fetch en vivo de ambos nodos, contenido presente sin mismatch. Census no aplica (sin altas/bajas de ID). DRY RUN presentado y aprobado explícitamente por el operador (yep) antes de escritura.
+---
+Tipo: [DOC]
+Documento modificado: V | KERNEL (§14, KERNEL:NAMING-CONVENTION)
+Documentos potencialmente afectados: Ninguno adicional — sin referencias cruzadas a esta sección en Manual/SP/Canon que requieran actualización.
+Tipo de impacto: Normativo — aclaración de regla existente, no alta de concepto nuevo.
+Causa raíz: La prosa de "Reglas de normalización" no explicitaba que Marca_normalizada y Vacante_normalizada son secuencias de palabras separadas por guión bajo entre sí — el ejemplo ya lo mostraba correctamente (Gucci_VM_Coordinator_LATAM) pero la regla en prosa dejaba ambigüedad, causando drift observado en esta sesión (stems generados como palabras concatenadas sin separador interno).
+Acción correctiva ejecutada: Agregada regla explícita en §14 — "Cada componente del stem (Marca_normalizada, Vacante_normalizada) se separa internamente por guión bajo entre cada palabra — no es un solo token concatenado. El guión bajo es el único separador, tanto entre componentes del stem como dentro de cada componente." Reutilización de ID existente (KERNEL:NAMING-CONVENTION), sin alta de subsección nueva.
+IDs afectados: Ninguno (sin alta/baja de ID canónico — extensión de nodo existente).
+Estado final de la validación: Write-Back Verification PASS — confirmado vía re-fetch en vivo de §14, regla nueva presente sin mismatch. Census no aplica (sin altas/bajas de ID). Sin DRY RUN presentado en el mismo turno de aprobación por instrucción explícita del operador (yep).
+---
+Tipo: [FIX] [CODE]
+Documento modificado: Layer_3/scripts/layer_3_mail.py (código, no documentación Notion)
+Documentos potencialmente afectados: Ninguno — fix de infraestructura de código, sin escritura a Kernel/Manual/Canon.
+Tipo de impacto: Operativo — VL3 quedaba en loop infinito de reintentos (8x backoff) contra 2+ correos que fallaban determinísticamente con Groq 400 json_validate_failed, sin nunca resolver ni descartar el correo.
+Causa raíz (dos mecanismos distintos, mismo síntoma):
+1. Correos de Indeed con bytes de reemplazo (\ufffd) corrompiendo URLs rc/clk/dl?jk=... dentro del body — el modelo no podía generar una URL literal válida y Groq rechazaba la generación con failed_generation: "".
+1. max_tokens=2500 insuficiente para correos con volumen alto de vacantes candidatas antes del filtro post-Groq — confirmado en vivo con mensaje explícito de Groq: "max completion tokens reached before generating a valid document" (correo Grupo Axo®).
+Acción correctiva ejecutada:
+1. _extract_body() — agregado body.replace("\ufffd", "") antes de truncar a GROQ_BODY_MAX, elimina bytes corruptos que bloqueaban la generación JSON de Groq.
+1. extract_jobs_with_groq() — max_tokens aumentado de 2500 a 6000, da margen suficiente para completar el array JSON en correos con más vacantes candidatas.
+1. Backup pre-fix conservado en layer_3_mail.py.bak antes de ambos cambios.
+IDs afectados: Ninguno (fix de código, sin alta/baja de ID canónico).
+Estado final de la validación: Confirmado en vivo por el operador vía 3 corridas sucesivas de vl3 — los correos que antes trababan el pipeline (Senior Merchandising Coordinator LATAM, Grupo Axo® SUPERVISOR, Supervisor de Visual Merchandiser CDMX) procesaron limpio tras el fix, con ⏸️ Groq pendientes: 0 en la corrida post-fix y 2 vacantes nuevas creadas en TRACKER (GOLDCO, Tendam). Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
+---
+Tipo: [DOC]
 Documento modificado: V | ALIASES (§05 fila vserial), V | MANUAL (§02, §08.1, §22.5), V | KERNEL (§04.4, §07.8, §09.2, §09.11)
 Documentos potencialmente afectados: Ninguno adicional — System Prompt y Career Canon no referencian estos contratos.
 Tipo de impacto: Normativo + Operativo — cierre del pendiente declarado en v9.21.40 ("Documentación transversal: KERNEL (arquitectura seriales, URL Gate), Manual (shortcuts, cron jobs)").
