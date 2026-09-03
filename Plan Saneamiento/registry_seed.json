@@ -1,0 +1,416 @@
+[
+  {
+    "page": "Page 1",
+    "total_nodes": 68,
+    "nodes": [
+      {
+        "id": "2:4",
+        "name": "HEADER_NAME",
+        "parent_frame": "HEADER",
+        "characters": "MAURICIO MEYRÁN"
+      },
+      {
+        "id": "2:5",
+        "name": "HEADER_PERSONAL-DETAILS_TAG_LINE",
+        "parent_frame": "HEADER_PERSONAL DETAILS",
+        "characters": "Visual Merchandising Manager · Luxury Brand Execution & LATAM Strategy"
+      },
+      {
+        "id": "8:56",
+        "name": "HEADER_PERSONAL_DETAILS_CONTACT_CITY",
+        "parent_frame": "CONTACT",
+        "characters": "Miguel Hidalgo, CDMX |"
+      },
+      {
+        "id": "8:57",
+        "name": "HEADER_PERSONAL_DETAILS_CONTACT_PHONE",
+        "parent_frame": "CONTACT",
+        "characters": "+52 1 56 4383 8125 |"
+      },
+      {
+        "id": "8:58",
+        "name": "HEADER_PERSONAL_DETAILS_CONTACT_EMAIL",
+        "parent_frame": "CONTACT",
+        "characters": "mauricio.meyran@icloud.com"
+      },
+      {
+        "id": "8:62",
+        "name": "HEADER_PERSONAL_DETAILS_LINKS_LINKEDIN",
+        "parent_frame": "LINKS",
+        "characters": "LinkedIn |"
+      },
+      {
+        "id": "8:63",
+        "name": "HEADER_PERSONAL_DETAILS_LINKS_PORTFOLIO",
+        "parent_frame": "LINKS",
+        "characters": "Portafolio"
+      },
+      {
+        "id": "2:7",
+        "name": "PROFESSIONAL_PROFILE_SECTION_TITLE",
+        "parent_frame": "PROFESSIONAL PROFILE",
+        "characters": "PERFIL PROFESIONAL"
+      },
+      {
+        "id": "2:9",
+        "name": "PROFESSIONAL_PROFILE_BODY_1",
+        "parent_frame": "BODY",
+        "characters": "Estratega de Visual Merchandising con más de 10 años de trayectoria en retail de lujo, moda premium y entornos multitienda. Especialista en traducir lineamientos globales de HQ en ejecuciones de marca impecables y consistentes a escala regional: boutiques monomarca, corners wholesale, flagship openings y campañas estacionales en entornos de ultra-lujo."
+      },
+      {
+        "id": "3:13",
+        "name": "PROFESSIONAL_PROFILE_BODY_2",
+        "parent_frame": "BODY",
+        "characters": "Con experiencia comprobada en 6 países LATAM y 270+ puntos de venta, domino la coordinación de proveedores locales e internacionales, la gestión de presupuestos CAPEX/OPEX y la generación de retroalimentación fotográfica y cualitativa para equipos corporativos. Historial cuantificado: +43% tráfico · +18% conversión · -74% costos operativos."
+      },
+      {
+        "id": "2:10",
+        "name": "PROFESSIONAL_PROFILE_BODY_3",
+        "parent_frame": "BODY",
+        "characters": "Cross-functional leadership focused on connecting commercial operations with brand visual identity, coordinating multidisciplinary teams and external agencies for store openings and critical events."
+      },
+      {
+        "id": "2:12",
+        "name": "SKILLS_SECTION_TITLE",
+        "parent_frame": "SKILLS",
+        "characters": "HABILIDADES CLAVE"
+      },
+      {
+        "id": "2:14",
+        "name": "SKILLS_BULLET_1",
+        "parent_frame": "BULLETS",
+        "characters": "Estrategia Visual: Window installations, store zoning, boutique & wholesale VM execution, seasonal campaigns, planogramas, HQ alignment & brand consistency."
+      },
+      {
+        "id": "2:15",
+        "name": "SKILLS_BULLET_2",
+        "parent_frame": "BULLETS",
+        "characters": "Operaciones & Finanzas: CAPEX/OPEX management, coordinación de proveedores locales e internacionales, flagship store openings, field audits, multi-country LATAM scope."
+      },
+      {
+        "id": "2:16",
+        "name": "SKILLS_BULLET_3",
+        "parent_frame": "BULLETS",
+        "characters": "Liderazgo & Training: Gestión de equipos directos e indirectos, coaching de alto desempeño, auditorías visuales de campo, reporte de mejores prácticas a corporativos regionales."
+      },
+      {
+        "id": "2:17",
+        "name": "SKILLS_BULLET_4",
+        "parent_frame": "BULLETS",
+        "characters": "Stack Técnico: Adobe Creative Cloud (Illustrator, Photoshop, InDesign), AutoCAD, SketchUp, IWD, Keynote, IA Generativa (visualizaciones, planogramas y reportes)."
+      },
+      {
+        "id": "2:18",
+        "name": "SKILLS_BULLET_5",
+        "parent_frame": "BULLETS",
+        "characters": "Idiomas: Español (Nativo) | Inglés (Profesional Corporativo)."
+      },
+      {
+        "id": "2:20",
+        "name": "PROFESSIONAL_EXPERIENCE_SECTION_TITLE",
+        "parent_frame": "PROFESSIONAL EXPERIENCE",
+        "characters": "EXPERIENCIA PROFESIONAL"
+      },
+      {
+        "id": "2:22",
+        "name": "LOREAL_SUB_SECTION_TITLE",
+        "parent_frame": "LOREAL",
+        "characters": "L'ORÉAL LUXE MÉXICO"
+      },
+      {
+        "id": "10:218",
+        "name": "PROFESSIONAL_EXPERIENCE_LOREAL_JOB_DETAILS_ROLE",
+        "parent_frame": "JOB DETAILS",
+        "characters": "Coordinador de Visual Merchandising – División de Lujo |"
+      },
+      {
+        "id": "10:219",
+        "name": "PROFESSIONAL_EXPERIENCE_LOREAL_JOB_DETAILS_DURATION",
+        "parent_frame": "JOB DETAILS",
+        "characters": "02/2025 - 03/2026"
+      },
+      {
+        "id": "2:25",
+        "name": "PROFESSIONAL_EXPERIENCE_LOREAL_BULLET_1",
+        "parent_frame": "BULLETS",
+        "characters": "Lidero la estrategia visual y el storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias), garantizando que cada exhibición refleje los estándares de sofisticación y coherencia de marca en entornos de luxury retail bajo lineamientos globales de HQ."
+      },
+      {
+        "id": "2:26",
+        "name": "PROFESSIONAL_EXPERIENCE_LOREAL_BULLET_2",
+        "parent_frame": "BULLETS",
+        "characters": "Coordino proveedores locales para la producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados, mantenimiento de mobiliario y cumplimiento de lineamientos globales de la división."
+      },
+      {
+        "id": "2:27",
+        "name": "PROFESSIONAL_EXPERIENCE_LOREAL_BULLET_3",
+        "parent_frame": "BULLETS",
+        "characters": "Ejecuté el despliegue nacional de campañas NPI clave 2025 (Born in Roma, Stronger With You), generando retroalimentación fotográfica y cualitativa para el equipo corporativo de VM en cada rotación estratégica."
+      },
+      {
+        "id": "2:28",
+        "name": "PROFESSIONAL_EXPERIENCE_LOREAL_BULLET_4|",
+        "parent_frame": "BULLETS",
+        "characters": "Colaboro con equipos de Marketing, Trade y Operaciones para alinear el calendario comercial con la ejecución visual, actuando como embajador de marca y referente de estándares en cada cuenta clave."
+      },
+      {
+        "id": "2:32",
+        "name": "BISONTE_SUB_SECTION_TITLE",
+        "parent_frame": "BISONTE",
+        "characters": "BISONTE EXPERIENTIAL MARKETING"
+      },
+      {
+        "id": "4:17",
+        "name": "PROFESSIONAL_EXPERIENCE_BISONTE_JOB_DETAILS_ROLE",
+        "parent_frame": "JOB DETAILS",
+        "characters": "Coordinador de Brand Environment y Store Design |"
+      },
+      {
+        "id": "4:18",
+        "name": "PROFESSIONAL_EXPERIENCE_BISONTE_JOB_DETAILS_DURATION",
+        "parent_frame": "JOB DETAILS",
+        "characters": "2022 - 2023"
+      },
+      {
+        "id": "2:35",
+        "name": "PROFESSIONAL_EXPERIENCE_BISONTE_BULLET_1",
+        "parent_frame": "BULLETS",
+        "characters": "Lidero la implementación visual y técnica para la apertura del Adidas Brand Center Madero (Flagship Store), coordinando proveedores locales e instalaciones bajo estándares globales de Store Design — entrega sin observaciones bloqueantes para apertura por parte de la marca."
+      },
+      {
+        "id": "2:36",
+        "name": "PROFESSIONAL_EXPERIENCE_BISONTE_BULLET_2",
+        "parent_frame": "BULLETS",
+        "characters": "Supervisé el zoning y disposición de experiencias de marca por categoría, validando planogramas con el equipo corporativo y garantizando la integridad visual desde el día uno de operaciones."
+      },
+      {
+        "id": "2:37",
+        "name": "PROFESSIONAL_EXPERIENCE_BISONTE_BULLET_3",
+        "parent_frame": "BULLETS",
+        "characters": "Gestioné la cadena de suministro de materiales de Store Design, asegurando disponibilidad, calidad de mobiliario, iluminación y props en todos los espacios del flagship."
+      },
+      {
+        "id": "2:39",
+        "name": "DOCKERS_SUB_SECTION_TITLE",
+        "parent_frame": "DOCKERS",
+        "characters": "LEVI STRAUSS & CO. (DOCKERS)"
+      },
+      {
+        "id": "4:21",
+        "name": "PROFESSIONAL_EXPERIENCE_DOCKERS_JOB_DETAILS_ROLE",
+        "parent_frame": "JOB DETAILS",
+        "characters": "Coordinador Senior de Brand Environment – LATAM |"
+      },
+      {
+        "id": "4:22",
+        "name": "PROFESSIONAL_EXPERIENCE_DOCKERS_JOB_DETAILS_DURATION",
+        "parent_frame": "JOB DETAILS",
+        "characters": "2018 - 2021"
+      },
+      {
+        "id": "2:42",
+        "name": "PROFESSIONAL_EXPERIENCE_DOCKERS_BULLET_1",
+        "parent_frame": "BULLETS",
+        "characters": "Gestioné la estrategia visual para 6 países en LATAM y 270+ puntos de venta nacionales, asegurando la estandarización regional de la marca y reportando mejores prácticas de mercado al equipo de Trade Marketing."
+      },
+      {
+        "id": "2:43",
+        "name": "PROFESSIONAL_EXPERIENCE_DOCKERS_BULLET_2",
+        "parent_frame": "BULLETS",
+        "characters": "Diseñé una estrategia de producción local que generó un ahorro del -74% en costos de campañas nacionales, manteniendo los estándares globales de exhibición en todas las categorías de producto."
+      },
+      {
+        "id": "2:44",
+        "name": "PROFESSIONAL_EXPERIENCE_DOCKERS_BULLET_3",
+        "parent_frame": "BULLETS",
+        "characters": "Reduje en un -33% el tiempo de actualización de floorsets mediante manuales de Zoning & Mapping y herramientas digitales para field teams, facilitando la ejecución consistente en red propia y franquicias."
+      },
+      {
+        "id": "3:9",
+        "name": "PROFESSIONAL_EXPERIENCE_DOCKERS_BULLET_4",
+        "parent_frame": "BULLETS",
+        "characters": "Led a team of 3 national coordinators with direct reporting, plus 3 dotted-line collaborators in other markets, acting as the regional liaison for the Americas."
+      },
+      {
+        "id": "3:2",
+        "name": "PROFESSIONAL_EXPERIENCE_DOCKERS_BULLET_5",
+        "parent_frame": "BULLETS",
+        "characters": "Managed visual strategy across 6 LATAM countries and 270+ points of sale (own boutiques, franchises, wholesale corners), ensuring regional brand image standardization and reporting best practices to the corporate team."
+      },
+      {
+        "id": "2:46",
+        "name": "AEROPOSTALE_SUB_SECTION_TITLE",
+        "parent_frame": "AEROPOSTALE",
+        "characters": "AÉROPOSTALE"
+      },
+      {
+        "id": "4:25",
+        "name": "PROFESSIONAL_EXPERIENCE_AEROPOSTALE_JOB_DETAILS_ROLE",
+        "parent_frame": "JOB DETAILS",
+        "characters": "Gerente de Visual Merchandising |"
+      },
+      {
+        "id": "4:26",
+        "name": "PROFESSIONAL_EXPERIENCE_AEROPOSTALE_JOB_DETAILS_DURATION",
+        "parent_frame": "JOB DETAILS",
+        "characters": "2017 - 2018"
+      },
+      {
+        "id": "2:49",
+        "name": "PROFESSIONAL_EXPERIENCE_AEROPOSTALE_BULLET_1",
+        "parent_frame": "BULLETS",
+        "characters": "Construí el área de VM desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona; implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional."
+      },
+      {
+        "id": "2:50",
+        "name": "PROFESSIONAL_EXPERIENCE_AEROPOSTALE_BULLET_2",
+        "parent_frame": "BULLETS",
+        "characters": "Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales."
+      },
+      {
+        "id": "2:51",
+        "name": "PROFESSIONAL_EXPERIENCE_AEROPOSTALE_BULLET_3",
+        "parent_frame": "BULLETS",
+        "characters": "Estandaricé los planogramas de categorías clave (Denim & Lifestyle), generando retroalimentación sistemática a dirección sobre desempeño visual y oportunidades de mejora en piso."
+      },
+      {
+        "id": "10:186",
+        "name": "ALDO_SUB_SECTION_TITLE",
+        "parent_frame": "ALDO",
+        "characters": "EL PALACIO DE HIERRO (ALDO GROUP)"
+      },
+      {
+        "id": "10:188",
+        "name": "PROFESSIONAL_EXPERIENCE_ALDO_JOB_DETAILS_ROLE 2",
+        "parent_frame": "JOB DETAILS",
+        "characters": "Coordinador de Visual Merchandising & Marketing |"
+      },
+      {
+        "id": "10:189",
+        "name": "PROFESSIONAL_EXPERIENCE_ALDO_JOB_DETAILS_DURATION 2",
+        "parent_frame": "JOB DETAILS",
+        "characters": "2014 - 2017"
+      },
+      {
+        "id": "10:191",
+        "name": "PROFESSIONAL_EXPERIENCE_ALDO_BULLET_2_1",
+        "parent_frame": "BULLETS",
+        "characters": "Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá."
+      },
+      {
+        "id": "10:192",
+        "name": "PROFESSIONAL_EXPERIENCE_ALDO_BULLET_2_2",
+        "parent_frame": "BULLETS",
+        "characters": "Realicé visitas regulares de auditoría visual a tienda, evaluando mantenimiento, iluminación, props y mobiliario; documenté hallazgos y mejores prácticas para retroalimentación al equipo regional."
+      },
+      {
+        "id": "10:193",
+        "name": "PROFESSIONAL_EXPERIENCE_ALDO_BULLET_2_3",
+        "parent_frame": "BULLETS",
+        "characters": "Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos 3 años del rol tuve a cargo una coordinadora Jr. con reporte directo."
+      },
+      {
+        "id": "10:195",
+        "name": "PROFESSIONAL_EXPERIENCE_ALDO_JOB_DETAILS_ROLE 1",
+        "parent_frame": "JOB DETAILS",
+        "characters": "Asesor de Visual Merchandising |"
+      },
+      {
+        "id": "10:196",
+        "name": "PROFESSIONAL_EXPERIENCE_ALDO_JOB_DETAILS_DURATION 1",
+        "parent_frame": "JOB DETAILS",
+        "characters": "2012 - 2014"
+      },
+      {
+        "id": "10:198",
+        "name": "PROFESSIONAL_EXPERIENCE_ALDO_BULLET_1",
+        "parent_frame": "ALDO",
+        "characters": "Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá."
+      },
+      {
+        "id": "10:154",
+        "name": "EDUCATION_SECTION_TITLE",
+        "parent_frame": "EDUCATION",
+        "characters": "FORMACIÓN ACADÉMICA"
+      },
+      {
+        "id": "10:158",
+        "name": "EDUCATION_PROGRAMS_1_NAME",
+        "parent_frame": "DETAILS",
+        "characters": "Licenciatura en Artes Visuales |"
+      },
+      {
+        "id": "10:159",
+        "name": "EDUCATION_PROGRAMS_1_DURATION",
+        "parent_frame": "DETAILS",
+        "characters": "2008 - 2012"
+      },
+      {
+        "id": "10:161",
+        "name": "EDUCATION_PROGRAMS_1_ISSUER",
+        "parent_frame": "1",
+        "characters": "Escuela Nacional de Artes Plásticas, UNAM"
+      },
+      {
+        "id": "10:164",
+        "name": "EDUCATION_PROGRAMS_2_NAME",
+        "parent_frame": "DETAILS",
+        "characters": "Diplomado en Museos y Exposiciones |"
+      },
+      {
+        "id": "10:165",
+        "name": "EDUCATION_PROGRAMS_2_DURATION",
+        "parent_frame": "DETAILS",
+        "characters": "2014"
+      },
+      {
+        "id": "10:167",
+        "name": "EDUCATION_PROGRAMS_2_ISSUER",
+        "parent_frame": "2",
+        "characters": "Facultad de Artes y Diseño, UNAM"
+      },
+      {
+        "id": "10:213",
+        "name": "COURSES_SECTION_TITLE",
+        "parent_frame": "COURSES",
+        "characters": "CURSOS Y CERTIFICACIONES"
+      },
+      {
+        "id": "10:202",
+        "name": "COURSES_PROGRAMS_1_NAME",
+        "parent_frame": "DETAILS",
+        "characters": "AutoCAD y SketchUp Essentials |"
+      },
+      {
+        "id": "10:203",
+        "name": "COURSES_PROGRAMS_1_DURATION",
+        "parent_frame": "DETAILS",
+        "characters": "2024"
+      },
+      {
+        "id": "10:204",
+        "name": "COURSES_PROGRAMS_1_ISSUER",
+        "parent_frame": "1",
+        "characters": "LinkedIn Learning"
+      },
+      {
+        "id": "10:207",
+        "name": "COURSES_PROGRAMS_2_NAME",
+        "parent_frame": "DETAILS",
+        "characters": "Store Operations Leaders Orientation (VM, Sales & Ops) |"
+      },
+      {
+        "id": "10:208",
+        "name": "COURSES_PROGRAMS_2_DURATION",
+        "parent_frame": "DETAILS",
+        "characters": "2014"
+      },
+      {
+        "id": "10:209",
+        "name": "COURSES_PROGRAMS_2_ISSUER",
+        "parent_frame": "2",
+        "characters": "ALDO Group, Montréal, Canadá"
+      }
+    ]
+  }
+]
