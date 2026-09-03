@@ -138,6 +138,26 @@ Un HANDOFF incompleto en cualquiera de los 7 campos originales no avanza a CV-B.
 [Listo para CV-B, o BLOQUEADO — razón]
 ```
 
+## Output — Naming Convention del Archivo (KERNEL:FILE-NAMING-001)
+
+El nombre del archivo `.md` debe seguir estrictamente el formato del Kernel:
+
+```
+{YYYY}_{FirstName}_{LastName}_{Empresa}_{Rol}_CV-A.md
+```
+
+Donde:
+- `YYYY`: Año de la sesión (ej. `2026`).
+- `FirstName_LastName`: `Mauricio_Meyran` (fijo, del Career Canon).
+- `Empresa`: Nombre de la empresa extraído del JD/URL, normalizado (espacios → underscores, sin caracteres especiales).
+- `Rol`: Título del rol extraído del JD, normalizado (espacios → underscores, sin caracteres especiales).
+- `Phase`: `CV-A` (fijo para esta skill).
+
+Ejemplo canónico:
+- `2026_Mauricio_Meyran_Dior_VM_Trade_Coordinator_CV-A.md`
+
+Si algún campo (empresa o rol) no está disponible al momento de la entrega, detener y solicitar al operador — no inferir ni usar placeholders.
+
 ## Output — Entrega
 
-Genera el archivo con `create_file`, guárdalo en `/mnt/user-data/outputs/`, y preséntalo con `present_files`. No agregues explicación adicional en el chat fuera del propio archivo — el mensaje de chat que acompaña la entrega debe ser mínimo (una línea, sin resumen del contenido).
+Genera el archivo con `create_file`, nombrándolo según la Naming Convention de arriba, guárdalo en `/mnt/user-data/outputs/`, y preséntalo con `present_files`. No agregues explicación adicional en el chat fuera del propio archivo — el mensaje de chat que acompaña la entrega debe ser mínimo (una línea, sin resumen del contenido).

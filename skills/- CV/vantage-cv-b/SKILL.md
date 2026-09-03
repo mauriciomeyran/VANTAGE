@@ -234,6 +234,26 @@ del HANDOFF activo, o desde el mismo pool de match transferible con distinto
 mismo dato subyacente del Canon (Tier 1/match literal) — el Anti-cloning
 Guard exige diferenciación de *redacción*, no prohíbe reusar el mismo hecho.
 
+## Output — Naming Convention del Archivo (KERNEL:FILE-NAMING-001)
+
+El nombre del archivo `.md` debe seguir estrictamente el formato del Kernel:
+
+```
+{YYYY}_{FirstName}_{LastName}_{Empresa}_{Rol}_CV-B.md
+```
+
+Donde:
+- `YYYY`: Año de la sesión (ej. `2026`).
+- `FirstName_LastName`: `Mauricio_Meyran` (fijo, del Career Canon).
+- `Empresa`: Nombre de la empresa extraído del HANDOFF (`empresa`), normalizado (espacios → underscores, sin caracteres especiales).
+- `Rol`: Título del rol extraído del HANDOFF (`rol`), normalizado (espacios → underscores, sin caracteres especiales).
+- `Phase`: `CV-B` (fijo para esta skill).
+
+Ejemplo canónico:
+- `2026_Mauricio_Meyran_Dior_VM_Trade_Coordinator_CV-B.md`
+
+Si algún campo (empresa o rol) no está disponible al momento de la entrega, detener y solicitar al operador — no inferir ni usar placeholders.
+
 ## Output — Formato de Entrega (único artefacto)
 
 **Un único artefacto:** archivo `.md` descargable, generado directamente tras
@@ -245,10 +265,11 @@ El archivo debe incluir el footer de metadata obligatorio: versión del Output
 Contract, Positioning Mode activo, referencia canónica al Canon usado, y
 detalle de Verificación Pre-Entrega punto 3 para cada `[PENDING DATA]`.
 
-Generar el archivo con `create_file`, guardarlo en `/mnt/user-data/outputs/`, y
-presentarlo con `present_files`. No agregues explicación adicional en el chat
-fuera del propio archivo — el mensaje de chat que acompaña la entrega debe ser
-mínimo (una línea, sin resumen del contenido).
+Generar el archivo con `create_file`, **nombrándolo según la Naming Convention
+de arriba**, guardarlo en `/mnt/user-data/outputs/`, y presentarlo con
+`present_files`. No agregues explicación adicional en el chat fuera del propio
+archivo — el mensaje de chat que acompaña la entrega debe ser mínimo (una línea,
+sin resumen del contenido).
 
 ### Verificación de Encoding (post-escritura)
 
