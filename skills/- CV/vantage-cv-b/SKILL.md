@@ -199,9 +199,14 @@ archivo. No se presenta como output intermedio en chat.
 
 Antes de escribir el `.md`, correr y no proceder si falla:
 
-1. **Formato de tag:** cada línea de tag matchea exactamente
-   `###### [figma_text_id](N:N)` contra el formato confirmado en el Golden
-   Skeleton de esta sesión — con corchetes.
+1. **Formato de tag:** extraer el ID **entre paréntesis** `(N:N)` de cada
+   línea de tag vía regex, ignorando el contenido del label entre corchetes.
+   Verificar membresía exacta de ese ID en `registry_seed.json`. Rechazar
+   si: (a) el ID entre paréntesis no existe en el registry, (b) hay más de
+   una convención de tag distinta en el mismo archivo o batch, o (c) el
+   label es el placeholder literal `figma_text_id` sin ID real ni
+   corchetes — eso sí es bloqueante (bug de plantilla, no cosmético). El
+   contenido del label (ej. `2:28|`) no forma parte del ID validado.
 2. **Scan de bullets manuales:** ningún párrafo dentro de un tag empieza con
    `•`, `-`, `*` o número seguido de punto.
 3. **Scan de `[PENDING DATA]` con evidencia de reencuadre intentado:** por
