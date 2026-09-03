@@ -23,7 +23,7 @@ Portafolio
 PERFIL PROFESIONAL
 
 ###### [2:9](2:9)
-Estratega de Visual Merchandising y Desarrollo de Tienda con más de 10 años de trayectoria en aperturas, remodelaciones y ejecución visual multi-punto de venta. Especialista en traducir conceptos de marca en experiencias físicas de tienda: coordinación de obra, montaje de escaparates y exhibiciones, y alineación de estándares visuales desde el día uno de operaciones.
+Estratega de Visual Merchandising y Desarrollo de Tienda con más de 10 años de trayectoria en aperturas, remodelaciones y ejecución visual multi-punto de venta. Especialista en traducir conceptos de marca en experiencias físicas de tienda: coordinación de instalaciones y montaje de escaparates y exhibiciones, y alineación de estándares visuales desde el día uno de operaciones.
 
 ###### [3:13](3:13)
 Lideré la implementación visual y técnica del Adidas Brand Center Madero (flagship store), entregando sin observaciones bloqueantes para apertura, y gestioné estrategia visual en 6 países LATAM con 270+ puntos de venta. Domino coordinación de proveedores locales, control de presupuesto CAPEX/OPEX y desarrollo de programas de capacitación para equipos de piso.
@@ -70,7 +70,7 @@ Coordino proveedores locales para la producción e instalación de materiales PO
 ###### [2:27](2:27)
 Ejecuté el despliegue nacional de campañas NPI clave 2025 (Born in Roma, Stronger With You), generando retroalimentación fotográfica y cualitativa para el equipo corporativo de VM en cada rotación estratégica de exhibición.
 
-###### [2:28|](2:28)
+###### [2:28](2:28)
 Colaboro con equipos de Marketing, Trade y Operaciones para alinear el calendario comercial con la ejecución visual, actuando como referente de estándares de marca en cada cuenta clave.
 
 ###### [2:32](2:32)
