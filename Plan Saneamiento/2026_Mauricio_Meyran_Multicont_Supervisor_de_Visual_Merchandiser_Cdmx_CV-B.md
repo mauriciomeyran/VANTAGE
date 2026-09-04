@@ -4,51 +4,51 @@
 
 ###### [figma_text_id](2:5)
 
-**Visual Merchandising Manager · Field Leadership, Multi-Unit Operations & Commercial KPI** · Miguel Hidalgo, CDMX | mauricio.meyran@icloud.com | LinkedIn | Portafolio
+**Gerente de Visual Merchandising · Liderazgo de Campo, Operación Multi-Unidad y KPI Comercial** · Miguel Hidalgo, CDMX | mauricio.meyran@icloud.com | LinkedIn | Portafolio
 
 ###### [figma_text_id](2:7)
 
-**PROFESSIONAL PROFILE**
+**PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
 
-**Visual Merchandising Manager** with over 14 years of experience leading field teams and multi-unit retail operations across fashion, luxury and department-store channels. Specialist in building and supervising VM teams, driving commercial KPIs through standardized execution, and coordinating campaign implementation, store coverage and openings across own stores, departmentals and wholesale accounts.
+**Gerente de Visual Merchandising** con más de 14 años de experiencia liderando equipos de campo y operaciones retail multi-unidad en canales de moda, lujo y tiendas departamentales. Especialista en construir y supervisar equipos de VM, impulsar KPIs comerciales a través de ejecución estandarizada, y coordinar implementación de campañas, cobertura de tiendas y aperturas en tiendas propias, departamentales y cuentas wholesale.
 
 ###### [figma_text_id](3:13)
 
-**Cross-functional field leadership** focused on connecting visual strategy with sales performance, managing teams of Visual Merchandisers, ensuring weekly coverage and campaign compliance, and resolving operational issues while delivering measurable traffic and conversion results.
+**Liderazgo de campo multifuncional** enfocado en conectar la estrategia visual con el desempeño de ventas, gestionando equipos de Visual Merchandisers, asegurando cobertura semanal y cumplimiento de campañas, y resolviendo incidencias operativas mientras entrego resultados medibles de tráfico y conversión.
 
 ###### [figma_text_id](2:10)
 
-**Commercial VM & field enablement** connecting team leadership, multi-POS supervision and KPI analysis to elevate brand presentation and product displacement at the point of sale.
+**VM comercial y habilitación de campo** que conecta liderazgo de equipo, supervisión multi-POS y análisis de KPIs para elevar la presentación de marca y el desplazamiento de producto en el punto de venta.
 
 ###### [figma_text_id](2:12)
 
-**KEY SKILLS**
+**HABILIDADES CLAVE**
 
 ###### [figma_text_id](2:14)
 
-**Field Team Leadership & Development:** Building and supervising Visual Merchandising teams (up to 21 direct reports), coaching high-performance execution, and ensuring consistent coverage across multi-store networks.
+**Liderazgo y Desarrollo de Equipos de Campo:** Construcción y supervisión de equipos de Visual Merchandising (hasta 21 reportes directos), coaching de ejecución de alto desempeño, y aseguramiento de cobertura consistente en redes multi-tienda.
 
 ###### [figma_text_id](2:15)
 
-**Campaign Implementation & Brand Standards:** Translating brand guidelines into in-store execution, coordinating seasonal campaigns, displays and planograms across departmentals and wholesale accounts.
+**Implementación de Campañas y Estándares de Marca:** Traducción de lineamientos de marca en ejecución en tienda, coordinación de campañas de temporada, displays y planogramas en departamentales y cuentas wholesale.
 
 ###### [figma_text_id](2:16)
 
-**Commercial KPI & Sales Analysis:** Using traffic, conversion and sell-out data to guide visual decisions, achieving documented +43% traffic and +18% conversion through strategic display and team enablement.
+**KPI Comercial y Análisis de Ventas:** Uso de datos de tráfico, conversión y sell-out para guiar decisiones visuales, logrando +43% de tráfico y +18% de conversión documentados mediante estrategia de display y habilitación de equipo.
 
 ###### [figma_text_id](2:17)
 
-**Technical Stack:** Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, Keynote, and Generative AI (ChatGPT, Claude, Perplexity).
+**Stack Técnico:** Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, Keynote, e IA Generativa (ChatGPT, Claude, Perplexity).
 
 ###### [figma_text_id](2:18)
 
-**Languages:** Spanish (Native) · English (Corporate Professional / Regional Fluency).
+**Idiomas:** Español (Nativo) · Inglés (Profesional Corporativo / Fluidez Regional).
 
 ###### [figma_text_id](2:20)
 
-**PROFESSIONAL EXPERIENCE**
+**EXPERIENCIA PROFESIONAL**
 
 ###### [figma_text_id](2:22)
 
@@ -56,23 +56,23 @@
 
 ###### [figma_text_id](2:23)
 
-***Visual Merchandising Coordinator – Luxury Division*** · *February 2025 – March 2026*
+***Coordinador de Visual Merchandising – División de Lujo*** · *Febrero 2025 – Marzo 2026*
 
 ###### [figma_text_id](2:25)
 
-**Campaign & brand guideline implementation:** Led Visual Merchandising strategy for Valentino, Giorgio Armani and Ralph Lauren across high-traffic luxury and department-store channels, ensuring consistent brand identity and commercial animation at key accounts.
+**Implementación de campañas y lineamientos de marca:** Lideré la estrategia de Visual Merchandising para Valentino, Giorgio Armani y Ralph Lauren en canales de alto tráfico de lujo y tiendas departamentales, asegurando identidad de marca consistente y animación comercial en cuentas clave.
 
 ###### [figma_text_id](2:26)
 
-**NPI rollout & commercial alignment:** Coordinated national rollout of key NPI campaigns with external agencies, managing production and installation while aligning visual execution with the commercial calendar in collaboration with Marketing and Trade Marketing.
+**Despliegue de NPI y alineación comercial:** Coordiné el despliegue nacional de campañas NPI clave con agencias externas, gestionando producción e instalación mientras alineaba la ejecución visual con el calendario comercial en colaboración con Marketing y Trade Marketing.
 
 ###### [figma_text_id](2:27)
 
-**Budget, vendors & field support:** Administered national CAPEX/OPEX budget for POP and fixtures, coordinated local and international vendors, and supported field teams in maintaining presentation standards that drive product visibility.
+**Presupuesto, proveedores y soporte de campo:** Administré el presupuesto nacional CAPEX/OPEX para POP y mobiliario, coordiné proveedores locales e internacionales, y apoyé a equipos de campo en mantener estándares de presentación que impulsan la visibilidad de producto.
 
 ###### [figma_text_id](2:28)
 
-**KPI-oriented execution:** Reinforced commercial impact of visual decisions at the point of sale by linking display quality and campaign compliance to sell-out and brand experience goals.
+**Ejecución orientada a KPI:** Reforcé el impacto comercial de las decisiones visuales en el punto de venta vinculando la calidad de display y el cumplimiento de campañas con los objetivos de sell-out y experiencia de marca.
 
 ###### [figma_text_id](2:32)
 
@@ -80,19 +80,19 @@
 
 ###### [figma_text_id](2:33)
 
-***Brand Environment & Store Design Coordinator*** · *2022 – 2023*
+***Coordinador de Brand Environment y Store Design*** · *2022 – 2023*
 
 ###### [figma_text_id](2:35)
 
-**Store opening & special projects:** Led visual and technical implementation for the Adidas Brand Center Madero Flagship opening, coordinating specialized vendors for production, logistics and installation under compressed timelines.
+**Apertura de tienda y proyectos especiales:** Lideré la implementación visual y técnica para la apertura del Adidas Brand Center Madero Flagship, coordinando proveedores especializados para producción, logística e instalación bajo plazos comprimidos.
 
 ###### [figma_text_id](2:36)
 
-**On-time delivery & quality control:** Supervised production and logistics on a project rescued three months before opening, achieving on-time delivery with 17 minor non-blocking punch-list observations and protecting consumer experience.
+**Entrega a tiempo y control de calidad:** Supervisé producción y logística en un proyecto rescatado tres meses antes de la apertura, logrando entrega a tiempo con 17 observaciones menores no bloqueantes de punch-list y protegiendo la experiencia del consumidor.
 
 ###### [figma_text_id](2:37)
 
-**Vendor coordination & design integrity:** Ensured quality of finishes and furniture while safeguarding architectural and visual design intent, supporting special projects that require precise field execution.
+**Coordinación de proveedores e integridad de diseño:** Aseguré la calidad de acabados y mobiliario mientras salvaguardaba la intención de diseño arquitectónico y visual, apoyando proyectos especiales que requieren ejecución de campo precisa.
 
 ###### [figma_text_id](2:39)
 
@@ -100,27 +100,27 @@
 
 ###### [figma_text_id](2:40)
 
-***Senior Brand Environment Coordinator – LATAM*** · *2018 – 2021*
+***Coordinador Senior de Brand Environment – LATAM*** · *2018 – 2021*
 
 ###### [figma_text_id](2:42)
 
-**Multi-POS supervision & network coverage:** Managed visual strategy across 6 LATAM countries and 270+ points of sale (own boutiques, franchises and wholesale corners), ensuring regional brand standardization and field coverage.
+**Supervisión multi-POS y cobertura de red:** Gestioné la estrategia visual en 6 países de LATAM y 270+ puntos de venta (tiendas propias, franquicias y corners wholesale), asegurando estandarización de marca regional y cobertura de campo.
 
 ###### [figma_text_id](2:43)
 
-**Field tools & execution efficiency:** Created Zoning & Mapping manuals and digital tools that reduced floor-display discrepancies and cut floorset update time by 33%, enabling consistent weekly execution by field teams.
+**Herramientas de campo y eficiencia de ejecución:** Creé manuales de Zoning & Mapping y herramientas digitales que redujeron discrepancias de exhibición en piso y disminuyeron el tiempo de actualización de floorset en 33%, habilitando ejecución semanal consistente por parte de los equipos de campo.
 
 ###### [figma_text_id](2:44)
 
-**Team leadership & remote coordination:** Led 3 national coordinators with direct reporting plus 3 dotted-line collaborators, ensuring 100% POP coverage during contingency periods through remote field management.
+**Liderazgo de equipo y coordinación remota:** Lideré 3 coordinadores nacionales con reporte directo más 3 colaboradores de línea punteada, asegurando 100% de cobertura POP durante periodos de contingencia mediante gestión de campo remota.
 
 ###### [figma_text_id](3:9)
 
-**Cost and vendor optimization:** Designed local production strategy that delivered 74% cost savings on national campaigns while maintaining visual consistency across the multi-channel network.
+**Optimización de costos y proveedores:** Diseñé una estrategia de producción local que generó un ahorro del 74% en costos de campañas nacionales mientras mantenía consistencia visual en toda la red multi-canal.
 
 ###### [figma_text_id](3:2)
 
-**Commercial alignment at scale:** Supported product displacement and sell-out focus by keeping visual standards aligned with commercial priorities across a large multi-account portfolio.
+**Alineación comercial a escala:** Apoyé el desplazamiento de producto y el enfoque de sell-out manteniendo los estándares visuales alineados con las prioridades comerciales en un portafolio amplio de múltiples cuentas.
 
 ###### [figma_text_id](2:46)
 
@@ -128,19 +128,19 @@
 
 ###### [figma_text_id](2:47)
 
-***Visual Merchandising Manager*** · *2017 – 2018*
+***Gerente de Visual Merchandising*** · *2017 – 2018*
 
 ###### [figma_text_id](2:49)
 
-**Field team build & leadership:** Built the Visual Merchandising department from scratch and managed 17 VM Assistant Managers plus 4 Zone Supervisors (21 direct reports), establishing national field coverage across a 17-store network.
+**Construcción y liderazgo de equipo de campo:** Construí el departamento de Visual Merchandising desde cero y gestioné 17 subgerentes de VM más 4 supervisores de zona (21 reportes directos), estableciendo cobertura de campo nacional en una red de 17 tiendas.
 
 ###### [figma_text_id](2:50)
 
-**Commercial KPI ownership:** Contributed directly to +43% traffic and +18% conversion across the store network through strategic display coordination, high-traffic zone restructuring and continuous analysis of sales and visual performance.
+**Responsabilidad sobre KPI comercial:** Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en la red de tiendas mediante coordinación estratégica de displays, reestructuración de zonas de alto tráfico y análisis continuo de ventas y desempeño visual.
 
 ###### [figma_text_id](2:51)
 
-**Campaign, planogram & team enablement:** Standardized planograms for key categories, trained the in-house VM team in commercial display techniques, and ensured campaign and brand-guideline compliance that supported product displacement.
+**Campañas, planogramas y habilitación de equipo:** Estandaricé planogramas para categorías clave, capacité al equipo interno de VM en técnicas de exhibición comercial, y aseguré el cumplimiento de campañas y lineamientos de marca que apoyaron el desplazamiento de producto.
 
 ###### [figma_text_id](2:54)
 
@@ -148,47 +148,47 @@
 
 ###### [figma_text_id](2:55)
 
-***Visual Merchandising & Marketing Coordinator*** · *2012 – 2017*
+***Coordinador de Visual Merchandising y Marketing*** · *2012 – 2017*
 
 ###### [figma_text_id](2:57)
 
-**Departmental + wholesale multi-account execution:** Coordinated visual and marketing execution for 17 retail stores and 12 wholesale corners inside El Palacio de Hierro, leading openings, remodels and window rotations under Canadian headquarters standards.
+**Ejecución multi-cuenta departamental y wholesale:** Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale dentro de El Palacio de Hierro, liderando aperturas, remodelaciones y rotaciones de vitrina bajo los estándares de la casa matriz canadiense.
 
 ###### [figma_text_id](2:58)
 
-**Campaign adaptation & traffic support:** Designed exclusive window displays for institutional campaigns and adapted global guidelines for the Mexican market, supporting category traffic and brand presence.
+**Adaptación de campañas y soporte de tráfico:** Diseñé vitrinas exclusivas para campañas institucionales y adapté lineamientos globales para el mercado mexicano, apoyando el tráfico de categoría y la presencia de marca.
 
 ###### [figma_text_id](2:59)
 
-**Field maintenance & incident resolution:** Supervised fixture maintenance and repair orders with in-house teams, ensuring correct brand presence during PR events, fashion shows and day-to-day operations.
+**Mantenimiento de campo y resolución de incidencias:** Supervisé el mantenimiento de mobiliario y órdenes de reparación con equipos internos, asegurando la presencia correcta de marca durante eventos de PR, desfiles de moda y operación diaria.
 
 ###### [figma_text_id](2:60)
 
-**Training & junior development:** Developed training programs for floor staff that elevated visual maintenance and launch execution, while directly managing one Jr. Brand Coordinator during the final three years of the role.
+**Capacitación y desarrollo junior:** Desarrollé programas de capacitación para personal de piso que elevaron el mantenimiento visual y la ejecución de lanzamientos, mientras gestionaba directamente a un Coordinador Jr. de Marca durante los últimos tres años del rol.
 
 ###### [figma_text_id](2:62)
 
-**ACADEMIC BACKGROUND**
+**FORMACIÓN ACADÉMICA**
 
 ###### [figma_text_id](2:64)
 
-**Bachelor’s Degree in Visual Arts** · *2008 – 2012* · Escuela Nacional de Artes Plásticas, UNAM
+**Licenciatura en Artes Visuales** · *2008 – 2012* · Escuela Nacional de Artes Plásticas, UNAM
 
 ###### [figma_text_id](2:65)
 
-**Diploma in Museums and Exhibitions** · *2014* · Facultad de Artes y Diseño, UNAM
+**Diplomado en Museos y Exposiciones** · *2014* · Facultad de Artes y Diseño, UNAM
 
 ###### [figma_text_id](2:67)
 
-**COURSES & CERTIFICATIONS**
+**CURSOS Y CERTIFICACIONES**
 
 ###### [figma_text_id](2:69)
 
-AutoCAD & SketchUp Essentials · *2024* · LinkedIn Learning
+AutoCAD y SketchUp Essentials · *2024* · LinkedIn Learning
 
 ###### [figma_text_id](2:70)
 
-Store Operations Leaders Orientation (VM, Sales & Ops) · *2014* · ALDO Group, Montréal, Canada
+Store Operations Leaders Orientation (VM, Sales & Ops) · *2014* · ALDO Group, Montréal, Canadá
 
 ---
 **Footer — Metadata & Pre-Delivery Verification**
@@ -196,11 +196,11 @@ Store Operations Leaders Orientation (VM, Sales & Ops) · *2014* · ALDO Group, 
 - Positioning Mode: N4 · Commercial VM & Field Leadership (operator decision)
 - Canon reference: V | CAREER CANON v9.21.41
 - HANDOFF source: Multicont / Supervisor de Visual Merchandiser Cdmx (2026-09-03)
-- Language: EN (structure aligned to Golden Skeleton; content prioritizes N4 anchors C04/C05 — team leadership, multi-POS, commercial KPIs, departmental + wholesale)
+- Language: ES (traducido en rebuild 2026-09-03 — mismatch de idioma corregido, causa raíz nueva detectada en auditoría v2; CV-A declaraba ES, cuerpo original estaba 100% en inglés)
 - PENDING DATA occurrences: 0
 - Pre-Delivery checks passed:
-  1. Tag format: all lines match `###### [figma_text_id](N:N)` with brackets
+  1. Tag format: ID validado entre paréntesis contra registry_seed.json (gate corregido R2.1)
   2. No manual bullets (`•` / `-` / `*` / numbered) at paragraph start
   3. All slots filled via direct Canon facts or transferable reframe under Match Transferible Obligatorio; no Anti-overselling
   4. Slot integrity preserved (C01×4, C02×3, C03×5, C04×3, C05×4)
-  5. Distinctiveness: wording driven by this HANDOFF’s JD_keywords_top6 (liderazgo 8-12 VMs, departamentales + wholesale, campañas, rutas/cobertura, análisis ventas/KPIs, aperturas) and N4 rationale; differentiated from prior Multicont N4 outputs by emphasis on field supervision scale and commercial KPI linkage
+  5. Distinctiveness: wording driven by this HANDOFF's JD_keywords_top6 (liderazgo 8-12 VMs, departamentales + wholesale, campañas, rutas/cobertura, análisis ventas/KPIs, aperturas) and N4 rationale; differentiated from prior Multicont N4 outputs by emphasis on field supervision scale and commercial KPI linkage

@@ -23,19 +23,19 @@ Portafolio
 PERFIL PROFESIONAL
 
 ###### [2:9](2:9)
-Retail Designer with hands-on ownership of architectural drawings, construction documents and commercial space planning for flagship store projects. Delivered the Adidas Brand Center Madero build from technical package through on-site handover, coordinating contractors and local teams under global Store Design standards.
+Retail Designer with hands-on experience in visual and technical implementation, commercial space planning and store-opening execution for flagship store projects. Delivered the Adidas Brand Center Madero build from production and logistics coordination through on-site handover, coordinating contractors and local teams under global Store Design standards.
 
 ###### [3:13](3:13)
 Background spans store-level execution across L'Oréal Luxe, Levi's/Dockers, Aéropostale and ALDO Group (Palacio de Hierro), applying consistent commercial space planning and brand-identity translation into physical retail environments across Mexico and 6 LATAM countries.
 
 ###### [2:10](2:10)
-Store design execution grounded in technical documentation, contractor coordination and brand-DNA translation into physical space — from architectural package review through construction follow-up to store opening.
+Store design execution grounded in visual and technical implementation, contractor coordination and brand-DNA translation into physical space — from Store Design materials production through installation follow-up to store opening.
 
 ###### [2:12](2:12)
 HABILIDADES CLAVE
 
 ###### [2:14](2:14)
-**Estrategia Visual:** Commercial space planning, brand DNA translation into physical retail environments, architectural package review, zoning y planogramas, escaparatismo y colorimetría.
+**Estrategia Visual:** Commercial space planning, brand DNA translation into physical retail environments, visual and technical implementation for flagship-store execution, zoning y planogramas, escaparatismo y colorimetría.
 
 ###### [2:15](2:15)
 **Operaciones & Finanzas:** Construction and store-opening project ownership, contractor and consultant coordination, CAPEX/OPEX tracking, vendor timeline management.
@@ -83,13 +83,13 @@ Coordinador de Brand Environment y Store Design |
 2022 - 2023
 
 ###### [2:35](2:35)
-**Architectural package ownership, flagship store:** Led technical and visual implementation for the Adidas Brand Center Madero opening, reviewing construction documents and coordinating local contractors and installers under global Store Design standards; delivered with no blocking observations at handover.
+**Visual and technical implementation, flagship store:** Led technical and visual implementation for the Adidas Brand Center Madero opening, coordinating visual and technical execution against global Store Design standards with local contractors and installers; delivered with no blocking observations at handover.
 
 ###### [2:36](2:36)
-Oversaw zoning and category layout, validating floor plans and planograms with the corporate team and ensuring visual and spatial integrity from day one of operations — direct precedent for commercial space planning and construction-document review.
+Oversaw zoning and category layout, aligning layout and planograms with the corporate team and ensuring visual and spatial integrity from day one of operations — direct precedent for commercial space planning and Store Design materials coordination.
 
 ###### [2:37](2:37)
-Managed the Store Design supply chain end-to-end — fixtures, lighting and props procurement, quality control and vendor timelines — across every space in the flagship, coordinating with contractors and consultants through project handover.
+Coordinated production and logistics of Store Design materials — fixtures, lighting and props, quality control and vendor timelines — across every space in the flagship, coordinating with contractors and consultants through project handover.
 
 ###### [2:39](2:39)
 LEVI STRAUSS & CO. (DOCKERS)
@@ -107,7 +107,7 @@ Coordinador Senior de Brand Environment – LATAM |
 Designed a local-production strategy that cut campaign and store-opening costs by -74%, maintaining global execution and construction standards across every product category and market.
 
 ###### [2:44](2:44)
-Reduced floorset and store-refresh turnaround time by -33% through Zoning & Mapping manuals and digital tools for field teams — direct precedent for project timeline ownership on construction documentation.
+Reduced floorset and store-refresh turnaround time by -33% through Zoning & Mapping manuals and digital tools for field teams — direct precedent for coordinating production timelines on Store Design materials.
 
 ###### [3:9](3:9)
 Led a team of 3 national coordinators with direct reporting, plus 3 dotted-line collaborators in other markets, acting as the regional liaison for the Americas.
@@ -210,5 +210,5 @@ ALDO Group, Montréal, Canadá
 - `[PENDING DATA]`: 0 ocurrencias
 - Registry SSOT: `Figma Sync/registry_seed.json` (GitHub `main`, 68 nodos) — sin discrepancias vs Golden Skeleton
 - Match Transferible aplicado: gap de Revit (fit_gaps) no se reencuadra como dominio de herramienta — Canon solo respalda AutoCAD/SketchUp (CERT02); se declara en Stack Técnico tal cual, sin sobrevender proficiency no documentada (Anti-overselling)
-- Nota de nivel de seniority (ver Observaciones del HANDOFF): el JD es un rol junior bajo supervisión; el Canon refleja 10+ años en roles de coordinación/liderazgo. CV-B no infla ni suaviza este desajuste — expone el hecho técnico transferible (architectural package ownership en C02) sin reencuadrar el nivel de seniority real de Mau como "junior".
-- Cross-check batch de sesión: comparado contra CV-B previos (Servicios Andrei Moygo N2, Eurokor N3, H&M Retail Designer N2) — mismo Canon fuente y mismo Positioning Mode que H&M Retail Designor; bullets C02/C03 reescritos con ángulo de "architectural package ownership / construction document review" ya usado en el HANDOFF senior, diferenciados por énfasis en review vs. autoría técnica y por tono junior-adjacent del perfil, sin match verbatim
+- Nota de nivel de seniority (ver Observaciones del HANDOFF): el JD es un rol junior bajo supervisión; el Canon refleja 10+ años en roles de coordinación/liderazgo. CV-B no infla ni suaviza este desajuste — expone el hecho técnico transferible (visual and technical implementation en C02) sin reencuadrar el nivel de seniority real de Mau como "junior".
+- Cross-check batch de sesión: comparado contra CV-B previos (Servicios Andrei Moygo N2, Eurokor N3, H&M Retail Designer N2) — mismo Canon fuente y mismo Positioning Mode que H&M Retail Designor; bullets C02/C03 reescritos con ángulo de "visual and technical implementation / Store Design materials coordination" ya usado en el HANDOFF senior, diferenciados por énfasis en review vs. autoría técnica y por tono junior-adjacent del perfil, sin match verbatim

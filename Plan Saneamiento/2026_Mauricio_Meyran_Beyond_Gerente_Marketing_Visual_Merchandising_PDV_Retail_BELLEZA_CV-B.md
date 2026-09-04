@@ -4,51 +4,51 @@
 
 ###### [figma_text_id](2:5)
 
-**Brand Environment & Store Design Coordinator · Flagship Execution, Network Expansion & Visual Strategy** · Miguel Hidalgo, CDMX | mauricio.meyran@icloud.com | LinkedIn | Portafolio
+**Coordinador de Brand Environment y Store Design · Ejecución de Flagships, Expansión de Red y Estrategia Visual** · Miguel Hidalgo, CDMX | mauricio.meyran@icloud.com | LinkedIn | Portafolio
 
 ###### [figma_text_id](2:7)
 
-**PROFESSIONAL PROFILE**
+**PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
 
-**Brand Environment & Store Design Coordinator** with over 14 years of experience implementing visual and technical strategies for flagship stores, new store openings, and multi-store retail networks. Specialist in translating global brand guidelines into high-impact local executions, coordinating specialized vendors for production and installation, and delivering projects on time under tight deadlines while supporting commercial growth of own-store networks.
+**Coordinador de Brand Environment y Store Design** con más de 14 años de experiencia implementando estrategias visuales y técnicas para tiendas flagship, aperturas de nueva tienda y redes retail multi-sucursal. Especialista en traducir lineamientos globales de marca en ejecuciones locales de alto impacto, coordinando proveedores especializados para producción e instalación, y entregando proyectos a tiempo bajo plazos ajustados mientras apoyo el crecimiento comercial de redes de tienda propia.
 
 ###### [figma_text_id](3:13)
 
-**Cross-functional leadership** focused on connecting brand strategy with physical space execution and commercial objectives, managing vendor relationships for production, logistics and installation, and overseeing visual operations across multi-store networks while maintaining brand coherence and operational efficiency.
+**Liderazgo multifuncional** enfocado en conectar la estrategia de marca con la ejecución de espacio físico y los objetivos comerciales, gestionando relaciones con proveedores para producción, logística e instalación, y supervisando operaciones visuales en redes multi-sucursal mientras mantengo coherencia de marca y eficiencia operativa.
 
 ###### [figma_text_id](2:10)
 
-**Physical space execution** focused on translating brand concepts into built environments, protecting design intent from concept through final installation, and enabling consistent Visual Merchandising standards across expanding point-of-sale networks.
+**Ejecución de espacio físico** enfocada en traducir conceptos de marca en entornos construidos, protegiendo la intención de diseño desde el concepto hasta la instalación final, y habilitando estándares consistentes de Visual Merchandising en redes de punto de venta en expansión.
 
 ###### [figma_text_id](2:12)
 
-**KEY SKILLS**
+**HABILIDADES CLAVE**
 
 ###### [figma_text_id](2:14)
 
-**Store Design & Flagship Execution:** Leading visual and technical implementation for flagship openings and remodels, coordinating specialized vendors for production and installation, and delivering under compressed timelines.
+**Store Design y Ejecución de Flagships:** Liderazgo de implementación visual y técnica para aperturas y remodelaciones de flagship, coordinación de proveedores especializados para producción e instalación, y entrega bajo plazos comprimidos.
 
 ###### [figma_text_id](2:15)
 
-**Network Expansion & Multi-Store Coordination:** Supporting visual standards and execution quality across own-store networks, franchises and wholesale corners during growth phases and rollouts.
+**Expansión de Red y Coordinación Multi-Sucursal:** Soporte a estándares visuales y calidad de ejecución en redes de tienda propia, franquicias y corners wholesale durante fases de crecimiento y despliegues.
 
 ###### [figma_text_id](2:16)
 
-**Visual Merchandising & Field Enablement:** Creating Zoning & Mapping tools, planogram standardization and training programs that elevate in-store execution and commercial alignment at the point of sale.
+**Visual Merchandising y Habilitación de Campo:** Creación de herramientas de Zoning & Mapping, estandarización de planogramas y programas de capacitación que elevan la ejecución en tienda y la alineación comercial en el punto de venta.
 
 ###### [figma_text_id](2:17)
 
-**Technical Stack:** Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, Keynote, and Generative AI (ChatGPT, Claude, Perplexity).
+**Stack Técnico:** Adobe Creative Cloud (Illustrator, Photoshop, InDesign), SketchUp, AutoCAD, Figma, Keynote, e IA Generativa (ChatGPT, Claude, Perplexity).
 
 ###### [figma_text_id](2:18)
 
-**Languages:** Spanish (Native) · English (Corporate Professional / Regional Fluency).
+**Idiomas:** Español (Nativo) · Inglés (Profesional Corporativo / Fluidez Regional).
 
 ###### [figma_text_id](2:20)
 
-**PROFESSIONAL EXPERIENCE**
+**EXPERIENCIA PROFESIONAL**
 
 ###### [figma_text_id](2:22)
 
@@ -56,23 +56,23 @@
 
 ###### [figma_text_id](2:23)
 
-***Visual Merchandising Coordinator – Luxury Division*** · *February 2025 – March 2026*
+***Coordinador de Visual Merchandising – División de Lujo*** · *Febrero 2025 – Marzo 2026*
 
 ###### [figma_text_id](2:25)
 
-**Visual strategy for luxury brands:** Led the Visual Merchandising strategy for Valentino, Giorgio Armani and Ralph Lauren (fragrances) across high-traffic and luxury channels, ensuring global brand identity alignment at key department-store accounts and points of sale.
+**Estrategia visual para marcas de lujo:** Lideré la estrategia de Visual Merchandising para Valentino, Giorgio Armani y Ralph Lauren (fragancias) en canales de alto tráfico y lujo, asegurando la alineación de identidad de marca global en cuentas clave de tiendas departamentales y puntos de venta.
 
 ###### [figma_text_id](2:26)
 
-**NPI campaigns & commercial alignment:** Coordinated national rollout of key NPI campaigns (Born in Roma, Stronger With You) with external agencies within budget, managing production and installation while aligning the commercial calendar with visual execution in collaboration with Marketing and Trade Marketing.
+**Campañas NPI y alineación comercial:** Coordiné el despliegue nacional de campañas NPI clave (Born in Roma, Stronger With You) con agencias externas dentro de presupuesto, gestionando producción e instalación mientras alineaba el calendario comercial con la ejecución visual en colaboración con Marketing y Trade Marketing.
 
 ###### [figma_text_id](2:27)
 
-**Budget & vendor management:** Administered the division’s national CAPEX/OPEX budget, optimizing investment in POP materials, displays and window fixtures for launches and seasonal campaigns, and coordinating local and international vendors for quality and on-time delivery.
+**Gestión de presupuesto y proveedores:** Administré el presupuesto nacional CAPEX/OPEX de la división, optimizando la inversión en materiales POP, displays y mobiliario de vitrina para lanzamientos y campañas de temporada, y coordinando proveedores locales e internacionales para calidad y entrega a tiempo.
 
 ###### [figma_text_id](2:28)
 
-**Field enablement & brand ambassadorship:** Acted as brand ambassador at key accounts and supported consistent product presentation standards, reinforcing the commercial impact of Visual Merchandising at the point of sale.
+**Habilitación de campo y representación de marca:** Actué como embajador de marca en cuentas clave y apoyé estándares consistentes de presentación de producto, reforzando el impacto comercial del Visual Merchandising en el punto de venta.
 
 ###### [figma_text_id](2:32)
 
@@ -80,19 +80,19 @@
 
 ###### [figma_text_id](2:33)
 
-***Brand Environment & Store Design Coordinator*** · *2022 – 2023*
+***Coordinador de Brand Environment y Store Design*** · *2022 – 2023*
 
 ###### [figma_text_id](2:35)
 
-**Flagship opening leadership:** Led the visual and technical implementation for the Adidas Brand Center Madero (Flagship Store) opening, meeting the brand’s highest global standards and coordinating multiple specialized vendors for production, logistics and installation.
+**Liderazgo de apertura de flagship:** Lideré la implementación visual y técnica para la apertura del Adidas Brand Center Madero (Flagship Store), cumpliendo los más altos estándares globales de la marca y coordinando múltiples proveedores especializados para producción, logística e instalación.
 
 ###### [figma_text_id](2:36)
 
-**On-time delivery under pressure:** Supervised production and logistics for Store Design materials on a project rescued three months before opening, achieving on-time delivery with 17 minor punch-list observations — none blocking the opening or compromising the consumer experience.
+**Entrega a tiempo bajo presión:** Supervisé producción y logística de materiales de Store Design en un proyecto rescatado tres meses antes de la apertura, logrando entrega a tiempo con 17 observaciones menores de punch-list — ninguna bloqueante para la apertura ni comprometiendo la experiencia del consumidor.
 
 ###### [figma_text_id](2:37)
 
-**Design integrity & vendor quality:** Coordinated specialized vendors to ensure quality in finishes and furniture, safeguarding architectural and visual design integrity while managing production budgets through strategic negotiations.
+**Integridad de diseño y calidad de proveedores:** Coordiné proveedores especializados para asegurar calidad en acabados y mobiliario, salvaguardando la integridad del diseño arquitectónico y visual mientras gestionaba presupuestos de producción mediante negociaciones estratégicas.
 
 ###### [figma_text_id](2:39)
 
@@ -100,27 +100,27 @@
 
 ###### [figma_text_id](2:40)
 
-***Senior Brand Environment Coordinator – LATAM*** · *2018 – 2021*
+***Coordinador Senior de Brand Environment – LATAM*** · *2018 – 2021*
 
 ###### [figma_text_id](2:42)
 
-**Regional visual strategy & multi-channel network:** Managed the visual strategy for 6 LATAM countries and 270+ points of sale (own boutiques, franchises and wholesale corners), ensuring regional brand image standardization and reporting best practices to the corporate team.
+**Estrategia visual regional y red multi-canal:** Gestioné la estrategia visual para 6 países de LATAM y 270+ puntos de venta (tiendas propias, franquicias y corners wholesale), asegurando la estandarización de imagen de marca regional y reportando mejores prácticas al equipo corporativo.
 
 ###### [figma_text_id](2:43)
 
-**Execution tools & efficiency:** Created simplified regional style guides and Zoning & Mapping manuals that reduced floor-display discrepancies and cut floorset update time by 33% through digital tools for field teams.
+**Herramientas de ejecución y eficiencia:** Creé guías de estilo regionales simplificadas y manuales de Zoning & Mapping que redujeron discrepancias de exhibición en piso y disminuyeron el tiempo de actualización de floorset en 33% mediante herramientas digitales para equipos de campo.
 
 ###### [figma_text_id](2:44)
 
-**Team leadership & coverage:** Led a team of 3 national coordinators with direct reporting plus 3 dotted-line collaborators in other markets, acting as regional liaison and ensuring 100% POP coverage during the COVID-19 contingency through remote coordination.
+**Liderazgo de equipo y cobertura:** Lideré un equipo de 3 coordinadores nacionales con reporte directo más 3 colaboradores de línea punteada en otros mercados, actuando como enlace regional y asegurando 100% de cobertura POP durante la contingencia de COVID-19 mediante coordinación remota.
 
 ###### [figma_text_id](3:9)
 
-**Cost optimization & vendor strategy:** Designed a local production strategy that generated 74% cost savings on national campaigns in Mexico, coordinating vendor negotiation and overseeing visual consistency across the region.
+**Optimización de costos y estrategia de proveedores:** Diseñé una estrategia de producción local que generó un ahorro del 74% en costos de campañas nacionales en México, coordinando la negociación con proveedores y supervisando la consistencia visual en toda la región.
 
 ###### [figma_text_id](3:2)
 
-**Commercial alignment at POS:** Supported sell-out focus through standardized visual execution and field enablement tools that kept brand presentation aligned with commercial priorities across a large multi-channel network.
+**Alineación comercial en punto de venta:** Apoyé el enfoque de sell-out mediante ejecución visual estandarizada y herramientas de habilitación de campo que mantuvieron la presentación de marca alineada con las prioridades comerciales en una amplia red multi-canal.
 
 ###### [figma_text_id](2:46)
 
@@ -128,19 +128,19 @@
 
 ###### [figma_text_id](2:47)
 
-***Visual Merchandising Manager*** · *2017 – 2018*
+***Gerente de Visual Merchandising*** · *2017 – 2018*
 
 ###### [figma_text_id](2:49)
 
-**Department build & multi-store leadership:** Built the Visual Merchandising department from scratch, managing 17 VM Assistant Managers and 4 Zone Supervisors (21 direct reports total) and establishing field coverage across a 17-store national network.
+**Construcción de departamento y liderazgo multi-tienda:** Construí el departamento de Visual Merchandising desde cero, gestionando 17 subgerentes de VM y 4 supervisores de zona (21 reportes directos en total) y estableciendo cobertura de campo en una red nacional de 17 tiendas.
 
 ###### [figma_text_id](2:50)
 
-**Commercial impact through visual strategy:** Contributed directly to +43% traffic and +18% conversion across the store network through strategic display coordination, high-traffic zone restructuring and continuous alignment of visual execution with sales objectives.
+**Impacto comercial a través de estrategia visual:** Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en la red de tiendas mediante coordinación estratégica de displays, reestructuración de zonas de alto tráfico y alineación continua de la ejecución visual con los objetivos de venta.
 
 ###### [figma_text_id](2:51)
 
-**Planogram standardization & team enablement:** Standardized planograms for key categories (Denim & Lifestyle), aligning display with monthly sales objectives and training the in-house VM team in mannequin styling and commercial display techniques.
+**Estandarización de planogramas y habilitación de equipo:** Estandaricé planogramas para categorías clave (Denim & Lifestyle), alineando la exhibición con los objetivos de venta mensuales y capacitando al equipo interno de VM en styling de maniquíes y técnicas de exhibición comercial.
 
 ###### [figma_text_id](2:54)
 
@@ -148,47 +148,47 @@
 
 ###### [figma_text_id](2:55)
 
-***Visual Merchandising & Marketing Coordinator*** · *2012 – 2017*
+***Coordinador de Visual Merchandising y Marketing*** · *2012 – 2017*
 
 ###### [figma_text_id](2:57)
 
-**Multi-store visual execution & openings:** Coordinated visual and marketing execution for 17 retail stores and 12 wholesale corners, leading openings, remodels and window rotations under the Canadian headquarters’ global standards.
+**Ejecución visual multi-tienda y aperturas:** Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrina bajo los estándares globales de la casa matriz canadiense.
 
 ###### [figma_text_id](2:58)
 
-**Campaign adaptation & traffic support:** Designed exclusive window displays for institutional campaigns and adapted global campaign guidelines for the Mexican market, supporting foot traffic into the footwear and accessories category.
+**Adaptación de campañas y soporte de tráfico:** Diseñé vitrinas exclusivas para campañas institucionales y adapté lineamientos de campaña globales para el mercado mexicano, apoyando el tráfico peatonal hacia la categoría de calzado y accesorios.
 
 ###### [figma_text_id](2:59)
 
-**Maintenance & brand presence:** Supervised fixture maintenance and repair orders with in-house teams, ensuring correct brand presence throughout PR events and in-store fashion shows.
+**Mantenimiento y presencia de marca:** Supervisé el mantenimiento de mobiliario y órdenes de reparación con equipos internos, asegurando la presencia correcta de marca durante eventos de PR y desfiles de moda en tienda.
 
 ###### [figma_text_id](2:60)
 
-**Training & junior leadership:** Developed training programs for floor staff that elevated visual maintenance and launch execution standards, while directly managing one Jr. Brand Coordinator during the final three years of the role.
+**Capacitación y liderazgo junior:** Desarrollé programas de capacitación para personal de piso que elevaron los estándares de mantenimiento visual y ejecución de lanzamientos, mientras gestionaba directamente a un Coordinador Jr. de Marca durante los últimos tres años del rol.
 
 ###### [figma_text_id](2:62)
 
-**ACADEMIC BACKGROUND**
+**FORMACIÓN ACADÉMICA**
 
 ###### [figma_text_id](2:64)
 
-**Bachelor’s Degree in Visual Arts** · *2008 – 2012* · Escuela Nacional de Artes Plásticas, UNAM
+**Licenciatura en Artes Visuales** · *2008 – 2012* · Escuela Nacional de Artes Plásticas, UNAM
 
 ###### [figma_text_id](2:65)
 
-**Diploma in Museums and Exhibitions** · *2014* · Facultad de Artes y Diseño, UNAM
+**Diplomado en Museos y Exposiciones** · *2014* · Facultad de Artes y Diseño, UNAM
 
 ###### [figma_text_id](2:67)
 
-**COURSES & CERTIFICATIONS**
+**CURSOS Y CERTIFICACIONES**
 
 ###### [figma_text_id](2:69)
 
-AutoCAD & SketchUp Essentials · *2024* · LinkedIn Learning
+AutoCAD y SketchUp Essentials · *2024* · LinkedIn Learning
 
 ###### [figma_text_id](2:70)
 
-Store Operations Leaders Orientation (VM, Sales & Ops) · *2014* · ALDO Group, Montréal, Canada
+Store Operations Leaders Orientation (VM, Sales & Ops) · *2014* · ALDO Group, Montréal, Canadá
 
 ---
 **Footer — Metadata & Pre-Delivery Verification**
@@ -196,10 +196,10 @@ Store Operations Leaders Orientation (VM, Sales & Ops) · *2014* · ALDO Group, 
 - Positioning Mode: N2 · Store Design & Flagship Execution (operator decision)
 - Canon reference: V | CAREER CANON v9.21.41
 - HANDOFF source: Beyond / Gerente Marketing, Visual, Merchandising PDV Retail BELLEZA (2026-09-03)
-- Language: EN (structure aligned to Golden Skeleton samples; content prioritizes N2 anchors C02 / openings / multi-store execution)
+- Language: ES (traducido en rebuild 2026-09-03 — mismatch de idioma corregido; CV-A declaraba ES, cuerpo original estaba 100% en inglés; ver Plan de Saneamiento v2)
 - PENDING DATA occurrences: 0
 - Pre-Delivery checks passed:
-  1. Tag format: all lines match `###### [figma_text_id](N:N)` with brackets
+  1. Tag format: ID validado entre paréntesis contra registry_seed.json (gate corregido R2.1)
   2. No manual bullets (`•` / `-` / `*` / numbered) at paragraph start
   3. All slots filled via direct Canon facts or transferable reframe (Match Transferible Obligatorio); no Anti-overselling claims introduced
   4. Slot integrity preserved (C01×4, C02×3, C03×5, C04×3, C05×4)

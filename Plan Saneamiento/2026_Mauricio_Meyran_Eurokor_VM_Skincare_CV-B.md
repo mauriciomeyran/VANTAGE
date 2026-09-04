@@ -26,7 +26,7 @@ PERFIL PROFESIONAL
 Estratega de Visual Merchandising con más de 10 años de trayectoria estandarizando imagen de marca en redes multi-sucursal y cadenas nacionales. Especialista en implementación de planogramas, distribución de producto por categoría y ejecución visual consistente a través de tiendas propias, franquicias y corners wholesale.
 
 ###### [3:13](3:13)
-Gestioné la estrategia visual para 6 países LATAM y 270+ puntos de venta, con experiencia adicional en aperturas y remodelaciones de tienda (Adidas Brand Center Madero) y en categoría beauty/skincare de lujo (L'Oréal Luxe — Valentino, Armani, Ralph Lauren). Historial cuantificado: -74% costos operativos · -33% tiempo de floorset.
+Gestioné la estrategia visual para 6 países LATAM y 270+ puntos de venta, con experiencia adicional en aperturas y remodelaciones de tienda (Adidas Brand Center Madero) y en categoría de fragancias de lujo (L'Oréal Luxe — Valentino, Armani, Ralph Lauren). Historial cuantificado: -74% costos operativos · -33% tiempo de floorset.
 
 ###### [2:10](2:10)
 Cross-functional leadership focused on multi-store brand image standardization, coordinating local vendors and field teams to deliver consistent visual execution across national retail chains.
@@ -62,7 +62,7 @@ Coordinador de Visual Merchandising – División de Lujo |
 02/2025 - 03/2026
 
 ###### [2:25](2:25)
-Lidero la estrategia visual y el storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias/skincare de lujo), garantizando que cada exhibición refleje los estándares de sofisticación y coherencia de marca bajo lineamientos globales de HQ.
+Lidero la estrategia visual y el storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias de lujo), garantizando que cada exhibición refleje los estándares de sofisticación y coherencia de marca bajo lineamientos globales de HQ.
 
 ###### [2:26](2:26)
 Coordino proveedores locales para la producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados, mantenimiento de mobiliario y cumplimiento de lineamientos globales de la división en cada punto de venta.
@@ -107,7 +107,7 @@ Coordinador Senior de Brand Environment – LATAM |
 Diseñé una estrategia de producción local que generó un ahorro del -74% en costos de campañas nacionales, manteniendo los estándares globales de exhibición y distribución de producto en todas las categorías.
 
 ###### [2:44](2:44)
-Reduje en un -33% el tiempo de actualización de floorsets mediante manuales de Zoning & Mapping e implementación de planogramas digitales para field teams, facilitando la ejecución consistente en red propia y franquicias.
+Reduje en un -33% el tiempo de actualización de floorsets mediante manuales de Zoning & Mapping y herramientas digitales para field teams, facilitando la ejecución consistente en red propia y franquicias.
 
 ###### [3:9](3:9)
 Led a team of 3 national coordinators with direct reporting, plus 3 dotted-line collaborators in other markets, acting as the regional liaison for the Americas.

@@ -26,7 +26,7 @@ PERFIL PROFESIONAL
 Retail Designer with 10+ years leading store projects end-to-end — from concept and technical documentation through vendor coordination to on-site delivery. Proven ownership of flagship store execution (Adidas Brand Center Madero), translating brand direction into physical retail spaces on schedule and to spec.
 
 ###### [3:13](3:13)
-Coordinated architectural production, contractors and local teams across store openings and remodels in Mexico and 6 LATAM countries (270+ points of sale), handling project timelines, vendor management and material handover from planning through store opening.
+Coordinated visual and technical implementation, contractors and local teams across store openings and remodels in Mexico and 6 LATAM countries (270+ points of sale), handling project timelines, vendor management and material handover from planning through store opening.
 
 ###### [2:10](2:10)
 Cross-functional project ownership connecting brand direction, technical execution and contractor coordination — delivering retail spaces that meet timeline, budget and brand-standard requirements from kickoff to handover.
@@ -86,10 +86,10 @@ Coordinador de Brand Environment y Store Design |
 **Flagship store project ownership:** Led technical and visual implementation for the Adidas Brand Center Madero opening, coordinating local contractors and installers under global Store Design standards; delivered with no blocking observations at handover.
 
 ###### [2:36](2:36)
-Oversaw zoning and category layout, validating floor plans and planograms with the corporate team and ensuring visual and spatial integrity from day one of operations — direct precedent for architectural package review and construction-document validation.
+Oversaw zoning and category layout, aligning layout and planograms with the corporate team and ensuring visual and spatial integrity from day one of operations — direct precedent for Store Design materials coordination and quality control of finishes.
 
 ###### [2:37](2:37)
-Managed the Store Design supply chain end-to-end — fixtures, lighting and props procurement, quality control and vendor timelines — across every space in the flagship, coordinating with contractors and consultants through project handover.
+Coordinated production and logistics of Store Design materials — fixtures, lighting and props, quality control and vendor timelines — across every space in the flagship, coordinating with contractors and consultants through project handover.
 
 ###### [2:39](2:39)
 LEVI STRAUSS & CO. (DOCKERS)
@@ -107,7 +107,7 @@ Coordinador Senior de Brand Environment – LATAM |
 Designed a local-production strategy that cut campaign and store-opening costs by -74%, maintaining global execution and construction standards across every product category and market.
 
 ###### [2:44](2:44)
-Reduced floorset and store-refresh turnaround time by -33% through Zoning & Mapping manuals and digital tools for field teams — direct project-management precedent for retail construction documentation and timeline ownership.
+Reduced floorset and store-refresh turnaround time by -33% through Zoning & Mapping manuals and digital tools for field teams — direct project-management precedent for coordinating production timelines on Store Design materials.
 
 ###### [3:9](3:9)
 Led a team of 3 national coordinators with direct reporting, plus 3 dotted-line collaborators in other markets, acting as the regional liaison for the Americas.
@@ -210,4 +210,4 @@ ALDO Group, Montréal, Canadá
 - `[PENDING DATA]`: 0 ocurrencias
 - Registry SSOT: `Figma Sync/registry_seed.json` (GitHub `main`, 68 nodos) — sin discrepancias vs Golden Skeleton
 - Idioma de entrega: EN (bullets de Experience/Perfil), etiquetas de sección y metadata de rol/fecha en ES — consistente con convención bilingüe ya usada en L'Oréal Luxe (perfil EN, resto ES) en entregas previas del batch
-- Cross-check batch de sesión: comparado contra CV-B previos (Servicios Andrei Moygo N2, Eurokor N3) — mismo Canon fuente, redacción diferenciada por ángulo (architectural package/construction-document framing vs. apertura comercial vs. estandarización multi-sucursal), sin match verbatim
+- Cross-check batch de sesión: comparado contra CV-B previos (Servicios Andrei Moygo N2, Eurokor N3) — mismo Canon fuente, redacción diferenciada por ángulo (visual and technical implementation/Store Design materials framing vs. apertura comercial vs. estandarización multi-sucursal), sin match verbatim

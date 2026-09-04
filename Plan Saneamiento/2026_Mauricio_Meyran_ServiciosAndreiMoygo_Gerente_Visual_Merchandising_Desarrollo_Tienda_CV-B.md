@@ -35,7 +35,7 @@ Cross-functional leadership connecting store development, brand visual identity 
 HABILIDADES CLAVE
 
 ###### [2:14](2:14)
-**Estrategia Visual:** Desarrollo de conceptos visuales para tienda, escaparatismo y colorimetría, zoning, planogramas, montaje de displays y exhibiciones, alineación de estándares de marca en aperturas y remodelaciones.
+**Estrategia Visual:** Desarrollo de conceptos visuales para tienda, escaparatismo, visual storytelling y presentación de producto, zoning, planogramas, montaje de displays y exhibiciones, alineación de estándares de marca en aperturas y remodelaciones.
 
 ###### [2:15](2:15)
 **Operaciones & Finanzas:** Gestión de CAPEX/OPEX en aperturas de tienda, coordinación de proveedores locales e internacionales, field audits, control de presupuesto multi-mercado en escala LATAM.

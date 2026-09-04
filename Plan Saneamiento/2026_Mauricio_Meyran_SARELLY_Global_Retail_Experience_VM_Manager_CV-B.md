@@ -84,7 +84,7 @@ Maintain continuous cross-functional communication with Marketing, Trade and Ope
 *2022 - 2023*
 
 ###### [figma_text_id](2:35)
-Led fixture development from concept through production for the Adidas Brand Center Madero flagship opening, working directly with external suppliers on manufacturing and installation under global Store Design standards.
+Coordinated fixture production and installation with external suppliers for the Adidas Brand Center Madero flagship opening, ensuring manufacturing quality and on-time delivery under global Store Design standards.
 
 ###### [figma_text_id](2:36)
 Supervised zoning and category-level brand experience layout, validating planograms with the corporate team and safeguarding visual integrity from day one of operations.
