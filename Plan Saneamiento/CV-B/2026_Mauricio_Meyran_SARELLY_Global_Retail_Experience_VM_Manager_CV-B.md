@@ -1,4 +1,3 @@
-```markdown
 ###### [figma_text_id](2:4)
 **MAURICIO MEYRÁN**
 
@@ -202,7 +201,6 @@ Store Operations Leaders Orientation (VM, Sales & Ops) |
 
 ###### [figma_text_id](10:209)
 ALDO Group, Montréal, Canada
-```
 
 ---
 

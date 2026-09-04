@@ -59,6 +59,12 @@ Si el Career Canon no ofrece información suficiente para un slot, conservar el 
 
 ### 4. Escaping
 
+El formato exacto del tag es: `###### [figma_text_id](N:N)` donde:
+- `######` : exactamente 6 caracteres hash, sin espacios
+- `[figma_text_id]` : literal "figma_text_id" entre corchetes
+- `(N:N)` : el ID numérico del registry entre paréntesis
+- **PROHIBIDO**: cualquier variación como `[N:N](N:N)`, `[N:N|](N:N)`, espacios adicionales, o caracteres especiales en el label
+
 Replicar el escaping de `(` y `)` únicamente si el Golden Skeleton vigente lo usa. Nunca normalizar ni modificar por preferencia.
 
 ### 5. Distinctiveness Rule
@@ -82,6 +88,12 @@ Referencia: `CANON:OUTPUT-CONTRACT-002`. Antes de generar cualquier output, leer
 
 El registry mapea `slot_name` a `figma_text_id`; sus llaves ordenadas C01→C05 constituyen la referencia física de secuencia, además de la regla explícita en `CANON:OUTPUT-CONTRACT-005`.
 
+**Formato estricto de tags:**
+- Cada tag debe seguir exactamente el formato: `###### [figma_text_id](N:N)`
+- El label entre corchetes debe ser literalmente `figma_text_id`, nunca el ID numérico
+- No permitir variaciones como `[N:N](N:N)`, `[N:N|](N:N)`, o caracteres especiales
+- Esta regla es no negociable y gana sobre cualquier template o memoria previa
+
 Si el registry no está disponible o no se puede leer, detener la generación y solicitarlo al operador. No inventar ni asumir IDs.
 
 ## Auditoría de identidad
@@ -92,8 +104,10 @@ El conteo no valida identidad estructural. Antes de entregar, verificar simultá
 2. Cada `figma_text_id` del output pertenece literalmente al `registry_seed.json` vigente.
 3. Cada ID del registry aparece exactamente una vez en el output, salvo slots explícitamente excluidos por el Skeleton vigente.
 4. La secuencia de IDs del output corresponde exactamente a la secuencia del Golden Skeleton.
+5. **Formato de label**: cada tag debe usar exactamente `[figma_text_id]` como label, no `[N:N]` ni variaciones.
+6. **Caracteres prohibidos**: no permitir caracteres especiales como `|`, `{`, `}` en los labels de los tags.
 
-Un schema heredado puede conservar la cantidad esperada y aun así fallar si contiene IDs obsoletos, slots fusionados o slots desplazados. Si falla conteo, membership, unicidad o correspondencia de secuencia, abortar y re-mapear antes de declarar `PASS_FOR_FIGMA`.
+Un schema heredado puede conservar la cantidad esperada y aun así fallar si contiene IDs obsoletos, slots fusionados, slots desplazados, o formato de label incorrecto. Si falla conteo, membership, unicidad, correspondencia de secuencia o formato de label, abortar y re-mapear antes de declarar `PASS_FOR_FIGMA`.
 
 ## Densidad por síntesis multi-hecho
 
@@ -151,12 +165,16 @@ Referencia: `CANON:OUTPUT-CONTRACT-004`.
 Esta verificación corre internamente antes de crear el archivo. No se muestra como output intermedio en chat.
 
 1. **Formato y membership de tags:** extraer el ID entre paréntesis `(N:N)` de cada tag, ignorando el label entre corchetes; validar membership exacta contra `registry_seed.json`. Rechazar IDs inexistentes, convenciones mixtas de tag o el placeholder literal `figma_text_id` sin ID real.
+   - Validar específicamente que el label sea exactamente `[figma_text_id]` (no `[N:N]`, `[N:N|]`, etc.)
+   - Rechazar tags con caracteres especiales en el label (como `|`, `{`, `}`, etc.)
+   - Verificar que no haya espacios entre `######` y `[`
 2. **Integridad estructural:** validar conteo, membership, unicidad y secuencia exacta contra el Golden Skeleton conforme a la Auditoría de identidad.
 3. **Sin bullets manuales:** ningún párrafo dentro de un tag puede iniciar con `•`, `-`, `*` o número seguido de punto.
 4. **Pendientes justificados:** por cada `[PENDING DATA]`, el footer debe declarar el hecho del Canon evaluado, el reencuadre intentado y la causa del fallo: ausencia real, Anti-overselling o mismatch total de disciplina.
 5. **Cross-check de sesión:** si el mismo `figma_text_id` tuvo contenido válido en un CV-B previo de la misma sesión y ahora está en `[PENDING DATA]`, tratarlo como alerta de probable omisión y repetir el análisis de Match Transferible.
 6. **Idioma:** confirmar coincidencia entre el cuerpo del CV-B y `HANDOFF.idioma`.
-7. **Anti-cloning:** ningún bullet de Experience puede coincidir verbatim con un CV-B previo del mismo Positioning Mode en la sesión o batch. Re-derivar la redacción desde el HANDOFF activo; el mismo hecho canónico puede reutilizarse si cambia el ángulo y la redacción.
+7. **Integridad de code fences:** si el footer de metadata incluye bloques de código JSON, verificar que los delimitadores ``` estén correctamente emparejados (apertura y cierre). Un code fence sin cierre corrompe el parseo downstream.
+8. **Anti-cloning:** ningún bullet de Experience puede coincidir verbatim con un CV-B previo del mismo Positioning Mode en la sesión o batch. Re-derivar la redacción desde el HANDOFF activo; el mismo hecho canónico puede reutilizarse si cambia el ángulo y la redacción.
 
 ## Restricción de lote
 
@@ -192,3 +210,9 @@ El archivo debe incluir un footer de metadata con:
 - Justificación de cada `[PENDING DATA]`, si existe.
 
 Después de crear el archivo, releerlo y verificar la codificación de caracteres acentuados y `ñ`. Si hay corrupción, no entregar; reportar el error antes de reintentar.
+
+**Verificación post-generación adicional:**
+1. Confirmar que no existen tags con formato incorrecto (usar regex para detectar `[N:N](N:N)` o variaciones)
+2. Verificar que no hay caracteres especiales prohibidos en los labels (como `|`)
+3. Validar la integridad de los code fences en el footer de metadata
+4. Ejecutar un diff final contra el Golden Skeleton para asegurar que solo cambió el contenido, no la estructura
