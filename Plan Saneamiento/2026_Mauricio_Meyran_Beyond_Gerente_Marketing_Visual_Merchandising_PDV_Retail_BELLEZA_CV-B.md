@@ -4,11 +4,31 @@
 
 ###### [figma_text_id](2:5)
 
-**Coordinador de Brand Environment y Store Design · Ejecución de Flagships, Expansión de Red y Estrategia Visual** · Miguel Hidalgo, CDMX | mauricio.meyran@icloud.com | LinkedIn | Portafolio
+Coordinador de Brand Environment y Store Design · Ejecución de Flagships, Expansión de Red y Estrategia Visual
+
+###### [figma_text_id](8:56)
+
+Miguel Hidalgo, CDMX |
+
+###### [figma_text_id](8:57)
+
++52 1 56 4383 8125 |
+
+###### [figma_text_id](8:58)
+
+mauricio.meyran@icloud.com
+
+###### [figma_text_id](8:62)
+
+LinkedIn |
+
+###### [figma_text_id](8:63)
+
+Portafolio
 
 ###### [figma_text_id](2:7)
 
-**PERFIL PROFESIONAL**
+PERFIL PROFESIONAL
 
 ###### [figma_text_id](2:9)
 
@@ -24,7 +44,7 @@
 
 ###### [figma_text_id](2:12)
 
-**HABILIDADES CLAVE**
+HABILIDADES CLAVE
 
 ###### [figma_text_id](2:14)
 
@@ -48,15 +68,19 @@
 
 ###### [figma_text_id](2:20)
 
-**EXPERIENCIA PROFESIONAL**
+EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:22)
 
 **L'ORÉAL LUXE MÉXICO**
 
-###### [figma_text_id](2:23)
+###### [figma_text_id](10:218)
 
-***Coordinador de Visual Merchandising – División de Lujo*** · *Febrero 2025 – Marzo 2026*
+**Coordinador de Visual Merchandising – División de Lujo** |
+
+###### [figma_text_id](10:219)
+
+*Febrero 2025 – Marzo 2026*
 
 ###### [figma_text_id](2:25)
 
@@ -78,9 +102,13 @@
 
 **BISONTE EXPERIENTIAL MARKETING**
 
-###### [figma_text_id](2:33)
+###### [figma_text_id](4:17)
 
-***Coordinador de Brand Environment y Store Design*** · *2022 – 2023*
+**Coordinador de Brand Environment y Store Design** |
+
+###### [figma_text_id](4:18)
+
+*2022 – 2023*
 
 ###### [figma_text_id](2:35)
 
@@ -98,9 +126,13 @@
 
 **LEVI STRAUSS & CO. (DOCKERS)**
 
-###### [figma_text_id](2:40)
+###### [figma_text_id](4:21)
 
-***Coordinador Senior de Brand Environment – LATAM*** · *2018 – 2021*
+**Coordinador Senior de Brand Environment – LATAM** |
+
+###### [figma_text_id](4:22)
+
+*2018 – 2021*
 
 ###### [figma_text_id](2:42)
 
@@ -126,9 +158,13 @@
 
 **AÉROPOSTALE MÉXICO**
 
-###### [figma_text_id](2:47)
+###### [figma_text_id](4:25)
 
-***Gerente de Visual Merchandising*** · *2017 – 2018*
+**Gerente de Visual Merchandising** |
+
+###### [figma_text_id](4:26)
+
+*2017 – 2018*
 
 ###### [figma_text_id](2:49)
 
@@ -142,65 +178,109 @@
 
 **Estandarización de planogramas y habilitación de equipo:** Estandaricé planogramas para categorías clave (Denim & Lifestyle), alineando la exhibición con los objetivos de venta mensuales y capacitando al equipo interno de VM en styling de maniquíes y técnicas de exhibición comercial.
 
-###### [figma_text_id](2:54)
+###### [figma_text_id](10:186)
 
 **EL PALACIO DE HIERRO (ALDO GROUP)**
 
-###### [figma_text_id](2:55)
+###### [figma_text_id](10:195)
 
-***Coordinador de Visual Merchandising y Marketing*** · *2012 – 2017*
+**Asesor de Visual Merchandising** |
 
-###### [figma_text_id](2:57)
+###### [figma_text_id](10:196)
 
-**Ejecución visual multi-tienda y aperturas:** Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrina bajo los estándares globales de la casa matriz canadiense.
+*2012 – 2014*
 
-###### [figma_text_id](2:58)
+###### [figma_text_id](10:198)
 
-**Adaptación de campañas y soporte de tráfico:** Diseñé vitrinas exclusivas para campañas institucionales y adapté lineamientos de campaña globales para el mercado mexicano, apoyando el tráfico peatonal hacia la categoría de calzado y accesorios.
+Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrina con proveedores especializados bajo los estándares globales de la casa matriz canadiense.
 
-###### [figma_text_id](2:59)
+###### [figma_text_id](10:188)
 
-**Mantenimiento y presencia de marca:** Supervisé el mantenimiento de mobiliario y órdenes de reparación con equipos internos, asegurando la presencia correcta de marca durante eventos de PR y desfiles de moda en tienda.
+**Coordinador de Visual Merchandising & Marketing** |
 
-###### [figma_text_id](2:60)
+###### [figma_text_id](10:189)
 
-**Capacitación y liderazgo junior:** Desarrollé programas de capacitación para personal de piso que elevaron los estándares de mantenimiento visual y ejecución de lanzamientos, mientras gestionaba directamente a un Coordinador Jr. de Marca durante los últimos tres años del rol.
+*2014 – 2017*
 
-###### [figma_text_id](2:62)
+###### [figma_text_id](10:191)
 
-**FORMACIÓN ACADÉMICA**
+**Ejecución multi-tienda y aperturas:** Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas y remodelaciones críticas bajo los estándares de la casa matriz canadiense.
 
-###### [figma_text_id](2:64)
+###### [figma_text_id](10:192)
 
-**Licenciatura en Artes Visuales** · *2008 – 2012* · Escuela Nacional de Artes Plásticas, UNAM
+**Adaptación de campañas:** Supervisé la implementación de campañas globales, adaptando los lineamientos de la casa matriz en Canadá para el mercado mexicano y apoyando el tráfico hacia la categoría de calzado y accesorios.
 
-###### [figma_text_id](2:65)
+###### [figma_text_id](10:193)
 
-**Diplomado en Museos y Exposiciones** · *2014* · Facultad de Artes y Diseño, UNAM
+**Capacitación y liderazgo junior:** Desarrollé programas de capacitación para personal de piso que elevaron los estándares de mantenimiento visual y ejecución de lanzamientos; durante los últimos tres años del rol, gestioné directamente a una coordinadora Jr. con reporte directo.
 
-###### [figma_text_id](2:67)
+###### [figma_text_id](10:154)
 
-**CURSOS Y CERTIFICACIONES**
+FORMACIÓN ACADÉMICA
 
-###### [figma_text_id](2:69)
+###### [figma_text_id](10:158)
 
-AutoCAD y SketchUp Essentials · *2024* · LinkedIn Learning
+Licenciatura en Artes Visuales |
 
-###### [figma_text_id](2:70)
+###### [figma_text_id](10:159)
 
-Store Operations Leaders Orientation (VM, Sales & Ops) · *2014* · ALDO Group, Montréal, Canadá
+2008 – 2012
+
+###### [figma_text_id](10:161)
+
+Escuela Nacional de Artes Plásticas, UNAM
+
+###### [figma_text_id](10:164)
+
+Diplomado en Museos y Exposiciones |
+
+###### [figma_text_id](10:165)
+
+2014
+
+###### [figma_text_id](10:167)
+
+Facultad de Artes y Diseño, UNAM
+
+###### [figma_text_id](10:213)
+
+CURSOS Y CERTIFICACIONES
+
+###### [figma_text_id](10:202)
+
+AutoCAD y SketchUp Essentials |
+
+###### [figma_text_id](10:203)
+
+2024
+
+###### [figma_text_id](10:204)
+
+LinkedIn Learning
+
+###### [figma_text_id](10:207)
+
+Store Operations Leaders Orientation (VM, Sales & Ops) |
+
+###### [figma_text_id](10:208)
+
+2014
+
+###### [figma_text_id](10:209)
+
+ALDO Group, Montréal, Canadá
 
 ---
 **Footer — Metadata & Pre-Delivery Verification**
 - Output Contract: CANON:OUTPUT-CONTRACT v10.1.0 (Sandbox-only refactor)
 - Positioning Mode: N2 · Store Design & Flagship Execution (operator decision)
-- Canon reference: V | CAREER CANON v9.21.41
+- Canon reference: V | CAREER CANON v9.21.44
 - HANDOFF source: Beyond / Gerente Marketing, Visual, Merchandising PDV Retail BELLEZA (2026-09-03)
-- Language: ES (traducido en rebuild 2026-09-03 — mismatch de idioma corregido; CV-A declaraba ES, cuerpo original estaba 100% en inglés; ver Plan de Saneamiento v2)
+- Language: ES
+- Registry SSOT: Figma Sync/registry_seed.json (68 nodos, Page 1) — schema corregido 2026-09-03 (causa raíz: tag schema obsoleto heredado de export previo a actualización del registry; ver auditoría de sesión)
 - PENDING DATA occurrences: 0
 - Pre-Delivery checks passed:
-  1. Tag format: ID validado entre paréntesis contra registry_seed.json (gate corregido R2.1)
+  1. Tag format: todos los IDs verificados contra registry_seed.json vigente (gate corregido R2.1)
   2. No manual bullets (`•` / `-` / `*` / numbered) at paragraph start
-  3. All slots filled via direct Canon facts or transferable reframe (Match Transferible Obligatorio); no Anti-overselling claims introduced
-  4. Slot integrity preserved (C01×4, C02×3, C03×5, C04×3, C05×4)
-  5. Distinctiveness: wording driven by HANDOFF JD_keywords_top6 (Visual Merchandising, Expansión de red de sucursales, Liderazgo de equipo) and N2 rationale (C02 Flagship + network expansion)
+  3. Slot integrity: C05 corregido de 1 rol fusionado a 2 roles separados (Asesor 2012–2014, Coordinador 2014–2017) conforme a CANON:EXPERIENCE-005 y CANON:CAREER-TIMELINE
+  4. Contacto (8:56–8:63) y Educación/Cursos (10:154–10:209) separados en tags individuales, no fusionados
