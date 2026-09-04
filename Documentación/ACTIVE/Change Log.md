@@ -1,5 +1,16 @@
 # V | CHANGELOG
 
+Tipo: [DOC] [OPS]
+Documento modificado: V | KERNEL (§12.2 KERNEL:CV-PIPELINE-002) · V | MANUAL (§12.1 MANUAL:FIGMA-SYNC-DIAGNOSTIC) · vantage-cv-b/SKILL.md (GitHub, v10.1.1)
+Documentos potencialmente afectados: Ninguno adicional — sin referencias cruzadas a estos nodos en System Prompt/Career Canon que requieran actualización.
+Tipo de impacto: Normativo + Operativo — cierre del gap detectado en el batch "Plan Saneamiento": un conteo correcto de tags (68/68) no garantiza identidad estructural; un schema heredado puede conservar la cantidad esperada mientras usa IDs obsoletos, slots fusionados o slots desplazados.
+Acción correctiva ejecutada:
+1. KERNEL:CV-PIPELINE-002 (12.2) — agregada "Auditoría de Registry Membership" inmediatamente después de la auditoría de conteo: cada figma_text_id del output debe pertenecer literalmente al registry_seed.json vigente y cada ID del registry debe aparecer una sola vez en el output. Un conteo coincidente no prueba identidad ni secuencia; si membership, unicidad o correspondencia exacta contra el Skeleton falla, abortar y re-mapear antes de declarar PASS_FOR_FIGMA.
+1. MANUAL:FIGMA-SYNC-DIAGNOSTIC (12.1) — agregado "Guard de identidad estructural" al inicio de la matriz de errores: un conteo de tags coincidente no valida el archivo; comparar ID por ID contra el registry vigente y contra la secuencia del Golden Skeleton; un schema heredado puede mantener la cantidad total mientras usa IDs obsoletos o representa slots fusionados/desplazados.
+1. vantage-cv-b/SKILL.md (GitHub) — rewrite completo v10.1.1: consolidación de secciones duplicadas (Language Policy, cv_b_eligible), eliminación de redundancias (verbos de ownership repetidos), sección nueva "Auditoría de identidad" que unifica los cuatro criterios (conteo, membership, unicidad, secuencia) y los integra como gate obligatorio antes de declarar PASS_FOR_FIGMA. Sin cambios de lógica operativa — solo consolidación y alineación explícita con los dos parches de Notion.
+IDs afectados: Ninguno (sin alta/baja de ID canónico — ambas ediciones de Notion extienden nodos existentes; el SKILL.md no introduce nuevos IDs).
+Estado final de la validación: Write-Back Verification PASS — confirmado vía re-fetch en vivo de KERNEL y MANUAL post-escritura, ambos parches presentes sin mismatch. Archivo vantage-cv-b_SKILL.md generado y entregado al operador para reemplazo local + vgit + sync. Census no aplica (sin altas/bajas de ID). Sin DRY RUN presentado por instrucción explícita del operador (optimización de tokens).
+---
 Tipo: [DOC] [OPS] [FIX]
 Documento modificado: 2 archivos CV-B (GitHub, Beyond y Multicont Supervisor — fix estructural de tags)
 Documentos potencialmente afectados: Ninguno en Notion — hallazgo y corrección viven en el repo GitHub, fuera de documentos fundacionales.

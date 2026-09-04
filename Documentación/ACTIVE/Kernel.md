@@ -803,6 +803,7 @@ Canon check
 Empresa, rol, bullets y KPIs derivados del Canon — no inventados. Cada bloque de experiencia es una derivación única del Canon frente al HANDOFF activo; se prohíbe reutilizar bullets pre-redactados verbatim entre vacantes distintas, incluso dentro del mismo Positioning Mode.
 Auditoría de Estructura
 COUNT(figma_text_id)_SKELETON == COUNT(figma_text_id)_OUTPUT. Si no coincide, abortar y re-mapear.
+Auditoría de Registry Membership — adicional al conteo: cada figma_text_id del output debe pertenecer literalmente al registry_seed.json vigente y cada ID del registry debe aparecer una sola vez en el output. Un conteo coincidente no prueba identidad ni secuencia: un schema heredado puede conservar la cantidad esperada con IDs obsoletos, slots fusionados o slots desplazados. Si membership, unicidad o correspondencia exacta contra el Skeleton falla, abortar y re-mapear antes de declarar PASS_FOR_FIGMA.
 Auditoría de Secuencia
 Los slots de experiencia deben aparecer en secuencia canónica estricta C01→C05. Ninguna variable del HANDOFF autoriza alterarla.
 Output

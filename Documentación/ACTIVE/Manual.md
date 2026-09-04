@@ -723,6 +723,7 @@ Rate limiting o bloqueo anti-bot: espaciar corridas vía cron, evitar re-ejecuta
 ### 12.1 MANUAL:FIGMA-SYNC-DIAGNOSTIC
 Matriz de Errores — Figma Sync
 "Keys sin resolver" tiene dos causas distintas:
+Guard de identidad estructural — un conteo de tags coincidente no valida el archivo: comparar ID por ID contra el registry vigente y contra la secuencia del Golden Skeleton; un schema heredado puede mantener la cantidad total mientras usa IDs obsoletos o representa slots fusionados/desplazados.
 - Causa A — Registry desincronizado: la KEY no existe en REGISTRY/registry_seed.json (Skeleton cambió o se agregó sección sin re-mapear). Se arregla actualizando registry_seed.json.
 - Causa B — Nodo ausente en el lienzo activo: el ID sí está en el registro, pero el nodo TEXT fue borrado, movido o convertido a otro tipo en el archivo abierto. Se arregla restaurando el nodo — nunca renombrando capas, porque el plugin ignora nombres y solo usa IDs crudos.
 Checklist de situaciones:
