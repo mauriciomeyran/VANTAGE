@@ -182,18 +182,6 @@ EXPERIENCIA PROFESIONAL
 
 **EL PALACIO DE HIERRO (ALDO GROUP)**
 
-###### [figma_text_id](10:195)
-
-**Asesor de Visual Merchandising** |
-
-###### [figma_text_id](10:196)
-
-*2012 – 2014*
-
-###### [figma_text_id](10:198)
-
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrina con proveedores especializados bajo los estándares globales de la casa matriz canadiense.
-
 ###### [figma_text_id](10:188)
 
 **Coordinador de Visual Merchandising & Marketing** |
@@ -213,6 +201,18 @@ Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corner
 ###### [figma_text_id](10:193)
 
 **Capacitación y liderazgo junior:** Desarrollé programas de capacitación para personal de piso que elevaron los estándares de mantenimiento visual y ejecución de lanzamientos; durante los últimos tres años del rol, gestioné directamente a una coordinadora Jr. con reporte directo.
+
+###### [figma_text_id](10:195)
+
+**Asesor de Visual Merchandising** |
+
+###### [figma_text_id](10:196)
+
+*2012 – 2014*
+
+###### [figma_text_id](10:198)
+
+Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrina con proveedores especializados bajo los estándares globales de la casa matriz canadiense.
 
 ###### [figma_text_id](10:154)
 

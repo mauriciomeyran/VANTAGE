@@ -182,18 +182,6 @@ Estandaricé los planogramas de categorías clave (Denim & Lifestyle), documenta
 
 EL PALACIO DE HIERRO (ALDO GROUP)
 
-###### [figma_text_id](10:195)
-
-**Asesor de Visual Merchandising** |
-
-###### [figma_text_id](10:196)
-
-*2012 - 2014*
-
-###### [figma_text_id](10:198)
-
-Ejecuté en piso el styling y la presentación de producto en tienda departamental, dando seguimiento al cumplimiento de estándares visuales de la casa matriz en Canadá durante rotaciones de vitrina y temporada.
-
 ###### [figma_text_id](10:188)
 
 **Coordinador de Visual Merchandising & Marketing** |
@@ -213,6 +201,18 @@ Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corner
 ###### [figma_text_id](10:193)
 
 **Capacitación y desarrollo de equipos de tienda:** Desarrollé e impartí programas de capacitación al personal de piso en lineamientos visuales, styling y conocimiento de producto en cada visita, reforzando la aplicación consistente de estándares de marca.
+
+###### [figma_text_id](10:195)
+
+**Asesor de Visual Merchandising** |
+
+###### [figma_text_id](10:196)
+
+*2012 - 2014*
+
+###### [figma_text_id](10:198)
+
+Ejecuté en piso el styling y la presentación de producto en tienda departamental, dando seguimiento al cumplimiento de estándares visuales de la casa matriz en Canadá durante rotaciones de vitrina y temporada.
 
 ###### [figma_text_id](10:154)
 
