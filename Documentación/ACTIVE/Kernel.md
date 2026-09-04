@@ -788,6 +788,7 @@ SESIÓN COMPLETADA → nueva sesión.
 }
 ```
 Un HANDOFF incompleto no avanza a CV-B. El sistema no inventa valores para campos faltantes.
+Campos de admisión (extensión 2026-09-03): cv_b_eligible (booleano) y block_reason (array) se agregan al JSON del HANDOFF. cv_b_eligible=false cuando Positioning_Mode=EMPATE, o Status ∈ {Expirada, Archivada, Rechazada}, o Next_Action=Archivar — replicando KERNEL:CV-GOLDEN-RULES-006 como campo computable, no solo principio narrativo.
 Regla de Orden de Experiencia
 Cronológico descendente siempre. Orden canónico obligatorio: C01 → C02 → C03 → C04 → C05. No se modifica por Positioning Mode, relevancia ni ninguna otra variable.
 ### 12.2 KERNEL:CV-PIPELINE-002
