@@ -80,6 +80,11 @@ Si el HANDOFF está incompleto o el Positioning Mode no está resuelto, detener 
 Si `cv_b_eligible: false` sin `operator_override: true` explícito en el mismo
 HANDOFF, detener y rechazar el HANDOFF — no generar contenido. No inferir
 override desde la ausencia de bloqueo explícito; el override debe ser un
+campo positivo declarado, nunca un default.
+
+Si `cv_b_eligible: false` sin `operator_override: true` explícito en el mismo
+HANDOFF, detener y rechazar el HANDOFF — no generar contenido. No inferir
+override desde la ausencia de bloqueo explícito; el override debe ser un
 campo positivo declared, nunca un default.
 
 ## Protocolo de Sincronización — FIGMA SYNC PROTOCOL (STRICT)
@@ -109,6 +114,17 @@ Antes de marcar un slot como `[PENDING DATA]`, **intentar reencuadrar** un hecho
 **Ejemplos de referencia** (`CANON:OUTPUT-CONTRACT-001`):
 - Válido: "coordiné ejecución visual 17 tiendas + 12 corners" (C05) → "coordinación de ejecución visual multi-punto de venta" para un JD regional sin mención literal de Palacio de Hierro.
 - Inválido: "lideré 3 coordinadoras directas" (C03) reencuadrado de cualquier forma para un JD individual contributor explícito — Anti-overselling bloquea independientemente del reencuadre.
+
+Un reencuadre NUNCA puede cambiar el verbo de nivel de ownership del hecho
+original. "Coordinar" no se reencuadra como "gestionar end-to-end",
+"dirigir" o "desarrollar desde concepto" — son verbos de ownership
+superior, no sinónimos de framing.
+
+Verbos de coordinación (permitidos para reencuadre): coordinar, supervisar,
+alinear, colaborar con, dar seguimiento a.
+Verbos de ownership pleno (prohibidos salvo literal en Canon): dirigir,
+gestionar end-to-end, desarrollar desde concepto, poseer, liderar el
+desarrollo de.
 
 Un reencuadre NUNCA puede cambiar el verbo de nivel de ownership del hecho
 original. "Coordinar" no se reencuadra como "gestionar end-to-end",
@@ -199,6 +215,12 @@ y detener la generación de contenido — no elegir un ángulo por default
 y proceder. La resolución debe llegar como instrucción explícita del
 operador en el mismo turno o uno posterior, nunca inferirse.
 
+Si el campo `observaciones` del HANDOFF señala una desalineación de
+seniority no resuelta, CV-B debe declarar STATUS=AWAITING_OPERATOR_ANGLE
+y detener la generación de contenido — no elegir un ángulo por default
+y proceder. La resolución debe llegar como instrucción explícita del
+operador en el mismo turno o uno posterior, nunca inferirse.
+
 ## Reglas de Serialización
 
 Referencia: `CANON:OUTPUT-CONTRACT-004`.
@@ -213,6 +235,15 @@ Referencia: `CANON:OUTPUT-CONTRACT-004`.
 - `&` en nombres de empresa se mantiene como `&`
 - Escaping de paréntesis en texto: replicar exactamente lo que muestre el
   Golden Skeleton vigente para ese slot
+
+## Language Policy
+
+- Si HANDOFF.idioma = ES → CV-B en ES completo, salvo nombres propios,
+  herramientas de software, y títulos oficiales de certificación/institución.
+- Si HANDOFF.idioma = EN → CV-B en EN completo, mismo criterio de excepción.
+- Verificación pre-entrega: el idioma del cuerpo del CV-B debe coincidir
+  con HANDOFF.idioma antes de generar el archivo .md descargable.
+  Si no coincide: STATUS=BLOCKED_LANGUAGE_MISMATCH.
 
 ## Language Policy
 
@@ -253,6 +284,9 @@ Antes de escribir el `.md`, correr y no proceder si falla:
    `figma_text_id` tiene contenido válido en un CV-B previo de la sesión y el
    nuevo output es `[PENDING DATA]`, tratarlo como alerta de probable omisión
    y re-verificar contra la regla 6 antes de aceptar el pendiente.
+5. **Coincidencia de idioma:** el idioma del cuerpo del CV-B coincide con
+   `HANDOFF.idioma` (ver Language Policy). Si no coincide: STATUS=
+   BLOCKED_LANGUAGE_MISMATCH, no proceder a generar el archivo.
 5. **Coincidencia de idioma:** el idioma del cuerpo del CV-B coincide con
    `HANDOFF.idioma` (ver Language Policy). Si no coincide: STATUS=
    BLOCKED_LANGUAGE_MISMATCH, no proceder a generar el archivo.
