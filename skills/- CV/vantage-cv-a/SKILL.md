@@ -95,11 +95,20 @@ Referencia: `KERNEL:CV-PIPELINE-001`. El JSON del HANDOFF tiene 8 campos obligat
   "tono_marca": "",
   "idioma": "",
   "positioning_rationale": "",
-  "observaciones": ""
+  "observaciones": "",
+  "cv_b_eligible": true,
+  "block_reason": []
 }
 ```
 
 - `observaciones` (opcional, texto libre): discrepancias detectadas durante el análisis que no encajan en `fit_gaps` (ej. inconsistencia entre JD y Gate_Decision previa, dato dudoso en la fuente, nota de dedup). **Nunca** contiene verbos de decisión sobre el gate. Si no hay nada que reportar, el campo va vacío — no se elimina (Null-Fill Rule, `CANON:OUTPUT-CONTRACT-001`).
+- `cv_b_eligible` (booleano, obligatorio): `false` si `Positioning_Mode = EMPATE`
+  OR `Status ∈ {Expirada, Archivada, Rechazada}` OR `Next_Action = Archivar`.
+  `true` en cualquier otro caso. Nunca inferido silenciosamente — se calcula
+  determinísticamente contra los mismos campos que ya audita "Validación de
+  exclusiones" (§4).
+- `block_reason` (array, obligatorio si `cv_b_eligible=false`): lista
+  exhaustiva de las condiciones de bloqueo detectadas.
 
 Un HANDOFF incompleto en cualquiera de los 7 campos originales no avanza a CV-B. `observaciones` es la única excepción — puede ir vacío sin bloquear el avance.
 
