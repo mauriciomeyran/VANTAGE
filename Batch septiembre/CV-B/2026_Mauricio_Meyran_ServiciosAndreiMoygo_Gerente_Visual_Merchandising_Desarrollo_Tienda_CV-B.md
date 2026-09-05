@@ -1,5 +1,5 @@
 ###### [figma_text_id](2:4)
-MAURICIO MEYRÁN
+**MAURICIO MEYRÁN**
 
 ###### [figma_text_id](2:5)
 Gerente de Visual Merchandising y Desarrollo de Tienda · Store Design & Flagship Execution · Miguel Hidalgo, CDMX | +52 1 56 4383 8125 | mauricio.meyran@icloud.com | LinkedIn | Portafolio
@@ -29,7 +29,7 @@ Estratega de Visual Merchandising y Desarrollo de Tienda con más de 10 años de
 Lideré la implementación visual y técnica del Adidas Brand Center Madero (flagship store), entregando sin observaciones bloqueantes para apertura, y gestioné estrategia visual en 6 países LATAM con 270+ puntos de venta. Domino coordinación de proveedores locales, control de presupuesto CAPEX/OPEX y desarrollo de programas de capacitación para equipos de piso.
 
 ###### [figma_text_id](2:10)
-Cross-functional leadership connecting store development, brand visual identity and commercial execution — coordinating multidisciplinary teams and external vendors for store openings, remodels and critical in-store events.
+Liderazgo multifuncional que conecta desarrollo de tienda, identidad visual de marca y ejecución comercial — coordinando equipos multidisciplinarios y proveedores externos para aperturas, remodelaciones y eventos críticos en punto de venta.
 
 ###### [figma_text_id](2:12)
 HABILIDADES CLAVE
@@ -53,34 +53,34 @@ HABILIDADES CLAVE
 EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:22)
-L'ORÉAL LUXE MÉXICO
+**L'ORÉAL LUXE MÉXICO**
 
 ###### [figma_text_id](10:218)
-Coordinador de Visual Merchandising – División de Lujo |
+**Coordinador de Visual Merchandising – División de Lujo** |
 
 ###### [figma_text_id](10:219)
-02/2025 - 03/2026
+*02/2025 - 03/2026*
 
 ###### [figma_text_id](2:25)
-Lidero la estrategia visual y el desarrollo de conceptos de exhibición in-store para Valentino, Giorgio Armani y Ralph Lauren, garantizando montaje y ejecución de vitrinas bajo estándares de sofisticación y coherencia de marca alineados a lineamientos globales de HQ.
+Lideré la estrategia visual y el desarrollo de conceptos de exhibición in-store para Valentino, Giorgio Armani y Ralph Lauren, garantizando montaje y ejecución de vitrinas bajo estándares de sofisticación y coherencia de marca alineados a lineamientos globales de HQ.
 
 ###### [figma_text_id](2:26)
-Coordino proveedores locales para la producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados, mantenimiento de mobiliario y cumplimiento de lineamientos de marca — disciplina directamente transferible a montaje de displays y exhibiciones en tienda.
+Coordiné proveedores locales para la producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados, mantenimiento de mobiliario y cumplimiento de lineamientos de marca — disciplina directamente transferible a montaje de displays y exhibiciones en tienda.
 
 ###### [figma_text_id](2:27)
 Ejecuté el despliegue nacional de campañas NPI clave 2025 (Born in Roma, Stronger With You), generando retroalimentación fotográfica y cualitativa para el equipo corporativo de VM en cada rotación estratégica de exhibición.
 
 ###### [figma_text_id](2:28)
-Colaboro con equipos de Marketing, Trade y Operaciones para alinear el calendario comercial con la ejecución visual, actuando como referente de estándares de marca en cada cuenta clave.
+Colaboré con equipos de Marketing, Trade y Operaciones para alinear el calendario comercial con la ejecución visual, actuando como referente de estándares de marca en cada cuenta clave.
 
 ###### [figma_text_id](2:32)
-BISONTE EXPERIENTIAL MARKETING
+**BISONTE EXPERIENTIAL MARKETING**
 
 ###### [figma_text_id](4:17)
-Coordinador de Brand Environment y Store Design |
+**Coordinador de Brand Environment y Store Design** |
 
 ###### [figma_text_id](4:18)
-2022 - 2023
+*2022 - 2023*
 
 ###### [figma_text_id](2:35)
 **Desarrollo y apertura de tienda flagship:** Lideré la implementación visual y técnica para la apertura del Adidas Brand Center Madero, coordinando proveedores locales e instalaciones bajo estándares globales de Store Design; entrega sin observaciones bloqueantes para apertura por parte de la marca.
@@ -92,55 +92,55 @@ Supervisé el zoning y disposición de experiencias de marca por categoría, val
 Gestioné la cadena de suministro de materiales de Store Design, asegurando disponibilidad, calidad de mobiliario, iluminación y props en todos los espacios del flagship — coordinación directa de montaje de exhibiciones a escala completa de tienda.
 
 ###### [figma_text_id](2:39)
-LEVI STRAUSS & CO. (DOCKERS)
+**LEVI STRAUSS & CO. (DOCKERS)**
 
 ###### [figma_text_id](4:21)
-Coordinador Senior de Brand Environment – LATAM |
+**Coordinador Senior de Brand Environment – LATAM** |
 
 ###### [figma_text_id](4:22)
-2018 - 2021
+*2018 - 2021*
 
 ###### [figma_text_id](2:42)
 **Gestión de red mixta multi-país:** Gestioné la estrategia visual de desarrollo y estandarización de tienda para 6 países en LATAM y 270+ puntos de venta (red propia, franquicias y corners wholesale), reportando mejores prácticas de mercado al equipo de Trade Marketing.
 
 ###### [figma_text_id](2:43)
-Diseñé una estrategia de producción local que generó un ahorro del -74% en costos de campañas y aperturas nacionales, manteniendo los estándares globales de exhibición y montaje en todas las categorías de producto.
+Diseñé una estrategia de producción local que generó un ahorro del **-74%** en costos de campañas y aperturas nacionales, manteniendo los estándares globales de exhibición y montaje en todas las categorías de producto.
 
 ###### [figma_text_id](2:44)
 Reduje en un -33% el tiempo de actualización de floorsets y montaje de exhibiciones mediante manuales de Zoning & Mapping y herramientas digitales para field teams, facilitando la ejecución consistente en red propia y franquicias.
 
 ###### [figma_text_id](3:9)
-Led a team of 3 national coordinators with direct reporting, plus 3 dotted-line collaborators in other markets, acting as the regional liaison for the Americas.
+Encabecé un equipo de 3 coordinadores nacionales con reporte directo y 3 colaboradores con línea punteada en otros mercados, fungiendo como enlace regional de la operación en toda la región de las Américas.
 
 ###### [figma_text_id](3:2)
-Managed visual strategy across 6 LATAM countries and 270+ points of sale (own boutiques, franchises, wholesale corners), ensuring regional brand image standardization and reporting best practices to the corporate team.
+Administré la estrategia de desarrollo y estandarización visual en 6 países de LATAM y más de 270 puntos de venta (tiendas propias, franquicias y corners wholesale), consolidando reportes de mejores prácticas hacia el equipo corporativo.
 
 ###### [figma_text_id](2:46)
-AÉROPOSTALE
+**AÉROPOSTALE**
 
 ###### [figma_text_id](4:25)
-Gerente de Visual Merchandising |
+**Gerente de Visual Merchandising** |
 
 ###### [figma_text_id](4:26)
-2017 - 2018
+*2017 - 2018*
 
 ###### [figma_text_id](2:49)
 Construí el área de VM desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona; implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional.
 
 ###### [figma_text_id](2:50)
-Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales — precedente directo de vincular ejecución visual con resultados de negocio, eje central del rol de Desarrollo de Tienda.
+Contribuí directamente a un incremento de **+43%** en tráfico y **+18%** en conversión en las 17 tiendas bajo mi supervisión, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales — precedente directo de vincular ejecución visual con resultados de negocio, eje central del rol de Desarrollo de Tienda.
 
 ###### [figma_text_id](2:51)
 Estandaricé los planogramas de categorías clave (Denim & Lifestyle), generando retroalimentación sistemática a dirección sobre desempeño visual y oportunidades de mejora en piso.
 
 ###### [figma_text_id](10:186)
-EL PALACIO DE HIERRO (ALDO GROUP)
+**EL PALACIO DE HIERRO (ALDO GROUP)**
 
 ###### [figma_text_id](10:188)
-Coordinador de Visual Merchandising & Marketing |
+**Coordinador de Visual Merchandising & Marketing** |
 
 ###### [figma_text_id](10:189)
-2014 - 2017
+*2014 - 2017*
 
 ###### [figma_text_id](10:191)
 **Aperturas y remodelaciones multi-punto de venta:** Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
@@ -152,10 +152,10 @@ Realicé visitas regulares de auditoría visual a tienda, evaluando mantenimient
 Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos 3 años del rol tuve a cargo una coordinadora Jr. con reporte directo.
 
 ###### [figma_text_id](10:195)
-Asesor de Visual Merchandising |
+**Asesor de Visual Merchandising** |
 
 ###### [figma_text_id](10:196)
-2012 - 2014
+*2012 - 2014*
 
 ###### [figma_text_id](10:198)
 Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.

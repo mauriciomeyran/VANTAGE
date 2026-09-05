@@ -1,6 +1,6 @@
 ###### [figma_text_id](2:4)
 
-MAURICIO MEYRÁN
+**MAURICIO MEYRÁN**
 
 ###### [figma_text_id](2:5)
 
@@ -36,11 +36,11 @@ Especialista en Visual Merchandising con más de 10 años de trayectoria en reta
 
 ###### [figma_text_id](3:13)
 
-Con experiencia coordinando ejecución visual en redes de 270+ puntos de venta y 6 países LATAM, domino la **asesoría y acompañamiento presencial y remoto** a equipos de piso, la movilidad multi-tienda y la estandarización de presentación de marca bajo calendarios de visita definidos. Historial cuantificado: +43% tráfico · +18% conversión · -74% costos operativos.
+Con experiencia coordinando ejecución visual en redes de 270+ puntos de venta y 6 países LATAM, domino la **asesoría y acompañamiento presencial y remoto** a equipos de piso, la movilidad multi-tienda y la estandarización de presentación de marca bajo calendarios de visita definidos. Historial cuantificado: **+43%** tráfico · **+18%** conversión · **-74%** costos operativos.
 
 ###### [figma_text_id](2:10)
 
-Cross-functional leadership focused on connecting commercial operations with brand visual identity, coordinating multidisciplinary teams and external agencies for store openings and critical events.
+Liderazgo multifuncional enfocado en conectar operaciones comerciales con identidad visual de marca, coordinando equipos multidisciplinarios y agencias externas para aperturas de tienda y eventos críticos.
 
 ###### [figma_text_id](2:12)
 
@@ -72,7 +72,7 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:22)
 
-L'ORÉAL LUXE MÉXICO
+**L'ORÉAL LUXE MÉXICO**
 
 ###### [figma_text_id](10:218)
 
@@ -84,11 +84,11 @@ L'ORÉAL LUXE MÉXICO
 
 ###### [figma_text_id](2:25)
 
-Ejecuto el storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias) en múltiples puntos de venta, dando seguimiento al cumplimiento de estándares visuales bajo lineamientos globales de HQ.
+Ejecuté el storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias) en múltiples puntos de venta, dando seguimiento al cumplimiento de estándares visuales bajo lineamientos globales de HQ.
 
 ###### [figma_text_id](2:26)
 
-Coordino proveedores locales para la producción e instalación de materiales POP y vitrinas, y **asesoro presencialmente al personal de mostrador** en el correcto montaje y mantenimiento de cada exhibición.
+Coordiné proveedores locales para la producción e instalación de materiales POP y vitrinas, y **asesoré presencialmente al personal de mostrador** en el correcto montaje y mantenimiento de cada exhibición.
 
 ###### [figma_text_id](2:27)
 
@@ -96,11 +96,11 @@ Ejecuté el despliegue nacional de campañas NPI clave 2025 (Born in Roma, Stron
 
 ###### [figma_text_id](2:28)
 
-Colaboro con equipos de Marketing, Trade y Operaciones para alinear el calendario comercial con la ejecución visual, actuando como punto de contacto de estándares para el personal de piso en cada cuenta clave.
+Colaboré con equipos de Marketing, Trade y Operaciones para alinear el calendario comercial con la ejecución visual, actuando como punto de contacto de estándares para el personal de piso en cada cuenta clave.
 
 ###### [figma_text_id](2:32)
 
-BISONTE EXPERIENTIAL MARKETING
+**BISONTE EXPERIENTIAL MARKETING**
 
 ###### [figma_text_id](4:17)
 
@@ -124,7 +124,7 @@ Gestioné la cadena de suministro de materiales de Store Design, dando seguimien
 
 ###### [figma_text_id](2:39)
 
-LEVI STRAUSS & CO. (DOCKERS)
+**LEVI STRAUSS & CO. (DOCKERS)**
 
 ###### [figma_text_id](4:21)
 
@@ -140,7 +140,7 @@ Coordiné la estrategia visual para 6 países en LATAM y 270+ puntos de venta, d
 
 ###### [figma_text_id](2:43)
 
-Diseñé una estrategia de producción local que generó un ahorro del -74% en costos de campañas nacionales, manteniendo los estándares globales de exhibición y styling en todas las categorías de producto.
+Diseñé una estrategia de producción local que generó un ahorro del **-74%** en costos de campañas nacionales, manteniendo los estándares globales de exhibición y styling en todas las categorías de producto.
 
 ###### [figma_text_id](2:44)
 
@@ -152,11 +152,11 @@ Reduje en un -33% el tiempo de actualización de floorsets mediante manuales de 
 
 ###### [figma_text_id](3:2)
 
-Managed visual strategy across 6 LATAM countries and 270+ points of sale (own boutiques, franchises, wholesale corners), ensuring regional brand image standardization and reporting best practices to the corporate team.
+Supervisé la estrategia visual en 6 países de LATAM y más de 270 puntos de venta (tiendas propias, franquicias y corners wholesale), dando seguimiento a la estandarización de imagen regional y documentando mejores prácticas para el equipo corporativo.
 
 ###### [figma_text_id](2:46)
 
-AÉROPOSTALE
+**AÉROPOSTALE**
 
 ###### [figma_text_id](4:25)
 
@@ -172,7 +172,7 @@ AÉROPOSTALE
 
 ###### [figma_text_id](2:50)
 
-**Cumplimiento de KPIs comerciales:** Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas del network, mediante zoning estratégico y alineación visual con objetivos comerciales mensuales verificados en cada visita.
+**Cumplimiento de KPIs comerciales:** Contribuí directamente a un incremento de **+43%** en tráfico y **+18%** en conversión en las 17 tiendas del network, mediante zoning estratégico y alineación visual con objetivos comerciales mensuales verificados en cada visita.
 
 ###### [figma_text_id](2:51)
 
@@ -180,7 +180,7 @@ Estandaricé los planogramas de categorías clave (Denim & Lifestyle), documenta
 
 ###### [figma_text_id](10:186)
 
-EL PALACIO DE HIERRO (ALDO GROUP)
+**EL PALACIO DE HIERRO (ALDO GROUP)**
 
 ###### [figma_text_id](10:188)
 

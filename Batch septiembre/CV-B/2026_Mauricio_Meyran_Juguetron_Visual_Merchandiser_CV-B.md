@@ -26,10 +26,10 @@ Portafolio
 Estratega de Visual Merchandising & Brand Execution con más de 14 años de trayectoria en trabajo de campo — visitas de tienda, montajes, validación de planogramas y capacitación de equipos en piso de venta — con disponibilidad de viaje y foco en la detección de oportunidades comerciales a través de la red.
 
 ###### [figma_text_id](3:13)
-He construido áreas de VM desde cero (21 reportes directos), liderando montajes, aperturas y remodelaciones bajo lineamientos y estándares de marca; complemento con auditorías periódicas de campo y desarrollo de programas de capacitación para personal de piso en implementación de materiales visuales y planogramas.
+He construido áreas de VM desde cero (**21 reportes directos**), liderando montajes, aperturas y remodelaciones bajo lineamientos y estándares de marca; complemento con auditorías periódicas de campo y desarrollo de programas de capacitación para personal de piso en implementación de materiales visuales y **planogramas**.
 
 ###### [figma_text_id](2:10)
-Field-first Visual Merchandising leadership: hands-on store visits, visual installs, and floor-team training to keep layouts and planograms on-brand across a multi-store network.
+Liderazgo de Visual Merchandising centrado en campo: visitas de tienda, montajes visuales y capacitación de equipos de piso para mantener layouts y planogramas alineados a marca en toda la red multi-tienda.
 
 ###### [figma_text_id](2:12)
 **HABILIDADES CLAVE**
@@ -62,16 +62,16 @@ Field-first Visual Merchandising leadership: hands-on store visits, visual insta
 *02/2025 - 03/2026*
 
 ###### [figma_text_id](2:25)
-Lidero la estrategia de VM para Valentino, Giorgio Armani y Ralph Lauren (fragancias), incluyendo montaje y supervisión de materiales visuales en punto de venta bajo lineamientos globales de HQ.
+Lideré la estrategia de VM para Valentino, Giorgio Armani y Ralph Lauren (fragancias), incluyendo montaje y supervisión de materiales visuales en punto de venta bajo lineamientos globales de HQ.
 
 ###### [figma_text_id](2:26)
-**Presupuesto y proveedores:** Administro el presupuesto nacional CAPEX/OPEX de la división y coordino proveedores locales e internacionales para producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados en tienda.
+**Presupuesto y proveedores:** Administré el presupuesto nacional CAPEX/OPEX de la división y coordiné proveedores locales e internacionales para producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados en tienda.
 
 ###### [figma_text_id](2:27)
 Coordiné el despliegue nacional de campañas NPI 2025 (Born in Roma, Stronger With You), incluyendo montaje en punto de venta y gestión de producción con agencias externas.
 
 ###### [figma_text_id](2:28)
-Colaboro con Marketing y Trade Marketing para alinear el calendario comercial con la ejecución visual en piso, actuando como embajador de marca en cuentas clave.
+Colaboré con Marketing y Trade Marketing para alinear el calendario comercial con la ejecución visual en piso, actuando como embajador de marca en cuentas clave.
 
 ###### [figma_text_id](2:32)
 **BISONTE EXPERIENTIAL MARKETING**
@@ -86,7 +86,7 @@ Colaboro con Marketing y Trade Marketing para alinear el calendario comercial co
 Lideré la implementación visual y técnica para la apertura del Adidas Brand Center Madero (Flagship Store), cumpliendo con los estándares globales de la marca.
 
 ###### [figma_text_id](2:36)
-Supervisé el montaje y la producción de materiales de Store Design en un proyecto rescatado a 3 meses de apertura, logrando entrega en fecha con 17 observaciones menores en punch list — ninguna bloqueante.
+Supervisé el montaje y la producción de materiales de Store Design en un proyecto rescatado a 3 meses de apertura, logrando entrega en fecha con **17 observaciones** menores en punch list — ninguna bloqueante.
 
 ###### [figma_text_id](2:37)
 Coordiné proveedores especializados para garantizar la calidad en acabados y mobiliario durante el montaje, asegurando la integridad del diseño visual.
@@ -101,16 +101,16 @@ Coordiné proveedores especializados para garantizar la calidad en acabados y mo
 *2018 - 2021*
 
 ###### [figma_text_id](2:42)
-**Escala regional:** Gestioné la estrategia visual para 6 países en LATAM y 270+ puntos de venta, incluyendo una red mexicana de 22 PDV (10 propias, 6 comisionadas, 6 franquicias), estandarizando montajes y planogramas a través de distintos modelos de operación.
+**Escala regional:** Gestioné la estrategia visual para **6 países** en LATAM y **270+ puntos de venta**, incluyendo una red mexicana de **22 PDV** (10 propias, 6 comisionadas, 6 franquicias), estandarizando montajes y **planogramas** a través de distintos modelos de operación.
 
 ###### [figma_text_id](2:43)
-Diseñé una estrategia de producción local que generó un ahorro del -74% en costos de campañas nacionales, manteniendo los estándares globales de exhibición.
+Diseñé una estrategia de producción local que generó un ahorro del **-74%** en costos de campañas nacionales, manteniendo los estándares globales de exhibición.
 
 ###### [figma_text_id](2:44)
-Reduje en un -33% el tiempo de actualización de floorsets mediante manuales de Zoning & Mapping y herramientas digitales para field teams — capacitando a los equipos de tienda en su uso.
+Reduje en un **-33%** el tiempo de actualización de floorsets mediante manuales de Zoning & Mapping y herramientas digitales para field teams — capacitando a los equipos de tienda en su uso.
 
 ###### [figma_text_id](3:9)
-Lideré un equipo de 3 coordinadoras directas y 3 indirectas, garantizando el 100% de cobertura POP durante la contingencia COVID-19 mediante coordinación remota con tiendas.
+Lideré un equipo de 3 coordinadoras directas y 3 indirectas, garantizando el **100%** de cobertura POP durante la contingencia COVID-19 mediante coordinación remota con tiendas.
 
 ###### [figma_text_id](3:2)
 Coordiné Market Weeks y Press Days; fui ponente en Nissan Connect representando a Dockers ante audiencias comerciales y de prensa.
@@ -125,13 +125,13 @@ Coordiné Market Weeks y Press Days; fui ponente en Nissan Connect representando
 *2017 - 2018*
 
 ###### [figma_text_id](2:49)
-**Trabajo de campo y construcción de equipo:** Construí el área de VM desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona (21 reportes directos) mediante visitas recurrentes a tienda; implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional.
+**Trabajo de campo y construcción de equipo:** Construí el área de VM desde cero, gestionando a **17 subgerentes** de VM y **4 supervisores** de zona (**21 reportes directos**) mediante visitas recurrentes a tienda; implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional.
 
 ###### [figma_text_id](2:50)
-Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión, detectando oportunidades comerciales durante visitas de campo y ajustando zoning en consecuencia.
+Contribuí directamente a un incremento de **+43%** en tráfico y **+18%** en conversión en las **17 tiendas** bajo mi supervisión, detectando oportunidades comerciales durante visitas de campo y ajustando zoning en consecuencia.
 
 ###### [figma_text_id](2:51)
-Estandaricé los planogramas de categorías clave (Denim & Lifestyle) y capacité a equipos de piso en su correcta implementación durante aperturas y remodelaciones.
+Estandaricé los **planogramas** de categorías clave (Denim & Lifestyle) y capacité a equipos de piso en su correcta implementación durante aperturas y remodelaciones.
 
 ###### [figma_text_id](10:186)
 **EL PALACIO DE HIERRO (ALDO GROUP)**
@@ -143,7 +143,7 @@ Estandaricé los planogramas de categorías clave (Denim & Lifestyle) y capacit�
 *2014 - 2017*
 
 ###### [figma_text_id](10:191)
-Coordiné el montaje y la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas y remodelaciones críticas bajo estándares globales de la casa matriz en Canadá.
+Coordiné el montaje y la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas y remodelaciones críticas bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:192)
 **Visitas de tienda y auditoría de campo:** Realicé visitas regulares de auditoría visual a tienda — evaluando mantenimiento, iluminación, props y mobiliario — documentando hallazgos y detectando oportunidades de mejora para retroalimentación al equipo regional.
@@ -158,7 +158,7 @@ Coordiné el montaje y la ejecución visual y de marketing para 17 tiendas retai
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**

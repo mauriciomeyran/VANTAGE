@@ -26,10 +26,10 @@ Portafolio
 Estratega de Visual Merchandising & Brand Execution con más de 14 años de trayectoria liderando la escalabilidad de estrategias visuales en redes multitienda a nivel nacional y regional. Especialista en traducir lineamientos de marca en sistemas de ejecución consistentes y replicables a través de múltiples mercados, canales (red propia, franquicias, wholesale) y equipos de campo.
 
 ###### [figma_text_id](3:13)
-Con experiencia comprobada gestionando 6 países LATAM y 270+ puntos de venta (desglose México: 22 PDV — 10 propias, 6 comisionadas, 6 franquicias), domino la administración de presupuestos CAPEX/OPEX, la coordinación de proveedores multi-mercado y el diseño de herramientas de estandarización para field teams. Historial cuantificado: -74% costos de campaña · -33% tiempo de actualización de floorsets · 100% cobertura POP en contingencia.
+Con experiencia comprobada gestionando **6 países** LATAM y **270+ puntos de venta** (desglose México: **22 PDV** — 10 propias, 6 comisionadas, 6 franquicias), domino la administración de presupuestos CAPEX/OPEX, la coordinación de proveedores multi-mercado y el diseño de herramientas de estandarización para field teams. Historial cuantificado: **-74%** costos de campaña · **-33%** tiempo de actualización de floorsets · **100%** cobertura POP en contingencia.
 
 ###### [figma_text_id](2:10)
-Cross-functional leadership focused on scaling brand visual standards across national and multi-country store networks, coordinating field teams, external vendors, and corporate stakeholders to sustain consistency during rollouts, remodels, and openings.
+Liderazgo transversal enfocado en escalar estándares visuales de marca a través de redes de tienda nacionales y multi-país, coordinando equipos de campo, proveedores externos y contrapartes corporativas para sostener consistencia durante rollouts, remodelaciones y aperturas.
 
 ###### [figma_text_id](2:12)
 **HABILIDADES CLAVE**
@@ -62,16 +62,16 @@ Cross-functional leadership focused on scaling brand visual standards across nat
 *02/2025 - 03/2026*
 
 ###### [figma_text_id](2:25)
-Lidero la estrategia de VM para Valentino, Giorgio Armani y Ralph Lauren (fragancias), asegurando consistencia de marca en canales de alto tráfico y lujo bajo lineamientos globales de HQ.
+Lideré la estrategia de VM para Valentino, Giorgio Armani y Ralph Lauren (fragancias), asegurando consistencia de marca en canales de alto tráfico y lujo bajo lineamientos globales de HQ.
 
 ###### [figma_text_id](2:26)
-**Gestión de presupuesto y proveedores:** Administro el presupuesto nacional de la división (CAPEX/OPEX) y coordino proveedores locales e internacionales para producción, importación e instalación de materiales POP y vitrinas, supervisando calidad de acabados y cumplimiento de especificaciones técnicas.
+**Gestión de presupuesto y proveedores:** Administré el presupuesto nacional de la división (CAPEX/OPEX) y coordiné proveedores locales e internacionales para producción, importación e instalación de materiales POP y vitrinas, supervisando calidad de acabados y cumplimiento de especificaciones técnicas.
 
 ###### [figma_text_id](2:27)
 Coordiné el despliegue nacional de campañas NPI clave en 2025 (Born in Roma, Stronger With You), gestionando producción y montaje con agencias externas dentro del presupuesto asignado.
 
 ###### [figma_text_id](2:28)
-Colaboro con Marketing y Trade Marketing para alinear el calendario comercial con la ejecución visual, actuando como embajador de marca en cuentas clave.
+Colaboré con Marketing y Trade Marketing para alinear el calendario comercial con la ejecución visual, actuando como embajador de marca en cuentas clave.
 
 ###### [figma_text_id](2:32)
 **BISONTE EXPERIENTIAL MARKETING**
@@ -86,7 +86,7 @@ Colaboro con Marketing y Trade Marketing para alinear el calendario comercial co
 Lideré la implementación visual y técnica para la apertura del Adidas Brand Center Madero (Flagship Store), cumpliendo con los estándares globales de la marca.
 
 ###### [figma_text_id](2:36)
-Supervisé la producción y logística de materiales de Store Design en un proyecto rescatado a 3 meses de apertura, logrando entrega en fecha con 17 observaciones menores en punch list — ninguna bloqueante para la apertura.
+Supervisé la producción y logística de materiales de Store Design en un proyecto rescatado a 3 meses de apertura, logrando entrega en fecha con **17 observaciones** menores en punch list — ninguna bloqueante para la apertura.
 
 ###### [figma_text_id](2:37)
 Coordiné proveedores especializados para garantizar la calidad en acabados y mobiliario, asegurando la integridad del diseño arquitectónico y visual.
@@ -101,16 +101,16 @@ Coordiné proveedores especializados para garantizar la calidad en acabados y mo
 *2018 - 2021*
 
 ###### [figma_text_id](2:42)
-**Escala regional:** Gestioné la estrategia visual para 6 países en LATAM y 270+ puntos de venta, asegurando la estandarización regional de la marca; en México, la red de 22 PDV se compone de 10 tiendas propias, 6 comisionadas y 6 franquicias, requiriendo consistencia visual a través de distintos modelos de operación.
+**Escala regional:** Gestioné la estrategia visual para **6 países** en LATAM y **270+ puntos de venta**, asegurando la estandarización regional de la marca; en México, la red de **22 PDV** se compone de **10 tiendas propias**, 6 comisionadas y 6 franquicias, requiriendo consistencia visual a través de distintos modelos de operación.
 
 ###### [figma_text_id](2:43)
-Diseñé una estrategia de producción local que generó un ahorro del -74% en costos de campañas nacionales, manteniendo los estándares globales de exhibición en todas las categorías de producto.
+Diseñé una estrategia de producción local que generó un ahorro del **-74%** en costos de campañas nacionales, manteniendo los estándares globales de exhibición en todas las categorías de producto.
 
 ###### [figma_text_id](2:44)
-Reduje en un -33% el tiempo de actualización de floorsets mediante manuales de Zoning & Mapping y herramientas digitales para field teams, facilitando la ejecución consistente en red propia y franquicias.
+Reduje en un **-33%** el tiempo de actualización de floorsets mediante manuales de Zoning & Mapping y herramientas digitales para field teams, facilitando la ejecución consistente en red propia y franquicias.
 
 ###### [figma_text_id](3:9)
-Lideré un equipo de 3 coordinadoras directas y 3 indirectas, garantizando el 100% de cobertura POP durante la contingencia COVID-19 mediante coordinación remota.
+Lideré un equipo de 3 coordinadoras directas y 3 indirectas, garantizando el **100%** de cobertura POP durante la contingencia COVID-19 mediante coordinación remota.
 
 ###### [figma_text_id](3:2)
 Coordiné Market Weeks y Press Days; fui ponente en Nissan Connect representando a Dockers ante audiencias comerciales y de prensa.
@@ -125,13 +125,13 @@ Coordiné Market Weeks y Press Days; fui ponente en Nissan Connect representando
 *2017 - 2018*
 
 ###### [figma_text_id](2:49)
-Construí el área de VM desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona (21 reportes directos en total); implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional.
+Construí el área de VM desde cero, gestionando a **17 subgerentes** de VM y **4 supervisores** de zona (**21 reportes directos** en total); implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional.
 
 ###### [figma_text_id](2:50)
-Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión estratégica, mediante zoning estratégico y alineación visual con objetivos comerciales mensuales.
+Contribuí directamente a un incremento de **+43%** en tráfico y **+18%** en conversión en las **17 tiendas** bajo mi supervisión estratégica, mediante zoning estratégico y alineación visual con objetivos comerciales mensuales.
 
 ###### [figma_text_id](2:51)
-Estandaricé los planogramas de categorías clave (Denim & Lifestyle), alineando la exhibición con los objetivos de ventas mensuales.
+Estandaricé los **planogramas** de categorías clave (Denim & Lifestyle), alineando la exhibición con los objetivos de ventas mensuales.
 
 ###### [figma_text_id](10:186)
 **EL PALACIO DE HIERRO (ALDO GROUP)**
@@ -143,7 +143,7 @@ Estandaricé los planogramas de categorías clave (Denim & Lifestyle), alineando
 *2014 - 2017*
 
 ###### [figma_text_id](10:191)
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas y remodelaciones críticas bajo estándares globales de la casa matriz en Canadá.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas y remodelaciones críticas bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:192)
 Supervisé la implementación de campañas globales, adaptando los lineamientos de la casa matriz en Canadá para el mercado mexicano.
@@ -158,7 +158,7 @@ Supervisé la implementación de campañas globales, adaptando los lineamientos 
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**
