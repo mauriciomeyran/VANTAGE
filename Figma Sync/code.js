@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-figma.showUI(__html__, { width: 450, height: 500 });
+figma.showUI(__html__, { width: 450, height: 260 });
 
 // Cache de familias ya resueltas contra figma.listAvailableFontsAsync() en esta sesión del plugin —
 // evita re-escanear la lista completa de fuentes del sistema por cada nodo con la misma familia.

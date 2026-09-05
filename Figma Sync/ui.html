@@ -2,11 +2,50 @@
 <html>
 <head>
   <style>
-    body { font-family: sans-serif; padding: 12px; margin: 0; background: #f5f5f5; }
-    textarea { width: 100%; height: 180px; font-family: monospace; font-size: 11px; box-sizing: border-box; resize: none; border: 1px solid #e0e0e0; padding: 8px; }
-    button { width: 100%; margin-top: 10px; background: #18a0fb; color: white; border: none; padding: 10px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: sans-serif;
+      padding: 12px;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+    }
+    textarea {
+      width: 100%;
+      flex: 1;
+      font-family: monospace;
+      font-size: 11px;
+      box-sizing: border-box;
+      resize: none;
+      border: 1px solid #e0e0e0;
+      padding: 8px;
+    }
+    button {
+      width: 100%;
+      margin-top: 10px;
+      background: #18a0fb;
+      color: white;
+      border: none;
+      padding: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
     button:hover { background: #0d8de3; }
-    .error-log { color: #f24822; font-size: 11px; margin-top: 5px; font-weight: bold; display: none; }
+    .error-log {
+      color: #f24822;
+      font-size: 11px;
+      margin-top: 5px;
+      font-weight: bold;
+      display: none;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -22,19 +61,16 @@
       errorDisplay.innerText = '';
       
       try {
-        // Try to parse as JSON array (new format)
         let payload;
         try {
           payload = JSON.parse(rawText);
           
-          // Convert to flat array if wrapped
           if (!Array.isArray(payload) && payload.nodes) {
             payload = payload.nodes;
           } else if (Array.isArray(payload) && payload[0]?.nodes) {
             payload = payload[0].nodes;
           }
           
-          // Validate structure
           if (!Array.isArray(payload)) {
             throw new Error('Payload must be an array');
           }
@@ -45,11 +81,9 @@
             }
           }
           
-          // Send new sync-nodes message
           parent.postMessage({ pluginMessage: { type: 'sync-nodes', payload: payload } }, '*');
           
         } catch (jsonError) {
-          // Fallback to old format for backward compatibility
           if (rawText.includes('figma_text_id')) {
             const parsedData = {};
             const duplicateIds = [];
@@ -64,8 +98,6 @@
                 duplicateIds.push(nodeId);
               }
 
-              // Sanitización de entidades HTML (el markdown de link [texto](url) se procesa
-              // aparte, ANTES de esto, para no perder la URL — ver extracción de linkRanges).
               content = content
                 .replace(/&amp;/g, '&')
                 .replace(/&lt;/g, '<')
@@ -73,13 +105,6 @@
                 .replace(/_([^_]+)_/g, '$1')
                 .replace(/\\/g, '');
 
-              // Motor de extracción de rangos dinámicos: negritas (**texto**), itálicas
-              // (*texto*, convención del skill para períodos: "*February 2025 – March 2026*"),
-              // y links ([texto](url), para LinkedIn/Portfolio — antes se descartaba la URL
-              // aquí mismo por la sanitización de figma_text_id, dejando solo el texto plano).
-              // Debe distinguir "**" (bold, 2 caracteres) de "*" simple (italic, 1 carácter)
-              // en la misma pasada, sin que uno sea leído como parte del otro, y reconocer
-              // [texto](url) como una unidad — NO como itálica con asteriscos accidentales.
               let cleanContent = "";
               let boldRanges = [];
               let italicRanges = [];
@@ -144,9 +169,6 @@
               return;
             }
 
-            // Convert old format to new format — boldRanges, italicRanges y linkRanges
-            // incluidos (antes se descartaban; causa raíz de los tres bugs: los rangos se
-            // calculaban aquí pero nunca llegaban a code.js).
             const newPayload = Object.entries(parsedData).map(([id, data]) => ({
               id: id,
               characters: data.text,
@@ -157,7 +179,6 @@
             
             parent.postMessage({ pluginMessage: { type: 'sync-nodes', payload: newPayload } }, '*');
           } else {
-            // Try old JSON format
             const parsed = JSON.parse(rawText);
             const newPayload = Object.entries(parsed).map(([id, data]) => ({
               id: id,
@@ -173,7 +194,6 @@
       }
     };
     
-    // Listen for sync results
     window.onmessage = (event) => {
       const msg = event.data.pluginMessage;
       if (msg.type === 'sync-result') {

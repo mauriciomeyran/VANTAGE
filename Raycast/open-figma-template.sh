@@ -14,4 +14,4 @@
 # @raycast.author mauriciomeyran
 # @raycast.authorURL https://raycast.com/mauriciomeyran
 
-open "https://dub.sh/Figma-template"
+open "figma://file/qPyrpGysJs7XxcbubKOo0n?node-id=0-1"
