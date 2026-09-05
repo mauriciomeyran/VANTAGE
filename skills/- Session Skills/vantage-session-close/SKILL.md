@@ -5,6 +5,9 @@ description: Cierre Lite de baja latencia con handoff serializado, identidad, ti
 
 # VANTAGE: SESSION CLOSE LITE
 
+ID Canónico: `KERNEL:SESSION-LEDGER` · Trigger: cierre de sesión (invocación explícita del operador)
+Versión de alineación: v1.0.0 — Versionado inicial (2026-09-05)
+
 1. Leer `agent.family` y `agent.instance` desde Project Instructions. No pedir confirmación.
 2. Emitir:
 
