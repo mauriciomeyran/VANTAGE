@@ -1018,6 +1018,40 @@ def print_dryrun_summary(processed: list[ProcessedRecord], layer_cli: int) -> No
     print(f"{'=' * 72}\n")
 
 
+def _resolve_fuente_from_source_type(rec: dict, fetch: str) -> str:
+    """Mapea source_type → Fuente canónica.
+
+    Prioridad:
+    1. source_type del JSON (valor explícito del agente).
+    2. inferir por fetch_status como fallback.
+    """
+    source_type = rec.get("source_type", "").strip()
+    # source_type del JSON (valores que puedo emitir yo o Gemini/Grok)
+    st_map: dict[str, str] = {
+        "linkedin":                 "LinkedIn",
+        "career_page (ats)":        "Career Page Oficial",
+        "career_page":              "Career Page Oficial",
+        "gemini":                   "Gemini",
+        "gemini (l2)":              "Gemini",
+    }
+    key = source_type.strip().lower()
+    if key in st_map:
+        return st_map[key]
+    # discovery-only ( aggregators sin URL oficial verificable)
+    if "discovery only" in key or "sin validar" in key:
+        return "Agregador"
+    # grok puro
+    if key.startswith("grok"):
+        return "Agregador"
+    # inferir por fetch_status (fallback legacy)
+    if fetch == "aggregator":
+        return "Agregador"
+    if fetch == "career_page":
+        return "Career Page Oficial"
+    # fetch_status "filled", vacío o cualquier otro → no inferir, dejar en blanco
+    return source_type or ""
+
+
 # ──────────────────────────────────────────
 # Paso 8: Write to Notion
 # ──────────────────────────────────────────
@@ -1043,8 +1077,8 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
 
     if schema.fetch_status_prop:
         props[schema.fetch_status_prop] = schema.select_value(fetch)
-    elif schema.fuente_prop:
-        fuente = "Agregador" if fetch == "aggregator" else "Career Page Oficial"
+    if schema.fuente_prop:
+        fuente = _resolve_fuente_from_source_type(rec, fetch)
         props[schema.fuente_prop] = schema.select_value(fuente)
 
     if schema.location_prop and rec.get("location"):
@@ -1057,8 +1091,8 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
     if apply_url.startswith("http"):
         props[schema.url_prop] = {"url": apply_url}
 
-    if "Source_Type " in schema.properties:
-        props["Source_Type "] = schema.select_value("Vacante")
+    if "Source_Type" in schema.properties:
+        props["Source_Type"] = schema.select_value("Vacante")
 
     # Prioridad: sin default — vl1 backfill (KERNEL:TRIGGER-002) es responsable de llenar este campo
     # en registros donde llega vacío. feed_processor.py deja el campo vacío/null si no viene en el JSON.

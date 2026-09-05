@@ -430,6 +430,19 @@ def get_script_library_titles(client: httpx.Client, data_source_id: str, headers
         cursor = data.get("next_cursor")
     return titles
 
+import time
+
+def safe_http_get(client: httpx.Client, url: str, headers: dict, params: dict = None, max_retries: int = 5) -> httpx.Response:
+    for attempt in range(max_retries):
+        response = client.get(url, headers=headers, params=params)
+        if response.status_code == 429:
+            retry_after = response.headers.get("Retry-After")
+            wait_time = float(retry_after) if retry_after else (2 ** attempt)
+            time.sleep(wait_time)
+            continue
+        return response
+    return response
+
 def get_page_line_count(client: httpx.Client, page_id: str, headers: dict, max_depth: int = 10) -> int | dict:
     """Cuenta recursivamente las líneas de texto extraíble en una página Notion.
     Usa GET /v1/blocks/{block_id}/children con paginación via next_cursor.
@@ -450,7 +463,7 @@ def get_page_line_count(client: httpx.Client, page_id: str, headers: dict, max_d
             params = {"page_size": 100}
             if cursor:
                 params["start_cursor"] = cursor
-            response = client.get(url, headers=block_headers, params=params)
+            response = safe_http_get(client, url, block_headers, params=params)
             if response.status_code != 200:
                 return {"error": f"HTTP {response.status_code}: {response.text[:200]}"}
 
