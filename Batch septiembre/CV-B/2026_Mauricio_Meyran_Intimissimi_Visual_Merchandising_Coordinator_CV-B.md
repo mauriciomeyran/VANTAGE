@@ -23,10 +23,10 @@ Portafolio
 **PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
-Estratega de Visual Merchandising con más de 14 años liderando estandarización visual y equipos en redes de tienda multi-mercado — desde el diseño de lineamientos de marca hasta su ejecución consistente en piso, con track record de gestión de presupuesto, proveedores y equipos directos e indirectos.
+Estratega de Visual Merchandising con más de **14 años** liderando estandarización visual y equipos en redes de tienda multi-mercado — desde el diseño de lineamientos de marca hasta su ejecución consistente en piso, con track record de gestión de presupuesto, proveedores y equipos directos e indirectos.
 
 ###### [figma_text_id](3:13)
-Lideré la estrategia visual y de estandarización para 6 países en LATAM y 270+ puntos de venta, y construí y dirigí un área de VM de 21 reportes directos que contribuyó a +43% de tráfico y +18% de conversión en la red bajo mi supervisión. Domino análisis de indicadores comerciales para traducir estrategia de marca en resultados de piso.
+Lideré la estrategia visual y de estandarización para **6 países** en LATAM y **270+ puntos de venta**, y construí y dirigí un área de VM de **21 reportes** directos que contribuyó a +43% de tráfico y +18% de conversión en la red bajo mi supervisión. Domino análisis de indicadores comerciales para traducir estrategia de marca en resultados de piso.
 
 ###### [figma_text_id](2:10)
 Liderazgo cross-funcional conectando desarrollo de marca, identidad visual y ejecución comercial — dirigiendo equipos multidisciplinarios y coordinando redes de tienda a escala nacional y regional para garantizar consistencia de marca en cada punto de venta.
@@ -41,7 +41,7 @@ Liderazgo cross-funcional conectando desarrollo de marca, identidad visual y eje
 **Operaciones & Finanzas:** Gestión de presupuesto CAPEX/OPEX en operación multi-mercado, coordinación de proveedores locales e internacionales, field audits, control de costos de campaña y aperturas.
 
 ###### [figma_text_id](2:16)
-**Liderazgo & Training:** Dirección de equipos directos e indirectos (hasta 21 reportes), diseño de programas de capacitación y estándares de desempeño, auditorías visuales de campo con retroalimentación a dirección.
+**Liderazgo & Training:** Dirección de equipos directos e indirectos (hasta **21 reportes**), diseño de programas de capacitación y estándares de desempeño, auditorías visuales de campo con retroalimentación a dirección.
 
 ###### [figma_text_id](2:17)
 **Stack Técnico:** Adobe Creative Cloud (Illustrator, Photoshop, InDesign), AutoCAD, SketchUp, IWD, Keynote, IA Generativa (visualizaciones, planogramas y reportes).
@@ -62,16 +62,16 @@ Liderazgo cross-funcional conectando desarrollo de marca, identidad visual y eje
 *02/2025 - 03/2026*
 
 ###### [figma_text_id](2:25)
-Lidero la estrategia visual y el desarrollo de conceptos de exhibición in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias), garantizando montaje y ejecución de vitrinas bajo estándares de sofisticación y coherencia de marca alineados a lineamientos globales de HQ.
+Lideré la estrategia visual y el desarrollo de conceptos de exhibición en punto de venta para Valentino, Giorgio Armani y Ralph Lauren (fragancias), garantizando montaje y ejecución de vitrinas bajo estándares de sofisticación y coherencia de marca alineados a lineamientos globales de HQ.
 
 ###### [figma_text_id](2:26)
-Coordino proveedores locales para la producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados, mantenimiento de mobiliario y cumplimiento de lineamientos globales de la división.
+Coordiné proveedores locales para la producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados, mantenimiento de mobiliario y cumplimiento de lineamientos globales de la división.
 
 ###### [figma_text_id](2:27)
 Ejecuté el despliegue nacional de campañas NPI clave 2025 (Born in Roma, Stronger With You), generando retroalimentación fotográfica y cualitativa para el equipo corporativo de VM en cada rotación estratégica.
 
 ###### [figma_text_id](2:28)
-Colaboro con equipos de Marketing, Trade y Operaciones para alinear el calendario comercial con la ejecución visual en cada cuenta clave.
+Colaboré con equipos de Marketing, Trade y Operaciones para alinear el calendario comercial con la ejecución visual en cada cuenta clave.
 
 ###### [figma_text_id](2:32)
 **BISONTE EXPERIENTIAL MARKETING**
@@ -101,7 +101,7 @@ Gestioné la cadena de suministro de materiales de Store Design, asegurando disp
 *2018 - 2021*
 
 ###### [figma_text_id](2:42)
-**Gestión de red mixta multi-país:** Lideré la estrategia visual de desarrollo y estandarización de tienda para 6 países en LATAM y 270+ puntos de venta (red propia, franquicias y corners wholesale), reportando mejores prácticas de mercado al equipo de Trade Marketing.
+**Gestión de red mixta multi-país:** Lideré la estrategia visual de desarrollo y estandarización de tienda para **6 países** en LATAM y **270+ puntos de venta** (red propia, franquicias y corners wholesale), reportando mejores prácticas de mercado al equipo de Trade Marketing.
 
 ###### [figma_text_id](2:43)
 Reduje en -74% los costos de campañas y aperturas nacionales mediante un modelo de producción local que diseñé e implementé, sosteniendo el estándar global de exhibición en todo el portafolio de categorías.
@@ -113,7 +113,7 @@ Desarrollé manuales de Zoning & Mapping y herramientas digitales para field tea
 Lideré un equipo de 3 coordinadoras nacionales con reporte directo, más 3 colaboradoras con línea punteada en otros mercados, actuando como referente regional para las Américas.
 
 ###### [figma_text_id](3:2)
-Gestioné la estrategia visual en 6 países de LATAM y 270+ puntos de venta, garantizando estandarización de imagen de marca a nivel regional y reportando mejores prácticas al equipo corporativo.
+Gestioné la estrategia visual en **6 países** de LATAM y **270+ puntos de venta**, garantizando estandarización de imagen de marca a nivel regional y reportando mejores prácticas al equipo corporativo.
 
 ###### [figma_text_id](2:46)
 **AÉROPOSTALE**
@@ -125,10 +125,10 @@ Gestioné la estrategia visual en 6 países de LATAM y 270+ puntos de venta, gar
 *2017 - 2018*
 
 ###### [figma_text_id](2:49)
-Diseñé y escalé el área de VM desde cero, con una estructura de 21 reportes directos (17 subgerentes de VM y 4 supervisores de zona) bajo mi dirección, estableciendo lineamientos por categoría y protocolos de mantenimiento visual como estándar nacional replicable.
+Diseñé y escalé el área de VM desde cero, con una estructura de **21 reportes** directos (**17 subgerentes** de VM y **4 supervisores** de zona) bajo mi dirección, estableciendo lineamientos por categoría y protocolos de mantenimiento visual como estándar nacional replicable.
 
 ###### [figma_text_id](2:50)
-Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales.
+Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las **17 tiendas** bajo mi supervisión, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales.
 
 ###### [figma_text_id](2:51)
 Definí el estándar de planogramas para las categorías clave del portafolio (Denim & Lifestyle) y lo institucionalicé como referencia de desempeño visual reportada sistemáticamente a dirección.
@@ -143,13 +143,13 @@ Definí el estándar de planogramas para las categorías clave del portafolio (D
 *2014 - 2017*
 
 ###### [figma_text_id](10:191)
-**Aperturas y remodelaciones multi-punto de venta:** Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+**Aperturas y remodelaciones multi-punto de venta:** Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:192)
 Realicé visitas regulares de auditoría visual a tienda, evaluando mantenimiento, iluminación, props y mobiliario; documenté hallazgos y mejores prácticas para retroalimentación al equipo regional.
 
 ###### [figma_text_id](10:193)
-Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos 3 años del rol tuve a cargo una coordinadora Jr. con reporte directo.
+Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos **3 años** del rol tuve a cargo una coordinadora Jr. con reporte directo.
 
 ###### [figma_text_id](10:195)
 **Asesor de Visual Merchandising |**
@@ -158,7 +158,7 @@ Desarrollé programas de capacitación para el personal de piso en lineamientos 
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**

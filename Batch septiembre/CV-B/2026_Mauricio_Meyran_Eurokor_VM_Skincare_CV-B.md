@@ -20,19 +20,19 @@ LinkedIn |
 Portafolio
 
 ###### [figma_text_id](2:7)
-PERFIL PROFESIONAL
+**PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
-Estratega de Visual Merchandising con más de 10 años de trayectoria estandarizando imagen de marca en **redes multi-sucursal y cadenas nacionales**. Especialista en **implementación de planogramas**, distribución de producto por categoría y ejecución visual consistente a través de tiendas propias, franquicias y corners wholesale.
+Estratega de Visual Merchandising con más de **10 años** de trayectoria estandarizando imagen de marca en **redes multi-sucursal y cadenas nacionales**. Especialista en **implementación de planogramas**, distribución de producto por categoría y ejecución visual consistente a través de tiendas propias, franquicias y corners wholesale.
 
 ###### [figma_text_id](3:13)
-Gestioné la estrategia visual para 6 países LATAM y 270+ puntos de venta, con experiencia adicional en **aperturas y remodelaciones de tienda** (Adidas Brand Center Madero) y en categoría de fragancias de lujo (L'Oréal Luxe — Valentino, Armani, Ralph Lauren). Historial cuantificado: **-74%** costos operativos · **-33%** tiempo de floorset.
+Gestioné la estrategia visual para **6 países** LATAM y **270+ puntos de venta**, con experiencia adicional en **aperturas y remodelaciones de tienda** (Adidas Brand Center Madero) y en categoría de fragancias de lujo (L'Oréal Luxe — Valentino, Armani, Ralph Lauren). Historial cuantificado: **-74%** costos operativos · **-33%** tiempo de floorset.
 
 ###### [figma_text_id](2:10)
 Liderazgo multifuncional enfocado en la estandarización de imagen de marca multi-tienda, coordinando proveedores locales y equipos de campo para garantizar ejecución visual consistente en cadenas de retail a nivel nacional.
 
 ###### [figma_text_id](2:12)
-HABILIDADES CLAVE
+**HABILIDADES CLAVE**
 
 ###### [figma_text_id](2:14)
 **Estrategia Visual:** Implementación de planogramas, distribución de producto por categoría, estandarización de imagen multi-sucursal, escaparatismo, zoning, HQ alignment & brand consistency.
@@ -50,7 +50,7 @@ HABILIDADES CLAVE
 **Idiomas:** Español (Nativo) | Inglés (Profesional Corporativo).
 
 ###### [figma_text_id](2:20)
-EXPERIENCIA PROFESIONAL
+**EXPERIENCIA PROFESIONAL**
 
 ###### [figma_text_id](2:22)
 **L'ORÉAL LUXE MÉXICO**
@@ -62,7 +62,7 @@ EXPERIENCIA PROFESIONAL
 *02/2025 - 03/2026*
 
 ###### [figma_text_id](2:25)
-Lideré la estrategia visual y el storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias de lujo), garantizando que cada exhibición reflejara los estándares de sofisticación y coherencia de marca bajo lineamientos globales de HQ.
+Lideré la estrategia visual y el storytelling en punto de venta para Valentino, Giorgio Armani y Ralph Lauren (fragancias de lujo), garantizando que cada exhibición reflejara los estándares de sofisticación y coherencia de marca bajo lineamientos globales de HQ.
 
 ###### [figma_text_id](2:26)
 Coordiné proveedores locales para la producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados, mantenimiento de mobiliario y cumplimiento de lineamientos globales de la división en cada punto de venta.
@@ -101,7 +101,7 @@ Gestioné la cadena de suministro de materiales de Store Design, asegurando disp
 *2018 - 2021*
 
 ###### [figma_text_id](2:42)
-**Estandarización de imagen multi-sucursal:** Gestioné la estrategia visual para 6 países en LATAM y 270+ puntos de venta nacionales (red propia, franquicias y corners wholesale), asegurando imagen de marca uniforme en toda la cadena y reportando mejores prácticas de mercado al equipo de Trade Marketing.
+**Estandarización de imagen multi-sucursal:** Gestioné la estrategia visual para **6 países** en LATAM y **270+ puntos de venta** nacionales (red propia, franquicias y corners wholesale), asegurando imagen de marca uniforme en toda la cadena y reportando mejores prácticas de mercado al equipo de Trade Marketing.
 
 ###### [figma_text_id](2:43)
 Diseñé una estrategia de producción local que generó un ahorro del **-74%** en costos de campañas nacionales, manteniendo los estándares globales de exhibición y distribución de producto en todas las categorías.
@@ -125,10 +125,10 @@ Coordiné la implementación de planogramas y lineamientos de marca en tiendas p
 *2017 - 2018*
 
 ###### [figma_text_id](2:49)
-Construí el área de VM desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona; implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional — modelo de estandarización aplicado a escala de cadena completa.
+Construí el área de VM desde cero, gestionando a **17 subgerentes** de VM y **4 supervisores** de zona; implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional — modelo de estandarización aplicado a escala de cadena completa.
 
 ###### [figma_text_id](2:50)
-Contribuí directamente a un incremento de **+43%** en tráfico y **+18%** en conversión en las 17 tiendas bajo mi supervisión, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales.
+Contribuí directamente a un incremento de **+43%** en tráfico y **+18%** en conversión en las **17 tiendas** bajo mi supervisión, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales.
 
 ###### [figma_text_id](2:51)
 Estandaricé los planogramas de categorías clave (Denim & Lifestyle), generando retroalimentación sistemática a dirección sobre desempeño visual y oportunidades de mejora en piso.
@@ -143,13 +143,13 @@ Estandaricé los planogramas de categorías clave (Denim & Lifestyle), generando
 *2014 - 2017*
 
 ###### [figma_text_id](10:191)
-**Ejecución multi-tienda y aperturas:** Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+**Ejecución multi-tienda y aperturas:** Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:192)
 Realicé visitas regulares de auditoría visual a tienda, evaluando mantenimiento, iluminación, props y mobiliario; documenté hallazgos y mejores prácticas para retroalimentación al equipo regional.
 
 ###### [figma_text_id](10:193)
-Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos 3 años del rol tuve a cargo una coordinadora Jr. con reporte directo.
+Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos **3 años** del rol tuve a cargo una coordinadora Jr. con reporte directo.
 
 ###### [figma_text_id](10:195)
 **Asesor de Visual Merchandising** |
@@ -158,16 +158,16 @@ Desarrollé programas de capacitación para el personal de piso en lineamientos 
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:154)
-FORMACIÓN ACADÉMICA
+**FORMACIÓN ACADÉMICA**
 
 ###### [figma_text_id](10:158)
 Licenciatura en Artes Visuales |
 
 ###### [figma_text_id](10:159)
-2008 - 2012
+*2008 - 2012*
 
 ###### [figma_text_id](10:161)
 Escuela Nacional de Artes Plásticas, UNAM
@@ -176,19 +176,19 @@ Escuela Nacional de Artes Plásticas, UNAM
 Diplomado en Museos y Exposiciones |
 
 ###### [figma_text_id](10:165)
-2014
+*2014*
 
 ###### [figma_text_id](10:167)
 Facultad de Artes y Diseño, UNAM
 
 ###### [figma_text_id](10:213)
-CURSOS Y CERTIFICACIONES
+**CURSOS Y CERTIFICACIONES**
 
 ###### [figma_text_id](10:202)
 AutoCAD y SketchUp Essentials |
 
 ###### [figma_text_id](10:203)
-2024
+*2024*
 
 ###### [figma_text_id](10:204)
 LinkedIn Learning
@@ -197,7 +197,7 @@ LinkedIn Learning
 Store Operations Leaders Orientation (VM, Sales & Ops) |
 
 ###### [figma_text_id](10:208)
-2014
+*2014*
 
 ###### [figma_text_id](10:209)
 ALDO Group, Montréal, Canadá

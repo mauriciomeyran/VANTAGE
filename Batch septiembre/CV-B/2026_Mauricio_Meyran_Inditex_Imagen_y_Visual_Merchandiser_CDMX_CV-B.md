@@ -23,10 +23,10 @@ Portafolio
 **PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
-Líder de Visual Merchandising con más de 14 años construyendo el puente entre espacio, producto y equipo comercial. Especialista en leer el ritmo de piso de venta y traducirlo en un matching de exhibición que no solo vende, sino que inspira al cliente — desde boutiques monomarca hasta redes multitienda de alto tráfico.
+Líder de Visual Merchandising con más de **14 años** construyendo el puente entre espacio, producto y equipo comercial. Especialista en leer el ritmo de piso de venta y traducirlo en un matching de exhibición que no solo vende, sino que inspira al cliente — desde boutiques monomarca hasta redes multitienda de alto tráfico.
 
 ###### [figma_text_id](3:13)
-Historial comprobado construyendo áreas de VM desde cero, coordinando equipos de campo y formando al personal comercial en estándares de exhibición y atención al cliente. Resultados cuantificados en el terreno: +43% tráfico · +18% conversión · 21 reportes directos gestionados.
+Historial comprobado construyendo áreas de VM desde cero, coordinando equipos de campo y formando al personal comercial en estándares de exhibición y atención al cliente. Resultados cuantificados en el terreno: +43% tráfico · +18% conversión · **21 reportes** directos gestionados.
 
 ###### [figma_text_id](2:10)
 Liderazgo enfocado en acompañar decisiones de piso junto al equipo — compartiendo criterios de zoning, producto y experiencia de cliente — y en mantener comunicación continua con dirección de tienda para sostener el estándar comercial día a día.
@@ -62,10 +62,10 @@ Liderazgo enfocado en acompañar decisiones de piso junto al equipo — comparti
 *02/2025 - 03/2026*
 
 ###### [figma_text_id](2:25)
-Lidero la estrategia visual y el storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias), asegurando que el matching entre espacio y producto se traduzca en una exhibición que inspira y conecta con el cliente, bajo lineamientos globales de HQ.
+Lideré la estrategia visual y el storytelling en punto de venta para Valentino, Giorgio Armani y Ralph Lauren (fragancias), asegurando que el matching entre espacio y producto se traduzca en una exhibición que inspira y conecta con el cliente, bajo lineamientos globales de HQ.
 
 ###### [figma_text_id](2:26)
-Coordino proveedores locales para la producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados, mantenimiento de mobiliario y cumplimiento de lineamientos globales de la división.
+Coordiné proveedores locales para la producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados, mantenimiento de mobiliario y cumplimiento de lineamientos globales de la división.
 
 ###### [figma_text_id](2:27)
 Ejecuté el despliegue nacional de campañas NPI clave 2025 (Born in Roma, Stronger With You), generando retroalimentación fotográfica y cualitativa para el equipo corporativo de VM en cada rotación estratégica.
@@ -101,7 +101,7 @@ Gestioné la cadena de suministro de materiales de Store Design, asegurando disp
 *2018 - 2021*
 
 ###### [figma_text_id](2:42)
-Gestioné la estrategia visual para 6 países en LATAM y 270+ puntos de venta nacionales, asegurando la estandarización regional de la marca y reportando mejores prácticas de mercado a los equipos de gestión.
+Gestioné la estrategia visual para **6 países** en LATAM y **270+ puntos de venta** nacionales, asegurando la estandarización regional de la marca y reportando mejores prácticas de mercado a los equipos de gestión.
 
 ###### [figma_text_id](2:43)
 Diseñé una estrategia de producción local que generó un ahorro del -74% en costos de campañas nacionales, manteniendo los estándares globales de exhibición en todas las categorías de producto.
@@ -125,10 +125,10 @@ Coordiné Market Weeks y Press Days, manteniendo comunicación continua con equi
 *2017 - 2018*
 
 ###### [figma_text_id](2:49)
-Construí el área de VM desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona (21 reportes directos); implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional.
+Construí el área de VM desde cero, gestionando a **17 subgerentes** de VM y **4 supervisores** de zona (**21 reportes** directos); implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional.
 
 ###### [figma_text_id](2:50)
-Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión, mediante un matching estratégico entre espacio y producto que priorizó la experiencia del cliente en piso.
+Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las **17 tiendas** bajo mi supervisión, mediante un matching estratégico entre espacio y producto que priorizó la experiencia del cliente en piso.
 
 ###### [figma_text_id](2:51)
 Estandaricé los planogramas de categorías clave (Denim & Lifestyle) y formé al equipo comercial en su ejecución, generando retroalimentación sistemática a dirección de tienda sobre desempeño visual y oportunidades de mejora.
@@ -143,13 +143,13 @@ Estandaricé los planogramas de categorías clave (Denim & Lifestyle) y formé a
 *2014 - 2017*
 
 ###### [figma_text_id](10:191)
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas — compartiendo criterios de ejecución con el equipo de tienda bajo estándares globales de la casa matriz en Canadá.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas — compartiendo criterios de ejecución con el equipo de tienda bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:192)
 Realicé visitas regulares de auditoría visual a tienda, evaluando mantenimiento, iluminación, props y mobiliario; documenté hallazgos y mejores prácticas en comunicación continua con supervisores y equipos de gestión.
 
 ###### [figma_text_id](10:193)
-Desarrollé programas de formación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de atención al cliente; durante los últimos 3 años del rol tuve a cargo una coordinadora Jr. con reporte directo.
+Desarrollé programas de formación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de atención al cliente; durante los últimos **3 años** del rol tuve a cargo una coordinadora Jr. con reporte directo.
 
 ###### [figma_text_id](10:195)
 **Asesor de Visual Merchandising |**
@@ -158,7 +158,7 @@ Desarrollé programas de formación para el personal de piso en lineamientos vis
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**

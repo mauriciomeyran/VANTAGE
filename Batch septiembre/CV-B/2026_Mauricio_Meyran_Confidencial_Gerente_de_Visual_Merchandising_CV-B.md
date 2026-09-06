@@ -84,7 +84,7 @@ Liderazgo cross-funcional enfocado en conectar operaciones comerciales con ident
 
 ###### [figma_text_id](2:25)
 
-**Dirección de estrategia de marca:** Definí y dirigí la estrategia visual y el storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias), estableciendo el estándar de ejecución en entornos de luxury retail bajo lineamientos globales de HQ.
+**Dirección de estrategia de marca:** Definí y dirigí la estrategia visual y el storytelling en punto de venta para Valentino, Giorgio Armani y Ralph Lauren (fragancias), estableciendo el estándar de ejecución en entornos de luxury retail bajo lineamientos globales de HQ.
 
 ###### [figma_text_id](2:26)
 

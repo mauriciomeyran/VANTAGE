@@ -32,7 +32,7 @@ Portafolio
 
 ###### [figma_text_id](2:9)
 
-**Coordinador de Brand Environment y Store Design** con más de 14 años de experiencia implementando estrategias visuales y técnicas para tiendas flagship, aperturas de nueva tienda y redes retail multi-sucursal. Especialista en traducir lineamientos globales de marca en ejecuciones locales de alto impacto, coordinando proveedores especializados para producción e instalación, y entregando proyectos a tiempo bajo plazos ajustados mientras apoyo el crecimiento comercial de redes de tienda propia.
+**Coordinador de Brand Environment y Store Design** con más de **14 años** de experiencia implementando estrategias visuales y técnicas para tiendas flagship, aperturas de nueva tienda y redes retail multi-sucursal. Especialista en traducir lineamientos globales de marca en ejecuciones locales de alto impacto, coordinando proveedores especializados para producción e instalación, y entregando proyectos a tiempo bajo plazos ajustados mientras apoyo el crecimiento comercial de redes de tienda propia.
 
 ###### [figma_text_id](3:13)
 

@@ -23,7 +23,7 @@ Portafolio
 **PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
-Estratega de Visual Merchandising & Brand Execution con más de 14 años de trayectoria en trabajo de campo — visitas de tienda, montajes, validación de planogramas y capacitación de equipos en piso de venta — con disponibilidad de viaje y foco en la detección de oportunidades comerciales a través de la red.
+Estratega de Visual Merchandising & Brand Execution con más de **14 años** de trayectoria en trabajo de campo — visitas de tienda, montajes, validación de planogramas y capacitación de equipos en piso de venta — con disponibilidad de viaje y foco en la detección de oportunidades comerciales a través de la red.
 
 ###### [figma_text_id](3:13)
 He construido áreas de VM desde cero (**21 reportes directos**), liderando montajes, aperturas y remodelaciones bajo lineamientos y estándares de marca; complemento con auditorías periódicas de campo y desarrollo de programas de capacitación para personal de piso en implementación de materiales visuales y **planogramas**.
@@ -149,7 +149,7 @@ Coordiné el montaje y la ejecución visual y de marketing para **17 tiendas** r
 **Visitas de tienda y auditoría de campo:** Realicé visitas regulares de auditoría visual a tienda — evaluando mantenimiento, iluminación, props y mobiliario — documentando hallazgos y detectando oportunidades de mejora para retroalimentación al equipo regional.
 
 ###### [figma_text_id](10:193)
-**Capacitación de equipos:** Desarrollé programas de capacitación para el personal de piso en implementación de materiales visuales y estándares de marca; durante los últimos 3 años del rol, gestioné una coordinadora Jr. con reporte directo.
+**Capacitación de equipos:** Desarrollé programas de capacitación para el personal de piso en implementación de materiales visuales y estándares de marca; durante los últimos **3 años** del rol, gestioné una coordinadora Jr. con reporte directo.
 
 ###### [figma_text_id](10:195)
 **Asesor de Visual Merchandising**

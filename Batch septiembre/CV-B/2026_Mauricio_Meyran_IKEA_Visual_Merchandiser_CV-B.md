@@ -23,7 +23,7 @@ Portafolio
 **PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
-Estratega de Visual Merchandising & Brand Execution con más de 14 años construyendo y liderando equipos de campo, formación de personal en piso y estándares de ejecución visual en entornos de retail de alto tráfico. Combino disciplina de auditoría, coaching de alto desempeño y análisis de indicadores comerciales para elevar la experiencia del consumidor en punto de venta.
+Estratega de Visual Merchandising & Brand Execution con más de **14 años** construyendo y liderando equipos de campo, formación de personal en piso y estándares de ejecución visual en entornos de retail de alto tráfico. Combino disciplina de auditoría, coaching de alto desempeño y análisis de indicadores comerciales para elevar la experiencia del consumidor en punto de venta.
 
 ###### [figma_text_id](3:13)
 He construido áreas de VM desde cero (**21 reportes directos**), logrando incrementos de **+43%** en tráfico y **+18%** en conversión mediante zoning estratégico y alineación visual con objetivos comerciales; complemento con auditorías periódicas de campo, documentación de hallazgos y desarrollo de programas de capacitación para personal de piso en lineamientos visuales y estándares de marca.
@@ -149,7 +149,7 @@ Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 
 **Auditoría y cumplimiento de estándares:** Realicé visitas regulares de auditoría visual a tienda — evaluando mantenimiento, iluminación, props y mobiliario — documentando hallazgos y mejores prácticas para retroalimentación al equipo regional.
 
 ###### [figma_text_id](10:193)
-**Formación de personal de piso:** Desarrollé programas de capacitación en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos 3 años del rol, gestioné una coordinadora Jr. con reporte directo.
+**Formación de personal de piso:** Desarrollé programas de capacitación en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos **3 años** del rol, gestioné una coordinadora Jr. con reporte directo.
 
 ###### [figma_text_id](10:195)
 **Asesor de Visual Merchandising**

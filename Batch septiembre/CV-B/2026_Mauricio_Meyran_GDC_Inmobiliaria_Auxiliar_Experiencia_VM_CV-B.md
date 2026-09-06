@@ -23,13 +23,13 @@ Portafolio
 **PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
-Especialista en Brand Environment y Store Design con más de 10 años traduciendo conceptos de marca en espacios físicos de alto impacto: flagship stores, showrooms premium y entornos de exhibición multimarca. Experiencia probada coordinando proveedores especializados de mobiliario, materiales y acabados, supervisando calidad técnica desde renders hasta entrega final, y protegiendo la integridad del diseño arquitectónico bajo estándares globales de lujo y alto rendimiento.
+Especialista en Brand Environment y Store Design con más de **10 años** traduciendo conceptos de marca en espacios físicos de alto impacto: flagship stores, showrooms premium y entornos de exhibición multimarca. Experiencia probada coordinando proveedores especializados de mobiliario, materiales y acabados, supervisando calidad técnica desde renders hasta entrega final, y protegiendo la integridad del diseño arquitectónico bajo estándares globales de lujo y alto rendimiento.
 
 ###### [figma_text_id](3:13)
-Historial en aperturas críticas bajo presión de tiempo (rescate a 3 meses de apertura con entrega en fecha y cero observaciones bloqueantes), gestión de presupuestos CAPEX/OPEX para materiales de construcción e instalación, y generación de protocolos de calidad visual aplicables a redes de 270+ puntos de venta. Domino herramientas de visualización 3D, planogramas y Zoning & Mapping para asegurar consistencia de experiencia en cada recorrido del cliente.
+Historial en aperturas críticas bajo presión de tiempo (rescate a 3 meses de apertura con entrega en fecha y cero observaciones bloqueantes), gestión de presupuestos CAPEX/OPEX para materiales de construcción e instalación, y generación de protocolos de calidad visual aplicables a redes de **270+ puntos de venta**. Domino herramientas de visualización 3D, planogramas y Zoning & Mapping para asegurar consistencia de experiencia en cada recorrido del cliente.
 
 ###### [figma_text_id](2:10)
-Brand Environment and Store Design specialist with 10+ years translating brand concepts into high-impact physical spaces: flagship stores, premium showrooms, and multi-brand environments. Proven experience coordinating specialized vendors for furniture, materials, and finishes, supervising technical quality from render to final delivery, and safeguarding architectural design integrity under global luxury and high-performance standards.
+Especialista en Brand Environment y Store Design con más de **10 años** traduciendo conceptos de marca en espacios físicos de alto impacto: tiendas flagship, showrooms premium y entornos multi-marca. Experiencia comprobada coordinando proveedores especializados de mobiliario, materiales y acabados, supervisando calidad técnica desde el render hasta la entrega final, y salvaguardando la integridad del diseño arquitectónico bajo estándares globales de lujo y alto desempeño.
 
 ###### [figma_text_id](2:12)
 **HABILIDADES CLAVE**
@@ -38,10 +38,10 @@ Brand Environment and Store Design specialist with 10+ years translating brand c
 **Estrategia Visual:** Store Design & Brand Environment, flagship openings, showroom staging, visual storytelling, Zoning & Mapping, seasonal campaigns, planogramas, HQ alignment & brand consistency.
 
 ###### [figma_text_id](2:15)
-**Operaciones & Finanzas:** CAPEX/OPEX control for construction and fixtures, vendor negotiation and coordination, quality control & punch list management, flagship store openings, remodeling, field audits.
+**Operaciones & Finanzas:** Control presupuestal CAPEX/OPEX para construcción y mobiliario, negociación y coordinación con proveedores, control de calidad y gestión de punch list, aperturas de flagship stores, remodelaciones, auditorías de campo.
 
 ###### [figma_text_id](2:16)
-**Liderazgo & Training:** Direct and indirect team management, high-performance coaching, operational process standardization for visual execution, field audits and best-practice reporting.
+**Liderazgo & Training:** Dirección de equipos directos e indirectos, coaching de alto desempeño, estandarización de procesos operativos para ejecución visual, auditorías de campo y reporte de mejores prácticas.
 
 ###### [figma_text_id](2:17)
 **Stack Técnico:** Adobe Creative Cloud (Illustrator, Photoshop, InDesign), AutoCAD, SketchUp, Figma, IWD, Keynote, SAP Concur, Generative AI (3D visualizations, planograms, reports).
@@ -101,19 +101,19 @@ Colaboré con Marketing y Trade Marketing para alinear el calendario comercial c
 *2018 - 2021*
 
 ###### [figma_text_id](2:42)
-Diseñé manuales de Zoning & Mapping y herramientas digitales para field teams, reduciendo en 33% el tiempo de actualización de floorsets y estandarizando el recorrido del cliente en 270+ puntos de venta de 6 países LATAM. [KPI04]
+Diseñé manuales de Zoning & Mapping y herramientas digitales para field teams, reduciendo en 33% el tiempo de actualización de floorsets y estandarizando el recorrido del cliente en **270+ puntos de venta** de **6 países** LATAM. [KPI04]
 
 ###### [figma_text_id](2:43)
 Implementé una estrategia de producción local de materiales visuales que generó un ahorro del 74% en costos de campañas nacionales, manteniendo estándares globales de calidad en acabados e instalación. [KPI03]
 
 ###### [figma_text_id](2:44)
-Gestioné la estrategia visual para 6 países en LATAM y 270+ puntos de venta, asegurando la estandarización regional de exhibición y calidad de materiales en red propia, franquicias y wholesale. [CF05]
+Gestioné la estrategia visual para **6 países** en LATAM y **270+ puntos de venta**, asegurando la estandarización regional de exhibición y calidad de materiales en red propia, franquicias y wholesale. [CF05]
 
 ###### [figma_text_id](3:9)
 Lideré un equipo de 3 coordinadoras directas y 3 indirectas, actuando como enlace regional para las Américas y garantizando cobertura operativa del 100%.
 
 ###### [figma_text_id](3:2)
-Gestioné la estrategia visual en 6 países de LATAM y 270+ puntos de venta (boutiques propias, franquicias, wholesale corners), asegurando la estandarización de imagen regional y reportando mejores prácticas al equipo corporativo.
+Gestioné la estrategia visual en **6 países** de LATAM y **270+ puntos de venta** (boutiques propias, franquicias, wholesale corners), asegurando la estandarización de imagen regional y reportando mejores prácticas al equipo corporativo.
 
 ###### [figma_text_id](2:46)
 **AÉROPOSTALE**
@@ -125,10 +125,10 @@ Gestioné la estrategia visual en 6 países de LATAM y 270+ puntos de venta (bou
 *2017 - 2018*
 
 ###### [figma_text_id](2:49)
-Construí el área de VM desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona; implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional. [CF06]
+Construí el área de VM desde cero, gestionando a **17 subgerentes** de VM y **4 supervisores** de zona; implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional. [CF06]
 
 ###### [figma_text_id](2:50)
-Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en 17 tiendas, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales. [KPI01] · [KPI02] · [CF07]
+Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en **17 tiendas**, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales. [KPI01] · [KPI02] · [CF07]
 
 ###### [figma_text_id](2:51)
 Estandaricé los planogramas de categorías clave (Denim & Lifestyle), generando retroalimentación sistemática a dirección sobre desempeño visual y oportunidades de mejora en piso.
@@ -143,13 +143,13 @@ Estandaricé los planogramas de categorías clave (Denim & Lifestyle), generando
 *2014 - 2017*
 
 ###### [figma_text_id](10:191)
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:192)
 Realicé visitas regulares de auditoría visual a tienda, evaluando mantenimiento, iluminación, props y mobiliario; documenté hallazgos y mejores prácticas para retroalimentación al equipo regional.
 
 ###### [figma_text_id](10:193)
-Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos 3 años del rol tuve a cargo una coordinadora Jr. con reporte directo.
+Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos **3 años** del rol tuve a cargo una coordinadora Jr. con reporte directo.
 
 ###### [figma_text_id](10:195)
 **Asesor de Visual Merchandising**
@@ -158,7 +158,7 @@ Desarrollé programas de capacitación para el personal de piso en lineamientos 
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**

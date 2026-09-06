@@ -28,15 +28,15 @@ Portafolio
 
 ###### [figma_text_id](2:7)
 
-PERFIL PROFESIONAL
+**PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
 
-Estratega de Visual Merchandising con más de 10 años de trayectoria en retail de lujo, moda premium y entornos multitienda, con **ejecución directa en piso de venta** sobre tiendas departamentales, boutiques monomarca y **corners/cuentas wholesale**. Especialista en traducir lineamientos de marca en resultados comerciales visibles en punto de venta: styling, colorización, zoning y rotación de producto.
+Estratega de Visual Merchandising con más de **10 años** de trayectoria en retail de lujo, moda premium y entornos multitienda, con **ejecución directa en piso de venta** sobre tiendas departamentales, boutiques monomarca y **corners/cuentas wholesale**. Especialista en traducir lineamientos de marca en resultados comerciales visibles en punto de venta: styling, colorización, zoning y rotación de producto.
 
 ###### [figma_text_id](3:13)
 
-Con experiencia comprobada en 6 países LATAM y 270+ puntos de venta —incluyendo red propia, franquicias y corners wholesale—, domino la **visita y auditoría constante de campo**, la coordinación de proveedores locales e internacionales, y la generación de **reportes fotográficos y cualitativos** para equipos comerciales y corporativos. Historial cuantificado: **+43%** tráfico · **+18%** conversión · **-74%** costos operativos.
+Con experiencia comprobada en **6 países** LATAM y **270+ puntos de venta** —incluyendo red propia, franquicias y corners wholesale—, domino la **visita y auditoría constante de campo**, la coordinación de proveedores locales e internacionales, y la generación de **reportes fotográficos y cualitativos** para equipos comerciales y corporativos. Historial cuantificado: **+43%** tráfico · **+18%** conversión · **-74%** costos operativos.
 
 ###### [figma_text_id](2:10)
 
@@ -44,7 +44,7 @@ Liderazgo transversal que vincula operaciones comerciales con la identidad visua
 
 ###### [figma_text_id](2:12)
 
-HABILIDADES CLAVE
+**HABILIDADES CLAVE**
 
 ###### [figma_text_id](2:14)
 
@@ -68,7 +68,7 @@ Idiomas: Español (Nativo) | Inglés (Profesional Corporativo).
 
 ###### [figma_text_id](2:20)
 
-EXPERIENCIA PROFESIONAL
+**EXPERIENCIA PROFESIONAL**
 
 ###### [figma_text_id](2:22)
 
@@ -84,7 +84,7 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:25)
 
-Ejecuté y di seguimiento en campo al storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias) en cuentas de tienda departamental, garantizando que cada exhibición y punto de contacto de styling reflejara los estándares de marca bajo lineamientos globales de HQ.
+Ejecuté y di seguimiento en campo al storytelling en punto de venta para Valentino, Giorgio Armani y Ralph Lauren (fragancias) en cuentas de tienda departamental, garantizando que cada exhibición y punto de contacto de styling reflejara los estándares de marca bajo lineamientos globales de HQ.
 
 ###### [figma_text_id](2:26)
 
@@ -136,7 +136,7 @@ Gestioné la cadena de suministro de materiales de Store Design, dando seguimien
 
 ###### [figma_text_id](2:42)
 
-Gestioné la estrategia visual para 6 países en LATAM y 270+ puntos de venta nacionales, dando seguimiento constante en campo a la estandarización regional de la marca y reportando mejores prácticas de mercado al equipo de Trade Marketing.
+Gestioné la estrategia visual para **6 países** en LATAM y **270+ puntos de venta** nacionales, dando seguimiento constante en campo a la estandarización regional de la marca y reportando mejores prácticas de mercado al equipo de Trade Marketing.
 
 ###### [figma_text_id](2:43)
 
@@ -152,7 +152,7 @@ Reduje en un -33% el tiempo de actualización de floorsets mediante manuales de 
 
 ###### [figma_text_id](3:2)
 
-Gestioné la estrategia visual en 6 países de LATAM y más de 270 puntos de venta (tiendas propias, franquicias y **corners wholesale**), garantizando la estandarización regional de imagen de marca y documentando mejores prácticas para el equipo corporativo.
+Gestioné la estrategia visual en **6 países** de LATAM y más de **270 puntos de venta** (tiendas propias, franquicias y **corners wholesale**), garantizando la estandarización regional de imagen de marca y documentando mejores prácticas para el equipo corporativo.
 
 ###### [figma_text_id](2:46)
 
@@ -168,11 +168,11 @@ Gestioné la estrategia visual en 6 países de LATAM y más de 270 puntos de ven
 
 ###### [figma_text_id](2:49)
 
-**Construcción de estándares en campo:** Diseñé y documenté vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual aplicados en 17 tiendas, generando consistencia de ejecución en todo el network.
+**Construcción de estándares en campo:** Diseñé y documenté vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual aplicados en **17 tiendas**, generando consistencia de ejecución en todo el network.
 
 ###### [figma_text_id](2:50)
 
-Contribuí directamente a un incremento de **+43%** en tráfico y **+18%** en conversión en las 17 tiendas del network, mediante zoning estratégico, **seguimiento de rotación y desplazamiento de producto** y alineación visual con objetivos comerciales mensuales.
+Contribuí directamente a un incremento de **+43%** en tráfico y **+18%** en conversión en las **17 tiendas** del network, mediante zoning estratégico, **seguimiento de rotación y desplazamiento de producto** y alineación visual con objetivos comerciales mensuales.
 
 ###### [figma_text_id](2:51)
 
@@ -192,7 +192,7 @@ Estandaricé los planogramas de categorías clave (Denim & Lifestyle), generando
 
 ###### [figma_text_id](10:191)
 
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 **corners wholesale**, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y 12 **corners wholesale**, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
 
 ###### [figma_text_id](10:192)
 
@@ -216,7 +216,7 @@ Ejecuté en piso el styling y la colorización de producto en tienda departament
 
 ###### [figma_text_id](10:154)
 
-FORMACIÓN ACADÉMICA
+**FORMACIÓN ACADÉMICA**
 
 ###### [figma_text_id](10:158)
 
@@ -224,7 +224,7 @@ Licenciatura en Artes Visuales |
 
 ###### [figma_text_id](10:159)
 
-2008 - 2012
+*2008 - 2012*
 
 ###### [figma_text_id](10:161)
 
@@ -236,7 +236,7 @@ Diplomado en Museos y Exposiciones |
 
 ###### [figma_text_id](10:165)
 
-2014
+*2014*
 
 ###### [figma_text_id](10:167)
 
@@ -244,7 +244,7 @@ Facultad de Artes y Diseño, UNAM
 
 ###### [figma_text_id](10:213)
 
-CURSOS Y CERTIFICACIONES
+**CURSOS Y CERTIFICACIONES**
 
 ###### [figma_text_id](10:202)
 
@@ -252,7 +252,7 @@ AutoCAD y SketchUp Essentials |
 
 ###### [figma_text_id](10:203)
 
-2024
+*2024*
 
 ###### [figma_text_id](10:204)
 
@@ -264,7 +264,7 @@ Store Operations Leaders Orientation (VM, Sales & Ops) |
 
 ###### [figma_text_id](10:208)
 
-2014
+*2014*
 
 ###### [figma_text_id](10:209)
 

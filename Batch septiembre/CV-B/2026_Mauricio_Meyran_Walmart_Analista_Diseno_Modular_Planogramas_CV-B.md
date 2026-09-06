@@ -23,7 +23,7 @@ Portafolio
 **PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
-Estratega de Visual Merchandising & Brand Execution con más de 14 años de trayectoria traduciendo blueprints y lineamientos de marca en ejecución física de espacios, zoning y disposición modular — con foco en integridad visual y operativa desde el diseño hasta el día uno de apertura.
+Estratega de Visual Merchandising & Brand Execution con más de **14 años** de trayectoria traduciendo blueprints y lineamientos de marca en ejecución física de espacios, zoning y disposición modular — con foco en integridad visual y operativa desde el diseño hasta el día uno de apertura.
 
 ###### [figma_text_id](3:13)
 Lideré la implementación física y técnica del Adidas Brand Center Madero (Flagship Store) bajo Blueprints y Store Design Guidelines internacionales, coordinando múltiples proveedores especializados — cadena de suministro, permisos, accesos y calendarización — con entrega en fecha y 17 observaciones menores en punch list, ninguna bloqueante. Complemento con manejo de presupuestos CAPEX/OPEX y validación de planogramas con equipos corporativos.
@@ -62,7 +62,7 @@ Liderazgo de ejecución física de espacios — traduciendo blueprints arquitect
 *02/2025 - 03/2026*
 
 ###### [figma_text_id](2:25)
-Diseñé y ejecuté la estrategia visual in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias), manteniendo consistencia de layout y storytelling de marca en canales de alto tráfico bajo lineamientos globales de HQ.
+Diseñé y ejecuté la estrategia visual en punto de venta para Valentino, Giorgio Armani y Ralph Lauren (fragancias), manteniendo consistencia de layout y storytelling de marca en canales de alto tráfico bajo lineamientos globales de HQ.
 
 ###### [figma_text_id](2:26)
 **Presupuesto y proveedores:** Administré el presupuesto nacional CAPEX/OPEX de la división y coordiné proveedores locales e internacionales para la producción e instalación de materiales POP y vitrinas, supervisando acabados y especificaciones técnicas.
@@ -149,7 +149,7 @@ Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 
 Realicé visitas regulares de auditoría visual a tienda, evaluando mantenimiento, iluminación, props y mobiliario; documenté hallazgos y mejores prácticas para retroalimentación al equipo regional.
 
 ###### [figma_text_id](10:193)
-**Capacitación y liderazgo:** Desarrollé programas de capacitación para personal de piso en lineamientos visuales y estándares de marca; durante los últimos 3 años del rol, gestioné una coordinadora Jr. con reporte directo.
+**Capacitación y liderazgo:** Desarrollé programas de capacitación para personal de piso en lineamientos visuales y estándares de marca; durante los últimos **3 años** del rol, gestioné una coordinadora Jr. con reporte directo.
 
 ###### [figma_text_id](10:195)
 **Asesor de Visual Merchandising**

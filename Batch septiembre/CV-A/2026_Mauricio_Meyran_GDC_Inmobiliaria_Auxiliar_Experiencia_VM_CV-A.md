@@ -54,4 +54,4 @@ N2 gana con 3/6 — no hay empate, no aplica Regla de Desempate.
 
 ## Próximo paso
 
-**REVISIÓN HUMANA REQUERIDA** antes de CV-B — por (a) discrepancia de alcance (`VM_Scope: Alto` vs. lectura de ubicación única) y (b) flag de integridad de registro (`AGREGADOR_STATUS_401` / posible archivado pendiente). No se genera bloqueo unilateral; se solicita confirmación del operador sobre si procede continuar con esta vacante antes de avanzar a CV-B.
+Listo para CV-B — **REVISIÓN HUMANA COMPLETADA (2026-09-05).** Operador confirma: (1) la vacante sigue activa pese al flag `AGREGADOR_STATUS_401` detectado en el pipeline, y (2) se autoriza continuar pese a la desalineación de seniority documentada (rol "Auxiliar", $18,000–$20,000 MXN/mes vs. perfil de gerencia regional 10+ años). Discrepancia de `VM_Scope: Alto` vs. lectura de ubicación única queda documentada como antecedente, sin bloquear el avance.

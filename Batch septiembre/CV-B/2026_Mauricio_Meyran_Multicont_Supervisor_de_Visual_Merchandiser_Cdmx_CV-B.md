@@ -28,11 +28,11 @@ Portafolio
 
 ###### [figma_text_id](2:7)
 
-PERFIL PROFESIONAL
+**PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
 
-**Gerente de Visual Merchandising** con más de 14 años de experiencia liderando equipos de campo y operaciones retail multi-unidad en canales de moda, lujo y tiendas departamentales. Especialista en construir y supervisar equipos de VM, impulsar KPIs comerciales a través de ejecución estandarizada, y coordinar implementación de campañas, cobertura de tiendas y aperturas en tiendas propias, departamentales y cuentas wholesale.
+**Gerente de Visual Merchandising** con más de **14 años** de experiencia liderando equipos de campo y operaciones retail multi-unidad en canales de moda, lujo y tiendas departamentales. Especialista en construir y supervisar equipos de VM, impulsar KPIs comerciales a través de ejecución estandarizada, y coordinar implementación de campañas, cobertura de tiendas y aperturas en tiendas propias, departamentales y cuentas wholesale.
 
 ###### [figma_text_id](3:13)
 
@@ -44,11 +44,11 @@ PERFIL PROFESIONAL
 
 ###### [figma_text_id](2:12)
 
-HABILIDADES CLAVE
+**HABILIDADES CLAVE**
 
 ###### [figma_text_id](2:14)
 
-**Liderazgo y Desarrollo de Equipos de Campo:** Construcción y supervisión de equipos de Visual Merchandising (hasta 21 reportes directos), coaching de ejecución de alto desempeño, y aseguramiento de cobertura consistente en redes multi-tienda.
+**Liderazgo y Desarrollo de Equipos de Campo:** Construcción y supervisión de equipos de Visual Merchandising (hasta **21 reportes** directos), coaching de ejecución de alto desempeño, y aseguramiento de cobertura consistente en redes multi-tienda.
 
 ###### [figma_text_id](2:15)
 
@@ -68,7 +68,7 @@ HABILIDADES CLAVE
 
 ###### [figma_text_id](2:20)
 
-EXPERIENCIA PROFESIONAL
+**EXPERIENCIA PROFESIONAL**
 
 ###### [figma_text_id](2:22)
 
@@ -136,7 +136,7 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:42)
 
-**Supervisión multi-POS y cobertura de red:** Gestioné la estrategia visual en 6 países de LATAM y 270+ puntos de venta (tiendas propias, franquicias y corners wholesale), asegurando estandarización de marca regional y cobertura de campo.
+**Supervisión multi-POS y cobertura de red:** Gestioné la estrategia visual en **6 países** de LATAM y **270+ puntos de venta** (tiendas propias, franquicias y corners wholesale), asegurando estandarización de marca regional y cobertura de campo.
 
 ###### [figma_text_id](2:43)
 
@@ -168,7 +168,7 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:49)
 
-**Construcción y liderazgo de equipo de campo:** Construí el departamento de Visual Merchandising desde cero y gestioné 17 subgerentes de VM más 4 supervisores de zona (21 reportes directos), estableciendo cobertura de campo nacional en una red de 17 tiendas.
+**Construcción y liderazgo de equipo de campo:** Construí el departamento de Visual Merchandising desde cero y gestioné **17 subgerentes** de VM más **4 supervisores** de zona (**21 reportes** directos), estableciendo cobertura de campo nacional en una red de **17 tiendas**.
 
 ###### [figma_text_id](2:50)
 
@@ -192,7 +192,7 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](10:191)
 
-**Ejecución multi-cuenta departamental y wholesale:** Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale dentro de El Palacio de Hierro, liderando aperturas y remodelaciones críticas bajo los estándares de la casa matriz canadiense.
+**Ejecución multi-cuenta departamental y wholesale:** Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale dentro de El Palacio de Hierro, liderando aperturas y remodelaciones críticas bajo los estándares de la casa matriz canadiense.
 
 ###### [figma_text_id](10:192)
 
@@ -212,11 +212,11 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](10:198)
 
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrina con proveedores especializados bajo los estándares globales de la casa matriz canadiense.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrina con proveedores especializados bajo los estándares globales de la casa matriz canadiense.
 
 ###### [figma_text_id](10:154)
 
-FORMACIÓN ACADÉMICA
+**FORMACIÓN ACADÉMICA**
 
 ###### [figma_text_id](10:158)
 
@@ -236,7 +236,7 @@ Diplomado en Museos y Exposiciones |
 
 ###### [figma_text_id](10:165)
 
-2014
+*2014*
 
 ###### [figma_text_id](10:167)
 
@@ -244,7 +244,7 @@ Facultad de Artes y Diseño, UNAM
 
 ###### [figma_text_id](10:213)
 
-CURSOS Y CERTIFICACIONES
+**CURSOS Y CERTIFICACIONES**
 
 ###### [figma_text_id](10:202)
 
@@ -252,7 +252,7 @@ AutoCAD y SketchUp Essentials |
 
 ###### [figma_text_id](10:203)
 
-2024
+*2024*
 
 ###### [figma_text_id](10:204)
 
@@ -264,7 +264,7 @@ Store Operations Leaders Orientation (VM, Sales & Ops) |
 
 ###### [figma_text_id](10:208)
 
-2014
+*2014*
 
 ###### [figma_text_id](10:209)
 
