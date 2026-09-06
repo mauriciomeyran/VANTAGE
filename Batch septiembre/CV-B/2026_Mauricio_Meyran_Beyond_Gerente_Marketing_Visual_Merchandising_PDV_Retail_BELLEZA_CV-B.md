@@ -4,7 +4,7 @@
 
 ###### [figma_text_id](2:5)
 
-Coordinador de Brand Environment y Store Design · Ejecución de Flagships, Expansión de Red y Estrategia Visual
+**Coordinador de Brand Environment y Store Design · Ejecución de Flagships, Expansión de Red y Estrategia Visual**
 
 ###### [figma_text_id](8:56)
 
@@ -28,7 +28,7 @@ Portafolio
 
 ###### [figma_text_id](2:7)
 
-PERFIL PROFESIONAL
+**PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
 
@@ -44,7 +44,7 @@ PERFIL PROFESIONAL
 
 ###### [figma_text_id](2:12)
 
-HABILIDADES CLAVE
+**HABILIDADES CLAVE**
 
 ###### [figma_text_id](2:14)
 
@@ -68,7 +68,7 @@ HABILIDADES CLAVE
 
 ###### [figma_text_id](2:20)
 
-EXPERIENCIA PROFESIONAL
+**EXPERIENCIA PROFESIONAL**
 
 ###### [figma_text_id](2:22)
 
@@ -84,7 +84,7 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:25)
 
-**Estrategia visual para marcas de lujo:** Lideré la estrategia de Visual Merchandising para Valentino, Giorgio Armani y Ralph Lauren (fragancias) en canales de alto tráfico y lujo, asegurando la alineación de identidad de marca global en cuentas clave de tiendas departamentales y puntos de venta.
+Lideré la estrategia de Visual Merchandising para Valentino, Giorgio Armani y Ralph Lauren (fragancias) en canales de alto tráfico y lujo, asegurando la alineación de identidad de marca global en cuentas clave de tiendas departamentales y puntos de venta.
 
 ###### [figma_text_id](2:26)
 
@@ -96,7 +96,7 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:28)
 
-**Habilitación de campo y representación de marca:** Actué como embajador de marca en cuentas clave y apoyé estándares consistentes de presentación de producto, reforzando el impacto comercial del Visual Merchandising en el punto de venta.
+Actué como embajador de marca en cuentas clave y apoyé estándares consistentes de presentación de producto, reforzando el impacto comercial del Visual Merchandising en el punto de venta.
 
 ###### [figma_text_id](2:32)
 
@@ -112,15 +112,15 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:35)
 
-**Liderazgo de apertura de flagship:** Lideré la implementación visual y técnica para la apertura del Adidas Brand Center Madero (Flagship Store), cumpliendo los más altos estándares globales de la marca y coordinando múltiples proveedores especializados para producción, logística e instalación.
+Lideré la implementación visual y técnica para la apertura del Adidas Brand Center Madero (Flagship Store), cumpliendo los más altos estándares globales de la marca y coordinando múltiples proveedores especializados para producción, logística e instalación.
 
 ###### [figma_text_id](2:36)
 
-**Entrega a tiempo bajo presión:** Supervisé producción y logística de materiales de Store Design en un proyecto rescatado tres meses antes de la apertura, logrando entrega a tiempo con 17 observaciones menores de punch-list — ninguna bloqueante para la apertura ni comprometiendo la experiencia del consumidor.
+Supervisé producción y logística de materiales de Store Design en un proyecto rescatado tres meses antes de la apertura, logrando entrega a tiempo con **17 observaciones** menores de punch-list — ninguna bloqueante para la apertura ni comprometiendo la experiencia del consumidor.
 
 ###### [figma_text_id](2:37)
 
-**Integridad de diseño y calidad de proveedores:** Coordiné proveedores especializados para asegurar calidad en acabados y mobiliario, salvaguardando la integridad del diseño arquitectónico y visual mientras gestionaba presupuestos de producción mediante negociaciones estratégicas.
+Coordiné proveedores especializados para asegurar calidad en acabados y mobiliario, salvaguardando la integridad del diseño arquitectónico y visual.
 
 ###### [figma_text_id](2:39)
 
@@ -136,23 +136,23 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:42)
 
-**Estrategia visual regional y red multi-canal:** Gestioné la estrategia visual para 6 países de LATAM y 270+ puntos de venta (tiendas propias, franquicias y corners wholesale), asegurando la estandarización de imagen de marca regional y reportando mejores prácticas al equipo corporativo.
+Gestioné la estrategia visual para **6 países** de LATAM y **270+ puntos de venta** (tiendas propias, franquicias y corners wholesale), asegurando la estandarización de imagen de marca regional y reportando mejores prácticas al equipo corporativo.
 
 ###### [figma_text_id](2:43)
 
-**Herramientas de ejecución y eficiencia:** Creé guías de estilo regionales simplificadas y manuales de Zoning & Mapping que redujeron discrepancias de exhibición en piso y disminuyeron el tiempo de actualización de floorset en 33% mediante herramientas digitales para equipos de campo.
+Creé guías de estilo regionales simplificadas y manuales de Zoning & Mapping que redujeron discrepancias de exhibición en piso y disminuyeron el tiempo de actualización de floorset en **33%** mediante herramientas digitales para equipos de campo.
 
 ###### [figma_text_id](2:44)
 
-**Liderazgo de equipo y cobertura:** Lideré un equipo de 3 coordinadores nacionales con reporte directo más 3 colaboradores de línea punteada en otros mercados, actuando como enlace regional y asegurando 100% de cobertura POP durante la contingencia de COVID-19 mediante coordinación remota.
+Lideré un equipo de 3 coordinadores nacionales con reporte directo más 3 colaboradores de línea punteada en otros mercados, actuando como enlace regional y asegurando **100%** de cobertura POP durante la contingencia de COVID-19 mediante coordinación remota.
 
 ###### [figma_text_id](3:9)
 
-**Optimización de costos y estrategia de proveedores:** Diseñé una estrategia de producción local que generó un ahorro del 74% en costos de campañas nacionales en México, coordinando la negociación con proveedores y supervisando la consistencia visual en toda la región.
+Diseñé una estrategia de producción local que generó un ahorro del **74%** en costos de campañas nacionales en México, coordinando la negociación con proveedores y supervisando la consistencia visual en toda la región.
 
 ###### [figma_text_id](3:2)
 
-**Alineación comercial en punto de venta:** Apoyé el enfoque de sell-out mediante ejecución visual estandarizada y herramientas de habilitación de campo que mantuvieron la presentación de marca alineada con las prioridades comerciales en una amplia red multi-canal.
+Apoyé el enfoque de sell-out mediante ejecución visual estandarizada y herramientas de habilitación de campo que mantuvieron la presentación de marca alineada con las prioridades comerciales en una amplia red multi-canal.
 
 ###### [figma_text_id](2:46)
 
@@ -168,15 +168,15 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:49)
 
-**Construcción de departamento y liderazgo multi-tienda:** Construí el departamento de Visual Merchandising desde cero, gestionando 17 subgerentes de VM y 4 supervisores de zona (21 reportes directos en total) y estableciendo cobertura de campo en una red nacional de 17 tiendas.
+Construí el departamento de Visual Merchandising desde cero, gestionando **17 subgerentes** de VM y **4 supervisores** de zona (**21 reportes** directos en total) y estableciendo cobertura de campo en una red nacional de **17 tiendas**.
 
 ###### [figma_text_id](2:50)
 
-**Impacto comercial a través de estrategia visual:** Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en la red de tiendas mediante coordinación estratégica de displays, reestructuración de zonas de alto tráfico y alineación continua de la ejecución visual con los objetivos de venta.
+Contribuí directamente a un incremento de **+43%** en tráfico y **+18%** en conversión en la red de tiendas mediante coordinación estratégica de displays, reestructuración de zonas de alto tráfico y alineación continua de la ejecución visual con los objetivos de venta.
 
 ###### [figma_text_id](2:51)
 
-**Estandarización de planogramas y habilitación de equipo:** Estandaricé planogramas para categorías clave (Denim & Lifestyle), alineando la exhibición con los objetivos de venta mensuales y capacitando al equipo interno de VM en styling de maniquíes y técnicas de exhibición comercial.
+Estandaricé planogramas para categorías clave (Denim & Lifestyle), alineando la exhibición con los objetivos de venta mensuales y capacitando al equipo interno de VM en styling de maniquíes y técnicas de exhibición comercial.
 
 ###### [figma_text_id](10:186)
 
@@ -192,15 +192,15 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](10:191)
 
-**Ejecución multi-tienda y aperturas:** Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas y remodelaciones críticas bajo los estándares de la casa matriz canadiense.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas y remodelaciones críticas bajo los estándares de la casa matriz canadiense.
 
 ###### [figma_text_id](10:192)
 
-**Adaptación de campañas:** Supervisé la implementación de campañas globales, adaptando los lineamientos de la casa matriz en Canadá para el mercado mexicano y apoyando el tráfico hacia la categoría de calzado y accesorios.
+Supervisé la implementación de campañas globales, adaptando los lineamientos de la casa matriz en Canadá para el mercado mexicano y apoyando el tráfico hacia la categoría de calzado y accesorios.
 
 ###### [figma_text_id](10:193)
 
-**Capacitación y liderazgo junior:** Desarrollé programas de capacitación para personal de piso que elevaron los estándares de mantenimiento visual y ejecución de lanzamientos; durante los últimos tres años del rol, gestioné directamente a una coordinadora Jr. con reporte directo.
+Desarrollé programas de capacitación para personal de piso que elevaron los estándares de mantenimiento visual y ejecución de lanzamientos; durante los últimos tres años del rol, gestioné directamente a una coordinadora Jr. con reporte directo.
 
 ###### [figma_text_id](10:195)
 
@@ -212,19 +212,19 @@ EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](10:198)
 
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrina con proveedores especializados bajo los estándares globales de la casa matriz canadiense.
+Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrina con proveedores especializados bajo los estándares globales de la casa matriz canadiense.
 
 ###### [figma_text_id](10:154)
 
-FORMACIÓN ACADÉMICA
+**FORMACIÓN ACADÉMICA**
 
 ###### [figma_text_id](10:158)
 
-Licenciatura en Artes Visuales |
+**Licenciatura en Artes Visuales |**
 
 ###### [figma_text_id](10:159)
 
-2008 – 2012
+*2008 – 2012*
 
 ###### [figma_text_id](10:161)
 
@@ -232,11 +232,11 @@ Escuela Nacional de Artes Plásticas, UNAM
 
 ###### [figma_text_id](10:164)
 
-Diplomado en Museos y Exposiciones |
+**Diplomado en Museos y Exposiciones |**
 
 ###### [figma_text_id](10:165)
 
-2014
+*2014*
 
 ###### [figma_text_id](10:167)
 
@@ -244,7 +244,7 @@ Facultad de Artes y Diseño, UNAM
 
 ###### [figma_text_id](10:213)
 
-CURSOS Y CERTIFICACIONES
+**CURSOS Y CERTIFICACIONES**
 
 ###### [figma_text_id](10:202)
 
@@ -252,7 +252,7 @@ AutoCAD y SketchUp Essentials |
 
 ###### [figma_text_id](10:203)
 
-2024
+*2024*
 
 ###### [figma_text_id](10:204)
 
@@ -264,7 +264,7 @@ Store Operations Leaders Orientation (VM, Sales & Ops) |
 
 ###### [figma_text_id](10:208)
 
-2014
+*2014*
 
 ###### [figma_text_id](10:209)
 
