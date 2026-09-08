@@ -1,0 +1,58 @@
+{
+  "source": "aggregators",
+  "searched_at": "2026-09-08",
+  "platforms_attempted": [
+    "OCC",
+    "Indeed",
+    "Computrabajo",
+    "Bumeran"
+  ],
+  "platforms_accessible": [],
+  "platforms_blocked": [
+    "OCC",
+    "Indeed",
+    "Computrabajo",
+    "Bumeran"
+  ],
+  "jobs": [],
+  "rejected_jobs": [],
+  "not_evaluated": {
+    "reason": "Todas las plataformas de agregadores están bloqueadas desde IP 189.217.111.56 (MX). Sin acceso a resultados.",
+    "items": []
+  },
+  "audit_log": [
+    {
+      "type": "HTTP",
+      "platform": "OCC",
+      "detail": "403 Forbidden — OCC bloquea acceso desde IP 189.217.111.56",
+      "url_attempted": "https://www.occ.com.mx/empleos/?q=Visual+Merchandising+OR+Brand+Experience+OR+Retail+Experience&l=Mexico+City%2C+Mexico",
+      "timestamp": "2026-09-08T07:57:19Z"
+    },
+    {
+      "type": "Cloudflare",
+      "platform": "Indeed",
+      "detail": "Cloudflare block — 'Solicitud bloqueada' + Ray ID. IP 189.217.111.56 bloqueada explícitamente.",
+      "url_attempted": "https://mx.indeed.com/jobs?q=Visual+Merchandising+OR+Brand+Experience+OR+Retail+Experience&l=Mexico+City%2C+Mexico",
+      "timestamp": "2026-09-08T07:57:19Z"
+    },
+    {
+      "type": "HTTP",
+      "platform": "Computrabajo",
+      "detail": "403 Forbidden — Computrabajo bloquea acceso desde IP 189.217.111.56",
+      "url_attempted": "https://www.computrabajo.com.mx/empleos/?q=Visual+Merchandising+OR+Brand+Experience+OR+Retail+Experience&l=Mexico+City%2C+Mexico",
+      "timestamp": "2026-09-08T07:57:19Z"
+    },
+    {
+      "type": "Redirect",
+      "platform": "Bumeran",
+      "detail": "404 Not Found — 'No encontramos la página que buscas'. Posiblemente el sitio migró o sufrió cambio de estructura.",
+      "url_attempted": "https://www.bumeran.com.mx/empleos?q=Visual+Merchandising+OR+Brand+Experience+OR+Retail+Experience&l=Mexico+City%2C+Mexico",
+      "timestamp": "2026-09-08T07:57:19Z"
+    }
+  ],
+  "search_metadata": {
+    "platforms_attempted": 4,
+    "platforms_accessible": 0,
+    "platforms_blocked": 4
+  }
+}

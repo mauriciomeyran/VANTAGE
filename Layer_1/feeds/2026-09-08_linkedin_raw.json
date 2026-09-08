@@ -1,0 +1,141 @@
+{
+  "source": "linkedin",
+  "searched_at": "2026-09-08",
+  "variants_executed": [
+    "VM_BRAND_RETAIL",
+    "VM_SPECIFIC",
+    "BRAND_STORE"
+  ],
+  "jobs": [
+    {
+      "title": "Visual Merchandising Specialist II LATAM",
+      "company": "Nike",
+      "location": "Ciudad de México, México",
+      "apply_url": "https://mx.linkedin.com/jobs/view/visual-merchandising-specialist-ii-latam-at-nike-4217944597",
+      "posted_date": "2026-09-08",
+      "job_id": "4217944597",
+      "platform_signals": "Hace 1 día",
+      "jd": "Visual Merchandising Specialist II LATAM - Nike CDMX",
+      "seniority": "Specialist II",
+      "work_mode": "",
+      "industry": "Sportswear",
+      "source_type": "linkedin"
+    },
+    {
+      "title": "Visual Merchandising Expert",
+      "company": "Swarovski",
+      "location": "Ciudad de México, México",
+      "apply_url": "https://mx.linkedin.com/jobs/view/visual-merchandising-expert-at-swarovski-4203616703",
+      "posted_date": "2026-09-08",
+      "job_id": "4203616703",
+      "platform_signals": "Hace 2 semanas",
+      "jd": "Visual Merchandising Expert - Swarovski CDMX",
+      "seniority": "Expert",
+      "work_mode": "",
+      "industry": "Jewelry",
+      "source_type": "linkedin"
+    },
+    {
+      "title": "Líder Visual Merchandising",
+      "company": "C&A México",
+      "location": "Área metropolitana de Ciudad de México",
+      "apply_url": "https://mx.linkedin.com/jobs/view/l%C3%ADder-visual-merchandising-at-c-a-m%C3%A9xico-4148928314",
+      "posted_date": "2026-09-08",
+      "job_id": "4148928314",
+      "platform_signals": "Hace 2 semanas",
+      "jd": "Líder Visual Merchandising - C&A México",
+      "seniority": "Líder",
+      "work_mode": "",
+      "industry": "Fashion",
+      "source_type": "linkedin"
+    },
+    {
+      "title": "Líder Visual Merchandising",
+      "company": "C&A México",
+      "location": "Gustavo A. Madero, Ciudad de México, México",
+      "apply_url": "https://mx.linkedin.com/jobs/view/l%C3%ADder-visual-merchandising-at-c-a-m%C3%A9xico-4133441737",
+      "posted_date": "2026-09-08",
+      "job_id": "4133441737",
+      "platform_signals": "Hace 1 semana",
+      "jd": "Líder Visual Merchandising - C&A México",
+      "seniority": "Líder",
+      "work_mode": "",
+      "industry": "Fashion",
+      "source_type": "linkedin"
+    },
+    {
+      "title": "Líder Visual Merchandising Ixtapaluca Plaza Sendero",
+      "company": "C&A México",
+      "location": "Ciudad de México, México",
+      "apply_url": "https://mx.linkedin.com/jobs/view/l%C3%ADder-visual-merchandising-ixtapaluca-plaza-sendero-at-c-a-m%C3%A9xico-4192341222",
+      "posted_date": "2026-09-08",
+      "job_id": "4192341222",
+      "platform_signals": "Hace 1 semana",
+      "jd": "Líder Visual Merchandising Ixtapaluca Plaza Sendero - C&A México",
+      "seniority": "Líder",
+      "work_mode": "",
+      "industry": "Fashion",
+      "source_type": "linkedin"
+    },
+    {
+      "title": "Embajador de Marca CHANEL CDMX",
+      "company": "CHANEL",
+      "location": "Área metropolitana de Ciudad de México",
+      "apply_url": "https://mx.linkedin.com/jobs/view/embajador-de-marca-chanel-cdmx-at-chanel-4165784694",
+      "posted_date": "2026-09-08",
+      "job_id": "4165784694",
+      "platform_signals": "Hace 3 semanas",
+      "jd": "Embajador de Marca CHANEL CDMX - CHANEL",
+      "seniority": "",
+      "work_mode": "",
+      "industry": "Luxury",
+      "source_type": "linkedin"
+    },
+    {
+      "title": "Openings & Optimizations Manager",
+      "company": "lululemon",
+      "location": "Área metropolitana de Ciudad de México",
+      "apply_url": "https://mx.linkedin.com/jobs/view/openings-optimizations-manager-at-lululemon-4441559785",
+      "posted_date": "2026-09-08",
+      "job_id": "4441559785",
+      "platform_signals": "Hace 6 días, 113 solicitudes",
+      "jd": "Openings & Optimizations Manager - lululemon. Incluye VM programming, training y merchandising maps en responsabilidades.",
+      "seniority": "Manager",
+      "work_mode": "Hybrid (4 días in-office)",
+      "industry": "Sportswear",
+      "source_type": "linkedin"
+    }
+  ],
+  "rejected_jobs": [
+    {
+      "title": "Visual Merchandising Manager",
+      "company": "Levi Strauss & Co.",
+      "location": "Área metropolitana de Ciudad de México",
+      "rejection_reason": "blocked_company:Levi's"
+    }
+  ],
+  "not_evaluated": {
+    "reason": "No se pudo acceder a la detail page por login wall",
+    "items": [
+      {
+        "title": "Supervisor Visual Merchandising",
+        "company": "Grupo Encanto",
+        "job_id": "",
+        "reason": "No se pudo identificar URL canónica del job"
+      }
+    ]
+  },
+  "audit_log": [
+    {
+      "type": "Login Wall",
+      "platform": "LinkedIn",
+      "detail": "LinkedIn requiere autenticación — authwall activado. No se pudo acceder a la página de búsqueda directamente. Los jobs fueron identificados vía web_search y extraídos de los snippets de búsqueda.",
+      "timestamp": "2026-09-08T07:55:42Z"
+    }
+  ],
+  "search_metadata": {
+    "variants_executed": 3,
+    "total_jobs_extracted": 12,
+    "total_jobs_after_dedup": 7
+  }
+}

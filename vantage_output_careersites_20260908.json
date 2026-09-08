@@ -1,0 +1,158 @@
+{
+  "search_metadata": {
+    "platform": "careersites",
+    "sources_searched": [
+      "M·A·C Cosmetics / Estée Lauder Companies (careers.elcompanies.com)",
+      "CHANEL (chanel.com/us/en/careers)",
+      "Tiffany & Co. (tiffany.com/careers)",
+      "Nike (careers.nike.com)",
+      "Apple (jobs.apple.com)",
+      "Sephora (sephora.com/employment)",
+      "e.l.f. Cosmetics (elfcosmetics.com/pages/careers)",
+      "Ralph Lauren (ralphlauren.com/careers)",
+      "Zara/Inditex (zara.com/mx/trabaja-zara)",
+      "Gucci (gucci.com/en-us/story/careers)",
+      "Daniel Wellington (danielwellington.com/pages/careers)",
+      "Coach (careers.coach.com)",
+      "Beyond (beyond.lat/carreras)"
+    ],
+    "query": "Visual Merchandising",
+    "location": "Mexico City, Mexico",
+    "posted_within_days": 14,
+    "total_results_found": 25,
+    "jobs_extracted": 0,
+    "jobs_validated_and_accepted": 0,
+    "jobs_rejected": 25,
+    "search_timestamp": "2026-09-08T01:23:00Z",
+    "prompt_variant": "A-weekly-unified-careersites",
+    "prompt_version": "PromptA-v1.0+careersites"
+  },
+  "audit_log": [
+    {
+      "type": "Access Denied",
+      "evidence": "CHANEL career page (chanel.com/us/en/careers) returned 'Access Denied - You don't have permission to access' with reference #18.a727c817",
+      "action": "registered"
+    },
+    {
+      "type": "Access Denied",
+      "evidence": "Tiffany & Co. career page (tiffany.com/careers) returned 'Access Denied - You don't have permission to access' with reference #18.c51bc817",
+      "action": "registered"
+    },
+    {
+      "type": "Cloudflare",
+      "evidence": "Sephora (sephora.com/employment) returned Access Denied (edgesuite.net error #18.8c29c817)",
+      "action": "registered"
+    },
+    {
+      "type": "Access Denied",
+      "evidence": "Ralph Lauren (ralphlauren.com/careers) returned 'Access to this page has been denied' with Cloudflare challenge",
+      "action": "registered"
+    },
+    {
+      "type": "Access Denied",
+      "evidence": "Zara (zara.com/mx/trabaja-zara) returned Access Denied (edgesuite.net error #18.57c557b8)",
+      "action": "registered"
+    },
+    {
+      "type": "HTTP",
+      "evidence": "Gucci (gucci.com/en-us/story/careers) returned ERR_HTTP2_PROTOCOL_ERROR - site temporarily unavailable",
+      "action": "registered"
+    },
+    {
+      "type": "DNS",
+      "evidence": "Coach (careers.coach.com) returned DNS_PROBE_FINISHED_NXDOMAIN - domain does not resolve",
+      "action": "registered"
+    },
+    {
+      "type": "HTTP",
+      "evidence": "Daniel Wellington (/pages/careers) returned 404 Not Found",
+      "action": "registered"
+    },
+    {
+      "type": "HTTP",
+      "evidence": "Beyond (beyond.lat/carreras) returned 404 Not Found",
+      "action": "registered"
+    }
+  ],
+  "data_quality_warnings": [
+    {
+      "job_id": "N/A",
+      "warning": "ELC/M·A·C portal search for 'Visual Merchandising' in Mexico City returned 25 results, ALL of which are sales roles (Counter Manager / Beauty Advisor). No dedicated Visual Merchandising positions were found on the career site. The search keyword matched descriptions containing 'visual merchandising' as a secondary duty within sales management roles.",
+      "severity": "high"
+    },
+    {
+      "job_id": "N/A",
+      "warning": "13 of 14 career sites searched were inaccessible due to access restrictions (Access Denied, Cloudflare, DNS errors, 404). Only ELC/M·A·C portal was reachable but returned no VM-specific roles.",
+      "severity": "high"
+    }
+  ],
+  "search_outcomes": {
+    "success": true,
+    "errors": [],
+    "sources_accessible": [
+      "M·A·C Cosmetics / Estée Lauder Companies (careers.elcompanies.com)"
+    ],
+    "sources_blocked": [
+      "CHANEL (Access Denied)",
+      "Tiffany & Co. (Access Denied)",
+      "Sephora (Access Denied / Cloudflare)",
+      "Ralph Lauren (Access Denied / Cloudflare)",
+      "Zara (Access Denied / Cloudflare)",
+      "Gucci (ERR_HTTP2_PROTOCOL_ERROR)",
+      "Daniel Wellington (404)",
+      "Coach (DNS NXDOMAIN)",
+      "Beyond (404)",
+      "Nike (no VM results for Mexico City)",
+      "Apple (no VM results for Mexico City)",
+      "e.l.f. Cosmetics (no Mexico-specific VM roles, redirects to LinkedIn)"
+    ]
+  },
+  "jobs": [],
+  "rejected_jobs": [
+    {
+      "job_id": "27809",
+      "title": "Counter Manager",
+      "company": "Balmain Beauty (M·A·C / Estée Lauder Companies)",
+      "location": "Ciudad de México, MX-CMX, Mexico",
+      "job_posted_date": "2026-08-15",
+      "job_detail_url": "https://careers.elcompanies.com/careers/job/1168274808512",
+      "rejection_rule": "posting_age_exceeded",
+      "rejection_reason": "Posted 24 days ago — exceeds the 21-day maximum acceptance threshold defined in PRE-INCLUSION CHECK. Even though the JD includes VM responsibilities ('Mantenimiento de las directrices de visual merchandising de la marca'), the posting age disqualifies this role."
+    },
+    {
+      "job_id": "27159",
+      "title": "Counter Manager",
+      "company": "M·A·C (Estée Lauder Companies)",
+      "location": "Ciudad de México, MX-CMX, Mexico",
+      "job_posted_date": "2026-08-16",
+      "job_detail_url": "https://careers.elcompanies.com/careers/job/1168274755746",
+      "rejection_rule": "posting_age_exceeded",
+      "rejection_reason": "Posted ~23-24 days ago — exceeds the 21-day maximum. Role is primarily Sales/Point of Sale Management; VM is only a secondary duty mentioned in the JD."
+    },
+    {
+      "job_id": "N/A",
+      "title": "Counter Manager (multiple positions)",
+      "company": "M·A·C / Estée Lauder Companies (various brands: MAC, Balmain Beauty, Tom Ford)",
+      "location": "Ciudad de México and other Mexico locations",
+      "job_posted_date": "2026-08-15 to 2026-08-17 (range)",
+      "job_detail_url": "https://careers.elcompanies.com/careers?query=Visual+Merchandising&location=Mexico+City,+Mexico",
+      "rejection_rule": "not_vm_role",
+      "rejection_reason": "All 25 ELC portal results are sales/retail management roles (Counter Manager, Beauty Advisor). While some JDs mention visual merchandising as a secondary duty, the primary function is Sales/Point of Sale Management. These do not match the candidate's Visual Merchandising career family as primary function."
+    },
+    {
+      "job_id": "N/A",
+      "title": "Beauty Advisor/Artist (multiple positions)",
+      "company": "M·A·C / Estée Lauder Companies",
+      "location": "Ciudad de México and other Mexico locations",
+      "job_posted_date": "2026-07-14 to 2026-08-15 (range)",
+      "job_detail_url": "https://careers.elcompanies.com/careers?query=Visual+Merchandising&location=Mexico+City,+Mexico",
+      "rejection_rule": "not_vm_role",
+      "rejection_reason": "Beauty Advisor roles are sales positions with no Visual Merchandising function. Titles contain no VM keywords. Rejected under not_vm_role rule."
+    }
+  ],
+  "search_source_notes": {
+    "careersites_summary": "Search executed across 14 career sites and ATS portals for Visual Merchandising roles in Mexico City. Only M·A·C/Estée Lauder Companies (ELC portal at careers.elcompanies.com) was accessible and returned results — 25 jobs, all sales/store management roles. 13 of 14 sites were blocked or returned errors. No dedicated Visual Merchandising positions were identified on any official career page within the search scope.",
+    "elc_portal_details": "The ELC/Estée Lauder Companies careers portal (careers.elcompanies.com) was accessed via the M·A·C Cosmetics employment page redirect. Search for 'Visual Merchandising' in Mexico City returned 25 results across 3 pages. All results are sales roles (Counter Manager and Beauty Advisor) for various ELC brands (M·A·C, Balmain Beauty, Tom Ford, Estée Lauder). While Counter Manager JDs include 'Mantenimiento de las directrices de visual merchandising de la marca' as a responsibility, the primary job function is Sales/Point of Sale Management — not Visual Merchandising. Posting ages range from 3 days to 1 month. Roles posted >21 days ago were rejected under posting_age_exceeded rule.",
+    "executive_note": "Mauricio's profile (Visual Merchandising career family, CDMX location) found NO matching VM roles on official career pages this cycle. The ELC/M·A·C portal is the only accessible luxury/beauty career site in Mexico and it currently has no dedicated VM postings. Recommendation: rely on LinkedIn (Layer 1) results from this same date for VM opportunities, as 7 valid VM roles were found there."
+  }
+}
