@@ -36,7 +36,8 @@ GROQ_API_KEY   = os.environ["GROQ_API_KEY"]
 # 8b-instant: más RPM/TPM en tier gratuito; 70b agota cuota rápido con varios correos
 GROQ_MODEL     = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
 GROQ_MIN_DELAY = float(os.environ.get("GROQ_MIN_DELAY_SEC", "12"))
-GROQ_MAX_RETRY = int(os.environ.get("GROQ_MAX_RETRIES", "8"))
+GROQ_MAX_RETRY = int(os.environ.get("GROQ_MAX_RETRIES", "3"))
+GROQ_MAX_BACKOFF = float(os.environ.get("GROQ_MAX_BACKOFF_SEC", "30"))
 GROQ_BODY_MAX  = int(os.environ.get("GROQ_BODY_MAX_CHARS", "3500"))
 MAX_EMAILS_RUN = int(os.environ.get("GROQ_MAX_EMAILS_PER_RUN", "10"))
 
@@ -76,6 +77,21 @@ SKIP_SUBJECT_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Indicadores básicos de vacantes para pre-filtrado (ahorra cuota Groq)
+JOB_INDICATORS_RE = re.compile(
+    r"vacante|empleo|puesto|posici[oó]n|oportunidad|contrataci[oó]n|"
+    r"job vacancy|job opening|hiring|vacancy|career|work|"
+    r"aplica|postula|inscribir|register|apply now",
+    re.IGNORECASE,
+)
+
+# Indicadores de URLs de job boards
+JOB_BOARD_URL_RE = re.compile(
+    r"https?://(www\.)?(linkedin|indeed|computrabajo|occ|bumeran)\.com|"
+    r"https?://(www\.)?jobs\.",
+    re.IGNORECASE,
+)
+
 # ──────────────────────────────────────────
 # GMAIL — leer correos no leídos de .Jobs
 # ──────────────────────────────────────────
@@ -89,6 +105,21 @@ def _connect_gmail():
 def _set_seen(mail, eid, seen: bool):
     flag = "+FLAGS" if seen else "-FLAGS"
     mail.store(eid, flag, "\\Seen")
+
+
+def should_skip_groq(subject: str, body: str) -> tuple[bool, str]:
+    """
+    Pre-filtrado antes de llamar a Groq para ahorrar cuota.
+    Devuelve (True, motivo) si debe saltarse, (False, "") si procede.
+    """
+    # Combinar subject y body para análisis
+    combined_text = f"{subject} {body}".lower()
+
+    # Si no hay indicadores de vacante ni URLs de job boards, saltar
+    if not JOB_INDICATORS_RE.search(combined_text) and not JOB_BOARD_URL_RE.search(combined_text):
+        return True, "NO_VACANCY_PREFILTER"
+
+    return False, ""
 
 
 def _decode_subject(msg):
@@ -183,6 +214,7 @@ GROQ_PROMPT = """Eres un extractor de vacantes de empleo especializado en Visual
 Del siguiente texto de correo electrónico, extrae ÚNICAMENTE vacantes relevantes para un profesional de Visual Merchandising.
 
 Roles RELEVANTES (incluir): Visual Merchandiser, VM Coordinator, VM Manager, VM Director, Brand Environment, Escaparatista, Retail Design, Store Planner, Display Coordinator, Trade Marketing Visual, y roles similares en retail/moda/lujo con componente visual explícito.
+Incluye también equivalentes en español: Exhibición Visual, Líder de Exhibición Visual, Coordinador Visual, Jefe de Visual, Escaparatismo, Diseño de Interiores Commercial, y cualquier rol con "Visual" o "Exhibición" en retail.
 
 Roles IRRELEVANTES (ignorar completamente — NO incluir aunque aparezcan en el mismo correo):
 - Ventas, cajero/a, asesor de ventas, ejecutivo de ventas, promotor
@@ -195,7 +227,7 @@ Roles IRRELEVANTES (ignorar completamente — NO incluir aunque aparezcan en el 
 - Diseño gráfico sin componente retail/VM explícito
 - Intern/practicante en áreas no-VM
 - Supervisor operativo de sucursal, gerente de tienda sin scope VM
-- Cualquier rol cuyo título no contenga palabras como: visual, merchandising, display, brand environment, retail design, store design, escaparate, vitrina, planograma
+- Cualquier rol cuyo título no contenga palabras como: visual, merchandising, display, brand environment, retail design, store design, escaparate, vitrina, planograma, exhibición, escaparatismo
 
 MARCAS BLOQUEADAS (ignorar todas sus vacantes, sin excepción):
 - El Palacio de Hierro (cualquier variante: Palacio de Hierro, palacio, PHierro)
@@ -248,11 +280,11 @@ def _groq_wait_seconds(resp, attempt):
     retry_after = resp.headers.get("Retry-After")
     if retry_after:
         try:
-            return max(float(retry_after), GROQ_MIN_DELAY)
+            return min(max(float(retry_after), GROQ_MIN_DELAY), GROQ_MAX_BACKOFF)
         except ValueError:
             pass
-    # backoff: 12, 24, 48… hasta 90s + jitter
-    return min(90, GROQ_MIN_DELAY * (2 ** attempt)) + random.uniform(0, 3)
+    # backoff: 12, 24, 48… capped at GROQ_MAX_BACKOFF + jitter
+    return min(GROQ_MAX_BACKOFF, GROQ_MIN_DELAY * (2 ** attempt)) + random.uniform(0, 3)
 
 
 def extract_jobs_with_groq(email_body, retries=None):
@@ -311,7 +343,8 @@ def extract_jobs_with_groq(email_body, retries=None):
         resp.raise_for_status()
         break
     else:
-        raise Exception(f"Groq rate limit persistente después de {retries} intentos")
+        print(f"  ⚠️ [L3_SKIPPED_RATE_LIMIT] Groq rate limit persistente después de {retries} intentos")
+        return []  # Return empty list to skip this email and continue
 
     content = resp.json()["choices"][0]["message"]["content"].strip()
     return _parse_groq_jobs(content)
@@ -517,10 +550,13 @@ def dedupe_jobs(jobs):
 # FILTRO VM — validación post-Groq por título
 # ──────────────────────────────────────────
 _VM_KEYWORDS = re.compile(
-    r"visual merch|merchandis|display|escaparat|vitrina|planograma|exhibicion|"
+    r"visual merch|merchandis|display|escaparat|vitrina|planograma|exhibici[oó]n|"
     r"brand environment|store design|retail design|store planner|"
     r"vm coord|vm manager|vm director|visual coord|visual manager|"
-    r"trade marketing visual|montaje.*mobiliario|mobiliario.*montaje",
+    r"trade marketing visual|montaje.*mobiliario|mobiliario.*montaje|"
+    r"exhibici[oó]n visual|escaparatismo|diseño.*interiores.*commercial|"
+    r"coordinador.*visual|líder.*visual|jefe.*visual|visual.*coordinator|"
+    r"visual.*leader|visual.*lead",
     re.IGNORECASE,
 )
 
@@ -708,6 +744,13 @@ def main():
 
         if SKIP_SUBJECT_RE.search(em["subject"]):
             print("  ⏭️  Asunto ignorado (sin vacantes)")
+            _set_seen(mail, em["id"], True)
+            continue
+
+        # Pre-filtrado para ahorrar cuota Groq
+        skip_groq, skip_reason = should_skip_groq(em["subject"], em["body"])
+        if skip_groq:
+            print(f"  ⏭️  Pre-filtrado ({skip_reason}) - sin indicadores de vacante")
             _set_seen(mail, em["id"], True)
             continue
 

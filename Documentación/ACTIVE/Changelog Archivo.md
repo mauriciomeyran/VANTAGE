@@ -1,4 +1,23 @@
 # V | CHANGELOG — ARCHIVO
+---
+Tipo: [FIX] [CODE]
+Alcance:
+- Código: Layer_3/scripts/layer_3_mail.py (backoff logic, pre-filtering, VM keywords)
+- Configuración: Layer_3/config/layer_3.env (GROQ_MAX_RETRIES, GROQ_MAX_BACKOFF_SEC)
+Contexto: Durante ejecución del pipeline L3 el 8-sep-2026, el script encontró explosión de backoff exponencial al alcanzar rate limits de Groq API (HTTP 429). El delay escaló de 12s hasta 1,217s (~20 minutos) en el correo 6/10, forzando interrupción manual (SIGINT). Adicionalmente, reglas post-procesamiento descartaban roles relevantes de visual merchandising debido a matching estricto de variantes en español (ej. "Líder de Exhibición Visual").
+Cambios:
+- layer_3_mail.py::_groq_wait_seconds() — capped backoff a GROQ_MAX_BACKOFF_SEC (30s) en lugar de 90s, tanto para Retry-After como para cálculo exponencial.
+- layer_3_mail.py::extract_jobs_with_groq() — modificado para retornar [] con warning [L3_SKIPPED_RATE_LIMIT] tras GROQ_MAX_RETRIES (3) en lugar de lanzar Exception, permitiendo continuar con siguiente correo.
+- layer_3_mail.py::should_skip_groq() — función nueva de pre-filtrado que inspecciona subject/body antes de llamar Groq; busca JOB_INDICATORS_RE y JOB_BOARD_URL_RE, marca como NO_VACANCY_PREFILTER si no encuentra indicadores.
+- layer_3_mail.py::_VM_KEYWORDS — expandido para incluir equivalentes españoles: exhibici[oó]n visual, escaparatismo, diseño.*interiores.*commercial, coordinador.*visual, líder.*visual, jefe.*visual, visual.*coordinator, visual.*leader, visual.*lead.
+- layer_3_mail.py::GROQ_PROMPT — actualizado para incluir equivalentes españoles en lista de roles relevantes: Exhibición Visual, Líder de Exhibición Visual, Coordinador Visual, Jefe de Visual, Escaparatismo, Diseño de Interiores Commercial.
+- layer_3.env — GROQ_MAX_RETRIES reducido de 8 a 3; GROQ_MAX_BACKOFF_SEC añadido con valor 30.
+IDs afectados: Ninguno (fix de código sin alta/baja de ID canónico — no dispara KERNEL:CENSUS-SYNC Regla 1).
+Write-Back Verification: Ejecución de prueba completada sin intervención manual; pipeline procesa correos continuamente, máximo wait time nunca excede 30s, llamadas fallidas con rate limit saltan tras max retries con logging apropiado.
+Pendiente (fuera de esta entrada):
+- vversions --sync para propagar versión al resto de fundacionales (Kernel, Manual, SP, etc.) si se bumpea versión.
+- Monitoreo de cuota Groq — la implementación actual de pre-filtrado reduce llamadas pero no resuelve limitaciones de cuota de cuenta; puede requerir ajuste de uso o upgrade de plan Groq.
+---
 
 Documento modificado: Skill Library (Notion) — vantage-cv-b, vantage-qa, vantage-present-handoff, vantage-session-close, vantage-session-open, prompt-master. Script local verify_versions.py (Layer_1/scripts).
 Documentos potencialmente afectados: Manual §23.2 (Skill Glossary Housekeeping) — gap real detectado, vantage-sync-skill-glossary sin fila propia (no corregido en este batch).
