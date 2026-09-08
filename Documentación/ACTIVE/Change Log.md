@@ -1,5 +1,92 @@
 # V | CHANGELOG
 
+Tipo: [MIGRATION] [CODE]
+Alcance: layer_3_mail.py (migración completa Groq → Gemini) + layer_3.env
+Contexto:
+- Problema de backoff exponencial (12s → 1,217s) en retries de Groq, causando tiempos de espera no viables.
+- Cuota insuficiente de Groq incluso tras implementar pre-filtrado y backoff cap.
+- Investigación de proveedores alternativos determinó que Gemini Flash-Lite ofrece mejor free tier (15-30 RPM vs ~10 RPM de Groq) y OpenAI-compatibility.
+Cambios ejecutados:
+1. Migración de proveedor: Reemplazo completo de cliente Groq por cliente Gemini:
+- extract_jobs_with_groq() → extract_jobs_with_gemini()
+- _groq_throttle() → _gemini_throttle()
+- _groq_wait_seconds() → _gemini_wait_seconds()
+- GroqFatalError → GeminiFatalError
+- Endpoint: https://api.groq.com/openai/v1/chat/completions → https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent
+- Payload format: OpenAI-style → Gemini native (contents/generationConfig)
+1. Configuración renombrada (layer_3.env):
+- GROQ_API_KEY → GEMINI_API_KEY (usando key existente en .env principal)
+- GROQ_MODEL → GEMINI_MODEL (gemini-3.5-flash-lite)
+- GROQ_MIN_DELAY_SEC → GEMINI_MIN_DELAY_SEC (8s, reducido de 12s)
+- GROQ_MAX_RETRIES → GEMINI_MAX_RETRIES (3)
+- GROQ_MAX_BACKOFF_SEC → GEMINI_MAX_BACKOFF_SEC (20s, reducido de 30s)
+- GROQ_MAX_EMAILS_PER_RUN → GEMINI_MAX_EMAILS_PER_RUN (5)
+- GROQ_BODY_MAX_CHARS → GEMINI_BODY_MAX_CHARS
+1. Pre-filtrado preservado: Función should_skip_groq() → should_skip_gemini() mantiene lógica de filtrado de correos sin indicadores de vacante.
+1. VM keywords preservadas: _VM_KEYWORDS expandido con equivalentes españoles (exhibición visual, escaparatismo, coordinador visual, etc.) implementados en sesión previa.
+Validación:
+- Pipeline ejecutado sin intervención manual en correos de prueba.
+- Sin rate limits observados con Gemini (vs persistentes con Groq).
+- Latencia mejorada: 8s delay vs 12s anterior.
+- Modelo gemini-3.5-flash-lite estable y disponible.
+Pendientes post-escritura:
+- Ejecutar vversions --sync para propagar cambios a documentos fundacionales.
+- Monitorear cuota de Gemini (usos/hora) tras despliegue.
+- Considerar backup provider (DeepSeek) como fallback si se requiere mayor throughput.
+IDs afectados: Ninguno (migración de proveedor sin alta/baja de ID canónico — no dispara KERNEL:CENSUS-SYNC Regla 1).
+---
+Tipo: [DOC] [INFRA]
+Documento modificado: V | SYSTEM PROMPT (§01.1 SP:BOOTLOADER-001 — agregado Hermes a Familia MCP-Notion) · .hermes.md (repo local, new file)
+Documentos potencialmente afectados: Ninguno — extensión de alcance de familia de agente existente, sin impacto en contratos documentales.
+Tipo de impacto: Operativo + Normativo — cierre de gap de capacidad de agente: Hermes ahora consume el manifiesto VANTAGE vía notion-fetch igual que el resto de la Familia MCP-Notion, y declara identidad HERMES/DEFAULT conforme al Contrato de Sesión y Handoff (SP:BOOTLOADER-002, v1.0).
+Acción correctiva ejecutada:
+1. V | SYSTEM PROMPT §01.1 — línea "Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes)" actualizada para incluir a Hermes en el registro de familias con acceso a notion-fetch.
+1. .hermes.md creado en raíz del repo VANTAGE — instrucciones persistentes de proyecto que Hermes carga automáticamente al iniciar sesión: identidad declarada (agent.family: HERMES, agent.instance: DEFAULT, identity.confirmation_mode: CONFIGURED_NO_REPROMPT), protocolo de Bootloader (BOOTLOADING... → notion-fetch SYSTEM PROMPT + ID CENSUS → BOOTLOADED), y restricciones operativas generales alineadas al Kernel.
+1. Sin DRY RUN presentado ni APROBAR_WRITE por turno adicional, por instrucción explícita del operador (optimización de tokens) — version bump y esta entrada ejecutados en una sola pasada.
+IDs afectados: Ninguno (sin alta/baja de ID canónico — extensión de texto existente en SP:BOOTLOADER-001 + nuevo archivo .hermes.md en repo local).
+Estado final de la validación: .hermes.md verificado en disco (ruta: /Users/mauriciomeyran/Documents/03 Projects/VANTAGE/.hermes.md). SP:BOOTLOADER-001 actualizado en Notion. Sin Census pendiente (sin alta/baja de ID). 23:50 CDMX.
+Handoff de referencia: HO-000045 (emitido en esta sesión, este es el handoff de cierre de la sesión de Bootloader Hermes).
+---
+Tipo: [OPS] [FIX]
+Documento modificado: 4 archivos CV-B (Eurokor VM Skincare, ServiciosAndreiMoygo, Tendam, Multicont Visual Merchandiser — repo local) · 3 archivos CV-B EN (SARELLY, HM Retail Designer, HM Junior Retail Designer — bold/métrica, nunca auditados antes) · saneamiento_reports/triajev3.py (3 correcciones de raíz) · V | Saneamiento CV-B.md (reporte de estado, v1.0→v1.2)
+Documentos potencialmente afectados: Ninguno en Kernel/Manual/SP/Canon — continuación operativa del saneamiento retroactivo iniciado en v9.21.49, sin cambios normativos.
+Tipo de impacto: Operativo — cierre de los 4 pendientes explícitos dejados en el handoff HO-000036 (Gates 6/7 en los 3 CV-B EN, Auditoría de Identidad Figma nunca ejecutada, revisión sistemática de doble-bold, persistencia de "Flagship Store" en FRASES_EXENTAS).
+Acción correctiva ejecutada:
+1. 4 archivos ALTA restantes del batch de contenido (Eurokor, ServiciosAndreiMoygo, Tendam, Multicont VM) corregidos: idioma mixto real (bloques íntegros en inglés traducidos con redacción diferenciada entre archivos por Anti-cloning Guard sobre el mismo hecho de Canon C03), tiempo verbal (L'Oréal en pretérito, rol cerrado), métricas sin bold, nombre/empresas/roles/períodos sin bold+italic.
+1. Los 3 CV-B EN (SARELLY, HM Retail Designer, HM Junior Retail Designer) — nunca auditados en ninguna sesión previa porque el script de triaje los excluye por diseño (falso positivo de idioma). Auditoría manual: SARELLY ya tenía formato correcto, solo 5 métricas sin bold; HM Retail Designer y HM Junior Retail Designer tenían el mismo bug de formato que los archivos ES (nombre/empresas/roles/períodos sin bold+italic) más 3 métricas sin bold cada uno. Los 3 corregidos.
+1. triaje_v3.py — 3 causas raíz corregidas (no parches por archivo): (a) FRASES_EXENTAS sin "Flagship Store", causaba falsos positivos de IDIOMA_MIXTO_REAL en 11+ archivos; (b) limpiar_exentas() case-sensitive, "flagship store" en minúsculas no quedaba exento (2 casos: ServiciosAndreiMoygo, GDC); (c) PRESENTE_PROHIBIDO marcaba "Desarrollo" como verbo en frases nominales ("Desarrollo de Tienda", "Desarrollo y apertura de...", "Desarrollo de Equipos") — 6 falsos positivos en 2 archivos. Corregido con lookahead/lookbehind. Re-corrida post-fix: 14/14 archivos ES → LIMPIO, confirmado en terminal por el operador.
+1. Auditoría de Identidad Figma — nunca ejecutada en ninguna iniciativa anterior sobre ninguno de los 18 archivos. Ejecutada esta sesión contra registry_seed.json (68 nodos), validada adicionalmente contra un CV-B de control ya confirmado funcional en Figma (Dior/Christian Dior LVMH v2, 100% idéntico al registry). Resultado: 18/18 archivos con conteo 68/68, membership idéntico, orden de secuencia idéntico al control, 0 duplicados de figma_text_id.
+1. Verificación sistemática (no muestral) de doble-bold (****) y bold asimétrico en los 18 archivos: 0 casos.
+IDs afectados: Ninguno (sin alta/baja de ID canónico — trabajo de contenido/formato/auditoría estructural, no de especificación normativa).
+Estado final de la validación: 18/18 CV-B del Batch Septiembre completos: idioma + tiempo verbal + Gates 6/7 + Identidad Figma. Los 4 pendientes obligatorios de HO-000036 quedan cerrados sin excepción. Sin próximos pasos obligatorios pendientes de esta iniciativa. Write-back de V | Saneamiento CV-B.md verificado vía re-fetch en vivo tras escritura. Sin DRY RUN presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens) — version bump y esta entrada ejecutados en una sola pasada.
+Handoff de referencia: HO-000036 (recibido al inicio de sesión, superseded por el cierre documentado aquí).
+---
+Tipo: [OPS] [FIX]
+Documento modificado: 18 archivos CV-B (repo local, carpeta Batch septiembre/CV-B) · 1 archivo CV-A (GDC, campo Próximo paso resuelto) · V | Saneamiento CV-B.md (reporte de estado, actualizado)
+Documentos potencialmente afectados: Ninguno en Kernel/Manual/SP/Canon — trabajo de saneamiento de contenido, no de especificación normativa (esa parte ya se cerró en v9.21.48 con el rewrite de vantage-cv-b a v10.2.0).
+Tipo de impacto: Operativo — barrido retroactivo sobre los 18 CV-B generados antes del rewrite v10.2.0, para llevarlos al estándar de Auto-Verificación Mecánica recién especificado. Ejecutado vía Desktop Commander con acceso directo al filesystem local.
+Hallazgo sistémico adicional (caso GDC): el HANDOFF-A de GDC Inmobiliaria declaraba explícitamente Próximo paso: REVISIÓN HUMANA REQUERIDA antes de CV-B — por discrepancia de VM_Scope y flag de integridad de registro AGREGADOR_STATUS_401 (posible vacante caída). El CV-B se había generado de todos modos, saltando ese gate de bloqueo explícito. Operador confirmó en esta sesión: (1) vacante sigue activa, (2) autoriza continuar pese a desalineación de seniority. Corregido después de esa autorización, no antes.
+Acción correctiva ejecutada:
+1. Triaje mecánico v1→v3: primeras dos versiones del script de detección tenían falsos positivos severos (nombres propios de campaña, términos técnicos de industria como "Store Design"/"Flagship Store", títulos oficiales de certificación). v3 excluye estos patrones y es la versión confiable para continuidad.
+1. Idioma y tiempo verbal: 15/18 archivos corregidos o confirmados limpios tras inspección de contexto real (no solo conteo de regex). 3/18 (HM Junior Retail Designer, HM Retail Designer, SARELLY) confirmados EN legítimo vía HANDOFF.idioma=EN — excluidos del saneamiento de idioma.
+1. Gates 6/7 (bold de métricas cuantificadas, formato estructural de secciones/años): aplicados sobre 14 archivos en español vía reemplazo con regex (cifras tipo "N años", "N países", "N+ puntos de venta", etc. envueltas en bold; títulos de sección en bold; años de formación en italic). Pendiente explícito: los 3 archivos EN no fueron auditados en Gates 6/7 — el script usado es español-only: no se corrió verificación de bold/italic en inglés sobre ellos.
+1. GDC: CV-A actualizado con decisión de operador documentada en el campo Próximo paso; CV-B corregido de idioma (perfil 2:10 y Skills 2:15/2:16, que estaban en inglés corrido pese a HANDOFF.idioma=ES).
+IDs afectados: Ninguno (sin alta/baja de ID canónico — trabajo sobre archivos de contenido, no sobre documentos fundacionales).
+Estado final de la validación: 15/18 CV-B completos (idioma + tiempo verbal + Gates 6/7). 3/18 (los EN) pendientes de auditoría de Gates 6/7 en inglés. Auditoría de Identidad Figma (membership/secuencia/conteo contra registry_seed.json) NO ejecutada en esta iniciativa sobre ninguno de los 18 — próximo paso obligatorio antes de dar cualquier archivo por listo para Figma Sync. Reporte de estado completo entregado como handoff a instancias siguientes en V | Saneamiento CV-B.md. Sin DRY RUN presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens, sesión en rango 77-82% de uso) — version bump y esta entrada ejecutados en una sola pasada.
+Handoff de cierre de esta sesión: HO-000036.
+---
+Tipo: [DOC] [OPS] [FIX]
+Documento modificado: V | SYSTEM PROMPT (nueva §01.3 SP:SKILL-VERSION-PIN) · vantage-cv-b/SKILL.md (GitHub, rewrite v10.2.0) · vantage-session-open/SKILL.md, vantage-session-close/SKILL.md, vantage-present-handoff/SKILL.md (GitHub, versionado inicial v1.0.0)
+Documentos potencialmente afectados: Ninguno adicional en Kernel/Manual/Canon.
+Tipo de impacto: Normativo + Operativo — cierre de dos gaps distintos detectados en batch de corrección de CV-B "Confidencial VM Manager" (2026-09-05): (1) la Verificación Pre-Entrega de vantage-cv-b v10.1.1 era autodeclarada por el mismo turno que generaba el contenido, sin evidencia mecánica — 8 rondas de corrección post-entrega detectadas por el operador (punchline-titular no solicitado, tiempo verbal incorrecto en rol cerrado, idioma mixto en 2 slots, bold ausente en keywords/métricas/secciones/empresas/tagline/licenciatura, italic ausente en años de formación) pese a que el skill ya prohibía explícitamente la mayoría; (2) agentes que resuelven skills desde memoria de contexto en vez de fetch en vivo carecían de una referencia de versión mínima aceptable, exponiendo al sistema a generación con skills obsoletos sin mecanismo de detección.
+Causa raíz: No fue vacío de especificación — el skill v10.1.1 ya cubría la mayoría de las reglas violadas. El fallo fue de auditoría autodeclarada sin evidencia mecánica: el mismo turno que redactaba el contenido declaraba "PASS" en el footer sin correr un chequeo real contra el texto ya escrito.
+Acción correctiva ejecutada:
+1. vantage-cv-b/SKILL.md — rewrite completo v10.2.0: la "Verificación Pre-Entrega" narrada de v10.1.1 se reemplaza por "Auto-Verificación Mecánica Obligatoria", 10 gates con criterio de PASS/FAIL basado en patrón detectable (membership/secuencia heredados + nuevos: Gate 3 idioma vs stopwords, Gate 4 tiempo verbal por rol con fecha de cierre, Gate 5 elegibilidad de etiqueta bold en Experience con umbral de alerta 40%, Gate 6 bold obligatorio en toda cifra cuantificada, Gate 7 formato estructural consolidado tagline/secciones/empresas/licenciatura/años). Nueva Regla de Elegibilidad de Etiqueta: la etiqueta temática en bold en Experience es síntesis de 2+ hechos dispares, nunca titular decorativo por defecto — distinto del comportamiento obligatorio de bold en categorías de Skills, que se mantiene sin cambio. Nueva regla de tiempo verbal: pretérito uniforme en todo rol con fecha de cierre, presente solo en rol activo. Footer ahora reporta los 10 gates individualmente, no un "PASS" genérico.
+1. V | SYSTEM PROMPT — nueva subsección §01.3 SP:SKILL-VERSION-PIN, inmediatamente después de 01.2 (Identidad de Agente y Serial de Handoff): tabla de versión vigente para los 6 skills de generación de contenido/sesión. Regla dura: ningún agente genera con versión inferior a la listada; si no puede confirmar coincidencia contra su memoria, declara SKILL_VERSION_UNVERIFIED y detiene hasta hacer fetch. Mantenimiento: la tabla se actualiza en el mismo turno que sube la versión de cualquier skill listado.
+1. vantage-session-open/SKILL.md, vantage-session-close/SKILL.md, vantage-present-handoff/SKILL.md — las tres carecían de versionado numérico, generando ambigüedad en la tabla de pin. Versionado inicial v1.0.0 (2026-09-05) agregado a cada una vía patch quirúrgico (línea de ID Canónico + Trigger + Versión de alineación insertada tras el título), sin tocar el resto del contenido operativo.
+IDs afectados: Alta de 1 ID nuevo (SP:SKILL-VERSION-PIN, §01.3). Sin baja de IDs.
+Estado final de la validación: Write-Back Verification pendiente de re-fetch post-escritura (siguiente paso inmediato en esta misma sesión). Census pendiente de actualización por el alta de SP:SKILL-VERSION-PIN. Sin DRY RUN presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens, sesión al 72% de uso) — version bump y esta entrada ejecutados en una sola pasada junto con la escritura de contenido.
+---
 Tipo: [DOC] [OPS]
 Documento modificado: V | KERNEL (§12.2 KERNEL:CV-PIPELINE-002) · V | MANUAL (§12.1 MANUAL:FIGMA-SYNC-DIAGNOSTIC) · vantage-cv-b/SKILL.md (GitHub, v10.1.1)
 Documentos potencialmente afectados: Ninguno adicional — sin referencias cruzadas a estos nodos en System Prompt/Career Canon que requieran actualización.
@@ -59,129 +146,5 @@ Acción correctiva ejecutada: Agregada regla explícita en §14 — "Cada compon
 IDs afectados: Ninguno (sin alta/baja de ID canónico — extensión de nodo existente).
 Estado final de la validación: Write-Back Verification PASS — confirmado vía re-fetch en vivo de §14, regla nueva presente sin mismatch. Census no aplica (sin altas/bajas de ID). Sin DRY RUN presentado en el mismo turno de aprobación por instrucción explícita del operador (yep).
 ---
-Tipo: [FIX] [CODE]
-Documento modificado: Layer_3/scripts/layer_3_mail.py (código, no documentación Notion)
-Documentos potencialmente afectados: Ninguno — fix de infraestructura de código, sin escritura a Kernel/Manual/Canon.
-Tipo de impacto: Operativo — VL3 quedaba en loop infinito de reintentos (8x backoff) contra 2+ correos que fallaban determinísticamente con Groq 400 json_validate_failed, sin nunca resolver ni descartar el correo.
-Causa raíz (dos mecanismos distintos, mismo síntoma):
-1. Correos de Indeed con bytes de reemplazo (\ufffd) corrompiendo URLs rc/clk/dl?jk=... dentro del body — el modelo no podía generar una URL literal válida y Groq rechazaba la generación con failed_generation: "".
-1. max_tokens=2500 insuficiente para correos con volumen alto de vacantes candidatas antes del filtro post-Groq — confirmado en vivo con mensaje explícito de Groq: "max completion tokens reached before generating a valid document" (correo Grupo Axo®).
-Acción correctiva ejecutada:
-1. _extract_body() — agregado body.replace("\ufffd", "") antes de truncar a GROQ_BODY_MAX, elimina bytes corruptos que bloqueaban la generación JSON de Groq.
-1. extract_jobs_with_groq() — max_tokens aumentado de 2500 a 6000, da margen suficiente para completar el array JSON en correos con más vacantes candidatas.
-1. Backup pre-fix conservado en layer_3_mail.py.bak antes de ambos cambios.
-IDs afectados: Ninguno (fix de código, sin alta/baja de ID canónico).
-Estado final de la validación: Confirmado en vivo por el operador vía 3 corridas sucesivas de vl3 — los correos que antes trababan el pipeline (Senior Merchandising Coordinator LATAM, Grupo Axo® SUPERVISOR, Supervisor de Visual Merchandiser CDMX) procesaron limpio tras el fix, con ⏸️ Groq pendientes: 0 en la corrida post-fix y 2 vacantes nuevas creadas en TRACKER (GOLDCO, Tendam). Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
----
-Tipo: [DOC]
-Documento modificado: V | ALIASES (§05 fila vserial), V | MANUAL (§02, §08.1, §22.5), V | KERNEL (§04.4, §07.8, §09.2, §09.11)
-Documentos potencialmente afectados: Ninguno adicional — System Prompt y Career Canon no referencian estos contratos.
-Tipo de impacto: Normativo + Operativo — cierre del pendiente declarado en v9.21.40 ("Documentación transversal: KERNEL (arquitectura seriales, URL Gate), Manual (shortcuts, cron jobs)").
-Acción correctiva ejecutada:
-1. ALIASES:L4-VERSION-CONTROL — corregido bug de formato en la fila vserial (estaba corrida una columna, celda Alias vacía) + referencia a vantage-serial.sh.
-1. MANUAL:SCRIPT-GLOSSARY-RAYCAST (§22.5) — alta de fila vantage-serial.sh → allocate_vantage_serial.py next.
-1. MANUAL:HOW-IT-WORKS (§02) y KERNEL:GATE-DECISION-002 (09.2) — documentado el tratamiento diferenciado de fallo HEAD en agregadores (Fetch=Accesible/Status=Target/Next_Action=Reparar URL) vs. sitios directos (Bloqueado/Expirada/Archivar), fix v9.21.40.
-1. KERNEL:GATE-DECISION-011 (09.11) — corregida fila de matriz "Agregador con HEAD fallido/timeout": Estado Destino REVIEW_NEEDED→Target, Efecto Class B actualizado a Fetch=Accesible/Next_Action=Reparar URL (estaba desactualizada respecto al fix real).
-1. KERNEL:SCHEMA-008 (07.8) — condición de "Reparar URL" ampliada para cubrir el caso de agregador con Fetch=Accesible sin confirmar (antes solo cubría Fetch=Bloqueado).
-1. KERNEL:ARCHITECTURE-L4 (04.4) y MANUAL:WEEKLY-FLOW-001 (§8.1, ¿Qué es L4?) — documentados los 3 cron jobs (vantage.py sync, notion_backup.py, vl3 · 00:00/08:00/16:00) y el fix de ruta directa al Python del venv.
-IDs afectados: Ninguno (sin alta/baja de ID canónico — todas las ediciones extienden nodos existentes).
-Estado final de la validación: Write-Back Verification PASS — 8/8 parches confirmados vía re-fetch en los 3 documentos, cero mismatch. Census no aplica (sin altas/bajas de ID).
----
-Tipo: [INFRA] [CODE] [FIX]
-Alcance:
-- state/vantage_handoff_counter.sqlite3 (counter corregido)
-- .zshrc (alias vserial nuevo)
-- Raycast/vantage-serial.sh (script nuevo)
-- Layer_1/scripts/layer_1_run.py (fix URL Gate agregadores)
-- crontab (arreglo de permisos + nuevo vl3)
-Contexto:
-1. Counter drift: Auditoría de arquitectura de seriales detectó discrepancia entre counter vivo (27) y Changelog v9.21.35 (documentaba emisión de HO-000028). Se corrigió a 28 para sincronizar con realidad documentada.
-1. URL Gate agresivo: 6 vacantes de Indeed se marcaron como "Bloqueado" y archivadas automáticamente aunque eran accesibles manualmente. El sistema archivaba agregadores por fallos temporales de HEAD request (timeout/rate-limiting).
-1. Cron jobs rotos: Los cron jobs existentes (vantage sync, notion backup) fallaban con "Operation not permitted" por usar source .venv/bin/activate en entorno limitado de cron. Se arreglaron usando ruta directa al Python del venv.
-1. vl3 sin automatización: vl3 nunca tuvo cron job configurado, se agregó ejecución automatizada a las 12am, 8am, 4pm.
-Cambios:
-- Counter fix: UPDATE directo a SQLite: UPDATE counters SET value = 28 WHERE name = 'GLOBAL_VANTAGE_COUNTER'
-- Alias terminal: .zshrc: alias vserial='cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/allocate_vantage_serial.py next'
-- Script Raycast: /Raycast/vantage-serial.sh creado (genera serial, copia al clipboard, notificación éxito)
-- URL Gate fix (layer_1_run.py):
-- Lógica agregadores modificada: fallo HEAD request retorna AGREGADOR_RETRY_... en vez de bloqueo
-- Tratamiento diferenciado: agregadores con fallo → Fetch: "Accesible", Status: "Target", Next_Action: "Reparar URL"; sitios directos → comportamiento original Bloqueado/Expirada/Archivar
-- Cron jobs arreglados:
-- vantage.py sync: source .venv/bin/activate → ruta directa Python
-- notion_backup.py: mismo fix
-- Nuevo vl3: 0 0,8,16 * * * (12am, 8am, 4pm) con ruta directa Python
-- Mailbox limpiado: 111 mensajes de error cron eliminados
-IDs afectados: Ninguno (sin alta/baja de ID canónico en Kernel/Manual/SP)
-Write-Back Verification: Aliases.md sync desde Notion (operador confirmó); Notion Changelog v9.21.40 pendiente de escritura por operador
-Pendiente:
-- Documentación transversal: KERNEL (arquitectura seriales, URL Gate), Manual (shortcuts, cron jobs), brief separado para solicitudes específicas
-Tipo: [INFRA]
-Alcance:
-- state/vantage_handoff_counter.sqlite3
-- Aliases.md (vserial)
-- Raycast (vantage-serial.sh)
-Contexto: Auditoría de arquitectura de seriales detectó drift entre Changelog (HO-000028 documentado) y counter vivo (HO-000027). Se corrigió el counter a 28 para sincronizar con la realidad documentada. Se agregó alias vserial a .zshrc y script Raycast vantage-serial.sh para facilitar generación de seriales desde terminal y Raycast.
-Cambios:
-- GLOBAL_VANTAGE_COUNTER: 27 → 28 (UPDATE directo a SQLite)
-- .zshrc: alias vserial='cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/allocate_vantage_serial.py next'
-- Aliases.md: fila vserial agregada en sección L4-VERSION-CONTROL
-- Raycast/vantage-serial.sh: script nuevo (genera serial, copia al clipboard, notifica éxito)
-Versión: 9.21.36
-Documento modificado: GitHub VANTAGE (repo raíz) — Dashboard/ (2 archivos movidos), página Notion GITHUB (tabla de reconciliación)
-Documentos potencialmente afectados: Ninguno adicional.
-Tipo de impacto: [OPS] [DOC] — Cierre de Fase 3 de GitHub Housekeeping (continuación de v9.21.37).
-Acción correctiva ejecutada: (1) vantage_serials.sqlite3 en raíz — confirmado inexistente en ninguna ruta del repo vía clone fresco; ítem del audit original de Devin ya obsoleto (probable resultado de la migración de autoridad a state/vantage_handoff_counter.sqlite3 en v9.21.32), sin duplicado real que eliminar. (2) Dashboard/dashboard.backup.html y Dashboard/Checklist.backup.html movidos a Archive/Legacy_Scripts/ vía git mv (commit c4b8a77) por el operador. (3) Lección de proceso repetida: vgit (alias local) ejecutó commit pero no push — confirmado por clone fresco sin el commit, replicando el patrón ya documentado en v9.21.11 con Devin. Operador ejecutó git push origin main explícito tras el hallazgo (03713ad..c4b8a77). (4) Página Notion GITHUB — tabla de reconciliación (añadida en v9.21.37 vía sesión previa) actualizada: ambos ítems pendientes marcados ✅ RESUELTO.
-Estado final de la validación: Write-back verificado vía clone fresco de origin/main post-push — commit c4b8a77 presente, backups confirmados en Archive/Legacy_Scripts/, vantage_serials.sqlite3 confirmado ausente en todo el árbol. Página GITHUB re-fetched post-escritura — tabla de reconciliación confirmada 7/7 ítems en ✅ RESUELTO, 0 pendientes. GitHub Housekeeping (Fases 1-3) cerrado por completo. Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
-
-Documento modificado: GitHub VANTAGE (repo raíz) — Layer_1/scripts (9 archivos), Figma Sync (1 archivo), config/ (3 archivos eliminados), Layer_1/feeds (21 archivos), output (19 archivos), Layer_1/scripts/profile_evolution.py (2 líneas de código)
-Documentos potencialmente afectados: Ninguno en Notion — housekeeping de infraestructura de repo, sin escritura a Career Canon/Kernel/Manual.
-Tipo de impacto: [OPS] [CODE] — Housekeeping de repositorio GitHub VANTAGE (Fase 1–2 de plan de trabajo, auditoría de scripts huérfanos y duplicados).
-Acción correctiva ejecutada: (1) Auditoría cruzada (grep) de 62 scripts en Layer_1/scripts/ contra Raycast, wrappers, triggers.json, .vscode/mcp.json, .devin/config.json, Figma Sync/code.js — 10 huérfanos confirmados sin referencias, archivados a Archive/Legacy_Scripts/DEPRECATED_. (2) update_canvas.py duplicado (Figma Sync/ vs Layer_1/scripts/) resuelto por recencia de commit — versión de Layer_1/scripts/ (commit eab0978, más reciente y más robusta) queda canónica; copia de Figma Sync/ archivada. (3) config/ raíz (alias_map.json, hard_blocks.json, profile_config.yaml) confirmado idéntico byte-a-byte a Layer_1/config/ — eliminado, unificado a Layer_1/config/ como fuente única; import relativo roto en profile_evolution.py corregido a path absoluto (BASE_DIR). (4) Layer_1/feeds/ pre-2026-08 (21 archivos) y output/HANDOFF_scaffold_ (19 archivos debug) archivados a Archive/. Commit dc33dcf pusheado por el operador vía git am + vgit.
-Estado final de la validación: Write-back verificado vía clone fresco de origin/main post-push (no memoria de sesión) — 10/10 huérfanos presentes en Archive, config/ raíz confirmado eliminado, Layer_1/config/ intacto, fix de path confirmado en archivo, update_canvas.py único en Layer_1/scripts/, conteos de feeds/output coinciden con lo esperado. Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
-
-### Patch Fix: Persistencia de Heartbeat L3: Contexto & Causa Raíz
-- Bug: health_check.py reportaba [WARN] layer3 - 81h sin correr aun después de ejecutar Layer 3.
-- Causa: layer_3_mail.py solo invocaba _write_heartbeat() cuando la bandeja .Jobs no tenía correos pendientes (if not emails). Al procesar lotes de correos, el flujo salía sin ejecutar la rutina de persistencia al cierre de main().
-### Cambios Aplicados
-- Core (layer_3_mail.py): Se reubicó la llamada _write_heartbeat(total_created, total_failed) para ejecutarse incondicionalmente tras el procesamiento de correos y logout de IMAP.
-- Runtime: Actualización y reset de timestamp en ~/.vantage/l3_heartbeat.json.
-### Impacto en Sistema
-- Eliminación del falso positivo [WARN] en el VANTAGE Health Check (start).
-- Contrato de lectura/escritura de telemetría L1/L3 normalizado.
-Documento modificado: Tasks Tracker (1 ticket) · Bug Tracker (9 tickets) · Tasks Tracker (1 ticket adicional, marcado)
-Documentos potencialmente afectados: Ninguno adicional.
-Tipo de impacto: [OPS] — Ticket VANTAGE Scout creado + tidy de Bug/Task Tracker (HO-000027 → HO-000028, SESSION-20260828-A).
-Acción correctiva ejecutada: (1) Ticket nuevo en Tasks Tracker: "VANTAGE Scout — resolver venv, decidir modelo (Ollama 16GB vs cloud) y rate-limit OpenRouter", Prioridad 2 MEDIO, Next_Action Decidir — único pendiente abierto de Fase 7 (V|PENDIENTES SWEEP). (2) Ejecutado vantage-tidy-bug-task-tracker: 9 Bugs + 1 Task marcados Archivar=true (Escenario 1, Status terminal) — 3× 4 CRÍTICO, 2× 3 ALTO, 3× 2 MEDIO, 3× 1 BAJO. Ningún ticket tenía tag [CENSUS-SYNC-R1] — sin disparo de generate_census.py.
-Estado final de la validación: Write-back verificado vía re-fetch del ticket Scout (Archivar=false) y query SQL post-marcado de los 10 tickets tidied (Archivar=true 10/10). Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
-
-Documento modificado: V | CAREER CANON (CANON:OUTPUT-CONTRACT-002 · CANON:SKILLS · CANON:FACT-005 · CANON:PROFILE-001/002 · CANON:KPI-008 · CANON:EXPERIENCE-003) · V | MANUAL (§8.3 WEEKLY-FLOW-003) · V | PENDIENTES SWEEP (Fase 6 completa, Fase 7 parcial) · Tasks Tracker (1 ticket)
-Documentos potencialmente afectados: Ninguno adicional.
-Tipo de impacto: [DOC] — Cierre de Fase 6 y 7.2 de Pendientes Sweep (HO-000026 → HO-000027, SESSION-20260828-A).
-Acción correctiva ejecutada: (1) 6.4/6.5 — CANON:OUTPUT-CONTRACT-002 (Golden Skeleton) ampliado con dos reglas: orden narrativo del Skeleton = estándar de lectura; Golden Skeleton = snapshot del CV en optimización activa (no archivo estático). (2) 6.6 — Manual §8.3 corregido de "checklist de 6 ítems" a "7 ítems", con referencia a KERNEL:TRIGGER-003/skill vantage-qa (Kernel ya estaba correcto). (3) 6.1 — Canon actualizado con hallazgos de FINDINGS.md confirmados por el operador como reales (no alucinados): CANON:SKILLS añade Concur y Adobe Premiere Pro (Stack Técnico, 10 y 7 CVs de recurrencia respectivamente); CF05 amplía con desglose México (22 PDV: 10 O&O, 6 comisionadas, 6 franquicias); PROFILE-001/002 y KPI08 actualizados de "10+ años" a "14+ años" (corrección de canon, no error de CV); CANON:EXPERIENCE-003 (C03) gana bullet ES/EN de PR activities (Market Weeks, Press Days, ponencia Nissan Connect representando Dockers). (4) 6.2 — decisión registrada: Dior/Zegna/Andrei Moygo se regeneran vía CV-A explícito por vacante (Restricción de Lote, no ejecutable en la misma pasada). (5) 6.3 — drift v10.0.0 vs. v10.2.0 de vantage-cv-b resuelto como falso positivo: git log + grep de "Versión de alineación" en SKILL.md local confirma v10.0.0, idéntico a Notion. Sweep actualizado. (6) 7.2 — ticket creado en Tasks Tracker (Documentar Lote v2 Documentation Drift) y cerrado en la misma sesión tras resolución directa de ambos puntos (PR activities canonizado; "Golden Rules expansion" cerrado sin acción por falta de alcance real en fuentes disponibles).
-Estado final de la validación: Write-back verificado vía re-fetch en Career Canon (5/5 ediciones de 6.1 confirmadas + bullet C03 confirmado) y en Sweep (6.3 confirmado). Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
-
-Documento modificado: V | PENDIENTES SWEEP (Fase 3, 4, 5 completa, 6.6) · KERNEL:TRIGGER-003 (11.3) · KERNEL:HANDOFF-SERIAL (03.18)
-Documentos potencialmente afectados: Ninguno adicional.
-Tipo de impacto: [DOC] [OPS] — Continuación de Pendientes Sweep (HO-000025 → HO-000026, SESSION-20260828-A).
-Acción correctiva ejecutada: (1) Fase 3 cerrada — fuga LLM_PROVIDER=openrouter cerrada por decisión del operador, sin auditoría. (2) KERNEL:TRIGGER-003 corregido — checklist de 6 ítems genéricos (drift vs. skill real) reemplazado por los 7 ítems canónicos del skill vantage-qa, con referencia explícita a la fuente. (3) Fase 4 cerrada por completo: 4.2 (vdoc→vcensus→vversions --sync) ejecutado por el operador en Terminal, PASS 10/10 fundacionales; 4.1 verificado vía CSV — 0/28 bugs y 0/4 tasks sin prioridad; 4.3 (Dior) cerrado sin acción — path original ya no existe; 4.4 (Skill Library) cerrado sin acción — los 4 candidatos aparentes (script/skill × library/glossary) son skills legítimos y distintos. (4) Fase 5 cerrada por completo: 5.1 (heartbeat L3) cerrado — operador confirma VL3 corriendo activamente; 5.2 (handshake vantage_serial_status :8787) auditado vía código GitHub y verificado en vivo — curl localhost:8787/health responde status:ok, current_value:26, DB en ruta migrada correcta; 5.4 (doc formal arquitectura HTTP) resuelto — párrafo nuevo agregado a KERNEL:HANDOFF-SERIAL (03.18) describiendo endpoints /allocate y /health, resolución de DB_PATH, aislamiento de canal HTTP vs. Terminal/MCP stdio; 5.5 (bloque vacío Littlebird, HO-000008) cerrado por decisión del operador — sin URL/page_id rastreable; 5.6 (discrepancia figma_text_id) auditado vía GitHub — sin discrepancia, formato consistente entre registry_seed.json y Golden Skeleton; 5.7 (criterio síntesis multi-hecho) auditado — alineado con CANON:OUTPUT-CONTRACT-001, sin discrepancia.
-Estado final de la validación: Write-back verificado vía re-fetch en Sweep y Kernel. Verificación en vivo del servidor HTTP confirmada por el operador. Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
-
-Documento modificado: Bug Tracker (8 filas)
-Documentos potencialmente afectados: Ninguno adicional.
-Tipo de impacto: [FIX] [OPS] — Continuación de Pendientes Sweep (HO-000022 → HO-000025, SESSION-20260828-A).
-Acción correctiva ejecutada: (1) Split-brain GLOBAL_VANTAGE_COUNTER resuelto — causa raíz: allocate_vantage_serial.py resolvía DB_PATH relativo a cwd (4 bases SQLite físicas divergentes: state/=6, Layer_1/=22 autoridad real, dos huérfanos=1 y 2); migrado value=22 a state/vantage_handoff_counter.sqlite3, ambos scripts (Terminal + HTTP) parcheados a Path(file).resolve().parent.parent.parent, VANTAGE_SERIAL_DB exportado en .zshrc, 3 archivos huérfanos eliminados. Verificado: Terminal→HO-000023, HTTP→HO-000024. (2) Canal MCP auditado — vantage_serial_mcp_bridge.py limpio; mcp_vantage_serial_server.py tenía mismo bug (.parent.parent en vez de .parent.parent.parent), corregido. (3) Rotación de credenciales — confirmada ejecutada por el operador. (4) Claude Desktop mcpServers — clave ausente en claude_desktop_config.json, añadido registro de vantage-serial-bridge, backup creado, JSON validado (pendiente reinicio de Desktop). (5) Alias skill2md — confirmado ya no existe en .zshrc, dado de baja de facto. (6) start_vantage_serial_server.sh — auditado, sin bug (ya usaba ruta correcta). (7) Kerning/espaciado PDF Dior (QA NO-GO previo) — revisado contra PDF real con el operador: tracking de título es decisión de diseño intencional, email coincide con Canon vivo, orden cronológico confirmado correcto. Sin correcciones. (8) Layer3 heartbeat, drift v10.2.0, Devin HO-000021 — actualizados con evidencia dura disponible en sesión (74h no 104h; sin confirmación de drift; sin revisar por límite de tokens), quedan abiertos/en revisión para sesión siguiente.
-Estado final de la validación: Write-back verificado — 4 canales de serial (Terminal, HTTP, MCP server, MCP bridge) confirmados sobre autoridad única tras fix. Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens, sesión con presupuesto ajustado).
-
-Documento modificado: V | PENDIENTES SWEEP (página de plan + data source Sweep)
-Documentos potencialmente afectados: Ninguno adicional — solo escritura de estado en Sweep y cierre de fases del plan de trabajo.
-Tipo de impacto: [OPS] — Cierre de fases de Pendientes Sweep (HO-000022 / SESSION-20260828-A).
-Acción correctiva ejecutada: (1) Fase 0 cerrada — hallazgos de registry/código HO-000021 escritos como Resuelto (citas 9b9ced7 / a58a678). (2) Fase 0.5 cerrada — discrepancia crítica vantage-cv-b v10.0.0 resuelta: refactor confirmado vigente en Notion Skill Library + sincronizado local/Git; densidad esperada alcanzada y markdown de inyección Figma correcto (confirmado por operador). Todas las filas HO-000010 actualizadas a Resuelto. (3) Fase 1 cerrada — confirmaciones de un solo mensaje: solo se generó CV-B de Dior (Andrei Moygo/Multicont no subidos); SESSION-2026-07-19-A eliminada; prueba de inyección Dior confirmada vía PDF; extensión Claude Desktop MCP no registrada (claude_desktop_config.json sin clave mcpServers). (4) Version bump a v9.21.31.
-Estado final de la validación: Write-back ejecutado en esta misma sesión (update_properties + update_content sobre Sweep y plan). Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
-
-Documento modificado: CANON:ACHIEVEMENTS (V | CAREER CANON)
-Documentos potencialmente afectados: Ninguno — Experience Records (03.5), Career Timeline (04) y Golden Skeleton (12.2) ya reflejaban el split C05 desde v9.21.27/28.
-Tipo de impacto: Normativo (Career Canon)
-Acción correctiva ejecutada: División de la fila única C05 en Achievement Library (05) en dos filas ancladas por rol — Asesor 2012–2014 y Coordinador 2014–2017 — cerrando el pendiente #4 heredado de HO-000002 (drift entre Achievements y Experience/Timeline/Skeleton, ya divididos desde v9.21.27).
-Estado final de la validación: Write-back verificado por Claude vía re-fetch en vivo — confirmado.
 ---
 > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
