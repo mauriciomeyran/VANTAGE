@@ -131,7 +131,34 @@ Ver `search_queries.json` para las 3 variantes de búsqueda de LinkedIn.
 - [x] sources/linkedin.md con protocolo de búsqueda + validación.
 - [x] sources/career_sites.md con marcas objetivo + protocolo por marca.
 - [x] sources/aggregators.md con protocolo de cada plataforma.
+- [x] orchestrator_prompt.md — prompt ejecutable (separado del skill, versión simplificada para ejecución directa).
 - [ ] triggers.json actualizado si existe el manifiesto.
+
+## Prompt Ejecutable (separado del skill)
+
+El skill define el protocolo documentado (este archivo). Para ejecutar la búsqueda, usar el **prompt ejecutable** independiente:
+
+```
+skills/vantage-active-search-weekly/orchestrator_prompt.md
+```
+
+**Cómo invocarlo:**
+
+1. Leé el prompt: `read_file(path="skills/vantage-active-search-weekly/orchestrator_prompt.md")`
+2. Ejecutá lo que dice el prompt en una sesión nueva (o la misma).
+3. El prompt es auto-contenido y no requiere contexto externo — solo browser-use funcional.
+
+**Por qué están separados:**
+
+- El **skill** (SKILL.md) es la documentación del protocolo: qué buscar, qué excluir, qué registrar, qué NO hace.
+- El **prompt ejecutable** (orchestrator_prompt.md) es la instrucción directa para el agente que ejecuta la búsqueda.
+- Están separados para que el skill sirva como referencia documental y el prompt pueda mejorarse/ajustarse sin tocar el skill.
+
+**Si el prompt no funciona como esperado:**
+
+- Revisá que el agente que lo ejecuta tiene browser-use funcional.
+- Chequeá que LinkedIn esté accesible en el momento (puede estar indisponible intermitentemente).
+- Chequeá que las career pages no estén bloqueadas por Cloudflare desde la IP de la sesión.
 
 ## Related Skills
 - `vantage-import-consolidated-feed` — ingesta del JSON consolidado en Notion (L1+L2 → Tracker).

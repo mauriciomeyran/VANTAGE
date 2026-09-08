@@ -1,59 +1,26 @@
-# VANTAGE — Active Search Orchestrator Prompt
+# VANTAGE — Búsqueda Activa Semanal (Ejecutable)
 
-> **Nota:** Este prompt es el ejecutor manual del skill `vantage-active-search-weekly`. No requiere cronjob. Se invoca en sesión cuando el operador necesita ejecutar la búsqueda.
-
----
-
-## Contexto inicial (se resuelve al inicio)
-
-Antes de ejecutar cualquier búsqueda, resolvé:
-
-```bash
-date +%Y-%m-%d
-```
-
-Esa fecha (`{HOY}`) se usará en todos los nombres de archivo y en los registros.
+> Prompt para ejecutar en sesión manual cuando se necesita hacer la búsqueda semanal. No requiere cronjob. Se invoca directamente.
 
 ---
 
-## 0. Firmar el inicio (KERNEL:DOCUMENTATION-005)
+**Antes de empezar:** obtené la fecha con `date +%Y-%m-%d`. Esa es {HOY}.
 
-Antes de empezar a navegar, anuncia:
-
-```
-SEARCHING...
-```
-
-Al terminar, anuncia:
-
-```
-SEARCH COMPLETE
-```
+**Anunciá al inicio:** `SEARCHING...`
+**Al terminar:** `SEARCH COMPLETE`
 
 ---
 
-## 1. Firmas del perfil (Prompt A)
+## Quién
 
-El candidato es **Mauricio Meyrán**. Aplicá estrictamente:
+Mauricio Meyrán. CDMX + Área Metropolitana de CDMX. On-site / Hybrid.
 
-### Seniorities aceptadas
-Coordinator, Senior Coordinator, Lead, Supervisor, Líder, Subgerente, Assistant Manager, Manager, Sr., Jefe, Head (solo IC — verificar en JD que es individual contributor, no reporting a c-level).
+## Exclusiones — aplicá estrictamente sobre CADA vacante
 
-### Location
-Mexico City (CDMX) + Área Metropolitana de CDMX. Rechazar:
-- Remote fuera de México
-- EdoMex que no sea el Área Metropolitana (Naucalpan, Ecatepec, Tlalnepantla, Nezahualcóyotl, Atizapán, etc.)
-
-### Work modes aceptados
-On-site, Hybrid. Rechazar Remote puro fuera de México.
-
-### Industrias aceptadas
-Luxury, Premium, Fashion, Beauty, Cosmetics, Fragrances, Jewelry, Sportswear, Experiential Retail.
-
-### Títulos excluidos (rechazar inmediatamente si el título COMPLETO contiene cualquiera de estos)
+### Títulos excluidos (rechazar si el título completo contiene alguno)
 Store Manager, Director, VP, C-Level, Assistant, Asistente, Auxiliar, Jr., Internship, Intern, Entry Level, Pasantía, Sales Advisor, Vendedor, Asesor Comercial.
 
-**Regla:** el título completo se evalúa como string. Ejemplos:
+**Regla:** el título COMPLETO se evalúa como string. Ejemplos:
 - `Coordinator Jr.` → Rechazar (contiene "Jr.")
 - `Visual Merchandising Jr. Coordinator` → Rechazar (contiene "Jr.")
 - `Sr. Visual Merchandiser` → Aceptar
@@ -63,26 +30,38 @@ Store Manager, Director, VP, C-Level, Assistant, Asistente, Auxiliar, Jr., Inter
 ### Empresas bloqueadas (no buscar, no registrar bajo ningún circumstance)
 L'Oréal (todas las divisiones), Levi's, Dockers, El Palacio de Hierro.
 
+### Location
+Aceptar: CDMX + Área Metropolitana de CDMX.
+Rechazar: Remote fuera de México, EdoMex fuera del Área Metropolitana (Naucalpan, Ecatepec, Tlalnepantla, Nezahualcóyotl, Atizapán, etc.)
+
+### Senioridades aceptadas
+Coordinator, Senior Coordinator, Lead, Supervisor, Líder, Subgerente, Assistant Manager, Manager, Sr., Jefe, Head (solo IC — verificar en JD que es individual contributor).
+
+### Industrias aceptadas
+Luxury, Premium, Fashion, Beauty, Cosmetics, Fragrances, Jewelry, Sportswear, Experiential Retail.
+
 ---
 
-## 2. Fuentes (ejecutar en orden)
+## Qué hacer
 
-### 2.1 LinkedIn Jobs
+Ejecutá los 3 fuentes en orden. No paralelices. Si una falla, registrá el error en audit_log y pasá a la siguiente.
 
-**Pre-requisitos:** Lee `skills/vantage-active-search-weekly/search_queries.json` para obtener las 3 variantes de búsqueda.
+---
+
+### Fuente 1: LinkedIn Jobs
+
+**Preparación:** Leé `skills/vantage-active-search-weekly/search_queries.json` para las 3 variantes de búsqueda.
 
 Cada variante tiene: `name`, `keywords`, `location`, `geoId`, `f_TPR`.
 
-**Protocolo por variante:**
+**Para cada variante:**
 
-Para cada una de las 3 variantes:
-
-1. Construí la URL de búsqueda:
+1. Construí la URL:
    ```
    https://www.linkedin.com/jobs/search/?keywords={keywords}&location={location}&geoId={geoId}&f_TPR={f_TPR}
    ```
 2. Navegá con `new_tab(url)`.
-3. Esperá carga con `wait_for_load()`.
+3. Esperá carga (`wait_for_load()`).
 4. Extraé todos los `a[href*="/jobs/view/"]` de la página.
 5. Dedupé por `job_id` (primera ocurrencia).
 6. Para cada job, visitá la detail page y extraé:
@@ -97,13 +76,14 @@ Para cada una de las 3 variantes:
 
 **Errores de LinkedIn:**
 
-- **429 Rate Limiting:** registrar en `audit_log`, dejar los jobs restantes en `not_evaluated`, continuar con la siguiente variante.
-- **Login Wall:** registrar en `audit_log`, dejar los jobs sin poder validar en `not_evaluated`, continuar.
-- **Cloudflare block:** registrar en `audit_log`, detener la variante actual, continuar con la siguiente.
+- **LinkedIn indisponible** ("Your LinkedIn Network Will Be Back Soon"): registrar en `audit_log`, dejar los jobs sueltos en `not_evaluated`, continuar con la siguiente variante.
+- **Login wall:** registrar en `audit_log`, dejar los jobs sin poder validar en `not_evaluated`, continuar.
+- **429 Rate Limiting:** registrar, dejar en `not_evaluated`, continuar.
+- **Cloudflare block:** registrar, detener la variante actual, continuar con la siguiente.
 
 **Dedup:** por `job_id`. Si dos variantes devuelven el mismo `job_id`, conservar la primera.
 
-**Output:** escribir `Layer_1/feeds/{HOY}_linkedin_raw.json` con el siguiente formato:
+**Output:** escribir `Layer_1/feeds/{HOY}_linkedin_raw.json` con este formato:
 
 ```json
 {
@@ -148,41 +128,41 @@ Para cada una de las 3 variantes:
     {
       "type": "HTTP",
       "platform": "LinkedIn",
-      "detail": "429 Rate Limiting tras 15 visitas consecutivas",
+      "detail": "LinkedIn indisponible — 'Your LinkedIn Network Will Be Back Soon'",
       "timestamp": "{HOY}T..."
     }
   ],
   "search_metadata": {
     "variants_executed": 3,
-    "total_jobs_extracted": 49,
-    "total_jobs_after_dedup": 45
+    "total_jobs_extracted": 0,
+    "total_jobs_after_dedup": 0
   }
 }
 ```
 
-### 2.2 Career Sites
+---
 
-**Pre-requisitos:** Lee `skills/vantage-active-search-weekly/sources/career_sites.md` para la lista de marcas objetivo por sector.
+### Fuente 2: Career Sites
 
-**Protocolo por marca:**
+**Preparación:** Leé `skills/vantage-active-search-weekly/sources/career_sites.md` para la lista de marcas objetivo por sector.
 
-Para cada marca en los grupos A-E (salvo las bloqueadas):
+**Para cada marca en los grupos A-E (salvo las bloqueadas):**
 
 1. Intentá acceder a la URL de career page (ver marca en el archivo).
 2. Si la página está accesible:
-   - Buscá listings con keywords "Visual Merchandising", "Brand Experience", "Retail Experience", "Store Design".
+   - Buscá listings con keywords: "Visual Merchandising", "Brand Experience", "Retail Experience", "Store Design".
    - Extraé cada listing: title, location, posted_date, apply_url.
    - Para cada listing, visitá la detail page.
    - Extraé: title completo, company, location, posted_date, job_id (si está en URL), jd_snippet.
    - Aplicá exclusiones de Prompt A.
    - Si pasa → agregar a `jobs`.
-   - Si falla → agregar a `rejected_jobs`.
+   - Si falla → agregar a `rejected_jobs` con `rejection_reason`.
 3. Si la página NO está accesible (Cloudflare, DNS, 403, 404, SSL):
    - Registrar en `audit_log`.
    - Intentá URL alternativa si existe (ATS o LinkedIn Jobs para la marca).
    - Si ninguna funciona → dejar la marca como "no accesible", continuar con la siguiente.
 
-**Marcas bloqueadas:** no buscar. Si aparece una vacante de marca bloqueada, rechazar inmediatamente.
+**Marcas bloqueadas:** L'Oréal, Levi's, Dockers, El Palacio de Hierro — no buscar. Si aparece una vacante de marca bloqueada, rechazar inmediatamente.
 
 **Output:** escribir `Layer_1/feeds/{HOY}_career_sites_raw.json` con formato similar al de LinkedIn.
 
@@ -213,13 +193,13 @@ Para cada marca en los grupos A-E (salvo las bloqueadas):
 }
 ```
 
-### 2.3 Aggregators
+---
 
-**Pre-requisitos:** Lee `skills/vantage-active-search-weekly/sources/aggregators.md` para los URL templates.
+### Fuente 3: Aggregators
 
-**Protocolo por plataforma:**
+**Preparación:** Leé `skills/vantage-active-search-weekly/sources/aggregators.md` para los URL templates.
 
-Para cada plataforma (OCC, Indeed, Computrabajo, Bumeran):
+**Para cada plataforma (OCC, Indeed, Computrabajo, Bumeran):**
 
 1. Construí la URL de búsqueda con keywords + location.
 2. Intentá acceder.
@@ -228,7 +208,7 @@ Para cada plataforma (OCC, Indeed, Computrabajo, Bumeran):
    - Para cada resultado, validá que apply_url sea canónica.
    - Aplicá exclusiones de Prompt A.
    - Si pasa → agregar a `jobs`.
-   - Si falla → agregar a `rejected_jobs`.
+   - Si falla → agregar a `rejected_jobs` con `rejection_reason`.
 4. Si NO accesible (403, Cloudflare, DNS, 404):
    - Registrar en `audit_log`.
    - Intentá URL alternativa si existe.
@@ -265,7 +245,7 @@ Para cada plataforma (OCC, Indeed, Computrabajo, Bumeran):
 
 ---
 
-## 3. Normalización (después de todas las búsquedas)
+## Normalización (después de todas las búsquedas)
 
 Una vez que los 3 JSONs crudos están escritos, ejecutá:
 
@@ -294,7 +274,7 @@ Estos son los JSONs normalizados que se pasan al consolidador (L0).
 
 ---
 
-## 4. Reporte final
+## Reporte final
 
 Al finalizar, reportá:
 
@@ -323,16 +303,16 @@ Al finalizar, reportá:
 - [lista de errores con tipo, plataforma, detail]
 
 ### Notas
-- [observaciones relevantes — ej: "OC M y Computrabajo seguían con 403", "Bumeran devolvió 404 en todas las URL"]
+- [observaciones relevantes — ej: "LinkedIn mostró 'Your LinkedIn Network Will Be Back Soon' en todas las variantes", "todas las marcas luxury/fashion bloqueadas por Cloudflare desde IP 189.217.111.56"]
 ```
 
 ---
 
-## 5. Reglas de pragmatismo (no violar)
+## Reglas de pragmatismo (no violar)
 
-- **No reintentes infinitamente.** Si una fuente falla, registra y continuá.
-- **No inventes resultados.** Si no podés acceder a una página, no crees vacancies.
+- **No reintentes infinitamente.** Si una fuente falla, registrá el error y pasá a la siguiente.
+- **No inventes resultados.** Si no podés acceder a una página, no crees vacantes.
 - **No skips.** No saltés fuentes sin intentarlas primero.
 - **No paralelices sin necesidad.** Ejecutá en secuencia: LinkedIn → Career Sites → Aggregators.
-- **No ignores exclusiones.** Aplicá Prompt A estrictamente sobre cada vacancy.
+- **No ignores exclusiones.** Aplicá Prompt A estrictamente sobre cada vacante.
 - **No sobre-escribas.** Si un job ya existe en la búsqueda actual, dedupé por job_id.
