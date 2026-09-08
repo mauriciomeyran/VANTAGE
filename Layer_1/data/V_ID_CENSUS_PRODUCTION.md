@@ -284,4 +284,6 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-_Ninguno detectado en esta corrida._
+| ID | Documento | Link |
+|---|---|---|
+| `SP:SKILL-VERSION-PIN` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#615f819a846c4ccb87cebcf8c088b046 ) |
