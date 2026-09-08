@@ -16,17 +16,19 @@ FRASES_EXENTAS = [
     "window installations", "store zoning",
     "Store Design", "Brand Environment",
     "Store Operations Leaders Orientation",
-    "Field Leadership",
+    "Field Leadership", "Flagship Store",
 ]
 
 EN_STOPWORDS = re.compile(r"\b(the|and|with|for|managed|ensuring|leadership|team|of|in|across|store|through)\b", re.IGNORECASE)
-PRESENTE_PROHIBIDO = re.compile(r"\b(Defino|Dirijo|Coordino|Colaboro|Gestiono|Lidero|Desarrollo|Construyo|Contribuyo|Superviso)\b")
+# Desarrollo excluido cuando es sustantivo ("Desarrollo de X", "Desarrollo y X", "de Desarrollo de X")
+PRESENTE_PROHIBIDO = re.compile(r"(?<!de\s)\b(Defino|Dirijo|Coordino|Colaboro|Gestiono|Lidero|Construyo|Contribuyo|Superviso)\b|(?<!de\s)\bDesarrollo\b(?!\s+(de|y)\b)")
 
 def limpiar_exentas(content):
     """Elimina del texto las frases exentas antes de correr el chequeo de idioma,
-    para que sus stopwords internas no cuenten como contaminación real."""
+    para que sus stopwords internas no cuenten como contaminación real.
+    Case-insensitive: "flagship store" en minúsculas también debe quedar exento."""
     for frase in FRASES_EXENTAS:
-        content = content.replace(frase, "")
+        content = re.sub(re.escape(frase), "", content, flags=re.IGNORECASE)
     # También se descarta todo lo que esté después del separador de footer,
     # ya que el footer de metadata no es contenido del CV en sí.
     if "\n---\n" in content:
@@ -43,13 +45,13 @@ for f in files:
 
     cuerpo_limpio = limpiar_exentas(raw)
     en_hits = EN_STOPWORDS.findall(cuerpo_limpio)
-    presente_hits = PRESENTE_PROHIBIDO.findall(raw)
+    presente_matches = [m.group(0) for m in PRESENTE_PROHIBIDO.finditer(raw)]
 
     issues = []
     if en_hits:
         issues.append(f"IDIOMA_MIXTO_REAL({len(en_hits)})")
-    if presente_hits:
-        issues.append(f"TIEMPO_VERBAL({len(presente_hits)}:{','.join(set(presente_hits))})")
+    if presente_matches:
+        issues.append(f"TIEMPO_VERBAL({len(presente_matches)}:{','.join(set(presente_matches))})")
 
     severidad = "LIMPIO" if not issues else ("ALTA" if len(issues) >= 2 else "BAJA")
     report.append({"archivo": f, "severidad": severidad, "issues": " | ".join(issues) if issues else "—"})

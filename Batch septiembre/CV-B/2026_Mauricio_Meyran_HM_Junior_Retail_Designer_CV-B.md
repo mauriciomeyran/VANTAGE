@@ -1,5 +1,5 @@
 ###### [figma_text_id](2:4)
-MAURICIO MEYRÁN
+**MAURICIO MEYRÁN**
 
 ###### [figma_text_id](2:5)
 Retail Designer · Store Design & Flagship Execution · Miguel Hidalgo, CDMX | +52 1 56 4383 8125 | mauricio.meyran@icloud.com | LinkedIn | Portafolio
@@ -53,13 +53,13 @@ HABILIDADES CLAVE
 EXPERIENCIA PROFESIONAL
 
 ###### [figma_text_id](2:22)
-L'ORÉAL LUXE MÉXICO
+**L'ORÉAL LUXE MÉXICO**
 
 ###### [figma_text_id](10:218)
-Coordinador de Visual Merchandising – División de Lujo |
+**Coordinador de Visual Merchandising – División de Lujo** |
 
 ###### [figma_text_id](10:219)
-02/2025 - 03/2026
+*02/2025 - 03/2026*
 
 ###### [figma_text_id](2:25)
 Own visual strategy and in-store display direction for Valentino, Giorgio Armani and Ralph Lauren, translating global brand guidelines and brand DNA into physical execution across the national retail network.
@@ -74,13 +74,13 @@ Led national rollout of key 2025 NPI campaigns (Born in Roma, Stronger With You)
 Collaborate with Marketing, Trade and Operations teams to align commercial calendar with visual execution, acting as brand-standard reference across key accounts.
 
 ###### [figma_text_id](2:32)
-BISONTE EXPERIENTIAL MARKETING
+**BISONTE EXPERIENTIAL MARKETING**
 
 ###### [figma_text_id](4:17)
-Coordinador de Brand Environment y Store Design |
+**Coordinador de Brand Environment y Store Design** |
 
 ###### [figma_text_id](4:18)
-2022 - 2023
+*2022 - 2023*
 
 ###### [figma_text_id](2:35)
 **Visual and technical implementation, flagship store:** Led technical and visual implementation for the Adidas Brand Center Madero opening, coordinating visual and technical execution against global Store Design standards with local contractors and installers; delivered with no blocking observations at handover.
@@ -92,22 +92,22 @@ Oversaw zoning and category layout, aligning layout and planograms with the corp
 Coordinated production and logistics of Store Design materials — fixtures, lighting and props, quality control and vendor timelines — across every space in the flagship, coordinating with contractors and consultants through project handover.
 
 ###### [figma_text_id](2:39)
-LEVI STRAUSS & CO. (DOCKERS)
+**LEVI STRAUSS & CO. (DOCKERS)**
 
 ###### [figma_text_id](4:21)
-Coordinador Senior de Brand Environment – LATAM |
+**Coordinador Senior de Brand Environment – LATAM** |
 
 ###### [figma_text_id](4:22)
-2018 - 2021
+*2018 - 2021*
 
 ###### [figma_text_id](2:42)
 **Multi-country commercial space planning:** Managed store development and standardization strategy across 6 LATAM countries and 270+ points of sale (owned stores, franchises and wholesale corners), coordinating local teams and reporting best practices to the corporate Trade Marketing team.
 
 ###### [figma_text_id](2:43)
-Designed a local-production strategy that cut campaign and store-opening costs by -74%, maintaining global execution and construction standards across every product category and market.
+Designed a local-production strategy that cut campaign and store-opening costs by **-74%**, maintaining global execution and construction standards across every product category and market.
 
 ###### [figma_text_id](2:44)
-Reduced floorset and store-refresh turnaround time by -33% through Zoning & Mapping manuals and digital tools for field teams — direct precedent for coordinating production timelines on Store Design materials.
+Reduced floorset and store-refresh turnaround time by **-33%** through Zoning & Mapping manuals and digital tools for field teams — direct precedent for coordinating production timelines on Store Design materials.
 
 ###### [figma_text_id](3:9)
 Led a team of 3 national coordinators with direct reporting, plus 3 dotted-line collaborators in other markets, acting as the regional liaison for the Americas.
@@ -116,31 +116,31 @@ Led a team of 3 national coordinators with direct reporting, plus 3 dotted-line 
 Managed visual strategy across 6 LATAM countries and 270+ points of sale (own boutiques, franchises, wholesale corners), ensuring regional brand image standardization and reporting best practices to the corporate team.
 
 ###### [figma_text_id](2:46)
-AÉROPOSTALE
+**AÉROPOSTALE**
 
 ###### [figma_text_id](4:25)
-Gerente de Visual Merchandising |
+**Gerente de Visual Merchandising** |
 
 ###### [figma_text_id](4:26)
-2017 - 2018
+*2017 - 2018*
 
 ###### [figma_text_id](2:49)
 Built the VM function from the ground up, managing 17 VM sub-managers and 4 zone supervisors; implemented pilot store setups, category guidelines and visual-maintenance checklists replicated at national scale.
 
 ###### [figma_text_id](2:50)
-Directly contributed to +43% traffic and +18% conversion across the 17 stores under my supervision through strategic zoning, product rotation and visual alignment with monthly commercial targets.
+Directly contributed to **+43%** traffic and **+18%** conversion across the 17 stores under my supervision through strategic zoning, product rotation and visual alignment with monthly commercial targets.
 
 ###### [figma_text_id](2:51)
 Standardized planograms for key categories (Denim & Lifestyle), delivering systematic feedback to leadership on visual performance and floor-level improvement opportunities.
 
 ###### [figma_text_id](10:186)
-EL PALACIO DE HIERRO (ALDO GROUP)
+**EL PALACIO DE HIERRO (ALDO GROUP)**
 
 ###### [figma_text_id](10:188)
-Coordinador de Visual Merchandising & Marketing |
+**Coordinador de Visual Merchandising & Marketing** |
 
 ###### [figma_text_id](10:189)
-2014 - 2017
+*2014 - 2017*
 
 ###### [figma_text_id](10:191)
 **Store openings and multi-site remodels:** Coordinated visual and marketing execution across 17 retail stores and 12 wholesale corners, leading openings, remodels and window rotations with specialized vendors under global parent-company standards (Montréal, Canada).
@@ -152,10 +152,10 @@ Conducted regular store visual audits assessing maintenance, lighting, props and
 Developed floor-staff training programs on visual guidelines, product knowledge and brand standards; managed a direct-report Jr. Coordinator during the final 3 years of the role.
 
 ###### [figma_text_id](10:195)
-Asesor de Visual Merchandising |
+**Asesor de Visual Merchandising** |
 
 ###### [figma_text_id](10:196)
-2012 - 2014
+*2012 - 2014*
 
 ###### [figma_text_id](10:198)
 Coordinated visual and marketing execution across 17 retail stores and 12 wholesale corners, leading openings, remodels and window rotations with specialized vendors under global parent-company standards (Montréal, Canada).

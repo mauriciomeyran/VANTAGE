@@ -26,7 +26,7 @@ Portafolio
 Visual Merchandising leader with 14+ years building scalable, modular VM standards that hold up across retailers, formats and markets. Proven track record leading retail project management end-to-end — timelines, budgets, priorities and deliverables — across 6 LATAM countries and 270+ points of sale.
 
 ###### [figma_text_id](3:13)
-Deep hands-on experience developing fixtures and displays from concept through production, working directly with external suppliers on installations and retail rollouts. Track record of audit frameworks and store-visit programs that sustain execution consistency across doors and markets: -74% campaign costs · -33% floorset time · 100% POP coverage during regional disruption.
+Deep hands-on experience developing fixtures and displays from concept through production, working directly with external suppliers on installations and retail rollouts. Track record of audit frameworks and store-visit programs that sustain execution consistency across doors and markets: **-74%** campaign costs · **-33%** floorset time · **100%** POP coverage during regional disruption.
 
 ###### [figma_text_id](2:10)
 Fully bilingual (Spanish/English), with strong cross-functional communication across Marketing, Trade, Operations and field teams — comfortable translating global guidelines into local execution and reporting best practices back to corporate stakeholders across markets, including luxury beauty (fragrance) retail.
@@ -104,13 +104,13 @@ Managed the supply chain for Store Design materials, ensuring availability and q
 Led retail project management for the visual strategy across 6 LATAM countries and 270+ points of sale, coordinating timelines, budgets and priorities to deliver scalable, modular VM guidelines adaptable to different formats and footprints.
 
 ###### [figma_text_id](2:43)
-Designed a local production strategy that generated -74% savings on national campaign costs while sustaining global display standards across every product category.
+Designed a local production strategy that generated **-74%** savings on national campaign costs while sustaining global display standards across every product category.
 
 ###### [figma_text_id](2:44)
-Built standards, tools and Zoning & Mapping manuals for field teams, reducing floorset update time by -33% and enabling consistent execution across own stores and franchises.
+Built standards, tools and Zoning & Mapping manuals for field teams, reducing floorset update time by **-33%** and enabling consistent execution across own stores and franchises.
 
 ###### [figma_text_id](3:9)
-Established a store-visit and audit framework that sustained 100% POP coverage across 270+ doors during the COVID-19 disruption, coordinated remotely with a team of 3 direct and 3 dotted-line coordinators across markets.
+Established a store-visit and audit framework that sustained **100%** POP coverage across 270+ doors during the COVID-19 disruption, coordinated remotely with a team of 3 direct and 3 dotted-line coordinators across markets.
 
 ###### [figma_text_id](3:2)
 Coordinated Market Weeks and Press Days, reporting execution best practices across markets to corporate stakeholders and speaking at Nissan Connect on behalf of Dockers.
@@ -128,7 +128,7 @@ Coordinated Market Weeks and Press Days, reporting execution best practices acro
 Built the VM department from scratch, managing 17 VM Assistant Managers and 4 Zone Supervisors (21 direct reports); rolled out pilot fixtures, category guidelines and maintenance checklists standardized nationwide.
 
 ###### [figma_text_id](2:50)
-Directly contributed to a +43% increase in traffic and +18% in conversion across the 17 stores under strategic supervision, through consistent execution standards and cross-store coordination.
+Directly contributed to a **+43%** increase in traffic and **+18%** in conversion across the 17 stores under strategic supervision, through consistent execution standards and cross-store coordination.
 
 ###### [figma_text_id](2:51)
 Standardized planograms for key categories (Denim & Lifestyle), running a systematic audit and feedback loop back to store leadership on visual performance and improvement opportunities.

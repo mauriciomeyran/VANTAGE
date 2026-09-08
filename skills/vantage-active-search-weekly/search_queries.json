@@ -1,0 +1,43 @@
+{
+  "linkedin_queries": [
+    {
+      "name": "VM_BRAND_RETAIL",
+      "keywords": "Visual Merchandising OR Brand Experience OR Retail Experience",
+      "location": "Ciudad de México, México",
+      "geoId": "102/103632511/104",
+      "f_TPR": "r604800"
+    },
+    {
+      "name": "VM_SPECIFIC",
+      "keywords": "Visual Merchandiser OR VM Coordinator OR VM Manager",
+      "location": "Ciudad de México, México",
+      "geoId": "102/103632511/104",
+      "f_TPR": "r604800"
+    },
+    {
+      "name": "BRAND_STORE",
+      "keywords": "Brand Experience OR Store Design OR Retail Experience",
+      "location": "Ciudad de México, México",
+      "geoId": "102/103632511/104",
+      "f_TPR": "r604800"
+    }
+  ],
+  "aggregator_queries": [
+    {
+      "platform": "OCC",
+      "url_template": "https://www.occ.com.mx/empleos/?q={keywords}&l={location}"
+    },
+    {
+      "platform": "Indeed",
+      "url_template": "https://mx.indeed.com/jobs?q={keywords}&l={location}"
+    },
+    {
+      "platform": "Computrabajo",
+      "url_template": "https://www.computrabajo.com.mx/empleos/?q={keywords}&l={location}"
+    },
+    {
+      "platform": "Bumeran",
+      "url_template": "https://www.bumeran.com.mx/empleos?q={keywords}&l={location}"
+    }
+  ]
+}
