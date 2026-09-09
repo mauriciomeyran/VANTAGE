@@ -47,7 +47,7 @@ Liderazgo de ejecución física de espacios — traduciendo blueprints arquitect
 **Stack Técnico:** Adobe Creative Cloud (Illustrator, Photoshop, Premiere Pro, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, SAP Concur, IA Generativa (ChatGPT, Perplexity, Claude).
 
 ###### [figma_text_id](2:18)
-**Idiomas:** Español (Nativo) · Inglés (Profesional Corporativo / Fluidez regional).
+**Idiomas:** Español (Nativo) | Inglés (Profesional Corporativo / Fluidez regional).
 
 ###### [figma_text_id](2:20)
 **EXPERIENCIA PROFESIONAL**
@@ -113,7 +113,7 @@ Reduje **-33%** el tiempo de actualización de floorsets mediante manuales de Zo
 Lideré un equipo de 3 coordinadoras directas y 3 indirectas, sosteniendo **100%** de cobertura POP durante la contingencia COVID-19 mediante coordinación remota.
 
 ###### [figma_text_id](3:2)
-Coordiné Market Weeks y Press Days; fui ponente en Nissan Connect representando a Dockers.
+Coordiné Market Weeks y Press Days; fui ponente en foros comerciales (Nissan Connect) representando a Dockers.
 
 ###### [figma_text_id](2:46)
 **AÉROPOSTALE**
@@ -158,7 +158,7 @@ Realicé visitas regulares de auditoría visual a tienda, evaluando mantenimient
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Apoyé el montaje de vitrinas y la disposición de producto en tienda departamental siguiendo especificaciones técnicas de la casa matriz en Canadá, primer contacto con la lectura de planogramas que después profundicé en roles de mayor especialización técnica.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**
@@ -205,11 +205,11 @@ ALDO Group, Montréal, Canadá
 ---
 
 **Footer — Metadata**
-- Output Contract version: `CANON:OUTPUT-CONTRACT` v9.21.41 (Career Canon, vía Notion live fetch) · Skill CV-B v10.1.0 (Sandbox-Only Refactor)
-- Positioning Mode activo: **N2 · Store Design & Flagship Execution — forzado por instrucción explícita del operador**, no por resolución determinística del algoritmo de CV-A. El HANDOFF original declaró EMPATE/mismatch de framework (ningún ancla N1–N4 acumuló match fuerte; disciplina central del JD — Space Planning/planogramación dedicada — no tiene ancla canónica). N2 se seleccionó como el ancla con mayor cercanía transferible (C02: ejecución física de blueprints/layout), no como match directo de disciplina.
-- Reactivación de registro: HANDOFF documentó Status=Expirada/Next_Action=Archivar (misfit de perfil, Class B/Python). Se continúa por instrucción explícita del operador — CV-B no reevalúa ni revierte esa clasificación, solo ejecuta la construcción solicitada.
-- Match Transferible Obligatorio (regla 6) — declaración de criterio: ningún hecho del Canon corresponde a software de planogramación dedicado (JDA/Blue Yonder/Spaceman) ni a Space Planning como disciplina formal. Los bullets de C02/C03/C04/C05 reencuadran ejecución física de layout, zoning y planogramas de piso de venta (disciplina adyacente, no idéntica) bajo terminología de "diseño modular"/"space execution" sin afirmar experiencia en software o metodología de Category Management que el Canon no respalda — ningún claim de este CV-B menciona herramientas o certificaciones de Space Planning no documentadas.
-- Referencia canónica: `CANON:EXPERIENCE-001` a `-005`, `CANON:MAJOR-PROJECT-001` (P01, Adidas Brand Center), `CANON:FACT-003/004` (CF03/CF04), `CANON:KPI-007`, `CANON:FACT-005` (CF05), `CANON:SKILLS`, `CANON:UF-003`
-- `[PENDING DATA]`: ninguno — todos los slots tuvieron cobertura directa o transferible declarada arriba.
-- Síntesis Multi-Hecho aplicada en: `2:26` (C01), `2:42` (C03), `10:193` (C05 Coordinador) — Slot Integrity respetada.
-- Anti-cloning: bullets de C01/C03/C04/C05 redactados con lenguaje distinto a los dos CV-B previos de esta sesión (Confidencial/N3, IKEA/N4); C02 recibe la mayor densidad de reencuadre por ser ancla primaria de este modo.
+- Output Contract version: `CANON:OUTPUT-CONTRACT` v9.21.41 · Skill CV-B v10.1.0 (Sandbox-Only Refactor)
+- Positioning Mode activo: **N2 · Store Design & Flagship Execution — forzado por instrucción explícita del operador**
+- Referencia canónica: `CANON:EXPERIENCE-001` a `-005`, `CANON:MAJOR-PROJECT-001`, `CANON:FACT-003/004`, `CANON:KPI-007`, `CANON:FACT-005`, `CANON:SKILLS`, `CANON:UF-003`
+- `[PENDING DATA]`: ninguno
+- **Correcciones aplicadas esta sesión (HO-000037+):**
+  1. `2:18` — separador de Idiomas unificado de `·` a `|`.
+  2. `3:2` — agregado contexto "en foros comerciales" antes de "(Nissan Connect)".
+- Síntesis Multi-Hecho aplicada en: `2:26`, `2:42`, `10:193` — Slot Integrity respetada.

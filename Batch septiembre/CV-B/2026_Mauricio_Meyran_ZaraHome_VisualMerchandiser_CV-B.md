@@ -158,7 +158,7 @@ Formé al personal de piso en lineamientos visuales, conocimiento de producto y 
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Ejecuté en piso el styling y la atención a cliente en tienda departamental bajo estándares de la casa matriz en Canadá, primera experiencia formando criterio comercial que apliqué después al liderar equipos de tienda.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**
@@ -205,12 +205,7 @@ ALDO Group, Montréal, Canadá
 ---
 
 **Footer de metadata**
-
-- Output Contract version: `CANON:OUTPUT-CONTRACT-001` v1.0 (puntos 1–6), vía skill `vantage-cv-b` v10.1.0 (Sandbox-Only Refactor, 2026-09-03)
-- Positioning Mode activo: **N4 · Commercial VM & Field Leadership** — coanclaje C04 (Aéropostale) / C05 (El Palacio de Hierro · ALDO Group), per `CANON:POSITIONING-004`
-- Referencia canónica del Canon usado: `CANON:PROFILE`, `CANON:SKILLS`, `CANON:EXPERIENCE-001..005`, `CANON:KPI-001/002/003/004/005`, `CANON:FACT-002/005/006/007`, `CANON:EDUCATION-001/002`, `CANON:CERTIFICATION-001/002`
-- Registry SSOT verificado: `registry_seed.json` (Figma Sync) — sin discrepancia contra el Golden Skeleton documentado en `CANON:OUTPUT-CONTRACT-002` (misma verificación de sesión, sin cambios en el registry)
-- `[PENDING DATA]`: ninguna ocurrencia — todos los slots tuvieron match directo o transferible (regla 6)
-- Experience conserva secuencia C01→C05 sin excepción, per `CANON:OUTPUT-CONTRACT-005`
-- Anti-cloning Guard: batch de sesión incluye el CV-B previo de Inditex/Imagen y VM CDMX (mismo Positioning Mode N4, mismos anclajes C04/C05). Se verificó que ningún bullet de Experience coincide verbatim: los hechos subyacentes (KPI01/KPI02, CF06, CF05, ALDO 2012–2017) son los mismos por match literal Tier 1, pero la redacción se re-derivó bajo el ángulo específico de este HANDOFF (JD_keywords_top6: ejecución de estrategia comercial, matching producto-espacio, ritmo comercial, formación de equipo, feedback continuo con supervisor) — distinto del ángulo del CV-B de Inditex (que enfatizaba liderazgo/coaching como eje central). Confirmado sin match verbatim >80% en ningún bloque.
-- Nota de discrepancia heredada del HANDOFF (Observaciones CV-A): `VM_Scope: Alto` (Notion, Class B) vs. lectura textual store-level del JD — resuelta por el operador en este turno ("Continua con VM_Scope: Alto y N4"), no reevaluada por esta skill (Scope Lock).
+- Output Contract: `CANON:OUTPUT-CONTRACT-001` v1.0
+- Positioning Mode: **N4 · Commercial VM & Field Leadership**
+- `[PENDING DATA]`: ninguna ocurrencia
+- **Corrección aplicada esta sesión (HO-000037+, Ronda 2):** `10:198` reemplazado — near-clon de `10:191` (>85% verbatim). Texto tomado del paquete de 13 nodos verificados entregado por el operador.

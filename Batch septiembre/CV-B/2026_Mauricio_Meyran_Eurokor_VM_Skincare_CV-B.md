@@ -158,7 +158,7 @@ Desarrollé programas de capacitación para el personal de piso en lineamientos 
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Ejecuté el rollout de lineamientos visuales de la casa matriz en Canadá en tienda departamental, primer contacto con la estandarización multi-punto de venta que después escalé a redes de mayor tamaño.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**
@@ -205,8 +205,7 @@ ALDO Group, Montréal, Canadá
 ---
 **Footer de metadata**
 - Output Contract: `CANON:OUTPUT-CONTRACT` v10.1.0 (Sandbox-Only Refactor)
-- Positioning Mode: N3 · Regional Brand Execution & Rollout (confirmado por operador — override del valor N2 precargado en Notion)
+- Positioning Mode: N3 · Regional Brand Execution & Rollout
 - Canon usado: `CANON:EXPERIENCE-001..005`, `CANON:MAJOR-PROJECT-001`, `CANON:FACT-005`, `CANON:SKILLS`, `CANON:EDUCATION`, `CANON:CERTIFICATIONS`
 - `[PENDING DATA]`: 0 ocurrencias
-- Registry SSOT: `Figma Sync/registry_seed.json` (GitHub `main`, 68 nodos) — sin discrepancias vs Golden Skeleton
-- Cross-check batch de sesión: comparado contra CV-B previo (Servicios Andrei Moygo, N2) — mismo Canon fuente, redacción diferenciada por ángulo (estandarización multi-sucursal vs. apertura/flagship), sin match verbatim
+- **Corrección aplicada esta sesión (HO-000037+, Ronda 2):** `10:198` reemplazado — clon verbatim/near-verbatim de `10:191` detectado (violación de Anti-cloning Guard). Texto de reemplazo tomado del paquete de 13 nodos verificados entregado por el operador.

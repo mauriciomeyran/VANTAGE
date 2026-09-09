@@ -47,7 +47,7 @@ Liderazgo de Visual Merchandising centrado en campo: visitas de tienda, montajes
 **Stack Técnico:** Adobe Creative Cloud (Illustrator, Photoshop, Premiere Pro, InDesign), SketchUp, AutoCAD, Figma, IWD, Keynote, SAP Concur, IA Generativa (ChatGPT, Perplexity, Claude).
 
 ###### [figma_text_id](2:18)
-**Idiomas:** Español (Nativo) · Inglés (Profesional Corporativo / Fluidez regional).
+**Idiomas:** Español (Nativo) | Inglés (Profesional Corporativo / Fluidez regional).
 
 ###### [figma_text_id](2:20)
 **EXPERIENCIA PROFESIONAL**
@@ -113,7 +113,7 @@ Reduje en un **-33%** el tiempo de actualización de floorsets mediante manuales
 Lideré un equipo de 3 coordinadoras directas y 3 indirectas, garantizando el **100%** de cobertura POP durante la contingencia COVID-19 mediante coordinación remota con tiendas.
 
 ###### [figma_text_id](3:2)
-Coordiné Market Weeks y Press Days; fui ponente en Nissan Connect representando a Dockers ante audiencias comerciales y de prensa.
+Coordiné Market Weeks y Press Days; fui ponente en foros comerciales (Nissan Connect) representando a Dockers ante audiencias comerciales y de prensa.
 
 ###### [figma_text_id](2:46)
 **AÉROPOSTALE**
@@ -158,7 +158,7 @@ Coordiné el montaje y la ejecución visual y de marketing para **17 tiendas** r
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Realicé el montaje de exhibiciones y vitrinas en piso de venta bajo estándares de la casa matriz en Canadá, ganando el pulso comercial del piso que apliqué después al zoning estratégico en roles de mayor alcance.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**
@@ -205,10 +205,12 @@ ALDO Group, Montréal, Canadá
 ---
 
 **Footer — Metadata**
-- Output Contract version: `CANON:OUTPUT-CONTRACT` v9.21.41 (Career Canon, vía Notion live fetch) · Skill CV-B v10.1.0 (Sandbox-Only Refactor)
+- Output Contract version: `CANON:OUTPUT-CONTRACT` v9.21.41 · Skill CV-B v10.1.0 (Sandbox-Only Refactor)
 - Positioning Mode activo: N4 · Commercial VM & Field Leadership (coanclaje `CANON:POSITIONING-004`, C04/C05) — sin empate, dominante 4/6 en CV-A.
-- Confirmación del operador: se procedió pese al gap de seniority documentado en el HANDOFF (rol de entrada, "Preparatoria concluida", sin exigencia de experiencia previa en VM) — decisión explícita registrada en esta sesión.
-- Referencia canónica: `CANON:EXPERIENCE-001` a `-005`, `CANON:FACT-006` (21 reportes), `CANON:MAJOR-PROJECT-001`, `CANON:KPI-001/002`, `CANON:SKILLS`, `CANON:UF-003`
-- `[PENDING DATA]`: ninguno — todos los slots del Golden Skeleton tuvieron cobertura directa o transferible del Canon.
-- Síntesis Multi-Hecho aplicada en: `2:26` (C01), `2:42` (C03), `10:193` (C05 Coordinador) — Slot Integrity respetada.
-- Anti-cloning: bullets redactados con lenguaje distinto a los tres CV-B previos de esta sesión (Confidencial/N3, IKEA/N4, Walmart/N2), con énfasis léxico en montaje/visitas de tienda/capacitación específico al JD de Juguetron, aun cuando C04/C05 comparten ancla N4 con el CV-B de IKEA.
+- Confirmación del operador: se procedió pese al gap de seniority documentado en el HANDOFF.
+- Referencia canónica: `CANON:EXPERIENCE-001` a `-005`, `CANON:FACT-006`, `CANON:MAJOR-PROJECT-001`, `CANON:KPI-001/002`, `CANON:SKILLS`, `CANON:UF-003`
+- `[PENDING DATA]`: ninguno
+- **Correcciones aplicadas esta sesión (HO-000037+):**
+  1. `2:18` — separador de Idiomas unificado de `·` a `|`.
+  2. `3:2` — agregado contexto "en foros comerciales" antes de "(Nissan Connect)".
+- Síntesis Multi-Hecho aplicada en: `2:26`, `2:42`, `10:193` — Slot Integrity respetada.

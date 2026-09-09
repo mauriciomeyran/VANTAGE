@@ -158,7 +158,7 @@ Desarrollé programas de capacitación para el personal de piso en lineamientos 
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Di mis primeros pasos en gestión de piso aplicando los estándares de la casa matriz en Canadá en tienda departamental, experiencia que sirvió de base directa para la coordinación de equipos regionales que asumí más adelante.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**
@@ -206,15 +206,8 @@ ALDO Group, Montréal, Canadá
 
 **Footer de metadata**
 
-- Output Contract version: `CANON:OUTPUT-CONTRACT-001` v1.0 (puntos 1–6), vía skill `vantage-cv-b` v10.1.0
-- Positioning Mode activo: **N4 · Commercial VM & Field Leadership** — coanclaje C03 (Levi's/Dockers) / C04 (Aéropostale) / C05 (El Palacio de Hierro · ALDO Group), per `CANON:POSITIONING-004`
-- Ángulo de posicionamiento elegido dentro de N4: **gestión estratégica regional** (liderazgo de equipos, estandarización multi-mercado, presupuesto CAPEX/OPEX) — reemplaza el ángulo de ejecución de campo/capacitación del build anterior. **Decisión confirmada por el operador esta sesión** (Auditoría Sesión Sep 03, 26 — ver REPORTE DE NO CONFORMIDADES, Fase 1.5), tras señalamiento de CV-A sobre desalineación de seniority (JD nivel Specialist/Coordinator vs. Canon senior).
-- Anti-overselling: ningún hecho nuevo introducido — se reencuadraron hechos ya acreditados (270+ POS, 6 países, 21 reportes directos vía C04, CAPEX/OPEX vía C02/C03) que el ángulo anterior subordinaba a la narrativa de campo.
-- Referencia canónica del Canon usado: `CANON:PROFILE`, `CANON:SKILLS`, `CANON:EXPERIENCE-001..005`, `CANON:KPI-001/002/003/004`, `CANON:FACT-002/005/006/007`, `CANON:EDUCATION-001/002`, `CANON:CERTIFICATION-001/002`
-- Registry SSOT verificado: `Figma Sync/registry_seed.json`, sha256 `761762e3ab636cc327bdd07f08fcdf59fa6f952b45bb51adb9fcd261f29d16d6` (commit `895b7a8`) — 68/68 tags, membresía exacta, formato `[ID](ID)` correcto (se corrige aquí el placeholder literal `figma_text_id` del build anterior)
+- Output Contract version: `CANON:OUTPUT-CONTRACT-001` v1.0, vía skill `vantage-cv-b` v10.1.0
+- Positioning Mode activo: **N4 · Commercial VM & Field Leadership** — ángulo de gestión estratégica regional (confirmado por operador, Auditoría Sesión Sep 03)
+- Referencia canónica: `CANON:PROFILE`, `CANON:SKILLS`, `CANON:EXPERIENCE-001..005`, `CANON:KPI-001/002/003/004`, `CANON:FACT-002/005/006/007`, `CANON:EDUCATION-001/002`, `CANON:CERTIFICATION-001/002`
 - `[PENDING DATA]`: ninguna ocurrencia
-- Experience conserva secuencia C01→C05 sin excepción, per `CANON:OUTPUT-CONTRACT-005`
-- Anti-cloning Guard: ángulo de gestión estratégica regional distingue este output de Inditex (liderazgo/coaching) y Zara Home (ejecución comercial/ritmo de campaña) — mismo batch N4. **Verificado con difflib contra los archivos reales de Inditex y Zara Home**: 2 slots (2:43, 2:44 — bullets de Levi's/Dockers KPI03/KPI04) excedían 80% de match verbatim (100% y 85% respectivamente) y fueron reescritos manteniendo el mismo hecho canónico con redacción distinta. Segunda pasada (verificación exhaustiva de los 14 slots, no solo 2) detectó 2 slots adicionales sobre umbral: 2:49 y 2:51 — bullets de Aéropostale (KPI01/KPI02), ambos en 85% verbatim contra Inditex/Zara Home, reescritos con el mismo criterio de diferenciación. Verificación final con difflib sobre los 14 slots de Experience: similitud máxima 65% — todos dentro de tolerancia, PASS real.
-- `tag_schema_result`: PASS — 68/68 `[ID](ID)`, sin label≠ID, sin duplicados
-- `registry_membership_result`: PASS — 68/68 verificados contra registry real
-- `estado_final`: `PASS_FOR_FIGMA`
+- **Corrección aplicada esta sesión (HO-000037+, Ronda 2):** `10:198` reemplazado — clon verbatim de `10:191` (con solo el label bold removido). Texto de reemplazo tomado del paquete de 13 nodos verificados entregado por el operador. Esto contradice la verificación previa de difflib documentada en el build original, que declaró "similitud máxima 65%" — esa verificación evidentemente no cubrió el par 10:191/10:198 correctamente.

@@ -158,7 +158,7 @@ Desarrollé programas de capacitación para el personal de piso en lineamientos 
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Participé en la instalación física de exhibiciones y vitrinas en tienda departamental bajo estándares de la casa matriz en Canadá, primer acercamiento a la coordinación de proveedores que después escalé a proyectos de apertura de mayor formato.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**
@@ -201,28 +201,13 @@ Store Operations Leaders Orientation (VM, Sales & Ops) |
 
 ###### [figma_text_id](10:209)
 ALDO Group, Montréal, Canadá
+
 ---
 
 ## Footer — Metadata de Entrega
 
-```json
-{
-  "canon_version": "v9.21.44",
-  "output_contract_version": "CANON:OUTPUT-CONTRACT-001 (v9.21.44)",
-  "registry_sha": "761762e3ab636cc327bdd07f08fcdf59fa6f952b45bb51adb9fcd261f29d16d6",
-  "skill_version": "vantage-cv-b v10.0.0",
-  "positioning_mode": "N2 · Store Design & Flagship Execution",
-  "tag_schema_result": "PASS — 68/68 tags formato [ID](ID) exacto, sin label≠ID, sin duplicados",
-  "registry_membership_result": "PASS — 68/68 IDs verificados contra Figma Sync/registry_seed.json",
-  "slot_count_result": "PASS — 68/68 slots, orden C01→C05 preservado",
-  "canon_traceability_result": "PASS — 0 ocurrencias de términos prohibidos (Revit, architectural package, construction documents, floor plans, permisos, skincare, planogramas digitales, colorimetría, showroom, supply chain end-to-end)",
-  "anti_overselling_result": "PASS — sustitución S1.6 aplicada (colorimetría retirada de Estrategia Visual, slot 2:14)",
-  "batch_similarity_result": "N/A — sin otros entregables del batch disponibles para comparar en esta sesión",
-  "remediation_applied": [
-    "S1.6: 'colorimetría' retirada de slot 2:14 (Estrategia Visual), sustituida por 'visual storytelling y presentación de producto'"
-  ],
-  "verified_by": "CLAUDE/MM",
-  "verified_at": "2026-09-03 20:56:00 CDMX",
-  "estado_final": "PASS_FOR_FIGMA"
-}
-```
+- Output Contract: `CANON:OUTPUT-CONTRACT-001` v9.21.44
+- Positioning Mode: N2 · Store Design & Flagship Execution
+- **Correcciones aplicadas esta sesión (HO-000037+, Ronda 2):**
+  1. `2:18` — **slot Idiomas faltante en el build original, restaurado.** El build previo saltaba de `2:17` (Stack Técnico) directamente a `2:20` (Experiencia), violando Slot Integrity (`CANON:OUTPUT-CONTRACT-001` punto 2). Contenido restaurado con el estándar del resto del batch.
+  2. `10:198` reemplazado — clon verbatim de `10:191` (con solo el label bold removido). Texto tomado del paquete de 13 nodos verificados entregado por el operador.

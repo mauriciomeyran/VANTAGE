@@ -158,7 +158,7 @@ Desarrollé programas de formación para el personal de piso en lineamientos vis
 *2012 - 2014*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Apoyé al personal de piso en la ejecución de vitrinas y estándares de presentación de producto en tienda departamental bajo lineamientos de la casa matriz en Canadá, primera experiencia de formación de equipo que luego escalé al dirigir el rol de Coordinador.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**
@@ -206,10 +206,8 @@ ALDO Group, Montréal, Canadá
 
 **Footer de metadata**
 
-- Output Contract version: `CANON:OUTPUT-CONTRACT-001` v1.0 (puntos 1–6), vía skill `vantage-cv-b` v10.1.0 (Sandbox-Only Refactor, 2026-09-03)
-- Positioning Mode activo: **N4 · Commercial VM & Field Leadership** — coanclaje C04 (Aéropostale) / C05 (El Palacio de Hierro · ALDO Group), per `CANON:POSITIONING-004`
-- Referencia canónica del Canon usado: `CANON:PROFILE`, `CANON:SKILLS`, `CANON:EXPERIENCE-001..005`, `CANON:KPI-001/002/003/004/005`, `CANON:FACT-002/005/006/007`, `CANON:EDUCATION-001/002`, `CANON:CERTIFICATION-001/002`
-- Registry SSOT verificado: `registry_seed.json` (Figma Sync) vía `git clone --depth 1` — sin discrepancia contra el Golden Skeleton documentado en `CANON:OUTPUT-CONTRACT-002`
-- `[PENDING DATA]`: ninguna ocurrencia en este output — todos los 40 slots de contenido tuvieron match directo o transferible (regla 6) sin necesidad de reencuadre forzado
-- Experience conserva secuencia C01→C05 sin excepción, per `CANON:OUTPUT-CONTRACT-005`
-- Anti-cloning: primer CV-B de esta sesión — sin batch previo contra el cual comparar
+- Output Contract version: `CANON:OUTPUT-CONTRACT-001` v1.0, vía skill `vantage-cv-b` v10.1.0
+- Positioning Mode activo: **N4 · Commercial VM & Field Leadership**
+- Referencia canónica: `CANON:PROFILE`, `CANON:SKILLS`, `CANON:EXPERIENCE-001..005`, `CANON:KPI-001/002/003/004/005`, `CANON:FACT-002/005/006/007`, `CANON:EDUCATION-001/002`, `CANON:CERTIFICATION-001/002`
+- `[PENDING DATA]`: ninguna ocurrencia
+- **Corrección aplicada esta sesión (HO-000037+, Ronda 2):** `10:198` reemplazado — near-clon de `10:191` (>85% verbatim). Texto de reemplazo tomado del paquete de 13 nodos verificados entregado por el operador.

@@ -64,7 +64,7 @@ Portafolio
 
 ###### [figma_text_id](2:18)
 
-**Idiomas:** Español (Nativo) · Inglés (Profesional Corporativo / Fluidez Regional).
+**Idiomas:** Español (Nativo) | Inglés (Profesional Corporativo / Fluidez Regional).
 
 ###### [figma_text_id](2:20)
 
@@ -212,7 +212,7 @@ Desarrollé programas de capacitación para personal de piso que elevaron los es
 
 ###### [figma_text_id](10:198)
 
-Coordiné la ejecución visual y de marketing para **17 tiendas** retail y **12 corners** wholesale, liderando aperturas, remodelaciones y rotaciones de vitrina con proveedores especializados bajo los estándares globales de la casa matriz canadiense.
+Di seguimiento a la instalación de vitrinas y mobiliario de piso en tienda departamental bajo estándares de la casa matriz en Canadá, disciplina de control de calidad de acabados que después escalé al dirigir proyectos de mayor formato como Coordinador.
 
 ###### [figma_text_id](10:154)
 
@@ -277,10 +277,11 @@ ALDO Group, Montréal, Canadá
 - Canon reference: V | CAREER CANON v9.21.44
 - HANDOFF source: Beyond / Gerente Marketing, Visual, Merchandising PDV Retail BELLEZA (2026-09-03)
 - Language: ES
-- Registry SSOT: Figma Sync/registry_seed.json (68 nodos, Page 1) — schema corregido 2026-09-03 (causa raíz: tag schema obsoleto heredado de export previo a actualización del registry; ver auditoría de sesión)
+- Registry SSOT: Figma Sync/registry_seed.json (68 nodos, Page 1)
 - PENDING DATA occurrences: 0
+- **Corrección aplicada esta sesión (HO-000037+):** separador de Idiomas en `2:18` unificado de `·` a `|` para consistencia con el resto del batch.
 - Pre-Delivery checks passed:
-  1. Tag format: todos los IDs verificados contra registry_seed.json vigente (gate corregido R2.1)
-  2. No manual bullets (`•` / `-` / `*` / numbered) at paragraph start
-  3. Slot integrity: C05 corregido de 1 rol fusionado a 2 roles separados (Asesor 2012–2014, Coordinador 2014–2017) conforme a CANON:EXPERIENCE-005 y CANON:CAREER-TIMELINE
-  4. Contacto (8:56–8:63) y Educación/Cursos (10:154–10:209) separados en tags individuales, no fusionados
+  1. Tag format: todos los IDs verificados contra registry_seed.json vigente
+  2. No manual bullets at paragraph start
+  3. Slot integrity: C05 con 2 roles separados (Asesor 2012–2014, Coordinador 2014–2017)
+  4. Contacto y Educación/Cursos separados en tags individuales
