@@ -1,5 +1,19 @@
 # V | CHANGELOG
 
+Tipo: [OPS]
+Documento modificado: Ninguno en Notion — auditoría de 15 PDFs finales del batch (Beyond, Confidencial GVM, Confidencial Gte.Nacional VM, Eurokor, GDC Inmobiliaria, H&M Junior Retail Designer, IKEA, Inditex, Intimissimi, Juguetron, SARELLY, ServiciosAndrei/Moygo, Tendam, Walmart, ZaraHome).
+Documentos potencialmente afectados: Ninguno — trabajo de auditoría de entregables, no de especificación normativa.
+Tipo de impacto: Operativo — checklist canónico de 7 ítems (vantage-qa v9.17.0) corrido sobre los 15 PDFs sin HANDOFF de CV-A disponible para ninguno (Ítem 3 = N/A en los 15). Ítem 7 (Anti-cloning) evaluado por comparación cruzada entre los 15 archivos del batch.
+Acción ejecutada:
+1. Verificación de orden cronológico C01→C05 intacto en los 15.
+1. Hard Blocks confirmados PASS en los 15 — L'Oréal/Levi's/Palacio de Hierro presentes solo como historial (C01/C03/C05), ninguna vacante target pertenece a esas marcas.
+1. Certificaciones (CERT01/CERT02) y email canónico verificados sin desviación en los 15.
+1. Métricas (+43%/+18%/-74%/-33%/17 punch-list/21 reportes/270+ PDV/6 países) verificadas sin inflación ni redondeo.
+1. Sin [PENDING DATA] visible en ningún PDF.
+1. Anti-cloning: pares con headers de título similares (Beyond/GDC; IKEA/Juguetron) verificados con bullets de Experience reescritos con ángulo distinto — ningún par supera 80% de coincidencia verbatim.
+IDs afectados: Ninguno (auditoría de contenido, sin alta/baja de ID canónico).
+Estado final de la validación: 15/15 PDFs con veredicto GO. Corrección de conteo aplicada en la misma sesión (reporte inicial erróneo de "14/14" corregido a 15/15 tras verificación directa del conteo de archivos). Sin DRY RUN presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens) — version bump y esta entrada ejecutados en una sola pasada.
+---
 Tipo: [MIGRATION] [CODE]
 Alcance: layer_3_mail.py (migración completa Groq → Gemini) + layer_3.env
 Contexto:

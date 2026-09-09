@@ -323,7 +323,7 @@ Portafolio
 **PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
-Estratega de Visual Merchandising con más de 10 años de trayectoria en retail de lujo, moda premium y entornos multitienda. Especialista en traducir lineamientos globales de HQ en ejecuciones de marca impecables y consistentes a escala regional: boutiques monomarca, corners wholesale, flagship openings y campañas estacionales en entornos de ultra-lujo.
+Estratega de Visual Merchandising con más de 14 años de trayectoria en retail de lujo, moda premium y entornos multitienda. Especialista en traducir lineamientos globales de HQ en ejecuciones de marca impecables y consistentes a escala regional: boutiques monomarca, corners wholesale, flagship openings y campañas estacionales en entornos de ultra-lujo.
 
 ###### [figma_text_id](3:13)
 Con experiencia comprobada en 6 países LATAM y 270+ puntos de venta, domino la coordinación de proveedores locales e internacionales, la gestión de presupuestos CAPEX/OPEX y la generación de retroalimentación fotográfica y cualitativa para equipos corporativos. Historial cuantificado: +43% tráfico · +18% conversión · -74% costos operativos.
