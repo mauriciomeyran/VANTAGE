@@ -32,13 +32,13 @@ GMAIL_USER     = os.environ["GMAIL_USER"]
 GMAIL_APP_PASS = os.environ["GMAIL_APP_PASS"]
 GMAIL_LABEL    = os.environ.get("GMAIL_LABEL", ".Jobs")
 
-GEMINI_API_KEY   = os.environ["GEMINI_API_KEY"]
-GEMINI_MODEL     = os.environ.get("GEMINI_MODEL", "gemini-pro-latest")
-GEMINI_MIN_DELAY = float(os.environ.get("GEMINI_MIN_DELAY_SEC", "10"))
+GROQ_API_KEY   = os.environ["GROQ_API_KEY"]
+GROQ_MODEL = "qwen/qwen3.8-27b"
+GEMINI_MIN_DELAY = float(os.environ.get("GEMINI_MIN_DELAY_SEC", "3"))
 GEMINI_MAX_RETRY = int(os.environ.get("GEMINI_MAX_RETRIES", "3"))
-GEMINI_MAX_BACKOFF = float(os.environ.get("GEMINI_MAX_BACKOFF_SEC", "30"))
-GEMINI_BODY_MAX  = int(os.environ.get("GEMINI_BODY_MAX_CHARS", "3500"))
-MAX_EMAILS_RUN = int(os.environ.get("GEMINI_MAX_EMAILS_PER_RUN", "3"))
+GEMINI_MAX_BACKOFF = float(os.environ.get("GEMINI_MAX_BACKOFF_SEC", "15"))
+GEMINI_BODY_MAX  = int(os.environ.get("GEMINI_BODY_MAX_CHARS", "2000"))
+MAX_EMAILS_RUN = int(os.environ.get("GEMINI_MAX_EMAILS_PER_RUN", "5"))
 
 NOTION_TOKEN   = os.environ["NOTION_TOKEN"]
 NOTION_DB_ID   = os.environ["NOTION_DB_ID"]
@@ -286,75 +286,52 @@ def _gemini_wait_seconds(resp, attempt):
     return min(GEMINI_MAX_BACKOFF, GEMINI_MIN_DELAY * (2 ** attempt)) + random.uniform(0, 3)
 
 
-def extract_jobs_with_gemini(email_body, retries=None):
-    if retries is None:
-        retries = GEMINI_MAX_RETRY
+def extract_jobs_with_gemini(email_body, retries=3):
+    valid_ascii = set(range(32, 127)) | {10, 13, 9}
+    clean_body = ''.join(ch for ch in email_body if ord(ch) in valid_ascii)[:2000]
+
+    api_key = os.environ.get("GROQ_API_KEY", "").strip()
+    model = os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b").strip()
 
     headers = {
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
     }
+    
     payload = {
-        "contents": [
-            {
-                "parts": [
-                    {"text": GROQ_PROMPT + "\n\n" + email_body + "\n\nResponde en formato json."}
-                ]
-            }
+        "model": model,
+        "messages": [
+            {"role": "system", "content": GROQ_PROMPT},
+            {"role": "user", "content": clean_body}
         ],
-        "generationConfig": {
-            "temperature": 0.0,
-            "maxOutputTokens": 6000,
-            "responseMimeType": "application/json"
-        }
+        "temperature": 0.0,
+        "response_format": {"type": "json_object"}
     }
 
-    resp = None
     for attempt in range(retries):
-        _gemini_throttle()
-        resp = requests.post(
-            f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}",
-            headers=headers,
-            json=payload,
-            timeout=60,
-        )
-        _last_gemini_call = time.monotonic()
-
-        if resp.status_code == 429:
-            wait = _gemini_wait_seconds(resp, attempt)
-            print(f"  ⏳ Gemini rate limit ({attempt + 1}/{retries}), esperando {wait:.0f}s...")
-            time.sleep(wait)
-            continue
-        if resp.status_code == 503:
-            wait = _gemini_wait_seconds(resp, attempt)
-            print(f"  ⏳ Gemini servicio no disponible (503), reintentando en {wait:.0f}s...")
-            time.sleep(wait)
-            continue
-        if resp.status_code == 403:
-            print(f"  🔴 Gemini raw error: {resp.text}")
-            raise GeminiFatalError(
-                "Gemini acceso denegado (403). Si usas VPN, desactívala e intenta de nuevo. "
-                "Si persiste: revisa API key, créditos y permisos del modelo en AI Studio"
+        time.sleep(3.5)
+        try:
+            resp = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers=headers,
+                json=payload,
+                timeout=30
             )
-        if resp.status_code == 404 or (
-            resp.status_code == 400
-            and "model_not_found" in resp.text
-        ):
-            print(f"  🔴 Gemini raw error: {resp.text}")
-            raise GeminiFatalError(
-                f"Modelo Gemini '{GEMINI_MODEL}' no existe o fue retirado. "
-                f"Actualiza GEMINI_MODEL en config/layer_3.env (recomendado: gemini-pro-latest). "
-                f"Ver https://ai.google.dev/docs/deprecations"
-            )
-        if resp.status_code != 200:
-            print(f"  🔴 Gemini raw error: {resp.text}")
-        resp.raise_for_status()
-        break
-    else:
-        print(f"  ⚠️ [L3_SKIPPED_RATE_LIMIT] Gemini rate limit persistente después de {retries} intentos")
-        return []  # Return empty list to skip this email and continue
+            if resp.status_code == 429:
+                print(f"  ⏳ Groq rate limit ({attempt+1}/{retries}), esperando 5s...")
+                time.sleep(5.0)
+                continue
+            
+            resp.raise_for_status()
+            content_json = resp.json()["choices"][0]["message"]["content"].strip()
+            return _parse_groq_jobs(content_json)
 
-    content = resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
-    return _parse_groq_jobs(content)
+        except requests.exceptions.RequestException as err:
+            print(f"  ❌ Groq error: {err}")
+            if attempt == retries - 1:
+                return []
+    return []
+    return []
 
 
 def _parse_groq_jobs(content):
@@ -730,7 +707,7 @@ def _write_heartbeat(total_created: int, total_failed: int):
 
 def main():
     print("\n🚀 VANTAGE L3 Pipeline arrancando...")
-    print(f"   Gemini: {GEMINI_MODEL} · pausa mín {GEMINI_MIN_DELAY}s · máx {MAX_EMAILS_RUN} correos/ejecución\n")
+    print(f"   Gemini: {GROQ_MODEL} · pausa mín {GEMINI_MIN_DELAY}s · máx {MAX_EMAILS_RUN} correos/ejecución\n")
 
     print("📬 Conectando a Gmail...")
     mail = _connect_gmail()
