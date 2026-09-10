@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VANTAGE L3 Pipeline — Gmail (.Jobs) → Gemini → Notion VANTAGE TRACKER
+VANTAGE L3 Pipeline — Gmail (.Jobs) → Groq → Notion VANTAGE TRACKER
 Extrae vacantes de correos y las ingresa individualmente al tracker.
 """
 
@@ -33,12 +33,13 @@ GMAIL_APP_PASS = os.environ["GMAIL_APP_PASS"]
 GMAIL_LABEL    = os.environ.get("GMAIL_LABEL", ".Jobs")
 
 GEMINI_API_KEY   = os.environ["GEMINI_API_KEY"]
-GEMINI_MODEL     = os.environ.get("GEMINI_MODEL", "gemini-pro-latest")
-GEMINI_MIN_DELAY = float(os.environ.get("GEMINI_MIN_DELAY_SEC", "10"))
+GEMINI_MODEL     = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_FALLBACK_MODEL = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-1.5-flash")
+GEMINI_MIN_DELAY = float(os.environ.get("GEMINI_MIN_DELAY_SEC", "8"))
 GEMINI_MAX_RETRY = int(os.environ.get("GEMINI_MAX_RETRIES", "3"))
-GEMINI_MAX_BACKOFF = float(os.environ.get("GEMINI_MAX_BACKOFF_SEC", "30"))
+GEMINI_MAX_BACKOFF = float(os.environ.get("GEMINI_MAX_BACKOFF_SEC", "20"))
 GEMINI_BODY_MAX  = int(os.environ.get("GEMINI_BODY_MAX_CHARS", "3500"))
-MAX_EMAILS_RUN = int(os.environ.get("GEMINI_MAX_EMAILS_PER_RUN", "3"))
+MAX_EMAILS_RUN = int(os.environ.get("GEMINI_MAX_EMAILS_PER_RUN", "10"))
 
 NOTION_TOKEN   = os.environ["NOTION_TOKEN"]
 NOTION_DB_ID   = os.environ["NOTION_DB_ID"]
@@ -65,7 +66,7 @@ EXCLUDED_SENDERS = [
     "palaciodehierro", "palacio de hierro"
 ]
 
-# Asuntos que no merecen llamada a Gemini (ahorra cuota y tiempo)
+# Asuntos que no merecen llamada a Groq (ahorra cuota y tiempo)
 SKIP_SUBJECT_RE = re.compile(
     r"agradecimiento|gracias por (tu|su)|postulaciones pendientes|"
     r"confirmaci[oó]n de (registro|cuenta)|newsletter|unsubscribe|"
@@ -76,7 +77,7 @@ SKIP_SUBJECT_RE = re.compile(
     re.IGNORECASE,
 )
 
-# Indicadores básicos de vacantes para pre-filtrado (ahorra cuota Gemini)
+# Indicadores básicos de vacantes para pre-filtrado (ahorra cuota Groq)
 JOB_INDICATORS_RE = re.compile(
     r"vacante|empleo|puesto|posici[oó]n|oportunidad|contrataci[oó]n|"
     r"job vacancy|job opening|hiring|vacancy|career|work|"
@@ -108,7 +109,7 @@ def _set_seen(mail, eid, seen: bool):
 
 def should_skip_groq(subject: str, body: str) -> tuple[bool, str]:
     """
-    Pre-filtrado antes de llamar a Gemini para ahorrar cuota.
+    Pre-filtrado antes de llamar a Groq para ahorrar cuota.
     Devuelve (True, motivo) si debe saltarse, (False, "") si procede.
     """
     # Combinar subject y body para análisis
@@ -172,7 +173,7 @@ def fetch_unread_emails(mail):
 
     total = len(email_ids)
     if total > MAX_EMAILS_RUN:
-        print(f"📨 {total} correo(s) nuevos — procesando {MAX_EMAILS_RUN} esta vez (límite GEMINI_MAX_EMAILS_PER_RUN)")
+        print(f"📨 {total} correo(s) nuevos — procesando {MAX_EMAILS_RUN} esta vez (límite GROQ_MAX_EMAILS_PER_RUN)")
         email_ids = email_ids[:MAX_EMAILS_RUN]
     else:
         print(f"📨 {total} correo(s) nuevos encontrados")
@@ -286,9 +287,14 @@ def _gemini_wait_seconds(resp, attempt):
     return min(GEMINI_MAX_BACKOFF, GEMINI_MIN_DELAY * (2 ** attempt)) + random.uniform(0, 3)
 
 
-def extract_jobs_with_gemini(email_body, retries=None):
+def extract_jobs_with_gemini(email_body, retries=None, use_fallback=False):
     if retries is None:
         retries = GEMINI_MAX_RETRY
+    
+    # Use fallback model if specified or if this is a retry attempt
+    model_to_use = GEMINI_FALLBACK_MODEL if use_fallback else GEMINI_MODEL
+    if use_fallback:
+        print(f"  🔄 Usando modelo fallback: {model_to_use}")
 
     headers = {
         "Content-Type": "application/json",
@@ -312,7 +318,7 @@ def extract_jobs_with_gemini(email_body, retries=None):
     for attempt in range(retries):
         _gemini_throttle()
         resp = requests.post(
-            f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}",
+            f"https://generativelanguage.googleapis.com/v1beta/models/{model_to_use}:generateContent?key={GEMINI_API_KEY}",
             headers=headers,
             json=payload,
             timeout=60,
@@ -325,6 +331,13 @@ def extract_jobs_with_gemini(email_body, retries=None):
             time.sleep(wait)
             continue
         if resp.status_code == 503:
+            if not use_fallback and attempt == retries - 1:
+                print(f"  ⚠️ Modelo principal falló con 503, intentando con fallback...")
+                try:
+                    return extract_jobs_with_gemini(email_body, retries=2, use_fallback=True)
+                except Exception as fallback_error:
+                    print(f"  ❌ Fallback también falló: {fallback_error}")
+                    raise
             wait = _gemini_wait_seconds(resp, attempt)
             print(f"  ⏳ Gemini servicio no disponible (503), reintentando en {wait:.0f}s...")
             time.sleep(wait)
@@ -342,7 +355,7 @@ def extract_jobs_with_gemini(email_body, retries=None):
             print(f"  🔴 Gemini raw error: {resp.text}")
             raise GeminiFatalError(
                 f"Modelo Gemini '{GEMINI_MODEL}' no existe o fue retirado. "
-                f"Actualiza GEMINI_MODEL en config/layer_3.env (recomendado: gemini-pro-latest). "
+                f"Actualiza GEMINI_MODEL en config/layer_3.env (recomendado: gemini-2.5-flash). "
                 f"Ver https://ai.google.dev/docs/deprecations"
             )
         if resp.status_code != 200:
