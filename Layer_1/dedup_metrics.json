@@ -1,13 +1,13 @@
 {
-  "timestamp": "2026-09-10T10:23:26.876643",
+  "timestamp": "2026-09-10T20:21:34.612417",
   "window_days": 60,
   "window_label": "2 meses",
-  "total_records_analyzed": 139,
-  "active_records": 39,
+  "total_records_analyzed": 124,
+  "active_records": 24,
   "archived_records": 100,
-  "duplicate_groups_found": 21,
+  "duplicate_groups_found": 19,
   "dedup_flags_assigned": 0,
-  "terminal_state_omitted": 6,
+  "terminal_state_omitted": 4,
   "filter_metrics": {},
   "dry_run": false
 }
