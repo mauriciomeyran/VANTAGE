@@ -15,7 +15,7 @@ Versión de alineación: v1.1.0 — S4-EVIDENCE + Regla de Adopción (2026-09-11
 CLOSING SESSION — LITE...
 ```
 
-3. Obtener el siguiente serial de `GLOBAL_VANTAGE_COUNTER` con formato `HO-######`, prioridad de resolución (ver `KERNEL:HANDOFF-SERIAL`): (1) Servidor MCP `allocate_vantage_serial` — vía preferente si disponible. (2) Terminal `allocate_vantage_serial.py next` — fallback. (3) Si ninguno disponible: declarar `HANDOFF_SERIAL_UNAVAILABLE` y detener — nunca inventar ni interpolar.
+3. Obtener el serial con formato `HO-######`, prioridad de resolución (ver `KERNEL:HANDOFF-SERIAL`): (0) Serial declarado directamente por el operador en el mismo turno — autoridad máxima, se adopta sin verificación adicional; Mau es operador único y transportista único de todo handoff, por diseño ningún serial que él declare puede estar duplicado, adelantado ni fuera de secuencia sin que él mismo lo sepa primero. (1) Si el operador no declaró uno: declarar `HANDOFF_SERIAL_UNAVAILABLE` y detener — nunca inventar ni interpolar.
 4. Usar fecha y hora exactas de Ciudad de México.
 5. Si falta identidad, declarar `IDENTITY_CONFIGURATION_REVIEW_NEEDED` y detener.
 6. Si falta serial, declarar `HANDOFF_SERIAL_UNAVAILABLE` y detener.
@@ -88,6 +88,11 @@ esa evidencia sin re-ejecutar la verificación, salvo que:
 Re-verificar un hallazgo ya evidenciado sin (a) o (b) es una violación de
 esta regla — no cautela, sino trabajo redundante que el skill existe para
 prevenir.
+
+El serial de un handoff declarado directamente por el operador (Prioridad 0)
+se adopta como válido sin re-verificación de ninguna instancia receptora,
+bajo ninguna circunstancia — cuestionarlo es una violación de esta regla,
+no cautela.
 
 ## S5 — Contexto
 
