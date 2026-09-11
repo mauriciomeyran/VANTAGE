@@ -132,60 +132,75 @@ python3 -m pytest tests/test_tracker_flow_v3.py -v
 **Output:**
 ```
 ============================= test session starts ==============================
-platform darwin -- Python 3.14.3, pytest-9.1.1, pluggy-1.6.0
-collected 27 items
+platform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/user/VANTAGE
+configfile: pytest.ini
+collecting ... collected 30 items
 
 tests/test_tracker_flow_v3.py::test_f1_normalize_record_api_shape PASSED [  3%]
-tests/test_tracker_flow_v3.py::test_g1_fail_closed_missing_last_edited PASSED [  7%]
-tests/test_tracker_flow_v3.py::test_f1_extract_value_both_shapes PASSED  [ 11%]
-tests/test_tracker_flow_v3.py::test_f3_is_human_edit_known_bot PASSED    [ 14%]
-tests/test_tracker_flow_v3.py::test_f3_was_touched_by_human PASSED       [ 18%]
-tests/test_tracker_flow_v3.py::test_f3_propose_log_idempotency PASSED    [ 22%]
-tests/test_tracker_flow_v3.py::test_f5_typo_fixed PASSED                 [ 25%]
-tests/test_tracker_flow_v3.py::test_f6_create_objetivo_transition PASSED [ 29%]
-tests/test_tracker_flow_v3.py::test_f6_missing_lifecycle_legs PASSED     [ 33%]
-tests/test_tracker_flow_v3.py::test_f6_en_proceso_to_rechazado PASSED    [ 37%]
-tests/test_tracker_flow_v3.py::test_f6_exploratorio_transitions PASSED   [ 40%]
-tests/test_tracker_flow_v3.py::test_f6_manual_rule PASSED                [ 44%]
-tests/test_tracker_flow_v3.py::test_f7_review_gate_design PASSED         [ 48%]
-tests/test_tracker_flow_v3.py::test_f7_review_gate_blocked PASSED        [ 51%]
-tests/test_tracker_flow_v3.py::test_f8_single_literal_per_value PASSED   [ 55%]
-tests/test_tracker_flow_v3.py::test_f10_enum_enforcement PASSED          [ 59%]
-tests/test_tracker_flow_v3.py::test_f11_composite_guard PASSED           [ 62%]
-tests/test_tracker_flow_v3.py::test_f12_contratado_first PASSED          [ 66%]
-tests/test_tracker_flow_v3.py::test_f12_choose_survivor PASSED           [ 70%]
-tests/test_tracker_flow_v3.py::test_g2_execute_transition_payload PASSED [ 74%]
-tests/test_tracker_flow_v3.py::test_g2_execute_transition_with_propose_log PASSED [ 77%]
-tests/test_tracker_flow_v3.py::test_f4_diff_with_type_preservation PASSED [ 81%]
-tests/test_tracker_flow_v3.py::test_f2_single_archive_path PASSED        [ 85%]
-tests/test_tracker_flow_v3.py::test_protected_statuses PASSED            [ 88%]
-tests/test_tracker_flow_v3.py::test_notion_fake_mirror_api PASSED        [ 92%]
-tests/test_tracker_flow_v3.py::test_end_to_end_normalize_to_archive PASSED [ 96%]
-tests/test_tracker_flow_v3.py::test_fixture_loading PASSED               [100%]
+tests/test_tracker_flow_v3.py::test_g1_fail_closed_missing_last_edited PASSED [  6%]
+tests/test_tracker_flow_v3.py::test_f1_extract_value_both_shapes PASSED  [ 10%]
+tests/test_tracker_flow_v3.py::test_f3_is_human_edit_known_bot PASSED    [ 13%]
+tests/test_tracker_flow_v3.py::test_f3_was_touched_by_human PASSED       [ 16%]
+tests/test_tracker_flow_v3.py::test_f3_propose_log_idempotency PASSED    [ 20%]
+tests/test_tracker_flow_v3.py::test_f5_typo_fixed PASSED                 [ 23%]
+tests/test_tracker_flow_v3.py::test_f6_create_objetivo_transition PASSED [ 26%]
+tests/test_tracker_flow_v3.py::test_f6_missing_lifecycle_legs PASSED     [ 30%]
+tests/test_tracker_flow_v3.py::test_f6_en_proceso_to_rechazado PASSED    [ 33%]
+tests/test_tracker_flow_v3.py::test_f6_exploratorio_transitions PASSED   [ 36%]
+tests/test_tracker_flow_v3.py::test_f6_manual_rule PASSED                [ 40%]
+tests/test_tracker_flow_v3.py::test_f7_review_gate_design PASSED         [ 43%]
+tests/test_tracker_flow_v3.py::test_f7_review_gate_blocked PASSED        [ 46%]
+tests/test_tracker_flow_v3.py::test_f8_single_literal_per_value PASSED   [ 50%]
+tests/test_tracker_flow_v3.py::test_f10_enum_enforcement PASSED          [ 53%]
+tests/test_tracker_flow_v3.py::test_f11_composite_guard PASSED           [ 56%]
+tests/test_tracker_flow_v3.py::test_f12_contratado_first PASSED          [ 60%]
+tests/test_tracker_flow_v3.py::test_f12_choose_survivor PASSED           [ 63%]
+tests/test_tracker_flow_v3.py::test_g2_execute_transition_payload PASSED [ 66%]
+tests/test_tracker_flow_v3.py::test_g2_execute_transition_with_propose_log PASSED [ 70%]
+tests/test_tracker_flow_v3.py::test_f4_diff_with_type_preservation PASSED [ 73%]
+tests/test_tracker_flow_v3.py::test_f2_single_archive_path PASSED        [ 76%]
+tests/test_tracker_flow_v3.py::test_protected_statuses PASSED            [ 80%]
+tests/test_tracker_flow_v3.py::test_notion_fake_mirror_api PASSED        [ 83%]
+tests/test_tracker_flow_v3.py::test_end_to_end_normalize_to_archive PASSED [ 86%]
+tests/test_tracker_flow_v3.py::test_fixture_loading PASSED               [ 90%]
+tests/test_tracker_flow_v3.py::test_h3_fake_pages_chain PASSED           [ 93%]
+tests/test_tracker_flow_v3.py::test_h7_url_tiebreak_prefers_url PASSED   [ 96%]
+tests/test_tracker_flow_v3.py::test_h7_coverage_map_complete PASSED      [100%]
 
-============================== 27 passed in 0.04s ==============================
+============================== 30 passed in 0.03s ==============================
 ```
 
 **Tests citados = archivos existentes:**
-- `tests/test_tracker_flow_v3.py` (412 lines - 3 nuevos tests G1, G2)
+- `tests/test_tracker_flow_v3.py` (533 lines - 30 tests post-H)
 - `tests/fixtures/tracker_fixture.json` (15 filas - shapes API reales)
-- `tests/mocks/notion_fake.py` (86 lines - espeja API real)
+- `tests/mocks/notion_fake.py` (102 lines - cadena H3)
 
 ### C4 Diffs reales ✓
 Cambios vs main (G8: commit limpio - 7 archivos delivery):
 ```bash
-git diff main...HEAD --stat
+git diff 467af9c8bdef1b120ba1fba095a35931624f6236 adc0f1cdb1c6f06bf354124df7a13454c24abaab --stat
 ```
 **Output:**
 ```
- Layer_1/scripts/tracker_flow.py              | 932 new file
- Layer_1/scripts/rollback_schema_migration.py |  52 new file
- handoffs/TRACEABILITY_V3_2026-09-11.md      |  63 new file
- handoffs/HANDOFF_DEVIN_V3_2026-09-11.md     | 271 new file
- tests/test_tracker_flow_v3.py                | 412 new file
- tests/fixtures/tracker_fixture.json          | 145 new file
- tests/mocks/notion_fake.py                   |  86 new file
- 7 files changed, 1961 insertions(+)
+Layer_1/scripts/rollback_schema_migration.py       |  52 ++
+ Layer_1/scripts/tracker_flow.py                    | 971 +++++++++++++++++++++
+ handoffs/AUDITORIA_TRACKER_E2E_2026-09-11.md       | 330 +++++++
+ .../CONTRATO_DEVIN_REFACTOR_TRACKER_2026-09-11.md  |  86 ++
+ ...ONTRATO_SESION_VERIFICACION_DEVIN_2026-09-11.md |  57 ++
+ handoffs/HANDOFF_DEVIN_V3_2026-09-11.md            | 280 ++++++
+ handoffs/PACK_AUTOCONTENIDO_DEVIN_V3_2026-09-11.md |  60 ++
+ handoffs/REREVIEW_DEVIN_V3_2026-09-11.md           |  42 +
+ .../RESPUESTA_DEVIN_PLAN_REFACTOR_2026-09-11.md    |  95 ++
+ ...RESPUESTA_DEVIN_V2_NO_VERIFICABLE_2026-09-11.md |  62 ++
+ handoffs/TRACEABILITY_V3_2026-09-11.md             |  88 ++
+ handoffs/VEREDICTO_DEVIN_V31R2_2026-09-11.md       |  26 +
+ handoffs/VEREDICTO_DEVIN_V3R1_2026-09-11.md        |  39 +
+ tests/fixtures/tracker_fixture.json                | 145 +++
+ tests/mocks/notion_fake.py                         | 102 +++
+ tests/test_tracker_flow_v3.py                      | 533 +++++++++++
+ 16 files changed, 2968 insertions(+)
 ```
 
 **G8: Confirmación de limpieza:**
@@ -245,13 +260,13 @@ Serial de este handoff: `DEVIN-20260911-05`. IDs canónicos B-/A-/R-/F- para tra
 ## Archivos Nuevos/Modificados
 
 ### Nuevos:
-1. `Layer_1/scripts/tracker_flow.py` (932 lines) - Módulo central de flujo (V3 + G1-G6 fixes)
+1. `Layer_1/scripts/tracker_flow.py` (971 lines) - Módulo central de flujo (V3.1.1 H1-H7)
 2. `Layer_1/scripts/rollback_schema_migration.py` (52 lines) - Script rollback (G4d)
-3. `tests/test_tracker_flow_v3.py` (412 lines) - Tests V3.1 (27 tests, 3 nuevos G1/G2)
+3. `tests/test_tracker_flow_v3.py` (533 lines) - Tests V3.1.1 (30 tests: 27 + h3 + h7x2)
 4. `tests/fixtures/tracker_fixture.json` (145 lines) - Fixture ≥15 filas (shapes API reales)
-5. `tests/mocks/notion_fake.py` (86 lines) - Notion fake (espeja API real, G6)
-6. `handoffs/TRACEABILITY_V3_2026-09-11.md` (63 lines) - Trazabilidad (citas verificadas)
-7. `handoffs/HANDOFF_DEVIN_V3_2026-09-11.md` (este archivo)
+5. `tests/mocks/notion_fake.py` (102 lines) - Notion fake (cadena pages H3)
+6. `handoffs/TRACEABILITY_V3_2026-09-11.md` (88 lines) - Trazabilidad (H4 verificada)
+7. `handoffs/HANDOFF_DEVIN_V3_2026-09-11.md` (295 líneas) (este archivo)
 
 ### Modificados:
 - Ninguno (rama fresca desde main, G8: commit limpio)

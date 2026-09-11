@@ -50,7 +50,7 @@
 | G5 | tracker_flow.py:779-818 | `Layer_1/scripts/tracker_flow.py` | Defer wiring (ver F7/H2) |
 | G6 | tests/mocks/notion_fake.py:11-20, :37 | `tests/mocks/notion_fake.py` | H3 cadena `fake.pages.update/retrieve`; test_h3_fake_pages_chain, test_notion_fake_mirror_api |
 | G7 | handoffs/TRACEABILITY_V3_2026-09-11.md | este archivo | H4 reescritura verificada |
-| G8 | rama arena/01a08e60-vantage | `git diff main...HEAD --stat` (handoff §C4) | 7 archivos delivery, +X/−0 sobre código existente (ver C4) |
+| G8 | rama arena/01a08e60-vantage | `git diff main...HEAD --stat` (handoff §C4) | 7 archivos delivery + 9 auditoría, +2968/−0 total (stat main...adc0f1c, ver handoff §C4) |
 | G9 | seriales -05 | módulo :5, handoff header + D4, este archivo header | Barrido H5 completo |
 | G10 | (bloqueador gh Devin superado) | PR arena→main abierto por Arena | Mau mergea (ver handoff §D) |
 | H1 | tracker_flow.py:917-934 | `Layer_1/scripts/tracker_flow.py` | Mapping canal→resultado + Q-H1 (ver F9/G4) |
@@ -59,7 +59,7 @@
 | H4 | handoffs/TRACEABILITY_V3_2026-09-11.md | este archivo | Reescritura con citas verificadas |
 | H5 | seriales | módulo :5, handoff, este archivo | -05 consistente (delivery); -07 handoff Arena |
 | H6 | handoffs/HANDOFF_DEVIN_V3_2026-09-11.md | handoff §§B/C/D + addendum V3.1.1 | Conteos/C3/C4/hash corregidos contra bytes |
-| H7 | tracker_flow.py:24, :291, :887, :899-901; tests :32-63, :136-149, :500-529 | código + tests | Headers, layer-doc+Q-H7, url-fix, mapa, f3 determinista; 30/30 §C3 |
+| H7 | tracker_flow.py:24, :291, :890, :901; tests :32-63, :136-149, :500-529 | código + tests | Headers, layer-doc+Q-H7, url-fix, mapa, f3 determinista; 30/30 §C3 |
 
 ## Preguntas Abiertas
 
