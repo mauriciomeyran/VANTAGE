@@ -1,0 +1,145 @@
+[
+  {
+    "id": "test-001",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Contratado"}},
+      "NAD": {"date": {"start": "2026-01-01"}},
+      "URL": {"url": "https://example.com/job/1"},
+      "Score": {"number": 85}
+    }
+  },
+  {
+    "id": "test-002",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Postulando"}},
+      "URL": {"url": "https://deadlink.example.com"},
+      "Score": {"number": 60}
+    }
+  },
+  {
+    "id": "test-003",
+    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_time": "2026-09-01T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "VM_Scope": {"select": {"name": "Bajo"}},
+      "Score": {"number": 45}
+    }
+  },
+  {
+    "id": "test-004",
+    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_time": "2026-09-01T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Por Revisar"}},
+      "Score": {"number": 45}
+    }
+  },
+  {
+    "id": "test-005",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Postulado"}},
+      "Score": {"number": 75}
+    }
+  },
+  {
+    "id": "test-006",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "En Proceso"}},
+      "Score": {"number": 80}
+    }
+  },
+  {
+    "id": "test-007",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Negociando"}},
+      "Score": {"number": 90}
+    }
+  },
+  {
+    "id": "test-008",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Sin Respuesta"}},
+      "Score": {"number": 70}
+    }
+  },
+  {
+    "id": "test-009",
+    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_time": "2026-09-01T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Expirada"}},
+      "Score": {"number": 30}
+    }
+  },
+  {
+    "id": "test-010",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Rechazado"}},
+      "Score": {"number": 25}
+    }
+  },
+  {
+    "id": "test-011",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Retirado"}},
+      "Score": {"number": 20}
+    }
+  },
+  {
+    "id": "test-012",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Exploratorio"}},
+      "Score": {"number": 40}
+    }
+  },
+  {
+    "id": "test-013",
+    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_time": "2026-09-01T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "InvalidStatus"}},
+      "Score": {"number": 50}
+    }
+  },
+  {
+    "id": "test-014",
+    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_time": "2026-09-01T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Score": {"number": 55},
+      "URL": {"url": "https://example.com/job/14"},
+      "layer": {"number": 1}
+    }
+  },
+  {
+    "id": "test-015",
+    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_time": "2026-09-01T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Score": {"number": 55},
+      "URL": {"url": "https://example.com/job/15"},
+      "layer": {"number": 2}
+    }
+  }
+]
