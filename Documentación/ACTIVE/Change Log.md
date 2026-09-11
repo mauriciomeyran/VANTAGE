@@ -1,5 +1,19 @@
 # V | CHANGELOG
 
+Tipo: [REVERT] [CODE]
+Alcance: layer_3_mail.py, layer_3.env
+Contexto:
+- Revert intencional de la migración v9.21.52 (Groq → Gemini): retorno a Groq como proveedor de LLM.
+- Razón del revert: Inestabilidad y errores de esquema/deprecación en el endpoint de Gemini. Se migró a Groq aprovechando el modelo qwen/qwen3.8-27b para garantizar JSON estructurado estricto.
+Cambios observados:
+1. Variables de configuración restablecidas a nomenclatura GROQ_* (GROQ_API_KEY, GROQ_MODEL, GROQ_MIN_DELAY_SEC).
+1. Actualización de modelo activo a qwen/qwen3.8-27b y ajuste del delay entre peticiones a 5.0s para evitar el rate limit por Tokens Per Minute (TPM).
+1. Implementación de sanitización ASCII en el cuerpo del correo previo al payload JSON para eliminar errores 400 Bad Request por caracteres de control.
+Estado: APLICADO Y VALIDADO EN PRODUCCIÓN — Pipeline ejecutado con éxito en la rama main (🏁 VL3 terminó — no quedan correos pendientes), procesando y deduplicando alertas de empleo en Notion sin errores de red o sintaxis.
+IDs afectados: Ninguno (refactor de código de backend/pipeline).
+Pendientes:
+- Ejecutar commit y push a GitHub (vgit) para sincronizar el estado local verificado con el repositorio remoto.
+---
 Tipo: [OPS]
 Documento modificado: Ninguno en Notion — auditoría de 15 PDFs finales del batch (Beyond, Confidencial GVM, Confidencial Gte.Nacional VM, Eurokor, GDC Inmobiliaria, H&M Junior Retail Designer, IKEA, Inditex, Intimissimi, Juguetron, SARELLY, ServiciosAndrei/Moygo, Tendam, Walmart, ZaraHome).
 Documentos potencialmente afectados: Ninguno — trabajo de auditoría de entregables, no de especificación normativa.
