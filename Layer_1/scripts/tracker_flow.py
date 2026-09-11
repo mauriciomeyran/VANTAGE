@@ -88,6 +88,52 @@ LIVE_APPLICATION_STATUSES: Set[Status] = {
 PROTECTED_STATUSES: Set[Status] = LIVE_APPLICATION_STATUSES | TERMINAL_STATUSES
 
 
+# ── F13: Outcome → Status Auto-Sync (Paso 2b, cierre de HO-000042) ───────────
+# Notion tiene "Outcome" como propiedad separada de "Status" (historial
+# post-hoc). tracker_flow.py trata Contratado como valor directo de Status,
+# pero ningún writer seteaba Status="Contratado" automáticamente cuando
+# Outcome pasaba a Contratado — PROTECTED_STATUSES.CONTRATADO era código
+# muerto en la práctica. F13 cierra ese gap sin tocar el schema de Outcome:
+# el mapeo vive aquí, en la única fuente de verdad del vocabulario de Status.
+
+OUTCOME_TO_STATUS_SYNC: Dict[str, Status] = {
+    "Contratado": Status.CONTRATADO,
+    # Deliberadamente NO se mapean "Rechazado", "Entrevista", "Sin respuesta":
+    # esos valores de Outcome son historial de una postulación que puede seguir
+    # viva bajo otro Status (p.ej. "Entrevista" no implica terminalidad). Solo
+    # Contratado es un evento que debe reflejarse siempre en Status.
+}
+
+
+def sync_status_from_outcome(flat_record: Dict[str, Any]) -> bool:
+    """
+    F13: Corrige Status en el registro plano si Outcome indica un evento que
+    debe reflejarse ahí (hoy: solo Contratado).
+
+    Retorna True si mutó flat_record["Status"], False si no había nada que
+    corregir. No escribe a Notion — opera sobre el dict en memoria; el
+    caller (normalize_record, o cualquier script que lo invoque tras un
+    fetch) es responsable de persistir el cambio si corresponde.
+    """
+    outcome = flat_record.get("Outcome", "")
+    target_status = OUTCOME_TO_STATUS_SYNC.get(outcome)
+    if target_status is None:
+        return False
+
+    current_status = flat_record.get("Status", "")
+    if current_status == target_status.value:
+        return False
+
+    logger.info(
+        f"[F13] Outcome={outcome!r} fuera de sync con Status={current_status!r} "
+        f"— corrigiendo a {target_status.value!r}: "
+        f"{flat_record.get('id', 'unknown')[:8]}"
+    )
+    flat_record["Status"] = target_status.value
+    flat_record["_status_synced_from_outcome"] = True
+    return True
+
+
 class NextAction(str, Enum):
     """Acciones válidas de Next_Action - conjunto cerrado (9 valores)"""
     # Valores operativos
@@ -168,6 +214,11 @@ def normalize_record(api_record: Dict[str, Any]) -> Dict[str, Any]:
     
     # Extract page ID
     flat_record["id"] = api_record.get("id", "")
+    
+    # F13: Outcome → Status auto-sync. Corre en TODO record que pase por esta
+    # frontera (layer_1_run, feed_processor, mcp_dashboard, cualquier futuro
+    # consumer) — no requiere que cada script lo invoque por separado.
+    sync_status_from_outcome(flat_record)
     
     return flat_record
 
@@ -744,6 +795,83 @@ def archive_gate(record: Dict[str, Any], reason: str, evidence: str, actor: Acto
         "Next_Action": NextAction.ARCHIVAR.value,
         "Notas": notes
     }
+
+
+# ── F13b: Write-back + Batch Runner ──────────────────────────────────────────
+# normalize_record() corrige Status en memoria automáticamente (F13), pero
+# alguien tiene que persistirlo en Notion. Estas dos funciones cierran ese
+# último tramo sin acoplar tracker_flow.py a notion_client en import time
+# (el cliente se pasa como parámetro, con duck-typing sobre .pages.update).
+
+def apply_status_sync_writeback(notion_client: Any, flat_record: Dict[str, Any]) -> bool:
+    """
+    F13b: Si flat_record trae _status_synced_from_outcome=True (seteado por
+    sync_status_from_outcome dentro de normalize_record), escribe el Status
+    corregido de vuelta a Notion. No vuelve a llamar a is_mutable() — la
+    corrección Outcome→Status es una reconciliación de integridad, no una
+    transición de negocio arbitraria, y Contratado es admisible sin importar
+    el actor (F12: Contratado siempre gana).
+
+    Retorna True si escribió, False si no había nada pendiente.
+    """
+    if not flat_record.get("_status_synced_from_outcome"):
+        return False
+
+    page_id = flat_record.get("id", "")
+    if not page_id:
+        logger.warning("[F13b] Sync pendiente sin page id — no se puede escribir")
+        return False
+
+    notion_client.pages.update(
+        page_id=page_id,
+        properties=to_notion_properties({"Status": flat_record["Status"]}),
+    )
+    logger.info(f"[F13b] Status sincronizado en Notion: {page_id[:8]} → {flat_record['Status']}")
+    return True
+
+
+def run_outcome_status_sync(notion_client: Any, database_id: str) -> Dict[str, int]:
+    """
+    F13b: Corre la reconciliación Outcome→Status sobre TODO el Tracker en una
+    sola invocación — este es el punto de entrada pensado para automatizarse
+    vía cron/launchd/Raycast (no hay webhooks nativos de Notion en este stack,
+    así que "automático" aquí significa "un comando, programable", no
+    "reactivo en tiempo real").
+
+    Uso típico (crontab o launchd, ejecutar cada N minutos/horas):
+        python3 -c "
+        from notion_client import Client
+        from tracker_flow import run_outcome_status_sync
+        import os
+        client = Client(auth=os.environ['NOTION_TOKEN'])
+        run_outcome_status_sync(client, os.environ['NOTION_DB_OPPORTUNITIES'])
+        "
+
+    Retorna conteos: {"checked": N, "synced": N, "skipped": N}.
+    """
+    checked = synced = skipped = 0
+    cursor: Optional[str] = None
+
+    while True:
+        kwargs: Dict[str, Any] = {"database_id": database_id, "page_size": 100}
+        if cursor:
+            kwargs["start_cursor"] = cursor
+        response = notion_client.databases.query(**kwargs)
+
+        for api_record in response.get("results", []):
+            checked += 1
+            flat_record = normalize_record(api_record)  # F13 corre adentro
+            if apply_status_sync_writeback(notion_client, flat_record):
+                synced += 1
+            else:
+                skipped += 1
+
+        if not response.get("has_more"):
+            break
+        cursor = response.get("next_cursor")
+
+    logger.info(f"[F13b] Reconciliación completa: {checked} revisados, {synced} sincronizados")
+    return {"checked": checked, "synced": synced, "skipped": skipped}
 
 
 def to_notion_properties(value_dict: Dict[str, Any]) -> Dict[str, Any]:
