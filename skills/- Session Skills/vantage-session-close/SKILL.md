@@ -6,7 +6,7 @@ description: Cierre Lite de baja latencia con handoff serializado, identidad, ti
 # VANTAGE: SESSION CLOSE LITE
 
 ID Canónico: `KERNEL:SESSION-LEDGER` · Trigger: cierre de sesión (invocación explícita del operador)
-Versión de alineación: v1.0.0 — Versionado inicial (2026-09-05)
+Versión de alineación: v1.1.0 — S4-EVIDENCE + Regla de Adopción (2026-09-11)
 
 1. Leer `agent.family` y `agent.instance` desde Project Instructions. No pedir confirmación.
 2. Emitir:
@@ -62,6 +62,32 @@ Deuda técnica heredada.
 ## S4 — Última acción
 
 Estado verificado post-ejecución.
+
+### S4-EVIDENCE (obligatorio si S4 incluye escritura o verificación de datos)
+
+Para cada afirmación verificable en S4, adjuntar:
+- **Comando exacto** corrido (copiable, no descrito)
+- **Output crudo** (primeras/últimas líneas reales, no interpretación)
+
+Orden implícito: al ser Mau el operador único que transporta cada handoff,
+toda evidencia en S4 se asume anterior a la emisión del handoff que la
+contiene — no requiere timestamp propio para establecer secuencia.
+
+Si no hay evidencia adjunta para una afirmación de S4, esa afirmación se
+marca `UNVERIFIED` explícitamente — nunca se presenta como hecho consumado
+sin evidencia ni sin la etiqueta.
+
+## Regla de Adopción (nueva, v1.1.0)
+
+La instancia receptora de un handoff con S4-EVIDENCE completo debe adoptar
+esa evidencia sin re-ejecutar la verificación, salvo que:
+(a) el operador la contradiga explícitamente, o
+(b) la evidencia misma sea internamente inconsistente (ej. el output no
+    corresponde al comando declarado).
+
+Re-verificar un hallazgo ya evidenciado sin (a) o (b) es una violación de
+esta regla — no cautela, sino trabajo redundante que el skill existe para
+prevenir.
 
 ## S5 — Contexto
 

@@ -6,7 +6,7 @@ description: Apertura Lite de sesión VANTAGE con recepción y registro de hando
 # VANTAGE: SESSION OPEN LITE
 
 ID Canónico: `KERNEL:SESSION-LEDGER` · Trigger: apertura de sesión (invocación explícita del operador)
-Versión de alineación: v1.0.0 — Versionado inicial (2026-09-05)
+Versión de alineación: v1.1.0 — Alineación de versión con vantage-present-handoff/close (2026-09-11)
 
 1. Leer `agent.family` y `agent.instance` desde Project Instructions. No pedir confirmación.
 2. Emitir:
