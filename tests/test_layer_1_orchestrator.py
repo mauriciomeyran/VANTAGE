@@ -219,8 +219,13 @@ def test_f3_score_contacto_directo():
 
 
 def test_f3_score_parity_with_layer_1_run():
-    """F3: mismo input → mismo score que layer_1_run.calculate_score_v6"""
-    import layer_1_run as old
+    """F3: mismo input → mismo score que layer_1_run.calculate_score_v6 (Archive/)"""
+    import importlib.util as _ilu
+    _arch = Path(__file__).resolve().parent.parent / "Archive" / "Legacy_Scripts" / "layer_1_run.py"
+    _spec = _ilu.spec_from_file_location("layer_1_run_archived", _arch)
+    assert _spec is not None and _spec.loader is not None
+    old = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(old)
     cases = [
         {},
         {"Marca": "Zara", "Rol": "VM Manager", "JD": "visual store", "Contacto": "a@b.c"},
@@ -1074,22 +1079,17 @@ def test_ingesta_url_gate_module_shared():
 
 
 def test_batch_operations_retire_decision():
-    """Batch Q-10: decisión RETIRAR adoptada; move físico = G6 (aún en árbol activo)."""
-    batch_path = (
-        Path(__file__).resolve().parent.parent / "Layer_1" / "scripts" / "batch_operations.py"
-    )
-    assert batch_path.exists(), "G6 moverá a Archive/; hasta entonces existe"
-    # Orquestador no lo invoca
-    orch_path = (
-        Path(__file__).resolve().parent.parent / "Layer_1" / "scripts" / "layer_1_orchestrator.py"
-    )
-    with open(orch_path, "r") as f:
-        orch = f.read()
+    """Batch Q-10/G6: RETIRADO — ya no está en árbol activo; vive en Archive/."""
+    root = Path(__file__).resolve().parent.parent
+    active = root / "Layer_1" / "scripts" / "batch_operations.py"
+    archived = root / "Archive" / "Legacy_Scripts" / "batch_operations.py"
+    assert not active.exists(), "batch_operations debe salir del árbol activo (G6)"
+    assert archived.exists(), "batch_operations debe vivir en Archive/ (cero trash físico)"
+    orch_path = root / "Layer_1" / "scripts" / "layer_1_orchestrator.py"
+    orch = orch_path.read_text()
     assert "batch_operations" not in orch
-    # Case Target legacy aún en archivo (no-op prod; G6 retira)
-    with open(batch_path, "r") as f:
-        content = f.read()
-    assert 'target_status = "Target"' in content
+    content = archived.read_text()
+    assert 'target_status = "Target"' in content  # legacy preserved in Archive
 
 
 # ── G2c-2: class_b_guard + transversales (snapshot, conditional writes, anti-rewrite) ──
@@ -1331,25 +1331,17 @@ def test_transversal_anti_rewrite_dedup_already_flagged():
 
 
 def test_consolidate_duplicates_exists():
-    """F6: consolidate_duplicates.py existe (move a Archive/ = G6, no trash)."""
-    consolidate_path = (
-        Path(__file__).resolve().parent.parent
-        / "Layer_1" / "scripts" / "consolidate_duplicates.py"
-    )
-    assert consolidate_path.exists()
-    with open(consolidate_path, "r") as f:
-        lines = len(f.readlines())
-    assert lines == 509
-    # Orquestador NO lo importa ni lo llama (dedup unificado = tracker_flow.choose_survivor)
-    orch_path = (
-        Path(__file__).resolve().parent.parent / "Layer_1" / "scripts" / "layer_1_orchestrator.py"
-    )
-    with open(orch_path, "r") as f:
-        orch = f.read()
+    """F6/G6: consolidate_duplicates.py movido a Archive/ (cero trash físico)."""
+    root = Path(__file__).resolve().parent.parent
+    active = root / "Layer_1" / "scripts" / "consolidate_duplicates.py"
+    archived = root / "Archive" / "Legacy_Scripts" / "consolidate_duplicates.py"
+    assert not active.exists(), "consolidate_duplicates debe salir del árbol activo (G6)"
+    assert archived.exists()
+    lines = len(archived.read_text().splitlines())
+    assert lines >= 400
+    orch = (root / "Layer_1" / "scripts" / "layer_1_orchestrator.py").read_text()
     assert "import consolidate_duplicates" not in orch
     assert "from consolidate_duplicates" not in orch
-    # No llamada runtime (el nombre solo puede aparecer en comentarios/docstrings)
-    assert "consolidate(" not in orch
     assert not any(
         line.strip().startswith(("import ", "from ")) and "consolidate_duplicates" in line
         for line in orch.splitlines()
@@ -2235,6 +2227,69 @@ def test_g5_orchestrator_inbound_bypass_and_nad_bot():
     assert metrics["errors"] == 0
     assert metrics["archives"] >= 1
     assert any(w[1] == "cov-nad-bot" for w in client.writes)
+
+
+
+# ── G6: retiro — archivos fuera del árbol activo + vl1 → orchestrator ────────
+
+def test_g6_layer_1_run_not_in_active_tree():
+    """G6: layer_1_run.py NO existe en Layer_1/scripts/; sí en Archive/."""
+    root = Path(__file__).resolve().parent.parent
+    assert not (root / "Layer_1" / "scripts" / "layer_1_run.py").exists()
+    assert (root / "Archive" / "Legacy_Scripts" / "layer_1_run.py").exists()
+
+
+def test_g6_dash_runner_not_in_active_tree():
+    """G6: layer_1_run_dash.py NO existe en Dashboard/scripts/; sí en Archive/."""
+    root = Path(__file__).resolve().parent.parent
+    assert not (root / "Dashboard" / "scripts" / "layer_1_run_dash.py").exists()
+    assert (root / "Archive" / "Dashboard" / "layer_1_run_dash.py").exists()
+
+
+def test_g6_pipeline_points_to_orchestrator():
+    """G6: layer_1_pipeline.sh default invoca layer_1_orchestrator.py."""
+    root = Path(__file__).resolve().parent.parent
+    sh = (root / "Layer_1" / "layer_1_pipeline.sh").read_text()
+    assert "layer_1_orchestrator.py" in sh
+    assert "python3 scripts/layer_1_run.py" not in sh
+    # batch case retired
+    assert "batch_operations.py RETIRADO" in sh or "batch_operations RETIRADO" in sh
+
+
+def test_g6_orchestrator_dry_run_cli_zero_notion():
+    """G6: vl1 path — orchestrator --dry-run con fake, exit 0, cero writes."""
+    import layer_1_orchestrator as orch
+    client = NotionClientFake()
+    client.query_data_sources = Mock(return_value={"results": []})
+    metrics = orch.run_orchestrator(client=client, dry_run=True, apply=False, dedup_audit=False)
+    assert metrics["errors"] == 0
+    assert metrics["writes"] == 0
+    assert client.writes == []
+
+
+def test_g6_no_active_import_of_layer_1_run_in_writers():
+    """G6: scripts activos de escritura no importan layer_1_run."""
+    root = Path(__file__).resolve().parent.parent
+    offenders = []
+    for path in [
+        root / "Layer_1" / "scripts" / "layer_1_orchestrator.py",
+        root / "Layer_1" / "scripts" / "feed_processor.py",
+        root / "Layer_1" / "scripts" / "backfill_class_a.py",
+        root / "Layer_1" / "scripts" / "vl1_sync.py",
+        root / "Dashboard" / "scripts" / "dashboard_validation.py",
+        root / "Dashboard" / "scripts" / "dashboard_notion.py",
+        root / "Dashboard" / "scripts" / "dashboard_routes.py",
+    ]:
+        if not path.exists():
+            continue
+        text = path.read_text()
+        for i, line in enumerate(text.splitlines(), 1):
+            s = line.strip()
+            if s.startswith("#"):
+                continue
+            if "from layer_1_run" in s or "import layer_1_run" in s:
+                offenders.append(f"{path.relative_to(root)}:{i}:{s}")
+    assert offenders == [], "imports activos de layer_1_run:\n" + "\n".join(offenders)
 
 
 

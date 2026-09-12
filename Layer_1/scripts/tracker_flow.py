@@ -249,6 +249,29 @@ def normalize_record(api_record: Dict[str, Any]) -> Dict[str, Any]:
     return flat_record
 
 
+def txt(prop):
+    """
+    Extrae valor plano de propiedad Notion (API shape).
+    Compatibilidad con el viejo layer_1_run.txt — usado por Dashboard y scripts.
+    """
+    if not prop:
+        return ""
+    t = prop.get("type") if isinstance(prop, dict) else None
+    if t == "url":
+        return prop.get("url") or ""
+    if t == "rich_text" and prop.get("rich_text"):
+        return "".join(chunk.get("plain_text", "") for chunk in prop["rich_text"])
+    if t == "select" and prop.get("select"):
+        return prop["select"].get("name", "") or ""
+    if t == "title" and prop.get("title"):
+        return "".join(chunk.get("plain_text", "") for chunk in prop["title"])
+    if t == "number":
+        return prop.get("number")
+    if t == "date" and prop.get("date"):
+        return (prop.get("date") or {}).get("start") or ""
+    return ""
+
+
 def extract_value(prop: Any) -> Any:
     """
     F4: Extract value from both API shapes and flat values.

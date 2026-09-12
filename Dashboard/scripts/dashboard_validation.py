@@ -1,5 +1,11 @@
-from layer_1_run import (
-    validate_url_pre_ingestion,
+# G6: layer_1_run archivado — decision surface vive en orquestador + url_gate
+import sys
+from pathlib import Path as _P
+_L1 = _P(__file__).resolve().parents[2] / "Layer_1" / "scripts"
+if str(_L1) not in sys.path:
+    sys.path.insert(0, str(_L1))
+from url_gate import validate_url_pre_ingestion
+from layer_1_orchestrator import (
     calculate_score_v6,
     get_vm_scope,
     get_role_class,

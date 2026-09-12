@@ -30,11 +30,11 @@ if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
 try:
-    from layer_1_run import calculate_score_v6
+    from layer_1_orchestrator import calculate_score_v6
     SCORING_AVAILABLE = True
 except ImportError:
     SCORING_AVAILABLE = False
-    pytest.skip("layer_1_run module not available", allow_module_level=True)
+    pytest.skip("layer_1_orchestrator module not available", allow_module_level=True)
 
 try:
     from feedback_loop import get_score_band

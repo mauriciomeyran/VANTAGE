@@ -29,18 +29,18 @@ except ImportError:
     pytest.skip("gate_logic module not available", allow_module_level=True)
 
 try:
-    from layer_1_run import (
+    from layer_1_orchestrator import (
         gate as gate_layer1,
         evaluate_application_status,
         evaluate_rejection_status,
         get_application_next_action,
-        txt,
-        validate_url_pre_ingestion
     )
+    from tracker_flow import txt
+    from url_gate import validate_url_pre_ingestion
     LAYER1_AVAILABLE = True
 except ImportError:
     LAYER1_AVAILABLE = False
-    pytest.skip("layer_1_run module not available", allow_module_level=True)
+    pytest.skip("layer_1_orchestrator module not available", allow_module_level=True)
 
 try:
     from priority_logic import infer_prioridad, get_importancia_bucket, apply_importancia_matrix

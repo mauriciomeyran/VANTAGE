@@ -43,7 +43,7 @@ from feed_processor import (  # noqa: E402
     normalize_record_fields,
     query_notion_db,
 )
-from layer_1_run import is_agregador  # noqa: E402
+from url_gate import is_agregador  # noqa: E402  # G6: layer_1_run → Archive
 from priority_logic import (  # noqa: E402
     get_importancia_bucket,
     apply_importancia_matrix,

@@ -20,7 +20,13 @@ ROOT = Path(__file__).resolve().parent.parent
 SCRIPTS = ROOT / "Layer_1" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-import layer_1_run as old  # noqa: E402
+# G6: layer_1_run archivado — load by path for parity harness
+import importlib.util as _ilu
+_arch = ROOT / "Archive" / "Legacy_Scripts" / "layer_1_run.py"
+_spec = _ilu.spec_from_file_location("layer_1_run_archived", _arch)
+assert _spec is not None and _spec.loader is not None
+old = _ilu.module_from_spec(_spec)
+_spec.loader.exec_module(old)
 import layer_1_orchestrator as new  # noqa: E402
 from tracker_flow import (  # noqa: E402
     Actor,

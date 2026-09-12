@@ -1,6 +1,6 @@
 #!/bin/bash
 # @raycast.schemaVersion 1
-# @raycast.title VANTAGE L1 Run
+# @raycast.title VANTAGE L1 Run (orchestrator v9)
 # @raycast.mode fullOutput
 # @raycast.icon 🚀
 # @raycast.packageName VANTAGE
@@ -14,6 +14,7 @@ if [ -f .env ]; then set -a; source .env; set +a; fi
 source .venv/bin/activate
 export PYTHONUNBUFFERED=1
 
+# G6: layer_1_pipeline.sh → layer_1_orchestrator.py (dry-run default)
 if bash layer_1_pipeline.sh; then
   notify_success "VANTAGE L1 Run" "✅ Pipeline L1 completado"
 else

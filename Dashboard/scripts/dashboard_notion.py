@@ -3,7 +3,13 @@ from notion_client import Client
 from dashboard_config import NOTION_TOKEN
 from dashboard_config import DATABASE_ID
 
-from layer_1_run import txt
+# G6: txt vive en tracker_flow (layer_1_run archivado)
+import sys as _sys
+from pathlib import Path as _P
+_L1 = _P(__file__).resolve().parents[2] / "Layer_1" / "scripts"
+if str(_L1) not in _sys.path:
+    _sys.path.insert(0, str(_L1))
+from tracker_flow import txt
 
 
 def get_layer_1_scripts_dir():

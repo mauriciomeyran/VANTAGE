@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# VANTAGE LAYER_1 — Pipeline Notion (core) v7.5
+# VANTAGE LAYER_1 — Pipeline Notion (core) v9.0
 # Uso: layer_1_pipeline.sh [tracker|analytics|batch|recovery|profile|feed|backfill|sync]
+# G6: entry default = layer_1_orchestrator.py (layer_1_run.py → Archive/)
 
 LAYER_1_DIR="${LAYER_1_DIR:-$HOME/Documents/03 Projects/VANTAGE/Layer_1}"
 
@@ -54,8 +55,12 @@ case "$1" in
         run_module "source_analytics.py" "📊 Source Analytics"
         ;;
     batch)
-        echo "🔄 Ejecutando operaciones batch..."
-        run_module "batch_operations.py" "🔄 Batch Operations"
+        # G6 Q-10: batch_operations.py RETIRADO → Archive/Legacy_Scripts/
+        # Target→Exploratorio ya no-op en prod (Target=0). Nada que migrar.
+        echo "ℹ️  batch_operations RETIRADO (G6 / Q-10)."
+        echo "   Script archivado en Archive/Legacy_Scripts/batch_operations.py"
+        echo "   Nada que ejecutar: Target→Exploratorio ya aplicado (0 filas Target)."
+        exit 0
         ;;
     recovery)
         echo "🔧 Verificando estado del sistema..."
@@ -138,29 +143,31 @@ case "$1" in
             exit 1
         fi
 
-        if [ ! -f "scripts/layer_1_run.py" ]; then
-            echo "❌ Error: scripts/layer_1_run.py no encontrado"
+        if [ ! -f "scripts/layer_1_orchestrator.py" ]; then
+            echo "❌ Error: scripts/layer_1_orchestrator.py no encontrado"
             exit 1
         fi
 
-        echo "📊 Ejecutando pipeline v7.5 (layer_1_run.py)..."
+        # G6: vl1 → layer_1_orchestrator.py (dry-run default; --apply explícito)
+        echo "📊 Ejecutando orquestador v9.0 (layer_1_orchestrator.py, dry-run)..."
         echo ""
-        python3 scripts/layer_1_run.py
+        python3 scripts/layer_1_orchestrator.py --dry-run
 
         if [ $? -eq 0 ]; then
             echo ""
-            echo "✅ Pipeline v7.5 completado"
+            echo "✅ Orquestador v9.0 completado (dry-run)"
+            echo "👉 Para escribir: python3 scripts/layer_1_orchestrator.py --apply"
             echo "👉 Notion: Pipeline Activo · Score >= 60 · revisar Fuente en Inbound"
             echo "=================================="
         else
             echo ""
-            echo "❌ Pipeline falló. Revisar errores arriba."
+            echo "❌ Orquestador falló. Revisar errores arriba."
             exit 1
         fi
         ;;
     *)
         echo "❌ Comando desconocido: $1"
-        echo "Uso: layer_1_pipeline.sh [tracker|analytics|batch|recovery|profile|feed|backfill|sync]"
+        echo "Uso: layer_1_pipeline.sh [tracker|analytics|batch(retired)|recovery|profile|feed|backfill|sync]"
         exit 1
         ;;
 esac
