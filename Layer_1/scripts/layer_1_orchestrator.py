@@ -279,7 +279,6 @@ def run_orchestrator(
             nad = record.get("NAD", "")
             if nad:
                 try:
-                    from datetime import datetime
                     nad_date = datetime.strptime(nad, "%Y-%m-%d")
                     if nad_date < datetime.now():
                         archive_result = archive_gate(
