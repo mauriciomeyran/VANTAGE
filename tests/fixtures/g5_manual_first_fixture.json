@@ -1,0 +1,110 @@
+[
+  {
+    "id": "g5-human-url-tracking",
+    "last_edited_by": {"object": "user", "id": "human-user-mau"},
+    "last_edited_time": "2026-09-11T18:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandiser"}]},
+      "Marca": {"select": {"name": "Zara"}},
+      "URL": {"url": "https://example.com/job?utm_source=google"},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2026-12-31"}},
+      "Last_Gate_Run": {"date": {"start": "2026-09-01T00:00:00.000Z"}},
+      "Score": {"number": 60}
+    }
+  },
+  {
+    "id": "g5-human-nad-expired",
+    "last_edited_by": {"object": "user", "id": "human-user-mau"},
+    "last_edited_time": "2026-09-12T10:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "VM Manager"}]},
+      "Marca": {"select": {"name": "Nike"}},
+      "URL": {"url": "https://careers.nike.com/job/ok"},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2020-01-01"}},
+      "Last_Gate_Run": {"date": {"start": "2026-09-01T00:00:00.000Z"}},
+      "Score": {"number": 70}
+    }
+  },
+  {
+    "id": "g5-human-live-postulado",
+    "last_edited_by": {"object": "user", "id": "human-user-mau"},
+    "last_edited_time": "2026-09-11T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Postulado"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandiser"}]},
+      "Marca": {"select": {"name": "Adidas"}},
+      "URL": {"url": "https://example.com/job/live"},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "NAD": {"date": {"start": "2026-12-01"}},
+      "Last_Gate_Run": {"date": {"start": "2026-08-01T00:00:00.000Z"}},
+      "Score": {"number": 75},
+      "Gate_Decision": {"select": {"name": "APPLIED"}},
+      "Next_Action": {"select": {"name": "Follow-up"}}
+    }
+  },
+  {
+    "id": "g5-bot-url-tracking-mutable",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandiser"}]},
+      "Marca": {"select": {"name": "Bershka"}},
+      "URL": {"url": "https://example.com/bot?utm_source=x"},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2026-12-31"}},
+      "Last_Gate_Run": {"date": {"start": "2026-06-01T00:00:00.000Z"}}
+    }
+  },
+  {
+    "id": "g5-human-before-last-run-mutable",
+    "last_edited_by": {"object": "user", "id": "human-user-old"},
+    "last_edited_time": "2026-05-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Intern"}]},
+      "Marca": {"select": {"name": "UnknownBrand"}},
+      "URL": {"url": "https://example.com/old-human"},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Bajo"}},
+      "Role_Class": {"select": {"name": "Otro"}},
+      "NAD": {"date": {"start": "2026-12-31"}},
+      "Last_Gate_Run": {"date": {"start": "2026-09-01T00:00:00.000Z"}},
+      "Score": {"number": 40}
+    }
+  },
+  {
+    "id": "g5-bot-clean-create",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandising Manager"}]},
+      "Marca": {"select": {"name": "Zara"}},
+      "URL": {"url": "https://careers.zara.com/job/clean"},
+      "JD": {"rich_text": [{"plain_text": "visual merchandising store design brand experience retail portfolio guidelines"}]},
+      "Contacto": {"rich_text": [{"plain_text": "talent@inditex.com"}]},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2026-12-31"}},
+      "Last_Gate_Run": {"date": {"start": "2026-06-01T00:00:00.000Z"}}
+    }
+  }
+]

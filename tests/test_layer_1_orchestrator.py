@@ -19,6 +19,9 @@ from layer_1_orchestrator import (
     calculate_score_v6,
     apply_gate_decision,
     manual_first_protection,
+    is_manual_first_immune,
+    preview_destructive_actions,
+    build_manual_suggestion,
     run_orchestrator,
     NotionClientFake,
     analyze_outcome_patterns,
@@ -1907,6 +1910,192 @@ def test_g4_next_action_legacy_and_canonical_in_enum():
     # Sin duplicados de value
     values = [a.value for a in NextAction]
     assert len(values) == len(set(values))
+
+
+
+# ── G5: manual-first — fixtures humano-tocadas inmunes; sugerencia ≠ ejecución ─
+
+G5_FIXTURE = Path(__file__).resolve().parent / "fixtures" / "g5_manual_first_fixture.json"
+
+
+def _g5_load():
+    import json
+    with open(G5_FIXTURE) as f:
+        return json.load(f)
+
+
+def test_g5_fixture_has_human_and_bot_rows():
+    """G5: fixture ≥4 filas con humanos recientes + bots mutables."""
+    rows = _g5_load()
+    assert len(rows) >= 4
+    humans = [r for r in rows if "human" in str(r.get("last_edited_by", {})).lower()]
+    bots = [r for r in rows if "integration-id" in str(r.get("last_edited_by", {}))]
+    assert len(humans) >= 2
+    assert len(bots) >= 1
+
+
+def test_g5_human_recent_is_immune_unit():
+    """G5: last_edited_time > Last_Gate_Run + humano → immune."""
+    rec = {
+        "id": "u1",
+        "Status": Status.OBJETIVO.value,
+        "last_edited_time": "2026-09-11T18:00:00.000Z",
+        "last_edited_by_id": "human-user-mau",
+        "Last_Gate_Run": "2026-09-01T00:00:00.000Z",
+        "URL": "https://example.com/x?utm_source=1",
+    }
+    assert is_manual_first_immune(rec) is True
+    assert manual_first_protection(rec, Actor.PIPELINE) is False
+
+
+def test_g5_bot_is_not_immune_unit():
+    """G5: bot known + tiempo viejo → mutable."""
+    rec = {
+        "id": "b1",
+        "Status": Status.OBJETIVO.value,
+        "last_edited_time": "2026-01-01T00:00:00.000Z",
+        "last_edited_by_id": "integration-id-feed-processor",
+        "Last_Gate_Run": "2026-06-01T00:00:00.000Z",
+        "URL": "https://example.com/y?utm_source=1",
+    }
+    assert is_manual_first_immune(rec) is False
+    assert manual_first_protection(rec, Actor.PIPELINE) is True
+
+
+def test_g5_suggestion_is_review_never_execution():
+    """G5: build_manual_suggestion marca execution=never + review=manual."""
+    rec = {
+        "id": "s1-url",
+        "Status": Status.OBJETIVO.value,
+        "URL": "https://example.com/z?utm_source=x",
+        "Source_Type ": "Vacante",
+        "VM_Scope": "Alto",
+        "Role_Class": "VM",
+        "Rol": "VM",
+        "Marca": "Zara",
+        "last_edited_time": "2026-09-11T18:00:00.000Z",
+        "last_edited_by_id": "human-mau",
+        "Last_Gate_Run": "2026-09-01T00:00:00.000Z",
+    }
+    sug = build_manual_suggestion(rec)
+    assert sug["execution"] == "never"
+    assert sug["review"] == "manual"
+    assert sug["immune"] is True
+    assert any(a["kind"] == "archive" for a in sug["actions"])
+    # No side-effect keys that look like a write payload root
+    assert "Status" not in sug or sug.get("Status") == rec["Status"]
+
+
+def test_g5_preview_does_not_mutate_record():
+    """G5: preview_destructive_actions no muta el dict de entrada."""
+    rec = {
+        "id": "p1",
+        "Status": Status.OBJETIVO.value,
+        "URL": "https://example.com/p?utm_source=1",
+        "Source_Type ": "Vacante",
+        "NAD": "2020-01-01",
+        "Rol": "VM",
+        "Marca": "Zara",
+        "VM_Scope": "Alto",
+        "Role_Class": "VM",
+    }
+    before = dict(rec)
+    actions = preview_destructive_actions(rec)
+    assert rec == before
+    assert actions  # al menos archive por tracking
+
+
+def test_g5_orchestrator_human_rows_zero_writes_apply_mode():
+    """G5 core: run_orchestrator apply sobre fixture — humanos 0 writes; bots sí pueden."""
+    rows = _g5_load()
+    client = NotionClientFake()
+    client.query_data_sources = Mock(return_value={"results": rows})
+
+    metrics = run_orchestrator(
+        client=client, dry_run=False, apply=True, dedup_audit=False
+    )
+
+    human_ids = {
+        "g5-human-url-tracking",
+        "g5-human-nad-expired",
+        "g5-human-live-postulado",
+    }
+    # Cero writes a filas humanas
+    written_ids = {w[1] for w in client.writes}
+    assert written_ids.isdisjoint(human_ids), f"wrote to humans: {written_ids & human_ids}"
+
+    # Sugerencias presentes para humanos inmunes
+    assert metrics["manual_protected"] >= 2
+    assert len(metrics["suggestions"]) >= 2
+    for s in metrics["suggestions"]:
+        assert s["execution"] == "never"
+        assert s["review"] == "manual"
+        assert s["id"] in human_ids or s["id"].startswith("g5-human")
+
+    # Ninguna suggestion se materializó como write
+    sug_ids = {s["id"] for s in metrics["suggestions"]}
+    assert written_ids.isdisjoint(sug_ids)
+
+    # Bot con URL tracking SÍ se archiva (control positivo)
+    bot_archives = [
+        w for w in client.writes
+        if w[1] == "g5-bot-url-tracking-mutable"
+        and isinstance(w[2], dict)
+        and w[2].get("Status") == Status.EXPIRADA.value
+    ]
+    assert len(bot_archives) == 1, "bot tracking URL debe archivarse (control)"
+
+
+def test_g5_suggestion_would_archive_but_does_not():
+    """G5: humano + URL tracking → suggestion archive; Status en client intacto."""
+    rows = [r for r in _g5_load() if r["id"] == "g5-human-url-tracking"]
+    client = NotionClientFake()
+    client.query_data_sources = Mock(return_value={"results": rows})
+    metrics = run_orchestrator(client=client, dry_run=False, apply=True, dedup_audit=False)
+
+    assert metrics["manual_protected"] == 1
+    assert len(metrics["suggestions"]) == 1
+    sug = metrics["suggestions"][0]
+    assert any(a["kind"] == "archive" for a in sug["actions"])
+    assert client.writes == []
+
+
+def test_g5_suggestion_would_nad_archive_but_does_not():
+    """G5: humano + NAD vencido → suggestion; cero writes."""
+    rows = [r for r in _g5_load() if r["id"] == "g5-human-nad-expired"]
+    client = NotionClientFake()
+    client.query_data_sources = Mock(return_value={"results": rows})
+    metrics = run_orchestrator(client=client, dry_run=False, apply=True, dedup_audit=False)
+    assert metrics["manual_protected"] == 1
+    sug = metrics["suggestions"][0]
+    assert any(a["kind"] == "archive" and "NAD" in a["reason"] for a in sug["actions"])
+    assert client.writes == []
+
+
+def test_g5_live_human_postulado_never_relabeled():
+    """G5: Postulado humano-reciente no recibe Gate/Next_Action write."""
+    rows = [r for r in _g5_load() if r["id"] == "g5-human-live-postulado"]
+    client = NotionClientFake()
+    client.query_data_sources = Mock(return_value={"results": rows})
+    metrics = run_orchestrator(client=client, dry_run=False, apply=True, dedup_audit=False)
+    assert metrics["manual_protected"] == 1
+    assert client.writes == []
+    # suggestion may be empty-actions (already APPLIED) but still immune
+    assert metrics["suggestions"][0]["execution"] == "never"
+
+
+def test_g5_no_code_path_executes_suggestion():
+    """G5: source del orquestador nunca escribe metrics['suggestions'] a client."""
+    orch = (
+        Path(__file__).resolve().parent.parent / "Layer_1" / "scripts" / "layer_1_orchestrator.py"
+    ).read_text()
+    # suggestions solo se append-ean; jamás se pasan a guarded_pages_update
+    assert "metrics[\"suggestions\"].append" in orch or "metrics['suggestions'].append" in orch
+    # No hay guarded_pages_update(..., suggestion) ni write de suggestion payload
+    assert "guarded_pages_update(\n                client, record[\"id\"], suggestion" not in orch
+    assert 'guarded_pages_update(client, record["id"], suggestion' not in orch
+    # execution never contract documented
+    assert 'execution": "never"' in orch or "execution\": \"never\"" in orch
 
 
 

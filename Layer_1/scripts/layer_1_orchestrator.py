@@ -421,21 +421,23 @@ def apply_gate_decision(record: Dict[str, Any], score: int) -> Dict[str, Any]:
 
 def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
     """
-    §2.3: Ediciones manuales recientes = máxima prioridad.
-    
+    §2.3 / G5: Ediciones manuales recientes = máxima prioridad.
+
     Ventana manual = last_edited_time > Last_Gate_Run + autor humano.
-    Una fila tocada por humano desde el último run queda inmune a mutación destructiva.
+    Retorna True si el actor PUEDE mutar; False = inmune (manual-first).
+
+    G5: cuando retorna False, el orquestador emite sugerencia de revisión
+    (build_manual_suggestion) y JAMÁS ejecuta la mutación.
     """
     if not is_mutable(record, actor):
         return False
-    
+
     last_edited_time = record.get("last_edited_time", "")
     last_gate_run = record.get("Last_Gate_Run", "")
-    
+
     if not last_edited_time or not last_gate_run:
         return True  # Sin timestamp = asumir mutable
-    
-    # Si editado por humano después del último run → inmunidad
+
     last_edited_by_id = record.get("last_edited_by_id", "")
     from tracker_flow import _is_human_edit
     if _is_human_edit(last_edited_by_id):
@@ -445,8 +447,118 @@ def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
                 f"editada por humano después del último run → inmunidad"
             )
             return False
-    
+
     return True
+
+
+def is_manual_first_immune(record: Dict[str, Any], actor: Actor = Actor.PIPELINE) -> bool:
+    """G5: True si la fila está inmune a mutación (inverso de manual_first_protection)."""
+    return not manual_first_protection(record, actor)
+
+
+def preview_destructive_actions(record: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """
+    G5: calcula qué haría el pipeline SIN escribir nada.
+
+    Usado para armar sugerencias de revisión en filas manual-first.
+    No llama client, no muta record.
+    """
+    actions: List[Dict[str, Any]] = []
+    flat = dict(record)
+    status = flat.get("Status", "") or ""
+    source_type = (
+        flat.get("Source_Type ", "")
+        or flat.get("Source_Type", "")
+        or SOURCE_TYPE_VACANTE
+    )
+    url = flat.get("URL", "") or ""
+    jd = flat.get("JD", "") or ""
+    nad = flat.get("NAD", "") or ""
+    rol = flat.get("Rol", "") or ""
+
+    # URL gate
+    ok, reason = validate_url(url, source_type, jd_text=jd)
+    if (
+        status not in [s.value for s in PROTECTED_STATUSES]
+        and not ok
+        and not reason.startswith("AGREGADOR_RETRY")
+    ):
+        actions.append({
+            "kind": "archive",
+            "reason": f"URL Gate: {reason}",
+            "would_set": {
+                "Status": Status.EXPIRADA.value,
+                "Next_Action": NextAction.ARCHIVAR.value,
+            },
+        })
+        return actions  # archive short-circuits like the loop
+
+    # NAD expired
+    if nad and status not in [s.value for s in PROTECTED_STATUSES]:
+        try:
+            nad_date = datetime.strptime(str(nad)[:10], "%Y-%m-%d")
+            if nad_date < datetime.now():
+                actions.append({
+                    "kind": "archive",
+                    "reason": f"NAD expirado: {nad}",
+                    "would_set": {
+                        "Status": Status.EXPIRADA.value,
+                        "Next_Action": NextAction.ARCHIVAR.value,
+                    },
+                })
+                return actions
+        except ValueError:
+            pass
+
+    # Score + gate labels (no Status mutation)
+    if source_type in SOURCE_TYPE_BYPASS:
+        score = flat.get("Score") if flat.get("Score") is not None else 0
+    else:
+        score = calculate_score_v6(flat)
+    gate_result = apply_gate_decision(flat, score if isinstance(score, int) else 0)
+    if gate_result.get("Gate_Decision") or gate_result.get("Next_Action"):
+        would = {}
+        if gate_result.get("Gate_Decision"):
+            would["Gate_Decision"] = gate_result["Gate_Decision"]
+        if gate_result.get("Next_Action"):
+            would["Next_Action"] = gate_result["Next_Action"]
+        if would:
+            actions.append({
+                "kind": "gate_label",
+                "reason": gate_result.get("decision") or gate_result.get("reason") or "gate",
+                "would_set": would,
+            })
+
+    return actions
+
+
+def build_manual_suggestion(
+    record: Dict[str, Any],
+    actions: Optional[List[Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
+    """
+    G5: sugerencia = revisión, jamás ejecución.
+
+    Produce un dict de observabilidad. El orquestador lo acumula en
+    metrics['suggestions'] y NUNCA lo pasa a guarded_pages_update.
+    """
+    if actions is None:
+        actions = preview_destructive_actions(record)
+    return {
+        "id": record.get("id", ""),
+        "status": record.get("Status", ""),
+        "last_edited_time": record.get("last_edited_time", ""),
+        "last_edited_by_id": record.get("last_edited_by_id", ""),
+        "Last_Gate_Run": record.get("Last_Gate_Run", ""),
+        "immune": True,
+        "execution": "never",  # contrato G5: jamás ejecución
+        "review": "manual",
+        "actions": actions,
+        "message": (
+            f"[SUGERENCIA] Fila {str(record.get('id', ''))[:8]} tocada por humano "
+            f"— revisar manualmente; pipeline no ejecuta."
+        ),
+    }
 
 
 def class_b_guard(payload: Dict[str, Any], actor: Actor) -> Dict[str, Any]:
@@ -758,6 +870,7 @@ def run_orchestrator(
         "archives": 0,
         "errors": 0,
         "manual_protected": 0,
+        "suggestions": [],  # G5: revisión, jamás ejecución
         "patterns": None,
         "dedup": None,
     }
@@ -781,9 +894,18 @@ def run_orchestrator(
             snapshot.append(record)
             record_id = record.get("id", "unknown")[:8]
             
-            # §2.3: Manual-first protection
+            # §2.3 / G5: Manual-first — inmune; sugerencia = revisión, jamás ejecución
             if not manual_first_protection(record, Actor.PIPELINE):
                 metrics["manual_protected"] += 1
+                suggestion = build_manual_suggestion(record)
+                metrics["suggestions"].append(suggestion)
+                logger.info(suggestion["message"])
+                for act in suggestion["actions"]:
+                    logger.info(
+                        f"[SUGERENCIA] {record_id} would {act['kind']}: "
+                        f"{act['reason']} → {act.get('would_set')}"
+                    )
+                # G5: CERO writes — no guarded_pages_update, no archive, no gate label
                 continue
             
             # F1.5: Clasificación VM_Scope/Role_Class/Source_Type (paridad layer_1_run)
@@ -942,6 +1064,7 @@ def run_orchestrator(
     logger.info(f"Skips (sin cambios): {metrics['skips']}")
     logger.info(f"Archivos: {metrics['archives']}")
     logger.info(f"Protegidos manual: {metrics['manual_protected']}")
+    logger.info(f"Sugerencias (revisión, no ejecución): {len(metrics['suggestions'])}")
     logger.info(f"Errores: {metrics['errors']}")
     if metrics.get("dedup"):
         logger.info(
