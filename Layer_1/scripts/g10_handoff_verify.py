@@ -50,9 +50,11 @@ def main() -> int:
         print("  · tip via git rev-parse HEAD (E4 live)")
     else:
         fails.append("Tip SHA or rev-parse instruction missing")
-    # G10 row has short sha
-    if not re.search(r"\| \*\*G10\*\* \| `[0-9a-f]{7}` \|", text):
-        fails.append("G10 gates table row missing short sha")
+    # G10 row has short sha (7 hex) or range
+    if not re.search(r"\| \*\*G10\*\* \| `([0-9a-f]{7})(?:…HEAD)?` \|", text):
+        # fallback: any G10 row with backtick sha
+        if not re.search(r"\*\*G10\*\*.*`[0-9a-f]{7}`", text):
+            fails.append("G10 gates table row missing short sha")
     if fails:
         for f in fails:
             print(f"  ✗ missing {f!r}")

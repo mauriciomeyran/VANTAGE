@@ -3,7 +3,7 @@
 **Serial:** `ARENA-20260912-G10`  
 **Contrato:** `handoffs/CONTRATO_DEVIN_CONSOLIDADO_2026-09-12.md` (manda)  
 **Rama sesión:** `arena/01a097ad-vantage`  
-**Tip (local = origin):** ejecutar `git rev-parse HEAD` y `git log origin/arena/01a097ad-vantage -1` — deben coincidir y status vacío (E4).
+**Tip (local = origin):** `9233ff27ab5bb1d21f3e13572ce4c3290489bcc0`
 **Operador:** Mauricio Meyrán · **Agente código:** Arena Agent Mode  
 **Estado gates:** G0–G10 **VERDE** (código + docs mirror). Cutover Notion schema/valores = G8 runbook pendiente de sesión Mau/Claude + `APROBAR_WRITE`.
 
@@ -22,22 +22,18 @@ Diffs documentales G9 viven en **repo mirror**; inyección Notion = Claude + `AP
 
 ```
 git rev-parse HEAD
-git status --short                    # vacío
+9233ff27ab5bb1d21f3e13572ce4c3290489bcc0
+
+git status --short
+(vacío)
+
 git log origin/arena/01a097ad-vantage -1 --oneline
-# == HEAD
+9233ff2 G10: handoff E4 live tip + verify final — cierre contrato orquestador
 
-pytest tests/test_layer_1_orchestrator.py tests/test_g3_parity.py \
-       tests/test_tracker_flow_v3.py tests/test_vl1_sync.py -q
-→ 250 passed
-
-python3 Layer_1/scripts/g8_post_checklist.py --offline
-→ 37 pass / 0 fail
-
-python3 Layer_1/scripts/g9_docsync_verify.py
-→ 21 anchors OK
-
-python3 Layer_1/scripts/g10_handoff_verify.py
-→ exit 0
+pytest … → 250 passed
+g8_post_checklist --offline → 37 PASS
+g9_docsync_verify → 21 OK
+g10_handoff_verify → exit 0
 ```
 
 ---
@@ -77,14 +73,15 @@ vl1 batch → RETIRADO exit 0 (Q-10)
 | **G7** | `a66bb7a` | `NORMALIZATION_TABLE` + `normalize_tracker_values.py` idempotente |
 | **G8** | `e4ac1ba` | Runbook freeze→merge→patch; export/checklist/rollback offline |
 | **G9** | `e24b4b1` | Kernel 09.10 Q-4 derogación; Manual/Aliases/tidy; Changelog **v9.22.0** |
-| **G10** | `791c41a`…HEAD | Handoff serial + paths + tests + Q-n + frase cero Notion |
+| **G10** | `9233ff2` | Handoff serial + paths + tests + Q-n + frase cero Notion |
 
 ---
 
 ### Commits G10 (cadena)
 - `791c41a` — handoff body + g10_handoff_verify + tests
-- `7643c18`… — tip/align follow-ups
-- HEAD al push = tip E4 (status vacío + origin match)
+- `7643c18`…`e1d488a` — tip/align
+- **`9233ff2`** — tip E4 de entrega G10 (status vacío + origin match al push)
+- commits posteriores solo pin/verify no cambian el serial
 
 ## 4. Paths canónicos
 
