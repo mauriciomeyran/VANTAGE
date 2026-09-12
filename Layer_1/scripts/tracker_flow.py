@@ -844,8 +844,15 @@ def run_outcome_status_sync(notion_client: Any, database_id: str) -> Dict[str, i
         from tracker_flow import run_outcome_status_sync
         import os
         client = Client(auth=os.environ['NOTION_TOKEN'])
-        run_outcome_status_sync(client, os.environ['NOTION_DB_OPPORTUNITIES'])
+        run_outcome_status_sync(client, os.environ['NOTION_DATA_SOURCE_ID'])
         "
+
+    NOTA (2026-09-11, verificado en DRY RUN): con notion-client en la versión
+    instalada (API version 2025-09-03), NO existe client.databases.query() —
+    ese endpoint se movió a client.data_sources.query(). El parámetro
+    `database_id` de esta función debe recibir el DATA SOURCE ID
+    (442938be-fc42-828f-b72e-076818d65a5b), no el DATABASE ID
+    (596938be-fc42-836b-aea7-814a1491bd47) — no son intercambiables.
 
     Retorna conteos: {"checked": N, "synced": N, "skipped": N}.
     """
@@ -853,10 +860,10 @@ def run_outcome_status_sync(notion_client: Any, database_id: str) -> Dict[str, i
     cursor: Optional[str] = None
 
     while True:
-        kwargs: Dict[str, Any] = {"database_id": database_id, "page_size": 100}
+        kwargs: Dict[str, Any] = {"data_source_id": database_id, "page_size": 100}
         if cursor:
             kwargs["start_cursor"] = cursor
-        response = notion_client.databases.query(**kwargs)
+        response = notion_client.data_sources.query(**kwargs)
 
         for api_record in response.get("results", []):
             checked += 1
