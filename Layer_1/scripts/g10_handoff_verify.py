@@ -7,6 +7,7 @@ Cero Notion. Exit 0 = completo.
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -18,8 +19,7 @@ REQUIRED = [
     "Ninguna escritura a Notion de producción fue realizada ni intentada en esta sesión.",
     "layer_1_orchestrator.py",
     "tracker_flow.is_mutable",
-    "e24b4b1",  # G9 tip
-    "791c41a",  # G10 tip
+    "e24b4b1",  # G9 tip in gates table
     "Q-4",
     "Q-10",
     "G8_DEPLOYMENT_PLAN",
@@ -39,22 +39,29 @@ def main() -> int:
         return 1
     text = HANDOFF.read_text(encoding="utf-8")
     fails = [n for n in REQUIRED if n not in text]
-    # phrase must appear at least twice (conformidad + final)
     phrase = "Ninguna escritura a Notion de producción fue realizada ni intentada en esta sesión."
     if text.count(phrase) < 2:
         fails.append("phrase must appear ≥2 times")
+    # Tip SHA present (40 hex)
+    m = re.search(r"\*\*Tip \(local = origin\):\*\* `([0-9a-f]{40})`", text)
+    if not m:
+        fails.append("Tip SHA full 40-hex missing")
+    else:
+        print(f"  · tip sha {m.group(1)[:7]}")
+    # G10 row has short sha
+    if not re.search(r"\| \*\*G10\*\* \| `[0-9a-f]{7}` \|", text):
+        fails.append("G10 gates table row missing short sha")
     if fails:
         for f in fails:
             print(f"  ✗ missing {f!r}")
         return 1
-    # active tree clean of layer_1_run
     if (ROOT / "Layer_1" / "scripts" / "layer_1_run.py").exists():
         print("  ✗ layer_1_run.py still in active tree")
         return 1
     if not (ROOT / "Archive" / "Legacy_Scripts" / "layer_1_run.py").exists():
         print("  ✗ archived layer_1_run missing")
         return 1
-    print(f"  ✓ handoff OK ({len(REQUIRED)} anchors)")
+    print(f"  ✓ handoff OK ({len(REQUIRED)} anchors + tip/G10 row)")
     print(f"  ✓ phrase ×{text.count(phrase)}")
     print(f"  ✓ layer_1_run absent active / present Archive")
     print("=" * 60)
