@@ -3,7 +3,7 @@
 **Serial:** `ARENA-20260912-G10`  
 **Contrato:** `handoffs/CONTRATO_DEVIN_CONSOLIDADO_2026-09-12.md` (manda)  
 **Rama sesión:** `arena/01a097ad-vantage`  
-**Tip (local = origin):** `7643c18d96189d7e890841a24d66c82ca56d8dd9`  
+**Tip (local = origin):** `705442dd154974bcd6f3bd3e60619e35f346ba65`  
 **Operador:** Mauricio Meyrán · **Agente código:** Arena Agent Mode  
 **Estado gates:** G0–G10 **VERDE** (código + docs mirror). Cutover Notion schema/valores = G8 runbook pendiente de sesión Mau/Claude + `APROBAR_WRITE`.
 
@@ -22,13 +22,13 @@ Diffs documentales G9 viven en **repo mirror**; inyección Notion = Claude + `AP
 
 ```
 git rev-parse HEAD
-7643c18d96189d7e890841a24d66c82ca56d8dd9
+705442dd154974bcd6f3bd3e60619e35f346ba65
 
 git status --short
 (vacío al cierre de este handoff — re-verificar post-commit G10)
 
 git ls-remote origin refs/heads/arena/01a097ad-vantage
-7643c18d96189d7e890841a24d66c82ca56d8dd9
+705442dd154974bcd6f3bd3e60619e35f346ba65
 
 pytest tests/test_layer_1_orchestrator.py tests/test_g3_parity.py \
        tests/test_tracker_flow_v3.py tests/test_vl1_sync.py -q
@@ -78,7 +78,7 @@ vl1 batch → RETIRADO exit 0 (Q-10)
 | **G7** | `a66bb7a` | `NORMALIZATION_TABLE` + `normalize_tracker_values.py` idempotente |
 | **G8** | `e4ac1ba` | Runbook freeze→merge→patch; export/checklist/rollback offline |
 | **G9** | `e24b4b1` | Kernel 09.10 Q-4 derogación; Manual/Aliases/tidy; Changelog **v9.22.0** |
-| **G10** | `7643c18` | Handoff serial + paths + tests + Q-n + frase cero Notion |
+| **G10** | `705442d` | Handoff serial + paths + tests + Q-n + frase cero Notion |
 
 ---
 
