@@ -30,12 +30,13 @@ script_dir = Path(__file__).resolve().parent
 sys.path.insert(0, str(script_dir))
 
 from tracker_flow import (
-    Status, NextAction, GateDecision, Actor,
+    Status, NextAction, GateDecision, Actor, FetchResult, DedupFlag,
     normalize_record, is_mutable, evaluate_flow, archive_gate,
     LIFECYCLE_MATRIX, TERMINAL_STATUSES, LIVE_APPLICATION_STATUSES,
     PROTECTED_STATUSES, DELETED_VALUE_MAPPINGS,
     sync_status_from_outcome, apply_status_sync_writeback, run_outcome_status_sync,
     choose_survivor, get_layer_rank, diff_records,
+    SOURCE_TYPE_VACANTE, SOURCE_TYPE_BYPASS,
 )
 from gate_logic import gate_logic
 from priority_logic import infer_prioridad
@@ -86,7 +87,7 @@ def validate_url(url: str, source_type: str, jd_text: str = "") -> tuple[bool, s
 
     Returns (is_valid, reason).
     """
-    if source_type in ("Inbound", "Referencia", "Networking"):
+    if source_type in SOURCE_TYPE_BYPASS:
         return True, "BYPASS_SOURCE"
 
     from url_gate import validate_url_offline, is_agregador, normalize_url
@@ -256,56 +257,72 @@ def gate(
     rol: str = "",
     marca: str = "",
 ) -> str:
-    """F4: idéntico a layer_1_run.gate (Gate_Decision crudo)."""
+    """F4: idéntico a layer_1_run.gate — retorna GateDecision.value (cero strings sueltos)."""
     from profile_fit import has_vm_title_signal, is_role_excluded, resolve_alias_flags
 
     if is_role_excluded(rol) or resolve_alias_flags(marca)[0]:
-        return "BLOCKED"
-    if source_type in ["Inbound", "Referencia", "Networking"]:
-        return "CREATE"
-    if source_type == "Vacante":
-        fetch_ok = fetch in ("Accesible", "Parcial")
+        return GateDecision.BLOCKED.value
+    if source_type in SOURCE_TYPE_BYPASS:
+        return GateDecision.CREATE.value
+    if source_type == SOURCE_TYPE_VACANTE:
+        fetch_ok = fetch in (FetchResult.ACCESIBLE.value, FetchResult.PARCIAL.value)
         scope_ok = fetch_ok and (
             vm_scope == "Alto"
             or (role_class == "Pivote" and has_vm_title_signal(rol))
         )
         if not scope_ok:
-            return "BLOCKED"
+            return GateDecision.BLOCKED.value
         if score is None:
-            return "REVIEW_NEEDED"
+            return GateDecision.REVIEW_NEEDED.value
         if score >= 60:
-            return "CREATE"
+            return GateDecision.CREATE.value
         if score >= 40:
-            return "REVIEW_NEEDED"
-        return "BLOCKED"
-    return "BLOCKED"
+            return GateDecision.REVIEW_NEEDED.value
+        return GateDecision.BLOCKED.value
+    return GateDecision.BLOCKED.value
 
 
 def evaluate_application_status(status: str) -> bool:
-    """Paridad layer_1_run."""
-    return status in ["Postulado", "En proceso", "En Proceso", "Negociando", "Sin respuesta", "Sin Respuesta"]
+    """Paridad layer_1_run — acepta Title Case ES + casing legacy 'En proceso'/'Sin respuesta'."""
+    if status in {
+        Status.POSTULADO.value,
+        Status.EN_PROCESO.value,
+        Status.NEGOCIANDO.value,
+        Status.SIN_RESPUESTA.value,
+    }:
+        return True
+    # Legacy casing visto en layer_1_run (pre-enum)
+    return status in {"En proceso", "Sin respuesta"}
 
 
 def evaluate_rejection_status(status: str) -> bool:
-    return status == "Rechazado"
+    return status == Status.RECHAZADO.value
 
 
 def get_application_next_action(status: str) -> str:
-    """Legacy EN next-actions del viejo (G7 normaliza; paridad G3 los expone crudos)."""
-    if status == "Postulado":
-        return "Follow-up"
-    if status in ("En proceso", "En Proceso"):
-        return "Interview prep"
-    if status == "Negociando":
-        return "Follow-up"
-    if status in ("Sin respuesta", "Sin Respuesta"):
-        return "Follow-up"
-    return "Re-check"
+    """
+    Next_Action para postulaciones vivas.
+
+    Emite legacy EN (NextAction.FOLLOW_UP / INTERVIEW_PREP / RE_CHECK) para
+    paridad G3 con layer_1_run; G7 normaliza a canónico ES.
+    Writers: siempre via enum .value — cero strings sueltos (G4).
+    """
+    if status == Status.POSTULADO.value:
+        return NextAction.FOLLOW_UP.value
+    if status in (Status.EN_PROCESO.value, "En proceso"):
+        return NextAction.INTERVIEW_PREP.value
+    if status == Status.NEGOCIANDO.value:
+        return NextAction.FOLLOW_UP.value
+    if status in (Status.SIN_RESPUESTA.value, "Sin respuesta"):
+        return NextAction.FOLLOW_UP.value
+    return NextAction.RE_CHECK.value
 
 
 def apply_gate_decision(record: Dict[str, Any], score: int) -> Dict[str, Any]:
     """
     F4: Gate + Next_Action — paridad con layer_1_run Fase 4.
+
+    Writers: GateDecision / NextAction enums only (G4 cero literales sueltos).
 
     Precedencia:
       1. evaluate_flow PROTECTED/TERMINAL (tracker_flow)
@@ -334,7 +351,11 @@ def apply_gate_decision(record: Dict[str, Any], score: int) -> Dict[str, Any]:
     fetch = flat.get("Fetch", "") or ""
     vm_scope = flat.get("VM_Scope", "") or get_vm_scope(flat.get("Rol", "") or "")
     role_class = flat.get("Role_Class", "") or get_role_class(flat.get("Rol", "") or "")
-    source_type = flat.get("Source_Type ", "") or flat.get("Source_Type", "") or "Vacante"
+    source_type = (
+        flat.get("Source_Type ", "")
+        or flat.get("Source_Type", "")
+        or SOURCE_TYPE_VACANTE
+    )
     rol = flat.get("Rol", "") or ""
     marca = flat.get("Marca", "") or ""
     jd_quality = flat.get("JD_Quality", "") or ""
@@ -347,41 +368,46 @@ def apply_gate_decision(record: Dict[str, Any], score: int) -> Dict[str, Any]:
         "Fetch": fetch,
         "id": flat.get("id", ""),
     })
-    if protected is not None and protected != "REJECTED":
+    if protected is not None and protected != GateDecision.REJECTED.value:
+        gate_out = None
+        if protected in (GateDecision.APPLIED.value, GateDecision.REJECTED.value):
+            gate_out = protected
+        else:
+            gate_out = flat.get("Gate_Decision")
         return {
             "decision": "PROTECTED",
             "reason": f"gate_logic:{protected}",
-            "Gate_Decision": protected if protected in ("APPLIED", "REJECTED") else flat.get("Gate_Decision"),
+            "Gate_Decision": gate_out,
             "Next_Action": current_action or None,
             "_protected": protected,
         }
 
     if evaluate_rejection_status(status):
-        decision = "REJECTED"
-        next_action = "Post-Mortem"
+        decision = GateDecision.REJECTED.value
+        next_action = NextAction.POST_MORTEM.value
     elif evaluate_application_status(status):
-        decision = "APPLIED"
+        decision = GateDecision.APPLIED.value
         next_action = get_application_next_action(status)
     elif jd_quality == "JD Completo":
         decision = gate(fetch, vm_scope, role_class, source_type, score=score, rol=rol, marca=marca)
-        if decision == "CREATE":
-            next_action = "Optimizar"
-        elif decision == "REVIEW_NEEDED":
-            next_action = "Investigar"
+        if decision == GateDecision.CREATE.value:
+            next_action = NextAction.OPTIMIZAR.value
+        elif decision == GateDecision.REVIEW_NEEDED.value:
+            next_action = NextAction.INVESTIGAR.value
         else:
-            next_action = "Optimizar"
+            next_action = NextAction.OPTIMIZAR.value
     else:
         decision = gate(fetch, vm_scope, role_class, source_type, score=score, rol=rol, marca=marca)
-        if decision == "CREATE":
-            next_action = "Re-check"
-        elif decision == "REVIEW_NEEDED":
-            next_action = "Investigar"
-        elif source_type == "Vacante" and fetch == "Bloqueado":
-            next_action = "Reparar URL"
-        elif source_type == "Vacante" and fetch == "Parcial":
-            next_action = "Verificar JD"
+        if decision == GateDecision.CREATE.value:
+            next_action = NextAction.RE_CHECK.value
+        elif decision == GateDecision.REVIEW_NEEDED.value:
+            next_action = NextAction.INVESTIGAR.value
+        elif source_type == SOURCE_TYPE_VACANTE and fetch == FetchResult.BLOQUEADO.value:
+            next_action = NextAction.REPARAR_URL.value
+        elif source_type == SOURCE_TYPE_VACANTE and fetch == FetchResult.PARCIAL.value:
+            next_action = NextAction.VERIFICAR_JD.value
         else:
-            next_action = "Investigar"
+            next_action = NextAction.INVESTIGAR.value
 
     return {
         "decision": decision,
@@ -660,7 +686,7 @@ def run_dedup_audit(
                 )
                 continue
 
-            flag_payload = {"Dedup_Flag": "Posible duplicado"}
+            flag_payload = {"Dedup_Flag": DedupFlag.POSIBLE_DUPLICADO.value}
             # Anti-rewrite: si ya tiene el flag, no tocar
             write_result = guarded_pages_update(
                 client,
@@ -763,8 +789,8 @@ def run_orchestrator(
             # F1.5: Clasificación VM_Scope/Role_Class/Source_Type (paridad layer_1_run)
             source_type = record.get("Source_Type ", "") or record.get("Source_Type", "") or ""
             if not source_type:
-                source_type = "Vacante"
-                record["Source_Type "] = "Vacante"
+                source_type = SOURCE_TYPE_VACANTE
+                record["Source_Type "] = SOURCE_TYPE_VACANTE
 
             rol = record.get("Rol", "") or ""
             if not record.get("VM_Scope"):
@@ -800,12 +826,20 @@ def run_orchestrator(
                 continue
             else:
                 # Éxito URL → Fetch=Accesible si faltaba (paridad bug-fix layer_1_run)
-                if is_valid and record.get("Fetch") != "Accesible" and source_type == "Vacante":
-                    record["_proposed_Fetch"] = "Accesible"
+                if (
+                    is_valid
+                    and record.get("Fetch") != FetchResult.ACCESIBLE.value
+                    and source_type == SOURCE_TYPE_VACANTE
+                ):
+                    record["_proposed_Fetch"] = FetchResult.ACCESIBLE.value
 
             # F3: Scoring v6.4 (idéntico)
-            source_type = record.get("Source_Type ", "") or record.get("Source_Type", "") or "Vacante"
-            if source_type in ("Inbound", "Referencia", "Networking"):
+            source_type = (
+                record.get("Source_Type ", "")
+                or record.get("Source_Type", "")
+                or SOURCE_TYPE_VACANTE
+            )
+            if source_type in SOURCE_TYPE_BYPASS:
                 score = record.get("Score") if record.get("Score") is not None else 0
                 record["Score_Method"] = "BYPASS"
             else:

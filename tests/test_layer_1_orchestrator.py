@@ -28,6 +28,8 @@ from layer_1_orchestrator import (
     class_b_guard,
     compute_write_diff,
     guarded_pages_update,
+    gate,
+    get_application_next_action,
 )
 from tracker_flow import (
     Status, Actor, normalize_record, is_mutable,
@@ -1748,6 +1750,164 @@ def test_url_gate_module_importable():
     assert callable(url_gate.validate_url_pre_ingestion)
     assert callable(url_gate.validate_url_offline)
     assert "linkedin.com" in url_gate.AGREGADOR_DOMAINS
+
+
+# ── G4: un escritor — cero literales sueltos en writers ───────────────────────
+
+# Vocab que DEBE salir solo de enums/constantes (no string literal en writers)
+_G4_WRITER_VOCAB = (
+    "CREATE", "BLOCKED", "REVIEW_NEEDED", "APPLIED", "REJECTED", "EXPIRED",
+    "Optimizar", "Seguimiento", "Investigar", "Post-Mortem", "Archivar",
+    "Reparar URL", "Verificar JD", "Follow-up", "Interview prep", "Re-check",
+    "Preparación Entrevista", "Revisión",
+    "Accesible", "Bloqueado", "Parcial",
+    "Posible duplicado",
+    "Objetivo", "Expirada", "Rechazado", "Postulado", "En Proceso",
+    "Negociando", "Sin Respuesta", "Contratado", "Por Revisar", "Retirado",
+    "Exploratorio", "Postulando", "Vacante",
+)
+
+# Funciones writer del orquestador (producen payloads de write o labels de gate)
+_G4_WRITER_FUNCS = (
+    "gate",
+    "get_application_next_action",
+    "apply_gate_decision",
+    "run_dedup_audit",
+    "run_orchestrator",
+    "guarded_pages_update",
+)
+
+
+def _g4_loose_literals_in_writers(source: str) -> list:
+    """AST: string constants == vocab dentro de funciones writer, excluyendo .value chains."""
+    import ast
+    tree = ast.parse(source)
+    hits = []
+
+    class Visitor(ast.NodeVisitor):
+        def __init__(self):
+            self.stack = []
+
+        def visit_FunctionDef(self, node):
+            self.stack.append(node.name)
+            self.generic_visit(node)
+            self.stack.pop()
+
+        visit_AsyncFunctionDef = visit_FunctionDef
+
+        def visit_Constant(self, node):
+            if not isinstance(node.value, str):
+                return
+            if node.value not in _G4_WRITER_VOCAB:
+                return
+            # ¿estamos dentro de una función writer?
+            if not any(fn in _G4_WRITER_FUNCS for fn in self.stack):
+                return
+            hits.append((node.lineno, node.value, "→".join(self.stack)))
+
+    Visitor().visit(tree)
+    return hits
+
+
+def test_g4_zero_loose_literals_in_writers():
+    """G4: grep/AST literales sueltos en writers del orquestador = 0."""
+    orch_path = (
+        Path(__file__).resolve().parent.parent / "Layer_1" / "scripts" / "layer_1_orchestrator.py"
+    )
+    source = orch_path.read_text()
+    hits = _g4_loose_literals_in_writers(source)
+    assert hits == [], (
+        "G4 literales sueltos en writers (usar Enum.value):\n"
+        + "\n".join(f"  L{ln} {val!r} in {ctx}" for ln, val, ctx in hits)
+    )
+
+
+def test_g4_gate_returns_only_enum_values():
+    """G4: gate() solo retorna GateDecision.value."""
+    from tracker_flow import GateDecision
+    allowed = {d.value for d in GateDecision}
+    samples = [
+        dict(fetch="Accesible", vm_scope="Alto", role_class="VM", source_type="Vacante", score=70, rol="VM", marca="Zara"),
+        dict(fetch="Accesible", vm_scope="Alto", role_class="VM", source_type="Vacante", score=50, rol="VM", marca="Zara"),
+        dict(fetch="Accesible", vm_scope="Alto", role_class="VM", source_type="Vacante", score=20, rol="VM", marca="Zara"),
+        dict(fetch="Bloqueado", vm_scope="Alto", role_class="VM", source_type="Vacante", score=80, rol="VM", marca="Zara"),
+        dict(fetch="Accesible", vm_scope="Bajo", role_class="Otro", source_type="Inbound", score=0, rol="X", marca="Y"),
+        dict(fetch="Accesible", vm_scope="Alto", role_class="VM", source_type="Vacante", score=None, rol="VM", marca="Zara"),
+    ]
+    for kw in samples:
+        assert gate(**kw) in allowed
+
+
+def test_g4_apply_gate_decision_payload_uses_enums():
+    """G4: apply_gate_decision emite Gate_Decision/Next_Action ∈ enum.values."""
+    from tracker_flow import GateDecision, NextAction
+    gate_allowed = {d.value for d in GateDecision}
+    na_allowed = {a.value for a in NextAction} | {None}
+    cases = [
+        {"Status": Status.OBJETIVO.value, "Fetch": "Accesible", "VM_Scope": "Alto",
+         "Role_Class": "VM", "Source_Type ": "Vacante", "Rol": "Visual Merchandiser",
+         "Marca": "Zara", "id": "g4-1",
+         "last_edited_time": "2024-01-01T00:00:00.000Z",
+         "last_edited_by_id": "integration-id-feed-processor"},
+        {"Status": Status.RECHAZADO.value, "id": "g4-2",
+         "last_edited_time": "2024-01-01T00:00:00.000Z",
+         "last_edited_by_id": "integration-id-feed-processor"},
+        {"Status": Status.POSTULADO.value, "id": "g4-3",
+         "last_edited_time": "2024-01-01T00:00:00.000Z",
+         "last_edited_by_id": "integration-id-feed-processor"},
+        {"Status": Status.OBJETIVO.value, "Fetch": "Bloqueado", "VM_Scope": "Alto",
+         "Role_Class": "VM", "Source_Type ": "Vacante", "Rol": "VM", "Marca": "Zara",
+         "id": "g4-4", "Score": 70,
+         "last_edited_time": "2024-01-01T00:00:00.000Z",
+         "last_edited_by_id": "integration-id-feed-processor"},
+        {"Status": Status.OBJETIVO.value, "Fetch": "Accesible", "VM_Scope": "Alto",
+         "Role_Class": "VM", "Source_Type ": "Vacante", "Rol": "VM", "Marca": "Zara",
+         "JD_Quality": "JD Completo", "id": "g4-5",
+         "last_edited_time": "2024-01-01T00:00:00.000Z",
+         "last_edited_by_id": "integration-id-feed-processor"},
+    ]
+    for rec in cases:
+        result = apply_gate_decision(rec, rec.get("Score") or 70)
+        gd = result.get("Gate_Decision")
+        na = result.get("Next_Action")
+        if gd is not None:
+            assert gd in gate_allowed, f"Gate_Decision suelto: {gd!r} on {rec['id']}"
+        assert na in na_allowed, f"Next_Action suelto: {na!r} on {rec['id']}"
+
+
+def test_g4_single_write_path_is_guarded_pages_update():
+    """G4 un escritor: client.pages_update solo vive dentro de guarded_pages_update."""
+    orch_path = (
+        Path(__file__).resolve().parent.parent / "Layer_1" / "scripts" / "layer_1_orchestrator.py"
+    )
+    content = orch_path.read_text()
+    lines = content.splitlines()
+    bare = []
+    in_guarded = in_fake = False
+    for i, line in enumerate(lines, 1):
+        if line.startswith("def guarded_pages_update"):
+            in_guarded, in_fake = True, False
+        elif line.startswith("class NotionClientFake"):
+            in_fake, in_guarded = True, False
+        elif line.startswith("def ") or line.startswith("class "):
+            in_guarded = in_fake = False
+        if "client.pages_update(" in line and not in_guarded and not in_fake:
+            bare.append(i)
+    assert bare == [], f"writes fuera de guarded_pages_update: {bare}"
+
+
+def test_g4_next_action_legacy_and_canonical_in_enum():
+    """G4/F8: legacy EN y canónico ES conviven en NextAction (un literal c/u)."""
+    from tracker_flow import NextAction
+    assert NextAction.FOLLOW_UP.value == "Follow-up"
+    assert NextAction.INTERVIEW_PREP.value == "Interview prep"
+    assert NextAction.RE_CHECK.value == "Re-check"
+    assert NextAction.SEGUIMIENTO.value == "Seguimiento"
+    assert NextAction.OPTIMIZAR.value == "Optimizar"
+    # Sin duplicados de value
+    values = [a.value for a in NextAction]
+    assert len(values) == len(set(values))
+
 
 
 if __name__ == "__main__":

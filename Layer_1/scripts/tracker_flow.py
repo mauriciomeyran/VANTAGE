@@ -135,21 +135,30 @@ def sync_status_from_outcome(flat_record: Dict[str, Any]) -> bool:
 
 
 class NextAction(str, Enum):
-    """Acciones válidas de Next_Action - conjunto cerrado (9 valores)"""
-    # Valores operativos
+    """Acciones válidas de Next_Action - conjunto cerrado (canónico ES + legacy EN).
+
+    Valores legacy EN viven en prod hoy (G7 normaliza a ES). Un literal por valor (F8/G4):
+    writers usan siempre NextAction.X.value — nunca strings sueltos.
+    """
+    # Valores operativos (canónico ES)
     OPTIMIZAR = "Optimizar"
     SEGUIMIENTO = "Seguimiento"
     PREPARACION_ENTREVISTA = "Preparación Entrevista"
     REVISION = "Revisión"
     INVESTIGAR = "Investigar"
     POST_MORTEM = "Post-Mortem"
-    
+
     # Archivo
     ARCHIVAR = "Archivar"
-    
+
     # Recuperación
     REPARAR_URL = "Reparar URL"
     VERIFICAR_JD = "Verificar JD"
+
+    # Legacy EN (vivos en prod; G7 → SEGUIMIENTO / PREPARACION_ENTREVISTA / REVISION)
+    FOLLOW_UP = "Follow-up"            # legacy → SEGUIMIENTO
+    INTERVIEW_PREP = "Interview prep"  # legacy → PREPARACION_ENTREVISTA
+    RE_CHECK = "Re-check"              # legacy → REVISION
 
 
 class GateDecision(str, Enum):
@@ -160,6 +169,23 @@ class GateDecision(str, Enum):
     APPLIED = "APPLIED"
     REJECTED = "REJECTED"
     EXPIRED = "EXPIRED"
+
+
+# Fetch vocab (paramétrico H1) — un literal por valor; writers usan estas constantes
+class FetchResult(str, Enum):
+    ACCESIBLE = "Accesible"
+    BLOQUEADO = "Bloqueado"
+    PARCIAL = "Parcial"
+
+
+# Dedup_Flag (Class B) — un literal
+class DedupFlag(str, Enum):
+    POSIBLE_DUPLICADO = "Posible duplicado"
+
+
+# Source_Type values usados por gate bypass (no enum de schema aún; Q-1 rename trailing)
+SOURCE_TYPE_VACANTE = "Vacante"
+SOURCE_TYPE_BYPASS = frozenset({"Inbound", "Referencia", "Networking"})
 
 
 class Actor(str, Enum):
