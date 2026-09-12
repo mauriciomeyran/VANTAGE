@@ -98,6 +98,7 @@ Si hay contradicción, DETENER y reportar al operador con ancla exacta (PREFIX:K
 **3.2 Análisis de dependencias cruzadas:**
 - Búsqueda inversa en Census de IDs que citan el nodo (KERNEL:DOCUMENTATION-011)
 - Identificación de referencias cruzadas en otros documentos
+- [ ] Consultar obligatoriamente la tabla en **BRIEF:CROSS-DEPENDENCIES** para identificar documentos afectados por el cambio de origen.
 - Skills locales que dependen del contrato
 - Documentos susceptibles de actualización para armonía
 

@@ -103,6 +103,7 @@ Al entregar el resumen de salida, declarar el cierre del protocolo respondiendo:
 - [ ] **Write-Back:** re-fetch de verificación (Fase 4) sin mismatch pendiente.
 - [ ] **Sync:** operador confirmado para correr `--sync` en Terminal.
 - [ ] **Binary Gate:** opción elegida (Full Data Dump / Step-by-Step) y confirmación recibida.
+- [ ] **Dependencias:** Verificado que los documentos marcados por la **Matriz de Dependencias Estructurales (§07)** han sido evaluados.
 
 Si algún punto falla, detener y reportar el gap — no declarar `DOCUMENTATION FINISHED` a medias.
 
