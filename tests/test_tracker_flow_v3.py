@@ -21,7 +21,8 @@ from tracker_flow import (
     evaluate_review_gate, diff_records,
     SURVIVOR_PRIORITY, get_survivor_rank, choose_survivor,
     TERMINAL_STATUSES, LIVE_APPLICATION_STATUSES, PROTECTED_STATUSES,
-    KNOWN_BOT_IDS, DELETED_VALUE_MAPPINGS
+    KNOWN_BOT_IDS, DELETED_VALUE_MAPPINGS,
+    sync_status_from_outcome, apply_status_sync_writeback, run_outcome_status_sync,
 )
 
 from tests.mocks.notion_fake import NotionClientFake
@@ -60,6 +61,12 @@ COVERAGE_MAP = {
     "test_h3_fake_pages_chain": "H3/G6",
     "test_h7_url_tiebreak_prefers_url": "H7/F12",
     "test_h7_coverage_map_complete": "H7/A5",
+    "test_f13_sync_status_from_outcome_corrects": "F13",
+    "test_f13_sync_status_from_outcome_noop_already_synced": "F13",
+    "test_f13_sync_status_from_outcome_ignores_non_mapped_outcomes": "F13",
+    "test_f13b_apply_status_sync_writeback_writes_when_flagged": "F13b",
+    "test_f13b_apply_status_sync_writeback_noop_without_flag": "F13b",
+    "test_f13b_run_outcome_status_sync_batch_counts": "F13b",
 }
 
 # ── F1: Normalization Boundary Tests ──────────────────────────────────────────
@@ -479,6 +486,106 @@ def test_end_to_end_normalize_to_archive():
     # Archive
     archive = archive_gate(flat, "url_failed", "dead link", Actor.PIPELINE, "2026-09-10T12:00:00.000Z")
     assert archive["Status"] == Status.EXPIRADA.value
+
+
+# ── F13/F13b: Outcome→Status Auto-Sync Tests (T0, HO-000042) ─────────────────
+
+def test_f13_sync_status_from_outcome_corrects():
+    """F13: Outcome=Contratado con Status desincronizado → corrige + marca flag."""
+    flat_record = {"id": "rec-001", "Status": "Postulado", "Outcome": "Contratado"}
+    mutated = sync_status_from_outcome(flat_record)
+    assert mutated is True
+    assert flat_record["Status"] == "Contratado"
+    assert flat_record["_status_synced_from_outcome"] is True
+
+
+def test_f13_sync_status_from_outcome_noop_already_synced():
+    """F13: Outcome=Contratado con Status ya en sync → no muta, no marca flag."""
+    flat_record = {"id": "rec-002", "Status": "Contratado", "Outcome": "Contratado"}
+    mutated = sync_status_from_outcome(flat_record)
+    assert mutated is False
+    assert flat_record["Status"] == "Contratado"
+    assert "_status_synced_from_outcome" not in flat_record
+
+
+def test_f13_sync_status_from_outcome_ignores_non_mapped_outcomes():
+    """F13: Rechazado/Entrevista/Sin respuesta en Outcome NO se sincronizan (por diseño — historial, no terminal)."""
+    for outcome in ("Rechazado", "Entrevista", "Sin respuesta", ""):
+        flat_record = {"id": "rec-003", "Status": "En Proceso", "Outcome": outcome}
+        mutated = sync_status_from_outcome(flat_record)
+        assert mutated is False, f"Outcome={outcome!r} no debería disparar sync"
+        assert flat_record["Status"] == "En Proceso"
+
+
+def test_f13b_apply_status_sync_writeback_writes_when_flagged():
+    """F13b: con _status_synced_from_outcome=True, escribe Status a Notion vía fake."""
+    fake = NotionClientFake()
+    flat_record = {
+        "id": "rec-004",
+        "Status": "Contratado",
+        "_status_synced_from_outcome": True,
+    }
+    wrote = apply_status_sync_writeback(fake, flat_record)
+    assert wrote is True
+    assert fake.get_update_count() == 1
+    logged = fake.get_update_log()[0]
+    assert logged["page_id"] == "rec-004"
+    assert logged["properties"] == {"Status": {"select": {"name": "Contratado"}}}
+
+
+def test_f13b_apply_status_sync_writeback_noop_without_flag():
+    """F13b: sin el flag de sync pendiente, no escribe nada (no llama pages.update)."""
+    fake = NotionClientFake()
+    flat_record = {"id": "rec-005", "Status": "Postulado"}
+    wrote = apply_status_sync_writeback(fake, flat_record)
+    assert wrote is False
+    assert fake.get_update_count() == 0
+
+
+class _DataSourcesFake:
+    """Fake mínimo de client.data_sources.query — no forma parte de NotionClientFake
+    compartido (F13b es el único consumidor hoy); evita acoplar el fake común a un
+    shape de paginación que solo usa este runner. Ver T0/§3."""
+
+    def __init__(self, pages: list[dict]):
+        self._pages = pages
+
+    def query(self, data_source_id: str, page_size: int = 100, start_cursor: str | None = None) -> dict:
+        return {"results": self._pages, "has_more": False, "next_cursor": None}
+
+
+def test_f13b_run_outcome_status_sync_batch_counts():
+    """F13b: runner batch — normaliza cada record, sincroniza los que aplican, cuenta correctamente."""
+    fake = NotionClientFake()
+    fake.data_sources = _DataSourcesFake(pages=[
+        {
+            "id": "rec-a",
+            "properties": {
+                "Status": {"select": {"name": "Postulado"}},
+                "Outcome": {"select": {"name": "Contratado"}},
+            },
+        },
+        {
+            "id": "rec-b",
+            "properties": {
+                "Status": {"select": {"name": "Contratado"}},
+                "Outcome": {"select": {"name": "Contratado"}},
+            },
+        },
+        {
+            "id": "rec-c",
+            "properties": {
+                "Status": {"select": {"name": "En Proceso"}},
+                "Outcome": {"select": {"name": "Entrevista"}},
+            },
+        },
+    ])
+
+    result = run_outcome_status_sync(fake, "fake-data-source-id")
+
+    assert result == {"checked": 3, "synced": 1, "skipped": 2}
+    assert fake.get_update_count() == 1
+    assert fake.get_update_log()[0]["page_id"] == "rec-a"
 
 
 def test_fixture_loading():

@@ -11,7 +11,8 @@ refleja eso.
 
 Modo de uso:
     python sync_status_contratado.py --dry-run     # reporta filas afectadas, no escribe
-    python sync_status_contratado.py --apply        # aplica el cambio (requiere --dry-run previo en la misma sesión)
+    python sync_status_contratado.py --apply        # aplica el cambio (NO enforced en código: correr --dry-run
+                                                      # primero es responsabilidad manual del operador, no un candado)
 
 Fuente de autoridad: Notion API directa (no notion-mcp) — ver KERNEL:CONTEXT-INFRASTRUCTURE,
 Terminal es la ruta preferente para operaciones estructurales.
@@ -64,18 +65,24 @@ def load_env_file(path: Path) -> dict[str, str]:
     return values
 
 NOTION_VERSION = "2022-06-28"
-DATA_SOURCE_ID = "596938be-fc42-836b-aea7-814a1491bd47"
+# NOTA (T0, verificado contra ID Census): este valor es el DATABASE ID
+# (VANTAGE TRACKER DB), no el data source. El endpoint /databases/{id}/query
+# usado abajo (Notion-Version 2022-06-28) acepta database ID directamente —
+# distinto del endpoint /data_sources/{id}/query (API 2025-09-03) usado en
+# tracker_flow.py/layer_1_run.py, que requiere el data source ID
+# (442938be-fc42-828f-b72e-076818d65a5b). No son intercambiables entre
+# endpoints de distinta versión de API — ver tracker_flow.py:run_outcome_status_sync
+# para el caso donde sí hay que usar el data source ID.
+DATABASE_ID = "596938be-fc42-836b-aea7-814a1491bd47"
 API_BASE = "https://api.notion.com/v1"
 
 TARGET_OUTCOME = "Contratado"
 TARGET_STATUS = "Contratado"
-
-PROTECTED_STATUSES_REF = {
-    # Espejo informativo de PROTECTED_STATUSES en tracker_flow.py — no se
-    # importa directo para no acoplar este script al repo. Si cambia allá,
-    # actualizar aquí también (ver Bug Tracker si diverge).
-    "Contratado",
-}
+# T0: PROTECTED_STATUSES_REF (espejo informativo de tracker_flow.PROTECTED_STATUSES)
+# retirado — declarado pero sin ningún uso real en este archivo (código muerto).
+# Este script es one-shot camino a retiro (D6) tras backfill verificado; no se
+# justifica mantener ni un espejo sin consumidor ni un import que lo acoplaría
+# al repo, algo que el comentario original explícitamente quería evitar.
 
 
 def get_api_key(explicit_env_path: str | None) -> str:
@@ -106,7 +113,7 @@ def get_api_key(explicit_env_path: str | None) -> str:
 
 def query_data_source(api_key: str, start_cursor: str | None = None) -> dict:
     """Query directo del data source vía REST — filtra Outcome=Contratado."""
-    url = f"{API_BASE}/databases/{DATA_SOURCE_ID}/query"
+    url = f"{API_BASE}/databases/{DATABASE_ID}/query"
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Notion-Version": NOTION_VERSION,
