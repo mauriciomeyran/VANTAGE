@@ -22,7 +22,7 @@
 **Impacto si se revierte:** Alto — pérdida de holdings corporativos reales.
 
 ## Q-4: ¿Debemos implementar el bloqueo Class-B-mientras-REVIEW_NEEDED documentado en KERNEL:GATE-DECISION-010?
-**Decisión tomada (ACEPTADA CONDICIONAL):** NO implementar en código. SOLO válida si G9 deroga/reescribe KERNEL:GATE-DECISION-010. Si G9 no deroga, gate rojo automático.  
+**Decisión tomada (ACEPTADA CONDICIONAL → CERRADA en G9):** NO implementar en código. **G9 derogó/reescribió KERNEL:GATE-DECISION-010** (v9.22.0): SSOT mutabilidad = `is_mutable`; promesa Class-B-bloqueado-en-REVIEW en Python = derogada. Condición satisfecha.  
 **Rationale:** La auditoría §4.6 confirma que el contrato es fictional en el lado lector.  
 **Alternativas descartadas:** Implementar bloqueo real (requeriría cambios mayores en múltiples fases).  
 **Qué dato la cerraría:** G9 (docsync) debe derogar/reescribir KERNEL:GATE-DECISION-010.  

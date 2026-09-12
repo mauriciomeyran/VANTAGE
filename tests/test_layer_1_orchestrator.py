@@ -2615,5 +2615,47 @@ def test_g8_export_and_normalize_pipeline_fixture(tmp_path):
 
 
 
+# ── G9: docsync package — Q-4 derogación + anchors en mirror ────────────────
+
+def test_g9_docsync_verify_pass():
+    """G9: g9_docsync_verify exit 0 (anchors Kernel/Manual/Changelog/tidy/Q-4)."""
+    import g9_docsync_verify as v
+    assert v.main() == 0
+
+
+def test_g9_kernel_gate_010_derogation_present():
+    """G9/Q-4: KERNEL GATE-DECISION-010 contiene DEROGACIÓN + is_mutable SSOT."""
+    root = Path(__file__).resolve().parent.parent
+    text = (root / "Documentación" / "ACTIVE" / "Kernel.md").read_text(encoding="utf-8")
+    assert "DEROGACIÓN PARCIAL" in text
+    assert "tracker_flow.is_mutable" in text
+    assert "NO se implementa bloqueo Class-B-mientras" in text or "Class-B-bloqueado-en-REVIEW" in text
+    # canonical Next_Action ES in SCHEMA-008
+    assert "Seguimiento" in text and "Preparación Entrevista" in text
+
+
+def test_g9_changelog_v922_entry():
+    """G9: Change Log tope tiene v9.22.0 formato vigente."""
+    root = Path(__file__).resolve().parent.parent
+    text = (root / "Documentación" / "ACTIVE" / "Change Log.md").read_text(encoding="utf-8")
+    head = text[:2500]
+    assert "v9.22.0" in head
+    assert "Tipo:" in head
+    assert "GATE-DECISION-010" in head
+
+
+def test_g9_q4_closed_in_preguntas():
+    """G9: Q-4 marcada CERRADA en PREGUNTAS_ABIERTAS."""
+    root = Path(__file__).resolve().parent.parent
+    text = (root / "handoffs" / "PREGUNTAS_ABIERTAS.md").read_text(encoding="utf-8")
+    assert "CERRADA en G9" in text
+
+
+def test_g9_package_doc_exists():
+    root = Path(__file__).resolve().parent.parent
+    assert (root / "Layer_1" / "docs" / "G9_DOCSYNC_PACKAGE.md").exists()
+
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

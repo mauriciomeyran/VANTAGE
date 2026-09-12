@@ -31,8 +31,8 @@ L0 · VANTAGE Runtime
 L1/L2 · Discovery (Lunes)
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
-| vl1 | Corre el pipeline principal de Active Recon — procesa el JSON consolidado del día y lo escribe en el Tracker. | Invoca layer_1_pipeline.sh, que activa .venv y dispara feed_processor.py: normaliza campos, aplica dedup cross-layer, presenta DRY RUN antes de escribir. El paso de URL Gate dentro de layer_1_run.py (ejecutado por vl1, Fase 2) valida activamente URLs de agregadores vía HEAD con timeout corto, en vez de aceptarlas por dominio. |
-| vl1status / vl1analytics / vl1batch / vl1recovery / vl1profile / vl1feed / vl1backfill | Atajos de un solo token a cada subcomando de vl1 (ver Manual 09.2 para el detalle de cada uno). | Cada uno equivale a vl1 — mismo contrato, solo evita el espacio. |
+| vl1 | Corre el pipeline principal de Active Recon (orquestador v9). Dry-run default. | Invoca `layer_1_pipeline.sh` → `layer_1_orchestrator.py --dry-run` (G6). Fases F0–F6 sobre `tracker_flow.is_mutable`; URL Gate en orch; writers vía enums + `guarded_pages_update`. `--apply` explícito para escribir. |
+| vl1status / vl1analytics / vl1recovery / vl1profile / vl1feed / vl1backfill / vl1s | Atajos a subcomandos de vl1 (Manual). `vl1batch` **retirado** (Q-10/G6). `vl1s` = sidecar F13b (`vl1_sync.py`). | Mismo contrato dry-run-first. |
 | vl1app | Abre la app empaquetada de Layer 1 desde Finder/Spotlight en vez de Terminal. | open /Applications/Layer 1. |
 | vassemble | Genera los 7 prompts semanales (.md) por motor desde la PROMPT LIBRARY, con fecha del día ya sustituida. | Corre weekly_prompt_assembler.py: fetch vía notion_utils.notion_get (cache/throttling/retry ya existentes) de Prompt A + Wrapper por motor + Prompt E, sustitución de [YYYY-MM-DD], concatenación Prompt A + Wrapper por orden fijo, escritura de Prompt_[Motor][Fecha].md y Prompt_E_Consolidation[Fecha].md en Layer_1/data/Prompts/. |
 ## 04 ALIASES:L3-PASSIVE-INTAKE
@@ -80,5 +80,5 @@ Dedup & Oportunidades
 | --- | --- | --- |
 | vdedup | Consolida entradas duplicadas detectadas en el Tracker. | Corre consolidate_duplicates.py sobre la clave compuesta brand+title+location. |
 | vopport | Limpia duplicados específicamente en oportunidades ya calificadas. | Corre dedup_opportunities.py. |
-| dedup_audit.sh <em>(sin alias corto en .zshrc — se invoca por ruta)</em> | Auditoría manual semanal recomendada de duplicados en Oportunidades — mismo motor que vopport, pensado como recordatorio de cadencia fija. | ./scripts/dedup_audit.sh → dedup_opportunities.py sin flags. Soporta también --clear <page_id> (falsos positivos) y layer_1_run.py --dedup-audit (integración automática Fase 6, +1-2 min al pipeline). |
+| dedup_audit.sh <em>(sin alias corto en .zshrc — se invoca por ruta)</em> | Auditoría manual semanal recomendada de duplicados en Oportunidades — mismo motor que vopport, pensado como recordatorio de cadencia fija. | ./scripts/dedup_audit.sh → dedup_opportunities.py sin flags. Soporta también --clear <page_id> (falsos positivos) y layer_1_orchestrator.py --dry-run --dedup-audit (F6; Raycast vantage-dedup.sh). |
 | Figma Sync (plugin CV, 04-Vantage_CV/Figma Sync/) no tiene alias de Terminal propio — se opera desde Figma Desktop, ver Manual 08.3. |  |  |

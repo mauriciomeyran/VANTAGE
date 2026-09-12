@@ -529,13 +529,9 @@ Comandos Principales
 Estos comandos operan sobre el estado del Tracker y están disponibles como subcomandos de vl1. Cada uno tiene un alcance preciso y un modo de operación por defecto.
 - vl1 tracker — genera un reporte de estado del Tracker en tiempo real: distribución por Gate_Decision, conteo de entradas activas (CREATE + APPLIED), entradas BLOCKED, aplicaciones de los últimos 7 días y NADs vencidas. Es el punto de partida del ciclo semanal — corre antes de cualquier otra operación para tener visibilidad del estado actual (esto es lo que produce el output que viste en el Test Inicial de Setup, MANUAL:SETUP, Paso 5).
 - vl1 analytics — analiza la efectividad de las fuentes de discovery: qué canales producen más entradas CREATE, qué ratio de URLs funcionales tienen, cuál es el score promedio por fuente, y qué método de búsqueda (SEARCH-WEEK, SEARCH-EXEC, Manual) tiene mayor tasa de éxito. Corre los viernes como parte del cierre semanal (MANUAL:WEEKLY-FLOW-005).
-- vl1 batch — modo de operación por defecto: read-only. Muestra la distribución por Status y el conteo de entradas que serían afectadas por la operación batch configurada en el script. Para ejecutar escritura, pasar el flag -execute explícitamente:
-```bash
-vl1 batch --execute
-```
-Sin --execute, el comando nunca escribe en Notion. Esta protección es permanente — no se puede desactivar sin modificar el flag.
+- vl1 batch — **RETIRADO (G6 / Q-10)**. Target→Exploratorio ya no-op (Target=0 en prod). El case `batch` de `layer_1_pipeline.sh` imprime nota y exit 0; script en `Archive/Legacy_Scripts/batch_operations.py`. No hay `--execute`.
 - vl1 recovery — verifica la consistencia de los datos en el Tracker: detecta entradas sin Score, sin VM_Scope o sin Gate_Decision. También gestiona checkpoints del pipeline — si un run anterior falló a mitad, recovery carga el último checkpoint y permite retomar desde el paso fallado. Corre cuando el pipeline reporta inconsistencias o tras un fallo inesperado.
-- vl1 profile — gestiona la configuración del perfil activo del sistema: keywords VM y de pivote, pesos de scoring, empresas target por tier y foco geográfico. Permite actualizar el perfil sin editar código — los cambios se persisten en config/profile_config.yaml. Opción 7 (“Salir sin cambios”) es el exit seguro; cualquier cambio guardado requiere propagación manual a layer_1_run.py.
+- vl1 profile — gestiona la configuración del perfil activo del sistema: keywords VM y de pivote, pesos de scoring, empresas target por tier y foco geográfico. Permite actualizar el perfil sin editar código — los cambios se persisten en config/profile_config.yaml. Opción 7 (“Salir sin cambios”) es el exit seguro; cualquier cambio guardado se refleja en el siguiente vl1 (orquestador); no hay sync aparte a layer_1_run (archivado).
 - vl1 backfill — catch-up de campos Class A faltantes en entradas existentes: layer, hash y Prioridad, para registros que no pasaron por la escritura primaria de Fase 3.6. Opera con preview obligatorio antes de escribir — muestra exactamente qué entradas serán modificadas y por qué razón se infirió el layer. La fórmula de Prioridad (Urgencia × Importancia) vive en priority_logic.py, referenciada desde KERNEL:TRIGGER-002 — este comando la ejecuta como catch-up; vl1 (bare) la ejecuta primero como parte del ingreso normal del pipeline (Fase 3.6). Acepta -dry-run para preview sin confirmación:
 ```bash
 vl1 backfill --dry-run
@@ -612,7 +608,7 @@ A diferencia de los Hard Blocks, estas vacantes sí pueden recuperarse: fueron b
 Dedup
 El sistema opera dos mecanismos complementarios de deduplicació¶¶¶n con propó¶¶¶sitos y ventanas distintas:
 - Dedup en tiempo real (ingesta): ventana de 30 dí­as, hash exacto + URL + brand+title. Previene contaminació¶¶¶n del Tracker con duplicados obvios al momento de ingesta (feed_processor.py).
-- Dedup por auditorí»¶ post-ingesta: ventana configurable de 60 dí­as por default, matching fuzzy (brand≥0.85, rol≥0.7) + fingerprint de contenido, contraste contra el Archivo Tracker y reglas anti-falsos positivos extensibles (ANTI_FALSE_POSITIVE_RULES). Desde v9.21.0 corre automá¶¶ticamente al finalizar layer_1_run.py mediante ENABLE_DEDUP_AUDIT=true, hereda --dry-run del pipeline principal y exporta métricas a dedup_metrics.json.
+- Dedup por auditorí»¶ post-ingesta: ventana configurable de 60 dí­as por default, matching fuzzy (brand≥0.85, rol≥0.7) + fingerprint de contenido, contraste contra el Archivo Tracker y reglas anti-falsos positivos extensibles (ANTI_FALSE_POSITIVE_RULES). Desde v9+ corre en layer_1_orchestrator.py F6 / --dedup-audit, hereda --dry-run del pipeline principal y exporta métricas a dedup_metrics.json.
 - Jerarquí»¶ entre capas: L1 > L2 > L3. Cuando dos capas detectan la misma vacante, persiste la instancia de la capa de mayor jerarquí»¶, pero se toman de la capa de menor jerarquí»¶ los datos que puedan complementar sus propiedades Class A (esto es exactamente lo que ocurre en el paso de Consolidation & Dedup del Lunes, MANUAL:WEEKLY-FLOW-001).
 - Resolució¶¶¶n de flags: los registros marcados Dedup_Flag='Posible duplicado' por la auditorí»¶ post-ingesta son candidatos a archivado; su resolució¶¶¶n opera ví­a vantage-tidy-opportunities-tracker (DRY RUN + APROBAR_WRITE), no hay archivado automá¶¶tico.
 - Ventana: 30 días. Una vacante que ya existe en el Tracker no se vuelve a crear si aparece de nuevo dentro de esta ventana.
@@ -747,9 +743,9 @@ Verificar que corrección se guardó (refrescar página Notion).
 Ejecutar pipeline: ~/vantage_pipeline.sh.
 Si persiste: verificar en terminal qué campo sigue bloqueando (Python imprime razón).
 Revisar logs en ~/.vantage/logs/ para diagnóstico detallado.
-vl1 batch Modifica Entradas Sin --execute
+vl1 batch RETIRADO (G6) — no modifica entradas
 Bug crítico: reportar inmediatamente.
-Workaround: verificar siempre con vl1 batch (sin flag) antes de ejecutar.
+Workaround: batch retirado; usar orch --dry-run para preview de writes.
 Confirmar que script tiene guard if not args.execute: return al inicio.
 vsync_doc.py Falla — “blocks.children.list() returned None”
 Bug conocido de notion-client 3.x.
@@ -804,7 +800,7 @@ Base: KERNEL:CV-GOLDEN-RULES.
 ---
 ## 17 MANUAL:SLA
 SLA de Latencia
-> Nota: el SLA “< 45 minutos” cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh (ver MANUAL:WEEKLY-FLOW-001, Lunes) — no tiene SLA fijo salvo ejecución manual explícita de layer_1_run.py.
+> Nota: el SLA “< 45 minutos” cubre únicamente el segmento Score calculado → Ready-to-Apply (Discovery → Ready-to-Apply en nomenclatura anterior). El segmento Trigger → Score depende del ciclo de ejecución de ~/vantage_pipeline.sh (ver MANUAL:WEEKLY-FLOW-001, Lunes) — no tiene SLA fijo salvo ejecución manual explícita de layer_1_orchestrator.py / vl1.
 ## 18 MANUAL:CV-GOLDEN-RULES-INDEX
 Reglas de Oro CV
 Las Reglas de Oro (KERNEL:CV-GOLDEN-RULES) son restricciones de arquitectura, no preferencias. Viven íntegras en el Kernel — esta sección es un índice de navegación, no una copia.
@@ -869,7 +865,7 @@ Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad ·
 Class B — System-Primary (Python únicamente, ningún otro componente escribe):
 Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente
 Fetch refleja verificación técnica real, incluso en agregadores — un valor Accesible ya no puede escribirse sin al menos un intento de request.
-Next_Action: select (10 valores operativos). Ver KERNEL:SCHEMA-008.
+Next_Action: select (9 valores canónicos ES post-G7; legacy EN en migración). Ver KERNEL:SCHEMA-008.
 Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida (KERNEL:SCHEMA-003).
 Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
 ---
@@ -936,17 +932,23 @@ Flags:
 ---
 ### 22.1 MANUAL:SCRIPT-GLOSSARY-L1
 Layer 1 — Active Recon & Core Pipeline
-layer_1_run.py
-Variables de entorno (tuning silencioso):
-| Variable | Default | Caso de uso |
-| --- | --- | --- |
-| ENABLE_DEDUP_AUDIT | true | La auditorí¶¶a de duplicados corre automá¶¶ticamente al final del pipeline; usa false solo para desactivarla en una ejecució¶¶¶n puntual. El subproceso hereda --dry-run y opera con timeout de 10 minutos. |
-| DEDUP_WINDOW_DAYS | 60 | Ajusta la ventana temporal enviada al audit de dedup sin modificar código. |
+
+**layer_1_orchestrator.py** (entry canónico post-G6 — reemplaza `layer_1_run.py` v7.5)
+Qué hace: orquesta F0–F6 sobre `tracker_flow.py` (enums cerrados, `is_mutable`, `archive_gate`, dedup survivor L1>L2>L3>N/A). Dry-run default; `--apply` explícito. Un solo escritor (`guarded_pages_update` + `class_b_guard`). Cadena: `vl1` → `layer_1_pipeline.sh` → este script.
 | Flag | Caso de uso |
 | --- | --- |
-| --dry-run | Antes de correr el pipeline completo en un día con muchos feeds nuevos, corre con --dry-run para ver qué escribiría sin comprometer el Tracker — útil si sospechas que un feed trae datos sucios. |
-| --dedup-audit | Al cerrar el ciclo semanal de L1, agrégalo para que el mismo comando dispare dedup_opportunities.py como subproceso y te dé el reporte fuzzy sin correr dos comandos separados. |
-generate_archive_notes() — función interna, sin CLI propia. Invocada desde 3 puntos de layer_1_run.py (URL Gate, misfit de perfil, NAD vencido) para escribir la nota determinista de archivado en Notas (ver KERNEL:GATE-DECISION-013, MANUAL:DATA-MANAGEMENT-001). Mecanismo de herencia de --dry-run pendiente de verificar contra código fuente.
+| --dry-run | Default. Preview de writes sin tocar Notion. |
+| --apply | Escritura real (requiere token; jamás default). |
+| --dedup-audit | F6 audit unificado (Raycast `vantage-dedup.sh`). |
+
+`layer_1_run.py` → `Archive/Legacy_Scripts/` (G6, cero trash físico). Tests de paridad G3 cargan el archivo archivado por path.
+
+**vl1_sync.py** — sidecar F13b Outcome→Status (dry-run default, proxy read-only; `--apply` gateado).
+**normalize_tracker_values.py** — G7 normalización de valores (tabla actual→normalizado); dry-run default.
+**export_tracker_snapshot.py · g8_post_checklist.py · rollback_schema_migration.py** — cutover G8 (`Layer_1/docs/G8_DEPLOYMENT_PLAN.md`).
+
+generate_archive_notes() / archive_gate — internos del core; el orquestador los invoca en URL Gate / misfit / NAD (KERNEL:GATE-DECISION-013). Dry-run heredado del pipeline padre.
+
 feed_processor.pyQué hace: Ingiere un JSON de feed (L1/L2/L3) y crea/actualiza registros en el Tracker.
 Flags:
 | Flag | Caso de uso |
@@ -1125,16 +1127,18 @@ Variables de entorno (todas ajustables sin tocar código):
 ---
 ### 22.1a MANUAL:SCRIPT-GLOSSARY-L1-MODULES
 Módulos Compartidos (sin CLI propia — se importan, no se ejecutan solos)
-> Estos 7 no son "scripts" en el sentido operativo — son librerías internas que otros scripts importan. --new-scripts los detecta igual porque no distingue tipo de archivo; se documentan aquí por completitud, sin tabla de flags porque no tienen ninguno.
-gate_logic.pyQué hace: Terminal State Protection (KERNEL:GATE-DECISION-010) — decide si un registro del Tracker ya está en estado terminal (Postulado, Rechazado, Expirada) y por lo tanto NO debe recalcularse. Contiene cero lógica de scoring.
-Quién lo consume: layer_1_run.py (Fase 4).
-Por qué te sirve saberlo: si un registro se queda "atorado" sin actualizar pese a nueva información, este es el módulo que decide si eso es correcto (protección de terminalidad) o un bug.
+tracker_flow.pyQué hace: Core único del Tracker — enums Status/Next_Action/Gate_Decision, normalize_record, is_mutable, archive_gate, choose_survivor, NORMALIZATION_TABLE (G7), F13 Outcome→Status.
+Quién lo consume: layer_1_orchestrator.py, vl1_sync.py, feed_processor (vía frontera), tests G3/G5.
+> Estos módulos no son "scripts" en el sentido operativo — son librerías internas que otros scripts importan. --new-scripts los detecta igual porque no distingue tipo de archivo; se documentan aquí por completitud, sin tabla de flags porque no tienen ninguno.
+gate_logic.pyQué hace: Labels de terminalidad legada (KERNEL:GATE-DECISION-010 §B) — STATUS_TERMINAL_MAP + TERMINAL_ACTIONS. **SSOT de mutabilidad de fila = tracker_flow.is_mutable** (LIVE∪TERMINAL + manual-first). Este módulo no decide solo si se escribe.
+Quién lo consume: layer_1_orchestrator.py (F4 labels).
+Por qué te sirve saberlo: si una fila LIVE no se toca, mira is_mutable primero; gate_logic solo etiqueta APPLIED/REJECTED/…
 class_b_guard.pyQué hace: Guard técnico para GAP-03 (KERNEL:GATE-DECISION-003) — punto único de verdad de qué campos puede escribir un actor no-Python (como Claude vía MCP) en el Tracker. No ejecuta la escritura, audita el payload antes y devuelve la versión limpiada + reporte de lo removido.
 Por qué existe: feed_processor.py ya filtra Class B por construcción, pero el conector MCP de Claude escribe directo a Notion sin pasar por ahí — esta es la asimetría que cierra.
 Por qué te sirve saberlo: si alguna vez ves un campo Class B escrito por mí (Claude) que no debería, este es el módulo que falló o que faltó invocar.
-priority_logic.pyQué hace: Lógica de Prioridad (Class A) compartida — extraída de backfill_class_a.py para romper un import circular con layer_1_run.py.
-Quién lo consume: layer_1_run.py (Fase 3.6, escritura primaria semanal) y backfill_class_a.py (catch-up de registros legacy).
-Por qué te sirve saberlo: si cambias la matriz de urgencia/importancia que define Prioridad, este es el único archivo que debes tocar. Nota: esto aplica solo a la matriz de Prioridad — la función auxiliar txt() (lectura de propiedades) sí existe duplicada en tres archivos (layer_1_run.py, priority_logic.py, backfill_class_a.py); consolidación evaluada y descartada por riesgo de import circular (mismo motivo por el que existe este módulo compartido).
+priority_logic.pyQué hace: Lógica de Prioridad (Class A) compartida. **No tocar el bug día/mes** (Q-7) — solo llamar.
+Quién lo consume: layer_1_orchestrator.py (F3.6) y backfill_class_a.py.
+Por qué te sirve saberlo: matriz Urgencia×Importancia vive solo aquí. `txt()` compartido ahora también en tracker_flow (G6 Dashboard compat).
 profile_fit.pyQué hace: Reglas de fit de perfil VM y exclusiones compartidas — detecta títulos de rol excluidos (vendedor, sales, planner sin "visual", store manager, etc.) vía regex.
 Quién lo consume: pipeline principal y scripts de cleanup.
 Por qué te sirve saberlo: si una vacante que debería excluirse se está colando (o viceversa, una válida se excluye), este archivo tiene el patrón regex responsable — no busques la lógica en otro lado.
@@ -1157,7 +1161,7 @@ Uso: Sin flags — se corre directo.
 Caso de uso: Tu Mac se siente lento o con poco espacio y quieres liberar caché de navegadores sin riesgo de cerrar sesiones activas.
 pipeline_recovery.pyQué hace: Manejo de fallos y "resume operations" del pipeline — guarda checkpoints (save_checkpoint) para poder retomar una corrida de L1 que se interrumpió a medias.
 Uso: Requiere NOTION_TOKEN.
-Caso de uso: Si layer_1_run.py se cae a la mitad de un batch grande (ej. por rate limit de Notion), este módulo es el que permite retomar desde el checkpoint en vez de reprocesar todo desde cero.
+Caso de uso: Si layer_1_orchestrator.py se cae a la mitad de un batch grande (ej. por rate limit de Notion), este módulo es el que permite retomar desde el checkpoint en vez de reprocesar todo desde cero.
 profile_evolution.pyQué hace: Maneja cambios en la configuración/perfil del sistema (config/profile_config.yaml) — crea config default si no existe, actualiza progresión de perfil.
 Uso: python3 profile_evolution.py — sin flags, interactivo, requiere pyyaml instalado.
 Caso de uso: Cuando cambia tu rol objetivo o etapa de carrera (ej. de "Coordinador" a "Dirección") y quieres que el sistema actualice su configuración de perfil de forma guiada en vez de editar el YAML a mano.
@@ -1208,7 +1212,7 @@ Flags:
 Dashboard — Servidor Local de Visualización
 dashboard_start.sh → dashboard_server.pyQué hace: Levanta el servidor local del Dashboard, corre smoke test, abre el navegador.
 Uso: Sin flags — un solo comando hace todo el ciclo (start → healthcheck → smoke test → abrir browser). Si el smoke test falla, no abre el navegador y te avisa por notificación de sistema.
-layer_1_run_dash.pyQué hace: Variante de layer_1_run.py adaptada para ser invocada desde el Dashboard web en vez de Terminal.
+layer_1_run_dash.pyQué hace: **ARCHIVADO** (G6) → `Archive/Dashboard/layer_1_run_dash.py`. Dashboard vive vía dashboard_*.py + orchestrator/url_gate/tracker_flow.
 Uso: Sin flags CLI propios — se invoca vía las rutas HTTP del Dashboard, no directo.
 ---
 ### 22.4a MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES

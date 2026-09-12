@@ -1,5 +1,30 @@
 # V | CHANGELOG
 
+Tipo: [DOC] [NORM] [OPS]
+Versión: v9.22.0
+Documento modificado (repo mirror; Notion aplica Claude + APROBAR_WRITE):
+- Documentación/ACTIVE/Kernel.md — §§05.2, 07.1, 07.7–07.8, 09.2–09.3, 09.10 (DEROGACIÓN Q-4), 09.13, 04 dedup
+- Documentación/ACTIVE/Manual.md — §22.1 glosario L1 (orchestrator), 22.1a modules, batch retired, Next_Action ES
+- Documentación/ACTIVE/Aliases.md — vl1 → orch; vl1batch retired; vl1s; dedup
+- skills/- Tidy/vantage-tidy-opportunities-tracker/SKILL.md — SSOT is_mutable; G9 note
+- Layer_1/docs/G7_NORMALIZATION_TABLE.md · G8_DEPLOYMENT_PLAN.md (ya en repo)
+Código de referencia (gates G2–G8, rama entrega): layer_1_orchestrator.py, tracker_flow.py, normalize_tracker_values.py, g8_post_checklist.py.
+Documentos potencialmente afectados: SP:SCHEMA / SP glosario scripts (si existe fila layer_1_run) — Claude verifica Census; System Prompt solo si cita entry VL1.
+Tipo de impacto: Normativo + Operativo — cierre docsync del reemplazo total del orquestador Tracker (contrato 2026-09-12). Alinea docs al código ya verde G0–G8.
+Causa raíz: Kernel/Manual describían W1 (`layer_1_run.py`) multi-whitelist y GATE-DECISION-010 como protección estrecha de 3 Status; el código unificado usa `is_mutable` + enums ES; Q-4 exige derogar la promesa Class-B-bloqueado-en-REVIEW en Python.
+Acción correctiva (esta pasada = diffs en repo; write Notion = Claude):
+1. KERNEL:SCHEMA-001/008 — Status 12 canónicos; Next_Action 9 ES + legacy mapa G7; Source_Type dual-key; Holding placeholder→vacío.
+2. KERNEL:GATE-DECISION-010 — **derogación parcial Q-4**: SSOT mutabilidad = is_mutable; gate_logic = labels; NO bloqueo Class-B-mientras-Por-Revisar en pipeline Python.
+3. KERNEL:GATE-DECISION-002/003/013 + OWNERSHIP-002 — entry orchestrator; resolución Objetivo (no Target); archive_gate.
+4. Manual §22.1 + Aliases vl1 — entry orch dry-run; batch RETIRADO; scripts G7/G8 documentados.
+5. tidy skill — lee Next_Action canónico; no escribe Class B; referencia Archive layer_1_run.
+6. Runbook cutover G8 ya entregado (freeze→merge→patch); esta entrada no ejecuta Notion prod.
+IDs afectados: reescritura de nodos KERNEL:SCHEMA-001, SCHEMA-007, SCHEMA-008, GATE-DECISION-002/003/010/013, OWNERSHIP-002; MANUAL:SCRIPT-GLOSSARY-L1; alias vl1. Sin alta/baja de ID canónico nuevo (mismo ancla, texto actualizado) — Claude confirma Census Regla 1.
+Estado: **DIFFS EN REPO APLICADOS** (mirror). **Notion: PENDIENTE APROBAR_WRITE** por Claude en sesión de docsync (G9 manda: "Los aplica Claude"). Cero escritura Notion en la sesión de código que generó este patch.
+Evidencia código: tip entrega G8 `e4ac1ba` + G9 doc tip (este commit); suite G* 242 passed; g8_post_checklist 37 PASS.
+Handoff de referencia: contrato consolidado 2026-09-12 · gates G2–G8.
+---
+
 Tipo: [FIX] [DOC] [OPS]
 Documento modificado: vantage-present-handoff/SKILL.md, vantage-session-open/SKILL.md, vantage-session-close/SKILL.md (repo GitHub, v1.0.0→v1.1.0→v1.2.0 en dos pasadas) · tracker_flow.py (repo, fix de bug real) · Tasks Tracker (Notion, 1 alta) · KERNEL:HANDOFF-SERIAL (Notion, pendiente de edición manual por el operador — markdown entregado, no aplicado por MCP en esta sesión).
 Documentos potencialmente afectados: SP:SKILL-VERSION-PIN (tabla en v1.0.0 para los 3 skills de sesión, desalineada contra el repo tras este cambio — pendiente de sync, no ejecutado en esta sesión).

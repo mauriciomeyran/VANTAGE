@@ -119,6 +119,13 @@ El único valor de `Status` que libera un registro bloqueado para reprocesamient
 - El archivado físico (mover a Archivo Tracker o `archived:true` en Notion) queda **fuera de alcance de esta skill** por decisión explícita del operador — es responsabilidad manual posterior, apoyada por la casilla `Archivar` como marcador visual.
 - Esquema del Archivo Tracker (propiedades duplicadas/corruptas, `Score_Method` faltante) — sigue sin resolver, pero ya no bloquea esta skill porque esta skill no escribe ahí.
 
+## G9 / orquestador v9 (docsync)
+
+- Entry pipeline: `layer_1_orchestrator.py` (no `layer_1_run.py`).
+- Esta skill **sigue** solo marcando checkbox `Archivar` (Class A); no escribe Class B.
+- Candidatos: `Next_Action=Archivar` (canónico) y/o `Dedup_Flag`; valores EN legacy (`Follow-up`…) pueden existir pre-cutover G8 — no los reescribas.
+- Terminalidad de fila la decide el orquestador (`is_mutable`), no esta skill.
+
 ## Reglas de oro
 
 - Nunca sobreescribir `Next_Action` — esta skill no lo toca, solo lee.
@@ -139,6 +146,6 @@ Post-`APROBAR_WRITE`, reportar sin que el operador lo pida:
 
 ## Fuentes verificadas (sesión 2026-07-19, vigentes salvo lo indicado en "Alcance de esta skill")
 
-Jerarquía de 3 mecanismos de dedup: confirmada por lectura directa de `feed_processor.py` (líneas 201-450) y `dedup_opportunities.py`. Estado real de datos (34/36 huérfanos de archivado, 27/27 `Expirada` sin `Gate_Decision=EXPIRED`): confirmado por análisis directo del CSV exportado del VANTAGE Tracker (76 filas). Motor de misfit de perfil: confirmado por lectura directa de `profile_fit.py`. PROTECCIÓN TOTAL: confirmada en código vigente de `layer_1_run.py` (línea 735-738, v8.0).
+Jerarquía de 3 mecanismos de dedup: confirmada por lectura directa de `feed_processor.py` (líneas 201-450) y `dedup_opportunities.py`. Estado real de datos (34/36 huérfanos de archivado, 27/27 `Expirada` sin `Gate_Decision=EXPIRED`): confirmado por análisis directo del CSV exportado del VANTAGE Tracker (76 filas). Motor de misfit de perfil: confirmado por lectura directa de `profile_fit.py`. PROTECCIÓN TOTAL / mutabilidad: SSOT = `tracker_flow.is_mutable` + `PROTECTED_STATUSES` (LIVE∪TERMINAL) en orquestador v9. `layer_1_run.py` → Archive/ (G6). Next_Action canónico ES (Seguimiento/Revisión/…); legacy EN solo lectura hasta prune G8.
 
 Nota de simplificación (2026-08-01): esta skill ya no depende de `auto_archive.py` ni del esquema del Archivo Tracker — decisión explícita del operador para reducir fricción y costo de tokens, calcando el modelo de `vantage-tidy-bug-task-tracker`.

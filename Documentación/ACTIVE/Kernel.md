@@ -359,7 +359,7 @@ Mecanismos de Dedup — Distinción de Propósito
 El sistema tiene dos mecanismos de dedup complementarios con ventanas y propósitos distintos:
 1. Dedup en tiempo real (ingesta): hash exacto + URL exacta + brand+title (ventana 30d, feed_processor.py). Propósito: prevenir contaminación del Tracker con duplicados obvios al momento de ingesta.
 1. Dedup por auditoría post-ingesta: fuzzy matching (brand≥0.85, rol≥0.7) + fingerprint de contenido (ventana 60d, dedup_opportunities.py + Archive Tracker). Propósito: detectar duplicados sutiles que el hash exacto no captura (rotación de jk, reposts) y mantener limpieza del Tracker a través del tiempo.
-Ambos mecanismos coexisten legítimamente: el primero es gate preventivo de ingesta, el segundo es auditoría correctiva post-ingesta. No son mutuamente excluyentes ni redundantes. Automatización (v9.21.0): el mecanismo 2 se dispara automáticamente al final de layer_1_run.py vía ENABLE_DEDUP_AUDIT=true (default) — ya no requiere invocación manual separada; hereda el modo --dry-run del pipeline principal y exporta métricas estructuradas a dedup_metrics.json. El filtro anti-falso-positivo (antes hardcoded para "electrónica") se generalizó a ANTI_FALSE_POSITIVE_RULES, una lista extensible de reglas.
+Ambos mecanismos coexisten legítimamente: el primero es gate preventivo de ingesta, el segundo es auditoría correctiva post-ingesta. Automatización v9+: el mecanismo 2 corre al final de **layer_1_orchestrator.py** (F6, survivor L1>L2>L3>N/A + `is_mutable`) y/o vía `vl1`/`--dedup-audit` (Raycast `vantage-dedup.sh`). `consolidate_duplicates.py` → Archive/ (G6). Hereda dry-run default; métricas en summary del orch. ANTI_FALSE_POSITIVE_RULES extensible en motor legacy de auditoría.
 Punto de Convergencia Único
 Las tres capas de búsqueda escriben a Notion. vantage-pipeline lee de Notion, no de outputs de capa directamente.
 Figma Sync — CV Output Layer
@@ -399,12 +399,12 @@ CV-À SCOPE LOCK: Prohibido en esta fase evaluar fit estratégico o cuestionar l
 ### 05.2 KERNEL:OWNERSHIP-002
 Python Component
 Motor de lógica de negocio y escritura autónoma: único componente con permiso de escritura autónoma en Notion.
-- Procesa FEED (feed_processor.py, layer_1_run.py, layer_3_mail.py).
-- Calcula Score, Gate_Decision, VM_Scope, Role_Class, Match, Next_Action, Fetch, Fuente.
+- Procesa FEED (feed_processor.py, **layer_1_orchestrator.py** / `vl1`, layer_3_mail.py). `layer_1_run.py` → Archive/ (G6).
+- Calcula Score, Gate_Decision, VM_Scope, Role_Class, Next_Action, Fetch, Fuente (Class B) solo si `is_mutable` y hay diff material.
 Excepción — Bypass
 Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE automático (ver 09.1).
 Invariante crítico
-Python recalcula campos Class B en cada run — ningún valor estimado por el AI Component tiene validez en el pipeline. Este invariante se aplica técnicamente en la vía RT-1/Dashboard mediante el guard documentado en KERNEL:GATE-DECISION-003 (GAP-03 cerrado v9.19.2).
+Python recalcula Class B bajo guard del orquestador — ningún valor estimado por el AI Component tiene validez en el pipeline. Vías: GATE-DECISION-003 (MCP/RT-1) + `guarded_pages_update` / Q-9 (pipeline).
 ---
 ## 06 KERNEL:DASHBOARD-CHECKLIST-ARCH
 Arquitectura Dashboard/Checklist
@@ -426,10 +426,13 @@ El schema define ownership. Cada campo pertenece a exactamente un componente.
 Class A — Human-Primary
 AI Component escribe en CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_processor.py escribe en FEED L1/L3:
 - Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash.
-Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Archivar · Repetida.
+Valores operativos de Status (canónico post-G7, enum `tracker_flow.Status`, 12): Objetivo · Exploratorio · Por Revisar · Postulando · Postulado · En Proceso · Negociando · Sin Respuesta · Contratado · Expirada · Rechazado · Retirado.
+Legacy eliminados del vocabulario activo (mapa G7): Target→Objetivo · Archivar(opción Status)→Retirado · REVIEW_NEEDED(Status)→Por Revisar. `Status=Archivar` como opción select está podado; la señal de archivo operativa es `Next_Action=Archivar` + checkbox `Archivar` (skill tidy).
+Propiedad `Source_Type`: schema vivo histórico tenía trailing space (`Source_Type `). Código dual-lee ambas claves (`SOURCE_TYPE_PROP_ALIASES`). Rename limpio = cutover G8 MCP.
 Notas recibe, entre otros usos, el texto determinista de auditoría de archivado escrito por VL1 (ver KERNEL:GATE-DECISION-013) — es trazabilidad de decisión, no un campo Class B pese a ser escrito por un comando Python.
 Class B — System-Primary
-Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Next_Action · Fetch · Fuente · Dedup_Flag · Score_Method · Last_Gate_Run.
+Python escribe (vía `layer_1_orchestrator.py` + `guarded_pages_update` + `class_b_guard`): Score · Gate_Decision · VM_Scope · Role_Class · Next_Action · Fetch · Fuente · Dedup_Flag · Score_Method · Last_Gate_Run.
+Holding placeholder `"Investigar"` → vacío en normalización G7 (holdings reales jamás se vacían; ver `NORMALIZATION_TABLE`).
 ### 07.2 KERNEL:SCHEMA-002
 Restricción del Sistema
 Campos Class B en JSON entrante se ignoran sin excepción — Python los calcula en el siguiente run.
@@ -461,27 +464,28 @@ Mapeo de Vocabulario — Prompts → Tracker
 - apply_url → URL
 - brand → Marca
 - title → Rol
-- holding → Holding (null → "Investigar")
+- holding → Holding (null/placeholder "Investigar" → vacío post-G7; holdings reales se curan, no se borran)
 Entry Template — Campos Class A Requeridos
 Rol · Marca · URL · Source_Type · Status · Prioridad · JD · JOB_ID · Holding.
 ---
 ### 07.8 KERNEL:SCHEMA-008
 Valores Operativos — Next_Action (Tracker de Vacantes)
-Campo Class B (System-Primary), tipo select (migrado de rich_text en v9.14.2) — escrito por layer_1_run.py y layer_1_run_dash.py con la estructura {"select": {"name": VALUE}}. Auditoría de código realizada 2026-08-06, verificada línea por línea contra el repositorio.
-Valores confirmados en código activo (10), rediseño v9.14.6 (KERNEL:GATE-DECISION-010):
+Campo Class B (System-Primary), tipo select (migrado de rich_text en v9.14.2) — escrito por **`layer_1_orchestrator.py`** (entry `vl1` / `layer_1_pipeline.sh` v9) con `{"select": {"name": VALUE}}` vía enums `tracker_flow.NextAction` (G4: cero literales sueltos). Writers legacy `layer_1_run.py` / `layer_1_run_dash.py` → `Archive/` (G6).
+**Canónico ES (9)** — writers post-G7 emiten solo estos:
 | Valor | Condición de disparo |
 | --- | --- |
-| Optimizar | JD_Quality = "JD Completo" (Prioridad de procesamiento) |
-| Archivar | Terminal — URL Gate bloqueado / Misfits / NAD vencido / Gate BLOCKED default |
-| Investigar | Default no destructivo — ningún branch de Source_Type/Status/Fetch matchea (reemplaza a Archivar como catch-all, v9.14.5) |
-| Post-Mortem | Status=Rechazado → Gate_Decision=REJECTED (reemplaza a Ninguna, v9.14.5 — señala análisis pendiente antes de Archivar=True) |
-| Expirada | Constante de protección en TERMINAL_ACTIONS (gate_logic.py) |
-| Follow-up | Status ∈ {Postulado, Negociando, Sin respuesta} |
-| Interview prep | Status=En proceso |
-| Re-check | Gate_Decision=CREATE (Source_Type=Vacante), o Source_Type=Inbound (unifica Referencia/Networking, v9.14.5) |
-| Reparar URL | Source_Type=Vacante AND Fetch=Bloqueado (sitios directos) O agregador con HEAD fallido (Fetch=Accesible sin confirmar, fix v9.21.40 — ver KERNEL:GATE-DECISION-011) |
+| Optimizar | JD_Quality = "JD Completo" + gate CREATE/else |
+| Archivar | Terminal archivo — URL Gate / misfit / NAD (archive_gate atómico) |
+| Investigar | Default no destructivo / REVIEW_NEEDED band |
+| Post-Mortem | Status=Rechazado → Gate_Decision=REJECTED |
+| Seguimiento | Status ∈ {Postulado, Negociando, Sin Respuesta} (era Follow-up) |
+| Preparación Entrevista | Status=En Proceso (era Interview prep) |
+| Revisión | Gate_Decision=CREATE u otros no-app (era Re-check) |
+| Reparar URL | Source_Type=Vacante AND Fetch=Bloqueado |
 | Verificar JD | Source_Type=Vacante AND Fetch=Parcial |
-Historial de tipo de campo: v9.13.7 introdujo escritura select; v9.13.11 documentó (erróneamente) rich_text tras una auditoría desactualizada; v9.14.2/v9.14.3 (Changelog) confirmaron y ejecutaron la migración real a select — esta sección se corrige en v9.14.5 para alinearse con el Changelog, tras detectarse el drift por fetch directo del schema vivo de Notion.
+**Legacy EN** (lectura + migración G7 `NORMALIZATION_TABLE`; prune opciones en cutover G8): Follow-up→Seguimiento · Interview prep→Preparación Entrevista · Re-check→Revisión · Ninguna→∅ · Expirada(como NA)→Archivar.
+`TERMINAL_ACTIONS` en `gate_logic.py` sigue incluyendo `"Archivar"` y `"Expirada"` (protección lectura legacy). Fuente SSOT de mutabilidad de fila = `tracker_flow.is_mutable` (ver 09.10).
+Historial de tipo: v9.13.7 select; v9.14.2/3 migración real; v9.14.5 catch-all no destructivo; **v9.22.0 G7** canónico ES + tabla ejecutable.
 ---
 ## 08 KERNEL:TRACKER-SCHEMA
 Bug Tracker y Tasks Tracker
@@ -513,14 +517,15 @@ Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE auto
 Bypasses: URL_GATE + Score threshold + Visual Signal detection.
 ### 09.2 KERNEL:GATE-DECISION-002
 Lógica Estándar
-Orden:
-1. URL_GATE (link muerto → Score=0, Status=Expirada). Para agregadores (Computrabajo, Indeed, LinkedIn), el chequeo se ejecuta como HEAD con timeout de 6s en vez de bloqueo de bot ciego — respuesta 200 confirma, timeout/error marca no-verificado sin asumir accesibilidad. Ante fallo del HEAD check en agregadores, el sistema no archiva automáticamente: escribe Fetch=Accesible, Status=Target, Next_Action=Reparar URL, dejando la verificación manual como siguiente paso — comportamiento distinto al de sitios directos, donde el fallo de URL_GATE mantiene Score=0/Status=Expirada/Next_Action=Archivar (fix v9.21.40).
-1. Score (0–100)
-1. Gate_Decision (≥60 CREATE · 40–59 REVIEW_NEEDED · <40 BLOCKED/Archivar).
+Orden (orquestador v9 — un solo re-query + `is_mutable` antes de cómputo):
+1. URL_GATE (link muerto → Score=0, Status=Expirada, Next_Action=Archivar atómico). Agregadores: HEAD timeout 6s; fallo → Fetch=Accesible, Next_Action=Reparar URL **sin archivar** (no escribe Status=Target legacy — status operativo post-G7 = Objetivo/Exploratorio según flujo; fix v9.21.40 conservado en espíritu).
+1. Score (0–100) vía scoring v6.4
+1. Gate_Decision (≥60 CREATE · 40–59 REVIEW_NEEDED · <40 BLOCKED). Archivo destructivo solo vía `archive_gate` + `is_mutable`, no por score bajo solo.
 ### 09.3 KERNEL:GATE-DECISION-003
-Resolución de REVIEW_NEEDED
-GAP-03 — CERRADO (v9.19.2): escritura directa vía MCP/RT-1 cuenta con guard equivalente al de feed_processor.py. class_b_guard.guard_write_payload() está integrado en dashboard_notion.py::write_patch_to_notion() como guard previo a client.pages.update(), fail-closed (CLASS_B_BLOCKED) ante campos Class B o desconocidos (strict_unknown=True). Verificado línea por línea contra el repositorio, 2026-08-10.
-Disparador de resolución: Status = "Target".
+Resolución de REVIEW_NEEDED / Por Revisar
+GAP-03 — CERRADO (v9.19.2): escritura directa vía MCP/RT-1 cuenta con guard `class_b_guard.guard_write_payload()` en dashboard_notion + **todas las vías Python de write del orquestador** (`guarded_pages_update`, Q-9). Fail-closed ante Class B o desconocidos en actores no-pipeline.
+Disparador de resolución (post-G7): Status = **"Objetivo"** (legacy documentado "Target" → mapa G7; Q-2 prod ya 0 filas Target).
+**Q-4 / G9:** NO se implementa bloqueo Class-B-mientras-`Por Revisar`/`REVIEW_NEEDED` en el pipeline Python. Esa promesa documental era fiction del lado lector (radiografía §4.6). Protección real = `is_mutable` (manual-first + LIVE/TERMINAL) + `class_b_guard` por actor. Ver derogación en 09.10.
 ### 09.4 KERNEL:GATE-DECISION-004
 Por Qué los Gates Son Deterministas
 Un gate que puede sobreescribirse manualmente no es un gate — es una sugerencia.
@@ -578,27 +583,35 @@ Resolución de los 3 puntos de fricción identificados
 | Choque con SP:CONSISTENCY 05 | Resuelto por diseño: Nivel 3 requiere fuente dura preexistente. Las inferencias on-the-fly de Claude no activan Nivel 3. |
 Referencia cruzada Manual: Ver MANUAL:SESSION-CYCLE — Ciclo de Sesión para la implementación práctica de este escalamiento dentro del flujo operador.
 ### 09.10 KERNEL:GATE-DECISION-010
-Definición de Estados Terminales Protegidos
-Contrato de terminalidad (doble criterio). Fuente de verdad ejecutable: gate_logic.py (constantes de módulo).
-Criterios (orden de evaluación obligatorio)
-1. Status → STATUS_TERMINAL_MAP (prioridad)
-- "Postulado" → protege como APPLIED
-- "Rechazado" → protege como REJECTED
-- "Expirada" → protege como EXPIRADA (fix D-001 aplicado v9.19.1 — antes protegida indirectamente solo vía Next_Action=Expirada en TERMINAL_ACTIONS; ambos mecanismos coexisten sin conflicto, evaluados en este orden)
-1. Next_Action → TERMINAL_ACTIONS
-- "Archivar" · "Expirada"
-1. Si ninguno aplica → None (registro elegible para recálculo por gate())
-Invariantes
-- gate_logic() se invoca antes de gate() en todo pipeline ordinario y backfill (layer_1_run.py Fase 4).
-- Todo write que fija Status=Expirada (Fase 2 — URL_GATE; Fase 3.5 — filtro de perfil) debe fijar Next_Action=Archivar en el mismo write — evita drift entre el criterio Status→TERMINAL y Next_Action→TERMINAL_ACTIONS.
-- Un registro terminal no puede ser sobreescrito por recálculo de Score/Gate, aunque cambien campos Class A.
-- RT-1 (/accept): la escritura de Class A corregido debe limpiar atómicamente Next_Action y Gate_Decision (select: null) en el mismo write, para que el siguiente run no trate la vacante recuperada como terminal fantasma.
-- v9.14.5: Status=Rechazado ahora escribe Next_Action=Post-Mortem (antes Ninguna) — protección terminal vía STATUS_TERMINAL_MAP sin cambio, ya cubierta por el criterio 1 de esta sección.
-- Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con KERNEL:OWNERSHIP-002.
+Definición de Estados Protegidos y Terminalidad
+> **G9 DEROGACIÓN PARCIAL (v9.22.0, Q-4):** Se deroga la lectura de este nodo como “whitelist corta de 3 Status + 2 Next_Action = única protección del pipeline” y cualquier promesa de “Class B bloqueado mientras Status=REVIEW_NEEDED/Por Revisar” *en el writer Python del Tracker*. Esa promesa era documental sin lector en W1 (radiografía §4.6) y **no se implementa en código** (decisión Q-4 aceptada condicional a esta derogación). Lo que sigue vigente:
+#### A. Fuente de verdad de mutabilidad de fila (NUEVO — manda)
+`tracker_flow.is_mutable(record, actor)` — orden:
+1. Manual-first: autor humano + `last_edited_time` desde último run exitoso → **inmune** (G5; sugerencia de revisión, jamás auto-ejecución).
+2. `PROTECTED_STATUSES` = `LIVE_APPLICATION_STATUSES ∪ TERMINAL_STATUSES`:
+   - LIVE: Postulando · Postulado · En Proceso · Negociando · Sin Respuesta · Contratado
+   - TERMINAL: Expirada · Rechazado · Retirado
+   - Contratado = **PROTECTED_ABSOLUTE** (sin excepción de actor pipeline).
+3. Elegibilidad por actor (INGESTA no toca LIVE).
+4. Cómputo de campo (orquestador).
+Writers: **solo** `layer_1_orchestrator.guarded_pages_update` (diff real + `class_b_guard` + dry-run default). Legacy `layer_1_run.py` / dash fork → `Archive/` (G6).
+#### B. gate_logic() — capa label (conservada, no es SSOT de mutabilidad)
+Sigue existiendo como etiqueta de workflow antes de `gate()`:
+1. Status → STATUS_TERMINAL_MAP: Postulado→APPLIED · Rechazado→REJECTED · Expirada→EXPIRADA (D-001)
+2. Next_Action → TERMINAL_ACTIONS: Archivar · Expirada (legacy NA)
+3. else → None (elegible a label de gate)
+**No** sustituye a `is_mutable`. Un LIVE no listado en el mapa viejo (En Proceso/Negociando/…) **ya no se recalcula** por pipeline: lo bloquea A.
+#### C. Invariantes post-G5/G7
+- Todo archivo atómico escribe `{Status=Expirada, Next_Action=Archivar, Notas+=…}` (+ Gate cuando aplica) vía `archive_gate`.
+- RT-1 (/accept): Class A + limpia Next_Action/Gate_Decision null en el mismo write; pasa `class_b_guard`.
+- Next_Action canónico ES (07.8); legacy EN solo lectura/migración.
+- Class B: Python-only en orquestador; MCP/Dashboard fail-closed (09.3). **No** hay gate adicional “Por Revisar bloquea Class B en Python” (derogado).
 Referencias
-- Implementación: Layer_1/scripts/gate_logic.py, Layer_1/scripts/layer_1_run.py
-- Atomicidad RT-1: Dashboard/scripts/dashboard_routes.py (/accept), dashboard_notion.py — la escritura en esta vía pasa por el guard class_b_guard.guard_write_payload() (ver KERNEL:GATE-DECISION-003, GAP-03 cerrado v9.19.2), que bloquea fail-closed cualquier campo Class B o desconocido antes de client.pages.update().
-- Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002
+- SSOT mutabilidad: `Layer_1/scripts/tracker_flow.py` (`is_mutable`, enums, `PROTECTED_STATUSES`)
+- Orquestador: `Layer_1/scripts/layer_1_orchestrator.py`
+- Labels: `Layer_1/scripts/gate_logic.py`
+- RT-1: `Dashboard/scripts/dashboard_routes.py`, `dashboard_notion.py` + `class_b_guard.py`
+- Contratos: GATE-DECISION-003/005/006/008 · OWNERSHIP-002 · SCHEMA-008 · G7/G8 docs en `Layer_1/docs/`
 ### 09.11 KERNEL:GATE-DECISION-011
 > Matiz (2026-08-17): La fila de la matriz de transición para "Dedup match en existente" se ajusta a: Dedup_Flag='Posible duplicado' solo si el Status del existente no está en el guard de KERNEL:GATE-DECISION-012.
 Matriz de Transición de Estados (Referencia Técnica)
@@ -645,9 +658,9 @@ Notas:
 ### 09.13 KERNEL:GATE-DECISION-013
 Auditoría de Archivado en Tiempo Real
 Distinto del guard de mutación (09.12, protege registros existentes durante ingesta): gobierna la generación de evidencia textual cuando VL1 ejecuta una decisión de archivado.
-Función: generate_archive_notes(), invocada desde layer_1_run.py en tres puntos deterministas: URL Gate bloqueado (Fase 2), Misfit de perfil (Fase 3.5), NAD vencido.
-Contrato de escritura: el mensaje se escribe en Notas (Class A) — nunca sobrescribe, agrega (append) separado por línea vacía. Soporta modo dry-run — el corpus disponible no confirma si hereda el flag del pipeline padre o lo declara independiente; pendiente de verificar contra código fuente.
-Distinción de ownership: VL1 documenta la razón en el momento de la decisión. vantage-tidy-opportunities-tracker y vantage-housekeeping-archive (ver MANUAL:SKILL-GLOSSARY-HOUSEKEEPING) no generan esta nota — operan sobre el registro ya marcado.
+Función: generate_archive_notes() / archive_gate — invocada desde **layer_1_orchestrator.py** (URL Gate, misfit, NAD) en un solo camino atómico (F2 consolidado). Legacy call-sites en Archive/layer_1_run.py.
+Contrato de escritura: Notas (Class A) append-only; dry-run default del orquestador (`--apply` explícito). Manual-first: filas humanas recientes reciben propose/sugerencia, no archivo silencioso (G5).
+Distinción de ownership: VL1 documenta la razón en el momento de la decisión. vantage-tidy-opportunities-tracker marca checkbox Archivar — no genera esta nota.
 ---
 ## 10 KERNEL:CV-GOLDEN-RULES
 Golden Rules
