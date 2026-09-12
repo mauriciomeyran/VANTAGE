@@ -50,7 +50,7 @@ Registro de identidad (10 agentes con Project Instructions configuradas):
 | GROK | DEFAULT |
 Fuera del registro por diseño: Arena, Cursor, Devin — no tienen Project Instructions configurables, no pueden satisfacer el contrato de identidad declarada. Cualquier handoff derivado de su trabajo debe re-emitirse a través de un agente con cédula (parent_handoff referencia el origen).
 Regla de confirmación: la identidad se lee de Project Instructions al cargar el proyecto; el agente no re-pregunta identidad en cada handoff (CONFIGURED_NO_REPROMPT). Si Project Instructions está ausente o contradice este registro, declarar IDENTITY_CONFIGURATION_REVIEW_NEEDED y no emitir handoff canónico.
-Serial de handoff: autoridad única GLOBAL_VANTAGE_COUNTER (ver KERNEL:HANDOFF-SERIAL) — formato HO-######, monotónico, nunca reiniciado ni reutilizado tras rechazo.
+Serial de handoff: autoridad GLOBAL_VANTAGE_COUNTER (ver KERNEL:HANDOFF-SERIAL) — formato HO-######, monotónico, nunca reiniciado ni reutilizado tras rechazo. Para obtener un serial nuevo, la única vía canónica es vserial vía Terminal (allocate_vantage_serial.py next). Un serial declarado directamente por el operador en el mismo turno tiene prioridad máxima y se adopta sin verificación adicional. MCP, HTTP y acceso directo a SQLite no son rutas válidas de asignación ni fallback.
 ### 01.3 SP:SKILL-VERSION-PIN
 Versión Vigente de Skills de Generación de Contenido (Anti-Staleness)
 Distinto de 01.1 (enrutamiento) — esta subsección fija la versión mínima aceptable de cada skill de generación de contenido, para agentes que resuelven el skill desde su propia memoria de contexto en vez de hacer fetch en vivo contra Notion/GitHub en cada invocación.

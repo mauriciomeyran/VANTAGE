@@ -1235,7 +1235,7 @@ Raycast — Atajos de Un Click
 | vantage-vl3.sh → layer_3_mail.sh | layer_3_mail.py | Sin flags — valida que exista .venv y config/layer_3.env antes de correr. |
 | vantage-dedup.sh / vantage-opport-dedup.sh | dedup_opportunities.py (sin args) | ⚠️ No expone --clear — para limpiar un flag puntual necesitas Terminal directo. |
 | vantage-vgit.sh → git_sync_wrapper.sh | git_sync.py | Reenvía "$@" — sí puedes pasarle --dry vía Raycast si tu atajo lo permite. Loguea cada corrida en /tmp/vantage_l4_gitsync.log. |
-| vantage-serial.sh | allocate_vantage_serial.py next | Genera un serial HO-###### desde Raycast, copia al portapapeles y notifica éxito — mismo mecanismo que el alias vserial de Terminal (ver ALIASES:L4-VERSION-CONTROL). |
+| vantage-serial.sh | allocate_vantage_serial.py next | Genera un serial HO-###### desde Raycast, copia al portapapeles y notifica éxito — atajo auxiliar que replica vserial de Terminal; la única vía canónica para obtener un serial nuevo es vserial vía Terminal (ver ALIASES:L4-VERSION-CONTROL). |
 | vantage-vdoc-dry.sh | vdoc.py dry | Atajo directo al modo preview. |
 | vantage-vdoc-notion.sh | vdoc.py notion | Atajo directo al modo forzado Notion→local (pide confirmación). |
 | vantage-vd.sh | vdoc.py (modo según config del atajo) | Revisa el contenido del script si necesitas saber qué dirección dispara por default. |

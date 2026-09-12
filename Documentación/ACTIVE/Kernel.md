@@ -276,12 +276,15 @@ Skills cuyo output es inherentemente iterativo o requiere confirmación por íte
 ---
 ### 03.18 KERNEL:HANDOFF-SERIAL
 Contrato de Serial Global de Handoff
-Autoridad única: GLOBAL_VANTAGE_COUNTER — contador persistente local (Terminal/SQLite o equivalente con bloqueo transaccional contra concurrencia), nunca dependiente de memoria conversacional ni de un agente específico.
+Autoridad de serial: GLOBAL_VANTAGE_COUNTER.
+Ruta canónica de obtención: vserial vía Terminal, que ejecuta allocate_vantage_serial.py next contra GLOBAL_VANTAGE_COUNTER. Esta continúa siendo la única vía canónica para obtener un serial nuevo.
 Formato: HO-######, monotónico — no se reinicia por sesión, agente, cuenta ni skill; no se reutiliza tras rechazo o corrección.
 Corrección: un handoff emitido no se edita silenciosamente — una corrección genera un nuevo serial referenciando el anterior vía correction_of.
 Identidad del emisor: ver SP:BOOTLOADER-002 para el registro de agentes autorizados a emitir handoffs serializados. Agentes sin Project Instructions (Arena, Cursor, Devin) no emiten serial propio.
-Vía de acceso — Servidor MCP: además de Terminal (allocate_vantage_serial.py), el contador es accesible vía servidor MCP (mcp_vantage_serial_server.py, transporte stdio, herramienta allocate_vantage_serial) para agentes sin acceso a filesystem/terminal. Reutiliza la misma lógica de allocate_serial() sobre la misma base SQLite — no es una segunda autoridad, es un segundo canal hacia GLOBAL_VANTAGE_COUNTER. Contrato de salida: éxito → {"serial": "HO-######", "authority": "GLOBAL_VANTAGE_COUNTER", "status": "ALLOCATED"}; fallo → {"error": "HANDOFF_SERIAL_UNAVAILABLE", "status": "UNAVAILABLE"}. Orden de resolución para cualquier skill que requiera serial: MCP → Terminal → HANDOFF_SERIAL_UNAVAILABLE (detener, no inventar serial).
-Arquitectura HTTP centralizada (vantage_serial_http_server.py): pieza intermedia entre el bridge MCP de Claude Desktop y GLOBAL_VANTAGE_COUNTER — servidor HTTP local (host/puerto configurables vía VANTAGE_SERIAL_HOST/VANTAGE_SERIAL_PORT, default localhost:8787) que expone dos endpoints: POST /allocate (asigna el siguiente serial) y GET /health (status: authority, current_value, next_serial, database). vantage_serial_mcp_bridge.py (herramientas allocate_vantage_serial / vantage_serial_status) consume estos endpoints vía HTTP en vez de invocar allocate_serial() directo — permite que Claude Desktop use el contador sin acceso directo a filesystem/SQLite. DB_PATH se resuelve vía VANTAGE_SERIAL_DB (env) o, en su ausencia, Path(file).resolve().parent.parent.parent / "state" / "vantage_handoff_counter.sqlite3" — mismo patrón de resolución aplicado a allocate_vantage_serial.py tras el fix de split-brain de 2026-08-28 (ver Changelog v9.21.32). Canal aislado: un fallo del servidor HTTP no afecta Terminal ni el servidor MCP stdio directo — ambos acceden la misma base SQLite sin pasar por HTTP.
+Prioridad de resolución:
+1. Serial declarado directamente por el operador en el mismo turno — autoridad máxima; se adopta sin verificación adicional.
+1. Si el operador no declaró un serial explícitamente, debe obtenerse mediante vserial vía Terminal antes de emitir el handoff. Si esa ruta no está disponible, declarar HANDOFF_SERIAL_UNAVAILABLE y detener la emisión — nunca inventar, interpolar ni asumir continuidad secuencial.
+Rutas no canónicas y deprecadas: el allocator MCP, el bridge HTTP, los endpoints de asignación y cualquier acceso directo a SQLite no son rutas válidas de obtención ni fallback. Los artefactos históricos pueden permanecer archivados, pero no forman parte del diseño operativo activo.
 ---
 ## 04 KERNEL:ARCHITECTURE
 Arquitectura de Cuatro Capas
