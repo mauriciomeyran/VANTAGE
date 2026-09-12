@@ -33,7 +33,8 @@ from tracker_flow import (
     Status, NextAction, GateDecision, Actor, FetchResult, DedupFlag,
     normalize_record, is_mutable, evaluate_flow, archive_gate,
     LIFECYCLE_MATRIX, TERMINAL_STATUSES, LIVE_APPLICATION_STATUSES,
-    PROTECTED_STATUSES, DELETED_VALUE_MAPPINGS,
+    PROTECTED_STATUSES, DELETED_VALUE_MAPPINGS, NORMALIZATION_TABLE,
+    normalize_field_value, normalize_flat_record, SOURCE_TYPE_PROP_ALIASES,
     sync_status_from_outcome, apply_status_sync_writeback, run_outcome_status_sync,
     choose_survivor, get_layer_rank, diff_records,
     SOURCE_TYPE_VACANTE, SOURCE_TYPE_BYPASS,
@@ -303,19 +304,19 @@ def get_application_next_action(status: str) -> str:
     """
     Next_Action para postulaciones vivas.
 
-    Emite legacy EN (NextAction.FOLLOW_UP / INTERVIEW_PREP / RE_CHECK) para
-    paridad G3 con layer_1_run; G7 normaliza a canónico ES.
+    G7: emite canónico ES (SEGUIMIENTO / PREPARACION_ENTREVISTA / REVISION).
+    Legacy EN sigue en enum para lectura/migración; writers ya no lo emiten.
     Writers: siempre via enum .value — cero strings sueltos (G4).
     """
     if status == Status.POSTULADO.value:
-        return NextAction.FOLLOW_UP.value
+        return NextAction.SEGUIMIENTO.value
     if status in (Status.EN_PROCESO.value, "En proceso"):
-        return NextAction.INTERVIEW_PREP.value
+        return NextAction.PREPARACION_ENTREVISTA.value
     if status == Status.NEGOCIANDO.value:
-        return NextAction.FOLLOW_UP.value
+        return NextAction.SEGUIMIENTO.value
     if status in (Status.SIN_RESPUESTA.value, "Sin respuesta"):
-        return NextAction.FOLLOW_UP.value
-    return NextAction.RE_CHECK.value
+        return NextAction.SEGUIMIENTO.value
+    return NextAction.REVISION.value
 
 
 def apply_gate_decision(record: Dict[str, Any], score: int) -> Dict[str, Any]:
@@ -399,7 +400,7 @@ def apply_gate_decision(record: Dict[str, Any], score: int) -> Dict[str, Any]:
     else:
         decision = gate(fetch, vm_scope, role_class, source_type, score=score, rol=rol, marca=marca)
         if decision == GateDecision.CREATE.value:
-            next_action = NextAction.RE_CHECK.value
+            next_action = NextAction.REVISION.value  # G7: was RE_CHECK (legacy EN)
         elif decision == GateDecision.REVIEW_NEEDED.value:
             next_action = NextAction.INVESTIGAR.value
         elif source_type == SOURCE_TYPE_VACANTE and fetch == FetchResult.BLOQUEADO.value:

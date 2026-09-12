@@ -270,38 +270,38 @@ class TestApplicationNextAction:
     def test_postulado_followup(self):
         """Test Postulado status returns Follow-up"""
         result = get_application_next_action("Postulado")
-        assert result == "Follow-up", \
-            "Postulado status should return Follow-up"
+        assert result == "Seguimiento", \
+            "Postulado status should return Seguimiento (G7 ES)"
     
     def test_en_proceso_interview_prep(self):
         """Test En proceso status returns Interview prep"""
         result = get_application_next_action("En proceso")
-        assert result == "Interview prep", \
-            "En proceso status should return Interview prep"
+        assert result == "Preparación Entrevista", \
+            "En proceso status should return Preparación Entrevista (G7 ES)"
     
     def test_negociando_followup(self):
         """Test Negociando status returns Follow-up"""
         result = get_application_next_action("Negociando")
-        assert result == "Follow-up", \
-            "Negociando status should return Follow-up"
+        assert result == "Seguimiento", \
+            "Negociando status should return Seguimiento (G7 ES)"
     
     def test_sin_respuesta_followup(self):
         """Test Sin respuesta status returns Follow-up"""
         result = get_application_next_action("Sin respuesta")
-        assert result == "Follow-up", \
-            "Sin respuesta status should return Follow-up"
+        assert result == "Seguimiento", \
+            "Sin respuesta status should return Seguimiento (G7 ES)"
     
     def test_unknown_status_recheck(self):
         """Test unknown status returns Re-check"""
         result = get_application_next_action("Unknown")
-        assert result == "Re-check", \
-            "Unknown status should return Re-check"
+        assert result == "Revisión", \
+            "Unknown status should return Revisión (G7 ES)"
     
     def test_empty_status_recheck(self):
         """Test empty status returns Re-check"""
         result = get_application_next_action("")
-        assert result == "Re-check", \
-            "Empty status should return Re-check"
+        assert result == "Revisión", \
+            "Empty status should return Revisión (G7 ES)"
 
 
 # ============================================================================

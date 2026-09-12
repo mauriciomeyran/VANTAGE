@@ -231,6 +231,31 @@ def normalize_record(api_record: Dict[str, Any]) -> Dict[str, Any]:
         if value is not None:
             flat_record[key] = value
     
+    # G7: map known legacy Status before F10 invalid→REVIEW
+    status = flat_record.get("Status", "")
+    if status:
+        status_n = normalize_field_value("Status", status)
+        if status_n != status:
+            flat_record["_original_status"] = status
+            flat_record["Status"] = status_n
+            status = status_n
+    # G7: Next_Action / Gate_Decision / Holding known maps
+    for _prop in ("Next_Action", "Gate_Decision", "Holding"):
+        _cur = flat_record.get(_prop, "")
+        if _cur:
+            _n = normalize_field_value(_prop, _cur)
+            if _n != _cur:
+                flat_record[f"_original_{_prop}"] = _cur
+                flat_record[_prop] = _n
+    # G7: Source_Type dual-key → prefer whichever is set
+    _st = ""
+    for _alias in ("Source_Type ", "Source_Type"):
+        if flat_record.get(_alias):
+            _st = flat_record[_alias]
+            break
+    if _st:
+        flat_record["Source_Type"] = normalize_field_value("Source_Type", _st)
+
     # F10: Enum enforcement - validate Status
     status = flat_record.get("Status", "")
     if status and not Status.is_valid(status):
@@ -1120,7 +1145,11 @@ DELETED_VALUE_MAPPINGS = {
     # disparar rutas de archivo masivo). Vocabulario Fetch PARAMÉTRICO — validar
     # contra schema vivo en despliegue (ver Q-H1 en handoff).
     "Status": {
-        "Archivar": "Retirado"  # Archived rows → Retirado
+        "Archivar": "Retirado",  # Archived rows → Retirado (pruning G7)
+        "Target": "Objetivo",    # Q-2 ya ejecutado en prod (0 filas); keep map
+        "En proceso": "En Proceso",
+        "Sin respuesta": "Sin Respuesta",
+        "REVIEW_NEEDED": "Por Revisar",  # Status legacy SCREAMING → Title Case ES
     },
     "Fetch": {
         "aggregator": {"fetch": "Accesible", "strategy": "revalidate", "parametric": True},
@@ -1129,6 +1158,172 @@ DELETED_VALUE_MAPPINGS = {
     },
     "Fetch_vocab_proposed": ["Accesible", "Bloqueado"],  # H1: PARAMÉTRICO, ver Q-H1
 }
+
+
+# ── G7: Tabla ejecutable actual → normalizado ───────────────────────────────
+# Criterio: ES operativo en VALORES; EN solo terminología técnica fijada
+# (Gate_Decision SCREAMING). Un literal canónico por semántica (F8).
+# Writers post-G7 emiten SOLO canónico; legacy queda como clave de lectura
+# hasta cutover schema (G8 MCP).
+
+NORMALIZATION_TABLE: Dict[str, Dict[str, str]] = {
+    # Next_Action: legacy EN + huérfanos → canónico ES
+    "Next_Action": {
+        "Follow-up": "Seguimiento",
+        "Interview prep": "Preparación Entrevista",
+        "Re-check": "Revisión",
+        "Ninguna": "",                 # huérfano sin productor → vacío
+        "Expirada": "Archivar",        # Next_Action=Expirada legacy → Archivar
+        # identity (canónico ya normalizado)
+        "Optimizar": "Optimizar",
+        "Seguimiento": "Seguimiento",
+        "Preparación Entrevista": "Preparación Entrevista",
+        "Revisión": "Revisión",
+        "Investigar": "Investigar",
+        "Post-Mortem": "Post-Mortem",
+        "Archivar": "Archivar",
+        "Reparar URL": "Reparar URL",
+        "Verificar JD": "Verificar JD",
+    },
+    # Gate_Decision: técnico EN fijado; EXPIRADA interno gate_logic → EXPIRED enum
+    "Gate_Decision": {
+        "CREATE": "CREATE",
+        "BLOCKED": "BLOCKED",
+        "REVIEW_NEEDED": "REVIEW_NEEDED",
+        "APPLIED": "APPLIED",
+        "REJECTED": "REJECTED",
+        "EXPIRED": "EXPIRED",
+        "EXPIRADA": "EXPIRED",  # valor interno gate_logic / legacy
+    },
+    # Status: casing + pruning (Target ya 0 en prod; Archivar huérfano)
+    "Status": {
+        "Target": "Objetivo",
+        "Archivar": "Retirado",
+        "En proceso": "En Proceso",
+        "Sin respuesta": "Sin Respuesta",
+        "REVIEW_NEEDED": "Por Revisar",
+        "Objetivo": "Objetivo",
+        "Exploratorio": "Exploratorio",
+        "Por Revisar": "Por Revisar",
+        "Postulando": "Postulando",
+        "Postulado": "Postulado",
+        "En Proceso": "En Proceso",
+        "Negociando": "Negociando",
+        "Sin Respuesta": "Sin Respuesta",
+        "Contratado": "Contratado",
+        "Expirada": "Expirada",
+        "Rechazado": "Rechazado",
+        "Retirado": "Retirado",
+    },
+    # Holding: placeholder ruido → vacío (holdings reales jamás se vacían)
+    "Holding": {
+        "Investigar": "",
+        "N/A": "",
+        "n/a": "",
+        "-": "",
+        "—": "",
+    },
+    # Source_Type: valores idénticos; rename de propiedad Source_Type␣ → Source_Type
+    # es G8 (MCP schema). Código dual-lee ambas claves (ver SOURCE_TYPE_PROP_ALIASES).
+    "Source_Type": {
+        "Vacante": "Vacante",
+        "Inbound": "Inbound",
+        "Referencia": "Referencia",
+        "Networking": "Networking",
+    },
+}
+
+# Propiedad schema vivo (trailing space) + limpia (post-rename G8)
+SOURCE_TYPE_PROP_CANONICAL = "Source_Type"
+SOURCE_TYPE_PROP_LEGACY = "Source_Type "  # trailing space real en Notion hoy
+SOURCE_TYPE_PROP_ALIASES = (SOURCE_TYPE_PROP_LEGACY, SOURCE_TYPE_PROP_CANONICAL)
+
+# Next_Action canónico ES (post-G7 writers); legacy EN se lee y se normaliza
+NEXT_ACTION_CANONICAL = frozenset({
+    NextAction.OPTIMIZAR.value,
+    NextAction.SEGUIMIENTO.value,
+    NextAction.PREPARACION_ENTREVISTA.value,
+    NextAction.REVISION.value,
+    NextAction.INVESTIGAR.value,
+    NextAction.POST_MORTEM.value,
+    NextAction.ARCHIVAR.value,
+    NextAction.REPARAR_URL.value,
+    NextAction.VERIFICAR_JD.value,
+})
+
+
+def normalize_field_value(property_name: str, value: Any) -> Any:
+    """
+    G7: aplica NORMALIZATION_TABLE a un valor de propiedad.
+    Idempotente: canónico → canónico; desconocido → se deja (caller loguea).
+    Vacío/None → vacío (no inventa defaults destructivos).
+    """
+    if value is None:
+        return ""
+    if not isinstance(value, str):
+        return value
+    table = NORMALIZATION_TABLE.get(property_name)
+    if not table:
+        return value
+    if value in table:
+        return table[value]
+    # Case-fold fallback for Status casing drift
+    if property_name == "Status":
+        for k, v in table.items():
+            if k.lower() == value.lower():
+                return v
+    return value  # unknown: preserve (migration script counts as skipped)
+
+
+def normalize_flat_record(flat: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    G7: normaliza Status/Next_Action/Gate_Decision/Holding en un record plano.
+    También unifica Source_Type␣ → Source_Type en el plano (sin write Notion).
+    Idempotente. No escribe a Notion.
+    """
+    out = dict(flat)
+    for prop in ("Status", "Next_Action", "Gate_Decision", "Holding"):
+        if prop in out and out[prop] not in (None, ""):
+            new_v = normalize_field_value(prop, out[prop])
+            if new_v != out[prop]:
+                out[f"_normalized_{prop}"] = {"from": out[prop], "to": new_v}
+            out[prop] = new_v
+    # Source_Type dual-key → canónico en plano
+    st = ""
+    for alias in SOURCE_TYPE_PROP_ALIASES:
+        if out.get(alias):
+            st = out[alias]
+            break
+    if st:
+        st_n = normalize_field_value("Source_Type", st)
+        out[SOURCE_TYPE_PROP_CANONICAL] = st_n
+        if SOURCE_TYPE_PROP_LEGACY in out and SOURCE_TYPE_PROP_LEGACY != SOURCE_TYPE_PROP_CANONICAL:
+            # Mantener legacy key sincronizada hasta G8 rename schema
+            out[SOURCE_TYPE_PROP_LEGACY] = st_n
+    return out
+
+
+def normalization_diff(flat: Dict[str, Any]) -> Dict[str, Dict[str, str]]:
+    """
+    G7: diff actual→normalizado sin mutar. Keys = props con cambio real.
+    """
+    diffs: Dict[str, Dict[str, str]] = {}
+    for prop in ("Status", "Next_Action", "Gate_Decision", "Holding"):
+        cur = flat.get(prop, "") or ""
+        if not cur:
+            continue
+        new_v = normalize_field_value(prop, cur)
+        if new_v != cur:
+            diffs[prop] = {"from": cur, "to": new_v}
+    # Source_Type key presence (rename plan; value usually identity)
+    has_legacy = bool(flat.get(SOURCE_TYPE_PROP_LEGACY))
+    has_clean = SOURCE_TYPE_PROP_CANONICAL in flat and flat.get(SOURCE_TYPE_PROP_CANONICAL) not in (None, "")
+    if has_legacy and not has_clean:
+        diffs["Source_Type_prop"] = {
+            "from": SOURCE_TYPE_PROP_LEGACY,
+            "to": SOURCE_TYPE_PROP_CANONICAL,
+        }
+    return diffs
 
 
 # ── State Management ─────────────────────────────────────────────────────────

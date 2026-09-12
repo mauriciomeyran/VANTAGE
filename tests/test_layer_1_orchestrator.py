@@ -2176,14 +2176,14 @@ def test_g5_preview_protected_status_skips_archive():
 
 
 def test_g5_get_application_next_action_all_legs():
-    """Cobertura: todas las ramas de get_application_next_action."""
-    assert get_application_next_action(Status.POSTULADO.value) == "Follow-up"
-    assert get_application_next_action(Status.EN_PROCESO.value) == "Interview prep"
-    assert get_application_next_action("En proceso") == "Interview prep"
-    assert get_application_next_action(Status.NEGOCIANDO.value) == "Follow-up"
-    assert get_application_next_action(Status.SIN_RESPUESTA.value) == "Follow-up"
-    assert get_application_next_action("Sin respuesta") == "Follow-up"
-    assert get_application_next_action(Status.OBJETIVO.value) == "Re-check"
+    """Cobertura: todas las ramas de get_application_next_action (G7 ES canónico)."""
+    assert get_application_next_action(Status.POSTULADO.value) == "Seguimiento"
+    assert get_application_next_action(Status.EN_PROCESO.value) == "Preparación Entrevista"
+    assert get_application_next_action("En proceso") == "Preparación Entrevista"
+    assert get_application_next_action(Status.NEGOCIANDO.value) == "Seguimiento"
+    assert get_application_next_action(Status.SIN_RESPUESTA.value) == "Seguimiento"
+    assert get_application_next_action("Sin respuesta") == "Seguimiento"
+    assert get_application_next_action(Status.OBJETIVO.value) == "Revisión"
 
 
 def test_g5_orchestrator_inbound_bypass_and_nad_bot():
@@ -2290,6 +2290,204 @@ def test_g6_no_active_import_of_layer_1_run_in_writers():
             if "from layer_1_run" in s or "import layer_1_run" in s:
                 offenders.append(f"{path.relative_to(root)}:{i}:{s}")
     assert offenders == [], "imports activos de layer_1_run:\n" + "\n".join(offenders)
+
+
+
+# ── G7: normalización actual→normalizado + script idempotente ───────────────
+
+def test_g7_normalization_table_next_action_en_to_es():
+    """G7: Follow-up/Interview prep/Re-check → ES canónico."""
+    from tracker_flow import normalize_field_value, NORMALIZATION_TABLE
+    assert normalize_field_value("Next_Action", "Follow-up") == "Seguimiento"
+    assert normalize_field_value("Next_Action", "Interview prep") == "Preparación Entrevista"
+    assert normalize_field_value("Next_Action", "Re-check") == "Revisión"
+    assert normalize_field_value("Next_Action", "Ninguna") == ""
+    assert normalize_field_value("Next_Action", "Expirada") == "Archivar"
+    # identity
+    assert normalize_field_value("Next_Action", "Seguimiento") == "Seguimiento"
+    assert "Next_Action" in NORMALIZATION_TABLE
+
+
+def test_g7_normalization_table_status_and_gate():
+    """G7: Status pruning/casing + Gate EXPIRADA→EXPIRED."""
+    from tracker_flow import normalize_field_value
+    assert normalize_field_value("Status", "Target") == "Objetivo"
+    assert normalize_field_value("Status", "Archivar") == "Retirado"
+    assert normalize_field_value("Status", "En proceso") == "En Proceso"
+    assert normalize_field_value("Status", "Sin respuesta") == "Sin Respuesta"
+    assert normalize_field_value("Status", "REVIEW_NEEDED") == "Por Revisar"
+    assert normalize_field_value("Gate_Decision", "EXPIRADA") == "EXPIRED"
+    assert normalize_field_value("Gate_Decision", "CREATE") == "CREATE"
+
+
+def test_g7_holding_placeholders_empty_reals_preserved():
+    """G7: Holding Investigar/N/A → vacío; holdings reales intactos."""
+    from tracker_flow import normalize_field_value
+    assert normalize_field_value("Holding", "Investigar") == ""
+    assert normalize_field_value("Holding", "N/A") == ""
+    assert normalize_field_value("Holding", "-") == ""
+    # unknown = preserve (not in table)
+    assert normalize_field_value("Holding", "LVMH") == "LVMH"
+    assert normalize_field_value("Holding", "Nike Inc.") == "Nike Inc."
+
+
+def test_g7_normalize_record_applies_maps():
+    """G7: normalize_record frontera aplica tabla antes de F10."""
+    from tracker_flow import normalize_record
+    api = {
+        "id": "g7-nr-1",
+        "properties": {
+            "Status": {"type": "select", "select": {"name": "Target"}},
+            "Next_Action": {"type": "select", "select": {"name": "Follow-up"}},
+            "Gate_Decision": {"type": "select", "select": {"name": "EXPIRADA"}},
+            "Holding": {"type": "rich_text", "rich_text": [
+                {"plain_text": "Investigar", "text": {"content": "Investigar"}}
+            ]},
+            "Source_Type ": {"type": "select", "select": {"name": "Vacante"}},
+        },
+    }
+    flat = normalize_record(api)
+    assert flat["Status"] == "Objetivo"
+    assert flat["Next_Action"] == "Seguimiento"
+    assert flat["Gate_Decision"] == "EXPIRED"
+    assert flat["Holding"] == ""
+    assert flat["Source_Type"] == "Vacante"
+
+
+def test_g7_normalize_idempotent():
+    """G7: segunda pasada no cambia (idempotencia)."""
+    from tracker_flow import normalize_field_value, normalize_flat_record
+    flat = {
+        "Status": "Target",
+        "Next_Action": "Follow-up",
+        "Gate_Decision": "EXPIRADA",
+        "Holding": "Investigar",
+        "Source_Type ": "Vacante",
+    }
+    once = normalize_flat_record(flat)
+    twice = normalize_flat_record(once)
+    for k in ("Status", "Next_Action", "Gate_Decision", "Holding", "Source_Type"):
+        assert once.get(k) == twice.get(k), k
+    # canonical stays
+    assert normalize_field_value("Next_Action", "Seguimiento") == "Seguimiento"
+
+
+def test_g7_writers_emit_canonical_es_only():
+    """G7: get_application_next_action ya no emite legacy EN."""
+    legacy = {"Follow-up", "Interview prep", "Re-check"}
+    for st in (
+        Status.POSTULADO.value, Status.EN_PROCESO.value, "En proceso",
+        Status.NEGOCIANDO.value, Status.SIN_RESPUESTA.value, "Sin respuesta",
+        Status.OBJETIVO.value, "",
+    ):
+        na = get_application_next_action(st)
+        assert na not in legacy, f"{st} → {na} still legacy"
+        assert na in {
+            "Seguimiento", "Preparación Entrevista", "Revisión",
+        }
+
+
+def test_g7_script_dry_run_fixture_zero_notion():
+    """G7: normalize_tracker_values --fixture dry-run; would_write>0; written=0."""
+    import normalize_tracker_values as ntv
+    fixture = Path(__file__).resolve().parent / "fixtures" / "g7_normalization_fixture.json"
+    assert fixture.exists()
+    import json
+    records = json.loads(fixture.read_text())
+    client = ntv.FixtureClient(records)
+    m1 = ntv.run_normalization(client, dry_run=True, state_path=None)
+    assert m1["errors"] == 0
+    assert m1["written"] == 0
+    assert m1["would_write"] >= 5, m1
+    assert client.writes == []  # dry-run must not write even to fixture store via apply path
+    # pre/post counts present
+    assert "Next_Action" in m1["pre_counts"]
+    assert "Next_Action" in m1["post_counts"]
+    # Follow-up should drop in post
+    pre_fu = m1["pre_counts"]["Next_Action"].get("Follow-up", 0)
+    post_fu = m1["post_counts"]["Next_Action"].get("Follow-up", 0)
+    assert pre_fu > 0 and post_fu == 0
+
+
+def test_g7_script_idempotent_second_pass():
+    """G7: tras aplicar maps en memoria, 2ª pasada would_write=0."""
+    import normalize_tracker_values as ntv
+    import json
+    from tracker_flow import extract_value, normalize_field_value
+    fixture = Path(__file__).resolve().parent / "fixtures" / "g7_normalization_fixture.json"
+    records = json.loads(fixture.read_text())
+    # Simulate post-state: rewrite select names to normalized
+    post_records = []
+    for rec in records:
+        new_props = {}
+        for k, prop in rec.get("properties", {}).items():
+            val = extract_value(prop)
+            prop_key = "Source_Type" if k.startswith("Source_Type") else k
+            if k == "Holding":
+                new_v = normalize_field_value("Holding", val or "")
+                new_props[k] = {
+                    "type": "rich_text",
+                    "rich_text": ([{"plain_text": new_v, "text": {"content": new_v}}] if new_v else []),
+                }
+            elif k in ("Status", "Next_Action", "Gate_Decision") or k.startswith("Source_Type"):
+                table_key = "Source_Type" if k.startswith("Source_Type") else k
+                new_v = normalize_field_value(table_key, val or "") if val else ""
+                new_props[k] = {
+                    "type": "select",
+                    "select": {"name": new_v} if new_v else None,
+                }
+            else:
+                new_props[k] = prop
+        post_records.append({**rec, "properties": new_props})
+    client = ntv.FixtureClient(post_records)
+    m2 = ntv.run_normalization(client, dry_run=True, state_path=None)
+    assert m2["would_write"] == 0, m2["changes"]
+    assert m2["errors"] == 0
+
+
+def test_g7_script_resume_skips_processed():
+    """G7: --resume salta page_ids ya procesados."""
+    import normalize_tracker_values as ntv
+    import json
+    fixture = Path(__file__).resolve().parent / "fixtures" / "g7_normalization_fixture.json"
+    records = json.loads(fixture.read_text())
+    client = ntv.FixtureClient(records)
+    # mark first 3 as done
+    done = {r["id"] for r in records[:3]}
+    m = ntv.run_normalization(client, dry_run=True, resume_ids=done, state_path=None)
+    changed_ids = {c["page_id"] for c in m["changes"]}
+    assert done.isdisjoint(changed_ids)
+
+
+def test_g7_source_type_prop_aliases_documented():
+    """G7/Q-1: aliases dual-key; rename schema = G8."""
+    from tracker_flow import (
+        SOURCE_TYPE_PROP_ALIASES, SOURCE_TYPE_PROP_CANONICAL, SOURCE_TYPE_PROP_LEGACY,
+    )
+    assert SOURCE_TYPE_PROP_LEGACY == "Source_Type "
+    assert SOURCE_TYPE_PROP_CANONICAL == "Source_Type"
+    assert SOURCE_TYPE_PROP_LEGACY in SOURCE_TYPE_PROP_ALIASES
+    assert SOURCE_TYPE_PROP_CANONICAL in SOURCE_TYPE_PROP_ALIASES
+
+
+def test_g7_normalization_table_doc_exists():
+    """G7: doc tabla ejecutable presente."""
+    root = Path(__file__).resolve().parent.parent
+    doc = root / "Layer_1" / "docs" / "G7_NORMALIZATION_TABLE.md"
+    assert doc.exists()
+    text = doc.read_text()
+    assert "Follow-up" in text and "Seguimiento" in text
+    assert "Source_Type" in text
+
+
+def test_g7_cli_fixture_exit_0(tmp_path):
+    """G7: CLI --fixture exit 0, printed report."""
+    import normalize_tracker_values as ntv
+    fixture = Path(__file__).resolve().parent / "fixtures" / "g7_normalization_fixture.json"
+    state = tmp_path / "state.json"
+    rc = ntv.main(["--fixture", str(fixture), "--state-out", str(state)])
+    assert rc == 0
+    assert state.exists()
 
 
 

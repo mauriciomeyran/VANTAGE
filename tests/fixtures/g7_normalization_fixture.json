@@ -1,0 +1,531 @@
+[
+  {
+    "id": "g7-001",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "Target"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Follow-up"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": {
+          "name": "CREATE"
+        }
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "plain_text": "Investigar",
+            "text": {
+              "content": "Investigar"
+            }
+          }
+        ]
+      },
+      "Source_Type ": {
+        "type": "select",
+        "select": {
+          "name": "Vacante"
+        }
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  },
+  {
+    "id": "g7-002",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "En proceso"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Interview prep"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": {
+          "name": "APPLIED"
+        }
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "plain_text": "LVMH",
+            "text": {
+              "content": "LVMH"
+            }
+          }
+        ]
+      },
+      "Source_Type ": {
+        "type": "select",
+        "select": {
+          "name": "Inbound"
+        }
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  },
+  {
+    "id": "g7-003",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "Sin respuesta"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Re-check"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": {
+          "name": "EXPIRADA"
+        }
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "plain_text": "N/A",
+            "text": {
+              "content": "N/A"
+            }
+          }
+        ]
+      },
+      "Source_Type": {
+        "type": "select",
+        "select": {
+          "name": "Referencia"
+        }
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  },
+  {
+    "id": "g7-004",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "Archivar"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Ninguna"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": {
+          "name": "BLOCKED"
+        }
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "plain_text": "-",
+            "text": {
+              "content": "-"
+            }
+          }
+        ]
+      },
+      "Source_Type ": {
+        "type": "select",
+        "select": {
+          "name": "Networking"
+        }
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  },
+  {
+    "id": "g7-005",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "Postulado"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Expirada"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": {
+          "name": "REJECTED"
+        }
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "plain_text": "Nike Inc.",
+            "text": {
+              "content": "Nike Inc."
+            }
+          }
+        ]
+      },
+      "Source_Type ": {
+        "type": "select",
+        "select": {
+          "name": "Vacante"
+        }
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  },
+  {
+    "id": "g7-006",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "Objetivo"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Seguimiento"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": {
+          "name": "EXPIRED"
+        }
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Source_Type ": {
+        "type": "select",
+        "select": {
+          "name": "Vacante"
+        }
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  },
+  {
+    "id": "g7-007",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "REVIEW_NEEDED"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Optimizar"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": {
+          "name": "REVIEW_NEEDED"
+        }
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "plain_text": "—",
+            "text": {
+              "content": "—"
+            }
+          }
+        ]
+      },
+      "Source_Type ": {
+        "type": "select",
+        "select": {
+          "name": "Vacante"
+        }
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  },
+  {
+    "id": "g7-008",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "Expirada"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Archivar"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": {
+          "name": "CREATE"
+        }
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "plain_text": "Kering",
+            "text": {
+              "content": "Kering"
+            }
+          }
+        ]
+      },
+      "Source_Type ": {
+        "type": "select",
+        "select": {
+          "name": "Vacante"
+        }
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  },
+  {
+    "id": "g7-009",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "Por Revisar"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Investigar"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": {
+          "name": "CREATE"
+        }
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "plain_text": "Investigar",
+            "text": {
+              "content": "Investigar"
+            }
+          }
+        ]
+      },
+      "Source_Type ": {
+        "type": "select",
+        "select": null
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  },
+  {
+    "id": "g7-010",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "Contratado"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Follow-up"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": {
+          "name": "APPLIED"
+        }
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "plain_text": "Independent",
+            "text": {
+              "content": "Independent"
+            }
+          }
+        ]
+      },
+      "Source_Type ": {
+        "type": "select",
+        "select": {
+          "name": "Referencia"
+        }
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  },
+  {
+    "id": "g7-011",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "Postulando"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Re-check"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": null
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "plain_text": "n/a",
+            "text": {
+              "content": "n/a"
+            }
+          }
+        ]
+      },
+      "Source_Type ": {
+        "type": "select",
+        "select": {
+          "name": "Vacante"
+        }
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  },
+  {
+    "id": "g7-012",
+    "properties": {
+      "Status": {
+        "type": "select",
+        "select": {
+          "name": "Exploratorio"
+        }
+      },
+      "Next_Action": {
+        "type": "select",
+        "select": {
+          "name": "Interview prep"
+        }
+      },
+      "Gate_Decision": {
+        "type": "select",
+        "select": {
+          "name": "CREATE"
+        }
+      },
+      "Holding": {
+        "type": "rich_text",
+        "rich_text": [
+          {
+            "plain_text": "L'Oréal",
+            "text": {
+              "content": "L'Oréal"
+            }
+          }
+        ]
+      },
+      "Source_Type ": {
+        "type": "select",
+        "select": {
+          "name": "Inbound"
+        }
+      }
+    },
+    "last_edited_time": "2024-01-01T00:00:00.000Z",
+    "last_edited_by": {
+      "object": "user",
+      "id": "integration-id-feed-processor"
+    }
+  }
+]

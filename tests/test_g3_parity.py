@@ -193,7 +193,16 @@ def test_g3_parity_application_status(status):
     ["Postulado", "En proceso", "Negociando", "Sin respuesta", "Objetivo"],
 )
 def test_g3_parity_application_next_action(status):
-    assert new.get_application_next_action(status) == old.get_application_next_action(status)
+    """G7: new emite ES canónico; old (Archive) emite EN legacy.
+    Misma semántica; mapeo vía NORMALIZATION_TABLE. No regresión de rama.
+    """
+    from tracker_flow import normalize_field_value
+    old_na = old.get_application_next_action(status)
+    new_na = new.get_application_next_action(status)
+    # Misma semántica tras normalizar el legacy EN del viejo
+    assert normalize_field_value("Next_Action", old_na) == new_na, (
+        f"{status}: old={old_na!r} new={new_na!r}"
+    )
 
 
 # ── Decision table: old pure sim vs new apply_gate_decision ──────────────────
@@ -408,6 +417,11 @@ def test_g3_parity_decision_table_all_rows():
 
         for key in COMPARE_KEYS:
             ov, nv = old_d.get(key), new_d.get(key)
+            # G7: Next_Action EN legacy (old) ≡ ES canónico (new) — misma semántica
+            if key == "Next_Action" and ov and nv:
+                from tracker_flow import normalize_field_value
+                if normalize_field_value("Next_Action", ov) == normalize_field_value("Next_Action", nv):
+                    continue
             if ov == nv:
                 continue
             allow = ALLOWLIST.get((flat.get("id"), key)) or ALLOWLIST.get(("*", key))
