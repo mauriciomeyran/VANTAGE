@@ -41,9 +41,11 @@ _SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
-# URL gate (HEAD+GET, agregadores sin CTA) — misma lógica que layer_1_run
-from layer_1_run import is_agregador, validate_url_pre_ingestion
+# URL gate compartido (url_gate.py) — cero dependencia de layer_1_run (vocab §3)
+from url_gate import is_agregador, validate_url_pre_ingestion
 from profile_fit import is_role_excluded, should_annotate_existing
+# Status canónico (tracker_flow) — Target ya migrado a Objetivo (Q-2)
+from tracker_flow import Status
 
 _LAYER_1_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(_LAYER_1_ROOT / ".env", override=True)
@@ -840,25 +842,20 @@ def process_record(
     schema: NotionSchema,
     alias_data: dict,
 ) -> ProcessedRecord:
-    # ── GAP-03 · REVIEW_NEEDED resolution contract ──────────────────────────────
-    # feed_processor.py asigna disposition="REVIEW_NEEDED" cuando una entrada
-    # no puede procesarse completamente (alias sin resolver, URL parcial,
+    # ── GAP-03 · REVIEW resolution contract (vocab §3) ──────────────────────────
+    # feed_processor.py asigna disposition="REVIEW_NEEDED" (interno) cuando una
+    # entrada no puede procesarse completamente (alias sin resolver, URL parcial,
     # semi-duplicado cross-layer). Estas entradas SE ESCRIBEN en Notion con
-    # Status="REVIEW_NEEDED" y sus campos Class B quedan BLOQUEADOS — Python no
-    # los calcula hasta que el operador resuelva el problema.
+    # Status="Por Revisar" (enum tracker_flow.Status.POR_REVISAR). Class B queda
+    # bloqueado hasta resolución manual.
     #
-    # CONTRATO DE RESOLUCIÓN (Kernel §10):
-    #   1. El operador abre la entrada en Notion y corrige el campo problemático
-    #      (URL parcial → URL completa, alias ambiguo → marca canónica).
-    #   2. El operador cambia Status → "Target".
-    #   3. El operador corre: ~/vantage_pipeline.sh
-    #   4. layer_1_run.py detecta Status="Target" en entradas que tenían
-    #      Gate vacío o REVIEW_NEEDED y procesa sus campos Class B normalmente.
+    # CONTRATO DE RESOLUCIÓN (Kernel §10, post Q-2 Target→Objetivo):
+    #   1. El operador corrige el campo problemático en Notion.
+    #   2. El operador cambia Status → "Objetivo" (Target ya no existe en prod).
+    #   3. El operador corre el orquestador (layer_1_orchestrator / vl1).
+    #   4. El pipeline detecta Status="Objetivo" y procesa Class B normalmente.
     #
-    # "Target" es el ÚNICO valor de Status reconocido como señal de resolución.
-    # Cualquier otro valor (ej. dejar "REVIEW_NEEDED") mantiene el bloqueo.
-    # Ver también: layer_1_run.py — lógica de gate() y scoring sobre entradas
-    # con Status="Target".
+    # "Objetivo" es el valor de resolución. Dejar "Por Revisar" mantiene el bloqueo.
     # ── fin GAP-03 ──────────────────────────────────────────────────────────────
     record = normalize_record_fields(raw)
     hash_key = compute_dedup_hash(record)
@@ -1057,7 +1054,12 @@ def _resolve_fuente_from_source_type(rec: dict, fetch: str) -> str:
 # ──────────────────────────────────────────
 def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
     rec = p.record
-    status = "Target" if p.disposition == "CLEAN" else "REVIEW_NEEDED"
+    # Vocab §3 / Q-2: CLEAN → Objetivo (Target retirado); review → Por Revisar
+    # disposition "REVIEW_NEEDED" es etiqueta interna; Status vivo = enum tracker_flow
+    if p.disposition == "CLEAN":
+        status = Status.OBJETIVO.value
+    else:
+        status = Status.POR_REVISAR.value
     layer = rec.get("layer", "L1")
     fetch = rec.get("fetch_status", "career_page")
 
@@ -1084,15 +1086,27 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
     if schema.location_prop and rec.get("location"):
         props[schema.location_prop] = schema.rich_text_value(rec["location"])
 
-    if schema.holding_prop and (p.holding or rec.get("holding")):
-        props[schema.holding_prop] = schema.rich_text_value(p.holding or rec.get("holding", ""))
+    # Holding: alias_map ya resolvió holdings reales (Nike Inc., LVMH, …).
+    # Q-3: holdings REALES se migran, jamás se vacían; placeholders → vacío.
+    holding_val = (p.holding or rec.get("holding") or "").strip()
+    if holding_val and holding_val.lower() in {"n/a", "na", "none", "null", "-", "tbd", "unknown"}:
+        holding_val = ""
+    if schema.holding_prop and holding_val:
+        props[schema.holding_prop] = schema.rich_text_value(holding_val)
 
     apply_url = rec.get("apply_url") or ""
     if apply_url.startswith("http"):
         props[schema.url_prop] = {"url": apply_url}
 
-    if "Source_Type" in schema.properties:
-        props["Source_Type"] = schema.select_value("Vacante")
+    # Source_Type: schema vivo tiene trailing space (Q-1; rename MCP = G8).
+    # Escribir al nombre que exista en el schema cargado.
+    source_type_prop = None
+    for candidate in ("Source_Type ", "Source_Type"):
+        if candidate in schema.properties:
+            source_type_prop = candidate
+            break
+    if source_type_prop:
+        props[source_type_prop] = schema.select_value("Vacante")
 
     # Prioridad: sin default — vl1 backfill (KERNEL:TRIGGER-002) es responsable de llenar este campo
     # en registros donde llega vacío. feed_processor.py deja el campo vacío/null si no viene en el JSON.
