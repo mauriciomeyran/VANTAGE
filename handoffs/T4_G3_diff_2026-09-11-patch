@@ -1,0 +1,128 @@
+--- a/Layer_1/scripts/tracker_flow.py	2026-09-12 04:17:53.555735563 +0000
++++ b/Layer_1/scripts/tracker_flow.py	2026-09-12 05:02:41.348044472 +0000
+@@ -1014,15 +1014,39 @@
+         return len(SURVIVOR_PRIORITY)  # Lowest priority for unknown
+ 
+ 
++# F12/Q-H7 FIX: `layer` es un valor string (L1/L2/L3/N/A), nunca numérico.
++# El código previo aplicaba `-(r.get("layer", 0) or 0)` directo sobre ese
++# string, lo cual produce TypeError en Python (unary minus sobre str) en
++# cuanto dos duplicados llegan a desempatar por este criterio. Dirección
++# confirmada por el operador (2026-09-11): L1 (Active Search) > L2 > L3
++# (Passive Intake) > N/A — mapeo explícito, no inferencia numérica del label.
++LAYER_SURVIVOR_PRIORITY = {
++    "L1": 3,
++    "L2": 2,
++    "L3": 1,
++    "N/A": 0,
++}
++
++
++def get_layer_rank(layer: Any) -> int:
++    """
++    F12/Q-H7: Traduce el valor string de `layer` a un rank numérico para
++    desempate en choose_survivor. Valores desconocidos o ausentes reciben
++    el rank más bajo (0), igual que "N/A" — nunca lanzan excepción.
++    """
++    return LAYER_SURVIVOR_PRIORITY.get(layer, 0)
++
++
+ def choose_survivor(records: list[Dict[str, Any]]) -> Dict[str, Any]:
+     """
+     F12: Choose survivor from duplicate records.
+-    
++
+     Priority:
+     1. Status rank (Contratado first)
+     2. Score (higher is better)
+     3. Has URL (preferred)
+-    4. Layer (higher number first — H7: direction to confirm, see Q-H7)
++    4. Layer (L1 > L2 > L3 > N/A — Q-H7 resuelto 2026-09-11, ver
++       LAYER_SURVIVOR_PRIORITY arriba)
+     """
+     if not records:
+         raise ValueError("No records to choose from")
+@@ -1034,7 +1058,7 @@
+             get_survivor_rank(r.get("Status", "")),
+             -(r.get("Score", 0) or 0),  # Higher score first
+             0 if r.get("URL") else 1,  # H7: Has URL first (was inverted: 1-if-URL sorted URL-less first)
+-            -(r.get("layer", 0) or 0)  # Higher layer first
++            -get_layer_rank(r.get("layer"))  # Q-H7 FIX: L1 > L2 > L3 > N/A, string-safe
+         )
+     )
+     
+--- a/tests/test_tracker_flow_v3.py	2026-09-12 04:18:00.407811110 +0000
++++ b/tests/test_tracker_flow_v3.py	2026-09-12 05:02:41.348044472 +0000
+@@ -20,6 +20,7 @@
+     archive_gate, to_notion_properties, generate_archive_notes,
+     evaluate_review_gate, diff_records,
+     SURVIVOR_PRIORITY, get_survivor_rank, choose_survivor,
++    LAYER_SURVIVOR_PRIORITY, get_layer_rank,
+     TERMINAL_STATUSES, LIVE_APPLICATION_STATUSES, PROTECTED_STATUSES,
+     KNOWN_BOT_IDS, DELETED_VALUE_MAPPINGS,
+     sync_status_from_outcome, apply_status_sync_writeback, run_outcome_status_sync,
+@@ -60,6 +61,9 @@
+     "test_fixture_loading": "A5/F15",
+     "test_h3_fake_pages_chain": "H3/G6",
+     "test_h7_url_tiebreak_prefers_url": "H7/F12",
++    "test_qh7_choose_survivor_string_layer_no_typeerror": "Q-H7",
++    "test_qh7_layer_priority_l1_beats_l3": "Q-H7",
++    "test_qh7_get_layer_rank_unknown_defaults_zero": "Q-H7",
+     "test_h7_coverage_map_complete": "H7/A5",
+     "test_f13_sync_status_from_outcome_corrects": "F13",
+     "test_f13_sync_status_from_outcome_noop_already_synced": "F13",
+@@ -627,6 +631,54 @@
+     assert survivor["URL"] == "https://example.com"
+ 
+ 
++def test_qh7_choose_survivor_string_layer_no_typeerror():
++    """Q-H7: choose_survivor no debe lanzar TypeError con layer como string
++    (L1/L2/L3/N/A), que es la forma real en que llega desde Notion — el bug
++    original hacía `-(layer_string)` directo, reventando con TypeError en
++    cuanto dos duplicados con Status/Score/URL idénticos desempataban por
++    layer."""
++    records = [
++        {"Status": "Objetivo", "Score": 50, "URL": "https://example.com", "layer": "L3"},
++        {"Status": "Objetivo", "Score": 50, "URL": "https://example.com", "layer": "L1"},
++    ]
++    # No debe lanzar TypeError
++    survivor = choose_survivor(records)
++    assert survivor["layer"] == "L1"
++
++
++def test_qh7_layer_priority_l1_beats_l3():
++    """Q-H7: dirección confirmada por el operador (2026-09-11) — L1 (Active
++    Search) gana sobre L3 (Passive Intake) cuando Status/Score/URL empatan."""
++    assert get_layer_rank("L1") > get_layer_rank("L2") > get_layer_rank("L3") > get_layer_rank("N/A")
++
++    records = [
++        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": "L3"},
++        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": "L2"},
++        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": "N/A"},
++        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": "L1"},
++    ]
++    survivor = choose_survivor(records)
++    assert survivor["layer"] == "L1"
++
++
++def test_qh7_get_layer_rank_unknown_defaults_zero():
++    """Q-H7: valores desconocidos o ausentes de layer (None, "", string
++    inesperado) nunca deben lanzar excepción — degradan a rank 0, igual que
++    N/A, en vez de romper choose_survivor en producción."""
++    assert get_layer_rank(None) == 0
++    assert get_layer_rank("") == 0
++    assert get_layer_rank("L99_UNKNOWN") == 0
++    assert get_layer_rank("N/A") == 0
++
++    # Y no debe reventar dentro de choose_survivor con un layer ausente/None
++    records = [
++        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": None},
++        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": "L1"},
++    ]
++    survivor = choose_survivor(records)
++    assert survivor["layer"] == "L1"
++
++
+ def test_h7_coverage_map_complete():
+     """H7/A5: every test in this module is mapped test↔finding-ID (no drift)."""
+     names = sorted(n for n, v in globals().items() if n.startswith("test_") and callable(v))
