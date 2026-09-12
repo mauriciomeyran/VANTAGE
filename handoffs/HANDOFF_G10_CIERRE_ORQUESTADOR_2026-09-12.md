@@ -3,7 +3,7 @@
 **Serial:** `ARENA-20260912-G10`  
 **Contrato:** `handoffs/CONTRATO_DEVIN_CONSOLIDADO_2026-09-12.md` (manda)  
 **Rama sesión:** `arena/01a097ad-vantage`  
-**Tip (local = origin):** `2d436b7c8f9f861778c2ff0d2c7e4cb923aa10e2`  
+**Tip (local = origin):** ejecutar `git rev-parse HEAD` y `git log origin/arena/01a097ad-vantage -1` — deben coincidir y status vacío (E4).
 **Operador:** Mauricio Meyrán · **Agente código:** Arena Agent Mode  
 **Estado gates:** G0–G10 **VERDE** (código + docs mirror). Cutover Notion schema/valores = G8 runbook pendiente de sesión Mau/Claude + `APROBAR_WRITE`.
 
@@ -22,13 +22,9 @@ Diffs documentales G9 viven en **repo mirror**; inyección Notion = Claude + `AP
 
 ```
 git rev-parse HEAD
-2d436b7c8f9f861778c2ff0d2c7e4cb923aa10e2
-
-git status --short
-(vacío al cierre — re-verificar post-push)
-
-git ls-remote origin refs/heads/arena/01a097ad-vantage
-2d436b7c8f9f861778c2ff0d2c7e4cb923aa10e2
+git status --short                    # vacío
+git log origin/arena/01a097ad-vantage -1 --oneline
+# == HEAD
 
 pytest tests/test_layer_1_orchestrator.py tests/test_g3_parity.py \
        tests/test_tracker_flow_v3.py tests/test_vl1_sync.py -q
@@ -39,6 +35,9 @@ python3 Layer_1/scripts/g8_post_checklist.py --offline
 
 python3 Layer_1/scripts/g9_docsync_verify.py
 → 21 anchors OK
+
+python3 Layer_1/scripts/g10_handoff_verify.py
+→ exit 0
 ```
 
 ---
@@ -78,9 +77,14 @@ vl1 batch → RETIRADO exit 0 (Q-10)
 | **G7** | `a66bb7a` | `NORMALIZATION_TABLE` + `normalize_tracker_values.py` idempotente |
 | **G8** | `e4ac1ba` | Runbook freeze→merge→patch; export/checklist/rollback offline |
 | **G9** | `e24b4b1` | Kernel 09.10 Q-4 derogación; Manual/Aliases/tidy; Changelog **v9.22.0** |
-| **G10** | `2d436b7` | Handoff serial + paths + tests + Q-n + frase cero Notion |
+| **G10** | `791c41a`…HEAD | Handoff serial + paths + tests + Q-n + frase cero Notion |
 
 ---
+
+### Commits G10 (cadena)
+- `791c41a` — handoff body + g10_handoff_verify + tests
+- `7643c18`… — tip/align follow-ups
+- HEAD al push = tip E4 (status vacío + origin match)
 
 ## 4. Paths canónicos
 

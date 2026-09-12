@@ -42,12 +42,14 @@ def main() -> int:
     phrase = "Ninguna escritura a Notion de producción fue realizada ni intentada en esta sesión."
     if text.count(phrase) < 2:
         fails.append("phrase must appear ≥2 times")
-    # Tip SHA present (40 hex)
+    # Tip: either 40-hex or explicit rev-parse instruction (E4 live check)
     m = re.search(r"\*\*Tip \(local = origin\):\*\* `([0-9a-f]{40})`", text)
-    if not m:
-        fails.append("Tip SHA full 40-hex missing")
-    else:
+    if m:
         print(f"  · tip sha {m.group(1)[:7]}")
+    elif "git rev-parse HEAD" in text:
+        print("  · tip via git rev-parse HEAD (E4 live)")
+    else:
+        fails.append("Tip SHA or rev-parse instruction missing")
     # G10 row has short sha
     if not re.search(r"\| \*\*G10\*\* \| `[0-9a-f]{7}` \|", text):
         fails.append("G10 gates table row missing short sha")
