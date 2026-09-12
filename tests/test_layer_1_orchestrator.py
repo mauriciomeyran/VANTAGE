@@ -2099,5 +2099,144 @@ def test_g5_no_code_path_executes_suggestion():
 
 
 
+def test_g5_preview_nad_and_gate_label_branches():
+    """Cobertura G5: NAD archive + gate_label (sin URL mala) + bypass + NAD inválido."""
+    # NAD expired, URL ok → archive NAD
+    rec_nad = {
+        "id": "cov-nad",
+        "Status": Status.OBJETIVO.value,
+        "URL": "https://example.com/ok",
+        "Source_Type ": "Vacante",
+        "NAD": "2019-06-01",
+        "Rol": "Visual Merchandiser",
+        "Marca": "Zara",
+        "VM_Scope": "Alto",
+        "Role_Class": "VM",
+        "Fetch": "Accesible",
+    }
+    acts = preview_destructive_actions(rec_nad)
+    assert any(a["kind"] == "archive" and "NAD" in a["reason"] for a in acts)
+
+    # URL ok, NAD future → gate_label
+    rec_gate = {
+        "id": "cov-gate",
+        "Status": Status.OBJETIVO.value,
+        "URL": "https://example.com/ok2",
+        "Source_Type ": "Vacante",
+        "NAD": "2026-12-31",
+        "Rol": "Visual Merchandiser",
+        "Marca": "Zara",
+        "VM_Scope": "Alto",
+        "Role_Class": "VM",
+        "Fetch": "Accesible",
+        "Score": 70,
+    }
+    # Añadir bot timestamps para que is_mutable deje pasar cómputo de gate
+    rec_gate["last_edited_time"] = "2024-01-01T00:00:00.000Z"
+    rec_gate["last_edited_by_id"] = "integration-id-feed-processor"
+    acts2 = preview_destructive_actions(rec_gate)
+    # gate_label o vacío si evaluate_flow protege; no crash
+    assert isinstance(acts2, list)
+    if acts2:
+        assert acts2[0]["kind"] in ("gate_label", "archive")
+
+    # Inbound bypass score path
+    rec_in = {
+        "id": "cov-in",
+        "Status": Status.OBJETIVO.value,
+        "URL": "https://example.com/in",
+        "Source_Type ": "Inbound",
+        "NAD": "2026-12-31",
+        "Rol": "Any",
+        "Marca": "X",
+        "Score": 0,
+    }
+    acts3 = preview_destructive_actions(rec_in)
+    assert isinstance(acts3, list)
+
+    # NAD inválido no crashea
+    rec_bad = {
+        "id": "cov-bad",
+        "Status": Status.OBJETIVO.value,
+        "URL": "https://example.com/ok3",
+        "Source_Type ": "Vacante",
+        "NAD": "not-a-date",
+        "Rol": "VM",
+        "Marca": "Zara",
+        "VM_Scope": "Alto",
+        "Role_Class": "VM",
+        "Fetch": "Accesible",
+    }
+    assert isinstance(preview_destructive_actions(rec_bad), list)
+
+
+def test_g5_preview_protected_status_skips_archive():
+    """Cobertura G5: Status protegido no genera archive por URL."""
+    rec = {
+        "id": "cov-prot",
+        "Status": Status.CONTRATADO.value,
+        "URL": "https://example.com/x?utm_source=1",
+        "Source_Type ": "Vacante",
+        "NAD": "2020-01-01",
+    }
+    acts = preview_destructive_actions(rec)
+    assert not any(a["kind"] == "archive" for a in acts)
+
+
+def test_g5_get_application_next_action_all_legs():
+    """Cobertura: todas las ramas de get_application_next_action."""
+    assert get_application_next_action(Status.POSTULADO.value) == "Follow-up"
+    assert get_application_next_action(Status.EN_PROCESO.value) == "Interview prep"
+    assert get_application_next_action("En proceso") == "Interview prep"
+    assert get_application_next_action(Status.NEGOCIANDO.value) == "Follow-up"
+    assert get_application_next_action(Status.SIN_RESPUESTA.value) == "Follow-up"
+    assert get_application_next_action("Sin respuesta") == "Follow-up"
+    assert get_application_next_action(Status.OBJETIVO.value) == "Re-check"
+
+
+def test_g5_orchestrator_inbound_bypass_and_nad_bot():
+    """Cobertura loop: Inbound BYPASS + NAD bot archive en apply."""
+    client = NotionClientFake()
+    client.query_data_sources = Mock(return_value={"results": [
+        {
+            "id": "cov-inbound",
+            "properties": {
+                "Status": {"select": {"name": Status.OBJETIVO.value}},
+                "URL": {"url": "https://example.com/inb"},
+                "Source_Type ": {"select": {"name": "Inbound"}},
+                "NAD": {"date": {"start": "2026-12-31"}},
+                "Rol": {"title": [{"plain_text": "Any"}]},
+                "Marca": {"select": {"name": "Friend"}},
+                "Score": {"number": 0},
+                "Last_Gate_Run": {"date": {"start": "2026-01-01"}},
+            },
+            "last_edited_time": "2026-01-01T00:00:00.000Z",
+            "last_edited_by": {"id": "integration-id-feed-processor"},
+        },
+        {
+            "id": "cov-nad-bot",
+            "properties": {
+                "Status": {"select": {"name": Status.OBJETIVO.value}},
+                "URL": {"url": "https://example.com/nadbot"},
+                "Source_Type ": {"select": {"name": "Vacante"}},
+                "NAD": {"date": {"start": "2018-01-01"}},
+                "Rol": {"title": [{"plain_text": "VM"}]},
+                "Marca": {"select": {"name": "Zara"}},
+                "VM_Scope": {"select": {"name": "Alto"}},
+                "Role_Class": {"select": {"name": "VM"}},
+                "Fetch": {"select": {"name": "Accesible"}},
+                "Last_Gate_Run": {"date": {"start": "2026-01-01"}},
+            },
+            "last_edited_time": "2026-01-01T00:00:00.000Z",
+            "last_edited_by": {"id": "integration-id-feed-processor"},
+        },
+    ]})
+    metrics = run_orchestrator(client=client, dry_run=False, apply=True, dedup_audit=False)
+    assert metrics["errors"] == 0
+    assert metrics["archives"] >= 1
+    assert any(w[1] == "cov-nad-bot" for w in client.writes)
+
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
