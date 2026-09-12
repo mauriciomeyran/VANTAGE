@@ -35,6 +35,7 @@ from tracker_flow import (
     LIFECYCLE_MATRIX, TERMINAL_STATUSES, LIVE_APPLICATION_STATUSES,
     PROTECTED_STATUSES, DELETED_VALUE_MAPPINGS,
     sync_status_from_outcome, apply_status_sync_writeback, run_outcome_status_sync,
+    choose_survivor, get_layer_rank, diff_records,
 )
 from gate_logic import gate_logic
 from priority_logic import infer_prioridad
@@ -185,6 +186,168 @@ def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
     return True
 
 
+def analyze_outcome_patterns(records: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    F5: Análisis de patrones de rechazo — SOLO LECTURA.
+
+    Opera sobre el snapshot ya normalizado (cero re-query, cero writes).
+    Port conductual de layer_1_run.analyze_outcome_patterns sobre plano.
+    """
+    rejection_patterns: Dict[str, Dict[str, int]] = {}
+    score_effectiveness: Dict[str, Dict[str, int]] = {}
+    timing_patterns: Dict[str, List[int]] = {}
+
+    live_applied = {
+        Status.POSTULADO.value,
+        Status.EN_PROCESO.value,
+        Status.NEGOCIANDO.value,
+        "En proceso",  # legacy casing visto en prod
+    }
+
+    for record in records:
+        status = record.get("Status", "") or ""
+        score = record.get("Score", 0) or 0
+        marca = record.get("Marca", "") or ""
+        vm_scope = record.get("VM_Scope", "") or ""
+        applied_date = record.get("Apply Date", "") or record.get("Applied", "") or ""
+        rejected_date = record.get("Rej Date", "") or ""
+
+        score_bracket = f"Score {score}"
+
+        if status == Status.RECHAZADO.value:
+            score_effectiveness.setdefault(score_bracket, {"applied": 0, "rejected": 0})
+            score_effectiveness[score_bracket]["rejected"] += 1
+            if marca:
+                rejection_patterns.setdefault(marca, {"applied": 0, "rejected": 0})
+                rejection_patterns[marca]["rejected"] += 1
+        elif status in live_applied:
+            score_effectiveness.setdefault(score_bracket, {"applied": 0, "rejected": 0})
+            score_effectiveness[score_bracket]["applied"] += 1
+            if marca:
+                rejection_patterns.setdefault(marca, {"applied": 0, "rejected": 0})
+                rejection_patterns[marca]["applied"] += 1
+
+        if applied_date and rejected_date:
+            try:
+                applied_dt = datetime.strptime(str(applied_date)[:10], "%Y-%m-%d").date()
+                rejected_dt = datetime.strptime(str(rejected_date)[:10], "%Y-%m-%d").date()
+                days_to_rejection = (rejected_dt - applied_dt).days
+                timing_key = f"{vm_scope or 'N/A'}_VM"
+                timing_patterns.setdefault(timing_key, []).append(days_to_rejection)
+            except (ValueError, TypeError):
+                pass
+
+    return {
+        "rejection_patterns": rejection_patterns,
+        "score_effectiveness": score_effectiveness,
+        "timing_patterns": timing_patterns,
+    }
+
+
+def _normalize_dedup_key(url: str) -> str:
+    """Clave canónica de URL para agrupar duplicados (sin query/fragment)."""
+    if not url:
+        return ""
+    raw = url.strip().lower()
+    # Quitar esquema y www
+    for prefix in ("https://", "http://"):
+        if raw.startswith(prefix):
+            raw = raw[len(prefix):]
+            break
+    if raw.startswith("www."):
+        raw = raw[4:]
+    # Quitar query y fragment
+    raw = raw.split("?", 1)[0].split("#", 1)[0]
+    return raw.rstrip("/")
+
+
+def find_duplicate_groups(records: List[Dict[str, Any]]) -> List[List[Dict[str, Any]]]:
+    """
+    F6: Agrupa duplicados por URL canónica o hash idéntico.
+
+    Solo produce grupos de tamaño ≥ 2. No escribe nada.
+    """
+    by_key: Dict[str, List[Dict[str, Any]]] = {}
+    for record in records:
+        url_key = _normalize_dedup_key(record.get("URL", "") or "")
+        hash_key = (record.get("hash") or "").strip().lower()
+        key = None
+        if url_key:
+            key = f"url:{url_key}"
+        elif hash_key:
+            key = f"hash:{hash_key}"
+        if not key:
+            continue
+        by_key.setdefault(key, []).append(record)
+
+    return [group for group in by_key.values() if len(group) >= 2]
+
+
+def run_dedup_audit(
+    records: List[Dict[str, Any]],
+    client: Any,
+    dry_run: bool = True,
+) -> Dict[str, Any]:
+    """
+    F6: Dedup unificado con survivor canónico + guard is_mutable.
+
+    - Survivor = choose_survivor (core tracker_flow: Status rank → Score → URL → layer L1>L2>L3>N/A)
+    - No-survivors mutables reciben Dedup_Flag = "Posible duplicado"
+    - Filas protegidas (is_mutable=False) jamás se marcan ni se archivan
+    - Cero trash físico; consolidate_duplicates.py se archiva en G6, no se llama aquí
+    """
+    result = {
+        "groups_found": 0,
+        "survivors": 0,
+        "flagged": 0,
+        "protected_skipped": 0,
+        "flags": [],  # list of {survivor_id, flagged_id, reason}
+    }
+
+    groups = find_duplicate_groups(records)
+    result["groups_found"] = len(groups)
+
+    for group in groups:
+        survivor = choose_survivor(group)
+        result["survivors"] += 1
+        survivor_id = survivor.get("id", "")
+
+        for record in group:
+            rid = record.get("id", "")
+            if rid == survivor_id:
+                continue
+
+            # Guard is_mutable: filas protegidas son inmunes al mark
+            if not is_mutable(record, Actor.DEDUP):
+                result["protected_skipped"] += 1
+                logger.info(
+                    f"[F6] Skip protegido {rid[:8]} (survivor={survivor_id[:8]})"
+                )
+                continue
+
+            flag_payload = {"Dedup_Flag": "Posible duplicado"}
+            result["flags"].append({
+                "survivor_id": survivor_id,
+                "flagged_id": rid,
+                "survivor_layer": survivor.get("layer", "N/A"),
+                "flagged_layer": record.get("layer", "N/A"),
+            })
+            result["flagged"] += 1
+
+            if not dry_run:
+                client.pages_update(rid, flag_payload)
+                logger.info(
+                    f"[F6] Dedup_Flag → {rid[:8]} (survivor={survivor_id[:8]})"
+                )
+            else:
+                logger.info(
+                    f"[F6 DRY] marcaría Dedup_Flag → {rid[:8]} "
+                    f"(survivor={survivor_id[:8]})"
+                )
+
+    return result
+
+
 def run_orchestrator(
     client: Any,
     dry_run: bool = True,
@@ -222,21 +385,27 @@ def run_orchestrator(
         "archives": 0,
         "errors": 0,
         "manual_protected": 0,
+        "patterns": None,
+        "dedup": None,
     }
     
-    # F0: Query inicial único
+    # F0: Query inicial único + snapshot (un solo re-query)
     logger.info("F0: Query inicial del Tracker...")
     query_result = client.query_data_sources(VANTAGE_DATA_SOURCE_ID)
     items = query_result.get("results", [])
     metrics["total_processed"] = len(items)
     
     logger.info(f"F0: {len(items)} filas recuperadas")
+
+    # Snapshot normalizado del run (fuente única para F5/F6; cero re-query)
+    snapshot: List[Dict[str, Any]] = []
     
     # Fases por cada fila
     for item in items:
         try:
             # Normalizar record
             record = normalize_record(item)
+            snapshot.append(record)
             record_id = record.get("id", "unknown")[:8]
             
             # §2.3: Manual-first protection
@@ -279,7 +448,6 @@ def run_orchestrator(
             nad = record.get("NAD", "")
             if nad:
                 try:
-                    from datetime import datetime
                     nad_date = datetime.strptime(nad, "%Y-%m-%d")
                     if nad_date < datetime.now():
                         archive_result = archive_gate(
@@ -309,12 +477,8 @@ def run_orchestrator(
             # F4: Gate + Next_Action (via tracker_flow.evaluate_flow)
             gate_result = apply_gate_decision(record, score)
             
-            # F5: Patrones (solo lectura, no writes)
-            # F6: Dedup audit (si habilitado)
-            
-            # Write final con diff
+            # Write final con diff (solo si hay cambios reales)
             if not dry_run:
-                # Solo escribir si hay cambios
                 changes = {}
                 for key, value in gate_result.items():
                     if record.get(key) != value:
@@ -331,12 +495,18 @@ def run_orchestrator(
         except Exception as e:
             logger.error(f"Error procesando fila {record.get('id', 'unknown')[:8]}: {e}")
             metrics["errors"] += 1
+
+    # F5: Patrones (solo lectura, sobre snapshot — cero writes)
+    logger.info("F5: Análisis de patrones (read-only)...")
+    metrics["patterns"] = analyze_outcome_patterns(snapshot)
     
-    # F6: Dedup audit (post-procesamiento)
-    if dedup_audit and ENABLE_DEDUP_AUDIT:
-        logger.info("F6: Dedup audit...")
-        # Aquí se llamaría al módulo de dedup unificado
-        # (pendiente de implementación en §6.2)
+    # F6: Dedup unificado (survivor canónico + guard is_mutable)
+    if dedup_audit or ENABLE_DEDUP_AUDIT:
+        logger.info("F6: Dedup audit (survivor L1>L2>L3>N/A + is_mutable)...")
+        dedup_result = run_dedup_audit(snapshot, client, dry_run=dry_run)
+        metrics["dedup"] = dedup_result
+        if not dry_run:
+            metrics["writes"] += dedup_result.get("flagged", 0)
     
     # Summary
     logger.info(f"{'='*60}")
@@ -347,6 +517,12 @@ def run_orchestrator(
     logger.info(f"Archivos: {metrics['archives']}")
     logger.info(f"Protegidos manual: {metrics['manual_protected']}")
     logger.info(f"Errores: {metrics['errors']}")
+    if metrics.get("dedup"):
+        logger.info(
+            f"Dedup: groups={metrics['dedup']['groups_found']} "
+            f"flagged={metrics['dedup']['flagged']} "
+            f"protected={metrics['dedup']['protected_skipped']}"
+        )
     logger.info(f"{'='*60}")
     
     return metrics

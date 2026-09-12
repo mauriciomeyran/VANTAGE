@@ -99,8 +99,6 @@ completar; los 17 tests previos NO cuentan como G2).
 - **G2 cobertura (rehacer):** tests `test_<fase>_*` por CADA fila §2; cobertura MEDIDA ≥90%
   en módulos nuevos (pegar tabla coverage — conteo solo no pasa). Reportable en 2 mitades
   (G2a F0–F3.6, G2b resto); cierra con ambas. Push comprobable por mitad (§7).
-  Aclaración vinculante 2026-09-12: el ≥90% whole-file se verifica al CIERRE de ambas
-  mitades; por mitad se exige tests por fila + push comprobable + reporte honesto.
 - **G3 paridad:** harness paralelo viejo-vs-nuevo sobre fixtures (≥15 filas, todas las ramas):
   diff vacío salvo allowlist justificada entrada por entrada.
 - **G4 un escritor:** grep literales sueltos en writers = 0 (comandos exactos en reporte).
