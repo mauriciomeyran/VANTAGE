@@ -18,12 +18,13 @@ REQUIRED = [
     "Ninguna escritura a Notion de producción fue realizada ni intentada en esta sesión.",
     "layer_1_orchestrator.py",
     "tracker_flow.is_mutable",
-    "e24b4b1",  # G9 tip at least; G10 commit may supersede tip
+    "e24b4b1",  # G9 tip
+    "791c41a",  # G10 tip
     "Q-4",
     "Q-10",
     "G8_DEPLOYMENT_PLAN",
     "G9_DOCSYNC_PACKAGE",
-    "247 passed",
+    "250 passed",
     "Archive/Legacy_Scripts/layer_1_run.py",
     "442938be-fc42-828f-b72e-076818d65a5b",
 ]

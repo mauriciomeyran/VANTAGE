@@ -22,17 +22,17 @@ Diffs documentales G9 viven en **repo mirror**; inyección Notion = Claude + `AP
 
 ```
 git rev-parse HEAD
-e24b4b17474b2a66037f777128c1d944d6dac8a3
+791c41a021bcdaaaab9d0d2995cafd4f300eb4a6
 
 git status --short
 (vacío al cierre de este handoff — re-verificar post-commit G10)
 
 git ls-remote origin refs/heads/arena/01a097ad-vantage
-e24b4b17474b2a66037f777128c1d944d6dac8a3
+791c41a021bcdaaaab9d0d2995cafd4f300eb4a6
 
 pytest tests/test_layer_1_orchestrator.py tests/test_g3_parity.py \
        tests/test_tracker_flow_v3.py tests/test_vl1_sync.py -q
-→ 247 passed
+→ 250 passed
 
 python3 Layer_1/scripts/g8_post_checklist.py --offline
 → 37 pass / 0 fail
@@ -78,7 +78,7 @@ vl1 batch → RETIRADO exit 0 (Q-10)
 | **G7** | `a66bb7a` | `NORMALIZATION_TABLE` + `normalize_tracker_values.py` idempotente |
 | **G8** | `e4ac1ba` | Runbook freeze→merge→patch; export/checklist/rollback offline |
 | **G9** | `e24b4b1` | Kernel 09.10 Q-4 derogación; Manual/Aliases/tidy; Changelog **v9.22.0** |
-| **G10** | *(este commit)* | Handoff serial + paths + tests + Q-n + frase cero Notion |
+| **G10** |  | Handoff serial + paths + tests + Q-n + frase cero Notion |
 
 ---
 
@@ -136,7 +136,7 @@ vl1 batch → RETIRADO exit 0 (Q-10)
 
 | Suite | Resultado |
 |---|---|
-| orch + g3 + tracker_flow_v3 + vl1_sync | **247 passed** |
+| orch + g3 + tracker_flow_v3 + vl1_sync | **250 passed** |
 | `g8_post_checklist --offline` | **37 PASS** |
 | `g9_docsync_verify` | **21 anchors OK** |
 | Layer_1/tests (gate/scoring/…) | 2 fails **preexistentes** ajenos (Q-7 deadline day/month; health_check acento) — no bloquean G10 |
