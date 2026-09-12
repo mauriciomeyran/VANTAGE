@@ -39,6 +39,17 @@ from tracker_flow import (
 )
 from gate_logic import gate_logic
 from priority_logic import infer_prioridad
+from class_b_guard import (
+    CLASS_A_FIELDS, CLASS_B_FIELDS, guard_write_payload, GuardResult,
+)
+
+# Actores Python autorizados a escribir Class B (cómputo del pipeline).
+# MCP/humano = exención procedural (APROBAR_WRITE); no pasan por esta vía.
+_PIPELINE_CLASS_B_ACTORS = {
+    Actor.PIPELINE,
+    Actor.DEDUP,
+    Actor.INGESTA,
+}
 
 # Setup logging
 logging.basicConfig(
@@ -161,6 +172,7 @@ def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
     """
     §2.3: Ediciones manuales recientes = máxima prioridad.
     
+    Ventana manual = last_edited_time > Last_Gate_Run + autor humano.
     Una fila tocada por humano desde el último run queda inmune a mutación destructiva.
     """
     if not is_mutable(record, actor):
@@ -184,6 +196,104 @@ def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
             return False
     
     return True
+
+
+def class_b_guard(payload: Dict[str, Any], actor: Actor) -> Dict[str, Any]:
+    """
+    Q-9 / §2-Clase B: guard fail-closed en TODAS las vías Python de escritura.
+
+    - PIPELINE / DEDUP / INGESTA: Class A + Class B permitidos; unknown → ValueError.
+    - Otros actores: solo Class A; Class B + unknown → ValueError.
+    - MCP = exención documentada (no usa esta vía; control procedural APROBAR_WRITE).
+
+    Retorna payload limpio listo para pages_update. Nunca silencia violaciones.
+    """
+    if not payload:
+        return {}
+
+    if actor in _PIPELINE_CLASS_B_ACTORS:
+        clean: Dict[str, Any] = {}
+        unknown: Dict[str, Any] = {}
+        for key, value in payload.items():
+            if key in CLASS_A_FIELDS or key in CLASS_B_FIELDS:
+                clean[key] = value
+            else:
+                unknown[key] = value
+        if unknown:
+            raise ValueError(
+                f"class_b_guard: campos desconocidos rechazados (fail-closed): "
+                f"{sorted(unknown.keys())}"
+            )
+        return clean
+
+    # Actores no-pipeline: Class A only (usa módulo class_b_guard)
+    return assert_class_a_only_safe(payload)
+
+
+def assert_class_a_only_safe(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Wrapper local sobre class_b_guard.assert_class_a_only (Class A only)."""
+    from class_b_guard import assert_class_a_only
+    return assert_class_a_only(payload)
+
+
+def compute_write_diff(
+    current: Dict[str, Any],
+    proposed: Dict[str, Any],
+) -> Dict[str, Any]:
+    """
+    Conditional write: solo campos con valor realmente distinto.
+
+    Usa diff_records del core (type-preserving). Anti-reescritura: si no hay
+    diff, retorna {} y el caller NO debe tocar Notion.
+    """
+    if not proposed:
+        return {}
+    # Diff solo sobre las keys propuestas (no re-escribir el record entero)
+    old_slice = {k: current.get(k) for k in proposed}
+    changes = diff_records(old_slice, proposed)
+    return {k: proposed[k] for k in changes}
+
+
+def guarded_pages_update(
+    client: Any,
+    page_id: str,
+    payload: Dict[str, Any],
+    *,
+    actor: Actor,
+    current: Optional[Dict[str, Any]] = None,
+    dry_run: bool = True,
+) -> Dict[str, Any]:
+    """
+    Única vía de escritura del orquestador.
+
+    1. Diff real vs current (anti-rewrite)
+    2. class_b_guard fail-closed
+    3. pages_update solo si queda payload no vacío y not dry_run
+
+    Returns: {wrote: bool, payload: dict, skipped_reason: str|None}
+    """
+    proposed = dict(payload or {})
+    if current is not None:
+        proposed = compute_write_diff(current, proposed)
+
+    if not proposed:
+        return {"wrote": False, "payload": {}, "skipped_reason": "no_diff"}
+
+    try:
+        clean = class_b_guard(proposed, actor)
+    except ValueError as exc:
+        logger.error(f"[class_b_guard] write bloqueado {page_id[:8]}: {exc}")
+        return {"wrote": False, "payload": {}, "skipped_reason": f"guard:{exc}"}
+
+    if not clean:
+        return {"wrote": False, "payload": {}, "skipped_reason": "empty_after_guard"}
+
+    if dry_run:
+        logger.info(f"[DRY] write {page_id[:8]} keys={sorted(clean.keys())}")
+        return {"wrote": False, "payload": clean, "skipped_reason": "dry_run"}
+
+    client.pages_update(page_id, clean)
+    return {"wrote": True, "payload": clean, "skipped_reason": None}
 
 
 def analyze_outcome_patterns(records: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -326,6 +436,19 @@ def run_dedup_audit(
                 continue
 
             flag_payload = {"Dedup_Flag": "Posible duplicado"}
+            # Anti-rewrite: si ya tiene el flag, no tocar
+            write_result = guarded_pages_update(
+                client,
+                rid,
+                flag_payload,
+                actor=Actor.DEDUP,
+                current=record,
+                dry_run=dry_run,
+            )
+            if write_result["skipped_reason"] == "no_diff":
+                logger.info(f"[F6] skip anti-rewrite {rid[:8]} (ya flagged)")
+                continue
+
             result["flags"].append({
                 "survivor_id": survivor_id,
                 "flagged_id": rid,
@@ -334,8 +457,7 @@ def run_dedup_audit(
             })
             result["flagged"] += 1
 
-            if not dry_run:
-                client.pages_update(rid, flag_payload)
+            if write_result["wrote"]:
                 logger.info(
                     f"[F6] Dedup_Flag → {rid[:8]} (survivor={survivor_id[:8]})"
                 )
@@ -424,7 +546,7 @@ def run_orchestrator(
             is_valid, reason = validate_url(url, source_type)
             
             if not is_valid and reason not in ["AGREGADOR_RETRY"]:
-                # Archivar por URL inválida
+                # Archivar por URL inválida (vía única: guarded_pages_update)
                 archive_result = archive_gate(
                     record,
                     reason=f"URL Gate: {reason}",
@@ -432,8 +554,11 @@ def run_orchestrator(
                     actor=Actor.PIPELINE,
                     timestamp=datetime.now().isoformat()
                 )
-                if not dry_run:
-                    client.pages_update(record["id"], archive_result)
+                wr = guarded_pages_update(
+                    client, record["id"], archive_result,
+                    actor=Actor.PIPELINE, current=record, dry_run=dry_run,
+                )
+                if wr["wrote"]:
                     metrics["writes"] += 1
                 metrics["archives"] += 1
                 continue
@@ -457,8 +582,11 @@ def run_orchestrator(
                             actor=Actor.PIPELINE,
                             timestamp=datetime.now().isoformat()
                         )
-                        if not dry_run:
-                            client.pages_update(record["id"], archive_result)
+                        wr = guarded_pages_update(
+                            client, record["id"], archive_result,
+                            actor=Actor.PIPELINE, current=record, dry_run=dry_run,
+                        )
+                        if wr["wrote"]:
                             metrics["writes"] += 1
                         metrics["archives"] += 1
                         continue
@@ -477,18 +605,14 @@ def run_orchestrator(
             # F4: Gate + Next_Action (via tracker_flow.evaluate_flow)
             gate_result = apply_gate_decision(record, score)
             
-            # Write final con diff (solo si hay cambios reales)
-            if not dry_run:
-                changes = {}
-                for key, value in gate_result.items():
-                    if record.get(key) != value:
-                        changes[key] = value
-                
-                if changes:
-                    client.pages_update(record["id"], changes)
-                    metrics["writes"] += 1
-                else:
-                    metrics["skips"] += 1
+            # Write final: diff real + class_b_guard + anti-rewrite
+            # (inseparables Q-5: ventana manual + conditional writes + anti-rewrite)
+            wr = guarded_pages_update(
+                client, record["id"], gate_result,
+                actor=Actor.PIPELINE, current=record, dry_run=dry_run,
+            )
+            if wr["wrote"]:
+                metrics["writes"] += 1
             else:
                 metrics["skips"] += 1
                 

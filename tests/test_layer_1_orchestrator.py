@@ -25,6 +25,9 @@ from layer_1_orchestrator import (
     find_duplicate_groups,
     run_dedup_audit,
     _normalize_dedup_key,
+    class_b_guard,
+    compute_write_diff,
+    guarded_pages_update,
 )
 from tracker_flow import (
     Status, Actor, normalize_record, is_mutable,
@@ -1038,26 +1041,84 @@ def test_batch_operations_target_case():
     assert 'new_status = "Exploratorio"' in content
 
 
-def test_class_b_guard_not_implemented():
-    """Clase B: class_b_guard aún NO cableado en orquestador (G2c-2)."""
+# ── G2c-2: class_b_guard + transversales (snapshot, conditional writes, anti-rewrite) ──
+
+def test_class_b_guard_pipeline_allows_class_b():
+    """Clase B Q-9: PIPELINE puede escribir Class A + Class B."""
+    payload = {
+        "Status": Status.EXPIRADA.value,       # Class A
+        "Notas": "[ARCHIVO] test",             # Class A
+        "Next_Action": "Archivar",             # Class B
+        "Score": 55,                           # Class B
+        "Dedup_Flag": "Posible duplicado",     # Class B
+    }
+    clean = class_b_guard(payload, Actor.PIPELINE)
+    assert clean == payload
+
+
+def test_class_b_guard_pipeline_rejects_unknown():
+    """Clase B Q-9: PIPELINE rechaza campos desconocidos (fail-closed)."""
+    payload = {"Status": Status.OBJETIVO.value, "campo_inventado": "x"}
+    with pytest.raises(ValueError, match="desconocidos"):
+        class_b_guard(payload, Actor.PIPELINE)
+
+
+def test_class_b_guard_non_pipeline_blocks_class_b():
+    """Clase B Q-9: actor no-pipeline (HUMANO vía código) solo Class A."""
+    payload = {
+        "Status": Status.OBJETIVO.value,
+        "Score": 90,  # Class B — debe fallar
+    }
+    with pytest.raises(ValueError, match="class_b_guard"):
+        class_b_guard(payload, Actor.HUMANO)
+
+
+def test_class_b_guard_dedup_actor_allows_flag():
+    """Clase B Q-9: Actor.DEDUP puede escribir Dedup_Flag (Class B)."""
+    clean = class_b_guard(
+        {"Dedup_Flag": "Posible duplicado"}, Actor.DEDUP
+    )
+    assert clean == {"Dedup_Flag": "Posible duplicado"}
+
+
+def test_class_b_guard_wired_all_python_write_paths():
+    """Clase B: toda pages_update del orquestador pasa por guarded_pages_update."""
     orch_path = (
         Path(__file__).resolve().parent.parent / "Layer_1" / "scripts" / "layer_1_orchestrator.py"
     )
     with open(orch_path, "r") as f:
         content = f.read()
-    # Aún no hay wrapper class_b_guard en el orquestador (G2c-2 lo agrega)
-    assert "def class_b_guard" not in content
-    assert "from class_b_guard import" not in content
+    # Definición presente
+    assert "def class_b_guard" in content
+    assert "def guarded_pages_update" in content
+    assert "from class_b_guard import" in content
+    # Única vía de write runtime: client.pages_update solo dentro de guarded_pages_update
+    # (y la definición del fake). Ningún call site suelto en run_orchestrator/run_dedup.
+    lines = content.splitlines()
+    bare_writes = []
+    in_guarded = False
+    in_fake = False
+    for i, line in enumerate(lines, 1):
+        if line.startswith("def guarded_pages_update"):
+            in_guarded = True
+            in_fake = False
+        elif line.startswith("class NotionClientFake"):
+            in_fake = True
+            in_guarded = False
+        elif line.startswith("def ") or line.startswith("class "):
+            in_guarded = False
+            in_fake = False
+        if "client.pages_update(" in line and not in_guarded and not in_fake:
+            bare_writes.append(i)
+    assert bare_writes == [], f"writes sin guard en líneas {bare_writes}"
 
 
 def test_transversal_manual_first_implemented():
-    """Transversal: manual-first protection implementado (línea 159-186)"""
+    """Transversal: manual-first protection implementado (ventana + autor humano)."""
     from layer_1_orchestrator import manual_first_protection
     
-    # Verificar que la función existe y es callable
     assert callable(manual_first_protection)
     
-    # Test básico de funcionalidad
     record = {
         "id": "test-id",
         "Status": Status.OBJETIVO.value,
@@ -1070,26 +1131,152 @@ def test_transversal_manual_first_implemented():
     assert isinstance(result, bool)
 
 
-def test_transversal_snapshot_not_implemented():
-    """Transversal: snapshot se construye en F0 (G2c-1 partial; G2c-2 cierra)."""
-    # G2c-1 ya introduce snapshot en run_orchestrator para F5/F6.
-    # Este test documenta presencia; G2c-2 agrega anti-rewrite + conditional writes completos.
-    orch_path = (
-        Path(__file__).resolve().parent.parent / "Layer_1" / "scripts" / "layer_1_orchestrator.py"
-    )
-    with open(orch_path, "r") as f:
-        content = f.read()
-    assert "snapshot" in content.lower()
+def test_transversal_manual_window_last_gate_run():
+    """Transversal Q-5: ventana = last_edited_time > Last_Gate_Run + humano."""
+    # Humano editó DESPUÉS del último run → inmune
+    human_after = {
+        "id": "h1",
+        "Status": Status.OBJETIVO.value,
+        "last_edited_time": "2024-06-02T00:00:00.000Z",
+        "last_edited_by_id": "human-real",
+        "Last_Gate_Run": "2024-06-01T00:00:00.000Z",
+    }
+    assert manual_first_protection(human_after, Actor.PIPELINE) is False
+
+    # Humano editó ANTES del último run → mutable (si is_mutable lo permite)
+    human_before = {
+        "id": "h2",
+        "Status": Status.OBJETIVO.value,
+        "last_edited_time": "2024-05-01T00:00:00.000Z",
+        "last_edited_by_id": "human-real",
+        "Last_Gate_Run": "2024-06-01T00:00:00.000Z",
+    }
+    # is_mutable puede proteger por _was_edited_since_last_run (state file / 7d);
+    # el contrato de ventana Last_Gate_Run se valida en manual_first_protection
+    # cuando is_mutable deja pasar. Forzamos bot known + tiempo viejo.
+    bot_before = {
+        "id": "b1",
+        "Status": Status.OBJETIVO.value,
+        "last_edited_time": "2024-01-01T00:00:00.000Z",
+        "last_edited_by_id": "integration-id-feed-processor",
+        "Last_Gate_Run": "2024-06-01T00:00:00.000Z",
+    }
+    assert manual_first_protection(bot_before, Actor.PIPELINE) is True
 
 
-def test_transversal_conditional_writes_partial():
-    """Transversal: conditional writes con diff real (parcial → G2c-2 completa)."""
-    orch_path = (
-        Path(__file__).resolve().parent.parent / "Layer_1" / "scripts" / "layer_1_orchestrator.py"
+def test_transversal_snapshot_single_query():
+    """Transversal Q-6: un solo re-query inicial; snapshot alimenta F5/F6."""
+    client = NotionClientFake()
+    client.query_data_sources = Mock(return_value={
+        "results": [{
+            "id": "snap-1",
+            "properties": {
+                "Status": {"select": {"name": Status.RECHAZADO.value}},
+                "Marca": {"select": {"name": "Zara"}},
+                "URL": {"url": "https://example.com/snap"},
+                "NAD": {"date": {"start": "2025-12-31"}},
+                "Score": {"number": 42},
+            },
+            "last_edited_time": "2024-01-01T00:00:00.000Z",
+            "last_edited_by": {"id": "integration-id-feed-processor"},
+        }]
+    })
+
+    metrics = run_orchestrator(
+        client=client, dry_run=True, apply=False, dedup_audit=True
     )
-    with open(orch_path, "r") as f:
-        content = f.read()
-    assert "Write final con diff" in content or "solo si hay cambios" in content.lower()
+
+    # Exactamente un query
+    assert client.query_data_sources.call_count == 1
+    # Snapshot → patterns poblados sin segundo fetch
+    assert metrics["patterns"] is not None
+    assert metrics["patterns"]["rejection_patterns"]["Zara"]["rejected"] == 1
+    assert metrics["dedup"] is not None
+
+
+def test_transversal_conditional_writes_diff_only():
+    """Transversal Q-5: compute_write_diff solo retorna campos que cambian."""
+    current = {"Status": Status.OBJETIVO.value, "Score": 40, "Notas": "x"}
+    proposed = {"Status": Status.OBJETIVO.value, "Score": 55, "Notas": "x"}
+    diff = compute_write_diff(current, proposed)
+    assert diff == {"Score": 55}
+    # Sin cambios → vacío (anti-rewrite)
+    assert compute_write_diff(current, {"Status": Status.OBJETIVO.value}) == {}
+
+
+def test_transversal_anti_rewrite_no_write_when_identical():
+    """Transversal: anti-rewrite — payload idéntico al current → cero pages_update."""
+    client = NotionClientFake()
+    current = {
+        "id": "page-same",
+        "Status": Status.EXPIRADA.value,
+        "Next_Action": "Archivar",
+        "Notas": "[ARCHIVO] ya",
+    }
+    proposed = {
+        "Status": Status.EXPIRADA.value,
+        "Next_Action": "Archivar",
+        "Notas": "[ARCHIVO] ya",
+    }
+    result = guarded_pages_update(
+        client, "page-same", proposed,
+        actor=Actor.PIPELINE, current=current, dry_run=False,
+    )
+    assert result["wrote"] is False
+    assert result["skipped_reason"] == "no_diff"
+    assert client.writes == []
+
+
+def test_transversal_guarded_write_applies_when_diff():
+    """Transversal: con diff real + apply → un write con payload limpio."""
+    client = NotionClientFake()
+    current = {"id": "page-diff", "Status": Status.OBJETIVO.value, "Notas": ""}
+    proposed = {
+        "Status": Status.EXPIRADA.value,
+        "Next_Action": "Archivar",
+        "Notas": "[ARCHIVO] URL Gate",
+    }
+    result = guarded_pages_update(
+        client, "page-diff", proposed,
+        actor=Actor.PIPELINE, current=current, dry_run=False,
+    )
+    assert result["wrote"] is True
+    assert len(client.writes) == 1
+    op, pid, props = client.writes[0]
+    assert op == "pages_update" and pid == "page-diff"
+    assert props["Status"] == Status.EXPIRADA.value
+    assert "Next_Action" in props
+
+
+def test_transversal_anti_rewrite_dedup_already_flagged():
+    """Transversal: Dedup_Flag ya presente → run_dedup_audit no reescribe."""
+    client = NotionClientFake()
+    records = [
+        {
+            "id": "surv",
+            "Status": Status.OBJETIVO.value,
+            "Score": 70,
+            "URL": "https://example.com/already",
+            "layer": "L1",
+            "last_edited_time": "2024-01-01T00:00:00.000Z",
+            "last_edited_by_id": "integration-id-feed-processor",
+        },
+        {
+            "id": "dup-flagged",
+            "Status": Status.OBJETIVO.value,
+            "Score": 40,
+            "URL": "https://example.com/already",
+            "layer": "L3",
+            "Dedup_Flag": "Posible duplicado",  # ya marcado
+            "last_edited_time": "2024-01-01T00:00:00.000Z",
+            "last_edited_by_id": "integration-id-feed-processor",
+        },
+    ]
+    result = run_dedup_audit(records, client, dry_run=False)
+    assert result["groups_found"] == 1
+    # Anti-rewrite: no write porque flag ya igual
+    assert result["flagged"] == 0
+    assert client.writes == []
 
 
 def test_consolidate_duplicates_exists():
