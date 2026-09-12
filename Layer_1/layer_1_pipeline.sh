@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # VANTAGE LAYER_1 — Pipeline Notion (core) v7.5
-# Uso: layer_1_pipeline.sh [tracker|analytics|batch|recovery|profile|feed|backfill]
+# Uso: layer_1_pipeline.sh [tracker|analytics|batch|recovery|profile|feed|backfill|sync]
 
 LAYER_1_DIR="${LAYER_1_DIR:-$HOME/Documents/03 Projects/VANTAGE/Layer_1}"
 
@@ -64,6 +64,10 @@ case "$1" in
     profile)
         echo "🔄 Gestionando evolución de perfil..."
         run_module "profile_evolution.py" "🔄 Profile Evolution"
+        ;;
+    sync)
+        echo "🔄 Sidecar F13b — reconciliación Outcome→Status (dry-run)..."
+        run_module "vl1_sync.py" "🔄 VL1 Sync (dry-run)"
         ;;
     backfill)
         echo "🔄 Backfill Class A (layer · hash)..."
@@ -156,7 +160,7 @@ case "$1" in
         ;;
     *)
         echo "❌ Comando desconocido: $1"
-        echo "Uso: layer_1_pipeline.sh [tracker|analytics|batch|recovery|profile|feed|backfill]"
+        echo "Uso: layer_1_pipeline.sh [tracker|analytics|batch|recovery|profile|feed|backfill|sync]"
         exit 1
         ;;
 esac
