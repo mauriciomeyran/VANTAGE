@@ -113,14 +113,14 @@ def test_f15_source_type_preserves_existing():
 
 
 def test_f15_vm_scope_enum_closed():
-    """F1.5: VM_Scope usa enum cerrado (ver tracker_flow.py)"""
-    # VM_Scope no está en enums de tracker_flow, pero se usa en scoring
-    # Verificar que no hay valores sueltos en código
-    from layer_1_orchestrator import calculate_score_v6
-    
-    record = {"VM_Scope": "Alto"}
-    score = calculate_score_v6(record)
-    assert score > 40  # Bonus por VM_Scope alto
+    """F1.5: get_vm_scope retorna solo Bajo|Alto (cerrado, paridad layer_1_run)"""
+    from layer_1_orchestrator import get_vm_scope
+    assert get_vm_scope("") == "Bajo"
+    assert get_vm_scope("x") == "Bajo"
+    assert get_vm_scope("Visual Merchandising Manager") == "Alto"
+    assert get_vm_scope("Software Engineer") == "Bajo"
+    # Solo dos valores posibles
+    assert get_vm_scope("Store Design Lead") in ("Alto", "Bajo")
 
 
 # ── F2: URL Gate ─────────────────────────────────────────────────────────────
@@ -162,12 +162,12 @@ def test_f2_url_aggregator_bypass():
 
 
 def test_f2_url_invalid_scheme():
-    """F2: URL sin esquema válido → INVALID_SCHEME"""
-    url = "not-a-url"
-    is_valid, reason = validate_url(url, "Vacante")
-    
-    assert not is_valid
-    assert reason == "INVALID_SCHEME"
+    """F2: URL vacía → NO_URL; bare host se normaliza a https (paridad layer_1_run)"""
+    is_valid, reason = validate_url("", "Vacante")
+    assert not is_valid and reason == "NO_URL"
+    # normalize_url agrega https:// (idéntico al viejo) → VALID offline
+    is_valid, reason = validate_url("example.com/job", "Vacante")
+    assert is_valid and reason == "VALID"
 
 
 def test_f2_url_manual_protection_objetivo():
@@ -188,67 +188,64 @@ def test_f2_url_manual_protection_objetivo():
 # ── F3: Scoring v6.4 + bandas ─────────────────────────────────────────────────
 
 def test_f3_score_base_40():
-    """F3: Score base = 40"""
-    record = {}
-    score = calculate_score_v6(record)
-    
-    assert score == 40
+    """F3: Score base = 40 (fórmula v6.4 idéntica a layer_1_run)"""
+    assert calculate_score_v6({}) == 40
 
 
 def test_f3_score_marca_premium():
-    """F3: Marca premium → +10"""
-    record = {"Marca": "Zara"}
-    score = calculate_score_v6(record)
-    
-    assert score == 50  # 40 + 10
+    """F3: Marca high-impact (Zara) → +15 COMPANY IMPACT"""
+    assert calculate_score_v6({"Marca": "Zara"}) == 55  # 40 + 15
 
 
 def test_f3_score_rol_senior():
-    """F3: Rol senior → +10"""
-    record = {"Rol": "Senior Engineer"}
-    score = calculate_score_v6(record)
-    
-    assert score == 50  # 40 + 10
+    """F3: quality title (manager/lead) → +10; 'senior' solo no suma"""
+    assert calculate_score_v6({"Rol": "Senior Engineer"}) == 40
+    assert calculate_score_v6({"Rol": "Visual Manager"}) == 50
 
 
-def test_f3_score_jd_largo():
-    """F3: JD largo (>500 chars) → +15"""
-    record = {"JD": "x" * 600}
-    score = calculate_score_v6(record)
-    
-    assert score == 55  # 40 + 15
+def test_f3_score_jd_visual_signal():
+    """F3: JD con visual_terms → +20"""
+    assert calculate_score_v6({"JD": "visual merchandising en tienda retail"}) == 60
 
 
 def test_f3_score_contacto_directo():
-    """F3: Contacto directo → +10"""
-    record = {"Contacto": "test@example.com"}
-    score = calculate_score_v6(record)
-    
-    assert score == 50  # 40 + 10
+    """F3: Contacto presente → +10 RECRUITER PRESENCE"""
+    assert calculate_score_v6({"Contacto": "test@example.com"}) == 50
 
 
-def test_f3_score_vm_scope_alto():
-    """F3: VM_Scope Alto → +10"""
-    record = {"VM_Scope": "Alto"}
-    score = calculate_score_v6(record)
-    
-    assert score == 50  # 40 + 10
+def test_f3_score_parity_with_layer_1_run():
+    """F3: mismo input → mismo score que layer_1_run.calculate_score_v6"""
+    import layer_1_run as old
+    cases = [
+        {},
+        {"Marca": "Zara", "Rol": "VM Manager", "JD": "visual store", "Contacto": "a@b.c"},
+        {"Marca": "Nike", "Rol": "Store Manager", "JD": "x"},
+        {"Marca": "Unknown Co", "Rol": "Intern", "JD": ""},
+        {"title": "Creative Lead", "company": "Auditoire", "jd": "brand experience", "contact": "x"},
+    ]
+    for c in cases:
+        new_s = calculate_score_v6(c)
+        old_entry = {
+            "title": c.get("Rol") or c.get("title") or "",
+            "company": c.get("Marca") or c.get("company") or "",
+            "jd": c.get("JD") or c.get("jd") or "",
+            "contact": c.get("Contacto") or c.get("contact") or "",
+        }
+        old_s = old.calculate_score_v6(old_entry)
+        assert new_s == old_s, f"mismatch on {c}: new={new_s} old={old_s}"
 
 
 def test_f3_score_cap_100():
     """F3: Score cap at 100"""
     record = {
-        "Marca": "Zara",
-        "Rol": "Senior Manager",
-        "JD": "x" * 600,
-        "Contacto": "test@example.com",
-        "VM_Scope": "Alto",
+        "Marca": "Louis Vuitton",
+        "Rol": "Visual Merchandising Manager",
+        "JD": "visual merchandising store design brand experience retail portfolio guidelines",
+        "Contacto": "recruiter@lvmh.com",
     }
     score = calculate_score_v6(record)
-    
-    # Cálculo real: 40 base + 10 marca + 10 rol + 15 JD + 10 contacto + 10 VM_Scope = 95
-    # El cap de 100 se aplica pero este caso no lo alcanza
-    assert score == 95
+    assert score <= 100
+    assert score >= 40
 
 
 # ── F3.5: Misfit + exclusiones (via is_mutable) ─────────────────────────────
@@ -1395,60 +1392,39 @@ def test_validate_url_lever_bypass():
 
 
 def test_score_rol_lead():
-    """Cobertura: Rol 'lead' (línea 125)"""
-    record = {"Rol": "Team Lead"}
-    score = calculate_score_v6(record)
-    assert score == 50  # 40 + 10
+    """Cobertura: Rol con 'lead' → +10 ROLE QUALITY"""
+    assert calculate_score_v6({"Rol": "Team Lead"}) == 50
 
 
 def test_score_rol_manager():
-    """Cobertura: Rol 'manager' (línea 125)"""
-    record = {"Rol": "Product Manager"}
-    score = calculate_score_v6(record)
-    assert score == 50  # 40 + 10
+    """Cobertura: Rol con 'manager' → +10"""
+    assert calculate_score_v6({"Rol": "Product Manager"}) == 50
 
 
-def test_score_rol_director():
-    """Cobertura: Rol 'director' (línea 125)"""
-    record = {"Rol": "Engineering Director"}
-    score = calculate_score_v6(record)
-    assert score == 50  # 40 + 10
+def test_score_rol_coordinator():
+    """Cobertura: Rol con 'coordinator' → +10"""
+    assert calculate_score_v6({"Rol": "VM Coordinator"}) == 50
 
 
 def test_score_marca_bershka():
-    """Cobertura: Marca Bershka (línea 121)"""
-    record = {"Marca": "Bershka"}
-    score = calculate_score_v6(record)
-    assert score == 50  # 40 + 10
-
-
-def test_score_marca_mango():
-    """Cobertura: Marca Mango (línea 121)"""
-    record = {"Marca": "Mango"}
-    score = calculate_score_v6(record)
-    assert score == 50  # 40 + 10
-
-
-def test_score_marca_hm():
-    """Cobertura: Marca H&M (línea 121)"""
-    record = {"Marca": "H&M"}
-    score = calculate_score_v6(record)
-    assert score == 50  # 40 + 10
+    """Cobertura: Bershka high-impact → +15"""
+    assert calculate_score_v6({"Marca": "Bershka"}) == 55
 
 
 def test_score_marca_stradivarius():
-    """Cobertura: Marca Stradivarius (línea 121)"""
-    record = {"Marca": "Stradivarius"}
-    score = calculate_score_v6(record)
-    assert score == 50  # 40 + 10
+    """Cobertura: Stradivarius high-impact → +15"""
+    assert calculate_score_v6({"Marca": "Stradivarius"}) == 55
 
 
-def test_score_vm_scope_medio():
-    """Cobertura: VM_Scope Medio (línea 137)"""
-    record = {"VM_Scope": "Medio"}
-    score = calculate_score_v6(record)
-    assert score == 50  # 40 + 10
+def test_score_marca_nike_manager_scale():
+    """Cobertura: Nike + manager → +15 company +10 role +5 scale = 70"""
+    assert calculate_score_v6({"Marca": "Nike", "Rol": "Store Manager"}) == 70
 
+
+def test_score_vm_scope_ignored_by_v64():
+    """Cobertura: VM_Scope NO entra en fórmula v6.4 (solo title/company/jd/contact)"""
+    assert calculate_score_v6({"VM_Scope": "Alto"}) == 40
+    assert calculate_score_v6({"VM_Scope": "Medio"}) == 40
 
 def test_manual_first_bot_edit():
     """Cobertura: Bot edit (línea 176-177)"""

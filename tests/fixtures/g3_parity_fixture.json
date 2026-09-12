@@ -1,0 +1,334 @@
+[
+  {
+    "id": "g3-001-contratado",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Contratado"}},
+      "Rol": {"title": [{"plain_text": "VM Manager"}]},
+      "Marca": {"select": {"name": "Zara"}},
+      "URL": {"url": "https://example.com/job/1"},
+      "Score": {"number": 85},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "NAD": {"date": {"start": "2026-12-01"}},
+      "layer": {"select": {"name": "L1"}}
+    }
+  },
+  {
+    "id": "g3-002-postulado",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Postulado"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandiser"}]},
+      "Marca": {"select": {"name": "Nike"}},
+      "URL": {"url": "https://example.com/job/2"},
+      "Score": {"number": 75},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "NAD": {"date": {"start": "2026-12-01"}},
+      "Gate_Decision": {"select": {"name": "APPLIED"}},
+      "Next_Action": {"select": {"name": "Follow-up"}}
+    }
+  },
+  {
+    "id": "g3-003-en-proceso",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "En Proceso"}},
+      "Rol": {"title": [{"plain_text": "Store Design Lead"}]},
+      "Marca": {"select": {"name": "Adidas"}},
+      "URL": {"url": "https://example.com/job/3"},
+      "Score": {"number": 80},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "NAD": {"date": {"start": "2026-12-01"}}
+    }
+  },
+  {
+    "id": "g3-004-rechazado",
+    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_time": "2026-09-01T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Rechazado"}},
+      "Rol": {"title": [{"plain_text": "VM Coordinator"}]},
+      "Marca": {"select": {"name": "Mango"}},
+      "URL": {"url": "https://example.com/job/4"},
+      "Score": {"number": 55},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "NAD": {"date": {"start": "2026-12-01"}},
+      "Apply Date": {"date": {"start": "2026-01-01"}},
+      "Rej Date": {"date": {"start": "2026-01-20"}}
+    }
+  },
+  {
+    "id": "g3-005-expirada",
+    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_time": "2026-09-01T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Expirada"}},
+      "Rol": {"title": [{"plain_text": "Old Role"}]},
+      "Marca": {"select": {"name": "OldCo"}},
+      "URL": {"url": "https://example.com/job/5"},
+      "Score": {"number": 40},
+      "Fetch": {"select": {"name": "Bloqueado"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "Next_Action": {"select": {"name": "Archivar"}}
+    }
+  },
+  {
+    "id": "g3-006-objetivo-vm-alto",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandising Manager"}]},
+      "Marca": {"select": {"name": "Zara"}},
+      "URL": {"url": "https://careers.zara.com/job/vm-1"},
+      "JD": {"rich_text": [{"plain_text": "visual merchandising store design brand experience retail portfolio guidelines creative standards"}]},
+      "Contacto": {"rich_text": [{"plain_text": "talent@inditex.com"}]},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2026-12-31"}},
+      "layer": {"select": {"name": "L1"}}
+    }
+  },
+  {
+    "id": "g3-007-objetivo-url-tracking",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandiser"}]},
+      "Marca": {"select": {"name": "Nike"}},
+      "URL": {"url": "https://example.com/job/7?utm_source=google"},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2026-12-31"}}
+    }
+  },
+  {
+    "id": "g3-008-objetivo-nad-expired",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandiser"}]},
+      "Marca": {"select": {"name": "Adidas"}},
+      "URL": {"url": "https://careers.adidas.com/job/8"},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2020-01-01"}}
+    }
+  },
+  {
+    "id": "g3-009-objetivo-score-low-block",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Intern"}]},
+      "Marca": {"select": {"name": "UnknownBrandXYZ"}},
+      "URL": {"url": "https://example.com/job/9"},
+      "JD": {"rich_text": [{"plain_text": "short"}]},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Bajo"}},
+      "Role_Class": {"select": {"name": "Otro"}},
+      "NAD": {"date": {"start": "2026-12-31"}}
+    }
+  },
+  {
+    "id": "g3-010-objetivo-review-band",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Visual Specialist"}]},
+      "Marca": {"select": {"name": "LocalShop"}},
+      "URL": {"url": "https://example.com/job/10"},
+      "JD": {"rich_text": [{"plain_text": "visual merchandising tienda"}]},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2026-12-31"}}
+    }
+  },
+  {
+    "id": "g3-011-inbound-bypass",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Any Role"}]},
+      "Marca": {"select": {"name": "FriendCo"}},
+      "URL": {"url": "https://example.com/job/11"},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Inbound"}},
+      "NAD": {"date": {"start": "2026-12-31"}},
+      "Score": {"number": 0}
+    }
+  },
+  {
+    "id": "g3-012-exploratorio",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Exploratorio"}},
+      "Rol": {"title": [{"plain_text": "Brand Experience Producer"}]},
+      "Marca": {"select": {"name": "Auditoire"}},
+      "URL": {"url": "https://example.com/job/12"},
+      "JD": {"rich_text": [{"plain_text": "brand experience activation creative retail"}]},
+      "Contacto": {"rich_text": [{"plain_text": "hr@auditoire.com"}]},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "NAD": {"date": {"start": "2026-12-31"}},
+      "layer": {"select": {"name": "L3"}}
+    }
+  },
+  {
+    "id": "g3-013-por-revisar",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Por Revisar"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandiser"}]},
+      "Marca": {"select": {"name": "Sephora"}},
+      "URL": {"url": "https://example.com/job/13"},
+      "Fetch": {"select": {"name": "Parcial"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2026-12-31"}},
+      "Score": {"number": 50}
+    }
+  },
+  {
+    "id": "g3-014-fetch-bloqueado",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandiser"}]},
+      "Marca": {"select": {"name": "Hermès"}},
+      "URL": {"url": "https://example.com/job/14"},
+      "Fetch": {"select": {"name": "Bloqueado"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2026-12-31"}},
+      "Score": {"number": 70}
+    }
+  },
+  {
+    "id": "g3-015-jd-completo-create",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandising Manager"}]},
+      "Marca": {"select": {"name": "Louis Vuitton"}},
+      "URL": {"url": "https://careers.lvmh.com/job/15"},
+      "JD": {"rich_text": [{"plain_text": "visual merchandising store design brand experience retail portfolio guidelines creative standards luxury heritage"}]},
+      "Contacto": {"rich_text": [{"plain_text": "talent@lvmh.com"}]},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "JD_Quality": {"select": {"name": "JD Completo"}},
+      "NAD": {"date": {"start": "2026-12-31"}},
+      "layer": {"select": {"name": "L1"}}
+    }
+  },
+  {
+    "id": "g3-016-negociando",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Negociando"}},
+      "Rol": {"title": [{"plain_text": "Head of VM"}]},
+      "Marca": {"select": {"name": "Chanel"}},
+      "URL": {"url": "https://example.com/job/16"},
+      "Score": {"number": 90},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "NAD": {"date": {"start": "2026-12-01"}}
+    }
+  },
+  {
+    "id": "g3-017-sin-respuesta",
+    "last_edited_by": {"object": "user", "id": "human-user-123"},
+    "last_edited_time": "2026-09-10T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Sin Respuesta"}},
+      "Rol": {"title": [{"plain_text": "VM Lead"}]},
+      "Marca": {"select": {"name": "Gucci"}},
+      "URL": {"url": "https://example.com/job/17"},
+      "Score": {"number": 70},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "NAD": {"date": {"start": "2026-12-01"}}
+    }
+  },
+  {
+    "id": "g3-018-human-recent-immune",
+    "last_edited_by": {"object": "user", "id": "human-user-real"},
+    "last_edited_time": "2026-09-11T18:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandiser"}]},
+      "Marca": {"select": {"name": "Zara"}},
+      "URL": {"url": "https://example.com/job/18?utm_source=x"},
+      "Fetch": {"select": {"name": "Accesible"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2020-01-01"}},
+      "Last_Gate_Run": {"date": {"start": "2026-09-01T00:00:00.000Z"}},
+      "Score": {"number": 60}
+    }
+  },
+  {
+    "id": "g3-019-agregador-url",
+    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_time": "2026-01-01T00:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Objetivo"}},
+      "Rol": {"title": [{"plain_text": "Visual Merchandiser"}]},
+      "Marca": {"select": {"name": "Bershka"}},
+      "URL": {"url": "https://www.linkedin.com/jobs/view/12345"},
+      "Fetch": {"select": {"name": ""}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "VM_Scope": {"select": {"name": "Alto"}},
+      "Role_Class": {"select": {"name": "VM"}},
+      "NAD": {"date": {"start": "2026-12-31"}},
+      "JD": {"rich_text": [{"plain_text": "visual merchandising store retail"}]},
+      "layer": {"select": {"name": "L3"}}
+    }
+  },
+  {
+    "id": "g3-020-retirado",
+    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_time": "2026-09-01T12:00:00.000Z",
+    "properties": {
+      "Status": {"select": {"name": "Retirado"}},
+      "Rol": {"title": [{"plain_text": "Old VM"}]},
+      "Marca": {"select": {"name": "GoneCo"}},
+      "URL": {"url": "https://example.com/job/20"},
+      "Score": {"number": 30},
+      "Fetch": {"select": {"name": "Bloqueado"}},
+      "Source_Type ": {"select": {"name": "Vacante"}},
+      "Next_Action": {"select": {"name": "Archivar"}}
+    }
+  }
+]

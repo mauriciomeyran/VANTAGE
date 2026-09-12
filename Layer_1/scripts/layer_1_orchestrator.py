@@ -80,92 +80,317 @@ class NotionClientFake:
         return {"id": page_id}
 
 
-def validate_url(url: str, source_type: str) -> tuple[bool, str]:
+def validate_url(url: str, source_type: str, jd_text: str = "") -> tuple[bool, str]:
     """
-    F2: URL Gate - validar URL con bypass para agregadores.
-    
-    Returns (is_valid, reason) donde reason puede ser:
-    - "VALID" - URL válida
-    - "BLOCKED" - URL bloqueada/caida
-    - "AGREGADOR_RETRY_..." - agregador con fallo temporal
+    F2: URL Gate - paridad con layer_1_run.validate_url_pre_ingestion (offline).
+
+    Returns (is_valid, reason).
     """
+    if source_type in ("Inbound", "Referencia", "Networking"):
+        return True, "BYPASS_SOURCE"
+
+    from url_gate import validate_url_offline, is_agregador, normalize_url
+
     if not url:
         return False, "NO_URL"
-    
-    # Bypass para agregadores (KERNEL:GATE-DECISION-002)
-    agregador_domains = [
-        "jobs.nike.com", "workable.com", "greenhouse.io", "lever.co"
+
+    # Esquemas no-http explícitos → inválidos (antes de normalize)
+    stripped = url.strip().lower()
+    if "://" in stripped and not stripped.startswith(("http://", "https://")):
+        return False, "INVALID_SCHEME"
+
+    # JD largo = bypass (paridad viejo)
+    if jd_text and isinstance(jd_text, str) and len(jd_text.strip()) > 100:
+        return True, "JD_ALREADY_EXISTS"
+
+    ok, reason = validate_url_offline(url, jd_text)
+    if ok:
+        return ok, reason
+
+    if is_agregador(normalize_url(url) if url else ""):
+        return True, "AGREGADOR_VALID"
+
+    return ok, reason
+
+
+def get_vm_scope(role_title: str) -> str:
+    """F1.5: idéntico a layer_1_run.get_vm_scope."""
+    if not role_title or len(role_title.strip()) < 3:
+        return "Bajo"
+    role_lower = role_title.lower()
+    vm_terms = [
+        "visual merchandising", "visual", "vm", "brand environment",
+        "estándares visuales", "store design", "retail design",
     ]
-    for domain in agregador_domains:
-        if domain in url:
-            return True, "AGREGADOR_VALID"
-    
-    # URL con tracking params → bloquear (radiografía §1.1-F2)
-    if any(param in url for param in ["utm_", "fbclid", "gclid"]):
-        return False, "TRACKING_URL"
-    
-    # Validación HEAD request sería aquí en modo real
-    # Para dry-run/fake, asumimos válido si tiene esquema
-    if url.startswith(("http://", "https://")):
-        return True, "VALID"
-    
-    return False, "INVALID_SCHEME"
+    for term in vm_terms:
+        if term in role_lower:
+            return "Alto"
+    return "Bajo"
+
+
+def get_role_class(role_title: str) -> str:
+    """F1.5: idéntico a layer_1_run.get_role_class."""
+    if not role_title or len(role_title.strip()) < 3:
+        return "Otro"
+    role_lower = role_title.lower()
+    vm_terms = ["visual merchandising", "visual", "vm", "brand environment"]
+    for term in vm_terms:
+        if term in role_lower:
+            return "VM"
+    pivot_terms = [
+        "training", "experience", "producer", "brand experience",
+        "retail design", "store design", "trade marketing", "shopper",
+        "activation", "environment", "creative director", "creative lead",
+    ]
+    for term in pivot_terms:
+        if term in role_lower:
+            return "Pivote"
+    return "Otro"
 
 
 def calculate_score_v6(record: Dict[str, Any]) -> int:
     """
-    F3: Scoring v6.4 - fórmula idéntica a layer_1_run.py v8.0.
-    
-    Base: 40
-    Bonos hasta 9 puntos por:
-    - Marca premium (+10)
-    - Rol senior (+10)
-    - JD largo (+15)
-    - Contacto directo (+10)
-    - VM_Scope alto (+10)
-    - Role_Class específico (+10)
-    - Source_Type calidad (+15)
+    F3: Scoring v6.4 — fórmula IDÉNTICA a layer_1_run.calculate_score_v6.
+
+    Acepta plano (Rol/Marca/JD/Contacto) o entry legacy (title/company/jd/contact).
     """
-    score = 40  # Base
-    
-    # Bonos (implementación simplificada para demo)
-    marca = record.get("Marca", "").lower()
-    if marca in ["zara", "bershka", "mango", "h&m", "stradivarius"]:
-        score += 10
-    
-    rol = record.get("Rol", "").lower()
-    if any(word in rol for word in ["senior", "lead", "manager", "director"]):
-        score += 10
-    
-    jd = record.get("JD", "")
-    if len(jd) > 500:
+    # Normalizar shape
+    jd_text = (record.get("JD") or record.get("jd") or "") 
+    jd_text = jd_text.lower() if isinstance(jd_text, str) else ""
+    company = (record.get("Marca") or record.get("company") or "")
+    company = company.lower() if isinstance(company, str) else ""
+    title = (record.get("Rol") or record.get("title") or "")
+    title = title.lower() if isinstance(title, str) else ""
+    contact = record.get("Contacto") or record.get("contact") or ""
+
+    score = 0
+
+    # 1. BASE SCORE: +40 si pasó URL_GATE
+    score += 40
+
+    # 2. VISUAL_SIGNAL: +20
+    visual_terms = [
+        "visual", "diseño", "brand", "experience", "experiencia",
+        "merchandising", "store", "tienda", "retail", "ambiente",
+        "estándares", "guidelines", "portfolio", "creativo",
+        "escenografía", "montaje", "exhibición", "pop", "punto de venta",
+        "trade marketing", "shopper", "customer journey",
+    ]
+    if any(term in jd_text for term in visual_terms):
+        score += 20
+
+    # 3. COMPANY IMPACT: +15
+    high_impact = [
+        "nike", "apple", "inditex", "zara", "adidas",
+        "lvmh", "kering", "richemont", "chanel", "hermès",
+        "dior", "guerlain", "louis vuitton", "gentle monster",
+        "grupo habita", "ben & frank", "auditoire", "another",
+        "sephora", "massimo dutti", "ikea", "cartier", "on ",
+        "on running", "aesop", "bershka", "stradivarius",
+        "oysho", "pull&bear",
+    ]
+    if any(brand in company for brand in high_impact):
         score += 15
-    
-    contacto = record.get("Contacto", "")
-    if contacto and "@" in contacto:
+
+    # 4. ROLE QUALITY: +10
+    quality_titles = [
+        "manager", "coordinator", "lead", "jefe", "líder",
+        "specialist", "expert", "designer", "architect",
+    ]
+    if any(role in title for role in quality_titles):
         score += 10
-    
-    vm_scope = record.get("VM_Scope", "")
-    if vm_scope in ["Alto", "Medio"]:
+
+    # 5. RECRUITER PRESENCE: +10
+    if contact or "contacto" in jd_text or "recruiter" in jd_text:
         score += 10
-    
-    # Cap a 100
+
+    # 6. INNOVATION / COOL DNA: +5
+    innovative = [
+        "gentle monster", "grupo habita", "ben & frank",
+        "sede cafe", "auditoire", "another", "magnus",
+        "aesop", "on running", "someone somewhere",
+        "astound group", "minuto x minuto", "taste mkt",
+        "alo yoga", "skims", "pop mart", "cyklar",
+    ]
+    if any(brand in company for brand in innovative):
+        score += 5
+
+    # 7. SCALE BONUS: +5
+    scale_companies = ["lvmh", "inditex", "nike", "apple", "adidas", "sephora"]
+    if any(brand in company for brand in scale_companies) and "manager" in title:
+        score += 5
+
+    # 8. PIVOT BONUS: +5
+    pivot_roles = [
+        "experience", "creative", "brand", "environment", "activation",
+        "marketing", "trade", "shopper", "retail design", "store design",
+    ]
+    if any(role in title for role in pivot_roles):
+        score += 5
+
+    # 9. AGENCY BONUS: +5
+    agency_names = [
+        "auditoire", "another", "astound", "bisonte", "magnus",
+        "minuto x minuto", "taste mkt", "astound group",
+    ]
+    if any(agency in company for agency in agency_names):
+        score += 5
+
+    # 10. LUXURY HERITAGE: +5
+    luxury_pure = [
+        "dior", "guerlain", "louis vuitton", "chanel", "hermès",
+        "cartier", "fendi", "gucci", "bottega veneta",
+    ]
+    if any(maison in company for maison in luxury_pure):
+        score += 5
+
     return min(score, 100)
+
+
+def gate(
+    fetch: str,
+    vm_scope: str,
+    role_class: str,
+    source_type: str,
+    score=None,
+    rol: str = "",
+    marca: str = "",
+) -> str:
+    """F4: idéntico a layer_1_run.gate (Gate_Decision crudo)."""
+    from profile_fit import has_vm_title_signal, is_role_excluded, resolve_alias_flags
+
+    if is_role_excluded(rol) or resolve_alias_flags(marca)[0]:
+        return "BLOCKED"
+    if source_type in ["Inbound", "Referencia", "Networking"]:
+        return "CREATE"
+    if source_type == "Vacante":
+        fetch_ok = fetch in ("Accesible", "Parcial")
+        scope_ok = fetch_ok and (
+            vm_scope == "Alto"
+            or (role_class == "Pivote" and has_vm_title_signal(rol))
+        )
+        if not scope_ok:
+            return "BLOCKED"
+        if score is None:
+            return "REVIEW_NEEDED"
+        if score >= 60:
+            return "CREATE"
+        if score >= 40:
+            return "REVIEW_NEEDED"
+        return "BLOCKED"
+    return "BLOCKED"
+
+
+def evaluate_application_status(status: str) -> bool:
+    """Paridad layer_1_run."""
+    return status in ["Postulado", "En proceso", "En Proceso", "Negociando", "Sin respuesta", "Sin Respuesta"]
+
+
+def evaluate_rejection_status(status: str) -> bool:
+    return status == "Rechazado"
+
+
+def get_application_next_action(status: str) -> str:
+    """Legacy EN next-actions del viejo (G7 normaliza; paridad G3 los expone crudos)."""
+    if status == "Postulado":
+        return "Follow-up"
+    if status in ("En proceso", "En Proceso"):
+        return "Interview prep"
+    if status == "Negociando":
+        return "Follow-up"
+    if status in ("Sin respuesta", "Sin Respuesta"):
+        return "Follow-up"
+    return "Re-check"
 
 
 def apply_gate_decision(record: Dict[str, Any], score: int) -> Dict[str, Any]:
     """
-    F4: Gate Logic + Next_Action via enums + DELETED_VALUE_MAPPINGS.
-    
-    Usa tracker_flow.evaluate_flow() como core de decisión.
+    F4: Gate + Next_Action — paridad con layer_1_run Fase 4.
+
+    Precedencia:
+      1. evaluate_flow PROTECTED/TERMINAL (tracker_flow)
+      2. gate_logic terminal map (Status/Next_Action)
+      3. rejection / application status
+      4. gate() + JD_Quality bandas
     """
-    # Normalizar record para tracker_flow
-    normalized = normalize_record(record)
-    
-    # Evaluar flujo usando tracker_flow
-    result = evaluate_flow(normalized, Actor.PIPELINE)
-    
-    return result
+    # Asegurar plano
+    if "properties" in record:
+        flat = normalize_record(record)
+    else:
+        flat = dict(record)
+
+    flow = evaluate_flow(flat, Actor.PIPELINE)
+    if flow.get("decision") in ("PROTECTED", "TERMINAL"):
+        return {
+            "decision": flow["decision"],
+            "reason": flow.get("reason", ""),
+            "Gate_Decision": None,
+            "Next_Action": None,
+            "_flow": flow,
+        }
+
+    status = flat.get("Status", "") or ""
+    current_action = flat.get("Next_Action", "") or ""
+    fetch = flat.get("Fetch", "") or ""
+    vm_scope = flat.get("VM_Scope", "") or get_vm_scope(flat.get("Rol", "") or "")
+    role_class = flat.get("Role_Class", "") or get_role_class(flat.get("Rol", "") or "")
+    source_type = flat.get("Source_Type ", "") or flat.get("Source_Type", "") or "Vacante"
+    rol = flat.get("Rol", "") or ""
+    marca = flat.get("Marca", "") or ""
+    jd_quality = flat.get("JD_Quality", "") or ""
+
+    # gate_logic terminal protection (paridad KERNEL:GATE-DECISION-010)
+    protected = gate_logic({
+        "Next_Action": current_action,
+        "Status": status,
+        "Gate_Decision": flat.get("Gate_Decision", ""),
+        "Fetch": fetch,
+        "id": flat.get("id", ""),
+    })
+    if protected is not None and protected != "REJECTED":
+        return {
+            "decision": "PROTECTED",
+            "reason": f"gate_logic:{protected}",
+            "Gate_Decision": protected if protected in ("APPLIED", "REJECTED") else flat.get("Gate_Decision"),
+            "Next_Action": current_action or None,
+            "_protected": protected,
+        }
+
+    if evaluate_rejection_status(status):
+        decision = "REJECTED"
+        next_action = "Post-Mortem"
+    elif evaluate_application_status(status):
+        decision = "APPLIED"
+        next_action = get_application_next_action(status)
+    elif jd_quality == "JD Completo":
+        decision = gate(fetch, vm_scope, role_class, source_type, score=score, rol=rol, marca=marca)
+        if decision == "CREATE":
+            next_action = "Optimizar"
+        elif decision == "REVIEW_NEEDED":
+            next_action = "Investigar"
+        else:
+            next_action = "Optimizar"
+    else:
+        decision = gate(fetch, vm_scope, role_class, source_type, score=score, rol=rol, marca=marca)
+        if decision == "CREATE":
+            next_action = "Re-check"
+        elif decision == "REVIEW_NEEDED":
+            next_action = "Investigar"
+        elif source_type == "Vacante" and fetch == "Bloqueado":
+            next_action = "Reparar URL"
+        elif source_type == "Vacante" and fetch == "Parcial":
+            next_action = "Verificar JD"
+        else:
+            next_action = "Investigar"
+
+    return {
+        "decision": decision,
+        "Gate_Decision": decision,
+        "Next_Action": next_action,
+        "VM_Scope": vm_scope,
+        "Role_Class": role_class,
+        "Score": score,
+    }
 
 
 def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
@@ -535,18 +760,29 @@ def run_orchestrator(
                 metrics["manual_protected"] += 1
                 continue
             
-            # F1.5: Clasificación VM_Scope/Role_Class/Source_Type
-            # (Se mantiene de layer_1_run.py, usa enums de tracker_flow)
-            source_type = record.get("Source_Type ", "Vacante")  # Nota: espacio en trailing
+            # F1.5: Clasificación VM_Scope/Role_Class/Source_Type (paridad layer_1_run)
+            source_type = record.get("Source_Type ", "") or record.get("Source_Type", "") or ""
             if not source_type:
+                source_type = "Vacante"
                 record["Source_Type "] = "Vacante"
-            
-            # F2: URL Gate
+
+            rol = record.get("Rol", "") or ""
+            if not record.get("VM_Scope"):
+                record["VM_Scope"] = get_vm_scope(rol)
+            if not record.get("Role_Class"):
+                record["Role_Class"] = get_role_class(rol)
+
+            # F2: URL Gate (JD bypass + agregadores; paridad offline)
             url = record.get("URL", "")
-            is_valid, reason = validate_url(url, source_type)
-            
-            if not is_valid and reason not in ["AGREGADOR_RETRY"]:
-                # Archivar por URL inválida (vía única: guarded_pages_update)
+            jd_text = record.get("JD", "") or ""
+            is_valid, reason = validate_url(url, source_type, jd_text=jd_text)
+
+            # Terminales / protegidos: no archivar por URL
+            status_now = record.get("Status", "") or ""
+            if status_now in [s.value for s in PROTECTED_STATUSES]:
+                # Aún corre F4 para APPLIED/REJECTED labels, sin mutar Status
+                pass
+            elif not is_valid and not reason.startswith("AGREGADOR_RETRY"):
                 archive_result = archive_gate(
                     record,
                     reason=f"URL Gate: {reason}",
@@ -562,18 +798,26 @@ def run_orchestrator(
                     metrics["writes"] += 1
                 metrics["archives"] += 1
                 continue
-            
-            # F3: Scoring v6.4
-            score = calculate_score_v6(record)
+            else:
+                # Éxito URL → Fetch=Accesible si faltaba (paridad bug-fix layer_1_run)
+                if is_valid and record.get("Fetch") != "Accesible" and source_type == "Vacante":
+                    record["_proposed_Fetch"] = "Accesible"
+
+            # F3: Scoring v6.4 (idéntico)
+            source_type = record.get("Source_Type ", "") or record.get("Source_Type", "") or "Vacante"
+            if source_type in ("Inbound", "Referencia", "Networking"):
+                score = record.get("Score") if record.get("Score") is not None else 0
+                record["Score_Method"] = "BYPASS"
+            else:
+                score = calculate_score_v6(record)
+                record["Score_Method"] = "DETERMINISTIC"
             record["Score"] = score
-            record["Score_Method"] = "DETERMINISTIC"
-            
-            # F3.5: Misfit + exclusiones (usando is_mutable de tracker_flow)
-            # F3.5.1: Expiración NAD (unificado con F0 NAD)
+
+            # F3.5.1: Expiración NAD (unificado; is_mutable ya filtró protegidos)
             nad = record.get("NAD", "")
-            if nad:
+            if nad and status_now not in [s.value for s in PROTECTED_STATUSES]:
                 try:
-                    nad_date = datetime.strptime(nad, "%Y-%m-%d")
+                    nad_date = datetime.strptime(str(nad)[:10], "%Y-%m-%d")
                     if nad_date < datetime.now():
                         archive_result = archive_gate(
                             record,
@@ -592,23 +836,47 @@ def run_orchestrator(
                         continue
                 except ValueError:
                     logger.warning(f"NAD malformado: {nad}")
-            
-            # F3.6: Prioridad (via priority_logic.py, NO tocar bug :125)
-            # (Portar llamada sin modificar lógica interna)
+
+            # F3.6: Prioridad (via priority_logic.py, NO tocar bug día/mes)
             try:
                 from priority_logic import infer_prioridad
                 prioridad = infer_prioridad(item, datetime.now())
-                record["Prioridad"] = prioridad
+                # infer_prioridad may return (value, reason) tuple
+                if isinstance(prioridad, tuple):
+                    record["Prioridad"] = prioridad[0]
+                else:
+                    record["Prioridad"] = prioridad
             except Exception as e:
                 logger.warning(f"Error calculando prioridad: {e}")
-            
-            # F4: Gate + Next_Action (via tracker_flow.evaluate_flow)
+
+            # F4: Gate + Next_Action (paridad layer_1_run Fase 4)
             gate_result = apply_gate_decision(record, score)
-            
-            # Write final: diff real + class_b_guard + anti-rewrite
-            # (inseparables Q-5: ventana manual + conditional writes + anti-rewrite)
+
+            # Ensamblar payload de write (solo campos de negocio mutables)
+            write_payload: Dict[str, Any] = {}
+            if record.get("_proposed_Fetch"):
+                write_payload["Fetch"] = record["_proposed_Fetch"]
+            for key in ("Score", "Score_Method", "VM_Scope", "Role_Class",
+                        "Source_Type ", "Prioridad", "Gate_Decision", "Next_Action"):
+                if key == "Score" and record.get("Score") is not None:
+                    write_payload["Score"] = record["Score"]
+                elif key == "Score_Method" and record.get("Score_Method"):
+                    write_payload["Score_Method"] = record["Score_Method"]
+                elif key in record and record[key] not in (None, ""):
+                    # Solo proponer si gate_result no lo sobreescribe
+                    if key not in ("Gate_Decision", "Next_Action"):
+                        write_payload[key] = record[key]
+            if gate_result.get("Gate_Decision"):
+                write_payload["Gate_Decision"] = gate_result["Gate_Decision"]
+            if gate_result.get("Next_Action"):
+                write_payload["Next_Action"] = gate_result["Next_Action"]
+            # No escribir decision/reason internos
+            if gate_result.get("decision") in ("PROTECTED", "TERMINAL"):
+                # Solo observabilidad — no mutar Status de protegidos
+                write_payload.pop("Status", None)
+
             wr = guarded_pages_update(
-                client, record["id"], gate_result,
+                client, record["id"], write_payload,
                 actor=Actor.PIPELINE, current=record, dry_run=dry_run,
             )
             if wr["wrote"]:
