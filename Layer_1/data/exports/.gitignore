@@ -1,0 +1,4 @@
+# G8 cutover snapshots (local; do not commit prod dumps with PII)
+*
+!.gitignore
+

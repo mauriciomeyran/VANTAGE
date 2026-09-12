@@ -2491,5 +2491,129 @@ def test_g7_cli_fixture_exit_0(tmp_path):
 
 
 
+# ── G8: plan despliegue — export / checklist / rollback offline ─────────────
+
+def test_g8_deployment_plan_doc_exists():
+    """G8: runbook paso-a-paso presente con freeze→merge→patch + rollback."""
+    root = Path(__file__).resolve().parent.parent
+    doc = root / "Layer_1" / "docs" / "G8_DEPLOYMENT_PLAN.md"
+    assert doc.exists()
+    text = doc.read_text()
+    assert "freeze" in text.lower()
+    assert "merge" in text.lower()
+    assert "APROBAR_WRITE" in text
+    assert "rollback" in text.lower()
+    assert "Source_Type" in text
+    assert "442938be-fc42-828f-b72e-076818d65a5b" in text
+    assert "§3.1" in text or "3.1" in text
+
+
+def test_g8_post_checklist_offline_pass():
+    """G8: checklist §3.1 offline exit 0 (código post G2–G7)."""
+    import g8_post_checklist as chk
+    rc = chk.main([])
+    assert rc == 0
+
+
+def test_g8_export_fixture_sha(tmp_path):
+    """G8: export desde fixture → JSON + sha256, cero red."""
+    import export_tracker_snapshot as exp
+    fixture = Path(__file__).resolve().parent / "fixtures" / "g7_normalization_fixture.json"
+    out = tmp_path / "snap.json"
+    rc = exp.main(["--fixture", str(fixture), "--out", str(out)])
+    assert rc == 0
+    assert out.exists()
+    assert out.with_suffix(".json.sha256").exists() or list(tmp_path.glob("*.sha256"))
+    data = __import__("json").loads(out.read_text())
+    assert data["n_records"] >= 10
+    assert "summary" in data
+    assert data["summary"]["n"] == data["n_records"]
+
+
+def test_g8_rollback_plan_from_backup_vs_normalized(tmp_path):
+    """G8: rollback dry-run restaura EN legacy desde backup vs estado normalizado."""
+    import json
+    import rollback_schema_migration as rb
+    from tracker_flow import normalize_field_value, extract_value
+
+    fixture = Path(__file__).resolve().parent / "fixtures" / "g7_normalization_fixture.json"
+    backup = json.loads(fixture.read_text())
+
+    # Build 'current' = normalized selects
+    current = []
+    for rec in backup:
+        new_props = {}
+        for k, prop in rec.get("properties", {}).items():
+            val = extract_value(prop)
+            table_key = "Source_Type" if k.startswith("Source_Type") else k
+            if k == "Holding":
+                nv = normalize_field_value("Holding", val or "")
+                new_props[k] = {
+                    "type": "rich_text",
+                    "rich_text": ([{"plain_text": nv, "text": {"content": nv}}] if nv else []),
+                }
+            elif k in ("Status", "Next_Action", "Gate_Decision") or k.startswith("Source_Type"):
+                nv = normalize_field_value(table_key, val or "") if val else ""
+                new_props[k] = {"type": "select", "select": {"name": nv} if nv else None}
+            else:
+                new_props[k] = prop
+        current.append({**rec, "properties": new_props})
+
+    metrics = rb.run_rollback(backup, current_records=current, client=None, dry_run=True)
+    assert metrics["errors"] == 0
+    assert metrics["would_restore"] >= 5, metrics
+    assert metrics["written"] == 0
+    # A restored payload should include a legacy EN next action for some row
+    restored_na = [p["payload"].get("Next_Action") for p in metrics["plans"] if "Next_Action" in p["payload"]]
+    assert any(x in ("Follow-up", "Interview prep", "Re-check", "Ninguna", "Expirada") for x in restored_na)
+
+
+def test_g8_rollback_validate_backup_cli(tmp_path):
+    """G8: --input solo valida shape (compat)."""
+    import rollback_schema_migration as rb
+    fixture = Path(__file__).resolve().parent / "fixtures" / "g7_normalization_fixture.json"
+    # wrap as export shape
+    import json
+    export = {"records": json.loads(fixture.read_text())}
+    path = tmp_path / "pre.json"
+    path.write_text(json.dumps(export))
+    recs = rb.validate_backup_only(str(path))
+    assert len(recs) >= 10
+
+
+def test_g8_matrix_live_statuses_protected():
+    """G8 §3.1: LIVE+TERMINAL no mutables por PIPELINE (is_mutable único)."""
+    from tracker_flow import (
+        Status, LIVE_APPLICATION_STATUSES, TERMINAL_STATUSES,
+        is_mutable, Actor,
+    )
+    bot = {
+        "last_edited_by_id": "integration-id-feed-processor",
+        "last_edited_time": "2020-01-01T00:00:00.000Z",
+        "id": "g8m",
+    }
+    for st in LIVE_APPLICATION_STATUSES | TERMINAL_STATUSES:
+        assert is_mutable({**bot, "Status": st.value}, Actor.PIPELINE) is False, st.value
+    for st in (Status.OBJETIVO, Status.EXPLORATORIO, Status.POR_REVISAR):
+        assert is_mutable({**bot, "Status": st.value}, Actor.PIPELINE) is True, st.value
+
+
+def test_g8_export_and_normalize_pipeline_fixture(tmp_path):
+    """G8 smoke offline: export → normalize dry-run → checklist."""
+    import export_tracker_snapshot as exp
+    import normalize_tracker_values as ntv
+    import g8_post_checklist as chk
+    import json
+    fixture = Path(__file__).resolve().parent / "fixtures" / "g7_normalization_fixture.json"
+    snap = tmp_path / "pre.json"
+    assert exp.main(["--fixture", str(fixture), "--out", str(snap)]) == 0
+    data = json.loads(snap.read_text())
+    client = ntv.FixtureClient(data["records"])
+    m = ntv.run_normalization(client, dry_run=True, state_path=None)
+    assert m["written"] == 0 and m["errors"] == 0 and m["would_write"] >= 1
+    assert chk.main([]) == 0
+
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
