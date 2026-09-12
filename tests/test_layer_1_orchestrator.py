@@ -2657,5 +2657,37 @@ def test_g9_package_doc_exists():
 
 
 
+# ── G10: handoff cierre — serial + frase cero Notion + paths ────────────────
+
+def test_g10_handoff_verify_pass():
+    """G10: handoff de cierre completo (serial, frase ×2, paths, Q-n)."""
+    import g10_handoff_verify as v
+    assert v.main() == 0
+
+
+def test_g10_zero_notion_phrase_verbatim():
+    """G10: frase textual exacta del contrato §6-G10."""
+    root = Path(__file__).resolve().parent.parent
+    text = (root / "handoffs" / "HANDOFF_G10_CIERRE_ORQUESTADOR_2026-09-12.md").read_text(
+        encoding="utf-8"
+    )
+    phrase = (
+        "Ninguna escritura a Notion de producción fue realizada ni intentada en esta sesión."
+    )
+    assert phrase in text
+    assert text.count(phrase) >= 2
+
+
+def test_g10_objective_binary_entry():
+    """G10/§1: layer_1_run ausente activo; orch presente; pipeline apunta orch."""
+    root = Path(__file__).resolve().parent.parent
+    assert not (root / "Layer_1" / "scripts" / "layer_1_run.py").exists()
+    assert (root / "Layer_1" / "scripts" / "layer_1_orchestrator.py").exists()
+    assert (root / "Archive" / "Legacy_Scripts" / "layer_1_run.py").exists()
+    sh = (root / "Layer_1" / "layer_1_pipeline.sh").read_text()
+    assert "layer_1_orchestrator.py" in sh
+
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
