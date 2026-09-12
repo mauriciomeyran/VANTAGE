@@ -20,6 +20,7 @@ from tracker_flow import (
     archive_gate, to_notion_properties, generate_archive_notes,
     evaluate_review_gate, diff_records,
     SURVIVOR_PRIORITY, get_survivor_rank, choose_survivor,
+    LAYER_SURVIVOR_PRIORITY, get_layer_rank,
     TERMINAL_STATUSES, LIVE_APPLICATION_STATUSES, PROTECTED_STATUSES,
     KNOWN_BOT_IDS, DELETED_VALUE_MAPPINGS,
     sync_status_from_outcome, apply_status_sync_writeback, run_outcome_status_sync,
@@ -60,6 +61,9 @@ COVERAGE_MAP = {
     "test_fixture_loading": "A5/F15",
     "test_h3_fake_pages_chain": "H3/G6",
     "test_h7_url_tiebreak_prefers_url": "H7/F12",
+    "test_qh7_choose_survivor_string_layer_no_typeerror": "Q-H7",
+    "test_qh7_layer_priority_l1_beats_l3": "Q-H7",
+    "test_qh7_get_layer_rank_unknown_defaults_zero": "Q-H7",
     "test_h7_coverage_map_complete": "H7/A5",
     "test_f13_sync_status_from_outcome_corrects": "F13",
     "test_f13_sync_status_from_outcome_noop_already_synced": "F13",
@@ -248,7 +252,7 @@ def test_f7_review_gate_design():
     record = {"Status": "Por Revisar"}
     result = evaluate_review_gate(record, field="Status")
     
-    assert result["decision"] == GateDecision.REVIEW
+    assert result["decision"] == GateDecision.REVIEW_NEEDED
     assert result["suggested_resolution"] == Status.OBJETIVO.value
     assert result["action"] == "review_to_objetivo"
 
@@ -638,3 +642,37 @@ def test_h7_coverage_map_complete():
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+def test_qh7_choose_survivor_string_layer_no_typeerror():
+    records = [
+        {"Status": "Objetivo", "Score": 50, "URL": "https://example.com", "layer": "L3"},
+        {"Status": "Objetivo", "Score": 50, "URL": "https://example.com", "layer": "L1"},
+    ]
+    survivor = choose_survivor(records)
+    assert survivor["layer"] == "L1"
+
+
+def test_qh7_layer_priority_l1_beats_l3():
+    assert get_layer_rank("L1") > get_layer_rank("L2") > get_layer_rank("L3") > get_layer_rank("N/A")
+    records = [
+        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": "L3"},
+        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": "L2"},
+        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": "N/A"},
+        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": "L1"},
+    ]
+    survivor = choose_survivor(records)
+    assert survivor["layer"] == "L1"
+
+
+def test_qh7_get_layer_rank_unknown_defaults_zero():
+    assert get_layer_rank(None) == 0
+    assert get_layer_rank("") == 0
+    assert get_layer_rank("L99_UNKNOWN") == 0
+    assert get_layer_rank("N/A") == 0
+    records = [
+        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": None},
+        {"Status": "Objetivo", "Score": 60, "URL": None, "layer": "L1"},
+    ]
+    survivor = choose_survivor(records)
+    assert survivor["layer"] == "L1"

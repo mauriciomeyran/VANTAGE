@@ -156,10 +156,10 @@ class GateDecision(str, Enum):
     """Decisiones de Gate - terminología técnica EN fijada"""
     CREATE = "CREATE"
     BLOCKED = "BLOCKED"
-    REVIEW = "REVIEW"
+    REVIEW_NEEDED = "REVIEW_NEEDED"
     APPLIED = "APPLIED"
     REJECTED = "REJECTED"
-    EXPIRADA = "EXPIRADA"
+    EXPIRED = "EXPIRED"
 
 
 class Actor(str, Enum):
@@ -935,7 +935,7 @@ def evaluate_review_gate(record: Dict[str, Any], field: Optional[str] = None) ->
     # If already in review, suggest resolution to Objetivo
     if current_status == Status.POR_REVISAR.value:
         return {
-            "decision": GateDecision.REVIEW,
+            "decision": GateDecision.REVIEW_NEEDED,
             "reason": f"Registro en estado Por Revisar (triggered by field: {field or 'unknown'})",
             "suggested_resolution": Status.OBJETIVO.value,
             "action": "review_to_objetivo"
@@ -1014,6 +1014,19 @@ def get_survivor_rank(status: str) -> int:
         return len(SURVIVOR_PRIORITY)  # Lowest priority for unknown
 
 
+LAYER_SURVIVOR_PRIORITY = {
+    "L1": 3,
+    "L2": 2,
+    "L3": 1,
+    "N/A": 0,
+}
+
+
+def get_layer_rank(layer: Any) -> int:
+    """F12/Q-H7: Traduce el valor string de layer a rank numérico."""
+    return LAYER_SURVIVOR_PRIORITY.get(layer, 0)
+
+
 def choose_survivor(records: list[Dict[str, Any]]) -> Dict[str, Any]:
     """
     F12: Choose survivor from duplicate records.
@@ -1034,7 +1047,7 @@ def choose_survivor(records: list[Dict[str, Any]]) -> Dict[str, Any]:
             get_survivor_rank(r.get("Status", "")),
             -(r.get("Score", 0) or 0),  # Higher score first
             0 if r.get("URL") else 1,  # H7: Has URL first (was inverted: 1-if-URL sorted URL-less first)
-            -(r.get("layer", 0) or 0)  # Higher layer first
+            -get_layer_rank(r.get("layer"))  # Higher layer first
         )
     )
     
