@@ -1,47 +1,76 @@
 # G8 — Plan de despliegue / cutover Tracker (orquestador v9)
 
-**Gate:** G8 · **Fecha:** 2026-09-12 · **Rama tip pre-cutover:** ver `git log -1` al ejecutar  
-**Quién escribe Notion:** Claude vía MCP con `APROBAR_WRITE` paso a paso · **Quién mergea git:** Mau  
+**Gate:** G8 · **Fecha original:** 2026-09-12 · **Revisión:** 2026-09-13 (G8-R, decisión Mau vía HO-000050)
+**Quién escribe Notion:** Claude vía MCP con `APROBAR_WRITE` paso a paso · **Quién mergea git:** Mau
 **Quién NO toca Notion prod:** Arena/Devin (esta sesión = solo plan + scripts offline)
 
-> **Binario G8:** existe documento paso-a-paso (comando exacto, validación, rollback) + export pre-migración + ventana de congelamiento manual + checklist post (matriz radiografía §3.1 toda ✓/~/documentada).  
+> **Binario G8:** existe documento paso-a-paso (comando exacto, validación, rollback) + baseline pre-reingesta + ventana de congelamiento manual + checklist post (matriz radiografía §3.1 toda ✓/~/documentada).
 > Ejecución real del cutover = sesión Claude/Mau separada. Este archivo es el runbook.
 
 ---
 
-## 0. IDs y artefactos (no intercambiables)
+## 0-R. NOTA DE REVISIÓN (G8-R, 2026-09-13) — LEER PRIMERO
 
-| Recurso | Valor | Uso |
-|---|---|---|
-| **DATABASE** ID | `596938be-fc42-836b-aea7-814a1491bd47` | `/databases` API 2022-06-28 — schema props |
-| **DATA SOURCE** ID | `442938be-fc42-828f-b72e-076818d65a5b` | `data_sources.query` API 2025-09-03 — filas |
-| Backup CSV sha256 (ground truth §4) | `7da5210c2bda170c6b590272d0d21f70691a31a74dfaf6b1c4244c1f8b7eb071` | 24/24 filas al censo |
-| Tabla G7 | `Layer_1/docs/G7_NORMALIZATION_TABLE.md` + `tracker_flow.NORMALIZATION_TABLE` | valores |
-| Script valores | `Layer_1/scripts/normalize_tracker_values.py` | dry-run / `--apply` |
-| Export snapshot | `Layer_1/scripts/export_tracker_snapshot.py` | pre/post JSON |
-| Rollback valores | `Layer_1/scripts/rollback_schema_migration.py` | reverse map + validate |
-| Checklist offline | `Layer_1/scripts/g8_post_checklist.py` | matriz §3.1 código |
-| Entry live | `layer_1_orchestrator.py` via `layer_1_pipeline.sh` / `vl1` | dry-run default |
-| Sidecar F13b | `vl1_sync.py` | intacto |
+**Qué cambió:** la versión original de este plan (2026-09-12) asumía normalización
+in-place sobre 24 filas existentes en el Tracker (PASO 1 export → PASO 4 dry-run →
+PASO 5 apply de `normalize_tracker_values.py`). Esa asunción quedó obsoleta:
+
+- El Tracker fue borrado manualmente (HO-000048) y **sigue vacío** — confirmado por
+  consulta directa `SELECT COUNT(*)` = **0 filas** (2026-09-13, sesión CLAUDE/MM).
+- La reingesta vía `feed_processor.py` planeada tras el borrado **nunca se ejecutó**.
+- Decisión de Mau (opción A, 2026-09-13): **reescribir este plan para reflejar
+  delete+reingest como el camino real**, en vez de forzar la ficción de "24 filas
+  a normalizar" contra una tabla vacía.
+
+**Por qué esto simplifica el cutover:** `feed_processor.py` y `layer_1_orchestrator.py`
+en su versión actual (post G6–G10, verificada contra el tip real `caf50b8` de
+`arena/01a097ad-vantage`, 250 tests passed) **ya escriben vocabulario canónico ES
+nativamente** — `Status.OBJETIVO` / `Status.POR_REVISAR` vía enum, nunca el string
+legacy `"Target"`. Esto significa que una reingesta limpia sobre Tracker vacío
+**no produce valores legacy que migrar**. El script `normalize_tracker_values.py`
+(G7) pasa de ser un paso obligatorio a una **red de seguridad opcional**, útil solo
+si aparecieran filas con vocabulario legacy por alguna vía distinta a estos writers
+(ej. entrada manual, import externo).
+
+**Qué NO cambió:**
+- El rename de propiedad `Source_Type ` → `Source_Type` (Q-1) sigue siendo trabajo
+  de schema vivo vía MCP — independiente de si hay 0 o 24 filas.
+- El prune de opciones select legacy sigue aplicando — de hecho es **más simple**
+  ahora: con 0 filas, el conteo "¿algún row usa este valor?" es trivialmente 0
+  para todo el vocabulario legacy, sin necesidad de re-query post-apply.
+- Freeze → merge → patch como orden de precedencia sigue vigente (F9c).
+
+**Prerequisito bloqueante para PASO 4-R (Reingesta):** el JSON
+`consolidated_results_from_tracker.json`, referenciado en HO-000048 S2.1/S2.2 y
+HO-000049 S2.8 como "validado y disponible en outputs de sesiones previas", **no
+está en el repo clonado** (`git log -1` = `07e1519` en `main`, sin ese archivo en
+el árbol). Mau debe volver a adjuntarlo o confirmar su ubicación antes de correr
+PASO 4-R. Sin ese archivo, la reingesta no tiene fuente de datos.
 
 ---
 
-## 1. Orden canónico (F9 / B9): freeze → merge → patch
+## 1. Orden canónico revisado (G8-R): freeze → merge → reingesta → patch
 
 ```
-PASO 0  Preflight offline (esta rama ya verde G0–G7)
-PASO 1  Export pre-migración (JSON+sha256)          ← lectura Notion OK
-PASO 2  FREEZE manual (Mau anuncia; nadie edita Tracker)
-PASO 3  Merge git a main (Mau) — código nuevo + schema viejo = ventana corta
-PASO 4  Dry-run normalización valores (G7 script)   ← cero writes
-PASO 5  APPLY normalización valores                 ← APROBAR_WRITE
-PASO 6  Schema MCP: rename Source_Type␣ + prune opciones select
-PASO 7  Smoke vl1 dry-run + checklist §3.1
-PASO 8  Unfreeze + monitor 24h
-PASO 9  Rollback SOLO si smoke rojo (ver §5)
+PASO 0    Preflight offline (esta rama ya verde G0–G10, 250 tests)
+PASO 1-R  Baseline pre-reingesta (Tracker vacío, documentar estado)   ← lectura Notion OK
+PASO 2    FREEZE manual (Mau anuncia; nadie edita Tracker)
+PASO 3    Merge git a main (Mau) — código nuevo ya en main o por mergear
+PASO 4-R  Reingesta limpia (feed_processor.py sobre JSON consolidado) ← writes canónicos ES nativos
+PASO 5-R  Verificación post-reingesta (0 valores legacy esperado)     ← cero normalize necesario
+PASO 6    Schema MCP: rename Source_Type␣ + prune opciones select    ← trivial con 0 legacy rows
+PASO 7    Smoke vl1 dry-run + checklist §3.1
+PASO 8    Unfreeze + monitor 24h
+PASO 9    Rollback SOLO si smoke rojo (ver §5) — ahora es re-vaciar + re-intentar reingesta, no revertir valores
 ```
 
-**Prohibido:** merge sin freeze; patch schema antes de export; apply valores sin dry-run pegado; `git revert` a ciegas (recrea options duplicadas — usar rollback scripteado).
+**Prohibido:** merge sin freeze; patch schema antes de baseline; reingesta sin
+confirmar fuente JSON íntegra; `git revert` a ciegas (recrea options duplicadas —
+usar rollback scripteado).
+
+**PASO 4/5 originales (`normalize_tracker_values.py --dry-run`/`--apply`) pasan a
+OPCIONALES** — ver §6-R. Se conservan documentados por si en el futuro entra data
+por una vía que no sea `feed_processor.py`/`layer_1_orchestrator.py`.
 
 ---
 
@@ -53,8 +82,8 @@ git log --oneline -1
 git status --short          # debe vacío en tip de entrega
 git branch --show-current
 
-# Suite G*
-.venv/bin/python -m pytest \
+# Suite G* (250 tests confirmados en sesión 2026-09-13 sobre caf50b8)
+python3 -m pytest \
   tests/test_layer_1_orchestrator.py \
   tests/test_g3_parity.py \
   tests/test_tracker_flow_v3.py \
@@ -67,45 +96,48 @@ test -f Archive/Legacy_Scripts/layer_1_run.py
 grep -q 'layer_1_orchestrator.py' Layer_1/layer_1_pipeline.sh
 
 # Checklist código §3.1 (is_mutable unificado)
-.venv/bin/python Layer_1/scripts/g8_post_checklist.py --offline
-# esperado: exit 0, todas las celdas LIVE/TERMINAL = PROTECTED para PIPELINE
+python3 Layer_1/scripts/g8_post_checklist.py --offline
+# esperado: exit 0, 37/37 PASS (confirmado 2026-09-13)
 ```
 
-**Validación:** pytest verde · `g8_post_checklist --offline` exit 0 · status vacío.
+**Validación:** pytest verde (250 passed) · `g8_post_checklist --offline` 37/37 PASS · status vacío.
+
+**Nota de dependencias:** `test_g3_parity.py` carga `Archive/Legacy_Scripts/layer_1_run.py`
+por path, que importa `httpx` directo — no declarado en `Layer_1/requirements.txt`.
+Instalar `httpx` explícitamente además de `pip install -r Layer_1/requirements.txt`
+o el collection de pytest falla antes de correr un solo test.
 
 ---
 
-## 3. PASO 1 — Export pre-migración
+## 3-R. PASO 1-R — Baseline pre-reingesta (reemplaza export de 24 filas)
 
-### 3.1 Comando (Claude/Mau con token lectura)
+Ya no hay 24 filas que exportar como backup — el objetivo de este paso cambia de
+"backup para rollback" a "evidencia documentada de que el Tracker está vacío antes
+de reingestar", para que cualquier discrepancia post-reingesta sea auditable.
+
+### 3-R.1 Comando (Claude/Mau con token lectura)
 
 ```bash
 cd Layer_1
-source .venv/bin/activate   # o repo .venv
+source .venv/bin/activate
 export NOTION_TOKEN=…       # NUNCA pegar en chat
 
 python3 scripts/export_tracker_snapshot.py \
-  --out "data/exports/pre_cutover_$(date -u +%Y%m%dT%H%M%SZ).json" \
+  --out "data/exports/baseline_pre_reingesta_$(date -u +%Y%m%dT%H%M%SZ).json" \
   --data-source-id 442938be-fc42-828f-b72e-076818d65a5b
 ```
 
-### 3.2 Offline / CI (fixture)
+### 3-R.2 Validación baseline
 
-```bash
-python3 Layer_1/scripts/export_tracker_snapshot.py \
-  --fixture tests/fixtures/g7_normalization_fixture.json \
-  --out /tmp/g8_export_fixture.json
-```
+- `n_records == 0` (confirmado por consulta directa SQL el 2026-09-13; si el
+  comando devuelve `n_records > 0`, **detener** — alguien reingestó o el
+  supuesto de Tracker vacío ya no es válido, re-evaluar plan).
+- `sha256sum` del baseline anotado en acta, aunque sea un JSON casi vacío —
+  sirve como timestamp verificable de "así estaba antes de la reingesta".
 
-### 3.3 Validación export
-
-- Archivo JSON lista de records API (`id` + `properties`).
-- `sha256sum <export.json>` anotado en acta de cutover.
-- `len(records) >= 24` (o conteo prod actual si creció).
-- Columnas clave presentes: `Status`, `Next_Action`, `Gate_Decision`, `Source_Type ` y/o `Source_Type`, `Holding`.
-- Copia del export **fuera del repo** (Drive/secure) además de `Layer_1/data/exports/` (gitignored si pesa).
-
-**Rollback depende de este archivo.** Sin export = no hay PASO 5/6.
+**A diferencia del plan original, este archivo NO es la fuente de rollback** — con
+0 filas no hay nada que restaurar hacia atrás; el "rollback" real de esta versión
+del plan es re-vaciar filas recién creadas por la reingesta si algo sale mal (ver §11-R).
 
 ---
 
@@ -113,15 +145,15 @@ python3 Layer_1/scripts/export_tracker_snapshot.py \
 
 | Acción | Owner | Detalle |
 |---|---|---|
-| Anuncio | Mau | “Tracker en freeze cutover v9 — no editar filas ni schema” |
+| Anuncio | Mau | "Tracker en freeze cutover v9 (reingesta) — no editar filas ni schema" |
 | Duración | Mau | Estimado 30–90 min (PASO 3–7) |
 | Quién puede romper freeze | Solo Mau | Excepción escrita en chat |
-| Pipeline | Mau | No correr `vl1 --apply` ni feed write durante freeze |
+| Pipeline | Mau | No correr `vl1 --apply` fuera de PASO 4-R durante freeze |
 | Dashboard/MCP | Mau/Claude | Sin `notion-update-page` salvo pasos APROBAR_WRITE de este plan |
 | Señal de freeze ON | | Nota en Notas de una fila sentinel **o** mensaje Slack/iMessage + timestamp en acta |
-| Señal de freeze OFF | PASO 8 | Acta + “unfreeze” explícito |
+| Señal de freeze OFF | PASO 8 | Acta + "unfreeze" explícito |
 
-**Validación freeze:** ningún `last_edited_time` humano nuevo entre export y post-checklist (comparar sample 5 page_ids).
+**Validación freeze:** ningún `last_edited_time` humano nuevo entre baseline y post-checklist en filas creadas por la reingesta.
 
 ---
 
@@ -138,62 +170,104 @@ test ! -f Layer_1/scripts/layer_1_run.py
 grep orchestrator Layer_1/layer_1_pipeline.sh
 ```
 
-**Ventana riesgo:** código nuevo + schema viejo (Source_Type␣, options EN). Mitigación: dual-read `SOURCE_TYPE_PROP_ALIASES` + enum legacy EN de lectura + writers ya ES (G7). No dejar esta ventana > freeze.
+**Nota (2026-09-13):** al momento de esta revisión, `main` está en `07e1519` y
+`arena/01a097ad-vantage` en `caf50b8` con el código G0–G10 completo — el merge
+descrito aquí sigue pendiente de ejecución por Mau. Verificar `git log -1` en el
+momento real del cutover, no asumir que sigue siendo el mismo tip.
+
+**Ventana riesgo:** con Tracker vacío, la ventana "código nuevo + schema viejo"
+(Source_Type␣, options EN) es de **impacto mínimo** — no hay filas legacy que el
+código nuevo pueda malinterpretar. El riesgo real de esta ventana pasa a ser que
+alguien reingeste con el pipeline viejo antes del merge (por eso el freeze cubre
+también el PASO 4-R, no solo edición manual).
 
 **Validación:** `vl1` / pipeline default dry-run arranca (puede fallar sin token — OK si el binario resuelve a orch).
 
 ---
 
-## 6. PASO 4 — Dry-run normalización valores (G7)
+## 6-R. PASO 4-R — Reingesta limpia (reemplaza normalización de valores)
+
+### 6-R.1 Prerequisito
+
+Confirmar ubicación y sha256 de `consolidated_results_from_tracker.json` (o el
+nombre que tenga la fuente validada). **No está en el repo** — Mau debe adjuntarlo
+o indicar su ruta local antes de este paso.
+
+### 6-R.2 Comando
 
 ```bash
 cd Layer_1
-python3 scripts/normalize_tracker_values.py --dry-run \
-  --data-source-id 442938be-fc42-828f-b72e-076818d65a5b \
-  --state-out state/g7_normalize_state_dry.json \
-  | tee /tmp/g7_dryrun_$(date -u +%Y%m%dT%H%M%SZ).log
+source .venv/bin/activate
+export NOTION_TOKEN=…
+
+# Dry-run primero — SIEMPRE
+python3 scripts/feed_processor.py \
+  --input /ruta/a/consolidated_results_from_tracker.json \
+  --dry-run
+
+# Revisar output: cuántos registros, qué Status asignaría (Objetivo/Por Revisar),
+# cuántos pasarían URL Gate, cuántos quedarían Fetch=Bloqueado.
 ```
 
-**Validación (pegar en acta):**
+```bash
+# Apply — requiere APROBAR_WRITE
+python3 scripts/feed_processor.py \
+  --input /ruta/a/consolidated_results_from_tracker.json \
+  --apply
+```
 
-- `written=0`
-- `would_write` = N reportado
-- pre→post: `Follow-up`→0, `Interview prep`→0, `Re-check`→0
-- `EXPIRADA` Gate → `EXPIRED`
-- `Target` Status →0 (ya era 0 en censo; idempotente)
-- `Holding=Investigar` → vacío; `LVMH`/`Nike Inc.` sin cambio
-- `errors=0`
+```text
+APROBAR_WRITE cutover-G8R-PASO4 feed_processor_reingesta
+scope: creación de filas nuevas en Tracker desde JSON consolidado
+baseline: <path PASO 1-R sha256=…>
+dry-run log: <adjuntar output>
+```
 
-Si N o diffs sorpresivos → **STOP**, no PASO 5. Revisar export vs tabla G7.
+### 6-R.3 Validación
+
+- Conteo de filas creadas == conteo de registros en el JSON fuente (menos dedup
+  esperado, si aplica).
+- Sample de 5 filas: `Status` ∈ {`Objetivo`, `Por Revisar`} — nunca `Target` ni
+  `REVIEW_NEEDED` crudo.
+- `Source_Type` (o `Source_Type ` según qué exista en schema vivo al momento)
+  poblado con `Vacante` por default salvo que el JSON traiga otro valor.
+- `Holding`: placeholders (`Investigar`, `N/A`, etc.) llegan vacíos, no como
+  texto — confirmar contra un par de filas con holding real vs. sin holding.
+
+Si algo no cuadra → **STOP**, no seguir a PASO 5-R. No hay "rollback de valores"
+aquí — el remedio es archivar/borrar las filas mal-creadas y re-correr con el
+JSON corregido (ver §11-R).
 
 ---
 
-## 7. PASO 5 — APPLY valores (Claude/Mau + APROBAR_WRITE)
+## 7-R. PASO 5-R — Verificación de vocabulario post-reingesta
 
-```text
-APROBAR_WRITE cutover-G8-PASO5 normalize_tracker_values
-scope: Status/Next_Action/Gate_Decision/Holding per NORMALIZATION_TABLE
-backup: <path export PASO1 sha256=…>
-dry-run log: <path PASO4>
-```
+Reemplaza el antiguo PASO 5 (apply de `normalize_tracker_values.py`). Con
+writers ya emitiendo canónico ES, este paso es una **auditoría de confirmación**,
+no una migración.
 
 ```bash
-python3 scripts/normalize_tracker_values.py --apply \
-  --data-source-id 442938be-fc42-828f-b72e-076818d65a5b \
-  --state-out state/g7_normalize_state_apply.json \
-  | tee /tmp/g7_apply_$(date -u +%Y%m%dT%H%M%SZ).log
+python3 scripts/export_tracker_snapshot.py \
+  --out "data/exports/post_reingesta_$(date -u +%Y%m%dT%H%M%SZ).json"
+
+python3 scripts/g8_post_checklist.py \
+  --export data/exports/post_reingesta_….json
 ```
 
-**Validación inmediata:**
+**Validación esperada:**
+- `export.legacy_next_action_zero` → PASS (0 filas con `Follow-up`/`Interview prep`/`Re-check`/`Ninguna`)
+- `export.legacy_status_zero` → PASS (0 filas con `Target`/`Archivar` como Status)
+
+**Si aparece vocabulario legacy** (posible si el JSON fuente trae datos crudos de
+una exportación vieja en vez de pasar por `feed_processor.py`): correr como red
+de seguridad el script G7 original, ahora ya no como paso obligatorio sino
+correctivo puntual:
 
 ```bash
-# 2ª pasada debe ser no-op
 python3 scripts/normalize_tracker_values.py --dry-run \
-  --state-out state/g7_normalize_state_post.json
-# would_write=0
+  --data-source-id 442938be-fc42-828f-b72e-076818d65a5b
+# revisar would_write; si >0, --apply con APROBAR_WRITE como en el plan original §7 (ver Anexo)
 ```
-
-Sample 5 page_ids del log apply: fetch MCP/UI confirma valores ES.
 
 ---
 
@@ -221,23 +295,28 @@ to:   "Source_Type"
 | `class_b_guard.py` | listar **ambas** keys en CLASS_A hasta confirmar rename (ver §8.3) |
 | `priority_logic.py` / `source_analytics.py` / `cross_tracker_match.py` | dual o legacy; post-rename prefer clean |
 
-**Validación:** query 1 fila → propiedad visible `Source_Type` sin espacio; código dual-read sigue OK.
+**Validación:** query 1 fila (de las recién reingestadas) → propiedad visible `Source_Type` sin espacio; código dual-read sigue OK.
 
-### 8.2 Prune opciones select legacy
+### 8.2 Prune opciones select legacy (simplificado — 0 filas legacy garantizado)
 
-| Propiedad | Quitar opciones (post-migración valores) | Dejar |
+| Propiedad | Quitar opciones | Dejar |
 |---|---|---|
 | `Next_Action` | `Follow-up`, `Interview prep`, `Re-check`, `Ninguna`, `Expirada` (como NA) | 9 canónicos ES G7 |
 | `Status` | `Target`, `Archivar` (opción), `REVIEW_NEEDED` (si existía como Status) | 12 enum `Status` |
 | `Gate_Decision` | `EXPIRADA` si aparece como option | 6 enum `GateDecision` |
 | `Holding` | n/a (rich_text) | — |
 
-**MCP/UI:** eliminar option solo si conteo de filas con ese valor = 0 (re-query). Si >0 → re-correr PASO 5.
+**Con Tracker reingestado desde cero por writers canónicos, el conteo "¿algún row
+usa este valor legacy?" es 0 por construcción** — no hace falta re-query de
+verificación previa al prune como exigía el plan original (esa cautela era
+necesaria contra datos legacy reales; aquí no los hay). Aun así, correr un
+conteo rápido antes de borrar la opción no cuesta nada y es buena disciplina:
 
 ```text
 APROBAR_WRITE cutover-G8-PASO6b prune-options
 props: Next_Action, Status, Gate_Decision
-remove: <lista arriba tras conteo 0>
+remove: <lista arriba>
+verificado: 0 filas con estos valores post-reingesta (PASO 5-R)
 ```
 
 ### 8.3 class_b_guard post-rename
@@ -258,158 +337,139 @@ Commit docs/código menor = G9 docsync batch si no se hace aquí.
 ### 9.1 Smoke pipeline
 
 ```bash
-# dry-run orquestador (fake o token read-only)
 cd Layer_1
 python3 scripts/layer_1_orchestrator.py --dry-run
-# o: bash layer_1_pipeline.sh   # default orch dry-run
-
 python3 scripts/vl1_sync.py --dry-run   # F13b sidecar intacto
 ```
 
-**Validación:** exit 0 · writes=0 · summary sin traceback.
+**Validación:** exit 0 · writes=0 (o writes esperados si el dry-run detecta filas recién reingestadas con campos Class B por calcular) · summary sin traceback.
 
-### 9.2 Matriz §3.1 — estado post G2–G7 (código)
+### 9.2 Matriz §3.1 — estado post G2–G10 (código)
 
-Fuente de verdad unificada: `tracker_flow.is_mutable` + `PROTECTED_STATUSES`  
+Fuente de verdad unificada: `tracker_flow.is_mutable` + `PROTECTED_STATUSES`
 (LIVE ∪ TERMINAL). Writers viejos (W1/W3/W4) **archivados (G6)**.
 
 | Status (canónico) | is_mutable PIPELINE | Fases orch (F1–F6) | Notas cutover |
 |---|---|---|---|
-| Objetivo | ✓ mutable | compute OK | era Target; Q-2 done |
+| Objetivo | ✓ mutable | compute OK | valor de reingesta CLEAN |
 | Exploratorio | ✓ mutable | compute OK | operativo |
-| Por Revisar | ✓ mutable | compute OK | era REVIEW_NEEDED Status |
+| Por Revisar | ✓ mutable | compute OK | valor de reingesta REVIEW |
 | Postulando | ✗ PROTECTED | skip write | LIVE |
 | Postulado | ✗ PROTECTED | skip write | LIVE + gate_logic APPLIED |
-| En Proceso | ✗ PROTECTED | skip write | LIVE (cerraba hueco §3.1) |
+| En Proceso | ✗ PROTECTED | skip write | LIVE |
 | Negociando | ✗ PROTECTED | skip write | LIVE |
 | Sin Respuesta | ✗ PROTECTED | skip write | LIVE |
 | Contratado | ✗ PROTECTED_ABSOLUTE | skip write | F12 survivor first |
 | Rechazado | ✗ PROTECTED | skip write | TERMINAL |
 | Expirada | ✗ PROTECTED | skip write | TERMINAL |
-| Retirado | ✗ PROTECTED | skip write | TERMINAL; absorbe Status=Archivar |
+| Retirado | ✗ PROTECTED | skip write | TERMINAL |
 
-**Celdas radiografía vieja (W1 multi-lista):** todas **documentadas como RESUELTAS por retiro W1 + is_mutable único**, no por parche a 7 whitelists.
-
-| Hallazgo §3.1 | Post cutover | Evidencia |
-|---|---|---|
-| Target archivable F3.5 | ✓ N/A | Target→Objetivo; W1 Archive; misfit solo si is_mutable |
-| LIVE NAD-archive | ✓ PROTECTED | `PROTECTED_STATUSES` includes LIVE |
-| Contratado re-gatea | ✓ PROTECTED_ABSOLUTE | is_mutable short-circuit |
-| 7 listas distintas | ✓ una | `is_mutable` |
-| W3 fork divergente | ✓ retirado | `Archive/Dashboard/layer_1_run_dash.py` |
-| W4 consolidate trash | ✓ retirado | Archive + dedup orch F6 + guard |
-| manual-first | ✓ | G5 `_was_touched_by_human` |
-| conditional writes | ✓ | G4 `guarded_pages_update` + diff |
-| Source_Type␣ | ~ → ✓ en PASO 6 | dual-read hasta rename |
-| Next_Action EN | ~ → ✓ en PASO 5–6 | G7 writers ES + prune |
+**Nota:** con Tracker recién reingestado, se espera que la mayoría de filas caiga
+en Objetivo/Por Revisar/Exploratorio — los estados LIVE/TERMINAL solo aparecerán
+si el JSON fuente ya traía vacantes en proceso avanzado (poco probable en una
+reingesta desde discovery).
 
 ### 9.3 Comando checklist
 
 ```bash
 python3 Layer_1/scripts/g8_post_checklist.py --offline
-# con export post:
 python3 Layer_1/scripts/g8_post_checklist.py \
-  --export data/exports/post_cutover_….json
+  --export data/exports/post_reingesta_….json
 ```
 
 **Validación:** exit 0 · tabla impresa sin `FAIL`.
-
-### 9.4 Export post (opcional pero recomendado)
-
-```bash
-python3 scripts/export_tracker_snapshot.py \
-  --out "data/exports/post_cutover_$(date -u +%Y%m%dT%H%M%SZ).json"
-sha256sum data/exports/post_cutover_*.json
-```
 
 ---
 
 ## 10. PASO 8 — Unfreeze + monitor
 
-1. Mau: “unfreeze Tracker cutover v9” + timestamp.
-2. 24h: no correr `--apply` masivo; solo dry-runs.
+1. Mau: "unfreeze Tracker cutover v9 (reingesta)" + timestamp.
+2. 24h: no correr reingesta masiva adicional; solo dry-runs / vl1 normal.
 3. Si Mau edita filas: manual-first las protege en próximo vl1.
-4. G9 docsync (Kernel §§07/09, Manual, Changelog, tidy skill) en paralelo o justo después.
+4. G9 docsync (ya aplicado en `caf50b8` — confirmar si Notion necesita el mismo
+   write-back o si esta sesión ya lo hizo) en paralelo o justo después.
 
 ---
 
-## 11. PASO 9 / §5 — Rollback
+## 11-R. PASO 9 / §5 — Rollback (reingesta, no valores)
 
-### 5.1 Cuándo
+### 11-R.1 Cuándo
 
-- PASO 5 apply con valores corruptos / conteos absurdos.
+- PASO 4-R apply crea filas con datos corruptos / conteo absurdo vs. JSON fuente.
 - PASO 6 rename rompe lectores no dual-key (no debería).
 - Smoke PASO 7 rojo no trivial.
 
-### 5.2 Rollback valores (preferido)
+### 11-R.2 Rollback de reingesta (reemplaza rollback de valores)
+
+No hay "valores previos" que restaurar — el rollback es deshacer la creación:
 
 ```bash
-# Valida backup y emite plan reverso (dry-run default)
-python3 Layer_1/scripts/rollback_schema_migration.py \
-  --input data/exports/pre_cutover_….json \
-  --dry-run
-
-# Apply reverso (APROBAR_WRITE cutover-G8-ROLLBACK)
-python3 Layer_1/scripts/rollback_schema_migration.py \
-  --input data/exports/pre_cutover_….json \
-  --apply
+# 1. Identificar page_ids creados por la reingesta (del log --apply de PASO 4-R)
+# 2. Archivar o borrar esas páginas específicas vía MCP/UI (no hay script
+#    automatizado para esto todavía — ejecutar manualmente con la lista de
+#    page_ids del log, uno por uno o vía notion-create-pages inverso si existe
+#    borrado en batch).
+# 3. Confirmar Tracker vuelve a 0 filas (o al conteo pre-reingesta si había
+#    algo más que no se tocó).
 ```
 
-Reverso usa `ROLLBACK_VALUE_MAPPINGS` (inverso de G7 donde es seguro).  
-**Holding** vaciado desde `Investigar`: **no se re-inventa** “Investigar” (evita re-ruido); solo restaura si backup trae valor no-placeholder.
+`rollback_schema_migration.py` (diseñado para revertir *valores* de filas
+existentes) **no aplica aquí** salvo que se haya corrido PASO 5-R correctivo
+(normalize --apply) — en ese caso sí sirve para esa porción específica.
 
-### 5.3 Rollback schema rename
+### 11-R.3 Rollback schema rename
 
 - UI Notion: renombrar `Source_Type` → `Source_Type ` **solo si** hace falta (dual-read tolera clean).
 - Re-añadir options select legacy solo si writers viejos resucitan (no aplica post-G6).
 
-### 5.4 Rollback git
+### 11-R.4 Rollback git
 
 ```bash
-# Mau only — revert del merge commit de cutover
 git revert -m 1 <merge_sha>
-# NO reescribir valores vía código viejo sin export
 ```
 
-### 5.5 Lo que NO es rollback
+### 11-R.5 Lo que NO es rollback
 
-- `git revert` sin export.
-- Re-escribir valores eliminados como options nuevas sin prune plan.
-- Trash físico de filas.
+- `git revert` sin identificar page_ids de la reingesta.
+- Dejar filas huérfanas a medio revertir sin conteo final verificado.
+- Trash físico de filas fuera de Notion (usar Archivar/Retirado, no delete API si se puede evitar).
 
 ---
 
-## 12. Matriz de comandos rápidos (cheat sheet)
+## 12. Matriz de comandos rápidos (cheat sheet, G8-R)
 
 | Paso | Comando | Write? | Owner |
 |---|---|---|---|
 | 0 | `pytest` + `g8_post_checklist.py --offline` | No | Arena/CI |
-| 1 | `export_tracker_snapshot.py --out …` | No (read) | Claude/Mau |
+| 1-R | `export_tracker_snapshot.py --out … ` (baseline, espera n=0) | No (read) | Claude/Mau |
 | 2 | anuncio freeze | No | Mau |
 | 3 | `git merge` main | disco | Mau |
-| 4 | `normalize_tracker_values.py --dry-run` | No | Claude/Mau |
-| 5 | `… --apply` + `APROBAR_WRITE` | **Sí** | Claude/Mau |
+| 4-R | `feed_processor.py --input … --apply` + `APROBAR_WRITE` | **Sí** | Claude/Mau |
+| 5-R | `export_tracker_snapshot.py` + `g8_post_checklist.py --export` | No (read) | Claude/Mau |
 | 6a | MCP/UI rename Source_Type | **Sí schema** | Claude |
 | 6b | MCP/UI prune options | **Sí schema** | Claude |
 | 7 | `layer_1_orchestrator.py --dry-run` + checklist | No | Mau |
 | 8 | unfreeze | No | Mau |
-| 9 | `rollback_schema_migration.py` | **Sí** si apply | Claude/Mau |
+| 9-R | archivar/borrar page_ids de reingesta fallida | **Sí** si necesario | Claude/Mau |
 
 ---
 
-## 13. Acta mínima de cutover (copiar al cerrar)
+## 13-R. Acta mínima de cutover (G8-R, copiar al cerrar)
 
 ```
-CUTOVER G8 Tracker v9
+CUTOVER G8-R Tracker v9 (delete+reingest)
 date_utc:
 operator:
-pre_export_path:
-pre_export_sha256:
+baseline_path (PASO 1-R):
+baseline_n_records: 0 (esperado)
 freeze_on:
 merge_sha:
-g7_dry_would_write:
-g7_apply_written:
-g7_second_pass_would_write: 0
+reingesta_input_source:       # ruta/nombre del JSON consolidado usado
+reingesta_input_sha256:
+reingesta_dry_run_n:          # cuántas filas crearía
+reingesta_apply_written:      # cuántas filas creó realmente
+post_reingesta_legacy_na_zero: PASS/FAIL
+post_reingesta_legacy_status_zero: PASS/FAIL
 source_type_renamed: yes/no
 options_pruned: [list]
 post_export_sha256:
@@ -422,18 +482,35 @@ rollback_used: no/yes→detail
 
 ---
 
-## 14. Fuera de alcance G8 (siguientes gates)
+## 14. Fuera de alcance G8-R (siguientes gates / trabajo pendiente)
 
-| Gate | Qué |
-|---|---|
-| **G9** | Kernel §§07/09 + derogación GATE-DECISION-010 (Q-4), Manual, tidy skill, Changelog |
-| **G10** | Handoff serial + frase cero Notion prod |
+| Ítem | Qué | Estado |
+|---|---|---|
+| **G9** | Kernel §§07/09 + derogación GATE-DECISION-010 (Q-4), Manual, tidy skill, Changelog | Ya aplicado en `caf50b8` (verificado 2026-09-13) |
+| **G10** | Handoff serial + frase cero Notion prod | Ya cerrado (`ARENA-20260912-G10`) |
+| **Q-11** | Excepción de una sola pasada reubicada a `manual_first_protection` | Ya aplicado (`caf50b8`), posterior a G10 |
+| **Merge a main** | `main` real sigue en `07e1519`; `arena/01a097ad-vantage` en `caf50b8` | **Pendiente** — Mau ejecuta PASO 3 |
+| **Localizar JSON consolidado** | Prerequisito de PASO 4-R | **Bloqueante** — Mau debe re-adjuntar o indicar ruta |
 
 ---
 
 ## 15. Conformidad
 
-- Cero escritura a Notion de producción en la sesión que **solo** entrega este plan.
+- Cero escritura a Notion de producción en la sesión que **solo** entrega/revisa este plan.
 - Ejecución cutover = sesión distinta con token + APROBAR_WRITE.
-- Orden freeze→merge→patch respetado (F9c).
+- Orden freeze→merge→reingesta→patch respetado (F9c, adaptado a G8-R).
 - PR/merge git = Mau (F9a).
+
+---
+
+## Anexo — Plan original (normalización in-place, 24 filas) — DEPRECADO
+
+Se conserva como referencia histórica y como red de seguridad correctiva (ver
+§7-R) por si en algún momento entra data con vocabulario legacy por una vía
+distinta a `feed_processor.py`/`layer_1_orchestrator.py`. **No usar como plan
+primario de cutover** — la decisión vigente (2026-09-13) es G8-R arriba.
+
+El detalle completo de PASO 4/PASO 5 originales (`normalize_tracker_values.py
+--dry-run` / `--apply` sobre 24 filas) vive en el historial de git de este
+archivo (`git log -p Layer_1/docs/G8_DEPLOYMENT_PLAN.md`) — no se duplica aquí
+para evitar dos fuentes de verdad divergentes sobre el mismo script.
