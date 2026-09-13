@@ -76,8 +76,6 @@ ALLOWLIST: Dict[tuple, str] = {
     # Rechazado: gate_logic viejo retorna REJECTED y Fase4 SÍ etiqueta (excepción);
     # is_mutable nuevo bloquea actor!=HUMANO en terminales → protected sin label write
     ("g3-004-rechazado", "Score"): "new: terminal protected no recalc; old recalcula antes de label",
-    ("g3-004-rechazado", "Gate_Decision"): "new: is_mutable terminal skip write; old set REJECTED label",
-    ("g3-004-rechazado", "Next_Action"): "new: is_mutable terminal skip write; old set Post-Mortem",
     ("g3-004-rechazado", "protected"): "new: TERMINAL in PROTECTED_STATUSES; old procesa label REJECTED",
     # Manual-first §0: humano reciente inmune; viejo archivaría por URL tracking + NAD
     ("g3-018-human-recent-immune", "Next_Action"): "new: manual-first immunity; old would Archivar",
@@ -354,7 +352,10 @@ def _new_decide(flat: Dict[str, Any]) -> Dict[str, Any]:
     }
 
     # Manual / is_mutable — corte destructivo (contrato §0/§2)
-    if not is_mutable(flat, Actor.PIPELINE) or not new.manual_first_protection(flat, Actor.PIPELINE):
+    # Q-11 fix-verify: el harness debe reflejar EXACTAMENTE run_orchestrator (línea
+    # ~930), que solo llama manual_first_protection -- el is_mutable() extra aquí
+    # era redundante y enmascaraba la excepción Q-11 (Rechazado, single-pass).
+    if not new.manual_first_protection(flat, Actor.PIPELINE):
         out["protected"] = True
         # Score se preserva (no recalc)
         return out

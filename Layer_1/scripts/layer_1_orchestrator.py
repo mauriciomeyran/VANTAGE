@@ -337,6 +337,25 @@ def apply_gate_decision(record: Dict[str, Any], score: int) -> Dict[str, Any]:
     else:
         flat = dict(record)
 
+    status = flat.get("Status", "") or ""
+
+    # Q-11: excepcion de una sola pasada -- SCHEMA-008 exige que Rechazado
+    # produzca Gate_Decision=REJECTED + Next_Action=Post-Mortem. Sin esto,
+    # is_mutable (TERMINAL incluye Rechazado post-G9) corta el flujo antes
+    # de que esta etiqueta se escriba nunca. compute_write_diff garantiza
+    # que esto escribe una sola vez: la 2a pasada ya trae Gate_Decision=
+    # REJECTED y esta rama no vuelve a dispararse.
+    if (
+        status == Status.RECHAZADO.value
+        and flat.get("Gate_Decision") != GateDecision.REJECTED.value
+    ):
+        return {
+            "decision": "TERMINAL_LABEL",
+            "reason": "Q-11: Rechazado label (single-pass, pre is_mutable cut)",
+            "Gate_Decision": GateDecision.REJECTED.value,
+            "Next_Action": NextAction.POST_MORTEM.value,
+        }
+
     flow = evaluate_flow(flat, Actor.PIPELINE)
     if flow.get("decision") in ("PROTECTED", "TERMINAL"):
         return {
@@ -346,8 +365,6 @@ def apply_gate_decision(record: Dict[str, Any], score: int) -> Dict[str, Any]:
             "Next_Action": None,
             "_flow": flow,
         }
-
-    status = flat.get("Status", "") or ""
     current_action = flat.get("Next_Action", "") or ""
     fetch = flat.get("Fetch", "") or ""
     vm_scope = flat.get("VM_Scope", "") or get_vm_scope(flat.get("Rol", "") or "")
@@ -430,6 +447,20 @@ def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
     G5: cuando retorna False, el orquestador emite sugerencia de revisión
     (build_manual_suggestion) y JAMÁS ejecuta la mutación.
     """
+    # Q-11 (reubicado desde apply_gate_decision -- is_mutable ya bloqueaba el
+    # loop de run_orchestrator ANTES de llegar ahí, dejando el fix original
+    # como código muerto inalcanzable). SCHEMA-008 exige que Rechazado
+    # produzca Gate_Decision=REJECTED + Next_Action=Post-Mortem al menos una
+    # vez. Excepción de una sola pasada: solo Actor.PIPELINE, solo mientras
+    # el label aún no está escrito. La 2a pasada ya trae Gate_Decision=
+    # REJECTED y is_mutable retoma control normal (bloquea de nuevo).
+    if (
+        actor == Actor.PIPELINE
+        and record.get("Status", "") == Status.RECHAZADO.value
+        and record.get("Gate_Decision") != GateDecision.REJECTED.value
+    ):
+        return True
+
     if not is_mutable(record, actor):
         return False
 
