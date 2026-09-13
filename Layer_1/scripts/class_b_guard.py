@@ -34,7 +34,13 @@ from dataclasses import dataclass, field
 # batch — no hay sincronización automática Notion → este archivo.
 
 CLASS_A_FIELDS: frozenset[str] = frozenset({
-    "Rol", "Marca", "Source_Type ",  # nota: trailing space real en schema Notion
+    "Rol", "Marca",
+    "Source_Type ", "Source_Type",  # Q-1: dual-key hasta confirmar rename G8
+                                     # (schema vivo hoy = "Source_Type " con
+                                     # espacio; tracker_flow.SOURCE_TYPE_PROP_ALIASES
+                                     # ya lee ambas — este guard debe aceptar
+                                     # ambas también para no bloquear MCP/Claude
+                                     # fail-closed el día del rename).
     "URL", "Status", "Prioridad", "Holding", "JD", "NAD", "layer", "hash",
     "Contacto", "Notas", "JOB_ID", "Files", "Interview", "Interview_Date",
     "Apply Date", "Rej Date", "Outcome", "Optimizar", "Postular", "Archivar",
