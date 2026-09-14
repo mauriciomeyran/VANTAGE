@@ -355,9 +355,10 @@ def extract_value(prop: Any) -> Any:
 # ── F3: Human Edit Detection (Fixed) ───────────────────────────────────────────
 
 KNOWN_BOT_IDS = {
-    "integration-id-mcp-dashboard",
-    "integration-id-feed-processor",
-    # Add more bot IDs as discovered via users.me() or config
+    "36e938be-fc42-81bc-a82a-00271388079d",  # Make (OK) — integración de producción, feed_processor.py
+    # NOTE: "integration-id-mcp-dashboard" placeholder removed - ID real no confirmado aún.
+    # Si existe una integración MCP Dashboard activa, obtener su UUID real vía users.me()
+    # con su token de Notion y agregarlo aquí.
 }
 
 
