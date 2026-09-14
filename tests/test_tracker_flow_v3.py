@@ -291,7 +291,7 @@ def test_f10_enum_enforcement():
     # normalize_record converts invalid to REVIEW
     api_record = {
         "id": "test-001",
-        "last_edited_by": {"object": "user", "id": "bot-integration"},
+        "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
         "last_edited_time": "2026-09-01T12:00:00.000Z",
         "properties": {
             "Status": {"select": {"name": "InvalidStatus"}}
@@ -325,7 +325,7 @@ def test_f11_composite_guard():
     # Operational not touched - should be mutable
     record = {
         "Status": "Objetivo",
-        "last_edited_by_id": "bot-integration",
+        "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         "last_edited_time": "2026-09-01T12:00:00.000Z"
     }
     assert is_mutable(record, Actor.PIPELINE)
@@ -381,7 +381,7 @@ def test_g2_execute_transition_with_propose_log():
     """G2: Direct test of execute_transition_with_propose_log"""
     record = {
         "Status": "Objetivo",
-        "last_edited_by_id": "bot-integration",
+        "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         "last_edited_time": "2026-09-01T12:00:00.000Z"
     }
     
@@ -422,7 +422,7 @@ def test_f2_single_archive_path():
     """F2: UN camino evaluate → propose/execute → archive_gate"""
     record = {
         "Status": "Objetivo",
-        "last_edited_by_id": "bot-integration",
+        "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         "last_edited_time": "2026-09-01T12:00:00.000Z"
     }
     
@@ -470,7 +470,7 @@ def test_end_to_end_normalize_to_archive():
     # API record
     api_record = {
         "id": "test-001",
-        "last_edited_by": {"object": "user", "id": "bot-integration"},
+        "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
         "last_edited_time": "2026-09-01T12:00:00.000Z",
         "properties": {
             "Status": {"select": {"name": "Objetivo"}},

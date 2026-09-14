@@ -49,7 +49,7 @@
   },
   {
     "id": "g3-004-rechazado",
-    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-09-01T12:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Rechazado"}},
@@ -66,7 +66,7 @@
   },
   {
     "id": "g3-005-expirada",
-    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-09-01T12:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Expirada"}},
@@ -81,7 +81,7 @@
   },
   {
     "id": "g3-006-objetivo-vm-alto",
-    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-01-01T00:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Objetivo"}},
@@ -100,7 +100,7 @@
   },
   {
     "id": "g3-007-objetivo-url-tracking",
-    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-01-01T00:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Objetivo"}},
@@ -116,7 +116,7 @@
   },
   {
     "id": "g3-008-objetivo-nad-expired",
-    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-01-01T00:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Objetivo"}},
@@ -132,7 +132,7 @@
   },
   {
     "id": "g3-009-objetivo-score-low-block",
-    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-01-01T00:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Objetivo"}},
@@ -149,7 +149,7 @@
   },
   {
     "id": "g3-010-objetivo-review-band",
-    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-01-01T00:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Objetivo"}},
@@ -166,7 +166,7 @@
   },
   {
     "id": "g3-011-inbound-bypass",
-    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-01-01T00:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Objetivo"}},
@@ -181,7 +181,7 @@
   },
   {
     "id": "g3-012-exploratorio",
-    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-01-01T00:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Exploratorio"}},
@@ -198,7 +198,7 @@
   },
   {
     "id": "g3-013-por-revisar",
-    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-01-01T00:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Por Revisar"}},
@@ -215,7 +215,7 @@
   },
   {
     "id": "g3-014-fetch-bloqueado",
-    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-01-01T00:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Objetivo"}},
@@ -232,7 +232,7 @@
   },
   {
     "id": "g3-015-jd-completo-create",
-    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-01-01T00:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Objetivo"}},
@@ -300,7 +300,7 @@
   },
   {
     "id": "g3-019-agregador-url",
-    "last_edited_by": {"object": "user", "id": "integration-id-feed-processor"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-01-01T00:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Objetivo"}},
@@ -318,7 +318,7 @@
   },
   {
     "id": "g3-020-retirado",
-    "last_edited_by": {"object": "user", "id": "bot-integration"},
+    "last_edited_by": {"object": "user", "id": "36e938be-fc42-81bc-a82a-00271388079d"},
     "last_edited_time": "2026-09-01T12:00:00.000Z",
     "properties": {
       "Status": {"select": {"name": "Retirado"}},

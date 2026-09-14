@@ -404,7 +404,7 @@ def test_integration_f2_url_gate_archives_in_apply_mode():
                 "NAD": {"date": {"start": "2025-12-31"}},
             },
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by": {"id": "bot-id"},  # Bot, no humano
+            "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},  # Bot, no humano
         }]
     })
     
@@ -441,7 +441,7 @@ def test_manual_first_bot_edit_before_run_mutable():
         "id": "test-id",
         "Status": Status.OBJETIVO.value,
         "last_edited_time": "2024-01-01T00:00:00.000Z",  # Antes del último run
-        "last_edited_by_id": "integration-id-feed-processor",  # Bot conocido
+        "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",  # Bot conocido
         "Last_Gate_Run": "2024-01-02T00:00:00.000Z",  # Después de la edición
     }
     
@@ -476,7 +476,7 @@ def test_orchestrator_writes_only_with_diff():
                 "NAD": {"date": {"start": "2025-12-31"}},
             },
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by": {"id": "bot-id"},
+            "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
         }]
     })
     
@@ -615,7 +615,7 @@ def test_run_orchestrator_priority_error_handling():
                 "URL": {"url": "https://example.com/job"},
             },
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by": {"id": "bot-id"},
+            "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
         }]
     })
     
@@ -655,7 +655,7 @@ def test_run_orchestrator_gate_result_with_changes():
                 "NAD": {"date": {"start": "2025-12-31"}},
             },
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by": {"id": "bot-id"},
+            "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
         }]
     })
     
@@ -710,7 +710,7 @@ def test_f4_gate_result_contains_next_action():
         "Status": Status.OBJETIVO.value,
         "Notas": "",
         "last_edited_time": "2024-01-01T00:00:00.000Z",
-        "last_edited_by_id": "bot-id",  # Bot para que sea mutable
+        "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",  # Bot para que sea mutable
         "Last_Gate_Run": "2024-01-02T00:00:00.000Z",
     }
     
@@ -793,7 +793,7 @@ def test_f5_patrones_called_in_orchestrator_dry_run():
                 "NAD": {"date": {"start": "2025-12-31"}},
             },
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by": {"id": "integration-id-feed-processor"},
+            "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
         }]
     })
 
@@ -857,7 +857,7 @@ def test_f6_dedup_guard_is_mutable_skips_protected():
             "URL": "https://example.com/dup-job",
             "layer": "L1",
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by_id": "integration-id-feed-processor",
+            "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         },
         {
             "id": "prot-contratado",
@@ -866,7 +866,7 @@ def test_f6_dedup_guard_is_mutable_skips_protected():
             "URL": "https://example.com/dup-job",
             "layer": "L3",
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by_id": "integration-id-feed-processor",
+            "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         },
     ]
     # Contratado gana survivor rank — el Objetivo es el no-survivor
@@ -895,7 +895,7 @@ def test_f6_dedup_marks_mutable_nonsurvivor_in_apply():
             "URL": "https://example.com/same-role",
             "layer": "L1",
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by_id": "integration-id-feed-processor",
+            "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         },
         {
             "id": "dup-l3",
@@ -904,7 +904,7 @@ def test_f6_dedup_marks_mutable_nonsurvivor_in_apply():
             "URL": "https://example.com/same-role",
             "layer": "L3",
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by_id": "integration-id-feed-processor",
+            "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         },
     ]
 
@@ -938,7 +938,7 @@ def test_f6_dedup_skips_human_protected_nonsurvivor():
             "URL": "https://example.com/human-dup",
             "layer": "L1",
             "last_edited_time": "2020-01-01T00:00:00.000Z",  # viejo
-            "last_edited_by_id": "integration-id-feed-processor",
+            "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         },
         {
             "id": "human-dup",
@@ -972,7 +972,7 @@ def test_f6_dedup_wired_in_orchestrator():
                     "NAD": {"date": {"start": "2025-12-31"}},
                 },
                 "last_edited_time": "2024-01-01T00:00:00.000Z",
-                "last_edited_by": {"id": "integration-id-feed-processor"},
+                "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
             },
             {
                 "id": "page-l3",
@@ -984,7 +984,7 @@ def test_f6_dedup_wired_in_orchestrator():
                     "NAD": {"date": {"start": "2025-12-31"}},
                 },
                 "last_edited_time": "2024-01-01T00:00:00.000Z",
-                "last_edited_by": {"id": "integration-id-feed-processor"},
+                "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
             },
         ]
     })
@@ -1174,7 +1174,7 @@ def test_transversal_manual_first_implemented():
         "id": "test-id",
         "Status": Status.OBJETIVO.value,
         "last_edited_time": "2024-01-01T00:00:00.000Z",
-        "last_edited_by_id": "bot-id",
+        "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         "Last_Gate_Run": "2024-01-02T00:00:00.000Z",
     }
     
@@ -1209,7 +1209,7 @@ def test_transversal_manual_window_last_gate_run():
         "id": "b1",
         "Status": Status.OBJETIVO.value,
         "last_edited_time": "2024-01-01T00:00:00.000Z",
-        "last_edited_by_id": "integration-id-feed-processor",
+        "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         "Last_Gate_Run": "2024-06-01T00:00:00.000Z",
     }
     assert manual_first_protection(bot_before, Actor.PIPELINE) is True
@@ -1229,7 +1229,7 @@ def test_transversal_snapshot_single_query():
                 "Score": {"number": 42},
             },
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by": {"id": "integration-id-feed-processor"},
+            "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
         }]
     })
 
@@ -1310,7 +1310,7 @@ def test_transversal_anti_rewrite_dedup_already_flagged():
             "URL": "https://example.com/already",
             "layer": "L1",
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by_id": "integration-id-feed-processor",
+            "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         },
         {
             "id": "dup-flagged",
@@ -1320,7 +1320,7 @@ def test_transversal_anti_rewrite_dedup_already_flagged():
             "layer": "L3",
             "Dedup_Flag": "Posible duplicado",  # ya marcado
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by_id": "integration-id-feed-processor",
+            "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         },
     ]
     result = run_dedup_audit(records, client, dry_run=False)
@@ -1429,7 +1429,7 @@ def test_manual_first_bot_edit():
         "id": "test-id",
         "Status": Status.OBJETIVO.value,
         "last_edited_time": "2024-01-01T00:00:00.000Z",
-        "last_edited_by_id": "integration-id-feed-processor",
+        "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         "Last_Gate_Run": "2024-01-02T00:00:00.000Z",
     }
     
@@ -1482,7 +1482,7 @@ def test_nad_malformed_warning():
                 "NAD": {"date": {"start": "invalid-date"}},
             },
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by": {"id": "bot-id"},
+            "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
         }]
     })
     
@@ -1618,7 +1618,7 @@ def test_orchestrator_source_type_default_empty_string():
                 "Source_Type ": {"select": {"name": ""}},
             },
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by": {"id": "integration-id-feed-processor"},
+            "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
         }]
     })
     metrics = run_orchestrator(
@@ -1640,7 +1640,7 @@ def test_orchestrator_nad_expired_archives_via_guard():
                 "NAD": {"date": {"start": "2020-01-01"}},
             },
             "last_edited_time": "2024-01-01T00:00:00.000Z",
-            "last_edited_by": {"id": "integration-id-feed-processor"},
+            "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
         }]
     })
     metrics = run_orchestrator(
@@ -1844,23 +1844,23 @@ def test_g4_apply_gate_decision_payload_uses_enums():
          "Role_Class": "VM", "Source_Type ": "Vacante", "Rol": "Visual Merchandiser",
          "Marca": "Zara", "id": "g4-1",
          "last_edited_time": "2024-01-01T00:00:00.000Z",
-         "last_edited_by_id": "integration-id-feed-processor"},
+         "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d"},
         {"Status": Status.RECHAZADO.value, "id": "g4-2",
          "last_edited_time": "2024-01-01T00:00:00.000Z",
-         "last_edited_by_id": "integration-id-feed-processor"},
+         "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d"},
         {"Status": Status.POSTULADO.value, "id": "g4-3",
          "last_edited_time": "2024-01-01T00:00:00.000Z",
-         "last_edited_by_id": "integration-id-feed-processor"},
+         "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d"},
         {"Status": Status.OBJETIVO.value, "Fetch": "Bloqueado", "VM_Scope": "Alto",
          "Role_Class": "VM", "Source_Type ": "Vacante", "Rol": "VM", "Marca": "Zara",
          "id": "g4-4", "Score": 70,
          "last_edited_time": "2024-01-01T00:00:00.000Z",
-         "last_edited_by_id": "integration-id-feed-processor"},
+         "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d"},
         {"Status": Status.OBJETIVO.value, "Fetch": "Accesible", "VM_Scope": "Alto",
          "Role_Class": "VM", "Source_Type ": "Vacante", "Rol": "VM", "Marca": "Zara",
          "JD_Quality": "JD Completo", "id": "g4-5",
          "last_edited_time": "2024-01-01T00:00:00.000Z",
-         "last_edited_by_id": "integration-id-feed-processor"},
+         "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d"},
     ]
     for rec in cases:
         result = apply_gate_decision(rec, rec.get("Score") or 70)
@@ -1922,7 +1922,11 @@ def test_g5_fixture_has_human_and_bot_rows():
     rows = _g5_load()
     assert len(rows) >= 4
     humans = [r for r in rows if "human" in str(r.get("last_edited_by", {})).lower()]
-    bots = [r for r in rows if "integration-id" in str(r.get("last_edited_by", {}))]
+    # Bot real = Make UUID en KNOWN_BOT_IDS (b96fd80); ya no "integration-id-*"
+    bots = [
+        r for r in rows
+        if (r.get("last_edited_by") or {}).get("id") in KNOWN_BOT_IDS
+    ]
     assert len(humans) >= 2
     assert len(bots) >= 1
 
@@ -1947,7 +1951,7 @@ def test_g5_bot_is_not_immune_unit():
         "id": "b1",
         "Status": Status.OBJETIVO.value,
         "last_edited_time": "2026-01-01T00:00:00.000Z",
-        "last_edited_by_id": "integration-id-feed-processor",
+        "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         "Last_Gate_Run": "2026-06-01T00:00:00.000Z",
         "URL": "https://example.com/y?utm_source=1",
     }
@@ -2126,7 +2130,7 @@ def test_g5_preview_nad_and_gate_label_branches():
     }
     # Añadir bot timestamps para que is_mutable deje pasar cómputo de gate
     rec_gate["last_edited_time"] = "2024-01-01T00:00:00.000Z"
-    rec_gate["last_edited_by_id"] = "integration-id-feed-processor"
+    rec_gate["last_edited_by_id"] = "36e938be-fc42-81bc-a82a-00271388079d"
     acts2 = preview_destructive_actions(rec_gate)
     # gate_label o vacío si evaluate_flow protege; no crash
     assert isinstance(acts2, list)
@@ -2204,7 +2208,7 @@ def test_g5_orchestrator_inbound_bypass_and_nad_bot():
                 "Last_Gate_Run": {"date": {"start": "2026-01-01"}},
             },
             "last_edited_time": "2026-01-01T00:00:00.000Z",
-            "last_edited_by": {"id": "integration-id-feed-processor"},
+            "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
         },
         {
             "id": "cov-nad-bot",
@@ -2221,7 +2225,7 @@ def test_g5_orchestrator_inbound_bypass_and_nad_bot():
                 "Last_Gate_Run": {"date": {"start": "2026-01-01"}},
             },
             "last_edited_time": "2026-01-01T00:00:00.000Z",
-            "last_edited_by": {"id": "integration-id-feed-processor"},
+            "last_edited_by": {"id": "36e938be-fc42-81bc-a82a-00271388079d"},
         },
     ]})
     metrics = run_orchestrator(client=client, dry_run=False, apply=True, dedup_audit=False)
@@ -2589,7 +2593,7 @@ def test_g8_matrix_live_statuses_protected():
         is_mutable, Actor,
     )
     bot = {
-        "last_edited_by_id": "integration-id-feed-processor",
+        "last_edited_by_id": "36e938be-fc42-81bc-a82a-00271388079d",
         "last_edited_time": "2020-01-01T00:00:00.000Z",
         "id": "g8m",
     }
