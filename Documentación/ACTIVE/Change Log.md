@@ -1,30 +1,23 @@
 # V | CHANGELOG
 
-Tipo: [DOC] [NORM] [OPS]
-Versión: v9.22.0
-Documento modificado (repo mirror; Notion aplica Claude + APROBAR_WRITE):
-- Documentación/ACTIVE/Kernel.md — §§05.2, 07.1, 07.7–07.8, 09.2–09.3, 09.10 (DEROGACIÓN Q-4), 09.13, 04 dedup
-- Documentación/ACTIVE/Manual.md — §22.1 glosario L1 (orchestrator), 22.1a modules, batch retired, Next_Action ES
-- Documentación/ACTIVE/Aliases.md — vl1 → orch; vl1batch retired; vl1s; dedup
-- skills/- Tidy/vantage-tidy-opportunities-tracker/SKILL.md — SSOT is_mutable; G9 note
-- Layer_1/docs/G7_NORMALIZATION_TABLE.md · G8_DEPLOYMENT_PLAN.md (ya en repo)
-Código de referencia (gates G2–G8, rama entrega): layer_1_orchestrator.py, tracker_flow.py, normalize_tracker_values.py, g8_post_checklist.py.
-Documentos potencialmente afectados: SP:SCHEMA / SP glosario scripts (si existe fila layer_1_run) — Claude verifica Census; System Prompt solo si cita entry VL1.
-Tipo de impacto: Normativo + Operativo — cierre docsync del reemplazo total del orquestador Tracker (contrato 2026-09-12). Alinea docs al código ya verde G0–G8.
-Causa raíz: Kernel/Manual describían W1 (`layer_1_run.py`) multi-whitelist y GATE-DECISION-010 como protección estrecha de 3 Status; el código unificado usa `is_mutable` + enums ES; Q-4 exige derogar la promesa Class-B-bloqueado-en-REVIEW en Python.
-Acción correctiva (esta pasada = diffs en repo; write Notion = Claude):
-1. KERNEL:SCHEMA-001/008 — Status 12 canónicos; Next_Action 9 ES + legacy mapa G7; Source_Type dual-key; Holding placeholder→vacío.
-2. KERNEL:GATE-DECISION-010 — **derogación parcial Q-4**: SSOT mutabilidad = is_mutable; gate_logic = labels; NO bloqueo Class-B-mientras-Por-Revisar en pipeline Python.
-3. KERNEL:GATE-DECISION-002/003/013 + OWNERSHIP-002 — entry orchestrator; resolución Objetivo (no Target); archive_gate.
-4. Manual §22.1 + Aliases vl1 — entry orch dry-run; batch RETIRADO; scripts G7/G8 documentados.
-5. tidy skill — lee Next_Action canónico; no escribe Class B; referencia Archive layer_1_run.
-6. Runbook cutover G8 ya entregado (freeze→merge→patch); esta entrada no ejecuta Notion prod.
-IDs afectados: reescritura de nodos KERNEL:SCHEMA-001, SCHEMA-007, SCHEMA-008, GATE-DECISION-002/003/010/013, OWNERSHIP-002; MANUAL:SCRIPT-GLOSSARY-L1; alias vl1. Sin alta/baja de ID canónico nuevo (mismo ancla, texto actualizado) — Claude confirma Census Regla 1.
-Estado: **DIFFS EN REPO APLICADOS** (mirror). **Notion: PENDIENTE APROBAR_WRITE** por Claude en sesión de docsync (G9 manda: "Los aplica Claude"). Cero escritura Notion en la sesión de código que generó este patch.
-Evidencia código: tip entrega G8 `e4ac1ba` + G9 doc tip (este commit); suite G* 242 passed; g8_post_checklist 37 PASS.
-Handoff de referencia: contrato consolidado 2026-09-12 · gates G2–G8.
+Tipo: [DOC]
+Documento modificado: V | KERNEL (§09.10 KERNEL:GATE-DECISION-010, §07.1 KERNEL:SCHEMA-001) · V | MANUAL (§22.1 MANUAL:SCRIPT-GLOSSARY-L1, entrada layer_1_run.py extendida con layer_1_orchestrator.py)
+Documentos potencialmente afectados: Ninguno adicional — System Prompt/Career Canon no referencian estos tres nodos.
+Tipo de impacto: Normativo — cierre de 3 de los 9 puntos de Fe de Erratas post-deploy G8/G9 (refactor v9.22.0, Layer_1), consolidados en mapeo de nodos por CLAUDE/MAIN (corrigiendo entrega previa incompleta de CLAUDE/KM en el Nodo 3).
+Acción correctiva ejecutada:
+1. KERNEL:GATE-DECISION-010 — agregada distinción entre bloqueo de escritura de Class B en el momento de ingesta (real, verificado por test_g8_matrix_live_statuses_protected) y protección persistente contra recálculo posterior (nunca existió — "Por Revisar" no formó parte de STATUS_TERMINAL_MAP ni TERMINAL_ACTIONS).
+1. KERNEL:SCHEMA-001 — agregada línea junto a campos Class B: VM_Scope ∈ {Alto, Bajo}, binario, sin valor "Medio" en ningún punto del sistema.
+1. MANUAL:SCRIPT-GLOSSARY-L1 — extendida entrada de layer_1_run.py (archivado) con layer_1_orchestrator.py (su reemplazo): documentadas las dos listas vm_terms independientes (línea 123 get_vm_scope vs línea 138 get_role_class, 7 vs 4 términos), alcance vigente ES+EN sin términos de escaparatismo (decisión explícita del operador, evidencia histórica de 8 filas "Escaparatista" documentada sin acción correctiva), y método de curación disponible a futuro no aplicado.
+IDs afectados: Ninguno (extensión de nodos existentes, sin alta/baja de ID canónico — no dispara CENSUS-SYNC Regla 1).
+Estado final de la validación: Write-Back Verification PASS — confirmado vía re-fetch en vivo de KERNEL post-escritura (Nodos 1 y 2 verbatim, sin mismatch); Manual escrito sin error reportado por la herramienta (mismo patrón y vía que los dos anteriores). APROBAR_WRITE del operador cubrió el lote de 3 nodos en un solo turno. Pendientes de la Fe de Erratas fuera de esta entrada: allowlist test_g3_parity.py (Q-11), suite completa de tests, confirmación de referencias residuales a Source_Type con espacio/"Medio".
 ---
-
+Tipo: [CODE] [OPS] [DOC]
+Alcance:
+- [CODE]: suite tracker_flow 30→39 (T0: 6 tests F13/F13b + 3 minors one-shot, bb29edf; T4: fix TypeError choose_survivor capa string Q-H7 L1>L2>L3>N/A + 3 tests; G1 enum GateDecision alineado a vivo REVIEW_NEEDED/EXPIRED). Patch combinado 159 líneas.
+Validación: pytest 39 passed reproducido por Arena; bug pre-fix confirmado con TypeError real; md5 base 6a41a7e0…/7e274a6d…. (Fix endpoint data_sources ya registrado en v9.21.56.)
+- [OPS]: censo T1 (24 filas; Status 12/12=enum; Target=0; fantasmas=0; Q-H1 Fetch 22/2 resuelto; Next_Action vivo 11 vs enum 9 y Gate_Decision 2/6 registrados como deuda-doc, no bloqueantes) · backup T2 CSV sha256 7da5210c…eb071 24/24 · T5: one-shot --dry-run 0 filas + cross-check MCP n=0 → --apply no-op (tercera corroboración junto al dry-run operador de v9.21.56; Outcome 100% vacío). Cero escrituras a prod en el ciclo.
+- [DOC]: actas handoffs/ seriales CLAUDE-20260911-01…06 (veredictos T0–T5, acta CIERRE, brief doc transversal, handoff T6 sidecar vl1s). Propuesta doc transversal pendiente de APROBAR_WRITE; T6 spec entregado (runner thin + case sync + alias, --apply excluido).
+IDs afectados: Ninguno (código; no dispara CENSUS-SYNC Regla 1).
 Tipo: [FIX] [DOC] [OPS]
 Documento modificado: vantage-present-handoff/SKILL.md, vantage-session-open/SKILL.md, vantage-session-close/SKILL.md (repo GitHub, v1.0.0→v1.1.0→v1.2.0 en dos pasadas) · tracker_flow.py (repo, fix de bug real) · Tasks Tracker (Notion, 1 alta) · KERNEL:HANDOFF-SERIAL (Notion, pendiente de edición manual por el operador — markdown entregado, no aplicado por MCP en esta sesión).
 Documentos potencialmente afectados: SP:SKILL-VERSION-PIN (tabla en v1.0.0 para los 3 skills de sesión, desalineada contra el repo tras este cambio — pendiente de sync, no ejecutado en esta sesión).
