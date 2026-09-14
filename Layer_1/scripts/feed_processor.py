@@ -1020,9 +1020,13 @@ def _resolve_fuente_from_source_type(rec: dict, fetch: str) -> str:
 
     Prioridad:
     1. source_type del JSON (valor explícito del agente).
-    2. inferir por fetch_status como fallback.
+    2. tracker_raw.Fuente como fallback (consolidados con shape anidado).
+    3. inferir por fetch_status como último fallback.
     """
-    source_type = rec.get("source_type", "").strip()
+    source_type = (rec.get("source_type") or "").strip()
+    if not source_type:
+        tracker_raw = rec.get("tracker_raw") or {}
+        source_type = (tracker_raw.get("Fuente") or "").strip()
     # source_type del JSON (valores que puedo emitir yo o Gemini/Grok)
     st_map: dict[str, str] = {
         "linkedin":                 "LinkedIn",
@@ -1030,6 +1034,7 @@ def _resolve_fuente_from_source_type(rec: dict, fetch: str) -> str:
         "career_page":              "Career Page Oficial",
         "gemini":                   "Gemini",
         "gemini (l2)":              "Gemini",
+        "indeed":                   "Agregador",
     }
     key = source_type.strip().lower()
     if key in st_map:
