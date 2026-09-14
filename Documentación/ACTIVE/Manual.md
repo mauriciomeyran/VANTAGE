@@ -1172,6 +1172,12 @@ Caso de uso: Antes de archivar cualquier script a Archive/Legacy_Scripts/, corre
 Uso: python3 patch_vsync_doc.py — sin flags. Es idempotente por diseño de patcher (aunque no verifiqué si tiene el mismo guard explícito).
 Nota operativa: Como es un patcher de una sola aplicación histórica (ya corrido, ver ALIASES/CHANGE_LOG separados en tu vsync_doc.py actual), no debería necesitar correrse de nuevo. patch_vsync_doc.py y patch_new_scripts.py fueron MOVIDOS a Archive/Legacy_Scripts/ (saneamiento v9.21.x) — --new-scripts ya no debería detectarlos como pendientes.
 ⚠️ Hallazgo real — extract_score_distribution.py: este script parece ser un borrador abandonado, no una herramienta funcional. El propio código trae comentarios como "Simulación: voy a asumir que necesito procesar los datos reales" y "Por ahora, voy a mostrar el formato de análisis esperado" — usa datos de muestra hardcodeados (sample_data), no consulta Notion. extract_score_distribution.py parece ser una versión temprana/incompleta de extract_scores.py (que sí funciona). Documentado como hallazgo, no corregido — decide tú si vale la pena eliminarlo del árbol para que deje de aparecer en cada gap report. — MOVIDO a Archive/Legacy_Scripts/ (saneamiento v9.21.x)
+vl1_sync.py
+Sidecar T6: sincroniza Outcome→Status del Tracker; --dry-run por defecto, --apply gateado; alias vl1s; tests tests/test_vl1_sync.py (3 verdes).
+normalize_tracker_values.py
+Script G7 idempotente: normaliza Next_Action/Gate_Decision legacy EN→ES canónico (Seguimiento, Preparación Entrevista, Revisión); dry-run por defecto, reanudable, conteos pre/post.
+batch_operations.py
+RETIRADO (G6 / Q-10) Script archivado en Archive/Legacy_Scripts/batch_operations.py. Case Target→Exploratorio ya aplicado en prod (Target=0); nada que migrar (Q-10).
 ---
 ### 22.3 MANUAL:SCRIPT-GLOSSARY-L4
 Layer 4 — Version Control & Sync Documental
