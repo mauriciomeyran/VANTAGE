@@ -2624,14 +2624,15 @@ def test_g9_docsync_verify_pass():
 
 
 def test_g9_kernel_gate_010_derogation_present():
-    """G9/Q-4: KERNEL GATE-DECISION-010 contiene DEROGACIÓN + is_mutable SSOT."""
+    """G9/Q-4: KERNEL GATE-DECISION-010 contiene disavowal + SSOT terminal (redacción vigente)."""
     root = Path(__file__).resolve().parent.parent
     text = (root / "Documentación" / "ACTIVE" / "Kernel.md").read_text(encoding="utf-8")
-    assert "DEROGACIÓN PARCIAL" in text
-    assert "tracker_flow.is_mutable" in text
-    assert "NO se implementa bloqueo Class-B-mientras" in text or "Class-B-bloqueado-en-REVIEW" in text
-    # canonical Next_Action ES in SCHEMA-008
-    assert "Seguimiento" in text and "Preparación Entrevista" in text
+    assert "Distinción de alcance temporal" in text
+    assert "STATUS_TERMINAL_MAP" in text
+    assert "no formó parte de STATUS_TERMINAL_MAP" in text
+    g7 = (root / "Layer_1" / "docs" / "G7_NORMALIZATION_TABLE.md").read_text(encoding="utf-8")
+    # canonical Next_Action ES in G7 table
+    assert "Seguimiento" in g7 and "Preparación Entrevista" in g7 and "Revisión" in g7
 
 
 def test_g9_changelog_v922_entry():

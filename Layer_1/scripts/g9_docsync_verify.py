@@ -14,13 +14,14 @@ ROOT = Path(__file__).resolve().parents[2]
 
 CHECKS = [
     (ROOT / "Documentación/ACTIVE/Kernel.md", [
-        "DEROGACIÓN PARCIAL",
-        "tracker_flow.is_mutable",
-        "layer_1_orchestrator.py",
+        "Distinción de alcance temporal",
+        "STATUS_TERMINAL_MAP",
+        "PROTECTED_STATUSES",
+    ]),
+    (ROOT / "Layer_1/docs/G7_NORMALIZATION_TABLE.md", [
         "Seguimiento",
         "Preparación Entrevista",
-        "PROTECTED_STATUSES",
-        "Q-4",
+        "Revisión",
     ]),
     (ROOT / "Documentación/ACTIVE/Manual.md", [
         "layer_1_orchestrator.py",
