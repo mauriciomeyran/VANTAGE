@@ -869,7 +869,8 @@ def run_orchestrator(
     client: Any,
     dry_run: bool = True,
     apply: bool = False,
-    dedup_audit: bool = False
+    dedup_audit: bool = False,
+    dry_run_live: bool = False
 ) -> Dict[str, Any]:
     """
     Ejecuta el orquestador completo.
@@ -879,6 +880,7 @@ def run_orchestrator(
         dry_run: Modo diagnóstico (default True)
         apply: Modo escritura (requiere --apply explícito)
         dedup_audit: Ejecutar dedup audit al final
+        dry_run_live: Modo diagnóstico con datos reales (lectura sin escritura)
     
     Returns:
         Dict con métricas del run
@@ -892,7 +894,13 @@ def run_orchestrator(
         dry_run = True
     
     logger.info(f"{'='*60}")
-    logger.info(f"VANTAGE Orquestador v9.0 - {'DRY RUN' if dry_run else 'APPLY MODE'}")
+    if apply:
+        mode = "APPLY MODE"
+    elif dry_run_live:
+        mode = "DRY RUN LIVE (real data, no writes)"
+    else:
+        mode = "DRY RUN (fake data)"
+    logger.info(f"VANTAGE Orquestador v9.0 - {mode}")
     logger.info(f"{'='*60}")
     
     metrics = {
@@ -1118,12 +1126,17 @@ def main():
         "--dry-run",
         action="store_true",
         default=True,
-        help="Modo diagnóstico (default)"
+        help="Modo diagnóstico con cliente fake (default)"
+    )
+    parser.add_argument(
+        "--dry-run-live",
+        action="store_true",
+        help="Modo diagnóstico con datos reales del Tracker (lectura sin escritura)"
     )
     parser.add_argument(
         "--apply",
         action="store_true",
-        help="Modo escritura (requiere confirmación)"
+        help="Modo escritura (requiere NOTION_TOKEN)"
     )
     parser.add_argument(
         "--dedup-audit",
@@ -1136,23 +1149,49 @@ def main():
     # Load environment
     load_dotenv()
     
-    # Crear client (fake en dry-run, real en apply)
-    if args.apply:
-        from notion_client import Client
+    # Crear client (fake en dry-run, real en apply o dry-run-live)
+    if args.apply or args.dry_run_live:
+        from notion_client import Client as NotionClient
+        import notion_client
         notion_token = os.environ.get("NOTION_TOKEN")
         if not notion_token:
-            logger.error("NOTION_TOKEN requerido en modo --apply")
+            logger.error("NOTION_TOKEN requerido en modo --apply o --dry-run-live")
             sys.exit(1)
-        client = Client(auth=notion_token)
+        # Wrap real client to match fake client interface
+        class NotionClientReal:
+            def __init__(self, client):
+                self.client = client
+                self.writes = []
+                self.queries = []
+            
+            def query_data_sources(self, data_source_id: str, **kwargs) -> Dict[str, Any]:
+                self.queries.append(("query_data_sources", data_source_id, kwargs))
+                return self.client.data_sources.query(data_source_id=data_source_id, **kwargs)
+            
+            def pages_update(self, page_id: str, properties: Dict[str, Any]) -> Dict[str, Any]:
+                self.writes.append(("pages_update", page_id, properties))
+                return self.client.pages.update(page_id=page_id, properties=properties)
+        
+        real_client = NotionClient(auth=notion_token)
+        client = NotionClientReal(real_client)
     else:
         client = NotionClientFake()
+    
+    # Determinar modo dry_run
+    if args.apply:
+        dry_run = False
+    elif args.dry_run_live:
+        dry_run = True  # real data pero sin escritura
+    else:
+        dry_run = True  # fake data (default --dry-run)
     
     # Ejecutar orquestador
     metrics = run_orchestrator(
         client=client,
-        dry_run=args.dry_run,
+        dry_run=dry_run,
         apply=args.apply,
-        dedup_audit=args.dedup_audit
+        dedup_audit=args.dedup_audit,
+        dry_run_live=args.dry_run_live
     )
     
     # Exit code

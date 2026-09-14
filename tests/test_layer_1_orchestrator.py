@@ -1686,10 +1686,11 @@ def test_main_dry_run_cli(monkeypatch):
 
     calls = {}
 
-    def fake_run(client, dry_run=True, apply=False, dedup_audit=False):
+    def fake_run(client, dry_run=True, apply=False, dedup_audit=False, dry_run_live=False):
         calls["client_type"] = type(client).__name__
         calls["dry_run"] = dry_run
         calls["apply"] = apply
+        calls["dry_run_live"] = dry_run_live
         return {
             "total_processed": 0, "writes": 0, "skips": 0,
             "archives": 0, "errors": 0, "manual_protected": 0,
