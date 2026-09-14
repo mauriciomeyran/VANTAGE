@@ -26,16 +26,6 @@ DIGEST_PATH = _PROJECT / "VANTAGE_digest.txt"   # ajusta si tu get_vantage_diges
 
 NOTEBOOK_ID = "120cc3d6-a2c0-4c2e-ae4c-a794e1fc7f30"
 
-FOUNDATIONAL = [
-    "Kernel.md",
-    "System Prompt.md",
-    "Career Canon.md",
-    "Manual.md",
-    "Aliases.md",
-    "Change Log.md",
-    "Brief.md",
-]
-
 def run_vdoc_notion():
     """Ejecuta el equivalente a `vdoc notion`."""
     print("→ Ejecutando vdoc notion (Notion → ACTIVE)...")
@@ -65,12 +55,10 @@ def run_digest():
 
 def collect_files(include_digest: bool = True) -> list[Path]:
     files = []
-    for name in FOUNDATIONAL:
-        p = ACTIVE_DIR / name
-        if p.exists():
-            files.append(p)
-        else:
-            print(f"  ⚠ No encontrado: {p}")
+    if ACTIVE_DIR.exists():
+        files.extend(sorted(ACTIVE_DIR.glob("*.md")))
+    else:
+        print(f"  ⚠ Directorio no encontrado: {ACTIVE_DIR}")
     if include_digest and DIGEST_PATH.exists():
         files.append(DIGEST_PATH)
     return files
@@ -93,7 +81,7 @@ async def upload_to_notebook(files: list[Path], force_login: bool = False):
             print(f"  • {f.name} ({f.stat().st_size // 1024} KB)")
             # La API exacta puede ser client.sources.add_file(...) o add_local
             # Verifica con: notebooklm source add --help
-            await client.sources.add_file(NOTEBOOK_ID, str(f), display_name=f.name)
+            await client.sources.add_file(NOTEBOOK_ID, str(f))
     print("✓ Subida completada")
 
 def main():
