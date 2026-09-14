@@ -1035,6 +1035,7 @@ def _resolve_fuente_from_source_type(rec: dict, fetch: str) -> str:
         "gemini":                   "Gemini",
         "gemini (l2)":              "Gemini",
         "indeed":                   "Agregador",
+        "computrabajo":             "Agregador",
     }
     key = source_type.strip().lower()
     if key in st_map:
