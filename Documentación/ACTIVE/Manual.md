@@ -191,6 +191,20 @@ python vsync_doc.py --dry-run
 ```
 Output esperado: 6 documentos listados con diff por documento, sin errores.
 Si falla: verificar que layer_1.env exista y que el token no tenga un salto de línea (\n) embebido por error de copy-paste.
+Paso 8
+Verificar Suite de Pruebas y Gates Documentales
+Antes de confiar en que el pipeline está en condiciones de operar, corre la suite obligatoria de 5 archivos de test — nunca pytest a secas, porque el árbol completo trae 3 errores de colección ajenos (dependencia pydantic_settings faltante) que no reflejan una regresión real:
+```bash
+python3 -m pytest tests/test_layer_1_orchestrator.py tests/test_g3_parity.py tests/test_tracker_flow_v3.py tests/test_vl1_sync.py tests/test_url_gate.py -q
+```
+Resultado esperado: todos pasan, exit 0.
+Complementa con los tres verifies offline — ninguno toca Notion:
+```bash
+python3 Layer_1/scripts/g8_post_checklist.py --offline
+python3 Layer_1/scripts/g9_docsync_verify.py
+python3 Layer_1/scripts/g10_handoff_verify.py
+```
+Si algo falla aquí, no sigas al Paso 1 de Cold-Start ni al ciclo semanal — este paso existe precisamente para atraparlo antes.
 ## 05 MANUAL:COLD-START
 Arranque Frío
 Usar cuando el sistema no ha sido operado por más de 5 días. A diferencia de MANUAL:SETUP, aquí no estás instalando nada nuevo — estás confirmando que todo lo que ya instalaste sigue funcionando después de un periodo de inactividad, antes de confiar en que el primer comando que corras te va a dar un resultado correcto.
@@ -519,6 +533,7 @@ Con esto se cierra el ciclo semanal. La siguiente vez que abras Claude para trab
 ## 09 MANUAL:RUNTIME
 Runtime
 Ya viste varios de estos comandos en acción durante el flujo semanal (MANUAL:WEEKLY-FLOW) — esta sección los reúne como catálogo de referencia completo, junto con el detalle de cuándo y por qué correr cada uno.
+Antes de correr cualquiera de los comandos siguientes: no todos pesan lo mismo. Ver KERNEL:DATA-FLOW-001 para el contrato de niveles de riesgo — cuáles son inofensivos por diseño y cuáles requieren freeze + intención explícita antes de tocarlos.
 ### 9.1 MANUAL:RUNTIME-001
 ¿Qué es el Runtime?
 Es la herramienta de observabilidad del sistema. Permite interrogar a Notion y extraer contexto semántico sin salir de la terminal.
@@ -541,6 +556,7 @@ Sin --execute, el comando nunca escribe en Notion. Esta protección es permanent
 vl1 backfill --dry-run
 ```
 Sin --dry-run, solicita confirmación explícita (s) antes de cualquier escritura.
+- vl1 sync — reconciliación Outcome→Status del Tracker (wrapper de vl1_sync.py). Modo por defecto dry-run: intercepta la escritura y reporta checked/synced/skipped sin tocar Notion — 0 filas a sincronizar es un resultado normal, no un fallo. --apply está bloqueado por diseño en la fase actual (T6): no ejecuta escritura real aunque se invoque con el flag.
 - 
 - vversions — acepta --bootstrap, --sync, --scripts, --skills, --length (Sanity check de integridad estructural: conteo de bloques de texto extraíble vs. baseline. Read-only. Exit code 1 si ATENCIÓN REQUERIDA), --update-baseline (Actualiza length_baseline.json. Requiere --length y confirmación explícita del operador cuando el veredicto no es PASS). — alias corto de verify_versions.py, el motor de verificación y sincronización de versión de los 9 documentos fundacionales (KERNEL:VERSION-CHECK-TOOL). No es un comando del Tracker de vacantes como los vl1 * de arriba — es infraestructura documental, y su uso está integrado al Ciclo de Sesión completo en MANUAL:SESSION-CYCLE, no como comando suelto. 
 Acepta cuatro flags: 
@@ -947,7 +963,14 @@ Variables de entorno (tuning silencioso):
 | --dry-run | Antes de correr el pipeline completo en un día con muchos feeds nuevos, corre con --dry-run para ver qué escribiría sin comprometer el Tracker — útil si sospechas que un feed trae datos sucios. |
 | --dedup-audit | Al cerrar el ciclo semanal de L1, agrégalo para que el mismo comando dispare dedup_opportunities.py como subproceso y te dé el reporte fuzzy sin correr dos comandos separados. |
 generate_archive_notes() — función interna, sin CLI propia. Invocada desde 3 puntos de layer_1_run.py (URL Gate, misfit de perfil, NAD vencido) para escribir la nota determinista de archivado en Notas (ver KERNEL:GATE-DECISION-013, MANUAL:DATA-MANAGEMENT-001). Mecanismo de herencia de --dry-run pendiente de verificar contra código fuente.
-layer_1_orchestrator.py — reemplaza a layer_1_run.py (archivado, ver refactor v9.22.0). Contiene dos listas vm_terms independientes con propósitos distintos: línea 123 (get_vm_scope) — ["visual merchandising", "visual", "vm", "brand environment", "estándares visuales", "store design", "retail design"], determina VM_Scope; línea 138 (get_role_class) — ["visual merchandising", "visual", "vm", "brand environment"], tres términos menos, determina Role_Class=VM. Alcance vigente: español + inglés únicamente, sin términos de escaparatismo (ej. "escaparat*") — decisión explícita del operador tras evidencia histórica de 8 filas "Escaparatista", sin acción correctiva sobre el código. Método de curación disponible a futuro, no aplicado: export VM_Scope=Bajo + Gate_Decision=BLOCKED + frecuencia de palabras en Rol.
+layer_1_orchestrator.py — reemplaza a layer_1_run.py (archivado, refactor v9.22.0). Ver KERNEL:DATA-FLOW-001 para el contrato de riesgo detrás de cada modo.
+| Flag | Caso de uso |
+| --- | --- |
+| --dry-run (default) | Cliente fake, cero red — tu vista previa diaria antes de cualquier otra cosa. |
+| --dry-run-live | Necesitas ver el estado real de Notion antes de decidir algo, sin arriesgar una escritura — requiere NOTION_TOKEN. |
+| --apply | Escritura real — nunca en frío; requiere freeze de cutover confirmado (G8) más tu intención explícita en el mismo turno. |
+| --dedup-audit | Se combina con cualquiera de los anteriores para correr el reporte de duplicados en la misma pasada. |
+Contiene dos listas vm_terms independientes con propósitos distintos: línea 123 (get_vm_scope) — ["visual merchandising", "visual", "vm", "brand environment", "estándares visuales", "store design", "retail design"], determina VM_Scope; línea 138 (get_role_class) — ["visual merchandising", "visual", "vm", "brand environment"], tres términos menos, determina Role_Class=VM. Alcance vigente: español + inglés únicamente, sin términos de escaparatismo (ej. "escaparat*") — decisión explícita del operador tras evidencia histórica de 8 filas "Escaparatista", sin acción correctiva sobre el código. Método de curación disponible a futuro, no aplicado: export VM_Scope=Bajo + Gate_Decision=BLOCKED + frecuencia de palabras en Rol.
 feed_processor.pyQué hace: Ingiere un JSON de feed (L1/L2/L3) y crea/actualiza registros en el Tracker.
 Flags:
 | Flag | Caso de uso |

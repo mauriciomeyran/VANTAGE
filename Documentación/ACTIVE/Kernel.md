@@ -336,6 +336,7 @@ No es capa de búsqueda — infraestructura documental.
 - Repo: github.com/mauriciomeyran/VANTAGE.
 - vsync_doc.py — sync bidireccional Notion → ACTIVE/ para los 6 fundacionales editables (Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log). Alias: vdoc · Flags: dry | notion | local | auto.
 Riesgo conocido — vdoc local sobre documentos con hyperlinks aplicados: push_local_to_notion() (vsync_doc.py) hace delete-all + create-all de bloques en cada corrida — cualquier anchor #block-id generado por el sistema de hyperlinks (KERNEL:DOCUMENTATION-011) queda huérfano al recrearse el bloque con ID nuevo. La variante vsync_doc_fast.py quedó deprecada en Archive/Legacy_Scripts/ (ver KERNEL:EVOLUTION §17, Linaje Histórico) — no forma parte del riesgo activo. apply_hyperlinks_notion.py evita este riesgo (PATCH puntual, preserva block-ID), pero vdoc local sigue sin guard equivalente — evitarlo sobre documentos con hyperlinks recién aplicados hasta que se decida su reemplazo formal.
+layer_1_run.py fue reemplazado por layer_1_orchestrator.py (refactor v9.22.0) como motor del pipeline Tracker — mismo alcance operativo, ahora con los cuatro modos de ejecución descritos en KERNEL:DATA-FLOW-001. layer_1_run.py queda archivado, no forma parte del riesgo activo.
 Skills Distribution — Single Source of Truth
 /skills/ en la raíz del repo es la fuente canónica de los archivos .md de VANTAGE. skills/triggers.json es el manifiesto SSOT — un JSON con estructura {trigger[], path, description, last_modified} por skill, generado y mantenido por Layer_1/scripts/update_triggers_json.py (alias vtriggers).
 update_triggers_json.py en cada corrida:
@@ -894,6 +895,13 @@ Flujo de Datos y Escritura
 Kernel → DRY RUN → APROBAR_WRITE → Notion Write.
 El componente AI consulta el Kernel para confirmar el contrato del trigger activo; produce DRY RUN (11.4); espera variante válida de APROBAR_WRITE (07.6); solo entonces escribe.
 Ningún paso puede saltarse: escribir sin DRY RUN previo, o sin APROBAR_WRITE explícito, viola el contrato aunque el contenido sea correcto.
+### 16.1 KERNEL:DATA-FLOW-001
+Contrato de Niveles de Riesgo de Escritura — Terminal
+El contrato Kernel → DRY RUN → APROBAR_WRITE → Notion Write (16) gobierna al AI Component. Los scripts de Terminal que operan sobre Notion (layer_1_orchestrator.py, vl1_sync.py y equivalentes) no pasan por un chat de Claude esperando confirmación textual — su propio contrato de riesgo es la contraparte mecánica del mismo invariante:
+- Nivel verde (sin red): cliente fake, sin token requerido. Ningún dato real entra ni sale.
+- Nivel amarillo (lectura de producción): requiere NOTION_TOKEN, consulta datos reales, pero mantiene writes=0 por diseño — el equivalente a un DRY RUN que sí ve el Tracker real.
+- Nivel rojo (escritura de producción): requiere flag explícito (--apply) más una condición externa de contexto (freeze de cutover, o intención declarada del operador) — nunca uno solo de los dos.
+Un script que escribe en rojo sin haber pasado por freeze + intención explícita viola este contrato aunque el flag esté técnicamente presente — mismo principio que 16: el paso no puede saltarse aunque el contenido sea correcto.
 Pre-validación
 Cruzar esquema contra 07 SCHEMA antes de cualquier escritura.
 ---
