@@ -20,7 +20,7 @@ from pathlib import Path
 
 # ── Rutas VANTAGE ────────────────────────────────────────────────────────────
 _SCRIPT_DIR = Path(__file__).resolve().parent
-_PROJECT = _SCRIPT_DIR.parents[2]          # VANTAGE root
+_PROJECT = _SCRIPT_DIR.parents[1]          # VANTAGE root
 ACTIVE_DIR = _PROJECT / "Documentación" / "ACTIVE"
 DIGEST_PATH = _PROJECT / "VANTAGE_digest.txt"   # ajusta si tu get_vantage_digest.sh usa otra ruta
 
