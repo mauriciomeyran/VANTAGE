@@ -127,7 +127,7 @@ def sync_status_from_outcome(flat_record: Dict[str, Any]) -> bool:
     logger.info(
         f"[F13] Outcome={outcome!r} fuera de sync con Status={current_status!r} "
         f"— corrigiendo a {target_status.value!r}: "
-        f"{flat_record.get('id', 'unknown')[:8]}"
+        f"{flat_record.get('id', 'unknown')[-8:]}"
     )
     flat_record["Status"] = target_status.value
     flat_record["_status_synced_from_outcome"] = True
@@ -432,7 +432,7 @@ def is_mutable(record: Dict[str, Any], actor: Actor) -> bool:
     """
     # 1. Protección manual - máxima prioridad
     if _was_touched_by_human(record):
-        logger.info(f"[PROTECTED] Edición manual reciente: {record.get('id', 'unknown')[:8]}")
+        logger.info(f"[PROTECTED] Edición manual reciente: {record.get('id', 'unknown')[-8:]}")
         return False
     
     # 2. Terminalidad - única fuente de verdad
@@ -440,7 +440,7 @@ def is_mutable(record: Dict[str, Any], actor: Actor) -> bool:
     if current_status in [s.value for s in PROTECTED_STATUSES]:
         # Contratado es el caso más grave - protección absoluta sin excepción
         if current_status == Status.CONTRATADO.value:
-            logger.warning(f"[PROTECTED_ABSOLUTE] Contratado: {record.get('id', 'unknown')[:8]}")
+            logger.warning(f"[PROTECTED_ABSOLUTE] Contratado: {record.get('id', 'unknown')[-8:]}")
             return False
         
         # Otros estados protegidos - solo humano puede mutar
@@ -756,7 +756,7 @@ def generate_propose_log(record: Dict[str, Any], transition: Transition, evidenc
     log_entry = (
         f"[PROPOSE] {transition.actor.value} → {transition.to_status.value if transition.to_status else 'MANUAL'}: {transition.event}\n"
         f"Evidencia: {evidence}\n"
-        f"Página: {record.get('id', 'unknown')[:8]}\n"
+        f"Página: {record.get('id', 'unknown')[-8:]}\n"
         f"Timestamp: {timestamp}"
     )
     
@@ -764,7 +764,7 @@ def generate_propose_log(record: Dict[str, Any], transition: Transition, evidenc
     existing_notes = record.get("Notas", "")
     expected_prefix = f"[PROPOSE] {transition.actor.value} → {transition.to_status.value if transition.to_status else 'MANUAL'}: {transition.event}"
     if expected_prefix in existing_notes:
-        logger.info(f"[F3] PROPOSE log ya existe, skipping: {record.get('id', 'unknown')[:8]}")
+        logger.info(f"[F3] PROPOSE log ya existe, skipping: {record.get('id', 'unknown')[-8:]}")
         return existing_notes
     
     # Escribir en Notas del registro
@@ -822,7 +822,7 @@ def execute_transition_with_propose_log(
     if transition.requires_propose_log and is_human_or_live_app:
         # Propose-log sin ejecutar
         updated_notes = generate_propose_log(record, transition, evidence)
-        logger.info(f"[PROPOSE] Transición propuesta para {record.get('id', 'unknown')[:8]}")
+        logger.info(f"[PROPOSE] Transición propuesta para {record.get('id', 'unknown')[-8:]}")
         logger.info(updated_notes)
         return {"Notas": updated_notes}
     
@@ -831,14 +831,14 @@ def execute_transition_with_propose_log(
         if not dry_run:
             return execute_transition(record, transition, evidence)
         else:
-            logger.info(f"[DRY RUN] Auto-ejecutaría transición para {record.get('id', 'unknown')[:8]}")
+            logger.info(f"[DRY RUN] Auto-ejecutaría transición para {record.get('id', 'unknown')[-8:]}")
             return {}
     
     # Ejecutar directo
     if not dry_run:
         return execute_transition(record, transition, evidence)
     else:
-        logger.info(f"[DRY RUN] Ejecutaría transición para {record.get('id', 'unknown')[:8]}")
+        logger.info(f"[DRY RUN] Ejecutaría transición para {record.get('id', 'unknown')[-8:]}")
         return {}
 
 
@@ -900,7 +900,7 @@ def apply_status_sync_writeback(notion_client: Any, flat_record: Dict[str, Any])
         page_id=page_id,
         properties=to_notion_properties({"Status": flat_record["Status"]}),
     )
-    logger.info(f"[F13b] Status sincronizado en Notion: {page_id[:8]} → {flat_record['Status']}")
+    logger.info(f"[F13b] Status sincronizado en Notion: {page_id[-8:]} → {flat_record['Status']}")
     return True
 
 

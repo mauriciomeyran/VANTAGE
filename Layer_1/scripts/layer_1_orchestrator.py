@@ -475,7 +475,7 @@ def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
     if _is_human_edit(last_edited_by_id):
         if last_edited_time > last_gate_run:
             logger.info(
-                f"[MANUAL-FIRST] Fila {record.get('id', 'unknown')[:8]} "
+                f"[MANUAL-FIRST] Fila {record.get('id', 'unknown')[-8:]} "
                 f"editada por humano después del último run → inmunidad"
             )
             return False
@@ -587,7 +587,7 @@ def build_manual_suggestion(
         "review": "manual",
         "actions": actions,
         "message": (
-            f"[SUGERENCIA] Fila {str(record.get('id', ''))[:8]} tocada por humano "
+            f"[SUGERENCIA] Fila {str(record.get('id', ''))[-8:]} tocada por humano "
             f"— revisar manualmente; pipeline no ejecuta."
         ),
     }
@@ -677,14 +677,14 @@ def guarded_pages_update(
     try:
         clean = class_b_guard(proposed, actor)
     except ValueError as exc:
-        logger.error(f"[class_b_guard] write bloqueado {page_id[:8]}: {exc}")
+        logger.error(f"[class_b_guard] write bloqueado {page_id[-8:]}: {exc}")
         return {"wrote": False, "payload": {}, "skipped_reason": f"guard:{exc}"}
 
     if not clean:
         return {"wrote": False, "payload": {}, "skipped_reason": "empty_after_guard"}
 
     if dry_run:
-        logger.info(f"[DRY] write {page_id[:8]} keys={sorted(clean.keys())}")
+        logger.info(f"[DRY] write {page_id[-8:]} keys={sorted(clean.keys())}")
         return {"wrote": False, "payload": clean, "skipped_reason": "dry_run"}
 
     client.pages_update(page_id, clean)
@@ -826,7 +826,7 @@ def run_dedup_audit(
             if not is_mutable(record, Actor.DEDUP):
                 result["protected_skipped"] += 1
                 logger.info(
-                    f"[F6] Skip protegido {rid[:8]} (survivor={survivor_id[:8]})"
+                    f"[F6] Skip protegido {rid[-8:]} (survivor={survivor_id[-8:]})"
                 )
                 continue
 
@@ -841,7 +841,7 @@ def run_dedup_audit(
                 dry_run=dry_run,
             )
             if write_result["skipped_reason"] == "no_diff":
-                logger.info(f"[F6] skip anti-rewrite {rid[:8]} (ya flagged)")
+                logger.info(f"[F6] skip anti-rewrite {rid[-8:]} (ya flagged)")
                 continue
 
             result["flags"].append({
@@ -854,12 +854,12 @@ def run_dedup_audit(
 
             if write_result["wrote"]:
                 logger.info(
-                    f"[F6] Dedup_Flag → {rid[:8]} (survivor={survivor_id[:8]})"
+                    f"[F6] Dedup_Flag → {rid[-8:]} (survivor={survivor_id[-8:]})"
                 )
             else:
                 logger.info(
-                    f"[F6 DRY] marcaría Dedup_Flag → {rid[:8]} "
-                    f"(survivor={survivor_id[:8]})"
+                    f"[F6 DRY] marcaría Dedup_Flag → {rid[-8:]} "
+                    f"(survivor={survivor_id[-8:]})"
                 )
 
     return result
@@ -932,7 +932,7 @@ def run_orchestrator(
             # Normalizar record
             record = normalize_record(item)
             snapshot.append(record)
-            record_id = record.get("id", "unknown")[:8]
+            record_id = record.get("id", "unknown")[-8:]
             
             # §2.3 / G5: Manual-first — inmune; sugerencia = revisión, jamás ejecución
             if not manual_first_protection(record, Actor.PIPELINE):
@@ -1081,7 +1081,7 @@ def run_orchestrator(
                 metrics["skips"] += 1
                 
         except Exception as e:
-            logger.error(f"Error procesando fila {record.get('id', 'unknown')[:8]}: {e}")
+            logger.error(f"Error procesando fila {record.get('id', 'unknown')[-8:]}: {e}")
             metrics["errors"] += 1
 
     # F5: Patrones (solo lectura, sobre snapshot — cero writes)
