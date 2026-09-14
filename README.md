@@ -157,6 +157,10 @@ vl1app
 
 L1 procesa el resultado consolidado del ciclo de Active Recon y lo incorpora al Tracker mediante el pipeline correspondiente.
 
+#### Trazabilidad de Archivado en Notas (§04 / §06)
+
+Al ejecutar decisiones de archivado por link muerto, misfit de perfil o NAD vencido, **VL1** escribe de forma determinista la causa en el campo **`Notas`** mediante la función `generate_archive_notes()`.
+
 ### L2 · Strategic Search
 
 L2 opera como bsqueda estratgica semanal.
@@ -332,6 +336,26 @@ tie-break
 
 El HANDOFF requiere `positioning_rationale`.
 
+#### Esquema HANDOFF y Verificación CV-B (§09)
+
+El esquema JSON del `HANDOFF` emitido por **CV-A** incluye los campos de admisión **`cv_b_eligible`** (booleano) y **`block_reason`** (array):
+
+```json
+{
+ "empresa": "",
+ "rol": "",
+ "JD_keywords_top6": ["", "", "", "", "", ""],
+ "fit_gaps": ["", ""],
+ "tono_marca": "",
+ "idioma": "",
+ "positioning_rationale": "",
+ "cv_b_eligible": true,
+ "block_reason": []
+}
+```
+
+Antes de autorizar la entrega hacia Figma Sync, la skill **`vantage-cv-b`** (v10.2.0) ejecuta una **Auto-Verificación Mecánica de 10 Gates**.
+
 ### CV-B · Construction
 
 ```text
@@ -348,7 +372,15 @@ CV-B construye el CV final a partir del HANDOFF de CV-A.
 QA [PDF]
 ```
 
-QA audita el PDF terminado.
+QA audita el PDF terminado contra un **checklist canónico de 7 ítems**:
+
+1. **Invarianza estructural**
+2. **Orden cronológico** (C01 → C05)
+3. **Cobertura JD**
+4. **Hard Blocks**
+5. **No inferencia / Canon**
+6. **Formato y completitud**
+7. **Diferenciación de Contenido (Anti-cloning)**
 
 Si QA falla:
 
@@ -388,6 +420,10 @@ Auditora manual:
 ```bash
 ./scripts/dedup_audit.sh
 ```
+
+#### Deduplicación Automática en L1 (§10)
+
+Además de la auditora manual, la auditora post-ingesta (`dedup_opportunities.py`) se ejecuta de manera **automática** al finalizar `layer_1_run.py` mediante la variable `ENABLE_DEDUP_AUDIT=true` (default), exportando métricas a `dedup_metrics.json`.
 
 Jerarqua de convergencia:
 
@@ -453,6 +489,7 @@ La cadencia organiza el trabajo del operador. No constituye una condicin adicion
 | `Kernel.md` | arquitectura, contratos e invariantes |
 | `Manual.md` | procedimientos, operacin y troubleshooting |
 | `Brief.md` | navegacin y routing documental |
+| `VANTAGE Central Hub` | espacio central de coordinacin y estado global |
 | `Master Index` | localizar documentos y estructura documental |
 | `ID Census` | resolver IDs, referencias y namespaces |
 | `Aliases.md` | interfaz Terminal y nomenclatura |
@@ -549,7 +586,15 @@ VANTAGE/
 
 ---
 
-## 15 · WHEN IN DOUBT
+## 15 · CAREER CANON (Sincronización de Datos del Perfil)
+
+* **Experiencia:** **14+ años** de trayectoria canónica.
+* **Desglose C05:** El Palacio de Hierro se divide en **Asesor de VM (2012–2014)** y **Coordinador de VM & Marketing (2014–2017)**.
+* **Stack Técnico:** Incluye **SAP Concur** y **Adobe Premiere Pro**.
+
+---
+
+## 16 · WHEN IN DOUBT
 
 Primero verificar:
 
