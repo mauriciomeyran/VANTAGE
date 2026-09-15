@@ -36,7 +36,9 @@ if "$ROOT/layer_1_pipeline.sh" "$@"; then
     notify_success "VANTAGE" "✅ Pipeline completado exitosamente"
     exit 0
 else
+    # Capturar código de error antes de notificar (notify_error lo sobrescribiría)
+    EXIT_CODE=$?
     # Notificar: Error CON SONIDO (Basso)
-    notify_error "VANTAGE" "❌ Error: Pipeline falló ($?)"
-    exit $?
+    notify_error "VANTAGE" "❌ Error: Pipeline falló ($EXIT_CODE)"
+    exit $EXIT_CODE
 fi

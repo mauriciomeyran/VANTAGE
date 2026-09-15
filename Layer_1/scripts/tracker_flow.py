@@ -385,7 +385,7 @@ def _was_edited_since_last_run(edited_time: str) -> bool:
     if not edited_time:
         return True  # G1: Fail-closed - no timestamp = assume recent
     
-    state_file = Path("state/last_successful_run.json")
+    state_file = Path(__file__).resolve().parent / "state" / "last_successful_run.json"
     if not state_file.exists():
         # Fallback: 7 days if no state file
         try:

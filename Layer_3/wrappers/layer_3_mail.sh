@@ -54,9 +54,9 @@ while true; do
         notify_success "LAYER 3" "🏁 VL3 terminó — no quedan correos pendientes"
         break
     fi
-    if echo "$out" | grep -qE "ABORT: Groq|Groq acceso denegado|Modelo Groq"; then
-        echo "🛑 VL3 detenido — error de configuración Groq"
-        notify_error "LAYER 3" "Groq error — revisa modelo/VPN/créditos"
+    if echo "$out" | grep -qE "ABORT: Gemini|Gemini no disponible"; then
+        echo "🛑 VL3 detenido — error de configuración Gemini"
+        notify_error "LAYER 3" "Gemini error — revisa modelo/VPN/créditos"
         exit 1
     fi
     sleep 5

@@ -1301,7 +1301,21 @@ def run_orchestrator(
             f"protected={metrics['dedup']['protected_skipped']}"
         )
     logger.info(f"{'='*60}")
-    
+
+    # Escribir state file tras run exitoso (no dry-run, sin errores) — el
+    # fallback de 7 días en tracker_flow._was_edited_since_last_run() solo
+    # se activa si este archivo no existe; sin este write, TODA fila tocada
+    # en los últimos 7 días queda protegida como "manual" indefinidamente.
+    if not dry_run and metrics.get("errors", 0) == 0:
+        import json
+        state_dir = Path(__file__).resolve().parent / "state"
+        state_dir.mkdir(exist_ok=True)
+        state_file = state_dir / "last_successful_run.json"
+        state_file.write_text(json.dumps({
+            "last_run_time": datetime.now().isoformat()
+        }))
+        logger.info(f"State file actualizado: {state_file}")
+
     return metrics
 
 
