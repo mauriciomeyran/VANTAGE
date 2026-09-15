@@ -1086,6 +1086,13 @@ def run_orchestrator(
         try:
             # Normalizar record
             record = normalize_record(item)
+            # P5 FIX HO-000056: snapshot inmutable ANTES de mutaciones F1.5/F3/F3.6.
+            # record se muta in-place (VM_Scope, Score, Score_Method, Prioridad) más
+            # abajo; si se usa el mismo objeto como 'current' en compute_write_diff,
+            # el diff compara el valor recién calculado contra sí mismo y descarta
+            # el campo como 'sin cambio' — record_original preserva el estado real
+            # de Notion al momento del F0 query.
+            record_original = dict(record)
             snapshot.append(record)
             record_id = record.get("id", "unknown")[-8:]
             
@@ -1135,7 +1142,7 @@ def run_orchestrator(
                 )
                 wr = guarded_pages_update(
                     client, record["id"], archive_result,
-                    actor=Actor.PIPELINE, current=record, dry_run=dry_run,
+                    actor=Actor.PIPELINE, current=record_original, dry_run=dry_run,
                 )
                 if wr["wrote"]:
                     metrics["writes"] += 1
@@ -1179,7 +1186,7 @@ def run_orchestrator(
                         )
                         wr = guarded_pages_update(
                             client, record["id"], archive_result,
-                            actor=Actor.PIPELINE, current=record, dry_run=dry_run,
+                            actor=Actor.PIPELINE, current=record_original, dry_run=dry_run,
                         )
                         if wr["wrote"]:
                             metrics["writes"] += 1
@@ -1212,16 +1219,31 @@ def run_orchestrator(
             write_payload: Dict[str, Any] = {}
             if record.get("_proposed_Fetch"):
                 write_payload["Fetch"] = record["_proposed_Fetch"]
-            for key in ("Score", "Score_Method", "VM_Scope", "Role_Class",
-                        "Source_Type ", "Prioridad", "Gate_Decision", "Next_Action"):
-                if key == "Score" and record.get("Score") is not None:
-                    write_payload["Score"] = record["Score"]
-                elif key == "Score_Method" and record.get("Score_Method"):
-                    write_payload["Score_Method"] = record["Score_Method"]
-                elif key in record and record[key] not in (None, ""):
-                    # Solo proponer si gate_result no lo sobreescribe
-                    if key not in ("Gate_Decision", "Next_Action"):
-                        write_payload[key] = record[key]
+            # Score y Score_Method (siempre calculados en F3 → siempre en payload)
+            if record.get("Score") is not None:
+                write_payload["Score"] = record["Score"]
+            if record.get("Score_Method"):
+                write_payload["Score_Method"] = record["Score_Method"]
+            # VM_Scope y Role_Class: calculados en F1.5 → explícitos, sin guarda elif
+            # que filtre por valor vacío. Siempre se assignmentan, con default si faltara.
+            write_payload["VM_Scope"] = record.get("VM_Scope") or get_vm_scope(
+                record.get("Rol", "") or ""
+            )
+            write_payload["Role_Class"] = record.get("Role_Class") or get_role_class(
+                record.get("Rol", "") or ""
+            )
+            # Source_Type: normalizado en F1.5 → siempre presente
+            source_type_val = (
+                record.get("Source_Type ")
+                or record.get("Source_Type", "")
+                or SOURCE_TYPE_VACANTE
+            )
+            write_payload["Source_Type"] = source_type_val
+            # Prioridad: calculada en F3.6 → write_payload si hay valor
+            if record.get("Prioridad"):
+                write_payload["Prioridad"] = record["Prioridad"]
+            # Gate_Decision y Next_Action: se sobreescriben por gate_result abajo
+            # (no los asignamos aquí; el bloque de gate_result los maneja)
             if gate_result.get("Gate_Decision"):
                 write_payload["Gate_Decision"] = gate_result["Gate_Decision"]
                 # P4 FIX 2026-09-14 (corregido tras dry-run-live real: 22/24
@@ -1239,7 +1261,7 @@ def run_orchestrator(
 
             wr = guarded_pages_update(
                 client, record["id"], write_payload,
-                actor=Actor.PIPELINE, current=record, dry_run=dry_run,
+                actor=Actor.PIPELINE, current=record_original, dry_run=dry_run,
             )
             if wr["wrote"]:
                 metrics["writes"] += 1

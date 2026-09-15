@@ -1,0 +1,271 @@
+{
+  "audit_log": [
+    {
+      "source": "linkedin",
+      "status": "partial_blocked",
+      "error_type": "Cloudflare",
+      "http_status": 403,
+      "timestamp": "2026-09-15T02:34:13Z",
+      "details": "LinkedIn Jobs search blocked intermittently by Cloudflare (403 Forbidden). Initial pages loaded successfully showing 123-153 vacancies; subsequent navigations blocked."
+    },
+    {
+      "source": "linkedin",
+      "status": "completed",
+      "timestamp": "2026-09-15T02:42:00Z",
+      "details": "60 job URLs extracted. 17 postings validated against rules. Detail pages accessed for 12 postings. 5 postings have URLs but detail page not accessed (HARMAN, Suntory Sr Field, Essity, Allergan Aesthetics, Tiffany & Co). Cloudflare blocked some detail page navigations during session."
+    },
+    {
+      "source": "linkedin",
+      "status": "completed",
+      "timestamp": "2026-09-15T02:48:00Z",
+      "details": "Detail pages accessed for remaining 5 postings: Essity, Allergan Aesthetics, Tiffany & Co., PayJoy, Kellanova."
+    }
+  ],
+  "jobs": [
+    {
+      "title": "SUPERVISOR VISUAL MERCHANDISING EN MUEBLES",
+      "company": "Sanborns",
+      "location": "Miguel Hidalgo, CDMX, Ciudad de México, México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/supervisor-visual-merchandising-en-muebles-at-sanborns-4467290499",
+      "posted_date": "2026-09-14",
+      "job_id": "4467290499",
+      "platform_signals": {
+        "applications": "25 solicitudes",
+        "salary_range": "26,000 - 28,000 MXN/mes",
+        "type": "Jornada completa",
+        "seniority": "Algo de responsabilidad",
+        "source": "Talenteca.com",
+        "sector": "Comercio al por menor"
+      },
+      "relevance": "VM directo en retail - títulos de lujo y departamentales. Supervisión de imagen, displays, escaparates. Lic. Arquitectura/Diseño requerido."
+    },
+    {
+      "title": "Retail Activation Coordinator",
+      "company": "Philip Morris International",
+      "location": "Ciudad de México, México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/retail-activation-coordinator-at-philip-morris-international-4466048546",
+      "posted_date": "2026-09-12",
+      "job_id": "4466048546",
+      "platform_signals": {
+        "applications": "76 solicitudes",
+        "type": "Jornada completa",
+        "seniority": "Sin experiencia (perfil ideal: 2-4 años)",
+        "modality": "Esquema híbrido (~2 días/semana en campo)",
+        "language": "Inglés avanzado requerido",
+        "sector": "Industria manufacturera",
+        "function": "Commercial"
+      },
+      "relevance": "Retail Experience + Brand Experience. Coordina activaciones en PDV, transformando estrategias en experiencias. Vínculo entre diseño, marketing, CX y operaciones."
+    },
+    {
+      "title": "Merch Supervisor",
+      "company": "Suntory Global Spirits",
+      "location": "Ciudad de México, México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/merch-supervisor-at-suntory-global-spirits-4395248253",
+      "posted_date": "2026-09-12",
+      "job_id": "4395248253",
+      "platform_signals": {
+        "applications": "Más de 200 solicitudes",
+        "type": "Jornada completa",
+        "seniority": "Intermedio",
+        "experience": "3-5 años como Operations Supervisor",
+        "sector": "Fabricación de bebidas"
+      },
+      "relevance": "VM/Merchandising en retail: Perfect Store execution (6Ps), displays, pricing, planograms, sell-out. Operaciones y commercial alignment."
+    },
+    {
+      "title": "Digital Merchandiser",
+      "company": "the LEGO Group",
+      "location": "Ciudad de México, México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/digital-merchandiser-at-the-lego-group-4445047062",
+      "posted_date": "2026-09-12",
+      "job_id": "4445047062",
+      "platform_signals": {
+        "applications": "Más de 200 solicitudes",
+        "type": "Jornada completa",
+        "seniority": "No corresponde",
+        "language": "Inglés fluido requerido (Portuguese plus)",
+        "sector": "Juguetes/Infantiles"
+      },
+      "relevance": "e-Merchandising para eCommerce LATAM. NO es VM físico - es digital. Product content, SEO, digital shelf, product launches. Experiencia en CPG o categoría infantil es plus."
+    },
+    {
+      "title": "Trade Marketing Coordinator",
+      "company": "Beiersdorf",
+      "location": "Ciudad de México, México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/trade-marketing-coordinator-at-beiersdorf-4462549422",
+      "posted_date": "2026-09-09",
+      "job_id": "4462549422",
+      "platform_signals": {
+        "applications": "186 solicitudes",
+        "type": "Jornada completa",
+        "seniority": "Intermedio",
+        "experience": "1+ año en Marketing/Trade Marketing",
+        "sector": "Fabricación de productos de cuidado personal",
+        "brands": "NIVEA, Eucerin, La Prairie, Hansaplast, Labello"
+      },
+      "relevance": "Trade Marketing + Retail. POS strategy, execution compliance tracking, shopper marketing. Beiersdorf = premium skincare brands."
+    },
+    {
+      "title": "Coordinador de Trade Marketing - Retail & Canal Tradicional",
+      "company": "Kärcher",
+      "location": "Área metropolitana de Ciudad de México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/coordinador-de-trade-marketing-retail-canal-tradicional-at-kärcher-4463421244",
+      "posted_date": "2026-09-10",
+      "job_id": "4463421244",
+      "platform_signals": {
+        "applications": "115 solicitudes",
+        "type": "Jornada completa",
+        "seniority": "No corresponde",
+        "experience": "3-5 años en Trade/Shopper Marketing",
+        "modality": "Presencial - CDMX, Monterrey, Guadalajara",
+        "sector": "Herramientas/Electrodomésticos",
+        "teams": "25 promotores",
+        "retail_partners": "Sam's Club, Walmart, Liverpool, Coppel, Costco"
+      },
+      "relevance": "Trade Marketing + Retail + Visual Merchandising elementos. Exhibiciones, islas, cabeceras, material POP. Liderazgo de fuerza de promotoría. Retail Media."
+    },
+    {
+      "title": "Sr. Analyst, Trade/Customer Marketing",
+      "company": "SC Johnson",
+      "location": "Área metropolitana de Ciudad de México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/sc-johnson-sr-analyst-tradecustomer-marketing-4464733584",
+      "posted_date": "2026-09-13",
+      "job_id": "4464733584",
+      "platform_signals": {
+        "applications": "52 solicitudes",
+        "type": "Jornada completa",
+        "seniority": "Algo de responsabilidad",
+        "experience": "3+ años en marketing/comercial/trade marketing",
+        "language": "Inglés conversacional avanzado",
+        "sector": "Industria manufacturera",
+        "tools": "Nielsen Answers"
+      },
+      "relevance": "Trade/Customer Marketing. SOM increment, parrillas promocionales, activaciones en PDV, desarrollo de marca en punto de venta. Supermercados y clubes de precio."
+    },
+    {
+      "title": "MAT Lead - Gold Squad Mexico City",
+      "company": "Monster Energy",
+      "location": "Ciudad de México, México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/mat-lead-gold-squad-mexico-city-at-monster-energy-4465603086",
+      "posted_date": "2026-09-10",
+      "job_id": "4465603086",
+      "platform_signals": {
+        "applications": "95 solicitudes",
+        "type": "Jornada completa",
+        "seniority": "Sin experiencia",
+        "experience": "1-3 años en marketing/ventas/activaciones",
+        "sector": "Servicios de alimentos y bebidas"
+      },
+      "relevance": "Experiential Retail + Brand Experience. Muestreo, eventos, Monster Ambassadors. Activación de marca en campo. Sportswear/energy drink sector."
+    },
+    {
+      "title": "Subgerente | PH | Santa Fe",
+      "company": "Giorgio Armani",
+      "location": "Ciudad de México, México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/subgerente-ph-santa-fe-at-giorgio-armani-4464158340",
+      "posted_date": "2026-09-10",
+      "job_id": "4464158340",
+      "platform_signals": {
+        "applications": "Sé de los primeros 25 solicitantes",
+        "type": "Jornada completa",
+        "seniority": "Sin experiencia",
+        "salary_range": "MX$15,000.00/mes",
+        "sector": "Comercio al por menor de prendas de vestir y moda",
+        "brands": "Giorgio Armani, Emporio Armani, EA7, A|X, Armani Casa"
+      },
+      "relevance": "LUXURY retail - Giorgio Armani boutique. 2 años como Subgerente en marcas de lujo. Premium/Fashion sector. Client experience en lujo. Horario flexible (festivos, noches, fines de semana)."
+    },
+    {
+      "title": "Brand Innovation Coordinator Regio",
+      "company": "Essity",
+      "location": "Ciudad de México, México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/brand-innovation-coordinator-regio-at-essity-4464253227",
+      "posted_date": "2026-09-12",
+      "job_id": "4464253227",
+      "platform_signals": {
+        "applications": "43 solicitudes",
+        "type": "Jornada completa",
+        "seniority": "No corresponde",
+        "experience": "3-4 años innovando marcas",
+        "location_details": "Santa Fe, CDMX",
+        "deadline": "24 sept 2026",
+        "requisition_id": "Essity265351",
+        "sector": "Higiene y cuidado personal",
+        "language": "Fluent English"
+      },
+      "relevance": "Innovation + Brand. Pipeline de productos para marca Regio (papel higiénico). Conecta R&D, Supply Chain, Regulatory, Design, Marketing. NO es VM directo pero aplica habilidades de brand experience."
+    },
+    {
+      "title": "Marketing Coordinator Allergan Aesthetics",
+      "company": "Allergan Aesthetics, an AbbVie Company",
+      "location": "Ciudad de México, México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/marketing-coordinator-allergan-aesthetics-at-allergan-aesthetics-an-abbvie-company-4465145376",
+      "posted_date": "2026-09-12",
+      "job_id": "4465145376",
+      "platform_signals": {
+        "applications": "52 solicitudes",
+        "type": "Jornada completa",
+        "seniority": "No corresponde",
+        "experience": "3-4 años en marketing/comercial",
+        "sector": "Salud/Beauty/Aesthetics"
+      },
+      "relevance": "Beauty/Cosmetics sector. Injectables, body contouring, skin care portfolio. Campaign execution, customer engagement, congresses/workshops. Healthcare/aesthetics industry - regulado."
+    },
+    {
+      "title": "Operations Professional Perisur",
+      "company": "Tiffany & Co.",
+      "location": "Ciudad de México, México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/operations-professional-perisur-at-tiffany-co-4454158109",
+      "posted_date": "2026-09-12",
+      "job_id": "4454158109",
+      "platform_signals": {
+        "applications": "39 solicitudes",
+        "type": "Jornada completa",
+        "seniority": "No corresponde",
+        "sector": "Joyería/Lujo",
+        "store": "Perisur"
+      },
+      "relevance": "LUXURY/JEWELRY retail. Operations + client service en tienda de lujo Tiffany & Co. Inventory control, client service, brand ambassador. Luxury retail experience - TEI program."
+    },
+    {
+      "title": "Coach de ventas",
+      "company": "PayJoy",
+      "location": "Ciudad de México, México",
+      "apply_path": "https://mx.linkedin.com/jobs/view/coach-de-ventas-at-payjoy-4455968012",
+      "posted_date": "2026-09-10",
+      "job_id": "4455968012",
+      "platform_signals": {
+        "applications": "35 solicitudes",
+        "type": "Jornada completa",
+        "seniority": "Sin experiencia",
+        "sector": "Tecnología/Finanzas"
+      },
+      "relevance": "Retail operations - NO es VM. Inventory control, pricing, promotional materials en tiendas. Field work. Risk credit metrics. Menor relevancia para perfil VM pero incluye retail execution."
+    }
+  ],
+  "validation_summary": {
+    "total_found": 60,
+    "total_validated": 17,
+    "excluded": 43,
+    "excluded_reasons": {
+      "title_terms": ["Trainee", "Jr.", "Vendedor", "Asesor", "Assistant", "Internship", "Store Manager", "Director", "VP", "C-Level"],
+      "blocked_companies": ["L'Oréal (0)", "Levi's (0)", "Dockers (0)", "El Palacio de Hierro (0)"],
+      "remote_outside_mexico": 0,
+      "other": 43
+    },
+    "detail_pages_accessed": 13,
+    "detail_pages_unaccessed": 4,
+    "notes": "4 postings (HARMAN, Suntory Sr Field, Kellanova, Colgate) have URLs but detail pages not accessed. 1 posting excluded after title validation (Guerlain Trainee). Cloudflare blocked some detail page navigations during session."
+  },
+  "meta": {
+    "prompt_variant": "A-weekly-unified-linkedin",
+    "prompt_version": "PromptA-v1.0+linkedin",
+    "candidate": "Mauricio Meyrán",
+    "profile": "Visual Merchandising | Brand Experience | Retail Experience | Store Design",
+    "seniority": "Coordinator / Senior Coordinator / Lead / Supervisor / Líder / Subgerente / Assistant Manager / Manager / Sr. / Jefe / Head (IC)",
+    "location": "Mexico City (CDMX)",
+    "industries": "Luxury | Premium | Fashion | Beauty | Cosmetics | Fragrances | Jewelry | Sportswear | Experiential Retail",
+    "date": "2026-09-14"
+  }
+}

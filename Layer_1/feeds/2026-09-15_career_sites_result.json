@@ -1,0 +1,55 @@
+{
+  "candidate": "Mauricio Meyrán",
+  "search_date": "2026-09-14",
+  "prompt_variant": "A-weekly-unified-careersites",
+  "prompt_version": "PromptA-v1.0+careersites",
+  "resultados": [],
+  "datos_calidad_advertencias": [
+    {
+      "tipo_auditoria": "HTTP",
+      "empresa": "Cartier, Sephora",
+      "evidence": "403 Forbidden — acceso bloqueado a career pages",
+      "fecha": "2026-09-14"
+    },
+    {
+      "tipo_auditoria": "DNS",
+      "empresa": "Tiffany & Co",
+      "evidence": "DNS_PROBE_FINISHED_NXDOMAIN — careers.tiffany.com no existe",
+      "fecha": "2026-09-14"
+    },
+    {
+      "tipo_auditoria": "Timeout",
+      "empresa": "lululemon, Adidas",
+      "evidence": "ERR_HTTP2_PROTOCOL_ERROR — sitio no responde",
+      "fecha": "2026-09-14"
+    },
+    {
+      "tipo_auditoria": "HTTP",
+      "empresa": "H&M, Zara, Liverpool, Inditex empleos",
+      "evidence": "Access Denied / página no disponible",
+      "fecha": "2026-09-14"
+    },
+    {
+      "tipo_auditoria": "Filled",
+      "empresa": "IKEA, Nike",
+      "evidence": "Sin vacantes activas en México al momento de la búsqueda",
+      "fecha": "2026-09-14"
+    },
+    {
+      "tipo_auditoria": "Timeout",
+      "empresa": "PUMA Workday, IKEA Workday",
+      "evidence": "Maintenance page / 404",
+      "fecha": "2026-09-14"
+    },
+    {
+      "tipo_auditoria": "Cloudflare",
+      "empresa": "Dior",
+      "evidence": "Page unavailable — IP bloqueada",
+      "fecha": "2026-09-14"
+    }
+  ],
+  "fuente": "Career Pages Oficiales + ATS (Workday, Greenhouse, Lever, SmartRecruiters, Taleo, Ashby)",
+  "busqueda_realizada": true,
+  "conclusion": "Ninguna oferta validada en Career Sites oficiales para Visual Merchandising en CDMX el 2026-09-14. La mayoría de sitios de marca luxury/premium tienen acceso restringido desde esta región. PUMA tiene oficina en CDMX (Santa Fe) pero sin vacantes publicadas.",
+  "siguiente_paso_recomendado": "Intentar búsqueda ATS directa (LinkedIn no permitido), revisar Google for Jobs, o esperar a nueva publicación"
+}

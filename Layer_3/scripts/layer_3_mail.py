@@ -33,11 +33,12 @@ GMAIL_APP_PASS = os.environ["GMAIL_APP_PASS"]
 GMAIL_LABEL    = os.environ.get("GMAIL_LABEL", ".Jobs")
 
 GROQ_API_KEY   = os.environ["GROQ_API_KEY"]
-GROQ_MODEL = "qwen/qwen3.8-27b"
-GEMINI_MIN_DELAY = float(os.environ.get("GEMINI_MIN_DELAY_SEC", "3"))
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b").strip()
+GROQ_FALLBACK_MODEL = os.environ.get("GROQ_FALLBACK_MODEL", "openai/gpt-oss-20b").strip()
+GEMINI_MIN_DELAY = float(os.environ.get("GEMINI_MIN_DELAY_SEC", "2.0"))
 GEMINI_MAX_RETRY = int(os.environ.get("GEMINI_MAX_RETRIES", "3"))
 GEMINI_MAX_BACKOFF = float(os.environ.get("GEMINI_MAX_BACKOFF_SEC", "15"))
-GEMINI_BODY_MAX  = int(os.environ.get("GEMINI_BODY_MAX_CHARS", "2000"))
+MAX_BODY_CHARS = int(os.environ.get("MAX_EMAIL_BODY_CHARS", "4000"))
 MAX_EMAILS_RUN = int(os.environ.get("GEMINI_MAX_EMAILS_PER_RUN", "5"))
 
 NOTION_TOKEN   = os.environ["NOTION_TOKEN"]
@@ -48,6 +49,11 @@ _last_gemini_call = 0.0
 
 class GeminiFatalError(Exception):
     """Error de Gemini que no se arregla reintentando (VPN, credenciales, modelo inválido)."""
+
+class GroqExhaustedError(Exception):
+    """Los N reintentos se agotaron (rate limit persistente o error de red).
+    Nunca debe tratarse como 'sin vacantes' — el correo debe reintentarse
+    en la siguiente corrida, no marcarse como leído/evaluado."""
 
 # Fuentes reconocidas en el TRACKER
 RAW_SOURCE_MAP = {
@@ -161,7 +167,14 @@ def _extract_body(msg):
     else:
         body = _decode_part(msg)
     body = body.replace("\ufffd", "")  # quita bytes corruptos (fix loop Gemini 400 json_validate_failed)
-    return body[:GEMINI_BODY_MAX]
+    return body[:MAX_BODY_CHARS]
+
+
+def sanitize_and_truncate_payload(body_text: str) -> str:
+    """Truncate body text to MAX_BODY_CHARS to prevent TPM spikes."""
+    if len(body_text) > MAX_BODY_CHARS:
+        return body_text[:MAX_BODY_CHARS] + "\n...[truncated for TPM optimization]"
+    return body_text
 
 
 def fetch_unread_emails(mail):
@@ -212,7 +225,7 @@ def fetch_unread_emails(mail):
 GROQ_PROMPT = """Eres un extractor de vacantes de empleo especializado en Visual Merchandising y retail.
 Del siguiente texto de correo electrónico, extrae ÚNICAMENTE vacantes relevantes para un profesional de Visual Merchandising.
 
-Roles RELEVANTES (incluir): Visual Merchandiser, VM Coordinator, VM Manager, VM Director, Brand Environment, Escaparatista, Retail Design, Store Planner, Display Coordinator, Trade Marketing Visual, y roles similares en retail/moda/lujo con componente visual explícito.
+Roles RELEVANTES (incluir): Visual Merchandiser, VM Coordinator, VM Manager, Brand Environment, Escaparatista, Retail Design, Store Planner, Display Coordinator, Trade Marketing Visual, y roles similares en retail/moda/lujo con componente visual explícito.
 Incluye también equivalentes en español: Exhibición Visual, Líder de Exhibición Visual, Coordinador Visual, Jefe de Visual, Escaparatismo, Diseño de Interiores Commercial, y cualquier rol con "Visual" o "Exhibición" en retail.
 
 Roles IRRELEVANTES (ignorar completamente — NO incluir aunque aparezcan en el mismo correo):
@@ -228,6 +241,11 @@ Roles IRRELEVANTES (ignorar completamente — NO incluir aunque aparezcan en el 
 - Supervisor operativo de sucursal, gerente de tienda sin scope VM
 - Cualquier rol cuyo título no contenga palabras como: visual, merchandising, display, brand environment, retail design, store design, escaparate, vitrina, planograma, exhibición, escaparatismo
 
+EXCLUSIÓN POR SENIORITY DEL TÍTULO (hard exclusion — rechazar sin importar si el rol es VM):
+Si el TÍTULO COMPLETO contiene cualquiera de estos términos, NO incluir la vacante:
+Director, VP, C-Level, Store Manager, Assistant, Asistente, Auxiliar, Jr., Internship, Intern, Entry Level, Pasantía, Sales Advisor, Vendedor, Asesor Comercial.
+Ejemplo: "Visual Merchandising Jr. Coordinator" → excluir (contiene "Jr."). "Sr. Visual Merchandiser" → sí incluir (no contiene ningún término excluido).
+
 MARCAS BLOQUEADAS (ignorar todas sus vacantes, sin excepción):
 - El Palacio de Hierro (cualquier variante: Palacio de Hierro, palacio, PHierro)
 - L'Oréal (todas sus divisiones: Lancôme, Giorgio Armani Beauty, YSL Beauty, Kiehl's, etc.)
@@ -238,6 +256,7 @@ Para cada vacante relevante devuelve un objeto json con estos campos exactos:
 - marca: empresa que publica TAL COMO APARECE en el texto (obligatorio)
 - url: URL COMPLETA que aparezca LITERALMENTE en el correo, copiada carácter por carácter (obligatorio)
 - holding: grupo corporativo si se menciona ("" si no se sabe)
+- ubicacion: ciudad/país TAL COMO APARECE en el correo ("" si no se menciona)
 
 DEFINICIÓN DE URL VÁLIDA:
 - Debe aparecer textualmente en el correo, copiada carácter por carácter
@@ -251,7 +270,7 @@ EJEMPLOS DE URLs INVÁLIDAS (NUNCA generar, inventar ni completar):
 
 EJEMPLO CORRECTO:
 Texto del correo: "...aplica aquí: https://www.linkedin.com/jobs/view/4414059078"
-Output: {"rol":"VM Coordinator - Zara Polanco","marca":"Zara","url":"https://www.linkedin.com/jobs/view/4414059078","holding":"Inditex"}
+Output: {"rol":"VM Coordinator - Zara Polanco","marca":"Zara","url":"https://www.linkedin.com/jobs/view/4414059078","holding":"Inditex","ubicacion":"CDMX"}
 
 REGLAS CRÍTICAS — léelas antes de responder:
 1. NUNCA inventes vacantes. Solo extrae lo que está explícitamente escrito en el correo.
@@ -263,7 +282,7 @@ REGLAS CRÍTICAS — léelas antes de responder:
 7. Ante la duda sobre si un rol es relevante → NO incluirlo. Es mejor perder una vacante marginal que contaminar el tracker.
 
 Responde ÚNICAMENTE con un objeto json válido (sin markdown):
-{"vacantes":[{"rol":"VM Coordinator - Zara Polanco","marca":"Zara","url":"https://www.linkedin.com/jobs/view/4414059078","holding":"Inditex"}]}
+{"vacantes":[{"rol":"VM Coordinator - Zara Polanco","marca":"Zara","url":"https://www.linkedin.com/jobs/view/4414059078","holding":"Inditex","ubicacion":"CDMX"}]}
 
 Si no hay vacantes con URL real: {"vacantes":[]}
 """
@@ -275,23 +294,52 @@ def _gemini_throttle():
         time.sleep(GEMINI_MIN_DELAY - elapsed)
 
 
+GEMINI_MAX_RETRY_AFTER = float(os.environ.get("GEMINI_MAX_RETRY_AFTER_SEC", "120"))
+
+
+def _log_rate_limit_headers(resp):
+    """Diagnóstico del 429 real de Groq — distingue RPM/TPM/cuota diaria.
+    Sin esto, un backoff bien afinado sigue siendo un tiro a ciegas si la
+    causa real es una cuota diaria agotada (ningún backoff dentro del script
+    la resuelve; hay que esperar al reset o revisar el dashboard de Groq)."""
+    keys = [
+        "retry-after",
+        "x-ratelimit-limit-requests", "x-ratelimit-remaining-requests", "x-ratelimit-reset-requests",
+        "x-ratelimit-limit-tokens", "x-ratelimit-remaining-tokens", "x-ratelimit-reset-tokens",
+    ]
+    found = {k: resp.headers[k] for k in keys if k in resp.headers}
+    if found:
+        detail = " · ".join(f"{k}={v}" for k, v in found.items())
+        print(f"      ↳ {detail}")
+    else:
+        print(f"      ↳ (Groq no devolvió headers x-ratelimit-* en este 429)")
+
+
 def _gemini_wait_seconds(resp, attempt):
     retry_after = resp.headers.get("Retry-After")
     if retry_after:
         try:
-            return min(max(float(retry_after), GEMINI_MIN_DELAY), GEMINI_MAX_BACKOFF)
+            # Techo de sanidad separado (120s default) — NO el mismo cap que
+            # el backoff exponencial sin header (15s). Un Retry-After real de
+            # Groq (ej. 60s por cuota de RPM/TPM agotada) es información del
+            # servidor, no una sugerencia; clampearlo al cap del backoff
+            # garantiza reintentos prematuros que vuelven a fallar.
+            return min(max(float(retry_after), GEMINI_MIN_DELAY), GEMINI_MAX_RETRY_AFTER)
         except ValueError:
             pass
-    # backoff: 8, 16, 32… capped at GEMINI_MAX_BACKOFF + jitter
+    # Sin header: backoff exponencial 8,16,32… capped at GEMINI_MAX_BACKOFF + jitter
     return min(GEMINI_MAX_BACKOFF, GEMINI_MIN_DELAY * (2 ** attempt)) + random.uniform(0, 3)
 
 
-def extract_jobs_with_gemini(email_body, retries=3):
+def extract_jobs_with_gemini(email_body, retries=3, use_fallback=False):
+    # Sanitize and truncate payload to prevent TPM spikes
+    sanitized_body = sanitize_and_truncate_payload(email_body)
+    
     valid_ascii = set(range(32, 127)) | {10, 13, 9}
-    clean_body = ''.join(ch for ch in email_body if ord(ch) in valid_ascii)[:2000]
+    clean_body = ''.join(ch for ch in sanitized_body if ord(ch) in valid_ascii)
 
     api_key = os.environ.get("GROQ_API_KEY", "").strip()
-    model = os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b").strip()
+    model = GROQ_FALLBACK_MODEL if use_fallback else GROQ_MODEL
 
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -308,8 +356,9 @@ def extract_jobs_with_gemini(email_body, retries=3):
         "response_format": {"type": "json_object"}
     }
 
+    last_was_rate_limit = False
     for attempt in range(retries):
-        time.sleep(3.5)
+        _gemini_throttle()
         try:
             resp = requests.post(
                 "https://api.groq.com/openai/v1/chat/completions",
@@ -318,10 +367,13 @@ def extract_jobs_with_gemini(email_body, retries=3):
                 timeout=30
             )
             if resp.status_code == 429:
-                print(f"  ⏳ Groq rate limit ({attempt+1}/{retries}), esperando 5s...")
-                time.sleep(5.0)
+                last_was_rate_limit = True
+                wait = _gemini_wait_seconds(resp, attempt)
+                print(f"  ⏳ Groq rate limit 429 ({attempt+1}/{retries}), esperando {wait:.1f}s...")
+                _log_rate_limit_headers(resp)
+                time.sleep(wait)
                 continue
-            
+
             resp.raise_for_status()
             content_json = resp.json()["choices"][0]["message"]["content"].strip()
             return _parse_groq_jobs(content_json)
@@ -329,9 +381,22 @@ def extract_jobs_with_gemini(email_body, retries=3):
         except requests.exceptions.RequestException as err:
             print(f"  ❌ Groq error: {err}")
             if attempt == retries - 1:
-                return []
-    return []
-    return []
+                # If primary model failed and we haven't tried fallback yet, try it
+                if not use_fallback and GROQ_FALLBACK_MODEL != GROQ_MODEL:
+                    print(f"  🔄 Primary model failed, trying fallback: {GROQ_FALLBACK_MODEL}")
+                    try:
+                        return extract_jobs_with_gemini(email_body, retries=2, use_fallback=True)
+                    except Exception as fallback_err:
+                        print(f"  ❌ Fallback model also failed: {fallback_err}")
+                raise GroqExhaustedError(f"Reintentos agotados (error de red): {err}") from err
+
+    # Si llegamos aquí, se agotaron los `retries` intentos por 429 —
+    # nunca retornar [] silenciosamente: eso se confunde con "Groq evaluó
+    # el correo y no encontró vacantes" y el correo se marca como leído
+    # sin haber sido evaluado realmente.
+    if last_was_rate_limit:
+        raise GroqExhaustedError(f"Rate limit agotado tras {retries} reintentos")
+    raise GroqExhaustedError("Reintentos agotados sin respuesta válida de Groq")
 
 
 def _parse_groq_jobs(content):
@@ -479,10 +544,11 @@ def normalize_holding(raw):
 
 def _normalize_job(job):
     return {
-        "rol":     (job.get("rol") or "").strip()[:200],
-        "marca":   (job.get("marca") or "").strip()[:200],
-        "url":     (job.get("url") or "").strip(),
-        "holding": (job.get("holding") or "").strip()[:200],
+        "rol":       (job.get("rol") or "").strip()[:200],
+        "marca":     (job.get("marca") or "").strip()[:200],
+        "url":       (job.get("url") or "").strip(),
+        "holding":   (job.get("holding") or "").strip()[:200],
+        "ubicacion": (job.get("ubicacion") or "").strip()[:200],
     }
 
 
@@ -536,7 +602,7 @@ def dedupe_jobs(jobs):
 _VM_KEYWORDS = re.compile(
     r"visual merch|merchandis|display|escaparat|vitrina|planograma|exhibici[oó]n|"
     r"brand environment|store design|retail design|store planner|"
-    r"vm coord|vm manager|vm director|visual coord|visual manager|"
+    r"vm coord|vm manager|visual coord|visual manager|"
     r"trade marketing visual|montaje.*mobiliario|mobiliario.*montaje|"
     r"exhibici[oó]n visual|escaparatismo|diseño.*interiores.*commercial|"
     r"coordinador.*visual|líder.*visual|jefe.*visual|visual.*coordinator|"
@@ -546,6 +612,38 @@ _VM_KEYWORDS = re.compile(
 
 _HARD_BLOCK_BRANDS = re.compile(
     r"palacio de hierro|palaciodehierro|l.?or.?al|loreal|levi.?s|dockers",
+    re.IGNORECASE,
+)
+
+# Hard exclusions de título — replicadas 1:1 de Prompt A / L1 (HARD EXCLUSIONS).
+# Evaluación sobre el TÍTULO COMPLETO, igual que L1 ("Title evaluation MUST use
+# the complete title string"). Rechaza sin importar si el rol matchea VM
+# keywords — Director/VP/Assistant/Jr./Intern/Sales quedan fuera aunque el
+# título contenga "Visual Merchandising".
+_TITLE_HARD_EXCLUSIONS = re.compile(
+    r"\bstore manager\b|\bdirector\b|\bvp\b|\bc-level\b|\bassistant\b|"
+    r"\basistente\b|\bauxiliar\b|\bjr\.?\b|\binternship\b|\bintern\b|"
+    r"\bentry level\b|\bpasant[ií]a\b|\bsales advisor\b|\bvendedor(a)?\b|"
+    r"\basesor(a)? comercial\b",
+    re.IGNORECASE,
+)
+
+# Location — replicado de L1 (Location: CDMX; Accepted work modes On-site/Hybrid;
+# Exclude remote roles outside Mexico). Solo rechaza cuando el correo declara
+# EXPLÍCITAMENTE una ubicación fuera de México o "remoto" sin país México —
+# nunca por ausencia de dato (la mayoría de los correos no traen ubicación en
+# el digest y L3 no debe perder cobertura por eso; el filtro estricto de
+# ubicación ya vive en L1/Score, aquí solo se descarta lo inequívocamente fuera
+# de alcance).
+_LOCATION_OUTSIDE_MX_RE = re.compile(
+    r"\bremote\b(?!.*m[eé]xico)|\bremoto\b(?!.*m[eé]xico)|"
+    r"\b(usa|united states|canada|canadá|espa[ñn]a|colombia|argentina|"
+    r"per[uú]|chile|brasil|brazil|europe|europa)\b",
+    re.IGNORECASE,
+)
+_LOCATION_MX_RE = re.compile(
+    r"cdmx|ciudad de m[eé]xico|m[eé]xico|mexico city|edo\.?\s*m[eé]x|"
+    r"estado de m[eé]xico",
     re.IGNORECASE,
 )
 
@@ -562,9 +660,36 @@ def is_vm_relevant(job: dict) -> tuple[bool, str]:
     if _HARD_BLOCK_BRANDS.search(marca):
         return False, f"HARD_BLOCK_BRAND: {marca}"
 
+    # Hard exclusion de título (replicado de L1/Prompt A) — se evalúa ANTES
+    # del match VM: un "VM Director" o "Visual Merchandising Jr. Coordinator"
+    # se rechaza aunque contenga keywords VM, igual que en L1.
+    excl_match = _TITLE_HARD_EXCLUSIONS.search(rol)
+    if excl_match:
+        return False, f"HARD_EXCLUSION_TITLE ({excl_match.group().strip()}): {rol}"
+
     if not _VM_KEYWORDS.search(rol):
         return False, f"NO_VM_KEYWORD: {rol}"
 
+    return True, ""
+
+
+def is_location_relevant(job: dict) -> tuple[bool, str]:
+    """
+    Devuelve (True, "") si la ubicación es aceptable (CDMX/México, on-site u
+    híbrido, o simplemente no se menciona en el correo).
+    Devuelve (False, motivo) SOLO cuando el correo declara explícitamente una
+    ubicación fuera de México o remoto sin México — replicado de L1
+    (Location: CDMX; Accepted work modes On-site/Hybrid; Exclude remote roles
+    outside Mexico). Nunca rechaza por ausencia de dato — eso corresponde a
+    una capa de filtrado más estricta (L1/Score), no a L3.
+    """
+    ubicacion = job.get("ubicacion", "")
+    if not ubicacion:
+        return True, ""
+    if _LOCATION_MX_RE.search(ubicacion):
+        return True, ""
+    if _LOCATION_OUTSIDE_MX_RE.search(ubicacion):
+        return False, f"LOCATION_OUTSIDE_MX: {ubicacion}"
     return True, ""
 
 
@@ -652,7 +777,7 @@ def create_notion_page(job, email_meta):
         "layer": {
             "select": {"name": "L3"}
         },
-        "Source_Type ": {
+        "Source_Type": {
             "select": {"name": "Vacante"}
         },
         "Holding": {
@@ -745,6 +870,11 @@ def main():
             _set_seen(mail, em["id"], False)
             groq_failed += 1
             continue
+        except GroqExhaustedError as e:
+            print(f"  ⏸️  {e} — correo dejado como no leído para reintentar")
+            _set_seen(mail, em["id"], False)
+            groq_failed += 1
+            continue
         except GeminiFatalError as e:
             print(f"  ❌ {e}")
             print("  ↩️  Correos dejados como no leídos")
@@ -778,6 +908,7 @@ def main():
 
         skipped_notion = 0
         skipped_vm = 0
+        skipped_location = 0
         for job in jobs:
             rol, marca, url = job["rol"], job["marca"], job["url"]
             label = f"{rol}" + (f" @ {marca}" if marca else f" · {url[:40]}")
@@ -786,6 +917,12 @@ def main():
             if not relevant:
                 print(f"  🚧 Filtrado post-Groq ({reason}): {label}")
                 skipped_vm += 1
+                continue
+
+            loc_ok, loc_reason = is_location_relevant(job)
+            if not loc_ok:
+                print(f"  🌍 Filtrado por ubicación ({loc_reason}): {label}")
+                skipped_location += 1
                 continue
 
             if already_exists(rol, marca, url):
@@ -801,6 +938,8 @@ def main():
 
         if skipped_vm:
             print(f"  🚧 {skipped_vm} filtrada(s) por no ser VM (post-Groq)")
+        if skipped_location:
+            print(f"  🌍 {skipped_location} filtrada(s) por ubicación fuera de México")
         if skipped_notion:
             print(f"  ⏭️  {skipped_notion} ya existían en Notion")
 

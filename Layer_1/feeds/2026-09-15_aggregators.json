@@ -1,0 +1,148 @@
+{
+  "prompt_variant": "A-weekly-unified-aggregators",
+  "prompt_version": "PromptA-v1.0+aggregators",
+  "generated_at": "2026-09-15T02:34:26Z",
+  "candidate": "Mauricio Meyrán",
+  "search_summary": {
+    "source": "aggregators",
+    "candidates_count": 0,
+    "rejected_count": 5,
+    "not_evaluated_count": 0,
+    "total_results_count": 5
+  },
+  "audit_log": [
+    {
+      "type": "HTTP",
+      "platform": "OCC",
+      "detail": "403 Forbidden — OCC bloquea acceso desde IP 189.217.111.56. Todos los queries de búsqueda (incluyendo 'visual merchandising', 'vm coordinator brand experience', 'coordinador exhibicion visual', 'brand experience manager luxury', 'retail experience manager ciudad de mexico') retornan HTTP 403. URL alternativas documentadas (/empleos/empresas/, /empleos/categoria/) no fueron probadas porque el mecanismo de búsqueda espera query params y retorna siempre 403.",
+      "url_attempted": "https://www.occ.com.mx/empleos?q=visual+merchandising+brand+experience+retail+experience",
+      "timestamp": "2026-09-15T02:34:26Z"
+    },
+    {
+      "type": "Cloudflare",
+      "platform": "Indeed",
+      "detail": "Cloudflare block — 'Solicitud bloqueada' + Ray ID. IP 189.217.111.56 bloqueada explícitamente. indeed-static-pages.pages.dev carga pero la búsqueda retorna WAF block page.",
+      "url_attempted": "https://mx.indeed.com/jobs?q=Visual+Merchandising+OR+Brand+Experience+OR+Retail+Experience&l=Mexico+City%2C+Mexico",
+      "timestamp": "2026-09-15T02:34:26Z"
+    },
+    {
+      "type": "HTTP",
+      "platform": "Computrabajo",
+      "detail": "403 Forbidden — Computrabajo bloquea acceso desde IP 189.217.111.56. URL de búsqueda retorna 403 Forbidden con página HTML mínima. URL alternativa (buscar ofertas) redirige a página de login/signup.",
+      "url_attempted": "https://mx.computrabajo.com/empleos?q=visual+merchandising&l=ciudad+de+m%C3%A9xico",
+      "timestamp": "2026-09-15T02:34:26Z"
+    },
+    {
+      "type": "Redirect",
+      "platform": "Bumeran",
+      "detail": "404 Not Found — 'No encontramos la página que buscas'. Todas las URL de búsqueda (empleos?q=..., empleos-en-mexico-ciudad, buscador-empleos?q=..., empleos-en-mexico/?, empleos-en-mexico-ciudad-de-mexico, empleos-en-mexico-ciudad-de-mexico?q=...) devuelven 404. Primera URL alternativa (/empleos-en-mexico-ciudad-de-mexico) redirige a LinkedIn (job view de Guerlain). Bumeran parece haber migrado su estructura o estar en mantenimiento.",
+      "url_attempted": "https://www.bumeran.com.mx/empleos?q=Visual+Merchandising+OR+Brand+Experience+OR+Retail+Experience&l=Mexico+City%2C+Mexico",
+      "timestamp": "2026-09-15T02:34:26Z"
+    }
+  ],
+  "jobs": [],
+  "rejected_jobs": [
+    {
+      "title": "Chofer Repartidor foraneo",
+      "company": "Empresa confidencial",
+      "location": "Cuautitlán Izcalli, Estado de México",
+      "apply_url": "https://www.occ.com.mx/empleos/?smax=5000",
+      "rejection_reason": "excluded_title: no_match_profile",
+      "rejection_detail": "OCC búsqueda 'visual merchandising brand experience retail experience' — no es vacante de VM (chofer). Solo aparecen resultados genéricos sin relación con el perfil."
+    },
+    {
+      "title": "Supervisor de mantenimiento industrial",
+      "company": "GUARDAS Y TRANSPORTADORES MEXICO",
+      "location": "Apodaca, Nuevo León",
+      "apply_url": "https://www.occ.com.mx/empleos/bolsa-de-trabajo-GUARDAS-Y-TRANSPORTADORES-MEXICO/",
+      "rejection_reason": "excluded_title: no_match_profile",
+      "rejection_detail": "OCC resultados — no es VM/brand experience/retail experience. Ubicación fuera de CDMX."
+    },
+    {
+      "title": "Gerente de tienda",
+      "company": "ENLACE DE NEGOCIOS EN CRECIMIENTO HUMANO S.A. DE C.V.",
+      "location": "Naucalpan de Juárez, Estado de México",
+      "apply_url": "https://www.occ.com.mx/empleos/bolsa-de-trabajo-ENLACE-DE-NEGOCIOS-EN-CRECIMIENTO-HUMANO-S-A--DE-C-V-/",
+      "rejection_reason": "excluded_title: Store Manager",
+      "rejection_detail": "OCC resultados — título 'Gerente de tienda' contiene 'Store Manager' (tienda = store). Rechazado por hard exclusion."
+    },
+    {
+      "title": "Ejecutivo de ventas Jr. (Arrendamiento automotriz)",
+      "company": "TIP México",
+      "location": "Cuautitlán Izcalli, Estado de México",
+      "apply_url": "https://www.occ.com.mx/empleos/bolsa-de-trabajo-TIP-Mexico/",
+      "rejection_reason": "excluded_title: Jr.",
+      "rejection_detail": "OCC resultados — título contiene 'Jr.' explícitamente."
+    },
+    {
+      "title": "Asesor Comercial Educativo",
+      "company": "Tecmilenio",
+      "location": "San Luis Potosí",
+      "apply_url": "https://www.occ.com.mx/empleos/bolsa-de-trabajo-Tecmilenio/",
+      "rejection_reason": "excluded_title: Asesor Comercial",
+      "rejection_detail": "OCC resultados — título contiene 'Asesor Comercial' explícitamente."
+    }
+  ],
+  "not_evaluated": {
+    "reason": "Sin evaluar — ver audit_log. Las 4 plataformas (OCC, Indeed, Computrabajo, Bumeran) están bloqueadas. OCC/Computrabajo: HTTP 403. Indeed: Cloudflare WAF block. Bumeran: 404 en todas las URL de búsqueda.",
+    "items": []
+  },
+  "search_metadata": {
+    "platforms_attempted": 4,
+    "platforms_accessible": 0,
+    "platforms_blocked": 4,
+    "platforms": {
+      "OCC": {
+        "status": "blocked",
+        "error": "HTTP 403 Forbidden",
+        "ip": "189.217.111.56"
+      },
+      "Indeed": {
+        "status": "blocked",
+        "error": "Cloudflare WAF block",
+        "ip": "189.217.111.56"
+      },
+      "Computrabajo": {
+        "status": "blocked",
+        "error": "HTTP 403 Forbidden",
+        "ip": "189.217.111.56"
+      },
+      "Bumeran": {
+        "status": "migrated/404",
+        "error": "404 Not Found — sitio posiblemente migrado",
+        "redirect_detected": "https://www.linkedin.com/jobs/view/regional-merchandising-trainee-at-guerlain-4465232165"
+      }
+    },
+    "queries_executed": [
+      "visual merchandising brand experience retail experience",
+      "visual merchandising",
+      "vm coordinator brand experience",
+      "coordinador exhibicion visual",
+      "brand experience manager luxury",
+      "retail experience manager ciudad de mexico"
+    ],
+    "urls_attempted": [
+      "https://www.occ.com.mx/empleos?q=visual+merchandising+brand+experience+retail+experience",
+      "https://www.occ.com.mx/empleos?q=visual+merchandising+brand+experience",
+      "https://www.occ.com.mx/empleos?q=vm+coordinator+brand+experience",
+      "https://www.occ.com.mx/empleos?q=coordinador+exhibicion+visual",
+      "https://www.occ.com.mx/empleos?q=brand+experience+manager+luxury",
+      "https://www.occ.com.mx/empleos?q=retail+experience+manager+ciudad+de+mexico",
+      "https://mx.indeed.com/jobs?q=Visual+Merchandising+OR+Brand+Experience+OR+Retail+Experience&l=Mexico+City%2C+Mexico",
+      "https://mx.indeed.com/empleos?q=visual+merchandising&l=ciudad+de+m%C3%A9xico",
+      "https://mx.computrabajo.com/empleos?q=visual+merchandising&l=ciudad+de+m%C3%A9xico",
+      "https://mx.computrabajo.com/empleos?q=Visual+Merchandising+OR+Brand+Experience+OR+Retail+Experience&l=Mexico+City%2C+Mexico",
+      "https://www.bumeran.com.mx/empleos?q=Visual+Merchandising+OR+Brand+Experience+OR+Retail+Experience&l=Mexico+City%2C+Mexico",
+      "https://www.bumeran.com.mx/empleos?q=visual+merchandising&l=ciudad+de+m%C3%A9xico",
+      "https://www.bumeran.com.mx/empleos?q=visual+merchandising",
+      "https://www.bumeran.com.mx/empleos/buscar?q=visual+merchandising",
+      "https://www.bumeran.com.mx/buscar?q=visual+merchandising",
+      "https://www.bumeran.com.mx/empleos?k=visual+merchandising",
+      "https://www.bumeran.com.mx/empleos-en-mexico-ciudad",
+      "https://www.bumeran.com.mx/buscador-empleos?q=visual+merchandising",
+      "https://www.bumeran.com.mx/empleos-en-mexico/?q=visual+merchandising",
+      "https://www.bumeran.com.mx/empleos-en-mexico-ciudad-de-mexico",
+      "https://www.bumeran.com.mx/empleos-en-mexico-ciudad-de-mexico?q=visual+merchandising"
+    ]
+  }
+}
