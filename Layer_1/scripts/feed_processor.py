@@ -382,6 +382,10 @@ class NotionSchema:
     def holding_prop(self) -> str | None:
         return self._pick("holding", "Holding")
 
+    @property
+    def jd_prop(self) -> str | None:
+        return self._pick("JD")
+
     def text_filter(self, prop: str, value: str) -> dict:
         ptype = self.properties.get(prop, {}).get("type", "rich_text")
         if ptype == "select":
@@ -1036,6 +1040,7 @@ def _resolve_fuente_from_source_type(rec: dict, fetch: str) -> str:
         "gemini (l2)":              "Gemini",
         "indeed":                   "Agregador",
         "computrabajo":             "Agregador",
+        "job_board":                "Agregador",
     }
     key = source_type.strip().lower()
     if key in st_map:
@@ -1092,6 +1097,18 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
     if schema.location_prop and rec.get("location"):
         props[schema.location_prop] = schema.rich_text_value(rec["location"])
 
+    # JD: grabar el texto de descripción del puesto (proveniente del JSON).
+    # Se resuelve en normalize_record_fields y puede venir de jd/jd_snippet/description/JD.
+    # Notion limita a 2000 chars — truncar con margen porque len() de Python cuenta
+    # code points Unicode, que puede diferir de lo que valida la API (char combinados,
+    # emoji ZWJ, etc.). Margen de 10 chars para evitar ValidationError.
+    if schema.jd_prop and rec.get("jd"):
+        jd_text = rec["jd"]
+        if len(jd_text) > 1990:
+            print(f"  ⚠️  JD truncado ({len(jd_text)} → 1990 chars) para: {rec.get('title','')[:50]}")
+            jd_text = jd_text[:1990]
+        props[schema.jd_prop] = schema.rich_text_value(jd_text)
+
     # Holding: alias_map ya resolvió holdings reales (Nike Inc., LVMH, …).
     # Q-3: holdings REALES se migran, jamás se vacían; placeholders → vacío.
     holding_val = (p.holding or rec.get("holding") or "").strip()
@@ -1114,8 +1131,10 @@ def build_notion_properties(p: ProcessedRecord, schema: NotionSchema) -> dict:
     if source_type_prop:
         props[source_type_prop] = schema.select_value("Vacante")
 
-    # Prioridad: sin default — vl1 backfill (KERNEL:TRIGGER-002) es responsable de llenar este campo
-    # en registros donde llega vacío. feed_processor.py deja el campo vacío/null si no viene en el JSON.
+    # Prioridad: calculada automáticamente por layer_1_orchestrator.py F3.6
+    # (infer_prioridad, via priority_logic.py) en cada corrida de --apply.
+    # feed_processor.py deja el campo vacío/null si no viene en el JSON;
+    # el orquestador lo llena después. No hacer backfill aquí.
 
     notes_parts = []
     if p.notes:

@@ -259,21 +259,6 @@ Pendiente (fuera de esta entrada):
 - vversions --sync para propagar v9.21.21 al resto de los fundacionales.
 - Nota aparte: bloque 09.12 del Kernel fue reordenado manualmente por el operador (duplicado eliminado) — fuera de este batch, sin acción adicional requerida.
 ---
-Tipo: [CODE] [DOC]
-Alcance:
-- Script nuevo: bulk_upload_skill_bodies.py (Layer_1/scripts)
-- Skill Library (Notion) — 28 bodies escritos
-- Skill: vantage-sync-skill-library — extensión para escribir body completo en altas futuras
-Contexto: Las páginas de Skill Library tenían solo metadata; el body estaba vacío. Se entregó script local (API directa, sin MCP) que descubre skills hasta 2 niveles, matchea contra la data source y escribe el SKILL.md completo como bloques Notion. Dry-run → 28/28 match. Ejecución --write → 28 bodies OK, 0 fallidos. Paralelamente se actualizó la skill de sync para que las altas futuras ya salgan con body desde el primer alta.
-Cambios:
-- bulk_upload_skill_bodies.py — creado (dry-run default, --write, --only, --force).
-- Skill Library — 28 páginas con lógica completa cargada.
-- vantage-sync-skill-library — procedimiento + reglas de oro actualizados para body writing; referencia explícita al script para carga histórica.
-IDs afectados: Ninguno.
-Write-Back Verification: Change Log re-fetched implícito; versión → v9.21.17.
-Pendiente:
-- vversions --sync para propagar v9.21.17.
-- Operador: mover las 2 filas Deprecado al archivo (ya marcadas).
 ---
 Tipo: [AUDIT] [DOC]
 Alcance:

@@ -1,5 +1,45 @@
 # V | CHANGELOG
 
+Tipo: [CODE] [FIX]
+Documento modificado: Layer_1/scripts/feed_processor.py (3 parches: jd_prop + write de JD, job_board en st_map, comentario Prioridad actualizado)
+Documentos potencialmente afectados: Ninguno — código de Layer 1, sin escritura a Kernel/Manual/SP/Canon.
+Tipo de impacto: Operativo — cierre de 3 deudas técnicas reportadas en HO-000054 (CLAUDE/MM): (1) JD nunca escrito a Notion, (2) source_type "job_board" sin mapeo, (3) comentario obsoleto sobre Prioridad.
+Acción correctiva ejecutada:
+1. Feed_processor.py — JD_write: agregado jd_prop en NotionSchema (resuelve propiedad "JD" de la DB) y write en build_notion_properties() con truncado explícito a 1990 chars (margen por discrepancia len() Python vs validación API de Notion). Resolvería 24/24 filas con JD en el reingreso.
+1. Feed_processor.py — job_board mapping: agregado "job_board": "Agregador" en st_map de _resolve_fuente_from_source_type(). Resolvería 21/24 filas que venían con Fuente crudo.
+1. Feed_processor.py — Prioridad doc drift: reemplazado comentario obsoleto (decía "vl1 backfill es responsable") por referencia correcta a layer_1_orchestrator.py F3.6 (infer_prioridad via priority_logic.py, se ejecuta en cada --apply).
+1. Reingesta global v9.21.60: 24/24 registros creados con éxito (0 fallidos), seguida de vl1 apply (2 pasadas de idempotencia: 1ra=29 escrituras + 2 archivados + 5 flagged dedup; 2da=13 escrituras + 9 skips + 2 protegidas manuales + 2 sugerencias revisión, 0 errores).
+Resultado:
+- JD poblado en las 24 filas del Tracker (truncado a 1990 en casos >2000).
+- Fuente canónica resuelta para los 21 registros job_board (antes "job_board" crudo).
+- Class B calculada: Score, Prioridad, Gate_Decision, VM_Scope, Role_Class, Next_Action, Dedup_Flag, JD_Quality — todas pobladas (2da pasada del orquestador).
+- Idempotencia verificada: 2da pasada idéntica a 1ra en resultado final, solo escrituras menores.
+IDs afectados: Ninguno (código, no alta/baja de ID canónico).
+Estado final de la validación: pytest 11/11 pasaron (feed_processor + notion). Sin DRY RUN presentado ni APROBAR_WRITE por turno adicional (operador autorizó directamente). 2026-09-14 19:40 CDMX.
+Tipo: [FIX]
+Documento modificado: Layer_1/scripts/layer_1_orchestrator.py (repo, un solo hunk — condición agregada al branch F4 de Last_Gate_Run).
+Documentos potencialmente afectados: Ninguno en Notion — corrección de código puro sobre el fix P4 ya reflejado en v9.21.59 (KERNEL:SCHEMA-001 no requiere cambio, la clasificación Class B de Last_Gate_Run ya era correcta).
+Tipo de impacto: Operativo — corrección de un bug real introducido por el propio fix P4 de v9.21.59, detectado con evidencia dura antes de tocar producción.
+Causa raíz: La implementación original de P4 ataba el write de Last_Gate_Run a if gate_result.get("Gate_Decision"): — condición que es verdadera para casi cualquier fila no protegida en cada corrida (apply_gate_decision() siempre recalcula una decisión salvo PROTECTED/TERMINAL), no una señal de que el gate haya cambiado algo. compute_write_diff() filtra Gate_Decision del payload final cuando el valor no cambió, pero Last_Gate_Run (timestamp fresco cada corrida) nunca coincide con el valor ya guardado — sobrevive el diff siempre. Confirmado con --dry-run-live contra el Tracker real (24 filas): 22/24 proponían escritura de Last_Gate_Run sin ningún cambio real de Gate_Decision — la misma escritura amplificada en cada corrida que el audit E2E 2026-09-11 documentó como problema del script legacy, reintroducida por el propio fix pensado para evitarla.
+Acción correctiva ejecutada: Condición adicional en el mismo branch — if gate_result["Gate_Decision"] != record.get("Gate_Decision"): antes de estampar Last_Gate_Run — de forma que el campo solo se toca cuando el Gate_Decision computado difiere del valor ya guardado en el record (transición real), no en cada corrida sobre cada fila no protegida.
+IDs afectados: Ninguno.
+Estado final de la validación: ast.parse OK. Verificado con --dry-run-live real (no sintético) en dos corridas comparables: antes del fix, 22/24 filas proponían Last_Gate_Run; después, 0/24 — mismo Tracker, mismo summary en el resto de métricas (24 procesadas, 2 protegidos manual, 2 sugerencias, 0 errores), sin regresión. Commit verificado en vivo contra origin/main (1db254d) — texto corregido presente carácter por carácter, sin mismatch. Sin DRY RUN de Changelog presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens, 18:27 CDMX) — version bump y esta entrada ejecutados en una sola pasada.
+Handoff de referencia: continuación de HO-000052→HO-000053 (P4), corrige la implementación de v9.21.59 antes de que el handoff HO-000053 se emitiera formalmente.
+
+---
+Tipo: [FIX] [DOC]
+Documento modificado: Layer_1/scripts/class_b_guard.py (repo, CLASS_A_FIELDS + CLASS_B_FIELDS) · Layer_1/scripts/layer_1_orchestrator.py (repo, F3.6 + F4) · V | KERNEL (§07.1 KERNEL:SCHEMA-001 — Match y JD_Quality agregados a Class B)
+Documentos potencialmente afectados: Ninguno adicional — Manual/SP/Canon no referencian estos campos directamente.
+Tipo de impacto: Normativo + Operativo — cierre de 4 de los 6 pendientes heredados de HO-000052 (verify_versions.py, P1, cerrado en esta misma sesión previo a esta entrada; P2 Prioridad, P3 Positioning_Mode/Match/JD_Quality/Last_Gate_Run).
+Acción correctiva ejecutada:
+1. P2 — layer_1_orchestrator.py (F3.6): infer_prioridad(item, ...) leía item["properties"]["Score"] sin actualizar tras el recálculo de F3 (record["Score"], no item) — Prioridad colapsaba a "2 MEDIO"/"1 BAJO" sin importar el Score real. Fix: item["properties"]["Score"] se parchea con el Score recién calculado justo antes de la llamada, sin tocar la firma de priority_logic.py (evita romper a backfill_class_a.py, que sí depende del shape crudo de item y no recalcula Score en su propia pasada). Validado con test funcional: Score=40 → "1 BAJO", Score=85 (mismo item) → "4 CRÍTICO".
+1. P3a — Positioning_Mode: agregado a CLASS_A_FIELDS en class_b_guard.py. Kernel (SCHEMA-001) ya lo clasificaba Class A correctamente — el guard estaba desalineado, bloqueaba el PATCH completo del Dashboard (dashboard_notion.py::guard_write_payload) con CLASS_B_BLOCKED en cualquier intento de setearlo.
+1. P3b — Match y JD_Quality: agregados a la lista Class B de KERNEL:SCHEMA-001 (Notion) para alinear con OWNERSHIP-002 (que ya listaba Match) y con class_b_guard.py (que ya listaba ambos en CLASS_B_FIELDS) — lapsus documental cerrado, sin cambio de código.
+1. P3c/P4 — Last_Gate_Run reabierto: huérfano desde el refactor v9.0 (layer_1_orchestrator.py solo lo leía en manual_first_protection(), nunca lo escribía — el único write vivía en layer_1_run.py, archivado). Agregado a CLASS_B_FIELDS en class_b_guard.py + write en F4 (layer_1_orchestrator.py), atado deliberadamente al mismo branch que Gate_Decision (no a cada fila procesada) para no recrear el write amplification que el audit E2E 2026-09-11 documentó en la versión legacy (que stampeaba Last_Gate_Run=now en TODA fila no-skipeada, invalidando last_edited_time como señal de edición humana).
+IDs afectados: Ninguno (extensión de listas existentes en class_b_guard.py; extensión de nodo existente KERNEL:SCHEMA-001, sin alta/baja de ID canónico — no dispara CENSUS-SYNC Regla 1).
+Estado final de la validación: class_b_guard.py y layer_1_orchestrator.py verificados con ast.parse tras cada cambio + tests funcionales aislados (guard_write_payload/class_b_guard con payloads sintéticos) confirmando que Positioning_Mode/Last_Gate_Run ya no bloquean sus respectivas vías de escritura, sin afectar el bloqueo intacto para actores no-pipeline. KERNEL:SCHEMA-001 verificado por re-fetch en vivo post-escritura, texto verbatim confirmado. Fixes aplicados sobre un clon de origin/main en sandbox — NO sobre el working tree local real del operador, que además contiene un fix de Cursor sin commitear (to_notion_properties() en pages.update(), línea ~1176) y el fix de P2 ya aplicado a mano por el operador vía edit_block. Handoff HO-000053 (siguiente entrada) entrega diffs exactos para aplicación manual sobre el working tree real, sin clonar de cero. Sin DRY RUN presentado ni aprobación por turno adicional para este Changelog, por instrucción explícita del operador (optimización de tokens, 18:01 CDMX) — version bump y esta entrada ejecutados en una sola pasada.
+Handoff de referencia: HO-000052 (recibido al inicio de sesión) · HO-000053 (emitido a continuación, para CLAUDE/MP).
+---
 Tipo: [DOC]
 Documento modificado: V | KERNEL (§09.10 KERNEL:GATE-DECISION-010, §07.1 KERNEL:SCHEMA-001) · V | MANUAL (§22.1 MANUAL:SCRIPT-GLOSSARY-L1, entrada layer_1_run.py extendida con layer_1_orchestrator.py)
 Documentos potencialmente afectados: Ninguno adicional — System Prompt/Career Canon no referencian estos tres nodos.

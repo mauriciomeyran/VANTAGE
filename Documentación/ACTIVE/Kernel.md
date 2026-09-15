@@ -430,7 +430,7 @@ AI Component escribe en CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_process
 Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Archivar · Repetida.
 Notas recibe, entre otros usos, el texto determinista de auditoría de archivado escrito por VL1 (ver KERNEL:GATE-DECISION-013) — es trazabilidad de decisión, no un campo Class B pese a ser escrito por un comando Python.
 Class B — System-Primary
-Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Next_Action · Fetch · Fuente · Dedup_Flag · Score_Method · Last_Gate_Run.
+Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente · Dedup_Flag · Score_Method · Last_Gate_Run · JD_Quality.
 VM_Scope ∈ {Alto, Bajo} — campo binario. No existe valor "Medio" en ningún punto del sistema (verificado contra Kernel y MANUAL:SCHEMA-FIELD-REF §21).
 ### 07.2 KERNEL:SCHEMA-002
 Restricción del Sistema
