@@ -199,6 +199,166 @@
       "marca": "Grupo Encanto",
       "holding": "Independiente",
       "hard_block": false
+    },
+    "ikea": {
+      "marca": "IKEA",
+      "holding": "IKEA",
+      "hard_block": false
+    },
+    "walmart": {
+      "marca": "Walmart",
+      "holding": "Walmart Inc.",
+      "hard_block": false
+    },
+    "walmart de méxico": {
+      "marca": "Walmart",
+      "holding": "Walmart Inc.",
+      "hard_block": false
+    },
+    "walmart de mexico": {
+      "marca": "Walmart",
+      "holding": "Walmart Inc.",
+      "hard_block": false
+    },
+    "walmart de méxico y centroamérica": {
+      "marca": "Walmart",
+      "holding": "Walmart Inc.",
+      "hard_block": false
+    },
+    "el puerto de liverpool": {
+      "marca": "Liverpool",
+      "holding": "El Puerto de Liverpool",
+      "hard_block": false
+    },
+    "liverpool": {
+      "marca": "Liverpool",
+      "holding": "El Puerto de Liverpool",
+      "hard_block": false
+    },
+    "tiffany & co.": {
+      "marca": "Tiffany & Co.",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "tiffany": {
+      "marca": "Tiffany & Co.",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "tendam": {
+      "marca": "Tendam",
+      "holding": "Tendam",
+      "hard_block": false
+    },
+    "beyond": {
+      "marca": "Beyond",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "adolfo domínguez": {
+      "marca": "Adolfo Domínguez",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "adolfo dominguez": {
+      "marca": "Adolfo Domínguez",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "lg electronics": {
+      "marca": "LG",
+      "holding": "LG Electronics",
+      "hard_block": false
+    },
+    "lg electronics mexico": {
+      "marca": "LG",
+      "holding": "LG Electronics",
+      "hard_block": false
+    },
+    "lg": {
+      "marca": "LG",
+      "holding": "LG Electronics",
+      "hard_block": false
+    },
+    "kärcher": {
+      "marca": "Kärcher",
+      "holding": "Alfred Kärcher",
+      "hard_block": false
+    },
+    "karcher": {
+      "marca": "Kärcher",
+      "holding": "Alfred Kärcher",
+      "hard_block": false
+    },
+    "juguetron": {
+      "marca": "Juguetrón",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "juguetrón": {
+      "marca": "Juguetrón",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "oniverse": {
+      "marca": "Oniverse",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "sarelly": {
+      "marca": "Sarelly",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "modatelas": {
+      "marca": "Modatelas",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "aplazo": {
+      "marca": "Aplazo",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "commando retail": {
+      "marca": "Commando Retail",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "gdc inmobiliaria": {
+      "marca": "GDC",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "gdc": {
+      "marca": "GDC",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "comercio excelente": {
+      "marca": "Comercio Excelente",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "viva": {
+      "marca": "Viva",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "servicios andrei moyg": {
+      "marca": "Servicios Andrei Moyg",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "grupo eurokor": {
+      "marca": "Eurokor",
+      "holding": "Independiente",
+      "hard_block": false
+    },
+    "eurokor": {
+      "marca": "Eurokor",
+      "holding": "Independiente",
+      "hard_block": false
     }
   },
   "holding_map": {

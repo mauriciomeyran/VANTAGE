@@ -1,28 +1,32 @@
 #!/usr/bin/env python3
 """
-VANTAGE Pipeline Orquestador v9.0 — Refactor completo
+VANTAGE Pipeline Orquestador v9.1 — Refactor completo + ingesta de feeds
 
 Este orquestador reemplaza layer_1_run.py v8.0/v8.1 usando tracker_flow.py
-como única fuente de verdad para decisiones de transición.
+como única fuente de verdad para decisiones de transición, y ahora también
+absorbe la capacidad de ingesta de feed_processor.py.
 
 Características:
 - CLI compatible con layer_1_run.py (--dry-run default, --apply explícito)
+- Soporte nativo de --file / --layer para ingesta de JSON de discovery
 - Un solo re-query inicial + writes con diff (no write-churn)
 - Fases lineales usando tracker_flow.py como core de decisión
 - Prioridad manual respetada (is_mutable + last_edited_time)
 - Dedup unificado con survivor canónico + guard is_mutable
 - class_b_guard generalizado a TODAS las vías de escritura
+- Flujo completo: feed JSON → pages.create (Class A) → Score/Gate/Prioridad (Class B)
 
-Serial: DEVIN-20260912-01
+Serial: DEVIN-20260912-01 → GROK-20260914-01 (ingesta integrada)
 """
 
 import os
 import sys
 import argparse
 import logging
-from datetime import datetime
+import json
+from datetime import datetime, date
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Tuple
 from dotenv import load_dotenv
 
 # Setup path for imports
@@ -44,6 +48,9 @@ from priority_logic import infer_prioridad
 from class_b_guard import (
     CLASS_A_FIELDS, CLASS_B_FIELDS, guard_write_payload, GuardResult,
 )
+
+# Reutilizar lógica de ingesta de feed_processor (Class A + pages.create)
+# Import lazy dentro de run_ingestion para evitar side-effects de Client al importar.
 
 # Actores Python autorizados a escribir Class B (cómputo del pipeline).
 # MCP/humano = exención procedural (APROBAR_WRITE); no pasan por esta vía.
@@ -865,6 +872,154 @@ def run_dedup_audit(
     return result
 
 
+def run_ingestion(
+    feed_path: str,
+    layer: int = 1,
+    dry_run: bool = True,
+) -> Dict[str, Any]:
+    """
+    Ejecuta el pipeline de ingesta (ex-feed_processor) y retorna métricas.
+
+    Reutiliza las funciones puras de feed_processor.py para:
+      - sanitize + normalize_envelope + coerce_types
+      - process_record (alias, hard-block, dedup, URL gate)
+      - write_to_notion (pages.create Class A) cuando not dry_run
+
+    Después de una ingesta exitosa el orquestador (F0+) calculará
+    Score / Prioridad / Gate_Decision / Next_Action sobre las filas nuevas.
+    """
+    # Import lazy para evitar side-effects de Client y path hacking de feed_processor
+    from feed_processor import (
+        sanitize_input,
+        normalize_envelope,
+        coerce_types,
+        process_record,
+        write_to_notion,
+        NotionSchema,
+        load_alias_map,
+        print_dryrun_summary,
+        write_dryrun_file,
+        archive_dryrun_notion,
+        ProcessedRecord,
+    )
+    from notion_client import Client as NotionClient
+
+    metrics: Dict[str, Any] = {
+        "total_records": 0,
+        "clean": 0,
+        "blocked": 0,
+        "review_needed": 0,
+        "written": 0,
+        "failed": 0,
+        "dry_run": dry_run,
+    }
+
+    path = Path(feed_path)
+    if not path.is_absolute():
+        # Resolver relativo al Layer_1 root (parent de scripts/)
+        layer1_root = script_dir.parent
+        path = layer1_root / path
+    if not path.exists():
+        logger.error(f"Archivo de feed no encontrado: {path}")
+        metrics["error"] = f"file_not_found:{path}"
+        return metrics
+
+    logger.info(f"INGESTA: Layer L{layer} · archivo={path.name}")
+
+    raw_text = path.read_text(encoding="utf-8")
+    try:
+        clean_json = sanitize_input(raw_text)
+        json_data = json.loads(clean_json)
+    except (json.JSONDecodeError, ValueError) as exc:
+        logger.error(f"JSON inválido tras sanitize_input: {exc}")
+        metrics["error"] = f"json_invalid:{exc}"
+        return metrics
+
+    records = normalize_envelope(json_data, layer)
+    records = coerce_types(records)
+    metrics["total_records"] = len(records)
+    logger.info(f"INGESTA: {len(records)} registros en envelope")
+
+    alias_data = load_alias_map()
+    notion_token = os.environ.get("NOTION_TOKEN")
+    if not notion_token and not dry_run:
+        logger.error("NOTION_TOKEN requerido para escritura de ingesta")
+        metrics["error"] = "missing_token"
+        return metrics
+
+    # Cliente real solo cuando vamos a escribir o a consultar schema/dedup
+    notion_utils = NotionClient(auth=notion_token) if notion_token else None
+    if notion_utils is None:
+        # Dry-run sin token: no podemos cargar schema ni hacer dedup real
+        logger.warning("Sin NOTION_TOKEN — dry-run de ingesta limitado (sin schema/dedup live)")
+        metrics["warning"] = "no_token_limited_dryrun"
+        # Aún así procesamos dispositions locales
+        processed = []
+        for r in records:
+            # process_record requiere client+schema; fallback mínimo
+            from feed_processor import normalize_record_fields, compute_dedup_hash
+            norm = normalize_record_fields(r)
+            processed.append(
+                ProcessedRecord(
+                    record=norm,
+                    hash_key=compute_dedup_hash(norm),
+                    disposition="CLEAN",
+                    brand=norm.get("brand_raw") or norm.get("brand") or "",
+                )
+            )
+    else:
+        schema = NotionSchema.load(notion_utils)
+        schema.warn_missing_class_a()
+        processed = [
+            process_record(r, notion_utils, schema, alias_data) for r in records
+        ]
+
+    metrics["clean"] = sum(1 for p in processed if p.disposition == "CLEAN")
+    metrics["blocked"] = sum(1 for p in processed if p.disposition == "BLOCKED")
+    metrics["review_needed"] = sum(
+        1 for p in processed if p.disposition == "REVIEW_NEEDED"
+    )
+
+    print_dryrun_summary(processed, layer)
+    dryrun_path = write_dryrun_file(processed, layer)
+    logger.info(f"DRY RUN de ingesta guardado: {dryrun_path}")
+
+    to_write = [p for p in processed if p.disposition in ("CLEAN", "REVIEW_NEEDED")]
+    metrics["candidates"] = len(to_write)
+
+    if dry_run:
+        logger.info(
+            f"INGESTA DRY-RUN: {len(to_write)} candidatos (CLEAN+REVIEW) "
+            f"— no se escribe en Notion"
+        )
+        # Archivar dry-run aunque sea modo diagnóstico
+        if notion_utils is not None:
+            try:
+                archive_dryrun_notion(notion_utils, dryrun_path, layer)
+            except Exception as exc:
+                logger.warning(f"No se pudo archivar dry-run de ingesta: {exc}")
+        return metrics
+
+    # Modo escritura
+    if notion_utils is None:
+        logger.error("No se puede escribir sin NOTION_TOKEN")
+        metrics["error"] = "missing_token"
+        return metrics
+
+    logger.info(f"INGESTA APPLY: escribiendo {len(to_write)} registros...")
+    written, failed = write_to_notion(notion_utils, processed, schema)
+    metrics["written"] = written
+    metrics["failed"] = failed
+    logger.info(f"INGESTA: escritos={written} · fallidos={failed}")
+
+    try:
+        archive_dryrun_notion(notion_utils, dryrun_path, layer)
+    except Exception as exc:
+        logger.warning(f"No se pudo archivar dry-run de ingesta: {exc}")
+
+    return metrics
+
+
 def run_orchestrator(
     client: Any,
     dry_run: bool = True,
@@ -873,7 +1028,7 @@ def run_orchestrator(
     dry_run_live: bool = False
 ) -> Dict[str, Any]:
     """
-    Ejecuta el orquestador completo.
+    Ejecuta el orquestador completo (Fases 0-6 sobre registros existentes).
     
     Args:
         client: Notion client (real o fake)
@@ -1129,15 +1284,15 @@ def run_orchestrator(
 
 
 def main():
-    """CLI entry point"""
+    """CLI entry point — v9.1 (ingesta + cálculo)"""
     parser = argparse.ArgumentParser(
-        description="VANTAGE Pipeline Orquestador v9.0"
+        description="VANTAGE Pipeline Orquestador v9.1 — cálculo + ingesta de feeds"
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
         default=True,
-        help="Modo diagnóstico con cliente fake (default)"
+        help="Modo diagnóstico (default). Con --file también simula la ingesta."
     )
     parser.add_argument(
         "--dry-run-live",
@@ -1147,12 +1302,25 @@ def main():
     parser.add_argument(
         "--apply",
         action="store_true",
-        help="Modo escritura (requiere NOTION_TOKEN)"
+        help="Modo escritura (requiere NOTION_TOKEN). Activa pages.create + pages.update."
     )
     parser.add_argument(
         "--dedup-audit",
         action="store_true",
-        help="Ejecutar dedup audit al final"
+        help="Ejecutar dedup audit al final del cálculo"
+    )
+    parser.add_argument(
+        "--file",
+        type=str,
+        default=None,
+        help="Ruta al JSON de feed. Activa modo completo: ingesta (Class A) + cálculo (Class B)."
+    )
+    parser.add_argument(
+        "--layer",
+        type=int,
+        default=1,
+        choices=[1, 2, 3],
+        help="Layer a asignar a los registros del feed (default: 1). Solo tiene efecto con --file."
     )
     
     args = parser.parse_args()
@@ -1160,13 +1328,43 @@ def main():
     # Load environment
     load_dotenv()
     
-    # Crear client (fake en dry-run, real en apply o dry-run-live)
-    if args.apply or args.dry_run_live:
+    # Determinar modo de escritura
+    if args.apply:
+        dry_run = False
+    elif args.dry_run_live:
+        dry_run = True
+    else:
+        dry_run = True  # default --dry-run
+
+    # ── Fase de INGESTA (si --file) ──────────────────────────────────────────
+    ingestion_metrics = None
+    if args.file:
+        logger.info("=" * 60)
+        logger.info("FASE INGESTA (feed → pages.create Class A)")
+        logger.info("=" * 60)
+        ingestion_metrics = run_ingestion(
+            feed_path=args.file,
+            layer=args.layer,
+            dry_run=dry_run,
+        )
+        if ingestion_metrics.get("error"):
+            logger.error(f"Ingesta abortada: {ingestion_metrics['error']}")
+            sys.exit(1)
+        logger.info(
+            f"Ingesta terminada · candidatos={ingestion_metrics.get('candidates', 0)} "
+            f"· escritos={ingestion_metrics.get('written', 0)} "
+            f"· dry_run={dry_run}"
+        )
+        # Tras una ingesta real, el Tracker ya tiene las nuevas filas.
+        # Continuamos con el cálculo normal (F0 re-query las verá).
+
+    # Crear client (fake en dry-run puro, real en apply / dry-run-live / post-ingesta)
+    need_real_client = args.apply or args.dry_run_live or (args.file and not dry_run)
+    if need_real_client:
         from notion_client import Client as NotionClient
-        import notion_client
         notion_token = os.environ.get("NOTION_TOKEN")
         if not notion_token:
-            logger.error("NOTION_TOKEN requerido en modo --apply o --dry-run-live")
+            logger.error("NOTION_TOKEN requerido en modo --apply, --dry-run-live o ingesta con escritura")
             sys.exit(1)
         # Wrap real client to match fake client interface
         class NotionClientReal:
@@ -1191,15 +1389,10 @@ def main():
     else:
         client = NotionClientFake()
     
-    # Determinar modo dry_run
-    if args.apply:
-        dry_run = False
-    elif args.dry_run_live:
-        dry_run = True  # real data pero sin escritura
-    else:
-        dry_run = True  # fake data (default --dry-run)
-    
-    # Ejecutar orquestador
+    # Ejecutar orquestador (cálculo Class B sobre el Tracker)
+    logger.info("=" * 60)
+    logger.info("FASE CÁLCULO (Score / Prioridad / Gate / Next_Action)")
+    logger.info("=" * 60)
     metrics = run_orchestrator(
         client=client,
         dry_run=dry_run,
@@ -1208,8 +1401,11 @@ def main():
         dry_run_live=args.dry_run_live
     )
     
+    if ingestion_metrics is not None:
+        metrics["ingestion"] = ingestion_metrics
+    
     # Exit code
-    if metrics["errors"] > 0:
+    if metrics.get("errors", 0) > 0:
         sys.exit(1)
     sys.exit(0)
 
