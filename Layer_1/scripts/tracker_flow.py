@@ -33,6 +33,8 @@ import logging
 import json
 from pathlib import Path
 
+from class_b_guard import CLASS_A_FIELDS, CLASS_B_FIELDS
+
 logger = logging.getLogger(__name__)
 
 
@@ -414,28 +416,83 @@ def _was_touched_by_human(record: Dict[str, Any]) -> bool:
     return _is_human_edit(last_edited_by_id) and _was_edited_since_last_run(last_edited_time)
 
 
-# ── F11/G3: Guard record-level (field-block deferred) ───────────────────────────────────
+# ── F11/G3/H9: Guard field-level (H9 cierra field-block Class-B) ──
+#
+# CLASS_A_FIELDS / CLASS_B_FIELDS: importados de class_b_guard.py — fuente
+# única de verdad, ya en uso de producción por layer_1_orchestrator.py.
+# NO redefinir aquí (ver HO-000057: una copia local divergió — CLASS_A_FIELDS
+# local era subconjunto incompleto, faltaban Contacto/JOB_ID/Files/Interview/
+# Interview_Date/Apply Date/Rej Date/Outcome/Optimizar/Postular/Archivar/
+# URL Notion — CLASS_B_FIELDS coincidía exacto en ambas fuentes).
 
-def is_mutable(record: Dict[str, Any], actor: Actor) -> bool:
+
+def is_mutable(record: Dict[str, Any], actor: Actor, field_name: Optional[str] = None) -> bool:
     """
     Predicado único de mutabilidad.
-    
-    G3: field-block Class-B deferred - implements record-level guard only.
-    Field-level blocking requires Class-B set integration (deferred to future phase).
-    
+
+    H9: field-block Class-B implementado. Sin field_name (default None), el
+    guard opera a nivel de registro — comportamiento previo (G3), preservado
+    para no romper los call sites de LIFECYCLE_MATRIX y evaluate_flow() que
+    evalúan protección de fila completa.
+
+    Con field_name explícito: la protección manual solo bloquea si el campo
+    tocado por el humano pertenece a Class B. Tocar Class A (ej. JD nuevo)
+    NO inmuniza los campos Class B — deben poder recalcularse en el mismo
+    run. Solo tocar Class B directamente activa inmunidad sobre Class B.
+    Decisión del operador, 2026-09-15.
+
+    Requiere record["last_edited_field"] (nombre del campo Notion tocado en
+    la edición humana detectada) para discriminar. Si el caller no puede
+    proveerlo, touched_field es None y el guard trata el caso como no
+    identificado — conservador: Class B no se asume recalculable sin saber
+    qué campo se tocó.
+
     Orden de evaluación:
-    1. Protección manual (last_edited_time + last_edited_by)
+    1. Protección manual (last_edited_time + last_edited_by), field-aware si
+       field_name se especifica
     2. Terminalidad (única fuente: PROTECTED_STATUSES)
     3. Elegibilidad (estado actual vs actor)
     4. Cómputo (¿puede el actor calcular este campo?)
-    
-    Retorna True si el actor puede mutar el registro, False si está protegido.
+
+    Retorna True si el actor puede mutar el registro/campo, False si está
+    protegido.
     """
     # 1. Protección manual - máxima prioridad
     if _was_touched_by_human(record):
-        logger.info(f"[PROTECTED] Edición manual reciente: {record.get('id', 'unknown')[-8:]}")
-        return False
-    
+        touched_field = record.get("last_edited_field")
+
+        if field_name is None:
+            # Sin field_name: guard de fila completa (comportamiento previo,
+            # preserva compatibilidad con call sites existentes).
+            logger.info(f"[PROTECTED] Edición manual reciente: {record.get('id', 'unknown')[-8:]}")
+            return False
+
+        if field_name in CLASS_B_FIELDS:
+            if touched_field == "_class_a_touched" or touched_field in CLASS_A_FIELDS:
+                # Se identificó con certeza que lo tocado fue Class A (vía
+                # marcador genérico de compute_last_edited_field, o nombre
+                # de campo Class A explícito) — Class B sigue recalculable.
+                logger.info(
+                    f"[RECALCULABLE] {field_name} (Class B) recalculable — "
+                    f"edición manual detectada sobre Class A ({touched_field}): "
+                    f"{record.get('id', 'unknown')[-8:]}"
+                )
+            else:
+                # touched_field es Class B, desconocido, o no identificado:
+                # conservador — inmuniza. Evita recalcular Class B a ciegas
+                # cuando no hay certeza de que lo editado fue Class A.
+                logger.info(
+                    f"[PROTECTED] {field_name} (Class B) inmune — campo tocado "
+                    f"{touched_field!r} no confirmado como Class A: "
+                    f"{record.get('id', 'unknown')[-8:]}"
+                )
+                return False
+        else:
+            # field_name es Class A (o fuera de ambos sets): guard de fila
+            # completa sigue aplicando — solo Class B obtiene la excepción.
+            logger.info(f"[PROTECTED] Edición manual reciente sobre campo Class A: {record.get('id', 'unknown')[-8:]}")
+            return False
+
     # 2. Terminalidad - única fuente de verdad
     current_status = record.get("Status")
     if current_status in [s.value for s in PROTECTED_STATUSES]:

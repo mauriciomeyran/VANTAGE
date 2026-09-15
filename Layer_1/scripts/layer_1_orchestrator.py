@@ -444,6 +444,93 @@ def apply_gate_decision(record: Dict[str, Any], score: int) -> Dict[str, Any]:
     }
 
 
+# ── H9: Snapshot Class B para field-level guard ──────────────────────────────
+# Separado de last_successful_run.json (decisión operador 2026-09-15):
+# archivos con propósito y tasa de cambio distintos no comparten storage.
+
+CLASS_B_SNAPSHOT_FILE = "last_class_b_snapshot.json"
+
+
+def load_class_b_snapshot() -> Dict[str, Dict[str, Any]]:
+    """
+    H9: Carga el snapshot de campos Class B tal como quedaron al final del
+    run anterior. Retorna {} si no existe (primer run tras el fix, o fila
+    nunca antes procesada) — caller trata ausencia como "sin baseline",
+    nunca como "sin cambios".
+    """
+    state_file = Path(__file__).resolve().parent / "state" / CLASS_B_SNAPSHOT_FILE
+    if not state_file.exists():
+        return {}
+    try:
+        with open(state_file) as f:
+            data = json.load(f)
+            return data.get("records", {})
+    except Exception as exc:
+        logger.warning(f"[H9] Snapshot Class B ilegible ({exc}) — tratado como ausente")
+        return {}
+
+
+def save_class_b_snapshot(snapshot: List[Dict[str, Any]]) -> None:
+    """
+    H9: Persiste los valores Class B finales de cada fila procesada este
+    run, para que el siguiente run pueda diferenciar "se tocó Class A" de
+    "se tocó Class B" por fila.
+    """
+    records: Dict[str, Dict[str, Any]] = {}
+    for record in snapshot:
+        page_id = record.get("id")
+        if not page_id:
+            continue
+        records[page_id] = {k: record.get(k) for k in CLASS_B_FIELDS if k in record}
+
+    state_dir = Path(__file__).resolve().parent / "state"
+    state_dir.mkdir(exist_ok=True)
+    state_file = state_dir / CLASS_B_SNAPSHOT_FILE
+    state_file.write_text(json.dumps({
+        "captured_at": datetime.now().isoformat(),
+        "records": records,
+    }))
+    logger.info(f"[H9] Snapshot Class B actualizado: {state_file} ({len(records)} filas)")
+
+
+def compute_last_edited_field(
+    record: Dict[str, Any],
+    previous_class_b: Dict[str, Dict[str, Any]],
+) -> Optional[str]:
+    """
+    H9: Determina, lo mejor que los datos disponibles permiten, si la
+    edición humana detectada tocó un campo Class A o Class B.
+
+    Estrategia (conservadora, no inventa certeza que no existe):
+    - Sin baseline previo para esta fila → None (fila nueva o snapshot no
+      existía aún; is_mutable() trata None como "no confirmado Class A",
+      protege Class B por defecto).
+    - Si algún campo Class B difiere del snapshot anterior → retorna ese
+      campo Class B (edición manual directa sobre Class B — inmuniza).
+    - Si ningún campo Class B difiere → retorna un marcador de Class A
+      genérico ("_class_a_touched"), suficiente para que is_mutable()
+      permita el recálculo (solo necesita saber que NO fue Class B).
+
+    No identifica CUÁL campo Class A cambió — el guard no lo necesita:
+    is_mutable() solo pregunta "¿touched_field es Class A?", y para eso
+    basta un marcador consistente. Devolver un nombre Class A inventado
+    sería peor que un marcador honesto.
+    """
+    page_id = record.get("id")
+    baseline = previous_class_b.get(page_id)
+
+    if baseline is None:
+        return None  # Sin baseline — conservador, no asumir Class A.
+
+    for field_name in CLASS_B_FIELDS:
+        if field_name not in baseline:
+            continue  # Campo no capturado en el snapshot anterior — skip.
+        if record.get(field_name) != baseline.get(field_name):
+            return field_name  # Class B cambió directamente → ese es el campo tocado.
+
+    return "_class_a_touched"  # Ningún Class B cambió → lo tocado fue Class A.
+
+
 def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
     """
     §2.3 / G5: Ediciones manuales recientes = máxima prioridad.
@@ -471,23 +558,58 @@ def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
     if not is_mutable(record, actor):
         return False
 
+    return True
+
+
+def manual_edit_touched_class_a_only(
+    record: Dict[str, Any],
+    actor: Actor,
+    previous_class_b: Dict[str, Dict[str, Any]],
+) -> bool:
+    """
+    H9: Evalúa si la ventana manual-first (edición humana tras Last_Gate_Run)
+    debe inmunizar la fila COMPLETA o si, dado que lo tocado fue Class A,
+    Class B sigue recalculable.
+
+    Retorna True si hay edición humana reciente pero se confirmó Class A
+    únicamente (Class B recalculable, fila NO va a la rama de sugerencia).
+    Retorna False si no hay edición humana reciente (no aplica este check),
+    o si la edición tocó Class B / no se pudo confirmar (fila SIGUE inmune
+    — mismo comportamiento que antes del fix, conservador).
+    """
     last_edited_time = record.get("last_edited_time", "")
     last_gate_run = record.get("Last_Gate_Run", "")
 
     if not last_edited_time or not last_gate_run:
-        return True  # Sin timestamp = asumir mutable
+        return False  # Sin timestamp: no hay ventana manual que evaluar aquí.
 
     last_edited_by_id = record.get("last_edited_by_id", "")
     from tracker_flow import _is_human_edit
-    if _is_human_edit(last_edited_by_id):
-        if last_edited_time > last_gate_run:
-            logger.info(
-                f"[MANUAL-FIRST] Fila {record.get('id', 'unknown')[-8:]} "
-                f"editada por humano después del último run → inmunidad"
-            )
-            return False
+    if not _is_human_edit(last_edited_by_id):
+        return False  # No es edición humana — no aplica.
 
-    return True
+    if not (last_edited_time > last_gate_run):
+        return False  # Edición humana, pero anterior al último run — no aplica.
+
+    # Hay edición humana posterior al último run: antes esto inmunizaba la
+    # fila completa (G5). H9: verificar si tocó solo Class A.
+    touched_field = compute_last_edited_field(record, previous_class_b)
+    record["last_edited_field"] = touched_field  # Consumido por is_mutable(field_name=...)
+
+    if touched_field == "_class_a_touched":
+        logger.info(
+            f"[MANUAL-FIRST-CLASS-A] Fila {record.get('id', 'unknown')[-8:]} "
+            f"editada por humano tras último run, pero solo Class A confirmado "
+            f"— Class B recalculable, fila continúa a cómputo normal."
+        )
+        return True
+
+    logger.info(
+        f"[MANUAL-FIRST] Fila {record.get('id', 'unknown')[-8:]} editada por "
+        f"humano tras último run, Class B tocado o no confirmado ({touched_field}) "
+        f"→ inmunidad de fila completa (comportamiento previo)."
+    )
+    return False
 
 
 def is_manual_first_immune(record: Dict[str, Any], actor: Actor = Actor.PIPELINE) -> bool:
@@ -1080,6 +1202,9 @@ def run_orchestrator(
 
     # Snapshot normalizado del run (fuente única para F5/F6; cero re-query)
     snapshot: List[Dict[str, Any]] = []
+
+    # H9: baseline Class B del run anterior, cargado una vez (no por fila).
+    previous_class_b_snapshot = load_class_b_snapshot()
     
     # Fases por cada fila
     for item in items:
@@ -1097,18 +1222,23 @@ def run_orchestrator(
             record_id = record.get("id", "unknown")[-8:]
             
             # §2.3 / G5: Manual-first — inmune; sugerencia = revisión, jamás ejecución
+            # H9: excepción field-aware — si la única edición humana confirmada
+            # fue sobre Class A, Class B sigue recalculable (no hace continue).
             if not manual_first_protection(record, Actor.PIPELINE):
-                metrics["manual_protected"] += 1
-                suggestion = build_manual_suggestion(record)
-                metrics["suggestions"].append(suggestion)
-                logger.info(suggestion["message"])
-                for act in suggestion["actions"]:
-                    logger.info(
-                        f"[SUGERENCIA] {record_id} would {act['kind']}: "
-                        f"{act['reason']} → {act.get('would_set')}"
-                    )
-                # G5: CERO writes — no guarded_pages_update, no archive, no gate label
-                continue
+                if manual_edit_touched_class_a_only(record, Actor.PIPELINE, previous_class_b_snapshot):
+                    pass  # Class A confirmado — cae al cómputo normal debajo.
+                else:
+                    metrics["manual_protected"] += 1
+                    suggestion = build_manual_suggestion(record)
+                    metrics["suggestions"].append(suggestion)
+                    logger.info(suggestion["message"])
+                    for act in suggestion["actions"]:
+                        logger.info(
+                            f"[SUGERENCIA] {record_id} would {act['kind']}: "
+                            f"{act['reason']} → {act.get('would_set')}"
+                        )
+                    # G5: CERO writes — no guarded_pages_update, no archive, no gate label
+                    continue
             
             # F1.5: Clasificación VM_Scope/Role_Class/Source_Type (paridad layer_1_run)
             source_type = record.get("Source_Type ", "") or record.get("Source_Type", "") or ""
@@ -1315,6 +1445,9 @@ def run_orchestrator(
             "last_run_time": datetime.now().isoformat()
         }))
         logger.info(f"State file actualizado: {state_file}")
+
+        # H9: snapshot Class B para el field-level guard del siguiente run.
+        save_class_b_snapshot(snapshot)
 
     return metrics
 
