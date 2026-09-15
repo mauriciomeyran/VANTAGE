@@ -1069,10 +1069,12 @@ def run_orchestrator(
                         write_payload[key] = record[key]
             if gate_result.get("Gate_Decision"):
                 write_payload["Gate_Decision"] = gate_result["Gate_Decision"]
-                # P4 FIX 2026-09-14 (Last_Gate_Run huérfano desde refactor v9.0):
-                # atado a este branch, no a cada fila — evita write amplification
-                # (ver audit E2E 2026-09-11).
-                write_payload["Last_Gate_Run"] = datetime.now().isoformat()
+                # P4 FIX 2026-09-14 (corregido tras dry-run-live real: 22/24
+                # filas proponían Last_Gate_Run sin cambio real de gate —
+                # "if gate_result.get(...)" no basta, hay que comparar contra
+                # el valor ya guardado):
+                if gate_result["Gate_Decision"] != record.get("Gate_Decision"):
+                    write_payload["Last_Gate_Run"] = datetime.now().isoformat()
             if gate_result.get("Next_Action"):
                 write_payload["Next_Action"] = gate_result["Next_Action"]
             # No escribir decision/reason internos
