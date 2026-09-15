@@ -36,7 +36,7 @@ from tracker_flow import (
     PROTECTED_STATUSES, DELETED_VALUE_MAPPINGS, NORMALIZATION_TABLE,
     normalize_field_value, normalize_flat_record, SOURCE_TYPE_PROP_ALIASES,
     sync_status_from_outcome, apply_status_sync_writeback, run_outcome_status_sync,
-    choose_survivor, get_layer_rank, diff_records,
+    choose_survivor, get_layer_rank, diff_records, to_notion_properties,
     SOURCE_TYPE_VACANTE, SOURCE_TYPE_BYPASS,
 )
 from gate_logic import gate_logic
@@ -1036,6 +1036,11 @@ def run_orchestrator(
             # F3.6: Prioridad (via priority_logic.py, NO tocar bug día/mes)
             try:
                 from priority_logic import infer_prioridad
+                # P2 FIX 2026-09-14: item["properties"]["Score"] queda stale tras F3
+                # (línea ~1010 actualiza record, no item). infer_prioridad lee de item —
+                # se parchea aquí para evitar tocar la firma compartida con
+                # backfill_class_a.py (que sí depende del shape crudo de item).
+                item.setdefault("properties", {})["Score"] = {"number": score}
                 prioridad = infer_prioridad(item, datetime.now())
                 # infer_prioridad may return (value, reason) tuple
                 if isinstance(prioridad, tuple):
@@ -1064,6 +1069,10 @@ def run_orchestrator(
                         write_payload[key] = record[key]
             if gate_result.get("Gate_Decision"):
                 write_payload["Gate_Decision"] = gate_result["Gate_Decision"]
+                # P4 FIX 2026-09-14 (Last_Gate_Run huérfano desde refactor v9.0):
+                # atado a este branch, no a cada fila — evita write amplification
+                # (ver audit E2E 2026-09-11).
+                write_payload["Last_Gate_Run"] = datetime.now().isoformat()
             if gate_result.get("Next_Action"):
                 write_payload["Next_Action"] = gate_result["Next_Action"]
             # No escribir decision/reason internos
@@ -1170,7 +1179,10 @@ def main():
             
             def pages_update(self, page_id: str, properties: Dict[str, Any]) -> Dict[str, Any]:
                 self.writes.append(("pages_update", page_id, properties))
-                return self.client.pages.update(page_id=page_id, properties=properties)
+                return self.client.pages.update(
+                    page_id=page_id,
+                    properties=to_notion_properties(properties),
+                )
         
         real_client = NotionClient(auth=notion_token)
         client = NotionClientReal(real_client)

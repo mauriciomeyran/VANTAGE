@@ -1905,6 +1905,30 @@ def test_g4_next_action_legacy_and_canonical_in_enum():
     assert len(values) == len(set(values))
 
 
+def test_to_notion_properties_wraps_gate_and_normalizes_expirada():
+    """Write path: planos → select/number; EXPIRADA interno → EXPIRED canónico."""
+    from tracker_flow import to_notion_properties, GateDecision, NextAction
+    shaped = to_notion_properties({
+        "Gate_Decision": GateDecision.CREATE.value,
+        "Next_Action": NextAction.OPTIMIZAR.value,
+        "Score": 70,
+        "Fetch": "Accesible",
+    })
+    assert shaped["Gate_Decision"] == {"select": {"name": "CREATE"}}
+    assert shaped["Next_Action"] == {"select": {"name": "Optimizar"}}
+    assert shaped["Score"] == {"number": 70}
+    assert shaped["Fetch"] == {"select": {"name": "Accesible"}}
+
+    expired = to_notion_properties({"Gate_Decision": "EXPIRADA"})
+    assert expired["Gate_Decision"] == {"select": {"name": "EXPIRED"}}
+
+    already = {"Gate_Decision": {"select": {"name": "BLOCKED"}}}
+    assert to_notion_properties(already) == already
+
+    empty = to_notion_properties({"Gate_Decision": None, "Next_Action": ""})
+    assert empty == {}
+
+
 
 # ── G5: manual-first — fixtures humano-tocadas inmunes; sugerencia ≠ ejecución ─
 

@@ -34,7 +34,7 @@ from dataclasses import dataclass, field
 # batch — no hay sincronización automática Notion → este archivo.
 
 CLASS_A_FIELDS: frozenset[str] = frozenset({
-    "Rol", "Marca",
+    "Rol", "Marca", "Positioning_Mode",
     "Source_Type ", "Source_Type",  # Q-1: dual-key hasta confirmar rename G8
                                      # (schema vivo hoy = "Source_Type " con
                                      # espacio; tracker_flow.SOURCE_TYPE_PROP_ALIASES
@@ -50,7 +50,7 @@ CLASS_A_FIELDS: frozenset[str] = frozenset({
 CLASS_B_FIELDS: frozenset[str] = frozenset({
     "Score", "Gate_Decision", "VM_Scope", "Role_Class", "Match",
     "Next_Action", "Fetch", "Fuente", "Dedup_Flag", "Score_Method",
-    "JD_Quality",
+    "JD_Quality", "Last_Gate_Run",
 })
 
 

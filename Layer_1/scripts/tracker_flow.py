@@ -956,19 +956,117 @@ def run_outcome_status_sync(notion_client: Any, database_id: str) -> Dict[str, i
     return {"checked": checked, "synced": synced, "skipped": skipped}
 
 
+_NOTION_API_SHAPE_KEYS = frozenset({
+    "select", "status", "number", "rich_text", "title", "url",
+    "checkbox", "date", "multi_select", "files", "email",
+    "phone_number", "relation", "people",
+})
+
+_SELECT_PROPS = frozenset({
+    "Status", "Next_Action", "Gate_Decision", "Fetch", "Dedup_Flag",
+    "VM_Scope", "Role_Class", "Prioridad", "layer", "Fuente",
+    "Score_Method", "JD_Quality", "Match", "Outcome",
+    "Source_Type", "Source_Type ",
+})
+
+_NUMBER_PROPS = frozenset({"Score"})
+
+_RICH_TEXT_PROPS = frozenset({
+    "Notas", "Holding", "JD", "Contacto", "hash", "JOB_ID",
+})
+
+_URL_PROPS = frozenset({"URL", "URL Notion"})
+
+_CHECKBOX_PROPS = frozenset({"Archivar", "Optimizar", "Postular", "Interview"})
+
+_DATE_PROPS = frozenset({
+    "NAD", "Apply Date", "Rej Date", "Interview_Date", "Last_Gate_Run",
+})
+
+_TITLE_PROPS = frozenset({"Rol"})
+
+
+def _plain_scalar(value: Any) -> Any:
+    if value is None:
+        return None
+    if isinstance(value, Enum):
+        return value.value
+    return value
+
+
+def _already_notion_shaped(value: Any) -> bool:
+    return isinstance(value, dict) and bool(_NOTION_API_SHAPE_KEYS & value.keys())
+
+
+def _select_payload(name: Any) -> Optional[Dict[str, Any]]:
+    if name is None:
+        return None
+    s = str(name).strip()
+    if not s or s.lower() in {"none", "null", "n/a"}:
+        return None
+    return {"select": {"name": s}}
+
+
 def to_notion_properties(value_dict: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Convierte valores planos a shapes API Notion.
+    Convierte valores planos (o enums) a shapes API Notion.
+
+    Idempotente: si el valor ya viene como shape API (`{"select": ...}`),
+    se pasa tal cual. Omite None/vacío en selects para no mandar `name=""`.
+    Normaliza Gate_Decision/Next_Action/Status via NORMALIZATION_TABLE
+    (p.ej. EXPIRADA → EXPIRED) antes de escribir.
     """
-    notion_props = {}
-    for key, value in value_dict.items():
-        if key == "Status":
-            notion_props["Status"] = {"select": {"name": value}}
-        elif key == "Next_Action":
-            notion_props["Next_Action"] = {"select": {"name": value}}
-        elif key == "Notas":
-            notion_props["Notas"] = {"rich_text": [{"text": {"content": str(value)[:2000]}}]}
-        # Agregar más campos según schema
+    notion_props: Dict[str, Any] = {}
+    for key, value in (value_dict or {}).items():
+        if not key or key.startswith("_"):
+            continue
+        if _already_notion_shaped(value):
+            notion_props[key] = value
+            continue
+
+        value = _plain_scalar(value)
+        table_key = "Source_Type" if key.startswith("Source_Type") else key
+        if table_key in NORMALIZATION_TABLE and isinstance(value, str) and value:
+            value = normalize_field_value(table_key, value)
+
+        if key in _SELECT_PROPS:
+            shaped = _select_payload(value)
+            if shaped is not None:
+                notion_props[key] = shaped
+        elif key in _NUMBER_PROPS:
+            if value is None or value == "":
+                continue
+            notion_props[key] = {"number": value}
+        elif key in _RICH_TEXT_PROPS:
+            if value is None:
+                continue
+            text = str(value)
+            notion_props[key] = {
+                "rich_text": (
+                    [{"text": {"content": text[:2000]}}] if text else []
+                )
+            }
+        elif key in _URL_PROPS:
+            notion_props[key] = {"url": str(value) if value else None}
+        elif key in _CHECKBOX_PROPS:
+            notion_props[key] = {"checkbox": bool(value)}
+        elif key in _DATE_PROPS:
+            if not value:
+                notion_props[key] = {"date": None}
+            else:
+                raw = str(value)
+                start = raw[:10] if len(raw) >= 10 else raw
+                notion_props[key] = {"date": {"start": start}}
+        elif key in _TITLE_PROPS:
+            if value is None:
+                continue
+            notion_props[key] = {
+                "title": [{"text": {"content": str(value)[:2000]}}]
+            }
+        else:
+            logger.warning(
+                f"[to_notion_properties] clave sin mapeo omitida: {key!r}"
+            )
     return notion_props
 
 

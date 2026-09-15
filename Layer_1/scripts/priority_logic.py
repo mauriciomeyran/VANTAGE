@@ -126,7 +126,7 @@ def infer_prioridad(item: dict, today: date) -> tuple[str, str]:
                     if year < 100:
                         year += 2000
                     deadline_date = date(year, month, day)
-                    days_until = (deadline_date - today).days
+                    days_until = ((getattr(deadline_date, "date", lambda: deadline_date)() - getattr(today, "date", lambda: today)())).days
                     if days_until <= 5:
                         deadline_near = True
                         break
@@ -143,7 +143,7 @@ def infer_prioridad(item: dict, today: date) -> tuple[str, str]:
         if created_time:
             try:
                 created_date = date.fromisoformat(created_time.replace("Z", "+00:00").split("T")[0])
-                days_old = (today - created_date).days
+                days_old = ((getattr(today, "date", lambda: today)() - getattr(created_date, "date", lambda: created_date)())).days
             except (ValueError, AttributeError):
                 urgencia = "MEDIO"
                 urgencia_reason = "fecha_invalida"
