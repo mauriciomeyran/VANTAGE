@@ -196,7 +196,7 @@ def register_routes(app):
                     event_sequence, correlation_id, operator_id,
                     payload, proposed_patch, block_reason, last_pipeline_run_id,
                     created_at, updated_at
-                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
                 ''',
                 (
                     instance_id, notion_page_id, 'BLOCKED', 1,

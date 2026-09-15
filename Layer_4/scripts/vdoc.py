@@ -94,9 +94,12 @@ def main():
 
     forced = direction in ("notion", "local")
 
-    # Confirmación obligatoria para dirección forzada (notion/local explícitos)
-    # EXCEPCIÓN TEMPORAL: dirección local no requiere confirmación (fix de link)
-    if forced and direction != "local":
+    # R-02 fix: la excepción temporal dejaba que 'vdoc local' se saltara la
+    # confirmación que su propio docstring (l.11: "FORZADO — pide
+    # confirmación") promete — justo la dirección que borra bloques en
+    # Notion sin comparar fecha de modificación. Confirmación obligatoria
+    # para ambas direcciones forzadas, sin excepción.
+    if forced:
         preview_args = vsync_args + ["--dry-run"]
         run(preview_args, "vsync_doc (preview — dirección forzada)")
         print("\n⚠️  Esta operación sobreescribe sin comparar fecha de modificación.")

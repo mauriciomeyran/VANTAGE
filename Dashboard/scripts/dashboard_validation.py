@@ -54,11 +54,17 @@ def run_python_validation(current_payload: dict, patch: dict):
     role_class = get_role_class(rol)
     fuente     = merged.get('fuente', '') or 'Career Page Oficial'
 
+    # R-04 fix: score se calculaba pero nunca se pasaba — con score=None,
+    # gate() nunca devuelve CREATE para source_type=Vacante (siempre
+    # REVIEW_NEEDED), sin importar qué tan bueno fuera el fit.
     gate_decision = gate(
         fetch_status,
         vm_scope,
         role_class,
         source_type,
+        score=score,
+        rol=rol,
+        marca=marca,
     )
 
     block_reason = None

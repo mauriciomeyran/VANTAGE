@@ -1,0 +1,278 @@
+diff --git a/Layer_1/scripts/apply_clean_patch.py b/Archive/Legacy_Scripts/one_offs/apply_clean_patch.py
+similarity index 100%
+rename from Layer_1/scripts/apply_clean_patch.py
+rename to Archive/Legacy_Scripts/one_offs/apply_clean_patch.py
+diff --git a/Layer_1/scripts/apply_flexible_patch.py b/Archive/Legacy_Scripts/one_offs/apply_flexible_patch.py
+similarity index 100%
+rename from Layer_1/scripts/apply_flexible_patch.py
+rename to Archive/Legacy_Scripts/one_offs/apply_flexible_patch.py
+diff --git a/Layer_1/scripts/fix_indentation.py b/Archive/Legacy_Scripts/one_offs/fix_indentation.py
+similarity index 100%
+rename from Layer_1/scripts/fix_indentation.py
+rename to Archive/Legacy_Scripts/one_offs/fix_indentation.py
+diff --git a/Layer_1/scripts/fix_scope.py b/Archive/Legacy_Scripts/one_offs/fix_scope.py
+similarity index 100%
+rename from Layer_1/scripts/fix_scope.py
+rename to Archive/Legacy_Scripts/one_offs/fix_scope.py
+diff --git a/Layer_1/scripts/fix_unhashable.py b/Archive/Legacy_Scripts/one_offs/fix_unhashable.py
+similarity index 100%
+rename from Layer_1/scripts/fix_unhashable.py
+rename to Archive/Legacy_Scripts/one_offs/fix_unhashable.py
+diff --git a/Layer_1/scripts/patch_script.py b/Archive/Legacy_Scripts/one_offs/patch_script.py
+similarity index 100%
+rename from Layer_1/scripts/patch_script.py
+rename to Archive/Legacy_Scripts/one_offs/patch_script.py
+diff --git a/Dashboard/scripts/dashboard_config.py b/Dashboard/scripts/dashboard_config.py
+index de37e94..aba6f52 100755
+--- a/Dashboard/scripts/dashboard_config.py
++++ b/Dashboard/scripts/dashboard_config.py
+@@ -11,6 +11,9 @@ DATABASE_ID = os.environ['NOTION_DB_OPPORTUNITIES']
+ 
+ DB_PATH = os.path.join(ROOT_DIR, 'dashboard_instances.db')
+ 
+-HOST = '0.0.0.0'
+-PORT = 8000
++# R-04 fix: 0.0.0.0 exponía el Dashboard (sin auth ni CORS) a toda la red
++# local. Default seguro = solo localhost; override explícito vía env si algún
++# día se necesita exponerlo (con auth añadida aparte).
++HOST = os.environ.get('DASHBOARD_HOST', '127.0.0.1')
++PORT = int(os.environ.get('DASHBOARD_PORT', '8000'))
+ DEBUG = False
+diff --git a/Dashboard/scripts/dashboard_notion.py b/Dashboard/scripts/dashboard_notion.py
+index ae85322..cb2cfdb 100644
+--- a/Dashboard/scripts/dashboard_notion.py
++++ b/Dashboard/scripts/dashboard_notion.py
+@@ -1,14 +1,18 @@
++# R-04 fix: faltaban estos dos imports — el resto del archivo usa os.environ,
++# os.path.* y sys.path directamente (l.21-32, 156-157) y producía NameError.
++import os
++import sys
++
+ from notion_client import Client
+ 
+ from dashboard_config import NOTION_TOKEN
+ from dashboard_config import DATABASE_ID
+ 
+ # G6: txt vive en tracker_flow (layer_1_run archivado)
+-import sys as _sys
+ from pathlib import Path as _P
+ _L1 = _P(__file__).resolve().parents[2] / "Layer_1" / "scripts"
+-if str(_L1) not in _sys.path:
+-    _sys.path.insert(0, str(_L1))
++if str(_L1) not in sys.path:
++    sys.path.insert(0, str(_L1))
+ from tracker_flow import txt
+ 
+ 
+diff --git a/Dashboard/scripts/dashboard_routes.py b/Dashboard/scripts/dashboard_routes.py
+index 65986a9..77543cf 100755
+--- a/Dashboard/scripts/dashboard_routes.py
++++ b/Dashboard/scripts/dashboard_routes.py
+@@ -196,7 +196,7 @@ def register_routes(app):
+                     event_sequence, correlation_id, operator_id,
+                     payload, proposed_patch, block_reason, last_pipeline_run_id,
+                     created_at, updated_at
+-                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
++                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+                 ''',
+                 (
+                     instance_id, notion_page_id, 'BLOCKED', 1,
+diff --git a/Dashboard/scripts/dashboard_validation.py b/Dashboard/scripts/dashboard_validation.py
+index 31c803e..aff1647 100755
+--- a/Dashboard/scripts/dashboard_validation.py
++++ b/Dashboard/scripts/dashboard_validation.py
+@@ -54,11 +54,17 @@ def run_python_validation(current_payload: dict, patch: dict):
+     role_class = get_role_class(rol)
+     fuente     = merged.get('fuente', '') or 'Career Page Oficial'
+ 
++    # R-04 fix: score se calculaba pero nunca se pasaba — con score=None,
++    # gate() nunca devuelve CREATE para source_type=Vacante (siempre
++    # REVIEW_NEEDED), sin importar qué tan bueno fuera el fit.
+     gate_decision = gate(
+         fetch_status,
+         vm_scope,
+         role_class,
+         source_type,
++        score=score,
++        rol=rol,
++        marca=marca,
+     )
+ 
+     block_reason = None
+diff --git a/Layer_1/scripts/dedup_opportunities.py b/Layer_1/scripts/dedup_opportunities.py
+index 6dcf04b..7003111 100755
+--- a/Layer_1/scripts/dedup_opportunities.py
++++ b/Layer_1/scripts/dedup_opportunities.py
+@@ -1,11 +1,20 @@
+ import os
+ import json
++import sys as _sys
++from pathlib import Path as _Path
+ from dotenv import load_dotenv
+ from notion_utils import Client
+ from difflib import SequenceMatcher
+ from collections import defaultdict
+ from datetime import datetime
+ 
++# R-05 fix: delegar terminalidad a la única fuente de verdad (tracker_flow),
++# en vez de la lista manual de 2 estados que tenía este script.
++_L1_SCRIPTS_DIR = _Path(__file__).resolve().parent
++if str(_L1_SCRIPTS_DIR) not in _sys.path:
++    _sys.path.insert(0, str(_L1_SCRIPTS_DIR))
++from tracker_flow import PROTECTED_STATUSES  # noqa: E402
++
+ # Diccionario global para métricas de filtros anti-falso-positivo
+ filter_metrics = {}
+ 
+@@ -59,22 +68,23 @@ def similarity(a, b):
+ 
+ def is_terminal_state(entry):
+     """
+-    Protección de estados terminales - respeta gate_logic.py
+-    
++    Protección de estados terminales - única fuente de verdad: tracker_flow.PROTECTED_STATUSES
++    (R-05 fix: antes solo cubría 2 de los 9 estados protegidos).
++
+     Args:
+         entry: dict con al menos "Status" y "Next_Action"
+-    
++
+     Returns:
+         bool - True si el registro NO debe ser modificado
+     """
+     status = entry.get("Status") or ""
+-    if status in ["Postulado", "Rechazado"]:
++    if status in [s.value for s in PROTECTED_STATUSES]:
+         return True
+-    
++
+     current_action = entry.get("Next_Action") or ""
+     if current_action in ["Archivar", "Expirada"]:
+         return True
+-    
++
+     return False
+ 
+ 
+@@ -168,9 +178,17 @@ if __name__ == "__main__":
+     parser.add_argument("--window-days", type=int, default=60,
+                        help="Ventana de días para búsqueda de duplicados (default: 60)")
+     parser.add_argument("--dry-run", action="store_true",
+-                       help="Simula ejecución sin escribir Dedup_Flag")
+-    
++                       help="[COMPATIBILIDAD] Simula ejecución sin escribir Dedup_Flag. "
++                            "Ya no es necesario: es el comportamiento por defecto.")
++    parser.add_argument("--apply", action="store_true",
++                       help="R-05 fix: requerido explícitamente para escribir Dedup_Flag en Notion. "
++                            "Sin este flag, el script siempre corre en modo simulación.")
++
+     args = parser.parse_args()
++
++    # R-05 fix: invertir el default. Antes --dry-run era opt-in y el script
++    # escribía por defecto; ahora se requiere --apply explícito para escribir.
++    args.dry_run = not args.apply
+     
+     # Verificar flag --clear para limpiar Dedup_Flag específico
+     if args.clear:
+@@ -194,6 +212,11 @@ if __name__ == "__main__":
+     if args.dry_run:
+         print("\n" + "="*60)
+         print("DRY RUN MODE — No se escribirán cambios a Notion")
++        print("Pasa --apply para escribir Dedup_Flag de verdad.")
++        print("="*60 + "\n")
++    else:
++        print("\n" + "="*60)
++        print("⚠️  MODO ESCRITURA (--apply) — se escribirá Dedup_Flag en Notion")
+         print("="*60 + "\n")
+     
+     load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
+@@ -259,6 +282,11 @@ if __name__ == "__main__":
+         "archived_count": len(archived_results)
+     }
+ 
++    # R-05 fix: el Archive Tracker se sigue leyendo para detectar duplicados
++    # cross-referenciados, pero nunca se le escribe Dedup_Flag — es un
++    # tracker de solo-lectura para efectos de este script.
++    archived_ids = {item["id"] for item in archived_results}
++
+     jobs = []
+     for item in all_results:
+         props = item["properties"]
+@@ -273,6 +301,7 @@ if __name__ == "__main__":
+             "Next_Action": get_plain_text(props.get("Next_Action")),
+             "created_time": item.get("created_time", ""),
+             "properties": props,  # Guardar props para escritura
++            "is_archived": item["id"] in archived_ids,
+         })
+ 
+     print("\n🔎 Buscando duplicados (Empresa + Rol similar)...")
+@@ -317,7 +346,10 @@ if __name__ == "__main__":
+                     "Next_Action": job["Next_Action"],
+                     "Gate_Decision": job["Gate_Decision"],
+                 }
+-                if not is_terminal_state(entry):
++                if job["is_archived"]:
++                    terminal_state_omitted += 1
++                    print(f"  ⛔ [{job['id'][:8]}] OMITIDO (Archive Tracker — solo lectura): {job['Marca']} | {job['Rol']}")
++                elif not is_terminal_state(entry):
+                     eligible_jobs.append(job)
+                 else:
+                     terminal_state_omitted += 1
+diff --git a/Layer_4/scripts/vdoc.py b/Layer_4/scripts/vdoc.py
+index b6df9ea..ae9b015 100644
+--- a/Layer_4/scripts/vdoc.py
++++ b/Layer_4/scripts/vdoc.py
+@@ -94,9 +94,12 @@ def main():
+ 
+     forced = direction in ("notion", "local")
+ 
+-    # Confirmación obligatoria para dirección forzada (notion/local explícitos)
+-    # EXCEPCIÓN TEMPORAL: dirección local no requiere confirmación (fix de link)
+-    if forced and direction != "local":
++    # R-02 fix: la excepción temporal dejaba que 'vdoc local' se saltara la
++    # confirmación que su propio docstring (l.11: "FORZADO — pide
++    # confirmación") promete — justo la dirección que borra bloques en
++    # Notion sin comparar fecha de modificación. Confirmación obligatoria
++    # para ambas direcciones forzadas, sin excepción.
++    if forced:
+         preview_args = vsync_args + ["--dry-run"]
+         run(preview_args, "vsync_doc (preview — dirección forzada)")
+         print("\n⚠️  Esta operación sobreescribe sin comparar fecha de modificación.")
+diff --git a/Layer_4/scripts/vsync_doc.py b/Layer_4/scripts/vsync_doc.py
+index fd0b882..373a705 100644
+--- a/Layer_4/scripts/vsync_doc.py
++++ b/Layer_4/scripts/vsync_doc.py
+@@ -519,13 +519,28 @@ def push_local_to_notion(pid, path):
+                                              local_block[block_type].get("rich_text", [])):
+                         patches_applied += 1
+             else:
+-                # Tipos no coinciden: recrear (DELETE + CREATE)
++                # R-02 fix: Tipos no coinciden → recrear, pero CREATE antes que
++                # DELETE. Antes esto borraba el bloque existente y solo
++                # incrementaba un contador (blocks_created += 1) sin ninguna
++                # llamada real a la API que creara el reemplazo — el
++                # contenido se perdía. Ahora: crear primero (en la posición
++                # correcta con `after`), y solo borrar el viejo si la
++                # creación fue exitosa. Si falla la creación, se preserva el
++                # bloque original antes que perder contenido.
+                 try:
+-                    notion.blocks.delete(existing_block["id"])
+-                    blocks_deleted += 1
++                    created = notion.blocks.children.append(
++                        block_id=pid,
++                        children=[local_block],
++                        after=existing_block["id"],
++                    )
++                    blocks_created += 1
++                    try:
++                        notion.blocks.delete(existing_block["id"])
++                        blocks_deleted += 1
++                    except Exception as e:
++                        print(f"       ⚠️ reemplazo creado pero no se pudo borrar el bloque viejo {existing_block['id'][:8]}: {e}")
+                 except Exception as e:
+-                    print(f"       ⚠️ no se pudo borrar bloque {existing_block['id'][:8]}: {e}")
+-                blocks_created += 1
++                    print(f"       ⚠️ no se pudo crear el reemplazo para el bloque {existing_block['id'][:8]} — se conserva el original sin cambios: {e}")
+                 
+         elif idx < len(local_blocks):
+             # Solo existe local: crear nuevo

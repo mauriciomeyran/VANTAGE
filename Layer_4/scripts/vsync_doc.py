@@ -519,13 +519,28 @@ def push_local_to_notion(pid, path):
                                              local_block[block_type].get("rich_text", [])):
                         patches_applied += 1
             else:
-                # Tipos no coinciden: recrear (DELETE + CREATE)
+                # R-02 fix: Tipos no coinciden → recrear, pero CREATE antes que
+                # DELETE. Antes esto borraba el bloque existente y solo
+                # incrementaba un contador (blocks_created += 1) sin ninguna
+                # llamada real a la API que creara el reemplazo — el
+                # contenido se perdía. Ahora: crear primero (en la posición
+                # correcta con `after`), y solo borrar el viejo si la
+                # creación fue exitosa. Si falla la creación, se preserva el
+                # bloque original antes que perder contenido.
                 try:
-                    notion.blocks.delete(existing_block["id"])
-                    blocks_deleted += 1
+                    created = notion.blocks.children.append(
+                        block_id=pid,
+                        children=[local_block],
+                        after=existing_block["id"],
+                    )
+                    blocks_created += 1
+                    try:
+                        notion.blocks.delete(existing_block["id"])
+                        blocks_deleted += 1
+                    except Exception as e:
+                        print(f"       ⚠️ reemplazo creado pero no se pudo borrar el bloque viejo {existing_block['id'][:8]}: {e}")
                 except Exception as e:
-                    print(f"       ⚠️ no se pudo borrar bloque {existing_block['id'][:8]}: {e}")
-                blocks_created += 1
+                    print(f"       ⚠️ no se pudo crear el reemplazo para el bloque {existing_block['id'][:8]} — se conserva el original sin cambios: {e}")
                 
         elif idx < len(local_blocks):
             # Solo existe local: crear nuevo

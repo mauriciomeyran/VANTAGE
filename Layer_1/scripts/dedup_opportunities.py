@@ -1,10 +1,19 @@
 import os
 import json
+import sys as _sys
+from pathlib import Path as _Path
 from dotenv import load_dotenv
 from notion_utils import Client
 from difflib import SequenceMatcher
 from collections import defaultdict
 from datetime import datetime
+
+# R-05 fix: delegar terminalidad a la única fuente de verdad (tracker_flow),
+# en vez de la lista manual de 2 estados que tenía este script.
+_L1_SCRIPTS_DIR = _Path(__file__).resolve().parent
+if str(_L1_SCRIPTS_DIR) not in _sys.path:
+    _sys.path.insert(0, str(_L1_SCRIPTS_DIR))
+from tracker_flow import PROTECTED_STATUSES  # noqa: E402
 
 # Diccionario global para métricas de filtros anti-falso-positivo
 filter_metrics = {}
@@ -59,22 +68,23 @@ def similarity(a, b):
 
 def is_terminal_state(entry):
     """
-    Protección de estados terminales - respeta gate_logic.py
-    
+    Protección de estados terminales - única fuente de verdad: tracker_flow.PROTECTED_STATUSES
+    (R-05 fix: antes solo cubría 2 de los 9 estados protegidos).
+
     Args:
         entry: dict con al menos "Status" y "Next_Action"
-    
+
     Returns:
         bool - True si el registro NO debe ser modificado
     """
     status = entry.get("Status") or ""
-    if status in ["Postulado", "Rechazado"]:
+    if status in [s.value for s in PROTECTED_STATUSES]:
         return True
-    
+
     current_action = entry.get("Next_Action") or ""
     if current_action in ["Archivar", "Expirada"]:
         return True
-    
+
     return False
 
 
@@ -168,9 +178,17 @@ if __name__ == "__main__":
     parser.add_argument("--window-days", type=int, default=60,
                        help="Ventana de días para búsqueda de duplicados (default: 60)")
     parser.add_argument("--dry-run", action="store_true",
-                       help="Simula ejecución sin escribir Dedup_Flag")
-    
+                       help="[COMPATIBILIDAD] Simula ejecución sin escribir Dedup_Flag. "
+                            "Ya no es necesario: es el comportamiento por defecto.")
+    parser.add_argument("--apply", action="store_true",
+                       help="R-05 fix: requerido explícitamente para escribir Dedup_Flag en Notion. "
+                            "Sin este flag, el script siempre corre en modo simulación.")
+
     args = parser.parse_args()
+
+    # R-05 fix: invertir el default. Antes --dry-run era opt-in y el script
+    # escribía por defecto; ahora se requiere --apply explícito para escribir.
+    args.dry_run = not args.apply
     
     # Verificar flag --clear para limpiar Dedup_Flag específico
     if args.clear:
@@ -194,6 +212,11 @@ if __name__ == "__main__":
     if args.dry_run:
         print("\n" + "="*60)
         print("DRY RUN MODE — No se escribirán cambios a Notion")
+        print("Pasa --apply para escribir Dedup_Flag de verdad.")
+        print("="*60 + "\n")
+    else:
+        print("\n" + "="*60)
+        print("⚠️  MODO ESCRITURA (--apply) — se escribirá Dedup_Flag en Notion")
         print("="*60 + "\n")
     
     load_dotenv(dotenv_path=os.path.abspath(".env"), override=True)
@@ -259,6 +282,11 @@ if __name__ == "__main__":
         "archived_count": len(archived_results)
     }
 
+    # R-05 fix: el Archive Tracker se sigue leyendo para detectar duplicados
+    # cross-referenciados, pero nunca se le escribe Dedup_Flag — es un
+    # tracker de solo-lectura para efectos de este script.
+    archived_ids = {item["id"] for item in archived_results}
+
     jobs = []
     for item in all_results:
         props = item["properties"]
@@ -273,6 +301,7 @@ if __name__ == "__main__":
             "Next_Action": get_plain_text(props.get("Next_Action")),
             "created_time": item.get("created_time", ""),
             "properties": props,  # Guardar props para escritura
+            "is_archived": item["id"] in archived_ids,
         })
 
     print("\n🔎 Buscando duplicados (Empresa + Rol similar)...")
@@ -317,7 +346,10 @@ if __name__ == "__main__":
                     "Next_Action": job["Next_Action"],
                     "Gate_Decision": job["Gate_Decision"],
                 }
-                if not is_terminal_state(entry):
+                if job["is_archived"]:
+                    terminal_state_omitted += 1
+                    print(f"  ⛔ [{job['id'][:8]}] OMITIDO (Archive Tracker — solo lectura): {job['Marca']} | {job['Rol']}")
+                elif not is_terminal_state(entry):
                     eligible_jobs.append(job)
                 else:
                     terminal_state_omitted += 1
