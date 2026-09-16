@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
@@ -124,7 +124,7 @@ def test_cli_dry_run(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.chdir(tmp_path)
     code = main(["--wrapper", "Prompt_Career_Sites", "--dry-run", "--today", "2026-08-18"])
     assert code == 0
-    out = ROOT / "vantage_scout" / "output" / "vantage_scout_Prompt_Career_Sites_20260818.json"
+    out = ROOT / "output" / "vantage_scout_Prompt_Career_Sites_20260818.json"
     assert out.is_file()
     data = json.loads(out.read_text(encoding="utf-8"))
     assert data["prompt_version"] == "PromptA-v1.0+careersites"

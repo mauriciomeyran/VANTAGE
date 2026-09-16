@@ -541,13 +541,7 @@ def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
     G5: cuando retorna False, el orquestador emite sugerencia de revisión
     (build_manual_suggestion) y JAMÁS ejecuta la mutación.
     """
-    # Q-11 (reubicado desde apply_gate_decision -- is_mutable ya bloqueaba el
-    # loop de run_orchestrator ANTES de llegar ahí, dejando el fix original
-    # como código muerto inalcanzable). SCHEMA-008 exige que Rechazado
-    # produzca Gate_Decision=REJECTED + Next_Action=Post-Mortem al menos una
-    # vez. Excepción de una sola pasada: solo Actor.PIPELINE, solo mientras
-    # el label aún no está escrito. La 2a pasada ya trae Gate_Decision=
-    # REJECTED y is_mutable retoma control normal (bloquea de nuevo).
+    # Q-11 / SCHEMA-008: excepción de una sola pasada para Rechazado.
     if (
         actor == Actor.PIPELINE
         and record.get("Status", "") == Status.RECHAZADO.value
@@ -555,11 +549,27 @@ def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
     ):
         return True
 
+    # G5: manual-first se evalúa explícitamente contra Last_Gate_Run.
+    # No sustituir esta ventana por last_successful_run.json:
+    # son contratos distintos.
+    last_edited_time = record.get("last_edited_time", "")
+    last_gate_run = record.get("Last_Gate_Run", "")
+    last_edited_by_id = record.get("last_edited_by_id", "")
+
+    if last_edited_time and last_gate_run:
+        from tracker_flow import _is_human_edit
+
+        if (
+            _is_human_edit(last_edited_by_id)
+            and last_edited_time > last_gate_run
+        ):
+            return False
+
+    # Fuera de la ventana manual-first, aplicar el guard general.
     if not is_mutable(record, actor):
         return False
 
     return True
-
 
 def manual_edit_touched_class_a_only(
     record: Dict[str, Any],

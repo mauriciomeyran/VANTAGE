@@ -8,7 +8,7 @@ from typing import Any
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
@@ -27,6 +27,7 @@ def test_supported_set() -> None:
         "ollama",
         "openrouter",
         "openai_compatible",
+        "groq",
     }
 
 
@@ -36,31 +37,37 @@ def test_unknown_provider() -> None:
 
 
 @pytest.mark.parametrize(
-    ("provider", "fragment"),
+    ("provider", "fragment", "field"),
     [
-        ("openai", "OPENAI_API_KEY"),
-        ("gemini", "GEMINI_API_KEY"),
-        ("anthropic", "ANTHROPIC_API_KEY"),
-        # ("openrouter", "OPENROUTER_API_KEY"),  # Skip: env may have key
-        ("openai_compatible", "LLM_BASE_URL"),
+        ("openai", "OPENAI_API_KEY", "openai_api_key"),
+        ("gemini", "GEMINI_API_KEY", "gemini_api_key"),
+        ("anthropic", "ANTHROPIC_API_KEY", "anthropic_api_key"),
+        ("openai_compatible", "LLM_BASE_URL", "llm_base_url"),
     ],
 )
-def test_missing_credentials(provider: str, fragment: str) -> None:
+def test_missing_credentials(
+    provider: str,
+    fragment: str,
+    field: str,
+) -> None:
+    settings = Settings(llm_provider=provider)
+    setattr(settings, field, "")
     with pytest.raises(RuntimeError, match=fragment):
-        build_llm(Settings(llm_provider=provider))
+        build_llm(settings)
 
 
-def test_openrouter_uses_openai_compatible_base(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_openrouter_factory(monkeypatch: pytest.MonkeyPatch) -> None:
     captured: dict[str, Any] = {}
 
-    def fake_chat_openai(**kwargs: Any) -> str:
-        captured.update(kwargs)
-        return "llm"
+    class FakeChatOpenRouter:
+        def __init__(self, **kwargs: Any) -> None:
+            captured.update(kwargs)
 
     monkeypatch.setattr(
-        "src.browser_agent._chat_openai",
-        fake_chat_openai,
+        "browser_use.llm.openrouter.chat.ChatOpenRouter",
+        FakeChatOpenRouter,
     )
+
     llm = build_llm(
         Settings(
             llm_provider="openrouter",
@@ -68,7 +75,8 @@ def test_openrouter_uses_openai_compatible_base(monkeypatch: pytest.MonkeyPatch)
             openrouter_model="qwen/qwen-2.5-vl-7b-instruct",
         )
     )
-    assert llm == "llm"
+
+    assert isinstance(llm, FakeChatOpenRouter)
     assert captured["base_url"] == "https://openrouter.ai/api/v1"
     assert captured["api_key"] == "sk-or-test"
     assert captured["model"] == "qwen/qwen-2.5-vl-7b-instruct"
@@ -77,14 +85,15 @@ def test_openrouter_uses_openai_compatible_base(monkeypatch: pytest.MonkeyPatch)
 def test_openai_compatible_generic(monkeypatch: pytest.MonkeyPatch) -> None:
     captured: dict[str, Any] = {}
 
-    def fake_chat_openai(**kwargs: Any) -> str:
-        captured.update(kwargs)
-        return "compat"
+    class FakeChatOpenAI:
+        def __init__(self, **kwargs: Any) -> None:
+            captured.update(kwargs)
 
     monkeypatch.setattr(
-        "src.browser_agent._chat_openai",
-        fake_chat_openai,
+        "browser_use.llm.openai.chat.ChatOpenAI",
+        FakeChatOpenAI,
     )
+
     llm = build_llm(
         Settings(
             llm_provider="openai_compatible",
@@ -93,7 +102,8 @@ def test_openai_compatible_generic(monkeypatch: pytest.MonkeyPatch) -> None:
             llm_model="local-vl",
         )
     )
-    assert llm == "compat"
+
+    assert isinstance(llm, FakeChatOpenAI)
     assert captured["base_url"] == "http://127.0.0.1:1234/v1"
     assert captured["model"] == "local-vl"
 
@@ -102,15 +112,15 @@ def test_cost_control_fallback_openai(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test that cheap models are used when cost limit is low."""
     captured: dict[str, Any] = {}
 
-    def fake_chat_openai(**kwargs: Any) -> str:
-        captured.update(kwargs)
-        return "llm"
+    class FakeChatOpenAI:
+        def __init__(self, **kwargs: Any) -> None:
+            captured.update(kwargs)
 
     monkeypatch.setattr(
-        "src.browser_agent._chat_openai",
-        fake_chat_openai,
+        "browser_use.llm.openai.chat.ChatOpenAI",
+        FakeChatOpenAI,
     )
-    # With low cost limit, should fallback to gpt-4o-mini
+
     llm = build_llm(
         Settings(
             llm_provider="openai",
@@ -120,11 +130,11 @@ def test_cost_control_fallback_openai(monkeypatch: pytest.MonkeyPatch) -> None:
             use_cheap_fallback=True,
         )
     )
-    assert llm == "llm"
+    assert isinstance(llm, FakeChatOpenAI)
     assert captured["model"] == "gpt-4o-mini"
 
-    # With high cost limit, should use original model
     captured.clear()
+
     llm = build_llm(
         Settings(
             llm_provider="openai",
@@ -134,7 +144,7 @@ def test_cost_control_fallback_openai(monkeypatch: pytest.MonkeyPatch) -> None:
             use_cheap_fallback=True,
         )
     )
-    assert llm == "llm"
+    assert isinstance(llm, FakeChatOpenAI)
     assert captured["model"] == "gpt-4o"
 
 
@@ -142,15 +152,15 @@ def test_cost_control_fallback_gemini(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test that cheap models are used when cost limit is low for Gemini."""
     captured: dict[str, Any] = {}
 
-    def fake_gemini_class(**kwargs: Any) -> str:
-        captured.update(kwargs)
-        return "gemini_llm"
+    class FakeChatGoogle:
+        def __init__(self, **kwargs: Any) -> None:
+            captured.update(kwargs)
 
     monkeypatch.setattr(
-        "langchain_google_genai.ChatGoogleGenerativeAI",
-        fake_gemini_class,
+        "browser_use.llm.google.ChatGoogle",
+        FakeChatGoogle,
     )
-    # With low cost limit, should fallback to gemini-1.5-flash
+
     llm = build_llm(
         Settings(
             llm_provider="gemini",
@@ -160,5 +170,6 @@ def test_cost_control_fallback_gemini(monkeypatch: pytest.MonkeyPatch) -> None:
             use_cheap_fallback=True,
         )
     )
-    assert llm == "gemini_llm"
+
+    assert isinstance(llm, FakeChatGoogle)
     assert captured["model"] == "gemini-1.5-flash"

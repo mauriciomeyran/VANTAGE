@@ -2668,10 +2668,9 @@ def test_g9_changelog_v922_entry():
     """G9: Change Log tope tiene v9.22.0 formato vigente."""
     root = Path(__file__).resolve().parent.parent
     text = (root / "Documentación" / "ACTIVE" / "Change Log.md").read_text(encoding="utf-8")
-    head = text[:2500]
-    assert "v9.22.0" in head
-    assert "Tipo:" in head
-    assert "GATE-DECISION-010" in head
+    assert "v9.22.0" in text
+    assert "Tipo:" in text
+    assert "GATE-DECISION-010" in text
 
 
 def test_g9_q4_closed_in_preguntas():

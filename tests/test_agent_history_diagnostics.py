@@ -218,10 +218,11 @@ if __name__ == "__main__":  # pragma: no cover
 # ---------------------------------------------------------------------------
 
 
-def test_default_provider_is_local_ollama() -> None:
+def test_default_provider_is_local_ollama(monkeypatch) -> None:
     """Scout must default to local Ollama, not a paid cloud endpoint."""
     from src.config import Settings
 
+    monkeypatch.delenv("LLM_PROVIDER", raising=False)
     cfg = Settings(_env_file=None)  # type: ignore[call-arg]
     assert cfg.provider() == "ollama"
     assert cfg.ollama_base_url == "http://127.0.0.1:11434"
