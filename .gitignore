@@ -1,6 +1,10 @@
 # Environment files
 *.env
 *.env.*
+# R-03 fix: *.env.* también bloqueaba los propios *.env.example (plantillas
+# sin secretos) — probable causa de que el .env.example de Layer_3 nunca se
+# haya podido corregir/versionar con el nombre correcto. Excepción explícita:
+!*.env.example
 *.key
 *.secret
 *.pem

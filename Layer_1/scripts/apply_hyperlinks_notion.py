@@ -338,6 +338,11 @@ def main():
         print("\nRecuerda: correr 'vdoc notion' después si quieres reflejar estos cambios")
         print("en el .md local de ACTIVE/ (esa dirección SÍ es segura — Notion es la fuente).")
 
+    # R-16 fix: totals["errors"] se calculaba pero nunca se usaba para
+    # decidir el exit code — main() siempre retornaba None (exit 0
+    # implícito) aunque hubiera errores de PATCH.
+    return 1 if totals["errors"] > 0 else 0
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

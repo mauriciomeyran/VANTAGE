@@ -455,6 +455,14 @@ def query_notion_db(
             response = notion_utils.request(path="data_sources/442938befc42828fb72e076818d65a5b/query", method="POST", body=kwargs)
         except Exception as exc:
             if schema and "property" in str(exc):
+                # R-13 fix: antes esto devolvía [] en completo silencio —
+                # cualquier consumidor (ej. detección de duplicados por URL)
+                # interpretaba "sin candidatos" en vez de "la consulta
+                # falló", y terminaba creando filas duplicadas sin ningún
+                # rastro del error real. Ahora se loggea de forma visible
+                # antes de devolver el fallback vacío.
+                print(f"  ⚠️  query_notion_db: fallo de schema en propiedad — devolviendo [] "
+                      f"(posible dedup omitido, revisar filter_body/schema). Error real: {exc}")
                 return []
             raise
         all_results.extend(response.get("results", []))
@@ -654,7 +662,7 @@ def dedup_cross_layer(
     record: dict,
     notion_utils: Client,
     schema: NotionSchema,
-    window_days: int = 30,
+    window_days: int = 60,  # R-13 fix: unificado con dedup_opportunities.py (antes 30)
 ) -> bool:
     # CHECK 1: Verificar Status=Rechazado histórico (sin ventana de tiempo)
     # Esto previene re-creación de vacantes ya rechazadas cualitativamente
@@ -721,7 +729,7 @@ def dedup_by_content_fingerprint(
     record: dict,
     notion_utils: Client,
     schema: NotionSchema,
-    window_days: int = 30,
+    window_days: int = 60,  # R-13 fix: unificado con dedup_opportunities.py (antes 30)
 ) -> bool:
     """
     Deduplication basado en fingerprint de contenido (título + empresa + ubicación).
@@ -1304,6 +1312,16 @@ def main() -> None:
             "⚠️  Items ya escritos NO se revierten si el operador elige Quit."
         ),
     )
+    parser.add_argument(
+        "--yes",
+        action="store_true",
+        default=False,
+        help=(
+            "R-13 fix: aprueba automáticamente la escritura sin pedir confirmación "
+            "interactiva. Requerido para invocaciones sin TTY (Raycast, Automator, "
+            "launchd) — antes, input() sin --yes abortaba con EOFError no capturado."
+        ),
+    )
     args = parser.parse_args()
 
     feed_path = Path(args.file)
@@ -1384,7 +1402,13 @@ def main() -> None:
             print(f"│  URL   : {rec.get('apply_url', '')[:80]}")
             print(f"│  Notas : {p.notes or '—'}")
             print(f"│  Hash  : {p.hash_key[:8]}")
-            action = input("└─ Acción [S]í / [O]mitir / [Q]uit : ").strip().upper()
+            try:
+                action = input("└─ Acción [S]í / [O]mitir / [Q]uit : ").strip().upper()
+            except EOFError:
+                # R-13 fix: sin TTY disponible, tratar como Quit seguro en
+                # vez de crashear con traceback — preserva lo ya aprobado.
+                print("\n⏹️  Sin entrada interactiva disponible — tratado como Quit.")
+                action = "Q"
 
             if action == "S":
                 approved.append(p)
@@ -1437,7 +1461,19 @@ def main() -> None:
 
     # ── MODO ESTÁNDAR (comportamiento original intacto) ─────────────────────────
     else:
-        confirm = input(f"¿Aprobar escritura de {n_write} vacantes en Notion? [s/N]: ").strip().lower()
+        # R-13 fix: --yes bypassa la confirmación para invocaciones sin TTY;
+        # y el input() ya no puede tirar un EOFError no capturado — si no
+        # hay entrada interactiva disponible, se aborta seguro (igual que
+        # el patrón ya usado en vdoc.py) en vez de crashear.
+        if args.yes:
+            confirm = "s"
+            print(f"¿Aprobar escritura de {n_write} vacantes en Notion? [s/N]: s  (--yes)")
+        else:
+            try:
+                confirm = input(f"¿Aprobar escritura de {n_write} vacantes en Notion? [s/N]: ").strip().lower()
+            except EOFError:
+                print("\n⏹️  Sin entrada interactiva disponible y sin --yes — abortado por seguridad.")
+                confirm = "n"
         if confirm != "s":
             print("⏹️  Escritura abortada por el operador.")
             print("\n📦 Archivando DRY RUN en Notion...")

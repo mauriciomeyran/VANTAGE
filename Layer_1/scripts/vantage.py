@@ -290,6 +290,14 @@ def _main() -> None:
 
         print(json.dumps(result, indent=2, ensure_ascii=False))
 
+        # R-16 fix: sync() (y potencialmente otros comandos) atrapan sus
+        # propios errores internamente y devuelven {"status": "error", ...}
+        # en vez de propagar una excepción — sin este chequeo, el proceso
+        # terminaba con exit 0 pese al error, y nada río abajo (Raycast,
+        # launchd, wrappers) se enteraba de que algo falló.
+        if isinstance(result, dict) and result.get("status") == "error":
+            raise SystemExit(1)
+
     except ResolverError as exc:
         print(json.dumps({"status": exc.status, "error": exc.message}, ensure_ascii=False))
         raise SystemExit(1)
