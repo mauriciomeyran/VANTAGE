@@ -23,7 +23,24 @@ esa responsabilidad vive en layer_1_run.py (Fase 4).
 
 from __future__ import annotations
 
-from vantage_status import gate_protected_value
+from vantage_status import gate_protected_value, Status
+
+# --- Compat shim (V-02) -----------------------------------------------
+# Archive/Legacy_Scripts/layer_1_run.py:60 importa estos dos símbolos
+# para el harness de paridad tests/test_g3_parity.py. El archivo
+# archivado no debe editarse (es el punto de comparación congelado),
+# así que el shim vive aquí. Reconstruye, a nivel de módulo, la misma
+# tabla que vantage_status.gate_protected_value() usa internamente
+# como _STATUS_TO_GATE — si esa tabla cambia, actualizar también aquí.
+TERMINAL_ACTIONS: set[str] = set()  # D1: eliminado de producción; nombre conservado para el espejo de paridad
+
+STATUS_TERMINAL_MAP: dict[str, str] = {
+    Status.POSTULADO.value: "APPLIED",
+    Status.RECHAZADO.value: "REJECTED",
+    Status.EXPIRADA.value: "EXPIRADA",
+    Status.RETIRADO.value: "EXPIRADA",  # D2: Retirado ahora protegido (89 registros reales)
+}
+# --- Fin compat shim ----------------------------------------------------
 
 
 def gate_logic(entry: dict) -> str | None:

@@ -1,0 +1,181 @@
+diff --git a/Layer_1/scripts/dedup_opportunities.py b/Layer_1/scripts/dedup_opportunities.py
+index 53a9196..4a1c6e7 100755
+--- a/Layer_1/scripts/dedup_opportunities.py
++++ b/Layer_1/scripts/dedup_opportunities.py
+@@ -209,12 +209,13 @@ if __name__ == "__main__":
+             page = client.pages.retrieve(page_id=target_page_id)
+             props = page.get("properties", {})
+ 
+-            if write_dedup_flag(client, target_page_id, props, clear=True):
++            if write_dedup_flag(client, target_page_id, props, clear=True, dry_run=args.dry_run):
+                 print(f"✅ Dedup_Flag limpiado para {target_page_id[:8]}")
+             else:
+                 print(f"ℹ️  No se necesitó limpiar Dedup_Flag para {target_page_id[:8]}")
+         except Exception as e:
+             print(f"❌ Error limpiando Dedup_Flag: {e}")
++            sys.exit(1)
+         sys.exit(0)
+ 
+     if args.dry_run:
+diff --git a/Layer_1/scripts/gate_logic.py b/Layer_1/scripts/gate_logic.py
+index f890a45..78b6971 100644
+--- a/Layer_1/scripts/gate_logic.py
++++ b/Layer_1/scripts/gate_logic.py
+@@ -23,7 +23,24 @@ esa responsabilidad vive en layer_1_run.py (Fase 4).
+ 
+ from __future__ import annotations
+ 
+-from vantage_status import gate_protected_value
++from vantage_status import gate_protected_value, Status
++
++# --- Compat shim (V-02) -----------------------------------------------
++# Archive/Legacy_Scripts/layer_1_run.py:60 importa estos dos símbolos
++# para el harness de paridad tests/test_g3_parity.py. El archivo
++# archivado no debe editarse (es el punto de comparación congelado),
++# así que el shim vive aquí. Reconstruye, a nivel de módulo, la misma
++# tabla que vantage_status.gate_protected_value() usa internamente
++# como _STATUS_TO_GATE — si esa tabla cambia, actualizar también aquí.
++TERMINAL_ACTIONS: set[str] = set()  # D1: eliminado de producción; nombre conservado para el espejo de paridad
++
++STATUS_TERMINAL_MAP: dict[str, str] = {
++    Status.POSTULADO.value: "APPLIED",
++    Status.RECHAZADO.value: "REJECTED",
++    Status.EXPIRADA.value: "EXPIRADA",
++    Status.RETIRADO.value: "EXPIRADA",  # D2: Retirado ahora protegido (89 registros reales)
++}
++# --- Fin compat shim ----------------------------------------------------
+ 
+ 
+ def gate_logic(entry: dict) -> str | None:
+diff --git a/Layer_1/scripts/layer_1_orchestrator.py b/Layer_1/scripts/layer_1_orchestrator.py
+index 8f8d180..0e66e8d 100644
+--- a/Layer_1/scripts/layer_1_orchestrator.py
++++ b/Layer_1/scripts/layer_1_orchestrator.py
+@@ -24,7 +24,7 @@ import sys
+ import argparse
+ import logging
+ import json
+-from datetime import datetime, date
++from datetime import datetime, date, timezone
+ from pathlib import Path
+ from typing import Dict, Any, List, Optional, Tuple
+ from dotenv import load_dotenv
+@@ -458,7 +458,7 @@ def load_class_b_snapshot() -> Dict[str, Dict[str, Any]]:
+     nunca antes procesada) — caller trata ausencia como "sin baseline",
+     nunca como "sin cambios".
+     """
+-    state_file = Path(__file__).resolve().parent / "state" / CLASS_B_SNAPSHOT_FILE
++    state_file = Path(os.environ.get("VANTAGE_STATE_DIR") or (Path(__file__).resolve().parent / "state")) / CLASS_B_SNAPSHOT_FILE
+     if not state_file.exists():
+         return {}
+     try:
+@@ -483,7 +483,7 @@ def save_class_b_snapshot(snapshot: List[Dict[str, Any]]) -> None:
+             continue
+         records[page_id] = {k: record.get(k) for k in CLASS_B_FIELDS if k in record}
+ 
+-    state_dir = Path(__file__).resolve().parent / "state"
++    state_dir = Path(os.environ.get("VANTAGE_STATE_DIR") or (Path(__file__).resolve().parent / "state"))
+     state_dir.mkdir(exist_ok=True)
+     state_file = state_dir / CLASS_B_SNAPSHOT_FILE
+     state_file.write_text(json.dumps({
+@@ -1438,11 +1438,11 @@ def run_orchestrator(
+     # en los últimos 7 días queda protegida como "manual" indefinidamente.
+     if not dry_run and metrics.get("errors", 0) == 0:
+         import json
+-        state_dir = Path(__file__).resolve().parent / "state"
++        state_dir = Path(os.environ.get("VANTAGE_STATE_DIR") or (Path(__file__).resolve().parent / "state"))
+         state_dir.mkdir(exist_ok=True)
+         state_file = state_dir / "last_successful_run.json"
+         state_file.write_text(json.dumps({
+-            "last_run_time": datetime.now().isoformat()
++            "last_run_time": datetime.now(timezone.utc).isoformat()
+         }))
+         logger.info(f"State file actualizado: {state_file}")
+ 
+diff --git a/Layer_1/scripts/tracker_flow.py b/Layer_1/scripts/tracker_flow.py
+index 1b679e9..c002528 100644
+--- a/Layer_1/scripts/tracker_flow.py
++++ b/Layer_1/scripts/tracker_flow.py
+@@ -26,9 +26,10 @@ V3 Fixes Applied:
+ """
+ 
+ from enum import Enum
++import os
+ from typing import Literal, Optional, Set, Dict, Any, Callable
+ from dataclasses import dataclass
+-from datetime import datetime
++from datetime import datetime, timezone
+ import logging
+ import json
+ from pathlib import Path
+@@ -387,7 +388,7 @@ def _was_edited_since_last_run(edited_time: str) -> bool:
+     if not edited_time:
+         return True  # G1: Fail-closed - no timestamp = assume recent
+     
+-    state_file = Path(__file__).resolve().parent / "state" / "last_successful_run.json"
++    state_file = Path(os.environ.get("VANTAGE_STATE_DIR") or (Path(__file__).resolve().parent / "state")) / "last_successful_run.json"
+     if not state_file.exists():
+         # Fallback: 7 days if no state file
+         try:
+@@ -400,9 +401,12 @@ def _was_edited_since_last_run(edited_time: str) -> bool:
+         with open(state_file) as f:
+             state = json.load(f)
+             last_run = datetime.fromisoformat(state["last_run_time"])
++            if last_run.tzinfo is None:
++                last_run = last_run.replace(tzinfo=timezone.utc)
+             edited_dt = datetime.fromisoformat(edited_time.replace("Z", "+00:00"))
+             return edited_dt > last_run
+-    except:
++    except (KeyError, ValueError) as e:
++        logger.warning(f"state de last_run ilegible ({e}); asumiendo edición reciente")
+         return True  # Safe default: assume recent
+ 
+ 
+diff --git a/Raycast/vantage-opport-dedup.sh b/Raycast/vantage-opport-dedup.sh
+index 0018ac9..942e161 100755
+--- a/Raycast/vantage-opport-dedup.sh
++++ b/Raycast/vantage-opport-dedup.sh
+@@ -14,10 +14,20 @@ if [ -f ../.env ]; then set -a; source ../.env; set +a; fi
+ source ../.venv/bin/activate
+ export PYTHONUNBUFFERED=1
+ 
+-if python3 dedup_opportunities.py; then
+-  notify_success "VANTAGE Dedup (Oportunidades)" "✅ Duplicados consolidados"
++if [ "$1" == "--apply" ]; then
++  if python3 dedup_opportunities.py --apply; then
++    notify_success "VANTAGE Dedup (Oportunidades)" "✅ Duplicados consolidados"
++  else
++    code=$?
++    notify_error "VANTAGE Dedup (Oportunidades)" "❌ Falló (exit $code)"
++    exit $code
++  fi
+ else
+-  code=$?
+-  notify_error "VANTAGE Dedup (Oportunidades)" "❌ Falló (exit $code)"
+-  exit $code
++  if python3 dedup_opportunities.py; then
++    notify_success "VANTAGE Dedup (Oportunidades)" "ℹ️ DRY RUN — sin escribir (usar --apply para escribir)"
++  else
++    code=$?
++    notify_error "VANTAGE Dedup (Oportunidades)" "❌ Falló (exit $code)"
++    exit $code
++  fi
+ fi
+diff --git a/tests/conftest.py b/tests/conftest.py
+new file mode 100644
+index 0000000..5ce5ca3
+--- /dev/null
++++ b/tests/conftest.py
+@@ -0,0 +1,12 @@
++"""Fase 1 fix: aísla el state file real (state/last_successful_run.json)
++de la suite de tests. Sin esto, cualquier test que invoque
++run_orchestrator() de verdad escribe en Layer_1/scripts/state/ y
++contamina los tests que corren después en la misma sesión pytest
++(V-01 secondary effect, Arena verdict)."""
++import os
++import pytest
++
++
++@pytest.fixture(autouse=True)
++def _isolate_vantage_state_dir(tmp_path, monkeypatch):
++    monkeypatch.setenv("VANTAGE_STATE_DIR", str(tmp_path / "state"))

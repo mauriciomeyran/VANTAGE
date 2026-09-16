@@ -14,10 +14,20 @@ if [ -f ../.env ]; then set -a; source ../.env; set +a; fi
 source ../.venv/bin/activate
 export PYTHONUNBUFFERED=1
 
-if python3 dedup_opportunities.py; then
-  notify_success "VANTAGE Dedup (Oportunidades)" "✅ Duplicados consolidados"
+if [ "$1" == "--apply" ]; then
+  if python3 dedup_opportunities.py --apply; then
+    notify_success "VANTAGE Dedup (Oportunidades)" "✅ Duplicados consolidados"
+  else
+    code=$?
+    notify_error "VANTAGE Dedup (Oportunidades)" "❌ Falló (exit $code)"
+    exit $code
+  fi
 else
-  code=$?
-  notify_error "VANTAGE Dedup (Oportunidades)" "❌ Falló (exit $code)"
-  exit $code
+  if python3 dedup_opportunities.py; then
+    notify_success "VANTAGE Dedup (Oportunidades)" "ℹ️ DRY RUN — sin escribir (usar --apply para escribir)"
+  else
+    code=$?
+    notify_error "VANTAGE Dedup (Oportunidades)" "❌ Falló (exit $code)"
+    exit $code
+  fi
 fi

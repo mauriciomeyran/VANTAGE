@@ -26,9 +26,10 @@ V3 Fixes Applied:
 """
 
 from enum import Enum
+import os
 from typing import Literal, Optional, Set, Dict, Any, Callable
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 import logging
 import json
 from pathlib import Path
@@ -387,7 +388,7 @@ def _was_edited_since_last_run(edited_time: str) -> bool:
     if not edited_time:
         return True  # G1: Fail-closed - no timestamp = assume recent
     
-    state_file = Path(__file__).resolve().parent / "state" / "last_successful_run.json"
+    state_file = Path(os.environ.get("VANTAGE_STATE_DIR") or (Path(__file__).resolve().parent / "state")) / "last_successful_run.json"
     if not state_file.exists():
         # Fallback: 7 days if no state file
         try:
@@ -400,9 +401,12 @@ def _was_edited_since_last_run(edited_time: str) -> bool:
         with open(state_file) as f:
             state = json.load(f)
             last_run = datetime.fromisoformat(state["last_run_time"])
+            if last_run.tzinfo is None:
+                last_run = last_run.replace(tzinfo=timezone.utc)
             edited_dt = datetime.fromisoformat(edited_time.replace("Z", "+00:00"))
             return edited_dt > last_run
-    except:
+    except (KeyError, ValueError) as e:
+        logger.warning(f"state de last_run ilegible ({e}); asumiendo edición reciente")
         return True  # Safe default: assume recent
 
 

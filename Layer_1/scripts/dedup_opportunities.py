@@ -209,12 +209,13 @@ if __name__ == "__main__":
             page = client.pages.retrieve(page_id=target_page_id)
             props = page.get("properties", {})
 
-            if write_dedup_flag(client, target_page_id, props, clear=True):
+            if write_dedup_flag(client, target_page_id, props, clear=True, dry_run=args.dry_run):
                 print(f"✅ Dedup_Flag limpiado para {target_page_id[:8]}")
             else:
                 print(f"ℹ️  No se necesitó limpiar Dedup_Flag para {target_page_id[:8]}")
         except Exception as e:
             print(f"❌ Error limpiando Dedup_Flag: {e}")
+            sys.exit(1)
         sys.exit(0)
 
     if args.dry_run:

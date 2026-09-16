@@ -24,7 +24,7 @@ import sys
 import argparse
 import logging
 import json
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Tuple
 from dotenv import load_dotenv
@@ -458,7 +458,7 @@ def load_class_b_snapshot() -> Dict[str, Dict[str, Any]]:
     nunca antes procesada) — caller trata ausencia como "sin baseline",
     nunca como "sin cambios".
     """
-    state_file = Path(__file__).resolve().parent / "state" / CLASS_B_SNAPSHOT_FILE
+    state_file = Path(os.environ.get("VANTAGE_STATE_DIR") or (Path(__file__).resolve().parent / "state")) / CLASS_B_SNAPSHOT_FILE
     if not state_file.exists():
         return {}
     try:
@@ -483,7 +483,7 @@ def save_class_b_snapshot(snapshot: List[Dict[str, Any]]) -> None:
             continue
         records[page_id] = {k: record.get(k) for k in CLASS_B_FIELDS if k in record}
 
-    state_dir = Path(__file__).resolve().parent / "state"
+    state_dir = Path(os.environ.get("VANTAGE_STATE_DIR") or (Path(__file__).resolve().parent / "state"))
     state_dir.mkdir(exist_ok=True)
     state_file = state_dir / CLASS_B_SNAPSHOT_FILE
     state_file.write_text(json.dumps({
@@ -1438,11 +1438,11 @@ def run_orchestrator(
     # en los últimos 7 días queda protegida como "manual" indefinidamente.
     if not dry_run and metrics.get("errors", 0) == 0:
         import json
-        state_dir = Path(__file__).resolve().parent / "state"
+        state_dir = Path(os.environ.get("VANTAGE_STATE_DIR") or (Path(__file__).resolve().parent / "state"))
         state_dir.mkdir(exist_ok=True)
         state_file = state_dir / "last_successful_run.json"
         state_file.write_text(json.dumps({
-            "last_run_time": datetime.now().isoformat()
+            "last_run_time": datetime.now(timezone.utc).isoformat()
         }))
         logger.info(f"State file actualizado: {state_file}")
 
