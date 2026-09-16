@@ -1,4 +1,14 @@
-"""Gate logic for VANTAGE Scout, adapted from Layer_1 patterns."""
+"""Gate logic for VANTAGE Scout, adapted from Layer_1 patterns.
+
+FUERA DE ALCANCE TOTAL (decisión operador 2026-09-16): el desarrollo de
+Scout es un diseño que no se completó ni se va a completar. Este archivo
+mantiene su propia definición de terminalidad (TERMINAL_STATUSES /
+TERMINAL_ACTIONS abajo), deliberadamente sin unificar con
+Layer_1/scripts/vantage_status.py — no por descuido, sino porque Scout
+no es código productivo y no vale la pena migrarlo. No tocar ni
+"arreglar" esta duplicación en futuras auditorías sin una decisión
+explícita nueva del operador que reabra el alcance de Scout.
+"""
 
 from __future__ import annotations
 

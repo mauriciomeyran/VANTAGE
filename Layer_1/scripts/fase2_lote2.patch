@@ -1,0 +1,144 @@
+diff --git a/Layer_1/config/hard_blocks.json b/Layer_1/config/hard_blocks.json
+index 32e916a..aef78b9 100644
+--- a/Layer_1/config/hard_blocks.json
++++ b/Layer_1/config/hard_blocks.json
+@@ -5,6 +5,10 @@
+     "l'oreal",
+     "loreal", 
+     "l'oréal",
++    "l'oreal mexico",
++    "l'oreal méxico",
++    "l'oreal luxury",
++    "l'oreal group",
+     "levi's",
+     "levis",
+     "dockers",
+diff --git a/Layer_1/scripts/hard_block_gate.py b/Layer_1/scripts/hard_block_gate.py
+index b5933eb..3fb2cd6 100644
+--- a/Layer_1/scripts/hard_block_gate.py
++++ b/Layer_1/scripts/hard_block_gate.py
+@@ -3,20 +3,17 @@ VANTAGE Hard Block Gate — Validación de empleadores bloqueados (Fase 3).
+ 
+ Fuente única declarada: Layer_1/config/hard_blocks.json.
+ Implementación independiente — no reutiliza, ni envuelve, ni depende de
+-src/validator.py (Scout no productivo; Fuera de alcance Fase 3 por
+-decisión del operador).
+-
+-Cobertura como mínimo de las variantes confirmadas en datos reales:
+-  - L'Oréal: l'oréal, l'oreal, loreal + divisiones/holdings + méxico
+-  - Levi's: levi's, levis
+-  - Dockers: dockers
+-  - El Palacio de Hierro: palacio de hierro, el palacio de hierro
++src/validator.py (Scout no productivo; diseño no completado ni a
++completarse, decisión operador 2026-09-16 — fuera de alcance total).
++
++Match por substring case-insensitive contra los términos declarados en
++hard_blocks.json. Sin regex: cualquier variante nueva (sede, división,
++holding) se agrega directamente al JSON, sin tocar este código.
+ """
+ 
+ from __future__ import annotations
+ 
+ import json
+-import re
+ from pathlib import Path
+ from typing import Optional
+ 
+@@ -30,38 +27,6 @@ _HARD_BLOCKS_CONFIG_PATH = (
+     / "hard_blocks.json"
+ )
+ 
+-# Regex patterns independientes para variantes de empleadores bloqueados.
+-# Cubren como mínimo las variantes confirmadas en datos reales
+-# (src/validator.py:BLOCKED_COMPANY_PATTERNS, sin reutilizar ese código).
+-_HARD_BLOCK_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+-    # L'Oréal — todas las divisiones y variantes de escritura
+-    ("L'Oréal", re.compile(
+-        r"l['’]?or[eé]al"
+-        r"(?:\s+(?:cosmetics|luxury|division|group|holding|m[eé]xico))?",
+-        re.IGNORECASE,
+-    )),
+-    # L'Oréal variante sin apóstrofo + sede méxico (cobertura alternativa)
+-    ("L'Oréal", re.compile(
+-        r"loreal\s+(?:mexico|m[eé]xico)?",
+-        re.IGNORECASE,
+-    )),
+-    # Levi's
+-    ("Levi's / Dockers", re.compile(
+-        r"levi['’]?s",
+-        re.IGNORECASE,
+-    )),
+-    # Dockers
+-    ("Dockers", re.compile(
+-        r"\bdockers\b",
+-        re.IGNORECASE,
+-    )),
+-    # El Palacio de Hierro — con "el" opcional
+-    ("El Palacio de Hierro", re.compile(
+-        r"(?:el\s+)?palacio\s+de\s+hierro",
+-        re.IGNORECASE,
+-    )),
+-)
+-
+ 
+ def _load_hard_blocked_terms() -> list[str]:
+     """Carga los términos base desde hard_blocks.json (fuente única declarada)."""
+@@ -78,17 +43,15 @@ def blocked_employer_term(
+ ) -> Optional[str]:
+     """Devuelve el término de hard_blocks.json que hizo match, o None.
+ 
+-    Verifica primero por substring contra los términos base de
+-    hard_blocks.json, luego por regex para variantes no cubiertas
+-    por los términos base.
++    Match por substring (case-insensitive, normaliza apóstrofos curvos)
++    contra los términos declarados en hard_blocks.json — única fuente.
+ 
+     Args:
+         brand: Nombre de la marca/empresa a verificar.
+         holding: Holding opcional (se concatena para la verificación).
+ 
+     Returns:
+-        El término base de hard_blocks.json que hizo match, o el label
+-        del patrón regex que coincidió, o None si no aplica.
++        El término de hard_blocks.json que hizo match, o None si no aplica.
+     """
+     if not brand:
+         return None
+@@ -96,17 +59,11 @@ def blocked_employer_term(
+     haystack = f"{brand} {holding or ''}"
+     haystack_norm = haystack.strip().lower().replace("’", "'").replace("‘", "'")
+ 
+-    # 1. Match por substring contra términos base de hard_blocks.json
+     for term in _load_hard_blocked_terms():
+         term_norm = term.strip().lower()
+         if term_norm and term_norm in haystack_norm:
+             return term
+ 
+-    # 2. Match por regex para variantes no cubiertas por términos base
+-    for label, pattern in _HARD_BLOCK_PATTERNS:
+-        if pattern.search(haystack):
+-            return label
+-
+     return None
+ 
+ 
+diff --git a/src/gate_logic.py b/src/gate_logic.py
+index 4465c67..73b6771 100644
+--- a/src/gate_logic.py
++++ b/src/gate_logic.py
+@@ -1,4 +1,14 @@
+-"""Gate logic for VANTAGE Scout, adapted from Layer_1 patterns."""
++"""Gate logic for VANTAGE Scout, adapted from Layer_1 patterns.
++
++FUERA DE ALCANCE TOTAL (decisión operador 2026-09-16): el desarrollo de
++Scout es un diseño que no se completó ni se va a completar. Este archivo
++mantiene su propia definición de terminalidad (TERMINAL_STATUSES /
++TERMINAL_ACTIONS abajo), deliberadamente sin unificar con
++Layer_1/scripts/vantage_status.py — no por descuido, sino porque Scout
++no es código productivo y no vale la pena migrarlo. No tocar ni
++"arreglar" esta duplicación en futuras auditorías sin una decisión
++explícita nueva del operador que reabra el alcance de Scout.
++"""
+ 
+ from __future__ import annotations
+ 

@@ -1,0 +1,231 @@
+diff --git a/Layer_1/scripts/dedup_opportunities.py b/Layer_1/scripts/dedup_opportunities.py
+index 4a1c6e7..f267ffc 100755
+--- a/Layer_1/scripts/dedup_opportunities.py
++++ b/Layer_1/scripts/dedup_opportunities.py
+@@ -15,6 +15,8 @@ _L1_SCRIPTS_DIR = _Path(__file__).resolve().parent
+ if str(_L1_SCRIPTS_DIR) not in _sys.path:
+     _sys.path.insert(0, str(_L1_SCRIPTS_DIR))
+ from vantage_status import is_terminal_status  # noqa: E402
++from layer_1_orchestrator import class_b_guard  # noqa: E402
++from tracker_flow import Actor  # noqa: E402
+ 
+ # Diccionario global para métricas de filtros anti-falso-positivo
+ filter_metrics = {}
+@@ -117,9 +119,10 @@ def write_dedup_flag(client, page_id, properties, clear=False, dry_run=False):
+                 print(f"  [DRY RUN] Limpiaría Dedup_Flag ({page_id[:8]}...)")
+                 return True
+             try:
++                payload = class_b_guard({"Dedup_Flag": {"select": None}}, Actor.DEDUP)
+                 client.pages.update(
+                     page_id=page_id,
+-                    properties={"Dedup_Flag": {"select": None}}
++                    properties=payload
+                 )
+                 print(f"  🧹 Dedup_Flag limpiado ({page_id[:8]}...)")
+                 return True
+@@ -133,9 +136,10 @@ def write_dedup_flag(client, page_id, properties, clear=False, dry_run=False):
+                 print(f"  [DRY RUN] Asignaría Dedup_Flag 'Posible duplicado' ({page_id[:8]}...)")
+                 return True  # En DRY RUN asumimos que se asignaría
+             try:
++                payload = class_b_guard({"Dedup_Flag": {"select": {"name": "Posible duplicado"}}}, Actor.DEDUP)
+                 client.pages.update(
+                     page_id=page_id,
+-                    properties={"Dedup_Flag": {"select": {"name": "Posible duplicado"}}}
++                    properties=payload
+                 )
+                 print(f"  🏷️  Dedup_Flag asignado: 'Posible duplicado' ({page_id[:8]}...)")
+                 return True
+diff --git a/Layer_1/scripts/health_check.py b/Layer_1/scripts/health_check.py
+index 3b32bd0..b2280c4 100644
+--- a/Layer_1/scripts/health_check.py
++++ b/Layer_1/scripts/health_check.py
+@@ -682,7 +682,15 @@ def main():
+ 
+     results = {}
+     for name, fn in checks:
+-        results[name] = fn()
++        try:
++            results[name] = fn()
++        except Exception as e:
++            # V-07 fix: una check que revienta sin capturar su propia
++            # excepción ya no se confunde con "encontró issues" (exit 1).
++            # health_check.py se cayó de verdad → exit 2, distinguible por
++            # el wrapper de "hay problemas reportados normalmente" (exit 1).
++            print(f"{RED}CRASH en check '{name}': {e}{RESET}")
++            sys.exit(2)
+ 
+     print("-" * 30)
+     if all(results.values()):
+diff --git a/Layer_1/scripts/vantage-health.sh b/Layer_1/scripts/vantage-health.sh
+index 544c14f..9d475be 100644
+--- a/Layer_1/scripts/vantage-health.sh
++++ b/Layer_1/scripts/vantage-health.sh
+@@ -18,12 +18,17 @@ export PYTHONUNBUFFERED=1
+ python3 health_check.py
+ code=$?
+ 
+-# health_check.py usa exit 1 para señalar "encontró issues" (git sucio, tickets sin
+-# prioridad, etc.), no para señalar que el script se cayó. No lo tratamos como error
+-# fatal de Raycast — solo cambiamos el sonido/mensaje para reflejar la severidad real.
++# health_check.py (V-07 fix): 0 = OK, 1 = encontró issues (git sucio, tickets
++# sin prioridad, etc — no fatal), 2 = se cayó de verdad (excepción no
++# capturada en una check). Antes solo existían 0/1 y el wrapper no podía
++# distinguir "hay issues" de "el script truena" — ambos caían en el mismo
++# aviso de warning.
+ if [ $code -eq 0 ]; then
+   notify_success "VANTAGE Health Check" "✅ Sistema saludable"
+-else
++elif [ $code -eq 1 ]; then
+   notify_warning "VANTAGE Health Check" "⚠️ Sistema con issues — revisar output"
++else
++  notify_error "VANTAGE Health Check" "❌ health_check.py se cayó (exit $code) — revisar output"
++  exit $code
+ fi
+ exit 0
+diff --git a/Layer_1/scripts/vantage_status.py b/Layer_1/scripts/vantage_status.py
+index b5db3dd..d839d25 100644
+--- a/Layer_1/scripts/vantage_status.py
++++ b/Layer_1/scripts/vantage_status.py
+@@ -38,7 +38,7 @@ TERMINAL_STATUSES_CANONICO = TERMINAL_STATUSES         # set[Status]
+ LEGACY_STATUS_MAP: dict[str, str | None] = {
+     "Archivar":       "Expirada",        # huérfano bilateral documentado en tracker_flow
+     "Repetida":       None,              # 29 filas — semántica no verificable, sin mapear
+-    "Target":         None,              # 31 filas — semántica no verificable, sin mapear
++    "Target":         "Objetivo",         # 31 filas — decisión operador 2026-09-16: L3 ya no debe escribir "Target"; equivale a Objetivo (mismo significado operativo, layer_1_orchestrator.py ya usa "Objetivo")
+     "Blocked":        "Rechazado",       # 2 filas — semántica más próxima
+     "REVIEW_NEEDED":  "Por Revisar",     # 24 filas — semántica más próxima
+     "Sin respuesta":  "Sin Respuesta",   # 1 fila  — diferencia solo de mayúscula
+diff --git a/Layer_3/scripts/layer_3_mail.py b/Layer_3/scripts/layer_3_mail.py
+index 86b0802..83f722b 100644
+--- a/Layer_3/scripts/layer_3_mail.py
++++ b/Layer_3/scripts/layer_3_mail.py
+@@ -772,7 +772,7 @@ def create_notion_page(job, email_meta):
+             "rich_text": [{"text": {"content": job.get("marca", "")[:200]}}]
+         },
+         "Status": {
+-            "select": {"name": "Target"}
++            "select": {"name": "Objetivo"}
+         },
+         "layer": {
+             "select": {"name": "L3"}
+diff --git a/Layer_4/scripts/vsync_doc.py b/Layer_4/scripts/vsync_doc.py
+index 373a705..8726423 100644
+--- a/Layer_4/scripts/vsync_doc.py
++++ b/Layer_4/scripts/vsync_doc.py
+@@ -480,6 +480,8 @@ def push_local_to_notion(pid, path):
+     patches_applied = 0
+     blocks_created = 0
+     blocks_deleted = 0
++    patches_failed = 0
++    tables_skipped = 0
+     
+     max_blocks = max(len(existing_blocks), len(local_blocks))
+     
+@@ -499,25 +501,34 @@ def push_local_to_notion(pid, path):
+                     new_rich_text = local_block[block_type].get("rich_text", [])
+                     if _patch_block_rich_text(existing_block["id"], block_type, new_rich_text):
+                         patches_applied += 1
++                    else:
++                        patches_failed += 1
+                 elif block_type == "divider":
+                     # Divider no tiene contenido que actualizar
+                     pass
+                 elif block_type == "table":
+                     # Tabla: estructura completa (más complejo, simplificado por ahora)
+                     # TODO: Implementar PATCH granular de tablas
+-                    # Por ahora, si la tabla cambia, no la tocamos
+-                    pass
++                    # V-06 fix: antes esto pasaba en silencio (pass) y el
++                    # bloque quedaba marcado como sincronizado más abajo
++                    # (manifest hash actualizado) pese a no haberse tocado.
++                    # Ahora se cuenta explícitamente como no sincronizado.
++                    tables_skipped += 1
+                 elif block_type == "table_row":
+                     # Table row: PATCH cells
+                     new_cells = local_block["table_row"].get("cells", [])
+                     if _patch_table_row(existing_block["id"], new_cells):
+                         patches_applied += 1
++                    else:
++                        patches_failed += 1
+                 else:
+                     # Otros tipos: intentar PATCH genérico
+                     payload = {block_type: local_block[block_type]}
+                     if _patch_block_rich_text(existing_block["id"], block_type, 
+                                              local_block[block_type].get("rich_text", [])):
+                         patches_applied += 1
++                    else:
++                        patches_failed += 1
+             else:
+                 # R-02 fix: Tipos no coinciden → recrear, pero CREATE antes que
+                 # DELETE. Antes esto borraba el bloque existente y solo
+@@ -540,6 +551,7 @@ def push_local_to_notion(pid, path):
+                     except Exception as e:
+                         print(f"       ⚠️ reemplazo creado pero no se pudo borrar el bloque viejo {existing_block['id'][:8]}: {e}")
+                 except Exception as e:
++                    patches_failed += 1
+                     print(f"       ⚠️ no se pudo crear el reemplazo para el bloque {existing_block['id'][:8]} — se conserva el original sin cambios: {e}")
+                 
+         elif idx < len(local_blocks):
+@@ -552,6 +564,7 @@ def push_local_to_notion(pid, path):
+                 notion.blocks.delete(existing_blocks[idx]["id"])
+                 blocks_deleted += 1
+             except Exception as e:
++                patches_failed += 1
+                 print(f"       ⚠️ no se pudo borrar bloque {existing_blocks[idx]['id'][:8]}: {e}")
+     
+     # Crear bloques nuevos al final (para casos donde len(local) > len(existing))
+@@ -560,7 +573,16 @@ def push_local_to_notion(pid, path):
+         for j in range(0, len(new_blocks), 100):
+             notion.blocks.children.append(block_id=pid, children=new_blocks[j:j+100])
+     
+-    print(f"       ✓ PATCH stats: {patches_applied} actualizados, {blocks_created} nuevos, {blocks_deleted} eliminados")
++    print(f"       ✓ PATCH stats: {patches_applied} actualizados, {blocks_created} nuevos, "
++          f"{blocks_deleted} eliminados, {patches_failed} fallidos, "
++          f"{tables_skipped} tablas NO sincronizadas (sin soporte de PATCH granular)")
++    return {
++        "patched": patches_applied,
++        "created": blocks_created,
++        "deleted": blocks_deleted,
++        "failed": patches_failed,
++        "tables_skipped": tables_skipped,
++    }
+ 
+ def auto_commit(dry_run=False):
+     """Llama a git_sync.py si hay cambios en ACTIVE."""
+@@ -583,6 +605,7 @@ def auto_commit(dry_run=False):
+         print(f"  ⚠️ git_sync falló: {e}")
+ 
+ def main():
++    _exit_code = [0]
+     p = argparse.ArgumentParser()
+     p.add_argument("--direction", choices=["notion","auto","local"], default="auto", help="notion→local (read-only), auto (decide por hash), o local→notion (PATCH puntual, preserva anchors)")
+     p.add_argument("--dry-run", action="store_true")
+@@ -642,11 +665,15 @@ def main():
+         elif args.direction == "local":
+             print(f"  → {d['label']:<30} local→notion (PATCH puntual, preserva anchors)")
+             original_mode = _make_writable(local)
+-            push_local_to_notion(d["notion_id"], local)
++            result = push_local_to_notion(d["notion_id"], local)
+             _restore_permissions(local, original_mode)
+-            manifest = _load_manifest()
+-            manifest[k] = _hash(local.read_text(encoding="utf-8"))
+-            _save_manifest(manifest)
++            if result["failed"] > 0:
++                print(f"  ✗ {d['label']:<30} {result['failed']} bloque(s) fallaron — manifest NO actualizado, el próximo auto reintentará")
++                _exit_code[0] = 1
++            else:
++                manifest = _load_manifest()
++                manifest[k] = _hash(local.read_text(encoding="utf-8"))
++                _save_manifest(manifest)
+ 
+         else:  # auto — decide por hash de contenido vs manifest, no por mtime
+             manifest = _load_manifest()
+@@ -673,6 +700,7 @@ def main():
+ 
+     if not args.dry_run:
+         auto_commit(dry_run=False)
++    return _exit_code[0]
+ 
+ if __name__ == "__main__":
+-    main()
++    sys.exit(main())

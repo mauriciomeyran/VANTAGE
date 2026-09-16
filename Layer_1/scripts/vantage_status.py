@@ -38,7 +38,7 @@ TERMINAL_STATUSES_CANONICO = TERMINAL_STATUSES         # set[Status]
 LEGACY_STATUS_MAP: dict[str, str | None] = {
     "Archivar":       "Expirada",        # huérfano bilateral documentado en tracker_flow
     "Repetida":       None,              # 29 filas — semántica no verificable, sin mapear
-    "Target":         None,              # 31 filas — semántica no verificable, sin mapear
+    "Target":         "Objetivo",         # 31 filas — decisión operador 2026-09-16: L3 ya no debe escribir "Target"; equivale a Objetivo (mismo significado operativo, layer_1_orchestrator.py ya usa "Objetivo")
     "Blocked":        "Rechazado",       # 2 filas — semántica más próxima
     "REVIEW_NEEDED":  "Por Revisar",     # 24 filas — semántica más próxima
     "Sin respuesta":  "Sin Respuesta",   # 1 fila  — diferencia solo de mayúscula

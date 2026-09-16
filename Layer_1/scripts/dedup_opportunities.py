@@ -15,6 +15,8 @@ _L1_SCRIPTS_DIR = _Path(__file__).resolve().parent
 if str(_L1_SCRIPTS_DIR) not in _sys.path:
     _sys.path.insert(0, str(_L1_SCRIPTS_DIR))
 from vantage_status import is_terminal_status  # noqa: E402
+from layer_1_orchestrator import class_b_guard  # noqa: E402
+from tracker_flow import Actor  # noqa: E402
 
 # Diccionario global para métricas de filtros anti-falso-positivo
 filter_metrics = {}
@@ -117,9 +119,10 @@ def write_dedup_flag(client, page_id, properties, clear=False, dry_run=False):
                 print(f"  [DRY RUN] Limpiaría Dedup_Flag ({page_id[:8]}...)")
                 return True
             try:
+                payload = class_b_guard({"Dedup_Flag": {"select": None}}, Actor.DEDUP)
                 client.pages.update(
                     page_id=page_id,
-                    properties={"Dedup_Flag": {"select": None}}
+                    properties=payload
                 )
                 print(f"  🧹 Dedup_Flag limpiado ({page_id[:8]}...)")
                 return True
@@ -133,9 +136,10 @@ def write_dedup_flag(client, page_id, properties, clear=False, dry_run=False):
                 print(f"  [DRY RUN] Asignaría Dedup_Flag 'Posible duplicado' ({page_id[:8]}...)")
                 return True  # En DRY RUN asumimos que se asignaría
             try:
+                payload = class_b_guard({"Dedup_Flag": {"select": {"name": "Posible duplicado"}}}, Actor.DEDUP)
                 client.pages.update(
                     page_id=page_id,
-                    properties={"Dedup_Flag": {"select": {"name": "Posible duplicado"}}}
+                    properties=payload
                 )
                 print(f"  🏷️  Dedup_Flag asignado: 'Posible duplicado' ({page_id[:8]}...)")
                 return True

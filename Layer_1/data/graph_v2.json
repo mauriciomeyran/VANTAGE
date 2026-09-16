@@ -1,10 +1,4 @@
 {
   "version": "2.0",
-  "edges": [
-    {
-      "from": "ARCHIVO:H_f9c1e900b551049c",
-      "to": "TRACKER:H_f9c1e900b551049c",
-      "type": "archived_from"
-    }
-  ]
+  "edges": []
 }

@@ -1,29 +1,128 @@
 {
   "entities": [
     {
-      "entity_id": "TRACKER:H_9140459e2c14f385",
-      "canonical_id": "9140459e2c14f3856bec08afee739ea21a722d263daa96cb396b43ee7a099d64",
-      "page_id": "3dc938be-fc42-81a3-b245-dd0801fdcceb",
-      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Fashion-Retail-Zona-Sur-CDMX-3dc938befc4281a3b245dd0801fdcceb",
-      "hash": "9140459e2c14f3856bec08afee739ea21a722d263daa96cb396b43ee7a099d64",
+      "entity_id": "TRACKER:H_c28cfadcd47dec15",
+      "canonical_id": "c28cfadcd47dec154fff5af8de997f63cb755f70dad1a6a87b36112aa7a1d026",
+      "page_id": "3dd938be-fc42-8102-b39b-d7171ddc4933",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Fashion-Retail-Grupo-Converse-de-Mxico-3dd938befc428102b39bd7171ddc4933",
+      "hash": "c28cfadcd47dec154fff5af8de997f63cb755f70dad1a6a87b36112aa7a1d026",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER"
     },
     {
-      "entity_id": "TRACKER:H_f9c1e900b551049c",
-      "canonical_id": "f9c1e900b551049c1026b6ce3d83f167acfc16537f85f5e7c1042e85ff6cae84",
-      "page_id": "3dc938be-fc42-8112-8d0e-d26a6edfc250",
-      "page_url": "https://app.notion.com/p/Analista-de-Categoras-Layouts-Planogramas-3dc938befc4281128d0ed26a6edfc250",
-      "hash": "f9c1e900b551049c1026b6ce3d83f167acfc16537f85f5e7c1042e85ff6cae84",
+      "entity_id": "TRACKER:H_7c88182544b9e28b",
+      "canonical_id": "7c88182544b9e28b4aad814295b39f7995fd0b9471a45b55a91690ca56a65f15",
+      "page_id": "3dd938be-fc42-816b-b381-e3e9c9b76a28",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Fashion-Retail-3dd938befc42816bb381e3e9c9b76a28",
+      "hash": "7c88182544b9e28b4aad814295b39f7995fd0b9471a45b55a91690ca56a65f15",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER"
     },
     {
-      "entity_id": "TRACKER:H_e2c59bac1ca1b184",
-      "canonical_id": "e2c59bac1ca1b18429ef7940b50e331f00ce6c4ba1cb48d66977fce094250d2f",
-      "page_id": "3dc938be-fc42-8123-b25d-fcb088cd9276",
-      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Moda-Zona-Norte-CDMX-Edo-Mx-3dc938befc428123b25dfcb088cd9276",
-      "hash": "e2c59bac1ca1b18429ef7940b50e331f00ce6c4ba1cb48d66977fce094250d2f",
+      "entity_id": "TRACKER:H_437d4479269c764d",
+      "canonical_id": "437d4479269c764d68f46dc2a3ea8c8f19e5d5f7f2dd92831438e248f5f68cf8",
+      "page_id": "3dd938be-fc42-81a8-a9b3-cb418c175c7b",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-3dd938befc4281a8a9b3cb418c175c7b",
+      "hash": "437d4479269c764d68f46dc2a3ea8c8f19e5d5f7f2dd92831438e248f5f68cf8",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_c0a8168ac5ace01a",
+      "canonical_id": "c0a8168ac5ace01ad94a8da327dcbb2f823536defab9f6ed31cc0163b907af21",
+      "page_id": "3dd938be-fc42-81d7-8c02-ee02fd259c55",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Grupo-Converse-de-Mxico-SA-de-CV-3dd938befc4281d78c02ee02fd259c55",
+      "hash": "c0a8168ac5ace01ad94a8da327dcbb2f823536defab9f6ed31cc0163b907af21",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_93c83c4010c01bb6",
+      "canonical_id": "93c83c4010c01bb61ee95d8f64148d3cb1fbc98c052882d955ecdc129d883f71",
+      "page_id": "3dd938be-fc42-8145-b2ef-c316513a5337",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Zona-Norte-CDMX-Edo-Mx-3dd938befc428145b2efc316513a5337",
+      "hash": "93c83c4010c01bb61ee95d8f64148d3cb1fbc98c052882d955ecdc129d883f71",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:U_3dc938befc4281e1af25f9bb08b083ce",
+      "canonical_id": "3dc938be-fc42-81e1-af25-f9bb08b083ce",
+      "page_id": "3dc938be-fc42-81e1-af25-f9bb08b083ce",
+      "page_url": "https://app.notion.com/p/Coordinador-a-de-Display-Visual-Merchandising-3dc938befc4281e1af25f9bb08b083ce",
+      "hash": null,
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:U_3dc938befc42816084b5fefaad5f6cb3",
+      "canonical_id": "3dc938be-fc42-8160-84b5-fefaad5f6cb3",
+      "page_id": "3dc938be-fc42-8160-84b5-fefaad5f6cb3",
+      "page_url": "https://app.notion.com/p/Visual-Merchandising-por-Proyecto-3dc938befc42816084b5fefaad5f6cb3",
+      "hash": null,
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:U_3dc938befc4281aab0c6e2d669b069be",
+      "canonical_id": "3dc938be-fc42-81aa-b0c6-e2d669b069be",
+      "page_id": "3dc938be-fc42-81aa-b0c6-e2d669b069be",
+      "page_url": "https://app.notion.com/p/Retail-Operation-Manager-3dc938befc4281aab0c6e2d669b069be",
+      "hash": null,
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_78f173a11a32d61b",
+      "canonical_id": "78f173a11a32d61b7d314897a5f8496205c7c4680bb8879cce50ecbd2247119e",
+      "page_id": "3dc938be-fc42-81aa-bfa1-d59f4735b3af",
+      "page_url": "https://app.notion.com/p/Brand-Innovation-Coordinator-Regio-3dc938befc4281aabfa1d59f4735b3af",
+      "hash": "78f173a11a32d61b7d314897a5f8496205c7c4680bb8879cce50ecbd2247119e",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_93a30e031d3cd640",
+      "canonical_id": "93a30e031d3cd640219a6774a20d7b18d20d7e2e6817d437aaad6cbac2255f80",
+      "page_id": "3dc938be-fc42-812b-8f5d-fefcfc41283b",
+      "page_url": "https://app.notion.com/p/MAT-Lead-Gold-Squad-Mexico-City-3dc938befc42812b8f5dfefcfc41283b",
+      "hash": "93a30e031d3cd640219a6774a20d7b18d20d7e2e6817d437aaad6cbac2255f80",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_35676002ab7d4be7",
+      "canonical_id": "35676002ab7d4be73b89a613a0c470071ac5b98cd06bf694fc942594e882e344",
+      "page_id": "3dc938be-fc42-8119-8809-fad80ea606b0",
+      "page_url": "https://app.notion.com/p/Sr-Analyst-Trade-Customer-Marketing-3dc938befc4281198809fad80ea606b0",
+      "hash": "35676002ab7d4be73b89a613a0c470071ac5b98cd06bf694fc942594e882e344",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_c6f75c5462ac6b4b",
+      "canonical_id": "c6f75c5462ac6b4b16454b5f3be7c61b42d8bab28918502b42956ee26bef6be9",
+      "page_id": "3dc938be-fc42-81fe-943e-d09d4f1d03ab",
+      "page_url": "https://app.notion.com/p/Merch-Supervisor-3dc938befc4281fe943ed09d4f1d03ab",
+      "hash": "c6f75c5462ac6b4b16454b5f3be7c61b42d8bab28918502b42956ee26bef6be9",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_70c342a18bc76df4",
+      "canonical_id": "70c342a18bc76df414a7f1ca323e74dfe4db6752e36e75ee04e7087caa5a91c0",
+      "page_id": "3dc938be-fc42-8115-9423-cadaff1e9352",
+      "page_url": "https://app.notion.com/p/Retail-Activation-Coordinator-3dc938befc4281159423cadaff1e9352",
+      "hash": "70c342a18bc76df414a7f1ca323e74dfe4db6752e36e75ee04e7087caa5a91c0",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "TRACKER:H_ee532f37268a319b",
+      "canonical_id": "ee532f37268a319bee0a1267c52e5383b04931695bc9bed256691b461982a77d",
+      "page_id": "3dc938be-fc42-819e-ba44-cbded6dfe697",
+      "page_url": "https://app.notion.com/p/SUPERVISOR-VISUAL-MERCHANDISING-EN-MUEBLES-3dc938befc42819eba44cbded6dfe697",
+      "hash": "ee532f37268a319bee0a1267c52e5383b04931695bc9bed256691b461982a77d",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER"
     },
@@ -33,24 +132,6 @@
       "page_id": "3dc938be-fc42-8145-9f30-f063b118ff87",
       "page_url": "https://app.notion.com/p/RIT-VISUAL-MERCHANDISING-3dc938befc4281459f30f063b118ff87",
       "hash": "6a3d2939fa6a4d49444de5686c4f60899946e5260a9a10857a8c01cff5d5ec1d",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_62df2b95ef70dbd8",
-      "canonical_id": "62df2b95ef70dbd8329d48f99608d467853ad715dd63da15b0a170bbf9b7afbd",
-      "page_id": "3dc938be-fc42-81af-a4bc-cd84be64662f",
-      "page_url": "https://app.notion.com/p/Retail-Operation-Manager-3dc938befc4281afa4bccd84be64662f",
-      "hash": "62df2b95ef70dbd8329d48f99608d467853ad715dd63da15b0a170bbf9b7afbd",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
-      "entity_id": "TRACKER:H_677f5f706c701588",
-      "canonical_id": "677f5f706c701588b772825fec1aa90d400f900f3c76854669862f24a5786b9b",
-      "page_id": "3dc938be-fc42-813b-9919-d7b326db5677",
-      "page_url": "https://app.notion.com/p/Visual-Merchandising-por-Proyecto-3dc938befc42813b9919d7b326db5677",
-      "hash": "677f5f706c701588b772825fec1aa90d400f900f3c76854669862f24a5786b9b",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER"
     },
@@ -242,6 +323,69 @@
       "hash": "2de0778f4359d30016f96d71aa16844fbd7b2a43d4b9afd6fabaca7d75b96a53",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_dcfa6a75fe0ad6fe",
+      "canonical_id": "dcfa6a75fe0ad6fec5a5505015b8d9d01979d60b27fc1268915124f0c1a25542",
+      "page_id": "3dc938be-fc42-8104-b00b-ced980ca0def",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Moda-Zona-Norte-CDMX-Edo-Mx-3dc938befc428104b00bced980ca0def",
+      "hash": "dcfa6a75fe0ad6fec5a5505015b8d9d01979d60b27fc1268915124f0c1a25542",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_dc4a7fd5b562d5f5",
+      "canonical_id": "dc4a7fd5b562d5f5f29853023e93bfbc74db410a567ede29005f8478431bbfee",
+      "page_id": "3dc938be-fc42-8104-ab9c-e295d4d5a235",
+      "page_url": "https://app.notion.com/p/Coach-de-ventas-3dc938befc428104ab9ce295d4d5a235",
+      "hash": "dc4a7fd5b562d5f5f29853023e93bfbc74db410a567ede29005f8478431bbfee",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_284c75d8fec5868f",
+      "canonical_id": "284c75d8fec5868fbe31268cc771cc09d3314ca8ee48d786a1356888cf74dc47",
+      "page_id": "3dc938be-fc42-81bf-9a79-e411cb1cd4ae",
+      "page_url": "https://app.notion.com/p/Operations-Professional-Perisur-3dc938befc4281bf9a79e411cb1cd4ae",
+      "hash": "284c75d8fec5868fbe31268cc771cc09d3314ca8ee48d786a1356888cf74dc47",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_b1a0d6c4e02beac4",
+      "canonical_id": "b1a0d6c4e02beac442f97d5ba5fd1b4256d5db3dd017082a8c751cb5ee98ce22",
+      "page_id": "3dc938be-fc42-81b6-89ba-d5916a4f9df7",
+      "page_url": "https://app.notion.com/p/Digital-Merchandiser-3dc938befc4281b689bad5916a4f9df7",
+      "hash": "b1a0d6c4e02beac442f97d5ba5fd1b4256d5db3dd017082a8c751cb5ee98ce22",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_9140459e2c14f385",
+      "canonical_id": "9140459e2c14f3856bec08afee739ea21a722d263daa96cb396b43ee7a099d64",
+      "page_id": "3dc938be-fc42-81a3-b245-dd0801fdcceb",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Fashion-Retail-Zona-Sur-CDMX-3dc938befc4281a3b245dd0801fdcceb",
+      "hash": "9140459e2c14f3856bec08afee739ea21a722d263daa96cb396b43ee7a099d64",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_f9c1e900b551049c",
+      "canonical_id": "f9c1e900b551049c1026b6ce3d83f167acfc16537f85f5e7c1042e85ff6cae84",
+      "page_id": "3dc938be-fc42-8112-8d0e-d26a6edfc250",
+      "page_url": "https://app.notion.com/p/Analista-de-Categoras-Layouts-Planogramas-3dc938befc4281128d0ed26a6edfc250",
+      "hash": "f9c1e900b551049c1026b6ce3d83f167acfc16537f85f5e7c1042e85ff6cae84",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_e2c59bac1ca1b184",
+      "canonical_id": "e2c59bac1ca1b18429ef7940b50e331f00ce6c4ba1cb48d66977fce094250d2f",
+      "page_id": "3dc938be-fc42-8123-b25d-fcb088cd9276",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Moda-Zona-Norte-CDMX-Edo-Mx-3dc938befc428123b25dfcb088cd9276",
+      "hash": "e2c59bac1ca1b18429ef7940b50e331f00ce6c4ba1cb48d66977fce094250d2f",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
     },
     {
       "entity_id": "ARCHIVO:H_f9c1e900b551049c",
@@ -7616,10 +7760,10 @@
     }
   ],
   "metrics": {
-    "total_entities": 846,
-    "tracker_entities": 27,
-    "archive_entities": 819,
-    "hash_coverage": 89.01,
-    "orphan_candidates": 93
+    "total_entities": 862,
+    "tracker_entities": 36,
+    "archive_entities": 826,
+    "hash_coverage": 88.86,
+    "orphan_candidates": 96
   }
 }

@@ -32,14 +32,25 @@ GMAIL_USER     = os.environ["GMAIL_USER"]
 GMAIL_APP_PASS = os.environ["GMAIL_APP_PASS"]
 GMAIL_LABEL    = os.environ.get("GMAIL_LABEL", ".Jobs")
 
-GROQ_API_KEY   = os.environ["GROQ_API_KEY"]
-GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b").strip()
-GROQ_FALLBACK_MODEL = os.environ.get("GROQ_FALLBACK_MODEL", "openai/gpt-oss-20b").strip()
-GEMINI_MIN_DELAY = float(os.environ.get("GEMINI_MIN_DELAY_SEC", "2.0"))
+EXTRACTION_BACKEND = os.environ.get("EXTRACTION_BACKEND", "ollama").strip().lower()
+
+GROQ_API_KEY   = os.environ.get("GROQ_API_KEY", "").strip()
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b").strip()
+GEMINI_MIN_DELAY = float(os.environ.get("GEMINI_MIN_DELAY_SEC", "3"))
 GEMINI_MAX_RETRY = int(os.environ.get("GEMINI_MAX_RETRIES", "3"))
 GEMINI_MAX_BACKOFF = float(os.environ.get("GEMINI_MAX_BACKOFF_SEC", "15"))
-MAX_BODY_CHARS = int(os.environ.get("MAX_EMAIL_BODY_CHARS", "4000"))
+GEMINI_BODY_MAX  = int(os.environ.get("GEMINI_BODY_MAX_CHARS", "2000"))
 MAX_EMAILS_RUN = int(os.environ.get("GEMINI_MAX_EMAILS_PER_RUN", "5"))
+
+OLLAMA_HOST    = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
+OLLAMA_MODEL   = os.environ.get("OLLAMA_MODEL", "qwen2.5:0.5b").strip()
+OLLAMA_TIMEOUT = float(os.environ.get("OLLAMA_TIMEOUT_SEC", "30"))
+OLLAMA_MAX_RETRIES = int(os.environ.get("OLLAMA_MAX_RETRIES", "2"))
+
+if EXTRACTION_BACKEND not in ("ollama", "groq"):
+    raise ValueError(f"EXTRACTION_BACKEND inválido: '{EXTRACTION_BACKEND}' (usar 'ollama' o 'groq')")
+if EXTRACTION_BACKEND == "groq" and not GROQ_API_KEY:
+    raise ValueError("EXTRACTION_BACKEND=groq requiere GROQ_API_KEY en config/layer_3.env")
 
 NOTION_TOKEN   = os.environ["NOTION_TOKEN"]
 NOTION_DB_ID   = os.environ["NOTION_DB_ID"]
@@ -47,13 +58,26 @@ NOTION_DB_ID   = os.environ["NOTION_DB_ID"]
 _last_gemini_call = 0.0
 
 
-class GeminiFatalError(Exception):
-    """Error de Gemini que no se arregla reintentando (VPN, credenciales, modelo inválido)."""
+class ExtractionError(Exception):
+    """Base común para errores del backend de extracción (Groq u Ollama)."""
 
-class GroqExhaustedError(Exception):
+class GeminiFatalError(ExtractionError):
+    """Error que no se arregla reintentando (VPN, credenciales, modelo inválido).
+    Aborta la corrida completa — no tiene caso seguir procesando correos."""
+
+class GroqExhaustedError(ExtractionError):
     """Los N reintentos se agotaron (rate limit persistente o error de red).
     Nunca debe tratarse como 'sin vacantes' — el correo debe reintentarse
     en la siguiente corrida, no marcarse como leído/evaluado."""
+
+class OllamaFatalError(ExtractionError):
+    """Ollama no está corriendo o no responde a nivel de conexión (no de
+    rate limit — eso no existe en local). Aborta la corrida: reintentar
+    correo por correo no arregla un servicio caído."""
+
+class OllamaUnavailableError(ExtractionError):
+    """Ollama respondió pero con error HTTP o payload inválido tras agotar
+    reintentos locales. Correo se deja sin leer para reintentar."""
 
 # Fuentes reconocidas en el TRACKER
 RAW_SOURCE_MAP = {
@@ -167,14 +191,7 @@ def _extract_body(msg):
     else:
         body = _decode_part(msg)
     body = body.replace("\ufffd", "")  # quita bytes corruptos (fix loop Gemini 400 json_validate_failed)
-    return body[:MAX_BODY_CHARS]
-
-
-def sanitize_and_truncate_payload(body_text: str) -> str:
-    """Truncate body text to MAX_BODY_CHARS to prevent TPM spikes."""
-    if len(body_text) > MAX_BODY_CHARS:
-        return body_text[:MAX_BODY_CHARS] + "\n...[truncated for TPM optimization]"
-    return body_text
+    return body[:GEMINI_BODY_MAX]
 
 
 def fetch_unread_emails(mail):
@@ -331,23 +348,21 @@ def _gemini_wait_seconds(resp, attempt):
     return min(GEMINI_MAX_BACKOFF, GEMINI_MIN_DELAY * (2 ** attempt)) + random.uniform(0, 3)
 
 
-def extract_jobs_with_gemini(email_body, retries=3, use_fallback=False):
-    # Sanitize and truncate payload to prevent TPM spikes
-    sanitized_body = sanitize_and_truncate_payload(email_body)
-    
+def _clean_body_for_extraction(email_body):
     valid_ascii = set(range(32, 127)) | {10, 13, 9}
-    clean_body = ''.join(ch for ch in sanitized_body if ord(ch) in valid_ascii)
+    return ''.join(ch for ch in email_body if ord(ch) in valid_ascii)[:2000]
 
-    api_key = os.environ.get("GROQ_API_KEY", "").strip()
-    model = GROQ_FALLBACK_MODEL if use_fallback else GROQ_MODEL
 
+def _call_groq(clean_body, retries=3):
+    """Backend Groq — retiene el retry/backoff original específico de rate
+    limit remoto (429, headers x-ratelimit-*). No aplica a Ollama: un
+    servicio local no tiene cuota que esperar."""
     headers = {
-        "Authorization": f"Bearer {api_key}",
+        "Authorization": f"Bearer {GROQ_API_KEY}",
         "Content-Type": "application/json",
     }
-    
     payload = {
-        "model": model,
+        "model": GROQ_MODEL,
         "messages": [
             {"role": "system", "content": GROQ_PROMPT},
             {"role": "user", "content": clean_body}
@@ -358,7 +373,7 @@ def extract_jobs_with_gemini(email_body, retries=3, use_fallback=False):
 
     last_was_rate_limit = False
     for attempt in range(retries):
-        _gemini_throttle()
+        time.sleep(3.5)
         try:
             resp = requests.post(
                 "https://api.groq.com/openai/v1/chat/completions",
@@ -369,25 +384,17 @@ def extract_jobs_with_gemini(email_body, retries=3, use_fallback=False):
             if resp.status_code == 429:
                 last_was_rate_limit = True
                 wait = _gemini_wait_seconds(resp, attempt)
-                print(f"  ⏳ Groq rate limit 429 ({attempt+1}/{retries}), esperando {wait:.1f}s...")
+                print(f"  ⏳ Groq rate limit ({attempt+1}/{retries}), esperando {wait:.1f}s...")
                 _log_rate_limit_headers(resp)
                 time.sleep(wait)
                 continue
 
             resp.raise_for_status()
-            content_json = resp.json()["choices"][0]["message"]["content"].strip()
-            return _parse_groq_jobs(content_json)
+            return resp.json()["choices"][0]["message"]["content"].strip()
 
         except requests.exceptions.RequestException as err:
             print(f"  ❌ Groq error: {err}")
             if attempt == retries - 1:
-                # If primary model failed and we haven't tried fallback yet, try it
-                if not use_fallback and GROQ_FALLBACK_MODEL != GROQ_MODEL:
-                    print(f"  🔄 Primary model failed, trying fallback: {GROQ_FALLBACK_MODEL}")
-                    try:
-                        return extract_jobs_with_gemini(email_body, retries=2, use_fallback=True)
-                    except Exception as fallback_err:
-                        print(f"  ❌ Fallback model also failed: {fallback_err}")
                 raise GroqExhaustedError(f"Reintentos agotados (error de red): {err}") from err
 
     # Si llegamos aquí, se agotaron los `retries` intentos por 429 —
@@ -397,6 +404,78 @@ def extract_jobs_with_gemini(email_body, retries=3, use_fallback=False):
     if last_was_rate_limit:
         raise GroqExhaustedError(f"Rate limit agotado tras {retries} reintentos")
     raise GroqExhaustedError("Reintentos agotados sin respuesta válida de Groq")
+
+
+def _call_ollama(clean_body, retries=None):
+    """Backend Ollama local — sin rate limit real, por lo que no hay backoff
+    exponencial ni lectura de headers de cuota. Un fallo aquí es servicio
+    caído (fatal, aborta la corrida) o timeout/error puntual (reintenta
+    localmente `retries` veces antes de dejar el correo sin leer)."""
+    if retries is None:
+        retries = OLLAMA_MAX_RETRIES
+
+    payload = {
+        "model": OLLAMA_MODEL,
+        "messages": [
+            {"role": "system", "content": GROQ_PROMPT},
+            {"role": "user", "content": clean_body}
+        ],
+        "format": "json",
+        "stream": False,
+        "options": {"temperature": 0.0},
+    }
+
+    last_err = None
+    for attempt in range(retries):
+        try:
+            resp = requests.post(
+                f"{OLLAMA_HOST}/api/chat",
+                json=payload,
+                timeout=OLLAMA_TIMEOUT,
+            )
+        except requests.exceptions.ConnectionError as err:
+            # Sin conexión al puerto local → Ollama no está corriendo.
+            # Reintentar correo por correo no arregla esto — abortar corrida.
+            raise OllamaFatalError(
+                f"No se pudo conectar a Ollama en {OLLAMA_HOST} "
+                f"— ¿está corriendo? (`ollama serve`)"
+            ) from err
+        except requests.exceptions.Timeout as err:
+            last_err = err
+            print(f"  ⏳ Ollama timeout ({attempt+1}/{retries}) tras {OLLAMA_TIMEOUT}s")
+            continue
+
+        try:
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            last_err = err
+            print(f"  ❌ Ollama HTTP error ({attempt+1}/{retries}): {err}")
+            continue
+
+        try:
+            return resp.json()["message"]["content"].strip()
+        except (KeyError, ValueError, TypeError) as err:
+            last_err = err
+            print(f"  ❌ Ollama respuesta sin 'message.content' ({attempt+1}/{retries}): {err}")
+            continue
+
+    raise OllamaUnavailableError(
+        f"Reintentos agotados ({retries}) sin respuesta válida de Ollama: {last_err}"
+    )
+
+
+def extract_jobs_with_gemini(email_body, retries=3):
+    """Dispatcher de backend. El parseo (`_parse_groq_jobs`) es agnóstico
+    del transporte — ambos backends devuelven el mismo tipo de string
+    (contenido crudo del mensaje) y se parsean igual."""
+    clean_body = _clean_body_for_extraction(email_body)
+
+    if EXTRACTION_BACKEND == "ollama":
+        content_json = _call_ollama(clean_body)
+    else:
+        content_json = _call_groq(clean_body, retries=retries)
+
+    return _parse_groq_jobs(content_json)
 
 
 def _parse_groq_jobs(content):
@@ -648,6 +727,24 @@ _LOCATION_MX_RE = re.compile(
 )
 
 
+def is_url_valid(job: dict, source_body: str) -> tuple[bool, str]:
+    """
+    Tercera línea de defensa: valida que la URL exista y sea LITERAL del
+    correo original — no basta con que el modelo la haya devuelto.
+    Sin esto, un modelo chico (ej. qwen2.5:3b) puede devolver la vacante
+    con url:'' en vez de omitirla del todo (regla del prompt: sin URL
+    literal, la vacante entera se descarta), y eso llegaría al tracker.
+    """
+    url = job.get("url", "").strip()
+    if not url:
+        return False, "NO_URL"
+    if not url.startswith("http"):
+        return False, f"URL_MALFORMED: {url}"
+    if url not in source_body:
+        return False, f"URL_NOT_LITERAL_IN_BODY: {url}"
+    return True, ""
+
+
 def is_vm_relevant(job: dict) -> tuple[bool, str]:
     """
     Devuelve (True, "") si la vacante pasa el filtro VM.
@@ -832,7 +929,10 @@ def _write_heartbeat(total_created: int, total_failed: int):
 
 def main():
     print("\n🚀 VANTAGE L3 Pipeline arrancando...")
-    print(f"   Gemini: {GROQ_MODEL} · pausa mín {GEMINI_MIN_DELAY}s · máx {MAX_EMAILS_RUN} correos/ejecución\n")
+    if EXTRACTION_BACKEND == "ollama":
+        print(f"   Backend: Ollama ({OLLAMA_MODEL} @ {OLLAMA_HOST}) · máx {MAX_EMAILS_RUN} correos/ejecución\n")
+    else:
+        print(f"   Backend: Groq ({GROQ_MODEL}) · pausa mín {GEMINI_MIN_DELAY}s · máx {MAX_EMAILS_RUN} correos/ejecución\n")
 
     print("📬 Conectando a Gmail...")
     mail = _connect_gmail()
@@ -870,20 +970,20 @@ def main():
             _set_seen(mail, em["id"], False)
             groq_failed += 1
             continue
-        except GroqExhaustedError as e:
+        except (GroqExhaustedError, OllamaUnavailableError) as e:
             print(f"  ⏸️  {e} — correo dejado como no leído para reintentar")
             _set_seen(mail, em["id"], False)
             groq_failed += 1
             continue
-        except GeminiFatalError as e:
+        except (GeminiFatalError, OllamaFatalError) as e:
             print(f"  ❌ {e}")
             print("  ↩️  Correos dejados como no leídos")
             _set_seen(mail, em["id"], False)
             groq_failed += len(emails) - idx + 1
             mail.logout()
             print(f"\n{'─'*40}")
-            print(f"🛑 ABORT: Gemini no disponible — corrige configuración antes de reintentar")
-            print(f"✅ Creadas: {total_created}  |  ❌ Notion: {total_failed}  |  ⏸️ Gemini pendientes: {groq_failed}")
+            print(f"🛑 ABORT: backend de extracción no disponible — corrige configuración antes de reintentar")
+            print(f"✅ Creadas: {total_created}  |  ❌ Notion: {total_failed}  |  ⏸️ Pendientes: {groq_failed}")
             print("─"*40 + "\n")
             sys.exit(1)
         except Exception as e:
@@ -916,6 +1016,12 @@ def main():
             relevant, reason = is_vm_relevant(job)
             if not relevant:
                 print(f"  🚧 Filtrado post-Groq ({reason}): {label}")
+                skipped_vm += 1
+                continue
+
+            url_ok, url_reason = is_url_valid(job, em["body"])
+            if not url_ok:
+                print(f"  🔗 Filtrado por URL inválida ({url_reason}): {label}")
                 skipped_vm += 1
                 continue
 

@@ -682,7 +682,15 @@ def main():
 
     results = {}
     for name, fn in checks:
-        results[name] = fn()
+        try:
+            results[name] = fn()
+        except Exception as e:
+            # V-07 fix: una check que revienta sin capturar su propia
+            # excepción ya no se confunde con "encontró issues" (exit 1).
+            # health_check.py se cayó de verdad → exit 2, distinguible por
+            # el wrapper de "hay problemas reportados normalmente" (exit 1).
+            print(f"{RED}CRASH en check '{name}': {e}{RESET}")
+            sys.exit(2)
 
     print("-" * 30)
     if all(results.values()):

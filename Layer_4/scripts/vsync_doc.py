@@ -480,6 +480,8 @@ def push_local_to_notion(pid, path):
     patches_applied = 0
     blocks_created = 0
     blocks_deleted = 0
+    patches_failed = 0
+    tables_skipped = 0
     
     max_blocks = max(len(existing_blocks), len(local_blocks))
     
@@ -499,25 +501,34 @@ def push_local_to_notion(pid, path):
                     new_rich_text = local_block[block_type].get("rich_text", [])
                     if _patch_block_rich_text(existing_block["id"], block_type, new_rich_text):
                         patches_applied += 1
+                    else:
+                        patches_failed += 1
                 elif block_type == "divider":
                     # Divider no tiene contenido que actualizar
                     pass
                 elif block_type == "table":
                     # Tabla: estructura completa (más complejo, simplificado por ahora)
                     # TODO: Implementar PATCH granular de tablas
-                    # Por ahora, si la tabla cambia, no la tocamos
-                    pass
+                    # V-06 fix: antes esto pasaba en silencio (pass) y el
+                    # bloque quedaba marcado como sincronizado más abajo
+                    # (manifest hash actualizado) pese a no haberse tocado.
+                    # Ahora se cuenta explícitamente como no sincronizado.
+                    tables_skipped += 1
                 elif block_type == "table_row":
                     # Table row: PATCH cells
                     new_cells = local_block["table_row"].get("cells", [])
                     if _patch_table_row(existing_block["id"], new_cells):
                         patches_applied += 1
+                    else:
+                        patches_failed += 1
                 else:
                     # Otros tipos: intentar PATCH genérico
                     payload = {block_type: local_block[block_type]}
                     if _patch_block_rich_text(existing_block["id"], block_type, 
                                              local_block[block_type].get("rich_text", [])):
                         patches_applied += 1
+                    else:
+                        patches_failed += 1
             else:
                 # R-02 fix: Tipos no coinciden → recrear, pero CREATE antes que
                 # DELETE. Antes esto borraba el bloque existente y solo
@@ -540,6 +551,7 @@ def push_local_to_notion(pid, path):
                     except Exception as e:
                         print(f"       ⚠️ reemplazo creado pero no se pudo borrar el bloque viejo {existing_block['id'][:8]}: {e}")
                 except Exception as e:
+                    patches_failed += 1
                     print(f"       ⚠️ no se pudo crear el reemplazo para el bloque {existing_block['id'][:8]} — se conserva el original sin cambios: {e}")
                 
         elif idx < len(local_blocks):
@@ -552,6 +564,7 @@ def push_local_to_notion(pid, path):
                 notion.blocks.delete(existing_blocks[idx]["id"])
                 blocks_deleted += 1
             except Exception as e:
+                patches_failed += 1
                 print(f"       ⚠️ no se pudo borrar bloque {existing_blocks[idx]['id'][:8]}: {e}")
     
     # Crear bloques nuevos al final (para casos donde len(local) > len(existing))
@@ -560,7 +573,16 @@ def push_local_to_notion(pid, path):
         for j in range(0, len(new_blocks), 100):
             notion.blocks.children.append(block_id=pid, children=new_blocks[j:j+100])
     
-    print(f"       ✓ PATCH stats: {patches_applied} actualizados, {blocks_created} nuevos, {blocks_deleted} eliminados")
+    print(f"       ✓ PATCH stats: {patches_applied} actualizados, {blocks_created} nuevos, "
+          f"{blocks_deleted} eliminados, {patches_failed} fallidos, "
+          f"{tables_skipped} tablas NO sincronizadas (sin soporte de PATCH granular)")
+    return {
+        "patched": patches_applied,
+        "created": blocks_created,
+        "deleted": blocks_deleted,
+        "failed": patches_failed,
+        "tables_skipped": tables_skipped,
+    }
 
 def auto_commit(dry_run=False):
     """Llama a git_sync.py si hay cambios en ACTIVE."""
@@ -583,6 +605,7 @@ def auto_commit(dry_run=False):
         print(f"  ⚠️ git_sync falló: {e}")
 
 def main():
+    _exit_code = [0]
     p = argparse.ArgumentParser()
     p.add_argument("--direction", choices=["notion","auto","local"], default="auto", help="notion→local (read-only), auto (decide por hash), o local→notion (PATCH puntual, preserva anchors)")
     p.add_argument("--dry-run", action="store_true")
@@ -642,11 +665,15 @@ def main():
         elif args.direction == "local":
             print(f"  → {d['label']:<30} local→notion (PATCH puntual, preserva anchors)")
             original_mode = _make_writable(local)
-            push_local_to_notion(d["notion_id"], local)
+            result = push_local_to_notion(d["notion_id"], local)
             _restore_permissions(local, original_mode)
-            manifest = _load_manifest()
-            manifest[k] = _hash(local.read_text(encoding="utf-8"))
-            _save_manifest(manifest)
+            if result["failed"] > 0:
+                print(f"  ✗ {d['label']:<30} {result['failed']} bloque(s) fallaron — manifest NO actualizado, el próximo auto reintentará")
+                _exit_code[0] = 1
+            else:
+                manifest = _load_manifest()
+                manifest[k] = _hash(local.read_text(encoding="utf-8"))
+                _save_manifest(manifest)
 
         else:  # auto — decide por hash de contenido vs manifest, no por mtime
             manifest = _load_manifest()
@@ -673,6 +700,7 @@ def main():
 
     if not args.dry_run:
         auto_commit(dry_run=False)
+    return _exit_code[0]
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
