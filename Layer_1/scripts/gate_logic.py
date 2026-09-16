@@ -2,57 +2,52 @@
 VANTAGE Gate Logic — Terminal State Protection (KERNEL:GATE-DECISION)
 
 Contrato (Patch 1 / GATE-DECISION-010):
-  1. Evalúa Status contra STATUS_TERMINAL_MAP primero.
-  2. Luego Next_Action contra TERMINAL_ACTIONS.
-  3. Retorna el valor terminal (str) si el registro NO debe ser recalculado;
+  1. Evalúa Status contra TERMINAL_STATUSES (tracker_flow) y su mapeo legacy.
+  2. Retorna el valor terminal (str) si el registro NO debe ser recalculado;
      retorna None si es elegible para recálculo por gate().
+
+Desde Fase 3 (este patch):
+  - TERMINAL_ACTIONS eliminado: Next_Action="Expirada" nunca ocurre en producción
+    (0 ocurrencias en 826 filas). El check era defensa sobre el campo equivocado.
+    La protección real para "Expirada" ya existe vía Status="Expirada" en
+    TERMINAL_STATUSES.
+  - STATUS_TERMINAL_MAP eliminado: su lógica ahora vive en
+    vantage_status.gate_protected_value(), que usa tracker_flow.TERMINAL_STATUSES
+    + LEGACY_STATUS_MAP.
+  - gate_logic() delega a vantage_status.gate_protected_value() para mantener
+    el contrato de retorno compatible (str | None).
 
 No contiene lógica de scoring ni de Next_Action operativa:
 esa responsabilidad vive en layer_1_run.py (Fase 4).
 """
 
-# ── Constantes de módulo (exportables) ──────────────────────────────────────
-TERMINAL_ACTIONS = {"Archivar", "Expirada"}
+from __future__ import annotations
 
-STATUS_TERMINAL_MAP = {
-    "Postulado": "APPLIED",
-    "Rechazado": "REJECTED",
-    "Expirada": "EXPIRADA",  # D-001 FIX: Alineado con KERNEL:GATE-DECISION-010 que documenta "Expirada" como criterio de terminalidad por Status
-}
+from vantage_status import gate_protected_value
 
 
-def gate_logic(entry):
-    """
-    Protección de estados terminales.
+def gate_logic(entry: dict) -> str | None:
+    """Protección de estados terminales.
 
     Args:
         entry: dict con al menos "Status" y "Next_Action".
 
     Returns:
-        str  — valor terminal ("APPLIED", "REJECTED", "Archivar", "Expirada")
+        str  — valor terminal ("APPLIED", "REJECTED", "EXPIRADA")
                si el registro NO debe ser recalculado.
         None — el registro es elegible para recálculo por gate().
+
+    Cambios Fase 3:
+      - El check de Next_Action="Expirada" fue eliminado (D1: 0 ocurrencias
+        en 826 filas; código muerto confirmado).
+      - Retirado ahora protegido (D2: 89 registros reales).
+      - "Archivar" como Status legacy ahora protegido vía LEGACY_STATUS_MAP.
+      - El logging de protección se conserva del módulo delegado.
     """
-    status = entry.get("Status") or ""
-    if status in STATUS_TERMINAL_MAP:
-        terminal_value = STATUS_TERMINAL_MAP[status]
-        # D-004 FIX: Logging de protección de terminales para observabilidad
-        entry_id = entry.get("id", "unknown")[:8] if "id" in entry else "unknown"
-        current_action = entry.get("Next_Action") or ""
-        print(f"[gate_logic] PROTECTED: {entry_id} → {terminal_value} (Status={status}, Next_Action={current_action})")
-        return terminal_value
-
-    current_action = entry.get("Next_Action") or ""
-    if current_action in TERMINAL_ACTIONS:
-        # D-004 FIX: Logging de protección de terminales para observabilidad
-        entry_id = entry.get("id", "unknown")[:8] if "id" in entry else "unknown"
-        print(f"[gate_logic] PROTECTED: {entry_id} → {current_action} (Status={status}, Next_Action={current_action})")
-        return current_action
-
-    return None
+    return gate_protected_value(entry)
 
 
-def evaluate_gate(fetch, vm_scope, role_class):
+def evaluate_gate(fetch: str, vm_scope: str, role_class: str) -> str:
     """Evalúa la regla del gate (helper legacy / smoke)."""
     if fetch == "Accesible" and (vm_scope == "Alto" or role_class == "Pivote"):
         return "CREATE"

@@ -1,4 +1,10 @@
-"""Reglas de fit de perfil VM y exclusiones compartidas (pipeline + cleanup)."""
+"""
+Reglas de fit de perfil VM y exclusiones compartidas (pipeline + cleanup).
+
+Terminalidad y mutabilidad: delegadas a vantage_status (Fase 3).
+El resto de este módulo (regex de roles, alias_map, VM title signals,
+profile_misfit_reasons) no es terminalidad — es fit de perfil.
+"""
 
 from __future__ import annotations
 
@@ -6,6 +12,8 @@ import json
 import re
 from functools import lru_cache
 from pathlib import Path
+
+from vantage_status import is_protected_status
 
 _EXCLUDE_ROLE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"\bvendedor", "vendedor"),
@@ -34,15 +42,6 @@ _EXCLUDE_ROLE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"merchandising\s+coordinator(?!.*visual)", "merchandising_coordinator"),
     (r"coordinador\s+de\s+merchandising(?!.*visual)", "coordinador_merchandising"),
 )
-
-_PROTECTED_STATUSES = frozenset({
-    "Postulado", "En proceso", "Negociando", "Sin respuesta", "Contratado",
-    "Postulando",  # D-003 FIX: Protege estado activo de aplicación (puede durar días)
-})
-
-_TERMINAL_STATUSES = frozenset({
-    "Expirada", "Rechazado", "Archivar", "Retirado",
-})
 
 _VM_TITLE_SIGNALS = (
     "visual", "merchandis", " vm", "vm ", "brand environment",
@@ -125,14 +124,21 @@ def profile_misfit_reasons(
 
 
 def should_auto_cleanup(status: str, reasons: list[str]) -> bool:
-    if status in _PROTECTED_STATUSES or status in _TERMINAL_STATUSES:
+    """¿Se puede auto-limpiar un registro?
+
+    Fase 3: delega a vantage_status.is_protected_status().
+    Los legacy sin mapeo (Repetida, Target) NO son protegidos por defecto
+    hasta que el operador confirme su semántica.
+    """
+    if is_protected_status(status):
         return False
     return bool(reasons)
 
 
 def should_annotate_existing(status: str) -> bool:
-    """
-    KERNEL:GATE-DECISION-007 — ¿se puede anotar un registro existente?
+    """KERNEL:GATE-DECISION-007 — ¿se puede anotar un registro existente?
+
+    Fase 3: delega a vantage_status.is_protected_status().
 
     Dedup_Flag (Class B, candidato a archivo) y upgrade de layer (Class A,
     procedencia) solo aplican si el existente NO es postulación viva ni
@@ -140,10 +146,6 @@ def should_annotate_existing(status: str) -> bool:
     no cubre En proceso / Negociando / Postulando.
 
     True  → Target, Exploratorio, REVIEW_NEEDED, vacío, u otro operativo.
-    False → _PROTECTED_STATUSES | _TERMINAL_STATUSES.
+    False → estados protegidos por vantage_status.
     """
-    normalized = (status or "").strip()
-    return (
-        normalized not in _PROTECTED_STATUSES
-        and normalized not in _TERMINAL_STATUSES
-    )
+    return not is_protected_status(status)
