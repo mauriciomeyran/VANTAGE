@@ -869,7 +869,7 @@ def create_notion_page(job, email_meta):
             "rich_text": [{"text": {"content": job.get("marca", "")[:200]}}]
         },
         "Status": {
-            "select": {"name": "Target"}
+            "select": {"name": "Objetivo"}
         },
         "layer": {
             "select": {"name": "L3"}

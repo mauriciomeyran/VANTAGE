@@ -1,0 +1,68 @@
+diff --git "a/Documentaci\303\263n/ACTIVE/Change Log.md" "b/Documentaci\303\263n/ACTIVE/Change Log.md"
+index fd9437f..927c988 100644
+--- "a/Documentaci\303\263n/ACTIVE/Change Log.md"	
++++ "b/Documentaci\303\263n/ACTIVE/Change Log.md"	
+@@ -1,30 +1,40 @@
+ # V | CHANGELOG
+ 
+-diff --git "a/Documentaci\303\263n/ACTIVE/Change Log.md" "b/Documentaci\303\263n/ACTIVE/Change Log.md"
+-index 0105cc9..e79f299 100644
+---- "a/Documentaci\303\263n/ACTIVE/Change Log.md"
+-+++ "b/Documentaci\303\263n/ACTIVE/Change Log.md"
+-@@ -258,5 +258,23 @@ Acción correctiva ejecutada: Agregada regla explícita en §14 — "Cada compon
+ IDs afectados: Ninguno (sin alta/baja de ID canónico — extensión de nodo existente).
+ Estado final de la validación: Write-Back Verification PASS — confirmado vía re-fetch en vivo de §14, regla nueva presente sin mismatch. Census no aplica (sin altas/bajas de ID). Sin DRY RUN presentado en el mismo turno de aprobación por instrucción explícita del operador (yep).
+-+Tipo: [CODE] [FIX]
+-+Documento modificado: Layer_1/scripts/hard_block_gate.py · Layer_1/config/hard_blocks.json · Layer_1/scripts/layer_1_orchestrator.py (manual_first_protection) · src/gate_logic.py (docstring only) · tests/test_hard_block_gate.py · tests/test_vantage_status.py · tests/test_llm_providers.py · tests/test_agent_history_diagnostics.py · tests/test_scout_dry_run.py · tests/test_layer_1_orchestrator.py (G9)
+-+Documentos potencialmente afectados: Ninguno en Kernel/Manual/SP/Canon — consolidación de código Layer_1 y alineación de contratos de tests, sin cambios normativos.
+-+Tipo de impacto: Operativo — cierre de v9.23.0 sobre v9.22.0: consolidación de Fase 2 (2.5–2.6, ya entregada en commit previo 62ee000), un bug funcional real corregido en G5 (manual-first), y alineación de la suite de tests con el código productivo tras la migración de LangChain a browser-use.
+-+Causa raíz (G5 manual-first): manual_first_protection() dependía únicamente de is_mutable() como guard — sin evaluar explícitamente la ventana de edición humana contra Last_Gate_Run. Last_Gate_Run y last_successful_run.json son contratos distintos; el guard general no sustituye la ventana manual.
+-+Acción correctiva ejecutada:
+-+1. Hard Block Gate (2.5) — hard_block_gate.py consolidado como implementación standalone; hard_blocks.json es la única fuente de términos bloqueados, sin capa paralela de regex. Fixtures de test_hard_block_gate.py alineados con la fuente canónica (Aéropostale removida de los fixtures — nunca perteneció al conjunto vigente de Hard Blocks; el fallo era del fixture, no del Gate. Bloqueo de producción sin cambios).
+-+1. Scout (2.6) — src/gate_logic.py fuera de alcance total, decisión explícita del operador (diseño no completado ni a completarse). Cambio limitado a docstring documentando la decisión, sin efecto en comportamiento.
+-+1. G5 Manual-First — manual_first_protection() ahora evalúa explícitamente last_edited_time > Last_Gate_Run con actor humano válido, antes del guard general. Se preserva la excepción de una sola pasada para Rechazado (Q-11/SCHEMA-008).
+-+1. Suite de tests — vantage_status.py con cobertura contractual nueva (normalización, mapeos legacy, terminalidad, protección/mutabilidad, Gate Decision); test_llm_providers.py migrado del API interno obsoleto _chat_openai (eliminado en edc75c5, migración a browser-use) al API real (ChatOpenRouter, ChatOpenAI+base_url, Groq agregado al contrato de providers); test_scout_dry_run.py con ROOT corregido (parents[2]→parents[1], escribía fuera del repo); test_default_provider_is_local_ollama aislado de LLM_PROVIDER del .env local; test_g9_changelog_v922_entry ampliado de text[:2500] a text completo.
+-+Resultado:
+-+- Suite completa: 311 passed, 5 failed (todos ModuleNotFoundError: browser_use, dependencia opcional no instalada en el entorno de verificación — no relacionado al código bajo prueba), 2 skipped.
+-+- Cost-control fallback validado contra comportamiento real bajo USE_CHEAP_FALLBACK=true / LLM_COST_LIMIT<1.0 — sin cambio de política: el fallback de Gemini sigue en gemini-1.5-flash (discontinuado según el propio código), no corregido en este lote.
+-+- G9 Change Log: "v9.22.0" localizado como mención de paso en entrada normativa distinta (Fe de Erratas G8/G9, línea 46) — no existe ni existía una entrada propia para esa versión; el fix corrige el rango de búsqueda del test, no crea un registro nuevo.
+-+IDs afectados: Ninguno (código y tests; no dispara CENSUS-SYNC Regla 1).
+-+Estado final de la validación: Commits verificados en origin/main: 62ee000 (Fase 2 lote 2) y 16acdea (auto-sync — G5 fix + suite de tests). Fixes de Fase 1 y Fase 2 lote 1 verificados en sesiones previas (ver HO-000059). DRY RUN presentado y aprobado explícitamente por el operador (yep) antes de escritura — version bump y esta entrada ejecutados en la misma pasada por instrucción del operador.
+-+Handoff de referencia: continuación de HO-000059 (CLAUDE/MAIN), consolida Fase 2 completa (2.1–2.6) + hallazgo G5 + reconciliación de suite de tests reportados por sesión posterior.
+-+---
++Tipo: [CODE] [FIX]
++Documento modificado: Layer_1/scripts/hard_block_gate.py · Layer_1/config/hard_blocks.json · Layer_1/scripts/layer_1_orchestrator.py (manual_first_protection) · src/gate_logic.py (docstring only) · tests/test_hard_block_gate.py · tests/test_vantage_status.py · tests/test_llm_providers.py · tests/test_agent_history_diagnostics.py · tests/test_scout_dry_run.py · tests/test_layer_1_orchestrator.py (G9)
++Documentos potencialmente afectados: Ninguno en Kernel/Manual/SP/Canon — consolidación de código Layer_1 y alineación de contratos de tests, sin cambios normativos.
++Tipo de impacto: Operativo — cierre de v9.23.0 sobre v9.22.0: consolidación de Fase 2 (2.5–2.6, ya entregada en commit previo 62ee000), un bug funcional real corregido en G5 (manual-first), y alineación de la suite de tests con el código productivo tras la migración de LangChain a browser-use.
++Causa raíz (G5 manual-first): manual_first_protection() dependía únicamente de is_mutable() como guard — sin evaluar explícitamente la ventana de edición humana contra Last_Gate_Run. Last_Gate_Run y last_successful_run.json son contratos distintos; el guard general no sustituye la ventana manual.
++Acción correctiva ejecutada:
++1. Hard Block Gate (2.5) — hard_block_gate.py consolidado como implementación standalone; hard_blocks.json es la única fuente de términos bloqueados, sin capa paralela de regex. Fixtures de test_hard_block_gate.py alineados con la fuente canónica (Aéropostale removida de los fixtures — nunca perteneció al conjunto vigente de Hard Blocks; el fallo era del fixture, no del Gate. Bloqueo de producción sin cambios).
++1. Scout (2.6) — src/gate_logic.py fuera de alcance total, decisión explícita del operador (diseño no completado ni a completarse). Cambio limitado a docstring documentando la decisión, sin efecto en comportamiento.
++1. G5 Manual-First — manual_first_protection() ahora evalúa explícitamente last_edited_time > Last_Gate_Run con actor humano válido, antes del guard general. Se preserva la excepción de una sola pasada para Rechazado (Q-11/SCHEMA-008).
++1. Suite de tests — vantage_status.py con cobertura contractual nueva (normalización, mapeos legacy, terminalidad, protección/mutabilidad, Gate Decision); test_llm_providers.py migrado del API interno obsoleto _chat_openai (eliminado en edc75c5, migración a browser-use) al API real (ChatOpenRouter, ChatOpenAI+base_url, Groq agregado al contrato de providers); test_scout_dry_run.py con ROOT corregido (parents[2]→parents[1], escribía fuera del repo); test_default_provider_is_local_ollama aislado de LLM_PROVIDER del .env local; test_g9_changelog_v922_entry ampliado de text[:2500] a text completo.
++Resultado:
++- Suite completa: 311 passed, 5 failed (todos ModuleNotFoundError: browser_use, dependencia opcional no instalada en el entorno de verificación — no relacionado al código bajo prueba), 2 skipped.
++- Cost-control fallback validado contra comportamiento real bajo USE_CHEAP_FALLBACK=true / LLM_COST_LIMIT<1.0 — sin cambio de política: el fallback de Gemini sigue en gemini-1.5-flash (discontinuado según el propio código), no corregido en este lote.
++- G9 Change Log: "v9.22.0" localizado como mención de paso en entrada normativa distinta (Fe de Erratas G8/G9, línea 46) — no existe ni existía una entrada propia para esa versión; el fix corrige el rango de búsqueda del test, no crea un registro nuevo.
++IDs afectados: Ninguno (código y tests; no dispara CENSUS-SYNC Regla 1).
++Estado final de la validación: Commits verificados en origin/main: 62ee000 (Fase 2 lote 2) y 16acdea (auto-sync — G5 fix + suite de tests). Fixes de Fase 1 y Fase 2 lote 1 verificados en sesiones previas (ver HO-000059). DRY RUN presentado y aprobado explícitamente por el operador (yep) antes de escritura — version bump y esta entrada ejecutados en la misma pasada por instrucción del operador.
++Handoff de referencia: continuación de HO-000059 (CLAUDE/MAIN), consolida Fase 2 completa (2.1–2.6) + hallazgo G5 + reconciliación de suite de tests reportados por sesión posterior.
++---
++Tipo: [CODE] [FIX]
++Documento modificado: Layer_3/scripts/layer_3_mail.py (línea 872) · tests/test_tracker_flow_v3.py (test_f11_composite_guard)
++Documentos potencialmente afectados: Ninguno en Kernel/Manual/SP/Canon — corrección de código puro, sin cambio normativo.
++Tipo de impacto: Operativo — corrección de una regresión introducida por el propio commit 62ee000 (Fase 2 lote 2), no un hallazgo nuevo de auditoría.
++Causa raíz (regresión L3): la migración de layer_3_mail.py al backend configurable ollama/groq (commit 62ee000, 2026-09-16) reescribió el archivo completo a partir de una copia previa al fix de Fase 2 (2.1, Target→Objetivo) — el rewrite reintrodujo Status="Target" sin que nadie lo notara, porque el commit se tituló y revisó como cambio de hard_block_gate.py/gate_logic.py, sin mención de layer_3_mail.py. vantage_status.LEGACY_STATUS_MAP["Target"]="Objetivo" nunca se revirtió y siguió vigente todo este tiempo, ocultando el drift.
++Causa raíz (test_f11_composite_guard): el fixture usa una fecha fija (2026-09-10T12:00:00.000Z) sin aislar _was_edited_since_last_run() del reloj real. Esa función cae a un fallback de "< 7 días desde hoy" cuando no hay state file — el test expira exactamente al séptimo día de su propia fecha hardcodeada (2026-09-17), no por contaminación de state/last_successful_run.json como se diagnosticó inicialmente. Verificado con VANTAGE_STATE_DIR apuntando a un directorio vacío: el test sigue fallando igual, confirmando que la causa no es el state file.
++Acción correctiva ejecutada:
++1. layer_3_mail.py:872 — Status="Target" corregido a Status="Objetivo", restaurando el fix de Fase 2 (2.1). Sin otro cambio: no toca EXTRACTION_BACKEND ni ningún otro campo introducido por 62ee000.
++1. test_f11_composite_guard — agregado parámetro monkeypatch; se mockea tracker_flow._was_edited_since_last_run para devolver True sin depender de la fecha real del sistema ni de ningún state file. Path de monkeypatch corregido a tracker_flow._was_edited_since_last_run (import plano vía sys.path.insert, no Layer_1.scripts.tracker_flow, que no existe como módulo).
++Resultado:
++- Suite completa en el Mac del operador (con browser_use instalado): 318 passed, 0 failed, 2 warnings (deprecaciones externas de browser_use/google.genai, no relacionadas a VANTAGE).
++- grep -c '"Target"' Layer_3/scripts/layer_3_mail.py → 0.
++IDs afectados: Ninguno (código y tests; no dispara CENSUS-SYNC Regla 1).
++Estado final de la validación: DRY RUN presentado y aprobado explícitamente por el operador (yep) antes de cada escritura, en turnos separados. Verificado py_compile + pytest tras cada fix, antes y después de aplicar en el Mac del operador.
++---
+ > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
+ Tipo: [CODE] [OPS] [DOC]
+ Alcance:

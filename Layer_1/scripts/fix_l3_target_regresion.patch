@@ -1,0 +1,13 @@
+diff --git a/Layer_3/scripts/layer_3_mail.py b/Layer_3/scripts/layer_3_mail.py
+index 83d290f..610ff58 100644
+--- a/Layer_3/scripts/layer_3_mail.py
++++ b/Layer_3/scripts/layer_3_mail.py
+@@ -869,7 +869,7 @@ def create_notion_page(job, email_meta):
+             "rich_text": [{"text": {"content": job.get("marca", "")[:200]}}]
+         },
+         "Status": {
+-            "select": {"name": "Target"}
++            "select": {"name": "Objetivo"}
+         },
+         "layer": {
+             "select": {"name": "L3"}

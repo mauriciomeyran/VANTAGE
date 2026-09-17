@@ -1,0 +1,19 @@
+diff --git a/tests/test_tracker_flow_v3.py b/tests/test_tracker_flow_v3.py
+index ae2860a..910dcfb 100644
+--- a/tests/test_tracker_flow_v3.py
++++ b/tests/test_tracker_flow_v3.py
+@@ -304,8 +304,13 @@ def test_f10_enum_enforcement():
+ 
+ # ── F11: Guard Regression Fix Tests ─────────────────────────────────────────
+ 
+-def test_f11_composite_guard():
++def test_f11_composite_guard(monkeypatch):
+     """F11: Guard = is_mutable (field-block deferred - see G3)"""
++    # Fixture usa una fecha fija (2026-09-10); sin aislar, _was_edited_since_last_run()
++    # cae al fallback de "< 7 días desde hoy" y el test expira con el paso del tiempo real
++    # (falla exacto a partir del día 7, no es contaminación de state/).
++    monkeypatch.setattr("tracker_flow._was_edited_since_last_run", lambda t: True)
++
+     # Protected status (Contratado) - should not be mutable
+     record = {
+         "Status": "Contratado",
