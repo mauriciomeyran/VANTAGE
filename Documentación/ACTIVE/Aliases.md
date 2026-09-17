@@ -5,7 +5,7 @@
 Session Cycle
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
-| start | Arranca el sistema al inicio de cada sesión: activa el entorno, carga variables y corre el chequeo de salud. | Activa .venv, exporta config/layer_1.env, y ejecuta health_check.py, que revisa en orden versión, entorno, git, conectividad a Notion, sync documental y antigüedad de índices — auto-sincroniza el Entity Index si pasó más de 24h. |
+| start | Arranca el sistema al inicio de cada sesión: activa el entorno, levanta el servidor de serial si no está corriendo, carga variables y corre el chequeo de salud. | Activa .venv, exporta config/layer_1.env, verifica (curl) si start_vantage_serial_server.sh ya escucha en :8787 y lo levanta en background si no, y ejecuta health_check.py, que revisa en orden versión, entorno, git, conectividad a Notion, sync documental y antigüedad de índices — auto-sincroniza el Entity Index si pasó más de 24h. |
 | vversions –bootstrap | Genera el paquete de contexto de apertura de sesión: última fila del Ledger, última entrada del Changelog, tickets críticos pendientes. | Lee pages.retrieve sobre la página del Session Ledger y el Changelog y arma el bloque [DUMP INICIO SESIÓN VANTAGE] — no escribe nada. |
 | vversions –sync | Propaga la versión ya escrita en el Changelog hacia los 6 documentos restantes. | Único flag con escritura: lee la versión target del Changelog y ejecuta 6 pages.patch secuenciales sobre la propiedad Versión — housekeeping, exento de APROBAR_WRITE. |
 ## 02 ALIASES:L0-RUNTIME
@@ -32,15 +32,18 @@ L1/L2 · Discovery (Lunes)
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | vl1 | Corre el pipeline principal de Active Recon — procesa el JSON consolidado del día y lo escribe en el Tracker. | vl1 → layer_1_pipeline.sh → layer_1_orchestrator.py --dry-run (default; --apply explícito para escribir). |
-| vl1status / vl1analytics / vl1batch / vl1recovery / vl1profile / vl1feed / vl1backfill | Atajos de un solo token a cada subcomando de vl1 (ver Manual 09.2 para el detalle de cada uno). | Cada uno equivale a vl1 — mismo contrato, solo evita el espacio. |
-| vl1app | Abre la app empaquetada de Layer 1 desde Finder/Spotlight en vez de Terminal. | open /Applications/Layer 1. |
+| vl1status / vl1analytics / vl1batch / vl1recovery / vl1profile / vl1feed / vl1backfill | Atajos a flags fijos de vl1, no subcomandos textuales (ver Manual 09.2 para el detalle de cada modo). | vl1status='vl1 --dry-run-live' · vl1analytics='vl1 --dry-run-live' · vl1batch='vl1 --apply' · vl1recovery='vl1 --apply' · vl1profile='vl1 --dry-run-live' · vl1feed='vl1 --apply --file' · vl1backfill='vl1 --apply'. |
+| vl1run | Corre el pipeline principal en modo escritura directa. | vl1 --apply. |
+| vl1dry | Corre el pipeline principal en modo preview, sin escritura. | vl1 --dry-run-live. |
+| vl1dedup | Corre el pipeline con auditoría de duplicados incluida, en modo escritura. | vl1 --apply --dedup-audit. |
+| vl1app | Abre la app empaquetada de Layer 1 desde Finder/Spotlight en vez de Terminal. (Obsoleto — preferir los alias de Terminal/Raycast de esta misma tabla; el .app no se mantiene activamente.) | open /Applications/Layer 1. |
 | vassemble | Genera los 7 prompts semanales (.md) por motor desde la PROMPT LIBRARY, con fecha del día ya sustituida. | Corre weekly_prompt_assembler.py: fetch vía notion_utils.notion_get (cache/throttling/retry ya existentes) de Prompt A + Wrapper por motor + Prompt E, sustitución de [YYYY-MM-DD], concatenación Prompt A + Wrapper por orden fijo, escritura de Prompt_[Motor][Fecha].md y Prompt_E_Consolidation[Fecha].md en Layer_1/data/Prompts/. |
 ## 04 ALIASES:L3-PASSIVE-INTAKE
 L3 · Passive Intake
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | vl3 | Procesa manualmente el backlog de Gmail (.Jobs) si el ciclo automático no corrió. | Invoca layer_3_mail.sh — lee vía IMAP, extrae vacantes con Groq (máx. 10 correos/run), escribe Class A en el Tracker. |
-| vl3app | Abre la app empaquetada de Layer 3. | open /Applications/Layer 2 (nombre de carpeta heredado, corresponde a L3). |
+| vl3app | Abre la app empaquetada de Layer 3. (Obsoleto — preferir los alias de Terminal/Raycast de esta misma tabla; el .app no se mantiene activamente.) | open /Applications/Layer 2 (nombre de carpeta heredado, corresponde a L3). |
 ## 05 ALIASES:L4-VERSION-CONTROL
 L4 · Version Control & Documentación
 | Alias | Qué hace | Procedimiento interno |
@@ -53,7 +56,9 @@ L4 · Version Control & Documentación
 | vprint | Lista vacantes con Gate_Decision = CREATE (conteo + IDs/URLs) vía query directo a Notion. | Corre vprint.py, cargando .env inline (vprint.sh en disco es un wrapper alterno no usado por este alias). |
 | vtriggers | Mantiene el manifiesto SSOT de skills (skills/triggers.json) que consume el Bootloader para lazy-load por trigger. | Corre update_triggers_json.py — escanea /skills/, valida SKILL.md por entrada, detecta huérfanos (reporta, no borra), actualiza last_modified, y ejecuta git add+commit+push automático sobre triggers.json. |
 | vserial | Obtiene un nuevo serial de handoff VANTAGE (formato HO-######), lo imprime en Terminal y lo copia al portapapeles. Es la única vía canónica para obtener un serial nuevo. | Ejecuta allocate_vantage_serial.py next contra GLOBAL_VANTAGE_COUNTER (ver KERNEL:HANDOFF-SERIAL). Alterno vía Raycast: vantage-serial.sh replica el mismo comando y agrega notificación de éxito. MCP, HTTP y acceso directo a SQLite no son rutas válidas de asignación ni fallback. |
-| vsum | Resume transcripts de sesiones |  |
+| vsum | Resume transcripts de sesiones de trabajo (propia u otra IA) a Markdown estructurado, para continuidad entre chats. | Corre vsum.py <archivo.md o URL> [--batch] [--notion]. --notion crea la página de resumen como hija del INBOX en Notion vía notion_client.Client directo (no MCP). |
+| vnblm | Invoca el flujo de consulta a Notebook Gemini para triaje documental (ver MANUAL:RUNTIME-005). | Corre vdoc_nblm.py. |
+| vcode | Abre .zshrc en el editor por defecto para edición rápida. | code ~/.zshrc. |
 ---
 | Flag / Comando | Modo | Descripción | Efecto Secundario | Requisitos / Condición |
 | --- | --- | --- | --- | --- |
@@ -64,7 +69,7 @@ Dashboard (Martes — Recuperación)
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
 | vd | Abre el Dashboard de recuperación de vacantes bloqueadas. | Invoca dashboard_start.sh — arranca Flask en :8000, corre smoke test, abre dashboard.html en el navegador. |
-| vdapp | Abre la app empaquetada del Dashboard. | open /Applications/Dashboard. |
+| vdapp | Abre la app empaquetada del Dashboard. (Obsoleto — preferir los alias de Terminal/Raycast de esta misma tabla; el .app no se mantiene activamente.) | open /Applications/Dashboard. |
 ## 07 ALIASES:CV-PIPELINE
 CV Pipeline (Miércoles)
 CV-A, CV-B y QA se disparan directamente en el chat de Claude — sin alias propio (ver Manual 08.3). La preparación mecánica previa (scaffold batch, opcional) sí corre en Terminal:
@@ -73,12 +78,13 @@ CV-A, CV-B y QA se disparan directamente en el chat de Claude — sin alias prop
 | (sin alias corto asignado) | Normaliza el export de Notion para el batch de CV-A. | python3 adapt_tracker_export.py --in <export.csv> |
 | (sin alias corto asignado) | Genera scaffolds HANDOFF en paralelo para vacantes Optimizar. | python3 cv_a_batch_agent.py --csv tracker_adapted.csv |
 | (sin alias corto asignado) | Prepara un scaffold individual (cache, Hard Block, idioma). | python3 cv_a_prep.py --url <URL> |
+| vfigma | Abre el archivo Figma activo del CV Pipeline directamente desde Terminal. | open 'figma://file/qPyrpGysJs7XxcbubKOo0n?node-id=0-1'. |
 | Ver MANUAL:SCRIPT-GLOSSARY-CV-PREP para el detalle completo de flags. |  |  |
 ## 08 ALIASES:DEDUP
 Dedup & Oportunidades
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
-| vdedup | Consolida entradas duplicadas detectadas en el Tracker. | Corre consolidate_duplicates.py sobre la clave compuesta brand+title+location. |
-| vopport | Limpia duplicados específicamente en oportunidades ya calificadas. | Corre dedup_opportunities.py. |
+| vdedup | Consolida entradas duplicadas detectadas en el Tracker. | Corre layer_1_orchestrator.py --dry-run --dedup-audit. consolidate_duplicates.py queda archivado en Archive/Legacy_Scripts/ — no se ejecuta salvo confirmación adicional del operador. |
+| vopport | Limpia duplicados específicamente en oportunidades ya calificadas. | Corre dedup_opportunities.py --apply (obligatorio para escribir desde H-2; sin el flag corre en modo preview). |
 | dedup_audit.sh <em>(sin alias corto en .zshrc — se invoca por ruta)</em> | Auditoría manual semanal recomendada de duplicados en Oportunidades — mismo motor que vopport, pensado como recordatorio de cadencia fija. | ./scripts/dedup_audit.sh → dedup_opportunities.py sin flags. Soporta también --clear <page_id> (falsos positivos) y layer_1_run.py --dedup-audit (integración automática Fase 6, +1-2 min al pipeline). |
-| Figma Sync (plugin CV, 04-Vantage_CV/Figma Sync/) no tiene alias de Terminal propio — se opera desde Figma Desktop, ver Manual 08.3. |  |  |
+| Figma Sync (plugin CV, 04-Vantage_CV/Figma Sync/) se abre directo desde Terminal vía vfigma; el trabajo de sincronización en sí (parsing, Registry V2) sigue operándose desde Figma Desktop, ver Manual 08.3. |  |  |

@@ -9,7 +9,7 @@ La solución no es buscar más — es verificar antes de evaluar, y evaluar ante
 Invariantes del Sistema
 1. Una vacante no entra al pipeline sin URL válida — excepción: Bypass activo (ver 09.1).
 1. Score no lo calcula el sistema de lenguaje — lo calcula Python con lógica determinista.
-1. Gate decision no se sobreescribe manualmente. RT-1 permite corregir inputs Class A para que Python recalcule (ver 09.5).
+1. Gate decision no se sobreescribe manualmente. El Dashboard permite corregir inputs Class A para que Python recalcule (ver 09.5).
 1. Strategy es responsabilidad humana; processing es responsabilidad del sistema.
 Qué significa esto para el Sistema AI
 El componente AI es el procesador textual del pipeline:
@@ -335,6 +335,7 @@ No es capa de búsqueda — infraestructura documental.
 - Cron jobs adicionales (ruta directa al Python del venv — source .venv/bin/activate falla con "Operation not permitted" en entorno cron): vantage.py sync y notion_backup.py, y vl3 nuevo · 00:00/08:00/16:00.
 - Repo: github.com/mauriciomeyran/VANTAGE.
 - vsync_doc.py — sync bidireccional Notion → ACTIVE/ para los 6 fundacionales editables (Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log). Alias: vdoc · Flags: dry | notion | local | auto.
+- Política de versionado en git (confirmada 2026-09-17, H-6): el comportamiento actual de vgit (commit automático de todo el árbol no ignorado) es la política vigente — se versiona el .db de estado por su valor de trazabilidad histórica y bajo tamaño; caché y binarios grandes quedan excluidos vía .gitignore ya existente. Sin cambios de código requeridos por esta decisión.
 Riesgo conocido — vdoc local sobre documentos con hyperlinks aplicados: push_local_to_notion() (vsync_doc.py) hace delete-all + create-all de bloques en cada corrida — cualquier anchor #block-id generado por el sistema de hyperlinks (KERNEL:DOCUMENTATION-011) queda huérfano al recrearse el bloque con ID nuevo. La variante vsync_doc_fast.py quedó deprecada en Archive/Legacy_Scripts/ (ver KERNEL:EVOLUTION §17, Linaje Histórico) — no forma parte del riesgo activo. apply_hyperlinks_notion.py evita este riesgo (PATCH puntual, preserva block-ID), pero vdoc local sigue sin guard equivalente — evitarlo sobre documentos con hyperlinks recién aplicados hasta que se decida su reemplazo formal.
 layer_1_run.py fue reemplazado por layer_1_orchestrator.py (refactor v9.22.0) como motor del pipeline Tracker — mismo alcance operativo, ahora con los cuatro modos de ejecución descritos en KERNEL:DATA-FLOW-001. layer_1_run.py queda archivado, no forma parte del riesgo activo.
 Skills Distribution — Single Source of Truth
@@ -405,7 +406,7 @@ Motor de lógica de negocio y escritura autónoma: único componente con permiso
 Excepción — Bypass
 Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE automático (ver 09.1).
 Invariante crítico
-Python recalcula campos Class B en cada run — ningún valor estimado por el AI Component tiene validez en el pipeline. Este invariante se aplica técnicamente en la vía RT-1/Dashboard mediante el guard documentado en KERNEL:GATE-DECISION-003 (GAP-03 cerrado v9.19.2).
+Python recalcula campos Class B en cada run — ningún valor estimado por el AI Component tiene validez en el pipeline. Este invariante se aplica técnicamente en la vía Dashboard mediante el guard documentado en KERNEL:GATE-DECISION-003 (GAP-03 cerrado v9.19.2).
 ---
 ## 06 KERNEL:DASHBOARD-CHECKLIST-ARCH
 Arquitectura Dashboard/Checklist
@@ -432,6 +433,7 @@ Notas recibe, entre otros usos, el texto determinista de auditoría de archivado
 Class B — System-Primary
 Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente · Dedup_Flag · Score_Method · Last_Gate_Run · JD_Quality.
 VM_Scope ∈ {Alto, Bajo} — campo binario. No existe valor "Medio" en ningún punto del sistema (verificado contra Kernel y MANUAL:SCHEMA-FIELD-REF §21).
+Resolución B-09 (2026-09-17): Notion es la autoridad declarada (SSOT) de este esquema. class_b_guard.py es su espejo verificado en código — no existen dos esquemas distintos. La sincronización entre ambos es hoy manual; se propone extender verify_versions.py (o un g9_docsync_verify.py nuevo) para comparar automáticamente los campos Class A/B de Notion contra class_b_guard.py y fallar si divergen.
 ### 07.2 KERNEL:SCHEMA-002
 Restricción del Sistema
 Campos Class B en JSON entrante se ignoran sin excepción — Python los calcula en el siguiente run.
@@ -485,6 +487,21 @@ Valores confirmados en código activo (10), rediseño v9.14.6 (KERNEL:GATE-DECIS
 | Verificar JD | Source_Type=Vacante AND Fetch=Parcial |
 Historial de tipo de campo: v9.13.7 introdujo escritura select; v9.13.11 documentó (erróneamente) rich_text tras una auditoría desactualizada; v9.14.2/v9.14.3 (Changelog) confirmaron y ejecutaron la migración real a select — esta sección se corrige en v9.14.5 para alinearse con el Changelog, tras detectarse el drift por fetch directo del schema vivo de Notion.
 ---
+### 07.9 KERNEL:SCHEMA-009
+Escritores hacia Notion — Matriz de Integridad
+Ocho componentes escriben directamente sobre el Tracker o sus derivados. Todos pasan por class_b_guard.guard_write_payload() salvo donde se indica lo contrario.
+| Escritor | Escribe sobre | Guard |
+| --- | --- | --- |
+| feed_processor.py | Class A (ingesta L1/L3) | Validación de schema en ingesta |
+| layer_1_orchestrator.py | Class A + Class B | class_b_guard |
+| dashboard_notion.py::write_patch_to_notion() | Class A (Dashboard) | class_b_guard, fail-closed |
+| dedup_opportunities.py | Class B (Dedup_Flag) + Archive Tracker | class_b_guard(payload, Actor.DEDUP) (Fase 2, 2026-09) |
+| vsync_doc.py | Documentos fundacionales (no Tracker) | N/A — housekeeping documental |
+| apply_hyperlinks_notion.py | Bloques de Notion (PATCH puntual) | N/A — preserva block-ID, no toca Class A/B |
+| vsum.py | Página hija de INBOX (resumen) | N/A — no toca el Tracker |
+| allocate_vantage_serial.py | GLOBAL_VANTAGE_COUNTER (SQLite, no Notion) | N/A — fuera del alcance de class_b_guard |
+Nota de historial: dedup_opportunities.py no pasaba por el guard hasta la remediación de Fase 2 (2026-09) — la tabla anterior a esta fecha lo listaba como evasor del contrato.
+---
 ## 08 KERNEL:TRACKER-SCHEMA
 Bug Tracker y Tasks Tracker
 Distinto del Tracker de vacantes (07) — bases de datos de trabajo interno del propio VANTAGE.
@@ -521,15 +538,15 @@ Orden:
 1. Gate_Decision (≥60 CREATE · 40–59 REVIEW_NEEDED · <40 BLOCKED/Archivar).
 ### 09.3 KERNEL:GATE-DECISION-003
 Resolución de REVIEW_NEEDED
-GAP-03 — CERRADO (v9.19.2): escritura directa vía MCP/RT-1 cuenta con guard equivalente al de feed_processor.py. class_b_guard.guard_write_payload() está integrado en dashboard_notion.py::write_patch_to_notion() como guard previo a client.pages.update(), fail-closed (CLASS_B_BLOCKED) ante campos Class B o desconocidos (strict_unknown=True). Verificado línea por línea contra el repositorio, 2026-08-10.
+GAP-03 — CERRADO (v9.19.2): escritura directa vía MCP/Dashboard cuenta con guard equivalente al de feed_processor.py. class_b_guard.guard_write_payload() está integrado en dashboard_notion.py::write_patch_to_notion() como guard previo a client.pages.update(), fail-closed (CLASS_B_BLOCKED) ante campos Class B o desconocidos (strict_unknown=True). Verificado línea por línea contra el repositorio, 2026-08-10.
 Disparador de resolución: Status = "Target".
 ### 09.4 KERNEL:GATE-DECISION-004
 Por Qué los Gates Son Deterministas
 Un gate que puede sobreescribirse manualmente no es un gate — es una sugerencia.
 ### 09.5 KERNEL:GATE-DECISION-005
 Flujo de Recuperación BLOCKED
-RT-1 permite corregir campos Class A y re-validar con Python.
-RT-1 no sobreescribe el gate.
+El Dashboard permite corregir campos Class A y re-validar con Python.
+El Dashboard no sobreescribe el gate.
 ### 09.6 KERNEL:GATE-DECISION-006
 REJECTED (Post-Aplicación)
 REJECTED es Class B derivado de Status = "Rechazado" (Class A).
@@ -594,7 +611,7 @@ Invariantes
 - gate_logic() se invoca antes de gate() en todo pipeline ordinario y backfill (layer_1_run.py Fase 4).
 - Todo write que fija Status=Expirada (Fase 2 — URL_GATE; Fase 3.5 — filtro de perfil) debe fijar Next_Action=Archivar en el mismo write — evita drift entre el criterio Status→TERMINAL y Next_Action→TERMINAL_ACTIONS.
 - Un registro terminal no puede ser sobreescrito por recálculo de Score/Gate, aunque cambien campos Class A.
-- RT-1 (/accept): la escritura de Class A corregido debe limpiar atómicamente Next_Action y Gate_Decision (select: null) en el mismo write, para que el siguiente run no trate la vacante recuperada como terminal fantasma.
+- Dashboard (/accept): la escritura de Class A corregido debe limpiar atómicamente Next_Action y Gate_Decision (select: null) en el mismo write, para que el siguiente run no trate la vacante recuperada como terminal fantasma.
 - v9.14.5: Status=Rechazado ahora escribe Next_Action=Post-Mortem (antes Ninguna) — protección terminal vía STATUS_TERMINAL_MAP sin cambio, ya cubierta por el criterio 1 de esta sección.
 - Protección estrecha: solo los valores listados arriba. Cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con KERNEL:OWNERSHIP-002.
 - Distinción de alcance temporal: feed_processor.py bloquea la escritura de campos Class B únicamente en el momento de ingesta de una fila ambigua (nace sin Score/Gate). Esto es distinto de una protección persistente contra recálculo posterior sobre filas ya existentes — esa protección persistente nunca existió: "Por Revisar" no formó parte de STATUS_TERMINAL_MAP ni de TERMINAL_ACTIONS. Verificado por test_g8_matrix_live_statuses_protected.
@@ -614,7 +631,7 @@ Referencia canónica para scripts y auditorías — no reemplaza la descripción
 | [ENTRY] | feed_processor.py ingesta JSON | URL viva + Score ≥ 60 + Status=Target | READY_TO_APPLY | Python | Gate_Decision=CREATE, Score, VM_Scope, Role_Class, Next_Action |
 | [ENTRY] | Agregador con HEAD fallido/timeout | AGREGADOR_UNVERIFIED | Target | Python | Fetch=Accesible, Next_Action=Reparar URL (fix v9.21.40 — reemplaza el tratamiento previo de bloqueo por defecto) |
 | [ENTRY] | feed_processor.py ingesta JSON | Dedup match (hash/URL/brand+title) contra VANTAGE TRACKER activo, ventana 30d | REVIEW_NEEDED | Python | Status=REVIEW_NEEDED en el registro entrante; Dedup_Flag='Posible duplicado' (select) en el registro existente coincidente |
-| BLOCKED | vd — Dashboard RT-1 edita Class A | Patch válido → run_pipeline.py --dry PASS | PATCHED | Humano + Python | Score, Gate_Decision recalculados |
+| BLOCKED | vd — Dashboard edita Class A | Patch válido → run_pipeline.py --dry PASS | PATCHED | Humano + Python | Score, Gate_Decision recalculados |
 | PATCHED | Operador acepta patch en Dashboard | Aceptar → vantage_pipeline.sh | READY_TO_APPLY OR BLOCKED | Python | Gate_Decision re-evaluado; si falla → regresa BLOCKED |
 | PATCHED | Operador rechaza patch en Dashboard | Rechazar | BLOCKED | Humano | Sin cambio en SSOT |
 | REVIEW_NEEDED | Operador edita Notion directo + Status→Target | vantage_pipeline.sh evalúa Class B por primera vez | READY_TO_APPLY OR BLOCKED | Humano + Python | Score, Gate_Decision, Next_Action calculados |
@@ -626,7 +643,7 @@ Referencia canónica para scripts y auditorías — no reemplaza la descripción
 Nota de orden de precedencia (Hallazgo 2 — auditoría arquitectónica)
 gate_logic() debe ejecutarse ANTES que gate() como filtro de mutabilidad.
 Si Status ∈ {Postulado, Rechazado, Expirada} → pipeline termina aquí, sin invocar gate(). Previene regresión de estado en terminales.
-→ Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), KERNEL:GATE-DECISION-005 (RT-1).
+→ Referencia cruzada: KERNEL:GATE-DECISION-010 (terminalidad), KERNEL:GATE-DECISION-005 (Dashboard).
 ---
 ### 09.12 KERNEL:DEDUP-LAYER-UPGRADE 
 — Guard de Mutación en Existentes
