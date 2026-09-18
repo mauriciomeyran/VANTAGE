@@ -969,7 +969,7 @@ def run_dedup_audit(
                 )
                 continue
 
-            flag_payload = {"Dedup_Flag": True}
+            flag_payload = {"Dedup_Flag": {"checkbox": True}}
             # Anti-rewrite: si ya tiene el flag, no tocar
             write_result = guarded_pages_update(
                 client,

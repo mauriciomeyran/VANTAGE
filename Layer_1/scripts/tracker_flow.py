@@ -1038,7 +1038,7 @@ _RICH_TEXT_PROPS = frozenset({
 
 _URL_PROPS = frozenset({"URL", "URL Notion"})
 
-_CHECKBOX_PROPS = frozenset({"Archivar", "Optimizar", "Postular", "Interview", "Dedup_Flag"})
+_CHECKBOX_PROPS = frozenset({"Archivar", "Optimizar", "Postular", "Interview"})
 
 _DATE_PROPS = frozenset({
     "NAD", "Apply Date", "Rej Date", "Interview_Date", "Last_Gate_Run",
