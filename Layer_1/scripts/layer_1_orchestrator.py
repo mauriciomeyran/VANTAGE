@@ -100,6 +100,13 @@ def validate_url(url: str, source_type: str, jd_text: str = "") -> tuple[bool, s
 
     from url_gate import validate_url_offline, is_agregador, normalize_url
 
+    # JD largo = bypass (paridad viejo). Debe evaluarse ANTES del check de
+    # URL vacía — vacantes válidas (LinkedIn screenshot, apply-por-correo)
+    # no siempre traen URL pero sí traen JD completo; el bypass existía en
+    # el código pero era inalcanzable porque "not url" cortaba primero.
+    if jd_text and isinstance(jd_text, str) and len(jd_text.strip()) > 100:
+        return True, "JD_ALREADY_EXISTS"
+
     if not url:
         return False, "NO_URL"
 
@@ -107,10 +114,6 @@ def validate_url(url: str, source_type: str, jd_text: str = "") -> tuple[bool, s
     stripped = url.strip().lower()
     if "://" in stripped and not stripped.startswith(("http://", "https://")):
         return False, "INVALID_SCHEME"
-
-    # JD largo = bypass (paridad viejo)
-    if jd_text and isinstance(jd_text, str) and len(jd_text.strip()) > 100:
-        return True, "JD_ALREADY_EXISTS"
 
     ok, reason = validate_url_offline(url, jd_text)
     if ok:
