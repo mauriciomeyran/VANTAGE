@@ -580,21 +580,21 @@ def _set_dedup_flag_if_needed(
 
     page_id = page["id"]
     props = page.get("properties", {})
-    current_dedup_flag = None
-    
-    # Extraer valor actual de Dedup_Flag
+    current_dedup_flag = False
+
+    # Extraer valor actual de Dedup_Flag (checkbox)
     dedup_field = props.get(dedup_flag_prop, {})
-    if dedup_field.get("type") == "select":
-        current_dedup_flag = (dedup_field.get("select") or {}).get("name", "")
-    
+    if dedup_field.get("type") == "checkbox":
+        current_dedup_flag = bool(dedup_field.get("checkbox"))
+
     # Solo actualizar si no tiene el valor correcto
-    if current_dedup_flag != "Posible duplicado":
+    if not current_dedup_flag:
         try:
             notion_utils.pages.update(
                 page_id=page_id,
-                properties={dedup_flag_prop: {"select": {"name": "Posible duplicado"}}}
+                properties={dedup_flag_prop: {"checkbox": True}}
             )
-            print(f"  🏷️  Dedup_Flag asignado: 'Posible duplicado' ({page_id[:8]}...)")
+            print(f"  🏷️  Dedup_Flag asignado: True ({page_id[:8]}...)")
         except Exception as exc:
             print(f"  ⚠️  Error asignando Dedup_Flag para {page_id[:8]}: {exc}")
 

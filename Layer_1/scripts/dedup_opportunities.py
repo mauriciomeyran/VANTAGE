@@ -106,20 +106,20 @@ def write_dedup_flag(client, page_id, properties, clear=False, dry_run=False):
         clear: si True, limpia el campo; si False, asigna "Posible duplicado"
         dry_run: si True, simula la escritura sin ejecutarla
     """
-    # Extraer valor actual de Dedup_Flag
+    # Extraer valor actual de Dedup_Flag (checkbox)
     dedup_field = properties.get("Dedup_Flag", {})
-    current_dedup_flag = ""
-    if dedup_field.get("type") == "select":
-        current_dedup_flag = (dedup_field.get("select") or {}).get("name", "")
+    current_dedup_flag = False
+    if dedup_field.get("type") == "checkbox":
+        current_dedup_flag = bool(dedup_field.get("checkbox"))
 
     if clear:
-        # Limpiar campo - enviar null para select
-        if current_dedup_flag:  # Solo si tiene valor
+        # Limpiar campo - checkbox a False
+        if current_dedup_flag:  # Solo si estaba marcado
             if dry_run:
                 print(f"  [DRY RUN] Limpiaría Dedup_Flag ({page_id[:8]}...)")
                 return True
             try:
-                payload = class_b_guard({"Dedup_Flag": {"select": None}}, Actor.DEDUP)
+                payload = class_b_guard({"Dedup_Flag": {"checkbox": False}}, Actor.DEDUP)
                 client.pages.update(
                     page_id=page_id,
                     properties=payload
@@ -130,18 +130,18 @@ def write_dedup_flag(client, page_id, properties, clear=False, dry_run=False):
                 print(f"  ⚠️  Error limpiando Dedup_Flag para {page_id[:8]}: {exc}")
                 return False
     else:
-        # Asignar "Posible duplicado"
-        if current_dedup_flag != "Posible duplicado":
+        # Asignar True (posible duplicado)
+        if not current_dedup_flag:
             if dry_run:
-                print(f"  [DRY RUN] Asignaría Dedup_Flag 'Posible duplicado' ({page_id[:8]}...)")
+                print(f"  [DRY RUN] Asignaría Dedup_Flag=True ({page_id[:8]}...)")
                 return True  # En DRY RUN asumimos que se asignaría
             try:
-                payload = class_b_guard({"Dedup_Flag": {"select": {"name": "Posible duplicado"}}}, Actor.DEDUP)
+                payload = class_b_guard({"Dedup_Flag": {"checkbox": True}}, Actor.DEDUP)
                 client.pages.update(
                     page_id=page_id,
                     properties=payload
                 )
-                print(f"  🏷️  Dedup_Flag asignado: 'Posible duplicado' ({page_id[:8]}...)")
+                print(f"  🏷️  Dedup_Flag asignado: True ({page_id[:8]}...)")
                 return True
             except Exception as exc:
                 print(f"  ⚠️  Error asignando Dedup_Flag para {page_id[:8]}: {exc}")
@@ -149,7 +149,7 @@ def write_dedup_flag(client, page_id, properties, clear=False, dry_run=False):
         else:
             # Ya tiene el valor correcto, no se necesita hacer nada
             if dry_run:
-                print(f"  [DRY RUN] Ya tiene Dedup_Flag 'Posible duplicado' ({page_id[:8]}...)")
+                print(f"  [DRY RUN] Ya tiene Dedup_Flag=True ({page_id[:8]}...)")
             return False  # No contar como asignación nueva
     return False
 
@@ -249,22 +249,13 @@ if __name__ == "__main__":
     # Obtener resultados del Tracker activo
     active_results = client.data_sources.query(data_source_id=data_source_id)["results"]
 
-    # Obtener resultados del Archive Tracker si está disponible como data source
+    # Fix (operador, 2026-09-17): el Archive Tracker deja de consultarse.
+    # Los registros ya archivados no requieren ninguna acción — listarlos
+    # como contexto no ayudaba a la toma de decisiones y dominaba el output
+    # (40/45 líneas "OMITIDO" en la corrida que motivó este fix).
     archived_results = []
-    if archive_data_source_id:
-        print(f"📁 Consultando Archive Tracker ({archive_data_source_id[:8]}...)...")
-        try:
-            archived_results = client.data_sources.query(data_source_id=archive_data_source_id)["results"]
-            print(f"✅ {len(archived_results)} entradas obtenidas del Archive Tracker")
-        except Exception as e:
-            print(f"⚠️  Error consultando Archive Tracker: {e}")
-            print("⚠️  Continuando solo con Tracker activo...")
-    else:
-        print("ℹ️  NOTION_ARCHIVE_DATA_SOURCE_ID no configurado - usando solo Tracker activo")
-
-    # Combinar resultados
-    all_results = active_results + archived_results
-    print(f"✅ Total de entradas: {len(all_results)} ({len(active_results)} activas + {len(archived_results)} archivadas)")
+    all_results = active_results
+    print(f"✅ Total de entradas: {len(all_results)} (solo Tracker activo)")
 
     # Aplicar filtro temporal en memoria basado en created_time
     from datetime import datetime, timedelta
@@ -295,11 +286,6 @@ if __name__ == "__main__":
         "archived_count": len(archived_results)
     }
 
-    # R-05 fix: el Archive Tracker se sigue leyendo para detectar duplicados
-    # cross-referenciados, pero nunca se le escribe Dedup_Flag — es un
-    # tracker de solo-lectura para efectos de este script.
-    archived_ids = {item["id"] for item in archived_results}
-
     jobs = []
     for item in all_results:
         props = item["properties"]
@@ -314,7 +300,7 @@ if __name__ == "__main__":
             "Next_Action": get_plain_text(props.get("Next_Action")),
             "created_time": item.get("created_time", ""),
             "properties": props,  # Guardar props para escritura
-            "is_archived": item["id"] in archived_ids,
+            "is_archived": False,  # ya no aplica: universo es solo Tracker activo
         })
 
     print("\n🔎 Buscando duplicados (Empresa + Rol similar)...")
@@ -359,10 +345,7 @@ if __name__ == "__main__":
                     "Next_Action": job["Next_Action"],
                     "Gate_Decision": job["Gate_Decision"],
                 }
-                if job["is_archived"]:
-                    terminal_state_omitted += 1
-                    print(f"  ⛔ [{job['id'][:8]}] OMITIDO (Archive Tracker — solo lectura): {job['Marca']} | {job['Rol']}")
-                elif not is_terminal_state(entry):
+                if not is_terminal_state(entry):
                     eligible_jobs.append(job)
                 else:
                     terminal_state_omitted += 1
