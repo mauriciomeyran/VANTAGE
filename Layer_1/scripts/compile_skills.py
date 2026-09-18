@@ -32,8 +32,10 @@ def find_skill_files(skills_dir: Path) -> list[Path]:
     Encuentra todos los SKILL.md dentro de skills_dir, incluyendo subcarpetas.
     Orden: alfabé�ıco por ruta completa.
     """
-    skill_files = sorted(skills_dir.rglob("SKILL.md"))
-    return skill_files
+    return sorted(
+        path for path in skills_dir.glob("*.md")
+        if path.is_file()
+    )
 
 def read_skill_file(path: Path) -> str:
     """Lee el contenido de un archivo SKILL.md."""
@@ -62,15 +64,8 @@ def generate_toc(skill_files: list[Path], skills_dir: Path) -> str:
     for i, skill_path in enumerate(skill_files, start=1):
         # Nombre legible: ruta relativa sin el sufijo SKILL.md
         rel_path = skill_path.relative_to(skills_dir)
-        # Convertir a slug para ancla: reemplazar espacios y caracteres especiales
-        slug = (
-            str(rel_path.parent)
-            .lower()
-            .replace(" ", "-")
-            .replace("/", "-")
-            .replace("-", "-")
-        )
-        skill_name = rel_path.parent.name
+        skill_name = skill_path.stem
+        slug = skill_name.lower().replace(" ", "-")
         toc_lines.append(f"{i}. [{skill_name}](#{slug})")
     return "\n".join(toc_lines) + "\n\n---\n\n"
 
@@ -79,13 +74,7 @@ def generate_content(skill_files: list[Path], skills_dir: Path) -> str:
     content_parts = []
     for skill_path in skill_files:
         rel_path = skill_path.relative_to(skills_dir)
-        slug = (
-            str(rel_path.parent)
-            .lower()
-            .replace(" ", "-")
-            .replace("/", "-")
-        )
-        skill_name = rel_path.parent.name
+        skill_name = skill_path.stem
         content = read_skill_file(skill_path)
         
         # Encabezado de cada skill

@@ -365,33 +365,32 @@ def scan_committed_assets(project_root: Path, extensions: tuple) -> list:
     return found
 
 def scan_skill_folders(project_root: Path) -> list:
-    """Escanea el árbol activo buscando carpetas que contienen un SKILL.md
-    (convención real de skills en disco: carpeta con SKILL.md adentro, no
-    archivos sueltos con extensión .skill -- esa extensión solo existe como
-    convención de nombre en el título de Notion, ej. 'vantage-cv-b.skill',
-    nunca como archivo físico). Devuelve lista de (nombre_virtual, ruta
-    relativa al SKILL.md) ordenada por nombre -- mismo shape de retorno que
-    scan_committed_assets, para reuso directo en los consumidores existentes
-    (--skills, --new-skills, --skills-drift)."""
+    """Escanea los skills activos en formato plano: skills/*.md.
+    Devuelve lista de (nombre_virtual, ruta relativa al archivo) ordenada
+    por nombre, manteniendo el mismo shape de retorno que los consumidores
+    existentes (--skills, --new-skills, --skills-drift).
+    """
     found = []
-    for top in sorted(ACTIVE_TOP_LEVEL_DIRS):
-        top_path = project_root / top
-        if not top_path.exists():
+    skills_dir = project_root / "skills"
+    if not skills_dir.exists():
+        return found
+
+    for path in skills_dir.glob("*.md"):
+        if not path.is_file():
             continue
-        for path in top_path.rglob("SKILL.md"):
-            if not path.is_file():
-                continue
-            folder_name = path.parent.name
-            if folder_name.startswith(EXCLUDED_FILE_PREFIXES):
-                continue
-            rel = path.relative_to(project_root)
-            parts_lower = {p.lower() for p in rel.parts}
-            if parts_lower & EXCLUDED_DIR_NAMES:
-                continue
-            if any(sub in p.lower() for p in rel.parts for sub in EXCLUDED_DIR_SUBSTRINGS):
-                continue
-            virtual_name = f"{folder_name}.skill"
-            found.append((virtual_name, str(rel)))
+        if path.name.startswith(EXCLUDED_FILE_PREFIXES):
+            continue
+
+        rel = path.relative_to(project_root)
+        parts_lower = {p.lower() for p in rel.parts}
+        if parts_lower & EXCLUDED_DIR_NAMES:
+            continue
+        if any(sub in p.lower() for p in rel.parts for sub in EXCLUDED_DIR_SUBSTRINGS):
+            continue
+
+        virtual_name = f"{path.stem}.skill"
+        found.append((virtual_name, str(rel)))
+
     found.sort(key=lambda t: t[0])
     return found
 

@@ -38,7 +38,7 @@ CHECKS = [
         "GATE-DECISION-010",
         "APROBAR_WRITE",
     ]),
-    (ROOT / "skills/- Tidy/vantage-tidy-opportunities-tracker/SKILL.md", [
+    (ROOT / "skills/vantage-tidy-opportunities-tracker.md", [
         "is_mutable",
         "G9 / orquestador v9",
     ]),

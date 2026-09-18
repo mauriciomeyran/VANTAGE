@@ -19,7 +19,7 @@
 | `Documentación/ACTIVE/Manual.md` | §22.1 orchestrator, 22.1a tracker_flow/gate_logic, batch retired, NA ES |
 | `Documentación/ACTIVE/Aliases.md` | vl1→orch; vl1batch retired; vl1s; dedup |
 | `Documentación/ACTIVE/Change Log.md` | entrada **v9.22.0** formato vigente (tope) |
-| `skills/- Tidy/vantage-tidy-opportunities-tracker/SKILL.md` | SSOT is_mutable; nota G9 |
+| `skills/vantage-tidy-opportunities-tracker.md` | SSOT is_mutable; nota G9 |
 | `handoffs/PREGUNTAS_ABIERTAS.md` | Q-4 cerrada |
 
 ## Nodos Kernel a inyectar (Claude)

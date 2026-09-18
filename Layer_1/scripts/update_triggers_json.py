@@ -47,119 +47,68 @@ DEFAULT_TRIGGERS_TEMPLATES = [
 ]
 
 
-def get_github_raw_url(relative_skill_dir, branch="main"):
+def get_github_raw_url(relative_skill_path, branch="main"):
+    """Genera la GitHub raw URL para un skill plano dentro de skills/."""
+    return (
+        f"https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/"
+        f"{branch}/skills/{relative_skill_path}"
+    )
+
+
+def discover_skill_files(skills_path: Path):
+    """Descubre skills activos en formato plano: skills/*.md."""
+    return {
+        path.stem: path
+        for path in sorted(skills_path.glob("*.md"))
+        if path.is_file() and path.name != "triggers.json"
+        and path.name != "vantage-active-search-weekly.md"
+    }
+
+
+def get_skill_metadata(skill_path, relative_skill_path):
     """
-    Genera la GitHub raw URL para un skill.
-    relative_skill_dir: ruta relativa del skill dentro de skills/, con separadores '/'
-    (ej. 'tailored-resume-generator' o '- CV/vantage-cv-a').
+    Extrae metadatos de un skill plano.
     """
-    return f"https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/{branch}/skills/{relative_skill_dir}/SKILL.md"
-
-
-def discover_skill_dirs(skills_path: Path):
-    """
-    Descubre todas las carpetas de skill válidas (con SKILL.md directo) hasta 2 niveles
-    de profundidad bajo skills/, para soportar tanto skills sueltos en raíz como
-    organizados en subcarpetas de categoría (ej. '- CV/', '- Tidy/', '- Style Skills/').
-
-    Regla: una carpeta de PRIMER nivel que YA tiene SKILL.md se trata como skill.
-    Una carpeta de primer nivel SIN SKILL.md se trata como categoría contenedora,
-    y se buscan skills (con SKILL.md) dentro de sus subcarpetas de segundo nivel.
-    No se baja más de 2 niveles.
-
-    Retorna: dict { skill_name: Path(carpeta_del_skill) }
-    skill_name es siempre el nombre de la carpeta hoja (sin el prefijo de categoría),
-    para mantener compatibilidad con las keys existentes del manifest.
-    """
-    discovered = {}
-    for entry in skills_path.iterdir():
-        if not entry.is_dir() or entry.name.startswith('.'):
-            continue
-
-        direct_md = entry / "SKILL.md"
-        if direct_md.exists():
-            discovered[entry.name] = entry
-            continue
-
-        # Carpeta sin SKILL.md directo -> tratar como categoría, bajar un nivel
-        for sub in entry.iterdir():
-            if not sub.is_dir() or sub.name.startswith('.'):
-                continue
-            sub_md = sub / "SKILL.md"
-            if sub_md.exists():
-                if sub.name in discovered:
-                    logger.warning(
-                        f"Nombre de skill duplicado entre categorías: '{sub.name}' "
-                        f"(ya visto en otra ruta) — se conserva la primera ocurrencia."
-                    )
-                    continue
-                discovered[sub.name] = sub
-            # No se baja a un tercer nivel.
-
-    return discovered
-
-
-def get_skill_metadata(skill_path, relative_skill_dir):
-    """
-    Extrae metadatos de un skill.
-    Intenta leer desde SKILL.md (front-matter o contenido) y usa index.json como fallback.
-    relative_skill_dir: ruta relativa dentro de skills/ (puede incluir subcarpeta de categoría)
-    usada para construir 'path' y 'url' correctamente.
-    """
-    skill_name = skill_path.name
+    skill_name = skill_path.stem
     skill_description = f"VANTAGE Skill: {skill_name}"
     last_modified = None
 
-    skill_md_path = skill_path / "SKILL.md"
-    if skill_md_path.exists():
-        try:
-            mtime = skill_md_path.stat().st_mtime
-            last_modified = datetime.fromtimestamp(mtime).isoformat()
+    try:
+        mtime = skill_path.stat().st_mtime
+        last_modified = datetime.fromtimestamp(mtime).isoformat()
 
-            with open(skill_md_path, "r", encoding="utf-8") as f:
-                lines = f.readlines()
+        with open(skill_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
 
-            in_front_matter = False
-            first_content_line = None
+        in_front_matter = False
+        first_content_line = None
 
-            for line in lines:
-                clean_line = line.strip()
-                if clean_line == "---":
-                    in_front_matter = not in_front_matter
-                    continue
+        for line in lines:
+            stripped = line.strip()
 
-                if clean_line.lower().startswith("description:"):
-                    parts = line.split(":", 1)
-                    if len(parts) > 1:
-                        skill_description = parts[1].strip().strip('"').strip("'")
-                        break
+            if stripped == "---":
+                in_front_matter = not in_front_matter
+                continue
 
-                if not in_front_matter and clean_line and first_content_line is None:
-                    if not clean_line.startswith("#"):
-                        first_content_line = clean_line
+            if in_front_matter:
+                if stripped.startswith("description:"):
+                    skill_description = stripped.split(":", 1)[1].strip().strip('"').strip("'")
+                    break
 
-            if skill_description == f"VANTAGE Skill: {skill_name}" and first_content_line:
-                skill_description = first_content_line
-        except Exception as e:
-            logger.warning(f"Error leyendo SKILL.md para {skill_name}: {e}")
+            if stripped and not stripped.startswith("#") and first_content_line is None:
+                first_content_line = stripped
 
-    if skill_description == f"VANTAGE Skill: {skill_name}":
-        index_json_path = skill_path / "index.json"
-        if index_json_path.exists():
-            try:
-                with open(index_json_path, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    if isinstance(data, dict):
-                        skill_description = data.get("description", data.get("desc", skill_description))
-            except Exception as e:
-                logger.warning(f"Error leyendo index.json para {skill_name}: {e}")
+        if skill_description == f"VANTAGE Skill: {skill_name}" and first_content_line:
+            skill_description = first_content_line[:200]
+
+    except Exception as e:
+        logger.warning(f"Error leyendo {skill_path.name}: {e}")
 
     return {
-        "name": skill_name,
+        "last_modified": last_modified,
+        "path": f"skills/{relative_skill_path}",
+        "url": get_github_raw_url(relative_skill_path),
         "description": skill_description,
-        "path": f"skills/{relative_skill_dir}/SKILL.md",
-        "url": get_github_raw_url(relative_skill_dir),
-        "last_modified": last_modified
     }
 
 
@@ -290,45 +239,36 @@ def fetch_notion_skill_library():
 
 
 def update_triggers_json():
-    """Actualiza el archivo triggers.json con todos los skills válidos en la carpeta."""
-    if not SKILLS_PATH.exists():
-        logger.error(f"Error: La carpeta de skills no existe en:\n   {SKILLS_PATH}")
-        return
-
+    """Actualiza triggers.json con los skills planos de skills/*.md."""
     triggers = {"skills": {}}
+
     if TRIGGERS_PATH.exists():
         try:
             with open(TRIGGERS_PATH, "r", encoding="utf-8") as f:
-                content = f.read().strip()
-                if content:
-                    loaded_data = json.loads(content)
-                    if isinstance(loaded_data, dict) and "skills" in loaded_data:
-                        triggers = loaded_data
-                    else:
-                        print(f"⚠️ Estructura no válida en {TRIGGERS_PATH}. Se reiniciará.")
-        except json.JSONDecodeError:
-            print(f"⚠️ El archivo {TRIGGERS_PATH} está corrupto. Se sobrescribirá.")
-        except Exception as e:
-            print(f"⚠️ Error al leer {TRIGGERS_PATH}: {e}")
+                loaded_data = json.load(f)
+                if isinstance(loaded_data, dict) and "skills" in loaded_data:
+                    triggers = loaded_data
+        except (json.JSONDecodeError, OSError) as e:
+            logger.warning(f"No se pudo cargar triggers.json: {e}")
 
+    discovered = discover_skill_files(SKILLS_PATH)
     added_count = 0
     skipped_count = 0
     orphan_count = 0
 
-    # Descubrimiento en hasta 2 niveles (soporta skills sueltos y organizados por categoría)
-    discovered = discover_skill_dirs(SKILLS_PATH)
-
-    # Detect orphans (entries in JSON without corresponding folders, dondequiera que estén)
+    # Elimina entradas que ya no corresponden a un skill activo.
+    discovered_names = set(discovered)
     for skill_name in list(triggers["skills"].keys()):
-        if skill_name not in discovered:
-            logger.warning(f"Huérfano: {skill_name} — carpeta no encontrada")
+        if skill_name not in discovered_names:
+            del triggers["skills"][skill_name]
             orphan_count += 1
+            logger.info(f"Huérfano eliminado: {skill_name}")
 
-    for skill_name, skill_dir in discovered.items():
-        relative_skill_dir = skill_dir.relative_to(SKILLS_PATH).as_posix()
+    for skill_name, skill_path in discovered.items():
+        relative_skill_path = skill_path.relative_to(SKILLS_PATH).as_posix()
+        metadata = get_skill_metadata(skill_path, relative_skill_path)
 
         if skill_name not in triggers["skills"]:
-            metadata = get_skill_metadata(skill_dir, relative_skill_dir)
             triggers["skills"][skill_name] = {
                 "trigger": generate_triggers(skill_name),
                 "path": metadata["path"],
@@ -337,16 +277,15 @@ def update_triggers_json():
                 "description": metadata["description"],
                 "last_modified": metadata["last_modified"]
             }
-            logger.info(f"Añadido: {skill_name} ({relative_skill_dir})")
+            logger.info(f"Añadido: {skill_name} ({relative_skill_path})")
             added_count += 1
         else:
-            metadata = get_skill_metadata(skill_dir, relative_skill_dir)
             triggers["skills"][skill_name]["last_modified"] = metadata["last_modified"]
             triggers["skills"][skill_name]["path"] = metadata["path"]
             triggers["skills"][skill_name]["url"] = metadata["url"]
             triggers["skills"][skill_name]["description"] = metadata["description"]
             triggers["skills"][skill_name].setdefault("notion_id", None)
-            logger.info(f"Ya existe: {skill_name} ({relative_skill_dir})")
+            logger.info(f"Ya existe: {skill_name} ({relative_skill_path})")
             skipped_count += 1
 
     # --- Sync notion_id contra Skill Library ---
