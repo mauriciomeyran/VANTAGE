@@ -45,12 +45,19 @@ CLASS_A_FIELDS: frozenset[str] = frozenset({
     "Contacto", "Notas", "JOB_ID", "Files", "Interview", "Interview_Date",
     "Apply Date", "Rej Date", "Outcome", "Optimizar", "Postular", "Archivar",
     "URL Notion",
+    # Fase 2 GAP Class-B: Fetch y Fuente son metadata de creación/ingesta
+    # (escritos por feed_processor.py). Deben ser Class A para alinear el
+    # guard con el flujo real de ingestion y evitar rechazo indebido.
+    "Fetch", "Fuente",
 })
 
 CLASS_B_FIELDS: frozenset[str] = frozenset({
     "Score", "Gate_Decision", "VM_Scope", "Role_Class", "Match",
-    "Next_Action", "Fetch", "Fuente", "Dedup_Flag", "Score_Method",
+    "Next_Action", "Dedup_Flag", "Score_Method",
     "JD_Quality", "Last_Gate_Run",
+    # Fase 2: baseline canónico de evaluación Class B exitosa.
+    # Semántica distinta de Last_Gate_Run (que solo registra cambio de Gate).
+    "Class_B_Last_Run",
 })
 
 

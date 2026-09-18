@@ -472,14 +472,34 @@ def load_class_b_snapshot() -> Dict[str, Dict[str, Any]]:
 
 def save_class_b_snapshot(snapshot: List[Dict[str, Any]]) -> None:
     """
-    H9: Persiste los valores Class B finales de cada fila procesada este
-    run, para que el siguiente run pueda diferenciar "se tocó Class A" de
-    "se tocó Class B" por fila.
+    H9 / Fase 2: Persiste los valores Class B de filas que REALMENTE
+    recibieron evaluación Class B en este run, o que ya tenían baseline
+    válido (Class_B_Last_Run presente).
+
+    No registra como "computado" filas que fueron:
+      protected / skipped / continue / REVIEW_NEEDED / terminal.
+    El snapshot es baseline auxiliar; la fuente de verdad del estado
+    Class B es Class_B_Last_Run en Notion.
     """
-    records: Dict[str, Dict[str, Any]] = {}
+    # Cargar snapshot previo para preservar baselines de filas no tocadas
+    # en este run (protegidas, etc.).
+    previous = load_class_b_snapshot()
+    records: Dict[str, Dict[str, Any]] = dict(previous)
+
     for record in snapshot:
         page_id = record.get("id")
         if not page_id:
+            continue
+        # Solo actualizar entrada si se computó Class B en este run
+        # o si ya existe baseline y queremos refrescar valores.
+        computed = record.get("_class_b_computed", False)
+        has_baseline = bool(record.get("Class_B_Last_Run"))
+        if not computed and not has_baseline:
+            # Protected/skipped sin baseline previo: no inventar entrada.
+            continue
+        if not computed and page_id in previous:
+            # Ya tenía baseline; mantener (no sobrescribir con valores
+            # posiblemente stale de un run que no recalculó).
             continue
         records[page_id] = {k: record.get(k) for k in CLASS_B_FIELDS if k in record}
 
@@ -531,15 +551,40 @@ def compute_last_edited_field(
     return "_class_a_touched"  # Ningún Class B cambió → lo tocado fue Class A.
 
 
+def needs_first_class_b_compute(record: Dict[str, Any]) -> bool:
+    """
+    Fase 2 GAP Class-B: True cuando el registro aún no tiene baseline de
+    evaluación Class B exitosa (Class_B_Last_Run ausente/vacío).
+
+    Ausencia de Class_B_Last_Run significa "primera evaluación pendiente",
+    NO "protección manual". El caller debe combinar esto con elegibilidad
+    de lifecycle (terminal, REVIEW_NEEDED, etc.).
+    """
+    val = record.get("Class_B_Last_Run", "")
+    return not val
+
+
 def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
     """
     §2.3 / G5: Ediciones manuales recientes = máxima prioridad.
 
-    Ventana manual = last_edited_time > Last_Gate_Run + autor humano.
+    Fase 2: la ventana manual se evalúa contra Class_B_Last_Run (baseline
+    de evaluación Class B exitosa), NO contra Last_Gate_Run.
+
+    Semántica separada:
+      - Class_B_Last_Run  = última evaluación Class B exitosa
+      - Last_Gate_Run     = último cambio de Gate_Decision
+
     Retorna True si el actor PUEDE mutar; False = inmune (manual-first).
 
     G5: cuando retorna False, el orquestador emite sugerencia de revisión
     (build_manual_suggestion) y JAMÁS ejecuta la mutación.
+
+    Primera evaluación (sin Class_B_Last_Run):
+      - NO se aplica protección manual por last_edited_by humano/ausente.
+      - Se permite el primer cómputo Class B si el registro es elegible
+        por lifecycle (is_mutable / terminal / REVIEW_NEEDED se evalúan
+        por separado en el flujo).
     """
     # Q-11 / SCHEMA-008: excepción de una sola pasada para Rechazado.
     if (
@@ -549,19 +594,43 @@ def manual_first_protection(record: Dict[str, Any], actor: Actor) -> bool:
     ):
         return True
 
-    # G5: manual-first se evalúa explícitamente contra Last_Gate_Run.
-    # No sustituir esta ventana por last_successful_run.json:
-    # son contratos distintos.
+    # Fase 2: sin baseline Class B → primera evaluación permitida.
+    # No usar last_edited_by / Last_Gate_Run como proxy de protección.
+    if needs_first_class_b_compute(record):
+        # Aún aplicamos is_mutable para terminalidad / REVIEW_NEEDED /
+        # protected statuses. is_mutable sin field_name puede bloquear por
+        # _was_touched_by_human; para first-run forçamos el camino de
+        # elegibilidad de lifecycle sin la rama de "edición humana reciente"
+        # como bloqueo de fila completa.
+        # Override temporal: si no hay Class_B_Last_Run, no tratar
+        # _was_touched_by_human como bloqueo de fila completa aquí.
+        # La protección de campos Class B YA EXISTENTES se aplica solo
+        # cuando ya hay baseline (rama de abajo).
+        from tracker_flow import PROTECTED_STATUSES, Status as TFStatus
+        current_status = record.get("Status")
+        if current_status in [s.value for s in PROTECTED_STATUSES]:
+            if current_status == TFStatus.CONTRATADO.value:
+                return False
+            if actor != Actor.HUMANO:
+                # Otros terminales: solo humano puede mutar (misma regla)
+                return False
+        # REVIEW_NEEDED / Por Revisar se gobiernan por is_mutable y el
+        # workflow explícito; si is_mutable dice False por status, respetar.
+        # Para first-run, saltamos la rama de protección manual por humano.
+        return True
+
+    # Baseline existe: ventana manual = last_edited_time > Class_B_Last_Run
+    # + autor humano. Protege valores Class B ya calculados.
     last_edited_time = record.get("last_edited_time", "")
-    last_gate_run = record.get("Last_Gate_Run", "")
+    class_b_last_run = record.get("Class_B_Last_Run", "")
     last_edited_by_id = record.get("last_edited_by_id", "")
 
-    if last_edited_time and last_gate_run:
+    if last_edited_time and class_b_last_run:
         from tracker_flow import _is_human_edit
 
         if (
             _is_human_edit(last_edited_by_id)
-            and last_edited_time > last_gate_run
+            and last_edited_time > class_b_last_run
         ):
             return False
 
@@ -577,9 +646,11 @@ def manual_edit_touched_class_a_only(
     previous_class_b: Dict[str, Dict[str, Any]],
 ) -> bool:
     """
-    H9: Evalúa si la ventana manual-first (edición humana tras Last_Gate_Run)
-    debe inmunizar la fila COMPLETA o si, dado que lo tocado fue Class A,
-    Class B sigue recalculable.
+    H9 / Fase 2: Evalúa si la ventana manual-first (edición humana tras
+    Class_B_Last_Run) debe inmunizar la fila COMPLETA o si, dado que lo
+    tocado fue Class A, Class B sigue recalculable.
+
+    Baseline canónico: Class_B_Last_Run (no Last_Gate_Run).
 
     Retorna True si hay edición humana reciente pero se confirmó Class A
     únicamente (Class B recalculable, fila NO va a la rama de sugerencia).
@@ -588,35 +659,35 @@ def manual_edit_touched_class_a_only(
     — mismo comportamiento que antes del fix, conservador).
     """
     last_edited_time = record.get("last_edited_time", "")
-    last_gate_run = record.get("Last_Gate_Run", "")
+    class_b_last_run = record.get("Class_B_Last_Run", "")
 
-    if not last_edited_time or not last_gate_run:
-        return False  # Sin timestamp: no hay ventana manual que evaluar aquí.
+    if not last_edited_time or not class_b_last_run:
+        return False  # Sin baseline Class B o sin timestamp: no aplica.
 
     last_edited_by_id = record.get("last_edited_by_id", "")
     from tracker_flow import _is_human_edit
     if not _is_human_edit(last_edited_by_id):
         return False  # No es edición humana — no aplica.
 
-    if not (last_edited_time > last_gate_run):
-        return False  # Edición humana, pero anterior al último run — no aplica.
+    if not (last_edited_time > class_b_last_run):
+        return False  # Edición humana, pero anterior al baseline Class B — no aplica.
 
-    # Hay edición humana posterior al último run: antes esto inmunizaba la
-    # fila completa (G5). H9: verificar si tocó solo Class A.
+    # Hay edición humana posterior al baseline Class B: verificar si tocó
+    # solo Class A.
     touched_field = compute_last_edited_field(record, previous_class_b)
     record["last_edited_field"] = touched_field  # Consumido por is_mutable(field_name=...)
 
     if touched_field == "_class_a_touched":
         logger.info(
             f"[MANUAL-FIRST-CLASS-A] Fila {record.get('id', 'unknown')[-8:]} "
-            f"editada por humano tras último run, pero solo Class A confirmado "
+            f"editada por humano tras Class_B_Last_Run, pero solo Class A confirmado "
             f"— Class B recalculable, fila continúa a cómputo normal."
         )
         return True
 
     logger.info(
         f"[MANUAL-FIRST] Fila {record.get('id', 'unknown')[-8:]} editada por "
-        f"humano tras último run, Class B tocado o no confirmado ({touched_field}) "
+        f"humano tras Class_B_Last_Run, Class B tocado o no confirmado ({touched_field}) "
         f"→ inmunidad de fila completa (comportamiento previo)."
     )
     return False
@@ -1398,6 +1469,19 @@ def run_orchestrator(
             if gate_result.get("decision") in ("PROTECTED", "TERMINAL"):
                 # Solo observabilidad — no mutar Status de protegidos
                 write_payload.pop("Status", None)
+
+            # Fase 2: Class_B_Last_Run se actualiza en TODA evaluación Class B
+            # exitosa, independientemente de que Gate_Decision haya cambiado.
+            # Distinto de Last_Gate_Run (solo cambio de Gate).
+            # Solo marcar cuando realmente se evaluó (no PROTECTED/TERMINAL
+            # early-exit que no computó Class B).
+            if gate_result.get("decision") not in ("PROTECTED", "TERMINAL"):
+                now_iso = datetime.now().isoformat()
+                write_payload["Class_B_Last_Run"] = now_iso
+                # Propagar al record para que el snapshot del run lo capture
+                # como baseline real (no artificial).
+                record["Class_B_Last_Run"] = now_iso
+                record["_class_b_computed"] = True
 
             wr = guarded_pages_update(
                 client, record["id"], write_payload,

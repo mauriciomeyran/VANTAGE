@@ -462,7 +462,11 @@ def is_mutable(record: Dict[str, Any], actor: Actor, field_name: Optional[str] =
     protegido.
     """
     # 1. Protección manual - máxima prioridad
-    if _was_touched_by_human(record):
+    # Fase 2 GAP Class-B: la ausencia de Class_B_Last_Run significa
+    # "primera evaluación pendiente", NO protección manual. Solo se aplica
+    # la rama de edición humana cuando ya existe baseline Class B.
+    has_class_b_baseline = bool(record.get("Class_B_Last_Run"))
+    if has_class_b_baseline and _was_touched_by_human(record):
         touched_field = record.get("last_edited_field")
 
         if field_name is None:
@@ -1042,6 +1046,8 @@ _CHECKBOX_PROPS = frozenset({"Archivar", "Optimizar", "Postular", "Interview"})
 
 _DATE_PROPS = frozenset({
     "NAD", "Apply Date", "Rej Date", "Interview_Date", "Last_Gate_Run",
+    # Fase 2 GAP Class-B: baseline de evaluación Class B exitosa.
+    "Class_B_Last_Run",
 })
 
 _TITLE_PROPS = frozenset({"Rol"})
