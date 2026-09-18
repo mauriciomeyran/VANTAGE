@@ -1250,7 +1250,7 @@ def get_survivor_rank(status: str) -> int:
 
 LAYER_SURVIVOR_PRIORITY = {
     "L1": 3,
-    "L2": 2,
+    "L2": 3,
     "L3": 1,
     "N/A": 0,
 }
