@@ -69,8 +69,11 @@ def _extract_document_references(content: str) -> Set[str]:
     pattern = r'\b[A-Z]+:[A-Z0-9_-]+\b'
     matches = re.findall(pattern, content)
     # Filtrar solo prefijos documentales comunes
-    doc_prefixes = {"SP", "KERNEL", "MANUAL", "CANON", "ALIASES", "BRIEF", "TRACKER", "CHANGELOG", "VANTAGE"}
-    return {m for m in matches if m.split(":")[0] in doc_prefixes}
+    doc_prefixes = {"SP", "KERNEL", "MANUAL", "ALIASES", "BRIEF", "TRACKER", "CHANGELOG", "VANTAGE"}
+    # Excluir CANON porque es un documento, no secciones (sus secciones son internas)
+    refs = {m for m in matches if m.split(":")[0] in doc_prefixes}
+    # Excluir placeholders XXXX
+    return {r for r in refs if "XXXX" not in r}
 
 
 # ---------------------------------------------------------------------------
@@ -204,17 +207,26 @@ def check_document_references() -> List[Tuple[str, str, List[str]]]:
         # Verificar que la sección exista en el documento
         try:
             doc_content = doc_file.read_text(encoding="utf-8")
-            # Buscar la sección en formato ## §XX — KEY o ## KEY
-            # Primero buscar formato con número de sección
-            section_pattern = rf'## §\d+[\s—-]+{re.escape(key)}'
-            if not re.search(section_pattern, doc_content, re.IGNORECASE):
-                # Luego buscar formato simple
-                simple_pattern = rf'## {re.escape(key)}'
-                if not re.search(simple_pattern, doc_content, re.IGNORECASE):
-                    # Finalmente buscar como parte de un heading
-                    any_heading_pattern = rf'## .*{re.escape(key)}'
-                    if not re.search(any_heading_pattern, doc_content, re.IGNORECASE):
-                        issues.append((str(doc_file), "missing_section", [ref]))
+            # Buscar la sección en varios formatos:
+            # 1. ## §XX — KEY (con número de sección)
+            # 2. ## KEY (heading simple)
+            # 3. # KEY (heading nivel 1)
+            # 4. KEY en cualquier heading
+            section_patterns = [
+                rf'## §\d+[\s—-]+{re.escape(key)}',
+                rf'## {re.escape(key)}\b',
+                rf'# {re.escape(key)}\b',
+                rf'#{1,3} .*{re.escape(key)}\b'
+            ]
+            
+            found = False
+            for pattern in section_patterns:
+                if re.search(pattern, doc_content, re.IGNORECASE):
+                    found = True
+                    break
+            
+            if not found:
+                issues.append((str(doc_file), "missing_section", [ref]))
         except Exception as e:
             print(f"[WARN] No se pudo verificar ref {ref} en {doc_file}: {e}")
     
