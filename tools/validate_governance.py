@@ -72,8 +72,8 @@ def _extract_document_references(content: str) -> Set[str]:
     doc_prefixes = {"SP", "KERNEL", "MANUAL", "ALIASES", "BRIEF", "TRACKER", "CHANGELOG", "VANTAGE"}
     # Excluir CANON porque es un documento, no secciones (sus secciones son internas)
     refs = {m for m in matches if m.split(":")[0] in doc_prefixes}
-    # Excluir placeholders XXXX
-    return {r for r in refs if "XXXX" not in r}
+    # Excluir placeholders XXXX y X (single char)
+    return {r for r in refs if "XXXX" not in r and not r.endswith(":X")}
 
 
 # ---------------------------------------------------------------------------
