@@ -99,7 +99,7 @@ def main():
     )
     parser.add_argument(
         "--route",
-        required=True,
+        required=False,  # No required cuando se usa --list
         help="Ruta canónica: PREFIX:CLAVE (ej. KERNEL:SCHEMA, MANUAL:RUNTIME-002). "
              "El prefijo se usa para resolver el UUID automáticamente si --page no se proporciona."
     )
@@ -120,6 +120,10 @@ def main():
         registry_path = Path(args.registry) if args.registry else None
         list_available_prefixes(registry_path)
         return
+    
+    # Validar que --route esté presente cuando no es --list
+    if not args.route:
+        parser.error("--route es requerido (excepto en modo --list)")
     
     # Cargar registry para resolución de UUID
     registry_path = Path(args.registry) if args.registry else None
