@@ -15,6 +15,12 @@ import argparse
 from pathlib import Path
 import httpx
 
+try:
+    from notion_utils import _notion_version
+except ImportError:
+    def _notion_version() -> str:
+        return os.environ.get("NOTION_VERSION", "2025-09-03")
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 ENV_PATH = SCRIPT_DIR.parent / "config" / "layer_1.env"
 SCRIPT_LIBRARY_DATA_SOURCE_ID = "ea914544-338f-485e-ac1b-7f137a5c9cee"
@@ -175,7 +181,7 @@ def main():
 
             patch_url = f"https://api.notion.com/v1/pages/{page_id}"
             patch_headers = dict(hdrs)
-            patch_headers["Notion-Version"] = "2022-06-28"  # /v1/pages usa esta versión
+            patch_headers["Notion-Version"] = _notion_version()
             resp = client.patch(patch_url, headers=patch_headers, json={"properties": props_payload})
             if resp.status_code != 200:
                 print(f"  [-] FAIL {s_old!r}: HTTP {resp.status_code}: {resp.text[:150]}")

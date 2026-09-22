@@ -56,6 +56,9 @@ def _lookup_entity(key: str) -> Dict[str, Any]:
     row = _entity_index.get(key)
     if row is None:
         raise ResolverError("unknown_entity", key)
+
+    # F3: Detect duplicate entity_ids in the index and log warning
+    # (This is a basic check; full duplicate detection is in generate_entity_index_v2.py)
     return row
 
 

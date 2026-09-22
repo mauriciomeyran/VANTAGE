@@ -190,19 +190,54 @@ def build_entities(
     print(f"  Páginas extraídas: {len(pages)}")
 
     entities = []
+    entity_id_seen = {}  # For duplicate detection (F3)
+
     for page in pages:
         page_id = page["id"]
         page_url = page.get("url", "")
         hash_value = get_hash(page)
 
+        # Extract archived_from metadata for ARCHIVO_TRACKER (P2 fix)
+        archived_from = None
+        if meta["entity_type"] == "archive":
+            props = page.get("properties", {})
+            # Try multiple possible property names for the archived reference
+            for prop_name in ["archived_from", "Archived_From", "TRACKER", "Tracker", "Origin"]:
+                if prop_name in props:
+                    prop_value = props[prop_name]
+                    # Handle different property types
+                    if prop_value.get("type") == "rich_text":
+                        archived_from = "".join(p.get("plain_text", "") for p in prop_value.get("rich_text", [])).strip()
+                    elif prop_value.get("type") == "title":
+                        archived_from = "".join(p.get("plain_text", "") for p in prop_value.get("title", [])).strip()
+                    elif prop_value.get("type") == "select":
+                        archived_from = (prop_value.get("select") or {}).get("name", "").strip()
+                    elif prop_value.get("type") == "relation":
+                        relations = prop_value.get("relation", [])
+                        if relations:
+                            archived_from = relations[0].get("id", "")
+                    if archived_from:
+                        break
+
+        entity_id = generate_entity_id(entity_prefix, page_id, hash_value)
+
+        # Duplicate detection (F3)
+        if entity_id in entity_id_seen:
+            print(f"  ⚠️  DUPLICADO DETECTADO: {entity_id} aparece múltiples veces")
+            print(f"      Previo: {entity_id_seen[entity_id]}")
+            print(f"      Nuevo: {page_id}")
+            # Log but continue - don't silently swallow
+        entity_id_seen[entity_id] = page_id
+
         entities.append({
-            "entity_id": generate_entity_id(entity_prefix, page_id, hash_value),
+            "entity_id": entity_id,
             "canonical_id": hash_value if hash_value else page_id,
             "page_id": page_id,
             "page_url": page_url,
             "hash": hash_value if hash_value else None,
             "entity_type": meta["entity_type"],
             "source_db": meta["source_db"],
+            "archived_from": archived_from,  # P2: metadata-based archiving
         })
 
     return entities
@@ -212,39 +247,50 @@ def build_entities(
 def build_graph(entities: list[dict]) -> dict:
     """
     Builds graph_v2.json from entity index.
-    
+
     Only implements archived_from relationships:
-    - ARCHIVO:H_<hash> → TRACKER:H_<hash> when both entities share the same hash
-    
-    Deterministic: edges are generated solely from hash matching in entity metadata.
+    - ARCHIVO → TRACKER based on archived_from metadata (P2 fix)
+    No longer uses hash matching (which was structurally empty).
+
+    Deterministic: edges are generated solely from archived_from metadata.
     No fabricated edges, no inferred relationships.
     """
-    # Group entities by hash (first 16 chars, matching entity_id format)
-    hash_to_entities = defaultdict(list)
+    # Build lookup for tracker entities by page_id
+    tracker_by_page_id = {}
     for entity in entities:
-        if entity.get("hash"):
-            hash_prefix = entity["hash"][:16]
-            hash_to_entities[hash_prefix].append(entity)
-    
-    # Build edges for archived_from relationships
+        if entity["entity_type"] == "tracker":
+            tracker_by_page_id[entity["page_id"]] = entity
+
+    # Build edges for archived_from relationships based on metadata
     edges = []
-    for hash_prefix, entity_list in hash_to_entities.items():
-        # Need at least one ARCHIVO and one TRACKER with this hash
-        archive_entities = [e for e in entity_list if e["entity_type"] == "archive"]
-        tracker_entities = [e for e in entity_list if e["entity_type"] == "tracker"]
-        
-        if not archive_entities or not tracker_entities:
-            continue
-        
-        # Create edges: ARCHIVO → TRACKER for each pair with matching hash
-        for archive_ent in archive_entities:
-            for tracker_ent in tracker_entities:
+    for entity in entities:
+        if entity["entity_type"] == "archive" and entity.get("archived_from"):
+            archived_from_ref = entity["archived_from"]
+
+            # Try to find the corresponding tracker entity
+            # archived_from_ref could be a page_id, entity_id, or URL
+            target_tracker = None
+
+            # Direct page_id match
+            if archived_from_ref in tracker_by_page_id:
+                target_tracker = tracker_by_page_id[archived_from_ref]
+            else:
+                # Try entity_id match
+                for tracker in tracker_by_page_id.values():
+                    if tracker["entity_id"] == archived_from_ref or tracker["canonical_id"] == archived_from_ref:
+                        target_tracker = tracker
+                        break
+
+            if target_tracker:
                 edges.append({
-                    "from": archive_ent["entity_id"],
-                    "to": tracker_ent["entity_id"],
+                    "from": entity["entity_id"],
+                    "to": target_tracker["entity_id"],
                     "type": "archived_from"
                 })
-    
+            else:
+                # Log unresolved archived_from references
+                print(f"  ⚠️  archived_from no resuelto: {entity['entity_id']} → {archived_from_ref}")
+
     return {
         "version": "2.0",
         "edges": edges
@@ -320,6 +366,25 @@ def validate_graph_artifacts(
         })
 
     actual_backlinks = backlinks_data
+
+    # Verify backlinks match
+    for node_id, expected_links in expected_backlinks.items():
+        actual_links = actual_backlinks.get(node_id, [])
+        if len(actual_links) != len(expected_links):
+            errors.append(f"Backlinks count mismatch for {node_id}: expected {len(expected_links)}, got {len(actual_links)}")
+
+        # Compare individual links (order-independent)
+        expected_set = {(link["from"], link["type"]) for link in expected_links}
+        actual_set = {(link["from"], link["type"]) for link in actual_links}
+        if expected_set != actual_set:
+            errors.append(f"Backlinks content mismatch for {node_id}")
+
+    # Check for extra backlinks not in graph
+    for node_id, actual_links in actual_backlinks.items():
+        if node_id not in expected_backlinks and actual_links:
+            errors.append(f"Extra backlinks for {node_id} not present in graph")
+
+    return (len(errors) == 0, errors)
     
     # Compare
     for entity_id in set(list(expected_backlinks.keys()) + list(actual_backlinks.keys())):

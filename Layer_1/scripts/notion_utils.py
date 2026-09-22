@@ -14,7 +14,7 @@ METRICS_PATH = BASE_DIR / "notion_metrics.json"
 def _notion_version() -> str:
     # Leído en cada llamada (no al importar el módulo) para no quedar fijado
     # a un valor stale si NOTION_VERSION se carga vía dotenv después del import.
-    return os.environ.get("NOTION_VERSION", "2022-06-28")
+    return os.environ.get("NOTION_VERSION", "2025-09-03")
 
 # --- rate limiting ------------------------------------------------------------
 # Notion API: ~3 req/s. Espaciamos llamadas reales (no cacheadas) a este ritmo.

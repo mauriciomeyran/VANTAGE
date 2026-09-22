@@ -13,6 +13,12 @@ from pathlib import Path
 from datetime import datetime, timezone
 import httpx
 
+try:
+    from notion_utils import _notion_version
+except ImportError:
+    def _notion_version() -> str:
+        return os.environ.get("NOTION_VERSION", "2025-09-03")
+
 # --- CONFIGURACIÓN DE RUTAS Y CONSTANTES ---
 SCRIPT_DIR = Path(__file__).resolve().parent
 ENV_PATH = SCRIPT_DIR.parent / "config" / "layer_1.env"
@@ -162,16 +168,15 @@ def load_document_uuids(registry_path: Path) -> dict:
 def get_notion_headers(token: str) -> dict:
     return {
         "Authorization": f"Bearer {token}",
-        "Notion-Version": "2022-06-28",
+        "Notion-Version": _notion_version(),
         "Content-Type": "application/json"
     }
 
 def query_data_source(client: httpx.Client, data_source_id: str, headers: dict, payload: dict) -> tuple:
     """Único punto de entrada para POST /v1/data_sources/{id}/query en todo el
-    script. Fuerza siempre Notion-Version 2025-09-03 (requerido por data
-    sources, distinto del 2022-06-28 usado para /v1/pages) y siempre devuelve
-    el body de error real (response.text[:200]) en vez de tragárselo — así no
-    puede reaparecer la ambigüedad de "HTTP 400" sin contexto.
+    script. Usa Notion-Version desde notion_utils._notion_version() (default 2025-09-03)
+    y siempre devuelve el body de error real (response.text[:200]) en vez de
+    tragárselo — así no puede reaparecer la ambigüedad de "HTTP 400" sin contexto.
     Devuelve (data, None) en éxito, o (None, {"error": "..."}) en fallo."""
     url = f"https://api.notion.com/v1/data_sources/{data_source_id}/query"
     query_headers = dict(headers)
@@ -453,7 +458,7 @@ def get_page_line_count(client: httpx.Client, page_id: str, headers: dict, max_d
     Devuelve int en éxito, o {"error": "..."} en fallo."""
     try:
         block_headers = dict(headers)
-        block_headers["Notion-Version"] = "2022-06-28"
+        block_headers["Notion-Version"] = _notion_version()
         url = f"https://api.notion.com/v1/blocks/{page_id}/children"
         count = 0
         cursor = None
