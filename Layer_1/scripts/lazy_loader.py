@@ -29,6 +29,12 @@ import requests
 import argparse
 from pathlib import Path
 
+try:
+    from notion_utils import _notion_version
+except ImportError:
+    def _notion_version() -> str:
+        return os.environ.get("NOTION_VERSION", "2025-09-03")
+
 # ---------------------------------------------------------------------------
 # Contrato de prefijos autorizados — cargado desde resolver_registry_v2.json
 # sección `document_registry` (namespace independiente de `data_sources`).
@@ -224,7 +230,7 @@ def fetch_lazy_section(page_id: str, route: str, api_key: str | None = None) -> 
 
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "Notion-Version": "2022-06-28",
+        "Notion-Version": _notion_version(),
     }
 
     # --- Parsear ruta ---

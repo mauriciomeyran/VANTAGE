@@ -38,6 +38,12 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
+try:
+    from notion_utils import _notion_version
+except ImportError:
+    def _notion_version() -> str:
+        return os.environ.get("NOTION_VERSION", "2025-09-03")
+
 # ─── IMPORTAR DESDE vantage_id_rules.py (módulo único de reglas) ─────
 # FIX: eliminar reimplementación local de classify_heading/suggest_fix
 # Los 4 scripts DEBEN importar de aquí, nunca reimplementar localmente
@@ -63,7 +69,7 @@ if not NOTION_TOKEN:
 
 HEADERS = {
     "Authorization": f"Bearer {NOTION_TOKEN}",
-    "Notion-Version": "2022-06-28",
+    "Notion-Version": _notion_version(),
     "Content-Type": "application/json",
 }
 

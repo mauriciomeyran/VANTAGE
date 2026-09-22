@@ -114,7 +114,7 @@ def assemble_context(entity_id_or_payload) -> Dict[str, Any]:
       "content": [...]   # bloques de la página, normalizados
     }
     """
-    if resolve_entity is None or find_entity is None:
+    if resolve_entity is None:
         raise RuntimeError(
             "query_layer no encontrado. Coloca context_layer.py en la misma "
             "carpeta que query_layer.py, resolver_layer_v1.py, "
@@ -130,12 +130,22 @@ def assemble_context(entity_id_or_payload) -> Dict[str, Any]:
     # 1. resolver -> confirma que la entidad existe y obtiene page_url
     resolved = resolve_entity(payload)
 
-    # 2. obtener entity entry completa del index (para page_id)
+    # 2. obtener entity entry completa del index (para page_id) - Doble lookup eliminado
+    # El resolver ya hizo el lookup en el index; reutilizamos el mismo resultado
+    # en vez de llamar find_entity() de nuevo (P1 fix)
     lookup_value = payload.get("entity_id") or payload.get("canonical_id")
-    matches = find_entity(lookup_value)
-    if not matches:
-        raise ResolverError("unknown_entity", lookup_value)
-    entity_entry = matches[0]
+    try:
+        from resolver_layer_v1 import _lookup_entity
+        entity_entry = _lookup_entity(lookup_value)
+    except ImportError:
+        # Fallback si resolver_layer_v1 no está disponible (no debería pasar en prod)
+        if find_entity is None:
+            raise RuntimeError("query_layer.find_entity no encontrado")
+        matches = find_entity(lookup_value)
+        if not matches:
+            raise ResolverError("unknown_entity", lookup_value)
+        entity_entry = matches[0]
+
     page_id = entity_entry["page_id"]
 
     # 3. notion page -> properties

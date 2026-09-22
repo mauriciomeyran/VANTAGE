@@ -17,8 +17,10 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 from collections import defaultdict
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -276,44 +278,48 @@ def build_backlinks(graph: dict) -> dict:
 
 
 def validate_graph_artifacts(
-    entities: list[dict], 
-    graph: dict, 
+    entities: list[dict],
+    graph: dict,
     backlinks: dict
 ) -> tuple[bool, list[str]]:
     """
     Validates graph artifacts against entity index.
-    
+
     Checks:
     1. No orphan entity_ids in graph edges (all nodes must exist in entity index)
     2. Backlinks exactly match graph (inverse relationship)
     3. Graph structure is valid
-    
+
     Returns:
         (is_valid, list of error messages)
     """
     errors = []
     entity_ids = {e["entity_id"] for e in entities}
-    
+
+    # Extract edges from graph (handle new structure with metadata)
+    graph_edges = graph.get("edges", []) if isinstance(graph, dict) else graph
+    backlinks_data = backlinks.get("backlinks", {}) if isinstance(backlinks, dict) else backlinks
+
     # Check 1: No orphan entity_ids in graph edges
-    for edge in graph.get("edges", []):
+    for edge in graph_edges:
         from_id = edge["from"]
         to_id = edge["to"]
-        
+
         if from_id not in entity_ids:
             errors.append(f"Orphan 'from' node in graph: {from_id}")
         if to_id not in entity_ids:
             errors.append(f"Orphan 'to' node in graph: {to_id}")
-    
+
     # Check 2: Backlinks exactly match graph (inverse relationship)
     # Rebuild backlinks from graph to verify
     expected_backlinks = defaultdict(list)
-    for edge in graph.get("edges", []):
+    for edge in graph_edges:
         expected_backlinks[edge["to"]].append({
             "from": edge["from"],
             "type": edge["type"]
         })
-    
-    actual_backlinks = backlinks.get("backlinks", {})
+
+    actual_backlinks = backlinks_data
     
     # Compare
     for entity_id in set(list(expected_backlinks.keys()) + list(actual_backlinks.keys())):
@@ -365,7 +371,17 @@ def main() -> None:
     }
 
     # Write entity index with atomic pattern
-    entity_index = {"entities": all_entities, "metrics": metrics}
+    try:
+        source_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=_LAYER_1_ROOT, stderr=subprocess.DEVNULL).decode().strip()
+    except Exception:
+        source_commit = "unknown"
+
+    entity_index = {
+        "entities": all_entities,
+        "metrics": metrics,
+        "generated_at": datetime.utcnow().isoformat() + "Z",
+        "source_commit": source_commit,
+    }
     entity_index_path = args.out
     entity_index_tmp = entity_index_path.with_suffix(".json.tmp")
     
@@ -390,19 +406,29 @@ def main() -> None:
         
         # Build graph
         graph = build_graph(all_entities)
-        graph_path = _SCRIPTS_DIR / "graph_v2.json"
+        graph_with_metadata = {
+            "edges": graph["edges"],
+            "generated_at": datetime.utcnow().isoformat() + "Z",
+            "source_commit": source_commit,
+        }
+        graph_path = _LAYER_1_ROOT / "data" / "graph_v2.json"
         graph_tmp = graph_path.with_suffix(".json.tmp")
-        
+
         with open(graph_tmp, "w", encoding="utf-8") as f:
-            json.dump(graph, f, indent=2, ensure_ascii=False)
+            json.dump(graph_with_metadata, f, indent=2, ensure_ascii=False)
         
         # Build backlinks
         backlinks = build_backlinks(graph)
-        backlinks_path = _SCRIPTS_DIR / "backlinks_v2.json"
+        backlinks_with_metadata = {
+            "backlinks": backlinks["backlinks"],
+            "generated_at": datetime.utcnow().isoformat() + "Z",
+            "source_commit": source_commit,
+        }
+        backlinks_path = _LAYER_1_ROOT / "data" / "backlinks_v2.json"
         backlinks_tmp = backlinks_path.with_suffix(".json.tmp")
-        
+
         with open(backlinks_tmp, "w", encoding="utf-8") as f:
-            json.dump(backlinks, f, indent=2, ensure_ascii=False)
+            json.dump(backlinks_with_metadata, f, indent=2, ensure_ascii=False)
         
         # Validate before replacing
         is_valid, errors = validate_graph_artifacts(all_entities, graph, backlinks)

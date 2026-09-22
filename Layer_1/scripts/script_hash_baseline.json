@@ -7,10 +7,7 @@
     "hash": "6de974f280bce897c01490f2585f919395211ebf5d427541523e3cfb4d9fa9c6",
     "captured_at": "2026-08-27T20:46:59.953868+00:00"
   },
-  "Layer_1/scripts/allocate_vantage_serial.py": {
-    "hash": "5321d9b90408e5e84565f4d27625f35741fedf3d8484077bfa589559d7425648",
-    "captured_at": "2026-08-27T20:46:59.954083+00:00"
-  },
+
   "Layer_1/scripts/apply_hyperlinks_notion.py": {
     "hash": "8e3077d923a72556061f68afcfa345b264e9792ddc45c40fe3e918e0ce8143cf",
     "captured_at": "2026-08-27T20:46:59.954272+00:00"
@@ -203,10 +200,7 @@
     "hash": "1e531522b74b99d436f0ed3d3eb4fc274a3804345be70f91fa7e547a0836a692",
     "captured_at": "2026-08-27T20:46:59.961709+00:00"
   },
-  "Layer_1/scripts/mcp_vantage_serial_server.py": {
-    "hash": "4ea0ee1ef2c9d22f765c00e3e64c99f8be0ed98d696ff36a8cd4c3e252369dac",
-    "captured_at": "2026-08-27T20:46:59.961870+00:00"
-  },
+
   "Layer_1/scripts/normalize_heading_ids.py": {
     "hash": "3f611c058e27faceb3ab58d15d26bf869ab2acab3c850eb366d26471eb4eca6b",
     "captured_at": "2026-08-27T20:46:59.962018+00:00"
@@ -259,22 +253,12 @@
     "hash": "f9c750a07625f7ad5b09d16ee4d990405132db180db31d862ad1dc92cacd33ad",
     "captured_at": "2026-08-27T20:46:59.963696+00:00"
   },
-  "Layer_1/scripts/start_vantage_serial_server.sh": {
-    "hash": "ca101a44b05c13dd29521a0f4a52732bd69882a678ebac3a1656f290400c45ff",
-    "captured_at": "2026-08-27T20:46:59.963849+00:00"
-  },
+
   "Layer_1/scripts/status_report.py": {
     "hash": "7cfd38215333cf4013de7457cb7a9fd0032c42dc0f9ccdaafa1bcf74c92f6dde",
     "captured_at": "2026-08-27T20:46:59.963987+00:00"
   },
-  "Layer_1/scripts/test_mcp_dry_run.py": {
-    "hash": "4ec6908618876cdacbd50b835225c1676a71e9f85e03b63bda43f650afd36613",
-    "captured_at": "2026-08-27T20:46:59.964148+00:00"
-  },
-  "Layer_1/scripts/test_mcp_real.py": {
-    "hash": "fc2719e93878e9ce1e70e6ebb6318c9f76e2d0df46ce9cc7eeaf6cec92ff515a",
-    "captured_at": "2026-08-27T20:46:59.964305+00:00"
-  },
+
   "Layer_1/scripts/update_canvas.py": {
     "hash": "8afd9201d4a10347a85e4863ba173b788987dab0a789bb27fe8a9fde622b1ea6",
     "captured_at": "2026-08-27T20:46:59.964444+00:00"
@@ -363,14 +347,7 @@
     "hash": "03a5c9fd2fd76ef8c8ef52d74b88231957c8b6f296bd3ce7de8d019945639e3b",
     "captured_at": "2026-08-27T20:46:59.965655+00:00"
   },
-  "Layer_1/scripts/vantage_serial_http_server.py": {
-    "hash": "88dc252e522c1ba5361e57ece826595904003dfa6daf487094d9d6f5362879bb",
-    "captured_at": "2026-08-27T20:46:59.965828+00:00"
-  },
-  "Layer_1/scripts/vantage_serial_mcp_bridge.py": {
-    "hash": "828101341b2d1c9743710191cab22b38a9d666c419434ac66369775c435cedea",
-    "captured_at": "2026-08-27T20:46:59.965863+00:00"
-  },
+
   "Layer_4/scripts/vdoc.py": {
     "hash": "3bbc93039fbbdfd7e526151a20cb14f720c85482bd9c79bf1144e7629bc275b3",
     "captured_at": "2026-08-27T20:46:59.966031+00:00"

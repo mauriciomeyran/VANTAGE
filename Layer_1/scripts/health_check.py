@@ -401,7 +401,23 @@ def check_index_age():
             warn(f"index - {name} no encontrado")
             all_ok = False
         else:
-            age_hours = (now - path.stat().st_mtime) / 3600
+            # Prefer generated_at field over mtime (P3 fix)
+            try:
+                with open(path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                generated_at = data.get("generated_at")
+                if generated_at:
+                    # Parse ISO format timestamp
+                    from datetime import datetime
+                    gen_time = datetime.fromisoformat(generated_at.replace('Z', '+00:00')).timestamp()
+                    age_hours = (now - gen_time) / 3600
+                else:
+                    # Fallback to mtime
+                    age_hours = (now - path.stat().st_mtime) / 3600
+            except Exception:
+                # Fallback to mtime on any error
+                age_hours = (now - path.stat().st_mtime) / 3600
+
             if age_hours > INDEX_STALE_THRESHOLD_HOURS:
                 warn(f"index - {name}: {age_hours:.0f}h sin actualizar (umbral: {INDEX_STALE_THRESHOLD_HOURS}h)")
                 stale_detected = True

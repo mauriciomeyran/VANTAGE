@@ -22,6 +22,17 @@ import requests
 from pathlib import Path
 from dotenv import load_dotenv
 
+try:
+    # Try to import from Layer_1/scripts if available
+    import sys
+    layer_1_scripts = Path(__file__).resolve().parent.parent / "Layer_1" / "scripts"
+    if str(layer_1_scripts) not in sys.path:
+        sys.path.insert(0, str(layer_1_scripts))
+    from notion_utils import _notion_version
+except ImportError:
+    def _notion_version() -> str:
+        return os.environ.get("NOTION_VERSION", "2025-09-03")
+
 # ──────────────────────────────────────────
 # CONFIGURACIÓN (config/layer_3.env)
 # ──────────────────────────────────────────
@@ -506,7 +517,7 @@ def _parse_groq_jobs(content):
 NOTION_HEADERS = {
     "Authorization":  f"Bearer {NOTION_TOKEN}",
     "Content-Type":   "application/json",
-    "Notion-Version": "2022-06-28",
+    "Notion-Version": _notion_version(),
 }
 
 VALID_HOLDINGS = [

@@ -108,7 +108,7 @@ def _extract_prop(page: Dict[str, Any], prop_name: str) -> Any:
     return None
 
 
-def _handle_show_roles(active: bool) -> Dict[str, Any]:
+def _handle_show_roles(active: bool, full: bool = False) -> Dict[str, Any]:
     trackers = list_entities(source_db="VANTAGE_TRACKER")
     matched, errors = [], []
 
@@ -126,10 +126,15 @@ def _handle_show_roles(active: bool) -> Dict[str, Any]:
                 "page_url": ctx["entity"].get("page_url"),
             })
 
+    # Default limit: top-25 + errors. Use full=True to get all records.
+    results = matched if full else matched[:25]
+
     return {
         "intent": "show_active_roles" if active else "show_archived_roles",
         "count": len(matched),
-        "results": matched,
+        "returned": len(results),
+        "full": full,
+        "results": results,
         "errors": errors,
     }
 
@@ -191,7 +196,7 @@ def _handle_compare(entity_id_a: str, entity_id_b: str) -> Dict[str, Any]:
     }
 
 
-def _handle_show_archived_history() -> Dict[str, Any]:
+def _handle_show_archived_history(full: bool = False) -> Dict[str, Any]:
     try:
         pages = _notion_db_query(_ARCHIVO_TRACKER_DS_ID)
     except Exception as exc:
@@ -215,16 +220,21 @@ def _handle_show_archived_history() -> Dict[str, Any]:
         by_status[s] = by_status.get(s, 0) + 1
         by_marca[m] = by_marca.get(m, 0) + 1
 
+    # Default limit: top-25. Use full=True to get all records.
+    returned_records = records if full else records[:25]
+
     return {
         "intent": "show_archived_history",
         "total": len(records),
+        "returned": len(returned_records),
+        "full": full,
         "by_status": by_status,
         "top_marcas": dict(sorted(by_marca.items(), key=lambda x: -x[1])[:10]),
-        "records": records,
+        "records": returned_records,
     }
 
 
-def _handle_show_bugs() -> Dict[str, Any]:
+def _handle_show_bugs(full: bool = False) -> Dict[str, Any]:
     try:
         pages = _notion_db_query(_BUG_TRACKER_DS_ID)
     except Exception as exc:
@@ -257,11 +267,16 @@ def _handle_show_bugs() -> Dict[str, Any]:
         s = b["status"] or "sin status"
         by_status[s] = by_status.get(s, 0) + 1
 
+    # Default limit: top-25. Use full=True to get all records.
+    returned_bugs = bugs if full else bugs[:25]
+
     return {
         "intent": "show_bugs",
         "total": len(bugs),
+        "returned": len(returned_bugs),
+        "full": full,
         "by_status": by_status,
-        "bugs": bugs,
+        "bugs": returned_bugs,
     }
 
 
@@ -286,23 +301,24 @@ def _handle_search(text: str) -> Dict[str, Any]:
 
 def ask(prompt: str, **kwargs) -> Dict[str, Any]:
     p = prompt.lower().strip()
+    full = kwargs.get("full", False) or "full" in p
 
     if "active role" in p or "roles activos" in p:
-        return _handle_show_roles(active=True)
+        return _handle_show_roles(active=True, full=full)
 
     if any(kw in p for kw in ("archived history", "archivo histórico", "historial")):
-        return _handle_show_archived_history()
+        return _handle_show_archived_history(full=full)
 
     if "show archived" in p:
         if "role" in p or "roles" in p or "job" in p:
-            return _handle_show_roles(active=False)
-        return _handle_show_archived_history()
+            return _handle_show_roles(active=False, full=full)
+        return _handle_show_archived_history(full=full)
 
     if "archived role" in p or "roles archivados" in p or "archived job" in p:
-        return _handle_show_roles(active=False)
+        return _handle_show_roles(active=False, full=full)
 
     if "bug" in p:
-        return _handle_show_bugs()
+        return _handle_show_bugs(full=full)
 
     if "find candidate" in p or "candidatos" in p:
         return _handle_find_candidates()

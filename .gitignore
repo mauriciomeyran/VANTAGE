@@ -20,6 +20,7 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .venv/
+Archive/Scout/
 
 # Google Drive OAuth credentials
 token_drive.json

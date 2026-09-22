@@ -1175,6 +1175,10 @@ Por qué te sirve saberlo: antes de esta consolidación (sesión 2026-07-25), ca
 Utilidades y Herramientas de Sesión
 agent_api.pyQué hace: Capa de consulta en lenguaje natural sobre el índice de entidades — es el motor real detrás de vantage.py ask.
 Uso: python3 agent_api.py "texto de consulta" — un solo argumento posicional, entre comillas.
+Flags:
+| Flag | Caso de uso |
+| --- | --- |
+| full | Obtiene el detalle completo (sin límite top-25) en consultas de historial, bugs o roles. Por defecto devuelve top-25 + errores. |
 Caso de uso: Ejemplos reales soportados: 'show active roles', 'show archived history', 'show bugs', 'find candidates', 'compare TRACKER:H_xxx TRACKER:H_yyy'.
 clean_caches.py (y su wrapper Raycast clean-caches-raycast.sh)Qué hace: Limpieza de cachés de aplicaciones en Mac (Chrome, Safari, Firefox, Edge, y otras) — no toca sesión/login ni LocalStorage, solo caché regenerable. Reporta espacio liberado por ruta.
 Uso: Sin flags — se corre directo.
