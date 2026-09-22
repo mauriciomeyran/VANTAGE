@@ -57,7 +57,9 @@ Si existe un HANDOFF de `vantage-cv-a` para esta vacante, úsalo como referencia
 Recorre los 7 ítems en orden. Para cada uno, documenta el resultado (PASS / FAIL / N/A con razón), aplicando la Regla Anti-Ambigüedad arriba.
 
 ### 1. Invarianza estructural
-¿Los subtítulos y headers del PDF coinciden con el Golden Skeleton (`CANON:OUTPUT-CONTRACT-002`, numeración real `2:X`/`3:X`)? Verifica que no se hayan fusionado, dividido, renombrado o reordenado secciones respecto a la estructura canónica. Incluye verificar que el tercer párrafo de perfil (`2:10`) no sea una duplicación verbatim del segundo (`3:13`) — si el CV-B correspondiente no tenía material para un tercer párrafo distinto, el slot debe mostrar `[PENDING DATA]` o estar vacío, nunca repetir el párrafo anterior.
+¿Los subtítulos y headers del PDF coinciden con el Golden Skeleton (`CANON:OUTPUT-CONTRACT-002`, numeración real `2:X`/`3:X`)? Verifica que no se hayan fusionado, dividido, renombrado o reordenado secciones respecto a la estructura canónica. Incluye verificar que el tercer párrafo de perfil (`2:10`) no sea una duplicación verbatim del segundo (`3:13`) — si el CV-B correspondiente no tenía material para un tercer párrafo distinto, el slot debe quedar vacío (BASELINE v1.1.0 — nunca `[PENDING DATA]`), nunca repetir el párrafo anterior.
+
+**Fuente obligatoria para este ítem**: leer `CANON:OUTPUT-CONTRACT-002` (Golden Skeleton) directamente del Career Canon antes de evaluar — no evaluar de memoria ni contra una copia local desactualizada del Skeleton. Si el Golden Skeleton no está accesible al momento de correr QA, detener el ítem 1 y declararlo `FAIL — requiere confirmación humana` (Regla Anti-Ambigüedad), no asumir estructura.
 
 ### 2. Orden cronológico
 ¿La trayectoria (Experience) sigue orden cronológico absoluto, sin reordenamiento estratégico? Referencia: `CANON:CAREER-TIMELINE` — C01 (2025–2026) → C02 (2022–2023) → C03 (2018–2021) → C04 (2017–2018) → C05 (2012–2017), en orden inverso-cronológico estándar de CV (más reciente primero). Verifica que ningún rol se haya movido de posición para "verse mejor" ante el JD.

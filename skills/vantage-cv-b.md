@@ -86,8 +86,11 @@ negociables.
 ### 1. Inmutabilidad de IDs
 
 Los `###### figma_text_id` son llaves primarias. Está prohibido alterarlos,
-omitirlos o inventar nuevos. El SSOT de IDs de nodo es `registry_seed.json` en
-`04-Vantage_CV/Figma Sync/`; ante discrepancia, el registry gana.
+omitirlos o inventar nuevas. El SSOT de IDs de nodo es `registry_seed.json`
+(ubicación de referencia histórica: `04-Vantage_CV/Figma Sync/`; también
+disponible vía Google Drive o adjunto directo del operador en el chat — leer
+la copia más reciente disponible por cualquiera de estas vías, nunca asumir
+que solo existe en la ruta local); ante discrepancia, el registry gana.
 
 ### 2. Integridad de slots
 
@@ -146,7 +149,10 @@ desarrollo de — solo se usan si existen literalmente en el Canon.
 ## Estructura Golden Skeleton
 
 Referencia: `CANON:OUTPUT-CONTRACT-002`. Antes de generar cualquier output,
-leer `registry_seed.json` vigente. Nunca usar una tabla de IDs memorizada o
+leer `registry_seed.json` vigente — desde el Career Canon en Notion
+(`CANON:OUTPUT-CONTRACT-003` mantiene una copia embebida de referencia,
+BASELINE 2026-09-19), Google Drive, o el adjunto más reciente que el operador
+haya compartido en la sesión. Nunca usar una tabla de IDs memorizada o
 hardcodeada en esta skill.
 
 El registry mapea `slot_name` a `figma_text_id`; sus llaves ordenadas C01→C05
