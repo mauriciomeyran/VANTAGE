@@ -248,52 +248,20 @@ def build_graph(entities: list[dict]) -> dict:
     """
     Builds graph_v2.json from entity index.
 
-    Only implements archived_from relationships:
-    - ARCHIVO → TRACKER based on archived_from metadata (P2 fix)
-    No longer uses hash matching (which was structurally empty).
+    SUSPENDED: The graph subsystem is suspended by product decision.
+    VANTAGE architecture does not support graph-based archiving relationships:
+    - Archived rows are the SAME row moved from TRACKER to ARCHIVO_TRACKER (mutually exclusive)
+    - No two entities exist simultaneously to link with an edge
+    - No "archived_from" field exists in the ARCHIVO_TRACKER schema
 
-    Deterministic: edges are generated solely from archived_from metadata.
-    No fabricated edges, no inferred relationships.
+    This function returns a SUSPENDED marker instead of attempting to build
+    structurally impossible edges from non-existent metadata.
     """
-    # Build lookup for tracker entities by page_id
-    tracker_by_page_id = {}
-    for entity in entities:
-        if entity["entity_type"] == "tracker":
-            tracker_by_page_id[entity["page_id"]] = entity
-
-    # Build edges for archived_from relationships based on metadata
-    edges = []
-    for entity in entities:
-        if entity["entity_type"] == "archive" and entity.get("archived_from"):
-            archived_from_ref = entity["archived_from"]
-
-            # Try to find the corresponding tracker entity
-            # archived_from_ref could be a page_id, entity_id, or URL
-            target_tracker = None
-
-            # Direct page_id match
-            if archived_from_ref in tracker_by_page_id:
-                target_tracker = tracker_by_page_id[archived_from_ref]
-            else:
-                # Try entity_id match
-                for tracker in tracker_by_page_id.values():
-                    if tracker["entity_id"] == archived_from_ref or tracker["canonical_id"] == archived_from_ref:
-                        target_tracker = tracker
-                        break
-
-            if target_tracker:
-                edges.append({
-                    "from": entity["entity_id"],
-                    "to": target_tracker["entity_id"],
-                    "type": "archived_from"
-                })
-            else:
-                # Log unresolved archived_from references
-                print(f"  ⚠️  archived_from no resuelto: {entity['entity_id']} → {archived_from_ref}")
-
     return {
         "version": "2.0",
-        "edges": edges
+        "status": "SUSPENDED",
+        "reason": "Product decision: VANTAGE uses mutually exclusive row movement (TRACKER ↔ ARCHIVO_TRACKER), not graph-based archiving. No edge relationships exist in the data model.",
+        "edges": []
     }
 
 
@@ -331,7 +299,11 @@ def validate_graph_artifacts(
     """
     Validates graph artifacts against entity index.
 
-    Checks:
+    SUSPENDED: If graph status is SUSPENDED, validation passes explicitly
+    recognizing the suspended state rather than attempting to validate
+    structurally impossible empty artifacts.
+
+    Normal validation (when not suspended):
     1. No orphan entity_ids in graph edges (all nodes must exist in entity index)
     2. Backlinks exactly match graph (inverse relationship)
     3. Graph structure is valid
@@ -339,6 +311,11 @@ def validate_graph_artifacts(
     Returns:
         (is_valid, list of error messages)
     """
+    # Check if graph is suspended
+    if graph.get("status") == "SUSPENDED":
+        print(f"  ✓ Graph validation: SUSPENDED (reason: {graph.get('reason', 'Product decision')})")
+        return (True, [])
+
     errors = []
     entity_ids = {e["entity_id"] for e in entities}
 

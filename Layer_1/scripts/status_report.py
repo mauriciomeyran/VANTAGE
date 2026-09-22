@@ -93,14 +93,26 @@ def inspect_archive_queue():
         # Get graph statistics
         stats = graph_stats()
         result["graph_stats"] = stats
-        
+
+        # Check if graph is suspended
+        if stats.get("status") == "SUSPENDED":
+            print(f"📊 Graph Statistics:")
+            print(f"  Status: SUSPENDED")
+            print(f"  Reason: {stats.get('reason', 'Product decision')}")
+            print(f"  ⚠️  Graph-based archiving not available - query Status field directly")
+            # Skip graph-based analysis and suggest direct field queries
+            print(f"\n💡 Para inspección de archivados, consulta directamente:")
+            print(f"   - Campo Status en ARCHIVO_TRACKER")
+            print(f"   - Campos Fecha_Resolución y Next_Action")
+            return result
+
         print(f"📊 Graph Statistics:")
         print(f"  Total edges: {stats['total_edges']}")
         print(f"  Total nodes: {stats['total_nodes']}")
         print(f"  Edges by type:")
         for edge_type, count in stats['edges_by_type'].items():
             print(f"    - {edge_type}: {count}")
-        
+
         # Get archived_from edges count
         archived_count = stats['edges_by_type'].get('archived_from', 0)
         print(f"\n🗄️  Archived From Edges: {archived_count}")

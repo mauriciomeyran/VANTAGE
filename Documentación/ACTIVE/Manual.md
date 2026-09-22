@@ -582,11 +582,12 @@ No es necesario para cambios de Status, Score, Gate_Decision en páginas individ
 ### 9.4 MANUAL:RUNTIME-004
 Runtime Build
 El Runtime Build regenera los tres artefactos de lectura del sistema: entity_index_v2.json, graph_v2.json y backlinks_v2.json. Se corre desde Layer_1/scripts/ con el venv activo.
+⚠️ SUSPENDED: graph_v2.json y backlinks_v2.json están suspendidos por decisión de producto (no hay relaciones de grafo en el modelo de datos). El Build genera estos archivos con estado SUSPENDED en lugar de intentar construir edges estructuralmente imposibles.
 Cuándo correrlo:
 - Después de cualquier migración de namespaces o cambio en resolver_registry_v2.json.
-- Si graph_v2.json muestra self-loops inesperados (síntoma de colisión de namespace).
 - Si entity_index_v2.json contiene IDs con prefix incorrecto.
 - Como parte del cierre formal de un release que afecte la capa de Runtime.
+No es necesario para graph_v2.json (el estado SUSPENDED se mantiene por diseño).
 El Build es determinista: el mismo Registry + el mismo estado de Notion producen los mismos artefactos. Si el resultado varía entre runs sin cambios en los inputs, es una señal de problema en el Registry — no en el Build.
 Sobre resolver_registry_v2.json
 Desde v2.4.0 (Runtime Contract Migration), este archivo es la fuente enforced — no solo declarada — de namespace ownership. Cada tipo de entidad tiene su entity_prefix definido aquí; ningún componente del sistema puede hardcodear ni inferir un prefix.
@@ -986,13 +987,15 @@ Flags:
 | --debug-id <id1> <id2> … | Ya sabes que KERNEL:SCHEMA-008 está fallando en el census y no quieres esperar el barrido completo — pásalo directo y te da diagnóstico quirúrgico de esos IDs específicos. |
 | --auto-fix-orphans | El census te reportó 40 huérfanos y no quieres darlos de alta uno por uno en CENSUS_SPEC a mano — corre esto y te los agrega interactivamente con el comentario de auditoría ya insertado. |
 | --sync-to-notion <page_id> | Ya corriste el census y quieres que el export quede reflejado en el V-ID-CENSUS de Notion sin copiar/pegar manualmente — pásale el page_id destino. |
-generate_entity_index_v2.pyQué hace: Reconstruye el índice de entidades (entity_index_v2.json), el grafo de relaciones y los backlinks — la base de datos interna que usa vantage.py ask/query.
+generate_entity_index_v2.pyQué hace: Reconstruye el índice de entidades (entity_index_v2.json) y genera graph_v2.json/backlinks_v2.json con estado SUSPENDED (no edges por diseño de producto).
+⚠️ SUSPENDED: El grafo de archivado está suspendido por decisión de producto. graph_v2.json y backlinks_v2.json se generan con estado SUSPENDED en lugar de intentar construir edges basados en metadata que no existe.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --limit <N> | Estás probando un cambio en la lógica de indexado y no quieres esperar a que procese todas las fuentes — límita a N entidades por fuente para iterar rápido. |
 | --out <ruta> | Quieres generar un índice de prueba sin pisar el archivo real que usa producción — apunta a una ruta temporal. |
 | --skip-graph | Solo necesitas refrescar el índice de entidades (para vantage.py query) y no te importa el grafo/backlinks en este momento — ahorra tiempo de corrida. |
+Caso de uso: Después de cambios en resolver_registry_v2.json o migraciones de namespace. Para inspección de archivados, consulta directamente los campos Status, Fecha_Resolución y Next_Action en lugar de usar funciones de grafo. |
 generate_id_inventory.pyQué hace: Escanea un árbol de archivos y genera un inventario CSV/Markdown de todas las definiciones y referencias de IDs canónicos encontradas.
 Flags:
 | Flag | Caso de uso |
@@ -1163,8 +1166,9 @@ profile_fit.pyQué hace: Reglas de fit de perfil VM y exclusiones compartidas �
 Quién lo consume: pipeline principal y scripts de cleanup.
 Por qué te sirve saberlo: si una vacante que debería excluirse se está colando (o viceversa, una válida se excluye), este archivo tiene el patrón regex responsable — no busques la lógica en otro lado.
 graph_layer.pyQué hace: Carga graph_v2.json y backlinks_v2.json, expone funciones de consulta sobre el grafo de entidades (get_archived_from, get_backlinks, graph_stats).
+⚠️ SUSPENDED: El subsistema de grafo está suspendido por decisión de producto. VANTAGE usa movimiento mutuamente exclusivo de filas (TRACKER ↔ ARCHIVO_TRACKER), no relaciones de grafo. No existen edges de archivado en el modelo de datos. Las funciones retornan [] y logean estado SUSPENDED.
 Quién lo consume: agent_api.py (y por extensión, vantage.py ask).
-Por qué te sirve saberlo: si vantage.py ask devuelve relaciones incorrectas o desactualizadas entre entidades, corre vantage.py sync para regenerar los JSON que este módulo lee — no es un bug del módulo en sí.
+Por qué te sirve saberlo: para inspección de archivados, consulta directamente los campos Status, Fecha_Resolución y Next_Action en lugar de usar funciones de grafo.
 runtime_identity.pyQué hace: Contrato canónico de resolución de entity_prefix por tipo de entidad — único SSOT, cierra DT-014. Ningún componente debe hardcodear un prefijo; si falta en el Registry, falla explícito (nunca default silencioso).
 Quién lo consume: generate_entity_index_v2.py, lazy_loader.py.
 Por qué te sirve saberlo: si ves un error de "prefijo ausente en Registry" en vez de un ID mal formado silencioso, es este contrato funcionando como debe — es una falla intencional, no un bug.

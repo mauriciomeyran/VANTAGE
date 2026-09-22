@@ -281,6 +281,22 @@ def _handle_show_bugs(full: bool = False) -> Dict[str, Any]:
 
 
 def _handle_graph_relations(entity_id: str) -> Dict[str, Any]:
+    stats = graph_stats()
+
+    # Check if graph is suspended
+    if stats.get("status") == "SUSPENDED":
+        return {
+            "intent": "graph_relations",
+            "entity_id": entity_id,
+            "status": "SUSPENDED",
+            "reason": stats.get("reason", "Product decision"),
+            "archived_from": [],
+            "archived_to": [],
+            "backlinks": [],
+            "stats": stats,
+            "note": "Graph-based archiving not available - query Status field directly"
+        }
+
     archived_from = get_archived_from(entity_id)
     backlinks = get_backlinks(entity_id)
 
@@ -290,7 +306,7 @@ def _handle_graph_relations(entity_id: str) -> Dict[str, Any]:
         "archived_from": archived_from,
         "archived_to": backlinks,
         "backlinks": backlinks,
-        "stats": graph_stats(),
+        "stats": stats,
     }
 
 
