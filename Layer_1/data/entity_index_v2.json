@@ -217,15 +217,6 @@
       "source_db": "VANTAGE_TRACKER"
     },
     {
-      "entity_id": "TRACKER:H_259b51e24cf9ebaf",
-      "canonical_id": "259b51e24cf9ebaf713542c058187d892472c9d3683cf4d6a2a839f565b1b678",
-      "page_id": "3dc938be-fc42-81be-95df-e6d73ee1e1d2",
-      "page_url": "https://app.notion.com/p/Creative-Brand-Guardian-3dc938befc4281be95dfe6d73ee1e1d2",
-      "hash": "259b51e24cf9ebaf713542c058187d892472c9d3683cf4d6a2a839f565b1b678",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER"
-    },
-    {
       "entity_id": "TRACKER:H_1fd046aecc24c13b",
       "canonical_id": "1fd046aecc24c13bc080a12d74101d93bbd1ddf37aa6b98858c567cd94ebc644",
       "page_id": "3dc938be-fc42-814f-9a1a-c8db4c54db2f",
@@ -402,6 +393,15 @@
       "page_id": "3dc938be-fc42-8123-b25d-fcb088cd9276",
       "page_url": "https://app.notion.com/p/Visual-Merchandiser-Moda-Zona-Norte-CDMX-Edo-Mx-3dc938befc428123b25dfcb088cd9276",
       "hash": "e2c59bac1ca1b18429ef7940b50e331f00ce6c4ba1cb48d66977fce094250d2f",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER"
+    },
+    {
+      "entity_id": "ARCHIVO:H_259b51e24cf9ebaf",
+      "canonical_id": "259b51e24cf9ebaf713542c058187d892472c9d3683cf4d6a2a839f565b1b678",
+      "page_id": "3dc938be-fc42-81be-95df-e6d73ee1e1d2",
+      "page_url": "https://app.notion.com/p/Creative-Brand-Guardian-3dc938befc4281be95dfe6d73ee1e1d2",
+      "hash": "259b51e24cf9ebaf713542c058187d892472c9d3683cf4d6a2a839f565b1b678",
       "entity_type": "archive",
       "source_db": "ARCHIVO_TRACKER"
     },
@@ -7779,8 +7779,8 @@
   ],
   "metrics": {
     "total_entities": 864,
-    "tracker_entities": 38,
-    "archive_entities": 826,
+    "tracker_entities": 37,
+    "archive_entities": 827,
     "hash_coverage": 89.0,
     "orphan_candidates": 95
   }
