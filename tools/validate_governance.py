@@ -251,16 +251,20 @@ def main():
     parser.add_argument(
         "--check",
         choices=["json", "parity", "refs", "all"],
-        default="all",
-        help="Tipo de validación a ejecutar (default: all)"
+        default="json,parity",
+        help="Tipo de validación a ejecutar (default: json,parity). --check refs requiere confirmación manual en Notion vivo."
     )
     
     args = parser.parse_args()
     
+    # Parsear checks seleccionados
+    selected_checks = args.check.split(",")
+    
     all_issues = []
+    is_refs_mode = "refs" in selected_checks
     
     # Ejecutar checks según selección
-    if args.check in ["json", "all"]:
+    if "json" in selected_checks:
         print("[CHECK] Validando JSON sin duplicados...")
         json_issues = check_json_duplicates()
         all_issues.extend(json_issues)
@@ -269,7 +273,7 @@ def main():
         else:
             print(f"  ✗ JSON duplicados: {len(json_issues)} issues")
     
-    if args.check in ["parity", "all"]:
+    if "parity" in selected_checks:
         print("[CHECK] Validando paridad triggers↔skills...")
         parity_issues = check_triggers_skills_parity()
         all_issues.extend(parity_issues)
@@ -278,28 +282,48 @@ def main():
         else:
             print(f"  ✗ Paridad triggers↔skills: {len(parity_issues)} issues")
     
-    if args.check in ["refs", "all"]:
+    if is_refs_mode:
         print("[CHECK] Validando referencias documentales...")
+        print("  ⚠ DISCLAIMER: Estos resultados comparan solo contra mirrors .md locales,")
+        print("  ⚠ NO contra Notion en vivo. Cada candidato requiere confirmación manual")
+        print("  ⚠ antes de tratarse como referencia rota real.")
         ref_issues = check_document_references()
-        all_issues.extend(ref_issues)
+        # No agregar refs a all_issues para que no bloquee el pase general
         if not ref_issues:
             print("  ✓ Referencias documentales: OK")
         else:
-            print(f"  ✗ Referencias documentales: {len(ref_issues)} issues")
+            print(f"  ⚠ Candidatos a revisar: {len(ref_issues)}")
     
-    # Reportar resultados
+    # Reportar resultados (solo para checks que bloquean)
+    blocking_issues = [i for i in all_issues if not is_refs_mode or i[1] != "missing_section" and i[1] != "missing_document"]
+    
     print("\n" + "=" * 60)
-    if not all_issues:
-        print("✓ TODAS LAS VALIDACIONES PASARON")
+    if not blocking_issues:
+        print("✓ VALIDACIONES BLOQUEANTES PASARON")
+        if is_refs_mode and ref_issues:
+            print(f"\n⚠ {len(ref_issues)} CANDIDATOS A REVISAR (modo --check refs):")
+            print("=" * 60)
+            for archivo, error_type, items in ref_issues:
+                print(f"\n[{error_type.upper()}] {archivo}")
+                for item in items:
+                    print(f"  - {item}")
         return 0
     else:
-        print(f"✗ {len(all_issues)} ISSUES ENCONTRADOS:")
+        print(f"✗ {len(blocking_issues)} ISSUES BLOQUEANTES ENCONTRADOS:")
         print("=" * 60)
         
-        for archivo, error_type, items in all_issues:
+        for archivo, error_type, items in blocking_issues:
             print(f"\n[{error_type.upper()}] {archivo}")
             for item in items:
                 print(f"  - {item}")
+        
+        if is_refs_mode and ref_issues:
+            print(f"\n⚠ {len(ref_issues)} CANDIDATOS ADICIONALES (modo --check refs):")
+            print("=" * 60)
+            for archivo, error_type, items in ref_issues:
+                print(f"\n[{error_type.upper()}] {archivo}")
+                for item in items:
+                    print(f"  - {item}")
         
         return 1
 
