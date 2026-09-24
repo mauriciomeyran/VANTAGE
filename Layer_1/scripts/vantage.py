@@ -36,6 +36,7 @@ import json
 import os
 import sys
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict
 
@@ -204,6 +205,16 @@ def sync() -> dict:
         os.replace(index_tmp, index_path)
         os.replace(graph_tmp, graph_path)
         os.replace(backlinks_tmp, backlinks_path)
+
+        # Write last_sync_result.json
+        sync_result_path = _scripts_dir.parent / "data" / "last_sync_result.json"
+        sync_result_content = {
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "entities_after": status_result["entity_index"]["total_entities"],
+            "elapsed_seconds": elapsed,
+            "status": "ok"
+        }
+        sync_result_path.write_text(json.dumps(sync_result_content, indent=2, ensure_ascii=False), encoding="utf-8")
 
     except Exception as exc:
         # Clean up temp files on failure
