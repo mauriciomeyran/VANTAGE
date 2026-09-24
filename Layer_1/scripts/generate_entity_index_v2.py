@@ -13,6 +13,7 @@ Uso:
 """
 
 from __future__ import annotations
+import hashlib
 
 import argparse
 import json
@@ -20,7 +21,7 @@ import os
 import subprocess
 import sys
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -229,12 +230,18 @@ def build_entities(
             # Log but continue - don't silently swallow
         entity_id_seen[entity_id] = page_id
 
+        if not hash_value:
+            seed = f"{page_id}:{meta['source_db']}".encode('utf-8')
+            final_hash = f"H_{hashlib.sha256(seed).hexdigest()[:16]}"
+        else:
+            final_hash = hash_value
+
         entities.append({
             "entity_id": entity_id,
-            "canonical_id": hash_value if hash_value else page_id,
+            "canonical_id": final_hash,
             "page_id": page_id,
             "page_url": page_url,
-            "hash": hash_value if hash_value else None,
+            "hash": final_hash,
             "entity_type": meta["entity_type"],
             "source_db": meta["source_db"],
             "archived_from": archived_from,  # P2: metadata-based archiving
@@ -421,7 +428,7 @@ def main() -> None:
     entity_index = {
         "entities": all_entities,
         "metrics": metrics,
-        "generated_at": datetime.utcnow().isoformat() + "Z",
+        "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "source_commit": source_commit,
     }
     entity_index_path = args.out
@@ -450,7 +457,7 @@ def main() -> None:
         graph = build_graph(all_entities)
         graph_with_metadata = {
             "edges": graph["edges"],
-            "generated_at": datetime.utcnow().isoformat() + "Z",
+            "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "source_commit": source_commit,
         }
         graph_path = _LAYER_1_ROOT / "data" / "graph_v2.json"
@@ -463,7 +470,7 @@ def main() -> None:
         backlinks = build_backlinks(graph)
         backlinks_with_metadata = {
             "backlinks": backlinks["backlinks"],
-            "generated_at": datetime.utcnow().isoformat() + "Z",
+            "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "source_commit": source_commit,
         }
         backlinks_path = _LAYER_1_ROOT / "data" / "backlinks_v2.json"
