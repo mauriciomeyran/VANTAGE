@@ -100,6 +100,16 @@ def status() -> Dict[str, Any]:
     }
     if index_age_hours > 24:
         result["warning"] = "entity_index_stale"
+
+    # Read last_sync_result.json if exists
+    sync_result_path = Path(__file__).resolve().parent.parent / "data" / "last_sync_result.json"
+    if sync_result_path.exists():
+        try:
+            with open(sync_result_path, "r", encoding="utf-8") as f:
+                result["last_sync_result"] = json.load(f)
+        except Exception:
+            pass
+
     return result
 
 
