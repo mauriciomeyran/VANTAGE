@@ -1646,6 +1646,14 @@ Versión actualizada: 9.10.6 (CHANGELOG).
 ---
 > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
 # v9.10.5 — Fix: MANUAL:HEALTHCHECK Restaurado Sin Guión Tras Edición Manual · 2026-07-31
+Tipo: [FIX]
+Alcance: Manual (sección 11 y sus 2 referencias cruzadas).
+Contexto: El operador editó manualmente el Manual en Notion, renombrando MANUAL:HEALTHCHECK a MANUAL:HEALTH-CHECK. Esto rompió 2 referencias cruzadas. Se restauró el ID estándar y se alinearon las referencias.
+Cambios:
+- Manual — heading sección 11: MANUAL:HEALTH-CHECK → MANUAL:HEALTHCHECK.
+- Manual — sección 03 (Filosofía de Fallo) y 09.1: referencias actualizadas a MANUAL:HEALTHCHECK.
+- Se mantuvo el nombre de subtítulo "¿Qué es el Census ID?" por instrucción del operador.
+Versión actualizada: 9.10.5 (CHANGELOG).
 ---
 # v9.10.4 — Documentación Transversal: SP:SCHEMA Alineado con Schema Vivo de Notion · 2026-07-31
 Tipo: [DOC] [FIX]

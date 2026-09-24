@@ -1,13 +1,34 @@
 # V | CHANGELOG
 
 Tipo: [CODE] [OPS] [DOC]
+Identidad VANTAGE: agent.family=GROK · agent.instance=DEFAULT. Agente de código: DEVIN (parcial, agotó tokens).
+Documentos / artefactos modificados:
+- Layer_4/scripts/trigger_sync_after_mcp_write.py (no-bloqueante + 8 docs fundacionales)
+- Layer_4/scripts/MCP_SYNC_HOOK_README.md (actualizado a 8 docs + estado actual)
+- validate_governance.py --check refs (exclusión de /Archive/ ya aplicada por Devin)
+- VANTAGE AUDIT TRACKER (página madre reordenada y limpiada de texto histórico parchado)
+- P-A y P-B (páginas de item) → Cerrado
+- RT-1 (Bug Tracker) → notas actualizadas, permanece en Monitorear
+Tipo de impacto: Cierre de contrato + endurecimiento operativo + higiene documental.
+Alcance de esta sesión:
+1. P-A cerrado — sync() escribe last_sync_result.json + status() lo incluye. Verificación byte-exacta previa confirmada. Status → Cerrado.
+1. P-B cerrado — skill vantage-session-open con warning de staleness. Sincronizado también a Notion Skill Library (v1.2.0) + tabla SP:SKILL-VERSION-PIN actualizada.
+1. MIRROR-TRIGGER cerrado pragmáticamente — commit 405ef8f endurece el trigger (Popen no-bloqueante, Brief + Changelog Archivo añadidos). Limitación del MCP server (fuera del repo) aceptada: invocación manual vía mcp_sync_wrapper.sh <page_id>. notion_write_wrapper.py queda como experimental/stub.
+1. --check refs — Devin ya excluyó /Archive/ del alcance. Triage de 224 candidatos: cero referencias muertas reales que ameriten limpieza hoy.
+1. Audit Tracker — página madre reescrita: estado actual consolidado, reglas operativas vigentes, resumen de cierre HO-000062 + HO-000064. Texto histórico parchado eliminado.
+1. RT-1 — notas actualizadas; Next_Action sigue = Monitorear (umbral 3er episodio para Patch).
+P-C / P-D / P-E del contrato HO-000064: páginas canceladas / en papelera (nunca iniciadas).
+Estado de verificación: origin/main contiene 405ef8f y a64cf56 (exclusión /Archive/). Tracker sin items abiertos.
+IDs afectados: ninguno en canon/documentación fundacional que dispare CENSUS-SYNC Regla 1.
+Estado: WRITE aplicado en Notion (Audit Tracker + Changelog + versión). Código ya en origin/main.
+Tipo: [CODE] [OPS] [DOC]
 Identidad VANTAGE: agent.family=CLAUDE · agent.instance=KM. Agente de código: DEVIN (2 instancias: local→repo-only).
 Documentos modificados: Layer_1/scripts/resolver_layer_v1.py · notion_utils.py · verify_versions.py · clean_script_library_links.py · agent_api.py · lazy_loader.py · generate_entity_index_v2.py · graph_layer.py · status_report.py · generate_census.py · health_check.py · normalize_heading_ids.py · generate_entity_index_v2.py · context_layer.py · Layer_3/scripts/layer_3_mail.py · Layer_1/scripts/vload.py (nuevo) · tools/validate_governance.py (nuevo) · Documentación/ACTIVE/Manual.md · .gitignore · handoffs/AUDITORIA_L0_RUNTIME_LAZYLOADER_2026-09-22.md (nuevo) · VANTAGE AUDIT TRACKER (Notion, 11 páginas de items + 1 página de handoff HO-000001 + 1 página HO-000064)
 Documentos potencialmente afectados: SP:CONTEXT-INFRASTRUCTURE (pendiente — P-C del contrato HO-000064) · MANUAL:SESSION-CYCLE (pendiente — P-D del contrato HO-000064)
 Tipo de impacto: Correctivo + Arquitectónico + Operativo + Documental.
 Alcance — items cerrados bajo HO-000062:
 1. P1 — Resolver v3: resolve_entity() usa GET /v1/pages/{page_id} vía notion_utils (cache/throttle/retry); _query_notion() deprecado explícitamente (raise ResolverError) en vez de dead code silencioso; load_index() con dict O(1) en memoria. Cierra F8/§1.2.
-1. P3 — Versión API única: notion_utils._notion_version() con default 2025-09-03 (antes 2022-06-28); verify_versions.py y clean_script_library_links.py enrutados a notion_utils._notion_version() con fallback consistente — eliminados los 2 hardcodes activos. 2 pasadas (primera pasada incompleta, segunda aprobada). Cierra F1/F5/F7/F12.
+1. P3 — Versión API única: notion_utils.notion_version() con default 2025-09-03 (antes 2022-06-28); verifyversions.py y clean_script_library_links.py enrutados a notion_utils._notion_version() con fallback consistente — eliminados los 2 hardcodes activos. 2 pasadas (primera pasada incompleta, segunda aprobada). Cierra F1/F5/F7/F12.
 1. P5 — Saneamiento documental (ejecutado directamente por Claude/KM vía MCP Notion): F16 (SP:BOOTSTRAP-001→SP:BOOTLOADER), F17 (3 fixes en Manual), F15 (creación KERNEL:DOC-CONTRACT §03.18), tabla única de triaje MCP-lectura, corrección vcontext en Aliases. F19 (Hermes) resultó falso positivo — ya registrado en Notion vivo; mirror .md desactualizado.
 1. P6 — Payload budgets: _handle_show_roles / _handle_show_archived_history / _handle_show_bugs con flag full=False y agregados top-25 por defecto. Cierra §3.3.
 1. P8 — Higiene del repo: Scout eliminado del árbol, .m4a de 40MB removido, config/layer_2.env.example removido, raíz limpia. DESVIACIÓN DOCUMENTADA: infra de seriales MCP (mcp_vantage_serial_server.py, tools/claude-desktop-mcp-extension/) eliminada por Devin sin decisión explícita previa — mandato pedía solo reportarla. Resultado técnico aprobado, desviación de protocolo registrada en Notas de Cierre de P8.
