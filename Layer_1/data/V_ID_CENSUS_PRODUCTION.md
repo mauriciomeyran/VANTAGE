@@ -40,6 +40,7 @@
 | [`KERNEL:SCHEMA-006`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428190accee01c75ed1fcf ) | 07.6 | Schema — Validation Rules |
 | [`KERNEL:SCHEMA-007`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281d7a2aef152785b1a41 ) | 07.7 | Schema — Mutability Rules |
 | [`KERNEL:SCHEMA-008`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#c5a64bcdea6f4ec5be379447a33cf4d2 ) | 07.8 | Valores Operativos — Next_Action (Tracker de Vacantes) |
+| [`KERNEL:SCHEMA-009`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#6b07971b41ef47f0ba7d0b6e402f2afb ) | 07.9 | Schema — Subsección 009 |
 | [`KERNEL:TRACKER-SCHEMA`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281a386b2c1c72e7ed2e8 ) | 08 | Schema del Tracker de Vacantes |
 | [`KERNEL:TRACKER-SCHEMA-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281efa463f09608bfa5c8 ) | 08.1 | Tracker Schema — Campos Principales |
 | [`KERNEL:TRACKER-SCHEMA-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281c2bf38d2a21c0c2fd8 ) | 08.2 | Tracker Schema — Campos Derivados |
@@ -86,9 +87,11 @@
 | [`KERNEL:CONTEXT-INFRASTRUCTURE-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e0b694c21ffcf053b8 ) | 15.1 | Context Infrastructure — Data Sources |
 | [`KERNEL:CONTEXT-INFRASTRUCTURE-002`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42818391f2ecc693b59a2a ) | 15.2 | Context Infrastructure — Integration Points |
 | [`KERNEL:DATA-FLOW`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428178be4dec4fc6423c14 ) | 16 | Flujo de Datos |
+| [`KERNEL:DATA-FLOW-001`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#8b46405501924da498b6068ddca32bb5 ) | 16.1 | Flujo de Datos — Subsección 001 |
+| [`KERNEL:DOC-CONTRACT`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5a99326b9a124e89a2fd575eda5fd2b9 ) | 03.18 | Document Contract |
 | [`KERNEL:EVOLUTION`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42812ca85ac71f34eaa9c9 ) | 17 | Evolución del Sistema |
 | [`KERNEL:DEDUP-LAYER-UPGRADE`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f8e1105ad1284258b05bb8576b35c4e0 ) | 09.12 | Dedup Layer Upgrade |
-| [`KERNEL:HANDOFF-SERIAL`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5a99326b9a124e89a2fd575eda5fd2b9 ) | 03.18 | Handoff Serial |
+| [`KERNEL:HANDOFF-SERIAL`]( https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#45733b3696264c42acf5d26381c27a17 ) | 03.19 | Handoff Serial |
 
 ---
 
@@ -263,6 +266,7 @@
 | [`SP:MCP-ROUTING-NOTES`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281e8aabec1d52a036038 ) | 09 | Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY) |
 | [`SP:CONSISTENCY`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428150a82cfb23a2d0edd3 ) | 10 | Regla de Consistencia Documental |
 | [`SP:CONSISTENCY-002`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#75dfe84eb19746b59525a869980388f2 ) | 10.1 | Triaje vía Notebook Gemini |
+| [`SP:SKILL-VERSION-PIN`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#615f819a846c4ccb87cebcf8c088b046 ) | 01.3 | Skill Version Pin |
 | [`SP:VERSION-CHECK-TOOL`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428191acd1e6a71d7f5cc4 ) | 11 | Herramienta de Verificación de Versión de Bajo Costo |
 
 ---
@@ -284,6 +288,4 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-| ID | Documento | Link |
-|---|---|---|
-| `SP:SKILL-VERSION-PIN` | System Prompt | [link]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#615f819a846c4ccb87cebcf8c088b046 ) |
+_Ninguno detectado en esta corrida._
