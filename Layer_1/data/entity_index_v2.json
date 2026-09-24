@@ -7297,7 +7297,5 @@
     "archive_entities": 693,
     "hash_coverage": 100.0,
     "orphan_candidates": 0
-  },
-  "generated_at": "2026-09-24T11:40:39.902194Z",
-  "source_commit": "6b74799873f589313af824249dff910628d77cb9"
+  }
 }

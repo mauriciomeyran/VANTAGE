@@ -645,7 +645,7 @@ def check_auto_link_corruption():
         print(f"  Info: entity_index_v2.json no encontrado, omitiendo escaneo de Descripciones")
     
     if corruption_count == 0:
-        ok(f"auto-link - {files_checked} archivos + {entities_checked} entidades verificadas, sin corrupcion detectada")
+        ok(f"auto-link - {files_checked} archivos + {entities_checked} entidades verificadas, sin corrupción detectada")
     else:
         warn(f"auto-link - {corruption_count}/{files_checked + entities_checked} items con patrones sospechosos")
     
