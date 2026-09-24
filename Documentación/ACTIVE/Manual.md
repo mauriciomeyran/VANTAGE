@@ -536,12 +536,11 @@ Ya viste varios de estos comandos en acción durante el flujo semanal (MANUAL:WE
 Antes de correr cualquiera de los comandos siguientes: no todos pesan lo mismo. Ver KERNEL:DATA-FLOW-001 para el contrato de niveles de riesgo — cuáles son inofensivos por diseño y cuáles requieren freeze + intención explícita antes de tocarlos.
 ### 9.1 MANUAL:RUNTIME-001
 ¿Qué es el Runtime?
-Es la herramienta de observabilidad del sistema. Permite interrogar a Notion y extraer contexto semántico sin salir de la terminal.
-¿Por qué vversions y vcensus viven aquí?
-Version Check Tool (vversions) y Census (vcensus) —ya documentados como comandos en MANUAL:RUNTIME (9.2) y en uso durante el Ciclo de Sesión (MANUAL:SESSION-CYCLE)— pertenecen a esta misma capa: interrogan a Notion para darte visibilidad (versión documental, salud del Census), nunca escriben datos de negocio del pipeline de vacantes. Si alguna vez te preguntas por qué vversions vive junto a vantage.py status en vez de junto a vl1, es por esto: los dos son observación, no procesamiento de vacantes.
+Es la capa técnica de observabilidad, lectura documental y resolución de entidades de VANTAGE.
+vversions y vcensus permanecen dentro de esta capa como herramientas de observabilidad documental. No forman parte de la resolución de entidades ni del procesamiento de vacantes.
 ### 9.2 MANUAL:RUNTIME-002
 Comandos Principales
-Estos comandos operan sobre el estado del Tracker y están disponibles como subcomandos de vl1. Cada uno tiene un alcance preciso y un modo de operación por defecto.
+Los comandos del Runtime se dividen en dos rutas: documentación y entidades. Los comandos de vl1 pertenecen al pipeline L1/L2 y no sustituyen estas rutas.
 - vl1 tracker — genera un reporte de estado del Tracker en tiempo real: distribución por Gate_Decision, conteo de entradas activas (CREATE + APPLIED), entradas BLOCKED, aplicaciones de los últimos 7 días y NADs vencidas. Es el punto de partida del ciclo semanal — corre antes de cualquier otra operación para tener visibilidad del estado actual (esto es lo que produce el output que viste en el Test Inicial de Setup, MANUAL:SETUP, Paso 5).
 - vl1 analytics — analiza la efectividad de las fuentes de discovery: qué canales producen más entradas CREATE, qué ratio de URLs funcionales tienen, cuál es el score promedio por fuente, y qué método de búsqueda (SEARCH-WEEK, SEARCH-EXEC, Manual) tiene mayor tasa de éxito. Corre los viernes como parte del cierre semanal (MANUAL:WEEKLY-FLOW-005).
 - vl1 batch — modo de operación por defecto: read-only. Muestra la distribución por Status y el conteo de entradas que serían afectadas por la operación batch configurada en el script. Para ejecutar escritura, pasar el flag -execute explícitamente:
@@ -573,15 +572,14 @@ Acepta archivo .md, URL de Claude share. Acepta los siguientes flags:
 Uso típico: vsum chat.md --notion.
 ### 9.3 MANUAL:RUNTIME-003
 Cuándo Correr Sync
-Correr vantage.py sync después de:
-- Cualquier ciclo L1/L2 que haya escrito entradas nuevas en Notion.
-- Después de resolver entradas REVIEW_NEEDED en el Tracker (ver MANUAL:WEEKLY-FLOW-002).
-- Si status muestra "warning": "entity_index_stale" (index > 24h).
-- Si status muestra orphan_candidates > 0 de forma persistente.
-No es necesario para cambios de Status, Score, Gate_Decision en páginas individuales — esos se leen en vivo vía resolve/context.
+Correr python3 scripts/vantage.py sync cuando el snapshot local del Entity Index deba reconstruirse a partir de las fuentes actuales de Notion.
+El sync reconstruye entity_index_v2.json, ejecuta la validación Graph configurada y persiste last_sync_result.json.
+Después del sync, vantage.py status confirma entities_after, las métricas del índice, index_age y last_sync_result.status.
+El Health Check puede ejecutar este sync automáticamente cuando el índice supera 24h.
+No ejecutar sync como mecanismo de reparación de datos de negocio.
 ### 9.4 MANUAL:RUNTIME-004
 Runtime Build
-El Runtime Build regenera los tres artefactos de lectura del sistema: entity_index_v2.json, graph_v2.json y backlinks_v2.json. Se corre desde Layer_1/scripts/ con el venv activo.
+El Runtime Build genera los artefactos derivados del snapshot local: entity_index_v2.json, graph_v2.json y backlinks_v2.json. El Entity Index es el artefacto operativo principal para resolución de entidades.
 Cuándo correrlo:
 - Después de cualquier migración de namespaces o cambio en resolver_registry_v2.json.
 - Si graph_v2.json muestra self-loops inesperados (síntoma de colisión de namespace).
@@ -589,9 +587,8 @@ Cuándo correrlo:
 - Como parte del cierre formal de un release que afecte la capa de Runtime.
 El Build es determinista: el mismo Registry + el mismo estado de Notion producen los mismos artefactos. Si el resultado varía entre runs sin cambios en los inputs, es una señal de problema en el Registry — no en el Build.
 Sobre resolver_registry_v2.json
-Desde v2.4.0 (Runtime Contract Migration), este archivo es la fuente enforced — no solo declarada — de namespace ownership. Cada tipo de entidad tiene su entity_prefix definido aquí; ningún componente del sistema puede hardcodear ni inferir un prefix.
-- Riesgo: una edición manual que asigne un prefix incorrecto producirá colisiones de namespace en el siguiente Runtime Build, lo que se manifestará como self-loops en graph_v2.json.
-- Antes de editar: verificar el prefix activo por tipo de entidad y correr Runtime Build para confirmar que no hay colisiones.
+resolver_registry_v2.json continúa siendo la fuente de namespace ownership del Runtime. Cada tipo de entidad tiene su entity_prefix definido aquí; ningún componente del sistema puede hardcodear ni inferir un prefix.
+Graph y Backlinks son artefactos de observabilidad. Su validación permanece SUSPENDED porque VANTAGE no utiliza relaciones de grafo para mover entidades entre TRACKER y ARCHIVO_TRACKER.
 Comandos relacionados de deduplicación y oportunidades:
 ```bash
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_duplicates.py  # alias: vdedup

@@ -38,7 +38,7 @@ Invariantes del Contrato
 - Formato Único: [PREFIX]:[KEY] (ej. MANUAL:SETUP).
 - Prefix Ownership: Cada prefijo mapea a una única página canónica en Notion.
 - SSOT: resolver_registry_v2.json es la autoridad única para resolver Prefijos a UUIDs.
-- Resolución Determinista: El Resolver (v1.py) garantiza resolución O(1) inyectando el ID crudo al componente solicitante.
+- Resolución Determinista: el Entity Index permite lookup O(1); el Resolver recupera la página puntual mediante Notion.
 Prefijos Autorizados
 | Prefijo | Documento Destino | Mapeo Registry |
 | --- | --- | --- |
@@ -73,20 +73,25 @@ Estado actual: normalización completada. DT-015 (26 ocurrencias) — CERRADO.
 ---
 ### 03.3 KERNEL:DOCUMENTATION-003
 L0 — VANTAGE Runtime
-Tipo: Capa de Observabilidad y Abstracción de Datos (ReadOnly).
-Propósito: Provee la verdad técnica sobre Notion. Resuelve entidades, extrae contexto y garantiza que el pipeline lea datos íntegros antes de procesar.
-Runtime Build — proceso determinista que genera:
-- entity_index_v2.json
-- graph_v2.json
-- backlinks_v2.json
-Consume resolver_registry_v2.json como fuente de namespace ownership — si el Registry no define el prefix de un tipo de entidad, el Build falla explícitamente. graph_layer.py construye graph_v2.json; nunca infiere namespaces ni redefine contratos.
-```plain text
-Notion (Source) → Runtime (Index + Resolver) → API Response → Pipeline (L1/L2/L3/CV)
-```
-Version Check Tool y Census como parte de L0: verify_versions.py (alias vversions) y generate_census.py (alias vcensus) son observabilidad ReadOnly sobre Notion — mismo tipo de operación que Runtime Build, aplicada a versión documental y salud del Census.
-```plain text
-Notion (Source) → Version Check (9 docs) / Census (ID audit) → Reporte a operador
-```
+Tipo: Capa de observabilidad, resolución y acceso ReadOnly a datos.
+Propósito: VANTAGE Runtime separa deliberadamente la lectura documental de la resolución de entidades.
+DOCUMENTACIÓN
+PREFIX:CLAVE → vload.py → document_registry → Notion
+ENTIDADES
+entity_id → Entity Index → Resolver → Notion
+Las rutas no son intercambiables:
+- PREFIX:CLAVE se resuelve mediante vload.
+- TRACKER/ARCHIVO_TRACKER se resuelve mediante Entity Index + Resolver.
+- vantage.py opera sobre entidades y las capas Query, Context y Agent.
+vload.py es la interfaz preferente para lectura puntual documental. lazy_loader.py es su implementación interna.
+entity_index_v2.json es el snapshot operativo. El Resolver usa el índice para lookup O(1) y recupera la página puntual mediante Notion.
+vantage.py expone resolve, context, ask, sync y status.
+sync reconstruye los artefactos derivados y persiste last_sync_result.json. status expone las métricas del índice, su antigüedad y el último resultado de sync.
+Graph y Backlinks son artefactos de observabilidad. Su validación permanece SUSPENDED porque VANTAGE utiliza movimiento mutuamente excluyente entre TRACKER y ARCHIVO_TRACKER y no relaciones de grafo para determinar archivado. Por tanto, graph_edges/backlinks_count pueden ser 0 y Graph no constituye una capa operativa de resolución.
+Cadena completa:
+Notion → Documentos → vload
+Notion → Entidades → Entity Index → Resolver → Query / Context / Agent
+Version Check y Census permanecen como herramientas de observabilidad documental independientes del Runtime de entidades.
 ---
 ### 03.4 KERNEL:DOCUMENTATION-004
 L0-Bootstrap — Dynamic Governance Layer
@@ -127,12 +132,14 @@ Nota — Contrato de Handoff: vantage-present-handoff, vantage-session-open y va
 ### 03.6 KERNEL:DOCUMENTATION-006
 Health Check
 Naturaleza: lectura estricta por defecto. Única excepción: auto-sync condicional del Entity Index.
-Checks ejecutados (orden fijo)
+Checks ejecutados:
 version → env → git → vgit → notion → docs_sync → vdoc → index_age → pending_tickets.
 Entity Index Auto-Sync
 Umbral 24h sobre graph_v2.json / entity_index_v2.json. Acción: subprocess a python3 vantage.py sync, timeout 120s. Clasificación: housekeeping de rutina, no remediación de fallo.
 Reporte de Tickets
 Agrupación por Prioridad (CRÍTICO / ALTO / MEDIO / BAJO) sobre Bug Tracker y Task Tracker. Detalle explícito solo para CRÍTICO y ALTO.
+Integridad del Runtime
+vantage.py status expone el estado del snapshot y el resultado más reciente de sync. Los checks advisory informan el estado, pero no se convierten por sí mismos en gates del pipeline.
 ---
 ### 03.7 KERNEL:DOCUMENTATION-007
 Verificación de Versión

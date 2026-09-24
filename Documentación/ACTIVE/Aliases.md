@@ -12,13 +12,13 @@ Session Cycle
 L0 · VANTAGE Runtime
 | Alias | Qué hace | Procedimiento interno |
 | --- | --- | --- |
-| vload | Motor base del Lazy Loader — consulta rutas específicas del Kernel sin fetch completo. | Activa .venv y corre lazy_loader.py –page {ID} –route {ruta}; parsea bloques hijos vía API y devuelve solo el payload pedido (~150 tokens). |
+| vload | Lee un nodo puntual de documentación mediante PREFIX:CLAVE. | Corre scripts/vload.py; resuelve el UUID desde document_registry y recupera el nodo solicitado. |
 | vtrig / vgolden / vcheat / vscope / vdataflow / vrouting | Atajos directos a secciones específicas del Kernel (Triggers, Golden Rules, Cheat Sheet, Scope, Data Flow, Routing) sin escribir la ruta a mano cada vez. | Cada uno es vload con –page y –route ya fijos al ID de esa sección. |
-| vstatus | Muestra el estado del Runtime: cuántas entidades tiene indexadas y qué tan viejo está el índice. | Corre vantage.py status — lectura pura contra entity_index_v2.json. |
-| vsync | Regenera el índice de entidades del Runtime desde Notion. | Corre vantage.py sync — reconstruye entity_index_v2.json, graph_v2.json, backlinks_v2.json. |
+| vstatus | Muestra el estado del Runtime y del Entity Index. | Corre vantage.py status. |
+| vsync | Regenera el Entity Index y los artefactos derivados del Runtime. | Corre vantage.py sync. |
 | vask | Hace una pregunta en lenguaje natural al Runtime sobre el estado del Tracker. | Corre vantage.py ask “…” — resuelve contra el índice ya cargado. |
 | vresolve | Resuelve una entidad específica (ID o nombre) a su ficha completa. | Corre vantage.py resolve — 4 pasos: lookup en índice, mapeo a data source, query a Notion, validación. |
-| vcontext | Trae contexto extendido de una entidad: página completa + bloques hijos vía resolve_entity() + find_entity(). No consulta graph_v2.json ni backlinks_v2.json — esos artefactos hoy no tienen contenido poblado; una consulta de relaciones real pasa por resolve/ask, no por context. | Corre vantage.py context — resuelve la entidad y trae su página + bloques completos, no un resumen de grafo. |
+| vcontext | Trae el contexto operativo de una entidad específica. | Corre vantage.py context. |
 | vquery | Corre una consulta estructurada contra el índice. | Corre vantage.py query — filtra entity_index_v2.json por los parámetros dados. |
 | vversions (sin flag) | Punto de entrada al motor de verificación de versión y observabilidad de librerías de activos — requiere flag explícito (–bootstrap/–sync, ver familia 1; –scripts/–skills, ver MANUAL:RUNTIME-002). | — |
 | vcensus | Regenera el V-ID-CENSUS y reporta IDs huérfanos. | Corre generate_census.py — resuelve cada ID contra CENSUS_SPEC, detecta huérfanos no listados, y genera deeplink de bloque exacto vía API para cada uno. |

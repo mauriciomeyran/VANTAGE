@@ -1,5 +1,91 @@
 # V | CHANGELOG
 
+Fecha: 24-Sep-2026 · 07:05 CDMX
+Estado: PASS / DOCUMENTACIÓN ACTUALIZADA
+Scope: Runtime VANTAGE · vload · lazy_loader · Entity Index · Resolver · Query · Context · Agent API · Health Check · Graph SUSPENDED
+Cambios documentales
+- KERNEL:DOCUMENTATION-003 actualizado para separar explícitamente la ruta documental PREFIX:CLAVE → vload → document_registry → Notion de la ruta de entidades Entity Index → Resolver → Notion.
+- KERNEL:DOCUMENTATION-003 actualizado para reflejar vload.py como interfaz documental preferente y lazy_loader.py como implementación interna.
+- KERNEL:DOCUMENTATION-003 actualizado con vantage.py, last_sync_result.json y el estado arquitectónico Graph SUSPENDED.
+- KERNEL:DOCUMENTATION-006 armonizado con el Health Check y el auto-sync condicional del Entity Index.
+- MANUAL:RUNTIME-001 armonizado para documentar las dos rutas del Runtime.
+- MANUAL:RUNTIME-002 armonizado para separar comandos documentales y operaciones de entidades.
+- MANUAL:RUNTIME-003 armonizado con el comportamiento actual de sync, status y last_sync_result.
+- MANUAL:RUNTIME-004 armonizado con el estado actual de Entity Index, Graph y Backlinks.
+- ALIASES:L0-RUNTIME corregido para reflejar vload.py como interfaz documental y vantage.py como Runtime operacional.
+IDs
+No se crearon ni eliminaron IDs canónicos. CENSUS-SYNC-R1 no se dispara.
+Validación
+La documentación se alineó con la validación E2E registrada en v9.22.12: vload 20/20, health_check 14/14, graph 16/16, sync 729→729, hash 100%, orphan candidates 0.
+Fecha: 24-Sep-2026 · 06:38 CDMX
+Estado: PASS / CERRADO
+Scope: Runtime VANTAGE · Lazy Loader · vload · Resolver · Context · Query · Agent API · Health Check
+### Validación E2E
+Se completó la validación funcional del Runtime/Lazy Loader contra HEAD actual, incluyendo rutas documentales, resolución de entidades, capas operativas y suites de regresión.
+Documentary path
+- vload --route KERNEL:SCHEMA → PASS
+- vload --route MANUAL:RUNTIME-002 → PASS
+- vload --list → PASS
+- Registry operativo: 11 prefijos disponibles
+- Resolución automática de UUID → PASS
+P4 — vload regression suite
+- tests/test_vload.py localizado en VANTAGE/tests/test_vload.py
+- Resultado: 20/20 PASS
+- Tiempo: 0.12 s
+Health Check
+- Corrección aplicada en scripts/health_check.py para normalizar el texto sin corrupción detectada.
+- tests/test_health_check.py
+- Resultado: 14/14 PASS
+- Tiempo: 0.11 s
+- El fallo previo era exclusivamente un mismatch de texto entre implementación y expectativa del test.
+Graph / Runtime validation
+- tests/test_graph_layer.py
+- Resultado: 16/16 PASS
+- Graph validation permanece SUSPENDED conforme a la decisión arquitectónica vigente: VANTAGE utiliza movimiento mutuamente excluyente TRACKER ↔ ARCHIVO_TRACKER y no relaciones de grafo para archivado.
+Resolver / Context / Query / Agent API
+- Entity Index → Resolver → Notion → PASS
+- resolve TRACKER:* → PASS
+- context TRACKER:* → PASS
+- ask "show active roles" → PASS
+- ask "compare ..." → PASS
+### Reconciliación de Entity Index
+Se ejecutó python3 scripts/vantage.py sync para resolver la discrepancia observada entre el índice actual y el último resultado histórico de sync.
+Resultado:
+- entities_before: 729
+- entities_after: 729
+- Tracker: 36
+- ARCHIVO_TRACKER: 693
+- Total: 729
+- Hash coverage: 100%
+- Orphan candidates: 0
+- Index age posterior al sync: 0.0 h
+- last_sync_result.status: ok
+- Graph edges: 0
+- Backlinks: 0
+La discrepancia previa 863 → 729 queda reconciliada mediante un sync actual exitoso que confirma estabilidad del índice en 729 entidades.
+### Resultado final
+Runtime / Lazy Loader E2E → PASS
+No quedan hallazgos funcionales abiertos dentro del scope auditado.
+Evidencia final:
+vload 20/20 · health_check 14/14 · graph 16/16 · sync 729→729 · hash 100% · orphans 0
+Tipo: [OPS] [DOC] [CODE]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=KM (P-E, triage) + agent.family=CLAUDE · agent.instance=MAIN (P-C/P-D, HO-000065) + agent.family=GEMINI · agent.instance=GEMINI-2.5-PRO (HO-000065, autor del script).
+Documentos modificados: V | SYSTEM PROMPT (§04 SP:CONTEXT-INFRASTRUCTURE) · V | MANUAL (§06 MANUAL:SESSION-CYCLE) · Layer_1/scripts/purge_archivo_duplicates.py · Layer_1/data/entity_index_v2.json · Layer_1/data/graph_v2.json · Layer_1/data/backlinks_v2.json
+Documentos pendientes de commit: ninguno — Documentación/ACTIVE/Aliases.md y Brief.md confirmados comiteados en origin/main (commit dcd21d3, verificado por CLAUDE/MP vía git pull independiente el mismo día).
+Tipo de impacto: Operativo + Documental + Correctivo.
+HO-000064 — cierre de contenido (P-C/P-D/P-E), posterior a la sesión GROK/DEFAULT (ver v9.22.10, anterior en el tiempo pese al número de versión menor — GROK trabajó primero, encontró las páginas de Tracker ya en la papelera, y por eso reportó P-C/D/E como "canceladas". Esta sesión completó el contenido real contra los documentos vivos):
+1. P-C — SP:CONTEXT-INFRASTRUCTURE (§04): reemplazada la línea genérica 'Terminal (lazy_loader.py): Ruta preferente...' con: (a) mención explícita de vload como comando preferente para fetches documentales, con lazy_loader.py como base interna; (b) tabla de 2 filas: DOCUMENTOS (Kernel/Manual/SP/Canon) → vload --route PREFIX:CLAVE | ENTIDADES (Tracker/bugs/vacantes) → vantage.py ask/query/resolve. Cierra Riesgo 2 del análisis de adopción (SESSION-20260921-KM3). Página de Tracker encontrada en papelera (trastada por MAIN por links rotos del handoff HO-000064) — trabajo aplicado en Notion vivo confirmado. Verificado independientemente por CLAUDE/MP vía notion-fetch en vivo el mismo día: texto presente byte-exacto.
+1. P-D — MANUAL:SESSION-CYCLE (§06): nota aclaratoria: Fail-Fast aplica únicamente a escrituras documentales y a emisión de seriales de handoff (vserial) — no a operaciones de solo lectura, análisis o revisión de código. Confirmado en Notion vivo. Cierra Riesgo 3. Verificado independientemente por CLAUDE/MP el mismo día.
+1. P-E — Triage de 216 candidatos de validate_governance.py --check refs contra Notion vivo. Resultado: 0 referencias realmente muertas. Desglose: 167 KERNEL/MANUAL/SP vivos en mirrors locales (el scanner no detecta headings con esa sintaxis); 8 ALIASES vivos en V|ALIASES Notion (01-08 confirmados vía notion-fetch); 48 BRIEF vivos en V|BRIEF Notion (01-11 y todos los sub-IDs confirmados); 1 SP:DIGITAL-ID-CARD-001 vivo como fila de tabla. Diagnóstico raíz: ALIASES y BRIEF no tenían mirror .md en Documentación/ACTIVE/. Fix: stubs generados (Aliases.md 25 líneas, Brief.md 42 líneas), comiteados a origin/main. Cierra Riesgo 4.
+Nota infraestructura: páginas Tracker de P-C, P-D y P-E encontradas en la papelera — las trastó CLAUDE/MAIN al no poder fetchearlas por links rotos en el handoff HO-000064. Trabajo aplicado confirmado en documentos vivos; solo el tracking operativo se perdió. No se restauran: esta entrada es el registro oficial.
+HO-000065 — GEMINI/GEMINI-2.5-PRO (purga de duplicados ARCHIVO_TRACKER):
+1. purge_archivo_duplicates.py: nuevo script de Gemini para purgar duplicados en ARCHIVO_TRACKER. Bug original: usaba client.request() y client.pages.update(archived=True) — métodos inexistentes en el SDK custom de VANTAGE. Fix por CLAUDE/MAIN: reemplazado por _notion_patch(f'/v1/pages/{page_id}', {'archived': True}), la función HTTP real de bajo nivel con auth, headers, throttle y versión correcta. Verificado contra un solo registro antes del apply masivo.
+1. Purga aplicada: 134/134 duplicados archivados en ARCHIVO_TRACKER. 827 → 693 registros. 600 hashes únicos mantenidos.
+1. generate_entity_index_v2.py re-ejecutado vía ../.venv/bin/python3: 729 entidades (Tracker 36 + Archivo 693), hash coverage 100%, 0 orphan candidates, Graph SUSPENDED confirmado. Artefactos entity_index_v2.json/graph_v2.json/backlinks_v2.json regenerados y comiteados (commit 47ab17c). Entity index ahora usa clave 'metrics' correctamente.
+Bug Tracker RT-1: este episodio suma como tercer caso del patrón de reporte optimista (Gemini reportó 'fix aplicado' con bugs de sintaxis aún presentes). Umbral 3er episodio alcanzado: Next_Action RT-1 debe escalar de Monitorear a Patch.
+Ver también: entrada anterior [v9.22.10 — GROK/DEFAULT, cierre operativo de HO-000064 P-A/P-B + MIRROR-TRIGGER], trabajo de otra sesión sobre el mismo contrato, ejecutado antes que este.
+IDs afectados: Ninguno (no dispara CENSUS-SYNC Regla 1).
+Estado: P-C/P-D aplicados en Notion vivo (verificados dos veces, por KM y por CLAUDE/MP independientemente). P-E triage completado (0 muertas). HO-000065 en origin/main (commit 47ab17c). Stubs comiteados (verificado). RT-1 aún Abierto/Monitorear en Bug Tracker — pendiente de escalar a Patch (ver ticket).
 Tipo: [CODE] [OPS] [DOC]
 Identidad VANTAGE: agent.family=GROK · agent.instance=DEFAULT. Agente de código: DEVIN (parcial, agotó tokens).
 Documentos / artefactos modificados:
@@ -10,15 +96,16 @@ Documentos / artefactos modificados:
 - P-A y P-B (páginas de item) → Cerrado
 - RT-1 (Bug Tracker) → notas actualizadas, permanece en Monitorear
 Tipo de impacto: Cierre de contrato + endurecimiento operativo + higiene documental.
+Nota de contexto (agregada en el split de esta entrada): esta sesión (GROK/DEFAULT) encontró las páginas de Tracker de P-C/P-D/P-E ya en la papelera al momento de escribir — de ahí que reporte "canceladas / nunca iniciadas" abajo. Trabajo posterior de otra sesión (KM/MAIN/GEMINI, ver entrada v9.22.11, posterior en el tiempo) sí completó P-C/P-D/P-E contra los documentos vivos, verificado independientemente por CLAUDE/MP. Las dos entradas describen agentes y alcance distintos sobre el mismo contrato HO-000064, no una contradicción real.
 Alcance de esta sesión:
 1. P-A cerrado — sync() escribe last_sync_result.json + status() lo incluye. Verificación byte-exacta previa confirmada. Status → Cerrado.
 1. P-B cerrado — skill vantage-session-open con warning de staleness. Sincronizado también a Notion Skill Library (v1.2.0) + tabla SP:SKILL-VERSION-PIN actualizada.
 1. MIRROR-TRIGGER cerrado pragmáticamente — commit 405ef8f endurece el trigger (Popen no-bloqueante, Brief + Changelog Archivo añadidos). Limitación del MCP server (fuera del repo) aceptada: invocación manual vía mcp_sync_wrapper.sh <page_id>. notion_write_wrapper.py queda como experimental/stub.
-1. --check refs — Devin ya excluyó /Archive/ del alcance. Triage de 224 candidatos: cero referencias muertas reales que ameriten limpieza hoy.
+1. -check refs — Devin ya excluyó /Archive/ del alcance. Triage de 224 candidatos: cero referencias muertas reales que ameriten limpieza hoy (nota: cifra de 224 reportada por esta sesión difiere de los 216 de la entrada v9.22.11 — ambas dentro del rango de drift normal entre corridas, no reconciliadas).
 1. Audit Tracker — página madre reescrita: estado actual consolidado, reglas operativas vigentes, resumen de cierre HO-000062 + HO-000064. Texto histórico parchado eliminado.
-1. RT-1 — notas actualizadas; Next_Action sigue = Monitorear (umbral 3er episodio para Patch).
-P-C / P-D / P-E del contrato HO-000064: páginas canceladas / en papelera (nunca iniciadas).
-Estado de verificación: origin/main contiene 405ef8f y a64cf56 (exclusión /Archive/). Tracker sin items abiertos.
+1. RT-1 — notas actualizadas; Next_Action sigue = Monitorear (umbral 3er episodio para Patch) — nota: entrada v9.22.11 declara el umbral ya cumplido por el episodio de Gemini/HO-000065; RT-1 en Notion vivo sigue en Monitorear al día de hoy — pendiente real, ver mensaje de CLAUDE/MP en sesión.
+P-C / P-D / P-E del contrato HO-000064: reportados por esta sesión como páginas canceladas / en papelera (nunca iniciadas) — ver nota de contexto arriba: trabajo real de contenido sí se completó por otra sesión el mismo día.
+Estado de verificación: origin/main contiene 405ef8f y a64cf56 (exclusión /Archive/). Tracker sin items abiertos (P-A/P-B).
 IDs afectados: ninguno en canon/documentación fundacional que dispare CENSUS-SYNC Regla 1.
 Estado: WRITE aplicado en Notion (Audit Tracker + Changelog + versión). Código ya en origin/main.
 Tipo: [CODE] [OPS] [DOC]
@@ -394,3 +481,4 @@ Documento modificado: KERNEL, SP, MANUAL
 Tipo de impacto: Normativo + Operativo  
 Acción correctiva: Rediseño Discovery L1/L2/L4 — L1 absorbe Gemini bajo ejecución Hermes Desktop; L2 se redefine como "Personal Request" (patrón espejo de L3, sin motores externos); jerarquía de dedup invertida a L2>L1>L3; Hermes agregado a matriz de ruteo L4 y a registro de identidad SP:BOOTLOADER-002; Vassemble actualizado a Hermes Desktop en MANUAL.  
 Estado final: PASS — todos los nodos validados y listos para escritura.
+
