@@ -74,7 +74,7 @@ EN
 - Contributed directly to a +43% increase in traffic and +18% in conversion across the 17 stores under strategic supervision. [KPI01] · [KPI02] · [CF07]
 - Standardized planograms for key categories (Denim & Lifestyle), aligning display with monthly sales objectives.
 ### 03.5 CANON:EXPERIENCE-005
-C05 · El Palacio de Hierro (ALDO Group) · [CF02: 2012–2017]
+C05 · El Palacio de Hierro (ALDO) · [CF02: 2012–2017]
 Asesor de Visual Merchandising · 2012–2014
 ES
 - Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
@@ -101,8 +101,8 @@ Career Timeline
 | C02 | Bisonte Experiential Marketing | Brand Environment & Store Design Coordinator | 2022 – 2023 | México |
 | C03 | Levi Strauss & Co. (Dockers) | Senior Brand Environment Coordinator – LATAM | 2018 – 2021 | México / LATAM |
 | C04 | Aéropostale México | Visual Merchandising Manager | 2017 – 2018 | México |
-| C05 | El Palacio de Hierro (ALDO Group) | VM Advisor | 2012 – 2014 | México |
-| C05 | El Palacio de Hierro (ALDO Group) | VM & Marketing Coordinator | 2014 – 2017 [CF02] | México |
+| C05 | El Palacio de Hierro (ALDO) | VM Advisor | 2012 – 2014 | México |
+| C05 | El Palacio de Hierro (ALDO) | VM & Marketing Coordinator | 2014 – 2017 [CF02] | México |
 ---
 ## 05 CANON:ACHIEVEMENTS
 Achievement Library
@@ -189,7 +189,7 @@ Certifications
 > Reintegrada desde CAREER CANON (DEPRECATED) — v9.11.0. Coincide exactamente con CANON:UF-003 (07.11), que ya exigía este set cerrado de certificaciones como único válido.
 ### 09.1 CANON:CERTIFICATION-001
 CERT01 · Store Operations Leaders Orientation (VM, Sales & Ops)
-ALDO Group, Montréal, Canadá · 2014
+ALDO, Montréal, Canadá · 2014
 ### 09.2 CANON:CERTIFICATION-002
 CERT02 · AutoCAD & SketchUp Essentials
 LinkedIn Learning · 2024
@@ -299,229 +299,312 @@ Definición de estado: el Golden Skeleton representa el snapshot del CV en optim
 ---
 ```json
 ###### [figma_text_id](2:4)
-**MAURICIO MEYRÁN**
+**[NOMBRE COMPLETO]**
 
 ###### [figma_text_id](2:5)
-**Visual Merchandising Manager · Luxury Brand Execution & LATAM Strategy**
+**[TITULO DEL PUESTO | SUBTITULO O ESPECIALIDAD]**
 
 ###### [figma_text_id](8:56)
-Miguel Hidalgo, CDMX |
+[UBICACION, CIUDAD]
 
 ###### [figma_text_id](8:57)
-+52 1 56 4383 8125 |
+ | [TELEFONO]
 
 ###### [figma_text_id](8:58)
-mauricio.meyran@icloud.com
+ | [CORREO ELECTRONICO]
 
 ###### [figma_text_id](8:62)
-LinkedIn |
+[ENLACE LINKEDIN]
 
 ###### [figma_text_id](8:63)
-Portafolio
+ | [ENLACE PORTAFOLIO]
 
 ###### [figma_text_id](2:7)
 **PERFIL PROFESIONAL**
 
 ###### [figma_text_id](2:9)
-Estratega de Visual Merchandising con más de 14 años de trayectoria en retail de lujo, moda premium y entornos multitienda. Especialista en traducir lineamientos globales de HQ en ejecuciones de marca impecables y consistentes a escala regional: boutiques monomarca, corners wholesale, flagship openings y campañas estacionales en entornos de ultra-lujo.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 
 ###### [figma_text_id](3:13)
-Con experiencia comprobada en 6 países LATAM y 270+ puntos de venta, domino la coordinación de proveedores locales e internacionales, la gestión de presupuestos CAPEX/OPEX y la generación de retroalimentación fotográfica y cualitativa para equipos corporativos. Historial cuantificado: +43% tráfico · +18% conversión · -74% costos operativos.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit: **[METRICA_1]** lorem ipsum dolor sit amet; **[METRICA_2]** lorem ipsum dolor sit amet; **[METRICA_3]** lorem ipsum dolor sit amet in **[CANTIDAD]** países. Lorem ipsum: **[METRICA_4]** lorem ipsum · **[METRICA_5]** lorem ipsum dolor sit amet.
 
 ###### [figma_text_id](2:10)
-Cross-functional leadership focused on connecting commercial operations with brand visual identity, coordinating multidisciplinary teams and external agencies for store openings and critical events.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](2:12)
 **HABILIDADES CLAVE**
 
 ###### [figma_text_id](2:14)
-**Estrategia Visual:** Window installations, store zoning, boutique & wholesale VM execution, seasonal campaigns, planogramas, HQ alignment & brand consistency.
+**[CATEGORIA_HABILIDAD_1]:** Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
 
 ###### [figma_text_id](2:15)
-**Operaciones & Finanzas:** CAPEX/OPEX management, coordinación de proveedores locales e internacionales, flagship store openings, field audits, multi-country LATAM scope.
+**[CATEGORIA_HABILIDAD_2]:** Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
 
 ###### [figma_text_id](2:16)
-**Liderazgo & Training:** Gestión de equipos directos e indirectos, coaching de alto desempeño, auditorías visuales de campo, reporte de mejores prácticas a corporativos regionales.
+**[CATEGORIA_HABILIDAD_3]:** Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
 
 ###### [figma_text_id](2:17)
-**Stack Técnico:** Adobe Creative Cloud (Illustrator, Photoshop, InDesign), AutoCAD, SketchUp, IWD, Keynote, IA Generativa (visualizaciones, planogramas y reportes).
+**[CATEGORIA_HABILIDAD_4]:** Herramienta 1, Herramienta 2, Herramienta 3, Herramienta 4, Herramienta 5.
 
 ###### [figma_text_id](2:18)
-**Idiomas:** Español (Nativo) | Inglés (Profesional Corporativo).
+**[CATEGORIA_IDIOMAS]:** Idioma 1 (Nivel) e Idioma 2 (Nivel).
 
 ###### [figma_text_id](2:20)
 **EXPERIENCIA PROFESIONAL**
 
 ###### [figma_text_id](2:22)
-**L'ORÉAL LUXE MÉXICO**
+**[NOMBRE EMPRESA 1]**
 
 ###### [figma_text_id](10:218)
-**Coordinador de Visual Merchandising – División de Lujo**
+**[TITULO DEL PUESTO 1]**
 
 ###### [figma_text_id](10:219)
-*02/2025 - 03/2026*
+ | *[MM/AAAA - MM/AAAA]*
 
 ###### [figma_text_id](2:25)
-Lidero la estrategia visual y el storytelling in-store para Valentino, Giorgio Armani y Ralph Lauren (fragancias), garantizando que cada exhibición refleje los estándares de sofisticación y coherencia de marca en entornos de luxury retail bajo lineamientos globales de HQ.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](2:26)
-Coordino proveedores locales para la producción e instalación de materiales POP y vitrinas, supervisando calidad de acabados, mantenimiento de mobiliario y cumplimiento de lineamientos globales de la división.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](2:27)
-Ejecuté el despliegue nacional de campañas NPI clave 2025 (Born in Roma, Stronger With You), generando retroalimentación fotográfica y cualitativa para el equipo corporativo de VM en cada rotación estratégica.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](2:28)
-Colaboro con equipos de Marketing, Trade y Operaciones para alinear el calendario comercial con la ejecución visual, actuando como embajador de marca y referente de estándares en cada cuenta clave.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](2:32)
-**BISONTE EXPERIENTIAL MARKETING**
+**[NOMBRE EMPRESA 2]**
 
 ###### [figma_text_id](4:17)
-**Coordinador de Brand Environment y Store Design**
+**[TITULO DEL PUESTO 2]**
 
 ###### [figma_text_id](4:18)
-*2022 - 2023*
+ | *[AAAA - AAAA]*
 
 ###### [figma_text_id](2:35)
-Lidero la implementación visual y técnica para la apertura del Adidas Brand Center Madero (Flagship Store), coordinando proveedores locales e instalaciones bajo estándares globales de Store Design — entrega sin observaciones bloqueantes para apertura por parte de la marca.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](2:36)
-Supervisé el zoning y disposición de experiencias de marca por categoría, validando planogramas con el equipo corporativo y garantizando la integridad visual desde el día uno de operaciones.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](2:37)
-Gestioné la cadena de suministro de materiales de Store Design, asegurando disponibilidad, calidad de mobiliario, iluminación y props en todos los espacios del flagship.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](2:39)
-**LEVI STRAUSS & CO. (DOCKERS)**
+**[NOMBRE EMPRESA 3]**
 
 ###### [figma_text_id](4:21)
-**Coordinador Senior de Brand Environment – LATAM**
+**[TITULO DEL PUESTO 3]**
 
 ###### [figma_text_id](4:22)
-*2018 - 2021*
+ | *[AAAA - AAAA]*
 
 ###### [figma_text_id](2:42)
-Gestioné la estrategia visual para 6 países en LATAM y 270+ puntos de venta nacionales, asegurando la estandarización regional de la marca y reportando mejores prácticas de mercado al equipo de Trade Marketing.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](2:43)
-Diseñé una estrategia de producción local que generó un ahorro del -74% en costos de campañas nacionales, manteniendo los estándares globales de exhibición en todas las categorías de producto.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua (**[METRICA_PORCENTAJE]**).
 
 ###### [figma_text_id](2:44)
-Reduje en un -33% el tiempo de actualización de floorsets mediante manuales de Zoning & Mapping y herramientas digitales para field teams, facilitando la ejecución consistente en red propia y franquicias.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua (**[METRICA_PORCENTAJE]**).
 
 ###### [figma_text_id](3:9)
-Led a team of 3 national coordinators with direct reporting, plus 3 dotted-line collaborators in other markets, acting as the regional liaison for the Americas.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](3:2)
-Managed visual strategy across 6 LATAM countries and 270+ points of sale (own boutiques, franchises, wholesale corners), ensuring regional brand image standardization and reporting best practices to the corporate team.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](2:46)
-**AÉROPOSTALE**
+**[NOMBRE EMPRESA 4]**
 
 ###### [figma_text_id](4:25)
-**Gerente de Visual Merchandising**
+**[TITULO DEL PUESTO 4]**
 
 ###### [figma_text_id](4:26)
-*2017 - 2018*
+ | *[AAAA - AAAA]*
 
 ###### [figma_text_id](2:49)
-Construí el área de VM desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona; implementé vitrinas piloto, lineamientos por categoría y checklists de mantenimiento visual replicados a nivel nacional.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](2:50)
-Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión, mediante zoning estratégico, rotación de producto y alineación visual con objetivos comerciales mensuales.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua (**[METRICA_1]** / **[METRICA_2]**).
 
 ###### [figma_text_id](2:51)
-Estandaricé los planogramas de categorías clave (Denim & Lifestyle), generando retroalimentación sistemática a dirección sobre desempeño visual y oportunidades de mejora en piso.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](10:186)
-**EL PALACIO DE HIERRO (ALDO GROUP)**
+**[NOMBRE EMPRESA 5]**
 
 ###### [figma_text_id](10:188)
-**Coordinador de Visual Merchandising & Marketing**
+**[TITULO DEL PUESTO 5A]**
 
 ###### [figma_text_id](10:189)
-*2014 - 2017*
+ | *[AAAA - AAAA]*
 
 ###### [figma_text_id](10:191)
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](10:192)
-Realicé visitas regulares de auditoría visual a tienda, evaluando mantenimiento, iluminación, props y mobiliario; documenté hallazgos y mejores prácticas para retroalimentación al equipo regional.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](10:193)
-Desarrollé programas de capacitación para el personal de piso en lineamientos visuales, conocimiento de producto y estándares de marca; durante los últimos 3 años del rol tuve a cargo una coordinadora Jr. con reporte directo.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](10:195)
-**Asesor de Visual Merchandising**
+**[TITULO DEL PUESTO 5B]**
 
 ###### [figma_text_id](10:196)
-*2012 - 2014*
+ | *[AAAA - AAAA]*
 
 ###### [figma_text_id](10:198)
-Coordiné la ejecución visual y de marketing para 17 tiendas retail y 12 corners wholesale, liderando aperturas, remodelaciones y rotaciones de vitrinas con proveedores especializados bajo estándares globales de la casa matriz en Canadá.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ###### [figma_text_id](10:154)
 **FORMACIÓN ACADÉMICA**
 
 ###### [figma_text_id](10:158)
-**Licenciatura en Artes Visuales |**
+**[GRADO O TITULO ACADEMICO 1]**
 
 ###### [figma_text_id](10:159)
-*2008 - 2012*
+ | *[AAAA - AAAA]*
 
 ###### [figma_text_id](10:161)
-Escuela Nacional de Artes Plásticas, UNAM
+[INSTITUCION / UNIVERSIDAD 1]
 
 ###### [figma_text_id](10:164)
-**Diplomado en Museos y Exposiciones |**
+**[DIPLOMADO O CURSO ACADEMICO 2]** 
 
 ###### [figma_text_id](10:165)
-*2014*
+ | *[AAAA]*
 
 ###### [figma_text_id](10:167)
-Facultad de Artes y Diseño, UNAM
+[INSTITUCION / FACULTAD 2]
 
 ###### [figma_text_id](10:213)
 **CURSOS Y CERTIFICACIONES**
 
 ###### [figma_text_id](10:202)
-AutoCAD y SketchUp Essentials |
+[NOMBRE DEL CURSO 1]
 
 ###### [figma_text_id](10:203)
-*2024*
+ | *[AAAA]*
 
 ###### [figma_text_id](10:204)
-LinkedIn Learning
+[PLATAFORMA / INSTITUCION]
 
 ###### [figma_text_id](10:207)
-Store Operations Leaders Orientation (VM, Sales & Ops) |
+[NOMBRE DEL CURSO 2]
 
 ###### [figma_text_id](10:208)
-*2014*
+ | *[AAAA]*
 
 ###### [figma_text_id](10:209)
-ALDO Group, Montréal, Canadá
+[INSTITUCION / UBICACION]
+
 ```
 ### 12.3 CANON:OUTPUT-CONTRACT-003
 Figma Tags
 > Formato base obligatorio para todos los Derived Outputs generados desde el Career Canon. Aplica ES + EN.
 > SSOT de IDs de nodos: registry_seed.json en /03 Projects/VANTAGE/Figma Sync/ es la fuente única de verdad para los IDs numéricos de nodo Figma. Si hay discrepancia entre un figma_text_id en un output CV-B y el registry, el registry gana. Ante cualquier cambio en la estructura del lienzo Figma, actualizar registry_seed.json antes de generar nuevos CV-B.
 > El plugin de inyección resuelve exclusivamente por ID de nodo (búsqueda O(1) vía figma.getNodeById) — nunca por nombre de capa. Renombrar una capa en Figma no afecta ni repara la resolución; ver MANUAL:FIGMA-SYNC-003.
+Copia embebida del registry_seed.json vigente (BASELINE verificado en Figma real, 2026-09-19) — para auditoría cruzada sin salir de Notion. El archivo en /Figma Sync/ sigue siendo la fuente operativa que lee CV-B; esta copia es de referencia/trazabilidad y debe actualizarse junto con cualquier cambio al archivo real.
+```json
+{
+  "HEADER_NAME": "2:4",
+  "HEADER_SUBTITLE": "2:5",
+  "HEADER_LOCATION": "8:56",
+  "HEADER_PHONE": "8:57",
+  "HEADER_EMAIL": "8:58",
+  "HEADER_LINKEDIN": "8:62",
+  "HEADER_PORTFOLIO": "8:63",
+  "SEC_PERFIL_PROFESIONAL_TITLE": "2:7",
+  "SEC_PERFIL_PROFESIONAL_BULLET_1": "2:9",
+  "SEC_PERFIL_PROFESIONAL_BULLET_2": "3:13",
+  "SEC_PERFIL_PROFESIONAL_BULLET_3": "2:10",
+  "SEC_HABILIDADES_CLAVE_TITLE": "2:12",
+  "SEC_HABILIDADES_CLAVE_BULLET_1": "2:14",
+  "SEC_HABILIDADES_CLAVE_BULLET_2": "2:15",
+  "SEC_HABILIDADES_CLAVE_BULLET_3": "2:16",
+  "SEC_HABILIDADES_CLAVE_BULLET_4": "2:17",
+  "SEC_HABILIDADES_CLAVE_BULLET_5": "2:18",
+  "SEC_EXPERIENCIA_PROFESIONAL_TITLE": "2:20",
+  "EXP_L_OR_AL_LUXE_M_XICO_COMPANY": "2:22",
+  "EXP_L_OR_AL_LUXE_M_XICO_ROLE": "10:218",
+  "EXP_L_OR_AL_LUXE_M_XICO_PERIOD": "10:219",
+  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_1": "2:25",
+  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_2": "2:26",
+  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_3": "2:27",
+  "EXP_L_OR_AL_LUXE_M_XICO_BULLET_4": "2:28",
+  "EXP_BISONTE_EXPERIENTIAL_MARKETING_COMPANY": "2:32",
+  "EXP_BISONTE_EXPERIENTIAL_MARKETING_ROLE": "4:17",
+  "EXP_BISONTE_EXPERIENTIAL_MARKETING_PERIOD": "4:18",
+  "EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_1": "2:35",
+  "EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_2": "2:36",
+  "EXP_BISONTE_EXPERIENTIAL_MARKETING_BULLET_3": "2:37",
+  "EXP_LEVI_STRAUSS___CO___DOCKERS__COMPANY": "2:39",
+  "EXP_LEVI_STRAUSS___CO___DOCKERS__ROLE": "4:21",
+  "EXP_LEVI_STRAUSS___CO___DOCKERS__PERIOD": "4:22",
+  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_1": "2:42",
+  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_2": "2:43",
+  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_3": "2:44",
+  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_4": "3:9",
+  "EXP_LEVI_STRAUSS___CO___DOCKERS__BULLET_5": "3:2",
+  "EXP_A_ROPOSTALE_COMPANY": "2:46",
+  "EXP_A_ROPOSTALE_ROLE": "4:25",
+  "EXP_A_ROPOSTALE_PERIOD": "4:26",
+  "EXP_A_ROPOSTALE_BULLET_1": "2:49",
+  "EXP_A_ROPOSTALE_BULLET_2": "2:50",
+  "EXP_A_ROPOSTALE_BULLET_3": "2:51",
+  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__COMPANY": "10:186",
+  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__ROLE_1": "10:188",
+  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__PERIOD_1": "10:189",
+  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_1": "10:191",
+  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_2": "10:192",
+  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_3": "10:193",
+  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__ROLE_2": "10:195",
+  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__PERIOD_2": "10:196",
+  "EXP_EL_PALACIO_DE_HIERRO__ALDO_GROUP__BULLET_4": "10:198",
+  "SEC_FORMACION_ACADEMICA_TITLE": "10:154",
+  "EDU_UNAM_ARTES": "10:158",
+  "EDU_UNAM_ARTES_PERIOD": "10:159",
+  "EDU_UNAM_ARTES_INSTITUTION": "10:161",
+  "EDU_UNAM_DIPLOMADO": "10:164",
+  "EDU_UNAM_DIPLOMADO_PERIOD": "10:165",
+  "EDU_UNAM_DIPLOMADO_INSTITUTION": "10:167",
+  "SEC_CURSOS_Y_CERTIFICACIONES_TITLE": "10:213",
+  "CERT_AUTOCAD": "10:202",
+  "CERT_AUTOCAD_PERIOD": "10:203",
+  "CERT_AUTOCAD_INSTITUTION": "10:204",
+  "CERT_ALDO": "10:207",
+  "CERT_ALDO_PERIOD": "10:208",
+  "CERT_ALDO_INSTITUTION": "10:209"
+}
+```
 ### 12.4 CANON:OUTPUT-CONTRACT-004
-Tag Registry
-Formato de Entrega Obligatorio
-Cada Derived Output generado bajo este contrato requiere dos outputs:
-1. Markdown con Figma Tags como contenido dentro de la página específica de la vacante que se estará trabajando, dentro de un bloque de código (markdown). Colocar en un párrafo aparte un footer con metadata: Output Contract version, Positioning Mode activo, referencia canónica al Canon.
-1. Archivo .md del mismo Markdown con Figma Tags explícitos – descargable, formato idéntico al archivo presentado y autorizado. Cada slot encabezado por ###### figma_text_id en línea propia. Este archivo es el entregable de trabajo para actualizar el archivo Figma.
-Reglas de Serialización
+Tag Registry — v1.1.0 (BASELINE verificado en Figma real, 2026-09-19)
+Formato de Entrega Obligatorio Cada Derived Output generado bajo este contrato requiere dos outputs:
+1. Markdown con Figma Tags como contenido dentro de la página específica de la vacante que se estará trabajando, dentro de un bloque de código (markdown). El footer de metadata (Output Contract version, Positioning Mode activo, referencia canónica al Canon) NUNCA va dentro del .md que se importa a Figma — el blockRegex del plugin (ui.html) extiende el último bloque hasta EOF si no hay un ###### posterior que lo cierre, causando que el footer se importe como parte del último nodo. El footer se entrega aparte (chat o archivo separado).
+1. Archivo .md del mismo Markdown con Figma Tags explícitos – descargable, formato idéntico al archivo presentado y autorizado. Ningún nodo se deja vacío o con solo espacio — el plugin falla el batch completo (0 nodos reconocidos) ante contenido vacío/solo-espacio en el payload. Si el Canon no tiene dato directo, aplicar Match Transferible antes que dejar el slot sin texto; nunca usar [PENDING DATA] en el .md final.
+- Cada slot encabezado por ###### figma\_text\_id en línea propia. Este archivo es el entregable de trabajo para actualizar el archivo Figma. Reglas de Serialización (BASELINE verificado)
 - Cada tag = párrafo independiente (sin listas, sin guiones)
-- Bold = keywords estratégicos dentro del párrafo
+- Bold = keywords estratégicos dentro del párrafo, mapeados contra JD_keywords_top6 del HANDOFF activo — no solo métricas numéricas
 - Empresa = bold standalone en su propio tag
-- Rol (nodo dedicado de puesto) = bold 12pt
-- Years (nodo dedicado de período: 4:14, 4:18, 4:22, 4:26, 4:30, 4:34) = italic 10pt
-- Skills = Categoría: texto plano
-- Tagline 2:5 = [Título · Subtítulo] · Ciudad | Tel | Email | LinkedIn | Portfolio
+- Rol (nodo dedicado de puesto: 10:218, 4:17, 4:21, 4:25, 10:188, 10:195) = bold, SIN barra final — el separador vive en el nodo de Período, nunca en ambos
+- Período/Years (nodo dedicado: 10:219, 4:18, 4:22, 4:26, 10:189, 10:196) = " | fecha" (espacio+barra+espacio+itálica) al INICIO del nodo — poner la barra en el nodo de Rol causa doble barra o hereda bold indebido
+- Contacto (8:56–8:63): primer nodo de la línea (8:56 Ciudad; 8:62 LinkedIn) SIN barra; a partir del segundo nodo de la línea (8:57, 8:58, 8:63) → " | contenido" con barra al inicio
+- Teléfono: formato "+52 56 4383 8125" — SIN el "1" después del 52 (corrección Career Canon aplicada en CANON:UF-002, ver Changelog)
+- Empresa (Palacio de Hierro): "EL PALACIO DE HIERRO (ALDO)" — nunca "(ALDO GROUP)"; ALDO Group es el holding, Mau trabajó scope específico para la marca ALDO (pin ejecutado, ver Changelog)
+- Skills = Categoría bold + ": " + texto plano; categorías con "y" nunca "&" ("Operaciones y Finanzas", "Liderazgo y Training") — razones sociales conservan "&" (Levi Strauss & Co.)
+- Idiomas (2:18) = prosa plana con "e" antes de palabra que empieza con "I": "Español (Nativo) e Inglés (Profesional Corporativo)" — nunca "|" en este nodo específico
+- Tagline 2:5 = SOLO el tagline (rol + especialización), bold, separador "|" — NUNCA concatenar el bloque de Contacto dentro de este nodo; Contacto vive exclusivamente en sus propios nodos 8:56–8:63
+- "Flagship Store" siempre capitalizado, sin paréntesis minúscula
+- Licenciatura y Diplomado (10:158, 10:164) = bold, con barra al final antes del nodo de período (mismo patrón que Rol/Período)
+- Formación/Cursos: Institución (10:161, 10:167, 10:204, 10:209) = texto plano, sin bold
 - & en nombres de empresa → &
+- Nodo vacío (sin dato ni Match Transferible posible): usar un solo carácter espacio (" "), NUNCA string vacío ("") — un nodo con characters="" rompe setRangeFontName en el reset a Regular (rango 0,0 inválido) y tira el batch completo (0 nodos reconocidos). Este error es distinto y más severo que dejar el tag sin match — aplica también a [PENDING DATA], que sigue prohibido.
+- Nunca dejar espacio final después de bold en nodos de Rol/Título/Grado — el espacio debe vivir únicamente al inicio del nodo de Período siguiente (" | fecha"), nunca duplicado ni movido al nodo anterior.
+- Antes de cualquier entrega: correr verify_md.py contra el archivo final. 0 issues obligatorio antes de presentar.
 ### 12.5 CANON:OUTPUT-CONTRACT-005
 Positioning Modes (Aplicación en Output)
 El Positioning Mode activo funciona como preset narrativo sobre el Canon (ver KERNEL:CV-PIPELINE-001, Algoritmo de Selección N1–N4): la decisión determinística ahí definida es la que fija qué subconjunto del Canon llena estos slots variables — Experience conserva siempre la secuencia C01–C05. Los slots Variable por modo se derivan del Positioning Mode activo (sección 11 · N1–N4):
