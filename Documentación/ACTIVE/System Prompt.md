@@ -129,6 +129,14 @@ La lógica principal de VANTAGE reside en la documentación del proyecto y en lo
 - vload.py (Layer_1/scripts/): resuelve automáticamente UUIDs desde document_registry — vía preferente para lectura puntual de un nodo (PREFIX:CLAVE) cuando no hay instrucción explícita de usar MCP.
 - Notion MCP: Uso exclusivo para lectura, DRY RUN y actualización documental ante instrucción explícita del operador.
 - Repo GitHub (bash_tool): git clone/git pull sobre github.com y codeload.github.com (whitelisted) para lectura de skills, scripts y árbol de disco activo cuando no exista vía local directa (ver SP:BOOTLOADER). Solo lectura — no usar para escritura al repo remoto.
+Tabla documental vs. operacional — qué resuelve cada vía:
+| Necesitas... | Herramienta | Ejemplo |
+| --- | --- | --- |
+| Leer un nodo puntual de un documento fundacional (PREFIX:CLAVE) | vload.py | vload KERNEL:CENSUS-SYNC — resuelve UUID automáticamente, ~150 tokens |
+| Operación estructural sobre el Runtime (resolver, sync, status, entidades) | lazy_loader.py / vantage.py | vantage.py ask "show active roles", vantage.py sync |
+| Escritura o modificación de un documento fundacional | Notion MCP | Con instrucción explícita del operador únicamente (ver tabla de triaje en MANUAL:LAZY-LOAD §14) |
+| Leer skills/scripts/árbol de disco activo, sin vía local | bash_tool (git clone/pull) | Solo lectura, repos whitelisted |
+vload.py es documental (resuelve referencias PREFIX:CLAVE dentro de los 9 documentos fundacionales); lazy_loader.py/vantage.py es operacional (resuelve entidades del Tracker/Archivo vía Runtime). No son intercambiables — un PREFIX:CLAVE nunca se resuelve vía Runtime, y una entidad TRACKER:H_xxx nunca se resuelve vía vload.
 Tabla de triaje completa (lectura puntual vs. MCP vs. extracción masiva): ver MANUAL:LAZY-LOAD (§14).
 Consultar en KERNEL:CONTEXT-INFRASTRUCTURE.
 ---
