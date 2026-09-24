@@ -1,41 +1,163 @@
 # V | CHANGELOG
 
+Corrige: posición de barra en Rol/Período (vivía en ambos nodos → duplicaba o heredaba bold), footer nunca en .md de Figma (bug blockRegex/EOF), prohibición de nodos vacíos/[PENDING DATA] en entrega final, teléfono sin "1" post-52, "ALDO GROUP"→"ALDO" pin ejecutado, Idiomas en prosa con "e", Tagline 2:5 sin duplicar Contacto.
+Tipo: [FIX] [DOC]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN.
+Documentos modificados: V | CAREER CANON (12.3 CANON:OUTPUT-CONTRACT-003, 12.4 CANON:OUTPUT-CONTRACT-004), skill vantage-qa (ítem 1 del checklist), skill vantage-cv-b (Inmutabilidad de IDs, Estructura Golden Skeleton).
+Causa raíz: tres rondas de correcciones consecutivas sobre el mismo CV-B (Adolfo Domínguez) revelaron que la posición de la barra en nodos Rol/Período vivía simultáneamente en ambos nodos en vez de uno solo — causando doble barra o herencia de bold indebida al importar a Figma — y que el footer de metadata, cuando se incluía dentro del .md entregado a Figma, quedaba absorbido por el último bloque del archivo debido a que el blockRegex del plugin (ui.html) extiende cualquier bloque sin un ###### posterior hasta EOF. Verificación adicional confirmó vía MCP Figma (get_metadata + get_screenshot contra el fileKey real) que el patrón corregido (barra al inicio del segundo nodo, footer fuera del .md, sin nodos vacíos) importa limpio: 67/67 nodos reconocidos.
+Acción correctiva:
+1. Reescrito CANON:OUTPUT-CONTRACT-002 (Golden Skeleton) con placeholders neutros reflejando el patrón corregido — pegado directamente por el operador en Notion.
+1. Añadida copia embebida de registry_seed.json dentro de CANON:OUTPUT-CONTRACT-003, como referencia de auditoría cruzada sin salir de Notion (el archivo en /Figma Sync/ sigue siendo la fuente operativa).
+1. Reescrito CANON:OUTPUT-CONTRACT-004 (Tag Registry) de v1.0 a v1.1.0 con reglas de serialización mecánicas: posición de barra Rol/Período, formato de Contacto (8:56-8:63), teléfono sin "1" post-52, "ALDO GROUP"→"ALDO", Idiomas en prosa con "e", Tagline 2:5 sin duplicar Contacto, "Flagship Store" capitalizado, Institución sin bold.
+1. skill vantage-qa (ítem 1, Invarianza estructural): añadida instrucción de leer CANON:OUTPUT-CONTRACT-002 en vivo antes de evaluar — nunca de memoria ni contra copia local desactualizada; si el Skeleton no está accesible, el ítem se declara FAIL — requiere confirmación humana en vez de asumir estructura.
+1. skill vantage-cv-b: corregida referencia a la ubicación del registry_seed.json — ya no asume una única ruta local (04-Vantage_CV/Figma Sync/); ahora acepta Notion (copia embebida en CANON:OUTPUT-CONTRACT-003), Google Drive, o adjunto directo del operador en sesión, leyendo siempre la copia más reciente disponible.
+Decisiones confirmadas: "ALDO GROUP"→"ALDO" se ejecutó también vía replace_aldo_notion.py (script del operador) sobre el árbol completo bajo VANTAGE HUB — verificado post-ejecución vía notion-fetch: CANON:EXPERIENCE-005, CANON:CAREER-TIMELINE (ambas filas C05) y CANON:CERTIFICATION-001 confirmados sin "GROUP" remanente. El log del script no mostró líneas de reemplazo individuales porque el Golden Skeleton ya había sido corregido a mano por el operador en una ronda previa — sin discrepancia real, solo ausencia de trabajo pendiente en esa corrida.
+Decisiones no duplicadas: no se tocó CANON:POSITIONING (11.x) ni CANON:EXPERIENCE bullets — el cambio fue exclusivamente de formato/serialización de output, no de contenido factual del Canon. No se regeneraron los ~14 CV-B previos del batch de la sesión (Beyond, Confidencial x2, Eurokor, GDC, HM, IKEA, Inditex, Intimissimi, Juguetron, SARELLY, ServiciosAndreiMoygo, Tendam, Walmart, ZaraHome) — quedan con footer embebido y convención de barra antigua; corrección queda pendiente para cuando se re-visiten explícitamente.
+Impacto: Corrective, Operativo. Cierra el ciclo BASELINE iniciado la mañana del mismo día — de 3 rondas de corrección iterativa sobre Adolfo Domínguez a un patrón único verificado y documentado en 4 ubicaciones del sistema (Golden Skeleton, registry embebido, Tag Registry v1.1.0, skills QA/CV-B).
+Validación: verificación visual directa contra el lienzo Figma real vía MCP (mcp__Figma__get_metadata, mcp__Figma__get_screenshot) sobre fileKey qPyrpGysJs7XxcbubKOo0n — 3 páginas confirmadas limpias (Header/Perfil/Skills/L'Oréal; Bisonte/Dockers/Aéropostale; ALDO/Formación/Cursos). Confirmación adicional del operador tras reimport: 67/67 nodos reconocidos, sin errores de parser.
+Estado: WRITE aplicado en Notion (V | CAREER CANON, secciones 12.2/12.3/12.4) y en los archivos de skill entregados al operador (vantage-qa.md, vantage-cv-b.md) para reemplazo manual en el repositorio local. Pin "ALDO GROUP"→"ALDO" cerrado y verificado. Corrección retroactiva a los ~14 CV-B del batch anterior: pendiente, no aplicada en esta sesión.
+Tipo: [FIX] [OPS]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN.
+Documentos modificados: V | CAREER CANON (12.4 CANON:OUTPUT-CONTRACT-004), verify_md.py (nuevo).
+Causa raíz: dos bugs distintos de importación a Figma detectados en la misma sesión post-BASELINE v9.22.8. (a) Nodo vacío con characters="" rompe setRangeFontName(0,0,...) en el reset a Regular del plugin (code.js) — "Empty range selected" — tumbando el batch completo (0/67 nodos), detectado en Viva CV-B (2:28, 10:198). (b) Espacio final residual tras bold en nodo de Rol + espacio faltante al inicio del nodo de Período siguiente — mezcla de convenciones de una prueba anterior que quedó parcialmente aplicada en un solo par de nodos (10:164/10:165) de Adolfo Domínguez.
+Acción correctiva: Golden Skeleton actualizado con regla explícita de nodo vacío = un espacio, nunca string vacío. Creado verify_md.py — chequeo automatizado (trailing whitespace, bold con espacio final, formato de nodo de Período, nodos vacíos, [PENDING DATA]) obligatorio antes de cualquier entrega de CV-B.
+Decisiones confirmadas: el patrón "un espacio en vez de vacío" ya se aplicó y confirmó funcional en Viva CV-B (reimport exitoso). Adolfo Domínguez CV-B corregido (10:164/10:165 normalizado) y confirmado por el operador: reimportado exitosamente a Figma.
+Impacto: Corrective, Operativo. Cierra el segundo ciclo de bugs de importación post-BASELINE — de detección manual por el operador a verificación mecánica previa a entrega.
+Estado: WRITE pendiente de aplicar por el operador en Notion (Golden Skeleton) y en el repo local (verify_md.py).
+Tipo: [FIX] [OPS]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=KM.
+Documentos modificados: Layer_1/scripts/layer_1_orchestrator.py (validate_url()).
+Causa raíz: el bypass "JD > 100 caracteres = válido" estaba ubicado después de if not url: return False, "NO_URL", haciéndolo inalcanzable para cualquier vacante sin URL de aplicación (capturas de LinkedIn, apply-por-correo) — se archivaban aunque tuvieran JD completo.
+Acción correctiva: reordenado el bypass de JD largo antes del check de URL vacía en validate_url(). Cambio quirúrgico de un solo bloque, sin tocar url_gate.py ni la lógica de agregadores.
+Decisiones confirmadas: el bypass de JD largo aplica también cuando no hay URL — la ausencia de URL de aplicación no es por sí sola motivo de archivo si el JD documenta la vacante.
+Decisiones no duplicadas: no se modificó el criterio de agregadores ni el gate de NAD/expiración; no se tocó el flujo de Class B origin-independent (v9.22.5), que ya operaba correctamente; no se reabrió la migración de baselines Class_B_Last_Run.
+Impacto: Correctivo, Operativo. Detectado al validar en vivo los 4 registros L2 sin baseline de Class B dejados por v9.22.5 (Adolfo Domínguez, Commando Retail, SomosUno, Grupo Axo) — el intento de recomputar Class B sobre ellos exponía que iban a ser archivados incorrectamente por este bug de URL Gate.
+Validación: ast.parse OK tras el patch. --dry-run-live antes/después: antes, las 4 filas se archivaban (Archivos: 4, keys=['Next_Action','Notas','Status']); después, Archivos: 0 y las 4 computan Class B completo (Score/Gate_Decision/Prioridad/VM_Scope/Class_B_Last_Run). --apply real ejecutado por el operador: 10 escrituras, 10/10 PATCH 200 OK, 0 archivados, 0 errores. Confirmado en Notion vía notion-fetch directo de las 4 páginas (URL vacía, apply-por-correo o solo screenshot, JD completo en las 4).
+Estado: WRITE aplicado. Commit subido a origin/main vía vgit — declaración directa del operador, adoptada bajo Regla de Adopción (Serial Authority v2, v9.21.56), no re-verificado con git log en esta sesión. Cierra el pendiente operativo de first-run Class B sobre los 4 New anunciado en v9.22.5.
+IDs afectados: Ninguno (corrección de código, sin alta/baja de ID canónico).
+---
+Tipo: [DEDUPE] [DOC]
+Identidad VANTAGE: agent.family=CHATGPT · agent.instance=DEFAULT (registro original); consolidación editorial agent.family=GROK · agent.instance=DEFAULT.
+Documentos modificados: Ninguno en este serial. El trabajo de código, tests, schema y migración Notion quedó documentado de forma canónica en v9.22.5.
+Causa raíz del dedupe: dos entradas de changelog (v9.22.5 GROK y v9.22.6 CHATGPT) describían el mismo batch — Class B origin-independent, commit 25b06d8, migración 28/4/6 — con redacción distinta pero sin segundo cambio de sistema.
+Acción correctiva: esta entrada se anula como evento operativo. El contenido útil (validación de suite completa Layer 1, control pre-cambio 160/13, confirmación push main) se fusionó en v9.22.5.
+Decisiones confirmadas: un serial = un cambio de sistema; la doble documentación del mismo fix no implica dos versiones de producto.
+Decisiones no duplicadas: no se revirtió código; no se re-ejecutó migración Notion; no se alteró v9.22.7.
+Impacto: Solo documental / higiene de changelog. Sin impacto runtime.
+Validación: N/A (dedupe editorial).
+Estado: ANULADA como entrada de cambio. Fuente de verdad del fix Class B: v9.22.5. URL Gate y apply de los 4 New: v9.22.7.
+IDs afectados: Ninguno.
+Tipo: [FIX] [ARCH] [OPS]
+Identidad VANTAGE: agent.family=GROK · agent.instance=DEFAULT (implementación Phase 2/3); integración y publicación en main confirmada por operador / agent.family=CHATGPT · agent.instance=DEFAULT.
+Documentos modificados: Layer_1/scripts/class_b_guard.py (CLASS_A_FIELDS / CLASS_B_FIELDS); Layer_1/scripts/tracker_flow.py (is_mutable + _DATE_PROPS); Layer_1/scripts/layer_1_orchestrator.py (needs_first_class_b_compute, manual_first_protection, baseline Class_B_Last_Run, snapshot); Layer_1/tests/test_class_b_origin_invariant.py (T1–T15 + regression). Schema Notion Tracker: propiedad Class_B_Last_Run (date) en collection://442938be-fc42-828f-b72e-076818d65a5b.
+Causa raíz: la elegibilidad Class B dependía del origen técnico de creación/escritura (feed/API vs MCP/manual vs layer). Registros equivalentes en lifecycle y Class A recibían tratamiento distinto; first-run podía bloquearse solo por last_edited_by humano cuando no existía baseline; Fetch/Fuente estaban mal clasificados; el snapshot podía inventar baseline en filas no evaluadas.
+Acción correctiva: baseline canónico Class_B_Last_Run (última evaluación Class B exitosa; semántica distinta de Last_Gate_Run); first-run cuando Class_B_Last_Run ausente y el registro es elegible, independientemente de Origin o editor; ventana de protección manual anclada al baseline (edición humana Class B protege; edición solo Class A permite recomputar); Fetch y Fuente movidos a Class A; snapshot solo persiste filas con evaluación real (_class_b_computed) y nunca se usa como fuente de verdad ni backfill; tests de invariante de origen + regression del gap original L2 feed vs MCP/manual.
+Decisiones confirmadas: el origen técnico no determina si Class B se calcula; same lifecycle + same Class A + different origin = same Class B behavior; ausencia de Class_B_Last_Run = primera evaluación pendiente, no “protegido por humano”; Last_Gate_Run sigue siendo solo marker de cambio de Gate; Class_B_Last_Run es el marcador canónico de última evaluación Class B exitosa.
+Decisiones no duplicadas: no se utilizó Last_Gate_Run como sustituto de Class_B_Last_Run; no se utilizó Snapshot para crear baselines; no se condicionó la elegibilidad Class B al origen del registro; no se reescribió Score/Gate_Decision/Next_Action/Status en migración; no se tocó Por Revisar ni estados terminales; no se inventaron baselines sin evidencia de evaluación previa; no se modificó el gate de URL/JD (eso es v9.22.7, posterior y distinto).
+Migración Notion: 38 registros validados. Baseline establecido en 28 SAFE_TO_MIGRATE (Class_B_Last_Run = Last_Gate_Run solo con evidencia previa de Class B); 4 New L2 sin baseline (MUST_RECOMPUTE vía first-run canónico); 6 Por Revisar MUST_NOT_TOUCH intactos.
+Impacto: Correctivo, Arquitectónico, Runtime y Operativo. Cierra la clase de defecto origin-dependent Class B processing y fija semántica persistente baseline Class B vs cambio de Gate.
+Validación: test_class_b_origin_invariant.py 18/18 PASS. Suite Layer 1: 178 passed / 13 failed; control contra origin/main pre-cambio: 160 passed / 13 failed → 0 regresiones nuevas atribuibles a Phase 2. git diff --check PASS. Schema check: Class_B_Last_Run date presente. Post-migración: Objetivo/Postulado con baseline; New 0/4 baseline (esperado); Por Revisar 0/6 baseline (protegido). APPLY Notion: solo Class_B_Last_Run en 28 páginas.
+Estado: WRITE aplicado. Código en origin/main (commit 25b06d8 — fix: make Class B evaluation origin-independent). Schema + 28 baselines WRITE en Tracker live. First-run de los 4 New L2 (Adolfo Domínguez, Commando Retail, SomosUno, Grupo Axo) quedó pendiente operativo y se cerró en cadena con v9.22.7 (URL Gate), no en este serial.
+IDs afectados: Ninguno (corrección de código + schema/baseline; sin alta/baja de ID canónico).
+---
+
+Documento modificado: KERNEL, SP
+Documentos potencialmente afectados: MANUAL (parcial, pendiente nodo 8), ALIASES (pendiente nodo 9)
+Tipo de impacto: Normativo + Operativo
+Acción correctiva: Rediseño Discovery L1/L2/L4 — L1 absorbe Gemini bajo ejecución Hermes; L2 se redefine como "Personal Request" (patrón espejo de L3, sin motores externos); jerarquía de dedup invertida a L2>L1>L3; Hermes agregado a matriz de ruteo L4 y a registro de identidad SP:BOOTLOADER-002.
+Estado final: PASS parcial — nodos 1–7 y 10 listos para escritura; nodos 8–9 bloqueados en espera de tu input.
+---
+
+Documento modificado:
+- Layer_1/scripts/dedup_opportunities.py
+- Layer_1/scripts/feed_processor.py
+Documentos potencialmente afectados (impacto documental, aún no actualizados):
+- KERNEL:GATE-DECISION-011 (Matriz de Transición de Estados) — declara
+explícitamente "Dedup_Flag='Posible duplicado' (select)" — ROMPE, según
+auditoría Notebook Gemini de esta sesión.
+- KERNEL:GATE-DECISION-007 (Marcado Manual de Archivado) — asume string
+'Posible duplicado' como señal — AMBIGUO.
+- MANUAL:DATA-MANAGEMENT (§10, Dedup) — misma asunción de string — AMBIGUO.
+Tipo de impacto: Operativo + Runtime
+(cambio de tipo de propiedad Notion + lógica de lectura/escritura en 2
+scripts productivos; sin cambio de comportamiento funcional del pipeline)
+Descripción del cambio:
+1. Propiedad "Dedup_Flag" en VANTAGE TRACKER migrada de tipo Select
+(única opción: "Posible duplicado") a tipo Checkbox, para alinear con
+el patrón ya usado por "Archivar".
+1. dedup_opportunities.py: write_dedup_flag() actualizado — lectura vía
+dedup_field.get("type") == "checkbox", escritura vía
+{"checkbox": True/False} en vez de {"select": {"name": ...}}/None.
+1. feed_processor.py: bloque de asignación (líneas ~581-599) actualizado
+con el mismo patrón select→checkbox.
+1. Verificado en producción: corrida post-fix confirmó marcado correcto
+(operador confirma "se marcaron correctamente").
+Acción correctiva ejecutada:
+- Backups automáticos creados antes de cada edición
+(dedup_opportunities.py.bak-, feed_processor.py.bak-).
+- Ambos scripts editados vía comando de terminal de una sola pasada,
+con assert de verificación de bloque exacto antes de escribir.
+Estado final de la validación:
+- dedup_opportunities.py: PASS (confirmado por operador en producción)
+- feed_processor.py: PENDIENTE — actualizado pero sin corrida de
+verificación confirmada en esta sesión (próxima ejecución del
+pipeline L1/L3 real validará)
+- class_b_guard.py: NO auditado — no se confirmó si valida estructura
+interna del payload; riesgo residual si rechaza {"checkbox": ...}
+Pendiente (no cerrado en esta sesión):
+- Actualizar KERNEL:GATE-DECISION-011, KERNEL:GATE-DECISION-007 y
+MANUAL:DATA-MANAGEMENT para reflejar tipo Checkbox (Regla de Versión
+Única, SP:SYNC-RULE).
+- Verificar class_b_guard.py contra el nuevo payload.
+- Confirmar tipo de propiedad ya migrado en Notion (Select→Checkbox) —
+prerequisito operativo para que ambos scripts lean valores correctos.
+Versión: [pendiente — operador hace bump manual]
+════════════════════════════════════════════════════════════
+---
+Tipo: [REFactor] [OPS]
+Identidad VANTAGE: agent.family=CHATGPT · agent.instance=DEFAULT.
+Documentos modificados: 29 skills activos fueron migrados de SKILL.md dentro de subdirectorios a archivos planos skills/<skill-name>.md. Se actualizaron compile_skills.py, verify_versions.py, update_triggers_json.py, g9_docsync_verify.py, skill_hash_baseline.json, triggers.json y G9_DOCSYNC_PACKAGE.md.
+Decisiones confirmadas: se conserva el contenido byte-for-byte de los 29 skills; el flattening se limita a los skills activos; vantage-active-search-weekly conserva sus assets auxiliares en su directorio; triggers.json mantiene sus 28 registros existentes y solo actualiza referencias de ruta/URL; el baseline se rebaselinizó contra las versiones vigentes de main para los 8 skills cuyo hash histórico estaba desfasado; se conserva la estructura de assets auxiliares fuera del nuevo nivel plano.
+Decisiones no duplicadas: no se modificaron los contenidos funcionales de los skills; no se eliminaron assets auxiliares de vantage-active-search-weekly; no se realizó ningún cambio adicional en documentación histórica fuera de las referencias necesarias para el flattening.
+Impacto: Estructural, Operativo, Runtime y Navegación. La resolución Git confirmó los 29 movimientos como renames al 100%.
+Validación: Flattening validado con 29/29 skills idénticos byte-for-byte a HEAD; 0 archivos SKILL.md; 29 archivos .md planos; baseline verificado; py_compile PASS; git diff --check PASS. Commit 80c4604 creado y push origin main completado correctamente.
+Estado: WRITE aplicado. El cambio ya está publicado en main.
+---
+Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=CHATGPT · agent.instance=DEFAULT.
+Documentos modificados: Manual y Kernel. Aliases fue revalidado: los cambios de este DRY RUN ya estaban aplicados, por lo que no se reescribió.
+Decisiones confirmadas: dedup por auditoría requiere --apply y usa class_b_guard; L3 usa backend configurable ollama/groq, límite GEMINI_MAX_EMAILS_PER_RUN (default 5) y conserva como no leídos los correos con fallo recuperable; B-12 mantiene regenerate_index_json() activo antes de git status en sync(); B-22 no se modificó porque no apareció la cadena previa exacta Aliases=6-7; B-25 queda como decisión documental sin mover ni eliminar archivos.
+Decisiones no duplicadas: B-09, H-6 y B-15 ya existían en sus nodos SSOT; H-1 no se modificó porque no apareció una referencia literal aplicable a RT-1.
+Impacto: Normativo, Operativo, Runtime y Navegación.
+Validación: DRY RUN aprobado con APROBAR_WRITE; patches mínimos por coincidencia exacta; write-back verification PASS para Manual y Kernel. Census no aplica: no se creó ningún ID canónico.
+---
+diff --git "a/Documentaci\303\263n/ACTIVE/Change Log.md" "b/Documentaci\303\263n/ACTIVE/Change Log.md"
+index 0105cc9..e79f299 100644
+--- "a/Documentaci\303\263n/ACTIVE/Change Log.md"
++++ "b/Documentaci\303\263n/ACTIVE/Change Log.md"
+@@ -258,5 +258,23 @@ Acción correctiva ejecutada: Agregada regla explícita en §14 — "Cada compon
 IDs afectados: Ninguno (sin alta/baja de ID canónico — extensión de nodo existente).
 Estado final de la validación: Write-Back Verification PASS — confirmado vía re-fetch en vivo de §14, regla nueva presente sin mismatch. Census no aplica (sin altas/bajas de ID). Sin DRY RUN presentado en el mismo turno de aprobación por instrucción explícita del operador (yep).
-Tipo: [CODE] [FIX]
-Documento modificado: Layer_1/scripts/hard_block_gate.py · Layer_1/config/hard_blocks.json · Layer_1/scripts/layer_1_orchestrator.py (manual_first_protection) · src/gate_logic.py (docstring only) · tests/test_hard_block_gate.py · tests/test_vantage_status.py · tests/test_llm_providers.py · tests/test_agent_history_diagnostics.py · tests/test_scout_dry_run.py · tests/test_layer_1_orchestrator.py (G9)
-Documentos potencialmente afectados: Ninguno en Kernel/Manual/SP/Canon — consolidación de código Layer_1 y alineación de contratos de tests, sin cambios normativos.
-Tipo de impacto: Operativo — cierre de v9.23.0 sobre v9.22.0: consolidación de Fase 2 (2.5–2.6, ya entregada en commit previo 62ee000), un bug funcional real corregido en G5 (manual-first), y alineación de la suite de tests con el código productivo tras la migración de LangChain a browser-use.
-Causa raíz (G5 manual-first): manual_first_protection() dependía únicamente de is_mutable() como guard — sin evaluar explícitamente la ventana de edición humana contra Last_Gate_Run. Last_Gate_Run y last_successful_run.json son contratos distintos; el guard general no sustituye la ventana manual.
-Acción correctiva ejecutada:
-1. Hard Block Gate (2.5) — hard_block_gate.py consolidado como implementación standalone; hard_blocks.json es la única fuente de términos bloqueados, sin capa paralela de regex. Fixtures de test_hard_block_gate.py alineados con la fuente canónica (Aéropostale removida de los fixtures — nunca perteneció al conjunto vigente de Hard Blocks; el fallo era del fixture, no del Gate. Bloqueo de producción sin cambios).
-1. Scout (2.6) — src/gate_logic.py fuera de alcance total, decisión explícita del operador (diseño no completado ni a completarse). Cambio limitado a docstring documentando la decisión, sin efecto en comportamiento.
-1. G5 Manual-First — manual_first_protection() ahora evalúa explícitamente last_edited_time > Last_Gate_Run con actor humano válido, antes del guard general. Se preserva la excepción de una sola pasada para Rechazado (Q-11/SCHEMA-008).
-1. Suite de tests — vantage_status.py con cobertura contractual nueva (normalización, mapeos legacy, terminalidad, protección/mutabilidad, Gate Decision); test_llm_providers.py migrado del API interno obsoleto _chat_openai (eliminado en edc75c5, migración a browser-use) al API real (ChatOpenRouter, ChatOpenAI+base_url, Groq agregado al contrato de providers); test_scout_dry_run.py con ROOT corregido (parents[2]→parents[1], escribía fuera del repo); test_default_provider_is_local_ollama aislado de LLM_PROVIDER del .env local; test_g9_changelog_v922_entry ampliado de text[:2500] a text completo.
-Resultado:
-- Suite completa: 311 passed, 5 failed (todos ModuleNotFoundError: browser_use, dependencia opcional no instalada en el entorno de verificación — no relacionado al código bajo prueba), 2 skipped.
-- Cost-control fallback validado contra comportamiento real bajo USE_CHEAP_FALLBACK=true / LLM_COST_LIMIT<1.0 — sin cambio de política: el fallback de Gemini sigue en gemini-1.5-flash (discontinuado según el propio código), no corregido en este lote.
-- G9 Change Log: "v9.22.0" localizado como mención de paso en entrada normativa distinta (Fe de Erratas G8/G9, línea 46) — no existe ni existía una entrada propia para esa versión; el fix corrige el rango de búsqueda del test, no crea un registro nuevo.
-IDs afectados: Ninguno (código y tests; no dispara CENSUS-SYNC Regla 1).
-Estado final de la validación: Commits verificados en origin/main: 62ee000 (Fase 2 lote 2) y 16acdea (auto-sync — G5 fix + suite de tests). Fixes de Fase 1 y Fase 2 lote 1 verificados en sesiones previas (ver HO-000059). DRY RUN presentado y aprobado explícitamente por el operador (yep) antes de escritura — version bump y esta entrada ejecutados en la misma pasada por instrucción del operador.
-Handoff de referencia: continuación de HO-000059 (CLAUDE/MAIN), consolida Fase 2 completa (2.1–2.6) + hallazgo G5 + reconciliación de suite de tests reportados por sesión posterior.
----
-Tipo: [CODE] [FIX]
-Documento modificado: Layer_3/scripts/layer_3_mail.py (línea 872) · tests/test_tracker_flow_v3.py (test_f11_composite_guard)
-Documentos potencialmente afectados: Ninguno en Kernel/Manual/SP/Canon — corrección de código puro, sin cambio normativo.
-Tipo de impacto: Operativo — corrección de una regresión introducida por el propio commit 62ee000 (Fase 2 lote 2), no un hallazgo nuevo de auditoría.
-Causa raíz (regresión L3): la migración de layer_3_mail.py al backend configurable ollama/groq (commit 62ee000, 2026-09-16) reescribió el archivo completo a partir de una copia previa al fix de Fase 2 (2.1, Target→Objetivo) — el rewrite reintrodujo Status="Target" sin que nadie lo notara, porque el commit se tituló y revisó como cambio de hard_block_gate.py/gate_logic.py, sin mención de layer_3_mail.py. vantage_status.LEGACY_STATUS_MAP["Target"]="Objetivo" nunca se revirtió y siguió vigente todo este tiempo, ocultando el drift.
-Causa raíz (test_f11_composite_guard): el fixture usa una fecha fija (2026-09-10T12:00:00.000Z) sin aislar _was_edited_since_last_run() del reloj real. Esa función cae a un fallback de "< 7 días desde hoy" cuando no hay state file — el test expira exactamente al séptimo día de su propia fecha hardcodeada (2026-09-17), no por contaminación de state/last_successful_run.json como se diagnosticó inicialmente. Verificado con VANTAGE_STATE_DIR apuntando a un directorio vacío: el test sigue fallando igual, confirmando que la causa no es el state file.
-Acción correctiva ejecutada:
-1. layer_3_mail.py:872 — Status="Target" corregido a Status="Objetivo", restaurando el fix de Fase 2 (2.1). Sin otro cambio: no toca EXTRACTION_BACKEND ni ningún otro campo introducido por 62ee000.
-1. test_f11_composite_guard — agregado parámetro monkeypatch; se mockea tracker_flow._was_edited_since_last_run para devolver True sin depender de la fecha real del sistema ni de ningún state file. Path de monkeypatch corregido a tracker_flow._was_edited_since_last_run (import plano vía sys.path.insert, no Layer_1.scripts.tracker_flow, que no existe como módulo).
-Resultado:
-- Suite completa en el Mac del operador (con browser_use instalado): 318 passed, 0 failed, 2 warnings (deprecaciones externas de browser_use/google.genai, no relacionadas a VANTAGE).
-- grep -c '"Target"' Layer_3/scripts/layer_3_mail.py → 0.
-IDs afectados: Ninguno (código y tests; no dispara CENSUS-SYNC Regla 1).
-Estado final de la validación: DRY RUN presentado y aprobado explícitamente por el operador (yep) antes de cada escritura, en turnos separados. Verificado py_compile + pytest tras cada fix, antes y después de aplicar en el Mac del operador.
----
++Tipo: [CODE] [FIX]
++Documento modificado: Layer_1/scripts/hard_block_gate.py · Layer_1/config/hard_blocks.json · Layer_1/scripts/layer_1_orchestrator.py (manual_first_protection) · src/gate_logic.py (docstring only) · tests/test_hard_block_gate.py · tests/test_vantage_status.py · tests/test_llm_providers.py · tests/test_agent_history_diagnostics.py · tests/test_scout_dry_run.py · tests/test_layer_1_orchestrator.py (G9)
++Documentos potencialmente afectados: Ninguno en Kernel/Manual/SP/Canon — consolidación de código Layer_1 y alineación de contratos de tests, sin cambios normativos.
++Tipo de impacto: Operativo — cierre de v9.23.0 sobre v9.22.0: consolidación de Fase 2 (2.5–2.6, ya entregada en commit previo 62ee000), un bug funcional real corregido en G5 (manual-first), y alineación de la suite de tests con el código productivo tras la migración de LangChain a browser-use.
++Causa raíz (G5 manual-first): manual_first_protection() dependía únicamente de is_mutable() como guard — sin evaluar explícitamente la ventana de edición humana contra Last_Gate_Run. Last_Gate_Run y last_successful_run.json son contratos distintos; el guard general no sustituye la ventana manual.
++Acción correctiva ejecutada:
++1. Hard Block Gate (2.5) — hard_block_gate.py consolidado como implementación standalone; hard_blocks.json es la única fuente de términos bloqueados, sin capa paralela de regex. Fixtures de test_hard_block_gate.py alineados con la fuente canónica (Aéropostale removida de los fixtures — nunca perteneció al conjunto vigente de Hard Blocks; el fallo era del fixture, no del Gate. Bloqueo de producción sin cambios).
++1. Scout (2.6) — src/gate_logic.py fuera de alcance total, decisión explícita del operador (diseño no completado ni a completarse). Cambio limitado a docstring documentando la decisión, sin efecto en comportamiento.
++1. G5 Manual-First — manual_first_protection() ahora evalúa explícitamente last_edited_time > Last_Gate_Run con actor humano válido, antes del guard general. Se preserva la excepción de una sola pasada para Rechazado (Q-11/SCHEMA-008).
++1. Suite de tests — vantage_status.py con cobertura contractual nueva (normalización, mapeos legacy, terminalidad, protección/mutabilidad, Gate Decision); test_llm_providers.py migrado del API interno obsoleto _chat_openai (eliminado en edc75c5, migración a browser-use) al API real (ChatOpenRouter, ChatOpenAI+base_url, Groq agregado al contrato de providers); test_scout_dry_run.py con ROOT corregido (parents[2]→parents[1], escribía fuera del repo); test_default_provider_is_local_ollama aislado de LLM_PROVIDER del .env local; test_g9_changelog_v922_entry ampliado de text[:2500] a text completo.
++Resultado:
++- Suite completa: 311 passed, 5 failed (todos ModuleNotFoundError: browser_use, dependencia opcional no instalada en el entorno de verificación — no relacionado al código bajo prueba), 2 skipped.
++- Cost-control fallback validado contra comportamiento real bajo USE_CHEAP_FALLBACK=true / LLM_COST_LIMIT<1.0 — sin cambio de política: el fallback de Gemini sigue en gemini-1.5-flash (discontinuado según el propio código), no corregido en este lote.
++- G9 Change Log: "v9.22.0" localizado como mención de paso en entrada normativa distinta (Fe de Erratas G8/G9, línea 46) — no existe ni existía una entrada propia para esa versión; el fix corrige el rango de búsqueda del test, no crea un registro nuevo.
++IDs afectados: Ninguno (código y tests; no dispara CENSUS-SYNC Regla 1).
++Estado final de la validación: Commits verificados en origin/main: 62ee000 (Fase 2 lote 2) y 16acdea (auto-sync — G5 fix + suite de tests). Fixes de Fase 1 y Fase 2 lote 1 verificados en sesiones previas (ver HO-000059). DRY RUN presentado y aprobado explícitamente por el operador (yep) antes de escritura — version bump y esta entrada ejecutados en la misma pasada por instrucción del operador.
++Handoff de referencia: continuación de HO-000059 (CLAUDE/MAIN), consolida Fase 2 completa (2.1–2.6) + hallazgo G5 + reconciliación de suite de tests reportados por sesión posterior.
++---
 > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
+---
 Tipo: [CODE] [OPS] [DOC]
 Alcance:
 - [CODE]:
@@ -50,6 +172,7 @@ Alcance:
 - Registro de Deuda Técnica y Gaps: (1) is_url_valid() sin validación de emparejamiento exacto rol-URL en correos multi-vacante. (2) Fallback local/rate-limit Groq pendiente de validación empírica real (vl3). (3) Decisiones pendientes en reasoning_effort ("low"), livelock de inbox y replicación de industrias L1→L3. (4) Reinyector de vacantes omitidas (Converse ×2, GOLDCO) pendiente. (5) OLLAMA_KEEP_ALIVE sin configurar por decisión explícita. (6) Alerta de credenciales en texto plano (layer_3.env) diferida por Mau.
 - Estado Handoff HO-000058: Ledger status declarado UNKNOWN por ausencia de vantage-session-open en la sesión SESSION-20260916-1.
 IDs afectados: Ninguno (código / refactor Layer 3; no dispara CENSUS-SYNC Regla 1).
+---
 Tipo: [FIX]
 Documento modificado: Layer_1/scripts/layer_1_orchestrator.py (repo local, 2 hunks quirúrgicos vía str_replace)
 Documentos potencialmente afectados: Ninguno en Kernel/Manual/SP/Canon — corrección de código puro, sin cambio de especificación normativa. class_b_guard.py verificado sin necesidad de cambio (Score_Method ya presente en CLASS_B_FIELDS desde antes).
@@ -215,3 +338,9 @@ IDs afectados: Ninguno (migración de proveedor sin alta/baja de ID canónico �
 ---
 ---
 > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
+---
+## Sep 18, 26 06.11
+Documento modificado: KERNEL, SP, MANUAL  
+Tipo de impacto: Normativo + Operativo  
+Acción correctiva: Rediseño Discovery L1/L2/L4 — L1 absorbe Gemini bajo ejecución Hermes Desktop; L2 se redefine como "Personal Request" (patrón espejo de L3, sin motores externos); jerarquía de dedup invertida a L2>L1>L3; Hermes agregado a matriz de ruteo L4 y a registro de identidad SP:BOOTLOADER-002; Vassemble actualizado a Hermes Desktop en MANUAL.  
+Estado final: PASS — todos los nodos validados y listos para escritura.
