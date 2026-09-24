@@ -10,6 +10,7 @@ if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
 from generate_entity_index_v2 import make_client, query_data_source, get_hash, iter_all_pages
+from notion_utils import _notion_patch
 
 env_path = _LAYER_1_ROOT / ".env"
 load_dotenv(env_path, override=True)
@@ -19,11 +20,7 @@ DATA_SOURCE_ID = "674696fd-94b6-464a-ac1f-64b0cc917e15"
 
 def archive_page(client, page_id):
     try:
-        client.request(
-            path=f"pages/{page_id}",
-            method="PATCH",
-            body={"archived": True}
-        )
+        _notion_patch(f"/v1/pages/{page_id}", {"archived": True})
         return True
     except Exception as e:
         print(f" Error archivando {page_id}: {e}")
