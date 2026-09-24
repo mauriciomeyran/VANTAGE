@@ -151,7 +151,7 @@ Ya no es necesario realizar copy-paste manual del System Prompt maestro en cada 
 Las instrucciones activas deben residir exclusivamente en las Project Instructions de la plataforma. Encontrarás la referencia documental en SP:BOOTLOADER. Este es el proceso para su configuración:
 Settings → Project → Project Instructions en la UI de Claude.
 Inicia un nuevo chat. El Agente  realizará un fetch automático del Bootloader  desde Notion.
-El Agente responde con “VANTAGE: SISTEMA SINCRONIZADO” (sin número de versión fijo — ver SP:BOOTLOADER) antes de enviar peticiones.
+El Agente responde con “BOOTLOADED: DOCUMENTOS CARGADOS” (sin número de versión fijo — ver SP:BOOTLOADER) antes de enviar peticiones.
 Nota: este setup de Claude es de una sola vez por proyecto — no se repite en cada sesión de trabajo. Lo que sí se repite en cada sesión es el Ciclo de Sesión completo, explicado en MANUAL:SESSION-CYCLE.
 Paso 4
 Verificar Archivos del Sistema y Permisos de Ejecución
@@ -181,7 +181,7 @@ El Runtime (explicado en detalle en MANUAL:RUNTIME) es el motor de lectura del s
 ```bash
 python vantage.py status
 ```
-Resultado esperado: Status: READY (4,200+ blocks indexed).
+Resultado esperado: JSON con el conteo actual de entidades indexadas (total_entities) y antigüedad del índice — la cifra varía con cada auto-sync, no es un valor fijo.
 Paso 7
 Verificar Sync Documental
 ```bash
@@ -229,8 +229,8 @@ Explicación por comando
 1. python3 vantage.py sync — regenera entity_index_v2.json, graph_v2.json y backlinks_v2.json consultando Notion en vivo; sí escribe.
 1. vl3 — corre layer_3_mail.py una vez, manualmente (asumiendo que vl3 es tu alias configurado para ese script).
 1. cat ~/.vantage/l3_heartbeat.json — confirma que L3 corrió y dejó su heartbeat; si el archivo no existe o el timestamp es viejo, L3 falló silenciosamente.
-1. python3 vantage.py ask "show active roles" — smoke test end-to-end contra el Tracker real vía resolver_layer_v1 — este es el que hoy falló por el archivo borrado en el commit 29fc7f0; seguirá fallando igual hasta que restauremos ese archivo.
-1. python3 vantage.py ask "find candidates" — mismo smoke test, distinto intent; mismo resultado esperado (falla) por la misma causa.
+1. python3 vantage.py ask "show active roles" — smoke test end-to-end contra el Tracker real vía resolver_layer_v1.
+1. python3 vantage.py ask "find candidates" — mismo smoke test, distinto intent.
 Nota: con el && encadenado, si sync o cualquier paso previo falla con código de salida distinto de cero, los comandos posteriores no corren. Si quieres que seguridad no se detenga a medio camino (por ejemplo, si vl3 no es un alias válido en tu shell), dímelo y te paso la versión con ; en vez de &&.
 ## 06 MANUAL:SESSION-CYCLE
 Ciclo de Sesión
@@ -550,7 +550,7 @@ vl1 batch --execute
 ```
 Sin --execute, el comando nunca escribe en Notion. Esta protección es permanente — no se puede desactivar sin modificar el flag.
 - vl1 recovery — verifica la consistencia de los datos en el Tracker: detecta entradas sin Score, sin VM_Scope o sin Gate_Decision. También gestiona checkpoints del pipeline — si un run anterior falló a mitad, recovery carga el último checkpoint y permite retomar desde el paso fallado. Corre cuando el pipeline reporta inconsistencias o tras un fallo inesperado.
-- vl1 profile — gestiona la configuración del perfil activo del sistema: keywords VM y de pivote, pesos de scoring, empresas target por tier y foco geográfico. Permite actualizar el perfil sin editar código — los cambios se persisten en config/profile_config.yaml. Opción 7 (“Salir sin cambios”) es el exit seguro; cualquier cambio guardado requiere propagación manual a layer_1_run.py.
+- vl1 profile — gestiona la configuración del perfil activo del sistema: keywords VM y de pivote, pesos de scoring, empresas target por tier y foco geográfico. Los cambios de perfil se persisten en config/profile_config.yaml a través de profile_evolution.py, pero ese archivo no alimenta el cálculo de Score/VM_Scope en producción: los pesos reales están fijos en layer_1_orchestrator.py (get_vm_scope, get_role_class, calculate_score_v6). El editor interactivo es útil para explorar escenarios, no para cambiar el comportamiento del pipeline sin tocar código. Opción 7 (“Salir sin cambios”) es el exit seguro.
 - vl1 backfill — catch-up de campos Class A faltantes en entradas existentes: layer, hash y Prioridad, para registros que no pasaron por la escritura primaria de Fase 3.6. Opera con preview obligatorio antes de escribir — muestra exactamente qué entradas serán modificadas y por qué razón se infirió el layer. La fórmula de Prioridad (Urgencia × Importancia) vive en priority_logic.py, referenciada desde KERNEL:TRIGGER-002 — este comando la ejecuta como catch-up; vl1 (bare) la ejecuta primero como parte del ingreso normal del pipeline (Fase 3.6). Acepta -dry-run para preview sin confirmación:
 ```bash
 vl1 backfill --dry-run
@@ -582,12 +582,11 @@ No es necesario para cambios de Status, Score, Gate_Decision en páginas individ
 ### 9.4 MANUAL:RUNTIME-004
 Runtime Build
 El Runtime Build regenera los tres artefactos de lectura del sistema: entity_index_v2.json, graph_v2.json y backlinks_v2.json. Se corre desde Layer_1/scripts/ con el venv activo.
-⚠️ SUSPENDED: graph_v2.json y backlinks_v2.json están suspendidos por decisión de producto (no hay relaciones de grafo en el modelo de datos). El Build genera estos archivos con estado SUSPENDED en lugar de intentar construir edges estructuralmente imposibles.
 Cuándo correrlo:
 - Después de cualquier migración de namespaces o cambio en resolver_registry_v2.json.
+- Si graph_v2.json muestra self-loops inesperados (síntoma de colisión de namespace).
 - Si entity_index_v2.json contiene IDs con prefix incorrecto.
 - Como parte del cierre formal de un release que afecte la capa de Runtime.
-No es necesario para graph_v2.json (el estado SUSPENDED se mantiene por diseño).
 El Build es determinista: el mismo Registry + el mismo estado de Notion producen los mismos artefactos. Si el resultado varía entre runs sin cambios en los inputs, es una señal de problema en el Registry — no en el Build.
 Sobre resolver_registry_v2.json
 Desde v2.4.0 (Runtime Contract Migration), este archivo es la fuente enforced — no solo declarada — de namespace ownership. Cada tipo de entidad tiene su entity_prefix definido aquí; ningún componente del sistema puede hardcodear ni inferir un prefix.
@@ -627,14 +626,11 @@ Roles store-level sin gestión estratégica
 Soft Blocks
 A diferencia de los Hard Blocks, estas vacantes sí pueden recuperarse: fueron bloqueadas por inconsistencias en datos Class A (URL rota, JD parcial) o por score insuficiente, no por pertenecer a una empresa vetada. Se recuperan corrigiendo el input incorrecto a través del Dashboard — el procedimiento completo está en MANUAL:WEEKLY-FLOW-002 (Martes).
 Dedup
-El sistema opera dos mecanismos complementarios de deduplicació¶¶¶n con propó¶¶¶sitos y ventanas distintas:
-- Dedup en tiempo real (ingesta): ventana de 30 dí­as, hash exacto + URL + brand+title. Previene contaminació¶¶¶n del Tracker con duplicados obvios al momento de ingesta (feed_processor.py).
-- Dedup por auditorí»¶ post-ingesta: ventana configurable de 60 dí­as por default, matching fuzzy (brand≥0.85, rol≥0.7) + fingerprint de contenido, contraste contra el Archivo Tracker y reglas anti-falsos positivos extensibles (ANTI_FALSE_POSITIVE_RULES). Desde v9.21.0 corre automá¶¶ticamente al finalizar layer_1_run.py mediante ENABLE_DEDUP_AUDIT=true, hereda --dry-run del pipeline principal y exporta métricas a dedup_metrics.json.
-- Jerarquí»¶ entre capas: L1 > L2 > L3. Cuando dos capas detectan la misma vacante, persiste la instancia de la capa de mayor jerarquí»¶, pero se toman de la capa de menor jerarquí»¶ los datos que puedan complementar sus propiedades Class A (esto es exactamente lo que ocurre en el paso de Consolidation & Dedup del Lunes, MANUAL:WEEKLY-FLOW-001).
-- Resolució¶¶¶n de flags: los registros marcados Dedup_Flag='Posible duplicado' por la auditorí»¶ post-ingesta son candidatos a archivado; su resolució¶¶¶n opera ví­a vantage-tidy-opportunities-tracker (DRY RUN + APROBAR_WRITE), no hay archivado automá¶¶tico.
-- Ventana: 30 días. Una vacante que ya existe en el Tracker no se vuelve a crear si aparece de nuevo dentro de esta ventana.
-- Clave compuesta: brand + title + location.
-- Jerarquía entre capas: L1 > L2 > L3. Cuando dos capas detectan la misma vacante, persiste la instancia de la capa de mayor jerarquía, pero se toman de la capa de menor jerarquía los datos que puedan complementar sus propiedades Class A (esto es exactamente lo que ocurre en el paso de Consolidation & Dedup del Lunes, MANUAL:WEEKLY-FLOW-001).
+El sistema tiene dos mecanismos de dedup complementarios, con ventanas y propósitos distintos:
+1. Dedup en tiempo real (ingesta): hash exacto + URL exacta + brand+title, ventana de 30 días, ejecutado por feed_processor.py. Previene contaminación del Tracker con duplicados obvios al momento de ingesta.
+1. Dedup por auditoría post-ingesta: fuzzy matching (brand≥0.85, rol≥0.7) + fingerprint de contenido, ventana de 60 días, ejecutado por dedup_opportunities.py sobre el Archive Tracker. Detecta duplicados sutiles que el hash exacto no captura.
+Ambos mecanismos coexisten legítimamente: el primero es gate preventivo de ingesta; el segundo es auditoría correctiva posterior.
+dedup_opportunities.py pasa por class_b_guard(payload, Actor.DEDUP) antes de cualquier escritura y requiere --apply explícito para escribir. Sin --apply corre en modo preview; el flag --dry-run se conserva por compatibilidad. consolidate_duplicates.py está archivado y no forma parte del flujo activo.
 ---
 ## 11 MANUAL:MONITOR
 Health Check
@@ -801,7 +797,16 @@ Lazy Load
 Cómo la IA lee el KERNEL y el CAREER CANON (Lazy Load)
 La extracción de reglas y contratos lógicos (Lazy Load) opera con la siguiente prioridad:
 Prioridad A — Terminal (canónico): lazy_loader.py ejecuta Server-Side Lazy Load. Parsea bloques hijos de la Notion API y devuelve únicamente el payload del ID solicitado. Consumo: ~150 tokens por llamada.
-Prioridad B — MCP Notion: reservado exclusivamente para escrituras (APROBAR_WRITE) y modificaciones estructurales de páginas. No se usa para lectura de reglas o contratos.
+Prioridad B — MCP Notion: vía autorizada para escrituras (APROBAR_WRITE), modificaciones estructurales de páginas, y lectura documental cuando exista instrucción explícita del operador (alineado con KERNEL:CONTEXT-INFRASTRUCTURE-002 y SP:CONTEXT-INFRASTRUCTURE — tabla única de triaje, ver abajo).
+Tabla única de triaje (referenciada por Kernel, Manual y System Prompt — resuelve la discrepancia histórica entre ambos):
+| Situación | Vía | Costo |
+| --- | --- | --- |
+| Lectura de un nodo puntual (PREFIX:CLAVE) sin instrucción explícita de usar MCP | Terminal (lazy_loader.py) | ~150 tokens |
+| Lectura documental con instrucción explícita del operador de usar MCP | MCP Notion | Costo de fetch completo o parche puntual |
+| Escritura (APROBAR_WRITE) | MCP Notion | N/A — única vía |
+| Modificación estructural de páginas | MCP Notion | N/A — única vía |
+| Extracción masiva de filas | Terminal | N/A — MCP no autorizado (ver SP:MCP-ROUTING-NOTES) |
+Prioridad: Terminal es la vía por defecto para lectura de reglas o contratos. MCP para lectura se activa únicamente cuando el operador lo solicita explícitamente en el turno — no es una vía libre para que el agente elija por conveniencia.
 ## 15 MANUAL:PATCH-QUALITY
 Calidad de Parches
 Todo parche a los 6 documentos fundacionales debe cumplir estos seis criterios antes de aplicarse — si falla alguno, se reescribe antes de solicitar APROBAR_WRITE:
@@ -987,15 +992,13 @@ Flags:
 | --debug-id <id1> <id2> … | Ya sabes que KERNEL:SCHEMA-008 está fallando en el census y no quieres esperar el barrido completo — pásalo directo y te da diagnóstico quirúrgico de esos IDs específicos. |
 | --auto-fix-orphans | El census te reportó 40 huérfanos y no quieres darlos de alta uno por uno en CENSUS_SPEC a mano — corre esto y te los agrega interactivamente con el comentario de auditoría ya insertado. |
 | --sync-to-notion <page_id> | Ya corriste el census y quieres que el export quede reflejado en el V-ID-CENSUS de Notion sin copiar/pegar manualmente — pásale el page_id destino. |
-generate_entity_index_v2.pyQué hace: Reconstruye el índice de entidades (entity_index_v2.json) y genera graph_v2.json/backlinks_v2.json con estado SUSPENDED (no edges por diseño de producto).
-⚠️ SUSPENDED: El grafo de archivado está suspendido por decisión de producto. graph_v2.json y backlinks_v2.json se generan con estado SUSPENDED en lugar de intentar construir edges basados en metadata que no existe.
+generate_entity_index_v2.pyQué hace: Reconstruye el índice de entidades (entity_index_v2.json), el grafo de relaciones y los backlinks — la base de datos interna que usa vantage.py ask/query.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --limit <N> | Estás probando un cambio en la lógica de indexado y no quieres esperar a que procese todas las fuentes — límita a N entidades por fuente para iterar rápido. |
 | --out <ruta> | Quieres generar un índice de prueba sin pisar el archivo real que usa producción — apunta a una ruta temporal. |
 | --skip-graph | Solo necesitas refrescar el índice de entidades (para vantage.py query) y no te importa el grafo/backlinks en este momento — ahorra tiempo de corrida. |
-Caso de uso: Después de cambios en resolver_registry_v2.json o migraciones de namespace. Para inspección de archivados, consulta directamente los campos Status, Fecha_Resolución y Next_Action en lugar de usar funciones de grafo. |
 generate_id_inventory.pyQué hace: Escanea un árbol de archivos y genera un inventario CSV/Markdown de todas las definiciones y referencias de IDs canónicos encontradas.
 Flags:
 | Flag | Caso de uso |
@@ -1139,7 +1142,7 @@ Flags:
 | --- | --- |
 | output_file (posicional, opcional) | Default VANTAGE_digest.txt. Especifica un nombre distinto si quieres conservar varios snapshots fechados sin sobrescribir el anterior. |
 Layer 3 — Passive Intake (Gmail)
-layer_3_mail.pyQué hace: Lee correos no leídos de una etiqueta Gmail vía IMAP, extrae vacantes con Groq, las escribe en el Tracker.
+layer_3_mail.pyQué hace: Admite EXTRACTION_BACKEND=ollama o EXTRACTION_BACKEND=groq, configurado en config/layer_3.env. El límite por corrida lo controla GEMINI_MAX_EMAILS_PER_RUN (default actual: 5). Si el prefiltrado descarta deliberadamente un correo, puede marcarse como leído. Si falla el parseo JSON, se agotan los reintentos, Ollama no está disponible o ocurre un error inesperado, el correo se conserva como no leído mediante _set_seen(..., False) para permitir reintento. Solo se marca como leído después de una extracción o descarte deliberado correctamente clasificado.
 Variables de entorno (todas ajustables sin tocar código):
 | Variable | Default | Caso de uso |
 | --- | --- | --- |
@@ -1166,9 +1169,8 @@ profile_fit.pyQué hace: Reglas de fit de perfil VM y exclusiones compartidas �
 Quién lo consume: pipeline principal y scripts de cleanup.
 Por qué te sirve saberlo: si una vacante que debería excluirse se está colando (o viceversa, una válida se excluye), este archivo tiene el patrón regex responsable — no busques la lógica en otro lado.
 graph_layer.pyQué hace: Carga graph_v2.json y backlinks_v2.json, expone funciones de consulta sobre el grafo de entidades (get_archived_from, get_backlinks, graph_stats).
-⚠️ SUSPENDED: El subsistema de grafo está suspendido por decisión de producto. VANTAGE usa movimiento mutuamente exclusivo de filas (TRACKER ↔ ARCHIVO_TRACKER), no relaciones de grafo. No existen edges de archivado en el modelo de datos. Las funciones retornan [] y logean estado SUSPENDED.
 Quién lo consume: agent_api.py (y por extensión, vantage.py ask).
-Por qué te sirve saberlo: para inspección de archivados, consulta directamente los campos Status, Fecha_Resolución y Next_Action en lugar de usar funciones de grafo.
+Por qué te sirve saberlo: si vantage.py ask devuelve relaciones incorrectas o desactualizadas entre entidades, corre vantage.py sync para regenerar los JSON que este módulo lee — no es un bug del módulo en sí.
 runtime_identity.pyQué hace: Contrato canónico de resolución de entity_prefix por tipo de entidad — único SSOT, cierra DT-014. Ningún componente debe hardcodear un prefijo; si falta en el Registry, falla explícito (nunca default silencioso).
 Quién lo consume: generate_entity_index_v2.py, lazy_loader.py.
 Por qué te sirve saberlo: si ves un error de "prefijo ausente en Registry" en vez de un ID mal formado silencioso, es este contrato funcionando como debe — es una falla intencional, no un bug.
@@ -1179,10 +1181,6 @@ Por qué te sirve saberlo: antes de esta consolidación (sesión 2026-07-25), ca
 Utilidades y Herramientas de Sesión
 agent_api.pyQué hace: Capa de consulta en lenguaje natural sobre el índice de entidades — es el motor real detrás de vantage.py ask.
 Uso: python3 agent_api.py "texto de consulta" — un solo argumento posicional, entre comillas.
-Flags:
-| Flag | Caso de uso |
-| --- | --- |
-| full | Obtiene el detalle completo (sin límite top-25) en consultas de historial, bugs o roles. Por defecto devuelve top-25 + errores. |
 Caso de uso: Ejemplos reales soportados: 'show active roles', 'show archived history', 'show bugs', 'find candidates', 'compare TRACKER:H_xxx TRACKER:H_yyy'.
 clean_caches.py (y su wrapper Raycast clean-caches-raycast.sh)Qué hace: Limpieza de cachés de aplicaciones en Mac (Chrome, Safari, Firefox, Edge, y otras) — no toca sesión/login ni LocalStorage, solo caché regenerable. Reporta espacio liberado por ruta.
 Uso: Sin flags — se corre directo.
@@ -1371,5 +1369,5 @@ Estilos de Escritura y Generación (activación por invocación explícita, no p
 ### 23.5 MANUAL:SKILL-GLOSSARY-XREF
 Gaps Abiertos (hallazgos, no corregidos en esta pasada)
 - Capa null en 24/25 filas de Skill Library (Notion) — campo definido en schema, prácticamente sin uso.
-- Anuncio no especificado en 5 skills operativas que deberían tenerlo por KERNEL:DOCUMENTATION-005:
-vantage-cv-a, vantage-cv-b, vantage-qa, vantage-sync-script-glossary, y el cierre de vantage-documentacion-transversal-propuesta.
+- Anuncio no especificado en 4 skills operativas que deberían tenerlo por KERNEL:DOCUMENTATION-005:
+vantage-cv-a, vantage-cv-b, vantage-qa y vantage-sync-script-glossary.
