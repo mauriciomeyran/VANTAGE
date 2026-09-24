@@ -49,7 +49,11 @@ Trace Status: LINKED | ORPHAN | REVIEW_NEEDED
 SNAPSHOT: 0 TAREAS CRÍTICAS
 ```
 
-10. Terminar con:
+10. Correr: `python3 vantage.py status`
+    - Si el output contiene 'entity_index_stale', emitir: `[WARN] Entity index > 24h — correr vantage.py sync antes de operar sobre el Tracker.`
+    - Si Terminal no disponible, omitir el paso sin bloquear la sesión.
+
+11. Terminar con:
 
 ```text
 SESSION-OPENED: VANTAGE READY
