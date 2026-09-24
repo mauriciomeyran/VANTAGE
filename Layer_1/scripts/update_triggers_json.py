@@ -61,7 +61,6 @@ def discover_skill_files(skills_path: Path):
         path.stem: path
         for path in sorted(skills_path.glob("*.md"))
         if path.is_file() and path.name != "triggers.json"
-        and path.name != "vantage-active-search-weekly.md"
     }
 
 

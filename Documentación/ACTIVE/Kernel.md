@@ -93,7 +93,7 @@ L0-Bootstrap — Dynamic Governance Layer
 Tipo: Capa de Sincronización de Sesión (Fetch-on-Start).
 Propósito: Elimina el drift de versiones entre la UI estática del agente y el repositorio dinámico de Notion.
 Bootstrap Protocol
-Ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de SP:BOOTSTRAP-001 y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
+Ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de SP:BOOTLOADER y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
 Convención de estado (X-ING → X-ED)
 El Bootstrap declara inicio con BOOTLOADING... y cierre con BOOTLOADED: DOCUMENTOS CARGADOS.
 Distinción de alcance — Bootstrap vs. Session Ledger
@@ -274,7 +274,12 @@ Cualquier skill nueva que adopte este patrón declara explícitamente qué pasos
 No aplica a
 Skills cuyo output es inherentemente iterativo o requiere confirmación por ítem (ej. vantage-cv-b, procesamiento single-item) — ahí la economía de tokens se gestiona por otro mecanismo (Restricción de Lote, ver KERNEL:CV-PIPELINE-002).
 ---
-### 03.18 KERNEL:HANDOFF-SERIAL
+### 03.18 KERNEL:DOC-CONTRACT
+Contrato de Prefijos Documentales del Lazy Loader
+Fuente de verdad de qué prefijos PREFIX:CLAVE están autorizados para resolución vía lazy_loader.py en el flujo documental (distinto del flujo de entidades del Runtime, ver 03.3). El propio resolver_registry_v2.json → document_registry es el SSOT operativo en tiempo de ejecución — esta sección es su contraparte narrativa en el Kernel, referenciada por lazy_loader.py, generate_id_inventory.py y verify_versions.py.
+Prefijos autorizados: los mismos 11 listados en KERNEL:DOCUMENTATION-001 — ALIASES, ARCHIVEROS, BRIEF, CANON, CHANGELOG, CHANGELOG_ARCHIVO, KERNEL, MANUAL, SP, TRACKER, VANTAGE. lazy_loader._get_authorized_prefixes() carga este conjunto desde el Registry en tiempo de ejecución; el fallback estático ante Registry ausente o malformado es {KERNEL, MANUAL, CANON, TRACKER}.
+Regla de resolución: un prefijo no listado aquí ni en el Registry cae a modo legacy con warning — no es un fallo silencioso, pero tampoco bloquea la sesión.
+### 03.19 KERNEL:HANDOFF-SERIAL
 Contrato de Serial Global de Handoff
 Autoridad de serial: GLOBAL_VANTAGE_COUNTER.
 Ruta canónica de obtención: vserial vía Terminal, que ejecuta allocate_vantage_serial.py next contra GLOBAL_VANTAGE_COUNTER. Esta continúa siendo la única vía canónica para obtener un serial nuevo.
@@ -292,11 +297,12 @@ Arquitectura de Cuatro Capas
 Active Recon
 Trigger: humano (ciclo semanal — lunes)
 ```plain text
-Human signal → Career Sites · LinkedIn · Aggregators (paralelo) → JSON estructurado
+Human signal → LinkedIn · Aggregators · Career Sites · Gemini (paralelo), ejecutado exclusivamente por Hermes → JSON estructurado
 → FEED → feed_processor.py → Notion (Class A) → vantage-pipeline
 ```
 Objetivo: maximizar cobertura y trazabilidad de entrada — no decide prioridad estratégica, solo captura oportunidades de alta señal antes de que se evaporen.
-Componentes: Career Sites · LinkedIn · Aggregators — wrappers especializados por fuente, convergiendo a un schema común. Herramienta de soporte: Weekly Prompt Assembler (weekly_prompt_assembler.py, alias vassemble) — materializa en disco los 7 prompts semanales por motor desde la PROMPT LIBRARY, reemplazando el ensamblado anterior vía agente dentro de Perplexity Desktop (ver ALIASES:L1L2-DISCOVERY).
+Componentes: LinkedIn · Aggregators · Career Sites · Gemini — wrappers especializados por fuente, convergiendo a un schema común. Herramienta de soporte: Weekly Prompt Assembler (weekly_prompt_assembler.py, alias vassemble) — materializa en disco los prompts semanales por motor desde la PROMPT LIBRARY, ejecutado por Hermes Desktop (ver ALIASES:L1L2-DISCOVERY).
+Ownership de ejecución: L1 corre exclusivamente vía Hermes Desktop — ningún otro agente de la matriz de ruteo (ver KERNEL:ARCHITECTURE-L4) ejecuta esta capa.
 Responsabilidades: buscar vacantes, validar evidencia mínima, extraer campos canónicos, mantener trazabilidad por fuente, emitir resultados estructurados (no recomendaciones).
 Campos inmutables: los campos Class A emitidos por cada wrapper (ver KERNEL:SCHEMA-001) no se reinterpretan en L1 — feed_processor.py normaliza formato, no criterio.
 Reglas de dedup: L1 no deduplica — la jerarquía L1>L2>L3 y el punto de convergencia único viven en KERNEL:ARCHITECTURE-L4.
@@ -306,27 +312,25 @@ Métricas mínimas: resultados por fuente, total de resultados, timestamp de bú
 Strategic Search
 Trigger: humano (ciclo semanal — lunes)
 ```plain text
-Human signal → Gemini · You.com · Grok (extracción paralela) → Perplexity (Consolidation & Dedup)
-→ FEED → feed_processor.py → Notion (Class A) → vantage-pipeline
+Operador (chat) → Claude → Notion (Class A poblado, Class B vacío) → vantage-pipeline
 ```
-Objetivo: resolver fragmentación entre motores de extracción — prioriza reconciliación y reducción de ruido sobre amplitud de cobertura.
-Componentes: Gemini · You.com · Grok (extracción paralela) — Perplexity como consolidador determinista.
-Responsabilidades: consolidar, deduplicar, resolver conflictos, enriquecer solo cuando no rompe evidencia válida, emitir métricas y estados.
-Reglas de consolidación/enriquecimiento: Perplexity aplica reglas deterministas sobre los JSON recibidos — no infiere ni inventa datos; prioriza evidencia y preserva el registro de mayor calidad o canonicalidad cuando hay conflicto.
-Estados de error: JSON malformado o evidencia contradictoria sin resolución determinista → registro se reporta, no se fuerza a Notion.
-Métricas mínimas: registros consolidados, duplicados eliminados, conflictos resueltos.
+Objetivo: captura de oportunidades puntuales fuera del ciclo automatizado de L1 — señal directa del operador, sin ciclo semanal ni motores externos.+ Componentes: Operador (chat) · Claude — sin wrappers, sin PROMPT LIBRARY.
+Responsabilidades: recibir la vacante en lenguaje natural o URL, poblar Class A, dejar Class B vacío para que Python lo calcule en el siguiente run.
+Reglas de dedup: L2 no deduplica — mismo patrón que L3 (ver KERNEL:ARCHITECTURE-L3-002); la jerarquía L2>L1>L3 se resuelve en KERNEL:ARCHITECTURE-L4.
+Estados de error: dato insuficiente para poblar Class A mínimo → Claude solicita el dato faltante antes de escribir, no infiere.
+Métricas mínimas: registros ingresados, timestamp de in
 ### 04.3 KERNEL:ARCHITECTURE-L3
 Passive Intake
 Trigger: automático (continuo)
 ```plain text
-Gmail (.Jobs label) → layer_3_mail.py (IMAP + Groq) → Notion (Class A poblado, Class B vacío) → vantage-pipeline
+Gmail (.Jobs label) → layer_3_mail.py (IMAP + backend configurable: ollama/groq) → Notion (Class A poblado, Class B vacío) → vantage-pipeline
 ```
 Objetivo: captura pasiva y continua de vacantes ya remitidas al operador — sin ciclo humano semanal, sin dependencia de búsqueda activa.
-Componentes: Gmail (label .Jobs) · layer_3_mail.py (IMAP + extracción Groq).
+Componentes: Gmail (label .Jobs) · layer_3_mail.py (IMAP + backend configurable ollama/groq).
 Responsabilidades: leer backlog de correo, extraer vacantes, poblar Class A; Class B queda vacío — lo calcula Python en el siguiente run del pipeline.
-Campos inmutables: máx. 10 correos por corrida (ver ALIASES:L3-PASSIVE-INTAKE); Class B nunca se estima aquí.
+Campos inmutables: GEMINI_MAX_EMAILS_PER_RUN controla el límite por corrida (default actual: 5; ver ALIASES:L3-PASSIVE-INTAKE); Class B nunca se estima aquí.
 Reglas de dedup: L3 no deduplica — entra directo a feed_processor.py; la jerarquía L1>L2>L3 se resuelve en KERNEL:ARCHITECTURE-L4.
-Estados de error: fallo de IMAP o extracción → correo se omite del batch, sin reintento automático (ver KERNEL:FAIL-PHILOSOPHY).
+Estados de error: si falla el parseo JSON, se agotan los reintentos, Ollama no está disponible o ocurre un error inesperado, el correo se conserva como no leído mediante _set_seen(..., False) para permitir reintento. Solo se marca como leído después de una extracción o descarte deliberado correctamente clasificado.
 Métricas mínimas: correos procesados, vacantes extraídas, Class A poblado / Class B pendiente.
 ### 04.4 KERNEL:ARCHITECTURE-L4
 Version Control & Infrastructure
@@ -335,6 +339,7 @@ No es capa de búsqueda — infraestructura documental.
 - Cron jobs adicionales (ruta directa al Python del venv — source .venv/bin/activate falla con "Operation not permitted" en entorno cron): vantage.py sync y notion_backup.py, y vl3 nuevo · 00:00/08:00/16:00.
 - Repo: github.com/mauriciomeyran/VANTAGE.
 - vsync_doc.py — sync bidireccional Notion → ACTIVE/ para los 6 fundacionales editables (Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log). Alias: vdoc · Flags: dry | notion | local | auto.
+- git_sync.py mantiene activo regenerate_index_json(): regenera skills/index.json a partir de los archivos .skill y se ejecuta antes de git status dentro de sync().
 - Política de versionado en git (confirmada 2026-09-17, H-6): el comportamiento actual de vgit (commit automático de todo el árbol no ignorado) es la política vigente — se versiona el .db de estado por su valor de trazabilidad histórica y bajo tamaño; caché y binarios grandes quedan excluidos vía .gitignore ya existente. Sin cambios de código requeridos por esta decisión.
 Riesgo conocido — vdoc local sobre documentos con hyperlinks aplicados: push_local_to_notion() (vsync_doc.py) hace delete-all + create-all de bloques en cada corrida — cualquier anchor #block-id generado por el sistema de hyperlinks (KERNEL:DOCUMENTATION-011) queda huérfano al recrearse el bloque con ID nuevo. La variante vsync_doc_fast.py quedó deprecada en Archive/Legacy_Scripts/ (ver KERNEL:EVOLUTION §17, Linaje Histórico) — no forma parte del riesgo activo. apply_hyperlinks_notion.py evita este riesgo (PATCH puntual, preserva block-ID), pero vdoc local sigue sin guard equivalente — evitarlo sobre documentos con hyperlinks recién aplicados hasta que se decida su reemplazo formal.
 layer_1_run.py fue reemplazado por layer_1_orchestrator.py (refactor v9.22.0) como motor del pipeline Tracker — mismo alcance operativo, ahora con los cuatro modos de ejecución descritos en KERNEL:DATA-FLOW-001. layer_1_run.py queda archivado, no forma parte del riesgo activo.
@@ -351,12 +356,12 @@ Matriz de ruteo por agente (8 auditados, ver SP:BOOTLOADER-001 para la regla de 
 - Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok) → resuelve notion_id → notion-fetch.
 - Familia GitHub-only (Perplexity, Mistral — sin MCP Notion) → resuelve url → fetch raw. Perplexity requiere el repo público (confirmado).
 - Gemini → sin fetch confiable a ninguna de las dos vías (Drive descartado por fricción OAuth+billing); única ruta de cero-fricción es un Gem con Knowledge pre-cargado, mantenido manualmente, fuera del flujo de triggers.json.
+- Hermes → ejecuta L1 (LinkedIn · Aggregators · Career Sites · Gemini, ver KERNEL:ARCHITECTURE-L1-002) — no consume skills/triggers.json vía notion-fetch ni fetch raw; fuera del flujo de enrutamiento de skills, exclusivo para ejecución de discovery.
 Consumidor original (Claude Claude.ai/API): el manifiesto (triggers.json) se recupera vía web_fetch directo a https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/triggers.json — el Bootloader (ver SP:BOOTLOADER) hace este fetch junto con SYSTEM PROMPT e ID CENSUS. El contenido de cada skill (SKILL.md individual) se lee vía git clone --depth 1 sobre el repo (bash_tool, github.com whitelisted) + lectura local del árbol clonado — vía primaria y estable, dado que web_fetch sobre raw.githubusercontent.com está bloqueado para URLs que no hayan aparecido previamente en la sesión (restricción estructural de la herramienta, no configurable). web_fetch queda como fallback solo si el git clone falla. Carga bajo demanda cuando el mensaje del operador matchea un trigger — nunca de forma masiva en cada boot.
 Riesgo conocido — caché de fetch dentro de sesión: fetches repetidos a la misma URL de triggers.json dentro de una misma sesión pueden devolver contenido servido desde caché del lado de la herramienta de fetch, no de GitHub (verificado empíricamente 2026-08-16: contenido idéntico byte-a-byte entre dos fetches separados por un commit real). Si el operador reporta un cambio reciente en el repo que el fetch no refleja, reintentar con parámetro de cache-busting (ej. ?t={timestamp}) antes de asumir fallo del repo o de la solución del operador.
 Descontinuado: GitHub Pages (mauriciomeyran.github.io/VANTAGE/skills/), index.json de recursos MCP, y el consumo vía devin mcp add vantage-skills — intento de servidor MCP sobre hosting estático que nunca operó (GitHub Pages no puede responder el handshake JSON-RPC que requiere MCP). Sin reemplazo funcional necesario: web_fetch a raw.githubusercontent.com cubre el mismo propósito sin esa capa. Al día de hoy, Devin no consume el manifiesto — solo Claude y Mistral.
 vsum.py (alias vsum) — herramienta de continuidad entre sesiones e IAs, no capa de búsqueda ni de pipeline: resume transcripts de sesiones (Claude, Gemini, ChatGPT, u otro) a Markdown estructurado (contexto, hallazgos, decisiones, pendientes), orientado a que la siguiente sesión o la siguiente IA no pierda continuidad. Escribe vía notion_client.Client directo (no MCP) como página hija del INBOX (ver Cédula Digital, SP:DIGITAL-ID-CARD). Mismo patrón de acceso directo a la API ya usado por vsync_doc.py. No lee ni escribe el Tracker de vacantes; su único contacto con Notion es de salida (push opcional del resumen), nunca de entrada.
-Jerarquía de Dedup
-L1 > L2 > L3. Perplexity aplica esta jerarquía en Consolidación & Dedup; L3 entra directo a feed_processor.py.
+Jerarquía de Dedup: L2 > L1 > L3. L1 y L3 entran directo a feed_processor.py; L2 no deduplica (ver KERNEL:ARCHITECTURE-L2-002).
 Mecanismos de Dedup — Distinción de Propósito
 El sistema tiene dos mecanismos de dedup complementarios con ventanas y propósitos distintos:
 1. Dedup en tiempo real (ingesta): hash exacto + URL exacta + brand+title (ventana 30d, feed_processor.py). Propósito: prevenir contaminación del Tracker con duplicados obvios al momento de ingesta.

@@ -331,7 +331,7 @@ def write_orphans(occurrences, out_path: Path, historical_path: Path, external_p
         ÚNICAS ocurrencias están en Change Log.md. El Change Log es una
         bitácora inmutable: documenta errores ya corregidos citando el
         nombre incorrecto a propósito, como registro de qué pasó y
-        dónde se corrigió (ver casos KERNEL:BOOTSTRAP-001 y
+        dónde se corrigió (ver casos SP:BOOTLOADER y
         KERNEL:PATCH-QUALITY-001, sesión 2026-07-20). Reclasificar estos
         como 'histórico' evita que cada corrida futura los reporte como
         falso problema, sin ocultarlos vía BLOCKLIST (que es solo para

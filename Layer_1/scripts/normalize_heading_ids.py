@@ -86,7 +86,7 @@ DOCUMENTS = {
 
 # Change Log queda fuera del barrido de headings: sus entradas narran
 # historia y mencionan IDs de pasada dentro de una oración ("v9.4.0 ...
-# KERNEL:BOOTSTRAP-001 corregido..."). Nunca son la definición canónica
+# SP:BOOTLOADER corregido..."). Nunca son la definición canónica
 # de una sección — normalizarlas no solo no aporta nada, sino que puede
 # corromper el registro histórico si se reescribe automáticamente
 # (ver falso positivo confirmado en la corrida 2026-07-16 19:07).
