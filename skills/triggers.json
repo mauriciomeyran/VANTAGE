@@ -7,8 +7,8 @@
         "vantage session close"
       ],
       "path": "skills/vantage-session-close.md",
-      "description": "Cierre de sesión VANTAGE (Optimizado para ahorro de tokens/Tier Free).",
-      "last_modified": "2026-08-17T05:17:12.916377",
+      "description": "Cierre Lite de baja latencia con handoff serializado, identidad, timestamp, pendientes y estado de sincronización.",
+      "last_modified": "2026-09-11T15:40:00.048064",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-session-close.md",
       "notion_id": "3b6938be-fc42-816f-913c-c666d381c9e2"
     },
@@ -43,8 +43,8 @@
         "vantage present handoff"
       ],
       "path": "skills/vantage-present-handoff.md",
-      "description": "Handoff compacto de sesión para continuidad en chat nuevo (Tier Free Optimized).",
-      "last_modified": "2026-08-17T05:17:58.667730",
+      "description": "Handoff Lite de emisión inmediata con identidad, serial global, timestamp CDMX y resumen S0-S5.",
+      "last_modified": "2026-09-11T15:40:00.047448",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-present-handoff.md",
       "notion_id": "3b6938be-fc42-814e-9a3e-c6c45cc25400"
     },
@@ -67,8 +67,8 @@
         "vantage session open"
       ],
       "path": "skills/vantage-session-open.md",
-      "description": "Bootstrap VANTAGE (Ledger -> Context).",
-      "last_modified": "2026-07-31T03:46:05.777145",
+      "description": "Apertura Lite de sesión VANTAGE con recepción y registro de handoffs serializados.",
+      "last_modified": "2026-09-11T15:27:30.941398",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-session-open.md",
       "notion_id": "3b6938be-fc42-815c-b4e8-c1bcbe92038e"
     },
@@ -91,8 +91,8 @@
         "vantage sync skill glossary"
       ],
       "path": "skills/vantage-sync-skill-glossary.md",
-      "description": "Sincroniza el Glosario de Skills (Manual apéndice 23) contra el árbol de disco activo de archivos .skill, usando el gap report LOCAL de verify_versions.py --new-skills (no --skills, que compara contra Notion). Usar cuando el operador pida \\\"sincronizar Skill Glossary\\\" o similar, o cuando --new-skills reporte gap mayor a 0 entre árbol activo y Manual.md apéndice 23. No usar para Skill Library (Notion, ver vantage-sync-skill-library), Script Glossary (vantage-sync-script-glossary) ni CENSUS_SPEC (vantage-sync-census-spec) — es exclusivo del glosario narrativo de skills en el Manual.",
-      "last_modified": "2026-08-13T20:57:48.377111",
+      "description": "Sincroniza el Glosario de Skills (Manual apéndice 23) contra el árbol de disco activo de archivos .skill, usando el gap report LOCAL de verify_versions.py --new-skills (no --skills, que compara contra Notion) y el drift report de --skills-drift (contenido modificado en un .skill ya documentado). Usar cuando el operador pida \\\"sincronizar Skill Glossary\\\" o similar, o cuando --new-skills reporte gap mayor a 0, o cuando --skills-drift reporte drift sin reconciliar. No usar para Skill Library (Notion, ver vantage-sync-skill-library), Script Glossary (vantage-sync-script-glossary) ni CENSUS_SPEC (vantage-sync-census-spec) — es exclusivo del glosario narrativo de skills en el Manual.",
+      "last_modified": "2026-08-20T03:59:01.695273",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-sync-skill-glossary.md",
       "notion_id": "3be938be-fc42-81b6-9f5f-d64272bdd6c9"
     },
@@ -115,8 +115,8 @@
         "vantage cv b"
       ],
       "path": "skills/vantage-cv-b.md",
-      "description": "Fase 2 del pipeline de CV de VANTAGE (KERNEL:CV-PIPELINE-002) — construye el CV final aplicando el Output Contract Framework para integración directa con Figma, a partir de un HANDOFF generado por vantage-cv-a. Usar cuando el operador invoque el trigger \"CV-B [HANDOFF]\", pegue o adjunte un HANDOFF de CV-A y pida construir el CV, o pida generar el Markdown con Figma Tags para una vacante ya analizada. También activar si el operador pide \"serializar\" un CV para Figma o menciona figma_text_id, Golden Skeleton, o Figma Sync Protocol. No usar sin un HANDOFF previo de vantage-cv-a — si no existe, redirigir primero a esa skill. No usar para el análisis inicial de la vacante (eso es vantage-cv-a) ni para la auditoría final del PDF (eso es vantage-qa).",
-      "last_modified": "2026-08-19T23:33:41.911291",
+      "description": "Fase 2 del pipeline de CV de VANTAGE (KERNEL:CV-PIPELINE-002) — construye el CV final aplicando el Output Contract Framework para integración directa con Figma, a partir de un HANDOFF generado por vantage-cv-a. Usar cuando el operador invoque el trigger \"CV-B [HANDOFF]\", pegue o adjunte un HANDOFF de CV-A y pida construir el CV, o pida generar el Markdown con Figma Tags para una vacante ya analizada. También activar si el operador pide \"serializar\" un CV para Figma o menciona figma_text_id, Golden Skeleton o Figma Sync Protocol. No usar sin un HANDOFF previo de vantage-cv-a — si no existe, redirigir primero a esa skill. No usar para el análisis inicial de la vacante (eso es vantage-cv-a) ni para la auditoría final del PDF (eso es vantage-qa).",
+      "last_modified": "2026-09-19T20:44:55.545580",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-cv-b.md",
       "notion_id": "3b6938be-fc42-8180-b24f-d8d9df4c4b8e"
     },
@@ -140,7 +140,7 @@
       ],
       "path": "skills/vantage-documentacion-transversal-propuesta.md",
       "description": "Genera la propuesta inicial de documentación transversal para un cambio estructural (regla, gate, flujo o parche) en VANTAGE — desde la detección del planteamiento hasta el mapeo completo de nodos tocantes en los documentos fundacionales, sin escribir ningún parche todavía. USAR cuando el operador pida \"propuesta de documentación transversal\", \"mapeo de nodos\" o similar para un cambio específico, o cuando durante cualquier otra tarea se detecte un cambio estructural (regla de gate, flujo operativo, schema) sin su contraparte documental. Esta es la mitad de solo-lectura del protocolo — no ejecuta DRY RUN ni escritura; para eso, transición explícita a vantage-documentacion-transversal-implementacion tras APROBAR_WRITE de la propuesta.",
-      "last_modified": "2026-08-14T18:44:07.805109",
+      "last_modified": "2026-09-12T00:40:23.682518",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-documentacion-transversal-propuesta.md",
       "notion_id": "3b6938be-fc42-8143-8b00-dea54a588485"
     },
@@ -164,7 +164,7 @@
       ],
       "path": "skills/prompt-master.md",
       "description": "Generates optimized prompts for AI tools. Activates only when the user explicitly asks to write, fix, improve, or adapt a prompt for a specific AI tool (LLM, Cursor, Midjourney, image AI, video AI, coding agents, etc.). Does not activate for general conversation, coding tasks, document writing, or other non-prompt-engineering work.",
-      "last_modified": "2026-07-27T01:53:35.615786",
+      "last_modified": "2026-08-27T14:35:58.712328",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/prompt-master.md",
       "notion_id": "3b6938be-fc42-8110-928b-cbdef00e15cc"
     },
@@ -235,8 +235,8 @@
         "vantage sync skill library"
       ],
       "path": "skills/vantage-sync-skill-library.md",
-      "description": "Sincroniza el inventario de habilidades (.skill) de VANTAGE en Notion contra el árbol de disco activo, usando el gap report extendido de verify_versions.py --skills. Además, en cada alta o actualización escribe el contenido completo del SKILL.md como body de la página Notion. Usar cuando el operador pida \"sincronizar Skill Library\", \"registrar skills nuevas\" o similar, o cuando un gap report reciente muestre archivos .skill sin registrar en Notion o entradas huérfanas sin archivo físico correspondiente. No aplica al Bug/Task Tracker (ver vantage-create-bug-task), al VANTAGE Tracker de vacantes, ni al inventario de scripts .py/.sh (ver vantage-sync-script-library) — es exclusivo del inventario de archivos .skill del propio sistema.",
-      "last_modified": "2026-08-17T15:08:01.483449",
+      "description": "Sincroniza el inventario de habilidades (.skill) de VANTAGE en Notion contra el árbol de disco activo, usando el gap report extendido de verify_versions.py --skills (altas/bajas por nombre) y el drift report de verify_versions.py --skills-drift (contenido modificado en una skill ya registrada). Además, en cada alta o actualización escribe el contenido completo del SKILL.md como body de la página Notion. Usar cuando el operador pida \"sincronizar Skill Library\", \"registrar skills nuevas\" o similar, cuando un gap report reciente muestre archivos .skill sin registrar en Notion o entradas huérfanas sin archivo físico correspondiente, o cuando --skills-drift reporte drift sin reconciliar. No aplica al Bug/Task Tracker (ver vantage-create-bug-task), al VANTAGE Tracker de vacantes, ni al inventario de scripts .py/.sh (ver vantage-sync-script-library) — es exclusivo del inventario de archivos .skill del propio sistema.",
+      "last_modified": "2026-08-20T03:58:55.485862",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-sync-skill-library.md",
       "notion_id": "3b6938be-fc42-813d-84c0-fd2642937365"
     },
@@ -248,7 +248,7 @@
       ],
       "path": "skills/vantage-documentacion-transversal-implementacion.md",
       "description": "Ejecuta la implementación completa de documentación transversal una vez autorizada una propuesta de nodos — DRY RUN, aprobación, inyección, write-back verification, changelog/versión, y entrega final. USAR tras APROBAR_WRITE de una propuesta generada por vantage-documentacion-transversal-propuesta, o cuando el operador active explícitamente \"implementación de documentación transversal\" sobre un mapeo de nodos ya existente. No usar para generar el mapeo inicial — eso corresponde al skill de propuesta.",
-      "last_modified": "2026-08-14T18:44:35.232237",
+      "last_modified": "2026-09-12T00:40:23.683511",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-documentacion-transversal-implementacion.md",
       "notion_id": "3b6938be-fc42-8113-b196-ea1a0a999232"
     },
@@ -284,7 +284,7 @@
       ],
       "path": "skills/vantage-tidy-opportunities-tracker.md",
       "description": "Identifica duplicados y vacantes expiradas en el VANTAGE Tracker (Opportunities DB) y marca Archivar = True en el registro original — sin crear copias ni tocar el Archivo Tracker. La documentación de razones deterministas en campo Notas es responsabilidad de VL1 (layer_1_run.py) en el momento de la decisión. Esta skill solo se encarga del marcado de Archivar=True para housekeeping de mantenimiento. Usa los mecanismos de fingerprint y protección de estado terminal ya implementados en el pipeline Python y documentados en el Kernel. Requiere Dry Run y APROBAR_WRITE antes de cualquier escritura.",
-      "last_modified": "2026-08-17T17:26:32.513693",
+      "last_modified": "2026-09-13T17:59:16.822737",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-tidy-opportunities-tracker.md",
       "notion_id": "3b6938be-fc42-81c6-8b38-ca674deaabf1"
     },
@@ -296,7 +296,7 @@
       ],
       "path": "skills/vantage-cv-a.md",
       "description": "Fase 1 del pipeline de CV de VANTAGE (KERNEL:CV-PIPELINE-001) — procesamiento inicial y validación de fit estratégico de una vacante contra el Career Canon de Mauricio Meyrán. Usar cuando el operador invoque el trigger \"CV-A [URL/JD]\", pegue una URL de vacante o un Job Description crudo pidiendo análisis, o pida identificar el Positioning Mode (N1-N4) para una oportunidad específica. También activar si el operador pide \"gap analysis\" de una vacante contra su trayectoria, o pida preparar el primer paso del pipeline de CV antes de construir el documento final (CV-B). No usar para construir el CV en sí (eso es vantage-cv-b) ni para auditoría de PDF final (eso es vantage-qa).",
-      "last_modified": "2026-08-10T03:04:44.886997",
+      "last_modified": "2026-09-03T22:06:14.506854",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-cv-a.md",
       "notion_id": "3b6938be-fc42-8171-9f5c-cfae0104a4d9"
     },
@@ -332,9 +332,21 @@
       ],
       "path": "skills/vantage-qa.md",
       "description": "Auditoría de calidad final canónica de VANTAGE (KERNEL:TRIGGER-003) sobre un CV en PDF antes de postularlo. Usar cuando el operador invoque el trigger \"QA [PDF]\", adjunte un PDF de CV pidiendo revisión final, o pida verificar que un CV ya construido cumple con el Career Canon antes de enviarlo a una vacante. Emite un veredicto binario GO/NO-GO. No usar para el análisis inicial de vacante (eso es vantage-cv-a) ni para construir el CV (eso es vantage-cv-b) — esta skill solo audita un PDF ya terminado.",
-      "last_modified": "2026-08-19T23:33:46.000960",
+      "last_modified": "2026-09-19T20:44:43.815348",
       "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-qa.md",
       "notion_id": "3b6938be-fc42-8105-8c47-fc6fdb144883"
+    },
+    "vantage-active-search-weekly": {
+      "trigger": [
+        "ejecuta vantage active search weekly",
+        "activa vantage active search weekly",
+        "vantage active search weekly"
+      ],
+      "path": "skills/vantage-active-search-weekly.md",
+      "url": "https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/vantage-active-search-weekly.md",
+      "notion_id": null,
+      "description": "Ejecutar la búsqueda semanal (lunes) en los tres L1 para Mauricio Meyrán:",
+      "last_modified": "2026-09-08T01:44:51.148905"
     }
   }
 }
