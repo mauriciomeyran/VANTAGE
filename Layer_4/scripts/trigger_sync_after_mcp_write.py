@@ -4,7 +4,7 @@ trigger_sync_after_mcp_write.py — VANTAGE L4
 Wrapper para disparar sync Notion→local tras un write exitoso vía MCP a documentos fundacionales.
 
 Este script está diseñado para ser invocado automáticamente por el sistema MCP o manualmente
-por el operador después de un write MCP a cualquiera de los 6 documentos fundacionales:
+por el operador después de un write MCP a cualquiera de los 8 documentos fundacionales:
 - Kernel
 - System Prompt
 - Career Canon
@@ -28,7 +28,8 @@ _SCRIPT_DIR = Path(__file__).resolve()
 _PROJECT = _SCRIPT_DIR.parents[2]  # VANTAGE
 _VSYNC_DOC = _PROJECT / "Layer_4" / "scripts" / "vsync_doc.py"
 
-# ── Documentos fundacionales (6) ──────────────────────────────────────────────
+# ── Documentos fundacionales (8) ──────────────────────────────────────────────
+# Actualizado para incluir todos los documentos en vsync_doc.py DOCS
 FOUNDATIONAL_DOCS = {
     "377938be-fc42-805e-a408-c9ae518d4fe7": "kernel",
     "37b938be-fc42-8001-9b9b-fcf81130d274": "system_prompt",
@@ -36,6 +37,8 @@ FOUNDATIONAL_DOCS = {
     "372938be-fc42-8050-9a67-e40857d7806e": "manual",
     "37c938be-fc42-80d4-b9ae-f5969830331b": "aliases",
     "390938be-fc42-80e7-b429-d7d730339353": "change_log",
+    "3a3938be-fc42-8008-9e90-ec435c01f50d": "brief",
+    "3ba938be-fc42-8011-8947-fb4fa5d1f63f": "change_log_archivo",
 }
 
 def main():
@@ -52,21 +55,23 @@ def main():
 
     doc_key = FOUNDATIONAL_DOCS[page_id]
     print(f"[MCP SYNC HOOK] Write detectado a documento fundacional: {doc_key}")
-    print(f"[MCP SYNC HOOK] Disparando sync Notion→local...")
+    print(f"[MCP SYNC HOOK] Disparando sync Notion→local (no-bloqueante)...")
 
-    # Ejecutar vsync_doc.py --direction notion --doc <doc_key>
-    result = subprocess.run(
-        [sys.executable, str(_VSYNC_DOC), "--direction", "notion", "--doc", doc_key],
-        cwd=str(_PROJECT),
-        capture_output=True,
-        text=True
-    )
-
-    if result.returncode == 0:
-        print(f"[MCP SYNC HOOK] Sync completado exitosamente para {doc_key}")
-    else:
-        print(f"[MCP SYNC HOOK] Error en sync para {doc_key}: {result.stderr}")
-        sys.exit(1)
+    # Ejecutar vsync_doc.py --direction notion --doc <doc_key> en background
+    # No-bloqueante: si el sync falla, loguear warning pero no abortar el write original
+    try:
+        process = subprocess.Popen(
+            [sys.executable, str(_VSYNC_DOC), "--direction", "notion", "--doc", doc_key],
+            cwd=str(_PROJECT),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        # No esperar a que termine - dejarlo correr en background
+        print(f"[MCP SYNC HOOK] Sync iniciado en background para {doc_key}")
+    except Exception as e:
+        print(f"[MCP SYNC HOOK] Error iniciando sync para {doc_key}: {e}")
+        # No abortar - el write original fue exitoso
 
 if __name__ == "__main__":
     main()
