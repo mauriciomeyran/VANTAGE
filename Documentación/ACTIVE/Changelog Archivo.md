@@ -200,6 +200,12 @@ Estado final de la validación: Write-back verificado vía clone fresco de origi
 ### Impacto en Sistema
 - Eliminación del falso positivo [WARN] en el VANTAGE Health Check (start).
 - Contrato de lectura/escritura de telemetría L1/L3 normalizado.
+Documento modificado: Tasks Tracker (1 ticket) · Bug Tracker (9 tickets) · Tasks Tracker (1 ticket adicional, marcado)
+Documentos potencialmente afectados: Ninguno adicional.
+Tipo de impacto: [OPS] — Ticket VANTAGE Scout creado + tidy de Bug/Task Tracker (HO-000027 → HO-000028, SESSION-20260828-A).
+Acción correctiva ejecutada: (1) Ticket nuevo en Tasks Tracker: "VANTAGE Scout — resolver venv, decidir modelo (Ollama 16GB vs cloud) y rate-limit OpenRouter", Prioridad 2 MEDIO, Next_Action Decidir — único pendiente abierto de Fase 7 (V|PENDIENTES SWEEP). (2) Ejecutado vantage-tidy-bug-task-tracker: 9 Bugs + 1 Task marcados Archivar=true (Escenario 1, Status terminal) — 3× 4 CRÍTICO, 2× 3 ALTO, 3× 2 MEDIO, 3× 1 BAJO. Ningún ticket tenía tag [CENSUS-SYNC-R1] — sin disparo de generate_census.py.
+Estado final de la validación: Write-back verificado vía re-fetch del ticket Scout (Archivar=false) y query SQL post-marcado de los 10 tickets tidied (Archivar=true 10/10). Sin DRY RUN previo por instrucción explícita del operador (optimización de tokens).
+
 Documento modificado: V | CAREER CANON (CANON:OUTPUT-CONTRACT-002 · CANON:SKILLS · CANON:FACT-005 · CANON:PROFILE-001/002 · CANON:KPI-008 · CANON:EXPERIENCE-003) · V | MANUAL (§8.3 WEEKLY-FLOW-003) · V | PENDIENTES SWEEP (Fase 6 completa, Fase 7 parcial) · Tasks Tracker (1 ticket)
 Documentos potencialmente afectados: Ninguno adicional.
 Tipo de impacto: [DOC] — Cierre de Fase 6 y 7.2 de Pendientes Sweep (HO-000026 → HO-000027, SESSION-20260828-A).

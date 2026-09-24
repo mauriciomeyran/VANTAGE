@@ -61,7 +61,7 @@ Regla dura: ningún agente debe generar contenido de CV, QA, o cualquier otro en
 | vantage-cv-a | v9.16.0 | 2026-08-09 |
 | vantage-cv-b | v10.2.0 | 2026-09-05 |
 | vantage-qa | v9.17.0 | 2026-08-19 |
-| vantage-session-open | v1.0.0 | 2026-09-05 |
+| vantage-session-open | v1.2.0 | 2026-09-24 |
 | vantage-session-close | v1.0.0 | 2026-09-05 |
 | vantage-present-handoff | v1.0.0 | 2026-09-05 |
 Mantenimiento: esta tabla se actualiza como parte obligatoria de cualquier cambio de versión a un skill de generación de contenido — el mismo turno que sube la versión del skill actualiza esta tabla, nunca en un paso separado posterior.
@@ -126,8 +126,10 @@ Cédula Digital
 Economía de Contexto y Rutas de Carga
 La lógica principal de VANTAGE reside en la documentación del proyecto y en los componentes locales.
 - Terminal (lazy_loader.py): Ruta preferente para operaciones estructurales.
+- vload.py (Layer_1/scripts/): resuelve automáticamente UUIDs desde document_registry — vía preferente para lectura puntual de un nodo (PREFIX:CLAVE) cuando no hay instrucción explícita de usar MCP.
 - Notion MCP: Uso exclusivo para lectura, DRY RUN y actualización documental ante instrucción explícita del operador.
 - Repo GitHub (bash_tool): git clone/git pull sobre github.com y codeload.github.com (whitelisted) para lectura de skills, scripts y árbol de disco activo cuando no exista vía local directa (ver SP:BOOTLOADER). Solo lectura — no usar para escritura al repo remoto.
+Tabla de triaje completa (lectura puntual vs. MCP vs. extracción masiva): ver MANUAL:LAZY-LOAD (§14).
 Consultar en KERNEL:CONTEXT-INFRASTRUCTURE.
 ---
 ## 05 SP:DATA-FLOW
