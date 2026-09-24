@@ -1,5 +1,17 @@
 # V | CHANGELOG
 
+Fecha: 24-Sep-2026 · 12:19 CDMX (VERIFICADO)
+Estado: PASS / CANON ACTUALIZADO
+Scope: V | CAREER CANON (377938befc42808993f2f52dbd2dec6c) · Secciones 07 y 12.4
+Cambios
+- 12.4 CANON:OUTPUT-CONTRACT-004 — INSERT labels de contacto: 8:62 = "LinkedIn", 8:63 = " | Portafolio". El hipervínculo se aplica en Figma, no en el .md.
+- 12.4 CANON:OUTPUT-CONTRACT-004 — INSERT regla de labels: nodo solo-etiqueta con hipervínculo en Figma → el .md lleva el label literal, NUNCA la URL cruda.
+- 07.12 CANON:UF-004 — INSERT Contact Block: Ubicación Miguel Hidalgo, CDMX · Teléfono +52 56 4383 8125 · Email mauricio.meyran@icloud.com (UF02).
+- 07.13 CANON:UF-005 — INSERT LinkedIn URL = https://www.linkedin.com/in/mauriciomeyran.
+- 07.14 CANON:UF-006 — INSERT Portfolio URLs = https://mmeyranesp.myportfolio.com (CV ES) · https://mmeyraneng.myportfolio.com (CV EN). Confirmado por operador en sesión.
+NO-OP
+- 03.1 CANON:EXPERIENCE-001 (C01 rol): sin cambio — el CV-B de referencia trunca el título; el Canon es correcto. Discrepancia documentada.
+Identidad: agent.family=MISTRAL · agent.instance=DEFAULT
 Fecha: 24-Sep-2026 · 07:05 CDMX
 Estado: PASS / DOCUMENTACIÓN ACTUALIZADA
 Scope: Runtime VANTAGE · vload · lazy_loader · Entity Index · Resolver · Query · Context · Agent API · Health Check · Graph SUSPENDED

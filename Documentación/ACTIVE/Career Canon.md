@@ -173,6 +173,12 @@ UF01 · L'Oréal End Date = March 2026
 UF02 · Canonical Email = mauricio.meyran@icloud.com
 ### 07.11 CANON:UF-003
 UF03 · Certifications Canon = ALDO Group (2014) + AutoCAD & SketchUp Essentials (2024) ONLY. No additional certs valid.
+### 07.12 CANON:UF-004
+UF04 · Contact Block = Ubicación: Miguel Hidalgo, CDMX · Teléfono: +52 56 4383 8125 · Email: mauricio.meyran@icloud.com (UF02)
+### 07.13 CANON:UF-005
+UF05 · LinkedIn URL = https://www.linkedin.com/in/mauriciomeyran
+### 07.14 CANON:UF-006
+UF06 · Portfolio URLs = https://mmeyranesp.myportfolio.com (CV en español) · https://mmeyraneng.myportfolio.com (CV en inglés) — confirmado por operador, 2026-09-24 12:19 CDMX
 ---
 ## 08 CANON:EDUCATION
 Education
@@ -593,6 +599,8 @@ Formato de Entrega Obligatorio Cada Derived Output generado bajo este contrato r
 - Rol (nodo dedicado de puesto: 10:218, 4:17, 4:21, 4:25, 10:188, 10:195) = bold, SIN barra final — el separador vive en el nodo de Período, nunca en ambos
 - Período/Years (nodo dedicado: 10:219, 4:18, 4:22, 4:26, 10:189, 10:196) = " | fecha" (espacio+barra+espacio+itálica) al INICIO del nodo — poner la barra en el nodo de Rol causa doble barra o hereda bold indebido
 - Contacto (8:56–8:63): primer nodo de la línea (8:56 Ciudad; 8:62 LinkedIn) SIN barra; a partir del segundo nodo de la línea (8:57, 8:58, 8:63) → " | contenido" con barra al inicio
+- Labels de contacto (8:62–8:63): 8:62 = "LinkedIn" y 8:63 = " | Portafolio" — labels literales en el .md; el hipervínculo se aplica en Figma, no en el archivo
+- Nodo solo-etiqueta con hipervínculo en Figma: el .md lleva el label literal; NUNCA la URL cruda
 - Teléfono: formato "+52 56 4383 8125" — SIN el "1" después del 52 (corrección Career Canon aplicada en CANON:UF-002, ver Changelog)
 - Empresa (Palacio de Hierro): "EL PALACIO DE HIERRO (ALDO)" — nunca "(ALDO GROUP)"; ALDO Group es el holding, Mau trabajó scope específico para la marca ALDO (pin ejecutado, ver Changelog)
 - Skills = Categoría bold + ": " + texto plano; categorías con "y" nunca "&" ("Operaciones y Finanzas", "Liderazgo y Training") — razones sociales conservan "&" (Levi Strauss & Co.)
