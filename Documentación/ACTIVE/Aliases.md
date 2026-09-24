@@ -18,7 +18,7 @@ L0 · VANTAGE Runtime
 | vsync | Regenera el índice de entidades del Runtime desde Notion. | Corre vantage.py sync — reconstruye entity_index_v2.json, graph_v2.json, backlinks_v2.json. |
 | vask | Hace una pregunta en lenguaje natural al Runtime sobre el estado del Tracker. | Corre vantage.py ask “…” — resuelve contra el índice ya cargado. |
 | vresolve | Resuelve una entidad específica (ID o nombre) a su ficha completa. | Corre vantage.py resolve — 4 pasos: lookup en índice, mapeo a data source, query a Notion, validación. |
-| vcontext | Trae contexto extendido de una entidad (relaciones, backlinks). | Corre vantage.py context sobre graph_v2.json y backlinks_v2.json. |
+| vcontext | Trae contexto extendido de una entidad: página completa + bloques hijos vía resolve_entity() + find_entity(). No consulta graph_v2.json ni backlinks_v2.json — esos artefactos hoy no tienen contenido poblado; una consulta de relaciones real pasa por resolve/ask, no por context. | Corre vantage.py context — resuelve la entidad y trae su página + bloques completos, no un resumen de grafo. |
 | vquery | Corre una consulta estructurada contra el índice. | Corre vantage.py query — filtra entity_index_v2.json por los parámetros dados. |
 | vversions (sin flag) | Punto de entrada al motor de verificación de versión y observabilidad de librerías de activos — requiere flag explícito (–bootstrap/–sync, ver familia 1; –scripts/–skills, ver MANUAL:RUNTIME-002). | — |
 | vcensus | Regenera el V-ID-CENSUS y reporta IDs huérfanos. | Corre generate_census.py — resuelve cada ID contra CENSUS_SPEC, detecta huérfanos no listados, y genera deeplink de bloque exacto vía API para cada uno. |
