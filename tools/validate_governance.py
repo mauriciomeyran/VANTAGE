@@ -13,6 +13,22 @@ Uso:
 Referencia: §3.2, patrón de drift recurrente (Handoff HO-000062 P7)
 """
 
+# Referencias en Archive que deben excluirse del check refs (falsos positivos por diseño)
+# Estos IDs viven en Archive/Documentación/contrato_migracion_headings.md y generate_census.md
+_ARCHIVE_REFS = {
+    "KERNEL:ARCHITECTURE-004",
+    "KERNEL:SCOPE",
+    "KERNEL:ARCHITECTURE-L0",
+    "MANUAL:OBJETIVO-001",
+    "MANUAL:SETUP-001",
+    "MANUAL:VANTAGE-RUNTIME-001",
+    "MANUAL:DASHBOARD-CHECKLIST-001",
+    "BRIEF:SCOPE",
+}
+_ARCHIVE_PREFIXES = {
+    "CHANGELOG_ARCHIVO",
+}
+
 import argparse
 import json
 import re
@@ -53,11 +69,15 @@ def _load_json(path: Path) -> dict:
 
 
 def _find_python_files(directories: List[Path]) -> List[Path]:
-    """Encuentra todos los archivos .py en los directorios dados."""
+    """Encuentra todos los archivos .py en los directorios dados, excluyendo /Archive/."""
     py_files = []
     for directory in directories:
         if directory.exists():
-            py_files.extend(directory.rglob("*.py"))
+            for py_file in directory.rglob("*.py"):
+                # Excluir archivos en /Archive/
+                if "/Archive/" in str(py_file) or "\\Archive\\" in str(py_file):
+                    continue
+                py_files.append(py_file)
     return py_files
 
 
@@ -196,6 +216,10 @@ def check_document_references() -> List[Tuple[str, str, List[str]]]:
     
     # 3. Verificar cada referencia
     for ref in all_refs:
+        # Excluir referencias en Archive (falsos positivos por diseño)
+        if ref in _ARCHIVE_REFS or any(ref.startswith(p) for p in _ARCHIVE_PREFIXES):
+            continue
+
         prefix, key = ref.split(":", 1)
         
         # Verificar que el documento base exista
