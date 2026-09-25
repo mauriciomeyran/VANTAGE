@@ -1682,10 +1682,6 @@ Cambios:
 Versión actualizada: 9.10.2 (CHANGELOG).
 ---
 # v9.10.1 — Documentación Transversal: Continuidad ID+Título en Bloque de Encabezado · 2026-07-30
-Tipo: [DOC]
-Alcance: Manual (MANUAL:PATCH-QUALITY, criterio 1).
-Contexto: Formalización de la regla de continuidad ID+título para evitar que procesos automáticos intenten "corregir" el espacio vertical generado por el rendering de Notion.
-Versión actualizada: 9.10.1 (CHANGELOG).
 ---
 # v9.10.0 — Auditoría de Jerarquía Tipográfica + Documentación Transversal: Matriz Congelada · 2026-07-30
 Tipo: [AUDIT] [DOC]

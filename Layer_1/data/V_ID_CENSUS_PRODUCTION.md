@@ -288,4 +288,8 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-_Ninguno detectado en esta corrida._
+| ID | Documento | Link |
+|---|---|---|
+| `CANON:UF-004` | Career Canon | [link]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#c38756ec5a374a4087b7c29df7d6cae9 ) |
+| `CANON:UF-005` | Career Canon | [link]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#9f4880b2b4654caca518c3105f4b5f76 ) |
+| `CANON:UF-006` | Career Canon | [link]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#4e2a3313ebd34163a8a1da998e82f1b2 ) |
