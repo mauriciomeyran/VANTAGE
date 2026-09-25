@@ -1,5 +1,34 @@
 # V | CHANGELOG
 
+Tipo: [OPS] [DOC] [FIX]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MM.
+Documentos modificados: V | PLAN DE TRABAJO — Reconciliación v10 (T1.2, T1.3, T1.5) · Bug Tracker (4 altas) · Skill Library / vantage-create-bug-task.skill (corrección data_source_id).
+Tipo de impacto: Operativo — cierre de Track Alpha completo (5/5) en Fase 1, con hallazgos reales de código documentados como deuda separada, no bloqueante.
+Alcance:
+1. T1.2/T1.3 — Responsable actualizado a CLAUDE/MP en ambas tareas (opción agregada al select por continuidad de sesión previa CLAUDE/MP). Sin cambio de contenido normativo, solo atribución.
+1. T1.5 — Ejecución real en Terminal del operador (no delegable): G8 post checklist 37/37 PASS, G9 docsync verify 20/20 PASS (8 files), G10 handoff verify 12/12 PASS (tip sha 9233ff2). pytest tests/ -q sobre los 9 archivos reales de tests/: 178 passed, 13 failed, 0 errores de colección — reproducido idéntico en 2 corridas (con y sin --continue-on-collection-errors). T1.5 cerrado como Resuelto con hallazgos: el runner funciona correctamente, los fallos se documentan aparte (ver punto 3) sin bloquear el cierre de la tarea de verificación en sí.
+1. Bug Tracker — 4 tickets nuevos (Prioridad 2 MEDIO, Status Abierto, Componente Layer 1/Notion): (a) protección de estado terminal/en-proceso no bloquea mutación — 9 tests fallando en test_authorized_fixes.py/test_gate_logic.py/test_profile_fit.py; (b) test de backlinks activo pese a graph subsystem SUSPENDED (decisión de producto ya tomada: VANTAGE usa row movement mutuamente exclusivo, no graph-based archiving); (c) override de prioridad por deadline no dispara razón deadline_jd; (d) MANUAL:SETUP Paso 8 cita 5 nombres de test inexistentes (test_layer_1_orchestrator.py, test_g3_parity.py, test_tracker_flow_v3.py, test_vl1_sync.py, test_url_gate.py) — la suite real tiene 9 archivos con nombres completamente distintos, sin overlap parcial. 1 fallo adicional (test_writes_on_target, KeyError 'select') identificado como deuda de test post-T1.2 (select→checkbox), no bug nuevo — no generó ticket propio.
+1. vantage-create-bug-task.skill (Skill Library, Notion) — corregida tabla de IDs: el data_source_id real para Bug Tracker vía notion-create-pages es 36e938be-fc42-81f8-8c6f-000b6769ba03 (idéntico al DB ID), no el COL ID 36e938be-fc42-81bd-9e1f-dc360b3b45f5 previamente documentado, que devolvía object_not_found (404). Detectado al primer intento real de escritura en esta sesión. Nota agregada: data_source_id de Tasks Tracker no verificado en esta pasada — confirmar contra fetch directo antes de la primera escritura ahí.
+Decisiones confirmadas: T1.5 se cierra con hallazgos en vez de Bloqueado — el criterio aplicado (operador, respuesta "1") es que el runner en sí funciona y los defectos de código no impiden verificar la suite, solo documentarla.
+Decisiones no duplicadas: no se corrigió ningún bug de código de los 13 fallos (Clusters B/C/D) en esta sesión — quedan en Bug Tracker para trabajo separado. No se tocó Tasks Tracker.
+Impacto: Operativo + Documental. Cierra Track Alpha (5/5) de Fase 1; deja Track Beta y T1.5-findings como trabajo pendiente explícito.
+Validación: Evidencia cruda de Terminal capturada en sesión (comando + output completo) para G8/G9/G10 y ambas corridas de pytest — ver S4-EVIDENCE del handoff HO-000066 para el detalle verbatim. 3 IDs de página de Bug Tracker + 1 de corrección de skill verificados por fetch/resultado de escritura directo, no narrado.
+Estado: WRITE aplicado en Notion (Plan de Trabajo, Bug Tracker, Skill Library). Sin DRY RUN de Changelog presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens, 02:15 CDMX) — version bump y esta entrada ejecutados en una sola pasada.
+Handoff de referencia: HO-000066 (serial declarado directamente por el operador en el mismo turno — Prioridad 0, adoptado sin verificación adicional).
+---
+Fecha: 24-Sep-2026 · 18:22 CDMX (PENDING)
+Estado: PENDIENTE REVISIÓN
+Scope: ARCHIVO TRACKER (674696fd-94b6-464a-ac1f-64b0cc917e15) · V | ARCHIVEROS
+Cambios
+1. SCHEMA: agregadas 4 propiedades que Tracker principal tiene y Archivo no tenía: Prioridad_Auto (select 1 BAJO/2 MEDIO/3 ALTO/4 CRÍTICO), Outcome (select Contratado/Rechazado/Entrevista/Sin respuesta), Figma (checkbox), PDF (checkbox).
+1. SCHEMA: completadas opciones faltantes en selects existentes: Fuente 1 (+Gemini, Descubrimiento (sin validar), job_board), Next_Action 1 (+Post-Mortem, Investigar, Optimizar, Revisión), Fetch 1 (+Pending), Gate_Decision (+READY_TO_APPLY, REJECTED), Prioridad (reemplazadas opciones 1-6→ 1 BAJO green/2 MEDIO yellow/3 ALTO orange/4 CRÍTICO red), Dedup_Flag (confirmada como select con Posible duplicado).
+1. SCHEMA: eliminadas 10 propiedades vestigio de versiones pasadas sin equivalente en Tracker: Componente, Fecha de actualización, Fecha_Detección, Fecha_Resolución, Match, Page ID, Solución, Tipo, URL Markdown, Versión.
+1. SCHEMA: los campos X (text) — Fuente, Next_Action, Fetch, Score_Method, VM_Scope — habían quedado huérfanos (no existen como propiedades reales en el schema JSON, solo como columnas residuales en tabla SQLite interna) por operaciones DDL previas; no requieren acción adicional ya que sus versiones X 1 (select) son las canónicas.
+1. VISTA: Default view de Archivo Tracker reordenada para replicar el orden de columnas del view ALL de Tracker (37 propiedades en idéntico orden), con mapeo de nombres: Fuente→Fuente 1, Next_Action→Next_Action 1, Fetch→Fetch 1, Score_Method→Score_Method 1, VM_Scope→VM_Scope 1.
+1. SSOT: Tracker (596938befc42836baea7814a1491bd47) dictó tipo y opciones durante toda la homologación; se replicó esquema, no se inventaron ni se inferieron propiedades.
+[NO-OP]
+1. Columnas legacy (Componente, Fecha de actualización, Fecha_Detección, Fecha_Resolución, Match, Page ID, Solución, Tipo, URL Markdown, Versión) ya no existían en el schema al momento de ejecutar los DROPs — operaciones abortadas silenciosamente, no errores de dato. Sin impacto.
+1. Campos X (text) — Fuente, Next_Action, Fetch, Score_Method, VM_Scope — no lograban DROP porque no existían como property_item en el esquema actual (solo en tabla SQLite interna); sin impacto en datos visibles.
 Fecha: 24-Sep-2026 · 12:19 CDMX (VERIFICADO)
 Estado: PASS / CANON ACTUALIZADO
 Scope: V | CAREER CANON (377938befc42808993f2f52dbd2dec6c) · Secciones 07 y 12.4
