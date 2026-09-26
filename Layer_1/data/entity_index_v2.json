@@ -1,6 +1,16 @@
 {
   "entities": [
     {
+      "entity_id": "TRACKER:H_7b4530a03ad92be3",
+      "canonical_id": "7b4530a03ad92be3a83dc722fbe95713cabb3eb218d855505971f687785043d7",
+      "page_id": "3e5938be-fc42-813f-a695-f3788d7d8679",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Wholesale-3e5938befc42813fa695f3788d7d8679",
+      "hash": "7b4530a03ad92be3a83dc722fbe95713cabb3eb218d855505971f687785043d7",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER",
+      "archived_from": null
+    },
+    {
       "entity_id": "TRACKER:U_3df938befc4281f8a2a2c02f40dc995a",
       "canonical_id": "H_cf52a8f0384d1214",
       "page_id": "3df938be-fc42-81f8-a2a2-c02f40dc995a",
@@ -91,16 +101,6 @@
       "archived_from": null
     },
     {
-      "entity_id": "TRACKER:H_78f173a11a32d61b",
-      "canonical_id": "78f173a11a32d61b7d314897a5f8496205c7c4680bb8879cce50ecbd2247119e",
-      "page_id": "3dc938be-fc42-81aa-bfa1-d59f4735b3af",
-      "page_url": "https://app.notion.com/p/Brand-Innovation-Coordinator-Regio-3dc938befc4281aabfa1d59f4735b3af",
-      "hash": "78f173a11a32d61b7d314897a5f8496205c7c4680bb8879cce50ecbd2247119e",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
       "entity_id": "TRACKER:H_93a30e031d3cd640",
       "canonical_id": "93a30e031d3cd640219a6774a20d7b18d20d7e2e6817d437aaad6cbac2255f80",
       "page_id": "3dc938be-fc42-812b-8f5d-fefcfc41283b",
@@ -171,31 +171,11 @@
       "archived_from": null
     },
     {
-      "entity_id": "TRACKER:H_94e370dfbf090b85",
-      "canonical_id": "94e370dfbf090b8545d2b3246acff3cc6d445f11bbe46889700cbd5ef4519877",
-      "page_id": "3dc938be-fc42-8189-8c5b-d139017de593",
-      "page_url": "https://app.notion.com/p/Coordinador-de-Trade-Marketing-Retail-Canal-Tradicional-3dc938befc4281898c5bd139017de593",
-      "hash": "94e370dfbf090b8545d2b3246acff3cc6d445f11bbe46889700cbd5ef4519877",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
       "entity_id": "TRACKER:H_79312402412b6f1e",
       "canonical_id": "79312402412b6f1e1aefe6c2cbdc0d844043b9dc50d2474c3a0068c9ffc46d5e",
       "page_id": "3dc938be-fc42-815e-a0df-f9c70758404e",
       "page_url": "https://app.notion.com/p/Senior-Merchandising-Coordinator-LATAM-3dc938befc42815ea0dff9c70758404e",
       "hash": "79312402412b6f1e1aefe6c2cbdc0d844043b9dc50d2474c3a0068c9ffc46d5e",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_47b9e1f61d98dfb2",
-      "canonical_id": "47b9e1f61d98dfb2d08e8a072b6e68c9edf21cb1fd6061fe811395f8318453fd",
-      "page_id": "3dc938be-fc42-81d4-bbf5-e5263651094e",
-      "page_url": "https://app.notion.com/p/Brand-Production-Specialist-3dc938befc4281d4bbf5e5263651094e",
-      "hash": "47b9e1f61d98dfb2d08e8a072b6e68c9edf21cb1fd6061fe811395f8318453fd",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER",
       "archived_from": null
@@ -361,6 +341,26 @@
       "archived_from": null
     },
     {
+      "entity_id": "ARCHIVO:H_2a826a82719c1841",
+      "canonical_id": "2a826a82719c184190649422afa91c274fd9a7a0b872eb9d57a5ab35a20d3d71",
+      "page_id": "3e5938be-fc42-812c-89de-ccc9f5e03d49",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Zona-Sur-CDMX-3e5938befc42812c89deccc9f5e03d49",
+      "hash": "2a826a82719c184190649422afa91c274fd9a7a0b872eb9d57a5ab35a20d3d71",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_7d54c1197f29f637",
+      "canonical_id": "7d54c1197f29f637335b759ad1993a18f6b087ef9a4853df3a3d0951dc87a389",
+      "page_id": "3e5938be-fc42-8177-bdbf-cd1a052ec2fb",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Fashion-Retail-Zona-Sur-CDMX-3e5938befc428177bdbfcd1a052ec2fb",
+      "hash": "7d54c1197f29f637335b759ad1993a18f6b087ef9a4853df3a3d0951dc87a389",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
       "entity_id": "ARCHIVO:H_dcfa6a75fe0ad6fe",
       "canonical_id": "dcfa6a75fe0ad6fec5a5505015b8d9d01979d60b27fc1268915124f0c1a25542",
       "page_id": "3dc938be-fc42-8104-b00b-ced980ca0def",
@@ -386,6 +386,16 @@
       "page_id": "3dc938be-fc42-81bf-9a79-e411cb1cd4ae",
       "page_url": "https://app.notion.com/p/Operations-Professional-Perisur-3dc938befc4281bf9a79e411cb1cd4ae",
       "hash": "284c75d8fec5868fbe31268cc771cc09d3314ca8ee48d786a1356888cf74dc47",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_78f173a11a32d61b",
+      "canonical_id": "78f173a11a32d61b7d314897a5f8496205c7c4680bb8879cce50ecbd2247119e",
+      "page_id": "3dc938be-fc42-81aa-bfa1-d59f4735b3af",
+      "page_url": "https://app.notion.com/p/Brand-Innovation-Coordinator-Regio-3dc938befc4281aabfa1d59f4735b3af",
+      "hash": "78f173a11a32d61b7d314897a5f8496205c7c4680bb8879cce50ecbd2247119e",
       "entity_type": "archive",
       "source_db": "ARCHIVO_TRACKER",
       "archived_from": null
@@ -426,6 +436,26 @@
       "page_id": "3dc938be-fc42-8123-b25d-fcb088cd9276",
       "page_url": "https://app.notion.com/p/Visual-Merchandiser-Moda-Zona-Norte-CDMX-Edo-Mx-3dc938befc428123b25dfcb088cd9276",
       "hash": "e2c59bac1ca1b18429ef7940b50e331f00ce6c4ba1cb48d66977fce094250d2f",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_94e370dfbf090b85",
+      "canonical_id": "94e370dfbf090b8545d2b3246acff3cc6d445f11bbe46889700cbd5ef4519877",
+      "page_id": "3dc938be-fc42-8189-8c5b-d139017de593",
+      "page_url": "https://app.notion.com/p/Coordinador-de-Trade-Marketing-Retail-Canal-Tradicional-3dc938befc4281898c5bd139017de593",
+      "hash": "94e370dfbf090b8545d2b3246acff3cc6d445f11bbe46889700cbd5ef4519877",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_47b9e1f61d98dfb2",
+      "canonical_id": "47b9e1f61d98dfb2d08e8a072b6e68c9edf21cb1fd6061fe811395f8318453fd",
+      "page_id": "3dc938be-fc42-81d4-bbf5-e5263651094e",
+      "page_url": "https://app.notion.com/p/Brand-Production-Specialist-3dc938befc4281d4bbf5e5263651094e",
+      "hash": "47b9e1f61d98dfb2d08e8a072b6e68c9edf21cb1fd6061fe811395f8318453fd",
       "entity_type": "archive",
       "source_db": "ARCHIVO_TRACKER",
       "archived_from": null
@@ -7292,9 +7322,9 @@
     }
   ],
   "metrics": {
-    "total_entities": 729,
-    "tracker_entities": 36,
-    "archive_entities": 693,
+    "total_entities": 732,
+    "tracker_entities": 34,
+    "archive_entities": 698,
     "hash_coverage": 100.0,
     "orphan_candidates": 0
   }

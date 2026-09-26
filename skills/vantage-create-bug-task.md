@@ -21,12 +21,12 @@ Distinto del Tracker de vacantes (KERNEL:SCHEMA) — estos dos trackers gestiona
 - Reactivo (algo roto) → **Bug Tracker**
 - Proactivo (trabajo/decisión pendiente) → **Tasks Tracker**
 
-| Tracker | DB ID | COL ID |
+| Tracker | Título (title prop) | Data source ID real (usar en `notion-create-pages`) |
 |---|---|---|
-| Bug Tracker | `36e938be-fc42-81f8-8c6f-000b6769ba03` | `36e938be-fc42-81bd-9e1f-dc360b3b45f5` |
-| Tasks Tracker | `d2a65ca1-6a35-465d-bcff-b0d82dddd549` | — |
+| Bug Tracker | `Bug` | `collection://36e938be-fc42-81f8-8c6f-000b6769ba03` |
+| Tasks Tracker | `Task` (no `Tarea`) | `collection://aaaaef55-a1ce-45f7-9c8b-1c1def2c18e8` (no el DB ID `d2a65ca1-6a35-465d-bcff-b0d82dddd549` — no es data source válido) |
 
-Campos reales confirmados en schema: `Bug`/título, `Fecha_Detección`, `Componente`, `Prioridad`, `Status`, `Next_Action`, `Notas`. **No existe campo `Tags`** en ninguno de los dos trackers — no inventar uno. No existe formato de ID secuencial (`BUG-0001`, etc.) — el identificador único de facto es el `page_id`/`url` que Notion asigna. No inventar formatos de ID.
+Campos reales confirmados en schema: `Bug`/`Task` (título), `Fecha_Detección`/`Fecha_Creación`, `Componente`, `Prioridad`, `Status`, `Next_Action`, `Notas`. **No existe campo `Tags`** en ninguno de los dos trackers — no inventar uno. No existe formato de ID secuencial (`BUG-0001`, etc.) — el identificador único de facto es el `page_id`/`url` que Notion asigna. No inventar formatos de ID.
 
 **Niveles de Prioridad (KERNEL:TRACKER-SCHEMA-002, misma escala para ambos trackers):**
 
@@ -46,7 +46,7 @@ Si el ticket que se está creando documenta o anticipa un cambio de estado de un
 1. **Clasificar**: ¿defecto de comportamiento (Bug) o tarea/mejora pendiente (Task)? Si es ambiguo, preguntar al operador antes de proceder — no asumir.
 2. **Asignar Prioridad** usando exclusivamente la escala de 4 niveles arriba — no inventar niveles intermedios.
 3. **Completar campos** según el schema real de cada tracker. No agregar campos inexistentes.
-4. **Componente**: usar Capa real si aplica (`L1`, `L3`, `L4`, `Dashboard`) o nombre de módulo/script afectado.
+4. **Componente**: usar exclusivamente una opción real del select (Bug: `Python`|`Notion`|`Layer 1`|`Layer 2`|`Layer 3`|`RT-1`; Task: `Python`|`Notion`|`Layer 1`|`Layer 2`|`Layer 3`|`Figma`) — nunca `L1`/`L3`/`L4`/`Dashboard` (eso es Skill Library) ni `Documentación`/`Layer 4` (no existen).
 5. **Dry Run**: presentar al operador el registro completo (todos los campos, incluida Prioridad clasificada) antes de escribir.
 6. Esperar variante válida de `APROBAR_WRITE`: `APROBAR_WRITE` · `APROBAR` · `SÍ` · `sí` · `YEP` · `yep`. Eliminados por RAI-03: `Ok` · `Go` · `YES` · `yes` — nunca aceptar estos como autorización.
 7. Ejecutar `notion-create-pages` con el `data_source_id`/DB ID correcto según el tracker elegido — verificar dos veces que no se está escribiendo en el tracker equivocado.
