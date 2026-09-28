@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""Allocate VANTAGE handoff serials from a shared HTTP service.
+"""Allocate VANTAGE handoff serials via CLI.
 
-The service is intentionally small: deploy it once on a reachable host and
-let every agent call POST /allocate. SQLite provides transactional allocation.
+Serial allocation is performed exclusively via terminal/CLI as per Kernel norms.
 """
 from __future__ import annotations
 
@@ -10,13 +9,6 @@ import argparse
 import os
 import sqlite3
 from pathlib import Path
-from typing import Any
-
-try:
-    from flask import Flask, jsonify
-except ImportError:
-    Flask = None
-    jsonify = None
 
 DB_PATH = Path(os.environ.get(
     "VANTAGE_SERIAL_DB",
@@ -59,51 +51,14 @@ def allocate_serial() -> str:
         return f"HO-{row[0]:06d}"
 
 
-def create_app() -> Any:
-    if Flask is None:
-        raise RuntimeError("Install Flask: python3 -m pip install flask")
-
-    app = Flask(__name__)
-
-    @app.post("/allocate")
-    def allocate() -> Any:
-        try:
-            serial = allocate_serial()
-            return jsonify(
-                {
-                    "serial": serial,
-                    "authority": COUNTER_NAME,
-                    "status": "ALLOCATED",
-                }
-            ), 200
-        except Exception as exc:
-            return jsonify(
-                {
-                    "error": "HANDOFF_SERIAL_UNAVAILABLE",
-                    "detail": str(exc),
-                }
-            ), 503
-
-    @app.get("/health")
-    def health() -> Any:
-        return jsonify({"status": "ok", "authority": COUNTER_NAME}), 200
-
-    return app
-
-
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["next", "serve"])
-    parser.add_argument("--host", default="0.0.0.0")
-    parser.add_argument("--port", type=int, default=8787)
+    parser.add_argument("command", choices=["next"])
     args = parser.parse_args()
 
     if args.command == "next":
         print(allocate_serial())
         return
-
-    app = create_app()
-    app.run(host=args.host, port=args.port)
 
 
 if __name__ == "__main__":

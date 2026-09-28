@@ -378,5 +378,97 @@
   "Layer_4/scripts/mcp_sync_wrapper.sh": {
     "hash": "989d77a6c1953ef91f68a0b59d3dc75c8e87c8ff58d6718703a116c58b5c1a56",
     "captured_at": "2026-09-22T23:18:00+00:00"
+  },
+  "Layer_1/scripts/allocate_vantage_serial.py": {
+    "hash": "6a8a71c2ca5bd0fb70e1fec01ff7ba8ab3081177456807b454cd506896810557",
+    "captured_at": "2026-09-28T23:00:34.535700+00:00"
+  },
+  "Layer_1/scripts/build_paquete_arena.sh": {
+    "hash": "18f8ae1e629fc026031fc8970a83f0cb3cd6fc36c6e2e95d3e2a557f0797e02a",
+    "captured_at": "2026-09-28T23:00:34.536293+00:00"
+  },
+  "Layer_1/scripts/conftest.py": {
+    "hash": "ce837aca837114408c0b0b6886f0231aba530e05d983f2180ae40209cb094f7b",
+    "captured_at": "2026-09-28T23:00:34.537549+00:00"
+  },
+  "Layer_1/scripts/export_tracker_snapshot.py": {
+    "hash": "8f2fae4113c07513b47ed7c4161bf74ce5d9d868feacce5a5f77b7e9759af7ec",
+    "captured_at": "2026-09-28T23:00:34.540781+00:00"
+  },
+  "Layer_1/scripts/g10_handoff_verify.py": {
+    "hash": "c7251d3642188913ad50388ee3c7d702e5b86991522f4324917ac6a912378947",
+    "captured_at": "2026-09-28T23:00:34.541918+00:00"
+  },
+  "Layer_1/scripts/g8_post_checklist.py": {
+    "hash": "1c12e1bf05916aece1994f788263009caa149cc82ff2c84830a8531a25b2a621",
+    "captured_at": "2026-09-28T23:00:34.542079+00:00"
+  },
+  "Layer_1/scripts/g9_docsync_verify.py": {
+    "hash": "724d4264b87eded4667e7f376b6502ba7085af69e73da4de309b463229a9db5a",
+    "captured_at": "2026-09-28T23:00:34.542336+00:00"
+  },
+  "Layer_1/scripts/hard_block_gate.py": {
+    "hash": "6505c00f0196b7a7036fe5c31d440fceb7f777065c6b4ae20de730f364005c6c",
+    "captured_at": "2026-09-28T23:00:34.544323+00:00"
+  },
+  "Layer_1/scripts/layer_1_orchestrator.py": {
+    "hash": "3e7c2a3e85a7bd3352844558c7de4742027bd73dce0e9065a1908b34354a518e",
+    "captured_at": "2026-09-28T23:00:34.544688+00:00"
+  },
+  "skills/vantage-active-search-weekly/normalize_source_json.py": {
+    "hash": "dc8285ca68ec6e6f2b7254c58be114c14d03b35859279d56423e48b7425d8abc",
+    "captured_at": "2026-09-28T23:00:34.546291+00:00"
+  },
+  "Layer_1/scripts/normalize_tracker_values.py": {
+    "hash": "a2e23de8d49469645475561c828baff6a12e3b4f8b8b617a122b8d6ad14a2016",
+    "captured_at": "2026-09-28T23:00:34.546467+00:00"
+  },
+  "Layer_4/scripts/notion_write_wrapper.py": {
+    "hash": "f2fab02e0e66ff0b1dad37be7ddbac4f8f017c489acddb733277de4ebeb62485",
+    "captured_at": "2026-09-28T23:00:34.546769+00:00"
+  },
+  "Layer_1/scripts/orphan_audit.py": {
+    "hash": "fb7ebd85af39e460fccb00378e24deb0ac9751f0a4fb6890a58ba95e57d5c602",
+    "captured_at": "2026-09-28T23:00:34.547282+00:00"
+  },
+  "Layer_1/scripts/purge_archivo_duplicates.py": {
+    "hash": "c1131c1acdcd2290a2253bd2fba5af9b940639dfdb20791b81ed7ed24af31c4d",
+    "captured_at": "2026-09-28T23:00:34.548320+00:00"
+  },
+  "Layer_1/scripts/rollback_schema_migration.py": {
+    "hash": "94e6e89e3a838f235e000b922d83bec63e07a75f61e04996dbb43a8d82f58d54",
+    "captured_at": "2026-09-28T23:00:34.548827+00:00"
+  },
+  "Layer_1/scripts/tracker_flow.py": {
+    "hash": "1fabc9749e4806f0e041c283dac0216cb74913385d65997a16ece42541b49874",
+    "captured_at": "2026-09-28T23:00:34.549682+00:00"
+  },
+  "Layer_1/scripts/url_gate.py": {
+    "hash": "528c7d7f6b01a4598bbdcba5e546f0fda25bcf9398d9aedcb8d348b188685942",
+    "captured_at": "2026-09-28T23:00:34.550146+00:00"
+  },
+  "Raycast/vantage-vl1sync.sh": {
+    "hash": "750818de0ece8f858cfc5e91d6d0156a2aa92e8528533e11fd1c966f4f67971d",
+    "captured_at": "2026-09-28T23:00:34.552809+00:00"
+  },
+  "Layer_1/scripts/vantage_status.py": {
+    "hash": "eb7c52cfbef4fda30aa1ba80f4374f6a5d6002dc2514a825fb734ae81031a229",
+    "captured_at": "2026-09-28T23:00:34.553447+00:00"
+  },
+  "Layer_4/scripts/vdoc_nblm.py": {
+    "hash": "3bf2b5dd11f32edf9089d29653e6514d79c344510185b7ab0fcf2a8c5f10c534",
+    "captured_at": "2026-09-28T23:00:34.553761+00:00"
+  },
+  "Layer_1/scripts/verify_md.py": {
+    "hash": "4c1f2a26eac8c17f3034b2f6e7c53fd04cf7226e5feac37cefe449fc0b441c8c",
+    "captured_at": "2026-09-28T23:00:34.553885+00:00"
+  },
+  "Layer_1/scripts/vl1_sync.py": {
+    "hash": "bfc1a073825a2f1da030905634aa956454202aed1c21963c8e35b238732aad05",
+    "captured_at": "2026-09-28T23:00:34.554083+00:00"
+  },
+  "Layer_1/scripts/vload.py": {
+    "hash": "3b13cf0217736e797bc5877235bdee2d1abcd08db11f596e3b9048f3a10b9474",
+    "captured_at": "2026-09-28T23:00:34.554235+00:00"
   }
 }

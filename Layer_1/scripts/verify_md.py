@@ -7,6 +7,9 @@ def verify(path):
 
     for i, line in enumerate(lines):
         if line != line.rstrip():
+            # Ignore single-space lines as they represent valid empty nodes per CANON:OUTPUT-CONTRACT-004
+            if line == " ":
+                continue
             issues.append(f'L{i+1}: trailing whitespace -> {line!r}')
 
     for i, line in enumerate(lines):
@@ -39,3 +42,6 @@ if __name__ == '__main__':
     print(f'Issues encontrados: {len(issues)}')
     for x in issues:
         print(x)
+    
+    # Exit with code 1 if issues are found, 0 otherwise
+    sys.exit(1 if issues else 0)

@@ -17,7 +17,6 @@ import subprocess
 import time
 import json
 import re
-import requests
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -513,8 +512,6 @@ def check_layer3_heartbeat():
 CENSUS_OUTPUT_PATH     = Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/data/V_ID_CENSUS_PRODUCTION.md")
 CENSUS_STALE_THRESHOLD_H = 24 * 7   # 7 dias - el Census cambia con cierre de tickets, no con cada sync
 
-SERIAL_SERVICE_URL = os.getenv("VANTAGE_SERIAL_SERVICE_URL", "http://localhost:8787")
-
 
 def check_census_age():
     """
@@ -652,29 +649,6 @@ def check_auto_link_corruption():
     return True  # Siempre advisory, nunca bloquea
 
 
-def check_serial_service():
-    """
-    Verifica que el servicio de seriales VANTAGE este disponible.
-    Informativo - no bloquea el health check si el servicio no esta corriendo.
-    """
-    try:
-        response = requests.get(f"{SERIAL_SERVICE_URL}/health", timeout=5)
-        if response.status_code == 200:
-            data = response.json()
-            authority = data.get("authority", "unknown")
-            ok(f"serial service - disponible (authority: {authority})")
-            return True
-        else:
-            warn(f"serial service - responde con status {response.status_code}")
-            return True
-    except requests.exceptions.RequestException as e:
-        warn(f"serial service - no disponible ({e.__class__.__name__})")
-        return True
-    except Exception as e:
-        warn(f"serial service - error inesperado: {e}")
-        return True
-
-
 # -- Runner --
 
 def main():
@@ -693,7 +667,6 @@ def main():
         ("census_age", check_census_age),
         ("pending_tickets", check_pending_tickets),
         ("auto_link", check_auto_link_corruption),
-        ("serial_service", check_serial_service),
     ]
 
     results = {}

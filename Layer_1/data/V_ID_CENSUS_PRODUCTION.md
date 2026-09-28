@@ -130,7 +130,7 @@
 | [`MANUAL:SLA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281549e1ee72e3240a9df ) | 17 | SLA de Latencia Post-Ingesta |
 | [`MANUAL:CV-GOLDEN-RULES-INDEX`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815592e9ecb6df06e21a ) | 18 | Reglas de Oro CV — Referencia Operativa |
 | [`MANUAL:POSITIONING-CRITERIA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815db277e3bcd24efda1 ) | 19 | Positioning Modes (N1–N4) — Criterio de Selección |
-| `MANUAL:WEEKLY-FLOW-006` | 08.6 | Cadence Matrix — Weekly Rhythm |
+| [`MANUAL:WEEKLY-FLOW-006`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#f6d3a492c9524bf3bb2270ca98f58a36 ) | 08.6 ⚠︎sin verificar en vivo | Cadence Matrix — Weekly Rhythm |
 | [`MANUAL:GOLDEN-SKELETON-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42810ea45dde6c4a0cb7e0 ) | 20 | Figma Sync & Golden Skeleton |
 | [`MANUAL:FIGMA-SYNC-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#9d42e3fbc953459f8457043565e7e884 ) | 20.1 | Arquitectura del Ecosistema |
 | [`MANUAL:FIGMA-SYNC-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#b805f3abb9f04c85992df278612f567c ) | 20.2 | Contrato de Bloque |
