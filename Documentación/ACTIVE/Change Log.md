@@ -1,5 +1,23 @@
 # V | CHANGELOG
 
+Tipo: [DOC] [FIX]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MP (contrato, revisión del DRY RUN y esta entrada). Ejecutor de las ediciones en Notion: Perplexity (MCP Notion).
+Documentos modificados: V | MANUAL (9 parches: A1, A2, A3, A5a, A5b, A5c, A5d, A6, A7) · V | KERNEL (0 — A4 omitido, ya satisfecho).
+Documentos potencialmente afectados: SP, Career Canon y Navigation Brief evaluados, sin cambio.
+Tipo de impacto: Normativo + Navegación — alinea el Manual con el Kernel en cinco puntos verificados contra el texto vivo.
+Alcance:
+1. L3 — Manual §12 (Troubleshooting): "hasta 10 correos" pasa a 5 por corrida, con referencia a GEMINI_MAX_EMAILS_PER_RUN. (A1)
+1. HANDOFF de CV-A — Manual §8.3: texto y bloque JSON pasan a 7 campos obligatorios más observaciones (opcional, texto libre), conforme a KERNEL:CV-PIPELINE-001. El bloque JSON del Kernel 12.1 ya contenía observaciones en Notion, por lo que A4 se omitió para evitar un campo duplicado. (A2, A3)
+1. Escalamiento de pendientes — Manual §6: las etiquetas de nivel quedan alineadas con KERNEL:GATE-DECISION-009 (Nivel 1 bajo esfuerzo · Nivel 2 alto esfuerzo sin fuente dura · Nivel 3 bloqueo confirmado); la referencia de re-clasificación deja de llevar etiqueta de nivel. (A5a a A5d)
+1. Class B — Manual §21: se agrega Class_B_Last_Run a la lista, como ya figuraba en KERNEL:SCHEMA-001. La entrada v9.22.17 (punto 1) enumera 10 campos Class B sin Class_B_Last_Run; con este parche el Manual lista 11, igual que el Kernel. (A6)
+1. VM_Scope — Manual §12 (Score = 0): "Core/Adjacent, no Off-Target" reemplazado por "campo binario: Alto o Bajo", con hipervínculo a KERNEL:SCHEMA-001. (A7)
+Decisiones confirmadas: parches de texto con old_str/new_str exactos; ejecución solo tras APROBAR_WRITE del operador; A4 omitido por bloqueo de texto divergente (ya aplicado).
+Decisiones no duplicadas: no se tocó ninguna de las 7 decisiones abiertas (B1 recuento de documentos fundacionales · B2 ejecutor de L1 · B3 definición de L2 · B4 literal de cierre del Bootstrap · B5 ubicación de pesos de Score · B6 ID del Session Ledger · B7 ruta del serial en las skills); no se reestructuraron Kernel ni Manual; no se tocaron skills, scripts ni Career Canon.
+Impacto: Documental + Normativo. Reduce contradicciones Kernel↔Manual; deja las decisiones de operación (B1–B7) como trabajo separado.
+Validación: Perplexity reportó write-back verification con texto verbatim en los 9 parches y sin cambio de IDs ni de niveles de heading; no hubo fetch propio de CLAUDE/MP tras la escritura. El cierre de Perplexity cuenta "8 aplicados + 1 omitido"; la tabla del propio reporte muestra 9 aplicados y 1 omitido. python vversions --length (A8): pendiente, a cargo del operador en Terminal.
+Estado: WRITE aplicado en Notion (Manual, por Perplexity bajo contrato de CLAUDE/MP; esta entrada y el version bump por CLAUDE/MP). vversions --sync y commit (vgit) pendientes sobre v9.22.18: el último --sync corrió sobre v9.22.16. Sin DRY RUN de Changelog presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens; hora CDMX provista por el operador) — version bump y esta entrada ejecutados en una sola pasada.
+IDs afectados: Ninguno (corrección de texto en nodos existentes; Census sin cambio, no dispara CENSUS-SYNC Regla 1).
+Handoff de referencia: ninguno (sin serial declarado en esta sesión).
 Tipo: [DOC] [FIX] [OPS]
 Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN (contrato, auditoría y cierre). Ejecutor de las ediciones en Notion: Perplexity (Sonnet 5 Thinking, MCP Notion).
 Documentos modificados: V | KERNEL (9 ediciones, K-01 a K-09) · V | MANUAL (22 ediciones, M-01 a M-22) · Bug Tracker (7 altas).

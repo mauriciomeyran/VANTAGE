@@ -155,7 +155,7 @@ Modos
 Verificación de Integridad Estructural (Length Check)
 Propósito: Detectar truncamiento silencioso en los documentos fundacionales mediante comparación del conteo de líneas de texto extraíble contra un baseline predefinido.
 Mecanismo:
-- Alcance: Aplica a los 10 documentos fundacionales (CHANGELOG, KERNEL, MANUAL, CANON, SP, ALIASES, CENSUS, BRIEF, VANTAGE y CHANGELOG_ARCHIVO).
+- Alcance: Aplica a los 11 documentos versionados (CHANGELOG, KERNEL, MANUAL, CANON, SP, ALIASES, CENSUS, BRIEF, VANTAGE, CHANGELOG_ARCHIVO y ARCHIVEROS).
 - Métrica: Conteo de bloques con texto extraíble no vacío (paragraph, headings, list_item, toggle, quote, callout, code, table_row), excluyendo bloques estructurales (divider, table_of_contents, column_list, column) y bloques vacíos.
 - Umbrales de alerta:
 - Porcentual: ≥5.0% de caída vs. baseline (LENGTH_TRUNCATION_THRESHOLD_PCT).
@@ -819,7 +819,8 @@ SESIÓN COMPLETADA → nueva sesión.
   "fit_gaps": ["", ""],
   "tono_marca": "",
   "idioma": "",
-  "positioning_rationale": ""
+  "positioning_rationale": "",
+  "observaciones": ""
 }
 ```
 Un HANDOFF incompleto no avanza a CV-B. El sistema no inventa valores para campos faltantes.

@@ -280,10 +280,10 @@ El Ledger anterior quedó OPEN → esto lo verás reflejado directamente en el d
 Drift de versión detectado y no es el documento que ibas a tocar hoy → se reporta, no bloquea. Puedes decidir resolverlo ahora o después.
 Drift de versión detectado y SÍ es el documento que ibas a tocar → se resuelve el drift primero, antes de aplicar cualquier parche nuevo — de lo contrario terminarías escribiendo sobre una base que ya no coincide con lo que las otras piezas del sistema esperan.
 Un cambio de código, schema o flujo operativo quedó sin reflejo en la documentación → esto no es parte del drift de versión que acabas de revisar arriba, es el caso que cubre KERNEL:DOCUMENTATION-001: el contrato que detecta contenido operativo nuevo sin ancla en Kernel, Manual, Canon o System Prompt, ya sea porque tú lo pides explícitamente ("documentación transversal", "parche orgánico") o porque el sistema lo señala como recordatorio no-bloqueante a media tarea, sin detener lo que estabas haciendo.
-Un pendiente detectado durante la sesión necesita convertirse en ticket (o no) → esto lo gobierna KERNEL:GATE-DECISION-009 (3 niveles de escalamiento). En resumen: esfuerzo bajo y sin bloqueo confirmado se queda en pending_summary del Ledger
-Nivel 1: Esfuerzo alto sin fuente dura de bloqueo se sugiere como ticket y espera tu APROBAR_WRITE
-Nivel 2: Bloqueo o degradación confirmados por una fuente dura (dump de Terminal, Ledger, Changelog, o tu propia declaración explícita) disparan vantage-create-bug-task de forma automática
-Nivel 3: Ver KERNEL:GATE-DECISION-009 para el detalle completo y las reglas de re-clasificación entre niveles.
+Un pendiente detectado durante la sesión necesita convertirse en ticket (o no) → esto lo gobierna KERNEL:GATE-DECISION-009 (3 niveles de escalamiento). En resumen — Nivel 1: esfuerzo bajo y sin bloqueo confirmado se queda en pending_summary del Ledger
+Nivel 2: Esfuerzo alto sin fuente dura de bloqueo se sugiere como ticket y espera tu APROBAR_WRITE
+Nivel 3: Bloqueo o degradación confirmados por una fuente dura (dump de Terminal, Ledger, Changelog, o tu propia declaración explícita) disparan vantage-create-bug-task de forma automática
+Re-clasificación entre niveles: ver KERNEL:GATE-DECISION-009 para el detalle completo.
 Con la sesión abierta y sincronizada, el siguiente paso natural es abrir tu mapa de la semana el Checklist, explicado en MANUAL:CHECKLIST.
 Ver MANUAL:SKILL-GLOSSARY (§23) para el catálogo completo de skills, incluyendo la convención de anuncio de cada una.
 ---
@@ -470,7 +470,7 @@ N2 Store Design & Flagship
 N3 Regional Brand Execution
 N4 Commercial VM & Field Leadership
 Además, define el tono de marca del CV y detecta el idioma del JD (ES/EN) para el output.
-Output de la sesión — el HANDOFF, 7 campos obligatorios:
+Output de la sesión — el HANDOFF, 7 campos obligatorios más observaciones (opcional, texto libre):
 {
   "empresa": "",
   "rol": "",
@@ -478,7 +478,8 @@ Output de la sesión — el HANDOFF, 7 campos obligatorios:
   "fit_gaps": ["", ""],
   "tono_marca": "",
   "idioma": "",
-  "positioning_rationale": ""
+  "positioning_rationale": "",
+"observaciones": ""
 }
 La sesión termina aquí. No se escribe ningún CV en CV-A.
 HANDOFF
@@ -721,7 +722,7 @@ Si persiste: verificar token Notion y conectividad a internet.
 L3 No Procesa Correos
 Verificar layer_3.env existe en Layer_3/config/.
 Confirmar credenciales: IMAP (Gmail), GROQ_API_KEY.
-Ejecutar manualmente: vl3 (debe procesar hasta 10 correos).
+Ejecutar manualmente: vl3 (debe procesar hasta 5 correos por corrida — ver GEMINI_MAX_EMAILS_PER_RUN).
 Revisar heartbeat: cat ~/.vantage/l3_heartbeat.json (última ejecución exitosa).
 Si falla autenticación IMAP: regenerar app password de Gmail.
 Scraping L1 No Corre (Playwright)
@@ -769,7 +770,7 @@ Alternativa temporal: sync manual vía MCP Notion.
 Score = 0 en Vacante Que Parece Relevante
 Verificar que URL esté activa (no 404/403).
 Confirmar que JD contenga keywords VM (Python busca términos específicos).
-Revisar VM_Scope asignado (debe ser Core/Adjacent, no Off-Target).
+Revisar VM_Scope asignado (campo binario: Alto o Bajo — ver KERNEL:SCHEMA-001).
 Si todo está correcto: revisar pesos de scoring en profile_config.yaml.
 No modificar Score manualmente (campo Class B, Python lo recalcula).
 Gate = BLOCKED Recuperable Pero el Dashboard No lo Detecta
@@ -886,7 +887,7 @@ KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de
 Class A — Human-Primary (operador/feed_processor escriben):
 Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash · Fetch · Fuente · JOB_ID (opcional)
 Class B — System-Primary (Python únicamente, ningún otro componente escribe):
-Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · JD_Quality
+Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · Class_B_Last_Run · JD_Quality
 Fetch (Class A) refleja verificación técnica real, incluso en agregadores — un valor Accesible ya no puede escribirse sin al menos un intento de request.
 Next_Action: select (10 valores operativos). Ver KERNEL:SCHEMA-008.
 Fuente es Class A, escrita por feed_processor.py al crear la fila. Fuente_Manual no existe en el código ni como propiedad del Tracker en Notion (KERNEL:SCHEMA-003).
@@ -980,7 +981,7 @@ Flags:
 | --layer {1,2,3} | Si estás cargando un feed que viene de investigación manual en Perplexity (no de L1 automatizado), usa --layer 2 para que el Tracker lo etiquete correctamente como fuente estratégica. |
 | --fast | Encontraste UNA vacante urgente fuera de tu ciclo semanal (ej. alguien te la compartió por WhatsApp) — usa --fast para meterla sola sin esperar al batch de los lunes. Rechaza feeds con más de un item. |
 | --interactive | Cuando el feed trae vacantes de calidad mixta y quieres decidir una por una ([S]í/[O]mitir/[Q]uit) en vez de que todo se escriba automáticamente. Ojo: si eliges Quit a medio camino, lo ya escrito no se revierte. |
-generate_census.pyQué hace: Genera el ID Census — barrido completo de IDs canónicos en los 9 documentos fundacionales, detecta huérfanos, y puede corregirlos o sincronizarlos a Notion sin intervención manual.
+generate_census.pyQué hace: Genera el ID Census — barrido completo de IDs canónicos en los 7 documentos que indexa (System Prompt, Manual, Kernel, Career Canon, Aliases, Change Log y Navigation Brief), detecta huérfanos, y puede corregirlos o sincronizarlos a Notion sin intervención manual.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
