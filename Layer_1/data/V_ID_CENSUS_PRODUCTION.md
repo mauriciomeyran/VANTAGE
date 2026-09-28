@@ -141,7 +141,7 @@
 | [`MANUAL:SCRIPT-GLOSSARY`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc428033aac7f397396a4d8e ) | 22 | Script Glossary |
 | [`MANUAL:SCRIPT-GLOSSARY-DASHBOARD`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280978eaccec1c0f3b28e ) | 22.4 | Script Glossary — Dashboard |
 | [`MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280f9bb7aec01efe805be ) | 22.4a | Script Glossary — Dashboard Modules |
-| [`MANUAL:SCRIPT-GLOSSARY-L1`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc42800abcede97904b535f9 ) | 22.1 | Script Glossary — L1 |
+| [`MANUAL:SCRIPT-GLOSSARY-L1`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#4fa823db035a43b0a36fcad5283f323c ) | 22.1 | Script Glossary — L1 |
 | [`MANUAL:SCRIPT-GLOSSARY-CV-PREP`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3aa2572b38e542d3bd4bd733a5910e15 ) | 22.2 | CV Pipeline — Preparación Mecánica (Miércoles) |
 | [`MANUAL:SCRIPT-GLOSSARY-L1-MODULES`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280e6b469f114f00d1cb8 ) | 22.1a | Script Glossary — L1 Modules |
 | [`MANUAL:SCRIPT-GLOSSARY-L1-TOOLS`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc428066b256f75d0faafcc3 ) | 22.1b | Script Glossary — L1 Tools |
