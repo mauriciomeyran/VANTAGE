@@ -189,7 +189,7 @@ cd ~/Documents/03 Projects/VANTAGE/Layer_4/scripts
 source ../../Layer_1/.venv/bin/activate
 python vsync_doc.py --dry-run
 ```
-Output esperado: 6 documentos listados con diff por documento, sin errores.
+Output esperado: 8 documentos listados con diff por documento, sin errores.
 Si falla: verificar que layer_1.env exista y que el token no tenga un salto de línea (\n) embebido por error de copy-paste.
 Paso 8
 Verificar Suite de Pruebas y Gates Documentales
@@ -359,7 +359,7 @@ Asuntos de agradecimiento
 Newsletters
 Confirmaciones de cuenta.
 Límites por ejecución:
-Procesa máximo 10 correos por run (configurable en GROQ_MAX_EMAILS_PER_RUN).
+Procesa máximo 5 correos por run (configurable en GEMINI_MAX_EMAILS_PER_RUN).
 Si hay backlog, el script reporta cuántos quedan.
 Si L3 falla: verifica que LAYER_3/config/layer_3.env existe y contiene las credenciales de Gmail, Groq y Notion. El venv hereda de LAYER_1/.venv — si Layer 1 funciona, L3 tiene el entorno listo. (Para troubleshooting detallado de L3, ver MANUAL:TROUBLESHOOTING.)
 Abre la Terminal y procesa el JSON consolidado de L1+L2:
@@ -376,7 +376,7 @@ Vacantes con Score ≥ 60 están listas para CV Optimization en preparación par
 ¿Qué es L4?
 L4 mantiene dos cosas sincronizadas en background, sin intervención manual en el ciclo semanal normal:
 El repositorio git del sistema (vgit)
-Los 6 documentos fundacionales entre Notion y el disco local (vdoc). 
+Los 8 documentos entre Notion y el disco local (vdoc). 
 Son dos herramientas separadas que se combinan: vdoc mueve contenido documental Notion ↔︎ ACTIVE/, y al terminar dispara automáticamente un git_sync — por eso casi nunca necesitas correr vgit a mano después de un vdoc.
 ¿Qué es vgit?
 Ejecuta vgit desde Terminal en cualquier momento para enviar un sync inmediato — útil si hiciste cambios locales fuera del ciclo automático y no quieres esperar al siguiente horario.
@@ -390,12 +390,12 @@ Extensión reciente — Skills Distribution: además de vgit, el alias vtriggers
 Esto es lo que permite que Claude lea siempre la misma versión del manifiesto (vía web_fetch) y del contenido de cada skill (vía git clone --depth 1 local), sin paso de sincronización manual ni intermediario MCP.
 Automatización adicional vía cron: además de vgit, tres cron jobs corren en background — vantage.py sync y notion_backup.py (arreglados en v9.21.40 tras fallar con "Operation not permitted"; ahora usan ruta directa al Python del venv) y vl3, nuevo cron job a las 12am/8am/4pm para procesar backlog de Gmail sin correrlo manualmente.
 ¿Qué es vdoc?
-Sincroniza los 6 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log) entre Notion y ACTIVE/ en disco.
+Sincroniza los 8 documentos (los 6 fundacionales editables — Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log — más Navigation Brief y Change Log Archivo) entre Notion y ACTIVE/ en disco.
 Al terminar encadena un git_sync automático para que el commit quede reflejado en GitHub sin un paso adicional.
 Tres direcciones posibles:
 vdoc auto — compara la fecha de modificación de cada documento (local vs. Notion) y sincroniza en el sentido que corresponda, documento por documento. Es el modo por defecto y el más seguro para uso diario: nunca sobreescribe algo más reciente con algo más viejo.
-vdoc notion — fuerza Notion → local para los 6 documentos, sin comparar fechas. Úsalo solo si sabes que Notion tiene la versión correcta y quieres descartar cualquier cambio local.
-vdoc local — fuerza local → Notion para los 6 documentos, sin comparar fechas. Úsalo solo si editaste los .md directamente en disco (offline) y quieres que Notion adopte esa versión.
+vdoc notion — fuerza Notion → local para los 8 documentos, sin comparar fechas. Úsalo solo si sabes que Notion tiene la versión correcta y quieres descartar cualquier cambio local.
+vdoc local — fuerza local → Notion para los 8 documentos, sin comparar fechas. Úsalo solo si editaste los .md directamente en disco (offline) y quieres que Notion adopte esa versión.
 notion y local sobreescriben sin comparar fechas, así que ambas son operaciones forzadas: antes de ejecutar nada, vdoc te muestra automáticamente un preview (equivalente a --dry-run). vdoc notion es la vía preferida — sí espera tu confirmación explícita en terminal (s para continuar, cualquier otra tecla cancela). ⚠️ vdoc local es la excepción: por una excepción temporal en el código, ejecuta directo sin pedir confirmación, es más lenta, y conlleva mayor riesgo de corrupción o truncado — además de eliminar los hipervínculos cross-reference ya escritos (ver MANUAL:MONITOR, riesgo de destroy/rebuild). Úsala solo cuando sepas que editaste offline y necesitas forzar esa dirección; revisa siempre el preview con vdoc local dry antes de correrla en serio.
 Si por alguna razón corres el comando sin una terminal interactiva disponible, el script no asume que confirmaste — cancela por seguridad y no escribe nada. vdoc auto nunca pide esta confirmación porque nunca sobreescribe algo más reciente.
 Modificador dry — se combina con cualquiera de los tres comandos anteriores y con cualquier documento específico, en cualquier orden, y siempre gana: nunca escribe en Notion, en disco ni hace commit, sin importar qué más hayas escrito en la misma línea.
@@ -566,10 +566,10 @@ Acepta cuatro flags:
 Estos dos últimos alimentan a vantage-sync-script-library y vantage-sync-skill-library respectivamente. El modo --check fue eliminado en Kernel v9.6.2.
 - vcensus — alias corto de generate_census.py. Regenera el V-ID-CENSUS y reporta IDs huérfanos detectados en los documentos fuente. Se corre en el paso 1 del Cierre de Sesión (MANUAL:SESSION-CYCLE) si algún ID cambió de estado durante la sesión — ver también MANUAL:HEALTH-CHECK, "¿Qué es el Census ID?", para el detalle completo de cuándo es obligatorio. Acepta --auto-fix-orphans (corrige huérfanos de forma interactiva, dándolos de alta en CENSUS_SPEC sin editar el script a mano) y --sync-to-notion [page_id] (sincroniza el export del Census directo a la página de Notion indicada, sin paso manual de copiar/pegar).
 - vsum — alias corto de vsum.py. Resume transcripts de sesiones de trabajo (propias o de otra IA) a Markdown estructurado, orientado a continuidad entre chats sin pérdida de contexto. No es comando del Tracker de vacantes ni observabilidad de Notion como vversions/vcensus — es infraestructura de continuidad documental sobre transcripts externos.
-Acepta archivo .md, URL de Claude share. Acepta los siguientes flags:
+Acepta la ruta de un archivo local (.md o texto). Acepta los siguientes flags:
 --batch para varios a la vez
 --notion crea la página de resumen como hija del INBOX en Notion. 
-Uso típico: vsum chat.md --notion.
+Uso típico: vsum chat.md.
 ### 9.3 MANUAL:RUNTIME-003
 Cuándo Correr Sync
 Correr python3 scripts/vantage.py sync cuando el snapshot local del Entity Index deba reconstruirse a partir de las fuentes actuales de Notion.
@@ -591,7 +591,7 @@ resolver_registry_v2.json continúa siendo la fuente de namespace ownership del 
 Graph y Backlinks son artefactos de observabilidad. Su validación permanece SUSPENDED porque VANTAGE no utiliza relaciones de grafo para mover entidades entre TRACKER y ARCHIVO_TRACKER.
 Comandos relacionados de deduplicación y oportunidades:
 ```bash
-cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_duplicates.py  # alias: vdedup
+cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_duplicates.py  # alias: vdedup — ARCHIVADO (2026-09-12, Archive/Legacy_Scripts/)
 cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/dedup_opportunities.py    # alias: vopport
 ```
 ---
@@ -605,7 +605,7 @@ Qué no resuelve: evaluación de fit, cálculo de Score/Class B, redacción de C
 Matriz de Guard de Mutación (PR #10):
 | Status |
 | --- |
-| Ver tabla completa en KERNEL:GATE-DECISION-012.
+| Ver tabla completa en KERNEL:DEDUP-LAYER-UPGRADE.
 Gestión de Datos |
 Esta sección consolida en un solo lugar todo lo relacionado con exclusiones y deduplicación de vacantes — conceptos que se mencionan a lo largo de MANUAL:OBJECTIVE, MANUAL:HOW-IT-WORKS y MANUAL:WEEKLY-FLOW, y que aquí tienen su definición completa y única.
 ### 10.1 MANUAL:DATA-MANAGEMENT-001
@@ -646,7 +646,7 @@ Entorno (.env) — verifica que NOTION_TOKEN y demás vars requeridas existan.
 Git — git status --porcelain; reporta si hay archivos sin commitear.
 Último commit (vgit) — git log -1 para timestamp de referencia.
 Notion reachable — fetch mínimo a V-SYSTEM-PROMPT para confirmar conectividad y token válido.
-Docs fundacionales — confirma que los 7 documentos existen localmente en ACTIVE/ (los 8 archivos del directorio, sin contar Changelog Archivo, excluido de --sync).
+Docs en ACTIVE/ — confirma que los 8 documentos existen localmente (los 6 fundacionales editables más Navigation Brief y Changelog Archivo); solo verifica existencia, no contenido.
 Último vdoc sync — cuál de los 6 docs locales sincronizados por vdoc (excluye Brief, que no forma parte de su alcance) tiene el mtime más reciente, y hace cuánto.
 Antigüedad de índices (index_age) — ver detalle abajo. Única sección con capacidad de escritura (auto-sync condicional).
 Tickets pendientes — Bug Tracker y Task Tracker, agrupados por prioridad.
@@ -884,12 +884,12 @@ La inyección es node.characters = item.text — reemplazo total, no merge ni ap
 Schema Class A/B
 KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.
 Class A — Human-Primary (operador/feed_processor escriben):
-Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash
+Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash · Fetch · Fuente · JOB_ID (opcional)
 Class B — System-Primary (Python únicamente, ningún otro componente escribe):
-Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente
-Fetch refleja verificación técnica real, incluso en agregadores — un valor Accesible ya no puede escribirse sin al menos un intento de request.
+Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · JD_Quality
+Fetch (Class A) refleja verificación técnica real, incluso en agregadores — un valor Accesible ya no puede escribirse sin al menos un intento de request.
 Next_Action: select (10 valores operativos). Ver KERNEL:SCHEMA-008.
-Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida (KERNEL:SCHEMA-003).
+Fuente es Class A, escrita por feed_processor.py al crear la fila. Fuente_Manual no existe en el código ni como propiedad del Tracker en Notion (KERNEL:SCHEMA-003).
 Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
 ---
  Verificación de Longitud (--length / --update-baseline)
@@ -914,15 +914,13 @@ Casos de uso clave:
 ---
 ## 22 MANUAL:SCRIPT-GLOSSARY
 - feed_processor.py:
-- should_mutate_existing_page(page, schema): Usado por _set_dedup_flag_if_needed y _upgrade_layer_if_needed para validar mutación según el guard de KERNEL:GATE-DECISION-012.
+- should_mutate_existing_page(page, schema): Usado por _set_dedup_flag_if_needed y _upgrade_layer_if_needed para validar mutación según el guard de KERNEL:DEDUP-LAYER-UPGRADE.
 - profile_fit.py:
 - should_annotate_existing(status): Determina si un registro existente puede ser anotado (Dedup_Flag/layer) según su Status.
 Glosario de Scripts — Referencia Operativa en Humano
 > Propósito: traducir cada script/wrapper del árbol activo (Layer_1, Layer_3, Layer_4, Dashboard, Raycast) a lenguaje operativo — qué hace, por qué existe, y un caso de uso concreto por cada flag disponible. Este documento es el "manual de instrucciones" legible; la Script Library (Notion DB) es su índice corto y estructurado. Se referencian entre sí — ver MANUAL:SCRIPT-GLOSSARY-XREF al final.
 > Nodo padre de [KERNEL:DOMAIN-ARCHITECTURE] — organizado por capa, no alfabéticamente, para que la lectura secuencial siga el flujo real del sistema (L1 → L3 → L4 → Dashboard → Raycast).
 ---
-### 22.1 MANUAL:SCRIPT-GLOSSARY-L1
-Layer 1 — Active Recon & Core Pipeline
 ### 22.2 MANUAL:SCRIPT-GLOSSARY-CV-PREP
 CV Pipeline — Preparación Mecánica (Miércoles)
 Contraparte operativa de KERNEL:CV-PIPELINE-003 — los 3 scripts que generan el HANDOFF scaffold en batch antes de la sesión de Claude. Ver también MANUAL:WEEKLY-FLOW-003 para cuándo usar esta ruta vs. copiar URL/JD manualmente.
@@ -1017,7 +1015,7 @@ Flags:
 | --csv <ruta> | Quieres revisar en Excel/Numbers qué headings están mal antes de decidir si vale la pena corregirlos — exporta el reporte sin tocar Notion. |
 | --apply | Ya revisaste el CSV y confirmaste que los fixes son correctos — aplica los reemplazos vía API. |
 | --yes | Vas a correr --apply en un batch grande ya pre-aprobado y no quieres que te pregunte confirmación por cada heading. |
-consolidate_duplicates.pyQué hace: Detecta y fusiona registros duplicados en el Tracker, archivando el sobrante.
+consolidate_duplicates.py — ARCHIVADO (2026-09-12, Archive/Legacy_Scripts/)Qué hace: Detecta y fusiona registros duplicados en el Tracker, archivando el sobrante.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
@@ -1148,7 +1146,7 @@ Variables de entorno (todas ajustables sin tocar código):
 | GROQ_MIN_DELAY_SEC | 12 | Súbelo si estás pegando contra rate limits de Groq en corridas con muchos correos. |
 | GROQ_MAX_RETRIES | 8 | Ajusta si tu conexión es inestable. |
 | GROQ_BODY_MAX_CHARS | 3500 | Si tus alertas de correo traen JDs muy largos y se están truncando antes de lo útil, súbelo (cuidado con costo de tokens de Groq). |
-| GROQ_MAX_EMAILS_PER_RUN | 10 | Si tuviste una semana sin correr L3 y hay backlog, súbelo temporalmente para procesar todo de un jalón. ⚠️ Nota de discrepancia: Manual y Aliases citan valores distintos (10 vs 5) — RESUELTO (v9.21.x): Manual §12 corregido a 10; código real ya usaba 10 como default. |
+| GEMINI_MAX_EMAILS_PER_RUN | 5 | Si tuviste una semana sin correr L3 y hay backlog, súbelo temporalmente para procesar todo de un jalón. Nombre heredado; aplica a ambos backends (Ollama/Groq). GROQ_MAX_EMAILS_PER_RUN no existe en el código. |
 ---
 ### 22.1a MANUAL:SCRIPT-GLOSSARY-L1-MODULES
 Módulos Compartidos (sin CLI propia — se importan, no se ejecutan solos)
@@ -1222,7 +1220,7 @@ Flags:
 | --- | --- |
 | --direction {notion,auto,local} | Igual lógica que los tokens de vdoc.py, pero si necesitas invocar el motor directo (debugging). |
 | --dry-run | Preview sin aplicar ni auto-commit. |
-| --doc {kernel,system_prompt,career_canon,manual,aliases,change_log,brief} | Nota real: maneja 7 documentos, incluyendo brief — aunque la documentación textual del Manual describe un catálogo de 6. |
+| --doc {kernel,system_prompt,career_canon,manual,aliases,change_log,brief,change_log_archivo} | Acepta 8 documentos: los 6 fundacionales editables más brief y change_log_archivo. |
 git_sync.pyQué hace: Genera commit y push del árbol VANTAGE hacia GitHub.
 Flags:
 | Flag | Caso de uso |
@@ -1303,11 +1301,11 @@ Reglas de mantenimiento derivadas de la matriz:
 Hallazgos de discrepancia activos (heredados de auditoría arena.ia, verificados contra código fuente):
 1. layer_1_pipeline.sh batch no reenvía -execute a batch_operations.py — siempre corre en modo definido por el propio script.
 1. vdoc.py local no pide confirmación pese a que el resto de direcciones forzadas sí (excepción temporal marcada en el propio código).
-1. vsync_doc.py --doc maneja 7 documentos (incluye brief), no 6.
+1. vsync_doc.py --doc maneja 8 documentos (6 fundacionales editables + brief + change_log_archivo).
 1. dedup_opportunities.py --clear requiere posición fija en sys.argv, no es un flag argparse real.
 1. vsum.py --notion se parsea pero no tiene efecto — vestigial.
 1. cross_tracker_match.py --dry-run no puede desactivarse — default True sin opuesto.
-1. GROQ_MAX_EMAILS_PER_RUN: Manual/Aliases citan valores distintos entre sí; código usa 10. — RESUELTO (v9.21.x, saneamiento estructural): Manual §12 alineado a 10 correos.
+1. GEMINI_MAX_EMAILS_PER_RUN (nombre heredado; aplica a Ollama y Groq): default 5 en layer_3_mail.py:54. GROQ_MAX_EMAILS_PER_RUN no existe en el código. — RESUELTO (v10): Manual §12 alineado a 5 correos.
 ---
 ## 23 MANUAL:SKILL-GLOSSARY
 Glosario de Skills — Referencia Operativa en Humano

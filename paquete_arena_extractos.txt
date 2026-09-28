@@ -1,0 +1,231 @@
+
+=== N2/#1/#5/#10/B-09 (Kernel 07.1) | Documentación/ACTIVE/Kernel.md L436-450 ===
+L436| ### 07.1 KERNEL:SCHEMA-001
+L437| > Aclaración (2026-08-17): El upgrade de layer en dedup respeta el guard de KERNEL:GATE-DECISION-012 — no reescribe procedencia de una postulación viva.
+L438| Class A vs Class B
+L439| El schema define ownership. Cada campo pertenece a exactamente un componente.
+L440| Class A — Human-Primary
+L441| AI Component escribe en CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_processor.py escribe en FEED L1/L3:
+L442| - Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash.
+L443| Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Archivar · Repetida.
+L444| Notas recibe, entre otros usos, el texto determinista de auditoría de archivado escrito por VL1 (ver KERNEL:GATE-DECISION-013) — es trazabilidad de decisión, no un campo Class B pese a ser escrito por un comando Python.
+L445| Class B — System-Primary
+L446| Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente · Dedup_Flag · Score_Method · Last_Gate_Run · JD_Quality.
+L447| VM_Scope ∈ {Alto, Bajo} — campo binario. No existe valor "Medio" en ningún punto del sistema (verificado contra Kernel y MANUAL:SCHEMA-FIELD-REF §21).
+L448| Resolución B-09 (2026-09-17): Notion es la autoridad declarada (SSOT) de este esquema. class_b_guard.py es su espejo verificado en código — no existen dos esquemas distintos. La sincronización entre ambos es hoy manual; se propone extender verify_versions.py (o un g9_docsync_verify.py nuevo) para comparar automáticamente los campos Class A/B de Notion contra class_b_guard.py y fallar si divergen.
+L449| ### 07.2 KERNEL:SCHEMA-002
+L450| Restricción del Sistema
+
+=== #9 (Kernel) | Documentación/ACTIVE/Kernel.md L336-340 ===
+L336| Componentes: Gmail (label .Jobs) · layer_3_mail.py (IMAP + backend configurable ollama/groq).
+L337| Responsabilidades: leer backlog de correo, extraer vacantes, poblar Class A; Class B queda vacío — lo calcula Python en el siguiente run del pipeline.
+L338| Campos inmutables: GEMINI_MAX_EMAILS_PER_RUN controla el límite por corrida (default actual: 5; ver ALIASES:L3-PASSIVE-INTAKE); Class B nunca se estima aquí.
+L339| Reglas de dedup: L3 no deduplica — entra directo a feed_processor.py; la jerarquía L1>L2>L3 se resuelve en KERNEL:ARCHITECTURE-L4.
+L340| Estados de error: si falla el parseo JSON, se agotan los reintentos, Ollama no está disponible o ocurre un error inesperado, el correo se conserva como no leído mediante _set_seen(..., False) para permitir reintento. Solo se marca como leído después de una extracción o descarte deliberado correctamente clasificado.
+
+=== #11 (Kernel) | Documentación/ACTIVE/Kernel.md L452-456 ===
+L452| ### 07.3 KERNEL:SCHEMA-003
+L453| Fuente como Campo Especial
+L454| Python sobrescribe Fuente en cada run. Persistencia manual → Fuente_Manual (Class A).
+L455| ### 07.4 KERNEL:SCHEMA-004
+L456| Entity Format
+
+=== #10 (Kernel Entry Template) | Documentación/ACTIVE/Kernel.md L478-484 ===
+L478| - brand → Marca
+L479| - title → Rol
+L480| - holding → Holding (null → "Investigar")
+L481| Entry Template — Campos Class A Requeridos
+L482| Rol · Marca · URL · Source_Type · Status · Prioridad · JD · JOB_ID · Holding.
+L483| ---
+L484| ### 07.8 KERNEL:SCHEMA-008
+
+=== N2 (Kernel Campos protegidos) | Documentación/ACTIVE/Kernel.md L688-694 ===
+L688| Regla #1 — No Evaluar Fit Antes de Escribir
+L689| Excepción: CV-A extrae keywords/gaps técnicos, no es evaluación de fit.
+L690| ### 10.2 KERNEL:CV-GOLDEN-RULES-002
+L691| Regla #2 — No Calcular ni Estimar Campos Class B
+L692| Campos protegidos: Score · VM_Scope · Role_Class · Match · Gate_Decision · Next_Action · Fetch · Fuente · JD_Quality · Dedup_Flag.
+L693| ### 10.3 KERNEL:CV-GOLDEN-RULES-003
+L694| Regla #3 — No Cuestionar la Calidad de Datos del Usuario
+
+=== #1/#10/#11/N2 (Manual §21) | Documentación/ACTIVE/Manual.md L884-894 ===
+L884| Schema Class A/B
+L885| KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de consulta rápida — el contrato completo (reglas de excepción, mapeo de vocabulario) vive en el Kernel.
+L886| Class A — Human-Primary (operador/feed_processor escriben):
+L887| Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash
+L888| Class B — System-Primary (Python únicamente, ningún otro componente escribe):
+L889| Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente
+L890| Fetch refleja verificación técnica real, incluso en agregadores — un valor Accesible ya no puede escribirse sin al menos un intento de request.
+L891| Next_Action: select (10 valores operativos). Ver KERNEL:SCHEMA-008.
+L892| Excepción documentada: Fuente_Manual (Class A) existe para valores de fuente que deben persistir entre runs — Fuente (Class B) se sobreescribe en cada corrida (KERNEL:SCHEMA-003).
+L893| Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
+L894| ---
+
+=== #9 (Manual) | Documentación/ACTIVE/Manual.md L360-364 ===
+L360| Confirmaciones de cuenta.
+L361| Límites por ejecución:
+L362| Procesa máximo 10 correos por run (configurable en GROQ_MAX_EMAILS_PER_RUN).
+L363| Si hay backlog, el script reporta cuántos quedan.
+L364| Si L3 falla: verifica que LAYER_3/config/layer_3.env existe y contiene las credenciales de Gmail, Groq y Notion. El venv hereda de LAYER_1/.venv — si Layer 1 funciona, L3 tiene el entorno listo. (Para troubleshooting detallado de L3, ver MANUAL:TROUBLESHOOTING.)
+
+=== #9 (Manual) | Documentación/ACTIVE/Manual.md L1140-1152 ===
+L1140| | output_file (posicional, opcional) | Default VANTAGE_digest.txt. Especifica un nombre distinto si quieres conservar varios snapshots fechados sin sobrescribir el anterior. |
+L1141| Layer 3 — Passive Intake (Gmail)
+L1142| layer_3_mail.pyQué hace: Admite EXTRACTION_BACKEND=ollama o EXTRACTION_BACKEND=groq, configurado en config/layer_3.env. El límite por corrida lo controla GEMINI_MAX_EMAILS_PER_RUN (default actual: 5). Si el prefiltrado descarta deliberadamente un correo, puede marcarse como leído. Si falla el parseo JSON, se agotan los reintentos, Ollama no está disponible o ocurre un error inesperado, el correo se conserva como no leído mediante _set_seen(..., False) para permitir reintento. Solo se marca como leído después de una extracción o descarte deliberado correctamente clasificado.
+L1143| Variables de entorno (todas ajustables sin tocar código):
+L1144| | Variable | Default | Caso de uso |
+L1145| | --- | --- | --- |
+L1146| | GMAIL_LABEL | .Jobs | Si organizas tus alertas de LinkedIn en una etiqueta distinta, apunta L3 ahí sin modificar el script. |
+L1147| | GROQ_MODEL | llama-3.1-8b-instant | Si notas que la extracción está fallando en vacantes complejas, prueba con un modelo más grande de Groq. |
+L1148| | GROQ_MIN_DELAY_SEC | 12 | Súbelo si estás pegando contra rate limits de Groq en corridas con muchos correos. |
+L1149| | GROQ_MAX_RETRIES | 8 | Ajusta si tu conexión es inestable. |
+L1150| | GROQ_BODY_MAX_CHARS | 3500 | Si tus alertas de correo traen JDs muy largos y se están truncando antes de lo útil, súbelo (cuidado con costo de tokens de Groq). |
+L1151| | GROQ_MAX_EMAILS_PER_RUN | 10 | Si tuviste una semana sin correr L3 y hay backlog, súbelo temporalmente para procesar todo de un jalón. ⚠️ Nota de discrepancia: Manual y Aliases citan valores distintos (10 vs 5) — RESUELTO (v9.21.x): Manual §12 corregido a 10; código real ya usaba 10 como default. |
+L1152| ---
+
+=== #9/N3 (Manual) | Documentación/ACTIVE/Manual.md L1306-1311 ===
+L1306| 1. vsync_doc.py --doc maneja 7 documentos (incluye brief), no 6.
+L1307| 1. dedup_opportunities.py --clear requiere posición fija en sys.argv, no es un flag argparse real.
+L1308| 1. vsum.py --notion se parsea pero no tiene efecto — vestigial.
+L1309| 1. cross_tracker_match.py --dry-run no puede desactivarse — default True sin opuesto.
+L1310| 1. GROQ_MAX_EMAILS_PER_RUN: Manual/Aliases citan valores distintos entre sí; código usa 10. — RESUELTO (v9.21.x, saneamiento estructural): Manual §12 alineado a 10 correos.
+L1311| ---
+
+=== #13/N3 (Manual vsum) | Documentación/ACTIVE/Manual.md L564-574 ===
+L564| --scripts (gap report read-only de scripts .py/.sh contra SCRIPT LIBRARY)
+L565| --skills (gap report read-only de archivos .skill contra SKILL LIBRARY) 
+L566| Estos dos últimos alimentan a vantage-sync-script-library y vantage-sync-skill-library respectivamente. El modo --check fue eliminado en Kernel v9.6.2.
+L567| - vcensus — alias corto de generate_census.py. Regenera el V-ID-CENSUS y reporta IDs huérfanos detectados en los documentos fuente. Se corre en el paso 1 del Cierre de Sesión (MANUAL:SESSION-CYCLE) si algún ID cambió de estado durante la sesión — ver también MANUAL:HEALTH-CHECK, "¿Qué es el Census ID?", para el detalle completo de cuándo es obligatorio. Acepta --auto-fix-orphans (corrige huérfanos de forma interactiva, dándolos de alta en CENSUS_SPEC sin editar el script a mano) y --sync-to-notion [page_id] (sincroniza el export del Census directo a la página de Notion indicada, sin paso manual de copiar/pegar).
+L568| - vsum — alias corto de vsum.py. Resume transcripts de sesiones de trabajo (propias o de otra IA) a Markdown estructurado, orientado a continuidad entre chats sin pérdida de contexto. No es comando del Tracker de vacantes ni observabilidad de Notion como vversions/vcensus — es infraestructura de continuidad documental sobre transcripts externos.
+L569| Acepta archivo .md, URL de Claude share. Acepta los siguientes flags:
+L570| --batch para varios a la vez
+L571| --notion crea la página de resumen como hija del INBOX en Notion. 
+L572| Uso típico: vsum chat.md --notion.
+L573| ### 9.3 MANUAL:RUNTIME-003
+L574| Cuándo Correr Sync
+
+=== #13 (Manual §22.3) | Documentación/ACTIVE/Manual.md L1229-1236 ===
+L1229| | --- | --- |
+L1230| | --dry | Antes de un push automático, revisa qué archivos entrarían al commit sin ejecutar nada. |
+L1231| vsum.pyQué hace: Genera resúmenes de archivos Markdown/texto vía Groq o Gemini.
+L1232| Flags:
+L1233| | Flag | Caso de uso |
+L1234| | --- | --- |
+L1235| | file (posicional, requerido) | Ruta al archivo local a resumir. ⚠️ Nota real: pese a lo que sugiere cualquier doc sobre "Claude Share URLs", el código solo acepta rutas de archivo local — una URL fallará. |
+L1236| | -o/--output <ruta> | Si quieres guardar el resumen en vez de verlo en pantalla — útil para encadenar con otro proceso. |
+
+=== #12 (Manual, 1a ocurrencia) | Documentación/ACTIVE/Manual.md L922-926 ===
+L922| > Nodo padre de [KERNEL:DOMAIN-ARCHITECTURE] — organizado por capa, no alfabéticamente, para que la lectura secuencial siga el flujo real del sistema (L1 → L3 → L4 → Dashboard → Raycast).
+L923| ---
+L924| ### 22.1 MANUAL:SCRIPT-GLOSSARY-L1
+L925| Layer 1 — Active Recon & Core Pipeline
+L926| ### 22.2 MANUAL:SCRIPT-GLOSSARY-CV-PREP
+
+=== #12 (Manual, 2a ocurrencia) | Documentación/ACTIVE/Manual.md L954-958 ===
+L954| | --clear-cache | Limpia cache expirada antes de correr. |
+L955| ---
+L956| ### 22.1 MANUAL:SCRIPT-GLOSSARY-L1
+L957| Layer 1 — Active Recon & Core Pipeline
+L958| layer_1_run.py
+
+=== #3 | grep -nE -C1 "consolidate_duplicates" ===
+Documentación/ACTIVE/Manual.md-593-```bash
+Documentación/ACTIVE/Manual.md:594:cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/consolidate_duplicates.py  # alias: vdedup
+Documentación/ACTIVE/Manual.md-595-cd $LAYER_1_DIR && source .venv/bin/activate && python3 scripts/dedup_opportunities.py    # alias: vopport
+--
+Documentación/ACTIVE/Manual.md-629-Ambos mecanismos coexisten legítimamente: el primero es gate preventivo de ingesta; el segundo es auditoría correctiva posterior.
+Documentación/ACTIVE/Manual.md:630:dedup_opportunities.py pasa por class_b_guard(payload, Actor.DEDUP) antes de cualquier escritura y requiere --apply explícito para escribir. Sin --apply corre en modo preview; el flag --dry-run se conserva por compatibilidad. consolidate_duplicates.py está archivado y no forma parte del flujo activo.
+Documentación/ACTIVE/Manual.md-631----
+--
+Documentación/ACTIVE/Manual.md-1019-| --yes | Vas a correr --apply en un batch grande ya pre-aprobado y no quieres que te pregunte confirmación por cada heading. |
+Documentación/ACTIVE/Manual.md:1020:consolidate_duplicates.pyQué hace: Detecta y fusiona registros duplicados en el Tracker, archivando el sobrante.
+Documentación/ACTIVE/Manual.md-1021-Flags:
+
+=== #4 | grep -nE -C1 "vsync_doc|(seis|6) documentos" ===
+189-source ../../Layer_1/.venv/bin/activate
+190:python vsync_doc.py --dry-run
+191-```
+192:Output esperado: 6 documentos listados con diff por documento, sin errores.
+193-Si falla: verificar que layer_1.env exista y que el token no tenga un salto de línea (\n) embebido por error de copy-paste.
+--
+378-El repositorio git del sistema (vgit)
+379:Los 6 documentos fundacionales entre Notion y el disco local (vdoc). 
+380-Son dos herramientas separadas que se combinan: vdoc mueve contenido documental Notion ↔︎ ACTIVE/, y al terminar dispara automáticamente un git_sync — por eso casi nunca necesitas correr vgit a mano después de un vdoc.
+--
+392-¿Qué es vdoc?
+393:Sincroniza los 6 documentos fundacionales (Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log) entre Notion y ACTIVE/ en disco.
+394-Al terminar encadena un git_sync automático para que el commit quede reflejado en GitHub sin un paso adicional.
+--
+396-vdoc auto — compara la fecha de modificación de cada documento (local vs. Notion) y sincroniza en el sentido que corresponda, documento por documento. Es el modo por defecto y el más seguro para uso diario: nunca sobreescribe algo más reciente con algo más viejo.
+397:vdoc notion — fuerza Notion → local para los 6 documentos, sin comparar fechas. Úsalo solo si sabes que Notion tiene la versión correcta y quieres descartar cualquier cambio local.
+398:vdoc local — fuerza local → Notion para los 6 documentos, sin comparar fechas. Úsalo solo si editaste los .md directamente en disco (offline) y quieres que Notion adopte esa versión.
+399-notion y local sobreescriben sin comparar fechas, así que ambas son operaciones forzadas: antes de ejecutar nada, vdoc te muestra automáticamente un preview (equivalente a --dry-run). vdoc notion es la vía preferida — sí espera tu confirmación explícita en terminal (s para continuar, cualquier otra tecla cancela). ⚠️ vdoc local es la excepción: por una excepción temporal en el código, ejecuta directo sin pedir confirmación, es más lenta, y conlleva mayor riesgo de corrupción o truncado — además de eliminar los hipervínculos cross-reference ya escritos (ver MANUAL:MONITOR, riesgo de destroy/rebuild). Úsala solo cuando sepas que editaste offline y necesitas forzar esa dirección; revisa siempre el preview con vdoc local dry antes de correrla en serio.
+--
+763-Confirmar que script tiene guard if not args.execute: return al inicio.
+764:vsync_doc.py Falla — “blocks.children.list() returned None”
+765-Bug conocido de notion-client 3.x.
+766:Solución: vsync_doc.py usa safe_list() con httpx directo (3 reintentos).
+767-Si persiste: verificar que page_id sea válido y token tenga permisos de lectura.
+--
+808-Calidad de Parches
+809:Todo parche a los 6 documentos fundacionales debe cumplir estos seis criterios antes de aplicarse — si falla alguno, se reescribe antes de solicitar APROBAR_WRITE:
+810-1. Invisibilidad estructural — no crea secciones nuevas si el contenido cabe en una existente. Nota: la invisibilidad estructural incluye el nivel de heading Markdown, no solo el contenido — una subsección (NN.N) que comparte nivel ## con su capítulo padre rompe esta invisibilidad tanto como un párrafo con tono distinto. Ver la matriz tipográfica congelada en KERNEL:DOCUMENTATION-001 como referencia de nivel correcto por tipo de nodo. Adicionalmente, el identificador técnico y el título descriptivo de cualquier nodo deben coexistir dentro de un único bloque de heading (un solo nodo ##/###), con el título unido al identificador mediante un salto de línea 
+--
+1196-Caso de uso: Antes de archivar cualquier script a Archive/Legacy_Scripts/, corre esto primero en vez de grep manual — te da el veredicto de las mismas fuentes que ya se usaron en el saneamiento v9.21.x.
+1197:⚠️ Limitación conocida: el corpus es heurístico por conteo de substring, no AST/import real. Solo reporta — nunca mueve ni archiva nada; la decisión sigue siendo del operador vía git mv manual. Falsos positivos confirmados en su sesión de creación: clean_caches.sh (housekeeping legítimo de macOS, no VANTAGE) y compile_skills.py/diagnose_agent_run.py (referenciados solo en script_hash_baseline.json, no en invocación real — requieren confirmación manual antes de archivar).nnpatch_vsync_doc.pyQué hace: Patcher de un solo uso (ya ejecutado) que separó la entrada cheat_sheet de vsync_doc.py en dos entradas independientes (aliases y change_log) — mismo patrón que patch_new_scripts.py (backup automático + validación de sintaxis antes de escribir).
+1198:Uso: python3 patch_vsync_doc.py — sin flags. Es idempotente por diseño de patcher (aunque no verifiqué si tiene el mismo guard explícito).
+1199:Nota operativa: Como es un patcher de una sola aplicación histórica (ya corrido, ver ALIASES/CHANGE_LOG separados en tu vsync_doc.py actual), no debería necesitar correrse de nuevo. patch_vsync_doc.py y patch_new_scripts.py fueron MOVIDOS a Archive/Legacy_Scripts/ (saneamiento v9.21.x) — --new-scripts ya no debería detectarlos como pendientes.
+1200-⚠️ Hallazgo real — extract_score_distribution.py: este script parece ser un borrador abandonado, no una herramienta funcional. El propio código trae comentarios como "Simulación: voy a asumir que necesito procesar los datos reales" y "Por ahora, voy a mostrar el formato de análisis esperado" — usa datos de muestra hardcodeados (sample_data), no consulta Notion. extract_score_distribution.py parece ser una versión temprana/incompleta de extract_scores.py (que sí funciona). Documentado como hallazgo, no corregido — decide tú si vale la pena eliminarlo del árbol para que deje de aparecer en cada gap report. — MOVIDO a Archive/Legacy_Scripts/ (saneamiento v9.21.x)
+--
+1209-Layer 4 — Version Control & Sync Documental
+1210:vdoc.pyQué hace: Wrapper de orquestación — decide dirección de sync (Notion↔local) y dispara vsync_doc.py + git_sync.py.
+1211-Uso (tokens posicionales, no flags tradicionales):
+--
+1218-| <documento> (ej. kernel, brief) | Restringe el sync a un solo documento en vez de los 7. |
+1219:vsync_doc.pyQué hace: Motor real de sincronización documento-por-documento (invocado por vdoc.py, no directo normalmente).
+1220-Flags:
+--
+1281-| vantage-status.sh | status_report.py | Sin flags. |
+1282:| vantage-sync.sh | (revisar contenido — probablemente alias de vdoc.py auto o vsync_doc.py) | Pendiente de confirmación directa si se usa activamente. |
+1283-| clean-caches-raycast.sh | clean_caches.sh | Limpieza de cachés de apps (Chrome, Figma, Notion, etc.) — no toca sesión/login, solo caché regenerable. |
+--
+1305-1. vdoc.py local no pide confirmación pese a que el resto de direcciones forzadas sí (excepción temporal marcada en el propio código).
+1306:1. vsync_doc.py --doc maneja 7 documentos (incluye brief), no 6.
+1307-1. dedup_opportunities.py --clear requiere posición fija en sys.argv, no es un flag argparse real.
+
+=== #5 | grep -nE -C1 "GATE-DECISION-012|DEDUP-LAYER-UPGRADE" ===
+Documentación/ACTIVE/Manual.md-607-| --- |
+Documentación/ACTIVE/Manual.md:608:| Ver tabla completa en KERNEL:GATE-DECISION-012.
+Documentación/ACTIVE/Manual.md-609-Gestión de Datos |
+--
+Documentación/ACTIVE/Manual.md-916-- feed_processor.py:
+Documentación/ACTIVE/Manual.md:917:- should_mutate_existing_page(page, schema): Usado por _set_dedup_flag_if_needed y _upgrade_layer_if_needed para validar mutación según el guard de KERNEL:GATE-DECISION-012.
+Documentación/ACTIVE/Manual.md-918-- profile_fit.py:
+--
+Documentación/ACTIVE/Kernel.md-436-### 07.1 KERNEL:SCHEMA-001
+Documentación/ACTIVE/Kernel.md:437:> Aclaración (2026-08-17): El upgrade de layer en dedup respeta el guard de KERNEL:GATE-DECISION-012 — no reescribe procedencia de una postulación viva.
+Documentación/ACTIVE/Kernel.md-438-Class A vs Class B
+--
+Documentación/ACTIVE/Kernel.md-568-### 09.7 KERNEL:GATE-DECISION-007
+Documentación/ACTIVE/Kernel.md:569:> Nota (2026-08-17): El marcado de Dedup_Flag/candidato a archivo está sujeto al guard de KERNEL:GATE-DECISION-012 — una postulación viva o terminal nunca se marca como candidata.
+Documentación/ACTIVE/Kernel.md-570-Marcado Manual de Archivado
+--
+Documentación/ACTIVE/Kernel.md-634-### 09.11 KERNEL:GATE-DECISION-011
+Documentación/ACTIVE/Kernel.md:635:> Matiz (2026-08-17): La fila de la matriz de transición para "Dedup match en existente" se ajusta a: Dedup_Flag='Posible duplicado' solo si el Status del existente no está en el guard de KERNEL:GATE-DECISION-012.
+Documentación/ACTIVE/Kernel.md-636-Matriz de Transición de Estados (Referencia Técnica)
+--
+Documentación/ACTIVE/Kernel.md-659----
+Documentación/ACTIVE/Kernel.md:660:### 09.12 KERNEL:DEDUP-LAYER-UPGRADE 
+Documentación/ACTIVE/Kernel.md-661-— Guard de Mutación en Existentes
+
+=== #4 (código) | Layer_4/scripts/vsync_doc.py L51-60 ===
+L51| DOCS = {
+L52|     "kernel":        {"notion_id": "377938be-fc42-805e-a408-c9ae518d4fe7", "local_file": BASE_DIR / "Kernel.md", "label": "TECHNICAL KERNEL"},
+L53|     "system_prompt": {"notion_id": "37b938be-fc42-8001-9b9b-fcf81130d274", "local_file": BASE_DIR / "System Prompt.md", "label": "SYSTEM PROMPT"},
+L54|     "career_canon":  {"notion_id": "377938be-fc42-8089-93f2-f52dbd2dec6c", "local_file": BASE_DIR / "Career Canon.md", "label": "CAREER CANON"},
+L55|     "manual":        {"notion_id": "372938be-fc42-8050-9a67-e40857d7806e", "local_file": BASE_DIR / "Manual.md", "label": "MANUAL DE USUARIO"},
+L56|     "aliases":       {"notion_id": "37c938be-fc42-80d4-b9ae-f5969830331b", "local_file": BASE_DIR / "Aliases.md", "label": "ALIASES"},
+L57|     "change_log":    {"notion_id": "390938be-fc42-80e7-b429-d7d730339353", "local_file": BASE_DIR / "Change Log.md", "label": "CHANGE LOG"},
+L58|     "brief":           {"notion_id": "3a3938be-fc42-8008-9e90-ec435c01f50d", "local_file": BASE_DIR / "Brief.md", "label": "DOCUMENT NAVIGATION BRIEF"},
+L59|     "change_log_archivo": {"notion_id": "3ba938be-fc42-8011-8947-fb4fa5d1f63f", "local_file": BASE_DIR / "Changelog Archivo.md", "label": "CHANGELOG ARCHIVO"},
+L60| }

@@ -434,24 +434,24 @@ Cualquier cambio a color de estado semántico o toggle de tema se hace en vantag
 Modelo de Datos y Ownership
 Aclaración terminológica: "el Tracker" sin calificativo se refiere siempre a la base de datos principal donde L1/L2/L3 escriben cada vacante — distinta del Bug Tracker y Tasks Tracker (08).
 ### 07.1 KERNEL:SCHEMA-001
-> Aclaración (2026-08-17): El upgrade de layer en dedup respeta el guard de KERNEL:GATE-DECISION-012 — no reescribe procedencia de una postulación viva.
+> Aclaración (2026-08-17): El upgrade de layer en dedup respeta el guard de KERNEL:DEDUP-LAYER-UPGRADE — no reescribe procedencia de una postulación viva.
 Class A vs Class B
 El schema define ownership. Cada campo pertenece a exactamente un componente.
 Class A — Human-Primary
 AI Component escribe en CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_processor.py escribe en FEED L1/L3:
-- Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash.
+- Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash · Fetch · Fuente · JOB_ID (opcional).
 Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Archivar · Repetida.
 Notas recibe, entre otros usos, el texto determinista de auditoría de archivado escrito por VL1 (ver KERNEL:GATE-DECISION-013) — es trazabilidad de decisión, no un campo Class B pese a ser escrito por un comando Python.
 Class B — System-Primary
-Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Fetch · Fuente · Dedup_Flag · Score_Method · Last_Gate_Run · JD_Quality.
+Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · JD_Quality.
 VM_Scope ∈ {Alto, Bajo} — campo binario. No existe valor "Medio" en ningún punto del sistema (verificado contra Kernel y MANUAL:SCHEMA-FIELD-REF §21).
-Resolución B-09 (2026-09-17): Notion es la autoridad declarada (SSOT) de este esquema. class_b_guard.py es su espejo verificado en código — no existen dos esquemas distintos. La sincronización entre ambos es hoy manual; se propone extender verify_versions.py (o un g9_docsync_verify.py nuevo) para comparar automáticamente los campos Class A/B de Notion contra class_b_guard.py y fallar si divergen.
+Resolución B-09 (2026-09-17): Notion es la autoridad declarada (SSOT) de este esquema. class_b_guard.py es su espejo en código; la equivalencia campo por campo no está verificada (divergencias conocidas: Match, Class_B_Last_Run, CV-A, CV-B, PDF, Figma, Prioridad_Auto). La sincronización entre ambos es hoy manual; se propone extender verify_versions.py (o un g9_docsync_verify.py nuevo) para comparar automáticamente los campos Class A/B de Notion contra class_b_guard.py y fallar si divergen.
 ### 07.2 KERNEL:SCHEMA-002
 Restricción del Sistema
 Campos Class B en JSON entrante se ignoran sin excepción — Python los calcula en el siguiente run.
 ### 07.3 KERNEL:SCHEMA-003
 Fuente como Campo Especial
-Python sobrescribe Fuente en cada run. Persistencia manual → Fuente_Manual (Class A).
+Fuente es Class A, escrita por feed_processor.py al crear la fila (notion_utils.pages.create). Fuente_Manual no existe en el código ni como propiedad del Tracker en Notion.
 ### 07.4 KERNEL:SCHEMA-004
 Entity Format
 PREFIX:H_<hash16> / PREFIX:U_<UUID>.
@@ -479,7 +479,7 @@ Mapeo de Vocabulario — Prompts → Tracker
 - title → Rol
 - holding → Holding (null → "Investigar")
 Entry Template — Campos Class A Requeridos
-Rol · Marca · URL · Source_Type · Status · Prioridad · JD · JOB_ID · Holding.
+Rol · Marca · URL · Source_Type · Status · Prioridad · JD · Holding. JOB_ID es Class A opcional: si falta o es un valor generado, el hash de dedup usa fallback:{composite_key}.
 ---
 ### 07.8 KERNEL:SCHEMA-008
 Valores Operativos — Next_Action (Tracker de Vacantes)
@@ -566,7 +566,7 @@ Python traduce vía evaluate_rejection_status().
 El operador nunca escribe Gate_Decision directamente.
 > [Corrección aplicada] Este ID ya existía en el cuerpo del Kernel pero faltaba en la TOC — agregado como sub-ítem de 09.
 ### 09.7 KERNEL:GATE-DECISION-007
-> Nota (2026-08-17): El marcado de Dedup_Flag/candidato a archivo está sujeto al guard de KERNEL:GATE-DECISION-012 — una postulación viva o terminal nunca se marca como candidata.
+> Nota (2026-08-17): El marcado de Dedup_Flag/candidato a archivo está sujeto al guard de KERNEL:DEDUP-LAYER-UPGRADE — una postulación viva o terminal nunca se marca como candidata.
 Marcado Manual de Archivado
 Next_Action='Archivar' Y/O Dedup_Flag='Posible duplicado' (ambos Class B) son señales de candidatos a archivar — no disparan archivado automático. Decisión del operador (2026-08-01): se abandonó el enfoque de mover/copiar automáticamente vía auto_archive.py (deprecado, ver Archive/Legacy_Scripts/) por menor fricción, menor costo de tokens, y por desalineación de esquema con el Archivo Tracker (ver skill vantage-tidy-opportunities-tracker).
 El mecanismo vigente es la skill vantage-tidy-opportunities-tracker: identifica candidatos vía Dedup_Flag/Next_Action, marca Archivar = True en el registro original tras DRY RUN + APROBAR_WRITE — no crea copias ni toca el Archivo Tracker ni mueve páginas físicamente. El operador localiza visualmente los registros marcados y decide cuándo archivarlos manualmente.
@@ -632,7 +632,7 @@ Referencias
 - Atomicidad RT-1: Dashboard/scripts/dashboard_routes.py (/accept), dashboard_notion.py — la escritura en esta vía pasa por el guard class_b_guard.guard_write_payload() (ver KERNEL:GATE-DECISION-003, GAP-03 cerrado v9.19.2), que bloquea fail-closed cualquier campo Class B o desconocido antes de client.pages.update().
 - Contratos relacionados: KERNEL:GATE-DECISION-005, KERNEL:GATE-DECISION-006, KERNEL:GATE-DECISION-008, KERNEL:OWNERSHIP-002
 ### 09.11 KERNEL:GATE-DECISION-011
-> Matiz (2026-08-17): La fila de la matriz de transición para "Dedup match en existente" se ajusta a: Dedup_Flag='Posible duplicado' solo si el Status del existente no está en el guard de KERNEL:GATE-DECISION-012.
+> Matiz (2026-08-17): La fila de la matriz de transición para "Dedup match en existente" se ajusta a: Dedup_Flag='Posible duplicado' solo si el Status del existente no está en el guard de KERNEL:DEDUP-LAYER-UPGRADE.
 Matriz de Transición de Estados (Referencia Técnica)
 Vista tabular consolidada de todas las reglas Gate (09.1–09.10).
 Referencia canónica para scripts y auditorías — no reemplaza la descripción en prosa de cada sección; la complementa con indexación de estados.
@@ -689,7 +689,7 @@ Regla #1 — No Evaluar Fit Antes de Escribir
 Excepción: CV-A extrae keywords/gaps técnicos, no es evaluación de fit.
 ### 10.2 KERNEL:CV-GOLDEN-RULES-002
 Regla #2 — No Calcular ni Estimar Campos Class B
-Campos protegidos: Score · VM_Scope · Role_Class · Match · Gate_Decision · Next_Action · Fetch · Fuente · JD_Quality · Dedup_Flag.
+Campos protegidos: Score · VM_Scope · Role_Class · Match · Gate_Decision · Next_Action · JD_Quality · Dedup_Flag.
 ### 10.3 KERNEL:CV-GOLDEN-RULES-003
 Regla #3 — No Cuestionar la Calidad de Datos del Usuario
 Sin sugerencias, sin recomendaciones de fuentes alternativas.
