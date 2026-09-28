@@ -1,5 +1,26 @@
 # V | CHANGELOG
 
+Tipo: [DOC] [FIX] [OPS]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN (contrato, auditoría y cierre). Ejecutor de las ediciones en Notion: Perplexity (Sonnet 5 Thinking, MCP Notion).
+Documentos modificados: V | KERNEL (9 ediciones, K-01 a K-09) · V | MANUAL (22 ediciones, M-01 a M-22) · Bug Tracker (7 altas).
+Documentos potencialmente afectados: Ninguno adicional. Career Canon, System Prompt y Aliases no se tocaron.
+Tipo de impacto: Normativo + Documental — alinea Kernel y Manual con el código real (class_b_guard.py, feed_processor.py, layer_3_mail.py, vsync_doc.py, vsum.py, health_check.py).
+Alcance:
+1. Class A/B — Fetch y Fuente pasan a Class A; Class B queda en 10 campos (Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · JD_Quality). JOB_ID documentado como Class A opcional (fallback a composite_key). Fuente_Manual retirado: no existe en código ni en Notion. Resolución B-09 reescrita: class_b_guard.py es espejo en código, la equivalencia campo por campo no está verificada. (K-01 a K-06, M-01 a M-04)
+1. Referencia huérfana KERNEL:GATE-DECISION-012 reemplazada por KERNEL:DEDUP-LAYER-UPGRADE en las 5 ocurrencias reales (3 en Kernel, 2 en Manual). (K-07 a K-09, M-05, M-06)
+1. Cifra de documentos — vdoc/vsync_doc y el chequeo de ACTIVE/ pasan de 6/7 a 8 (los 6 fundacionales editables + Navigation Brief + Changelog Archivo), conforme a DOCS en vsync_doc.py y DOCS_FUNDACIONALES en health_check.py. (M-09 a M-16)
+1. consolidate_duplicates.py marcado ARCHIVADO (2026-09-12) en el bloque de comando y en el glosario, sin borrar la entrada. (M-07, M-08)
+1. L3 — el límite de correos por run es GEMINI_MAX_EMAILS_PER_RUN, default 5 (nombre heredado, aplica a Ollama y Groq); GROQ_MAX_EMAILS_PER_RUN no existe en el código. Notas "RESUELTO 10" reescritas. (M-17 a M-19)
+1. vsum.py acepta solo rutas locales (no URL); --notion retirado del uso típico (flag vestigial). (M-20, M-21)
+1. Heading duplicado MANUAL:SCRIPT-GLOSSARY-L1 (§22.1) eliminado: el cascarón sin cuerpo. Único borrado del contrato. (M-22)
+Decisiones confirmadas: Fetch y Fuente son Class A (operador, 2026-09-27); vdoc local nunca se usa (operador único); los hallazgos de código y config van a tickets, no a v10; la tabla de flags de apply_hyperlinks_notion.py en el Manual conserva "7 documentos" porque ese script maneja 7.
+Decisiones no duplicadas: no se tocó el orden de §22 (quedó 22.2 antes de 22.1; se difiere a v10.1); no se tocó Kernel §10.2 (campos protegidos sin Score_Method ni Last_Gate_Run); no se tocaron las menciones de "6 documentos" en otros contextos (hyperlinks en Kernel, criterios de parche en Manual); no se tocó Career Canon.
+Tickets Bug Tracker (7, todos Abierto): (1) layer_3.env.example define GROQ_MAX_EMAILS_PER_RUN, variable muerta — 2 MEDIO / Patch; (2) vsync_doc.py --direction local omite tablas — 1 BAJO / Documentar; (3) comentario de verify_versions.py con cifra inconsistente — 1 BAJO / Documentar; (4) banner v9.13.0 en vsync_doc.py — 1 BAJO / Patch; (5) EXCLUDE_IDS vacío en apply_hyperlinks_notion.py — 3 ALTO / Patch; (6) docstring de health_check.py dice 5 archivos y son 8 — 1 BAJO / Documentar; (7) 4 ocurrencias preexistentes de ¶¶ en el Manual — 1 BAJO / Documentar.
+Impacto: Documental + Normativo. Cierra la Fase 2 de la reconciliación v10 sobre Kernel y Manual; deja los defectos de código como deuda separada y no bloqueante.
+Validación: auditoría 1:1 de las 31 ediciones contra Kernel.md (956 líneas) y Manual.md (1368 líneas) exportados tras la edición — 31/31 con el texto resultante presente, KERNEL:GATE-DECISION-012 = 0 en ambos, 0 IDs duplicados, un solo heading 22.1. Terminal del operador: vdoc notion 8/8 notion→local; vcensus 253 en spec / 252 resueltos / 1 sin link (MANUAL:WEEKLY-FLOW-006) / 3 huérfanos (CANON:UF-004/005/006), idéntico al estado previo; vversions --length PASS (11 documentos OK). Código leído directamente en layer_3_mail.py, vsync_doc.py, verify_versions.py, apply_hyperlinks_notion.py y health_check.py; de feed_processor.py, class_b_guard.py y vsum.py solo hay conteo de líneas y grep del operador, y el detalle de comportamiento proviene de la auditoría de Arena, no de lectura directa.
+Estado: WRITE aplicado en Notion (Kernel y Manual por Perplexity bajo contrato de CLAUDE/MAIN; Bug Tracker y esta entrada por CLAUDE/MAIN). vversions --sync y commit (vgit) pendientes sobre v9.22.17: el --sync de las 03:37 corrió sobre v9.22.16. Sin DRY RUN de Changelog presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens, 03:39 CDMX) — version bump y esta entrada ejecutados en una sola pasada.
+IDs afectados: Ninguno (corrección de nodos existentes; Census sin cambio, no dispara CENSUS-SYNC Regla 1).
+Handoff de referencia: HO-000068 (recibido al inicio de esta sesión de continuación).
 Tipo: [OPS] [DOC] [FIX]
 Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MM.
 Documentos modificados: V | PLAN DE TRABAJO — Reconciliación v10 (T1.2, T1.3, T1.5) · Bug Tracker (4 altas) · Skill Library / vantage-create-bug-task.skill (corrección data_source_id).

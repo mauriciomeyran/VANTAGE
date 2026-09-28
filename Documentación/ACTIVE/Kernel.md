@@ -443,9 +443,9 @@ AI Component escribe en CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_process
 Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Archivar · Repetida.
 Notas recibe, entre otros usos, el texto determinista de auditoría de archivado escrito por VL1 (ver KERNEL:GATE-DECISION-013) — es trazabilidad de decisión, no un campo Class B pese a ser escrito por un comando Python.
 Class B — System-Primary
-Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · JD_Quality.
+Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · Class_B_Last_Run · JD_Quality.
 VM_Scope ∈ {Alto, Bajo} — campo binario. No existe valor "Medio" en ningún punto del sistema (verificado contra Kernel y MANUAL:SCHEMA-FIELD-REF §21).
-Resolución B-09 (2026-09-17): Notion es la autoridad declarada (SSOT) de este esquema. class_b_guard.py es su espejo en código; la equivalencia campo por campo no está verificada (divergencias conocidas: Match, Class_B_Last_Run, CV-A, CV-B, PDF, Figma, Prioridad_Auto). La sincronización entre ambos es hoy manual; se propone extender verify_versions.py (o un g9_docsync_verify.py nuevo) para comparar automáticamente los campos Class A/B de Notion contra class_b_guard.py y fallar si divergen.
+Resolución B-09 (2026-09-17): Notion es la autoridad declarada (SSOT) de este esquema. class_b_guard.py es su espejo en código; la equivalencia campo por campo no está verificada (divergencias conocidas: Match, CV-A, CV-B, PDF, Figma, Prioridad_Auto). La sincronización entre ambos es hoy manual; se propone extender verify_versions.py (o un g9_docsync_verify.py nuevo) para comparar automáticamente los campos Class A/B de Notion contra class_b_guard.py y fallar si divergen.
 ### 07.2 KERNEL:SCHEMA-002
 Restricción del Sistema
 Campos Class B en JSON entrante se ignoran sin excepción — Python los calcula en el siguiente run.
@@ -689,7 +689,7 @@ Regla #1 — No Evaluar Fit Antes de Escribir
 Excepción: CV-A extrae keywords/gaps técnicos, no es evaluación de fit.
 ### 10.2 KERNEL:CV-GOLDEN-RULES-002
 Regla #2 — No Calcular ni Estimar Campos Class B
-Campos protegidos: Score · VM_Scope · Role_Class · Match · Gate_Decision · Next_Action · JD_Quality · Dedup_Flag.
+Campos protegidos: Score · VM_Scope · Role_Class · Match · Gate_Decision · Next_Action · JD_Quality · Dedup_Flag · Score_Method · Last_Gate_Run · Class_B_Last_Run.
 ### 10.3 KERNEL:CV-GOLDEN-RULES-003
 Regla #3 — No Cuestionar la Calidad de Datos del Usuario
 Sin sugerencias, sin recomendaciones de fuentes alternativas.
@@ -808,7 +808,7 @@ Extrae keywords + gaps + tono de marca. Determina el Positioning Mode aplicable 
 Contrato de Persistencia de la Decisión
 El modo seleccionado no es válido sin su justificación: CV-A escribe positioning_rationale (texto libre, 1 línea) en el HANDOFF, documentando el match predominante que determinó el modo (ej. "JD centrado en obra civil → N2"). Sin este campo, el HANDOFF está incompleto y no avanza a CV-B.
 Output
-HANDOFF (JSON de 7 campos).
+HANDOFF (JSON de 8 campos: los 7 canónicos más observaciones, texto libre y opcional).
 Cierre obligatorio
 SESIÓN COMPLETADA → nueva sesión.
 ```json
