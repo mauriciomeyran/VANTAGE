@@ -49,10 +49,11 @@ CLASS_A_FIELDS: frozenset[str] = frozenset({
     # (escritos por feed_processor.py). Deben ser Class A para alinear el
     # guard con el flujo real de ingestion y evitar rechazo indebido.
     "Fetch", "Fuente",
+    "CV-A", "CV-B", "PDF", "Figma",
 })
 
 CLASS_B_FIELDS: frozenset[str] = frozenset({
-    "Score", "Gate_Decision", "VM_Scope", "Role_Class", "Match",
+    "Score", "Gate_Decision", "VM_Scope", "Role_Class",
     "Next_Action", "Dedup_Flag", "Score_Method",
     "JD_Quality", "Last_Gate_Run",
     # Fase 2: baseline canónico de evaluación Class B exitosa.
