@@ -218,14 +218,15 @@ class TestGetBacklinks:
             "entity3": []
         }
     })
+    @patch("graph_layer.graph_v2", {"status": "ACTIVE"})  # Override SUSPENDED for this test
     def test_get_backlinks_returns_correct_backlinks(self):
-        """Test that get_backlinks returns correct backlinks for entity"""
+        """Test that get_backlinks returns correct backlinks for entity when graph is ACTIVE"""
         import graph_layer
-        
+
         result = graph_layer.get_backlinks("entity1")
-        
+
         assert result == ["entity5", "entity6"], \
-            "Should return correct backlinks for entity1"
+            "Should return correct backlinks for entity1 when graph is ACTIVE"
     
     @patch("graph_layer.backlinks_v2", {
         "backlinks": {

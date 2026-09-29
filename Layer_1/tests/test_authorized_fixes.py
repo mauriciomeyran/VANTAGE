@@ -155,7 +155,7 @@ class TestShouldMutateExistingPage:
         assert should_mutate_existing_page(_page("Target"), _schema()) is True
 
     def test_en_proceso_is_not_mutable(self):
-        assert should_mutate_existing_page(_page("En proceso"), _schema()) is False
+        assert should_mutate_existing_page(_page("En Proceso"), _schema()) is False
 
     def test_postulado_is_not_mutable(self):
         assert should_mutate_existing_page(_page("Postulado"), _schema()) is False
@@ -167,7 +167,7 @@ class TestShouldMutateExistingPage:
 class TestDedupFlagGuard:
     def test_skips_write_on_protected_status(self):
         client = MagicMock()
-        _set_dedup_flag_if_needed(client, _page("En proceso"), _schema())
+        _set_dedup_flag_if_needed(client, _page("En Proceso"), _schema())
         client.pages.update.assert_not_called()
 
     def test_writes_on_target(self):
@@ -175,7 +175,7 @@ class TestDedupFlagGuard:
         _set_dedup_flag_if_needed(client, _page("Target"), _schema())
         client.pages.update.assert_called_once()
         payload = client.pages.update.call_args.kwargs
-        assert payload["properties"]["Dedup_Flag"]["select"]["name"] == "Posible duplicado"
+        assert payload["properties"]["Dedup_Flag"]["checkbox"] is True
 
 
 class TestLayerUpgradeGuard:

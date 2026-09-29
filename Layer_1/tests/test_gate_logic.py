@@ -65,30 +65,30 @@ class TestGateLogic:
     """Test suite for gate_logic() function - terminal state protection only"""
     
     def test_terminal_state_protection_archivar(self):
-        """Test that 'Archivar' terminal state is protected"""
+        """Test that 'Archivar' legacy status is protected (mapped to Expirada)"""
         entry = {
-            "Next_Action": "Archivar",
-            "Status": "Target",
+            "Next_Action": "Re-check",
+            "Status": "Archivar",  # Legacy status mapped to Expirada
             "Gate_Decision": "CREATE",
             "Fetch": "Accesible"
         }
-        
+
         result = gate_logic(entry)
-        assert result == "Archivar", \
-            "Terminal state 'Archivar' should not be overwritten"
+        assert result == "EXPIRADA", \
+            "Legacy status 'Archivar' should return EXPIRADA (terminal protection)"
     
     def test_terminal_state_protection_expirada(self):
-        """Test that 'Expirada' terminal state is protected"""
+        """Test that 'Expirada' terminal status is protected"""
         entry = {
-            "Next_Action": "Expirada",
-            "Status": "Target",
+            "Next_Action": "Re-check",
+            "Status": "Expirada",
             "Gate_Decision": "BLOCKED",
             "Fetch": "Bloqueado"
         }
-        
+
         result = gate_logic(entry)
-        assert result == "Expirada", \
-            "Terminal state 'Expirada' should not be overwritten"
+        assert result == "EXPIRADA", \
+            "Terminal status 'Expirada' should return EXPIRADA (legacy value for compat)"
     
     def test_status_postulado_returns_applied(self):
         """Test that Status='Postulado' returns APPLIED (terminal protection)"""
@@ -312,17 +312,17 @@ class TestGateLogicIntegration:
     """Integration tests for gate logic functionality - terminal state protection"""
     
     def test_terminal_state_priority_over_gate_decision(self):
-        """Test that terminal state has priority over gate decision"""
+        """Test that terminal status has priority over gate decision"""
         entry = {
-            "Next_Action": "Archivar",  # Terminal state
-            "Status": "Target",
+            "Next_Action": "Re-check",
+            "Status": "Archivar",  # Legacy status mapped to Expirada
             "Gate_Decision": "CREATE",  # Would normally change action
             "Fetch": "Accesible"
         }
-        
+
         result = gate_logic(entry)
-        assert result == "Archivar", \
-            "Terminal state should have priority over gate decision"
+        assert result == "EXPIRADA", \
+            "Legacy status 'Archivar' should return EXPIRADA (terminal protection overrides gate)"
     
     def test_status_postulado_overrides_non_terminal_next_action(self):
         """Test that Status='Postulado' overrides non-terminal Next_Action"""
@@ -444,30 +444,30 @@ class TestTerminalProtectionScoring:
             "Rechazado should return REJECTED (terminal protection)"
     
     def test_archivar_action_protected_from_scoring(self):
-        """Test that Archivar Next_Action is protected from Score recalculation"""
+        """Test that Archivar legacy status is protected from Score recalculation"""
         entry = {
-            "Next_Action": "Archivar",
-            "Status": "Target",
+            "Next_Action": "Re-check",
+            "Status": "Archivar",  # Legacy status mapped to Expirada
             "Gate_Decision": "BLOCKED",
             "Fetch": "Accesible"
         }
-        
+
         result = gate_logic(entry)
-        assert result == "Archivar", \
-            "Archivar Next_Action should be protected (terminal protection)"
+        assert result == "EXPIRADA", \
+            "Legacy status 'Archivar' should return EXPIRADA (terminal protection from scoring)"
     
     def test_expirada_action_protected_from_scoring(self):
-        """Test that Expirada Next_Action is protected from Score recalculation"""
+        """Test that Expirada terminal status is protected from Score recalculation"""
         entry = {
-            "Next_Action": "Expirada",
-            "Status": "Target",
+            "Next_Action": "Re-check",
+            "Status": "Expirada",
             "Gate_Decision": "BLOCKED",
             "Fetch": "Bloqueado"
         }
-        
+
         result = gate_logic(entry)
-        assert result == "Expirada", \
-            "Expirada Next_Action should be protected (terminal protection)"
+        assert result == "EXPIRADA", \
+            "Terminal status 'Expirada' should return EXPIRADA (terminal protection from scoring)"
 
 
 # ============================================================================
@@ -717,7 +717,7 @@ class TestPriorityLogicCreatedTime:
             "id": "test-id",
             "created_time": "2026-07-20T00:00:00.000Z",  # 24 days ago (would be BAJO normally)
             "properties": {
-                "JD": {"type": "rich_text", "rich_text": [{"plain_text": "Apply by 08/15/2026"}]},  # 2 days from test date
+                "JD": {"type": "rich_text", "rich_text": [{"plain_text": "Apply by 15/08/2026"}]},  # 2 days from test date (D/M/Y format)
                 "Source_Type ": {"type": "select", "select": {"name": "Vacante"}},
                 "Score": {"type": "number", "number": 60}
             }
