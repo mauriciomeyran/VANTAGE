@@ -6,7 +6,7 @@ description: Fase 2 del pipeline de CV de VANTAGE (KERNEL:CV-PIPELINE-002) — c
 # VANTAGE — Skill CV-B (Construcción y Contrato de Salida)
 
 ID Canónico: `KERNEL:CV-PIPELINE-002` · Trigger: `CV-B [HANDOFF]`
-Versión de alineación: v10.2.0 — Auto-Verificación Mecánica Obligatoria (2026-09-05)
+Versión de alineación: v10.2.1 — Auto-Verificación Mecánica Obligatoria (2026-09-05)
 
 ## Nota de refactor (por qué existe esta versión)
 
@@ -36,8 +36,9 @@ el archivo Figma vía el Output Contract Framework (`CANON:OUTPUT-CONTRACT`).
 
 **Cero prosa en el chat.** Esta skill no conversa sobre la construcción del CV
 en el cuerpo del mensaje. El único output permitido es un archivo `.md`
-descargable que contenga el CV completo. Cualquier explicación, aclaración o
-duda va dentro del propio archivo, no como texto de chat adicional.
+descargable que contenga el CV completo. La única excepción es el footer de
+metadata de Entrega, que se emite solo en el chat. Cualquier explicación,
+aclaración o duda va dentro del propio archivo, no como texto de chat adicional.
 
 Excepción: si el HANDOFF está incompleto, el Positioning Mode no está resuelto,
 o un Gate de Auto-Verificación Mecánica falla y requiere input humano, se puede
@@ -102,9 +103,10 @@ no limita a un solo hecho del Canon por slot.
 ### 3. Regla de llenado nulo
 
 Si el Career Canon no ofrece información suficiente para un slot, conservar el
-ID original y usar `[PENDING DATA]` o dejar el contenido vacío; nunca eliminar
-el slot. `[PENDING DATA]` solo es válido después de intentar Match Transferible
-Obligatorio y fallar.
+ID original y escribir un solo carácter espacio; nunca eliminar el slot, usar
+`[PENDING DATA]` ni dejar un string vacío en el `.md` final. El slot en un solo
+espacio solo se permite después de intentar Match Transferible Obligatorio y
+fallar.
 
 ### 4. Escaping
 
@@ -125,11 +127,11 @@ Cada bullet de Experience responde al Gap Analysis del HANDOFF activo
 
 ### 6. Match Transferible Obligatorio
 
-Antes de marcar un slot como `[PENDING DATA]`, intentar reencuadrar un hecho
+Antes de dejar un slot en un solo espacio, intentar reencuadrar un hecho
 disponible del Career Canon bajo terminología relevante al JD activo, incluso
 si no existe coincidencia literal con `JD_keywords_top6`. `[PENDING DATA]`
-solo aplica cuando ningún hecho del Canon, directo o reencuadrado, es
-transferible al eje temático de la vacante.
+no se usa: el slot queda en un solo espacio únicamente cuando ningún hecho del
+Canon, directo o reencuadrado, es transferible al eje temático de la vacante.
 
 Anti-overselling gobierna por separado y tiene prioridad: no reencuadrar ni
 sintetizar un hecho si afirma una responsabilidad que el JD contradice
@@ -172,7 +174,7 @@ mismo slot, sintetizarlos en un bullet denso:
 [Hecho 3 relacionado si aplica].
 ```
 
-**Criterio de elegibilidad — nuevo, v10.2.0 (causa raíz del incidente
+**Criterio de elegibilidad — nuevo, v10.2.1 (causa raíz del incidente
 2026-09-05):** la etiqueta temática en bold es una anotación de síntesis, no
 un titular decorativo. Antes de escribir una, correr esta prueba binaria:
 
@@ -199,10 +201,10 @@ Reglas adicionales:
    dice.
 3. Un slot puede contener un hecho aislado sin etiqueta si es el único dato
    relevante — éste es el caso por defecto, no la excepción.
-4. `[PENDING DATA]` solo aplica tras intentar el Match Transferible
-   Obligatorio y documentar el fallo.
+4. Un slot queda en un solo espacio únicamente tras intentar el Match
+   Transferible Obligatorio y documentar el fallo.
 
-## Tiempo verbal por rol — nuevo, v10.2.0
+## Tiempo verbal por rol — nuevo, v10.2.1
 
 Cada Experience Record (C01–C05) tiene una fecha de cierre en el Career Canon.
 
@@ -223,8 +225,8 @@ Los cinco slots de Skills deben mapear a las cinco categorías de
 `CANON:SKILLS`:
 
 - Estrategia Visual
-- Operaciones & Finanzas
-- Liderazgo & Training
+- Operaciones y Finanzas
+- Liderazgo y Training
 - Stack Técnico
 - Idiomas
 
@@ -246,7 +248,7 @@ No mezclar bullets de dos Positioning Modes en un mismo CV-B. El modo
 determina énfasis y ángulo; la disponibilidad de contenido la determina Match
 Transferible Obligatorio.
 
-## Reglas de serialización y formato — consolidado, v10.2.0
+## Reglas de serialización y formato — consolidado, v10.2.1
 
 Referencia: `CANON:OUTPUT-CONTRACT-004`.
 
@@ -290,7 +292,7 @@ Reglas generales adicionales:
   Mecánica — nunca se asume que un slot heredado ya está en el idioma
   correcto solo porque el resto del documento lo está.
 
-## Auto-Verificación Mecánica Obligatoria — nuevo, v10.2.0
+## Auto-Verificación Mecánica Obligatoria — nuevo, v10.2.1
 
 Esta sección reemplaza la "Verificación Pre-Entrega" narrada de v10.1.1. Cada
 gate se corre como una comprobación de patrón sobre el texto ya generado —
@@ -352,12 +354,12 @@ tagline en bold e idioma correcto. Cualquier discrepancia es FAIL con el
 `figma_text_id` exacto señalado.
 
 ### Gate 8 — Pendientes justificados (heredado de v10.1.1)
-Por cada `[PENDING DATA]`, el footer debe declarar el hecho del Canon
-evaluado, el reencuadre intentado y la causa del fallo.
+Por cada slot que quede en un solo espacio, el footer debe declarar el hecho
+del Canon evaluado, el reencuadre intentado y la causa del fallo.
 
 ### Gate 9 — Cross-check de sesión y Anti-cloning (heredado de v10.1.1)
 Si el mismo `figma_text_id` tuvo contenido válido en un CV-B previo de la
-misma sesión y ahora está en `[PENDING DATA]`, tratarlo como alerta de
+misma sesión y ahora está en un solo espacio, tratarlo como alerta de
 probable omisión. Ningún bullet de Experience puede coincidir verbatim con un
 CV-B previo del mismo Positioning Mode en la sesión o batch.
 
@@ -417,13 +419,14 @@ Generar un único archivo `.md` descargable mediante `create_file`. No
 renderizar el Markdown del CV en chat ni pedir confirmación adicional para
 crear el artefacto.
 
-El archivo debe incluir un footer de metadata con:
+El footer de metadata NUNCA va dentro del `.md` importable. Se entrega solo en
+el chat, con:
 
 - Versión del Output Contract y de este skill.
 - Positioning Mode activo.
 - Referencia canónica al Canon usado.
 - Reporte de los 10 gates (ver sección Auto-Verificación Mecánica).
-- Justificación de cada `[PENDING DATA]`, si existe.
+- Justificación de cada slot en un solo espacio, si existe.
 
 Después de crear el archivo, releerlo y verificar la codificación de
 caracteres acentuados y `ñ`. Si hay corrupción, no entregar; reportar el error
@@ -435,3 +438,4 @@ antes de reintentar.
 3. Validar la integridad de los code fences en el footer de metadata.
 4. Ejecutar un diff final contra el Golden Skeleton para asegurar que solo
    cambió el contenido, no la estructura.
+5. Ejecutar `verify_md.py` sobre el `.md`; 0 issues obligatorio antes de presentar.
