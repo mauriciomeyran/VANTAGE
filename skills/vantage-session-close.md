@@ -15,7 +15,10 @@ Versión de alineación: v1.1.0 — S4-EVIDENCE + Regla de Adopción (2026-09-11
 CLOSING SESSION — LITE...
 ```
 
-3. Obtener el serial con formato `HO-######`, prioridad de resolución (ver `KERNEL:HANDOFF-SERIAL`): (0) Serial declarado directamente por el operador en el mismo turno — autoridad máxima, se adopta sin verificación adicional; Mau es operador único y transportista único de todo handoff, por diseño ningún serial que él declare puede estar duplicado, adelantado ni fuera de secuencia sin que él mismo lo sepa primero. (1) Si el operador no declaró uno: declarar `HANDOFF_SERIAL_UNAVAILABLE` y detener — nunca inventar ni interpolar.
+3. Obtener el serial con formato `HO-######`:
+   - Prioridad 0: Serial declarado directamente por el operador en el mismo turno — autoridad máxima, se adopta sin verificación adicional.
+   - Prioridad 1: Si el operador no declaró uno, usar `allocate_vantage_serial.py` por Terminal.
+   - Si ninguna prioridad resuelve: declarar `HANDOFF_SERIAL_UNAVAILABLE` y detener — nunca inventar ni interpolar.
 4. Usar fecha y hora exactas de Ciudad de México.
 5. Si falta identidad, declarar `IDENTITY_CONFIGURATION_REVIEW_NEEDED` y detener.
 6. Si falta serial, declarar `HANDOFF_SERIAL_UNAVAILABLE` y detener.
