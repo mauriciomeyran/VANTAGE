@@ -29,11 +29,8 @@ class TestShouldAnnotateExisting:
             assert should_annotate_existing(status) is False, status
 
     def test_strips_whitespace(self):
-        # should_annotate_existing delegates to vantage_status.is_protected_status
-        # which does NOT strip whitespace (only gate_protected_value does)
-        # Therefore, "  Postulado  " with spaces is NOT recognized as protected
         assert should_annotate_existing("  Target  ") is True
-        assert should_annotate_existing("  Postulado  ") is True  # Spaces break exact match
+        assert should_annotate_existing("  Postulado  ") is False
 
     def test_gate_logic_would_miss_en_proceso(self):
         """Regression: gate_logic() does not protect En Proceso; this helper must."""

@@ -113,6 +113,9 @@ def is_protected_status(status: str) -> bool:
     if not status:
         return False
 
+    if isinstance(status, str):
+        status = status.strip()
+
     try:
         if Status(status) in PROTECTED_STATUSES_CANONICO:
             return True
