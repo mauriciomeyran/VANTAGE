@@ -6,7 +6,7 @@ description: Fase 2 del pipeline de CV de VANTAGE (KERNEL:CV-PIPELINE-002) — c
 # VANTAGE — Skill CV-B (Construcción y Contrato de Salida)
 
 ID Canónico: `KERNEL:CV-PIPELINE-002` · Trigger: `CV-B [HANDOFF]`
-Versión de alineación: v10.2.1 — Auto-Verificación Mecánica Obligatoria (2026-09-05)
+Versión de alineación: v10.2.1 — Auto-Verificación Mecánica Obligatoria (2026-09-28)
 
 ## Nota de refactor (por qué existe esta versión)
 
@@ -174,7 +174,7 @@ mismo slot, sintetizarlos en un bullet denso:
 [Hecho 3 relacionado si aplica].
 ```
 
-**Criterio de elegibilidad — nuevo, v10.2.1 (causa raíz del incidente
+**Criterio de elegibilidad — nuevo, v10.2.0 (causa raíz del incidente
 2026-09-05):** la etiqueta temática en bold es una anotación de síntesis, no
 un titular decorativo. Antes de escribir una, correr esta prueba binaria:
 
@@ -204,7 +204,7 @@ Reglas adicionales:
 4. Un slot queda en un solo espacio únicamente tras intentar el Match
    Transferible Obligatorio y documentar el fallo.
 
-## Tiempo verbal por rol — nuevo, v10.2.1
+## Tiempo verbal por rol — nuevo, v10.2.0
 
 Cada Experience Record (C01–C05) tiene una fecha de cierre en el Career Canon.
 
@@ -248,7 +248,7 @@ No mezclar bullets de dos Positioning Modes en un mismo CV-B. El modo
 determina énfasis y ángulo; la disponibilidad de contenido la determina Match
 Transferible Obligatorio.
 
-## Reglas de serialización y formato — consolidado, v10.2.1
+## Reglas de serialización y formato — consolidado, v10.2.0
 
 Referencia: `CANON:OUTPUT-CONTRACT-004`.
 
@@ -292,7 +292,7 @@ Reglas generales adicionales:
   Mecánica — nunca se asume que un slot heredado ya está en el idioma
   correcto solo porque el resto del documento lo está.
 
-## Auto-Verificación Mecánica Obligatoria — nuevo, v10.2.1
+## Auto-Verificación Mecánica Obligatoria — nuevo, v10.2.0
 
 Esta sección reemplaza la "Verificación Pre-Entrega" narrada de v10.1.1. Cada
 gate se corre como una comprobación de patrón sobre el texto ya generado —
