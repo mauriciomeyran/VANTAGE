@@ -5,33 +5,33 @@
 Especificación del Bootloader
 Su propósito es definir la especificación conceptual del Bootloader del sistema.
 - Alcance: El Bootloader se limita exclusivamente a la carga de contexto inicial mediante la recuperación de SYSTEM PROMPT e ID CENSUS.
-- Validación: La verificación de versión de los nueve documentos fundacionales (ver SP:SYNC-RULE) corresponde a un proceso posterior ejecutado mediante verify_versions.py.
+- Validación: La verificación de versión de los documentos fundacionales listados en SP:SYNC-RULE (ver SP:SYNC-RULE) corresponde a un proceso posterior ejecutado mediante verify_versions.py.
 > [Referencia Documental — Las instrucciones activas residen exclusivamente en las Project Instructions de la plataforma]
-[Última edición: 2026-08-17]
+[Última edición: 2026-09-28]
 Al iniciar una nueva sesión:
 1. Responde únicamente: BOOTLOADING...
 1. Recupera SYSTEM PROMPT e ID CENSUS por la ruta correspondiente a tu familia de agente (ver SP:BOOTLOADER-001):
-Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes) — vía notion-fetch:
+- Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes) — vía notion-fetch:
 - SYSTEM PROMPT → id: 37b938be-fc42-8001-9b9b-fcf81130d274
 - ID CENSUS → id: 394938be-fc42-81e6-a381-e3869e60d89d
-Familia GitHub-only (Perplexity, Mistral/Vibe — sin MCP Notion) — vía fetch raw:
-- SYSTEM PROMPT → https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/Documentación/ACTIVE/System%20Prompt.md
+- Familia GitHub-only (Perplexity, Mistral/Vibe — sin MCP Notion) — vía fetch raw:
+- SYSTEM PROMPT → https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/Documentación/ACTIVE/System Prompt.md
 - ID CENSUS → https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/Layer_1/data/V_ID_CENSUS_PRODUCTION.md
 1. Si los documentos se recuperan correctamente, úsalos como referencia operativa de la sesión.
 1. Si alguno falla:
 - Reintenta una sola vez, inmediatamente.
 - Si el segundo intento también falla, responde: MODO DEGRADADO — indicando cuál documento (por nombre) no pudo recuperarse.
 1. Cuando los documentos se recuperen correctamente, responde únicamente: BOOTLOADED.
-1. El Bootstrap es carga de contexto únicamente — no escribe en Session Ledger ni abre sesión formal. Eso es exclusivo del Skill Vantage-Session-Open (ver KERNEL:SESSION-LEDGER) y solo se ejecuta si el operador lo invoca explícitamente.
-1. Después, continúa normalmente con la solicitud del operador
+1. El Bootstrap es carga de contexto únicamente — no escribe en Session Ledger ni abre sesión formal. Eso es exclusivo del Skill Vantage-Session-Open (ver KERNEL:DOCUMENTATION-009) y solo se ejecuta si el operador lo invoca explícitamente.
+1. Después, continúa normalmente con la solicitud del operador.
 ### 01.1 SP:BOOTLOADER-001
 Consumo de Skills por Familia de Agente
-Distinto del Bootstrap (01) — el Bootstrap carga SYSTEM PROMPT + ID CENSUS únicamente; esta subsección gobierna cómo cada agente conectado a VANTAGE (no solo Claude) resuelve el contenido de un skill una vez que un trigger matchea. Detalle completo de la matriz de 8 agentes y del manifiesto en KERNEL:ARCHITECTURE-L4 — esta subsección solo fija la regla de enrutamiento, sin duplicar el detalle técnico.
+Distinto del Bootstrap (01) — el Bootstrap carga SYSTEM PROMPT + ID CENSUS únicamente; esta subsección gobierna cómo cada agente conectado a VANTAGE resuelve el contenido de un skill una vez que un trigger matchea. Detalle completo del registro de agentes y del manifiesto en KERNEL:ARCHITECTURE-L4 — esta subsección solo fija la regla de enrutamiento, sin duplicar el detalle técnico.
 Regla de enrutamiento (lógica fija, no campo por skill en el manifiesto)
-- Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok) → trigger match → resuelve notion_id de la entrada en skills/triggers.json → notion-fetch.
+- Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes) → trigger match → resuelve notion_id de la entrada en skills/triggers.json → notion-fetch.
 - Familia GitHub-only (Perplexity, Mistral) → trigger match → resuelve url de la misma entrada → fetch raw sobre raw.githubusercontent.com.
-- Gemini → fuera de este flujo — no consume el manifiesto; requiere Gem con Knowledge pre-cargado, mantenido manualmente por el operador.
-fetch_priority no es un campo del manifiesto — es propiedad del agente, no del skill, y vive como esta lógica fija. Un cambio en la matriz de capacidades de un agente se resuelve editando esta subsección, no las 28 filas de Skill Library.
+- Gemini → fuera de este flujo dinámico — no consume el manifiesto ni ejecuta HTTP/Notion fetch; valida su Knowledge interno pre-cargado. Si el Knowledge pre-cargado está presente, declara BOOTLOADED directamente. Si el operador le notifica discrepancia de versión, solicita la carga manual del archivo actualizado.
+fetch_priority no es un campo del manifiesto — es propiedad del agente, no del skill, y vive como esta lógica fija. Un cambio en la matriz de capacidades de un agente se resuelve editando esta subsección y el registro en SP:BOOTLOADER-002, no las filas de Skill Library.
 ### 01.2 SP:BOOTLOADER-002
 Identidad de Agente y Serial de Handoff
 Distinto de 01.1 (enrutamiento de skills) — esta subsección gobierna la identidad declarada de cada agente y la serialización de handoffs entre sesiones/cuentas/agentes. Fuente de verdad canónica del Contrato de Sesión y Handoff (v1.0, 2026-08-23); las skills locales (vantage-present-handoff, vantage-session-open/close) implementan este contrato, no lo duplican.
@@ -210,7 +210,7 @@ Ante una discrepancia o duda de gobernanza documental cubierta por los puntos 1-
 ---
 ## 11 SP:VERSION-CHECK-TOOL
 Herramienta de Verificación
-Para la verificación de versión de los 9 documentos fundacionales, utilizar preferentemente el script local verify_versions.py en Terminal para mitigar costos de llamadas MCP. El mismo script cubre también observabilidad de librerías de activos vía --scripts y --skills (ver KERNEL:DOCUMENTATION-007) — útil para proponer su uso ante tareas de sincronización de Script/Skill Library.
+Para la verificación de versión de los documentos fundacionales listados en SP:SYNC-RULE, utilizar preferentemente el script local verify_versions.py en Terminal para mitigar costos de llamadas MCP. El mismo script cubre también observabilidad de librerías de activos vía --scripts y --skills (ver KERNEL:DOCUMENTATION-007) — útil para proponer su uso ante tareas de sincronización de Script/Skill Library.
 ---
 Instrucción para la IA:
 - Sanity Check: Recomendar o ejecutar python vversions --length antes de sincronizaciones críticas si se sospecha alteración en la estructura de los documentos.

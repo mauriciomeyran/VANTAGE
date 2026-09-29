@@ -766,7 +766,38 @@ Write-Back Verification: 3 parches inyectados y confirmados en sesión previa (K
 Pendiente (fuera de esta entrada):
 - vversions --sync para propagar v9.20.3 al resto de los fundacionales.
 ---
+Tipo: [FIX] [CODE]
+Alcance:
+- Código: Layer_1/scripts/priority_logic.py (infer_prioridad()), Layer_1/scripts/layer_1_run.py (caller Fase 3.6), Layer_1/scripts/backfill_class_a.py (txt())
+Contexto: Verificación post-v9.20.1 detectó que infer_prioridad() nunca calculaba Urgencia por antigüedad real: leía props.get("created_time"), pero ese campo vive en la raíz del objeto de página de Notion (item["created_time"]), no dentro de properties. Todas las vacantes caían en el fallback urgencia="MEDIO", razon="sin_fecha_creacion" sin importar su antigüedad real. Auditoría de verificación de ese fix reveló además una tercera copia independiente de txt() en backfill_class_a.py sin el fix de concatenación de rich_text aplicado en v9.20.1 (Bug Tracker 3bb938be-fc42-8186-a551-d19cc3691d86).
+Cambios:
+- priority_logic.py::infer_prioridad() — firma cambiada de (props, today) a (item, today); lee item.get("created_time") en vez de props.get("created_time").
+- layer_1_run.py y backfill_class_a.py — callers actualizados para pasar item completo.
+- backfill_class_a.py::txt() — concatena todos los chunks de rich_text/title, igual que las otras dos instancias.
+- test_gate_logic.py — 7 tests nuevos (TestPriorityLogicCreatedTime) + 5 tests nuevos (TestBackfillTxtConcatenation).
+Validación: Corrida real de vl1 post-fix — 9 cambios de Prioridad reflejando antigüedad real (antes: fallback fijo a MEDIO). Fix de backfill_class_a.py::txt() verificado línea por línea contra el archivo real, no solo por resumen del agente.
+IDs afectados: Ninguno (fix de código, sin alta/baja de ID canónico).
+Write-Back Verification: Bug Tracker 3bb938be-fc42-8186-a551-d19cc3691d86 — Resuelto, verificado.
+Pendiente (fuera de esta entrada):
+- Evaluar ticket de Task Tracker para consolidar txt() en módulo compartido (notion_helpers.py) — no viable en este ciclo por hack de imports en backfill_class_a.py (ver Bug Tracker para detalle).
+- vversions --sync para propagar v9.20.2 al resto de los fundacionales.
 ---
+Tipo: [FIX] [CODE]
+Alcance:
+- Código: Layer_1/scripts/layer_1_run.py (txt(), FASE 2 URL Gate línea ~693)
+- Kernel (KERNEL:GATE-DECISION-010 §09.10 — referencia de protección de terminalidad)
+Contexto:
+Operador verificó manualmente 17 vacantes activas (JD completo, accesibles, reciben postulaciones) marcándolas Status=Target, Fetch=Accesible, Gate_Decision=CREATE. Re-ejecución de vl1 revirtió las 17 a Bloqueado/Expirada/Archivar. Causa raíz aislada con evidencia directa de la API (no CSV, no hipótesis): txt() leía únicamente rich_text[0]["plain_text"]; la API de Notion fragmenta contenido largo en múltiples chunks (confirmado: 21 chunks para un JD de ENCANTO MÉXICO, chunk[0] de 60 caracteres frente a ~1750+ reales). Esto rompía JD_ALREADY_EXISTS (len(jd_clean) > 100), forzando la rama de HEAD en vivo contra agregadores con anti-scraping activo (403 reproducido en Indeed/OCC/LVMH), sin protección de terminalidad para Status=Target.
+Cambios:
+- layer_1_run.py::txt() — concatena todos los chunks de rich_text y title en vez de leer solo [0].
+- layer_1_run.py línea ~693 — nueva protección: Status=Target con JD concatenado >100 chars se salta el URL Gate (defensa en profundidad, además del fix de raíz).
+- test_gate_logic.py — nueva clase TestRichTextConcatenation, 7 tests, 7/7 passed.
+Validación: DRY_RUN sobre las 17 filas afectadas — 0/17 rechazos (antes: 17/17 reversiones erróneas).
+IDs afectados: Ninguno (fix de código, sin alta/baja de ID canónico).
+Write-Back Verification: Bug Tracker (ticket 3bb938be-fc42-813d-a253-ca2097f33957) creado y verificado en esta sesión.
+Pendiente (fuera de esta entrada):
+- Corrección manual/batch de las 17 filas ya dañadas en Notion (operación de datos separada, requiere DRY RUN + APROBAR_WRITE aparte).
+- vversions --sync para propagar v9.20.1 al resto de los fundacionales.
 ---
 Tipo: [FIX] [CODE] [DOC]
 Alcance:

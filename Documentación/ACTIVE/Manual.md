@@ -151,7 +151,7 @@ Ya no es necesario realizar copy-paste manual del System Prompt maestro en cada 
 Las instrucciones activas deben residir exclusivamente en las Project Instructions de la plataforma. Encontrarás la referencia documental en SP:BOOTLOADER. Este es el proceso para su configuración:
 Settings → Project → Project Instructions en la UI de Claude.
 Inicia un nuevo chat. El Agente  realizará un fetch automático del Bootloader  desde Notion.
-El Agente responde con “BOOTLOADED: DOCUMENTOS CARGADOS” (sin número de versión fijo — ver SP:BOOTLOADER) antes de enviar peticiones.
+El Agente responde con “BOOTLOADED.” (sin número de versión fijo — ver SP:BOOTLOADER) antes de enviar peticiones.
 Nota: este setup de Claude es de una sola vez por proyecto — no se repite en cada sesión de trabajo. Lo que sí se repite en cada sesión es el Ciclo de Sesión completo, explicado en MANUAL:SESSION-CYCLE.
 Paso 4
 Verificar Archivos del Sistema y Permisos de Ejecución
@@ -242,7 +242,7 @@ vantage-session-open al inicio de cada sesión
 vantage-session-close al final
 Y hace tres cosas que ningún otro punto del sistema hace:
 Deja un registro de que la sesión existió y en qué estado terminó (el Session Ledger).
-Confirma que los 9 documentos fundacionales (incluyendo el Census) están todos en la misma versión (nunca uno adelantado y otro atrasado).
+Confirma que los documentos fundacionales de SP:SYNC-RULE (incluyendo el Census) están todos en la misma versión (nunca uno adelantado y otro atrasado).
 Te recuerda, sin que tengas que preguntarlo, qué quedó pendiente de la sesión anterior.
 No necesitas invocarlo tú manualmente cada vez que se te ocurra — pero sí necesitas recordar que es el primer paso obligatorio: si acabas de abrir Claude para trabajar en VANTAGE hoy, el primer paso siempre es este ciclo, antes de tocar Tracker, Dashboard o cualquier trigger de CV descrito en MANUAL:WEEKLY-FLOW.
 ¿Por qué existe esto?
@@ -253,7 +253,7 @@ Ambos skills viven en /mnt/skills/user/ y son deliberadamente cortos: cada token
 Open Session Protocol
 ANNOUNCE: SESSION-OPENING...
 LEDGER: SQL directo vía MCP está bloqueado en este plan (query_data_sources no disponible en este workspace). Usar en su lugar:
-- notion-search sobre el data source del Ledger (collection://38324240-c686-47d0-8082-cee5e4409f88)
+- notion-search sobre el data source del Ledger (8d736032-eef9-4e6e-a05a-df8b8079ebff) ()
 - notion-fetch de la fila más reciente devuelta
 Si Status = OPEN o duplicados -> Reportar WARN. Crear fila nueva (Status: OPEN).
 HEALTH: Verificar System Prompt + ID Census vía MCP (ya cubierto por el Bootstrap universal, KERNEL:DOCUMENTATION-004).
@@ -558,7 +558,7 @@ vl1 backfill --dry-run
 Sin --dry-run, solicita confirmación explícita (s) antes de cualquier escritura.
 - vl1 sync — reconciliación Outcome→Status del Tracker (wrapper de vl1_sync.py). Modo por defecto dry-run: intercepta la escritura y reporta checked/synced/skipped sin tocar Notion — 0 filas a sincronizar es un resultado normal, no un fallo. --apply está bloqueado por diseño en la fase actual (T6): no ejecuta escritura real aunque se invoque con el flag.
 - 
-- vversions — acepta --bootstrap, --sync, --scripts, --skills, --length (Sanity check de integridad estructural: conteo de bloques de texto extraíble vs. baseline. Read-only. Exit code 1 si ATENCIÓN REQUERIDA), --update-baseline (Actualiza length_baseline.json. Requiere --length y confirmación explícita del operador cuando el veredicto no es PASS). — alias corto de verify_versions.py, el motor de verificación y sincronización de versión de los 9 documentos fundacionales (KERNEL:VERSION-CHECK-TOOL). No es un comando del Tracker de vacantes como los vl1 * de arriba — es infraestructura documental, y su uso está integrado al Ciclo de Sesión completo en MANUAL:SESSION-CYCLE, no como comando suelto. 
+- vversions — acepta --bootstrap, --sync, --scripts, --skills, --length (Sanity check de integridad estructural: conteo de bloques de texto extraíble vs. baseline. Read-only. Exit code 1 si ATENCIÓN REQUERIDA), --update-baseline (Actualiza length_baseline.json. Requiere --length y confirmación explícita del operador cuando el veredicto no es PASS). — alias corto de verify_versions.py, el motor de verificación y sincronización de versión de los documentos fundacionales listados en SP:SYNC-RULE (KERNEL:VERSION-CHECK-TOOL). No es un comando del Tracker de vacantes como los vl1 * de arriba — es infraestructura documental, y su uso está integrado al Ciclo de Sesión completo en MANUAL:SESSION-CYCLE, no como comando suelto. 
 Acepta cuatro flags: 
 --bootstrap (dump read-only de apertura)
 --sync (único modo de escritura y verificación real, relee cada documento post-escritura)
@@ -771,7 +771,7 @@ Score = 0 en Vacante Que Parece Relevante
 Verificar que URL esté activa (no 404/403).
 Confirmar que JD contenga keywords VM (Python busca términos específicos).
 Revisar VM_Scope asignado (campo binario: Alto o Bajo — ver KERNEL:SCHEMA-001).
-Si todo está correcto: revisar pesos de scoring en profile_config.yaml.
+Si todo está correcto: revisar la salida de Score; los pesos están fijos en calculate_score_v6 (layer_1_orchestrator.py), no en profile_config.yaml.
 No modificar Score manualmente (campo Class B, Python lo recalcula).
 Gate = BLOCKED Recuperable Pero el Dashboard No lo Detecta
 Confirmar que entrada aparece en dropdown del Dashboard.
@@ -807,7 +807,7 @@ Tabla única de triaje (referenciada por Kernel, Manual y System Prompt — resu
 Prioridad: Terminal es la vía por defecto para lectura de reglas o contratos. MCP para lectura se activa únicamente cuando el operador lo solicita explícitamente en el turno — no es una vía libre para que el agente elija por conveniencia.
 ## 15 MANUAL:PATCH-QUALITY
 Calidad de Parches
-Todo parche a los 6 documentos fundacionales debe cumplir estos seis criterios antes de aplicarse — si falla alguno, se reescribe antes de solicitar APROBAR_WRITE:
+Todo parche a los 6 documentos fundacionales editables debe cumplir estos seis criterios antes de aplicarse — si falla alguno, se reescribe antes de solicitar APROBAR_WRITE:
 1. Invisibilidad estructural — no crea secciones nuevas si el contenido cabe en una existente. Nota: la invisibilidad estructural incluye el nivel de heading Markdown, no solo el contenido — una subsección (NN.N) que comparte nivel ## con su capítulo padre rompe esta invisibilidad tanto como un párrafo con tono distinto. Ver la matriz tipográfica congelada en KERNEL:DOCUMENTATION-001 como referencia de nivel correcto por tipo de nodo. Adicionalmente, el identificador técnico y el título descriptivo de cualquier nodo deben coexistir dentro de un único bloque de heading (un solo nodo ##/###), con el título unido al identificador mediante un salto de línea 
 interno al mismo bloque — nunca como dos bloques de heading consecutivos, aunque visualmente ambos casos puedan parecer "dos líneas" a simple vista. El espaciado visual que Notion aplica entre dos bloques de heading consecutivos en su renderizado es un artefacto de la plataforma, no una instrucción para insertar contenido de separación — esta regla aplica a todo nodo del sistema documental, no a un caso puntual.
 1. Continuidad de voz — mismo registro y nivel técnico del bloque que lo rodea.
@@ -887,11 +887,11 @@ KERNEL:SCHEMA-001 define ownership exclusivo por campo. Esta tabla es índice de
 Class A — Human-Primary (operador/feed_processor escriben):
 Rol · Marca · Source_Type · URL · Status · Positioning_Mode · Prioridad · Holding · JD · NAD · layer · hash · Fetch · Fuente · JOB_ID (opcional)
 Class B — System-Primary (Python únicamente, ningún otro componente escribe):
-Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · Class_B_Last_Run · JD_Quality
+Score · Gate_Decision · VM_Scope · Role_Class · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · Class_B_Last_Run · JD_Quality
 Fetch (Class A) refleja verificación técnica real, incluso en agregadores — un valor Accesible ya no puede escribirse sin al menos un intento de request.
 Next_Action: select (10 valores operativos). Ver KERNEL:SCHEMA-008.
 Fuente es Class A, escrita por feed_processor.py al crear la fila. Fuente_Manual no existe en el código ni como propiedad del Tracker en Notion (KERNEL:SCHEMA-003).
-Pesos de Score/VM_Scope: viven en profile_config.yaml, propiedad de Python — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Un operador que necesite ajustar pesos debe editar ese archivo directamente, no este documento.
+Pesos de Score/VM_Scope: viven fijos en calculate_score_v6 (layer_1_orchestrator.py); profile_config.yaml no los alimenta (ver la entrada de vl1 profile) — el Manual no reproduce los valores numéricos porque son deuda de implementación, no contrato documental (ver KERNEL:GATE-DECISION-002). Los pesos se ajustan editando el código, no este documento ni el YAML.
 ---
  Verificación de Longitud (--length / --update-baseline)
 Contexto:

@@ -100,12 +100,12 @@ Propósito: Elimina el drift de versiones entre la UI estática del agente y el 
 Bootstrap Protocol
 Ante el primer mensaje del operador, el AI Component suspende el procesamiento de datos y ejecuta fetch de SP:BOOTLOADER y del ID CENSUS. El resultado sobreescribe cualquier instrucción estática previa. Si el Bootstrap falla, reportar "MODO DEGRADADO" y no proceder con triggers operativos.
 Convención de estado (X-ING → X-ED)
-El Bootstrap declara inicio con BOOTLOADING... y cierre con BOOTLOADED: DOCUMENTOS CARGADOS.
+El Bootstrap declara inicio con BOOTLOADING... y cierre con BOOTLOADED.
 Distinción de alcance — Bootstrap vs. Session Ledger
 El Bootstrap corre en cada mensaje inicial de cualquier conversación del proyecto — carga de contexto universal, no registro de sesión formal. El Session Ledger (03.9) es opt-in: solo se escribe cuando el operador invoca vantage-session-open.
 ```plain text
 Sesión Iniciada → BOOTLOADING... → AI Fetch (Bootstrap IDs) → Sincronización de Verdad Operativa
-→ BOOTLOADED: DOCUMENTOS CARGADOS → Procesamiento Petición
+→ BOOTLOADED → Procesamiento Petición
 (Ledger: solo si el operador invoca vantage-session-open)
 ```
 ---
@@ -143,7 +143,7 @@ vantage.py status expone el estado del snapshot y el resultado más reciente de 
 ---
 ### 03.7 KERNEL:DOCUMENTATION-007
 Verificación de Versión
-Propósito: ruta de bajo costo para verificar y sincronizar la Versión de los 10 documentos fundacionales sin pagar el costo de un fetch completo por documento.
+Propósito: ruta de bajo costo para verificar y sincronizar la Versión de los documentos fundacionales listados en SP:SYNC-RULE sin pagar el costo de un fetch completo por documento.
 Modos
 - --sync (único modo de escritura y verificación real, relee cada documento post-escritura)
 - --bootstrap (dump read-only de apertura de sesión)
@@ -231,7 +231,7 @@ Para CV-A, Layer_1/config/hard_blocks.json es la fuente externa de la lista de H
 ---
 ### 03.13 KERNEL:DOCUMENTATION-013
 Sistema de Cross-Reference Hyperlinks
-Propósito: convertir cada mención de un ID canónico (PREFIX:KEY) en los 6 documentos fundamentales en un hipervínculo real al bloque de definición, en vez de texto plano — para que el sistema sea navegable y auditable, no solo nombrado.
+Propósito: convertir cada mención de un ID canónico (PREFIX:KEY) en los 7 documentos que indexa el Census (System Prompt, Manual, Kernel, Career Canon, Aliases, Change Log y Navigation Brief) en un hipervínculo real al bloque de definición, en vez de texto plano — para que el sistema sea navegable y auditable, no solo nombrado.
 Piezas
 - generate_census.py (resuelve cada ID a su anchor de bloque real vía API, detecta huérfanos)
 - apply_hyperlinks_notion.py — PATCH puntual directo sobre bloques Notion (notion.blocks.update), preserva block-ID, no pasa por destroy/rebuild. Reutiliza fetch_blocks_recursive/extract_ids_from_block/is_definition_block de generate_census.py. Es la vía activa de escritura.
@@ -323,7 +323,7 @@ Operador (chat) → Claude → Notion (Class A poblado, Class B vacío) → vant
 ```
 Objetivo: captura de oportunidades puntuales fuera del ciclo automatizado de L1 — señal directa del operador, sin ciclo semanal ni motores externos.+ Componentes: Operador (chat) · Claude — sin wrappers, sin PROMPT LIBRARY.
 Responsabilidades: recibir la vacante en lenguaje natural o URL, poblar Class A, dejar Class B vacío para que Python lo calcule en el siguiente run.
-Reglas de dedup: L2 no deduplica — mismo patrón que L3 (ver KERNEL:ARCHITECTURE-L3-002); la jerarquía L2>L1>L3 se resuelve en KERNEL:ARCHITECTURE-L4.
+Reglas de dedup: L2 no deduplica — mismo patrón que L3 (ver KERNEL:ARCHITECTURE-L3-002); la jerarquía L1>L2>L3 se resuelve en KERNEL:ARCHITECTURE-L4.
 Estados de error: dato insuficiente para poblar Class A mínimo → Claude solicita el dato faltante antes de escribir, no infiere.
 Métricas mínimas: registros ingresados, timestamp de in
 ### 04.3 KERNEL:ARCHITECTURE-L3
@@ -368,7 +368,7 @@ Consumidor original (Claude Claude.ai/API): el manifiesto (triggers.json) se rec
 Riesgo conocido — caché de fetch dentro de sesión: fetches repetidos a la misma URL de triggers.json dentro de una misma sesión pueden devolver contenido servido desde caché del lado de la herramienta de fetch, no de GitHub (verificado empíricamente 2026-08-16: contenido idéntico byte-a-byte entre dos fetches separados por un commit real). Si el operador reporta un cambio reciente en el repo que el fetch no refleja, reintentar con parámetro de cache-busting (ej. ?t={timestamp}) antes de asumir fallo del repo o de la solución del operador.
 Descontinuado: GitHub Pages (mauriciomeyran.github.io/VANTAGE/skills/), index.json de recursos MCP, y el consumo vía devin mcp add vantage-skills — intento de servidor MCP sobre hosting estático que nunca operó (GitHub Pages no puede responder el handshake JSON-RPC que requiere MCP). Sin reemplazo funcional necesario: web_fetch a raw.githubusercontent.com cubre el mismo propósito sin esa capa. Al día de hoy, Devin no consume el manifiesto — solo Claude y Mistral.
 vsum.py (alias vsum) — herramienta de continuidad entre sesiones e IAs, no capa de búsqueda ni de pipeline: resume transcripts de sesiones (Claude, Gemini, ChatGPT, u otro) a Markdown estructurado (contexto, hallazgos, decisiones, pendientes), orientado a que la siguiente sesión o la siguiente IA no pierda continuidad. Escribe vía notion_client.Client directo (no MCP) como página hija del INBOX (ver Cédula Digital, SP:DIGITAL-ID-CARD). Mismo patrón de acceso directo a la API ya usado por vsync_doc.py. No lee ni escribe el Tracker de vacantes; su único contacto con Notion es de salida (push opcional del resumen), nunca de entrada.
-Jerarquía de Dedup: L2 > L1 > L3. L1 y L3 entran directo a feed_processor.py; L2 no deduplica (ver KERNEL:ARCHITECTURE-L2-002).
+Jerarquía de Dedup: L1 > L2 > L3. L1 y L3 entran directo a feed_processor.py; L2 no deduplica (ver KERNEL:ARCHITECTURE-L2-002).
 Mecanismos de Dedup — Distinción de Propósito
 El sistema tiene dos mecanismos de dedup complementarios con ventanas y propósitos distintos:
 1. Dedup en tiempo real (ingesta): hash exacto + URL exacta + brand+title (ventana 30d, feed_processor.py). Propósito: prevenir contaminación del Tracker con duplicados obvios al momento de ingesta.
@@ -443,7 +443,7 @@ AI Component escribe en CV-A · CV-B · QA · FAST · CANON-UPDATE; feed_process
 Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Archivar · Repetida.
 Notas recibe, entre otros usos, el texto determinista de auditoría de archivado escrito por VL1 (ver KERNEL:GATE-DECISION-013) — es trazabilidad de decisión, no un campo Class B pese a ser escrito por un comando Python.
 Class B — System-Primary
-Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · Class_B_Last_Run · JD_Quality.
+Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · Class_B_Last_Run · JD_Quality.
 VM_Scope ∈ {Alto, Bajo} — campo binario. No existe valor "Medio" en ningún punto del sistema (verificado contra Kernel y MANUAL:SCHEMA-FIELD-REF §21).
 Resolución B-09 (2026-09-17): Notion es la autoridad declarada (SSOT) de este esquema. class_b_guard.py es su espejo en código; la equivalencia campo por campo no está verificada (divergencias conocidas: Match, CV-A, CV-B, PDF, Figma, Prioridad_Auto). La sincronización entre ambos es hoy manual; se propone extender verify_versions.py (o un g9_docsync_verify.py nuevo) para comparar automáticamente los campos Class A/B de Notion contra class_b_guard.py y fallar si divergen.
 ### 07.2 KERNEL:SCHEMA-002
@@ -689,7 +689,7 @@ Regla #1 — No Evaluar Fit Antes de Escribir
 Excepción: CV-A extrae keywords/gaps técnicos, no es evaluación de fit.
 ### 10.2 KERNEL:CV-GOLDEN-RULES-002
 Regla #2 — No Calcular ni Estimar Campos Class B
-Campos protegidos: Score · VM_Scope · Role_Class · Match · Gate_Decision · Next_Action · JD_Quality · Dedup_Flag · Score_Method · Last_Gate_Run · Class_B_Last_Run.
+Campos protegidos: Score · VM_Scope · Role_Class · Gate_Decision · Next_Action · JD_Quality · Dedup_Flag · Score_Method · Last_Gate_Run · Class_B_Last_Run.
 ### 10.3 KERNEL:CV-GOLDEN-RULES-003
 Regla #3 — No Cuestionar la Calidad de Datos del Usuario
 Sin sugerencias, sin recomendaciones de fuentes alternativas.
