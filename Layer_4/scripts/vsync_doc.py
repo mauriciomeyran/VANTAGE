@@ -702,6 +702,16 @@ def main():
     for k, d in targets.items():
         local = d["local_file"]
 
+        if args.direction == "local" and k == "project_charter":
+            print(
+                "BLOCKED: el Charter no acepta escritura directa vía "
+                "vsync_doc --direction local. Todo cambio al Charter requiere "
+                "ticket Task Tracker tipo CHARTER, evaluado por CLAUDE/MAIN "
+                "(ver SP:BOOTLOADER-002/004)."
+            )
+            _exit_code[0] = 1
+            continue
+
         # ── DRY RUN: solo metadata (pages.retrieve), sin fetch recursivo de bloques ──
         if args.dry_run:
             try:
