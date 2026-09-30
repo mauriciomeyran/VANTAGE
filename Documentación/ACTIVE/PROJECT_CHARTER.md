@@ -57,21 +57,21 @@ ese peso.
 > Formato: [Fecha] Decisión — Razón — Qué se descartó y por qué.
 Solo decisiones que cambiaron el modelo, no fixes de código ni parches
 documentales puntuales (esos viven en el Changelog).
-[2026-07 aprox., fecha exacta no registrada] CHARTER:DECISIONS-001 — Separación Class A / Class B.
-Python es dueño exclusivo de los campos calculados deterministamente (Score,
+### 2.1 CHARTER:DECISIONS-001 — Separación Class A / Class B
+[2026-07 aprox., fecha exacta no registrada] Python es dueño exclusivo de los campos calculados deterministamente (Score,
 Gate_Decision, VM_Scope, Role_Class, Next_Action, etc.); la IA nunca los escribe
 directamente. Razón: evitar que juicio de lenguaje natural determine decisiones
 que deben ser reproducibles y auditables. Se descartó el modelo alternativo de
 "la IA sugiere, Python valida después" porque permitía que una sugerencia mal
 calibrada de la IA se colara como escritura antes de la validación.
-[2026-08-07] CHARTER:DECISIONS-002 — Aéropostale removido de Hard Blocks. Confirmado con el operador
-que Aéropostale, a diferencia de L'Oréal/Levi's-Dockers/Palacio de Hierro, sí
+### 2.2 CHARTER:DECISIONS-002 — Aéropostale removido de Hard Blocks
+[2026-08-07] Confirmado con el operador que Aéropostale, a diferencia de L'Oréal/Levi's-Dockers/Palacio de Hierro, sí
 recontrata y no debía excluirse de vacantes nuevas. Cualquier referencia previa
 que lo incluyera como Hard Block era un error, no una versión histórica válida.
 Este error reapareció después en al menos un brief operativo — ver sección 3,
 "Fracasos conocidos", primer ítem — razón directa por la que este Charter existe.
-[2026-09-11] CHARTER:DECISIONS-003 — Serial Authority v2 — operador como Prioridad 0. Se eliminó del
-diseño la vía MCP/HTTP de asignación de seriales de handoff (no degradada a
+### 2.3 CHARTER:DECISIONS-003 — Serial Authority v2 — operador como Prioridad 0
+[2026-09-11] Se eliminó del diseño la vía MCP/HTTP de asignación de seriales de handoff (no degradada a
 fallback, retirada por no ser funcional en la práctica) y se estableció que un
 serial declarado directamente por el operador en el mismo turno se adopta sin
 verificación adicional bajo ninguna circunstancia. Razón: instancias receptoras
@@ -82,22 +82,22 @@ de la introducción de S4-EVIDENCE (comando + output crudo) y la Regla de
 Adopción: una instancia que recibe evidencia completa la adopta sin re-ejecutar
 verificación, salvo contradicción explícita o inconsistencia interna de la
 evidencia misma.
-[2026-09-12, commit 7ce685ee] CHARTER:DECISIONS-004 — Retiro de layer_1_run.py / consolidate_duplicates.py (G6).
-Consolidación del pipeline Layer 1 en layer_1_orchestrator.py como único activo;
+### 2.4 CHARTER:DECISIONS-004 — Retiro de layer_1_run.py / consolidate_duplicates.py (G6)
+[2026-09-12, commit 7ce685ee] Consolidación del pipeline Layer 1 en layer_1_orchestrator.py como único activo;
 los scripts anteriores se archivaron formalmente en Archive/Legacy_Scripts/ con
 README de retiro. Razón: reducir superficie de scripts duplicados que generaban
 ambigüedad sobre cuál era la vía operativa vigente. Este retiro no se propagó
 consistentemente a la documentación — ver sección 3.
-[2026-09-24, v9.22.12] CHARTER:DECISIONS-005 — Cierre E2E de Runtime/Lazy Loader — Graph declarado SUSPENDED.
-Decisión de producto explícita: VANTAGE usa movimiento mutuamente excluyente entre
+### 2.5 CHARTER:DECISIONS-005 — Cierre E2E de Runtime/Lazy Loader — Graph declarado SUSPENDED
+[2026-09-24, v9.22.12] Decisión de producto explícita: VANTAGE usa movimiento mutuamente excluyente entre
 TRACKER y ARCHIVO_TRACKER para archivado, no relaciones de grafo. Graph/Backlinks
 quedan como artefactos de observabilidad derivados, con graph_edges/backlinks_count
 en 0 por diseño — no como una capa operativa pendiente de arreglar. Se descartó
 la alternativa de invertir esfuerzo en hacer funcional el grafo porque el modelo
 de archivado por movimiento de fila ya cumplía la función sin esa complejidad
 adicional.
-[2026-09-24 a 09-25] CHARTER:DECISIONS-006 — Detección de fabricación en auditoría externa — origen de
-la disciplina de verificación 1:1. Una primera ronda de auditoría delegada a
+### 2.6 CHARTER:DECISIONS-006 — Detección de fabricación en auditoría externa — origen de la disciplina de verificación 1:1
+[2026-09-24 a 09-25] Una primera ronda de auditoría delegada a
 Perplexity produjo una "Cédula de Reconciliación" con datos plausibles (versión
 v9.21.40, estados PASS) sin fuente verificable — patrón de fabricación
 detectado y rechazado antes de que contaminara cualquier decisión. A partir de
@@ -109,22 +109,22 @@ reporte (citas, tablas, aparente rigor) como sustituto de la verificación —
 la segunda ronda de Perplexity, con URLs reales y admisiones honestas de
 FUENTE NO ACCESIBLE, demostró que la forma correcta sí es alcanzable y se
 volvió el estándar exigido en todo contrato de sesión posterior.
-[2026-09-25] CHARTER:DECISIONS-007 — Dedup_Flag migrado de select a checkbox — drift documental
-cerrado con evidencia dura. El campo cambió de tipo en Notion (registrado en
+### 2.7 CHARTER:DECISIONS-007 — Dedup_Flag migrado de select a checkbox — drift documental cerrado con evidencia dura
+[2026-09-25] El campo cambió de tipo en Notion (registrado en
 Changelog v9.22.3) pero KERNEL nunca se actualizó en consecuencia, y esa
 discrepancia sobrevivió sin resolverse durante meses hasta la auditoría de
 reconciliación. Razón para registrarlo aquí (no solo como fix): es el caso
 de referencia de cómo un cambio de código sin la disciplina de propagación
 documental puede persistir invisible hasta una auditoría dedicada.
-[2026-09-27 a 09-29] CHARTER:DECISIONS-008 — Reconciliación v10 — modelo de tracks paralelos. Se
-adoptó el modelo Track Alpha (normativo/KERNEL) + Track Beta (código/scripts)
+### 2.8 CHARTER:DECISIONS-008 — Reconciliación v10 — modelo de tracks paralelos
+[2026-09-27 a 09-29] Se adoptó el modelo Track Alpha (normativo/KERNEL) + Track Beta (código/scripts)
 corriendo en paralelo durante Fase 1 y 2, convergiendo en Fase 3. Razón: evitar
 que la corrección de contradicciones documentales avance desacoplada de la
 verificación del código real que esas contradicciones describen — el patrón que
 ya había fallado antes (documentación "corregida" sobre un estado de código no
 verificado).
-[2026-09-29] CHARTER:DECISIONS-009 — Blueprint de reescritura KERNEL/MANUAL v10 — adopción híbrida.
-Se decidió no adoptar un solo diagnóstico externo en bloque; se usa el blueprint
+### 2.9 CHARTER:DECISIONS-009 — Blueprint de reescritura KERNEL/MANUAL v10 — adopción híbrida
+[2026-09-29] Se decidió no adoptar un solo diagnóstico externo en bloque; se usa el blueprint
 estructural de ChatGPT (12 secciones para KERNEL, 9-10 para MANUAL, con matriz
 sección-por-sección KEEP/REWRITE/MOVE/MERGE/SPLIT/REMOVE) como plan de
 construcción, y la tabla de contradicciones X-01..X-10 de Perplexity como lente
@@ -132,14 +132,14 @@ de validación de riesgo antes de mover cualquier sección. Razón: cada auditor
 por separado tenía un punto ciego que la otra cubría (ChatGPT no consolidaba
 duplicaciones cruzadas con la misma trazabilidad; Perplexity no proponía
 estructura de reemplazo ejecutable).
-[2026-09-29] CHARTER:DECISIONS-010 — Creación de este Charter. Ver sección 1 para la razón completa.
-Decisión explícita del operador tras notar que saltar entre sesiones y entre
+### 2.10 CHARTER:DECISIONS-010 — Creación de este Charter
+[2026-09-29] Ver sección 1 para la razón completa. Decisión explícita del operador tras notar que saltar entre sesiones y entre
 instancias de agente (para economizar contexto/tokens) estaba erosionando la
 continuidad de objetivos, decisiones y prioridades — el mismo contexto de
 génesis que permitió detectar los drifts de esta semana solo existía en una
 instancia de Claude, no en ningún documento del proyecto.
-[2026-09-30] CHARTER:DECISIONS-011 — CLAUDE/MAIN declarado gatekeeper exclusivo de cambios al
-Charter — vía SP:BOOTLOADER-002 y Bootstrap Universal. Ningún agente
+### 2.11 CHARTER:DECISIONS-011 — CLAUDE/MAIN declarado gatekeeper exclusivo de cambios al Charter
+[2026-09-30] Vía SP:BOOTLOADER-002 y Bootstrap Universal. Ningún agente
 escribe directamente sobre este documento; todo cambio entra como ticket
 Task Tracker tipo CHARTER, evaluado únicamente por CLAUDE/MAIN, aplicado
 únicamente por el operador. Se descartó un modelo más flexible (cualquier
@@ -157,39 +157,39 @@ verificada).
 ## 3. CHARTER:FAILURES — Fracasos conocidos (para no repetir)
 > Si estás a punto de proponer algo que se parece a uno de estos, revisa primero
 por qué no funcionó.
-CHARTER:FAILURES-001 — Reaparición de Hard Blocks ya corregidos. El bloqueo de Aéropostale se
-levantó explícitamente el 2026-08-07, pero volvió a aparecer como exclusión en
+### 3.1 CHARTER:FAILURES-001 — Reaparición de Hard Blocks ya corregidos
+El bloqueo de Aéropostale se levantó explícitamente el 2026-08-07, pero volvió a aparecer como exclusión en
 al menos un brief operativo posterior, obligando a corregirlo dos veces. Causa
 raíz: la corrección vivía solo en una entrada de Changelog y en la memoria de
 la sesión que la hizo, sin quedar consolidada en un lugar que un agente nuevo
 consultara por default. Mitigación: este Charter, más la disciplina de que
 Hard Blocks reales se declaran una sola vez en el KERNEL vigente, nunca se
-re-derivan de briefs históricos.
-CHARTER:FAILURES-002 — Patrón de reporte optimista (ticket RT-1, Bug Tracker). Al menos tres
-episodios documentados donde un agente (Devin en dos ocasiones, Gemini en una)
+re-derivan de briefs históricos. 
+### 3.2 CHARTER:FAILURES-002 — Patrón de reporte optimista (ticket RT-1, Bug Tracker)
+Al menos tres episodios documentados donde un agente (Devin en dos ocasiones, Gemini en una)
 reportó una corrección o un push/commit como aplicado cuando la verificación
 independiente mostró que no lo estaba, o que el bug de sintaxis seguía presente.
 Mitigación adoptada: ningún reporte de éxito de otro agente se acepta sin
 re-fetch/re-verificación independiente contra la fuente real (repo, Notion,
 Terminal) — este es hoy un principio explícito de ways-of-working, nacido
 directamente de este patrón repetido.
-CHARTER:FAILURES-003 — Cédula de Reconciliación fabricada (primera ronda de auditoría externa,
-2026-09-24/25). Ver sección 2 para el detalle. El fracaso no fue solo el dato
+### 3.3 CHARTER:FAILURES-003 — Cédula de Reconciliación fabricada (primera ronda de auditoría externa, 2026-09-24/25)
+Ver sección 2 para el detalle. El fracaso no fue solo el dato
 fabricado — fue que tenía forma de rigor (citas, tablas, formato profesional)
 suficiente para casi pasar sin objeción. Mitigación: todo contrato de sesión con
 un agente delegado exige ahora URL/cita verificable específica, no solo nombre
 de fuente, y prohíbe explícitamente declarar "PASS"/"Verificado" sin evidencia
 citable.
-CHARTER:FAILURES-004 — Loop de auto-rechazo QA↔CV-B (detectado 2026-08-19). Un CV-B generado por
-Claude fue rechazado por la propia skill de QA de Claude en el mismo turno, y
+### 3.4 CHARTER:FAILURES-004 — Loop de auto-rechazo QA↔CV-B (detectado 2026-08-19)
+Un CV-B generado por Claude fue rechazado por la propia skill de QA de Claude en el mismo turno, y
 "corregido" sin cambio real verificable — un ciclo de generar-rechazar-simular
 corrección sin progreso genuino. Mitigación estructural: se separó
 explícitamente la responsabilidad de QA (audita, no corrige) de CV-B
 (construye, no se auto-audita en el mismo turno) — la regeneración tras un
 NO-GO requiere invocación explícita separada del operador, nunca colapsarse
 en el mismo turno por inercia conversacional.
-CHARTER:FAILURES-005 — Documentación que describe código ya retirado. Patrón recurrente, no un
-incidente único: layer_1_run.py y consolidate_duplicates.py permanecieron
+### 3.5 CHARTER:FAILURES-005 — Documentación que describe código ya retirado
+Patrón recurrente, no un incidente único: layer_1_run.py y consolidate_duplicates.py permanecieron
 documentados como scripts activos en MANUAL semanas después de su retiro real
 (commit 7ce685ee, 2026-09-12). Detectado independientemente por dos auditorías
 externas y confirmado contra el repo real. Causa raíz: no existe (todavía) un
@@ -208,40 +208,31 @@ automática.
 ways-of-working. Se consolidan aquí con su razón de ser — la fuente normativa
 exacta sigue siendo el documento original; este Charter no la reemplaza, la
 contextualiza.
-1. CHARTER:NON-NEGOTIABLES-001 — Python es dueño exclusivo de los campos Class B. La IA nunca los calcula
-ni los escribe directamente. Por qué: decisiones reproducibles y auditables
+### 4.1 CHARTER:NON-NEGOTIABLES-001 — Python es dueño exclusivo de los campos Class B
+La IA nunca los calcula ni los escribe directamente. Por qué: decisiones reproducibles y auditables
 no pueden depender de juicio de lenguaje natural turno a turno.
-1. CHARTER:NON-NEGOTIABLES-002 — APROBAR_WRITE (o equivalente explícito) es obligatorio antes de cualquier
-escritura a Notion; DRY RUN se presenta primero salvo que el operador lo
-salte explícitamente. Por qué: Mau es el único responsable final de cada
+### 4.2 CHARTER:NON-NEGOTIABLES-002 — APROBAR_WRITE obligatorio antes de cualquier escritura a Notion
+APROBAR_WRITE (o equivalente explícito) es obligatorio antes de cualquier escritura a Notion; DRY RUN se presenta primero salvo que el operador lo salte explícitamente. Por qué: Mau es el único responsable final de cada
 cambio en producción; ninguna automatización debe erosionar ese control.
-1. CHARTER:NON-NEGOTIABLES-003 — Ningún reporte de éxito de otro agente se acepta sin re-fetch/verificación
-independiente contra la fuente real. Por qué: patrón RT-1 (sección 3) —
-confiar en la narración sin verificar produjo errores reales repetidos.
-1. CHARTER:NON-NEGOTIABLES-004 — Un serial de handoff declarado por el operador en el mismo turno se adopta
-sin verificación adicional, bajo ninguna circunstancia. Por qué: Mau es
-operador y transportista único de todo handoff — cuestionar su declaración
+### 4.3 CHARTER:NON-NEGOTIABLES-003 — Ningún reporte de éxito se acepta sin re-fetch/verificación independiente
+Ningún reporte de éxito de otro agente se acepta sin re-fetch/verificación independiente contra la fuente real. Por qué: patrón RT-1 (sección 3) — confiar en la narración sin verificar produjo errores reales repetidos.
+### 4.4 CHARTER:NON-NEGOTIABLES-004 — Serial declarado por el operador se adopta sin verificación adicional
+Un serial de handoff declarado por el operador en el mismo turno se adopta sin verificación adicional, bajo ninguna circunstancia. Por qué: Mau es operador y transportista único de todo handoff — cuestionar su declaración
 directa es trabajo redundante, no cautela (Serial Authority v2, sección 2).
-1. CHARTER:NON-NEGOTIABLES-005 — Todo diagnóstico externo (auditoría, hallazgo, "Cédula") se trata como
-hipótesis hasta verificación 1:1 contra fuente primaria real — nunca como
-verdad operativa por su sola forma o aparente rigor. Por qué: incidente
-de Cédula fabricada (sección 3).
-1. CHARTER:NON-NEGOTIABLES-006 — Ningún agente delegado resuelve por su cuenta una discrepancia entre
-documentos o entre documento y código — la reporta con ambas fuentes citadas
-y espera decisión humana. Por qué: la resolución unilateral de
+### 4.5 CHARTER:NON-NEGOTIABLES-005 — Diagnóstico externo = hipótesis hasta verificación 1:1
+Todo diagnóstico externo (auditoría, hallazgo, "Cédula") se trata como hipótesis hasta verificación 1:1 contra fuente primaria real — nunca como verdad operativa por su sola forma o aparente rigor. Por qué: incidente de Cédula fabricada (sección 3).
+### 4.6 CHARTER:NON-NEGOTIABLES-006 — Ningún agente delegado resuelve discrepancias por su cuenta; reporta y espera decisión humana
+Ningún agente delegado resuelve por su cuenta una discrepancia entre documentos o entre documento y código — la reporta con ambas fuentes citadas y espera decisión humana. Por qué: la resolución unilateral de
 ambigüedad es precisamente lo que generó el patrón de "corrección" ficticia
 en el loop QA↔CV-B y en la Cédula fabricada.
-1. CHARTER:NON-NEGOTIABLES-007 — tracker_flow.is_mutable() es la única fuente de verdad sobre mutabilidad
-de un registro; ningún guard alternativo debe reimplementar ese criterio.
-1. CHARTER:NON-NEGOTIABLES-008 — Graph/Backlinks son artefactos de observabilidad derivados, nunca una capa
-operativa de resolución o archivado. Por qué: decisión de producto
-explícita (sección 2) — VANTAGE archiva por movimiento de fila, no por grafo.
-1. CHARTER:NON-NEGOTIABLES-009 — VM_Scope es binario (Alto/Bajo) — no existe, ni debe reintroducirse, un
-valor "Medio" ni terminología de escaparatismo.
-1. CHARTER:NON-NEGOTIABLES-010 — Hard Blocks reales (empleadores que no recontratan) se consultan siempre
-contra el KERNEL vigente, nunca se re-derivan de un brief o auditoría
-histórica. Por qué: fracaso conocido de reaparición de Aéropostale
-(sección 3).
+### 4.7 CHARTER:NON-NEGOTIABLES-007 — tracker_flow.is_mutable() única fuente de verdad de mutabilidad
+tracker_flow.is_mutable() es la única fuente de verdad sobre mutabilidad de un registro; ningún guard alternativo debe reimplementar ese criterio.
+### 4.8 CHARTER:NON-NEGOTIABLES-008 — Graph/Backlinks solo observabilidad, nunca capa operativa
+Graph/Backlinks son artefactos de observabilidad derivados, nunca una capa operativa de resolución o archivado. Por qué: decisión de producto explícita (sección 2) — VANTAGE archiva por movimiento de fila, no por grafo.
+### 4.9 CHARTER:NON-NEGOTIABLES-009 — VM_Scope binario (Alto/Bajo), sin "Medio"
+VM_Scope es binario (Alto/Bajo) — no existe, ni debe reintroducirse, un valor "Medio" ni terminología de escaparatismo.
+### 4.10 CHARTER:NON-NEGOTIABLES-010 — Hard Blocks se consultan contra el KERNEL vigente
+Hard Blocks reales (empleadores que no recontratan) se consultan siempre contra el KERNEL vigente, nunca se re-derivan de un brief o auditoría histórica. Por qué: fracaso conocido de reaparición de Aéropostale (sección 3).
 ---
 ## 5. CHARTER:MILESTONES — Trayectoria esperada — hitos de fase, no lista de tareas
 > Esta sección no duplica el Plan de Trabajo (Notion) — ese vive de tareas que
@@ -249,9 +240,8 @@ cambian de estado todos los días. Aquí van los hitos que casi nunca
 cambian aunque las tareas debajo sí, con su definición explícita de "hecho".
 Si te encuentras editando esta sección cada sesión, algo se filtró aquí que
 debería vivir en el Plan de Trabajo, no aquí.
-CHARTER:MILESTONES-001 — Hito 1 — Track Beta (código) cerrado de una sola vez. ✅ CERRADO 2026-09-29,
-vía Arena.IA Agent Mode, evidencia línea-por-línea contra HEAD=cef2de7.
-Las 10 preguntas recurrentes quedan respondidas para siempre — no se vuelven a
+### 5.1 CHARTER:MILESTONES-001 — Hito 1 — Track Beta (código) cerrado de una sola vez
+✅ CERRADO 2026-09-29, vía Arena.IA Agent Mode, evidencia línea-por-línea contra HEAD=cef2de7. Las 10 preguntas recurrentes quedan respondidas para siempre — no se vuelven a
 levantar desde cero en ninguna sesión futura, con cualquier agente:
 | # | Pregunta | Respuesta final | Discrepancia Manual↔código |
 | --- | --- | --- | --- |
@@ -270,25 +260,24 @@ genuino de responder la misma pregunta a distintos agentes en distintos
 momentos sin que ninguno recordara la respuesta anterior. Con esta tabla, esa
 pregunta deja de repetirse — cualquier agente que la levante de nuevo se
 remite aquí.
-CHARTER:MILESTONES-002 — Hito 2 — T2.1 (Redacción KERNEL v10) arranca en paralelo a Track Beta, no
-después. Definición de hecho: T2.1 no espera a que Track Beta cierre al
+### 5.2 CHARTER:MILESTONES-002 — Hito 2 — T2.1 (Redacción KERNEL v10) en paralelo a Track Beta
+Definición de hecho: T2.1 no espera a que Track Beta cierre al
 100% si las piezas de Track Beta que bloquean secciones específicas del KERNEL
 (la cifra de documentos fundacionales, la jerarquía de dedup L1>L2>L3, el
 scope real de vsync_doc.py) ya están resueltas — lo cual, a la fecha de este
 Charter, ya lo están (ver Changelog v9.22.17-19). El resto de Track Beta
 (scripts de Layer 4/Dashboard/Raycast) no bloquea el arranque de la redacción
 normativa central de KERNEL.
-CHARTER:MILESTONES-003 — Hito 3 — MANUAL v10 corre en paralelo a KERNEL v10 una vez que ambos
-comparten la misma base de hechos verificados (Cédula de Reconciliación +
+### 5.3 CHARTER:MILESTONES-003 — Hito 3 — MANUAL v10 corre en paralelo a KERNEL v10
+Una vez que ambos comparten la misma base de hechos verificados (Cédula de Reconciliación +
 output de Track Beta cerrado). No se redacta MANUAL v10 sobre una cifra o un
 estado de script que Track Beta aún no ha confirmado.
-CHARTER:MILESTONES-004 — Hito 4 — Fase 3 (sync + verificación cruzada) solo arranca cuando KERNEL v10
-y MANUAL v10 tienen draft completo, no parches incrementales sobre v9.22.x.
-Definición de hecho: vsync corre sobre el árbol v10 completo una sola vez,
+### 5.4 CHARTER:MILESTONES-004 — Hito 4 — Fase 3 (sync + verificación cruzada) solo con drafts v10 completos
+Fase 3 (sync + verificación cruzada) solo arranca cuando KERNEL v10 y MANUAL v10 tienen draft completo, no parches incrementales sobre v9.22.x. Definición de hecho: vsync corre sobre el árbol v10 completo una sola vez,
 no sobre fragmentos sueltos — evitar el patrón de esta semana donde cada
 parche puntual requería su propio ciclo de vversions --sync / vgit.
-CHARTER:MILESTONES-005 — Hito 5 — Este Charter se actualiza en cada decisión estructural mayor,
-no solo en checkpoints de fase. Ver sección 2 para el criterio de qué
+### 5.5 CHARTER:MILESTONES-005 — Hito 5 — Este Charter se actualiza en cada decisión estructural mayor
+No solo en checkpoints de fase. Ver sección 2 para el criterio de qué
 califica como "estructural mayor" vs. "fix, no anotar aquí".
 ---
 ## 6. CHARTER:CONTINUITY — Protocolo de continuidad entre agentes y sesiones

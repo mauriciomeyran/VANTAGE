@@ -1816,6 +1816,7 @@ Pendiente (fuera de esta entrada): verificar si el resto de CENSUS_SPEC para Car
 Versión actualizada: 9.7.9 (solo esta página — CHANGELOG). El resto de los fundacionales permanece en v9.7.8 hasta que el operador corra verify_versions.py --sync.
 ---
 # v9.7.8 — Centralización de Skills VANTAGE en MCP Server / Single Source of Truth (/skills/) · 2026-07-23
+Tipo: [DOC] [INFRA]
 Alcance: KERNEL (KERNEL:ARCHITECTURE-L4, §4) + MANUAL (§8.1, bloque vgit).
 Contexto: El operador centralizó el sistema de Skills VANTAGE en /skills/ como single source of truth (12 .skill files + index.json + index.html), migró GitHub Pages de la rama dev/layer-2 a main, y extendió git_sync.py (motor de vgit) para detectar .skill nuevos y regenerar index.json en el mismo commit+push. Se ejecutó vantage-documentacion-transversal-propuesta seguido de -implementacion para reflejar este cambio en Kernel y Manual, ambos con gap total previo (ninguna mención de Skills/MCP filesystem en L4). Se detectó además que Kernel §4 citaba el repo como jhs-pipeline, nombre desactualizado — corregido a VANTAGE.
 Cambios:

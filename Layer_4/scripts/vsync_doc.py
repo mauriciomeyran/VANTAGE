@@ -483,7 +483,22 @@ def _patch_table_row(block_id: str, cells: list) -> bool:
 
 
 def push_local_to_notion(pid, path):
-    """Sincroniza archivo local a Notion usando PATCH puntual para preservar block_ids."""
+    """
+    Sincroniza archivo local a Notion usando PATCH puntual para preservar block_ids.
+    Reemplaza el patrón destroy/rebuild (delete-all + create-all) que rompía anchors.
+    
+    ESTRATEGIA:
+    1. Fetch bloques existentes de Notion con sus block_ids
+    2. Parsear archivo local a bloques
+    3. Hacer matching por posición y tipo (estrategia determinista)
+    4. PATCH bloques existentes que coinciden por posición
+    5. DELETE bloques sobrantes al final
+    6. APPEND bloques nuevos al final
+    
+    Esta estrategia preserva los block_ids de bloques existentes manteniendo
+    la integridad de los anchors de hipervínculos según KERNEL:DOCUMENTATION-011.
+    """
+    # Fetch bloques existentes
     existing_blocks = []
     cur = None
     while True:
@@ -497,7 +512,8 @@ def push_local_to_notion(pid, path):
         if not d.get("has_more"):
             break
         cur = d.get("next_cursor")
-
+    
+    # Parsear archivo local a bloques
     lines = path.read_text(encoding="utf-8").splitlines()
     local_blocks = []
     i = 0
@@ -509,9 +525,265 @@ def push_local_to_notion(pid, path):
             i = next_i
             continue
         if l.startswith("```"):
-            lang = l[3:].strip()
-            i += 1
-            code = []
-            while i < len(lines) and not lines[i].startswith("```"): 
-                code.append(lines[i])
-                i += 1
+            lang = l[3:].strip(); i+=1; code=[]
+            while i < len(lines) and not lines[i].startswith("```"):
+                code.append(lines[i]); i+=1
+            local_blocks.extend(_make_code_blocks(lang, "\n".join(code)))
+        elif l.startswith("### "):
+            local_blocks.append(_make_text_block("heading_3", "heading_3", l[4:]))
+        elif l.startswith("## "):
+            local_blocks.append(_make_text_block("heading_2", "heading_2", l[3:]))
+        elif l.startswith("# "):
+            local_blocks.append(_make_text_block("heading_1", "heading_1", l[2:]))
+        elif l.startswith("- [x] ") or l.startswith("- [X] "):
+            local_blocks.append({"object":"block","type":"to_do","to_do":{
+                "checked":True,"rich_text":[{"type":"text","text":{"content":l[6:NOTION_TEXT_LIMIT+6]}}]}})
+        elif l.startswith("- [ ] "):
+            local_blocks.append({"object":"block","type":"to_do","to_do":{
+                "checked":False,"rich_text":[{"type":"text","text":{"content":l[6:NOTION_TEXT_LIMIT+6]}}]}})
+        elif l.startswith("- "):
+            local_blocks.append(_make_text_block("bulleted_list_item", "bulleted_list_item", l[2:]))
+        elif l.startswith("> "):
+            local_blocks.append(_make_text_block("quote", "quote", l[2:]))
+        elif l.startswith("---"):
+            local_blocks.append({"object":"block","type":"divider","divider":{}})
+        elif l.strip():
+            local_blocks.append(_make_text_block("paragraph", "paragraph", l))
+        else:
+            local_blocks.append({"object":"block","type":"paragraph","paragraph":{"rich_text":[]}})
+        i+=1
+    
+    # PATCH por posición: para cada bloque local, intentar hacer PATCH al bloque existente en la misma posición
+    patches_applied = 0
+    blocks_created = 0
+    blocks_deleted = 0
+    patches_failed = 0
+    tables_skipped = 0
+    
+    max_blocks = max(len(existing_blocks), len(local_blocks))
+    
+    for idx in range(max_blocks):
+        if idx < len(local_blocks) and idx < len(existing_blocks):
+            # Ambos existen: intentar PATCH
+            local_block = local_blocks[idx]
+            existing_block = existing_blocks[idx]
+            block_type = local_block.get("type")
+            existing_type = existing_block.get("type")
+            
+            # Si tipos coinciden, hacer PATCH
+            if block_type == existing_type:
+                if block_type in ["paragraph", "heading_1", "heading_2", "heading_3", 
+                                "bulleted_list_item", "quote", "to_do"]:
+                    # Bloques de texto: PATCH rich_text
+                    new_rich_text = local_block[block_type].get("rich_text", [])
+                    if _patch_block_rich_text(existing_block["id"], block_type, new_rich_text):
+                        patches_applied += 1
+                    else:
+                        patches_failed += 1
+                elif block_type == "divider":
+                    # Divider no tiene contenido que actualizar
+                    pass
+                elif block_type == "table":
+                    # Tabla: estructura completa (más complejo, simplificado por ahora)
+                    # TODO: Implementar PATCH granular de tablas
+                    # V-06 fix: antes esto pasaba en silencio (pass) y el
+                    # bloque quedaba marcado como sincronizado más abajo
+                    # (manifest hash actualizado) pese a no haberse tocado.
+                    # Ahora se cuenta explícitamente como no sincronizado.
+                    tables_skipped += 1
+                elif block_type == "table_row":
+                    # Table row: PATCH cells
+                    new_cells = local_block["table_row"].get("cells", [])
+                    if _patch_table_row(existing_block["id"], new_cells):
+                        patches_applied += 1
+                    else:
+                        patches_failed += 1
+                else:
+                    # Otros tipos: intentar PATCH genérico
+                    if _patch_block_rich_text(existing_block["id"], block_type, 
+                                             local_block[block_type].get("rich_text", [])):
+                        patches_applied += 1
+                    else:
+                        patches_failed += 1
+            else:
+                # R-02 fix: Tipos no coinciden → recrear, pero CREATE antes que
+                # DELETE. Antes esto borraba el bloque existente y solo
+                # incrementaba un contador (blocks_created += 1) sin ninguna
+                # llamada real a la API que creara el reemplazo — el
+                # contenido se perdía. Ahora: crear primero (en la posición
+                # correcta con `after`), y solo borrar el viejo si la
+                # creación fue exitosa. Si falla la creación, se preserva el
+                # bloque original antes que perder contenido.
+                try:
+                    notion.blocks.children.append(
+                        block_id=pid,
+                        children=[local_block],
+                        after=existing_block["id"],
+                    )
+                    blocks_created += 1
+                    try:
+                        notion.blocks.delete(existing_block["id"])
+                        blocks_deleted += 1
+                    except Exception as e:
+                        # El bloque viejo queda duplicado junto al nuevo: contar como
+                        # fallo para que el manifest NO se actualice y quede visible.
+                        patches_failed += 1
+                        print(f"       ⚠️ reemplazo creado pero no se pudo borrar el bloque viejo {existing_block['id'][:8]}: {e}")
+                except Exception as e:
+                    patches_failed += 1
+                    print(f"       ⚠️ no se pudo crear el reemplazo para el bloque {existing_block['id'][:8]} — se conserva el original sin cambios: {e}")
+                
+        elif idx < len(local_blocks):
+            # Solo existe local: crear nuevo
+            blocks_created += 1
+            
+        elif idx < len(existing_blocks):
+            # Solo existe en Notion: borrar
+            try:
+                notion.blocks.delete(existing_blocks[idx]["id"])
+                blocks_deleted += 1
+            except Exception as e:
+                patches_failed += 1
+                print(f"       ⚠️ no se pudo borrar bloque {existing_blocks[idx]['id'][:8]}: {e}")
+    
+    # Crear bloques nuevos al final (para casos donde len(local) > len(existing))
+    if len(local_blocks) > len(existing_blocks):
+        new_blocks = local_blocks[len(existing_blocks):]
+        for j in range(0, len(new_blocks), 100):
+            notion.blocks.children.append(block_id=pid, children=new_blocks[j:j+100])
+    
+    print(f"       ✓ PATCH stats: {patches_applied} actualizados, {blocks_created} nuevos, "
+          f"{blocks_deleted} eliminados, {patches_failed} fallidos, "
+          f"{tables_skipped} tablas NO sincronizadas (sin soporte de PATCH granular)")
+    return {
+        "patched": patches_applied,
+        "created": blocks_created,
+        "deleted": blocks_deleted,
+        "failed": patches_failed,
+        "tables_skipped": tables_skipped,
+    }
+
+def auto_commit(dry_run=False):
+    """Llama a git_sync.py si hay cambios en ACTIVE."""
+    import subprocess
+    gs = _PROJECT / "Layer_4" / "scripts" / "git_sync.py"
+    if not gs.exists():
+        return
+    cmd = [sys.executable, str(gs)]
+    if dry_run:
+        cmd.append("--dry-run")
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(_PROJECT))
+        if result.returncode == 0:
+            print(f"  📦 {result.stdout.strip()}")
+        elif "No hay cambios" in result.stdout:
+            pass
+        else:
+            print(f"  ⚠️ git: {result.stderr.strip() or result.stdout.strip()}")
+    except Exception as e:
+        print(f"  ⚠️ git_sync falló: {e}")
+
+def main():
+    _exit_code = [0]
+    p = argparse.ArgumentParser()
+    p.add_argument("--direction", choices=["notion","auto","local"], default="auto", help="notion→local (read-only), auto (decide por hash), o local→notion (PATCH puntual, preserva anchors)")
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--doc", choices=list(DOCS.keys()))
+    args = p.parse_args()
+    targets = {args.doc: DOCS[args.doc]} if args.doc else DOCS
+
+    print(f"\nvsync_doc v9.13.1 L4 → ACTIVE  [{args.direction.upper()}]{' DRY' if args.dry_run else ''}")
+    print("⚠️  DOCUMENTACIÓN ACTIVE LOCAL ES READ-ONLY — NOTION ES ÚNICA FUENTE DE VERDAD")
+    if args.direction == "local":
+        print("ℹ️  --direction local ahora usa PATCH puntual para preservar anchors (KERNEL:DOCUMENTATION-011)\n")
+    else:
+        print()
+
+    for k, d in targets.items():
+        local = d["local_file"]
+
+        # ── DRY RUN: solo metadata (pages.retrieve), sin fetch recursivo de bloques ──
+        if args.dry_run:
+            try:
+                meta = notion.pages.retrieve(d["notion_id"])
+            except Exception as e:
+                print(f"  ✗ {d['label']:<30} [DRY] ERROR — {e}")
+                continue
+            ts = datetime.fromisoformat(meta["last_edited_time"].replace("Z","+00:00"))
+            local_ts = datetime.fromtimestamp(local.stat().st_mtime, tz=timezone.utc) if local.exists() else None
+
+            if args.direction == "notion":
+                print(f"  · {d['label']:<30} [DRY] notion→local (sin cambios aplicados)")
+            else:
+                manifest = _load_manifest()
+                local_text = local.read_text(encoding="utf-8") if local.exists() else ""
+                notion_text, _ts_unused = fetch_notion_as_md(d["notion_id"])
+                decision = _decide(k, local_text, notion_text or "", manifest)
+                label_map = {
+                    "local->notion": "local→notion (PATCH puntual)",
+                    "notion->local": "notion→local",
+                    "noop": "sin cambios (hash igual)",
+                    "conflict": "⚠️ CONFLICT — ambos lados cambiaron, resolver manual",
+                }
+                print(f"  · {d['label']:<30} [DRY] {label_map[decision]} (auto, sin cambios aplicados)")
+            continue
+
+        # ── RUN REAL: aquí sí se justifica el fetch completo y recursivo ──
+        md, ts = fetch_notion_as_md(d["notion_id"])
+        if md is None:
+            print(f"  ✗ {d['label']:<30} ERROR")
+            continue
+
+        if args.direction == "notion":
+            local.parent.mkdir(parents=True, exist_ok=True)
+            original_mode = _make_writable(local)
+            local.write_text(md, encoding="utf-8")
+            _restore_permissions(local, original_mode)
+            manifest = _load_manifest()
+            manifest[k] = _hash(md)
+            _save_manifest(manifest)
+            print(f"  ✓ {d['label']:<30} notion→local")
+
+        elif args.direction == "local":
+            print(f"  → {d['label']:<30} local→notion (PATCH puntual, preserva anchors)")
+            original_mode = _make_writable(local)
+            result = push_local_to_notion(d["notion_id"], local)
+            _restore_permissions(local, original_mode)
+            if result["failed"] > 0 or result["tables_skipped"] > 0:
+                print(f"  ✗ {d['label']:<30} {result['failed']} bloque(s) fallaron, "
+                      f"{result['tables_skipped']} tabla(s) sin sincronizar — manifest NO actualizado")
+                _exit_code[0] = 1
+            else:
+                manifest = _load_manifest()
+                manifest[k] = _hash(local.read_text(encoding="utf-8"))
+                _save_manifest(manifest)
+
+        else:  # auto — decide por hash de contenido vs manifest, no por mtime
+            manifest = _load_manifest()
+            local_text = local.read_text(encoding="utf-8") if local.exists() else ""
+            decision = _decide(k, local_text, md, manifest)
+
+            if decision == "noop":
+                print(f"  · {d['label']:<30} sin cambios (hash igual, auto)")
+            elif decision == "conflict":
+                print(f"  ⚠️ {d['label']:<30} CONFLICT — ambos lados cambiaron desde el último sync. SIN APLICAR. Resolver manual con --direction.")
+            elif decision == "local->notion":
+                print(f"  ⚠️  {d['label']:<30} SKIP — local→notion deshabilitado (ACTIVE LOCAL es read-only)")
+                print(f"    Cambios locales detectados pero no se pueden subir a Notion.")
+                print(f"    Use --direction notion para sobrescribir local con la versión de Notion.")
+                continue
+            else:  # notion->local
+                local.parent.mkdir(parents=True, exist_ok=True)
+                original_mode = _make_writable(local)
+                local.write_text(md, encoding="utf-8")
+                _restore_permissions(local, original_mode)
+                manifest[k] = _hash(md)
+                _save_manifest(manifest)
+                print(f"  ✓ {d['label']:<30} notion→local (auto)")
+
+    if not args.dry_run and not os.environ.get("VDOC_WRAPPER"):
+        auto_commit(dry_run=False)
+    return _exit_code[0]
+
+if __name__ == "__main__":
+    sys.exit(main())

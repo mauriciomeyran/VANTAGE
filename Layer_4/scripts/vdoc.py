@@ -29,7 +29,7 @@ arriba y SIEMPRE gana: nunca escribe en Notion, local ni GitHub sin importar
 qué más se haya pasado en la misma línea.
 """
 
-import subprocess, sys
+import os, subprocess, sys
 from pathlib import Path
 
 PROJECT = Path.home() / "Documents/03 Projects/VANTAGE"
@@ -49,7 +49,8 @@ DIRECTIONS = {"notion", "auto", "local"}
 
 def run(cmd, label=""):
     print(f"\n── {label} ──")
-    r = subprocess.run([sys.executable] + cmd, cwd=str(PROJECT))
+    r = subprocess.run([sys.executable] + cmd, cwd=str(PROJECT),
+                       env={**os.environ, "VDOC_WRAPPER": "1"})
     return r.returncode
 
 def main():

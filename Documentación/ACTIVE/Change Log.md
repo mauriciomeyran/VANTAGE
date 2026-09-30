@@ -1,5 +1,36 @@
 # V | CHANGELOG
 
+Tipo: [OPS] [DOC] [FIX]
+Identidad VANTAGE: agent.family=GEMINI · agent.instance=DEFAULT (emisor de la actualización). Redacción y aplicación de esta entrada en el formato del Log: MISTRAL/DEFAULT (Vibe, MCP Notion), por instrucción del operador.
+Documentos modificados: Layer_1/data/V_ID_CENSUS_PRODUCTION.md (mapeo granular de índices) · rama local main (rebase + stash pop) · CHANGELOG (esta entrada + bump de Versión).
+Documentos potencialmente afectados: V | ID CENSUS (Notion), sin sync en esta pasada · V | PROJECT CHARTER, sin cambio de contenido.
+Tipo de impacto: Operativo + Documental — incorpora el mapeo íntegro de sub-nodos del Charter al Census de producción tras el rebase de main, y corrige la resolución de rutas para ejecución en subshell.
+Alcance:
+1. Added — Mapeo granular de índices en Layer_1/data/V_ID_CENSUS_PRODUCTION.md para nodos del Charter: CHARTER:DECISIONS (001–011) · CHARTER:FAILURES (001–005) · CHARTER:NON-NEGOTIABLES (001–010) · CHARTER:MILESTONES (001–002, según el emisor).
+1. Changed — Rebase de la rama local main con origin/main, incorporando d34cd48 (CONTRATO_MISTRAL_CHARTER_NODES.md) · stash pop del staging local sin conflictos de merge.
+1. Fixed — Resolución de ruta de data/V_ID_CENSUS_PRODUCTION.md corregida para ejecución dentro de scope subshell (Layer_1/).
+Commits: b2c5b42 — docs(census): add granular charter nodes mapping to production census (pusheado a origin/main).
+Decisiones no duplicadas: no se ejecutó vcensus --sync-to-notion · no se modificó generate_census.py ni CENSUS_SPEC · no se tocaron documentos fundacionales en Notion.
+Validación: (a) Rebase y stash pop verificados por el emisor (sin conflictos); (b) commit b2c5b42 confirmado como pusheado a origin/main; (c) NOTA DE DISCREPANCIA: el Census verificado en v9.22.23 (corrida 12:18 CDMX) registra CHARTER:MILESTONES-001..005 — el emisor declara mapeo solo hasta 002; requerida verificación 1:1 del operador contra el V_ID_CENSUS_PRODUCTION.md en origin/main antes de citar esta cifra como definitiva.
+Estado: WRITE aplicado en Notion. Versión del Change Log bumpada a v9.22.24. Sin DRY RUN de Changelog presentado, por instrucción explícita del operador (APROBAR_WRITE + version bump en una sola pasada).
+IDs afectados: Ninguno nuevo (mapeo de índices de IDs existentes); no dispara CENSUS-SYNC Regla 1.
+Handoff de referencia: ninguno (sin serial declarado en esta sesión).
+Tipo: [DOC] [FIX]
+Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT. Ejecutor de las ediciones en Notion: MISTRAL (Vibe, MCP Notion).
+Documentos modificados: V | PROJECT CHARTER (31 sub-nodos: CHARTER:DECISIONS-001..011, CHARTER:FAILURES-001..005, CHARTER:NON-NEGOTIABLES-001..010, CHARTER:MILESTONES-001..005) · V | CHANGELOG (esta entrada + bump de Versión).
+Documentos potencialmente afectados: Layer_1/data/V_ID_CENSUS_PRODUCTION.md (regenerado por el operador vía vcensus; no editado por el agente) · CENSUS_SPEC en generate_census.py, sin cambio (numeración provisional 05.x/06.x/02.x/04.x persiste hasta commit de alineación por Arena).
+Tipo de impacto: Documental + Gobernanza — convierte los 31 sub-nodos del Charter de párrafos/list items a bloques heading_3 con formato "N.n CHARTER:PREFIX-XXX — Título", habilitando que generate_census.py los resuelva como DEF con columna Sección tomada en vivo de Notion en lugar de hardcodeada del CENSUS_SPEC.
+Alcance:
+1. Pipeline REST (PATCH children + DELETE) no disponible vía MCP; conversión ejecutada vía notion_update_page con search-and-replace estructurado, 4 batches en orden de documento (DECISIONS → FAILURES → NON-NEGOTIABLES → MILESTONES), sin fallos intermedios.
+1. Split heading/párrafo por nodo: heading_3 con número de sección en posición 1 (Position-One Rule: extract_live_section captura ^([w.]+)) + ID canónico + título; cuerpo íntegro preservado en párrafo inmediato inferior, fechas antepuestas en los 11 DECISIONS.
+1. Numeración heredada del heading padre vivo: DECISIONS 2.1–2.11, FAILURES 3.1–3.5, NON-NEGOTIABLES 4.1–4.10, MILESTONES 5.1–5.5.
+1. Limpieza de auto-links residuales de Notion (run.py, duplicates.py, flow.is convertidos a inline code) en heading 2.4, heading 4.7 y cuerpo de FAILURES-005 — plain_text idéntico, sin pérdida de contenido.
+1. Fuera de alcance verificado intacto: CHARTER:PURPOSE, CHARTER:STATUS, CHARTER:CONTINUITY, headings padre, tabla de 10 preguntas de MILESTONES-001, párrafo huérfano post-FAILURES-005.
+Decisiones no duplicadas: no se editó generate_census.py ni CENSUS_SPEC (alineación de numeración es commit de seguimiento por Arena) · no se ejecutó vcensus --sync-to-notion, vhyperlinks --apply ni vdoc (pasos posteriores del operador) · no se asignó ID al párrafo huérfano "Discrepancia de versión no bloqueante…" (candidato a CHARTER:FAILURES-006 vía ticket tipo CHARTER a CLAUDE/MAIN) · tabla old_block_id → new_block_id no generable vía MCP (limitación declarada pre-write; los 31 bloques cambiaron de block_id) · no se tocaron los 8 huérfanos REF-sin-DEF de inventario_huerfanos.md.
+Validación: (a) Re-fetch 1:1 post-write por el agente: 31/31 heading_3 cumplen regex ^d+.d+ CHARTER:(DECISIONS|FAILURES|NON-NEGOTIABLES|MILESTONES)-d{3} — .+; 0 bloques con ID de sub-nodo fuera de heading; 0 auto-links residuales; (b) vcensus corrido por el operador (12:08 y 12:18 CDMX): 294 IDs en spec / 294 resueltos / 0 sin link / 0 huérfanos / 0 con Sección hardcodeada — baseline pre-migración verificada (31 hardcodeados, P1/P2/P3 confirmados); (c) V_ID_CENSUS_PRODUCTION.md regenerado con las 31 filas CHARTER:*-NNN con Sección 2.n/3.n/4.n/5.n, links a anchors nuevos y sin "⚠︎sin verificar en vivo".
+Estado: WRITE aplicado en Notion. Versión del Change Log bumpada a v9.22.23; propiedad Versión de otros documentos no modificada. Sin DRY RUN de Changelog presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens; fecha y hora CDMX provistas por el operador).
+IDs afectados: Ninguno nuevo; mismo universo de 294 IDs en spec — no dispara CENSUS-SYNC Regla 1.
+Handoff de referencia: ninguno (sin serial declarado en esta sesión).
 Tipo: [OPS] [DOC] [CODE] Identidad VANTAGE: agent.family=GROK · agent.instance=DEFAULT. Documentos modificados:
 - Layer_4/scripts/vsync_doc.py
 - Layer_4/scripts/vdoc.py
@@ -606,6 +637,12 @@ Contexto:
 - Investigación de proveedores alternativos determinó que Gemini Flash-Lite ofrece mejor free tier (15-30 RPM vs ~10 RPM de Groq) y OpenAI-compatibility.
 Cambios ejecutados:
 1. Migración de proveedor: Reemplazo completo de cliente Groq por cliente Gemini:
+- extract_jobs_with_groq() → extract_jobs_with_gemini()
+- _groq_throttle() → _gemini_throttle()
+- _groq_wait_seconds() → _gemini_wait_seconds()
+- GroqFatalError → GeminiFatalError
+- Endpoint: https://api.groq.com/openai/v1/chat/completions → https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent
+- Payload format: OpenAI-style → Gemini native (contents/generationConfig)
 1. Configuración renombrada (layer_3.env):
 - GROQ_API_KEY → GEMINI_API_KEY (usando key existente en .env principal)
 - GROQ_MODEL → GEMINI_MODEL (gemini-3.5-flash-lite)
