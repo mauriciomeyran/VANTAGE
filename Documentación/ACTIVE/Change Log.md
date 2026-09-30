@@ -1,5 +1,21 @@
 # V | CHANGELOG
 
+Tipo: [DOC] [FIX]
+Identidad VANTAGE: agent.family=LITTLEBIRD · agent.instance=DEFAULT.
+Documentos modificados: V | PROJECT CHARTER (sección 7) · V | CHANGELOG (esta entrada).
+Documentos potencialmente afectados: V | ID CENSUS evaluado, sin cambio · document_registry y registry_seed.json, sin cambio · auto_archive.py, pendiente de verificación independiente.
+Tipo de impacto: Documental + Gobernanza — corrige el estado de dos referencias verificadas sin convertir todavía el Charter en documento canónico versionado.
+Alcance:
+1. KERNEL:CV-GOLDEN-RULES-002 confirmado 1:1 contra V | KERNEL v9.22.19, sección 10.2, "Regla de Oro #2".
+1. BRIEF:CROSS-DEPENDENCIES-001 confirmado 1:1 contra V | BRIEF v9.22.19, sección 07.1, "Impact Assessment Contract".
+1. KERNEL:GATE-DECISION-012 conservado como referencia no operativa/huérfana: el Kernel vigente usa KERNEL:DEDUP-LAYER-UPGRADE en la sección 09.12. No se reactiva ni se agrega al Census.
+1. Se reemplazó únicamente el bloque de fact-check de la sección 7 del Charter. Se mantuvieron sin cambio las decisiones pendientes sobre nombre final, prefijo CHARTER:, registry, Census, convivencia con el Tablero, ciclo de versión y plantilla de contratos.
+1. La deprecación de auto_archive.py permanece pendiente y no se cita como hecho confirmado.
+Decisiones no duplicadas: no se asignó prefijo canónico al Charter · no se incorporó al ID Census · no se actualizó document_registry ni registry_seed.json · no se marcó el Charter como verificado · no se cambió su propiedad Versión ni su Fecha de actualización.
+Validación: el reemplazo se ejecutó sobre una coincidencia exacta del bloque existente; las dos fuentes primarias fueron fetcheadas en vivo antes de la escritura.
+Estado: WRITE aplicado en Notion. Pendientes: verificación real de auto_archive.py; decisión de canonización e integración del Charter; implementación del Anti-Drift Guard en generate_census.py por el agente con acceso a Terminal.
+IDs afectados: Ninguno nuevo; no dispara CENSUS-SYNC.
+Handoff: agent.family=LITTLEBIRD · agent.instance=DEFAULT.
 Tipo: [DOC] [OPS] [FIX]
 Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MM (revisión, verificación y esta entrada). Decisiones y contratos de sesión: CLAUDE/KM. Ejecutor de las ediciones en Notion: Perplexity (MCP Notion). Cambios de código y skill: Copilot coding agent, PR en draft, no mergeado.
 Documentos modificados: V | KERNEL (ítems 1, 2, 4, 5, 10, 11) · V | MANUAL (ítems 3, 6, 7, 8, 12, 13) · V | SYSTEM PROMPT (ítem 9) · Bug Tracker (schema de Componente + tickets) · Tasks Tracker (Notas de T2.1–T2.3).
@@ -582,3 +598,13 @@ Tipo de impacto: Normativo + Operativo
 Acción correctiva: Rediseño Discovery L1/L2/L4 — L1 absorbe Gemini bajo ejecución Hermes Desktop; L2 se redefine como "Personal Request" (patrón espejo de L3, sin motores externos); jerarquía de dedup invertida a L2>L1>L3; Hermes agregado a matriz de ruteo L4 y a registro de identidad SP:BOOTLOADER-002; Vassemble actualizado a Hermes Desktop en MANUAL.  
 Estado final: PASS — todos los nodos validados y listos para escritura.
 
+Tipo: [DOC] [FIX] [OPS]
+Identidad VANTAGE: agent.family=LITTLEBIRD · agent.instance=DEFAULT. Operador: Mauricio Meyrán.
+Documentos modificados: V | ID CENSUS (página Notion 394938befc4281e6a381e3869e60d89d) · V | CHANGELOG.
+Causa raíz: CENSUS_SPEC en generate_census.py mantenía nombres de secciones KERNEL hardcodeados y podía regenerar drift silencioso después de un rename en el Kernel vivo.
+Alcance ejecutado y verificado: (1) Census reconciliado contra KERNEL v9.22.19 en las filas 03.6, 03.7, 03.8, 03.9, 03.11, 03.12, 03.13, 03.14, 03.15, 03.16, 03.17, 03.18 y 03.19; (2) copias Notion y GitHub verificadas alineadas; (3) propiedad Versión de V | ID CENSUS bump a v9.22.20; (4) propiedad Fecha de actualización de V | ID CENSUS actualizada a 2026-09-30.
+Guard anti-drift: especificación aprobada para implementación fail-fast: resolver nombres desde el Kernel vivo y abortar con error si el fetch no está disponible o si la spec estática diverge; no se acepta fallback silencioso. La modificación del archivo de repo queda pendiente de ejecución en Terminal/GitHub, porque esta instancia no tiene una vía de escritura al repositorio.
+Impacto: Documental + Gobernanza. No se crean ni eliminan IDs canónicos; no dispara CENSUS-SYNC Regla 1.
+Validación: verificación independiente previa contra KERNEL vivo v9.22.19, V | ID CENSUS y GitHub. La escritura de Notion y el bump de versión se verifican después de esta operación.
+Estado: Notion WRITE aplicado. Guard de código: PENDIENTE DE REPO, no declarado como implementado.
+Handoff: no emitido.

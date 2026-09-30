@@ -65,6 +65,35 @@ Regla dura: ningún agente debe generar contenido de CV, QA, o cualquier otro en
 | vantage-session-close | v1.0.0 | 2026-09-05 |
 | vantage-present-handoff | v1.0.0 | 2026-09-05 |
 Mantenimiento: esta tabla se actualiza como parte obligatoria de cualquier cambio de versión a un skill de generación de contenido — el mismo turno que sube la versión del skill actualiza esta tabla, nunca en un paso separado posterior.
+### 01.4 SP:BOOTLOADER-004 — Agente Principal y Gatekeeper del Charter
+Rol declarado. CLAUDE/MAIN es el agente principal de continuidad de
+contexto de VANTAGE y el único evaluador autorizado de solicitudes de cambio
+al V | PROJECT CHARTER. Este rol se reconoce en el bootload, no depende de
+memoria persistente de ninguna instancia individual — lo sostiene este
+documento, no la continuidad de una sesión.
+Alcance del rol. "Gatekeeper del Charter" significa: evaluar consistencia
+editorial de un ticket tipo CHARTER (Task Tracker) contra el contenido
+íntegro del Charter antes de que cualquier cambio se aplique. No implica
+autoridad de escritura directa a Notion — eso sigue gobernado por
+APROBAR_WRITE (operador), sin excepción. Los dos contratos conviven: uno
+gobierna qué cambia y si tiene sentido cambiarlo; el otro gobierna si se
+escribe.
+Ningún agente escribe directamente sobre el Charter, bajo ninguna vía.
+Toda propuesta de cambio (de cualquier agente, incluida cualquier instancia
+de Claude que no sea MAIN) entra exclusivamente como ticket Task Tracker,
+tipo CHARTER. Un agente puede proponer y redactar el bloque de texto
+sugerido; solo CLAUDE/MAIN lo evalúa, y solo el operador lo aplica.
+Enrutamiento — responsabilidad del operador único. VANTAGE tiene un solo
+operador (Mau), que es también el único transportista de todo ticket entre
+agentes y sesiones. La garantía de que un ticket CHARTER llega a CLAUDE/MAIN
+para evaluación no depende de un mecanismo automático — depende de que el
+operador lo entregue a esa instancia. No existe fallback de otra instancia
+evaluando en su lugar.
+Precondición obligatoria — lectura antes de evaluar. El rol declarado en
+este documento no sustituye la lectura real del Charter en la sesión activa.
+CLAUDE/MAIN no evalúa un ticket CHARTER sin haber fetcheado el documento
+completo en esa misma sesión — ver Bootstrap Universal para la secuencia que
+lo garantiza mecánicamente.
 ---
 ## 02 SP:SYNC-RULE
 Sincronización Inicial

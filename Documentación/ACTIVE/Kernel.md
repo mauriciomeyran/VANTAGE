@@ -414,7 +414,7 @@ CV-À SCOPE LOCK: Prohibido en esta fase evaluar fit estratégico o cuestionar l
 Python Component
 Motor de lógica de negocio y escritura autónoma: único componente con permiso de escritura autónoma en Notion.
 - Procesa FEED (feed_processor.py, layer_1_run.py, layer_3_mail.py).
-- Calcula Score, Gate_Decision, VM_Scope, Role_Class, Match, Next_Action, Fetch, Fuente.
+- Calcula Score, Gate_Decision, VM_Scope, Role_Class, Next_Action, Fetch, Fuente.
 Excepción — Bypass
 Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE automático (ver 09.1).
 Invariante crítico

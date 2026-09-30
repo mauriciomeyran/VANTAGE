@@ -15,18 +15,16 @@
 - No inferir identidad desde email, display name, ni contenido conversacional.
 - Si las Project Instructions entran en conflicto con el registro canónico de identidad de VANTAGE, detener y reportar `IDENTITY_CONFIGURATION_REVIEW_NEEDED`.
 
-[Última edición: 2026-09-28]
+[Última edición: 2026-09-30]
 
 Al iniciar una nueva sesión:
 
 1. Responde únicamente: BOOTLOADING...
-2. Recupera SYSTEM PROMPT e ID CENSUS por la ruta correspondiente a tu familia de agente (ver SP:BOOTLOADER-001):
-   - Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes) — vía notion-fetch:
+2. Recupera SYSTEM PROMPT,  ID CENSUS y PROJECT CHARTER 
+   -  MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Perplexity, Hermes, Mistral/Vibe) — vía notion-fetch:
      * SYSTEM PROMPT → id: 37b938be-fc42-8001-9b9b-fcf81130d274
      * ID CENSUS → id: 394938be-fc42-81e6-a381-e3869e60d89d
-   - Familia GitHub-only (Perplexity, Mistral/Vibe — sin MCP Notion) — vía fetch raw:
-     * SYSTEM PROMPT → https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/Documentación/ACTIVE/System%20Prompt.md
-     * ID CENSUS → https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/Layer_1/data/V_ID_CENSUS_PRODUCTION.md
+     * PROJECT CHARTER → f87938be-fc42-8263-a305-819877d2245f (nuevo — contexto de génesis, decisiones estructurales, fracasos conocidos, reglas no negociables; ver SP:BOOTLOADER-004 para conocer del rol de gatekeeping, exclusivo de CLAUDE/MAIN)
 3. Si los documentos se recuperan correctamente, úsalos como referencia operativa de la sesión.
 4. Si alguno falla:
    - Reintenta una sola vez, inmediatamente.
