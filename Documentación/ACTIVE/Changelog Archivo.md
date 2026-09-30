@@ -2010,19 +2010,15 @@ IDs afectados: ninguno en Notion — cambio en lógica local de scripting.
 Versión actualizada: 9.6.5 (sincronizada en los 7 documentos).
 ---
 # v9.6.0 — Re-Arquitectura de Kernel §3 y §4 + Consolidación de Output Contract · 2026-07-20
-Tipo: [AUDIT] [DOC] [FIX]
-Alcance: KERNEL (§3, §4), CAREER CANON (§8), MANUAL (§19).
-Contexto: Auditoría estructural de la suite documental tras detectar ambigüedad en la definición de capas L1 (Pipeline) vs L4 (Control de Versiones) y fragmentación del contrato de salida en el Career Canon.
-Cambios:
-- KERNEL §3 (Runtime): reescrito para separar L0 (Bootloader) de L4 (Sync Engine). Documentado formalmente el L0 Registry en KERNEL:DOCUMENTATION-003.
-- KERNEL §4 (Scripts): reescrito para definir las 3 capas activas: L1 (vsearch/vtrack), L3 (vmail/vupdate), L4 (vgit/vsync). Definido KERNEL:ARCHITECTURE-001 (L1 Pipeline Flow).
-- CAREER CANON §8 (Output Contract): consolidado esquema de 4 piezas: Golden Skeleton (-001), Figma Tags (-002), Tag Registry (-003), Positioning Modes (-004). Dados de baja 5 IDs fragmentados previos.
-- MANUAL §19 (Positioning Modes): actualizadas referencias cruzadas al nuevo esquema CANON:OUTPUT-CONTRACT-004.
-Write-Back Verification: re-fetch de los 3 documentos tras la escritura — confirmados correctos.
-IDs afectados — CENSUS-SYNC-R1: bajas de CANON:FIGMA-TAGS-001, CANON:GOLDEN-SKELETON-001, CANON:TAG-REGISTRY-001, CANON:SKELETON-SPEC-001. Altas de CANON:OUTPUT-CONTRACT-001..004. Census regenerado.
-Versión actualizada: 9.6.0 (fundacional sincronizado).
 ---
 # v9.5.9 — Transición a Notion-First (Filesystem read-only) · 2026-07-20
+Tipo: [INFRA]
+Alcance: Filesystem local (Documentación/ACTIVE/).
+Contexto: Para evitar el drift entre las copias locales (.md) y las páginas de Notion, se formalizó a Notion como la Única Fuente de Verdad. Los archivos locales se marcaron como read-only (chmod 444).
+Cambios:
+- Documentación/ACTIVE/ (.md): todos los archivos fundacionales protegidos contra escritura accidental.
+- SP:CONSISTENCY: agregada regla de verificación de permisos en el bootloading.
+Versión: 9.5.9 (sincronizada).
 ---
 # v9.5.4 — Blindaje de Class B (Dedup_Flag) en KERNEL:CV-GOLDEN-RULES · 2026-07-18
 Tipo: [FIX] [DOC]

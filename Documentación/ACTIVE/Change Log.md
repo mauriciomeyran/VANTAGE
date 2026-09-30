@@ -1,5 +1,29 @@
 # V | CHANGELOG
 
+Tipo: [OPS] [DOC] [CODE] Identidad VANTAGE: agent.family=GROK · agent.instance=DEFAULT. Documentos modificados:
+- Layer_4/scripts/vsync_doc.py
+- Layer_4/scripts/vdoc.py
+- Layer_4/scripts/trigger_sync_after_mcp_write.py
+- Layer_4/scripts/notion_write_wrapper.py
+- Layer_4/scripts/MCP_SYNC_HOOK_README.md
+- tests/test_vdoc.py (o suit de tests equivalente en tests/)
+Documentos potencialmente afectados: V | PROJECT CHARTER (sin cambio de contenido; habilitada sincronización vía vsync/vdoc) · document_registry / health_check / verify_versions (cubiertos previamente en v9.22.21).
+Tipo de impacto: Operativo y Normativo — Habilita la sincronización bidireccional Notion  ACTIVE/ y la ejecución del trigger post-escritura en background para el Project Charter desde Layer_4, expandiendo el universo de documentos fundacionales. 
+Alcance:
+1. vsync_doc.py (v9.13.0): Registro de la clave canónica project_charter en la estructura DOCS con Notion UUID f87938be-fc42-8263-a305-819877d2245f, archivo local PROJECT_CHARTER.md y etiqueta PROJECT CHARTER.
+1. vdoc.py: Habilitación de la clave project_charter y el alias charter en el CLI; mapeo en DOC_ALIASES a la clave de vsync y actualización de la documentación interna (docstring).
+1. Hooks de Sincronización Asíncrona: Registro del UUID del Project Charter en la constante FOUNDATIONAL_DOCS de trigger_sync_after_mcp_write.py y notion_write_wrapper.py (incremento del inventario fundacional de 8 a 9 documentos).
+1. Documentación de Hook (MCP_SYNC_HOOK_README.md): Actualización del catálogo normativo de documentos fundacionales (8  9) e incorporación del registro del Project Charter en la tabla de mapeo de page_id.
+1. Harness de Pruebas e Infraestructura (tests/): Ajustes en la suite de pruebas unitarias (test_vdoc.py / test_vsync.py) para validar dinámicamente la presencia de los 9 documentos y verificar la resolución correcta del alias charter desde CLI.
+Decisiones confirmadas: Integración mínima bajo el patrón de diseño existente DOCS / FOUNDATIONAL_DOCS; alias corto charter restringido exclusivamente al orquestador CLI vdoc (mientras vsync_doc utiliza la clave canónica project_charter).
+Decisiones no duplicadas: No se alteró Layer_1 (completado en v9.22.21); el Charter no requiere propiedad propia de "Versión" independiente en esta fase; no se modificó ID Census ni documentos maestros de reglas.
+Validación:
+- Verificación de sintaxis: python3 -m py_compile ejecutado exitosamente en los 4 scripts de Layer_4.
+- Suite de pruebas unitarias: Ejecución de pytest en el directorio de pruebas validando assertions de 9 fundacionales sin regresiones.
+- Parche aplicado localmente y verificado vía git status / git diff.
+Estado: APLICADO en código local y reflejado en la propiedad Versión del Change Log en Notion.
+IDs afectados: Ninguno nuevo; no dispara CENSUS-SYNC Regla 1.
+Handoff de referencia: N/A
 Tipo: [FIX] [DOC]
 Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN (revisión, verificación y esta entrada). Ejecutor de las ediciones en Notion: CLAUDE/MAIN.
 Documentos modificados: Layer_1/scripts/generate_census.py · Layer_1/scripts/verify_versions.py · Layer_1/scripts/normalize_heading_ids.py · Layer_1/scripts/vantage_id_rules.py · Layer_1/scripts/health_check.py · Layer_1/data/resolver_registry_v2.json

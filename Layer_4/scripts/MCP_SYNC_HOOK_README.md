@@ -4,7 +4,7 @@
 
 Implementar el mecanismo de sincronización permanente de mirrors fundacionales tras writes MCP a Notion, según decisión S2.1 / R2-3 del VANTAGE AUDIT TRACKER.
 
-## Documentos Fundacionales (8)
+## Documentos Fundacionales (9)
 
 | Documento              | page_id                              | key en vsync_doc.py   |
 |------------------------|--------------------------------------|-----------------------|
@@ -16,6 +16,7 @@ Implementar el mecanismo de sincronización permanente de mirrors fundacionales 
 | Change Log             | 390938be-fc42-80e7-b429-d7d730339353 | change_log            |
 | Brief                  | 3a3938be-fc42-8008-9e90-ec435c01f50d | brief                 |
 | Changelog Archivo      | 3ba938be-fc42-8011-8947-fb4fa5d1f63f | change_log_archivo    |
+| Project Charter        | f87938be-fc42-8263-a305-819877d2245f | project_charter       |
 
 ## Scripts
 
