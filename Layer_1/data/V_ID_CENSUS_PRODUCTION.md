@@ -130,7 +130,6 @@
 | [`MANUAL:SLA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281549e1ee72e3240a9df ) | 17 | SLA de Latencia Post-Ingesta |
 | [`MANUAL:CV-GOLDEN-RULES-INDEX`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815592e9ecb6df06e21a ) | 18 | Reglas de Oro CV — Referencia Operativa |
 | [`MANUAL:POSITIONING-CRITERIA`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815db277e3bcd24efda1 ) | 19 | Positioning Modes (N1–N4) — Criterio de Selección |
-| [`MANUAL:WEEKLY-FLOW-006`]( https://app.notion.com/p/390938befc4280e7b429d7d730339353#f6d3a492c9524bf3bb2270ca98f58a36 ) | 08.6 ⚠︎sin verificar en vivo | Cadence Matrix — Weekly Rhythm |
 | [`MANUAL:GOLDEN-SKELETON-REF`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42810ea45dde6c4a0cb7e0 ) | 20 | Figma Sync & Golden Skeleton |
 | [`MANUAL:FIGMA-SYNC-001`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#9d42e3fbc953459f8457043565e7e884 ) | 20.1 | Arquitectura del Ecosistema |
 | [`MANUAL:FIGMA-SYNC-002`]( https://app.notion.com/p/372938befc4280509a67e40857d7806e#b805f3abb9f04c85992df278612f567c ) | 20.2 | Contrato de Bloque |
@@ -187,6 +186,9 @@
 | [`CANON:UF-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42817db963d1642ab92cbd ) | 07.9 | Unique Factor — L'Oréal End Date |
 | [`CANON:UF-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281d791dffac497912c6c ) | 07.10 | Unique Factor — Canonical Email |
 | [`CANON:UF-003`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281358861fa1e61f7fc27 ) | 07.11 | Unique Factor — Certifications Canon |
+| [`CANON:UF-004`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#c38756ec5a374a4087b7c29df7d6cae9 ) | 07.12 | Unique Factor — Contact Block |
+| [`CANON:UF-005`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#9f4880b2b4654caca518c3105f4b5f76 ) | 07.13 | Unique Factor — LinkedIn URL |
+| [`CANON:UF-006`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#4e2a3313ebd34163a8a1da998e82f1b2 ) | 07.14 | Unique Factor — Portfolio URLs |
 | [`CANON:EDUCATION`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42819cbf71ca4a708f6502 ) | 08 | Education (reintegrada v9.11.0) |
 | [`CANON:EDUCATION-001`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281ee8fbce635d829722c ) | 08.1 | ED01 — Licenciatura en Artes Visuales |
 | [`CANON:EDUCATION-002`]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281fd87a3f4d4bbeff061 ) | 08.2 | ED02 — Diplomado en Museos y Exposiciones |
@@ -254,7 +256,7 @@
 | ID | Sección | Nombre |
 |---|---|---|
 | [`SP:BOOTLOADER`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428197ba0dc11cda45db3d ) | 01 | Operating Specification — Bootstrap de Sesión |
-| [`SP:BOOTLOADER-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#fb6f76f090524f82bec8e297b6ccd65a ) | 01.1 | Consumo de Skills por Familia de Agente |
+| [`SP:BOOTLOADER-001`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3e9938befc428067824ff8b10025c690 ) | 01.1 | Consumo de Skills por Familia de Agente |
 | [`SP:BOOTLOADER-002`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#398b224e9b0e4d10868f1a05a55dc3d0 ) | 01.2 | Bootstrap de Sesión — Subsección 002 |
 | [`SP:SYNC-RULE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281328031dd488f1aea06 ) | 02 | Sincronización Inicial y Verificación de Versión |
 | [`SP:CONTEXT-INFRASTRUCTURE`]( https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428147bd85e68499246777 ) | 04 | Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE) |
@@ -288,8 +290,4 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-| ID | Documento | Link |
-|---|---|---|
-| `CANON:UF-004` | Career Canon | [link]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#c38756ec5a374a4087b7c29df7d6cae9 ) |
-| `CANON:UF-005` | Career Canon | [link]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#9f4880b2b4654caca518c3105f4b5f76 ) |
-| `CANON:UF-006` | Career Canon | [link]( https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#4e2a3313ebd34163a8a1da998e82f1b2 ) |
+_Ninguno detectado en esta corrida._
