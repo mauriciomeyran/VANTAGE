@@ -1,3 +1,17 @@
+## PROJECT CHARTER
+
+| ID | Sección | Nombre |
+|---|---|---|
+| [`CHARTER:PURPOSE`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280cfa758eec00c6b4bd3) | 1. | Propósito del Proyecto |
+| [`CHARTER:NON-NEGOTIABLES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280d0b67de66fad8199c8) | 4. | Principios No Negociables |
+| [`CHARTER:STATUS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280ebb77fef32858e73c4) | 7. | Estatus del Proyecto |
+| [`CHARTER:MILESTONES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280dc8598dadd5e8c050f) | 5. | Hitos y Milestones |
+| [`CHARTER:DECISIONS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42809ba6ffc94a0d10b714) | 2. | Registro de Decisiones |
+| [`CHARTER:FAILURES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428075b83ec234ef46eed3) | 3. | Registro de Fallos |
+| [`CHARTER:CONTINUITY`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42803e9c24f2d6e9bced1e) | 6. | Continuidad Operativa |
+
+---
+
 ## KERNEL
 
 | ID | Sección | Nombre |
@@ -258,6 +272,7 @@
 | [`SP:BOOTLOADER`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428197ba0dc11cda45db3d) | 01 | Operating Specification — Bootstrap de Sesión |
 | [`SP:BOOTLOADER-001`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3e9938befc428067824ff8b10025c690) | 01.1 | Consumo de Skills por Familia de Agente |
 | [`SP:BOOTLOADER-002`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#398b224e9b0e4d10868f1a05a55dc3d0) | 01.2 | Bootstrap de Sesión — Subsección 002 |
+| [`SP:BOOTLOADER-004`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3eb938befc4280f3adc4c70bf3de7f49) | 01.4 | Agente Principal y Gatekeeper del Charter |
 | [`SP:SYNC-RULE`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281328031dd488f1aea06) | 02 | Sincronización Inicial y Verificación de Versión |
 | [`SP:CONTEXT-INFRASTRUCTURE`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428147bd85e68499246777) | 04 | Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE) |
 | [`SP:DIGITAL-ID-CARD`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42819a919cc80ec56ad76c) | 03 | Cédula Digital — rutas de operación y UUIDs |
@@ -290,13 +305,4 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-| ID | Documento | Link |
-|---|---|---|
-| `CHARTER:CONTINUITY` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42803e9c24f2d6e9bced1e) |
-| `CHARTER:DECISIONS` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42809ba6ffc94a0d10b714) |
-| `CHARTER:FAILURES` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428075b83ec234ef46eed3) |
-| `CHARTER:MILESTONES` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280dc8598dadd5e8c050f) |
-| `CHARTER:NON-NEGOTIABLES` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280d0b67de66fad8199c8) |
-| `CHARTER:PURPOSE` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280cfa758eec00c6b4bd3) |
-| `CHARTER:STATUS` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280ebb77fef32858e73c4) |
-| `SP:BOOTLOADER-004` | System Prompt | [link](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3eb938befc4280f3adc4c70bf3de7f49) |
+_Ninguno detectado en esta corrida._

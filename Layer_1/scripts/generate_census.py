@@ -63,6 +63,18 @@ DOC_PRIORITY = {
 
 CENSUS_SPEC = [
     {
+        "name": "PROJECT CHARTER",
+        "rows": [
+            {"id": "CHARTER:PURPOSE", "seccion": "01", "nombre": "Propósito del Proyecto"},
+            {"id": "CHARTER:NON-NEGOTIABLES", "seccion": "02", "nombre": "Principios No Negociables"},
+            {"id": "CHARTER:STATUS", "seccion": "03", "nombre": "Estatus del Proyecto"},
+            {"id": "CHARTER:MILESTONES", "seccion": "04", "nombre": "Hitos y Milestones"},
+            {"id": "CHARTER:DECISIONS", "seccion": "05", "nombre": "Registro de Decisiones"},
+            {"id": "CHARTER:FAILURES", "seccion": "06", "nombre": "Registro de Fallos"},
+            {"id": "CHARTER:CONTINUITY", "seccion": "07", "nombre": "Continuidad Operativa"},
+        ],
+    },
+    {
         "name": "KERNEL",
         "rows": [
             {"id": "KERNEL:DOCUMENTATION", "seccion": "03", "nombre": "Documentación y Gobernanza (L0)"},
@@ -315,6 +327,7 @@ CENSUS_SPEC = [
             {"id": "SP:BOOTLOADER", "seccion": "01", "nombre": "Operating Specification — Bootstrap de Sesión"},
             {"id": "SP:BOOTLOADER-001", "seccion": "01.1", "nombre": "Consumo de Skills por Familia de Agente"},
             {"id": "SP:BOOTLOADER-002", "seccion": "01.2", "nombre": "Bootstrap de Sesión — Subsección 002"},
+            {"id": "SP:BOOTLOADER-004", "seccion": "01.4", "nombre": "Agente Principal y Gatekeeper del Charter"},
             {"id": "SP:SYNC-RULE", "seccion": "02", "nombre": "Sincronización Inicial y Verificación de Versión"},
             {"id": "SP:CONTEXT-INFRASTRUCTURE", "seccion": "04", "nombre": "Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE)"},
             {
@@ -350,7 +363,12 @@ CENSUS_SPEC = [
 ]
     # Auto-generated orphan IDs
 # IDs huérfanos detectados - agregar a CENSUS_SPEC
-# Generado automáticamente por generate_census.py --auto-fix-orphans
+
+# SP
+{"id": "SP:BOOTLOADER-004", "seccion": "004", "nombre": "SP:BOOTLOADER — 004"},
+
+    # Auto-generated orphan IDs
+# IDs huérfanos detectados - agregar a CENSUS_SPEC
 
 # SP
 {"id": "SP:BOOTLOADER-004", "seccion": "004", "nombre": "SP:BOOTLOADER — 004"},
@@ -610,43 +628,32 @@ def find_orphan_ids(link_index: dict, known_ids: set) -> dict:
 
 
 def infer_section_from_id(id_str: str) -> tuple:
-    """Infiere la sección y nombre a partir del ID huérfano."""
     prefix = id_str.split(":")[0] if ":" in id_str else ""
-    
     section_map = {
         "KERNEL": "KERNEL",
         "MANUAL": "MANUAL",
         "CANON": "CANON",
         "CAREER_CANON": "CAREER_CANON",
-        "SP": "SP",
+        "SP": "SYSTEM PROMPT",
         "ALIASES": "ALIASES",
         "CHANGELOG": "CHANGELOG",
         "CHANGELOG_ARCHIVO": "CHANGELOG_ARCHIVO",
-        "BRIEF": "BRIEF",
+        "BRIEF": "NAVIGATION BRIEF",
+        "CHARTER": "PROJECT CHARTER",
     }
-    
     section_name = section_map.get(prefix, "UNKNOWN")
     seccion = ""
-    nombre = ""
-    
-    if "-" in id_str:
-        parts = id_str.split("-")
-        if len(parts) > 1:
-            base = parts[0]
-            suffix = parts[1]
-            if suffix.isdigit():
-                seccion = f"{seccion}.{suffix}" if seccion else suffix
-            
-            if prefix in ("KERNEL", "MANUAL"):
-                nombre = f"Subsección {suffix} de {base}"
-            else:
-                nombre = f"{base} — {suffix}"
-    else:
-        if prefix in ("KERNEL", "MANUAL"):
-            nombre = f"Sección principal de {id_str}"
+    parts = id_str.split(":")
+    body = parts[1] if len(parts) > 1 else id_str
+    if "-" in body:
+        subparts = body.split("-")
+        if subparts[-1].isdigit():
+            seccion = subparts[-1]
+            nombre = f"Subsección {seccion} de {id_str}"
         else:
-            nombre = id_str
-    
+            nombre = id_str.replace("-", " ")
+    else:
+        nombre = id_str
     return section_name, seccion, nombre
 
 
@@ -657,7 +664,6 @@ def generate_census_spec_additions(orphans: dict) -> str:
     
     additions = []
     additions.append("# IDs huérfanos detectados - agregar a CENSUS_SPEC")
-    additions.append("# Generado automáticamente por generate_census.py --auto-fix-orphans")
     additions.append("")
     
     by_section = {}
@@ -686,6 +692,18 @@ def generate_census_spec_additions(orphans: dict) -> str:
 def find_census_spec_end(content: str) -> int | None:
     """Encuentra el índice del ']' que cierra CENSUS_SPEC balanceando profundidad."""
     start_marker = "CENSUS_SPEC = ["
+    {
+        "name": "PROJECT CHARTER",
+        "rows": [
+            {"id": "CHARTER:PURPOSE", "seccion": "01", "nombre": "Propósito del Proyecto"},
+            {"id": "CHARTER:NON-NEGOTIABLES", "seccion": "02", "nombre": "Principios No Negociables"},
+            {"id": "CHARTER:STATUS", "seccion": "03", "nombre": "Estatus del Proyecto"},
+            {"id": "CHARTER:MILESTONES", "seccion": "04", "nombre": "Hitos y Milestones"},
+            {"id": "CHARTER:DECISIONS", "seccion": "05", "nombre": "Registro de Decisiones"},
+            {"id": "CHARTER:FAILURES", "seccion": "06", "nombre": "Registro de Fallos"},
+            {"id": "CHARTER:CONTINUITY", "seccion": "07", "nombre": "Continuidad Operativa"},
+        ],
+    },
     start = content.find(start_marker)
     if start == -1:
         return None
@@ -1207,7 +1225,6 @@ if __name__ == "__main__":
             print("  python3 generate_census.py --debug-id KERNEL:GATE-DECISION-001 KERNEL:GATE-DECISION-004")
             sys.exit(1)
     
-    if "--auto-fix-orphans" in sys.argv:
         auto_fix_orphans_flag = True
     
     if "--sync-to-notion" in sys.argv:
