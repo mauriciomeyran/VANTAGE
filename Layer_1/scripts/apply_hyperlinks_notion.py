@@ -111,19 +111,23 @@ DOC_KEY_TO_NAME = {
 
 # ─── PATCH a un bloque puntual (preserva block-ID) ─────────────────────
 
-def patch_block_rich_text(block_id: str, btype: str, new_rich_text: list) -> bool:
-    """
-    PATCH /v1/blocks/{id} sobre el campo rich_text del tipo correspondiente.
-    No cambia el tipo del bloque, no cambia su posición, no cambia su ID.
-    """
-    payload = {btype: {"rich_text": new_rich_text}}
-    for attempt in range(3):
-        r = requests.patch(
-            f"https://api.notion.com/v1/blocks/{block_id}",
-            headers=HEADERS, json=payload, timeout=30,
-        )
-        if r.status_code == 200:
-            return True
+def patch_block_rich_text(block_id, btype, new_rt, retries=3):
+    import time
+    from requests.exceptions import RequestException
+    url = f"https://api.notion.com/v1/blocks/{block_id}"
+    payload = {btype: {"rich_text": new_rt}}
+    for attempt in range(1, retries + 1):
+        try:
+            r = requests.patch(url, headers=HEADERS, json=payload, timeout=30)
+            if r.status_code == 200:
+                return True
+            r.raise_for_status()
+        except RequestException as e:
+            if attempt == retries:
+                print(f"
+[ERROR] Falló PATCH {block_id}: {e}")
+                return False
+            time.sleep(2 * attempt)
         if r.status_code == 429:
             wait = int(r.headers.get("Retry-After", 2))
             time.sleep(wait)
