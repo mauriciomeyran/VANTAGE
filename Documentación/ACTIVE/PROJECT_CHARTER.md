@@ -253,6 +253,18 @@ CHARTER:MILESTONES-001 — Hito 1 — Track Beta (código) cerrado de una sola v
 vía Arena.IA Agent Mode, evidencia línea-por-línea contra HEAD=cef2de7.
 Las 10 preguntas recurrentes quedan respondidas para siempre — no se vuelven a
 levantar desde cero en ninguna sesión futura, con cualquier agente:
+| # | Pregunta | Respuesta final | Discrepancia Manual↔código |
+| --- | --- | --- | --- |
+| 1 | layer_1_pipeline.sh reenvía -execute a batch_operations.py | No — la rama batch anuncia el script como retirado (G6/Q-10) y sale con exit 0, nunca lo invoca | El Manual describe un comportamiento ("corre en modo definido por el script") que ya no aplica a la rama actual |
+| 2 | vdoc.py local pide confirmación | Sí pide (input + chequeo == "s") | El Manual afirma lo contrario ("excepción temporal... NO pide confirmación") — corregido en código, no en Manual |
+| 3 | vsync_doc.py --doc maneja 8 documentos | Confirmado exacto, tercera vez independiente | Ninguna — Manual correcto aquí |
+| 3b | (hallazgo nuevo, no preguntado) vdoc.py (wrapper) vs vsync_doc.py (motor) | El wrapper acepta 9 etiquetas (incluye Navigation_Brief/VANTAGE, le falta brief) que no coinciden con las 8 que el motor realmente admite | Riesgo real: el wrapper puede pasar un nombre que el motor rechaza |
+| 4 | dedup_opportunities.py --clear usa posición fija en sys.argv | No — es un flag argparse real (type=str, metavar="PAGE_ID") | El Manual se contradice internamente: §22.1b ya lo documenta como flag, §22.6 dice lo contrario |
+| 5 | vsum.py --notion se parsea pero no hace nada | El parser actual no registra --notion en absoluto | El Manual describe un flag que ya no existe en el código |
+| 6 | cross_tracker_match.py --dry-run default True sin opuesto | Confirmado exacto | Ninguna — Manual correcto |
+| 7 | Dashboard importa layer_1_run.py archivado | No, en ningún módulo verificado. Además: layer_1_run_dash.py ya no vive en Dashboard/, vive en Archive/Dashboard/; dashboard_notion.py y dashboard_routes.py migraron su import a tracker_flow.py (no solo dashboard_validation.py, que ya sabíamos) | El Manual describe una topología de carpetas y de imports que quedó obsoleta en al menos 3 archivos, no solo 1 |
+| 8 | GEMINI_MAX_EMAILS_PER_RUN vs GROQ_MAX_EMAILS_PER_RUN | Default 5 confirmado en el script activo (layer_3_mail.py); GROQ_MAX_EMAILS_PER_RUN no se lee en ningún código activo — pero sí existe como texto en layer_3.env.example y en un archivo .gemini_backup | El Manual dice "no existe en el código", literalmente incompleto (existe como texto en dos archivos no ejecutados) — matiz menor, no bloqueante |
+| 9-10 | Inventario Layer_1/3/4, Dashboard, Raycast + Archive/Legacy_Scripts/ | 159 archivos rastreados con commit exacto; confirmado que verify_versions.py --new-scripts compara por subcadena contra el Manual completo (no delimita §22) y que su rama local exige NOTION_TOKEN presente aunque no llame a la API | Dos afirmaciones del propio scanner declaradas REQUIERE EJECUCIÓN — NO VERIFICABLE POR LECTURA — honestidad de límite, no fabricación |
 Motivo explícito de este hito (palabras del operador, 2026-09-29): hartazgo
 genuino de responder la misma pregunta a distintos agentes en distintos
 momentos sin que ninguno recordara la respuesta anterior. Con esta tabla, esa

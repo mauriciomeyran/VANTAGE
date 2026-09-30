@@ -80,3 +80,4 @@ GPT.png
 # Config local (secrets, no versionar)
 config/*.env
 config/*.env.bak
+VANTAGE_digest.txt

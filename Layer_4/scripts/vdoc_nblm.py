@@ -1,121 +1,132 @@
-#!/usr/bin/env python3
-"""
-vdoc_nblm.py — VANTAGE
-Sincroniza docs fundacionales (vdoc notion) + digest de GitHub
-y los sube como fuentes al NotebookLM gratuito fijo.
-
-Uso:
-  python vdoc_nblm.py                  # reutiliza sesión si es válida
-  python vdoc_nblm.py --login          # fuerza abrir browser (login + llave de acceso)
-  python vdoc_nblm.py --dry-run
-  python vdoc_nblm.py --no-vdoc        # salta sync de Notion
-  python vdoc_nblm.py --no-digest      # no descarga el ingest
-"""
-
-import argparse
-import asyncio
-import subprocess
+import os
 import sys
 from pathlib import Path
 
-# ── Rutas VANTAGE ────────────────────────────────────────────────────────────
-_SCRIPT_DIR = Path(__file__).resolve().parent
-_PROJECT = _SCRIPT_DIR.parents[1]          # VANTAGE root
-ACTIVE_DIR = _PROJECT / "Documentación" / "ACTIVE"
-DIGEST_PATH = _PROJECT / "VANTAGE_digest.txt"   # ajusta si tu get_vantage_digest.sh usa otra ruta
+# ==============================================================================
+# CONFIGURACIÓN DE RUTAS Y CONSTANTES
+# ==============================================================================
+PROJECT_ROOT = Path('/Users/mauriciomeyran/Documents/03 Projects/VANTAGE')
+ACTIVE_DIR = PROJECT_ROOT / 'ACTIVE'
+DIGEST_PATH = PROJECT_ROOT / 'VANTAGE_digest.txt'
+NOTEBOOK_ID = os.environ.get('NOTEBOOK_ID', '')
 
-NOTEBOOK_ID = "120cc3d6-a2c0-4c2e-ae4c-a794e1fc7f30"
+EXCLUDE_DIRS = {'.git', '.venv', '__pycache__', '.idea', '.vscode', 'node_modules', '.obsidian'}
+EXCLUDE_EXTS = {'.png', '.jpg', '.jpeg', '.gif', '.ico', '.pdf', '.zip', '.tar', '.gz', '.pyc'}
 
-def run_vdoc_notion():
-    """Ejecuta el equivalente a `vdoc notion`."""
-    print("→ Ejecutando vdoc notion (Notion → ACTIVE)...")
-    # Opción A: llamar al wrapper existente
-    # subprocess.run([sys.executable, str(_SCRIPT_DIR / "vdoc.py"), "notion"], check=True)
-    # Opción B: llamar directamente vsync_doc
-    subprocess.run(
-        [sys.executable, str(_SCRIPT_DIR / "vsync_doc.py"), "--direction", "notion"],
-        check=True,
-        cwd=_SCRIPT_DIR,
-    )
-    print("✓ Documentos fundacionales actualizados en ACTIVE/")
+# ==============================================================================
+# GENERACIÓN DE DIGEST LOCAL
+# ==============================================================================
+def generate_local_digest():
+    print('→ Generando digest desde el sistema de archivos local...')
+    tree_lines = []
+    content_blocks = []
+    
+    for root, dirs, files in os.walk(PROJECT_ROOT):
+        dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
+        rel_path = Path(root).relative_to(PROJECT_ROOT)
+        depth = len(rel_path.parts) if str(rel_path) != '.' else 0
+        indent = '  ' * depth
+        
+        if depth == 0:
+            tree_lines.append(f"Directory structure:\n└── {PROJECT_ROOT.name}/")
+        else:
+            tree_lines.append(f"{indent}├── {Path(root).name}/")
+            
+        for file in sorted(files):
+            file_path = Path(root) / file
+            if file_path.suffix.lower() in EXCLUDE_EXTS or file == 'VANTAGE_digest.txt':
+                continue
+                
+            file_rel = file_path.relative_to(PROJECT_ROOT)
+            tree_lines.append(f"{indent}  └── {file}")
+            
+            try:
+                with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    text = f.read()
+                content_blocks.append(f"========================================\nFile: {file_rel}\n========================================\n{text}\n")
+            except Exception as e:
+                content_blocks.append(f"========================================\nFile: {file_rel} (Error al leer: {e})\n========================================\n")
 
-def run_digest():
-    """Descarga el ingest de GitHub."""
-    print("→ Descargando digest de GitHub (gitingest)...")
-    # Ajusta según tu get_vantage_digest.sh real
-    script = _SCRIPT_DIR / "get_vantage_digest.sh"
-    if script.exists():
-        subprocess.run(["bash", str(script), str(DIGEST_PATH)], check=True)
-    else:
-        # fallback directo
-        import urllib.request
-        url = "https://gitingest.com/r/mauriciomeyran/VANTAGE"
+    full_digest = "========================================\nVANTAGE CODEBASE DIGEST (LOCAL)\n========================================\n\n"
+    full_digest += "\n".join(tree_lines) + "\n\n"
+    full_digest += "========================================\nFILES CONTENT\n========================================\n\n"
+    full_digest += "\n".join(content_blocks)
+    
+    with open(DIGEST_PATH, 'w', encoding='utf-8') as f:
+        f.write(full_digest)
+        
+    print(f'✓ Digest local guardado en {DIGEST_PATH}')
 
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+# ==============================================================================
+# INICIALIZACIÓN DE CLIENTE Y AUTENTICACIÓN
+# ==============================================================================
+def get_notebooklm_client():
+    from notebooklm import NotebookLM
+    from notebooklm.auth import Auth
 
-        with urllib.request.urlopen(req) as response, open(DIGEST_PATH, 'wb') as out_file:
-
-            out_file.write(response.read())
-    print(f"✓ Digest guardado en {DIGEST_PATH}")
-
-def collect_files(include_digest: bool = True) -> list[Path]:
-    files = []
-    if ACTIVE_DIR.exists():
-        files.extend(sorted(ACTIVE_DIR.glob("*.md")))
-    else:
-        print(f"  ⚠ Directorio no encontrado: {ACTIVE_DIR}")
-    if include_digest and DIGEST_PATH.exists():
-        files.append(DIGEST_PATH)
-    return files
-
-async def upload_to_notebook(files: list[Path], force_login: bool = False):
-    """Sube los archivos al notebook fijo usando notebooklm-py."""
+    # Cargar credenciales guardadas en perfil local o entorno
     try:
-        from notebooklm import NotebookLMClient
-    except ImportError:
-        print("ERROR: instala notebooklm-py →  pip install 'notebooklm-py[browser]'")
-        sys.exit(1)
+        auth = Auth.from_storage()
+    except Exception:
+        auth = Auth.from_env()
 
-    if force_login:
-        print("→ Abriendo browser para login (usa tu llave de acceso si es necesario)...")
-        subprocess.run(["notebooklm", "login"], check=False)
+    return NotebookLM(auth=auth)
 
-    print(f"→ Subiendo {len(files)} fuentes al notebook {NOTEBOOK_ID}...")
-    async with NotebookLMClient.from_storage() as client:
-        for f in files:
-            print(f"  • {f.name} ({f.stat().st_size // 1024} KB)")
-            # La API exacta puede ser client.sources.add_file(...) o add_local
-            # Verifica con: notebooklm source add --help
-            await client.sources.add_file(NOTEBOOK_ID, str(f))
-    print("✓ Subida completada")
+# ==============================================================================
+# OPERACIONES DE SINCRONIZACIÓN Y PURGA
+# ==============================================================================
+def purge_and_upload(client, notebook_id, file_path: Path):
+    file_name = file_path.name
+    
+    # 1. Purga de versiones antiguas
+    try:
+        sources = client.notebooks.list_sources(notebook_id)
+        for src in sources:
+            src_title = getattr(src, 'title', getattr(src, 'name', ''))
+            if src_title == file_name:
+                client.notebooks.delete_source(notebook_id, src.id)
+                print(f'✓ Purga preventiva: {file_name} antiguo eliminado (ID: {src.id})')
+    except Exception as e:
+        print(f'⚠ Warning en purga preventiva para {file_name}: {e}')
 
+    # 2. Carga pasando el objeto Path directo
+    try:
+        client.notebooks.add_source(notebook_id, file_path)
+        print(f'✓ {file_name} sincronizado exitosamente.')
+    except Exception as e:
+        print(f'❌ Error cargando {file_name}: {e}')
+
+# ==============================================================================
+# EJECUCIÓN PRINCIPAL
+# ==============================================================================
 def main():
-    parser = argparse.ArgumentParser(description="vdoc + digest → NotebookLM")
-    parser.add_argument("--login", action="store_true", help="Fuerza abrir browser para login")
-    parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--no-vdoc", action="store_true", help="Salta sync de Notion")
-    parser.add_argument("--no-digest", action="store_true", help="No descarga el digest")
-    args = parser.parse_args()
+    generate_local_digest()
+    
+    try:
+        client = get_notebooklm_client()
+        target_notebook = NOTEBOOK_ID
+        
+        if not target_notebook:
+            notebooks = client.notebooks.list()
+            if notebooks:
+                target_notebook = notebooks[0].id
+            else:
+                print('❌ No se encontraron cuadernos activos en NotebookLM.')
+                return
 
-    if not args.no_vdoc:
-        run_vdoc_notion()
+        print(f'→ Sincronizando espacio de fuentes con NotebookLM (ID: {target_notebook})...')
 
-    if not args.no_digest:
-        run_digest()
+        # 1. Digest
+        if DIGEST_PATH.exists():
+            purge_and_upload(client, target_notebook, DIGEST_PATH)
 
-    files = collect_files(include_digest=not args.no_digest)
+        # 2. Documentos de ACTIVE/
+        if ACTIVE_DIR.exists():
+            for file_path in ACTIVE_DIR.glob('*.md'):
+                purge_and_upload(client, target_notebook, file_path)
 
-    if not files:
-        print("No hay archivos para subir.")
-        sys.exit(1)
+    except Exception as e:
+        print(f'❌ Error en la sincronización con NotebookLM: {e}')
 
-    if args.dry_run:
-        print("\n[DRY-RUN] Se subirían estos archivos:")
-        for f in files:
-            print(f"  - {f}")
-        return
-
-    asyncio.run(upload_to_notebook(files, force_login=args.login))
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

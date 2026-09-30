@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-git_sync.py — VANTAGE L4 Git Auto-Sync + MCP Server Update
-===========================================================
+git_sync.py — VANTAGE L4 Git Auto-Sync + MCP Server Update (v9.13.1)
+===================================================================
 Detecta cambios en el repo y hace add+commit+push automáticamente.
 Sincroniza automáticamente index.json si hay cambios en /skills/
 
 Características:
 - Regenera index.json si hay nuevos .skill files
-- Detecta cambios en git status
-- Commitea + push a origin/main
+- Detecta cambios en git status con timeout estricto
+- Commitea + push a origin/main con timeout de red (30s max)
 - Sin cambios: no hace nada, no emite ruido
 
 Capa: L4 — Version Control & Infrastructure
@@ -28,7 +28,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# Layer_4/scripts/ -> Layer_4/ -> 04-VANTAGE_CV/
+# Layer_4/scripts/ -> Layer_4/ -> VANTAGE
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BRANCH = "main"
 SKILLS_DIR = REPO_ROOT / "skills"
@@ -51,9 +51,15 @@ SKILL_DESCRIPTIONS = {
 }
 
 
-def run(cmd: list[str], cwd: Path = REPO_ROOT) -> tuple[int, str, str]:
-    result = subprocess.run(cmd, cwd=str(cwd), capture_output=True, text=True)
-    return result.returncode, result.stdout.strip(), result.stderr.strip()
+def run(cmd: list[str], cwd: Path = REPO_ROOT, timeout: int = 15) -> tuple[int, str, str]:
+    """Ejecuta comando en subprocess con captura de output y timeout estricto."""
+    try:
+        result = subprocess.run(cmd, cwd=str(cwd), capture_output=True, text=True, timeout=timeout)
+        return result.returncode, result.stdout.strip(), result.stderr.strip()
+    except subprocess.TimeoutExpired:
+        return 128, "", f"TimeoutExpired: El comando {' '.join(cmd)} superó el límite de {timeout}s."
+    except Exception as e:
+        return 1, "", f"ExecutionError: {e}"
 
 
 class GitError(Exception):
@@ -119,14 +125,14 @@ def regenerate_index_json() -> bool:
 
 
 def has_changes() -> bool:
-    code, out, err = run(["git", "status", "--porcelain"])
+    code, out, err = run(["git", "status", "--porcelain"], timeout=10)
     if code != 0:
         raise GitError(err or "git status falló (¿repo inexistente o corrupto?)")
     return bool(out)
 
 
 def get_changed_files() -> list[str]:
-    _, out, _ = run(["git", "status", "--porcelain"])
+    _, out, _ = run(["git", "status", "--porcelain"], timeout=10)
     return [line.strip() for line in out.splitlines() if line.strip()]
 
 
@@ -155,15 +161,16 @@ def sync(dry_run: bool = False) -> dict:
             "index_updated": index_updated
         }
 
-    code, _, err = run(["git", "add", "-A"])
+    code, _, err = run(["git", "add", "-A"], timeout=15)
     if code != 0:
         return {"status": "error", "step": "git add", "error": err}
 
-    code, out, err = run(["git", "commit", "-m", msg])
+    code, out, err = run(["git", "commit", "-m", msg], timeout=15)
     if code != 0:
         return {"status": "error", "step": "git commit", "error": err or out}
 
-    code, out, err = run(["git", "push", "origin", BRANCH])
+    # Timeout extendido (30s) para llamadas de red (git push)
+    code, out, err = run(["git", "push", "origin", BRANCH], timeout=30)
     if code != 0:
         return {"status": "error", "step": "git push", "error": err or out}
 
@@ -178,10 +185,10 @@ def sync(dry_run: bool = False) -> dict:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="VANTAGE L4 Git Auto-Sync + MCP Server Update")
-    parser.add_argument("--dry", action="store_true", help="Ver cambios sin commitear")
+    parser.add_argument("--dry-run", "--dry", action="store_true", help="Ver cambios sin commitear")
     args = parser.parse_args()
 
-    result = sync(dry_run=args.dry)
+    result = sync(dry_run=args.dry_run)
 
     if result["status"] == "clean":
         print(result["message"])
