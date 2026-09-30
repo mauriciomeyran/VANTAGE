@@ -600,7 +600,6 @@ def push_local_to_notion(pid, path):
                         patches_failed += 1
                 else:
                     # Otros tipos: intentar PATCH genérico
-                    payload = {block_type: local_block[block_type]}
                     if _patch_block_rich_text(existing_block["id"], block_type, 
                                              local_block[block_type].get("rich_text", [])):
                         patches_applied += 1
@@ -626,6 +625,9 @@ def push_local_to_notion(pid, path):
                         notion.blocks.delete(existing_block["id"])
                         blocks_deleted += 1
                     except Exception as e:
+                        # El bloque viejo queda duplicado junto al nuevo: contar como
+                        # fallo para que el manifest NO se actualice y quede visible.
+                        patches_failed += 1
                         print(f"       ⚠️ reemplazo creado pero no se pudo borrar el bloque viejo {existing_block['id'][:8]}: {e}")
                 except Exception as e:
                     patches_failed += 1
@@ -747,8 +749,9 @@ def main():
             original_mode = _make_writable(local)
             result = push_local_to_notion(d["notion_id"], local)
             _restore_permissions(local, original_mode)
-            if result["failed"] > 0:
-                print(f"  ✗ {d['label']:<30} {result['failed']} bloque(s) fallaron — manifest NO actualizado, el próximo auto reintentará")
+            if result["failed"] > 0 or result["tables_skipped"] > 0:
+                print(f"  ✗ {d['label']:<30} {result['failed']} bloque(s) fallaron, "
+                      f"{result['tables_skipped']} tabla(s) sin sincronizar — manifest NO actualizado")
                 _exit_code[0] = 1
             else:
                 manifest = _load_manifest()
