@@ -26,7 +26,7 @@
         <meta property="og:description"
               content="Replace 'hub' with 'ingest' in any GitHub URL for a prompt-friendly text.">
         <meta property="og:type"        content="website">
-        <meta property="og:url"         content="https://gitingest.com/raw/mauriciomeyran/VANTAGE">
+        <meta property="og:url"         content="https://gitingest.com/r/mauriciomeyran/VANTAGE">
         <meta property="og:image"       content="/static/og-image.png">
         
         <meta name="apple-mobile-web-app-title"            content="Gitingest">
@@ -141,7 +141,7 @@
                            name="input_text"
                            id="input_text"
                            placeholder="https://github.com/..."
-                           value="raw/mauriciomeyran/VANTAGE"
+                           value="r/mauriciomeyran/VANTAGE"
                            required
                            class="border-[3px] w-full relative z-20 border-gray-900 placeholder-gray-600 text-lg font-medium focus:outline-none py-3.5 px-6 rounded bg-[#E8F0FE]">
                 </div>

@@ -169,6 +169,13 @@ Incluye
 ## 06 BRIEF:VERIFICATION-DEPTH
 Contratos de Verificación
 Toda modificación debe respetar el nivel mínimo de validación requerido.
+| Nivel | Alcance |
+| --- | --- |
+| L0 | Consulta Read-Only |
+| L1 | Verificación documental |
+| L2 | Validación Runtime |
+| L3 | Validación Pipeline |
+| L4 | Validación integral del sistema |
 Cada operación debe utilizar el menor nivel posible compatible con su riesgo.
 ---
 ## 07 BRIEF:CROSS-DEPENDENCIES
