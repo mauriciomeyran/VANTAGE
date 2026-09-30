@@ -57,6 +57,7 @@ DOCS = {
     "change_log":    {"notion_id": "390938be-fc42-80e7-b429-d7d730339353", "local_file": BASE_DIR / "Change Log.md", "label": "CHANGE LOG"},
     "brief":           {"notion_id": "3a3938be-fc42-8008-9e90-ec435c01f50d", "local_file": BASE_DIR / "Brief.md", "label": "DOCUMENT NAVIGATION BRIEF"},
     "change_log_archivo": {"notion_id": "3ba938be-fc42-8011-8947-fb4fa5d1f63f", "local_file": BASE_DIR / "Changelog Archivo.md", "label": "CHANGELOG ARCHIVO"},
+    "project_charter": {"notion_id": "f87938be-fc42-8263-a305-819877d2245f", "local_file": BASE_DIR / "PROJECT_CHARTER.md", "label": "PROJECT CHARTER"},
 }
 
 NOTION_TEXT_LIMIT = 1990  # margen de seguridad bajo el límite de 2000

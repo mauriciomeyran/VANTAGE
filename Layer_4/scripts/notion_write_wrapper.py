@@ -24,7 +24,7 @@ _SCRIPT_DIR = Path(__file__).resolve()
 _PROJECT = _SCRIPT_DIR.parents[2]  # VANTAGE
 _TRIGGER_SCRIPT = _PROJECT / "Layer_4" / "scripts" / "trigger_sync_after_mcp_write.py"
 
-# ── Documentos fundacionales (8) ──────────────────────────────────────────────
+# ── Documentos fundacionales (9) ──────────────────────────────────────────────
 FOUNDATIONAL_DOCS = {
     "377938be-fc42-805e-a408-c9ae518d4fe7": "kernel",
     "37b938be-fc42-8001-9b9b-fcf81130d274": "system_prompt",
@@ -34,6 +34,7 @@ FOUNDATIONAL_DOCS = {
     "390938be-fc42-80e7-b429-d7d730339353": "change_log",
     "3a3938be-fc42-8008-9e90-ec435c01f50d": "brief",
     "3ba938be-fc42-8011-8947-fb4fa5d1f63f": "change_log_archivo",
+    "f87938be-fc42-8263-a305-819877d2245f": "project_charter",
 }
 
 
