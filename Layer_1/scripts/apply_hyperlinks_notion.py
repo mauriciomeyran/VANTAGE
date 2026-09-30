@@ -62,6 +62,7 @@ PENDIENTE (no bloqueante, anotado para sesión futura):
 Uso:
     python3 apply_hyperlinks_notion.py --doc career_canon --dry-run
     python3 apply_hyperlinks_notion.py --doc career_canon --apply
+    python3 apply_hyperlinks_notion.py --doc project_charter --dry-run
     python3 apply_hyperlinks_notion.py --all --dry-run
 """
 
@@ -104,6 +105,7 @@ DOC_KEY_TO_NAME = {
     "aliases": "Aliases",
     "change_log": "Change Log",
     "brief": "Navigation Brief",
+    "project_charter": "Project Charter",
 }
 
 
@@ -155,7 +157,7 @@ def patch_table_row_cell(block_id: str, cells: list) -> bool:
 def build_dynamic_mapping(link_index: dict) -> dict:
     """
     A partir del link_index que ya arma generate_census.py (DEF + REF de
-    TODOS los bloques de los 7 documentos, con block_id real), construye
+    todos los bloques de los documentos registrados, con block_id real), construye
     un MAPPING id -> url usando exactamente la misma lógica de selección
     que el censo (pick_best_link): prioriza DEF, luego por DOC_PRIORITY.
 
