@@ -19,6 +19,7 @@ Los argumentos son independientes de orden y combinables:
     vdoc system_prompt   |  vdoc career_canon  |  vdoc manual
     vdoc aliases          |  vdoc change_log
     vdoc Navigation_Brief |  vdoc VANTAGE
+    vdoc project_charter  |  vdoc charter
 
 Nota: ID Census no es un doc soportado aquí — se genera vía generate-census
 y se sube directo a Notion, no vive en ACTIVE/ ni se respalda por este flujo.
@@ -38,7 +39,12 @@ VGIT  = PROJECT / "Layer_4/scripts/git_sync.py"
 # Nota (CENSUS-SYNC-R1): ID Census queda fuera de este set a propósito — se
 # genera vía generate-census y se sube directo a Notion; no tiene contraparte
 # en ACTIVE/ ni tiene sentido respaldarlo por este flujo.
-DOCS = {"kernel", "system_prompt", "career_canon", "manual", "aliases", "change_log", "Navigation_Brief", "VANTAGE", "change_log_archivo"}
+DOCS = {"kernel", "system_prompt", "career_canon", "manual", "aliases", "change_log", "Navigation_Brief", "VANTAGE", "change_log_archivo", "project_charter", "charter"}
+# Alias → key canónica en vsync_doc.DOCS
+DOC_ALIASES = {
+    "charter": "project_charter",
+    "Navigation_Brief": "brief",  # histórico: vdoc acepta Navigation_Brief; vsync usa "brief"
+}
 DIRECTIONS = {"notion", "auto", "local"}
 
 def run(cmd, label=""):
@@ -83,7 +89,9 @@ def main():
 
     vsync_args = [str(VSYNC), "--direction", direction]
     if doc:
-        vsync_args += ["--doc", doc]
+        # Resolver alias a la key canónica que entiende vsync_doc.DOCS
+        doc_key = DOC_ALIASES.get(doc, doc)
+        vsync_args += ["--doc", doc_key]
 
     # dry SIEMPRE gana — nunca se pasa a escritura real, sin importar
     # qué dirección o doc se haya combinado en la misma línea.
