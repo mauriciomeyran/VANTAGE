@@ -820,9 +820,9 @@ def parse_markdown_table_cell(cell_str: str) -> list:
     return rich_text if rich_text else [{"type": "text", "text": {"content": cell_str}}]
 
 
-def markdown_table_to_notion_blocks(table_lines: list, max_rows_per_table: int = 90) -> list:
+def markdown_table_to_notion_blocks(table_lines: list, max_rows_per_table: int = 98) -> list:
     """Convierte un bloque de lIneas de tabla Markdown a una lista de bloques 'table' de Notion,
-    dividiendo tablas de mas de 90 filas para respetar el limite de 100 de la API.
+    dividiendo tablas de mas de 98 filas para respetar el limite de 100 de la API (header + 98 filas = 99 bloques).
     """
     if not table_lines:
         return []
@@ -831,7 +831,8 @@ def markdown_table_to_notion_blocks(table_lines: list, max_rows_per_table: int =
     headers = [c.strip() for c in header_line.strip().strip('|').split('|')]
     column_count = len(headers)
 
-    row_lines = table_lines[2:] if len(table_lines) > 1 and '---' in table_lines[1] else table_lines[1:]
+    # Filtrar separator line (linea con ---) y obtener solo filas de datos
+    row_lines = [line for line in table_lines[1:] if '---' not in line and line.strip().startswith('|')]
 
     header_cells = [parse_markdown_table_cell(h) for h in headers]
     data_rows = []
