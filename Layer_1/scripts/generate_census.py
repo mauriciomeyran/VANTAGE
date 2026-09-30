@@ -971,7 +971,7 @@ def update_notion_census_page(page_id: str, markdown_content: str) -> bool:
         return False
 
 
-def sync_to_notion(page_id: str, markdown_content: str) -> bool:
+def sync_to_notion(page_id: str, markdown_content: str, auto_confirm: bool = False) -> bool:
     """Sincroniza el census a Notion con confirmación del usuario."""
     print("\n" + "=" * 52)
     print("  SINCRONIZACIÓN A NOTION")
@@ -979,13 +979,19 @@ def sync_to_notion(page_id: str, markdown_content: str) -> bool:
     print(f"  Página ID: {page_id}")
     print(f"  Tamaño del contenido: {len(markdown_content)} caracteres")
     print()
+
+    if auto_confirm:
+        print("  Auto-confirmado via --yes")
+        print("=" * 52)
+        return update_notion_census_page(page_id, markdown_content)
+
     print("  ¿Deseas actualizar la página de Notion con el census actual?")
     print("  [Y/y] = Sí, actualizar Notion")
     print("  [N/n] = No, cancelar")
     print("=" * 52)
-    
+
     response = input("  Tu elección: ").strip().lower()
-    
+
     if response in ['y']:
         return update_notion_census_page(page_id, markdown_content)
     else:
@@ -1062,6 +1068,7 @@ if __name__ == "__main__":
     debug_ids = []
     auto_fix_orphans_flag = False
     sync_to_notion_flag = False
+    auto_confirm_flag = False
     notion_page_id = "394938befc4281e6a381e3869e60d89d"
     
     if "--debug-id" in sys.argv:
@@ -1080,6 +1087,9 @@ if __name__ == "__main__":
         idx = sys.argv.index("--sync-to-notion")
         if idx + 1 < len(sys.argv) and not sys.argv[idx + 1].startswith("--"):
             notion_page_id = sys.argv[idx + 1]
+
+    if "--yes" in sys.argv:
+        auto_confirm_flag = True
 
     print(f"\nV-ID-CENSUS Generator v3.1")
     print(f"Generado: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
@@ -1132,7 +1142,7 @@ if __name__ == "__main__":
             print("✓ Census regenerado.")
     
     if sync_to_notion_flag:
-        sync_to_notion(notion_page_id, md)
+        sync_to_notion(notion_page_id, md, auto_confirm_flag)
 
     if incomplete_docs:
         print("\n  ⚠️  ADVERTENCIA: CENSUS INCOMPLETO")
