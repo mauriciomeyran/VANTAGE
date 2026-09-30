@@ -615,7 +615,7 @@ def push_local_to_notion(pid, path):
                 # creación fue exitosa. Si falla la creación, se preserva el
                 # bloque original antes que perder contenido.
                 try:
-                    created = notion.blocks.children.append(
+                    notion.blocks.children.append(
                         block_id=pid,
                         children=[local_block],
                         after=existing_block["id"],
