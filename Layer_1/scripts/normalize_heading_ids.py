@@ -73,7 +73,7 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVO:")
+VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVO:", "CHARTER:")
 
 DOCUMENTS = {
     "System Prompt": "37b938be-fc42-8001-9b9b-fcf81130d274",
@@ -82,6 +82,7 @@ DOCUMENTS = {
     "Career Canon":  "377938be-fc42-8089-93f2-f52dbd2dec6c",
     "Aliases":       "37c938be-fc42-80d4-b9ae-f5969830331b",
     "Change Log":    "390938be-fc42-80e7-b429-d7d730339353",
+    "Project Charter": "f87938be-fc42-8263-a305-819877d2245f",
 }
 
 # Change Log queda fuera del barrido de headings: sus entradas narran

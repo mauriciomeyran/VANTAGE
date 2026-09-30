@@ -35,7 +35,7 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVO:", "BRIEF:")
+VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVO:", "BRIEF:", "CHARTER:")
 
 DOCUMENTS = {
     "System Prompt": "37b938be-fc42-8001-9b9b-fcf81130d274",
@@ -45,6 +45,7 @@ DOCUMENTS = {
     "Aliases":       "37c938be-fc42-80d4-b9ae-f5969830331b",
     "Change Log":    "390938be-fc42-80e7-b429-d7d730339353",
     "Navigation Brief": "3a3938be-fc42-8008-9e90-ec435c01f50d",
+    "Project Charter": "f87938be-fc42-8263-a305-819877d2245f",
 }
 
 DOC_PRIORITY = {
@@ -55,6 +56,7 @@ DOC_PRIORITY = {
     "Aliases":       5,
     "Change Log":    6,
     "Navigation Brief": 7,
+    "Project Charter": 8,
 }
 
 # ─── LISTADO CANÓNICO DE IDs ──────────────────────────────────────────────────
