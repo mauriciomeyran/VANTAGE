@@ -606,12 +606,6 @@ Contexto:
 - Investigación de proveedores alternativos determinó que Gemini Flash-Lite ofrece mejor free tier (15-30 RPM vs ~10 RPM de Groq) y OpenAI-compatibility.
 Cambios ejecutados:
 1. Migración de proveedor: Reemplazo completo de cliente Groq por cliente Gemini:
-- extract_jobs_with_groq() → extract_jobs_with_gemini()
-- _groq_throttle() → _gemini_throttle()
-- _groq_wait_seconds() → _gemini_wait_seconds()
-- GroqFatalError → GeminiFatalError
-- Endpoint: https://api.groq.com/openai/v1/chat/completions → https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent
-- Payload format: OpenAI-style → Gemini native (contents/generationConfig)
 1. Configuración renombrada (layer_3.env):
 - GROQ_API_KEY → GEMINI_API_KEY (usando key existente en .env principal)
 - GROQ_MODEL → GEMINI_MODEL (gemini-3.5-flash-lite)
