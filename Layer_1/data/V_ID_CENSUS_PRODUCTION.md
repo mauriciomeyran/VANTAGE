@@ -8,14 +8,14 @@
 | [`KERNEL:DOCUMENTATION-003`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42811a8860f01feeda1034) | 03.3 | L0 — VANTAGE Runtime |
 | [`KERNEL:DOCUMENTATION-004`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42815fbcf0e632699767ce) | 03.4 | Kernel vs Manual |
 | [`KERNEL:DOCUMENTATION-005`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42819ba306df51cd76194c) | 03.5 | Convención de Anuncio de Skills |
-| [`KERNEL:DOCUMENTATION-006`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281088852cdba5432bf38) | 03.6 | Diffs y Write-Back Verification |
-| [`KERNEL:DOCUMENTATION-007`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42813b8e7eede391952f38) | 03.7 | Version-Check Tool (verify_versions.py) |
-| [`KERNEL:DOCUMENTATION-008`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281d788e5c96f99f3b6e8) | 03.8 | Sincronización de Versiones |
-| [`KERNEL:DOCUMENTATION-009`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42816f80dec85df01a673b) | 03.9 | Census Sync |
+| [`KERNEL:DOCUMENTATION-006`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281088852cdba5432bf38) | 03.6 | Health Check |
+| [`KERNEL:DOCUMENTATION-007`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42813b8e7eede391952f38) | 03.7 | Verificación de Versión |
+| [`KERNEL:DOCUMENTATION-008`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281d788e5c96f99f3b6e8) | 03.8 | ID Census |
+| [`KERNEL:DOCUMENTATION-009`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42816f80dec85df01a673b) | 03.9 | Session Ledger |
 | [`KERNEL:DOCUMENTATION-010`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42814ea9a3e9abd1b8e80e) | 03.10 | Documentación Transversal |
-| [`KERNEL:DOCUMENTATION-011`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e3ad72f7f5b13d2804) | 03.11 | Gate Decision Documentation |
-| [`KERNEL:DOCUMENTATION-012`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#1fc298d1a0eb4e04bf287df831f21ee1) | 03.12 | Notebook Gemini — Auditor Documental Externo |
-| [`KERNEL:DOCUMENTATION-013`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#030ab36cb5524618b8ead54575555b47) | 03.13 | Protocolo Sandbox — Economía de Tokens Máxima |
+| [`KERNEL:DOCUMENTATION-011`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e3ad72f7f5b13d2804) | 03.11 | Impact Assessment Contract |
+| [`KERNEL:DOCUMENTATION-012`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#1fc298d1a0eb4e04bf287df831f21ee1) | 03.12 | External Configuration Contract |
+| [`KERNEL:DOCUMENTATION-013`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#030ab36cb5524618b8ead54575555b47) | 03.13 | Sistema de Cross-Reference Hyperlinks |
 | [`KERNEL:DOCUMENTATION-014`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f6874261bf2744c78caa79222a0b5120) | 03.14 | Change Log |
 | [`KERNEL:DOCUMENTATION-015`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#9cfab84c738f4a53abe6fe9f244a31ae) | 03.15 | Cross-Reference Hyperlinks |
 | [`KERNEL:DOCUMENTATION-016`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74) | 03.16 | Notebook Gemini |
@@ -88,10 +88,10 @@
 | [`KERNEL:CONTEXT-INFRASTRUCTURE-002`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42818391f2ecc693b59a2a) | 15.2 | Context Infrastructure — Integration Points |
 | [`KERNEL:DATA-FLOW`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428178be4dec4fc6423c14) | 16 | Flujo de Datos |
 | [`KERNEL:DATA-FLOW-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#8b46405501924da498b6068ddca32bb5) | 16.1 | Flujo de Datos — Subsección 001 |
-| [`KERNEL:DOC-CONTRACT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5a99326b9a124e89a2fd575eda5fd2b9) | 03.18 | Document Contract |
+| [`KERNEL:DOC-CONTRACT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5a99326b9a124e89a2fd575eda5fd2b9) | 03.18 | Contrato de Prefijos Documentales del Lazy Loader |
 | [`KERNEL:EVOLUTION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42812ca85ac71f34eaa9c9) | 17 | Evolución del Sistema |
 | [`KERNEL:DEDUP-LAYER-UPGRADE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f8e1105ad1284258b05bb8576b35c4e0) | 09.12 | Dedup Layer Upgrade |
-| [`KERNEL:HANDOFF-SERIAL`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#45733b3696264c42acf5d26381c27a17) | 03.19 | Handoff Serial |
+| [`KERNEL:HANDOFF-SERIAL`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#45733b3696264c42acf5d26381c27a17) | 03.19 | Contrato de Serial Global de Handoff |
 
 ---
 
