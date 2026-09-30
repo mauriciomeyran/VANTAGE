@@ -2023,13 +2023,6 @@ IDs afectados — CENSUS-SYNC-R1: bajas de CANON:FIGMA-TAGS-001, CANON:GOLDEN-SK
 Versión actualizada: 9.6.0 (fundacional sincronizado).
 ---
 # v9.5.9 — Transición a Notion-First (Filesystem read-only) · 2026-07-20
-Tipo: [INFRA]
-Alcance: Filesystem local (Documentación/ACTIVE/).
-Contexto: Para evitar el drift entre las copias locales (.md) y las páginas de Notion, se formalizó a Notion como la Única Fuente de Verdad. Los archivos locales se marcaron como read-only (chmod 444).
-Cambios:
-- Documentación/ACTIVE/ (.md): todos los archivos fundacionales protegidos contra escritura accidental.
-- SP:CONSISTENCY: agregada regla de verificación de permisos en el bootloading.
-Versión: 9.5.9 (sincronizada).
 ---
 # v9.5.4 — Blindaje de Class B (Dedup_Flag) en KERNEL:CV-GOLDEN-RULES · 2026-07-18
 Tipo: [FIX] [DOC]
