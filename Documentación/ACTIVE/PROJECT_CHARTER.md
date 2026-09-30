@@ -1,6 +1,5 @@
 # V | PROJECT CHARTER
 
-Documento fundacional de contexto. Léase antes que KERNEL, MANUAL, o cualquier tracker.
 > Qué es este documento y qué no es. Este Charter no dicta cómo operar VANTAGE
 (eso es MANUAL) ni qué contratos técnicos rigen (eso es KERNEL). Dicta por qué
 existen esos contratos, qué se intentó antes y falló, y hacia dónde va el proyecto.

@@ -677,24 +677,6 @@ Pendiente (fuera de esta entrada):
 - Skill Library (Notion) — alta de fila vantage-housekeeping-tracker, actualización de descripción de vantage-sync-assets (delegar a vantage-sync-skill-library).
 - vversions --sync para propagar v9.20.9 al resto de los fundacionales.
 ---
-Tipo: [DOC]
-Alcance:
-- Kernel (KERNEL:DOCUMENTATION-005, 03.5 — lista de implementación)
-- Kernel (KERNEL:DOCUMENTATION-010, 03.10 — tabla Skills de Gobernanza Documental)
-- Kernel (KERNEL:DOCUMENTATION-013, 03.13 — nodo nuevo)
-- Manual (MANUAL:SKILL-GLOSSARY-AUDIT, 23.3 — fila nueva)
-Contexto: Brief del operador reportaba 4 skills modificadas/creadas sin contraparte documental formal (vantage-sync-assets, el split propuesta/implementación de documentación transversal con protocolo sandbox de economía de tokens, y vantage-skill-updater, nueva skill de meta-gobernanza). Mapeo confirmó que MANUAL §23.2 ya reflejaba correctamente vantage-sync-assets y el split propuesta/implementación (v9.20.4/v9.20.5) — el drift real estaba únicamente en KERNEL:DOCUMENTATION-005, que seguía listando una entrada única obsoleta ("vantage-documentacion-transversal") con banners incorrectos. Se descartó agregar vantage-sync-assets a la tabla de gobernanza de KERNEL:DOCUMENTATION-010 (decisión explícita del operador — esa tabla es exclusiva de skills que escriben Class A en trackers/changelog, no de orquestación de Library/Glossary). El patrón de protocolo sandbox (máx. 3 outputs visibles, procesos internos no renderizados) se identificó duplicado idénticamente en 4 skills sin ancla canónica — se formaliza como KERNEL:DOCUMENTATION-013 en vez de crear IDs separados por skill (KERNEL:SANDBOX-PROTOCOL, KERNEL:TOKEN-ECONOMY descartados por redundancia conceptual).
-Cambios:
-- KERNEL:DOCUMENTATION-005 (03.5) — lista "Implementación actual" corregida: entrada única obsoleta reemplazada por vantage-documentacion-transversal-propuesta y -implementacion (banners reales); altas de vantage-sync-assets y vantage-skill-updater.
-- KERNEL:DOCUMENTATION-010 (03.10) — tabla de Skills de Gobernanza Documental: 2 filas nuevas (propuesta/implementacion), que faltaban listarse a sí mismas pese a ser el motor del protocolo que la sección define.
-- KERNEL:DOCUMENTATION-013 (03.13) — nodo nuevo: "Protocolo Sandbox — Economía de Tokens Máxima", formaliza el patrón de máx. 3 outputs visibles compartido por 4 skills.
-- MANUAL:SKILL-GLOSSARY-AUDIT (23.3) — fila nueva: vantage-skill-updater (Propósito/Trigger/Gate/Anuncio).
-IDs afectados: 1 alta — KERNEL:DOCUMENTATION-013 (dispara KERNEL:CENSUS-SYNC Regla 1).
-Write-Back Verification: Kernel y Manual re-fetched post-escritura — 4/4 nodos confirmados en posición correcta, sin mismatch.
-Pendiente (fuera de esta entrada):
-- vcensus para registrar KERNEL:DOCUMENTATION-013 en el Census (alta de ID canónico).
-- vversions --sync para propagar v9.20.8 al resto de los fundacionales.
-- Skill Library (Notion) — alta de fila vantage-skill-updater pendiente (fuera de alcance de esta entrada, delegar a vantage-sync-skill-library).
 ---
 Tipo: [DOC]
 Alcance:
@@ -2010,6 +1992,17 @@ IDs afectados: ninguno en Notion — cambio en lógica local de scripting.
 Versión actualizada: 9.6.5 (sincronizada en los 7 documentos).
 ---
 # v9.6.0 — Re-Arquitectura de Kernel §3 y §4 + Consolidación de Output Contract · 2026-07-20
+Tipo: [AUDIT] [DOC] [FIX]
+Alcance: KERNEL (§3, §4), CAREER CANON (§8), MANUAL (§19).
+Contexto: Auditoría estructural de la suite documental tras detectar ambigüedad en la definición de capas L1 (Pipeline) vs L4 (Control de Versiones) y fragmentación del contrato de salida en el Career Canon.
+Cambios:
+- KERNEL §3 (Runtime): reescrito para separar L0 (Bootloader) de L4 (Sync Engine). Documentado formalmente el L0 Registry en KERNEL:DOCUMENTATION-003.
+- KERNEL §4 (Scripts): reescrito para definir las 3 capas activas: L1 (vsearch/vtrack), L3 (vmail/vupdate), L4 (vgit/vsync). Definido KERNEL:ARCHITECTURE-001 (L1 Pipeline Flow).
+- CAREER CANON §8 (Output Contract): consolidado esquema de 4 piezas: Golden Skeleton (-001), Figma Tags (-002), Tag Registry (-003), Positioning Modes (-004). Dados de baja 5 IDs fragmentados previos.
+- MANUAL §19 (Positioning Modes): actualizadas referencias cruzadas al nuevo esquema CANON:OUTPUT-CONTRACT-004.
+Write-Back Verification: re-fetch de los 3 documentos tras la escritura — confirmados correctos.
+IDs afectados — CENSUS-SYNC-R1: bajas de CANON:FIGMA-TAGS-001, CANON:GOLDEN-SKELETON-001, CANON:TAG-REGISTRY-001, CANON:SKELETON-SPEC-001. Altas de CANON:OUTPUT-CONTRACT-001..004. Census regenerado.
+Versión actualizada: 9.6.0 (fundacional sincronizado).
 ---
 # v9.5.9 — Transición a Notion-First (Filesystem read-only) · 2026-07-20
 Tipo: [INFRA]

@@ -290,4 +290,13 @@
 
 ## IDs Huérfanos (fuera de CENSUS_SPEC)
 
-_Ninguno detectado en esta corrida._
+| ID | Documento | Link |
+|---|---|---|
+| `CHARTER:CONTINUITY` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42803e9c24f2d6e9bced1e) |
+| `CHARTER:DECISIONS` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42809ba6ffc94a0d10b714) |
+| `CHARTER:FAILURES` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428075b83ec234ef46eed3) |
+| `CHARTER:MILESTONES` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280dc8598dadd5e8c050f) |
+| `CHARTER:NON-NEGOTIABLES` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280d0b67de66fad8199c8) |
+| `CHARTER:PURPOSE` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280cfa758eec00c6b4bd3) |
+| `CHARTER:STATUS` | Project Charter | [link](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280ebb77fef32858e73c4) |
+| `SP:BOOTLOADER-004` | System Prompt | [link](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3eb938befc4280f3adc4c70bf3de7f49) |

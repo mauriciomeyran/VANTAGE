@@ -348,6 +348,13 @@ CENSUS_SPEC = [
         ],
     },
 ]
+    # Auto-generated orphan IDs
+# IDs huérfanos detectados - agregar a CENSUS_SPEC
+# Generado automáticamente por generate_census.py --auto-fix-orphans
+
+# SP
+{"id": "SP:BOOTLOADER-004", "seccion": "004", "nombre": "SP:BOOTLOADER — 004"},
+
 
 
 # ─── CAPA DE RED ──────────────────────────────────────────────────────────────
