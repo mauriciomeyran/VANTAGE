@@ -16,10 +16,10 @@
 | [`KERNEL:DOCUMENTATION-011`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e3ad72f7f5b13d2804) | 03.11 | Gate Decision Documentation |
 | [`KERNEL:DOCUMENTATION-012`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#1fc298d1a0eb4e04bf287df831f21ee1) | 03.12 | Notebook Gemini — Auditor Documental Externo |
 | [`KERNEL:DOCUMENTATION-013`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#030ab36cb5524618b8ead54575555b47) | 03.13 | Protocolo Sandbox — Economía de Tokens Máxima |
-| [`KERNEL:DOCUMENTATION-014`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f6874261bf2744c78caa79222a0b5120) | 03.14 | Subsección 014 de KERNEL:DOCUMENTATION |
-| [`KERNEL:DOCUMENTATION-015`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#9cfab84c738f4a53abe6fe9f244a31ae) | 03.15 | Subsección 015 de KERNEL:DOCUMENTATION |
-| [`KERNEL:DOCUMENTATION-016`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74) | 03.16 | Subsección 016 de KERNEL:DOCUMENTATION |
-| [`KERNEL:DOCUMENTATION-017`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#430a977f08b742dfa476a0840a909e51) | 03.17 | Subsección 017 de KERNEL:DOCUMENTATION |
+| [`KERNEL:DOCUMENTATION-014`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f6874261bf2744c78caa79222a0b5120) | 03.14 | Change Log |
+| [`KERNEL:DOCUMENTATION-015`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#9cfab84c738f4a53abe6fe9f244a31ae) | 03.15 | Cross-Reference Hyperlinks |
+| [`KERNEL:DOCUMENTATION-016`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74) | 03.16 | Notebook Gemini |
+| [`KERNEL:DOCUMENTATION-017`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#430a977f08b742dfa476a0840a909e51) | 03.17 | Sandbox |
 | [`KERNEL:ARCHITECTURE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810a8870dd1d384c1e7a) | 04 | Arquitectura de Cuatro Capas |
 | [`KERNEL:ARCHITECTURE-L1`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f3825bd740b23ec959) | 04.1 | L1 — Active Search |
 | [`KERNEL:ARCHITECTURE-L2`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#73f6ec3692de4632a16d89313b91456d) | 04.2 | L2 — Strategic Search |
