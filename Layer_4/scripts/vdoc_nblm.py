@@ -49,8 +49,13 @@ def run_digest():
     else:
         # fallback directo
         import urllib.request
-        url = "https://gitingest.com/raw/mauriciomeyran/VANTAGE"
-        urllib.request.urlretrieve(url, DIGEST_PATH)
+        url = "https://gitingest.com/r/mauriciomeyran/VANTAGE"
+
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+
+        with urllib.request.urlopen(req) as response, open(DIGEST_PATH, 'wb') as out_file:
+
+            out_file.write(response.read())
     print(f"✓ Digest guardado en {DIGEST_PATH}")
 
 def collect_files(include_digest: bool = True) -> list[Path]:
