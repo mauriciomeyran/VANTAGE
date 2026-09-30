@@ -127,7 +127,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:CV-GOLDEN-RULES-003", "seccion": "10.3", "nombre": "Regla de Oro #3"},
             {"id": "KERNEL:CV-GOLDEN-RULES-004", "seccion": "10.4", "nombre": "Regla de Oro #4"},
             {"id": "KERNEL:CV-GOLDEN-RULES-005", "seccion": "10.5", "nombre": "Regla de Oro #5"},
-                {"id": "KERNEL:CV-GOLDEN-RULES-006", "seccion": "10.6", "nombre": "Regla de Oro #6 — Invarianza de la Decisión de Gate"},
+            {"id": "KERNEL:CV-GOLDEN-RULES-006", "seccion": "10.6", "nombre": "Regla de Oro #6 — Invarianza de la Decisión de Gate"},
             {"id": "KERNEL:TRIGGERS", "seccion": "11", "nombre": "Contratos de Ejecución del AI Component"},
             {"id": "KERNEL:TRIGGER-001", "seccion": "11.1", "nombre": "Trigger — Discovery Request"},
             {"id": "KERNEL:TRIGGER-002", "seccion": "11.2", "nombre": "Trigger — CV Optimization"},
@@ -263,7 +263,7 @@ CENSUS_SPEC = [
             {"id": "CANON:POSITIONING-002", "seccion": "11.2", "nombre": "Positioning N2 — Store Design & Flagship Execution"},
             {"id": "CANON:POSITIONING-003", "seccion": "11.3", "nombre": "Positioning N3 — Regional Brand Execution & Rollout"},
             {"id": "CANON:POSITIONING-004", "seccion": "11.4", "nombre": "Positioning N4 — Commercial VM & Field Leadership"},
-                {"id": "CANON:POSITIONING-005", "seccion": "11.5", "nombre": "Mitigación de Riesgos"},
+            {"id": "CANON:POSITIONING-005", "seccion": "11.5", "nombre": "Mitigación de Riesgos"},
             {"id": "CANON:OUTPUT-CONTRACT", "seccion": "12", "nombre": "Output Contract Framework"},
             {"id": "CANON:OUTPUT-CONTRACT-001", "seccion": "12.1", "nombre": "Output Contract — Golden Skeleton"},
             {"id": "CANON:OUTPUT-CONTRACT-002", "seccion": "12.2", "nombre": "Output Contract — Figma Tags / Registry SSOT"},
@@ -604,7 +604,6 @@ def infer_section_from_id(id_str: str) -> tuple:
     """Infiere la sección y nombre a partir del ID huérfano."""
     prefix = id_str.split(":")[0] if ":" in id_str else ""
     
-    # Mapeo de prefijos a secciones del CENSUS_SPEC
     section_map = {
         "KERNEL": "KERNEL",
         "MANUAL": "MANUAL",
@@ -618,34 +617,23 @@ def infer_section_from_id(id_str: str) -> tuple:
     }
     
     section_name = section_map.get(prefix, "UNKNOWN")
-    
-    # Inferir sección numérica basado en el patrón del ID
     seccion = ""
     nombre = ""
     
     if "-" in id_str:
         parts = id_str.split("-")
         if len(parts) > 1:
-            # IDs con sufijo numérico
             base = parts[0]
             suffix = parts[1]
-            
-            # Intentar inferir sección numérica
             if suffix.isdigit():
                 seccion = f"{seccion}.{suffix}" if seccion else suffix
             
-            # Generar nombre descriptivo
-            if prefix == "KERNEL":
-                nombre = f"Subsección {suffix} de {base}"
-            elif prefix == "MANUAL":
+            if prefix in ("KERNEL", "MANUAL"):
                 nombre = f"Subsección {suffix} de {base}"
             else:
                 nombre = f"{base} — {suffix}"
     else:
-        # IDs sin sufijo numérico (encabezados principales)
-        if prefix == "KERNEL":
-            nombre = f"Sección principal de {id_str}"
-        elif prefix == "MANUAL":
+        if prefix in ("KERNEL", "MANUAL"):
             nombre = f"Sección principal de {id_str}"
         else:
             nombre = id_str
@@ -663,7 +651,6 @@ def generate_census_spec_additions(orphans: dict) -> str:
     additions.append("# Generado automáticamente por generate_census.py --auto-fix-orphans")
     additions.append("")
     
-    # Agrupar por sección
     by_section = {}
     for id_str, entry in orphans.items():
         section_name, seccion, nombre = infer_section_from_id(id_str)
@@ -688,8 +675,7 @@ def generate_census_spec_additions(orphans: dict) -> str:
 
 
 def find_census_spec_end(content: str) -> int | None:
-    """Encuentra el índice del ']' que cierra CENSUS_SPEC balanceando profundidad,
-    inmune a corchetes anidados (ej. campos tipo 'lookup_ids': [...])."""
+    """Encuentra el índice del ']' que cierra CENSUS_SPEC balanceando profundidad."""
     start_marker = "CENSUS_SPEC = ["
     start = content.find(start_marker)
     if start == -1:
@@ -740,7 +726,6 @@ def auto_fix_orphans(orphans: dict) -> bool:
         print("✓ Cancelado. No se realizaron cambios.")
         return False
     
-    # Generar el código para agregar
     additions_code = generate_census_spec_additions(orphans)
     
     if response in ['n']:
@@ -750,19 +735,14 @@ def auto_fix_orphans(orphans: dict) -> bool:
         return False
     
     if response in ['y']:
-        # Leer el archivo actual
         script_path = Path(__file__).resolve()
         current_content = script_path.read_text(encoding="utf-8")
-        
-        # Encontrar el final real del CENSUS_SPEC (balanceo de corchetes, no regex)
         census_spec_end = find_census_spec_end(current_content)
         
         if census_spec_end is not None:
             new_content = current_content[:census_spec_end] + "\n    # Auto-generated orphan IDs\n" + additions_code + current_content[census_spec_end:]
-            
             script_path.write_text(new_content, encoding="utf-8")
             print(f"✓ IDs agregados a {script_path}")
-            print("  Revisa el archivo para verificar la inserción y ajustar secciones si es necesario.")
             return True
         else:
             print("✗ Error: No se pudo encontrar el cierre real de CENSUS_SPEC en el archivo.")
@@ -771,14 +751,191 @@ def auto_fix_orphans(orphans: dict) -> bool:
     print("✗ Respuesta no reconocida. Cancelado.")
     return False
 
+# ─── PARSER NATIVO Y CONVERSOR DE MARKDOWN A NOTION API BLOCKS ────────────────
+
+def parse_markdown_table_cell(cell_str: str) -> list:
+    """Parsea el contenido de una celda Markdown generando objetos rich_text válidos para la API de Notion.
+    
+    Soporta:
+    - Enlaces con formato [`LABEL`](URL) o [LABEL](URL)
+    - Fragmentos en inline code `CODE`
+    - Texto plano sin formato
+    """
+    cell_str = cell_str.strip()
+    if not cell_str:
+        return [{"type": "text", "text": {"content": ""}}]
+
+    link_pattern = re.compile(r"\[`?([^`\]]+)`?\]\(\s*(\S+?)\s*\)")
+    rich_text = []
+    last_idx = 0
+
+    for match in link_pattern.finditer(cell_str):
+        start, end = match.span()
+        label, url = match.group(1), match.group(2)
+
+        if start > last_idx:
+            pre_text = cell_str[last_idx:start]
+            rich_text.append({"type": "text", "text": {"content": pre_text}})
+
+        rich_text.append({
+            "type": "text",
+            "text": {
+                "content": label,
+                "link": {"url": url}
+            },
+            "annotations": {
+                "code": True
+            }
+        })
+        last_idx = end
+
+    if last_idx < len(cell_str):
+        post_text = cell_str[last_idx:]
+        code_pattern = re.compile(r"`([^`]+)`")
+        code_last_idx = 0
+        
+        for code_match in code_pattern.finditer(post_text):
+            c_start, c_end = code_match.span()
+            c_label = code_match.group(1)
+
+            if c_start > code_last_idx:
+                rich_text.append({
+                    "type": "text",
+                    "text": {"content": post_text[code_last_idx:c_start]}
+                })
+
+            rich_text.append({
+                "type": "text",
+                "text": {"content": c_label},
+                "annotations": {"code": True}
+            })
+            code_last_idx = c_end
+
+        if code_last_idx < len(post_text):
+            rich_text.append({
+                "type": "text",
+                "text": {"content": post_text[code_last_idx:]}
+            })
+
+    return rich_text if rich_text else [{"type": "text", "text": {"content": cell_str}}]
+
+
+def markdown_table_to_notion_blocks(table_lines: list, max_rows_per_table: int = 90) -> list:
+    """Convierte un bloque de lIneas de tabla Markdown a una lista de bloques 'table' de Notion,
+    dividiendo tablas de mas de 90 filas para respetar el limite de 100 de la API.
+    """
+    if not table_lines:
+        return []
+
+    header_line = table_lines[0]
+    headers = [c.strip() for c in header_line.strip().strip('|').split('|')]
+    column_count = len(headers)
+
+    row_lines = table_lines[2:] if len(table_lines) > 1 and '---' in table_lines[1] else table_lines[1:]
+
+    header_cells = [parse_markdown_table_cell(h) for h in headers]
+    data_rows = []
+    for row in row_lines:
+        raw_cells = [c.strip() for c in row.strip().strip('|').split('|')]
+        while len(raw_cells) < column_count:
+            raw_cells.append("")
+        raw_cells = raw_cells[:column_count]
+        cells = [parse_markdown_table_cell(c) for c in raw_cells]
+        data_rows.append({
+            "object": "block",
+            "type": "table_row",
+            "table_row": {"cells": cells}
+        })
+
+    table_blocks = []
+    for i in range(0, len(data_rows), max_rows_per_table):
+        chunk = data_rows[i:i + max_rows_per_table]
+        children = [{
+            "object": "block",
+            "type": "table_row",
+            "table_row": {"cells": header_cells}
+        }] + chunk
+
+        table_blocks.append({
+            "object": "block",
+            "type": "table",
+            "table": {
+                "table_width": column_count,
+                "has_column_header": True,
+                "has_row_header": False,
+                "children": children
+            }
+        })
+
+    return table_blocks
+
+
+def markdown_to_notion_blocks(markdown: str) -> list:
+    """Convierte sintaxis Markdown completa a bloques nativos de Notion AST estructurados."""
+    blocks = []
+    lines = markdown.split('\n')
+    i = 0
+
+    while i < len(lines):
+        line = lines[i]
+
+        if not line.strip():
+            i += 1
+            continue
+
+        if line.startswith('## '):
+            text = line[3:].strip()
+            blocks.append({
+                "object": "block",
+                "type": "heading_2",
+                "heading_2": {
+                    "rich_text": [{"type": "text", "text": {"content": text}}]
+                }
+            })
+            i += 1
+        elif line.startswith('### '):
+            text = line[4:].strip()
+            blocks.append({
+                "object": "block",
+                "type": "heading_3",
+                "heading_3": {
+                    "rich_text": [{"type": "text", "text": {"content": text}}]
+                }
+            })
+            i += 1
+        elif line.startswith('|'):
+            table_lines = []
+            while i < len(lines) and lines[i].startswith('|'):
+                table_lines.append(lines[i])
+                i += 1
+            
+            t_blocks = markdown_table_to_notion_blocks(table_lines)
+            blocks.extend(t_blocks)
+        elif line.strip() == '---':
+            blocks.append({
+                "object": "block",
+                "type": "divider",
+                "divider": {}
+            })
+            i += 1
+        else:
+            blocks.append({
+                "object": "block",
+                "type": "paragraph",
+                "paragraph": {
+                    "rich_text": [{"type": "text", "text": {"content": line.strip()}}]
+                }
+            })
+            i += 1
+
+    return blocks
+
 
 def update_notion_census_page(page_id: str, markdown_content: str) -> bool:
-    """Actualiza la página de Notion especificada con el contenido del census."""
+    """Elimina los bloques anteriores y publica la nueva estructura AST a Notion."""
     try:
-        # Convertir el markdown a bloques de Notion
         blocks = markdown_to_notion_blocks(markdown_content)
         
-        # Primero obtener los bloques actuales para reemplazar
         url = f"https://api.notion.com/v1/blocks/{page_id}/children"
         response = requests.get(url, headers=HEADERS)
         
@@ -788,16 +945,13 @@ def update_notion_census_page(page_id: str, markdown_content: str) -> bool:
         
         current_blocks = response.json().get("results", [])
         
-        # Si hay bloques, eliminarlos todos
         if current_blocks:
             for block in current_blocks:
                 delete_url = f"https://api.notion.com/v1/blocks/{block['id']}"
                 requests.delete(delete_url, headers=HEADERS)
         
-        # Agregar los nuevos bloques
         append_url = f"https://api.notion.com/v1/blocks/{page_id}/children"
         
-        # Notion API tiene límite de 100 bloques por request
         for i in range(0, len(blocks), 100):
             batch = blocks[i:i+100]
             payload = {"children": batch}
@@ -815,64 +969,6 @@ def update_notion_census_page(page_id: str, markdown_content: str) -> bool:
     except Exception as e:
         print(f"✗ Error al actualizar Notion: {e}")
         return False
-
-
-def markdown_to_notion_blocks(markdown: str) -> list:
-    """Convierte contenido markdown a bloques de Notion."""
-    blocks = []
-    lines = markdown.split('\n')
-    
-    for line in lines:
-        if not line.strip():
-            continue
-            
-        # Encabezados
-        if line.startswith('## '):
-            text = line[3:].strip()
-            blocks.append({
-                "object": "block",
-                "type": "heading_2",
-                "heading_2": {
-                    "rich_text": [{"type": "text", "text": {"content": text}}]
-                }
-            })
-        elif line.startswith('### '):
-            text = line[4:].strip()
-            blocks.append({
-                "object": "block",
-                "type": "heading_3",
-                "heading_3": {
-                    "rich_text": [{"type": "text", "text": {"content": text}}]
-                }
-            })
-        # Tablas (simplificado - Notion no soporta tablas nativamente en API)
-        elif line.startswith('|'):
-            # Para tablas, convertirlas a texto con formato
-            blocks.append({
-                "object": "block",
-                "type": "paragraph",
-                "paragraph": {
-                    "rich_text": [{"type": "text", "text": {"content": line}}]
-                }
-            })
-        # Separadores
-        elif line.strip() == '---':
-            blocks.append({
-                "object": "block",
-                "type": "divider",
-                "divider": {}
-            })
-        # Texto normal
-        else:
-            blocks.append({
-                "object": "block",
-                "type": "paragraph",
-                "paragraph": {
-                    "rich_text": [{"type": "text", "text": {"content": line}}]
-                }
-            })
-    
-    return blocks
 
 
 def sync_to_notion(page_id: str, markdown_content: str) -> bool:
@@ -924,7 +1020,7 @@ def render_markdown(link_index: dict, orphans: dict) -> tuple:
                     hardcoded_fallbacks.append(display_id)
 
             if link:
-                cell = f"[`{display_id}`]( {link} )"
+                cell = f"[`{display_id}`]({link})"
             else:
                 cell = f"`{display_id}`"
                 unresolved.append(display_id)
@@ -937,7 +1033,7 @@ def render_markdown(link_index: dict, orphans: dict) -> tuple:
     if orphans:
         lines += ["| ID | Documento | Link |", "|---|---|---|"]
         for id_str, entry in orphans.items():
-            lines.append(f"| `{id_str}` | {entry['doc']} | [link]( {entry['link']} ) |")
+            lines.append(f"| `{id_str}` | {entry['doc']} | [link]({entry['link']}) |")
     else:
         lines.append("_Ninguno detectado en esta corrida._")
     lines.append("")
@@ -966,7 +1062,7 @@ if __name__ == "__main__":
     debug_ids = []
     auto_fix_orphans_flag = False
     sync_to_notion_flag = False
-    notion_page_id = "394938befc4281e6a381e3869e60d89d"  # ID default proporcionado
+    notion_page_id = "394938befc4281e6a381e3869e60d89d"
     
     if "--debug-id" in sys.argv:
         idx = sys.argv.index("--debug-id")
@@ -1026,10 +1122,8 @@ if __name__ == "__main__":
             print(f"    - {uid}")
     print("=" * 52)
     
-    # Auto-fix orphans si se solicita
     if auto_fix_orphans_flag:
         if auto_fix_orphans(orphans):
-            # Si se agregaron IDs, regenerar el census
             print("\nRegenerando census con IDs actualizados...")
             known_ids = known_ids_from_spec()
             orphans = find_orphan_ids(link_index, known_ids)
@@ -1037,7 +1131,6 @@ if __name__ == "__main__":
             output.write_text(md, encoding="utf-8")
             print("✓ Census regenerado.")
     
-    # Sync a Notion si se solicita
     if sync_to_notion_flag:
         sync_to_notion(notion_page_id, md)
 
