@@ -72,6 +72,38 @@ CENSUS_SPEC = [
             {"id": "CHARTER:DECISIONS", "seccion": "05", "nombre": "Registro de Decisiones"},
             {"id": "CHARTER:FAILURES", "seccion": "06", "nombre": "Registro de Fallos"},
             {"id": "CHARTER:CONTINUITY", "seccion": "07", "nombre": "Continuidad Operativa"},
+            # Sub-nodos del Charter (CHARTER-NODES): requieren heading con ID al inicio en Notion para resolver como DEF.
+            {"id": "CHARTER:DECISIONS-001", "seccion": "05.1", "nombre": "Separación Class A / Class B"},
+            {"id": "CHARTER:DECISIONS-002", "seccion": "05.2", "nombre": "Aéropostale removido de Hard Blocks"},
+            {"id": "CHARTER:DECISIONS-003", "seccion": "05.3", "nombre": "Serial Authority v2 — operador como Prioridad 0"},
+            {"id": "CHARTER:DECISIONS-004", "seccion": "05.4", "nombre": "Retiro de layer_1_run.py / consolidate_duplicates.py (G6)"},
+            {"id": "CHARTER:DECISIONS-005", "seccion": "05.5", "nombre": "Cierre E2E de Runtime/Lazy Loader — Graph declarado SUSPENDED"},
+            {"id": "CHARTER:DECISIONS-006", "seccion": "05.6", "nombre": "Detección de fabricación en auditoría externa"},
+            {"id": "CHARTER:DECISIONS-007", "seccion": "05.7", "nombre": "Dedup_Flag migrado de select a checkbox"},
+            {"id": "CHARTER:DECISIONS-008", "seccion": "05.8", "nombre": "Reconciliación v10 — modelo de tracks paralelos"},
+            {"id": "CHARTER:DECISIONS-009", "seccion": "05.9", "nombre": "Blueprint de reescritura KERNEL/MANUAL v10 — adopción híbrida"},
+            {"id": "CHARTER:DECISIONS-010", "seccion": "05.10", "nombre": "Creación de este Charter"},
+            {"id": "CHARTER:DECISIONS-011", "seccion": "05.11", "nombre": "CLAUDE/MAIN declarado gatekeeper exclusivo del Charter"},
+            {"id": "CHARTER:FAILURES-001", "seccion": "06.1", "nombre": "Reaparición de Hard Blocks ya corregidos"},
+            {"id": "CHARTER:FAILURES-002", "seccion": "06.2", "nombre": "Patrón de reporte optimista (ticket RT-1)"},
+            {"id": "CHARTER:FAILURES-003", "seccion": "06.3", "nombre": "Cédula de Reconciliación fabricada"},
+            {"id": "CHARTER:FAILURES-004", "seccion": "06.4", "nombre": "Loop de auto-rechazo QA↔CV-B"},
+            {"id": "CHARTER:FAILURES-005", "seccion": "06.5", "nombre": "Documentación que describe código ya retirado"},
+            {"id": "CHARTER:NON-NEGOTIABLES-001", "seccion": "02.1", "nombre": "Python es dueño exclusivo de los campos Class B"},
+            {"id": "CHARTER:NON-NEGOTIABLES-002", "seccion": "02.2", "nombre": "APROBAR_WRITE obligatorio antes de cualquier escritura"},
+            {"id": "CHARTER:NON-NEGOTIABLES-003", "seccion": "02.3", "nombre": "Ningún reporte de éxito se acepta sin re-fetch/verificación"},
+            {"id": "CHARTER:NON-NEGOTIABLES-004", "seccion": "02.4", "nombre": "Serial de handoff del operador se adopta en el mismo turno"},
+            {"id": "CHARTER:NON-NEGOTIABLES-005", "seccion": "02.5", "nombre": "Todo diagnóstico externo se trata como hipótesis"},
+            {"id": "CHARTER:NON-NEGOTIABLES-006", "seccion": "02.6", "nombre": "Ningún agente delegado resuelve discrepancias por su cuenta"},
+            {"id": "CHARTER:NON-NEGOTIABLES-007", "seccion": "02.7", "nombre": "tracker_flow.is_mutable() única fuente de verdad de mutabilidad"},
+            {"id": "CHARTER:NON-NEGOTIABLES-008", "seccion": "02.8", "nombre": "Graph/Backlinks son artefactos derivados, nunca capa de autoridad"},
+            {"id": "CHARTER:NON-NEGOTIABLES-009", "seccion": "02.9", "nombre": "VM_Scope es binario (Alto/Bajo)"},
+            {"id": "CHARTER:NON-NEGOTIABLES-010", "seccion": "02.10", "nombre": "Hard Blocks reales se consultan siempre en la fuente"},
+            {"id": "CHARTER:MILESTONES-001", "seccion": "04.1", "nombre": "Hito 1 — Track Beta (código) cerrado"},
+            {"id": "CHARTER:MILESTONES-002", "seccion": "04.2", "nombre": "Hito 2 — T2.1 KERNEL v10 en paralelo a Track Beta"},
+            {"id": "CHARTER:MILESTONES-003", "seccion": "04.3", "nombre": "Hito 3 — MANUAL v10 en paralelo a KERNEL v10"},
+            {"id": "CHARTER:MILESTONES-004", "seccion": "04.4", "nombre": "Hito 4 — Fase 3 sync + verificación cruzada"},
+            {"id": "CHARTER:MILESTONES-005", "seccion": "04.5", "nombre": "Hito 5 — Charter actualizado en cada decisión estructural"},
         ],
     },
     {
@@ -692,18 +724,6 @@ def generate_census_spec_additions(orphans: dict) -> str:
 def find_census_spec_end(content: str) -> int | None:
     """Encuentra el índice del ']' que cierra CENSUS_SPEC balanceando profundidad."""
     start_marker = "CENSUS_SPEC = ["
-    {
-        "name": "PROJECT CHARTER",
-        "rows": [
-            {"id": "CHARTER:PURPOSE", "seccion": "01", "nombre": "Propósito del Proyecto"},
-            {"id": "CHARTER:NON-NEGOTIABLES", "seccion": "02", "nombre": "Principios No Negociables"},
-            {"id": "CHARTER:STATUS", "seccion": "03", "nombre": "Estatus del Proyecto"},
-            {"id": "CHARTER:MILESTONES", "seccion": "04", "nombre": "Hitos y Milestones"},
-            {"id": "CHARTER:DECISIONS", "seccion": "05", "nombre": "Registro de Decisiones"},
-            {"id": "CHARTER:FAILURES", "seccion": "06", "nombre": "Registro de Fallos"},
-            {"id": "CHARTER:CONTINUITY", "seccion": "07", "nombre": "Continuidad Operativa"},
-        ],
-    },
     start = content.find(start_marker)
     if start == -1:
         return None
@@ -1224,9 +1244,10 @@ if __name__ == "__main__":
             print("[ERROR] --debug-id requiere al menos un ID después, ej.:")
             print("  python3 generate_census.py --debug-id KERNEL:GATE-DECISION-001 KERNEL:GATE-DECISION-004")
             sys.exit(1)
-    
+
+    if "--auto-fix-orphans" in sys.argv:
         auto_fix_orphans_flag = True
-    
+
     if "--sync-to-notion" in sys.argv:
         sync_to_notion_flag = True
         idx = sys.argv.index("--sync-to-notion")
