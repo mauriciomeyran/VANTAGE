@@ -972,8 +972,106 @@ def update_notion_census_page(page_id: str, markdown_content: str) -> bool:
         return False
 
 
-def sync_to_notion(page_id: str, markdown_content: str, auto_confirm: bool = False) -> bool:
-    """Sincroniza el census a Notion con confirmación del usuario."""
+def get_page_version(page_id: str) -> str:
+    """Extrae la propiedad 'Versión' de una página Notion."""
+    url = f"https://api.notion.com/v1/pages/{page_id}"
+    headers = {
+        "Authorization": f"Bearer {NOTION_TOKEN}",
+        "Notion-Version": _notion_version(),
+        "Content-Type": "application/json"
+    }
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            return f"Error HTTP {response.status_code}"
+
+        properties = response.json().get("properties", {})
+        prop = properties.get("Versión") or properties.get("Version") or properties.get("Versión ")
+        if not prop:
+            return "Sin Propiedad"
+
+        p_type = prop.get("type")
+        if p_type == "rich_text":
+            texts = prop.get("rich_text", [])
+            return texts[0].get("plain_text", "N/A") if texts else "N/A"
+        elif p_type == "select":
+            return prop.get("select", {}).get("name", "N/A")
+        elif p_type == "title":
+            texts = prop.get("title", [])
+            return texts[0].get("plain_text", "N/A") if texts else "N/A"
+        return "Tipo no Soportado"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+def update_page_version(page_id: str, version: str, prop_name: str = "Versión") -> bool:
+    """Actualiza la propiedad de versión de una página Notion."""
+    url = f"https://api.notion.com/v1/pages/{page_id}"
+    headers = {
+        "Authorization": f"Bearer {NOTION_TOKEN}",
+        "Notion-Version": _notion_version(),
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "properties": {
+            prop_name: {
+                "rich_text": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "content": version
+                        }
+                    }
+                ]
+            }
+        }
+    }
+    try:
+        response = requests.patch(url, headers=headers, json=payload)
+        return response.status_code == 200
+    except Exception:
+        return False
+
+
+def sync_page_version_from_changelog(page_id: str, changelog_id: str) -> bool:
+    """Sincroniza la versión de una página con la versión del CHANGELOG."""
+    # Obtener versión maestra del CHANGELOG
+    master_version = get_page_version(changelog_id)
+    if "Error" in master_version or master_version in ["N/A", "Sin Propiedad"]:
+        print(f"  ✗ Fallo al leer versión maestro de CHANGELOG: {master_version}")
+        return False
+
+    print(f"  ✓ Versión maestro del CHANGELOG: {master_version}")
+
+    # Obtener versión actual de la página
+    current_version = get_page_version(page_id)
+    print(f"  Versión actual de la página: {current_version}")
+
+    # Si ya están sincronizadas, no hacer nada
+    if current_version == master_version:
+        print(f"  ✓ La versión ya está sincronizada")
+        return True
+
+    # Actualizar versión
+    print(f"  → Actualizando versión a {master_version}...")
+    prop_name = "Versión " if page_id == "36e938befc4281d6bf40dfe7dee782a5" else "Versión"  # VANTAGE tiene "Versión " con espacio
+    write_ok = update_page_version(page_id, master_version, prop_name=prop_name)
+    if not write_ok:
+        print(f"  ✗ Fallo al actualizar versión")
+        return False
+
+    # Verificar post-escritura
+    confirmed_version = get_page_version(page_id)
+    if confirmed_version == master_version:
+        print(f"  ✓ Versión sincronizada exitosamente: {confirmed_version}")
+        return True
+    else:
+        print(f"  ✗ Verificación falló: esperado {master_version}, releído {confirmed_version}")
+        return False
+
+
+def sync_to_notion(page_id: str, markdown_content: str, auto_confirm: bool = False, sync_version: bool = True) -> bool:
+    """Sincroniza el census a Notion con confirmación del usuario y opcionalmente sincroniza la versión."""
     print("\n" + "=" * 52)
     print("  SINCRONIZACIÓN A NOTION")
     print("=" * 52)
@@ -984,20 +1082,39 @@ def sync_to_notion(page_id: str, markdown_content: str, auto_confirm: bool = Fal
     if auto_confirm:
         print("  Auto-confirmado via --yes")
         print("=" * 52)
-        return update_notion_census_page(page_id, markdown_content)
-
-    print("  ¿Deseas actualizar la página de Notion con el census actual?")
-    print("  [Y/y] = Sí, actualizar Notion")
-    print("  [N/n] = No, cancelar")
-    print("=" * 52)
-
-    response = input("  Tu elección: ").strip().lower()
-
-    if response in ['y']:
-        return update_notion_census_page(page_id, markdown_content)
+        content_ok = update_notion_census_page(page_id, markdown_content)
     else:
-        print("✓ Cancelado. No se actualizó Notion.")
+        print("  ¿Deseas actualizar la página de Notion con el census actual?")
+        print("  [Y/y] = Sí, actualizar Notion")
+        print("  [N/n] = No, cancelar")
+        print("=" * 52)
+
+        response = input("  Tu elección: ").strip().lower()
+        if response in ['y']:
+            content_ok = update_notion_census_page(page_id, markdown_content)
+        else:
+            print("✓ Cancelado. No se actualizó Notion.")
+            return False
+
+    if not content_ok:
+        print("✗ Error al actualizar contenido")
         return False
+
+    # Sincronizar versión con CHANGELOG si se solicita
+    if sync_version:
+        print("\n" + "=" * 52)
+        print("  SINCRONIZACIÓN DE VERSIÓN")
+        print("=" * 52)
+        changelog_id = DOCUMENTS.get("Change Log", "").replace("-", "")
+        if not changelog_id:
+            print("  ✗ No se pudo resolver ID del CHANGELOG")
+            return False
+
+        page_id_clean = page_id.replace("-", "")
+        version_ok = sync_page_version_from_changelog(page_id_clean, changelog_id)
+        return version_ok
+
+    return True
 
 # ─── RENDER ────────────────────────────────────────────────────────────────────
 
@@ -1070,6 +1187,7 @@ if __name__ == "__main__":
     auto_fix_orphans_flag = False
     sync_to_notion_flag = False
     auto_confirm_flag = False
+    sync_version_flag = True
     notion_page_id = "394938befc4281e6a381e3869e60d89d"
     
     if "--debug-id" in sys.argv:
@@ -1091,6 +1209,9 @@ if __name__ == "__main__":
 
     if "--yes" in sys.argv:
         auto_confirm_flag = True
+
+    if "--no-sync-version" in sys.argv:
+        sync_version_flag = False
 
     print(f"\nV-ID-CENSUS Generator v3.1")
     print(f"Generado: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
@@ -1143,7 +1264,7 @@ if __name__ == "__main__":
             print("✓ Census regenerado.")
     
     if sync_to_notion_flag:
-        sync_to_notion(notion_page_id, md, auto_confirm_flag)
+        sync_to_notion(notion_page_id, md, auto_confirm_flag, sync_version_flag)
 
     if incomplete_docs:
         print("\n  ⚠️  ADVERTENCIA: CENSUS INCOMPLETO")
