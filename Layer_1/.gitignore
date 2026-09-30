@@ -8,3 +8,4 @@ scripts/notion_cache.json
 scripts/notion_metrics.json
 *.bak
 scripts/retro_clean_l3_dryrun.json
+data/last_sync_result.json
