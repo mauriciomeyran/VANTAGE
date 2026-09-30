@@ -24,7 +24,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 ENV_PATH = SCRIPT_DIR.parent / "config" / "layer_1.env"
 REGISTRY_NAME = "resolver_registry_v2.json"
 
-# Nombres canónicos de los 12 puntos de supervisión (9 fundacionales + VANTAGE hub + ARCHIVEROS + CHARTER).
+# DOC_KEYS es la fuente vigente de los puntos de supervisión de versiones.
 # VANTAGE (página principal) se integró en modo idéntico a los demás — NO es
 # supervisión pasiva: participa en --sync y en el check de lectura con el
 # mismo veredicto PASS/FAIL que el resto.
@@ -206,7 +206,7 @@ def get_page_version(client: httpx.Client, page_id: str, headers: dict) -> str:
         properties = response.json().get("properties", {})
         # Buscar propiedad "Versión", "Version", o "Versión " (con espacio final —
         # variante real detectada en VANTAGE página principal, schema inconsistente
-        # respecto a los 8 fundacionales).
+        # respecto a los documentos fundacionales).
         prop = properties.get("Versión") or properties.get("Version") or properties.get("Versión ")
         if not prop:
             return "Sin Propiedad"
@@ -532,7 +532,7 @@ def get_page_line_count(client: httpx.Client, page_id: str, headers: dict, max_d
         return {"error": str(e)}
 
 def render_length_report(client: httpx.Client, uuids: dict, headers: dict, baseline_path: Path, update_baseline: bool = False) -> None:
-    """Compara el conteo de líneas de los 10 documentos fundacionales contra
+    """Compara el conteo de líneas de los documentos registrados en DOC_KEYS contra
     el baseline guardado para detectar truncamiento silencioso.
     Si update_baseline=True, sobrescribe el baseline tras el reporte."""
     # Cargar baseline existente o crear dict vacío
@@ -851,7 +851,7 @@ def main():
     parser.add_argument("--skills", action="store_true", help="Cruza los archivos .skill del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SKILL LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     parser.add_argument("--new-scripts", action="store_true", help="Cruza los scripts .py/.sh del árbol activo contra el Glosario de Scripts LOCAL (MANUAL:SCRIPT-GLOSSARY), sin llamar a Notion. Exit 1 si hay scripts sin documentar — úsalo como gate para vantage-sync-script-glossary.")
     parser.add_argument("--new-skills", action="store_true", help="Cruza los archivos .skill del árbol activo contra el Glosario de Skills LOCAL (MANUAL:SKILL-GLOSSARY), sin llamar a Notion. Exit 1 si hay skills sin documentar — úsalo como gate para vantage-sync-skill-glossary.")
-    parser.add_argument("--length", action="store_true", help="Compara el conteo de líneas de contenido de los 10 documentos fundacionales contra el último baseline guardado, para detectar truncamiento silencioso. Read-only salvo --update-baseline.")
+    parser.add_argument("--length", action="store_true", help=f"Compara el conteo de líneas de contenido de los {len(DOC_KEYS)} documentos supervisados contra el último baseline guardado, para detectar truncamiento silencioso. Read-only salvo --update-baseline.")
     parser.add_argument("--update-baseline", action="store_true", help="Usar junto a --length. Sobrescribe el baseline de longitud con el conteo actual tras confirmar que no hubo truncamiento (edición legítima).")
     parser.add_argument("--skills-drift", action="store_true", help="Detecta drift de CONTENIDO en archivos .skill ya registrados (mismo nombre, hash distinto respecto al último baseline) -- complementario a --skills/--new-skills, que solo detectan altas/bajas por nombre. Read-only salvo --update-skill-baseline. Exit 1 si hay drift sin reconciliar.")
     parser.add_argument("--update-skill-baseline", action="store_true", help="Usar junto a --skills-drift. Sobrescribe el baseline de hashes tras confirmar que el drift ya fue reconciliado en Skill Library (Notion) y Skill Glossary (Manual apéndice 23).")

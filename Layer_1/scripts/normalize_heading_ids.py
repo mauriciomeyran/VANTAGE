@@ -2,10 +2,10 @@
 normalize_heading_ids.py
 ========================
 
-Complemento de generate_census.py — audita los 6 documentos fundacionales
+Complemento de generate_census.py — audita los documentos fundacionales
 en busca de encabezados (heading_1/2/3) que contienen un ID con prefijo
-válido (KERNEL:, MANUAL:, CANON:, CAREER_CANON:, SP:, ALIASES:, CHANGELOG:)
-pero que NO respetan ninguna de las dos nomenclaturas canónicas reconocidas
+documental válido (según vantage_id_rules.py) pero que NO respetan ninguna
+de las dos nomenclaturas canónicas reconocidas
 por el sistema:
 
     (a) Heading = ID puro                    ej. "### KERNEL:ARCHITECTURE-L0"

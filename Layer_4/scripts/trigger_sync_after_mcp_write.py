@@ -4,13 +4,8 @@ trigger_sync_after_mcp_write.py — VANTAGE L4
 Wrapper para disparar sync Notion→local tras un write exitoso vía MCP a documentos fundacionales.
 
 Este script está diseñado para ser invocado automáticamente por el sistema MCP o manualmente
-por el operador después de un write MCP a cualquiera de los 8 documentos fundacionales:
-- Kernel
-- System Prompt
-- Career Canon
-- Manual
-- Aliases
-- Change Log
+por el operador después de un write MCP a un documento registrado en
+FOUNDATIONAL_DOCS.
 
 Uso:
     python3 trigger_sync_after_mcp_write.py <page_id>
@@ -28,8 +23,7 @@ _SCRIPT_DIR = Path(__file__).resolve()
 _PROJECT = _SCRIPT_DIR.parents[2]  # VANTAGE
 _VSYNC_DOC = _PROJECT / "Layer_4" / "scripts" / "vsync_doc.py"
 
-# ── Documentos fundacionales (9) ──────────────────────────────────────────────
-# Actualizado para incluir todos los documentos en vsync_doc.py DOCS
+# ── Mapeo vigente de documentos fundacionales ─────────────────────────────────
 FOUNDATIONAL_DOCS = {
     "377938be-fc42-805e-a408-c9ae518d4fe7": "kernel",
     "37b938be-fc42-8001-9b9b-fcf81130d274": "system_prompt",

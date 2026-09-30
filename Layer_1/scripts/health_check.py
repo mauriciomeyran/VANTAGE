@@ -35,7 +35,7 @@ DOCS_FUNDACIONALES = {
     "V-CAREER-CANON":  ("377938be-fc42-8089-93f2-f52dbd2dec6c", "Career Canon.md"),
     "V-BRIEF":         ("3a3938be-fc42-8008-9e90-ec435c01f50d", "Brief.md"),
     "V-CHANGELOG-ARCHIVO": ("3ba938be-fc42-8011-8947-fb4fa5d1f63f", "Changelog Archivo.md"),
-    "V-CHARTER":       ("f87938be-fc42-8263-a305-819877d2245f", "Project Charter.md"),
+    "V-CHARTER":       ("f87938be-fc42-8263-a305-819877d2245f", "PROJECT_CHARTER.md"),
 }
 
 ACTIVE_DIR = Path(__file__).resolve().parent.parent.parent / "Documentación" / "ACTIVE"
