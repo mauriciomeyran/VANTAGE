@@ -7,7 +7,7 @@ Session Cycle
 | --- | --- | --- |
 | start | Arranca el sistema al inicio de cada sesión: activa el entorno, levanta el servidor de serial si no está corriendo, carga variables y corre el chequeo de salud. | Activa .venv, exporta config/layer_1.env, verifica (curl) si start_vantage_serial_server.sh ya escucha en :8787 y lo levanta en background si no, y ejecuta health_check.py, que revisa en orden versión, entorno, git, conectividad a Notion, sync documental y antigüedad de índices — auto-sincroniza el Entity Index si pasó más de 24h. |
 | vversions –bootstrap | Genera el paquete de contexto de apertura de sesión: última fila del Ledger, última entrada del Changelog, tickets críticos pendientes. | Lee pages.retrieve sobre la página del Session Ledger y el Changelog y arma el bloque [DUMP INICIO SESIÓN VANTAGE] — no escribe nada. |
-| vversions –sync | Propaga la versión ya escrita en el Changelog hacia los 6 documentos restantes. | Único flag con escritura: lee la versión target del Changelog y ejecuta 6 pages.patch secuenciales sobre la propiedad Versión — housekeeping, exento de APROBAR_WRITE. |
+| vversions –sync | Propaga la versión ya escrita en el Changelog hacia los demás documentos registrados para supervisión. | Único flag con escritura: lee la versión target del Changelog y ejecuta pages.patch sobre la propiedad Versión de los documentos registrados — housekeeping, exento de APROBAR_WRITE. |
 ## 02 ALIASES:L0-RUNTIME
 L0 · VANTAGE Runtime
 | Alias | Qué hace | Procedimiento interno |
@@ -22,9 +22,9 @@ L0 · VANTAGE Runtime
 | vquery | Corre una consulta estructurada contra el índice. | Corre vantage.py query — filtra entity_index_v2.json por los parámetros dados. |
 | vversions (sin flag) | Punto de entrada al motor de verificación de versión y observabilidad de librerías de activos — requiere flag explícito (–bootstrap/–sync, ver familia 1; –scripts/–skills, ver MANUAL:RUNTIME-002). | — |
 | vcensus | Regenera el V-ID-CENSUS y reporta IDs huérfanos. | Corre generate_census.py — resuelve cada ID contra CENSUS_SPEC, detecta huérfanos no listados, y genera deeplink de bloque exacto vía API para cada uno. |
-| vlength | Verifica integridad de longitud de los 9 documentos fundacionales contra el baseline. | Corre verify_versions.py --length — genera length_baseline.json si no existe. |
+| vlength | Verifica la integridad de longitud de los documentos supervisados contra el baseline; el alcance se deriva de verify_versions.py. | Corre verify_versions.py --length — genera length_baseline.json si no existe. |
 | vupdatebaseline | Sobrescribe el baseline de longitud con las métricas del conteo actual. | Corre verify_versions.py --length --update-baseline (requiere --length previo; veredicto PASS o confirmación del operador). |
-| vunlock / vlock | Quita/restaura el permiso de escritura sobre los .md de Documentación/ACTIVE/. | chmod u+w / chmod 444 directo sobre los 9 archivos fundacionales — housekeeping puro, no invoca Python. |
+| vunlock / vlock | Quita/restaura el permiso de escritura sobre los .md de Documentación/ACTIVE/. | chmod u+w / chmod 444 sobre los mirrors Markdown de ACTIVE/ — housekeeping puro, no invoca Python. |
 | vdigest | Descarga el digest completo del repo VANTAGE (vía gitingest.com) a un .txt local, para pegar contexto en agentes sin acceso a GitHub/Notion (Perplexity, Mistral). | Corre get_vantage_digest.sh — curl a gitingest.com/raw/mauriciomeyran/VANTAGE, guarda en VANTAGE_digest.txt (o el path dado como argumento). |
 | vsource | Recarga la configuración de shell tras editar .zshrc, sin abrir una terminal nueva. | source ~/.zshrc — housekeeping puro, no toca Notion ni el pipeline. |
 ## 03 ALIASES:L1L2-DISCOVERY
@@ -50,7 +50,7 @@ L4 · Version Control & Documentación
 | --- | --- | --- |
 | vgit | Fuerza un sync inmediato del repo git fuera de su horario automático. | Invoca git_sync_wrapper.sh — commit con timestamp + push a origin/main si hay cambios sin commitear. |
 | vsync-doc | Invocación directa del motor de sync documental (uso interno/depuración). | Corre vsync_doc.py sin el wrapper de comandos — requiere pasar flags manualmente. |
-| vdoc | Sincroniza los 6 documentos fundacionales desde Notion hacia el disco local (Read Only): Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log. | Corre vdoc.py (wrapper de comandos) → invoca vsync_doc.py con la dirección y documento pedidos (notion/auto (equivalente), dry (previsualización limitada)). |
+| vdoc | Sincroniza los documentos registrados en vsync_doc.py desde Notion hacia el disco local (Read Only); la matriz fundacional de referencia es SP:SYNC-RULE. | Corre vdoc.py (wrapper de comandos) → invoca vsync_doc.py con la dirección y documento pedidos (notion/auto, dry (previsualización limitada)). |
 | vhyperlinks | Aplica hipervínculos cross-reference DIRECTO sobre bloques de Notion (PATCH puntual, preserva block-ID), a partir de cada mención de un ID canónico (PREFIX:KEY). apply_hyperlinks.py (variante anterior, sobre .md locales) queda DEPRECATED. | Corre apply_hyperlinks_notion.py --all. Sin --apply es dry-run (reporta cuántos links propuestos por documento, no escribe). Agregar --apply para escribir de verdad. |
 | cleancaches | Limpia cachés regenerables de apps Mac (Chrome/Safari/Firefox/Edge, WhatsApp/WeChat/Telegram, ChatGPT/Ollama/LM Studio, npm, Cursor) sin tocar sesiones activas. | Corre clean_caches.py. Wrapper Raycast equivalente: clean-caches-raycast.sh (🧹 "Limpiar Cachés de Apps"). |
 | vprint | Lista vacantes con Gate_Decision = CREATE (conteo + IDs/URLs) vía query directo a Notion. | Corre vprint.py, cargando .env inline (vprint.sh en disco es un wrapper alterno no usado por este alias). |

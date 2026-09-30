@@ -155,7 +155,7 @@ Modos
 Verificación de Integridad Estructural (Length Check)
 Propósito: Detectar truncamiento silencioso en los documentos fundacionales mediante comparación del conteo de líneas de texto extraíble contra un baseline predefinido.
 Mecanismo:
-- Alcance: Aplica a los 11 documentos versionados (CHANGELOG, KERNEL, MANUAL, CANON, SP, ALIASES, CENSUS, BRIEF, VANTAGE, CHANGELOG_ARCHIVO y ARCHIVEROS).
+- Alcance: Aplica a los documentos versionados registrados en DOC_KEYS de verify_versions.py.
 - Métrica: Conteo de bloques con texto extraíble no vacío (paragraph, headings, list_item, toggle, quote, callout, code, table_row), excluyendo bloques estructurales (divider, table_of_contents, column_list, column) y bloques vacíos.
 - Umbrales de alerta:
 - Porcentual: ≥5.0% de caída vs. baseline (LENGTH_TRUNCATION_THRESHOLD_PCT).
@@ -345,7 +345,7 @@ No es capa de búsqueda — infraestructura documental.
 - Auto-commit + push cuando hay cambios en el repo. Alias: vgit · 09:00/15:00/21:00.
 - Cron jobs adicionales (ruta directa al Python del venv — source .venv/bin/activate falla con "Operation not permitted" en entorno cron): vantage.py sync y notion_backup.py, y vl3 nuevo · 00:00/08:00/16:00.
 - Repo: github.com/mauriciomeyran/VANTAGE.
-- vsync_doc.py — sync bidireccional Notion → ACTIVE/ para los 8 documentos reales del diccionario DOCS (los 6 fundacionales editables — Kernel, System Prompt, Career Canon, Manual, Aliases, Change Log — más Navigation Brief y Change Log Archivo); normativamente solo los 6 son "fundacionales", pero el script sincroniza los 8. Alias: vdoc · Flags: dry | notion | local | auto.
+- vsync_doc.py — sync Notion ↔ ACTIVE/ para las claves registradas en DOCS; la matriz de documentos fundacionales se mantiene en SP:SYNC-RULE. Alias: vdoc · Flags: dry | notion | local | auto. La escritura local→Notion está bloqueada para Project Charter.
 - git_sync.py mantiene activo regenerate_index_json(): regenera skills/index.json a partir de los archivos .skill y se ejecuta antes de git status dentro de sync().
 - Política de versionado en git (confirmada 2026-09-17, H-6): el comportamiento actual de vgit (commit automático de todo el árbol no ignorado) es la política vigente — se versiona el .db de estado por su valor de trazabilidad histórica y bajo tamaño; caché y binarios grandes quedan excluidos vía .gitignore ya existente. Sin cambios de código requeridos por esta decisión.
 Riesgo conocido — vdoc local sobre documentos con hyperlinks aplicados: push_local_to_notion() (vsync_doc.py) hace delete-all + create-all de bloques en cada corrida — cualquier anchor #block-id generado por el sistema de hyperlinks (KERNEL:DOCUMENTATION-011) queda huérfano al recrearse el bloque con ID nuevo. La variante vsync_doc_fast.py quedó deprecada en Archive/Legacy_Scripts/ (ver KERNEL:EVOLUTION §17, Linaje Histórico) — no forma parte del riesgo activo. apply_hyperlinks_notion.py evita este riesgo (PATCH puntual, preserva block-ID), pero vdoc local sigue sin guard equivalente — evitarlo sobre documentos con hyperlinks recién aplicados hasta que se decida su reemplazo formal.

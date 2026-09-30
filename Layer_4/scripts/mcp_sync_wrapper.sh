@@ -3,7 +3,7 @@
 # Wrapper para orquestar writes MCP + sync automático de documentos fundacionales
 #
 # Este script está diseñado para ser usado después de un write MCP a Notion.
-# Si el write fue a uno de los 6 documentos fundacionales, dispara automáticamente
+# Si el write fue a un documento fundacional, dispara automáticamente
 # el sync Notion→local para mantener los mirrors actualizados.
 #
 # Uso:
