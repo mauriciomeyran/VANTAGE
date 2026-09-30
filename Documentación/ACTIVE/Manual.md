@@ -402,18 +402,13 @@ Modificador dry — se combina con cualquiera de los tres comandos anteriores y 
 vdoc dry — preview de auto (equivalente a vdoc auto dry)
 vdoc notion dry — preview de lo que haría vdoc notion, sin ejecutar la escritura forzada
 vdoc local dry — preview de lo que haría vdoc local
-vdoc kernel dry — preview de solo Kernel en modo auto
+vdoc <clave> dry — preview de auto para el documento seleccionado
 Recomendación operativa: corre siempre la variante dry primero cuando no estés seguro de qué dirección va a ganar — te cuesta segundos y evita sorpresas, especialmente antes de un notion o local forzado.
 ¿Que es sync?
-Sync quirúrgico por documento — cualquiera de los 6 nombres puede pasarse solo o combinado con dirección/dry:
-vdoc kernel
-vdoc system_prompt
-vdoc career_canon
-vdoc manual
-vdoc aliases
-vdoc change_log
-Sin dirección explícita, cada uno corre en modo auto (gana el más reciente) solo para ese documento — los otros 5 no se tocan. 
-Se puede combinar con notion/local (ej. vdoc notion kernel fuerza solo Kernel Notion→local) y con dry (ej. vdoc kernel dry).
+Sync quirúrgico por documento — cualquier clave aceptada por DOCS en vsync_doc.py puede pasarse sola o combinada con dirección/dry:
+vdoc <clave>
+Sin dirección explícita, corre en modo auto (gana el más reciente) solo para el documento seleccionado; los demás no se procesan.
+Se puede combinar con notion/local (ej. vdoc notion <clave> fuerza Notion→local para el documento seleccionado) y con dry (ej. vdoc <clave> dry).
 ---
 ### 8.2 MANUAL:WEEKLY-FLOW-002
 Martes
