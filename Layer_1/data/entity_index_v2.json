@@ -1,6 +1,16 @@
 {
   "entities": [
     {
+      "entity_id": "TRACKER:U_3ed938befc4281cf9941ebaa1d07e6e2",
+      "canonical_id": "H_3962136321d78d45",
+      "page_id": "3ed938be-fc42-81cf-9941-ebaa1d07e6e2",
+      "page_url": "https://app.notion.com/p/Coordinador-de-Visual-Merchandising-L-Or-al-Luxe-M-xico-Grupo-Axo-3ed938befc4281cf9941ebaa1d07e6e2",
+      "hash": "H_3962136321d78d45",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER",
+      "archived_from": null
+    },
+    {
       "entity_id": "TRACKER:H_7b4530a03ad92be3",
       "canonical_id": "7b4530a03ad92be3a83dc722fbe95713cabb3eb218d855505971f687785043d7",
       "page_id": "3e5938be-fc42-813f-a695-f3788d7d8679",
@@ -7322,8 +7332,8 @@
     }
   ],
   "metrics": {
-    "total_entities": 732,
-    "tracker_entities": 34,
+    "total_entities": 733,
+    "tracker_entities": 35,
     "archive_entities": 698,
     "hash_coverage": 100.0,
     "orphan_candidates": 0
