@@ -2,8 +2,8 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`CHARTER:PURPOSE`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280cfa758eec00c6b4bd3) | 1. | Propósito del Proyecto |
-| [`CHARTER:DECISIONS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42809ba6ffc94a0d10b714) | 2. | Registro de Decisiones |
+| [`CHARTER:PURPOSE`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280cfa758eec00c6b4bd3) | 01 | Propósito del Proyecto |
+| [`CHARTER:DECISIONS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42809ba6ffc94a0d10b714) | 02 | Registro de Decisiones |
 | [`CHARTER:DECISIONS-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280229697f961aefc5ceb) | 2.1 | Separación Class A / Class B |
 | [`CHARTER:DECISIONS-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280edbfdef81c9d544217) | 2.2 | Aéropostale removido de Hard Blocks |
 | [`CHARTER:DECISIONS-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280a5b8b2ea05b3b675f0) | 2.3 | Serial Authority v2 — operador como Prioridad 0 |
@@ -15,13 +15,13 @@
 | [`CHARTER:DECISIONS-009`](https://app.notion.com/p/f87938befc428263a305819877d2245f#a2a688b0c9874f05990238b0c72b7a9b) | 2.9 | Blueprint de reescritura KERNEL/MANUAL v10 — adopción híbrida |
 | [`CHARTER:DECISIONS-010`](https://app.notion.com/p/f87938befc428263a305819877d2245f#60edda41d7ac4601b824838882d8d02e) | 2.10 | Creación de este Charter |
 | [`CHARTER:DECISIONS-011`](https://app.notion.com/p/f87938befc428263a305819877d2245f#55b26526efbb46b38e8666abf8877599) | 2.11 | CLAUDE/MAIN declarado gatekeeper exclusivo del Charter |
-| [`CHARTER:FAILURES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428075b83ec234ef46eed3) | 3. | Registro de Fallos |
+| [`CHARTER:FAILURES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428075b83ec234ef46eed3) | 03 | Registro de Fallos |
 | [`CHARTER:FAILURES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42805f9285f417aa359826) | 3.1 | Reaparición de Hard Blocks ya corregidos |
 | [`CHARTER:FAILURES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280f29959f58b132ac9cb) | 3.2 | Patrón de reporte optimista (ticket RT-1) |
 | [`CHARTER:FAILURES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280998c78cf5f4df4689d) | 3.3 | Cédula de Reconciliación fabricada |
 | [`CHARTER:FAILURES-004`](https://app.notion.com/p/f87938befc428263a305819877d2245f#119fab7b2a2340ab86a346cbd20b5a54) | 3.4 | Loop de auto-rechazo QA↔CV-B |
 | [`CHARTER:FAILURES-005`](https://app.notion.com/p/f87938befc428263a305819877d2245f#78ae3afe77e949b3a25941edc42e0d86) | 3.5 | Documentación que describe código ya retirado |
-| [`CHARTER:NON-NEGOTIABLES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280d0b67de66fad8199c8) | 4. | Principios No Negociables |
+| [`CHARTER:NON-NEGOTIABLES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280d0b67de66fad8199c8) | 04 | Principios No Negociables |
 | [`CHARTER:NON-NEGOTIABLES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280499cb9f08227656612) | 4.1 | Python es dueño exclusivo de los campos Class B |
 | [`CHARTER:NON-NEGOTIABLES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428061a047e730d71fe71c) | 4.2 | APROBAR_WRITE obligatorio antes de cualquier escritura |
 | [`CHARTER:NON-NEGOTIABLES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280519ae1d3aac599e87f) | 4.3 | Ningún reporte de éxito se acepta sin re-fetch/verificación |
@@ -32,14 +32,14 @@
 | [`CHARTER:NON-NEGOTIABLES-008`](https://app.notion.com/p/f87938befc428263a305819877d2245f#b9ca36b00b124df9be3db39c0a629e3d) | 4.8 | Graph/Backlinks son artefactos derivados, nunca capa de autoridad |
 | [`CHARTER:NON-NEGOTIABLES-009`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d756328198ed4ea4bb7f39f7bb6027b7) | 4.9 | VM_Scope es binario (Alto/Bajo) |
 | [`CHARTER:NON-NEGOTIABLES-010`](https://app.notion.com/p/f87938befc428263a305819877d2245f#6cd49fcd84bd4a0eba084b1b0ab10ca1) | 4.10 | Hard Blocks reales se consultan siempre en la fuente |
-| [`CHARTER:MILESTONES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280dc8598dadd5e8c050f) | 5. | Hitos y Milestones |
+| [`CHARTER:MILESTONES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280dc8598dadd5e8c050f) | 05 | Hitos y Milestones |
 | [`CHARTER:MILESTONES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280eb9ad8ce382d23dd35) | 5.1 | Hito 1 — Track Beta (código) cerrado |
 | [`CHARTER:MILESTONES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280c0bf5dc992ed50be72) | 5.2 | Hito 2 — T2.1 KERNEL v10 en paralelo a Track Beta |
 | [`CHARTER:MILESTONES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280658fd9d6c19954a7ea) | 5.3 | Hito 3 — MANUAL v10 en paralelo a KERNEL v10 |
 | [`CHARTER:MILESTONES-004`](https://app.notion.com/p/f87938befc428263a305819877d2245f#01cf0330464a4dbc97d1584d4176dd41) | 5.4 | Hito 4 — Fase 3 sync + verificación cruzada |
 | [`CHARTER:MILESTONES-005`](https://app.notion.com/p/f87938befc428263a305819877d2245f#301a87b2a0f841ce8917c35189fbb99a) | 5.5 | Hito 5 — Charter actualizado en cada decisión estructural |
-| [`CHARTER:CONTINUITY`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42803e9c24f2d6e9bced1e) | 6. | Continuidad Operativa |
-| [`CHARTER:STATUS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280ebb77fef32858e73c4) | 7. | Estatus del Proyecto |
+| [`CHARTER:CONTINUITY`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42803e9c24f2d6e9bced1e) | 06 | Continuidad Operativa |
+| [`CHARTER:STATUS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280ebb77fef32858e73c4) | 07 | Estatus del Proyecto |
 
 ---
 
@@ -144,90 +144,6 @@
 | [`KERNEL:EVO-POLICY`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281418d50e83e5a6d1098) | 15.1 | KERNEL:EVO POLICY |
 | [`KERNEL:EVO-CHANGELOG`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#2b23364ce8074f57b20043529839b48c) | 15.2 | KERNEL:EVO CHANGELOG |
 | [`KERNEL:EXCEPTIONS`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428143b49ecee447f46943) | 16 | KERNEL:EXCEPTIONS |
-| `KERNEL:PURPOSE-001` | 01.1 | Objetivo Principal |
-| [`KERNEL:FAIL-PHILOSOPHY`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42816cafc1d1e1da7884bf) | 02 ⚠︎sin verificar en vivo | Filosofía de Fallo |
-| `KERNEL:FAIL-PHILOSOPHY-001` | 02.1 | Fail-Fast vs Fail-Safe |
-| `KERNEL:FAIL-PHILOSOPHY-002` | 02.2 | Recovery Strategies |
-| `KERNEL:DOCUMENTATION` | 03 | Documentación y Gobernanza (L0) |
-| [`KERNEL:DOCUMENTATION-001`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42810282ccce530b0cfd14) | 03.1 ⚠︎sin verificar en vivo | Canonical Document ID Contract |
-| `KERNEL:DOCUMENTATION-002` | 03.2 | Nomenclatura de IDs Canónicos |
-| `KERNEL:DOCUMENTATION-003` | 03.3 | L0 — VANTAGE Runtime |
-| [`KERNEL:DOCUMENTATION-004`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281dcbbd6ef22efb735a4) | 03.4 ⚠︎sin verificar en vivo | Kernel vs Manual |
-| [`KERNEL:DOCUMENTATION-005`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3bc938befc428017bec9f34a00cc2a08) | 03.5 ⚠︎sin verificar en vivo | Convención de Anuncio de Skills |
-| `KERNEL:DOCUMENTATION-006` | 03.6 | Health Check |
-| [`KERNEL:DOCUMENTATION-007`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281ed81d1c4ae302a836d) | 03.7 ⚠︎sin verificar en vivo | Verificación de Versión |
-| `KERNEL:DOCUMENTATION-008` | 03.8 | ID Census |
-| [`KERNEL:DOCUMENTATION-009`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3e9938befc4280518494d948dcf5cada) | 03.9 ⚠︎sin verificar en vivo | Session Ledger |
-| [`KERNEL:DOCUMENTATION-010`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3b88756ae2aa42df8ad3e1a54c55ba28) | 03.10 ⚠︎sin verificar en vivo | Documentación Transversal |
-| `KERNEL:DOCUMENTATION-011` | 03.11 | Impact Assessment Contract |
-| [`KERNEL:DOCUMENTATION-012`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#400076f9b13644009ee357dcebb2227b) | 03.12 ⚠︎sin verificar en vivo | External Configuration Contract |
-| `KERNEL:DOCUMENTATION-013` | 03.13 | Sistema de Cross-Reference Hyperlinks |
-| `KERNEL:DOCUMENTATION-014` | 03.14 | Change Log |
-| `KERNEL:DOCUMENTATION-015` | 03.15 | Cross-Reference Hyperlinks |
-| `KERNEL:DOCUMENTATION-016` | 03.16 | Notebook Gemini |
-| `KERNEL:DOCUMENTATION-017` | 03.17 | Sandbox |
-| `KERNEL:DOC-CONTRACT` | 03.18 | Contrato de Prefijos Documentales del Lazy Loader |
-| [`KERNEL:HANDOFF-SERIAL`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#1f615025202c4c4084e81d2befda70dd) | 03.19 ⚠︎sin verificar en vivo | Contrato de Serial Global de Handoff |
-| `KERNEL:ARCHITECTURE-L1` | 04.1 | L1 — Active Search |
-| `KERNEL:ARCHITECTURE-L2` | 04.2 | L2 — Strategic Search |
-| `KERNEL:ARCHITECTURE-L3` | 04.3 | L3 — Passive Intake |
-| [`KERNEL:ARCHITECTURE-L4`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3e9938befc4280759170ff74a21bbd40) | 04.4 ⚠︎sin verificar en vivo | L4 — Version Control & Infrastructure |
-| `KERNEL:OWNERSHIP` | 05 | División de Responsabilidades AI/Python |
-| `KERNEL:OWNERSHIP-001` | 05.1 | AI Component |
-| `KERNEL:OWNERSHIP-002` | 05.2 | Python Component |
-| `KERNEL:DASHBOARD-CHECKLIST-ARCH` | 06 | Dashboard Checklist Architecture |
-| [`KERNEL:SCHEMA-001`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281399727ef5b7b6b2237) | 07.1 ⚠︎sin verificar en vivo | Schema — Class A Fields |
-| [`KERNEL:SCHEMA-002`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428169bff5cc0b76241887) | 07.2 ⚠︎sin verificar en vivo | Schema — Class B Fields |
-| [`KERNEL:SCHEMA-003`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428153b7fefdf261381900) | 07.3 ⚠︎sin verificar en vivo | Schema — Field Validation Rules |
-| `KERNEL:SCHEMA-004` | 07.4 | Schema — Class A vs Class B |
-| `KERNEL:SCHEMA-005` | 07.5 | Schema — Field Types |
-| `KERNEL:SCHEMA-006` | 07.6 | Schema — Validation Rules |
-| `KERNEL:SCHEMA-007` | 07.7 | Schema — Mutability Rules |
-| [`KERNEL:SCHEMA-008`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#f81b24fde6474a48ba26700e7a1fe55e) | 07.8 ⚠︎sin verificar en vivo | Valores Operativos — Next_Action (Tracker de Vacantes) |
-| `KERNEL:SCHEMA-009` | 07.9 | Schema — Subsección 009 |
-| `KERNEL:TRACKER-SCHEMA` | 08 | Schema del Tracker de Vacantes |
-| `KERNEL:TRACKER-SCHEMA-001` | 08.1 | Tracker Schema — Campos Principales |
-| `KERNEL:TRACKER-SCHEMA-002` | 08.2 | Tracker Schema — Campos Derivados |
-| [`KERNEL:GATE-DECISION`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281019d1ae3d2129801a5) | 09 ⚠︎sin verificar en vivo | Lógica de Gate Decision |
-| `KERNEL:GATE-DECISION-001` | 09.1 | Gate Decision — Overview |
-| [`KERNEL:GATE-DECISION-002`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281b3ac43e975c9c1a5db) | 09.2 ⚠︎sin verificar en vivo | Lógica Estándar |
-| [`KERNEL:GATE-DECISION-003`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc428067890ddef32fb0f523) | 09.3 ⚠︎sin verificar en vivo | Resolución de REVIEW_NEEDED |
-| `KERNEL:GATE-DECISION-004` | 09.4 | Por Qué los Gates Son Deterministas |
-| [`KERNEL:GATE-DECISION-005`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281c6b9cfd6e0afde5a37) | 09.5 ⚠︎sin verificar en vivo | Flujo de Recuperación BLOCKED |
-| `KERNEL:GATE-DECISION-006` | 09.6 | REJECTED (Post-Aplicación) |
-| [`KERNEL:GATE-DECISION-007`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#8bcc897f33ff4de58e1f109d42fd699b) | 09.7 ⚠︎sin verificar en vivo | Ejecución Automática de Archivado |
-| `KERNEL:GATE-DECISION-008` | 09.8 | Capas de Evaluación de Gate: Técnica vs. Negocio |
-| [`KERNEL:GATE-DECISION-009`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428105a60ce202eddfe92d) | 09.9 ⚠︎sin verificar en vivo | Escalamiento de Pendientes a Tickets |
-| [`KERNEL:GATE-DECISION-010`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281dca93ecb6695822cba) | 09.10 ⚠︎sin verificar en vivo | Gate Decision — Technical Review |
-| [`KERNEL:GATE-DECISION-011`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281c6b9cfd6e0afde5a37) | 09.11 ⚠︎sin verificar en vivo | Gate Decision — Business Review |
-| [`KERNEL:DEDUP-LAYER-UPGRADE`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#04ba8adf25c0403a8cb2b4a7b2490ddb) | 09.12 ⚠︎sin verificar en vivo | Dedup Layer Upgrade |
-| [`KERNEL:GATE-DECISION-013`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#1c9a44c3e14545d8b43f18a223d3b6dc) | 09.13 ⚠︎sin verificar en vivo | Gate Decision — Subsección 013 |
-| [`KERNEL:CV-GOLDEN-RULES`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281b5b282c5800b053f49) | 10 ⚠︎sin verificar en vivo | Golden Rules — Límites de Ejecución |
-| [`KERNEL:CV-GOLDEN-RULES-001`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281608a43ff131c05fdf1) | 10.1 ⚠︎sin verificar en vivo | Regla de Oro #1 |
-| [`KERNEL:CV-GOLDEN-RULES-002`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281839d8be975f25ebb20) | 10.2 ⚠︎sin verificar en vivo | Regla de Oro #2 |
-| [`KERNEL:CV-GOLDEN-RULES-003`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281cf838ae15db84f662e) | 10.3 ⚠︎sin verificar en vivo | Regla de Oro #3 |
-| [`KERNEL:CV-GOLDEN-RULES-004`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42812f9253e7b939462b5d) | 10.4 ⚠︎sin verificar en vivo | Regla de Oro #4 |
-| [`KERNEL:CV-GOLDEN-RULES-005`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42815e9c82e18564306938) | 10.5 ⚠︎sin verificar en vivo | Regla de Oro #5 |
-| [`KERNEL:CV-GOLDEN-RULES-006`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3b6938befc428097bd8eeba691e07e4c) | 10.6 ⚠︎sin verificar en vivo | Regla de Oro #6 — Invarianza de la Decisión de Gate |
-| [`KERNEL:TRIGGER-001`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428169bff5cc0b76241887) | 11.1 ⚠︎sin verificar en vivo | Trigger — Discovery Request |
-| [`KERNEL:TRIGGER-002`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42814aabcfce475f5aeafc) | 11.2 ⚠︎sin verificar en vivo | Trigger — CV Optimization |
-| [`KERNEL:TRIGGER-003`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428106b5eeece406ad4254) | 11.3 ⚠︎sin verificar en vivo | Trigger — Recovery Request |
-| `KERNEL:TRIGGER-004` | 11.4 | Trigger — Documentation Update |
-| `KERNEL:TRIGGER-005` | 11.5 | Trigger — Schema Validation |
-| `KERNEL:TRIGGER-006` | 11.6 | Trigger — Gate Decision |
-| `KERNEL:TRIGGER-007` | 11.7 | Trigger — Archiving |
-| `KERNEL:TRIGGER-008` | 11.8 | Trigger — Health Check |
-| `KERNEL:TRIGGER-009` | 11.9 | Trigger — Version Check |
-| `KERNEL:CV-PIPELINE` | 12 | Pipeline de CV |
-| [`KERNEL:CV-PIPELINE-003`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#5a3ff163b40b4466a6e0d6319f1304b8) | 12.3 ⚠︎sin verificar en vivo | CV-C |
-| [`KERNEL:CV-PIPELINE-001`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281259e31dd55483f7619) | 12.1 ⚠︎sin verificar en vivo | CV-A |
-| `KERNEL:CV-PIPELINE-002` | 12.2 | CV-B |
-| `KERNEL:NAMING-CONVENTION` | 14 | Convención de Nombres |
-| [`KERNEL:CONTEXT-INFRASTRUCTURE`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281ab8363cd0b437f99dc) | 15 ⚠︎sin verificar en vivo | Context Infrastructure |
-| `KERNEL:CONTEXT-INFRASTRUCTURE-001` | 15.1 | Context Infrastructure — Data Sources |
-| [`KERNEL:CONTEXT-INFRASTRUCTURE-002`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42817fb748fca78b22adcc) | 15.2 ⚠︎sin verificar en vivo | Context Infrastructure — Integration Points |
-| [`KERNEL:DATA-FLOW`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281758c5ad1c465c57380) | 16 ⚠︎sin verificar en vivo | Flujo de Datos |
-| [`KERNEL:DATA-FLOW-001`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#4b1feafab9bb43a7b79d386b7dbf0035) | 16.1 ⚠︎sin verificar en vivo | Flujo de Datos — Subsección 001 |
 
 ---
 

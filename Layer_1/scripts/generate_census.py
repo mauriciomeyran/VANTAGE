@@ -210,90 +210,6 @@ CENSUS_SPEC = [
             {"id": "KERNEL:EVO-POLICY", "seccion": "15.1", "nombre": "KERNEL:EVO POLICY"},
             {"id": "KERNEL:EVO-CHANGELOG", "seccion": "15.2", "nombre": "KERNEL:EVO CHANGELOG"},
             {"id": "KERNEL:EXCEPTIONS", "seccion": "16", "nombre": "KERNEL:EXCEPTIONS"},
-            {"id": "KERNEL:PURPOSE-001", "seccion": "01.1", "nombre": "Objetivo Principal"},
-            {"id": "KERNEL:FAIL-PHILOSOPHY", "seccion": "02", "nombre": "Filosofía de Fallo"},
-            {"id": "KERNEL:FAIL-PHILOSOPHY-001", "seccion": "02.1", "nombre": "Fail-Fast vs Fail-Safe"},
-            {"id": "KERNEL:FAIL-PHILOSOPHY-002", "seccion": "02.2", "nombre": "Recovery Strategies"},
-            {"id": "KERNEL:DOCUMENTATION", "seccion": "03", "nombre": "Documentación y Gobernanza (L0)"},
-            {"id": "KERNEL:DOCUMENTATION-001", "seccion": "03.1", "nombre": "Canonical Document ID Contract"},
-            {"id": "KERNEL:DOCUMENTATION-002", "seccion": "03.2", "nombre": "Nomenclatura de IDs Canónicos"},
-            {"id": "KERNEL:DOCUMENTATION-003", "seccion": "03.3", "nombre": "L0 — VANTAGE Runtime"},
-            {"id": "KERNEL:DOCUMENTATION-004", "seccion": "03.4", "nombre": "Kernel vs Manual"},
-            {"id": "KERNEL:DOCUMENTATION-005", "seccion": "03.5", "nombre": "Convención de Anuncio de Skills"},
-            {"id": "KERNEL:DOCUMENTATION-006", "seccion": "03.6", "nombre": "Health Check"},
-            {"id": "KERNEL:DOCUMENTATION-007", "seccion": "03.7", "nombre": "Verificación de Versión"},
-            {"id": "KERNEL:DOCUMENTATION-008", "seccion": "03.8", "nombre": "ID Census"},
-            {"id": "KERNEL:DOCUMENTATION-009", "seccion": "03.9", "nombre": "Session Ledger"},
-            {"id": "KERNEL:DOCUMENTATION-010", "seccion": "03.10", "nombre": "Documentación Transversal"},
-            {"id": "KERNEL:DOCUMENTATION-011", "seccion": "03.11", "nombre": "Impact Assessment Contract"},
-            {"id": "KERNEL:DOCUMENTATION-012", "seccion": "03.12", "nombre": "External Configuration Contract"},
-            {"id": "KERNEL:DOCUMENTATION-013", "seccion": "03.13", "nombre": "Sistema de Cross-Reference Hyperlinks"},
-            {"id": "KERNEL:DOCUMENTATION-014", "seccion": "03.14", "nombre": "Change Log"},
-            {"id": "KERNEL:DOCUMENTATION-015", "seccion": "03.15", "nombre": "Cross-Reference Hyperlinks"},
-            {"id": "KERNEL:DOCUMENTATION-016", "seccion": "03.16", "nombre": "Notebook Gemini"},
-            {"id": "KERNEL:DOCUMENTATION-017", "seccion": "03.17", "nombre": "Sandbox"},
-            {"id": "KERNEL:DOC-CONTRACT", "seccion": "03.18", "nombre": "Contrato de Prefijos Documentales del Lazy Loader"},
-            {"id": "KERNEL:HANDOFF-SERIAL", "seccion": "03.19", "nombre": "Contrato de Serial Global de Handoff"},
-            {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "04.1", "nombre": "L1 — Active Search"},
-            {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "04.2", "nombre": "L2 — Strategic Search"},
-            {"id": "KERNEL:ARCHITECTURE-L3", "seccion": "04.3", "nombre": "L3 — Passive Intake"},
-            {"id": "KERNEL:ARCHITECTURE-L4", "lookup_ids": ["KERNEL:ARCHITECTURE-004", "KERNEL:ARCHITECTURE-L4"], "seccion": "04.4", "nombre": "L4 — Version Control & Infrastructure"},
-            {"id": "KERNEL:OWNERSHIP", "seccion": "05", "nombre": "División de Responsabilidades AI/Python"},
-            {"id": "KERNEL:OWNERSHIP-001", "seccion": "05.1", "nombre": "AI Component"},
-            {"id": "KERNEL:OWNERSHIP-002", "seccion": "05.2", "nombre": "Python Component"},
-            {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH", "seccion": "06", "nombre": "Dashboard Checklist Architecture"},
-            {"id": "KERNEL:SCHEMA-001", "seccion": "07.1", "nombre": "Schema — Class A Fields"},
-            {"id": "KERNEL:SCHEMA-002", "seccion": "07.2", "nombre": "Schema — Class B Fields"},
-            {"id": "KERNEL:SCHEMA-003", "seccion": "07.3", "nombre": "Schema — Field Validation Rules"},
-            {"id": "KERNEL:SCHEMA-004", "seccion": "07.4", "nombre": "Schema — Class A vs Class B"},
-            {"id": "KERNEL:SCHEMA-005", "seccion": "07.5", "nombre": "Schema — Field Types"},
-            {"id": "KERNEL:SCHEMA-006", "seccion": "07.6", "nombre": "Schema — Validation Rules"},
-            {"id": "KERNEL:SCHEMA-007", "seccion": "07.7", "nombre": "Schema — Mutability Rules"},
-            {"id": "KERNEL:SCHEMA-008", "seccion": "07.8", "nombre": "Valores Operativos — Next_Action (Tracker de Vacantes)"},
-            {"id": "KERNEL:SCHEMA-009", "seccion": "07.9", "nombre": "Schema — Subsección 009"},
-            {"id": "KERNEL:TRACKER-SCHEMA", "seccion": "08", "nombre": "Schema del Tracker de Vacantes"},
-            {"id": "KERNEL:TRACKER-SCHEMA-001", "seccion": "08.1", "nombre": "Tracker Schema — Campos Principales"},
-            {"id": "KERNEL:TRACKER-SCHEMA-002", "seccion": "08.2", "nombre": "Tracker Schema — Campos Derivados"},
-            {"id": "KERNEL:GATE-DECISION", "seccion": "09", "nombre": "Lógica de Gate Decision"},
-            {"id": "KERNEL:GATE-DECISION-001", "seccion": "09.1", "nombre": "Gate Decision — Overview"},
-            {"id": "KERNEL:GATE-DECISION-002", "seccion": "09.2", "nombre": "Lógica Estándar"},
-            {"id": "KERNEL:GATE-DECISION-003", "seccion": "09.3", "nombre": "Resolución de REVIEW_NEEDED"},
-            {"id": "KERNEL:GATE-DECISION-004", "seccion": "09.4", "nombre": "Por Qué los Gates Son Deterministas"},
-            {"id": "KERNEL:GATE-DECISION-005", "seccion": "09.5", "nombre": "Flujo de Recuperación BLOCKED"},
-            {"id": "KERNEL:GATE-DECISION-006", "seccion": "09.6", "nombre": "REJECTED (Post-Aplicación)"},
-            {"id": "KERNEL:GATE-DECISION-007", "seccion": "09.7", "nombre": "Ejecución Automática de Archivado"},
-            {"id": "KERNEL:GATE-DECISION-008", "seccion": "09.8", "nombre": "Capas de Evaluación de Gate: Técnica vs. Negocio"},
-            {"id": "KERNEL:GATE-DECISION-009", "seccion": "09.9", "nombre": "Escalamiento de Pendientes a Tickets"},
-            {"id": "KERNEL:GATE-DECISION-010", "seccion": "09.10", "nombre": "Gate Decision — Technical Review"},
-            {"id": "KERNEL:GATE-DECISION-011", "seccion": "09.11", "nombre": "Gate Decision — Business Review"},
-            {"id": "KERNEL:DEDUP-LAYER-UPGRADE", "seccion": "09.12", "nombre": "Dedup Layer Upgrade"},
-            {"id": "KERNEL:GATE-DECISION-013", "seccion": "09.13", "nombre": "Gate Decision — Subsección 013"},
-            {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "10", "nombre": "Golden Rules — Límites de Ejecución"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "10.1", "nombre": "Regla de Oro #1"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "10.2", "nombre": "Regla de Oro #2"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-003", "seccion": "10.3", "nombre": "Regla de Oro #3"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-004", "seccion": "10.4", "nombre": "Regla de Oro #4"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-005", "seccion": "10.5", "nombre": "Regla de Oro #5"},
-            {"id": "KERNEL:CV-GOLDEN-RULES-006", "seccion": "10.6", "nombre": "Regla de Oro #6 — Invarianza de la Decisión de Gate"},
-            {"id": "KERNEL:TRIGGER-001", "seccion": "11.1", "nombre": "Trigger — Discovery Request"},
-            {"id": "KERNEL:TRIGGER-002", "seccion": "11.2", "nombre": "Trigger — CV Optimization"},
-            {"id": "KERNEL:TRIGGER-003", "seccion": "11.3", "nombre": "Trigger — Recovery Request"},
-            {"id": "KERNEL:TRIGGER-004", "seccion": "11.4", "nombre": "Trigger — Documentation Update"},
-            {"id": "KERNEL:TRIGGER-005", "seccion": "11.5", "nombre": "Trigger — Schema Validation"},
-            {"id": "KERNEL:TRIGGER-006", "seccion": "11.6", "nombre": "Trigger — Gate Decision"},
-            {"id": "KERNEL:TRIGGER-007", "seccion": "11.7", "nombre": "Trigger — Archiving"},
-            {"id": "KERNEL:TRIGGER-008", "seccion": "11.8", "nombre": "Trigger — Health Check"},
-            {"id": "KERNEL:TRIGGER-009", "seccion": "11.9", "nombre": "Trigger — Version Check"},
-            {"id": "KERNEL:CV-PIPELINE", "seccion": "12", "nombre": "Pipeline de CV"},
-            {"id": "KERNEL:CV-PIPELINE-003", "seccion": "12.3", "nombre": "CV-C"},
-            {"id": "KERNEL:CV-PIPELINE-001", "seccion": "12.1", "nombre": "CV-A"},
-            {"id": "KERNEL:CV-PIPELINE-002", "seccion": "12.2", "nombre": "CV-B"},
-            {"id": "KERNEL:NAMING-CONVENTION", "seccion": "14", "nombre": "Convención de Nombres"},
-            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE", "seccion": "15", "nombre": "Context Infrastructure"},
-            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-001", "seccion": "15.1", "nombre": "Context Infrastructure — Data Sources"},
-            {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-002", "seccion": "15.2", "nombre": "Context Infrastructure — Integration Points"},
-            {"id": "KERNEL:DATA-FLOW", "seccion": "16", "nombre": "Flujo de Datos"},
-            {"id": "KERNEL:DATA-FLOW-001", "seccion": "16.1", "nombre": "Flujo de Datos — Subsección 001"},
         ],
     },
     {
@@ -580,14 +496,29 @@ SECTION_HEADING_CAPTURE_RE = re.compile(r"^([\w.]+)\s*(?:[—-]\s*)?")
 LEADING_NUMBER_SECTION_RE = re.compile(r"^(\d+(?:\.\d+)*)\.?\s+")
 
 
+def _normalize_live_section(raw: str) -> str:
+    """Normaliza el número de sección a la forma canónica del CENSUS_SPEC.
+
+    Quita el punto final ('1.' → '1') y aplica padding de 2 dígitos solo a
+    capítulos raíz ('1' → '01'), dejando las subsecciones intactas ('2.1').
+    Misma regla que reorder_census_spec.normalize_heading_section: sin esto, el
+    markdown publicado guardaba '1.' mientras el spec guarda '01' y las dos
+    representaciones del Census divergían en cada corrida viva.
+    """
+    cleaned = raw.strip().rstrip(".")
+    if cleaned.isdigit():
+        return cleaned.zfill(2)
+    return cleaned
+
+
 def extract_live_section(plain: str) -> str | None:
     stripped = plain.strip("` \n")
     m = SECTION_HEADING_CAPTURE_RE.match(stripped)
     if m:
-        return f"{m.group(1)}"
+        return _normalize_live_section(m.group(1))
     m2 = LEADING_NUMBER_SECTION_RE.match(stripped)
     if m2:
-        return m2.group(1)
+        return _normalize_live_section(m2.group(1))
     return None
 
 
@@ -729,6 +660,19 @@ def known_ids_from_spec(spec: list | None = None) -> set:
 
 KNOWN_RETIRED_NOISE = {
     "MANUAL:DASHBOARD-CHECKLIST-001",
+    # Re-key semántico del KERNEL (v10.3, KERNEL:NAM-ID-GRAMMAR): keys legacy
+    # que ya no existen como ancla viva pero siguen citados dentro de tablas
+    # índice del MANUAL (celda con el ID aislado = falso positivo de
+    # is_definition_block). No son huérfanos del spec: son citas por actualizar
+    # en el MANUAL (ver ticket de citas KERNEL del Charter).
+    "KERNEL:CV-GOLDEN-RULES",
+    "KERNEL:CV-GOLDEN-RULES-001",
+    "KERNEL:CV-GOLDEN-RULES-002",
+    "KERNEL:CV-GOLDEN-RULES-003",
+    "KERNEL:CV-GOLDEN-RULES-004",
+    "KERNEL:CV-GOLDEN-RULES-005",
+    "KERNEL:CV-GOLDEN-RULES-006",
+    "KERNEL:GATE-DECISION-010",
 }
 
 
