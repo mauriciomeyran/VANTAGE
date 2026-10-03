@@ -1,4 +1,7 @@
 import os
+import sys
+import tempfile
+from fnmatch import fnmatch
 from pathlib import Path
 
 # ==============================================================================
@@ -16,8 +19,42 @@ ACTIVE_DIR = PROJECT_ROOT / 'Documentación' / 'ACTIVE'
 DIGEST_PATH = PROJECT_ROOT / 'VANTAGE_digest.txt'
 NOTEBOOK_ID = os.environ.get('NOTEBOOK_ID', '')
 
-EXCLUDE_DIRS = {'.git', '.venv', '__pycache__', '.idea', '.vscode', 'node_modules', '.obsidian'}
-EXCLUDE_EXTS = {'.png', '.jpg', '.jpeg', '.gif', '.ico', '.pdf', '.zip', '.tar', '.gz', '.pyc'}
+# Filtrar ANTES de abrir archivos. No seguir enlaces, ni siquiera dentro del repo.
+EXCLUDE_DIRS = {
+    '.git', '.venv', 'venv', '__pycache__', '.idea', '.vscode', 'node_modules',
+    '.obsidian', 'archive', 'backups', '.ssh', '.aws', '.config', '.cache',
+    '.pytest_cache', 'dist', 'build',
+}
+# Lista positiva: los formatos desconocidos/binarios no son fuentes del digest.
+INCLUDE_EXTS = {'.py', '.sh', '.md', '.txt', '.json', '.yaml', '.yml', '.toml',
+                '.ini', '.cfg', '.csv', '.js', '.ts', '.tsx', '.jsx', '.html', '.css'}
+SECRET_PATTERNS = (
+    '*.env', '*.env.*', '*.key', '*.key.*', '*.pem', '*.pem.*',
+    '*.secret', '*.secret.*', '*.p12', '*.pfx',
+    '*token*.json*', '*secret*.json*', '*credential*.json*',
+    'id_rsa*', 'id_ed25519*', '.netrc', '.git-credentials',
+)
+
+
+def is_safe_source(path: Path) -> bool:
+    """Política por ruta; no detecta secretos incrustados en código/documentación."""
+    try:
+        relative = path.relative_to(PROJECT_ROOT)
+    except ValueError:
+        return False
+    if any(part.lower() in EXCLUDE_DIRS for part in relative.parts[:-1]):
+        return False
+    if any(PROJECT_ROOT.joinpath(*relative.parts[:i]).is_symlink()
+           for i in range(1, len(relative.parts) + 1)):
+        return False
+    name = path.name.lower()
+    return (
+        path != DIGEST_PATH
+        and name != 'vantage_digest.txt'
+        and not any(fnmatch(name, pattern) for pattern in SECRET_PATTERNS)
+        and path.suffix.lower() in INCLUDE_EXTS
+        and path.is_file()
+    )
 
 # ==============================================================================
 # GENERACIÓN DE DIGEST LOCAL
@@ -28,7 +65,8 @@ def generate_local_digest():
     content_blocks = []
     
     for root, dirs, files in os.walk(PROJECT_ROOT):
-        dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
+        dirs[:] = sorted(d for d in dirs if d.lower() not in EXCLUDE_DIRS
+                         and not (Path(root) / d).is_symlink())
         rel_path = Path(root).relative_to(PROJECT_ROOT)
         depth = len(rel_path.parts) if str(rel_path) != '.' else 0
         indent = '  ' * depth
@@ -40,27 +78,33 @@ def generate_local_digest():
             
         for file in sorted(files):
             file_path = Path(root) / file
-            if file_path.suffix.lower() in EXCLUDE_EXTS or file == 'VANTAGE_digest.txt':
+            if not is_safe_source(file_path):
                 continue
                 
             file_rel = file_path.relative_to(PROJECT_ROOT)
             tree_lines.append(f"{indent}  └── {file}")
             
-            try:
-                with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-                    text = f.read()
-                content_blocks.append(f"========================================\nFile: {file_rel}\n========================================\n{text}\n")
-            except Exception as e:
-                content_blocks.append(f"========================================\nFile: {file_rel} (Error al leer: {e})\n========================================\n")
+            # Un error de lectura debe abortar, no producir un digest parcial exitoso.
+            text = file_path.read_text(encoding='utf-8')
+            content_blocks.append(f"========================================\nFile: {file_rel}\n========================================\n{text}\n")
 
     full_digest = "========================================\nVANTAGE CODEBASE DIGEST (LOCAL)\n========================================\n\n"
     full_digest += "\n".join(tree_lines) + "\n\n"
     full_digest += "========================================\nFILES CONTENT\n========================================\n\n"
     full_digest += "\n".join(content_blocks)
     
-    with open(DIGEST_PATH, 'w', encoding='utf-8') as f:
-        f.write(full_digest)
-        
+    # Reemplazo atómico y permisos privados; no escribir a través de un symlink.
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8',
+                                         dir=DIGEST_PATH.parent, delete=False) as f:
+            temporary = Path(f.name)
+            f.write(full_digest)
+        temporary.replace(DIGEST_PATH)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
     print(f'✓ Digest local guardado en {DIGEST_PATH}')
 
 # ==============================================================================
@@ -83,59 +127,46 @@ def get_notebooklm_client():
 # ==============================================================================
 def purge_and_upload(client, notebook_id, file_path: Path):
     file_name = file_path.name
-    
-    # 1. Purga de versiones antiguas
-    try:
-        sources = client.notebooks.list_sources(notebook_id)
-        for src in sources:
-            src_title = getattr(src, 'title', getattr(src, 'name', ''))
-            if src_title == file_name:
-                client.notebooks.delete_source(notebook_id, src.id)
-                print(f'✓ Purga preventiva: {file_name} antiguo eliminado (ID: {src.id})')
-    except Exception as e:
-        print(f'⚠ Warning en purga preventiva para {file_name}: {e}')
-
-    # 2. Carga pasando el objeto Path directo
-    try:
-        client.notebooks.add_source(notebook_id, file_path)
-        print(f'✓ {file_name} sincronizado exitosamente.')
-    except Exception as e:
-        print(f'❌ Error cargando {file_name}: {e}')
+    # Listar antes de modificar; subir antes de borrar para conservar la fuente
+    # anterior si la carga falla. Cualquier fallo se propaga hasta el CLI.
+    sources = list(client.notebooks.list_sources(notebook_id))
+    client.notebooks.add_source(notebook_id, file_path)
+    for src in sources:
+        src_title = getattr(src, 'title', getattr(src, 'name', ''))
+        if src_title == file_name:
+            client.notebooks.delete_source(notebook_id, src.id)
+            print(f'✓ Fuente anterior eliminada: {file_name} (ID: {src.id})')
+    print(f'✓ {file_name} sincronizado exitosamente.')
 
 # ==============================================================================
 # EJECUCIÓN PRINCIPAL
 # ==============================================================================
 def main():
-    generate_local_digest()
-    
+    target_notebook = NOTEBOOK_ID.strip()
+    if not target_notebook:
+        print('❌ NOTEBOOK_ID es obligatorio; no se seleccionará un cuaderno automáticamente.')
+        return 1
+
     try:
-        client = get_notebooklm_client()
-        target_notebook = NOTEBOOK_ID
-        
-        if not target_notebook:
-            notebooks = client.notebooks.list()
-            if notebooks:
-                target_notebook = notebooks[0].id
-            else:
-                print('❌ No se encontraron cuadernos activos en NotebookLM.')
-                return
-
-        print(f'→ Sincronizando espacio de fuentes con NotebookLM (ID: {target_notebook})...')
-
-        # 1. Digest
-        if DIGEST_PATH.exists():
-            purge_and_upload(client, target_notebook, DIGEST_PATH)
-
-        # 2. Documentos de ACTIVE/
-        if ACTIVE_DIR.exists():
-            for file_path in sorted(ACTIVE_DIR.glob('*.md')):
-                purge_and_upload(client, target_notebook, file_path)
-        else:
-            print(f'⚠ ACTIVE_DIR no existe: {ACTIVE_DIR}')
+        if not ACTIVE_DIR.is_dir() or ACTIVE_DIR.is_symlink():
+            print(f'⚠ ACTIVE_DIR no existe o no es un directorio seguro: {ACTIVE_DIR}')
             print('  No se subió ningún documento fundacional (revisar la ruta).')
+            return 1
+        client = get_notebooklm_client()
+        if not any(nb.id == target_notebook for nb in client.notebooks.list()):
+            print('❌ NOTEBOOK_ID no corresponde a un cuaderno accesible.')
+            return 1
 
+        generate_local_digest()
+        print(f'→ Sincronizando espacio de fuentes con NotebookLM (ID: {target_notebook})...')
+        purge_and_upload(client, target_notebook, DIGEST_PATH)
+        for file_path in sorted(ACTIVE_DIR.glob('*.md')):
+            if is_safe_source(file_path):
+                purge_and_upload(client, target_notebook, file_path)
+        return 0
     except Exception as e:
         print(f'❌ Error en la sincronización con NotebookLM: {e}')
+        return 1
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
