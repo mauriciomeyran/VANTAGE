@@ -39,6 +39,9 @@ def test_is_definition_block_no_confunde_prefijos(census_module):
 def test_extract_live_section(census_module):
     assert census_module.extract_live_section("03.1 KERNEL:DOCUMENTATION-001 — Canonical") == "03.1"
     assert census_module.extract_live_section("03 KERNEL:DOCUMENTATION") == "03"
+    # Forma canónica del spec: capítulo raíz sin punto final y con padding.
+    assert census_module.extract_live_section("1. CHARTER:PURPOSE — Propósito") == "01"
+    assert census_module.extract_live_section("7. CHARTER:STATUS — Estado") == "07"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -325,7 +328,10 @@ def test_census_spec_separa_career_canon_y_no_tiene_duplicados(census_module):
         "ALIASES",
     ]
     all_ids = [r["id"] for s in spec for r in s["rows"]]
-    assert len(all_ids) == 294
+    # 301 = total tras retirar las 84 filas del KERNEL legacy (re-key v10.3).
+    # El invariante real (spec ↔ documentos vivos) se verifica en
+    # test_cada_fila_del_spec_esta_anclada_en_documentacion_active.
+    assert len(all_ids) == 301
     assert len(all_ids) == len(set(all_ids)), "CENSUS_SPEC no debe tener IDs duplicados"
 
     by_name = {s["name"]: s["rows"] for s in spec}
@@ -348,12 +354,36 @@ def test_changelog_y_changelog_archivo_fuera_del_census_por_diseno(census_module
 
 def test_reorder_census_spec_sigue_orden_real_de_active_y_es_idempotente(reorder_module, census_module):
     new_spec, stats = reorder_module.reorder_spec(census_module.CENSUS_SPEC)
-    assert stats["total_rows"] == 294
+    assert stats["total_rows"] == 301
     assert stats["relocated"] == 0
     assert stats["seccion_synced"] == 0
     assert stats["duplicates_removed"] == 0
     assert stats["unlocated"] == []
     assert new_spec == census_module.CENSUS_SPEC
+
+
+def test_cada_fila_del_spec_esta_anclada_en_documentacion_active(reorder_module, census_module):
+    """Regresión del drift spec ↔ documentos vivos (re-key KERNEL v10.3).
+
+    Cada fila de CENSUS_SPEC debe tener al menos una definición (heading/bloque
+    DEF) en el espejo de Documentación/ACTIVE. Una fila sin definición es un ID
+    ya retirado del documento vivo que sobrevive en el spec: vcensus lo reporta
+    como "ID SIN link" en cada corrida aunque el documento esté correcto.
+    Limpieza: python3 Layer_1/scripts/reorder_census_spec.py --dry-run --drop-dead
+    """
+    active_dir = reorder_module.DEFAULT_ACTIVE_DIR
+    if not active_dir.exists():
+        pytest.skip("Documentación/ACTIVE no disponible en este checkout")
+
+    dead = []
+    for section in census_module.CENSUS_SPEC:
+        fname = reorder_module.DOC_TO_ACTIVE_FILE.get(section["name"])
+        positions = reorder_module.scan_document_positions(active_dir / fname) if fname else {}
+        for row in section["rows"]:
+            lids = [row["id"]] + [x for x in row.get("lookup_ids", []) if x != row["id"]]
+            if not any(positions.get(l, {}).get("first_def_line") is not None for l in lids):
+                dead.append(row["id"])
+    assert dead == [], f"filas del spec sin ancla viva en Documentación/ACTIVE: {dead}"
 
 
 def test_reorder_census_spec_reubica_separa_canon_y_sincroniza_seccion(reorder_module, tmp_path):
@@ -416,11 +446,50 @@ def test_reorder_census_spec_reubica_separa_canon_y_sincroniza_seccion(reorder_m
     assert stats["seccion_synced"] == 3
 
 
-def test_reorder_census_spec_detecta_las_dos_inversiones_numericas_reales(reorder_module, census_module):
+def test_reorder_census_spec_drop_dead_retira_ids_sin_definicion_viva(reorder_module, tmp_path):
+    active = tmp_path / "ACTIVE"
+    active.mkdir()
+    (active / "Kernel.md").write_text(
+        "# V | KERNEL\n"
+        "## 01 KERNEL:PURPOSE\n"
+        "### 01.1 KERNEL:PURPOSE-001\n"
+        "Texto plano que menciona KERNEL:FAIL-PHILOSOPHY sin definirlo.\n",
+        encoding="utf-8",
+    )
+    spec = [
+        {
+            "name": "KERNEL",
+            "rows": [
+                {"id": "KERNEL:PURPOSE", "seccion": "01", "nombre": "Propósito"},
+                {"id": "KERNEL:PURPOSE-001", "seccion": "01.1", "nombre": "Sub"},
+                {"id": "KERNEL:FAIL-PHILOSOPHY", "seccion": "02", "nombre": "Retirado"},
+            ],
+        },
+    ]
+
+    kept, stats = reorder_module.reorder_spec(spec, active_dir=active, drop_dead=True)
+    assert [r["id"] for r in kept[0]["rows"]] == ["KERNEL:PURPOSE", "KERNEL:PURPOSE-001"]
+    assert stats["dead_dropped"] == ["KERNEL:FAIL-PHILOSOPHY"]
+    assert stats["total_rows"] == 2
+
+    # Sin el flag, el comportamiento no cambia (opt-in).
+    kept_default, stats_default = reorder_module.reorder_spec(spec, active_dir=active)
+    assert [r["id"] for r in kept_default[0]["rows"]] == [
+        "KERNEL:PURPOSE",
+        "KERNEL:PURPOSE-001",
+        "KERNEL:FAIL-PHILOSOPHY",
+    ]
+    assert stats_default["dead_dropped"] == []
+
+
+def test_reorder_census_spec_detecta_la_inversion_numerica_real_del_manual(reorder_module, census_module):
     inversions = reorder_module.detect_numeric_inversions(census_module.CENSUS_SPEC)
     pairs = [(i["section"], i["first_id"], i["first_seccion"], i["second_id"], i["second_seccion"]) for i in inversions]
+    # §22 del MANUAL sigue con 22.2 antes de 22.1 en el documento vivo (diferido
+    # a v10.1, ver Change Log): la inversión se respeta por orden real.
+    # La otra inversión histórica (KERNEL CV-PIPELINE 12.3 → 12.1) desapareció
+    # con el retiro del bloque KERNEL legacy del spec (re-key v10.3).
     assert pairs == [
-        ("KERNEL", "KERNEL:CV-PIPELINE-003", "12.3", "KERNEL:CV-PIPELINE-001", "12.1"),
         ("MANUAL", "MANUAL:SCRIPT-GLOSSARY-CV-PREP", "22.2", "MANUAL:SCRIPT-GLOSSARY-L1", "22.1"),
     ]
 

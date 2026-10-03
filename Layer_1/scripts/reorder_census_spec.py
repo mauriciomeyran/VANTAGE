@@ -15,9 +15,14 @@ Herramienta determinista offline (sin red ni NOTION_TOKEN) que:
   4. Elimina duplicados exactos por `id` preservando la primera aparición.
   5. Con `--md-file`, reescribe el markdown publicado (`V_ID_CENSUS_PRODUCTION.md`)
      preservando los enlaces `[`ID`](url)` ya resueltos y la sección de huérfanos.
+  6. Con `--drop-dead` (opt-in), retira las filas que no tienen NINGUNA definición
+     (heading/bloque DEF) en el documento espejo — IDs retirados que sobreviven en
+     el spec y hacen que `vcensus` reporte "sin link" en cada corrida. Los IDs
+     retirados se listan en el resumen antes de escribir nada.
 
 Uso:
     python3 Layer_1/scripts/reorder_census_spec.py --dry-run
+    python3 Layer_1/scripts/reorder_census_spec.py --dry-run --drop-dead
     python3 Layer_1/scripts/reorder_census_spec.py --md-file Layer_1/data/V_ID_CENSUS_PRODUCTION.md
 """
 from __future__ import annotations
@@ -254,8 +259,14 @@ def reorder_spec(
     active_dir: Path = DEFAULT_ACTIVE_DIR,
     section_order: str = "preserve",
     sync_seccion: bool = True,
+    drop_dead: bool = False,
 ) -> tuple[list[dict], dict]:
     """Reordena `spec` según la primera aparición real en `active_dir`.
+
+    Con `drop_dead=True` retira además las filas cuyo ID (o cualquiera de sus
+    `lookup_ids`) no tiene ninguna definición en el documento espejo: son IDs
+    retirados del documento vivo que el spec todavía declara, y son la causa
+    de los "IDs SIN link" del reporte de vcensus.
 
     Retorna `(new_spec, stats)`.
     """
@@ -273,6 +284,7 @@ def reorder_spec(
 
     seen_global: set[str] = set()
     duplicates_removed = 0
+    dead_dropped: list[str] = []
     relocated_total = 0
     seccion_synced = 0
     seccion_changes: list[tuple[str, str, str, str]] = []
@@ -294,6 +306,14 @@ def reorder_spec(
                 duplicates_removed += 1
                 continue
             seen_global.add(rid)
+            if drop_dead:
+                lids = [rid] + [x for x in row.get("lookup_ids", []) if x != rid]
+                has_def = any(
+                    positions.get(lid, {}).get("first_def_line") is not None for lid in lids
+                )
+                if not has_def:
+                    dead_dropped.append(rid)
+                    continue
             deduped_rows.append(copy.deepcopy(row))
 
         indexed_rows: list[tuple[tuple[int, int, int], int, dict]] = []
@@ -351,6 +371,7 @@ def reorder_spec(
         "seccion_synced": seccion_synced,
         "seccion_changes": seccion_changes,
         "duplicates_removed": duplicates_removed,
+        "dead_dropped": dead_dropped,
         "unlocated": unlocated,
         "inversions": inversions,
     }
@@ -501,6 +522,11 @@ def main(argv: list[str] | None = None) -> int:
         help="No actualizar el campo 'seccion' con el número del heading vivo.",
     )
     parser.add_argument(
+        "--drop-dead",
+        action="store_true",
+        help="Retira filas sin ninguna definición en el documento espejo (IDs retirados).",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Calcula y reporta cambios sin escribir archivos.",
@@ -515,6 +541,7 @@ def main(argv: list[str] | None = None) -> int:
         active_dir=args.active_dir,
         section_order=args.section_order,
         sync_seccion=not args.no_sync_seccion,
+        drop_dead=args.drop_dead,
     )
 
     print("reorder_census_spec — Resumen")
@@ -527,6 +554,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"    - {sname:<18} {moved} reubicada(s)")
     print(f"  Secciones sincronizadas con heading vivo: {stats['seccion_synced']}")
     print(f"  Duplicados eliminados:{stats['duplicates_removed']}")
+    if stats["dead_dropped"]:
+        print(f"  Filas retiradas (sin definición viva): {len(stats['dead_dropped'])}")
+        for rid in stats["dead_dropped"]:
+            print(f"    - {rid}")
     if stats["inversions"]:
         print("  ⚠ Inversiones numéricas en documento fuente (respetadas por orden real):")
         for inv in stats["inversions"]:
