@@ -46,6 +46,7 @@ build/
 *_backup.*
 *.old
 *.orig
+Layer_4/backups/
 
 # Temporary files
 *.tmp

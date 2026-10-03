@@ -733,34 +733,41 @@ def auto_commit(dry_run=False):
     except Exception as e:
         print(f"  ⚠️ git_sync falló: {e}")
 
+CONTINGENCY_SCRIPT = "Layer_4/scripts/vdoc_local_contingency.py"
+
+
 def main():
+    raw_argv = sys.argv[1:]
+    for idx, token in enumerate(raw_argv):
+        if token == "--direction=local" or (
+            token == "--direction" and idx + 1 < len(raw_argv) and raw_argv[idx + 1] == "local"
+        ):
+            print(
+                "✗ '--direction local' fue retirado de vsync_doc.py "
+                "(Documentación/ACTIVE/ es read-only; Notion es SSOT).\n"
+                f"  Para contingencia de un solo documento usa: "
+                f"python3 {CONTINGENCY_SCRIPT} --doc <doc>"
+            )
+            return 1
+
     _exit_code = [0]
     p = argparse.ArgumentParser()
-    p.add_argument("--direction", choices=["notion","auto","local"], default="auto", help="notion→local (read-only), auto (decide por hash), o local→notion (PATCH puntual, preserva anchors)")
+    p.add_argument(
+        "--direction",
+        choices=["notion", "auto"],
+        default="auto",
+        help="notion→local (read-only) o auto (decide por hash; local→notion usa vdoc_local_contingency.py)",
+    )
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--doc", choices=list(DOCS.keys()))
     args = p.parse_args()
     targets = {args.doc: DOCS[args.doc]} if args.doc else DOCS
 
     print(f"\nvsync_doc v9.13.1 L4 → ACTIVE  [{args.direction.upper()}]{' DRY' if args.dry_run else ''}")
-    print("⚠️  DOCUMENTACIÓN ACTIVE LOCAL ES READ-ONLY — NOTION ES ÚNICA FUENTE DE VERDAD")
-    if args.direction == "local":
-        print("ℹ️  --direction local ahora usa PATCH puntual para preservar anchors (KERNEL:DOCUMENTATION-011)\n")
-    else:
-        print()
+    print("⚠️  DOCUMENTACIÓN ACTIVE LOCAL ES READ-ONLY — NOTION ES ÚNICA FUENTE DE VERDAD\n")
 
     for k, d in targets.items():
         local = d["local_file"]
-
-        if args.direction == "local" and k == "project_charter":
-            print(
-                "BLOCKED: el Charter no acepta escritura directa vía "
-                "vsync_doc --direction local. Todo cambio al Charter requiere "
-                "ticket Task Tracker tipo CHARTER, evaluado por CLAUDE/MAIN "
-                "(ver SP:BOOTLOADER-002/004)."
-            )
-            _exit_code[0] = 1
-            continue
 
         # ── DRY RUN: solo metadata (pages.retrieve), sin fetch recursivo de bloques ──
         if args.dry_run:
@@ -780,7 +787,7 @@ def main():
                 notion_text, _ts_unused = fetch_notion_as_md(d["notion_id"])
                 decision = _decide(k, local_text, notion_text or "", manifest)
                 label_map = {
-                    "local->notion": "local→notion (PATCH puntual)",
+                    "local->notion": "SKIP (local→notion deshabilitado; usar vdoc_local_contingency.py)",
                     "notion->local": "notion→local",
                     "noop": "sin cambios (hash igual)",
                     "conflict": "⚠️ CONFLICT — ambos lados cambiaron, resolver manual",
@@ -804,20 +811,6 @@ def main():
             manifest[k] = _hash(md)
             _save_manifest(manifest)
             print(f"  ✓ {d['label']:<30} notion→local")
-
-        elif args.direction == "local":
-            print(f"  → {d['label']:<30} local→notion (PATCH puntual, preserva anchors)")
-            original_mode = _make_writable(local)
-            result = push_local_to_notion(d["notion_id"], local)
-            _restore_permissions(local, original_mode)
-            if result["failed"] > 0 or result["tables_skipped"] > 0:
-                print(f"  ✗ {d['label']:<30} {result['failed']} bloque(s) fallaron, "
-                      f"{result['tables_skipped']} tabla(s) sin sincronizar — manifest NO actualizado")
-                _exit_code[0] = 1
-            else:
-                manifest = _load_manifest()
-                manifest[k] = _hash(local.read_text(encoding="utf-8"))
-                _save_manifest(manifest)
 
         else:  # auto — decide por hash de contenido vs manifest, no por mtime
             manifest = _load_manifest()

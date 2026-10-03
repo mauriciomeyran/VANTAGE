@@ -124,8 +124,7 @@ def patch_block_rich_text(block_id, btype, new_rt, retries=3):
             r.raise_for_status()
         except RequestException as e:
             if attempt == retries:
-                print(f"
-[ERROR] Falló PATCH {block_id}: {e}")
+                print(f"\n[ERROR] Falló PATCH {block_id}: {e}")
                 return False
             time.sleep(2 * attempt)
         if r.status_code == 429:

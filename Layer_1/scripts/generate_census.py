@@ -36,7 +36,13 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "CHANGELOG:", "CHANGELOG_ARCHIVO:", "BRIEF:", "CHARTER:")
+# Change Log y Changelog Archivo quedan fuera del Census por diseño (son
+# bitácoras cronológicas de versiones, no documentos con secciones canónicas
+# direccionables en CENSUS_SPEC).
+EXCLUDED_FROM_CENSUS_BY_DESIGN = ("Change Log", "Changelog Archivo")
+CHANGELOG_PAGE_ID = "390938be-fc42-80e7-b429-d7d730339353"
+
+VALID_PREFIXES = ("KERNEL:", "MANUAL:", "CANON:", "CAREER_CANON:", "SP:", "ALIASES:", "BRIEF:", "CHARTER:")
 
 DOCUMENTS = {
     "System Prompt": "37b938be-fc42-8001-9b9b-fcf81130d274",
@@ -44,7 +50,6 @@ DOCUMENTS = {
     "Kernel":        "377938be-fc42-805e-a408-c9ae518d4fe7",
     "Career Canon":  "377938be-fc42-8089-93f2-f52dbd2dec6c",
     "Aliases":       "37c938be-fc42-80d4-b9ae-f5969830331b",
-    "Change Log":    "390938be-fc42-80e7-b429-d7d730339353",
     "Navigation Brief": "3a3938be-fc42-8008-9e90-ec435c01f50d",
     "Project Charter": "f87938be-fc42-8263-a305-819877d2245f",
 }
@@ -55,9 +60,8 @@ DOC_PRIORITY = {
     "Manual":        3,
     "Career Canon":  4,
     "Aliases":       5,
-    "Change Log":    6,
-    "Navigation Brief": 7,
-    "Project Charter": 8,
+    "Navigation Brief": 6,
+    "Project Charter": 7,
 }
 
 # ─── LISTADO CANÓNICO DE IDs ──────────────────────────────────────────────────
@@ -67,13 +71,7 @@ CENSUS_SPEC = [
         "name": "PROJECT CHARTER",
         "rows": [
             {"id": "CHARTER:PURPOSE", "seccion": "01", "nombre": "Propósito del Proyecto"},
-            {"id": "CHARTER:NON-NEGOTIABLES", "seccion": "02", "nombre": "Principios No Negociables"},
-            {"id": "CHARTER:STATUS", "seccion": "03", "nombre": "Estatus del Proyecto"},
-            {"id": "CHARTER:MILESTONES", "seccion": "04", "nombre": "Hitos y Milestones"},
-            {"id": "CHARTER:DECISIONS", "seccion": "05", "nombre": "Registro de Decisiones"},
-            {"id": "CHARTER:FAILURES", "seccion": "06", "nombre": "Registro de Fallos"},
-            {"id": "CHARTER:CONTINUITY", "seccion": "07", "nombre": "Continuidad Operativa"},
-            # Sub-nodos del Charter (CHARTER-NODES): numeración alineada con headings vivos en Notion (2.n DECISIONS, 3.n FAILURES, 4.n NON-NEGOTIABLES, 5.n MILESTONES). Formato DEF: 'N.n ID — Título'.
+            {"id": "CHARTER:DECISIONS", "seccion": "02", "nombre": "Registro de Decisiones"},
             {"id": "CHARTER:DECISIONS-001", "seccion": "2.1", "nombre": "Separación Class A / Class B"},
             {"id": "CHARTER:DECISIONS-002", "seccion": "2.2", "nombre": "Aéropostale removido de Hard Blocks"},
             {"id": "CHARTER:DECISIONS-003", "seccion": "2.3", "nombre": "Serial Authority v2 — operador como Prioridad 0"},
@@ -85,11 +83,13 @@ CENSUS_SPEC = [
             {"id": "CHARTER:DECISIONS-009", "seccion": "2.9", "nombre": "Blueprint de reescritura KERNEL/MANUAL v10 — adopción híbrida"},
             {"id": "CHARTER:DECISIONS-010", "seccion": "2.10", "nombre": "Creación de este Charter"},
             {"id": "CHARTER:DECISIONS-011", "seccion": "2.11", "nombre": "CLAUDE/MAIN declarado gatekeeper exclusivo del Charter"},
+            {"id": "CHARTER:FAILURES", "seccion": "03", "nombre": "Registro de Fallos"},
             {"id": "CHARTER:FAILURES-001", "seccion": "3.1", "nombre": "Reaparición de Hard Blocks ya corregidos"},
             {"id": "CHARTER:FAILURES-002", "seccion": "3.2", "nombre": "Patrón de reporte optimista (ticket RT-1)"},
             {"id": "CHARTER:FAILURES-003", "seccion": "3.3", "nombre": "Cédula de Reconciliación fabricada"},
             {"id": "CHARTER:FAILURES-004", "seccion": "3.4", "nombre": "Loop de auto-rechazo QA↔CV-B"},
             {"id": "CHARTER:FAILURES-005", "seccion": "3.5", "nombre": "Documentación que describe código ya retirado"},
+            {"id": "CHARTER:NON-NEGOTIABLES", "seccion": "04", "nombre": "Principios No Negociables"},
             {"id": "CHARTER:NON-NEGOTIABLES-001", "seccion": "4.1", "nombre": "Python es dueño exclusivo de los campos Class B"},
             {"id": "CHARTER:NON-NEGOTIABLES-002", "seccion": "4.2", "nombre": "APROBAR_WRITE obligatorio antes de cualquier escritura"},
             {"id": "CHARTER:NON-NEGOTIABLES-003", "seccion": "4.3", "nombre": "Ningún reporte de éxito se acepta sin re-fetch/verificación"},
@@ -100,16 +100,24 @@ CENSUS_SPEC = [
             {"id": "CHARTER:NON-NEGOTIABLES-008", "seccion": "4.8", "nombre": "Graph/Backlinks son artefactos derivados, nunca capa de autoridad"},
             {"id": "CHARTER:NON-NEGOTIABLES-009", "seccion": "4.9", "nombre": "VM_Scope es binario (Alto/Bajo)"},
             {"id": "CHARTER:NON-NEGOTIABLES-010", "seccion": "4.10", "nombre": "Hard Blocks reales se consultan siempre en la fuente"},
+            {"id": "CHARTER:MILESTONES", "seccion": "05", "nombre": "Hitos y Milestones"},
             {"id": "CHARTER:MILESTONES-001", "seccion": "5.1", "nombre": "Hito 1 — Track Beta (código) cerrado"},
             {"id": "CHARTER:MILESTONES-002", "seccion": "5.2", "nombre": "Hito 2 — T2.1 KERNEL v10 en paralelo a Track Beta"},
             {"id": "CHARTER:MILESTONES-003", "seccion": "5.3", "nombre": "Hito 3 — MANUAL v10 en paralelo a KERNEL v10"},
             {"id": "CHARTER:MILESTONES-004", "seccion": "5.4", "nombre": "Hito 4 — Fase 3 sync + verificación cruzada"},
             {"id": "CHARTER:MILESTONES-005", "seccion": "5.5", "nombre": "Hito 5 — Charter actualizado en cada decisión estructural"},
+            {"id": "CHARTER:CONTINUITY", "seccion": "06", "nombre": "Continuidad Operativa"},
+            {"id": "CHARTER:STATUS", "seccion": "07", "nombre": "Estatus del Proyecto"},
         ],
     },
     {
         "name": "KERNEL",
         "rows": [
+            {"id": "KERNEL:PURPOSE", "seccion": "01", "nombre": "Propósito del Sistema"},
+            {"id": "KERNEL:PURPOSE-001", "seccion": "01.1", "nombre": "Objetivo Principal"},
+            {"id": "KERNEL:FAIL-PHILOSOPHY", "seccion": "02", "nombre": "Filosofía de Fallo"},
+            {"id": "KERNEL:FAIL-PHILOSOPHY-001", "seccion": "02.1", "nombre": "Fail-Fast vs Fail-Safe"},
+            {"id": "KERNEL:FAIL-PHILOSOPHY-002", "seccion": "02.2", "nombre": "Recovery Strategies"},
             {"id": "KERNEL:DOCUMENTATION", "seccion": "03", "nombre": "Documentación y Gobernanza (L0)"},
             {"id": "KERNEL:DOCUMENTATION-001", "seccion": "03.1", "nombre": "Canonical Document ID Contract"},
             {"id": "KERNEL:DOCUMENTATION-002", "seccion": "03.2", "nombre": "Nomenclatura de IDs Canónicos"},
@@ -128,17 +136,17 @@ CENSUS_SPEC = [
             {"id": "KERNEL:DOCUMENTATION-015", "seccion": "03.15", "nombre": "Cross-Reference Hyperlinks"},
             {"id": "KERNEL:DOCUMENTATION-016", "seccion": "03.16", "nombre": "Notebook Gemini"},
             {"id": "KERNEL:DOCUMENTATION-017", "seccion": "03.17", "nombre": "Sandbox"},
+            {"id": "KERNEL:DOC-CONTRACT", "seccion": "03.18", "nombre": "Contrato de Prefijos Documentales del Lazy Loader"},
+            {"id": "KERNEL:HANDOFF-SERIAL", "seccion": "03.19", "nombre": "Contrato de Serial Global de Handoff"},
             {"id": "KERNEL:ARCHITECTURE", "seccion": "04", "nombre": "Arquitectura de Cuatro Capas"},
             {"id": "KERNEL:ARCHITECTURE-L1", "seccion": "04.1", "nombre": "L1 — Active Search"},
             {"id": "KERNEL:ARCHITECTURE-L2", "seccion": "04.2", "nombre": "L2 — Strategic Search"},
             {"id": "KERNEL:ARCHITECTURE-L3", "seccion": "04.3", "nombre": "L3 — Passive Intake"},
             {"id": "KERNEL:ARCHITECTURE-L4", "lookup_ids": ["KERNEL:ARCHITECTURE-004", "KERNEL:ARCHITECTURE-L4"], "seccion": "04.4", "nombre": "L4 — Version Control & Infrastructure"},
-            {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH", "seccion": "06", "nombre": "Dashboard Checklist Architecture"},
             {"id": "KERNEL:OWNERSHIP", "seccion": "05", "nombre": "División de Responsabilidades AI/Python"},
             {"id": "KERNEL:OWNERSHIP-001", "seccion": "05.1", "nombre": "AI Component"},
             {"id": "KERNEL:OWNERSHIP-002", "seccion": "05.2", "nombre": "Python Component"},
-            {"id": "KERNEL:PURPOSE", "seccion": "01", "nombre": "Propósito del Sistema"},
-            {"id": "KERNEL:PURPOSE-001", "seccion": "01.1", "nombre": "Objetivo Principal"},
+            {"id": "KERNEL:DASHBOARD-CHECKLIST-ARCH", "seccion": "06", "nombre": "Dashboard Checklist Architecture"},
             {"id": "KERNEL:SCHEMA", "seccion": "07", "nombre": "Modelo de Datos y Ownership"},
             {"id": "KERNEL:SCHEMA-001", "seccion": "07.1", "nombre": "Schema — Class A Fields"},
             {"id": "KERNEL:SCHEMA-002", "seccion": "07.2", "nombre": "Schema — Class B Fields"},
@@ -152,9 +160,6 @@ CENSUS_SPEC = [
             {"id": "KERNEL:TRACKER-SCHEMA", "seccion": "08", "nombre": "Schema del Tracker de Vacantes"},
             {"id": "KERNEL:TRACKER-SCHEMA-001", "seccion": "08.1", "nombre": "Tracker Schema — Campos Principales"},
             {"id": "KERNEL:TRACKER-SCHEMA-002", "seccion": "08.2", "nombre": "Tracker Schema — Campos Derivados"},
-            {"id": "KERNEL:FAIL-PHILOSOPHY", "seccion": "02", "nombre": "Filosofía de Fallo"},
-            {"id": "KERNEL:FAIL-PHILOSOPHY-001", "seccion": "02.1", "nombre": "Fail-Fast vs Fail-Safe"},
-            {"id": "KERNEL:FAIL-PHILOSOPHY-002", "seccion": "02.2", "nombre": "Recovery Strategies"},
             {"id": "KERNEL:GATE-DECISION", "seccion": "09", "nombre": "Lógica de Gate Decision"},
             {"id": "KERNEL:GATE-DECISION-001", "seccion": "09.1", "nombre": "Gate Decision — Overview"},
             {"id": "KERNEL:GATE-DECISION-002", "seccion": "09.2", "nombre": "Lógica Estándar"},
@@ -167,7 +172,8 @@ CENSUS_SPEC = [
             {"id": "KERNEL:GATE-DECISION-009", "seccion": "09.9", "nombre": "Escalamiento de Pendientes a Tickets"},
             {"id": "KERNEL:GATE-DECISION-010", "seccion": "09.10", "nombre": "Gate Decision — Technical Review"},
             {"id": "KERNEL:GATE-DECISION-011", "seccion": "09.11", "nombre": "Gate Decision — Business Review"},
-            {"id": "KERNEL:GATE-DECISION-013", "seccion": "09.12", "nombre": "Gate Decision — Subsección 013"},
+            {"id": "KERNEL:DEDUP-LAYER-UPGRADE", "seccion": "09.12", "nombre": "Dedup Layer Upgrade"},
+            {"id": "KERNEL:GATE-DECISION-013", "seccion": "09.13", "nombre": "Gate Decision — Subsección 013"},
             {"id": "KERNEL:CV-GOLDEN-RULES", "seccion": "10", "nombre": "Golden Rules — Límites de Ejecución"},
             {"id": "KERNEL:CV-GOLDEN-RULES-001", "seccion": "10.1", "nombre": "Regla de Oro #1"},
             {"id": "KERNEL:CV-GOLDEN-RULES-002", "seccion": "10.2", "nombre": "Regla de Oro #2"},
@@ -186,9 +192,9 @@ CENSUS_SPEC = [
             {"id": "KERNEL:TRIGGER-008", "seccion": "11.8", "nombre": "Trigger — Health Check"},
             {"id": "KERNEL:TRIGGER-009", "seccion": "11.9", "nombre": "Trigger — Version Check"},
             {"id": "KERNEL:CV-PIPELINE", "seccion": "12", "nombre": "Pipeline de CV"},
+            {"id": "KERNEL:CV-PIPELINE-003", "seccion": "12.3", "nombre": "CV-C"},
             {"id": "KERNEL:CV-PIPELINE-001", "seccion": "12.1", "nombre": "CV-A"},
             {"id": "KERNEL:CV-PIPELINE-002", "seccion": "12.2", "nombre": "CV-B"},
-            {"id": "KERNEL:CV-PIPELINE-003", "seccion": "12.3", "nombre": "CV-C"},
             {"id": "KERNEL:CANON-UPDATE", "seccion": "13", "nombre": "Actualización del Canon"},
             {"id": "KERNEL:NAMING-CONVENTION", "seccion": "14", "nombre": "Convención de Nombres"},
             {"id": "KERNEL:CONTEXT-INFRASTRUCTURE", "seccion": "15", "nombre": "Context Infrastructure"},
@@ -196,10 +202,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:CONTEXT-INFRASTRUCTURE-002", "seccion": "15.2", "nombre": "Context Infrastructure — Integration Points"},
             {"id": "KERNEL:DATA-FLOW", "seccion": "16", "nombre": "Flujo de Datos"},
             {"id": "KERNEL:DATA-FLOW-001", "seccion": "16.1", "nombre": "Flujo de Datos — Subsección 001"},
-            {"id": "KERNEL:DOC-CONTRACT", "seccion": "03.18", "nombre": "Contrato de Prefijos Documentales del Lazy Loader"},
             {"id": "KERNEL:EVOLUTION", "seccion": "17", "nombre": "Evolución del Sistema"},
-            {"id": "KERNEL:DEDUP-LAYER-UPGRADE", "seccion": "18", "nombre": "Dedup Layer Upgrade"},
-            {"id": "KERNEL:HANDOFF-SERIAL", "seccion": "03.19", "nombre": "Contrato de Serial Global de Handoff"},
         ],
     },
     {
@@ -244,13 +247,13 @@ CENSUS_SPEC = [
             {"id": "MANUAL:FIGMA-SYNC-005", "seccion": "20.5", "nombre": "Regla de Reemplazo Total"},
             {"id": "MANUAL:SCHEMA-FIELD-REF", "seccion": "21", "nombre": "Schema Class A/B — Referencia de Campos"},
             {"id": "MANUAL:SCRIPT-GLOSSARY", "seccion": "22", "nombre": "Script Glossary"},
-            {"id": "MANUAL:SCRIPT-GLOSSARY-DASHBOARD", "seccion": "22.4", "nombre": "Script Glossary — Dashboard"},
-            {"id": "MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES", "seccion": "22.4a", "nombre": "Script Glossary — Dashboard Modules"},
-            {"id": "MANUAL:SCRIPT-GLOSSARY-L1", "seccion": "22.1", "nombre": "Script Glossary — L1"},
             {"id": "MANUAL:SCRIPT-GLOSSARY-CV-PREP", "seccion": "22.2", "nombre": "CV Pipeline — Preparación Mecánica (Miércoles)"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-L1", "seccion": "22.1", "nombre": "Script Glossary — L1"},
             {"id": "MANUAL:SCRIPT-GLOSSARY-L1-MODULES", "seccion": "22.1a", "nombre": "Script Glossary — L1 Modules"},
             {"id": "MANUAL:SCRIPT-GLOSSARY-L1-TOOLS", "seccion": "22.1b", "nombre": "Script Glossary — L1 Tools"},
             {"id": "MANUAL:SCRIPT-GLOSSARY-L4", "seccion": "22.3", "nombre": "Script Glossary — L4"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-DASHBOARD", "seccion": "22.4", "nombre": "Script Glossary — Dashboard"},
+            {"id": "MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES", "seccion": "22.4a", "nombre": "Script Glossary — Dashboard Modules"},
             {"id": "MANUAL:SCRIPT-GLOSSARY-RAYCAST", "seccion": "22.5", "nombre": "Script Glossary — Raycast"},
             {"id": "MANUAL:SCRIPT-GLOSSARY-XREF", "seccion": "22.6", "nombre": "Script Glossary — Cross-Reference"},
             {"id": "MANUAL:SKILL-GLOSSARY", "seccion": "23", "nombre": "Glosario de Skills — Referencia Operativa en Humano"},
@@ -258,7 +261,12 @@ CENSUS_SPEC = [
             {"id": "MANUAL:SKILL-GLOSSARY-HOUSEKEEPING", "seccion": "23.2", "nombre": "Sincronización y Mantenimiento Documental"},
             {"id": "MANUAL:SKILL-GLOSSARY-AUDIT", "seccion": "23.3", "nombre": "Auditoría y Continuidad"},
             {"id": "MANUAL:SKILL-GLOSSARY-STYLE", "seccion": "23.4", "nombre": "Estilos de Escritura y Generación"},
-            {"id": "MANUAL:SKILL-GLOSSARY-XREF", "seccion": "23.5", "nombre": "Gaps Abiertos"},            
+            {"id": "MANUAL:SKILL-GLOSSARY-XREF", "seccion": "23.5", "nombre": "Gaps Abiertos"},
+        ],
+    },
+    {
+        "name": "CAREER CANON",
+        "rows": [
             {"id": "CANON:PROFILE", "seccion": "01", "nombre": "Professional Profile Canon"},
             {"id": "CANON:PROFILE-001", "seccion": "01.1", "nombre": "Professional Profile — ES"},
             {"id": "CANON:PROFILE-002", "seccion": "01.2", "nombre": "Professional Profile — EN"},
@@ -323,35 +331,35 @@ CENSUS_SPEC = [
     {
         "name": "NAVIGATION BRIEF",
         "rows": [
-            {"id": "BRIEF:PURPOSE-SCOPE", "lookup_ids": ["BRIEF:PURPOSE-SCOPE", "BRIEF:SCOPE", "BRIEF:001"], "seccion": "00", "nombre": "Propósito y Alcance"},
-            {"id": "BRIEF:AUTHORITY-MATRIX", "lookup_ids": ["BRIEF:AUTHORITY-MATRIX", "BRIEF:002"], "seccion": "01", "nombre": "Matriz de Autoridad Documental"},
-            {"id": "BRIEF:ECOSYSTEM", "lookup_ids": ["BRIEF:ECOSYSTEM", "BRIEF:003"], "seccion": "02", "nombre": "Ecosistema Documental"},
-            {"id": "BRIEF:NAV-CONTRACTS", "lookup_ids": ["BRIEF:NAV-CONTRACTS", "BRIEF:004"], "seccion": "03", "nombre": "Contratos de navegación"},
-            {"id": "BRIEF:DOMAIN-ARCHITECTURE", "lookup_ids": ["BRIEF:DOMAIN-ARCHITECTURE", "BRIEF:005"], "seccion": "04", "nombre": "Dominios"},
-            {"id": "BRIEF:VERIFICATION-DEPTH", "lookup_ids": ["BRIEF:VERIFICATION-DEPTH", "BRIEF:006"], "seccion": "05", "nombre": "Contratos de verificación"},
-            {"id": "BRIEF:CROSS-DEPENDENCIES", "lookup_ids": ["BRIEF:CROSS-DEPENDENCIES", "BRIEF:007"], "seccion": "06", "nombre": "Dependencias entre documentos"},
-            {"id": "BRIEF:MAINTENANCE-CONTRACT", "lookup_ids": ["BRIEF:MAINTENANCE-CONTRACT", "BRIEF:008"], "seccion": "07", "nombre": "Contrato de Mantenimiento"},
-            {"id": "BRIEF:DECISION-TREE", "lookup_ids": ["BRIEF:DECISION-TREE", "BRIEF:009"], "seccion": "08", "nombre": "Árbol de Decisiones"},
-            {"id": "BRIEF:NAV-PRINCIPLES", "lookup_ids": ["BRIEF:NAV-PRINCIPLES", "BRIEF:010"], "seccion": "09", "nombre": "Principios de Navegación"},
-            {"id": "BRIEF:EXPECTED-OUTCOME", "lookup_ids": ["BRIEF:EXPECTED-OUTCOME", "BRIEF:011"], "seccion": "10", "nombre": "Resultado Esperado"},
-            {"id": "BRIEF:AUTHORITY-001", "seccion": "08.1", "nombre": "Autoridad"},
+            {"id": "BRIEF:PURPOSE-SCOPE", "lookup_ids": ["BRIEF:PURPOSE-SCOPE", "BRIEF:SCOPE", "BRIEF:001"], "seccion": "01", "nombre": "Propósito y Alcance"},
+            {"id": "BRIEF:PURPOSE-SCOPE-001", "seccion": "01.1", "nombre": "Propósito"},
+            {"id": "BRIEF:PURPOSE-SCOPE-002", "seccion": "01.2", "nombre": "Alcance"},
+            {"id": "BRIEF:PURPOSE-SCOPE-003", "seccion": "01.3", "nombre": "Fuera de Alcance"},
+            {"id": "BRIEF:AUTHORITY-MATRIX", "lookup_ids": ["BRIEF:AUTHORITY-MATRIX", "BRIEF:002"], "seccion": "02", "nombre": "Matriz de Autoridad Documental"},
+            {"id": "BRIEF:ECOSYSTEM", "lookup_ids": ["BRIEF:ECOSYSTEM", "BRIEF:003"], "seccion": "03", "nombre": "Ecosistema Documental"},
+            {"id": "BRIEF:NAV-CONTRACTS", "lookup_ids": ["BRIEF:NAV-CONTRACTS", "BRIEF:004"], "seccion": "04", "nombre": "Contratos de navegación"},
             {"id": "BRIEF:CONSULTATION-001", "seccion": "04.1", "nombre": "Consulta Arquitectónica"},
             {"id": "BRIEF:CONSULTATION-002", "seccion": "04.2", "nombre": "Consulta Operativa"},
             {"id": "BRIEF:CONSULTATION-003", "seccion": "04.3", "nombre": "Consulta Profesional"},
             {"id": "BRIEF:CONSULTATION-004", "seccion": "04.4", "nombre": "Consulta Documental"},
             {"id": "BRIEF:CONSULTATION-005", "seccion": "04.5", "nombre": "Consulta de IDs"},
             {"id": "BRIEF:CONSULTATION-006", "seccion": "04.6", "nombre": "Consulta Histórica"},
-            {"id": "BRIEF:CROSS-DEPENDENCIES-001", "seccion": "07.1", "nombre": "Impact Assessment Contract"},
-            {"id": "BRIEF:CROSS-DEPENDENCIES-002", "seccion": "07.2", "nombre": "Mandatory Change Reporting"},
-            {"id": "BRIEF:CROSS-DEPENDENCIES-003", "seccion": "07.3", "nombre": "Closure Gate"},
+            {"id": "BRIEF:DOMAIN-ARCHITECTURE", "lookup_ids": ["BRIEF:DOMAIN-ARCHITECTURE", "BRIEF:005"], "seccion": "05", "nombre": "Dominios"},
             {"id": "BRIEF:HOUSEKEEPING-001", "seccion": "05.1", "nombre": "Housekeeping"},
             {"id": "BRIEF:CORE-ASSETS-001", "seccion": "05.2", "nombre": "Core Assets"},
             {"id": "BRIEF:DISCOVERY-001", "seccion": "05.3", "nombre": "Discovery"},
             {"id": "BRIEF:GATE-LOGIC-001", "seccion": "05.4", "nombre": "Gate Logic"},
             {"id": "BRIEF:CV-PIPELINE-001", "seccion": "05.5", "nombre": "CV Pipeline"},
-            {"id": "BRIEF:PURPOSE-SCOPE-001", "seccion": "01.1", "nombre": "Propósito"},
-            {"id": "BRIEF:PURPOSE-SCOPE-002", "seccion": "01.2", "nombre": "Alcance"},
-            {"id": "BRIEF:PURPOSE-SCOPE-003", "seccion": "01.3", "nombre": "Fuera de Alcance"},
+            {"id": "BRIEF:VERIFICATION-DEPTH", "lookup_ids": ["BRIEF:VERIFICATION-DEPTH", "BRIEF:006"], "seccion": "06", "nombre": "Contratos de verificación"},
+            {"id": "BRIEF:CROSS-DEPENDENCIES", "lookup_ids": ["BRIEF:CROSS-DEPENDENCIES", "BRIEF:007"], "seccion": "07", "nombre": "Dependencias entre documentos"},
+            {"id": "BRIEF:CROSS-DEPENDENCIES-001", "seccion": "07.1", "nombre": "Impact Assessment Contract"},
+            {"id": "BRIEF:CROSS-DEPENDENCIES-002", "seccion": "07.2", "nombre": "Mandatory Change Reporting"},
+            {"id": "BRIEF:CROSS-DEPENDENCIES-003", "seccion": "07.3", "nombre": "Closure Gate"},
+            {"id": "BRIEF:MAINTENANCE-CONTRACT", "lookup_ids": ["BRIEF:MAINTENANCE-CONTRACT", "BRIEF:008"], "seccion": "08", "nombre": "Contrato de Mantenimiento"},
+            {"id": "BRIEF:AUTHORITY-001", "seccion": "08.1", "nombre": "Autoridad"},
+            {"id": "BRIEF:DECISION-TREE", "lookup_ids": ["BRIEF:DECISION-TREE", "BRIEF:009"], "seccion": "09", "nombre": "Árbol de Decisiones"},
+            {"id": "BRIEF:NAV-PRINCIPLES", "lookup_ids": ["BRIEF:NAV-PRINCIPLES", "BRIEF:010"], "seccion": "10", "nombre": "Principios de Navegación"},
+            {"id": "BRIEF:EXPECTED-OUTCOME", "lookup_ids": ["BRIEF:EXPECTED-OUTCOME", "BRIEF:011"], "seccion": "11", "nombre": "Resultado Esperado"},
         ],
     },
     {
@@ -360,15 +368,11 @@ CENSUS_SPEC = [
             {"id": "SP:BOOTLOADER", "seccion": "01", "nombre": "Operating Specification — Bootstrap de Sesión"},
             {"id": "SP:BOOTLOADER-001", "seccion": "01.1", "nombre": "Consumo de Skills por Familia de Agente"},
             {"id": "SP:BOOTLOADER-002", "seccion": "01.2", "nombre": "Bootstrap de Sesión — Subsección 002"},
+            {"id": "SP:SKILL-VERSION-PIN", "seccion": "01.3", "nombre": "Skill Version Pin"},
             {"id": "SP:BOOTLOADER-004", "seccion": "01.4", "nombre": "Agente Principal y Gatekeeper del Charter"},
             {"id": "SP:SYNC-RULE", "seccion": "02", "nombre": "Sincronización Inicial y Verificación de Versión"},
+            {"id": "SP:DIGITAL-ID-CARD", "lookup_ids": ["SP:DIGITAL-ID-CARD-001", "SP:DIGITAL-ID-CARD"], "seccion": "03", "nombre": "Cédula Digital — rutas de operación y UUIDs"},
             {"id": "SP:CONTEXT-INFRASTRUCTURE", "seccion": "04", "nombre": "Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE)"},
-            {
-                "id": "SP:DIGITAL-ID-CARD",
-                "lookup_ids": ["SP:DIGITAL-ID-CARD-001", "SP:DIGITAL-ID-CARD"],
-                "seccion": "03",
-                "nombre": "Cédula Digital — rutas de operación y UUIDs"
-            },
             {"id": "SP:DATA-FLOW", "seccion": "05", "nombre": "Referencia — Consultar en Technical Kernel (KERNEL:DATA-FLOW)"},
             {"id": "SP:TRIGGERS", "seccion": "06", "nombre": "Triggers operativos de VANTAGE"},
             {"id": "SP:CV-GOLDEN-RULES-REF", "seccion": "07", "nombre": "Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES)"},
@@ -376,7 +380,6 @@ CENSUS_SPEC = [
             {"id": "SP:MCP-ROUTING-NOTES", "seccion": "09", "nombre": "Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY)"},
             {"id": "SP:CONSISTENCY", "seccion": "10", "nombre": "Regla de Consistencia Documental"},
             {"id": "SP:CONSISTENCY-002", "seccion": "10.1", "nombre": "Triaje vía Notebook Gemini"},
-            {"id": "SP:SKILL-VERSION-PIN", "seccion": "12", "nombre": "Skill Version Pin"},
             {"id": "SP:VERSION-CHECK-TOOL", "seccion": "11", "nombre": "Herramienta de Verificación de Versión de Bajo Costo"},
         ],
     },
@@ -395,11 +398,9 @@ CENSUS_SPEC = [
     },
 ]
 
-# NOTA: "Changelog Archivo" (prefijo CHANGELOG_ARCHIVO:) NO está en DOCUMENTS.
-# Efecto conocido: sus IDs no se indexan ni se reportan como huérfanos. Agregarlo
-# aquí haría visibles cientos de IDs del archivo histórico; si se decide incluirlo,
-# revisar KNOWN_RETIRED_NOISE y el ruido esperado del render.
-# Pendiente de decisión del operador (ver handoffs/VALIDACION_GENERATE_CENSUS_Y_LAYER4_2026-10-02.md §A7).
+# NOTA (A7 cerrado): "Change Log" y "Changelog Archivo" quedan fuera del Census
+# por diseño (no se indexan en DOCUMENTS ni participan como prefijos en
+# VALID_PREFIXES). Las filas CANON: viven en su propia sección "CAREER CANON".
 
 # ─── CAPA DE RED ──────────────────────────────────────────────────────────────
 
@@ -658,12 +659,10 @@ def infer_section_from_id(id_str: str) -> tuple:
     section_map = {
         "KERNEL": "KERNEL",
         "MANUAL": "MANUAL",
-        "CANON": "CANON",
-        "CAREER_CANON": "CAREER_CANON",
+        "CANON": "CAREER CANON",
+        "CAREER_CANON": "CAREER CANON",
         "SP": "SYSTEM PROMPT",
         "ALIASES": "ALIASES",
-        "CHANGELOG": "CHANGELOG",
-        "CHANGELOG_ARCHIVO": "CHANGELOG_ARCHIVO",
         "BRIEF": "NAVIGATION BRIEF",
         "CHARTER": "PROJECT CHARTER",
     }
@@ -1346,7 +1345,7 @@ def sync_to_notion(page_id: str, markdown_content: str, auto_confirm: bool = Fal
         print("\n" + "=" * 52)
         print("  SINCRONIZACIÓN DE VERSIÓN")
         print("=" * 52)
-        changelog_id = DOCUMENTS.get("Change Log", "").replace("-", "")
+        changelog_id = (DOCUMENTS.get("Change Log") or CHANGELOG_PAGE_ID).replace("-", "")
         if not changelog_id:
             print("  ✗ No se pudo resolver ID del CHANGELOG")
             return False

@@ -20,8 +20,8 @@ VANTAGE: NAVIGATION LOOP
    - **Lock:** Ejecutar `vlock` en terminal.
 
 3. NOTION SYNC (`vdoc`):
-   Ejecutar: `vdoc local`.
-   **Validación:** Verificar vínculos clickeables en Notion (KERNEL/PIPELINE/TRACKER).
+   Ejecutar: `vdoc notion`.
+   **Validación:** Verificar vínculos clickeables en Notion (KERNEL/PIPELINE/TRACKER) y espejo actualizado en `Documentación/ACTIVE/`.
 
 4. VERSION SYNC (`vversions`):
    Ejecutar: `vversions --sync`.

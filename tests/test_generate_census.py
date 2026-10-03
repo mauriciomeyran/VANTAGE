@@ -298,3 +298,181 @@ def test_fetch_blocks_lanza_incompleto_tras_agotar_reintentos(census_module, mon
 
     with pytest.raises(census_module.FetchIncompleteError):
         census_module.fetch_blocks("page")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Ronda 2 — orden real de CENSUS_SPEC, CAREER CANON y exclusión de Changelogs
+# ─────────────────────────────────────────────────────────────────────────────
+
+REORDER_SRC = CENSUS_SRC.parent / "reorder_census_spec.py"
+
+
+@pytest.fixture(scope="module")
+def reorder_module():
+    return load_module_from(REORDER_SRC, "reorder_census_spec_under_test")
+
+
+def test_census_spec_separa_career_canon_y_no_tiene_duplicados(census_module):
+    spec = census_module.CENSUS_SPEC
+    section_names = [s["name"] for s in spec]
+    assert section_names == [
+        "PROJECT CHARTER",
+        "KERNEL",
+        "MANUAL",
+        "CAREER CANON",
+        "NAVIGATION BRIEF",
+        "SYSTEM PROMPT",
+        "ALIASES",
+    ]
+    all_ids = [r["id"] for s in spec for r in s["rows"]]
+    assert len(all_ids) == 294
+    assert len(all_ids) == len(set(all_ids)), "CENSUS_SPEC no debe tener IDs duplicados"
+
+    by_name = {s["name"]: s["rows"] for s in spec}
+    assert len(by_name["MANUAL"]) == 54
+    assert all(not r["id"].startswith(("CANON:", "CAREER_CANON:")) for r in by_name["MANUAL"])
+    assert len(by_name["CAREER CANON"]) == 59
+    assert all(r["id"].startswith(("CANON:", "CAREER_CANON:")) for r in by_name["CAREER CANON"])
+
+
+def test_changelog_y_changelog_archivo_fuera_del_census_por_diseno(census_module):
+    assert "Change Log" not in census_module.DOCUMENTS
+    assert "Changelog Archivo" not in census_module.DOCUMENTS
+    assert "Change Log" not in census_module.DOC_PRIORITY
+    assert "CHANGELOG:" not in census_module.VALID_PREFIXES
+    assert "CHANGELOG_ARCHIVO:" not in census_module.VALID_PREFIXES
+    assert census_module.CHANGELOG_PAGE_ID == "390938be-fc42-80e7-b429-d7d730339353"
+    assert census_module.infer_section_from_id("CANON:PROFILE")[0] == "CAREER CANON"
+    assert census_module.infer_section_from_id("CAREER_CANON:PROFILE")[0] == "CAREER CANON"
+
+
+def test_reorder_census_spec_sigue_orden_real_de_active_y_es_idempotente(reorder_module, census_module):
+    new_spec, stats = reorder_module.reorder_spec(census_module.CENSUS_SPEC)
+    assert stats["total_rows"] == 294
+    assert stats["relocated"] == 0
+    assert stats["seccion_synced"] == 0
+    assert stats["duplicates_removed"] == 0
+    assert stats["unlocated"] == []
+    assert new_spec == census_module.CENSUS_SPEC
+
+
+def test_reorder_census_spec_reubica_separa_canon_y_sincroniza_seccion(reorder_module, tmp_path):
+    active = tmp_path / "ACTIVE"
+    active.mkdir()
+    (active / "Kernel.md").write_text(
+        "# V | KERNEL\n"
+        "## 01 KERNEL:PURPOSE\n"
+        "Texto menciona KERNEL:FAIL-PHILOSOPHY antes de su heading.\n"
+        "### 01.1 KERNEL:PURPOSE-001\n"
+        "## 02 KERNEL:FAIL-PHILOSOPHY\n",
+        encoding="utf-8",
+    )
+    (active / "Manual.md").write_text(
+        "# V | MANUAL\n"
+        "## 01 MANUAL:OBJECTIVE\n"
+        "## 02 MANUAL:SETUP\n",
+        encoding="utf-8",
+    )
+    (active / "Career Canon.md").write_text(
+        "# V | CAREER CANON\n"
+        "## 01 CANON:PROFILE\n",
+        encoding="utf-8",
+    )
+
+    dirty_spec = [
+        {
+            "name": "KERNEL",
+            "rows": [
+                {"id": "KERNEL:FAIL-PHILOSOPHY", "seccion": "99", "nombre": "Filosofía"},
+                {"id": "KERNEL:PURPOSE", "seccion": "01", "nombre": "Propósito"},
+                {"id": "KERNEL:PURPOSE", "seccion": "01", "nombre": "Duplicado"},
+                {"id": "KERNEL:PURPOSE-001", "seccion": "01.9", "nombre": "Sub"},
+            ],
+        },
+        {
+            "name": "MANUAL",
+            "rows": [
+                {"id": "MANUAL:SETUP", "seccion": "04", "nombre": "Setup"},
+                {"id": "MANUAL:OBJECTIVE", "seccion": "01", "nombre": "Objetivo"},
+                {"id": "CANON:PROFILE", "seccion": "01", "nombre": "Profile"},
+            ],
+        },
+    ]
+
+    new_spec, stats = reorder_module.reorder_spec(dirty_spec, active_dir=active)
+    assert [s["name"] for s in new_spec] == ["KERNEL", "MANUAL", "CAREER CANON"]
+    assert [r["id"] for r in new_spec[0]["rows"]] == [
+        "KERNEL:PURPOSE",
+        "KERNEL:PURPOSE-001",
+        "KERNEL:FAIL-PHILOSOPHY",
+    ]
+    assert [r["id"] for r in new_spec[1]["rows"]] == ["MANUAL:OBJECTIVE", "MANUAL:SETUP"]
+    assert [r["id"] for r in new_spec[2]["rows"]] == ["CANON:PROFILE"]
+    assert new_spec[0]["rows"][2]["seccion"] == "02"
+    assert new_spec[0]["rows"][1]["seccion"] == "01.1"
+    assert new_spec[1]["rows"][1]["seccion"] == "02"
+    assert stats["duplicates_removed"] == 1
+    assert stats["canon_separated"] == 1
+    assert stats["seccion_synced"] == 3
+
+
+def test_reorder_census_spec_detecta_las_dos_inversiones_numericas_reales(reorder_module, census_module):
+    inversions = reorder_module.detect_numeric_inversions(census_module.CENSUS_SPEC)
+    pairs = [(i["section"], i["first_id"], i["first_seccion"], i["second_id"], i["second_seccion"]) for i in inversions]
+    assert pairs == [
+        ("KERNEL", "KERNEL:CV-PIPELINE-003", "12.3", "KERNEL:CV-PIPELINE-001", "12.1"),
+        ("MANUAL", "MANUAL:SCRIPT-GLOSSARY-CV-PREP", "22.2", "MANUAL:SCRIPT-GLOSSARY-L1", "22.1"),
+    ]
+
+
+def test_reorder_census_spec_section_order_canonical(reorder_module, census_module):
+    canonical_spec, _ = reorder_module.reorder_spec(
+        census_module.CENSUS_SPEC, section_order="canonical"
+    )
+    assert [s["name"] for s in canonical_spec] == reorder_module.CANONICAL_SECTION_ORDER
+
+
+def test_reorder_census_spec_reescribe_md_preservando_links(reorder_module, tmp_path):
+    md_file = tmp_path / "V_ID_CENSUS_PRODUCTION.md"
+    md_file.write_text(
+        "## MANUAL\n\n"
+        "| ID | Sección | Nombre |\n"
+        "|---|---|---|\n"
+        "| [`MANUAL:OBJECTIVE`](https://app.notion.com/p/m#1) | 99 | Objetivo |\n"
+        "| [`CANON:PROFILE`](https://app.notion.com/p/c#2) | 01 | Profile |\n\n"
+        "---\n\n"
+        "## IDs Huérfanos (fuera de CENSUS_SPEC)\n\n"
+        "_Ninguno detectado en esta corrida._\n",
+        encoding="utf-8",
+    )
+    spec = [
+        {"name": "MANUAL", "rows": [{"id": "MANUAL:OBJECTIVE", "seccion": "01", "nombre": "Objetivo"}]},
+        {"name": "CAREER CANON", "rows": [{"id": "CANON:PROFILE", "seccion": "01", "nombre": "Profile"}]},
+    ]
+    rendered = reorder_module.rewrite_census_markdown(md_file, spec)
+    assert "## CAREER CANON" in rendered
+    assert "| [`MANUAL:OBJECTIVE`](https://app.notion.com/p/m#1) | 01 | Objetivo |" in rendered
+    assert "| [`CANON:PROFILE`](https://app.notion.com/p/c#2) | 01 | Profile |" in rendered
+    assert "## IDs Huérfanos (fuera de CENSUS_SPEC)" in rendered
+
+
+def test_v_id_census_production_md_coincide_con_census_spec(reorder_module, census_module):
+    md_path = CENSUS_SRC.parent.parent / "data" / "V_ID_CENSUS_PRODUCTION.md"
+    text = md_path.read_text(encoding="utf-8")
+
+    headings = [
+        line[3:].strip()
+        for line in text.splitlines()
+        if line.startswith("## ") and "Huérfanos" not in line
+    ]
+    assert headings == [s["name"] for s in census_module.CENSUS_SPEC]
+
+    md_rows = []
+    for line in text.splitlines():
+        m = reorder_module.MD_ROW_RE.match(line.strip())
+        if m:
+            md_rows.append((m.group(2), m.group(3)))
+
+    spec_rows = [(r["id"], r["seccion"]) for s in census_module.CENSUS_SPEC for r in s["rows"]]
+    assert md_rows == spec_rows
+
