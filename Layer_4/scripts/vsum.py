@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import os
-import re
 import sys
 import time
 import argparse
@@ -145,9 +144,9 @@ def call_ollama(prompt: str) -> str:
             return response_data["choices"][0]["message"]["content"]
     except urllib.error.HTTPError as e:
         error_body = e.read().decode("utf-8")
-        raise RuntimeError(f"Ollama API error {e.code}: {error_body}")
+        raise RuntimeError(f"Ollama API error {e.code}: {error_body}") from e
     except urllib.error.URLError as e:
-        raise RuntimeError(f"Ollama API connection error: {e}")
+        raise RuntimeError(f"Ollama API connection error: {e}") from e
 
 def call_groq(prompt: str) -> str:
     if not GROQ_API_KEY:
@@ -177,9 +176,9 @@ def call_groq(prompt: str) -> str:
             return response_data["choices"][0]["message"]["content"]
     except urllib.error.HTTPError as e:
         error_body = e.read().decode("utf-8")
-        raise RuntimeError(f"Groq API error {e.code}: {error_body}")
+        raise RuntimeError(f"Groq API error {e.code}: {error_body}") from e
     except urllib.error.URLError as e:
-        raise RuntimeError(f"Groq API connection error: {e}")
+        raise RuntimeError(f"Groq API connection error: {e}") from e
 
 def call_gemini(prompt: str) -> str:
     from google import genai
@@ -201,6 +200,11 @@ def call_gemini(prompt: str) -> str:
 
 # --- HELPERS ---
 
+def _hard_split(text: str, max_chars: int) -> list[str]:
+    """Parte un texto que por sí solo excede max_chars (párrafo gigante)."""
+    return [text[i:i + max_chars] for i in range(0, len(text), max_chars)]
+
+
 def chunk_text(text: str, max_chars: int = MAX_CHARS_PER_CHUNK) -> list[str]:
     if len(text) <= max_chars:
         return [text]
@@ -211,6 +215,17 @@ def chunk_text(text: str, max_chars: int = MAX_CHARS_PER_CHUNK) -> list[str]:
     current_len = 0
 
     for para in paragraphs:
+        # Un párrafo sin \n\n puede ser mayor al límite (p. ej. un log o una
+        # transcripción en una sola línea): antes se emitía completo y el chunk
+        # superaba max_chars, rompiendo el troceo.
+        if len(para) > max_chars:
+            if current_chunk:
+                chunks.append("\n\n".join(current_chunk))
+                current_chunk = []
+                current_len = 0
+            chunks.extend(_hard_split(para, max_chars))
+            continue
+
         if current_len + len(para) + 2 > max_chars:
             if current_chunk:
                 chunks.append("\n\n".join(current_chunk))

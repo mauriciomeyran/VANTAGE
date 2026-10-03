@@ -18,8 +18,11 @@ Los argumentos son independientes de orden y combinables:
     vdoc notion kernel          # solo Kernel, forzado notion→local (pide confirmación)
     vdoc system_prompt   |  vdoc career_canon  |  vdoc manual
     vdoc aliases          |  vdoc change_log
-    vdoc Navigation_Brief |  vdoc VANTAGE
+    vdoc Navigation_Brief
     vdoc project_charter  |  vdoc charter
+
+Nota: 'VANTAGE' ya no es un doc válido: se anunciaba aquí pero vsync_doc.py
+nunca lo aceptó en --doc (exit 2 con "invalid choice"). Usa las keys de arriba.
 
 Nota: ID Census no es un doc soportado aquí — se genera vía generate-census
 y se sube directo a Notion, no vive en ACTIVE/ ni se respalda por este flujo.
@@ -32,14 +35,16 @@ qué más se haya pasado en la misma línea.
 import os, subprocess, sys
 from pathlib import Path
 
-PROJECT = Path.home() / "Documents/03 Projects/VANTAGE"
+# Derivado del propio archivo (Layer_4/scripts/vdoc.py → VANTAGE), no de
+# ~/Documents/... hardcodeado: así el wrapper es portable.
+PROJECT = Path(__file__).resolve().parents[2]
 VSYNC = PROJECT / "Layer_4/scripts/vsync_doc.py"
 VGIT  = PROJECT / "Layer_4/scripts/git_sync.py"
 
 # Nota (CENSUS-SYNC-R1): ID Census queda fuera de este set a propósito — se
 # genera vía generate-census y se sube directo a Notion; no tiene contraparte
 # en ACTIVE/ ni tiene sentido respaldarlo por este flujo.
-DOCS = {"kernel", "system_prompt", "career_canon", "manual", "aliases", "change_log", "Navigation_Brief", "VANTAGE", "change_log_archivo", "project_charter", "charter"}
+DOCS = {"kernel", "system_prompt", "career_canon", "manual", "aliases", "change_log", "Navigation_Brief", "change_log_archivo", "project_charter", "charter"}
 # Alias → key canónica en vsync_doc.DOCS
 DOC_ALIASES = {
     "charter": "project_charter",
@@ -53,12 +58,18 @@ def run(cmd, label=""):
                        env={**os.environ, "VDOC_WRAPPER": "1"})
     return r.returncode
 
-def main():
+def main() -> int:
+    """Retorna el exit code: 0 OK/cancelado por el usuario, != 0 error real.
+
+    Antes todos los caminos terminaban en un `return` pelado (None → exit 0),
+    incluso "comando no reconocido" o un fallo de vsync_doc: cualquier wrapper
+    o cron que leyera el exit code veía éxito siempre.
+    """
     raw_args = sys.argv[1:]
 
     if not raw_args or raw_args[0] in ("-h", "--help"):
         print(__doc__)
-        return
+        return 0
 
     # 'dry' es un modificador global — se detecta y se retira de los args,
     # sin importar en qué posición venga.
@@ -71,17 +82,17 @@ def main():
         if a in DIRECTIONS:
             if direction is not None:
                 print(f"Dirección duplicada/ambigua: '{direction}' y '{a}'")
-                return
+                return 1
             direction = a
         elif a in DOCS:
             if doc is not None:
                 print(f"Doc duplicado/ambiguo: '{doc}' y '{a}'")
-                return
+                return 1
             doc = a
         else:
             print(f"Comando no reconocido: '{a}'")
             print(__doc__)
-            return
+            return 1
 
     # 'vdoc kernel' sin dirección explícita → auto (comportamiento histórico)
     # 'vdoc dry' sin nada más → auto dry
@@ -98,8 +109,7 @@ def main():
     # qué dirección o doc se haya combinado en la misma línea.
     if dry_flag:
         vsync_args += ["--dry-run"]
-        run(vsync_args, "vsync_doc (preview)")
-        return
+        return run(vsync_args, "vsync_doc (preview)")
 
     forced = direction in ("notion", "local")
 
@@ -119,20 +129,20 @@ def main():
             # Sin TTY interactivo — fallar seguro, nunca asumir confirmación.
             print("\n   Sin entrada interactiva disponible — cancelado por seguridad.")
             print("   No se escribió nada.")
-            return
+            return 0
         if confirm != "s":
             print("   Cancelado. No se escribió nada.")
-            return
+            return 0
 
     # Paso 1: sync
     rc = run(vsync_args, "vsync_doc (Notion ↔ ACTIVE)")
     if rc != 0:
         print("⚠️ vsync_doc tuvo error")
-        return
+        return rc
 
     # Paso 2: commit
     vgit_args = [str(VGIT)]
-    run(vgit_args, "git_sync (ACTIVE → GitHub)")
+    return run(vgit_args, "git_sync (ACTIVE → GitHub)")
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

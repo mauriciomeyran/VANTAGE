@@ -29,8 +29,16 @@ Implementar el mecanismo de sincronización permanente de mirrors fundacionales 
    Wrapper shell fino que invoca el script Python.
 
 3. **notion_write_wrapper.py**  
-   **Estado: Experimental / Stub.**  
-   No está terminado ni es usado por ningún script del repo. Contiene la lista de los 8 documentos y la llamada al trigger, pero la lógica real de escritura a Notion está pendiente (TODO). No usar en producción hasta que se complete o se elimine.
+   **Estado: Experimental / Stub — falla rápido.**  
+   No está terminado ni es usado por ningún script del repo. Desde el fix B10,
+   `write_to_notion_page()` lanza `NotImplementedError` en vez de simular un
+   `{"success": True}` sin escribir nada (antes un import accidental reportaba
+   éxito falso y disparaba un sync del contenido viejo). La lista de documentos
+   fundacionales ya no vive aquí: viene de `foundational_docs.py`.
+
+4. **foundational_docs.py**  
+   Fuente única del mapeo `page_id → key` de documentos fundacionales, compartida
+   por el wrapper y el trigger (antes estaba duplicada y podía quedar en drift).
 
 ## Limitación importante (aceptada)
 

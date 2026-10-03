@@ -17,7 +17,6 @@ import hashlib
 import json
 import os
 import re as _re
-import stat
 import sys
 import time
 from datetime import datetime, timezone
@@ -32,6 +31,14 @@ _L1 = _PROJECT / "Layer_1"
 for p in (_L1 / ".venv" / "lib").glob("python3*/site-packages"):
     sys.path.insert(0, str(p))
     break
+
+# helper compartido de versión de API (mismo criterio que Layer_1/scripts/generate_census.py)
+sys.path.insert(0, str(_L1 / "scripts"))
+try:
+    from notion_utils import _notion_version
+except ImportError:
+    def _notion_version() -> str:
+        return os.environ.get("NOTION_VERSION", "2025-09-03")
 
 # carga env de L1
 _ENV = _L1 / "config" / "layer_1.env"
@@ -59,7 +66,7 @@ HTTP = httpx.Client(
     timeout=httpx.Timeout(10.0, connect=5.0),
     limits=httpx.Limits(max_keepalive_connections=5, max_connections=10),
 )
-HEADERS = {"Authorization": f"Bearer {TOKEN}", "Notion-Version": "2025-09-03"}
+HEADERS = {"Authorization": f"Bearer {TOKEN}", "Notion-Version": _notion_version()}
 
 BASE_DIR = _PROJECT / "Documentación" / "ACTIVE"
 
@@ -171,9 +178,21 @@ def _decide(key, local_text, notion_text, manifest):
 
 
 def _rich_text(rt):
+    """Texto plano de un rich_text de Notion.
+
+    Notion incluye `plain_text`; los bloques que construimos localmente (desde
+    markdown) no, así que se usa `text.content` como fallback. Antes el helper
+    devolvía "" para bloques locales, lo que hacía imposible comparar contenido.
+    """
     if not rt:
         return ""
-    return "".join(r.get("plain_text", "") for r in rt)
+    out = []
+    for r in rt:
+        if r.get("plain_text") is not None:
+            out.append(r["plain_text"])
+        else:
+            out.append((r.get("text") or {}).get("content", ""))
+    return "".join(out)
 
 
 def _block_to_md(block):
@@ -241,7 +260,7 @@ def safe_list(block_id: str, cursor: str | None = None, retries: int = 3) -> dic
                 time.sleep(wait)
                 continue
             r.raise_for_status()
-        except (TimeoutException, NetworkError) as e:
+        except (TimeoutException, NetworkError):
             if attempt == retries:
                 print(f"\n       ⚠️  [TIMEOUT] Falló bloque {block_id[:8]} tras {retries} intentos. Omitiendo hijos.")
                 return None
@@ -451,7 +470,7 @@ def _patch_block_rich_text(block_id: str, btype: str, new_rich_text: list) -> bo
                 continue
             print(f"       ⚠️ [ERROR {r.status_code}] PATCH {block_id[:8]}: {r.text[:150]}")
             return False
-        except Exception as e:
+        except Exception:
             if attempt < 2:
                 time.sleep(1.5 * (attempt + 1))
             continue
@@ -480,6 +499,33 @@ def _patch_table_row(block_id: str, cells: list) -> bool:
                 time.sleep(1.5 * (attempt + 1))
             continue
     return False
+
+
+def _local_table_signature(table_block: dict) -> list[list[str]]:
+    """Firma (texto por celda) de una tabla local construida desde markdown."""
+    children = (table_block.get("table") or {}).get("children", [])
+    return [
+        [_rich_text(c) for c in (row.get("table_row") or {}).get("cells", [])]
+        for row in children
+    ]
+
+
+def _existing_table_signature(block_id: str) -> list[list[str]] | None:
+    """Firma (texto por celda) de una tabla ya existente en Notion, paginando."""
+    rows = []
+    cur = None
+    while True:
+        data = safe_list(block_id, cur)
+        if data is None:
+            return None
+        for b in data.get("results", []):
+            if b.get("type") == "table_row":
+                rows.append([_rich_text(c) for c in (b.get("table_row") or {}).get("cells", [])])
+        if not data.get("has_more"):
+            return rows
+        cur = data.get("next_cursor")
+        if not cur:
+            return rows
 
 
 def push_local_to_notion(pid, path):
@@ -584,13 +630,17 @@ def push_local_to_notion(pid, path):
                     # Divider no tiene contenido que actualizar
                     pass
                 elif block_type == "table":
-                    # Tabla: estructura completa (más complejo, simplificado por ahora)
-                    # TODO: Implementar PATCH granular de tablas
-                    # V-06 fix: antes esto pasaba en silencio (pass) y el
-                    # bloque quedaba marcado como sincronizado más abajo
-                    # (manifest hash actualizado) pese a no haberse tocado.
-                    # Ahora se cuenta explícitamente como no sincronizado.
-                    tables_skipped += 1
+                    # Tabla: no hay PATCH granular completo todavía.
+                    # V-06: se cuenta como no sincronizada (antes pasaba en
+                    # silencio y el manifest se actualizaba sin haber tocado
+                    # nada).
+                    # B11: si la tabla es IDÉNTICA, no hay nada que
+                    # sincronizar — antes se contaba igual como fallo, lo que
+                    # marcaba exit 1 y bloqueaba el manifest sin motivo.
+                    if _local_table_signature(local_block) == _existing_table_signature(existing_block["id"]):
+                        pass  # contenido ya idéntico
+                    else:
+                        tables_skipped += 1
                 elif block_type == "table_row":
                     # Table row: PATCH cells
                     new_cells = local_block["table_row"].get("cells", [])
@@ -718,9 +768,9 @@ def main():
                 meta = notion.pages.retrieve(d["notion_id"])
             except Exception as e:
                 print(f"  ✗ {d['label']:<30} [DRY] ERROR — {e}")
+                _exit_code[0] = 1
                 continue
             ts = datetime.fromisoformat(meta["last_edited_time"].replace("Z","+00:00"))
-            local_ts = datetime.fromtimestamp(local.stat().st_mtime, tz=timezone.utc) if local.exists() else None
 
             if args.direction == "notion":
                 print(f"  · {d['label']:<30} [DRY] notion→local (sin cambios aplicados)")
@@ -742,6 +792,7 @@ def main():
         md, ts = fetch_notion_as_md(d["notion_id"])
         if md is None:
             print(f"  ✗ {d['label']:<30} ERROR")
+            _exit_code[0] = 1
             continue
 
         if args.direction == "notion":
@@ -779,8 +830,8 @@ def main():
                 print(f"  ⚠️ {d['label']:<30} CONFLICT — ambos lados cambiaron desde el último sync. SIN APLICAR. Resolver manual con --direction.")
             elif decision == "local->notion":
                 print(f"  ⚠️  {d['label']:<30} SKIP — local→notion deshabilitado (ACTIVE LOCAL es read-only)")
-                print(f"    Cambios locales detectados pero no se pueden subir a Notion.")
-                print(f"    Use --direction notion para sobrescribir local con la versión de Notion.")
+                print("    Cambios locales detectados pero no se pueden subir a Notion.")
+                print("    Use --direction notion para sobrescribir local con la versión de Notion.")
                 continue
             else:  # notion->local
                 local.parent.mkdir(parents=True, exist_ok=True)
@@ -791,7 +842,8 @@ def main():
                 _save_manifest(manifest)
                 print(f"  ✓ {d['label']:<30} notion→local (auto)")
 
-    if not args.dry_run and not os.environ.get("VDOC_WRAPPER"):
+    # Si hubo errores, no commitear: dejaría un estado parcial en git sin aviso.
+    if not args.dry_run and not os.environ.get("VDOC_WRAPPER") and _exit_code[0] == 0:
         auto_commit(dry_run=False)
     return _exit_code[0]
 

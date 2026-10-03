@@ -14,8 +14,8 @@ Si el page_id corresponde a un documento fundacional, dispara vsync_doc.py --dir
 para ese documento específicamente.
 """
 
-import sys
 import subprocess
+import sys
 from pathlib import Path
 
 # ── Paths L4 → L1 ────────────────────────────────────────────────────────────
@@ -23,18 +23,10 @@ _SCRIPT_DIR = Path(__file__).resolve()
 _PROJECT = _SCRIPT_DIR.parents[2]  # VANTAGE
 _VSYNC_DOC = _PROJECT / "Layer_4" / "scripts" / "vsync_doc.py"
 
-# ── Mapeo vigente de documentos fundacionales ─────────────────────────────────
-FOUNDATIONAL_DOCS = {
-    "377938be-fc42-805e-a408-c9ae518d4fe7": "kernel",
-    "37b938be-fc42-8001-9b9b-fcf81130d274": "system_prompt",
-    "377938be-fc42-8089-93f2-f52dbd2dec6c": "career_canon",
-    "372938be-fc42-8050-9a67-e40857d7806e": "manual",
-    "37c938be-fc42-80d4-b9ae-f5969830331b": "aliases",
-    "390938be-fc42-80e7-b429-d7d730339353": "change_log",
-    "3a3938be-fc42-8008-9e90-ec435c01f50d": "brief",
-    "3ba938be-fc42-8011-8947-fb4fa5d1f63f": "change_log_archivo",
-    "f87938be-fc42-8263-a305-819877d2245f": "project_charter",
-}
+if str(_SCRIPT_DIR.parent) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR.parent))
+
+from foundational_docs import FOUNDATIONAL_DOCS, mcp_sync_log_path  # noqa: E402
 
 def main():
     if len(sys.argv) < 2:
@@ -50,20 +42,28 @@ def main():
 
     doc_key = FOUNDATIONAL_DOCS[page_id]
     print(f"[MCP SYNC HOOK] Write detectado a documento fundacional: {doc_key}")
-    print(f"[MCP SYNC HOOK] Disparando sync Notion→local (no-bloqueante)...")
+    print("[MCP SYNC HOOK] Disparando sync Notion→local (no-bloqueante)...")
 
-    # Ejecutar vsync_doc.py --direction notion --doc <doc_key> en background
-    # No-bloqueante: si el sync falla, loguear warning pero no abortar el write original
+    # Ejecutar vsync_doc.py --direction notion --doc <doc_key> en background.
+    # No-bloqueante: si el sync falla, se registra en el log y NO se aborta el write.
+    #
+    # IMPORTANTE (fix B1): el hijo NO debe heredar PIPE. Antes se lanzaba con
+    # stdout=PIPE/stderr=PIPE y el padre terminaba de inmediato sin leer: en cuanto
+    # el sync escribía su primer print, moría con BrokenPipeError y el sync
+    # post-MCP nunca se completaba. Ahora escribe a un log en disco.
+    log_path = mcp_sync_log_path()
     try:
-        process = subprocess.Popen(
-            [sys.executable, str(_VSYNC_DOC), "--direction", "notion", "--doc", doc_key],
-            cwd=str(_PROJECT),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
-        # No esperar a que termine - dejarlo correr en background
-        print(f"[MCP SYNC HOOK] Sync iniciado en background para {doc_key}")
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(log_path, "a", encoding="utf-8") as log:
+            subprocess.Popen(
+                [sys.executable, str(_VSYNC_DOC), "--direction", "notion", "--doc", doc_key],
+                cwd=str(_PROJECT),
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                text=True,
+                start_new_session=True,
+            )
+        print(f"[MCP SYNC HOOK] Sync iniciado en background para {doc_key} (log: {log_path})")
     except Exception as e:
         print(f"[MCP SYNC HOOK] Error iniciando sync para {doc_key}: {e}")
         # No abortar - el write original fue exitoso
