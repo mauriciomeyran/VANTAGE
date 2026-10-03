@@ -390,25 +390,30 @@ Extensión reciente — Skills Distribution: además de vgit, el alias vtriggers
 Esto es lo que permite que Claude lea siempre la misma versión del manifiesto (vía web_fetch) y del contenido de cada skill (vía git clone --depth 1 local), sin paso de sincronización manual ni intermediario MCP.
 Automatización adicional vía cron: además de vgit, tres cron jobs corren en background — vantage.py sync y notion_backup.py (arreglados en v9.21.40 tras fallar con "Operation not permitted"; ahora usan ruta directa al Python del venv) y vl3, nuevo cron job a las 12am/8am/4pm para procesar backlog de Gmail sin correrlo manualmente.
 ¿Qué es vdoc?
-Sincroniza los documentos registrados en DOCS de vsync_doc.py entre Notion y ACTIVE/ en disco; la matriz fundacional de referencia se mantiene en SP:SYNC-RULE.
+Sincroniza los 8 documentos (los 6 fundacionales editables — Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log — más Navigation Brief y Change Log Archivo) entre Notion y ACTIVE/ en disco.
 Al terminar encadena un git_sync automático para que el commit quede reflejado en GitHub sin un paso adicional.
 Tres direcciones posibles:
 vdoc auto — compara la fecha de modificación de cada documento (local vs. Notion) y sincroniza en el sentido que corresponda, documento por documento. Es el modo por defecto y el más seguro para uso diario: nunca sobreescribe algo más reciente con algo más viejo.
-vdoc notion — fuerza Notion → local para los documentos registrados en DOCS, sin comparar fechas. Úsalo solo si sabes que Notion tiene la versión correcta y quieres descartar cualquier cambio local.
-vdoc local — fuerza local → Notion para los documentos permitidos por vsync_doc.py, sin comparar fechas. Project Charter está bloqueado para escritura directa desde este flujo.
+vdoc notion — fuerza Notion → local para los 8 documentos, sin comparar fechas. Úsalo solo si sabes que Notion tiene la versión correcta y quieres descartar cualquier cambio local.
+vdoc local — fuerza local → Notion para los 8 documentos, sin comparar fechas. Úsalo solo si editaste los .md directamente en disco (offline) y quieres que Notion adopte esa versión.
 notion y local sobreescriben sin comparar fechas, así que ambas son operaciones forzadas: antes de ejecutar nada, vdoc te muestra automáticamente un preview (equivalente a --dry-run). vdoc notion es la vía preferida — sí espera tu confirmación explícita en terminal (s para continuar, cualquier otra tecla cancela). ⚠️ vdoc local es la excepción: por una excepción temporal en el código, ejecuta directo sin pedir confirmación, es más lenta, y conlleva mayor riesgo de corrupción o truncado — además de eliminar los hipervínculos cross-reference ya escritos (ver MANUAL:MONITOR, riesgo de destroy/rebuild). Úsala solo cuando sepas que editaste offline y necesitas forzar esa dirección; revisa siempre el preview con vdoc local dry antes de correrla en serio.
 Si por alguna razón corres el comando sin una terminal interactiva disponible, el script no asume que confirmaste — cancela por seguridad y no escribe nada. vdoc auto nunca pide esta confirmación porque nunca sobreescribe algo más reciente.
 Modificador dry — se combina con cualquiera de los tres comandos anteriores y con cualquier documento específico, en cualquier orden, y siempre gana: nunca escribe en Notion, en disco ni hace commit, sin importar qué más hayas escrito en la misma línea.
 vdoc dry — preview de auto (equivalente a vdoc auto dry)
 vdoc notion dry — preview de lo que haría vdoc notion, sin ejecutar la escritura forzada
 vdoc local dry — preview de lo que haría vdoc local
-vdoc <clave> dry — preview de auto para el documento seleccionado
+vdoc kernel dry — preview de solo Kernel en modo auto
 Recomendación operativa: corre siempre la variante dry primero cuando no estés seguro de qué dirección va a ganar — te cuesta segundos y evita sorpresas, especialmente antes de un notion o local forzado.
 ¿Que es sync?
-Sync quirúrgico por documento — cualquier clave aceptada por DOCS en vsync_doc.py puede pasarse sola o combinada con dirección/dry:
-vdoc <clave>
-Sin dirección explícita, corre en modo auto (gana el más reciente) solo para el documento seleccionado; los demás no se procesan.
-Se puede combinar con notion/local (ej. vdoc notion <clave> fuerza Notion→local para el documento seleccionado) y con dry (ej. vdoc <clave> dry).
+Sync quirúrgico por documento — cualquiera de los 6 nombres puede pasarse solo o combinado con dirección/dry:
+vdoc kernel
+vdoc system_prompt
+vdoc career_canon
+vdoc manual
+vdoc aliases
+vdoc change_log
+Sin dirección explícita, cada uno corre en modo auto (gana el más reciente) solo para ese documento — los otros 5 no se tocan. 
+Se puede combinar con notion/local (ej. vdoc notion kernel fuerza solo Kernel Notion→local) y con dry (ej. vdoc kernel dry).
 ---
 ### 8.2 MANUAL:WEEKLY-FLOW-002
 Martes
@@ -642,8 +647,8 @@ Entorno (.env) — verifica que NOTION_TOKEN y demás vars requeridas existan.
 Git — git status --porcelain; reporta si hay archivos sin commitear.
 Último commit (vgit) — git log -1 para timestamp de referencia.
 Notion reachable — fetch mínimo a V-SYSTEM-PROMPT para confirmar conectividad y token válido.
-Docs en ACTIVE/ — confirma que los documentos supervisados existen localmente; el conjunto de verificación se deriva de DOCS_FUNDACIONALES en health_check.py. Solo verifica existencia, no contenido.
-Último vdoc sync — cuál de los documentos sincronizados por vdoc, según las claves registradas en DOCS de vsync_doc.py, tiene el mtime más reciente, y hace cuánto.
+Docs en ACTIVE/ — confirma que los 8 documentos existen localmente (los 6 fundacionales editables más Navigation Brief y Changelog Archivo); solo verifica existencia, no contenido.
+Último vdoc sync — cuál de los 6 docs locales sincronizados por vdoc (excluye Brief, que no forma parte de su alcance) tiene el mtime más reciente, y hace cuánto.
 Antigüedad de índices (index_age) — ver detalle abajo. Única sección con capacidad de escritura (auto-sync condicional).
 Tickets pendientes — Bug Tracker y Task Tracker, agrupados por prioridad.
 Índices monitoreados: graph_v2.json y entity_index_v2.json, ambos en Layer_1/scripts/.
@@ -802,7 +807,7 @@ Tabla única de triaje (referenciada por Kernel, Manual y System Prompt — resu
 Prioridad: Terminal es la vía por defecto para lectura de reglas o contratos. MCP para lectura se activa únicamente cuando el operador lo solicita explícitamente en el turno — no es una vía libre para que el agente elija por conveniencia.
 ## 15 MANUAL:PATCH-QUALITY
 Calidad de Parches
-Todo parche a un documento fundacional editable debe cumplir estos seis criterios antes de aplicarse — si falla alguno, se reescribe antes de solicitar APROBAR_WRITE:
+Todo parche a los 6 documentos fundacionales editables debe cumplir estos seis criterios antes de aplicarse — si falla alguno, se reescribe antes de solicitar APROBAR_WRITE:
 1. Invisibilidad estructural — no crea secciones nuevas si el contenido cabe en una existente. Nota: la invisibilidad estructural incluye el nivel de heading Markdown, no solo el contenido — una subsección (NN.N) que comparte nivel ## con su capítulo padre rompe esta invisibilidad tanto como un párrafo con tono distinto. Ver la matriz tipográfica congelada en KERNEL:DOCUMENTATION-001 como referencia de nivel correcto por tipo de nodo. Adicionalmente, el identificador técnico y el título descriptivo de cualquier nodo deben coexistir dentro de un único bloque de heading (un solo nodo ##/###), con el título unido al identificador mediante un salto de línea 
 interno al mismo bloque — nunca como dos bloques de heading consecutivos, aunque visualmente ambos casos puedan parecer "dos líneas" a simple vista. El espaciado visual que Notion aplica entre dos bloques de heading consecutivos en su renderizado es un artefacto de la plataforma, no una instrucción para insertar contenido de separación — esta regla aplica a todo nodo del sistema documental, no a un caso puntual.
 1. Continuidad de voz — mismo registro y nivel técnico del bloque que lo rodea.
@@ -1000,7 +1005,7 @@ apply_hyperlinks_notion.pyQué hace: Aplica el sistema de cross-reference hyperl
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
-| --doc <clave registrada en DOC_KEY_TO_NAME> | Acabas de editar solo el Manual y no quieres re-procesar todos los documentos — corre el ciclo de hyperlinks en uno solo. |
+| --doc {kernel,system_prompt,manual,career_canon,aliases,change_log,brief} | Acabas de editar solo el Manual y no quieres re-procesar los 7 documentos — corre el ciclo de hyperlinks en uno solo. |
 | --all | Ciclo completo de housekeeping documental — mutuamente excluyente con --doc. |
 | --apply | El modo real de escritura — sin este flag, cualquier corrida (incluso sin --dry-run) es preview únicamente. |
 | --dry-run | ⚠️ No tiene efecto propio — el script ya es dry-run por default sin --apply. Es no-op explícito, no un modo adicional. |
@@ -1048,7 +1053,7 @@ Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --execute | Ya validaste el dry-run (default) y quieres aplicar la conversión real. |
-verify_versions.py (alias vversions)Qué hace: Herramienta central de verificación de los documentos registrados en DOC_KEYS, gap-report de scripts/skills e integridad de longitud documental; la matriz fundacional se referencia en SP:SYNC-RULE.
+verify_versions.py (alias vversions)Qué hace: Herramienta central de verificación — versión de los 9 fundacionales, gap-report de scripts/skills, e integridad de longitud documental.
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
@@ -1216,7 +1221,7 @@ Flags:
 | --- | --- |
 | --direction {notion,auto,local} | Igual lógica que los tokens de vdoc.py, pero si necesitas invocar el motor directo (debugging). |
 | --dry-run | Preview sin aplicar ni auto-commit. |
-| --doc <clave registrada en DOCS> | Selecciona un documento registrado por vsync_doc.py; los documentos fundacionales se enumeran en SP:SYNC-RULE. |
+| --doc {kernel,system_prompt,career_canon,manual,aliases,change_log,brief,change_log_archivo} | Acepta 8 documentos: los 6 fundacionales editables más brief y change_log_archivo. |
 git_sync.pyQué hace: Genera commit y push del árbol VANTAGE hacia GitHub.
 Flags:
 | Flag | Caso de uso |
@@ -1297,7 +1302,7 @@ Reglas de mantenimiento derivadas de la matriz:
 Hallazgos de discrepancia activos (heredados de auditoría arena.ia, verificados contra código fuente):
 1. layer_1_pipeline.sh batch no reenvía -execute a batch_operations.py — siempre corre en modo definido por el propio script.
 1. vdoc.py local no pide confirmación pese a que el resto de direcciones forzadas sí (excepción temporal marcada en el propio código).
-1. vsync_doc.py --doc acepta las claves registradas en DOCS; la matriz fundacional se mantiene en SP:SYNC-RULE.
+1. vsync_doc.py --doc maneja 8 documentos (6 fundacionales editables + brief + change_log_archivo).
 1. dedup_opportunities.py --clear requiere posición fija en sys.argv, no es un flag argparse real.
 1. vsum.py --notion se parsea pero no tiene efecto — vestigial.
 1. cross_tracker_match.py --dry-run no puede desactivarse — default True sin opuesto.

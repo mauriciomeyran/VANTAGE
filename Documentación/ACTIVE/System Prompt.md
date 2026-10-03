@@ -59,7 +59,7 @@ Regla dura: ningún agente debe generar contenido de CV, QA, o cualquier otro en
 | Skill | Versión vigente | Última actualización |
 | --- | --- | --- |
 | vantage-cv-a | v9.16.0 | 2026-08-09 |
-| vantage-cv-b | v10.2.0 | 2026-09-05 |
+| vantage-cv-b | v10.2.1 | 2026-09-28 |
 | vantage-qa | v9.17.0 | 2026-08-19 |
 | vantage-session-open | v1.2.0 | 2026-09-24 |
 | vantage-session-close | v1.0.0 | 2026-09-05 |

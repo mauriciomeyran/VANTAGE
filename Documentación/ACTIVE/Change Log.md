@@ -29,7 +29,7 @@ Alcance:
 1. Fixed — Resolución de ruta de data/V_ID_CENSUS_PRODUCTION.md corregida para ejecución dentro de scope subshell (Layer_1/).
 Commits: b2c5b42 — docs(census): add granular charter nodes mapping to production census (pusheado a origin/main).
 Decisiones no duplicadas: no se ejecutó vcensus --sync-to-notion · no se modificó generate_census.py ni CENSUS_SPEC · no se tocaron documentos fundacionales en Notion.
-Validación: (a) Rebase y stash pop verificados por el emisor (sin conflictos); (b) commit b2c5b42 confirmado como pusheado a origin/main; (c) NOTA DE DISCREPANCIA: el Census verificado en v9.22.23 (corrida 12:18 CDMX) registra CHARTER:MILESTONES-001..005 — el emisor declara mapeo solo hasta 002; requerida verificación 1:1 del operador contra el V_ID_CENSUS_PRODUCTION.md en origin/main antes de citar esta cifra como definitiva.
+Validación: (a) Rebase y stash pop verificados por el emisor (sin conflictos); (b) commit b2c5b42 confirmado como pusheado a origin/main; (c) NOTA DE DISCREPANCIA: el Census verificado en v9.22.23 (corrida 12:18 CDMX) registra CHARTER:MILESTONES-001..005 — el emisor declara mapeo solo hasta 002; RESUELTA 2026-09-30 por verificación 1:1 del operador contra V_ID_CENSUS_PRODUCTION.md (commit b2c5b42): CHARTER:MILESTONES-001..005 completos (31/31 sub-nodos mapeados); la declaración "001–002" del emisor era incorrecta.
 Estado: WRITE aplicado en Notion. Versión del Change Log bumpada a v9.22.24. Sin DRY RUN de Changelog presentado, por instrucción explícita del operador (APROBAR_WRITE + version bump en una sola pasada).
 IDs afectados: Ninguno nuevo (mapeo de índices de IDs existentes); no dispara CENSUS-SYNC Regla 1.
 Handoff de referencia: ninguno (sin serial declarado en esta sesión).
