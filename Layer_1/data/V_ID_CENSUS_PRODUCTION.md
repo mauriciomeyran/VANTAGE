@@ -2,13 +2,8 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`CHARTER:PURPOSE`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280cfa758eec00c6b4bd3) | 1. | Propósito del Proyecto |
-| [`CHARTER:NON-NEGOTIABLES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280d0b67de66fad8199c8) | 4. | Principios No Negociables |
-| [`CHARTER:STATUS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280ebb77fef32858e73c4) | 7. | Estatus del Proyecto |
-| [`CHARTER:MILESTONES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280dc8598dadd5e8c050f) | 5. | Hitos y Milestones |
-| [`CHARTER:DECISIONS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42809ba6ffc94a0d10b714) | 2. | Registro de Decisiones |
-| [`CHARTER:FAILURES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428075b83ec234ef46eed3) | 3. | Registro de Fallos |
-| [`CHARTER:CONTINUITY`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42803e9c24f2d6e9bced1e) | 6. | Continuidad Operativa |
+| [`CHARTER:PURPOSE`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280cfa758eec00c6b4bd3) | 01 | Propósito del Proyecto |
+| [`CHARTER:DECISIONS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42809ba6ffc94a0d10b714) | 02 | Registro de Decisiones |
 | [`CHARTER:DECISIONS-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280229697f961aefc5ceb) | 2.1 | Separación Class A / Class B |
 | [`CHARTER:DECISIONS-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280edbfdef81c9d544217) | 2.2 | Aéropostale removido de Hard Blocks |
 | [`CHARTER:DECISIONS-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280a5b8b2ea05b3b675f0) | 2.3 | Serial Authority v2 — operador como Prioridad 0 |
@@ -20,11 +15,13 @@
 | [`CHARTER:DECISIONS-009`](https://app.notion.com/p/f87938befc428263a305819877d2245f#a2a688b0c9874f05990238b0c72b7a9b) | 2.9 | Blueprint de reescritura KERNEL/MANUAL v10 — adopción híbrida |
 | [`CHARTER:DECISIONS-010`](https://app.notion.com/p/f87938befc428263a305819877d2245f#60edda41d7ac4601b824838882d8d02e) | 2.10 | Creación de este Charter |
 | [`CHARTER:DECISIONS-011`](https://app.notion.com/p/f87938befc428263a305819877d2245f#55b26526efbb46b38e8666abf8877599) | 2.11 | CLAUDE/MAIN declarado gatekeeper exclusivo del Charter |
+| [`CHARTER:FAILURES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428075b83ec234ef46eed3) | 03 | Registro de Fallos |
 | [`CHARTER:FAILURES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42805f9285f417aa359826) | 3.1 | Reaparición de Hard Blocks ya corregidos |
 | [`CHARTER:FAILURES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280f29959f58b132ac9cb) | 3.2 | Patrón de reporte optimista (ticket RT-1) |
 | [`CHARTER:FAILURES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280998c78cf5f4df4689d) | 3.3 | Cédula de Reconciliación fabricada |
 | [`CHARTER:FAILURES-004`](https://app.notion.com/p/f87938befc428263a305819877d2245f#119fab7b2a2340ab86a346cbd20b5a54) | 3.4 | Loop de auto-rechazo QA↔CV-B |
 | [`CHARTER:FAILURES-005`](https://app.notion.com/p/f87938befc428263a305819877d2245f#78ae3afe77e949b3a25941edc42e0d86) | 3.5 | Documentación que describe código ya retirado |
+| [`CHARTER:NON-NEGOTIABLES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280d0b67de66fad8199c8) | 04 | Principios No Negociables |
 | [`CHARTER:NON-NEGOTIABLES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280499cb9f08227656612) | 4.1 | Python es dueño exclusivo de los campos Class B |
 | [`CHARTER:NON-NEGOTIABLES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428061a047e730d71fe71c) | 4.2 | APROBAR_WRITE obligatorio antes de cualquier escritura |
 | [`CHARTER:NON-NEGOTIABLES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280519ae1d3aac599e87f) | 4.3 | Ningún reporte de éxito se acepta sin re-fetch/verificación |
@@ -35,11 +32,14 @@
 | [`CHARTER:NON-NEGOTIABLES-008`](https://app.notion.com/p/f87938befc428263a305819877d2245f#b9ca36b00b124df9be3db39c0a629e3d) | 4.8 | Graph/Backlinks son artefactos derivados, nunca capa de autoridad |
 | [`CHARTER:NON-NEGOTIABLES-009`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d756328198ed4ea4bb7f39f7bb6027b7) | 4.9 | VM_Scope es binario (Alto/Bajo) |
 | [`CHARTER:NON-NEGOTIABLES-010`](https://app.notion.com/p/f87938befc428263a305819877d2245f#6cd49fcd84bd4a0eba084b1b0ab10ca1) | 4.10 | Hard Blocks reales se consultan siempre en la fuente |
+| [`CHARTER:MILESTONES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280dc8598dadd5e8c050f) | 05 | Hitos y Milestones |
 | [`CHARTER:MILESTONES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280eb9ad8ce382d23dd35) | 5.1 | Hito 1 — Track Beta (código) cerrado |
 | [`CHARTER:MILESTONES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280c0bf5dc992ed50be72) | 5.2 | Hito 2 — T2.1 KERNEL v10 en paralelo a Track Beta |
 | [`CHARTER:MILESTONES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280658fd9d6c19954a7ea) | 5.3 | Hito 3 — MANUAL v10 en paralelo a KERNEL v10 |
 | [`CHARTER:MILESTONES-004`](https://app.notion.com/p/f87938befc428263a305819877d2245f#01cf0330464a4dbc97d1584d4176dd41) | 5.4 | Hito 4 — Fase 3 sync + verificación cruzada |
 | [`CHARTER:MILESTONES-005`](https://app.notion.com/p/f87938befc428263a305819877d2245f#301a87b2a0f841ce8917c35189fbb99a) | 5.5 | Hito 5 — Charter actualizado en cada decisión estructural |
+| [`CHARTER:CONTINUITY`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42803e9c24f2d6e9bced1e) | 06 | Continuidad Operativa |
+| [`CHARTER:STATUS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280ebb77fef32858e73c4) | 07 | Estatus del Proyecto |
 
 ---
 
@@ -47,6 +47,11 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
+| [`KERNEL:PURPOSE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281339ef8c3708fe206fb) | 01 | Propósito del Sistema |
+| [`KERNEL:PURPOSE-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281c49ef9e1a931655091) | 01.1 | Objetivo Principal |
+| [`KERNEL:FAIL-PHILOSOPHY`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428191ac44ca3789bb647b) | 02 | Filosofía de Fallo |
+| [`KERNEL:FAIL-PHILOSOPHY-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42811e8433d4b688978609) | 02.1 | Fail-Fast vs Fail-Safe |
+| [`KERNEL:FAIL-PHILOSOPHY-002`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281b38b03cca79fab0ddf) | 02.2 | Recovery Strategies |
 | [`KERNEL:DOCUMENTATION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810995f1cf4bdbc58d07) | 03 | Documentación y Gobernanza (L0) |
 | [`KERNEL:DOCUMENTATION-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281dda00cefa2da3a2c79) | 03.1 | Canonical Document ID Contract |
 | [`KERNEL:DOCUMENTATION-002`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42815e96bcf54323fc9958) | 03.2 | Nomenclatura de IDs Canónicos |
@@ -65,17 +70,17 @@
 | [`KERNEL:DOCUMENTATION-015`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#9cfab84c738f4a53abe6fe9f244a31ae) | 03.15 | Cross-Reference Hyperlinks |
 | [`KERNEL:DOCUMENTATION-016`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#b63cef46a0bb46d1b0114e72a910fc74) | 03.16 | Notebook Gemini |
 | [`KERNEL:DOCUMENTATION-017`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#430a977f08b742dfa476a0840a909e51) | 03.17 | Sandbox |
+| [`KERNEL:DOC-CONTRACT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5a99326b9a124e89a2fd575eda5fd2b9) | 03.18 | Contrato de Prefijos Documentales del Lazy Loader |
+| [`KERNEL:HANDOFF-SERIAL`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#45733b3696264c42acf5d26381c27a17) | 03.19 | Contrato de Serial Global de Handoff |
 | [`KERNEL:ARCHITECTURE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810a8870dd1d384c1e7a) | 04 | Arquitectura de Cuatro Capas |
 | [`KERNEL:ARCHITECTURE-L1`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f3825bd740b23ec959) | 04.1 | L1 — Active Search |
 | [`KERNEL:ARCHITECTURE-L2`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#73f6ec3692de4632a16d89313b91456d) | 04.2 | L2 — Strategic Search |
 | [`KERNEL:ARCHITECTURE-L3`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#42d63b98d72a4512911fe520df42947a) | 04.3 | L3 — Passive Intake |
 | [`KERNEL:ARCHITECTURE-L4`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#112a181a8573420888342840865da012) | 04.4 | L4 — Version Control & Infrastructure |
-| [`KERNEL:DASHBOARD-CHECKLIST-ARCH`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281dd931af4809a6d9084) | 06 | Dashboard Checklist Architecture |
 | [`KERNEL:OWNERSHIP`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42815cbfaec3f4090ea4bf) | 05 | División de Responsabilidades AI/Python |
 | [`KERNEL:OWNERSHIP-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e8a1abc8652e2568ce) | 05.1 | AI Component |
 | [`KERNEL:OWNERSHIP-002`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281c58d23ce22d20833b4) | 05.2 | Python Component |
-| [`KERNEL:PURPOSE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281339ef8c3708fe206fb) | 01 | Propósito del Sistema |
-| [`KERNEL:PURPOSE-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281c49ef9e1a931655091) | 01.1 | Objetivo Principal |
+| [`KERNEL:DASHBOARD-CHECKLIST-ARCH`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281dd931af4809a6d9084) | 06 | Dashboard Checklist Architecture |
 | [`KERNEL:SCHEMA`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281d1a7dafa0620f8f375) | 07 | Modelo de Datos y Ownership |
 | [`KERNEL:SCHEMA-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428100852fd85e9b4cdfae) | 07.1 | Schema — Class A Fields |
 | [`KERNEL:SCHEMA-002`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42816a82cffe5c657156d9) | 07.2 | Schema — Class B Fields |
@@ -89,9 +94,6 @@
 | [`KERNEL:TRACKER-SCHEMA`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281a386b2c1c72e7ed2e8) | 08 | Schema del Tracker de Vacantes |
 | [`KERNEL:TRACKER-SCHEMA-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281efa463f09608bfa5c8) | 08.1 | Tracker Schema — Campos Principales |
 | [`KERNEL:TRACKER-SCHEMA-002`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281c2bf38d2a21c0c2fd8) | 08.2 | Tracker Schema — Campos Derivados |
-| [`KERNEL:FAIL-PHILOSOPHY`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428191ac44ca3789bb647b) | 02 | Filosofía de Fallo |
-| [`KERNEL:FAIL-PHILOSOPHY-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42811e8433d4b688978609) | 02.1 | Fail-Fast vs Fail-Safe |
-| [`KERNEL:FAIL-PHILOSOPHY-002`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281b38b03cca79fab0ddf) | 02.2 | Recovery Strategies |
 | [`KERNEL:GATE-DECISION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281daa375fd80dae471d1) | 09 | Lógica de Gate Decision |
 | [`KERNEL:GATE-DECISION-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281eab202c5c58c30b4b9) | 09.1 | Gate Decision — Overview |
 | [`KERNEL:GATE-DECISION-002`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42817092c1c48145b35c49) | 09.2 | Lógica Estándar |
@@ -104,6 +106,7 @@
 | [`KERNEL:GATE-DECISION-009`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428117ab7eff03acdc8c7e) | 09.9 | Escalamiento de Pendientes a Tickets |
 | [`KERNEL:GATE-DECISION-010`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281d89366e9fd53916cca) | 09.10 | Gate Decision — Technical Review |
 | [`KERNEL:GATE-DECISION-011`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428192a026efbb6e5024e0) | 09.11 | Gate Decision — Business Review |
+| [`KERNEL:DEDUP-LAYER-UPGRADE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f8e1105ad1284258b05bb8576b35c4e0) | 09.12 | Dedup Layer Upgrade |
 | [`KERNEL:GATE-DECISION-013`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#78eb917493444f2db0c00fa5c4594e08) | 09.13 | Gate Decision — Subsección 013 |
 | [`KERNEL:CV-GOLDEN-RULES`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428187abded6a06ac3a4cf) | 10 | Golden Rules — Límites de Ejecución |
 | [`KERNEL:CV-GOLDEN-RULES-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42816a9186e8f054105519) | 10.1 | Regla de Oro #1 |
@@ -123,9 +126,9 @@
 | [`KERNEL:TRIGGER-008`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281818468d69b755df466) | 11.8 | Trigger — Health Check |
 | [`KERNEL:TRIGGER-009`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281fc9623fddebb36ba38) | 11.9 | Trigger — Version Check |
 | [`KERNEL:CV-PIPELINE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281fca6b5d07b17e3e5eb) | 12 | Pipeline de CV |
+| [`KERNEL:CV-PIPELINE-003`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5e4b693d0439469fb29f8f2687e4d401) | 12.3 | CV-C |
 | [`KERNEL:CV-PIPELINE-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281ef8d6adc3a4f9a4a42) | 12.1 | CV-A |
 | [`KERNEL:CV-PIPELINE-002`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281ecad30fc4dfd15db6c) | 12.2 | CV-B |
-| [`KERNEL:CV-PIPELINE-003`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5e4b693d0439469fb29f8f2687e4d401) | 12.3 | CV-C |
 | [`KERNEL:CANON-UPDATE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f2aed4f6bf584787b0) | 13 | Actualización del Canon |
 | [`KERNEL:NAMING-CONVENTION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42819385a1d069583bfeeb) | 14 | Convención de Nombres |
 | [`KERNEL:CONTEXT-INFRASTRUCTURE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42815993f0dc1d08c956f0) | 15 | Context Infrastructure |
@@ -133,10 +136,7 @@
 | [`KERNEL:CONTEXT-INFRASTRUCTURE-002`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42818391f2ecc693b59a2a) | 15.2 | Context Infrastructure — Integration Points |
 | [`KERNEL:DATA-FLOW`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428178be4dec4fc6423c14) | 16 | Flujo de Datos |
 | [`KERNEL:DATA-FLOW-001`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#8b46405501924da498b6068ddca32bb5) | 16.1 | Flujo de Datos — Subsección 001 |
-| [`KERNEL:DOC-CONTRACT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#5a99326b9a124e89a2fd575eda5fd2b9) | 03.18 | Contrato de Prefijos Documentales del Lazy Loader |
 | [`KERNEL:EVOLUTION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42812ca85ac71f34eaa9c9) | 17 | Evolución del Sistema |
-| [`KERNEL:DEDUP-LAYER-UPGRADE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#f8e1105ad1284258b05bb8576b35c4e0) | 09.12 | Dedup Layer Upgrade |
-| [`KERNEL:HANDOFF-SERIAL`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#45733b3696264c42acf5d26381c27a17) | 03.19 | Contrato de Serial Global de Handoff |
 
 ---
 
@@ -183,13 +183,13 @@
 | [`MANUAL:FIGMA-SYNC-005`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3eb471d8f5744556af1ef7bcd51b1ca6) | 20.5 | Regla de Reemplazo Total |
 | [`MANUAL:SCHEMA-FIELD-REF`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc42817a81abc00d317d8300) | 21 | Schema Class A/B — Referencia de Campos |
 | [`MANUAL:SCRIPT-GLOSSARY`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc428033aac7f397396a4d8e) | 22 | Script Glossary |
-| [`MANUAL:SCRIPT-GLOSSARY-DASHBOARD`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280978eaccec1c0f3b28e) | 22.4 | Script Glossary — Dashboard |
-| [`MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280f9bb7aec01efe805be) | 22.4a | Script Glossary — Dashboard Modules |
-| [`MANUAL:SCRIPT-GLOSSARY-L1`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#4fa823db035a43b0a36fcad5283f323c) | 22.1 | Script Glossary — L1 |
 | [`MANUAL:SCRIPT-GLOSSARY-CV-PREP`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3aa2572b38e542d3bd4bd733a5910e15) | 22.2 | CV Pipeline — Preparación Mecánica (Miércoles) |
+| [`MANUAL:SCRIPT-GLOSSARY-L1`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#4fa823db035a43b0a36fcad5283f323c) | 22.1 | Script Glossary — L1 |
 | [`MANUAL:SCRIPT-GLOSSARY-L1-MODULES`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280e6b469f114f00d1cb8) | 22.1a | Script Glossary — L1 Modules |
 | [`MANUAL:SCRIPT-GLOSSARY-L1-TOOLS`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc428066b256f75d0faafcc3) | 22.1b | Script Glossary — L1 Tools |
 | [`MANUAL:SCRIPT-GLOSSARY-L4`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc42808f819cf573211f33a2) | 22.3 | Script Glossary — L4 |
+| [`MANUAL:SCRIPT-GLOSSARY-DASHBOARD`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280978eaccec1c0f3b28e) | 22.4 | Script Glossary — Dashboard |
+| [`MANUAL:SCRIPT-GLOSSARY-DASHBOARD-MODULES`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280f9bb7aec01efe805be) | 22.4a | Script Glossary — Dashboard Modules |
 | [`MANUAL:SCRIPT-GLOSSARY-RAYCAST`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc4280238bc8e40a944f19d7) | 22.5 | Script Glossary — Raycast |
 | [`MANUAL:SCRIPT-GLOSSARY-XREF`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3ba938befc42801ba178e80d98305fd1) | 22.6 | Script Glossary — Cross-Reference |
 | [`MANUAL:SKILL-GLOSSARY`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3bc938befc428097aba7edb39ac6a81f) | 23 | Glosario de Skills — Referencia Operativa en Humano |
@@ -198,6 +198,13 @@
 | [`MANUAL:SKILL-GLOSSARY-AUDIT`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3bc938befc4280878cb4c6c3835a162e) | 23.3 | Auditoría y Continuidad |
 | [`MANUAL:SKILL-GLOSSARY-STYLE`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3bc938befc4280bd8d61e4d6b2468cc1) | 23.4 | Estilos de Escritura y Generación |
 | [`MANUAL:SKILL-GLOSSARY-XREF`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3bc938befc42807781fbe8135fcbb223) | 23.5 | Gaps Abiertos |
+
+---
+
+## CAREER CANON
+
+| ID | Sección | Nombre |
+|---|---|---|
 | [`CANON:PROFILE`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42815ebad8f33dc7b4a7aa) | 01 | Professional Profile Canon |
 | [`CANON:PROFILE-001`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281048b8bfcb2ab76b16e) | 01.1 | Professional Profile — ES |
 | [`CANON:PROFILE-002`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281178bc8cb6f121c0b29) | 01.2 | Professional Profile — EN |
@@ -265,34 +272,34 @@
 | ID | Sección | Nombre |
 |---|---|---|
 | [`BRIEF:PURPOSE-SCOPE`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3b2938befc4280668c3fc28cabb0a8f8) | 01 | Propósito y Alcance |
+| [`BRIEF:PURPOSE-SCOPE-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc42810f909dfb9ef3d94d84) | 01.1 | Propósito |
+| [`BRIEF:PURPOSE-SCOPE-002`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428170a836f5e3c9dc2f05) | 01.2 | Alcance |
+| [`BRIEF:PURPOSE-SCOPE-003`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281a2bb15f63807e2c22a) | 01.3 | Fuera de Alcance |
 | [`BRIEF:AUTHORITY-MATRIX`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281039f28e60fd49760af) | 02 | Matriz de Autoridad Documental |
 | [`BRIEF:ECOSYSTEM`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281bc805fd9e9c5c05856) | 03 | Ecosistema Documental |
 | [`BRIEF:NAV-CONTRACTS`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428151a093f8b716de4583) | 04 | Contratos de navegación |
-| [`BRIEF:DOMAIN-ARCHITECTURE`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc42813eb510e8fec88ffe37) | 05 | Dominios |
-| [`BRIEF:VERIFICATION-DEPTH`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281afa18af1ff0380418a) | 06 | Contratos de verificación |
-| [`BRIEF:CROSS-DEPENDENCIES`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428125baaceb22b3acfed3) | 07 | Dependencias entre documentos |
-| [`BRIEF:MAINTENANCE-CONTRACT`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc42817385fede93578bf2c7) | 08 | Contrato de Mantenimiento |
-| [`BRIEF:DECISION-TREE`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281d8b78cd6c9fa653dfd) | 09 | Árbol de Decisiones |
-| [`BRIEF:NAV-PRINCIPLES`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281779e1ff09ae1da17e1) | 10 | Principios de Navegación |
-| [`BRIEF:EXPECTED-OUTCOME`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428115b98ce4196e023a17) | 11 | Resultado Esperado |
-| [`BRIEF:AUTHORITY-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281df994bfe7bfef08bf7) | 08.1 | Autoridad |
 | [`BRIEF:CONSULTATION-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281fc9191d8168f58197a) | 04.1 | Consulta Arquitectónica |
 | [`BRIEF:CONSULTATION-002`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc42815b937bd782987e42e7) | 04.2 | Consulta Operativa |
 | [`BRIEF:CONSULTATION-003`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc42813fb32be6da8ed61caf) | 04.3 | Consulta Profesional |
 | [`BRIEF:CONSULTATION-004`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc42811da8cafbec4c2b32dc) | 04.4 | Consulta Documental |
 | [`BRIEF:CONSULTATION-005`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281d882e4f8c653bb40e6) | 04.5 | Consulta de IDs |
 | [`BRIEF:CONSULTATION-006`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281d5a63cf230d31c3aac) | 04.6 | Consulta Histórica |
-| [`BRIEF:CROSS-DEPENDENCIES-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428192b694d940e25e003f) | 07.1 | Impact Assessment Contract |
-| [`BRIEF:CROSS-DEPENDENCIES-002`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428175bae5d6adcc176a75) | 07.2 | Mandatory Change Reporting |
-| [`BRIEF:CROSS-DEPENDENCIES-003`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281429103ce05ce3da52d) | 07.3 | Closure Gate |
+| [`BRIEF:DOMAIN-ARCHITECTURE`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc42813eb510e8fec88ffe37) | 05 | Dominios |
 | [`BRIEF:HOUSEKEEPING-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428171ba67e086fa9ce162) | 05.1 | Housekeeping |
 | [`BRIEF:CORE-ASSETS-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281a79371d5aebae020ad) | 05.2 | Core Assets |
 | [`BRIEF:DISCOVERY-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428192b80fc7113c8dc1ba) | 05.3 | Discovery |
 | [`BRIEF:GATE-LOGIC-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281b389b5ff4ed3f407d0) | 05.4 | Gate Logic |
 | [`BRIEF:CV-PIPELINE-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281048d7fd8245393bdca) | 05.5 | CV Pipeline |
-| [`BRIEF:PURPOSE-SCOPE-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc42810f909dfb9ef3d94d84) | 01.1 | Propósito |
-| [`BRIEF:PURPOSE-SCOPE-002`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428170a836f5e3c9dc2f05) | 01.2 | Alcance |
-| [`BRIEF:PURPOSE-SCOPE-003`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281a2bb15f63807e2c22a) | 01.3 | Fuera de Alcance |
+| [`BRIEF:VERIFICATION-DEPTH`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281afa18af1ff0380418a) | 06 | Contratos de verificación |
+| [`BRIEF:CROSS-DEPENDENCIES`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428125baaceb22b3acfed3) | 07 | Dependencias entre documentos |
+| [`BRIEF:CROSS-DEPENDENCIES-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428192b694d940e25e003f) | 07.1 | Impact Assessment Contract |
+| [`BRIEF:CROSS-DEPENDENCIES-002`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428175bae5d6adcc176a75) | 07.2 | Mandatory Change Reporting |
+| [`BRIEF:CROSS-DEPENDENCIES-003`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281429103ce05ce3da52d) | 07.3 | Closure Gate |
+| [`BRIEF:MAINTENANCE-CONTRACT`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc42817385fede93578bf2c7) | 08 | Contrato de Mantenimiento |
+| [`BRIEF:AUTHORITY-001`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281df994bfe7bfef08bf7) | 08.1 | Autoridad |
+| [`BRIEF:DECISION-TREE`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281d8b78cd6c9fa653dfd) | 09 | Árbol de Decisiones |
+| [`BRIEF:NAV-PRINCIPLES`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc4281779e1ff09ae1da17e1) | 10 | Principios de Navegación |
+| [`BRIEF:EXPECTED-OUTCOME`](https://app.notion.com/p/3a3938befc4280089e90ec435c01f50d#3af938befc428115b98ce4196e023a17) | 11 | Resultado Esperado |
 
 ---
 
@@ -303,10 +310,11 @@
 | [`SP:BOOTLOADER`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428197ba0dc11cda45db3d) | 01 | Operating Specification — Bootstrap de Sesión |
 | [`SP:BOOTLOADER-001`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3e9938befc428067824ff8b10025c690) | 01.1 | Consumo de Skills por Familia de Agente |
 | [`SP:BOOTLOADER-002`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#398b224e9b0e4d10868f1a05a55dc3d0) | 01.2 | Bootstrap de Sesión — Subsección 002 |
+| [`SP:SKILL-VERSION-PIN`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#615f819a846c4ccb87cebcf8c088b046) | 01.3 | Skill Version Pin |
 | [`SP:BOOTLOADER-004`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3eb938befc4280f3adc4c70bf3de7f49) | 01.4 | Agente Principal y Gatekeeper del Charter |
 | [`SP:SYNC-RULE`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281328031dd488f1aea06) | 02 | Sincronización Inicial y Verificación de Versión |
-| [`SP:CONTEXT-INFRASTRUCTURE`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428147bd85e68499246777) | 04 | Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE) |
 | [`SP:DIGITAL-ID-CARD`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42819a919cc80ec56ad76c) | 03 | Cédula Digital — rutas de operación y UUIDs |
+| [`SP:CONTEXT-INFRASTRUCTURE`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428147bd85e68499246777) | 04 | Referencia — Context Infrastructure (KERNEL:CONTEXT-INFRASTRUCTURE) |
 | [`SP:DATA-FLOW`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42819ea9a2ffe6eb852fcb) | 05 | Referencia — Consultar en Technical Kernel (KERNEL:DATA-FLOW) |
 | [`SP:TRIGGERS`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc42818aa6eac0882e9c30c0) | 06 | Triggers operativos de VANTAGE |
 | [`SP:CV-GOLDEN-RULES-REF`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428101b2d4f1124a2c06ab) | 07 | Referencia — Consultar en Technical Kernel (KERNEL:CV-GOLDEN-RULES) |
@@ -314,7 +322,6 @@
 | [`SP:MCP-ROUTING-NOTES`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc4281e8aabec1d52a036038) | 09 | Notas Operativas de Ruteo MCP/Terminal (ex duplicado SP:CONSISTENCY) |
 | [`SP:CONSISTENCY`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428150a82cfb23a2d0edd3) | 10 | Regla de Consistencia Documental |
 | [`SP:CONSISTENCY-002`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#75dfe84eb19746b59525a869980388f2) | 10.1 | Triaje vía Notebook Gemini |
-| [`SP:SKILL-VERSION-PIN`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#615f819a846c4ccb87cebcf8c088b046) | 01.3 | Skill Version Pin |
 | [`SP:VERSION-CHECK-TOOL`](https://app.notion.com/p/37b938befc4280019b9bfcf81130d274#3af938befc428191acd1e6a71d7f5cc4) | 11 | Herramienta de Verificación de Versión de Bajo Costo |
 
 ---

@@ -290,3 +290,47 @@ DRY RUN — auto-sync: auto-sync: 2026-10-03 02:37 (14 archivo(s)) (rama arena/0
 ```
 
 **Trade-off asumido en A1:** durante la publicación el documento muestra transitoriamente el contenido viejo **y** el nuevo antes de borrar el viejo (duplica la longitud unos segundos). Es el mismo patrón del fix R-02 y evita el caso catastrófico de página vacía.
+
+---
+
+## 8. Decisiones del operador sobre pendientes estructurales (A7 y `vdoc local`)
+
+1. **`CANON:` separado en su propia sección `CAREER CANON`:** las 59 filas `CANON:*` que vivían dentro de `MANUAL` pasan a un bloque independiente `{"name": "CAREER CANON", "rows": [...]}` tanto en `CENSUS_SPEC` como en `Layer_1/data/V_ID_CENSUS_PRODUCTION.md`.
+2. **Orden de `CENSUS_SPEC` = orden real de aparición en `Documentación/ACTIVE/`:** ninguna sección se ordena a mano ni forzando orden numérico; el orden canónico del spec sigue la primera aparición real de la definición (heading/bloque DEF) en el documento espejo.
+3. **`Change Log` y `Changelog Archivo` fuera del Census por diseño:** ambos son bitácoras cronológicas de versiones, no documentos con secciones direccionables en `CENSUS_SPEC`. Se retiran de `DOCUMENTS`, `DOC_PRIORITY`, `VALID_PREFIXES` e `infer_section_from_id()` en `generate_census.py` (conservando `CHANGELOG_PAGE_ID` únicamente para leer la versión maestra en `--sync-to-notion`).
+4. **`vdoc local` fuera del CLI estándar:** `Documentación/ACTIVE/` es espejo read-only y Notion es única fuente de verdad. `vdoc.py` y `vsync_doc.py` rechazan `local` y redirigen a `Layer_4/scripts/vdoc_local_contingency.py`.
+
+---
+
+## 9. Ronda 2 — Reordenamiento real del Census y aislamiento de `vdoc local` (2026-10-02)
+
+### Cambios aplicados
+
+1. **`Layer_1/scripts/reorder_census_spec.py` (nuevo):**
+   - Separa las 59 filas `CANON:` de `MANUAL` hacia la sección `CAREER CANON` (7 secciones totales: `PROJECT CHARTER`, `KERNEL`, `MANUAL`, `CAREER CANON`, `NAVIGATION BRIEF`, `SYSTEM PROMPT`, `ALIASES`).
+   - Ordena `CENSUS_SPEC` por la **primera aparición real** de cada ID en `Documentación/ACTIVE/` (no orden manual ni numérico forzado): **294 filas totales, 173 reubicadas** (`PROJECT CHARTER`: 37, `KERNEL`: 90, `MANUAL`: 7, `CAREER CANON`: 0, `NAVIGATION BRIEF`: 28, `SYSTEM PROMPT`: 11, `ALIASES`: 0), **0 duplicados**.
+   - Sincroniza **20 campos `seccion`** con el heading real en `Documentación/ACTIVE/` (`CHARTER`: 6 capítulos `02`..`07`, `KERNEL`: `09.12` y `09.13`, `NAVIGATION BRIEF`: 11 capítulos `01`..`11`, `SYSTEM PROMPT`: `01.3 SP:SKILL-VERSION-PIN`).
+   - Con `--md-file Layer_1/data/V_ID_CENSUS_PRODUCTION.md`, reescribe el markdown publicado preservando los 294 enlaces de Notion y el bloque de huérfanos.
+   - Respeta y reporta las **2 inversiones numéricas reales** en los documentos fuente (pendientes de decisión del operador en Notion, no se corrigen automáticamente):
+     - `KERNEL`: `KERNEL:CV-PIPELINE-003` (`12.3`) aparece antes de `KERNEL:CV-PIPELINE-001` (`12.1`).
+     - `MANUAL`: `MANUAL:SCRIPT-GLOSSARY-CV-PREP` (`22.2`) aparece antes de `MANUAL:SCRIPT-GLOSSARY-L1` (`22.1`).
+2. **`Layer_1/scripts/generate_census.py`:**
+   - `CENSUS_SPEC` actualizado con el resultado de `reorder_census_spec.py` (294 filas, 7 secciones).
+   - `Change Log` y `Changelog Archivo` declarados fuera del Census por diseño (`EXCLUDED_FROM_CENSUS_BY_DESIGN`, retirados de `DOCUMENTS`, `DOC_PRIORITY`, `VALID_PREFIXES` e `infer_section_from_id`; `CHANGELOG_PAGE_ID` conservado para sincronización de versión).
+   - `infer_section_from_id` mapea `CANON` y `CAREER_CANON` a `"CAREER CANON"`.
+3. **`vdoc` dividido y contingencia aislada:**
+   - `Layer_4/scripts/vdoc.py` y `Layer_4/scripts/vsync_doc.py` ya no aceptan `local` y devuelven error (`exit 1`) redirigiendo a `Layer_4/scripts/vdoc_local_contingency.py`.
+   - `Layer_4/scripts/vdoc_local_contingency.py` (nuevo): exige un único documento (`--doc <doc>`), bloquea `project_charter`/`charter` con la guarda del Charter, exige escribir `FORZAR` en modo interactivo y guarda un backup previo del estado de Notion en `Layer_4/backups/` (ignorado en `.gitignore`) antes de invocar `push_local_to_notion()`.
+   - `Layer_4/scripts.zip` regenerado y `skills/vantage-hyperlink-loop.md` actualizada (`vdoc notion` en el paso 3).
+4. **`Layer_1/scripts/apply_hyperlinks_notion.py`:**
+   - Corregido el f-string multilínea en `patch_block_rich_text()` que impedía compilar/importar el módulo en Python <3.12 (`SyntaxError` en Python 3.11).
+
+### Verificación de la Ronda 2
+
+```
+$ python3 -m pytest tests/ -q
+85 passed
+
+$ ruff check --select F,E9,B018,B904,B006,B008,E722 Layer_1/scripts/generate_census.py Layer_1/scripts/reorder_census_spec.py Layer_1/scripts/apply_hyperlinks_notion.py Layer_4/scripts/ tests/
+All checks passed!
+```

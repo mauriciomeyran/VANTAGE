@@ -422,3 +422,135 @@ def test_vsum_respeta_limite_con_parrafos_normales():
 def test_layer4_sin_rutas_del_usuario(name):
     source = (L4_SCRIPTS / name).read_text(encoding="utf-8")
     assert "/Users/mauriciomeyran" not in source, f"{name} tiene rutas absolutas del operador"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Ronda 2 — retiro de 'local' del CLI y contingencia vdoc_local_contingency.py
+# ─────────────────────────────────────────────────────────────────────────────
+
+@pytest.fixture(scope="module")
+def contingency_module(vsync_module):
+    """vdoc_local_contingency.py importado reutilizando el entorno simulado de vsync_doc."""
+    sys.modules["vsync_doc"] = vsync_module
+    return load_module_from(L4_SCRIPTS / "vdoc_local_contingency.py", "vdoc_local_contingency_under_test")
+
+
+def test_vdoc_rechaza_local_y_redirige_a_contingencia():
+    for args in (["local"], ["local", "kernel"], ["local", "dry"]):
+        result = run_py(L4_SCRIPTS / "vdoc.py", args)
+        assert result.returncode != 0
+        assert "vdoc_local_contingency.py" in result.stdout
+
+
+def test_vsync_doc_rechaza_direction_local_y_redirige_a_contingencia(vsync_module, monkeypatch, capsys):
+    for argv in (
+        ["vsync_doc.py", "--direction", "local"],
+        ["vsync_doc.py", "--direction=local", "--doc", "kernel"],
+    ):
+        monkeypatch.setattr(sys, "argv", argv)
+        assert vsync_module.main() != 0
+        out = capsys.readouterr().out
+        assert "vdoc_local_contingency.py" in out
+
+
+def test_vdoc_local_contingency_exige_un_unico_documento(contingency_module, capsys):
+    assert contingency_module.main([]) != 0
+    assert "UN documento" in capsys.readouterr().out
+
+    assert contingency_module.main(["kernel", "manual"]) != 0
+    assert "UN documento" in capsys.readouterr().out
+
+
+def test_vdoc_local_contingency_bloquea_project_charter(contingency_module, capsys):
+    for arg in (["--doc", "project_charter"], ["charter"], ["charter", "--dry-run"]):
+        assert contingency_module.main(arg) != 0
+        out = capsys.readouterr().out
+        assert "BLOCKED" in out
+        assert "CHARTER" in out
+
+
+def test_vdoc_local_contingency_cancela_sin_confirmacion_forzar(
+    contingency_module, vsync_module, tmp_path, monkeypatch
+):
+    import builtins
+
+    local = tmp_path / "Kernel.md"
+    local.write_text("# Kernel\n", encoding="utf-8")
+    monkeypatch.setitem(vsync_module.DOCS, "kernel", dict(vsync_module.DOCS["kernel"], local_file=local))
+
+    called = {"push": 0, "backup": 0}
+    monkeypatch.setattr(vsync_module, "push_local_to_notion", lambda *a, **k: called.__setitem__("push", 1))
+    monkeypatch.setattr(
+        contingency_module, "create_pre_write_backup", lambda *a, **k: called.__setitem__("backup", 1)
+    )
+
+    for respuesta in ("s", "yes", "forzar", ""):
+        monkeypatch.setattr(builtins, "input", lambda *a, _r=respuesta, **k: _r)
+        assert contingency_module.main(["--doc", "kernel"]) == 0
+        assert called == {"push": 0, "backup": 0}
+
+
+def test_vdoc_local_contingency_crea_backup_previo_y_escribe_con_forzar(
+    contingency_module, vsync_module, tmp_path, monkeypatch
+):
+    import builtins
+
+    local = tmp_path / "Kernel.md"
+    local.write_text("# Kernel nuevo\n", encoding="utf-8")
+    backup_dir = tmp_path / "backups"
+    manifest_file = tmp_path / ".vsync_manifest.json"
+
+    monkeypatch.setitem(vsync_module.DOCS, "kernel", dict(vsync_module.DOCS["kernel"], local_file=local))
+    monkeypatch.setattr(contingency_module, "BACKUP_DIR", backup_dir)
+    monkeypatch.setattr(vsync_module, "MANIFEST_PATH", manifest_file)
+    monkeypatch.setattr(vsync_module, "fetch_notion_as_md", lambda pid: ("# Kernel vivo en Notion\n", None))
+
+    events = []
+
+    def fake_push(pid, path):
+        assert list(backup_dir.glob("kernel_*.md")), "el backup debe existir ANTES de push_local_to_notion"
+        events.append("push")
+        return {"patched": 1, "created": 0, "deleted": 0, "failed": 0, "tables_skipped": 0}
+
+    monkeypatch.setattr(vsync_module, "push_local_to_notion", fake_push)
+    monkeypatch.setattr(builtins, "input", lambda *a, **k: "FORZAR")
+
+    assert contingency_module.main(["--doc", "kernel"]) == 0
+    backups = list(backup_dir.glob("kernel_*.md"))
+    assert len(backups) == 1
+    assert backups[0].read_text(encoding="utf-8") == "# Kernel vivo en Notion\n"
+    assert events == ["push"]
+
+
+def test_vdoc_local_contingency_aborta_si_falla_el_backup(
+    contingency_module, vsync_module, tmp_path, monkeypatch
+):
+    import builtins
+
+    local = tmp_path / "Kernel.md"
+    local.write_text("# Kernel\n", encoding="utf-8")
+    monkeypatch.setitem(vsync_module.DOCS, "kernel", dict(vsync_module.DOCS["kernel"], local_file=local))
+    monkeypatch.setattr(vsync_module, "fetch_notion_as_md", lambda pid: (None, None))
+
+    pushed = {"n": 0}
+    monkeypatch.setattr(vsync_module, "push_local_to_notion", lambda *a, **k: pushed.__setitem__("n", 1))
+    monkeypatch.setattr(builtins, "input", lambda *a, **k: "FORZAR")
+
+    assert contingency_module.main(["--doc", "kernel"]) != 0
+    assert pushed["n"] == 0
+
+
+def test_scripts_zip_y_apply_hyperlinks_notion_integros(census_tree):
+    import ast
+    import zipfile
+
+    zip_path = REPO_ROOT / "Layer_4" / "scripts.zip"
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        names = set(zf.namelist())
+        assert "scripts/vdoc_local_contingency.py" in names
+        for name in ("vdoc.py", "vsync_doc.py", "vdoc_local_contingency.py"):
+            assert zf.read(f"scripts/{name}").decode("utf-8") == (L4_SCRIPTS / name).read_text(encoding="utf-8")
+
+    ahl_src = REPO_ROOT / "Layer_1" / "scripts" / "apply_hyperlinks_notion.py"
+    ast.parse(ahl_src.read_text(encoding="utf-8"))
+

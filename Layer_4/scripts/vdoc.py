@@ -8,18 +8,20 @@ Flujo documental completo: Notion ↔ ACTIVE/ ↔ GitHub
 Los argumentos son independientes de orden y combinables:
     vdoc dry                    # preview auto, sin escribir ni commitear
     vdoc notion                 # Notion → local + commit (FORZADO — pide confirmación)
-    vdoc local                  # local → Notion + commit (FORZADO — pide confirmación)
-    vdoc auto                   # auto-detecta dirección (gana el más reciente)
+    vdoc auto                   # auto-detecta dirección (Notion → local si aplica)
     vdoc notion dry             # preview de lo que haría 'vdoc notion', sin escribir
-    vdoc local dry              # preview de lo que haría 'vdoc local', sin escribir
     vdoc kernel                 # solo Kernel (auto)
-    vdoc brief                 # solo Brief (auto)
+    vdoc brief                  # solo Brief (auto)
     vdoc kernel dry             # preview de solo Kernel (auto)
     vdoc notion kernel          # solo Kernel, forzado notion→local (pide confirmación)
     vdoc system_prompt   |  vdoc career_canon  |  vdoc manual
     vdoc aliases          |  vdoc change_log
     vdoc Navigation_Brief
     vdoc project_charter  |  vdoc charter
+
+Nota: 'local' fue retirado del CLI estándar (Documentación/ACTIVE/ es read-only y
+Notion es SSOT). Para contingencia puntual de un único documento usa:
+    python3 Layer_4/scripts/vdoc_local_contingency.py --doc <doc>
 
 Nota: 'VANTAGE' ya no es un doc válido: se anunciaba aquí pero vsync_doc.py
 nunca lo aceptó en --doc (exit 2 con "invalid choice"). Usa las keys de arriba.
@@ -50,7 +52,8 @@ DOC_ALIASES = {
     "charter": "project_charter",
     "Navigation_Brief": "brief",  # histórico: vdoc acepta Navigation_Brief; vsync usa "brief"
 }
-DIRECTIONS = {"notion", "auto", "local"}
+DIRECTIONS = {"notion", "auto"}
+CONTINGENCY_SCRIPT = "Layer_4/scripts/vdoc_local_contingency.py"
 
 def run(cmd, label=""):
     print(f"\n── {label} ──")
@@ -79,6 +82,14 @@ def main() -> int:
     direction = None
     doc = None
     for a in args:
+        if a == "local":
+            print(
+                "✗ 'vdoc local' fue retirado del CLI estándar "
+                "(Documentación/ACTIVE/ es read-only; Notion es SSOT).\n"
+                f"  Para contingencia de un solo documento usa: "
+                f"python3 {CONTINGENCY_SCRIPT} --doc <doc>"
+            )
+            return 1
         if a in DIRECTIONS:
             if direction is not None:
                 print(f"Dirección duplicada/ambigua: '{direction}' y '{a}'")
@@ -111,13 +122,8 @@ def main() -> int:
         vsync_args += ["--dry-run"]
         return run(vsync_args, "vsync_doc (preview)")
 
-    forced = direction in ("notion", "local")
+    forced = direction == "notion"
 
-    # R-02 fix: la excepción temporal dejaba que 'vdoc local' se saltara la
-    # confirmación que su propio docstring (l.11: "FORZADO — pide
-    # confirmación") promete — justo la dirección que borra bloques en
-    # Notion sin comparar fecha de modificación. Confirmación obligatoria
-    # para ambas direcciones forzadas, sin excepción.
     if forced:
         preview_args = vsync_args + ["--dry-run"]
         run(preview_args, "vsync_doc (preview — dirección forzada)")
