@@ -64,6 +64,10 @@ Uso:
     python3 apply_hyperlinks_notion.py --doc career_canon --apply
     python3 apply_hyperlinks_notion.py --doc project_charter --dry-run
     python3 apply_hyperlinks_notion.py --all --dry-run
+
+NOTA: Change Log está excluido del Census por diseño (bitácora cronológica,
+no documento con secciones canónicas direccionables). No disponible como
+--doc target.
 """
 
 import argparse
@@ -103,7 +107,6 @@ DOC_KEY_TO_NAME = {
     "manual": "Manual",
     "career_canon": "Career Canon",
     "aliases": "Aliases",
-    "change_log": "Change Log",
     "brief": "Navigation Brief",
     "project_charter": "Project Charter",
 }

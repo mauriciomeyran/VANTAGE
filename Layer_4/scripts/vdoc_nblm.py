@@ -1,3 +1,4 @@
+import asyncio
 import os
 import sys
 import tempfile
@@ -7,27 +8,21 @@ from pathlib import Path
 # ==============================================================================
 # CONFIGURACIÓN DE RUTAS Y CONSTANTES
 # ==============================================================================
-# Derivado del propio archivo (Layer_4/scripts/vdoc_nblm.py → VANTAGE), no de
-# una ruta /Users/... hardcodeada.
 _SCRIPT_DIR = Path(__file__).resolve()
 PROJECT_ROOT = _SCRIPT_DIR.parents[2]
-# Fix B8: la ruta real de los mirrors es Documentación/ACTIVE (la que usa
-# vsync_doc y la que se respalda en git). Antes apuntaba a PROJECT_ROOT/'ACTIVE',
-# que no existe: el digest se subía pero NINGÚN documento fundacional llegaba a
-# NotebookLM, sin ningún aviso.
 ACTIVE_DIR = PROJECT_ROOT / 'Documentación' / 'ACTIVE'
 DIGEST_PATH = PROJECT_ROOT / 'VANTAGE_digest.txt'
 NOTEBOOK_ID = os.environ.get('NOTEBOOK_ID', '')
 
-# Filtrar ANTES de abrir archivos. No seguir enlaces, ni siquiera dentro del repo.
 EXCLUDE_DIRS = {
     '.git', '.venv', 'venv', '__pycache__', '.idea', '.vscode', 'node_modules',
     '.obsidian', 'archive', 'backups', '.ssh', '.aws', '.config', '.cache',
     '.pytest_cache', 'dist', 'build',
 }
-# Lista positiva: los formatos desconocidos/binarios no son fuentes del digest.
+
 INCLUDE_EXTS = {'.py', '.sh', '.md', '.txt', '.json', '.yaml', '.yml', '.toml',
                 '.ini', '.cfg', '.csv', '.js', '.ts', '.tsx', '.jsx', '.html', '.css'}
+
 SECRET_PATTERNS = (
     '*.env', '*.env.*', '*.key', '*.key.*', '*.pem', '*.pem.*',
     '*.secret', '*.secret.*', '*.p12', '*.pfx',
@@ -84,7 +79,6 @@ def generate_local_digest():
             file_rel = file_path.relative_to(PROJECT_ROOT)
             tree_lines.append(f"{indent}  └── {file}")
             
-            # Un error de lectura debe abortar, no producir un digest parcial exitoso.
             text = file_path.read_text(encoding='utf-8')
             content_blocks.append(f"========================================\nFile: {file_rel}\n========================================\n{text}\n")
 
@@ -93,7 +87,6 @@ def generate_local_digest():
     full_digest += "========================================\nFILES CONTENT\n========================================\n\n"
     full_digest += "\n".join(content_blocks)
     
-    # Reemplazo atómico y permisos privados; no escribir a través de un symlink.
     temporary = None
     try:
         with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8',
@@ -108,40 +101,25 @@ def generate_local_digest():
     print(f'✓ Digest local guardado en {DIGEST_PATH}')
 
 # ==============================================================================
-# INICIALIZACIÓN DE CLIENTE Y AUTENTICACIÓN
-# ==============================================================================
-def get_notebooklm_client():
-    from notebooklm import NotebookLM
-    from notebooklm.auth import Auth
-
-    # Cargar credenciales guardadas en perfil local o entorno
-    try:
-        auth = Auth.from_storage()
-    except Exception:
-        auth = Auth.from_env()
-
-    return NotebookLM(auth=auth)
-
-# ==============================================================================
 # OPERACIONES DE SINCRONIZACIÓN Y PURGA
 # ==============================================================================
-def purge_and_upload(client, notebook_id, file_path: Path):
+async def purge_and_upload(client, notebook_id, file_path: Path):
     file_name = file_path.name
-    # Listar antes de modificar; subir antes de borrar para conservar la fuente
-    # anterior si la carga falla. Cualquier fallo se propaga hasta el CLI.
-    sources = list(client.notebooks.list_sources(notebook_id))
-    client.notebooks.add_source(notebook_id, file_path)
+    sources = await client.sources.list(notebook_id)
+    await client.sources.add_file(notebook_id, file_path)
     for src in sources:
         src_title = getattr(src, 'title', getattr(src, 'name', ''))
         if src_title == file_name:
-            client.notebooks.delete_source(notebook_id, src.id)
+            await client.sources.delete(notebook_id, src.id)
             print(f'✓ Fuente anterior eliminada: {file_name} (ID: {src.id})')
     print(f'✓ {file_name} sincronizado exitosamente.')
 
 # ==============================================================================
 # EJECUCIÓN PRINCIPAL
 # ==============================================================================
-def main():
+async def main():
+    from notebooklm import NotebookLMClient
+
     target_notebook = NOTEBOOK_ID.strip()
     if not target_notebook:
         print('❌ NOTEBOOK_ID es obligatorio; no se seleccionará un cuaderno automáticamente.')
@@ -152,21 +130,23 @@ def main():
             print(f'⚠ ACTIVE_DIR no existe o no es un directorio seguro: {ACTIVE_DIR}')
             print('  No se subió ningún documento fundacional (revisar la ruta).')
             return 1
-        client = get_notebooklm_client()
-        if not any(nb.id == target_notebook for nb in client.notebooks.list()):
-            print('❌ NOTEBOOK_ID no corresponde a un cuaderno accesible.')
-            return 1
 
-        generate_local_digest()
-        print(f'→ Sincronizando espacio de fuentes con NotebookLM (ID: {target_notebook})...')
-        purge_and_upload(client, target_notebook, DIGEST_PATH)
-        for file_path in sorted(ACTIVE_DIR.glob('*.md')):
-            if is_safe_source(file_path):
-                purge_and_upload(client, target_notebook, file_path)
+        async with NotebookLMClient.from_storage() as client:
+            notebooks = await client.notebooks.list()
+            if not any(getattr(nb, 'id', '') == target_notebook for nb in notebooks):
+                print('❌ NOTEBOOK_ID no corresponde a un cuaderno accesible.')
+                return 1
+
+            generate_local_digest()
+            print(f'→ Sincronizando espacio de fuentes con NotebookLM (ID: {target_notebook})...')
+            await purge_and_upload(client, target_notebook, DIGEST_PATH)
+            for file_path in sorted(ACTIVE_DIR.glob('*.md')):
+                if is_safe_source(file_path):
+                    await purge_and_upload(client, target_notebook, file_path)
         return 0
     except Exception as e:
         print(f'❌ Error en la sincronización con NotebookLM: {e}')
         return 1
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(asyncio.run(main()))
