@@ -1,6 +1,15 @@
 # V | CHANGELOG
 
 Tipo: [DOC] [OPS]
+Identidad VANTAGE: redacción CLAUDE/MAIN · Ejecutor de las escrituras W1–W8: MISTRAL (Vibe, MCP Notion), por APROBAR_WRITE del operador en este contrato · Ejecutor del re-key: PERPLEXITY (CS-PPLX-07).
+Fecha: 2026-10-03 13:10 CDMX.
+Documentos modificados: PLAN DE TRABAJO (W1–W5: T3.C→T3.Ca + fila T3.Cb; fila T2.N; Evidencia T2.1; Notas T2.G y T2.D) · RECONCILIATION LOG (W6: filas nuevas Finding ARC-L1/L2/L3-002 y Skills legacy; fila Decisión re-key v10.4 ABORTADA por select Tipo sin esa opción) · TRACKER REWRITE MANUAL & KERNEL, TABLERO (W7: encabezado HO-000081, Próxima acción punto 0, Decisiones abiertas re-key v10.4 / DECISIONS-012 en HOLD) · V | CHANGELOG (esta entrada) (+ V | KERNEL tras CS-PPLX-07).
+Tipo de impacto: Documental + Gobernanza.
+IDs a afectar (aún NO aplicados; CS-PPLX-07 pendiente): 24 renames + 2 headings nuevos en KERNEL (Census NO sincronizado; T3.1).
+Corrección [14:48 CDMX]: la línea "IDs afectados" describía el plan, no un estado aplicado (fetch KERNEL vivo: 0/24). Sin bump de Versión.
+Versión: SIN bump de Versión (decisión del operador) — se mantiene v9.22.30.
+Handoff de referencia: HO-000081.
+Tipo: [DOC] [OPS]
 Identidad VANTAGE: agent.family=PERPLEXITY · agent.instance=DEFAULT. Ejecutor de las ediciones en Notion: PERPLEXITY (MCP Notion), por instrucción explícita del operador.
 Documentos modificados: V | CHANGELOG (esta entrada) · Tasks Tracker (ticket nuevo: 3ee938be-fc42-8126-a159-ed4afd6f1fd4).
 Documentos potencialmente afectados: V | PROJECT CHARTER (pendiente de aplicación por operador) · V | ID CENSUS (pendiente de sync en Fase 3).
