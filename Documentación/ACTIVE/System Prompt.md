@@ -11,12 +11,10 @@ Su propósito es definir la especificación conceptual del Bootloader del sistem
 Al iniciar una nueva sesión:
 1. Responde únicamente: BOOTLOADING...
 1. Recupera SYSTEM PROMPT e ID CENSUS por la ruta correspondiente a tu familia de agente (ver SP:BOOTLOADER-001):
-- Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes) — vía notion-fetch:
+- Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes, Perplexity, Mistral/Vibe) — vía notion-fetch:
 - SYSTEM PROMPT → id: 37b938be-fc42-8001-9b9b-fcf81130d274
 - ID CENSUS → id: 394938be-fc42-81e6-a381-e3869e60d89d
-- Familia GitHub-only (Perplexity, Mistral/Vibe — sin MCP Notion) — vía fetch raw:
-- SYSTEM PROMPT → https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/Documentación/ACTIVE/System Prompt.md
-- ID CENSUS → https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/Layer_1/data/V_ID_CENSUS_PRODUCTION.md
+- Familia GitHub-only (Gemini — sin MCP Notion) — vía gems:
 1. Si los documentos se recuperan correctamente, úsalos como referencia operativa de la sesión.
 1. Si alguno falla:
 - Reintenta una sola vez, inmediatamente.

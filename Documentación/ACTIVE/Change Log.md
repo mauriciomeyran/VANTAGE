@@ -1,6 +1,22 @@
 # V | CHANGELOG
 
 Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=PERPLEXITY · agent.instance=DEFAULT. Ejecutor de las ediciones en Notion: PERPLEXITY (MCP Notion), por instrucción explícita del operador.
+Documentos modificados: V | CHANGELOG (esta entrada) · Tasks Tracker (ticket nuevo: 3ee938be-fc42-8126-a159-ed4afd6f1fd4).
+Documentos potencialmente afectados: V | PROJECT CHARTER (pendiente de aplicación por operador) · V | ID CENSUS (pendiente de sync en Fase 3).
+Tipo de impacto: Documental + Gobernanza — registra en el Change Log la creación del ticket que documenta el re-key semántico de IDs canónicos del KERNEL (v10.3) y la decisión estructural CHARTER:DECISIONS-012.
+Alcance:
+1. Creación de ticket en Tasks Tracker (): título [CHARTER] Actualizar citas KERNEL del Charter por re-key v10.3 + registrar decisión, Prioridad 3 ALTO, Componente Notion, Status Pendiente, Next_Action Decidir, Notas con el detalle completo del alcance (candidatas de reemplazo de cita, decisión estructural propuesta, pendientes no cubiertos).
+1. Decisión estructural propuesta (CHARTER:DECISIONS-012): re-key semántico de IDs canónicos del KERNEL (v10.3) — sustitución de KEYS opacos (DOCUMENTATION-nnn, SCHEMA-00n, GATE-DECISION-nnn…) por slugs semánticos con gramática KERNEL:NAM-ID-GRAMMAR; puente de alias de vigencia un ciclo de release. Razón: eliminar IDs opacos que causaron drift documental (ver CHARTER:DECISIONS-007). Descartado: mantener numeración legacy con alias permanente.
+1. Candidatas de reemplazo de cita declaradas en el ticket: KERNEL:GATE-DECISION-012 (STATUS) → KERNEL:GATE-MUTABILITY · KERNEL:DEDUP-LAYER-UPGRADE (STATUS) → KERNEL:GATE-MUTABILITY · KERNEL:CV-GOLDEN-RULES-002 (STATUS) → KERNEL:CVR-NOCLASSB · CHARTER:DECISIONS-011 (sin cambio de ID).
+1. Pendientes que este ticket NO cubre: alta de prefijo CHARTER: en registry/Census (Fase 3), pase NORM de Reconciliation Log y Bug Tracker (MEDIA), serial HO de esta operación (HANDOFF_SERIAL_UNAVAILABLE).
+Decisiones confirmadas: ninguna decisión de re-key fue aplicada en esta sesión — el ticket solo documenta y deja la aplicación exclusiva al operador (gatekeeper CLAUDE/MAIN, SP:BOOTLOADER-004).
+Decisiones no duplicadas: no se tocó el PROJECT CHARTER · no se ejecutó vcensus --sync-to-notion · no se modificó generate_census.py ni CENSUS_SPEC · no se crearon IDs canónicos nuevos en esta sesión.
+Validación: ticket creado y verificado vía notion-get-async-task (status: succeeded); página 3ee938be-fc42-8126-a159-ed4afd6f1fd4 accesible en Notion.
+Estado: WRITE aplicado en Notion (Tasks Tracker + CHANGELOG). Versión del Change Log bumpada a v9.22.30 (asumiendo que el bump existente corresponde a esta sesión). Pendientes: aplicación del re-key por CLAUDE/MAIN · sync de Census (Fase 3) · pase NORM de Reconciliation Log y Bug Tracker.
+IDs afectados: Ninguno nuevo en esta sesión (el ticket documenta un re-key futuro; no se crean ni eliminan IDs canónicos hoy, no dispara CENSUS-SYNC Regla 1).
+Handoff de referencia: HANDOFF_SERIAL_UNAVAILABLE (operador asignará serial si corresponde).
+Tipo: [DOC] [OPS]
 Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MM. Redacción del registro: CLAUDE/MM, por instrucción explícita del operador (fecha y hora: Oct 3, 26 04:35). Ejecutor de las ediciones del Lote 5 en Notion: MISTRAL (Vibe, MCP Notion), bajo contrato CS-MISTRAL-05 con APROBAR_WRITE del operador.
 Documentos modificados por el Lote 5: TRACKER REWRITE MANUAL & KERNEL (Tablero: bloqueo Match, Próxima acción pto 2, Fase 3 en ambas tablas, Decisiones abiertas de Script Library) · PLAN DE TRABAJO (T2.H y T3.C, solo Notas) · RECONCILIATION LOG (2 filas Finding con nota de actualización + fila nueva CS-MISTRAL-05) · V | CHANGELOG (esta entrada + bump de Versión).
 Tipo de impacto: Documental — alinea el Tablero, el Plan y el Log con las 8 decisiones del operador aplicadas en el Lote 4 (CS-MISTRAL-04). Sin cambios de código, schema, Status ni IDs.
