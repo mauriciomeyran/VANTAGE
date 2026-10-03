@@ -375,6 +375,7 @@ def test_vdoc_nblm_avisa_si_falta_active_dir(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(module, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(module, "DIGEST_PATH", tmp_path / "digest.txt")
     monkeypatch.setattr(module, "ACTIVE_DIR", tmp_path / "NO_EXISTE")
+    monkeypatch.setattr(module, "NOTEBOOK_ID", "nb-1")
 
     class Notebooks:
         @staticmethod
@@ -548,7 +549,7 @@ def test_scripts_zip_y_apply_hyperlinks_notion_integros(census_tree):
     with zipfile.ZipFile(zip_path, "r") as zf:
         names = set(zf.namelist())
         assert "scripts/vdoc_local_contingency.py" in names
-        for name in ("vdoc.py", "vsync_doc.py", "vdoc_local_contingency.py"):
+        for name in ("vdoc.py", "vsync_doc.py", "vdoc_local_contingency.py", "vdoc_nblm.py", "vsum.py"):
             assert zf.read(f"scripts/{name}").decode("utf-8") == (L4_SCRIPTS / name).read_text(encoding="utf-8")
 
     ahl_src = REPO_ROOT / "Layer_1" / "scripts" / "apply_hyperlinks_notion.py"

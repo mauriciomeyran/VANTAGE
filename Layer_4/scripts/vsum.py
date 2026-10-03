@@ -139,7 +139,7 @@ def call_ollama(prompt: str) -> str:
         method="POST"
     )
     try:
-        with urllib.request.urlopen(req, timeout=300) as response:
+        with urllib.request.urlopen(req, timeout=OLLAMA_TIMEOUT_SEC) as response:
             response_data = json.loads(response.read().decode("utf-8"))
             return response_data["choices"][0]["message"]["content"]
     except urllib.error.HTTPError as e:
@@ -206,6 +206,8 @@ def _hard_split(text: str, max_chars: int) -> list[str]:
 
 
 def chunk_text(text: str, max_chars: int = MAX_CHARS_PER_CHUNK) -> list[str]:
+    if max_chars <= 0:
+        raise ValueError("max_chars debe ser positivo")
     if len(text) <= max_chars:
         return [text]
 
@@ -226,88 +228,98 @@ def chunk_text(text: str, max_chars: int = MAX_CHARS_PER_CHUNK) -> list[str]:
             chunks.extend(_hard_split(para, max_chars))
             continue
 
-        if current_len + len(para) + 2 > max_chars:
+        separator_len = 2 if current_chunk else 0
+        if current_len + len(para) + separator_len > max_chars:
             if current_chunk:
                 chunks.append("\n\n".join(current_chunk))
             current_chunk = [para]
             current_len = len(para)
         else:
             current_chunk.append(para)
-            current_len += len(para) + 2
+            current_len += len(para) + separator_len
 
     if current_chunk:
         chunks.append("\n\n".join(current_chunk))
 
     return chunks
 
-def summarize(text: str, model: str = DEFAULT_MODEL, serial: str = "HO-000000", agent_family: str = "AGENT_FAMILY", agent_instance: str = "AGENT_INSTANCE", session_id: str = "SESSION-UNKNOWN") -> str:
-    chunks = chunk_text(text)
-    summaries = []
-    timestamp_cdmx = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+def call_with_fallback(prompt: str, model: str) -> str:
+    """Misma política para chunks y consolidación: Gemini → Ollama (2) → Groq.
 
+    Groq sólo se usa como fallback si hay clave configurada.
+    """
+    if model == "groq":
+        return call_groq(prompt)
+    if model not in {"gemini", "ollama"}:
+        raise ValueError(f"Modelo desconocido: {model}")
+    if model == "gemini":
+        try:
+            return call_gemini(prompt)
+        except Exception as e:
+            print(f"  ⚠ Gemini falló ({e}). Intentando Ollama...")
+    for attempt in range(2):
+        try:
+            return call_ollama(prompt)
+        except Exception:
+            if attempt == 0:
+                print("  ⚠ Ollama falló. Reintentando en 5 segundos...")
+                time.sleep(5)
+            elif not GROQ_API_KEY:
+                raise
+    print("  ⚠ Ollama falló dos veces. Fallback al servicio externo Groq...")
+    return call_groq(prompt)
+
+
+def summarize(text: str, model: str = DEFAULT_MODEL, serial: str = "HO-000000", agent_family: str = "AGENT_FAMILY", agent_instance: str = "AGENT_INSTANCE", session_id: str = "SESSION-UNKNOWN") -> str:
+    metadata = dict(
+        serial=serial, agent_family=agent_family, agent_instance=agent_instance,
+        session_id=session_id, timestamp_cdmx=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+    # El presupuesto incluye las instrucciones y metadatos, no sólo el texto.
+    # Es un límite de caracteres conservador, no una medida exacta de tokens.
+    overhead = len(SUMMARY_SYSTEM) + len(SUMMARY_PROMPT.format(transcript="", **metadata))
+    budget = MAX_CHARS_PER_CHUNK - overhead
+    meta_instruction = (
+        "Estos son resúmenes parciales de una misma sesión larga. Consolídalos "
+        "sin duplicar información en un Handoff Lite breve. Reduce el texto "
+        "a menos de la mitad conservando decisiones, pendientes y evidencia:\n\n"
+    )
+    meta_budget = budget - len(meta_instruction)
+    if meta_budget <= 0:
+        raise ValueError("Las instrucciones y metadatos exceden el presupuesto de contexto")
+
+    def request(transcript):
+        prompt = SUMMARY_PROMPT.format(transcript=transcript, **metadata)
+        result = call_with_fallback(prompt, model)
+        if not isinstance(result, str) or not result.strip():
+            raise RuntimeError("El modelo devolvió un resumen vacío")
+        return result
+
+    chunks = chunk_text(text, budget)
+    summaries = []
     for i, chunk in enumerate(chunks, 1):
         print(f"  → Enviando chunk {i}/{len(chunks)} ({len(chunk)} chars) a {model}...")
-        prompt = SUMMARY_PROMPT.format(
-            transcript=chunk,
-            serial=serial,
-            agent_family=agent_family,
-            agent_instance=agent_instance,
-            session_id=session_id,
-            timestamp_cdmx=timestamp_cdmx
-        )
-
-        try:
-            if model == "gemini":
-                part = call_gemini(prompt)
-            elif model == "ollama":
-                part = call_ollama(prompt)
-            else:
-                part = call_groq(prompt)
-            summaries.append(part)
-        except Exception as e:
-            if model == "gemini":
-                print(f"  ⚠ Gemini falló ({e}). Intentando fallback a Ollama...")
-                part = call_ollama(prompt)
-                summaries.append(part)
-            elif model == "ollama":
-                print(f"  ⚠ Ollama falló ({e}). Reintentando chunk...")
-                time.sleep(5)
-                part = call_ollama(prompt)
-                summaries.append(part)
-            else:
-                raise
-
+        summaries.append(request(chunk))
         if i < len(chunks):
             time.sleep(2)
 
     if len(summaries) == 1:
         return summaries[0]
 
-    print("  → Combinando resúmenes parciales en esquema Handoff Lite...")
     combined = "\n\n---\n\n".join(summaries)
-    meta_prompt = SUMMARY_PROMPT.format(
-        transcript=f"Estos son resúmenes parciales de una misma sesión larga. Consolídalos en un único Handoff Lite coherente sin duplicar información:\n\n{combined}",
-        serial=serial,
-        agent_family=agent_family,
-        agent_instance=agent_instance,
-        session_id=session_id,
-        timestamp_cdmx=timestamp_cdmx
-    )
-
-    if model == "gemini":
-        try:
-            return call_gemini(meta_prompt)
-        except Exception as e:
-            print(f"  ⚠ Gemini falló en meta-resumen ({e}). Fallback a Ollama...")
-            return call_ollama(meta_prompt)
-    elif model == "ollama":
-        try:
-            return call_ollama(meta_prompt)
-        except Exception as e:
-            print(f"  ⚠ Ollama falló en meta-resumen ({e}). Fallback a Groq...")
-            return call_groq(meta_prompt)
-
-    return call_groq(meta_prompt)
+    # Map/reduce jerárquico sin truncar. Fallar explícitamente si el modelo no
+    # comprime, en lugar de un bucle infinito o una llamada fuera de presupuesto.
+    for level in range(8):
+        print(f"  → Consolidando resúmenes parciales (nivel {level + 1})...")
+        groups = chunk_text(combined, meta_budget)
+        reduced = [request(meta_instruction + group) for group in groups]
+        if len(reduced) == 1:
+            return reduced[0]
+        next_combined = "\n\n---\n\n".join(reduced)
+        if len(next_combined) >= len(combined):
+            raise RuntimeError("La consolidación no reduce el texto; no se enviará un prompt sobredimensionado")
+        combined = next_combined
+    raise RuntimeError("La consolidación excedió el máximo de 8 niveles")
 
 # --- CLI & EXECUTION ---
 
