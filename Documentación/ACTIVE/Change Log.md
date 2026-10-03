@@ -1,6 +1,16 @@
 # V | CHANGELOG
 
 Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MP (redacción de esta entrada y escrituras D2–D7 en Notion, por APROBAR_WRITE del operador, "Yep", con hora CDMX dada por el operador) · Ejecutor del re-key en V | KERNEL: MISTRAL (CS-REKEY-08; cambio de ejecutor respecto a HO-000081 decisión 4, antes PERPLEXITY/CS-PPLX-07).
+Fecha: 2026-10-03 15:25 CDMX.
+Documentos modificados: V | KERNEL (por MISTRAL: 24 renombrados de subsección + 2 headings nuevos 03.1 ACT-ROLES y 08.1 FLOW-CONTRACT; 3 refs ARC-L1/L2/L3-002 corregidas; capítulos CVP/CVR/CANON-UPDATE conservan su ID original por diseño) · PLAN DE TRABAJO (T2.N: solo Notas) · TRACKER REWRITE MANUAL & KERNEL, TABLERO (Decisiones abiertas re-key, Próxima acción, línea de versión fundacional) · RECONCILIATION LOG (fila nueva) · V | CHANGELOG (esta entrada).
+Tipo de impacto: Documental + Normativo.
+IDs afectados: 24 renombrados + 2 nuevos en KERNEL. Census, registry y ALIASES NO sincronizados (T3.1, Fase 3).
+Verificación: resultado reportado por el ejecutor 97 headings / 0 duplicados / 0 refs colgantes. A1 (lista de headings del vivo, 97/97) PERPLEXITY y CLAUDE/KM. A2–A9 CLAUDE/KM: diff mecánico entre Kernel.md y Kernel_updated.md (idénticos salvo los 3 capítulos revertidos; 97 headings, 0 duplicados, 0 IDs viejos como heading, 0 refs ARC-L*-002). Origen de Kernel.md: vdoc notion ejecutado por el operador el 2026-10-03, confirmado por el operador. CLAUDE/MP no re-fetcheó el KERNEL vivo ni revisó la Entrega CS-VERIFY-01c de Perplexity (Bloque B). Verificación parcial: Verificado_Por de T2.N sin tocar.
+Pendiente de schema: la opción MISTRAL no existe en el select Responsable del PLAN DE TRABAJO; T2.N conserva Responsable=PERPLEXITY hasta que el operador decida.
+Versión: SIN bump de Versión (decisión del operador). El Tablero pasa de v9.22.29 a v9.22.30 solo para igualar la versión fundacional ya vigente.
+Handoff de referencia: HO-000081.
+Tipo: [DOC] [OPS]
 Identidad VANTAGE: redacción CLAUDE/MAIN · Ejecutor de las escrituras W1–W8: MISTRAL (Vibe, MCP Notion), por APROBAR_WRITE del operador en este contrato · Ejecutor del re-key: PERPLEXITY (CS-PPLX-07).
 Fecha: 2026-10-03 13:10 CDMX.
 Documentos modificados: PLAN DE TRABAJO (W1–W5: T3.C→T3.Ca + fila T3.Cb; fila T2.N; Evidencia T2.1; Notas T2.G y T2.D) · RECONCILIATION LOG (W6: filas nuevas Finding ARC-L1/L2/L3-002 y Skills legacy; fila Decisión re-key v10.4 ABORTADA por select Tipo sin esa opción) · TRACKER REWRITE MANUAL & KERNEL, TABLERO (W7: encabezado HO-000081, Próxima acción punto 0, Decisiones abiertas re-key v10.4 / DECISIONS-012 en HOLD) · V | CHANGELOG (esta entrada) (+ V | KERNEL tras CS-PPLX-07).
