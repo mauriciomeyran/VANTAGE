@@ -2,8 +2,8 @@
 
 | ID | Sección | Nombre |
 |---|---|---|
-| [`CHARTER:PURPOSE`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280cfa758eec00c6b4bd3) | 01 | Propósito del Proyecto |
-| [`CHARTER:DECISIONS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42809ba6ffc94a0d10b714) | 02 | Registro de Decisiones |
+| [`CHARTER:PURPOSE`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280cfa758eec00c6b4bd3) | 1. | Propósito del Proyecto |
+| [`CHARTER:DECISIONS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42809ba6ffc94a0d10b714) | 2. | Registro de Decisiones |
 | [`CHARTER:DECISIONS-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280229697f961aefc5ceb) | 2.1 | Separación Class A / Class B |
 | [`CHARTER:DECISIONS-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280edbfdef81c9d544217) | 2.2 | Aéropostale removido de Hard Blocks |
 | [`CHARTER:DECISIONS-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280a5b8b2ea05b3b675f0) | 2.3 | Serial Authority v2 — operador como Prioridad 0 |
@@ -15,13 +15,13 @@
 | [`CHARTER:DECISIONS-009`](https://app.notion.com/p/f87938befc428263a305819877d2245f#a2a688b0c9874f05990238b0c72b7a9b) | 2.9 | Blueprint de reescritura KERNEL/MANUAL v10 — adopción híbrida |
 | [`CHARTER:DECISIONS-010`](https://app.notion.com/p/f87938befc428263a305819877d2245f#60edda41d7ac4601b824838882d8d02e) | 2.10 | Creación de este Charter |
 | [`CHARTER:DECISIONS-011`](https://app.notion.com/p/f87938befc428263a305819877d2245f#55b26526efbb46b38e8666abf8877599) | 2.11 | CLAUDE/MAIN declarado gatekeeper exclusivo del Charter |
-| [`CHARTER:FAILURES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428075b83ec234ef46eed3) | 03 | Registro de Fallos |
+| [`CHARTER:FAILURES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428075b83ec234ef46eed3) | 3. | Registro de Fallos |
 | [`CHARTER:FAILURES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42805f9285f417aa359826) | 3.1 | Reaparición de Hard Blocks ya corregidos |
 | [`CHARTER:FAILURES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280f29959f58b132ac9cb) | 3.2 | Patrón de reporte optimista (ticket RT-1) |
 | [`CHARTER:FAILURES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280998c78cf5f4df4689d) | 3.3 | Cédula de Reconciliación fabricada |
 | [`CHARTER:FAILURES-004`](https://app.notion.com/p/f87938befc428263a305819877d2245f#119fab7b2a2340ab86a346cbd20b5a54) | 3.4 | Loop de auto-rechazo QA↔CV-B |
 | [`CHARTER:FAILURES-005`](https://app.notion.com/p/f87938befc428263a305819877d2245f#78ae3afe77e949b3a25941edc42e0d86) | 3.5 | Documentación que describe código ya retirado |
-| [`CHARTER:NON-NEGOTIABLES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280d0b67de66fad8199c8) | 04 | Principios No Negociables |
+| [`CHARTER:NON-NEGOTIABLES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280d0b67de66fad8199c8) | 4. | Principios No Negociables |
 | [`CHARTER:NON-NEGOTIABLES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280499cb9f08227656612) | 4.1 | Python es dueño exclusivo de los campos Class B |
 | [`CHARTER:NON-NEGOTIABLES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428061a047e730d71fe71c) | 4.2 | APROBAR_WRITE obligatorio antes de cualquier escritura |
 | [`CHARTER:NON-NEGOTIABLES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280519ae1d3aac599e87f) | 4.3 | Ningún reporte de éxito se acepta sin re-fetch/verificación |
@@ -32,14 +32,14 @@
 | [`CHARTER:NON-NEGOTIABLES-008`](https://app.notion.com/p/f87938befc428263a305819877d2245f#b9ca36b00b124df9be3db39c0a629e3d) | 4.8 | Graph/Backlinks son artefactos derivados, nunca capa de autoridad |
 | [`CHARTER:NON-NEGOTIABLES-009`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d756328198ed4ea4bb7f39f7bb6027b7) | 4.9 | VM_Scope es binario (Alto/Bajo) |
 | [`CHARTER:NON-NEGOTIABLES-010`](https://app.notion.com/p/f87938befc428263a305819877d2245f#6cd49fcd84bd4a0eba084b1b0ab10ca1) | 4.10 | Hard Blocks reales se consultan siempre en la fuente |
-| [`CHARTER:MILESTONES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280dc8598dadd5e8c050f) | 05 | Hitos y Milestones |
+| [`CHARTER:MILESTONES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280dc8598dadd5e8c050f) | 5. | Hitos y Milestones |
 | [`CHARTER:MILESTONES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280eb9ad8ce382d23dd35) | 5.1 | Hito 1 — Track Beta (código) cerrado |
 | [`CHARTER:MILESTONES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280c0bf5dc992ed50be72) | 5.2 | Hito 2 — T2.1 KERNEL v10 en paralelo a Track Beta |
 | [`CHARTER:MILESTONES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280658fd9d6c19954a7ea) | 5.3 | Hito 3 — MANUAL v10 en paralelo a KERNEL v10 |
 | [`CHARTER:MILESTONES-004`](https://app.notion.com/p/f87938befc428263a305819877d2245f#01cf0330464a4dbc97d1584d4176dd41) | 5.4 | Hito 4 — Fase 3 sync + verificación cruzada |
 | [`CHARTER:MILESTONES-005`](https://app.notion.com/p/f87938befc428263a305819877d2245f#301a87b2a0f841ce8917c35189fbb99a) | 5.5 | Hito 5 — Charter actualizado en cada decisión estructural |
-| [`CHARTER:CONTINUITY`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42803e9c24f2d6e9bced1e) | 06 | Continuidad Operativa |
-| [`CHARTER:STATUS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280ebb77fef32858e73c4) | 07 | Estatus del Proyecto |
+| [`CHARTER:CONTINUITY`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42803e9c24f2d6e9bced1e) | 6. | Continuidad Operativa |
+| [`CHARTER:STATUS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280ebb77fef32858e73c4) | 7. | Estatus del Proyecto |
 
 ---
 

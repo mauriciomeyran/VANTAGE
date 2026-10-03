@@ -1,0 +1,178 @@
+{
+  "resources": [
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/corporate-communication-style",
+      "name": "corporate-communication-style",
+      "description": "VANTAGE Skill: corporate-communication-style",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/critico-pensante-style",
+      "name": "critico-pensante-style",
+      "description": "VANTAGE Skill: critico-pensante-style",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/prompt-master",
+      "name": "prompt-master",
+      "description": "Genera prompts optimizados para herramientas de IA",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/retail-auditor-style",
+      "name": "retail-auditor-style",
+      "description": "VANTAGE Skill: retail-auditor-style",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/socio-estrategico-style",
+      "name": "socio-estrategico-style",
+      "description": "VANTAGE Skill: socio-estrategico-style",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/tailored-resume-generator",
+      "name": "tailored-resume-generator",
+      "description": "Genera currículums personalizados según descripciones de trabajo",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-active-search-weekly",
+      "name": "vantage-active-search-weekly",
+      "description": "VANTAGE Skill: vantage-active-search-weekly",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-create-bug-task",
+      "name": "vantage-create-bug-task",
+      "description": "Crea tickets en Bug Tracker o Task Tracker de VANTAGE",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-cv-a",
+      "name": "vantage-cv-a",
+      "description": "VANTAGE Skill: vantage-cv-a",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-cv-b",
+      "name": "vantage-cv-b",
+      "description": "VANTAGE Skill: vantage-cv-b",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal-implementacion",
+      "name": "vantage-documentacion-transversal-implementacion",
+      "description": "Implementa documentación transversal",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-documentacion-transversal-propuesta",
+      "name": "vantage-documentacion-transversal-propuesta",
+      "description": "Genera propuestas de documentación transversal",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-housekeeping-archive",
+      "name": "vantage-housekeeping-archive",
+      "description": "VANTAGE Skill: vantage-housekeeping-archive",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-housekeeping-tracker",
+      "name": "vantage-housekeeping-tracker",
+      "description": "VANTAGE Skill: vantage-housekeeping-tracker",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-hyperlink-loop",
+      "name": "vantage-hyperlink-loop",
+      "description": "VANTAGE Skill: vantage-hyperlink-loop",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-present-handoff",
+      "name": "vantage-present-handoff",
+      "description": "Genera snapshot de contexto de sesión para continuidad",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-qa",
+      "name": "vantage-qa",
+      "description": "VANTAGE Skill: vantage-qa",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-close",
+      "name": "vantage-session-close",
+      "description": "Protocolo de cierre de sesión VANTAGE",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-open",
+      "name": "vantage-session-open",
+      "description": "Protocolo de apertura de sesión VANTAGE",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-skill-updater",
+      "name": "vantage-skill-updater",
+      "description": "VANTAGE Skill: vantage-skill-updater",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-assets",
+      "name": "vantage-sync-assets",
+      "description": "VANTAGE Skill: vantage-sync-assets",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-census-spec",
+      "name": "vantage-sync-census-spec",
+      "description": "VANTAGE Skill: vantage-sync-census-spec",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-script-glossary",
+      "name": "vantage-sync-script-glossary",
+      "description": "VANTAGE Skill: vantage-sync-script-glossary",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-script-library",
+      "name": "vantage-sync-script-library",
+      "description": "VANTAGE Skill: vantage-sync-script-library",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-skill-glossary",
+      "name": "vantage-sync-skill-glossary",
+      "description": "VANTAGE Skill: vantage-sync-skill-glossary",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-sync-skill-library",
+      "name": "vantage-sync-skill-library",
+      "description": "VANTAGE Skill: vantage-sync-skill-library",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-tidy-bug-task-tracker",
+      "name": "vantage-tidy-bug-task-tracker",
+      "description": "Marca tickets para archivo en Bug/Task Tracker",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-tidy-changelog",
+      "name": "vantage-tidy-changelog",
+      "description": "Mantiene el Change Log con las últimas 10 entradas",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-tidy-opportunities-tracker",
+      "name": "vantage-tidy-opportunities-tracker",
+      "description": "Identifica duplicados y vacantes expiradas en VANTAGE Tracker",
+      "mimeType": "application/octet-stream"
+    }
+  ]
+}
