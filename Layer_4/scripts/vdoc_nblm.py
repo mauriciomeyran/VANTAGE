@@ -1,12 +1,18 @@
 import os
-import sys
 from pathlib import Path
 
 # ==============================================================================
 # CONFIGURACIÓN DE RUTAS Y CONSTANTES
 # ==============================================================================
-PROJECT_ROOT = Path('/Users/mauriciomeyran/Documents/03 Projects/VANTAGE')
-ACTIVE_DIR = PROJECT_ROOT / 'ACTIVE'
+# Derivado del propio archivo (Layer_4/scripts/vdoc_nblm.py → VANTAGE), no de
+# una ruta /Users/... hardcodeada.
+_SCRIPT_DIR = Path(__file__).resolve()
+PROJECT_ROOT = _SCRIPT_DIR.parents[2]
+# Fix B8: la ruta real de los mirrors es Documentación/ACTIVE (la que usa
+# vsync_doc y la que se respalda en git). Antes apuntaba a PROJECT_ROOT/'ACTIVE',
+# que no existe: el digest se subía pero NINGÚN documento fundacional llegaba a
+# NotebookLM, sin ningún aviso.
+ACTIVE_DIR = PROJECT_ROOT / 'Documentación' / 'ACTIVE'
 DIGEST_PATH = PROJECT_ROOT / 'VANTAGE_digest.txt'
 NOTEBOOK_ID = os.environ.get('NOTEBOOK_ID', '')
 
@@ -122,8 +128,11 @@ def main():
 
         # 2. Documentos de ACTIVE/
         if ACTIVE_DIR.exists():
-            for file_path in ACTIVE_DIR.glob('*.md'):
+            for file_path in sorted(ACTIVE_DIR.glob('*.md')):
                 purge_and_upload(client, target_notebook, file_path)
+        else:
+            print(f'⚠ ACTIVE_DIR no existe: {ACTIVE_DIR}')
+            print('  No se subió ningún documento fundacional (revisar la ruta).')
 
     except Exception as e:
         print(f'❌ Error en la sincronización con NotebookLM: {e}')

@@ -1,3 +1,4 @@
+import ast
 import os
 import re
 import sys
@@ -393,19 +394,12 @@ CENSUS_SPEC = [
         ],
     },
 ]
-    # Auto-generated orphan IDs
-# IDs huérfanos detectados - agregar a CENSUS_SPEC
 
-# SP
-{"id": "SP:BOOTLOADER-004", "seccion": "004", "nombre": "SP:BOOTLOADER — 004"},
-
-    # Auto-generated orphan IDs
-# IDs huérfanos detectados - agregar a CENSUS_SPEC
-
-# SP
-{"id": "SP:BOOTLOADER-004", "seccion": "004", "nombre": "SP:BOOTLOADER — 004"},
-
-
+# NOTA: "Changelog Archivo" (prefijo CHANGELOG_ARCHIVO:) NO está en DOCUMENTS.
+# Efecto conocido: sus IDs no se indexan ni se reportan como huérfanos. Agregarlo
+# aquí haría visibles cientos de IDs del archivo histórico; si se decide incluirlo,
+# revisar KNOWN_RETIRED_NOISE y el ruido esperado del render.
+# Pendiente de decisión del operador (ver handoffs/VALIDACION_GENERATE_CENSUS_Y_LAYER4_2026-10-02.md §A7).
 
 # ─── CAPA DE RED ──────────────────────────────────────────────────────────────
 
@@ -631,9 +625,9 @@ def resolve_link(row: dict, link_index: dict) -> dict | None:
 
 # ─── DETECCIÓN DE HUÉRFANOS ───────────────────────────────────────────────────
 
-def known_ids_from_spec() -> set:
+def known_ids_from_spec(spec: list | None = None) -> set:
     known = set()
-    for section in CENSUS_SPEC:
+    for section in (spec if spec is not None else CENSUS_SPEC):
         for row in section["rows"]:
             known.add(row["id"])
             for lid in row.get("lookup_ids", []):
@@ -689,55 +683,144 @@ def infer_section_from_id(id_str: str) -> tuple:
     return section_name, seccion, nombre
 
 
-def generate_census_spec_additions(orphans: dict) -> str:
-    """Genera el código Python para agregar IDs huérfanos al CENSUS_SPEC."""
-    if not orphans:
-        return "# No hay IDs huérfanos para agregar\n"
-    
-    additions = []
-    additions.append("# IDs huérfanos detectados - agregar a CENSUS_SPEC")
-    additions.append("")
-    
-    by_section = {}
-    for id_str, entry in orphans.items():
-        section_name, seccion, nombre = infer_section_from_id(id_str)
-        if section_name not in by_section:
-            by_section[section_name] = []
-        by_section[section_name].append({
-            "id": id_str,
-            "seccion": seccion,
-            "nombre": nombre,
-            "entry": entry
-        })
-    
-    for section_name, items in sorted(by_section.items()):
-        if section_name == "UNKNOWN":
-            continue
-        additions.append(f"# {section_name}")
-        for item in items:
-            additions.append(f'{{"id": "{item["id"]}", "seccion": "{item["seccion"]}", "nombre": "{item["nombre"]}"}},')
-        additions.append("")
-    
-    return "\n".join(additions)
-
-
-def find_census_spec_end(content: str) -> int | None:
-    """Encuentra el índice del ']' que cierra CENSUS_SPEC balanceando profundidad."""
-    start_marker = "CENSUS_SPEC = ["
-    start = content.find(start_marker)
-    if start == -1:
+def _spec_from_source(content: str) -> list | None:
+    """Parsea el CENSUS_SPEC del código fuente (por AST, sin ejecutarlo)."""
+    try:
+        tree = ast.parse(content)
+    except SyntaxError as e:
+        print(f"✗ El archivo no es Python válido: {e}")
         return None
-    bracket_start = start + len(start_marker) - 1
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(getattr(t, "id", "") == "CENSUS_SPEC" for t in node.targets):
+            try:
+                return ast.literal_eval(node.value)
+            except Exception as e:
+                print(f"✗ CENSUS_SPEC no es un literal evaluable: {e}")
+                return None
+    return None
+
+
+def load_spec_from_file(path: Path) -> list | None:
+    """Carga el CENSUS_SPEC desde disco (para reflejar un auto-fix recién aplicado)."""
+    try:
+        return _spec_from_source(Path(path).read_text(encoding="utf-8"))
+    except OSError as e:
+        print(f"✗ No se pudo leer {path}: {e}")
+        return None
+
+
+def _find_rows_bounds(content: str, section_name: str) -> tuple[int, int] | None:
+    """Devuelve (inicio, fin) del literal de la lista 'rows' de una sección.
+
+    Balancea corchetes ignorando los que aparecen dentro de strings, para no
+    confundirse con listas anidadas como lookup_ids.
+    """
+    name_idx = content.find(f'"name": "{section_name}"')
+    if name_idx == -1:
+        return None
+    rows_idx = content.find('"rows": [', name_idx)
+    if rows_idx == -1:
+        return None
+    open_idx = content.index("[", rows_idx)
     depth = 0
-    for i in range(bracket_start, len(content)):
+    in_str = None
+    i = open_idx
+    while i < len(content):
         ch = content[i]
-        if ch == "[":
+        if in_str:
+            if ch == "\\":
+                i += 2
+                continue
+            if ch == in_str:
+                in_str = None
+        elif ch in "\"'":
+            in_str = ch
+        elif ch == "[":
             depth += 1
         elif ch == "]":
             depth -= 1
             if depth == 0:
-                return i + 1
+                return open_idx, i + 1
+        i += 1
     return None
+
+
+def _orphan_rows_text(items: list, indent: str) -> str:
+    """Genera las filas de CENSUS_SPEC para una lista de (id, seccion, nombre)."""
+    return "\n".join(
+        f'{indent}{{"id": "{id_str}", "seccion": "{seccion}", "nombre": "{nombre}"}},'
+        for id_str, seccion, nombre in items
+    )
+
+
+def generate_census_spec_additions(orphans: dict) -> str:
+    """Genera el código Python (solo muestra) para agregar IDs huérfanos al CENSUS_SPEC."""
+    if not orphans:
+        return "# No hay IDs huérfanos para agregar\n"
+
+    by_section = {}
+    for id_str in orphans:
+        section_name, seccion, nombre = infer_section_from_id(id_str)
+        by_section.setdefault(section_name, []).append((id_str, seccion, nombre))
+
+    additions = ["# IDs huérfanos detectados — insertar DENTRO de la sección indicada", ""]
+    for section_name, items in sorted(by_section.items()):
+        if section_name == "UNKNOWN":
+            continue
+        additions.append(f"# {section_name}")
+        additions.append(_orphan_rows_text(items, indent="            "))
+        additions.append("")
+    unknown = by_section.get("UNKNOWN", [])
+    if unknown:
+        additions.append("# Sin sección reconocida en el spec (requieren revisión manual):")
+        for id_str, _, _ in unknown:
+            additions.append(f"#   {id_str}")
+        additions.append("")
+    return "\n".join(additions)
+
+
+def insert_orphan_rows(content: str, orphans: dict) -> tuple[str, list, list]:
+    """Inserta cada huérfano DENTRO de la sección que le corresponde del CENSUS_SPEC.
+
+    Retorna (contenido_nuevo, ids_insertados, ids_sin_seccion).
+    """
+    by_section = {}
+    unknown = []
+    for id_str in orphans:
+        section_name, seccion, nombre = infer_section_from_id(id_str)
+        if section_name == "UNKNOWN":
+            unknown.append(id_str)
+            continue
+        by_section.setdefault(section_name, []).append((id_str, seccion, nombre))
+
+    edits = []
+    inserted = []
+    for section_name, items in by_section.items():
+        bounds = _find_rows_bounds(content, section_name)
+        if bounds is None:
+            unknown.extend(id_str for id_str, _, _ in items)
+            continue
+        open_idx, close_idx = bounds
+
+        # Indentación: la de la última fila existente antes del cierre
+        last_open = content.rfind("{", open_idx, close_idx)
+        if last_open != -1:
+            line_start = content.rfind("\n", 0, last_open) + 1
+            indent = content[line_start:last_open] if not content[line_start:last_open].strip() else " " * 12
+        else:
+            indent = " " * 12
+
+        close_line_start = content.rfind("\n", 0, close_idx) + 1
+        rows_text = _orphan_rows_text(items, indent) + "\n"
+        edits.append((close_line_start, rows_text))
+        inserted.extend(id_str for id_str, _, _ in items)
+
+    # Aplicar de abajo hacia arriba para no desplazar los índices previos
+    new_content = content
+    for pos, text in sorted(edits, key=lambda e: e[0], reverse=True):
+        new_content = new_content[:pos] + text + new_content[pos:]
+
+    return new_content, inserted, unknown
 
 
 def auto_fix_orphans(orphans: dict) -> bool:
@@ -784,17 +867,45 @@ def auto_fix_orphans(orphans: dict) -> bool:
     if response in ['y']:
         script_path = Path(__file__).resolve()
         current_content = script_path.read_text(encoding="utf-8")
-        census_spec_end = find_census_spec_end(current_content)
-        
-        if census_spec_end is not None:
-            new_content = current_content[:census_spec_end] + "\n    # Auto-generated orphan IDs\n" + additions_code + current_content[census_spec_end:]
-            script_path.write_text(new_content, encoding="utf-8")
-            print(f"✓ IDs agregados a {script_path}")
-            return True
-        else:
-            print("✗ Error: No se pudo encontrar el cierre real de CENSUS_SPEC en el archivo.")
+
+        # Idempotencia: no reinsertar IDs que ya están en el spec
+        current_spec = _spec_from_source(current_content)
+        if current_spec is None:
+            print("✗ No se pudo parsear el CENSUS_SPEC actual. Archivo sin cambios.")
             return False
-    
+        already_known = known_ids_from_spec(current_spec)
+        new_orphans = {k: v for k, v in orphans.items() if k not in already_known}
+        skipped_existing = len(orphans) - len(new_orphans)
+        if skipped_existing:
+            print(f"  · {skipped_existing} ID(s) ya estaban en CENSUS_SPEC (se omiten).")
+        if not new_orphans:
+            print("✓ Nada que agregar: todos los huérfanos ya están en el spec.")
+            return False
+
+        new_content, inserted, unknown = insert_orphan_rows(current_content, new_orphans)
+
+        if not inserted:
+            print("✗ No se insertó ningún ID: no se encontró la sección destino en CENSUS_SPEC.")
+            print("  Usa [N/n] para revisar el código generado. Archivo sin cambios.")
+            return False
+
+        # Validación previa a la escritura: sintaxis + los IDs deben quedar DENTRO del spec
+        new_spec = _spec_from_source(new_content)
+        if new_spec is None:
+            print("✗ Validación falló (CENSUS_SPEC ilegible tras el cambio). Archivo sin cambios.")
+            return False
+        new_known = known_ids_from_spec(new_spec)
+        missing = [id_str for id_str in inserted if id_str not in new_known]
+        if missing:
+            print(f"✗ Validación falló: {missing[:3]} no quedaron dentro de CENSUS_SPEC. Archivo sin cambios.")
+            return False
+
+        script_path.write_text(new_content, encoding="utf-8")
+        print(f"✓ {len(inserted)} ID(s) agregados DENTRO de CENSUS_SPEC en {script_path}")
+        if unknown:
+            print(f"  ⚠ {len(unknown)} ID(s) sin sección reconocida (no insertados): {', '.join(unknown[:5])}")
+        return True
+
     print("✗ Respuesta no reconocida. Cancelado.")
     return False
 
@@ -867,6 +978,9 @@ def parse_markdown_table_cell(cell_str: str) -> list:
     return rich_text if rich_text else [{"type": "text", "text": {"content": cell_str}}]
 
 
+TABLE_SEPARATOR_RE = re.compile(r"^\s*\|[\s:\-|]+\|\s*$")
+
+
 def markdown_table_to_notion_blocks(table_lines: list, max_rows_per_table: int = 98) -> list:
     """Convierte un bloque de lIneas de tabla Markdown a una lista de bloques 'table' de Notion,
     dividiendo tablas de mas de 98 filas para respetar el limite de 100 de la API (header + 98 filas = 99 bloques).
@@ -878,8 +992,13 @@ def markdown_table_to_notion_blocks(table_lines: list, max_rows_per_table: int =
     headers = [c.strip() for c in header_line.strip().strip('|').split('|')]
     column_count = len(headers)
 
-    # Filtrar separator line (linea con ---) y obtener solo filas de datos
-    row_lines = [line for line in table_lines[1:] if '---' not in line and line.strip().startswith('|')]
+    # Filtrar SOLO la línea separadora (|---|---|) y quedarse con filas de datos.
+    # Antes se descartaba cualquier fila que contuviera '---' en alguna celda,
+    # perdiendo filas legítimas (p. ej. URLs con '---').
+    row_lines = [
+        line for line in table_lines[1:]
+        if line.strip().startswith('|') and not TABLE_SEPARATOR_RE.match(line)
+    ]
 
     header_cells = [parse_markdown_table_cell(h) for h in headers]
     data_rows = []
@@ -979,44 +1098,114 @@ def markdown_to_notion_blocks(markdown: str) -> list:
     return blocks
 
 
-def update_notion_census_page(page_id: str, markdown_content: str) -> bool:
-    """Elimina los bloques anteriores y publica la nueva estructura AST a Notion."""
-    try:
-        blocks = markdown_to_notion_blocks(markdown_content)
-        
-        url = f"https://api.notion.com/v1/blocks/{page_id}/children"
-        response = requests.get(url, headers=HEADERS)
-        
+def fetch_all_children(block_id: str) -> list | None:
+    """Lista TODOS los bloques hijos de una página, paginando con start_cursor.
+
+    La versión anterior leía solo la primera página (100 bloques): en páginas
+    más grandes dejaba bloques viejos sin borrar (duplicados tras el re-render).
+    Retorna None si la lectura falla, para que el llamador aborte sin escribir.
+    """
+    url = f"https://api.notion.com/v1/blocks/{block_id}/children"
+    results = []
+    cursor = None
+    while True:
+        params = {"page_size": 100}
+        if cursor:
+            params["start_cursor"] = cursor
+        try:
+            response = requests.get(url, headers=HEADERS, params=params)
+        except Exception as e:
+            print(f"✗ Error de red leyendo bloques de {block_id[:8]}: {e}")
+            return None
         if response.status_code != 200:
-            print(f"✗ Error al obtener bloques actuales: {response.status_code}")
-            return False
-        
-        current_blocks = response.json().get("results", [])
-        
-        if current_blocks:
-            for block in current_blocks:
-                delete_url = f"https://api.notion.com/v1/blocks/{block['id']}"
-                requests.delete(delete_url, headers=HEADERS)
-        
-        append_url = f"https://api.notion.com/v1/blocks/{page_id}/children"
-        
-        for i in range(0, len(blocks), 100):
-            batch = blocks[i:i+100]
-            payload = {"children": batch}
-            
-            response = requests.patch(append_url, headers=HEADERS, json=payload)
-            
-            if response.status_code != 200:
-                print(f"✗ Error al agregar bloques (batch {i//100 + 1}): {response.status_code}")
-                print(f"  Response: {response.text}")
-                return False
-        
-        print(f"✓ Página de Notion actualizada exitosamente")
-        return True
-        
-    except Exception as e:
-        print(f"✗ Error al actualizar Notion: {e}")
+            print(f"✗ Error al obtener bloques actuales: {response.status_code} {response.text[:120]}")
+            return None
+        data = response.json()
+        results.extend(data.get("results", []))
+        if not data.get("has_more"):
+            return results
+        cursor = data.get("next_cursor")
+        if not cursor:
+            return results
+
+
+def _delete_block(block_id: str, retries: int = 3) -> bool:
+    """Borra un bloque verificando el status HTTP, con backoff ante 429."""
+    url = f"https://api.notion.com/v1/blocks/{block_id}"
+    for attempt in range(1, retries + 1):
+        try:
+            r = requests.delete(url, headers=HEADERS)
+        except Exception as e:
+            print(f"  ⚠ Fallo de red borrando bloque {block_id[:8]}: {e}")
+            time.sleep(RETRY_BACKOFF_SECONDS * attempt)
+            continue
+        if r.status_code == 200:
+            return True
+        if r.status_code == 429:
+            wait = int(r.headers.get("Retry-After", 2))
+            time.sleep(wait)
+            continue
+        print(f"  ⚠ No se pudo borrar bloque {block_id[:8]}: HTTP {r.status_code} {r.text[:100]}")
         return False
+    return False
+
+
+def update_notion_census_page(page_id: str, markdown_content: str) -> bool:
+    """Publica el census en Notion con orden seguro: APPEND primero, DELETE después.
+
+    El patrón anterior (borrar todo y luego escribir) dejaba la página VACÍA si
+    el append fallaba, y no verificaba los DELETE. Ahora:
+      1. Se leen y paginan TODOS los bloques actuales.
+      2. Se agregan los bloques nuevos por lotes; si un lote falla se deshace lo
+         agregado y se aborta SIN tocar los bloques viejos.
+      3. Solo si el paso 2 terminó OK se borran los viejos, verificando status.
+    """
+    blocks = markdown_to_notion_blocks(markdown_content)
+
+    if not blocks:
+        print("✗ Payload vacío: se aborta para no dejar la página sin contenido.")
+        return False
+
+    current_blocks = fetch_all_children(page_id)
+    if current_blocks is None:
+        return False
+
+    append_url = f"https://api.notion.com/v1/blocks/{page_id}/children"
+    created_ids = []
+
+    for i in range(0, len(blocks), 100):
+        batch = blocks[i:i+100]
+        response = None
+        try:
+            response = requests.patch(append_url, headers=HEADERS, json={"children": batch})
+        except Exception as e:
+            print(f"✗ Error de red agregando bloques (lote {i//100 + 1}): {e}")
+        if response is None or response.status_code != 200:
+            status = "sin respuesta" if response is None else f"{response.status_code}: {response.text[:150]}"
+            print(f"✗ Error al agregar bloques (lote {i//100 + 1}): {status}")
+            for bid in created_ids:
+                _delete_block(bid)
+            print("  ↩ Se deshizo lo agregado; los bloques originales NO se tocaron.")
+            return False
+        created_ids.extend(
+            b.get("id") for b in response.json().get("results", []) if b.get("id")
+        )
+
+    deleted = 0
+    failed = 0
+    for block in current_blocks:
+        if _delete_block(block["id"]):
+            deleted += 1
+        else:
+            failed += 1
+
+    if failed:
+        print(f"✗ Contenido publicado pero {failed} bloque(s) viejos no se pudieron borrar "
+              f"(quedan duplicados en la página). Reintentar o limpiar manualmente.")
+        return False
+
+    print(f"✓ Página de Notion actualizada exitosamente (nuevos: {len(blocks)}, reemplazados: {deleted})")
+    return True
 
 
 def get_page_version(page_id: str) -> str:
@@ -1096,7 +1285,7 @@ def sync_page_version_from_changelog(page_id: str, changelog_id: str) -> bool:
 
     # Si ya están sincronizadas, no hacer nada
     if current_version == master_version:
-        print(f"  ✓ La versión ya está sincronizada")
+        print("  ✓ La versión ya está sincronizada")
         return True
 
     # Actualizar versión
@@ -1104,7 +1293,7 @@ def sync_page_version_from_changelog(page_id: str, changelog_id: str) -> bool:
     prop_name = "Versión " if page_id == "36e938befc4281d6bf40dfe7dee782a5" else "Versión"  # VANTAGE tiene "Versión " con espacio
     write_ok = update_page_version(page_id, master_version, prop_name=prop_name)
     if not write_ok:
-        print(f"  ✗ Fallo al actualizar versión")
+        print("  ✗ Fallo al actualizar versión")
         return False
 
     # Verificar post-escritura
@@ -1117,8 +1306,13 @@ def sync_page_version_from_changelog(page_id: str, changelog_id: str) -> bool:
         return False
 
 
-def sync_to_notion(page_id: str, markdown_content: str, auto_confirm: bool = False, sync_version: bool = True) -> bool:
-    """Sincroniza el census a Notion con confirmación del usuario y opcionalmente sincroniza la versión."""
+def sync_to_notion(page_id: str, markdown_content: str, auto_confirm: bool = False, sync_version: bool = True) -> bool | None:
+    """Sincroniza el census a Notion.
+
+    Retorna True si se publicó OK, False si hubo un error real y None si el
+    usuario canceló (cancelar no es un fallo: el entry point no debe marcar
+    exit code 1 en ese caso).
+    """
     print("\n" + "=" * 52)
     print("  SINCRONIZACIÓN A NOTION")
     print("=" * 52)
@@ -1141,7 +1335,7 @@ def sync_to_notion(page_id: str, markdown_content: str, auto_confirm: bool = Fal
             content_ok = update_notion_census_page(page_id, markdown_content)
         else:
             print("✓ Cancelado. No se actualizó Notion.")
-            return False
+            return None
 
     if not content_ok:
         print("✗ Error al actualizar contenido")
@@ -1165,12 +1359,12 @@ def sync_to_notion(page_id: str, markdown_content: str, auto_confirm: bool = Fal
 
 # ─── RENDER ────────────────────────────────────────────────────────────────────
 
-def render_markdown(link_index: dict, orphans: dict) -> tuple:
+def render_markdown(link_index: dict, orphans: dict, spec: list | None = None) -> tuple:
     lines = []
     unresolved = []
     hardcoded_fallbacks = []
 
-    for i, section in enumerate(CENSUS_SPEC):
+    for i, section in enumerate(spec if spec is not None else CENSUS_SPEC):
         if i > 0:
             lines.append("---")
             lines.append("")
@@ -1239,7 +1433,8 @@ if __name__ == "__main__":
     
     if "--debug-id" in sys.argv:
         idx = sys.argv.index("--debug-id")
-        debug_ids = sys.argv[idx + 1:]
+        # Solo IDs: cualquier flag posterior (p. ej. --sync-to-notion) no es un ID
+        debug_ids = [a for a in sys.argv[idx + 1:] if not a.startswith("--")]
         if not debug_ids:
             print("[ERROR] --debug-id requiere al menos un ID después, ej.:")
             print("  python3 generate_census.py --debug-id KERNEL:GATE-DECISION-001 KERNEL:GATE-DECISION-004")
@@ -1260,7 +1455,7 @@ if __name__ == "__main__":
     if "--no-sync-version" in sys.argv:
         sync_version_flag = False
 
-    print(f"\nV-ID-CENSUS Generator v3.1")
+    print("\nV-ID-CENSUS Generator v3.1")
     print(f"Generado: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("=" * 52)
 
@@ -1274,7 +1469,8 @@ if __name__ == "__main__":
     orphans = find_orphan_ids(link_index, known_ids)
     md, unresolved, hardcoded_fallbacks = render_markdown(link_index, orphans)
 
-    output = Path("/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Layer_1/data/V_ID_CENSUS_PRODUCTION.md")
+    # Ruta relativa al script (antes hardcodeada a una ruta absoluta del operador → no portable)
+    output = script_dir.parent / "data" / "V_ID_CENSUS_PRODUCTION.md"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(md, encoding="utf-8")
 
@@ -1301,22 +1497,30 @@ if __name__ == "__main__":
             print(f"    - {uid}")
     print("=" * 52)
     
+    exit_code = 0
+
     if auto_fix_orphans_flag:
         if auto_fix_orphans(orphans):
             print("\nRegenerando census con IDs actualizados...")
-            known_ids = known_ids_from_spec()
+            # Recargar el spec DESDE DISCO: el de memoria no refleja el auto-fix
+            updated_spec = load_spec_from_file(Path(__file__).resolve()) or CENSUS_SPEC
+            known_ids = known_ids_from_spec(updated_spec)
             orphans = find_orphan_ids(link_index, known_ids)
-            md, unresolved, hardcoded_fallbacks = render_markdown(link_index, orphans)
+            md, unresolved, hardcoded_fallbacks = render_markdown(link_index, orphans, updated_spec)
             output.write_text(md, encoding="utf-8")
             print("✓ Census regenerado.")
     
     if sync_to_notion_flag:
-        sync_to_notion(notion_page_id, md, auto_confirm_flag, sync_version_flag)
+        # None = el usuario canceló (no es fallo); False = error real
+        if sync_to_notion(notion_page_id, md, auto_confirm_flag, sync_version_flag) is False:
+            exit_code = 1
 
     if incomplete_docs:
         print("\n  ⚠️  ADVERTENCIA: CENSUS INCOMPLETO")
         print("  Los siguientes documentos NO se indexaron completos")
         for entry in incomplete_docs:
             print(f"    - {entry['doc']}: {entry['error']}")
+        exit_code = 1
 
     print(f"\nExportado a: {output.resolve()}")
+    sys.exit(exit_code)

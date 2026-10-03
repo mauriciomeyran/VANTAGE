@@ -6,7 +6,7 @@ Detecta cambios en el repo y hace add+commit+push automáticamente.
 Sincroniza automáticamente index.json si hay cambios en /skills/
 
 Características:
-- Regenera index.json si hay nuevos .skill files
+- Regenera index.json si hay cambios en las skills (skills/*.md, */SKILL.md, legacy *.skill)
 - Detecta cambios en git status con timeout estricto
 - Commitea + push a origin/main con timeout de red (30s max)
 - Sin cambios: no hace nada, no emite ruido
@@ -15,8 +15,8 @@ Capa: L4 — Version Control & Infrastructure
 Ruta canónica: ~/Documents/03 Projects/VANTAGE/Layer_4/scripts/git_sync.py
 
 Uso:
-    python3 git_sync.py              # corre sync real
-    python3 git_sync.py --dry-run   # ver qué commitearía sin ejecutar
+    python3 git_sync.py              # corre sync real (commit + push de la rama activa)
+    python3 git_sync.py --dry-run   # ver qué commitearía sin escribir ni commitear
 """
 
 from __future__ import annotations
@@ -66,15 +66,39 @@ class GitError(Exception):
     pass
 
 
+SKILL_PATTERNS = ("*.md", "*/SKILL.md", "*.skill")
+
+
 def get_skill_files() -> list[str]:
-    """Obtiene lista de archivos .skill en /skills/"""
+    """Obtiene los nombres de skill en /skills/.
+
+    Layout vigente: un `skills/<nombre>.md` por skill. `*.skill` es el sufijo
+    legacy (verify_versions.py lo documenta como formato histórico) y se sigue
+    aceptando. Antes solo se buscaba `*.skill` → la lista siempre salía vacía y
+    `index.json` nunca se regeneraba.
+    """
     if not SKILLS_DIR.exists():
         return []
-    return sorted([f.name for f in SKILLS_DIR.glob("*.skill")])
+    names = set()
+    for pattern in SKILL_PATTERNS:
+        for f in SKILLS_DIR.glob(pattern):
+            if f.name.startswith("."):
+                continue
+            if pattern == "*/SKILL.md":
+                names.add(f.parent.name)
+            elif f.name.endswith(".skill"):
+                names.add(f.name[: -len(".skill")])
+            else:
+                names.add(f.stem)
+    return sorted(names)
 
 
-def regenerate_index_json() -> bool:
-    """Regenera index.json si hay cambios en los .skill files. Retorna True si fue actualizado."""
+def regenerate_index_json(dry_run: bool = False) -> bool:
+    """Regenera index.json si hay cambios en las skills. Retorna True si hubo cambios.
+
+    Con dry_run=True calcula el resultado pero NO escribe el archivo (antes el
+    --dry-run sí creaba index.json, dejando el working tree modificado).
+    """
     skill_files = get_skill_files()
     
     if not skill_files:
@@ -110,6 +134,10 @@ def regenerate_index_json() -> bool:
         if all(current_resources.get(k) == v for k, v in new_resources.items()):
             return False
     
+    if dry_run:
+        print(f"📝 index.json se actualizaría ({len(new_resources)} skills)")
+        return True
+
     new_index = {
         "resources": sorted(
             new_resources.values(), 
@@ -122,6 +150,19 @@ def regenerate_index_json() -> bool:
     
     print(f"✏️  index.json actualizado ({len(new_resources)} skills)")
     return True
+
+
+def current_branch() -> str:
+    """Rama activa del repo.
+
+    Antes sync() commiteaba en la rama activa pero pusheaba el BRANCH fijo
+    ("main"): cualquier trabajo en otra rama quedaba commiteado localmente SIN
+    publicar y el script reportaba "✅ L4 Sync OK".
+    """
+    code, out, _ = run(["git", "rev-parse", "--abbrev-ref", "HEAD"], timeout=10)
+    if code == 0 and out and out != "HEAD":  # HEAD = detached HEAD → fallback
+        return out
+    return BRANCH
 
 
 def has_changes() -> bool:
@@ -139,15 +180,19 @@ def get_changed_files() -> list[str]:
 def sync(dry_run: bool = False) -> dict:
     try:
         # Paso 1: Regenera index.json si hay cambios en /skills/
-        index_updated = regenerate_index_json()
+        # (en dry-run solo se calcula; no se escribe nada en disco)
+        index_updated = regenerate_index_json(dry_run=dry_run)
         
         # Paso 2: Detecta cambios en git
         changed_flag = has_changes()
+
+        # Paso 3: Rama activa — se commitea y se pushea la MISMA rama
+        branch = current_branch()
     except GitError as e:
         return {"status": "error", "step": "git status", "error": str(e)}
     
     if not changed_flag and not index_updated:
-        return {"status": "clean", "message": "No hay cambios — nada que commitear."}
+        return {"status": "clean", "branch": branch, "message": "No hay cambios — nada que commitear."}
 
     changed = get_changed_files()
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -158,7 +203,8 @@ def sync(dry_run: bool = False) -> dict:
             "status": "dry_run", 
             "would_commit": msg, 
             "files": changed,
-            "index_updated": index_updated
+            "index_updated": index_updated,
+            "branch": branch,
         }
 
     code, _, err = run(["git", "add", "-A"], timeout=15)
@@ -169,10 +215,11 @@ def sync(dry_run: bool = False) -> dict:
     if code != 0:
         return {"status": "error", "step": "git commit", "error": err or out}
 
-    # Timeout extendido (30s) para llamadas de red (git push)
-    code, out, err = run(["git", "push", "origin", BRANCH], timeout=30)
+    # Timeout extendido (30s) para llamadas de red (git push).
+    # HEAD:refs/heads/<branch> publica la rama activa real (antes: BRANCH fijo).
+    code, out, err = run(["git", "push", "origin", f"HEAD:refs/heads/{branch}"], timeout=30)
     if code != 0:
-        return {"status": "error", "step": "git push", "error": err or out}
+        return {"status": "error", "step": "git push", "error": err or out, "branch": branch}
 
     return {
         "status": "ok",
@@ -180,6 +227,7 @@ def sync(dry_run: bool = False) -> dict:
         "files_committed": len(changed),
         "files": changed,
         "index_updated": index_updated,
+        "branch": branch,
     }
 
 
@@ -194,14 +242,15 @@ if __name__ == "__main__":
         print(result["message"])
         sys.exit(0)
     elif result["status"] == "ok":
-        msg = f"✅ L4 Sync OK — {result['files_committed']} archivo(s) commiteados"
+        msg = (f"✅ L4 Sync OK — {result['files_committed']} archivo(s) "
+               f"commiteados en {result.get('branch', BRANCH)}")
         if result.get("index_updated"):
             msg += " (index.json actualizado)"
         print(msg)
         print(f"   {result['commit_message']}")
         sys.exit(0)
     elif result["status"] == "dry_run":
-        print(f"DRY RUN — auto-sync: {result['would_commit']}")
+        print(f"DRY RUN — auto-sync: {result['would_commit']} (rama {result.get('branch', BRANCH)})")
         if result.get("index_updated"):
             print("  📝 index.json será actualizado")
         for f in result["files"]:

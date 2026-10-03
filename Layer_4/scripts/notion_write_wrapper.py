@@ -17,25 +17,19 @@ Uso:
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Any, Dict
 
 # ── Paths L4 → L1 ────────────────────────────────────────────────────────────
 _SCRIPT_DIR = Path(__file__).resolve()
 _PROJECT = _SCRIPT_DIR.parents[2]  # VANTAGE
 _TRIGGER_SCRIPT = _PROJECT / "Layer_4" / "scripts" / "trigger_sync_after_mcp_write.py"
 
-# ── Mapeo vigente de documentos fundacionales ─────────────────────────────────
-FOUNDATIONAL_DOCS = {
-    "377938be-fc42-805e-a408-c9ae518d4fe7": "kernel",
-    "37b938be-fc42-8001-9b9b-fcf81130d274": "system_prompt",
-    "377938be-fc42-8089-93f2-f52dbd2dec6c": "career_canon",
-    "372938be-fc42-8050-9a67-e40857d7806e": "manual",
-    "37c938be-fc42-80d4-b9ae-f5969830331b": "aliases",
-    "390938be-fc42-80e7-b429-d7d730339353": "change_log",
-    "3a3938be-fc42-8008-9e90-ec435c01f50d": "brief",
-    "3ba938be-fc42-8011-8947-fb4fa5d1f63f": "change_log_archivo",
-    "f87938be-fc42-8263-a305-819877d2245f": "project_charter",
-}
+if str(_SCRIPT_DIR.parent) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR.parent))
+
+# Fuente única del mapeo (ver foundational_docs.py). Se re-exporta el nombre
+# para no romper imports existentes de este módulo.
+from foundational_docs import FOUNDATIONAL_DOCS, mcp_sync_log_path  # noqa: E402,F401
 
 
 def write_to_notion_page(page_id: str, content: Dict[str, Any]) -> Dict[str, Any]:
@@ -60,27 +54,20 @@ def write_to_notion_page(page_id: str, content: Dict[str, Any]) -> Dict[str, Any
         notion = Client(auth=token)
         result = write_to_notion_page(page_id, {"properties": {...}, "children": [...]})
     """
-    # TODO: Implementar la lógica real de escritura según el stack del proyecto
-    # Esto podría ser:
+    # NO implementado a propósito (fix B10): antes esta función simulaba una
+    # escritura exitosa (write_success = True) y devolvía {"success": True} sin
+    # tocar Notion — un success falso que además disparaba un sync del contenido
+    # viejo si la página era fundacional. Hasta que exista la implementación real,
+    # falla rápido.
+    # Implementación pendiente (una de estas):
     # - notion_client API calls
     # - MCP tool calls (notion-update-page, etc.)
     # - HTTP directo a Notion API
-    
-    # Por ahora, este es un stub que demuestra el patrón
-    print(f"[NOTION WRITE] Escribiendo a página {page_id}")
-    
-    # Simular escritura exitosa
-    write_success = True
-    
-    if write_success:
-        # Disparar trigger de sync si es documento fundacional
-        if page_id in FOUNDATIONAL_DOCS:
-            print(f"[NOTION WRITE] Página fundacional detectada, disparando sync...")
-            _trigger_sync(page_id)
-        
-        return {"success": True, "page_id": page_id}
-    else:
-        return {"success": False, "error": "Write failed"}
+    raise NotImplementedError(
+        "notion_write_wrapper.write_to_notion_page() es un stub: la escritura real "
+        "a Notion no está implementada. No reportar éxito sin escritura "
+        "(ver MCP_SYNC_HOOK_README.md, sección notion_write_wrapper)."
+    )
 
 
 def _trigger_sync(page_id: str) -> None:
@@ -91,15 +78,21 @@ def _trigger_sync(page_id: str) -> None:
         page_id: ID de la página que fue modificada
     """
     try:
-        # Ejecutar trigger_sync_after_mcp_write.py en background
-        subprocess.Popen(
-            [sys.executable, str(_TRIGGER_SCRIPT), page_id],
-            cwd=str(_PROJECT),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
-        print(f"[NOTION WRITE] Sync trigger iniciado para {page_id}")
+        # Ejecutar trigger_sync_after_mcp_write.py en background.
+        # Fix B1: el hijo escribe a un log, NO a un PIPE que nadie lee (moría con
+        # BrokenPipeError en cuanto imprimía su primera línea).
+        log_path = mcp_sync_log_path()
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(log_path, "a", encoding="utf-8") as log:
+            subprocess.Popen(
+                [sys.executable, str(_TRIGGER_SCRIPT), page_id],
+                cwd=str(_PROJECT),
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                text=True,
+                start_new_session=True,
+            )
+        print(f"[NOTION WRITE] Sync trigger iniciado para {page_id} (log: {log_path})")
     except Exception as e:
         print(f"[NOTION WRITE] Error iniciando sync trigger: {e}")
         # No abortar - el write fue exitoso
@@ -129,8 +122,8 @@ if __name__ == "__main__":
     print(f"[TEST] Verificando page_id: {test_page_id}")
     
     if is_foundational_doc(test_page_id):
-        print(f"[TEST] ✓ Page_id es documento fundacional")
-        print(f"[TEST] Disparando sync trigger...")
+        print("[TEST] ✓ Page_id es documento fundacional")
+        print("[TEST] Disparando sync trigger...")
         _trigger_sync(test_page_id)
     else:
-        print(f"[TEST] ✗ Page_id NO es documento fundacional")
+        print("[TEST] ✗ Page_id NO es documento fundacional")
