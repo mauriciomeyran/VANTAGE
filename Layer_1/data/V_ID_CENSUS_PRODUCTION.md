@@ -49,11 +49,12 @@
 |---|---|---|
 | [`KERNEL:PURPOSE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281339ef8c3708fe206fb) | 01 | Propósito del Sistema |
 | [`KERNEL:INVARIANTS`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#2568c925ac9143a5973e8598f4414c9b) | 02 | KERNEL:INVARIANTS |
-| [`KERNEL:INV-LIST`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#340f0fc2437e4491b9d7d7905f1000a7) | 02.1 | KERNEL:INV LIST |
-| [`KERNEL:FAIL`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#bb929f79bfea4e9291af4f2edcf787cd) | 02.2 | KERNEL:FAIL |
-| [`KERNEL:FAIL-BEHAVIOR`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428162ac15d595f6a06929) | 02.3 | KERNEL:FAIL BEHAVIOR |
-| [`KERNEL:FAIL-DASHBOARD`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42813790a2e0b6fe18ec70) | 02.4 | KERNEL:FAIL DASHBOARD |
+| [`KERNEL:INV-SYSTEM`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#340f0fc2437e4491b9d7d7905f1000a7) | 02.1 | KERNEL:INV SYSTEM |
+| [`KERNEL:INV-FAIL-NATURE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#bb929f79bfea4e9291af4f2edcf787cd) | 02.2 | KERNEL:INV FAIL NATURE |
+| [`KERNEL:INV-FAIL-BEHAVIOR`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428162ac15d595f6a06929) | 02.3 | KERNEL:INV FAIL BEHAVIOR |
+| [`KERNEL:INV-FAIL-DASHBOARD`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42813790a2e0b6fe18ec70) | 02.4 | KERNEL:INV FAIL DASHBOARD |
 | [`KERNEL:ACTORS`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281dda298d87830500140) | 03 | KERNEL:ACTORS |
+| [`KERNEL:ACT-ROLES`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#884d6ff41c6b4fb9b44718bced14b974) | 03.1 | KERNEL:ACT ROLES |
 | [`KERNEL:ACT-SPLIT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281369043eded8cb52416) | 03.2 | KERNEL:ACT SPLIT |
 | [`KERNEL:ACT-AI`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281a6a95ed5e0c330c025) | 03.3 | KERNEL:ACT AI |
 | [`KERNEL:ACT-PY`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281df86f9e18f40430a6e) | 03.4 | KERNEL:ACT PY |
@@ -63,18 +64,18 @@
 | [`KERNEL:ARC-L2`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281a49bacecbcc753c469) | 04.3 | KERNEL:ARC L2 |
 | [`KERNEL:ARC-L3`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281d1a1dfccbdb49d2b51) | 04.4 | KERNEL:ARC L3 |
 | [`KERNEL:ARC-L4`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#8632cc5674a64ba0892edefe7487f4e4) | 04.5 | KERNEL:ARC L4 |
-| [`KERNEL:ARC-DASH`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#2efac53fe5d14605be1629d9a34d7104) | 04.6 | KERNEL:ARC DASH |
+| [`KERNEL:ARC-DASHBOARD`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#2efac53fe5d14605be1629d9a34d7104) | 04.6 | KERNEL:ARC DASHBOARD |
 | [`KERNEL:SCHEMA`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281ca93c0ebce8db647dc) | 05 | Modelo de Datos y Ownership |
-| [`KERNEL:SCH-DEDUP-GUARD`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e98271ded91a80eeac) | 05.1 | KERNEL:SCH DEDUP GUARD |
-| [`KERNEL:SCH-RESTRICTIONS`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428132a0bdf4fce35a7e73) | 05.2 | KERNEL:SCH RESTRICTIONS |
-| [`KERNEL:SCH-FUENTE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e296c5fb405398fcb8) | 05.3 | KERNEL:SCH FUENTE |
+| [`KERNEL:SCH-OWNERSHIP`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e98271ded91a80eeac) | 05.1 | KERNEL:SCH OWNERSHIP |
+| [`KERNEL:SCH-INGEST`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428132a0bdf4fce35a7e73) | 05.2 | KERNEL:SCH INGEST |
+| [`KERNEL:SCH-SOURCE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e296c5fb405398fcb8) | 05.3 | KERNEL:SCH SOURCE |
 | [`KERNEL:SCH-ENTITY`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#26ee15d13c9a4f4888504dfe9d3ba8fd) | 05.4 | KERNEL:SCH ENTITY |
 | [`KERNEL:SCH-RESOLUTION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#afd94ad4d2524403afabd119c2be961e) | 05.5 | KERNEL:SCH RESOLUTION |
 | [`KERNEL:SCH-APPROVE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#a6e30fdb5f7448e184d254e514e728b0) | 05.6 | KERNEL:SCH APPROVE |
-| [`KERNEL:SCH-AUDIT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281348324e244b03b30db) | 05.7 | KERNEL:SCH AUDIT |
-| [`KERNEL:SCH-NEXTACTION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281788659ceb30ef02df5) | 05.8 | KERNEL:SCH NEXTACTION |
+| [`KERNEL:SCH-ACCEPTANCE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281348324e244b03b30db) | 05.7 | KERNEL:SCH ACCEPTANCE |
+| [`KERNEL:SCH-NEXTACTION-VALUES`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281788659ceb30ef02df5) | 05.8 | KERNEL:SCH NEXTACTION VALUES |
 | [`KERNEL:SCH-WRITERS`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428125b77ad6f6714015e6) | 05.9 | KERNEL:SCH WRITERS |
-| [`KERNEL:SCH-TRACKER`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281d39f5bea6c9c5e2d26) | 05.10 | KERNEL:SCH TRACKER |
+| [`KERNEL:SCH-TRACKER-ROUTING`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281d39f5bea6c9c5e2d26) | 05.10 | KERNEL:SCH TRACKER ROUTING |
 | [`KERNEL:SCH-PRIORITY`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42813c81e8c4d58c3060ba) | 05.11 | KERNEL:SCH PRIORITY |
 | [`KERNEL:GATE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428122832dd1a2c95738fa) | 06 | KERNEL:GATE |
 | [`KERNEL:GATE-BYPASS`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f899a9d8b2315f6460) | 06.1 | KERNEL:GATE BYPASS |
@@ -83,13 +84,13 @@
 | [`KERNEL:GATE-DETERMINISM`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281eeb861c5b059027f7b) | 06.4 | KERNEL:GATE DETERMINISM |
 | [`KERNEL:GATE-BLOCKED`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e48e92ee14621a14ee) | 06.5 | KERNEL:GATE BLOCKED |
 | [`KERNEL:GATE-REJECTED`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f2a2d7c8186a91f8e7) | 06.6 | KERNEL:GATE REJECTED |
-| [`KERNEL:GATE-DEDUP-MARK`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e9b20cfbc3a943a9b4) | 06.7 | KERNEL:GATE DEDUP MARK |
+| [`KERNEL:GATE-ARCHIVE-MARK`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e9b20cfbc3a943a9b4) | 06.7 | KERNEL:GATE ARCHIVE MARK |
 | [`KERNEL:GATE-LAYERS`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42812ba0a0e25b02bb187f) | 06.8 | KERNEL:GATE LAYERS |
 | [`KERNEL:GATE-ESCALATION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281d7a2aef152785b1a41) | 06.9 | KERNEL:GATE ESCALATION |
 | [`KERNEL:GATE-TERMINAL`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281638bf3fee962107130) | 06.10 | KERNEL:GATE TERMINAL |
-| [`KERNEL:GATE-MATRIX-NOTE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#11ff408269d34a0dbbba0f3c76ca5fd5) | 06.11 | KERNEL:GATE MATRIX NOTE |
+| [`KERNEL:GATE-TRANSITIONS`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#11ff408269d34a0dbbba0f3c76ca5fd5) | 06.11 | KERNEL:GATE TRANSITIONS |
 | [`KERNEL:GATE-MUTABILITY`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#6b07971b41ef47f0ba7d0b6e402f2afb) | 06.12 | KERNEL:GATE MUTABILITY |
-| [`KERNEL:GATE-AUDIT-LIVE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#77e27e8d5b214aa5b33123ae640889c4) | 06.13 | KERNEL:GATE AUDIT LIVE |
+| [`KERNEL:GATE-ARCHIVE-AUDIT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#77e27e8d5b214aa5b33123ae640889c4) | 06.13 | KERNEL:GATE ARCHIVE AUDIT |
 | [`KERNEL:TRIGGERS`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281bb962beb5d540ae1fc) | 07 | Contratos de Ejecución del AI Component |
 | [`KERNEL:TRG-FEED`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281fda510c8fc7e5dbe2a) | 07.1 | KERNEL:TRG FEED |
 | [`KERNEL:TRG-VL1`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42811fbaaad38b41104fd2) | 07.2 | KERNEL:TRG VL1 |
@@ -98,12 +99,13 @@
 | [`KERNEL:TRG-SYNC`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281f59570f095f715a228) | 07.5 | KERNEL:TRG SYNC |
 | [`KERNEL:TRG-TOP3`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42814985e1f365267bbf87) | 07.6 | KERNEL:TRG TOP3 |
 | [`KERNEL:TRG-NEXTACTION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42819da606d30a284e01c4) | 07.7 | KERNEL:TRG NEXTACTION |
-| [`KERNEL:TRG-FEEDMIG`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810b8407cc6bcddd269d) | 07.8 | KERNEL:TRG FEEDMIG |
+| [`KERNEL:TRG-FEED-REDIRECT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810b8407cc6bcddd269d) | 07.8 | KERNEL:TRG FEED REDIRECT |
 | [`KERNEL:TRG-STATUS`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428130b270f44bac723fd7) | 07.9 | KERNEL:TRG STATUS |
 | [`KERNEL:FLOW`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42814f857ee7e83927c03d) | 08 | KERNEL:FLOW |
-| [`KERNEL:FLOW-WRITE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281da96eee13fdccf5a7b) | 08.2 | KERNEL:FLOW WRITE |
-| [`KERNEL:FLOW-CTX-SCOPE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281bd8ea1ec84f2d36f43) | 08.3 | KERNEL:FLOW CTX SCOPE |
-| [`KERNEL:FLOW-CTX-ROUTE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428105927af28a7be01c6c) | 08.4 | KERNEL:FLOW CTX ROUTE |
+| [`KERNEL:FLOW-CONTRACT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#efebc4a7023849789b210db509cf8518) | 08.1 | KERNEL:FLOW CONTRACT |
+| [`KERNEL:FLOW-WRITE-RISK`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281da96eee13fdccf5a7b) | 08.2 | KERNEL:FLOW WRITE RISK |
+| [`KERNEL:FLOW-CONTEXT-ECONOMY`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281bd8ea1ec84f2d36f43) | 08.3 | KERNEL:FLOW CONTEXT ECONOMY |
+| [`KERNEL:FLOW-CONTEXT-ROUTING`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428105927af28a7be01c6c) | 08.4 | KERNEL:FLOW CONTEXT ROUTING |
 | [`KERNEL:CVP`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42810abed7cd16728849af) | 09 | KERNEL:CVP |
 | [`KERNEL:CVP-CVA`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281a98fc3f20219b30385) | 09.1 | KERNEL:CVP CVA |
 | [`KERNEL:CVP-CVB`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#412beb4f3f8e4e58ac1dde1d8afcb879) | 09.2 | KERNEL:CVP CVB |
@@ -112,10 +114,10 @@
 | [`KERNEL:CVR`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428187abded6a06ac3a4cf) | 11 | KERNEL:CVR |
 | [`KERNEL:CVR-NOFIT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42816a9186e8f054105519) | 11.1 | KERNEL:CVR NOFIT |
 | [`KERNEL:CVR-NOCLASSB`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281cabd78cea71f10af0d) | 11.2 | KERNEL:CVR NOCLASSB |
-| [`KERNEL:CVR-NODATAQ`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e78666f83de32a09ba) | 11.3 | KERNEL:CVR NODATAQ |
-| [`KERNEL:CVR-NOHANDOFF`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42819394fcce90dc89df0c) | 11.4 | KERNEL:CVR NOHANDOFF |
+| [`KERNEL:CVR-NODATAQUALITY`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e78666f83de32a09ba) | 11.3 | KERNEL:CVR NODATAQUALITY |
+| [`KERNEL:CVR-NODELEGATE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42819394fcce90dc89df0c) | 11.4 | KERNEL:CVR NODELEGATE |
 | [`KERNEL:CVR-NOSYNC`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281a0b4c3fac3a44af77f) | 11.5 | KERNEL:CVR NOSYNC |
-| [`KERNEL:CVR-GATE-INV`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3b6938befc4280b08b52e629fd3516ca) | 11.6 | KERNEL:CVR GATE INV |
+| [`KERNEL:CVR-GATE-INVARIANCE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3b6938befc4280b08b52e629fd3516ca) | 11.6 | KERNEL:CVR GATE INVARIANCE |
 | [`KERNEL:NAMING`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428172afddfb9c6f8d60a5) | 12 | KERNEL:NAMING |
 | [`KERNEL:NAM-ID-CONTRACT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42819e9483ec44987363b5) | 12.1 | KERNEL:NAM ID CONTRACT |
 | [`KERNEL:NAM-ID-MIGRATION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42817db5b0ec1f9c2282ca) | 12.2 | KERNEL:NAM ID MIGRATION |
@@ -132,11 +134,11 @@
 | [`KERNEL:OPS-CENSUS`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42819385a1d069583bfeeb) | 14.4 | KERNEL:OPS CENSUS |
 | [`KERNEL:OPS-LEDGER`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42812ea3cee969fdddd18a) | 14.5 | KERNEL:OPS LEDGER |
 | [`KERNEL:OPS-IMPACT`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281c7b29fcb1ae649d4bb) | 14.6 | KERNEL:OPS IMPACT |
-| [`KERNEL:OPS-EXTCFG`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42814b9398d5d7f0347012) | 14.7 | KERNEL:OPS EXTCFG |
-| [`KERNEL:OPS-GEMINI`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281cdbc66cf8ce4233633) | 14.8 | KERNEL:OPS GEMINI |
+| [`KERNEL:OPS-EXTCONFIG`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42814b9398d5d7f0347012) | 14.7 | KERNEL:OPS EXTCONFIG |
+| [`KERNEL:OPS-NOTEBOOK`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281cdbc66cf8ce4233633) | 14.8 | KERNEL:OPS NOTEBOOK |
 | [`KERNEL:OPS-SANDBOX`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428144b4ffe44e9f9df66e) | 14.9 | KERNEL:OPS SANDBOX |
 | [`KERNEL:OPS-ANNOUNCE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42812f8117d0ab6011fae5) | 14.10 | KERNEL:OPS ANNOUNCE |
-| [`KERNEL:OPS-GATES`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281ca88f8e6513d3b6829) | 14.11 | KERNEL:OPS GATES |
+| [`KERNEL:OPS-DOCPROTOCOL`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281ca88f8e6513d3b6829) | 14.11 | KERNEL:OPS DOCPROTOCOL |
 | [`KERNEL:OPS-SERIAL`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e79e22c8c59fc410c0) | 14.12 | KERNEL:OPS SERIAL |
 | [`KERNEL:EVOLUTION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428178bb0ada5f47c02e6a) | 15 | Evolución del Sistema |
 | [`KERNEL:EVO-POLICY`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281418d50e83e5a6d1098) | 15.1 | KERNEL:EVO POLICY |
