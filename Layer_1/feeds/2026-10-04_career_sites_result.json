@@ -1,0 +1,82 @@
+{
+  "candidate": "Mauricio Meyrán",
+  "search_date": "2026-10-04",
+  "prompt_variant": "A-weekly-unified-careersites",
+  "prompt_version": "PromptA-v1.0+careersites",
+  "fuente": "Career Pages Oficiales + ATS (Workday, Greenhouse, Lever, SmartRecruiters, Taleo, Ashby)",
+  "busqueda_realizada": true,
+  "resultados": [],
+  "rechazados": [
+    {
+      "titulo": "Visual Merchandising | Guadalajara",
+      "empresa": "CHANEL",
+      "url": "https://cc.wd3.myworkdayjobs.com/en-US/ChanelCareers/job/Zapopan/Visual-Merchandising---Guadalajara_JOBREQ00115048-1",
+      "fecha_publicacion": "30+ días (verificado 2026-10-04 en Workday CXS)",
+      "motivo_rechazo": "Ubicación Zapopan, Guadalajara (no CDMX) y antigüedad >30 días, fuera del rango ≤21 días de PRE-INCLUSION CHECK. Título en sí pasa exclusiones."
+    }
+  ],
+  "datos_calidad_advertencias": [
+    {
+      "tipo_auditoria": "DNS",
+      "fuente": "careers.sephora.com / sephora.com.mx/careers",
+      "evidencia": "NXDOMAIN / HTTP 410 — el portal de carreras de Sephora MX no resuelve; sephora.com.mx/careers devuelve 410 Gone",
+      "fecha": "2026-10-04"
+    },
+    {
+      "tipo_auditoria": "Filled",
+      "fuente": "SmartRecruiters API — Sephora, Chanel, benefitcorporation",
+      "evidencia": "GET /v1/companies/Sephora/postings → totalFound=0; Chanel → 0; benefitcorporation → 0. Sin postings activos.",
+      "fecha": "2026-10-04"
+    },
+    {
+      "tipo_auditoria": "HTTP",
+      "fuente": "SmartRecruiters boards de lujo/fashion (Gucci, Prada, Kering, Swarovski, Pandora, L'Oréal, Liverpool, Sanborns, El Palacio de Hierro, etc.)",
+      "evidencia": "HTTP 200 con totalFound=0 en ~60 company slugs probados; boards inexistentes.",
+      "fecha": "2026-10-04"
+    },
+    {
+      "tipo_auditoria": "HTTP",
+      "fuente": "Greenhouse boards-api",
+      "evidencia": "404 en la mayoría de los slugs (sephora, lululemon, benefitcosmetics, BathBodyWorks, Victoria's Secret, kyliecosmetics). Sólo 200 con vacantes: Glossier (27, US/UK) y Bombas (11, US) — ninguna con VM en México.",
+      "fecha": "2026-10-04"
+    },
+    {
+      "tipo_auditoria": "HTTP",
+      "fuente": "Lever API (api.lever.co/v0/postings)",
+      "evidencia": "404 en todos los slugs probados (nike, adidas, puma, sephora, loreal, chanel…) — sin board Lever accesible.",
+      "fecha": "2026-10-04"
+    },
+    {
+      "tipo_auditoria": "HTTP",
+      "fuente": "Ashby posting-api",
+      "evidencia": "200 sólo para boards tech (linear, ramp, notion, plaid, ashby); 404 en todos los boards de retail/beauty probados.",
+      "fecha": "2026-10-04"
+    },
+    {
+      "tipo_auditoria": "Cloudflare",
+      "fuente": "Cartier, Tiffany, Rolex, Swarovski, H&M, Primark, Fossil, Abercrombie",
+      "evidencia": "HTTP 403 en career pages; Playwright/browser también 403.",
+      "fecha": "2026-10-04"
+    },
+    {
+      "tipo_auditoria": "Timeout",
+      "fuente": "Kering (careers.kering.com), Richemont (SSL handshake timeout), Aerie (timeout)",
+      "evidencia": "read timeout / SSL handshake timeout en urllib y browser.",
+      "fecha": "2026-10-04"
+    },
+    {
+      "tipo_auditoria": "DNS",
+      "fuente": "Careers portals México: liverpool careers,-sanborns, empleos.coppel, guessed: mangofashion/zara/pullofbear",
+      "evidencia": "DNS_PROBE_FINISHED_NXDOMAIN o nodename nor servname provided; liverpool.com.mx responde Access Denied (Akamai ref 18.1171ca17)",
+      "fecha": "2026-10-04"
+    },
+    {
+      "tipo_auditoria": "Technical",
+      "fuente": "Walmart Careers (careers.walmart.com)",
+      "evidencia": "Search URLs /en/search?keyword=...&location=Mexico devuelven 404 (redirect a /us/en/en/search). No fue posible filtrar vacantes por México vía career page.",
+      "fecha": "2026-10-04"
+    }
+  ],
+  "conclusion": "0 vacantes aceptadas. Único posting con señal visual real en México encontrado en fuentes permitidas: CHANEL 'Visual Merchandising | Guadalajara' (Zapopan, 30+ días) — rechazado por ubicación fuera de CDMX y antigüedad fuera de rango. Under Armour México (13 vacantes en MX) no tiene rol de VM/merchandising: sólo retail field (Sales Associate, Store Supervisor, Assistant Store Manager) y roles corporativos, todos excluidos por título o familia.",
+  "siguiente_paso_recomendado": "Sin resultados en career sites/ATS. Considerar reroute: muchas marcas de lujo en México no publican VM en su portal (usan SuccessFactors/Taleo con login o ATS inaccesible desde esta región). Revisar manualmente Sephora MX y Liverpool desde una red/cdm distinta, o esperar la L1 LinkedIn run."
+}
