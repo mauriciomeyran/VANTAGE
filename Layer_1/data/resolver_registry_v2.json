@@ -39,7 +39,7 @@
   },
 
   "document_registry": {
-    "_comment": "SSOT para prefijos documentales (KERNEL:DOC-CONTRACT). Namespace separado de data_sources — este mapea PREFIX -> UUID de página fundacional, no entity_prefix de filas de tracker. Consumido por lazy_loader.py._get_authorized_prefixes(). Agregado v9.0.5 — cierra el pendiente registrado en Change Log v9.0.4. Actualizado (CENSUS-SYNC-R1): conteo de fundamentales pasa de 7→9 — se incorporan BRIEF y VANTAGE, previamente cubiertos solo por fallback fijo en verify_versions.py. CENSUS permanece fuera de este namespace: no tiene prefijo propio en KERNEL:DOC-CONTRACT (sus IDs internos usan KERNEL:/SP:/MANUAL:/CANON:/BRIEF:), por lo que verify_versions.py sigue resolviéndolo vía CENSUS_FALLBACK_ID. Actualizado (ARCHIVEROS): conteo de fundamentales pasa de 9→10 — se incorpora ARCHIVEROS al document_registry. Actualizado (CHARTER): conteo de fundamentales pasa de 10→11 — se incorpora CHARTER al document_registry.",
+    "_comment": "SSOT para prefijos documentales (KERNEL:DOC-CONTRACT). Namespace separado de data_sources — este mapea PREFIX -> UUID de página fundacional, no entity_prefix de filas de tracker. Consumido por lazy_loader.py._get_authorized_prefixes(). Agregado v9.0.5 — cierra el pendiente registrado en Change Log v9.0.4. Actualizado (CENSUS-SYNC-R1): conteo de fundamentales pasa de 7→9 — se incorporan BRIEF y VANTAGE, previamente cubiertos solo por fallback fijo en verify_versions.py. CENSUS permanece fuera de este namespace: no tiene prefijo propio en KERNEL:DOC-CONTRACT (sus IDs internos usan KERNEL:/SP:/MANUAL:/CANON:/BRIEF:), por lo que verify_versions.py sigue resolviéndolo vía CENSUS_FALLBACK_ID. Actualizado (ARCHIVEROS): conteo de fundamentales pasa de 9→10 — se incorpora ARCHIVEROS al document_registry. Actualizado (CHARTER): conteo de fundamentales pasa de 10→11 — se incorpora CHARTER al document_registry. Actualizado (PROMPT_CANON): conteo de fundamentales pasa de 11→12 — se incorpora PROMPT_CANON al document_registry. PROMPT_CANON es la autoridad de estado y provenance de los contratos de prompt L1; su ausencia es FAIL de infraestructura en verify_versions.py, no warning, porque sin ella no existe forma de verificar estado canónico. No tiene fallback fijo por diseño. No se integra a generate_census.py: census descubre documentos vía DOCUMENTS hardcodeado y no depende del contrato de prefijos.",
     "KERNEL":    "377938be-fc42-805e-a408-c9ae518d4fe7",
     "MANUAL":    "372938be-fc42-8050-9a67-e40857d7806e",
     "CANON":     "377938be-fc42-8089-93f2-f52dbd2dec6c",
@@ -51,7 +51,8 @@
     "BRIEF":     "3a3938be-fc42-8008-9e90-ec435c01f50d",
     "VANTAGE":   "36e938be-fc42-81d6-bf40-dfe7dee782a5",
     "ARCHIVEROS": "3bb938befc4280cd8ea3fc8ba78f570c",
-    "CHARTER":   "f87938be-fc42-8263-a305-819877d2245f"
+    "CHARTER":   "f87938be-fc42-8263-a305-819877d2245f",
+    "PROMPT_CANON": "3f0938be-fc42-813a-9215-c6a1a716c3b7"
   },
 
   "known_pitfalls": {

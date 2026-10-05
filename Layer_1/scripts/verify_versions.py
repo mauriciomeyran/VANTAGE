@@ -5,6 +5,8 @@ Path: Layer_1/scripts/verify_versions.py
 """
 
 import os
+import re
+import subprocess
 import sys
 import json
 import hashlib
@@ -30,7 +32,7 @@ REGISTRY_NAME = "resolver_registry_v2.json"
 # mismo veredicto PASS/FAIL que el resto.
 # ARCHIVEROS (página de archiveros) también participa en --sync del mismo modo.
 # CHARTER (Project Charter) también participa en --sync del mismo modo.
-DOC_KEYS = ["CHANGELOG", "KERNEL", "MANUAL", "CANON", "SP", "ALIASES", "CENSUS", "BRIEF", "VANTAGE", "CHANGELOG_ARCHIVO", "ARCHIVEROS", "CHARTER"]
+DOC_KEYS = ["CHANGELOG", "KERNEL", "MANUAL", "CANON", "SP", "ALIASES", "CENSUS", "BRIEF", "VANTAGE", "CHANGELOG_ARCHIVO", "ARCHIVEROS", "CHARTER", "PROMPT_CANON"]
 
 # CENSUS no vive en resolver_registry_v2.json: no tiene prefijo propio en
 # KERNEL:DOC-CONTRACT (sus IDs internos usan KERNEL:/SP:/MANUAL:/CANON:/BRIEF:),
@@ -45,6 +47,21 @@ VANTAGE_FALLBACK_ID = "36e938be-fc42-81d6-bf40-dfe7dee782a5"
 CHANGELOG_ARCHIVO_FALLBACK_ID = "3ba938be-fc42-8011-8947-fb4fa5d1f63f"
 ARCHIVEROS_FALLBACK_ID = "3bb938befc4280cd8ea3fc8ba78f570c"
 CHARTER_FALLBACK_ID = "f87938be-fc42-8263-a305-819877d2245f"
+
+# PROMPT_CANON NO tiene fallback por diseño (KERNEL:NAM-ID-CONTRACT §12.1).
+# A diferencia de BRIEF/VANTAGE/ARCHIVEROS/CHARTER —punteros rediscibles si el
+# registro pierde la clave—, PROMPT_CANON ES la autoridad de canonicalización.
+# Si está ausente no existe forma de verificar estado canónico de ningún prompt,
+# y degradar a warning dejaría al pipeline declarar CANONICAL sin autoridad.
+# Ausencia = FAIL de infraestructura.
+PROMPT_CANON_DATA_SOURCE_ID = "9d63b44d-c744-4a17-9bba-94222782b95b"
+
+PROMPT_CANON_REQUIRED_FIELDS = (
+    "Version", "Contract", "Rules", "Query Set", "Output Schema",
+    "Tests", "Implementation SHA", "Implementation Path", "Promoted At",
+)
+PROMPT_CANON_STATUSES = frozenset({"CANONICAL", "CANDIDATE", "BLOCKED", "SUPERSEDED"})
+PROMPT_CANON_L1_SOURCES = ("linkedin", "aggregators", "career sites", "gemini")
 
 # Infraestructura de sesión — no son documentos fundacionales, no participan de SP:SYNC-RULE
 # SESSION LEDGER es una DATABASE (no una página standalone) — corregido tras
@@ -164,6 +181,14 @@ def load_document_uuids(registry_path: Path) -> dict:
             uuids[key] = val.replace("-", "") if val else CHARTER_FALLBACK_ID.replace("-", "")
             continue
         val = doc_registry.get(key)
+        if key == "PROMPT_CANON":
+            # Sin fallback y sin degradación a warning: la ausencia de la
+            # autoridad impide verificar estado canónico (ver constante arriba).
+            uuids[key] = val.replace("-", "") if val else None
+            if not val:
+                print("[PROMPT_CANON] FAIL de infraestructura — autoridad ausente "
+                      "en document_registry.", file=sys.stderr)
+            continue
         if val:
             # Limpieza básica de formato si viene con prefijos o brackets
             uuids[key] = val.replace("-", "")
@@ -843,10 +868,204 @@ def render_bootstrap_dump(client: httpx.Client, changelog_page_id: str, headers:
     print("[FIN DUMP INICIO SESIÓN VANTAGE]")
 
 
+# ══════════════════════════════════════════════════════════════════════════
+# PROMPT_CANON — verificador de estado y provenance de contratos de prompt
+# (KERNEL:NAM-ID-CONTRACT §12.1 + V | PROMPT CANON)
+#
+# Verificador, NO promotor. Sólo el operador cambia CANDIDATE → CANONICAL.
+# ══════════════════════════════════════════════════════════════════════════
+
+def _git(args_list, cwd):
+    """Ejecuta git sin shell y devuelve (returncode, stdout)."""
+    try:
+        proc = subprocess.run(["git"] + args_list, cwd=str(cwd),
+                              capture_output=True, text=True, timeout=30)
+        return proc.returncode, proc.stdout
+    except Exception:
+        return 1, ""
+
+
+def verify_provenance_git(sha: str, path: str, project_root: Path) -> tuple:
+    """V6′ — provenance real: el SHA debe resolver Y vincular al path.
+
+    Un SHA válido sin binding al path no prueba nada: podría ser el commit de
+    otra implementación. La propiedad que importa es::
+
+        git show <SHA>:<path>   ->   contenido
+    """
+    if not sha or len(sha) != 40:
+        return False, "SHA no tiene 40 caracteres"
+    if not all(c in "0123456789abcdef" for c in sha.lower()):
+        return False, "SHA no es hex"
+    rc, _out = _git(["cat-file", "-e", sha], project_root)
+    if rc != 0:
+        return False, "SHA no resuelve en git"
+    rc, out = _git(["show", f"{sha}:{path}"], project_root)
+    if rc != 0:
+        return False, f"path no existe en {sha[:7]}"
+    if not out.strip():
+        return False, "git show devolvio vacio"
+    return True, "SHA vincula al path"
+
+
+def _row_prop(row: dict, name: str):
+    """Extrae el valor de una propiedad de data source de Notion por tipo.
+
+    La API no devuelve el valor plano: lo anida bajo properties.<name>.<type>.
+    Ignorar esto hace que toda fila parezca vacía.
+    """
+    props = row.get("properties") or {}
+    prop = props.get(name)
+    if not isinstance(prop, dict):
+        return ""
+    ptype = prop.get("type")
+    if ptype == "title":
+        return "".join(t.get("plain_text", "") for t in prop.get("title", []))
+    if ptype == "rich_text":
+        return "".join(t.get("plain_text", "") for t in prop.get("rich_text", []))
+    if ptype == "url":
+        return prop.get("url") or ""
+    if ptype == "select":
+        sel = prop.get("select")
+        return sel.get("name") if isinstance(sel, dict) else ""
+    if ptype == "date":
+        d = prop.get("date")
+        return d.get("start") if isinstance(d, dict) else ""
+    return ""
+
+
+def verify_prompt_canon(client, headers, page_id, project_root: Path,
+                        data_source_id: str = None) -> dict:
+    """V1..V7′. Devuelve dict con status, findings y coverage."""
+    findings = []
+    ds_id = data_source_id or PROMPT_CANON_DATA_SOURCE_ID
+
+    # V1 — existencia de la autoridad (FAIL duro, sin fallback)
+    if not page_id:
+        findings.append(("FAIL_INFRASTRUCTURE", "V1",
+            "PROMPT_CANON ausente en document_registry. Sin autoridad no puede "
+            "verificarse estado canonico de ningun prompt."))
+        return {"status": "FAIL_INFRASTRUCTURE", "findings": findings,
+                "coverage": {}, "rows": 0}
+
+    # V2 — lectura del data source
+    # query_data_source devuelve (data, error) — ver su docstring.
+    data, ds_error = query_data_source(client, ds_id, headers, {"page_size": 100})
+    if ds_error is not None or not isinstance(data, dict):
+        findings.append(("FAIL_INFRASTRUCTURE", "V2",
+            f"data source {ds_id[:8]}... no responde: {ds_error}"))
+        return {"status": "FAIL_INFRASTRUCTURE", "findings": findings,
+                "coverage": {}, "rows": 0}
+
+    rows = data.get("results", [])
+    coverage = {src: 0 for src in PROMPT_CANON_L1_SOURCES}
+
+    # V5′ — Status valido por fila (NO cobertura global)
+    for row in rows:
+        pid = _row_prop(row, "Prompt ID")
+        status = _row_prop(row, "Status")
+        if not status:
+            findings.append(("FAIL_DATA", "V5", f"fila sin Status: {pid}"))
+        elif status not in PROMPT_CANON_STATUSES:
+            findings.append(("FAIL_DATA", "V5",
+                             f"Status fuera de enum: {pid} = {status!r}"))
+
+    canonical_rows = [r for r in rows if _row_prop(r, "Status") == "CANONICAL"]
+
+    # V3 — integridad de fila CANONICAL + coverage (reporte, nunca FAIL)
+    for row in canonical_rows:
+        pid = _row_prop(row, "Prompt ID")
+        missing = [f for f in PROMPT_CANON_REQUIRED_FIELDS
+                   if not str(_row_prop(row, f)).strip()]
+        if missing:
+            findings.append(("FAIL_DATA", "V3",
+                             f"{pid}: campos primarios vacios: {missing}"))
+        low = pid.lower()
+        for src in coverage:
+            if src in low:
+                coverage[src] += 1
+
+    # V4′ — correspondencia de artefactos. NO se exige MD5: la integridad
+    # reproducible del codigo la aporta git (V6′).
+    for row in canonical_rows:
+        pid = _row_prop(row, "Prompt ID")
+        for art in ("Contract", "Rules", "Query Set", "Output Schema"):
+            url = str(_row_prop(row, art)).strip()
+            if not url:
+                continue  # ya reportado en V3
+            # Notion sirve las URLs en formato sin guiones (32 hex). Aceptar
+            # ambos: /p/<32hex> y el UUID con guiones.
+            m = re.search(r"([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-"
+                          r"[0-9a-fA-F]{4}-[0-9a-fA-F]{12})", url) \
+                or re.search(r"([0-9a-fA-F]{32})", url)
+            if not m:
+                findings.append(("FAIL_DATA", "V4",
+                                 f"{pid}: {art} sin page_id extraible"))
+                continue
+            raw_id = m.group(1).replace("-", "").lower()
+            dashed = (f"{raw_id[0:8]}-{raw_id[8:12]}-{raw_id[12:16]}-"
+                      f"{raw_id[16:20]}-{raw_id[20:32]}")
+            # safe_http_get devuelve un Response (ver fetch_blocks).
+            resp_pg = safe_http_get(client,
+                                    f"https://api.notion.com/v1/pages/{dashed}",
+                                    headers)
+            if resp_pg.status_code != 200:
+                findings.append(("FAIL_DATA", "V4",
+                                 f"{pid}: {art} no resuelve ({m.group(1)[:8]})"))
+
+    # V6′ — provenance con binding
+    for row in canonical_rows:
+        pid = _row_prop(row, "Prompt ID")
+        sha = str(_row_prop(row, "Implementation SHA")).strip()
+        path = str(_row_prop(row, "Implementation Path")).strip()
+        ok, why = verify_provenance_git(sha, path, project_root)
+        if not ok:
+            findings.append(("FAIL_DATA", "V6", f"{pid}: {why}"))
+        if path and not (project_root / path).exists():
+            findings.append(("FAIL_DATA", "V6",
+                             f"{pid}: path no existe en disco: {path}"))
+
+    # V7 — contradicciones
+    by_pid = {}
+    for row in canonical_rows:
+        by_pid.setdefault(_row_prop(row, "Prompt ID"), []).append(row)
+    for pid, group in by_pid.items():
+        if len(group) > 1:
+            findings.append(("FAIL_DATA", "V7",
+                             f"{pid}: {len(group)} filas CANONICAL (debe ser 1)"))
+
+    data_fail = any(f[0] == "FAIL_DATA" for f in findings)
+    return {"status": "FAIL_DATA" if data_fail else "PASS",
+            "findings": findings, "coverage": coverage, "rows": len(rows)}
+
+
+def render_prompt_canon_report(result: dict) -> None:
+    print("=" * 60)
+    print("PROMPT_CANON - Estado y provenance de contratos de prompt")
+    print("=" * 60)
+    print(f"Filas en registry: {result.get('rows', 0)}")
+    print(f"Disposicion:      {result.get('status')}")
+    cov = result.get("coverage") or {}
+    if cov:
+        print("-" * 60)
+        total_c = sum(1 for v in cov.values() if v)
+        print(f"Coverage fuentes L1: {total_c}/{len(cov)} con contrato canonico")
+        for src, n in cov.items():
+            mark = "CANONICAL" if n else "(sin fila - sin paquete contractual)"
+            print(f"  {src:14} {n}  {mark}")
+        print("  Nota: cobertura incompleta es reporte, NO FAIL.")
+    for level, check, msg in result.get("findings", []):
+        print(f"  [{level}] {check}: {msg}")
+    print("-" * 60)
+    print(f"[VEREDICTO PROMPT_CANON] "
+          f"{'PASS' if result.get('status') == 'PASS' else result.get('status')}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Verify and Sync document versions across Notion SSOT.")
     parser.add_argument("--sync", action="store_true", help="Sincroniza la versión de CHANGELOG hacia todos los documentos y verifica por relectura (veredicto PASS/FAIL real). Reemplaza al antiguo par --sync + --check.")
     parser.add_argument("--bootstrap", action="store_true", help="Genera el dump de contexto de apertura de sesión (Ledger + Changelog + tickets prioritarios). Read-only.")
+    parser.add_argument("--prompt-canon", action="store_true", help="Verifica estado y provenance de los contratos de prompt contra V | PROMPT CANON. Read-only, no participa en --sync. Exit 1 si la autoridad esta ausente o hay datos invalidos.")
     parser.add_argument("--scripts", action="store_true", help="Cruza los scripts .py/.sh (únicamente) del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SCRIPT LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     parser.add_argument("--skills", action="store_true", help="Cruza los archivos .skill del árbol activo (Layer_1/3/4, Dashboard, Raycast) contra la base SKILL LIBRARY en Notion. Read-only, no requiere resolver_registry_v2.json.")
     parser.add_argument("--new-scripts", action="store_true", help="Cruza los scripts .py/.sh del árbol activo contra el Glosario de Scripts LOCAL (MANUAL:SCRIPT-GLOSSARY), sin llamar a Notion. Exit 1 si hay scripts sin documentar — úsalo como gate para vantage-sync-script-glossary.")
@@ -886,8 +1105,18 @@ def main():
         return
 
     if args.new_skills:
-        render_new_scripts_gap_report((".skill",), SCRIPT_GLOSSARY_PATH, label="SKILL GLOSSARY")
+        render_new_scripts_gap_report((".skill",), SKILL_GLOSSARY_PATH, label="SKILL GLOSSARY")
         return
+
+    if args.prompt_canon:
+        registry_pc = find_registry_file(SCRIPT_DIR)
+        uuids_pc = load_document_uuids(registry_pc)
+        headers_pc = get_notion_headers(token)
+        with httpx.Client(timeout=20.0) as client_pc:
+            res_pc = verify_prompt_canon(client_pc, headers_pc,
+                                        uuids_pc.get("PROMPT_CANON"), PROJECT_ROOT)
+        render_prompt_canon_report(res_pc)
+        sys.exit(0 if res_pc["status"] == "PASS" else 1)
 
     # --update-skill-baseline requiere --skills-drift; --update-script-baseline
     # requiere --scripts-drift (mismo guard que --update-baseline/--length más
