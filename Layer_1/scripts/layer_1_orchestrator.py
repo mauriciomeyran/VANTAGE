@@ -49,6 +49,8 @@ from class_b_guard import (
     CLASS_A_FIELDS, CLASS_B_FIELDS, guard_write_payload, GuardResult,
 )
 
+# Import de ats_adapter para discovery directo (lazy en main)
+
 # Reutilizar lógica de ingesta de feed_processor (Class A + pages.create)
 # Import lazy dentro de run_ingestion para evitar side-effects de Client al importar.
 
@@ -1078,6 +1080,31 @@ def run_dedup_audit(
     return result
 
 
+def run_ats_discovery(
+    tenant: str,
+    site: str,
+    host: str,
+    *,
+    brand: Optional[str] = None,
+    require_city: bool = False,
+    dry_run: bool = True,
+) -> Dict[str, Any]:
+    """
+    Ejecuta discovery ATS vía ats_adapter y retorna el resultado.
+    """
+    import ats_adapter as ats
+
+    result = ats.run_workday_discovery(
+        tenant=tenant,
+        site=site,
+        host=host,
+        brand=brand,
+        require_city=require_city,
+        dry_run=dry_run,
+    )
+    return result
+
+
 def run_ingestion(
     feed_path: str,
     layer: int = 1,
@@ -1588,7 +1615,54 @@ def main():
         choices=[1, 2, 3],
         help="Layer a asignar a los registros del feed (default: 1). Solo tiene efecto con --file."
     )
-    
+    parser.add_argument(
+        "--ats",
+        type=str,
+        default=None,
+        choices=["workday"],
+        help="Fuente ATS para discovery directo (ej: --ats workday). Invoca ats_adapter."
+    )
+    parser.add_argument(
+        "--tenant",
+        type=str,
+        default=None,
+        help="Tenant de Workday (ej: cc). Requiere --ats workday."
+    )
+    parser.add_argument(
+        "--site",
+        type=str,
+        default=None,
+        help="Site de Workday (ej: ChanelCareers). Requiere --ats workday."
+    )
+    parser.add_argument(
+        "--host",
+        type=str,
+        default=None,
+        help="Host de Workday (ej: cc.wd3.myworkdayjobs.com). Requiere --ats workday."
+    )
+    parser.add_argument(
+        "--brand",
+        type=str,
+        default=None,
+        help="Brand para mapeo (ej: Chanel). Requiere --ats workday."
+    )
+    parser.add_argument(
+        "--require-city",
+        action="store_true",
+        help="Forzar filtro de ciudad en discovery de Workday. Requiere --ats workday."
+    )
+    parser.add_argument(
+        "--feed-out",
+        type=str,
+        default=None,
+        help="Ruta para escribir el feed JSON generado (para --ats workday)."
+    )
+    parser.add_argument(
+        "--skip-ingestion",
+        action="store_true",
+        help="Solo ejecutar discovery ATS, omitir ingesta al Tracker."
+    )
+
     args = parser.parse_args()
     
     # Load environment
@@ -1602,7 +1676,62 @@ def main():
     else:
         dry_run = True  # default --dry-run
 
-    # ── Fase de INGESTA (si --file) ──────────────────────────────────────────
+    # ── Fase de ATS DISCOVERY (si --ats workday) ───────────────────────────────
+    ats_feed_path = None
+    if args.ats == "workday":
+        if not args.tenant or not args.site or not args.host:
+            logger.error("--ats workday requiere --tenant, --site y --host")
+            sys.exit(1)
+
+        logger.info("=" * 60)
+        logger.info("FASE ATS DISCOVERY (Workday)")
+        logger.info("=" * 60)
+        logger.info(f"tenant={args.tenant} site={args.site} host={args.host}")
+
+        discovery_result = run_ats_discovery(
+            tenant=args.tenant,
+            site=args.site,
+            host=args.host,
+            brand=args.brand,
+            require_city=args.require_city,
+            dry_run=dry_run,
+        )
+
+        # Imprimir reporte de discovery
+        import ats_adapter as ats
+        print(ats.format_discovery_report(discovery_result))
+
+        # Escribir feed JSON si se especificó --feed-out
+        if args.feed_out:
+            feed_path = Path(args.feed_out)
+            feed_path.parent.mkdir(parents=True, exist_ok=True)
+            feed_path.write_text(
+                json.dumps(discovery_result["envelope"], ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            logger.info(f"Feed escrito → {feed_path}")
+            ats_feed_path = str(feed_path)
+        else:
+            # Usar un archivo temporal si no se especificó --feed-out
+            import tempfile
+            temp_dir = Path(tempfile.gettempdir())
+            temp_file = temp_dir / f"vantage_ats_feed_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            temp_file.write_text(
+                json.dumps(discovery_result["envelope"], ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            logger.info(f"Feed temporal → {temp_file}")
+            ats_feed_path = str(temp_file)
+
+        # Sobrescribir args.file para que run_ingestion use el feed generado
+        args.file = ats_feed_path
+
+        # Si solo se quiere discovery, salir aquí
+        if args.skip_ingestion:
+            logger.info("Discovery ATS completado (skip-ingestion activo)")
+            sys.exit(0)
+
+    # ── Fase de INGESTA (si --file o tras ATS discovery) ───────────────────────
     ingestion_metrics = None
     if args.file:
         logger.info("=" * 60)
