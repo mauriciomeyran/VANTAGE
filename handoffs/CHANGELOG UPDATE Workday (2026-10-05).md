@@ -19,7 +19,7 @@
 - Workday location discovery now resolves the country before resolving the corresponding city/location facets.
 - Workday querying now operates against structured facet values rather than free-text location matching.
 - Unstable `workerSubType` metadata is deterministically represented as `unknown` instead of producing nondeterministic downstream behavior.
-- Layer 1 now routes `--target-ats workday` through the dedicated Workday adapter.
+- Layer 1 now routes `--ats workday` through the dedicated Workday adapter.
 
 ### Validation
 

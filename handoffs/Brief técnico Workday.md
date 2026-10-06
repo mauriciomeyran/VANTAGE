@@ -236,13 +236,14 @@ Phase 3 Option A wired the Workday adapter into the Layer 1 main orchestrator.
 
 Verified invocation:
 
-    python Layer_1/scripts/layer1_orchestrator.py \
-      --target-ats workday \
+    python Layer_1/scripts/layer_1_orchestrator.py \
+      --ats workday \
       --tenant cc \
       --site ChanelCareers \
+      --host cc.wd3.myworkdayjobs.com \
       --skip-ingestion
 
-The `--target-ats workday` selector routes execution to the Workday adapter.
+The `--ats workday` selector routes execution to the Workday adapter.
 
 The tenant and site parameters establish the external scope.
 
@@ -285,8 +286,8 @@ Verified result:
 
 ### Layer 1 integration
 
-    python Layer_1/scripts/layer1_orchestrator.py \
-      --target-ats workday \
+    python Layer_1/scripts/layer_1_orchestrator.py \
+      --ats workday \
       --tenant cc \
       --site ChanelCareers \
       --skip-ingestion

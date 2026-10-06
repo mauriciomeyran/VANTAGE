@@ -54,7 +54,7 @@ Restricciones (no negociables):
 - CV-A Scope Lock: prohibido evaluar fit estratégico o cuestionar la Gate_Decision de Python en esta fase. Discrepancias se informan en "observaciones" del HANDOFF sin emitir verbos de decisión ("bloquear", "pasa").
 ### 03.4 KERNEL:ACT-PY - Python Component — Contrato de Ejecución
 Función: motor de lógica de negocio y único componente con permiso de escritura autónoma en Notion.
-Proceso: procesa FEED (feed_processor.py, layer_1_run.py, layer_3_mail.py); calcula Score, Gate_Decision, VM_Scope, Role_Class, Next_Action, Fetch, Fuente.
+Proceso: procesa FEED (feed_processor.py, layer_1_orchestrator.py, layer_3_mail.py); calcula Score, Gate_Decision, VM_Scope, Role_Class, Next_Action, Fetch, Fuente.
 Excepción — Bypass: Source_Type ∈ {Inbound, Referencia, Networking} → Gate_Decision: CREATE automático (ver 06.1).
 Invariante crítico: Python recalcula campos Class B en cada run. Ningún valor estimado por el AI Component tiene validez en el pipeline. Aplicado técnicamente en la vía Dashboard mediante guard documentado en 06.3 (GAP-03 cerrado v9.19.2).
 ---
@@ -103,15 +103,15 @@ Repo: github.com/mauriciomeyran/VANTAGE.
 Automatización vigente:
 - Auto-commit + push (alias vgit) en cambios de repo, 09:00/15:00/21:00.
 - Cron adicionales vía ruta directa al Python del venv (source .venv/bin/activate falla con "Operation not permitted" en entorno cron): vantage.py sync, notion_backup.py, vl3 — 00:00/08:00/16:00.
-- vsync_doc.py (alias vdoc, flags dry|notion|local|auto): sync bidireccional Notion↔ACTIVE/ para los 8 documentos del diccionario DOCS (6 fundacionales + Navigation Brief + Change Log Archivo); normativamente solo los 6 son "fundacionales", pero el script sincroniza los 8.
+- vsync_doc.py (alias vdoc, flags --direction notion|auto, --dry-run, --doc): sincroniza Notion→ACTIVE/ (ACTIVE local es read-only; local→Notion deshabilitado, contingencia en vdoc_local_contingency.py) para los documentos del diccionario DOCS: kernel, system_prompt, career_canon, manual, aliases, change_log, brief, change_log_archivo y project_charter.
 - git_sync.py regenera skills/index.json antes de git status en cada sync().
 - Política de versionado (H-6, confirmada): commit automático de todo el árbol no ignorado; .db de estado se versiona por trazabilidad histórica.
 Riesgo activo: push_local_to_notion() (vsync_doc.py) ejecuta delete-all + create-all de bloques en cada corrida — cualquier anchor #block-id de hyperlinks (14.6) queda huérfano. apply_hyperlinks_notion.py evita este riesgo (PATCH puntual); vdoc local carece de guard equivalente — evitar sobre documentos con hyperlinks recién aplicados.
 Estado de scripts: layer_1_run.py reemplazado por layer_1_orchestrator.py (refactor v9.22.0, mismo alcance, cuatro modos de ejecución — 08.2); layer_1_run.py archivado, fuera de riesgo activo. vsync_doc_fast.py deprecado en Archive/Legacy_Scripts/.
 Skills Distribution (Single Source of Truth): /skills/ es la fuente canónica de .md; skills/triggers.json es el manifiesto SSOT ({trigger[], path, description, last_modified}), generado por update_triggers_json.py (alias vtriggers), que en cada corrida: escanea altas, valida SKILL.md físico, detecta huérfanos (reporta, no elimina), actualiza last_modified, y ejecuta git add+commit+push automático sobre triggers.json validando cada paso explícitamente. Cada entrada incluye notion_id poblado por fetch_notion_skill_library().
 Matriz de ruteo por agente (8 auditados):
-- Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok) → notion_id → notion-fetch.
-- Familia GitHub-only (Perplexity, Mistral) → url → fetch raw. Perplexity requiere repo público.
+- Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Perplexity, Mistral/Vibe) → notion_id → notion-fetch.
+- Fallback GitHub (Perplexity, Mistral/Vibe, cuando no hay conector MCP-Notion) → url → fetch raw. Perplexity requiere repo público.
 - Gemini → sin ruta de fetch confiable; único canal cero-fricción es Gem con Knowledge precargado, fuera del flujo de triggers.json.
 - Hermes → ejecuta L1 exclusivamente (LinkedIn · Aggregators · Career Sites · Gemini, ver KERNEL:ARC-L1); no consume triggers.json.
 - Claude (claude.ai/API): fetch del manifiesto vía web_fetch a https://raw.githubusercontent.com/mauriciomeyran/VANTAGE/main/skills/triggers.json (Bootloader, junto con SYSTEM PROMPT e ID CENSUS); contenido de skills vía git clone --depth 1 + lectura local (vía primaria y estable: web_fetch sobre raw.githubusercontent.com está bloqueado para URLs que no hayan aparecido antes en la sesión, restricción estructural de la herramienta); web_fetch es fallback si git clone falla. Carga bajo demanda por match de trigger, nunca masiva.
@@ -121,7 +121,7 @@ Continuidad entre sesiones: vsum.py (alias vsum) resume transcripts a Markdown e
 Jerarquía de Dedup: L1 > L2 > L3. L1 y L3 entran directo a feed_processor.py; L2 no deduplica (ver KERNEL:ARC-L2).
 Mecanismos de Dedup (dos, complementarios, no excluyentes):
 1. Tiempo real (ingesta): hash exacto + URL exacta + brand+title, ventana 30d, feed_processor.py. Previene contaminación obvia al ingresar.
-1. Auditoría post-ingesta: fuzzy matching (brand≥0.85, rol≥0.7) + fingerprint, ventana 60d, dedup_opportunities.py + Archive Tracker. Detecta duplicados sutiles (rotación de jk, reposts). Automatizado (v9.21.0) vía ENABLE_DEDUP_AUDIT=true al final de layer_1_run.py; hereda --dry-run; exporta dedup_metrics.json; filtro ANTI_FALSE_POSITIVE_RULES extensible.
+1. Auditoría post-ingesta: fuzzy matching (brand≥0.85, rol≥0.7) + fingerprint, ventana 60d, dedup_opportunities.py + Archive Tracker. Detecta duplicados sutiles (rotación de jk, reposts). Automatizado (v9.21.0) vía ENABLE_DEDUP_AUDIT=true al final de layer_1_orchestrator.py; hereda --dry-run; exporta dedup_metrics.json; filtro ANTI_FALSE_POSITIVE_RULES extensible.
 Punto de Convergencia Único: las tres capas de búsqueda escriben a Notion. vantage-pipeline lee de Notion, nunca de outputs de capa directamente.
 Figma Sync — CV Output Layer
 Tipo: capa de materialización de CV, WriteOnly sobre lienzo Figma activo. Arquitectura de 3 piezas sobre permisos mínimos (sin capabilities, sin red).
@@ -147,7 +147,7 @@ Valores operativos de Status: Target · Postulado · Rechazado · Expirada · Ar
 Notas recibe el texto determinista de auditoría de archivado escrito por VL1 (06.13) — es trazabilidad de decisión, no Class B pese a ser escrito por comando Python.
 Class B — System-Primary. Python escribe: Score · Gate_Decision · VM_Scope · Role_Class · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · Class_B_Last_Run · JD_Quality.
 VM_Scope ∈ {Alto, Bajo} — campo binario. No existe valor "Medio" en ningún punto del sistema.
-Resolución B-09 (2026-09-17): Notion es la autoridad declarada (SSOT) del esquema; class_b_guard.py es su espejo en código, con divergencia conocida (Prioridad_Auto). Sincronización manual hoy; propuesta de verificación automática pendiente (verify_versions.py o g9_docsync_verify.py).
+Notion es la autoridad declarada (SSOT) del esquema; class_b_guard.py es su espejo en código. La divergencia conocida y su estado actual viven en 16 KERNEL:EXCEPTIONS (Resolución B-09).
 ### 05.2 KERNEL:SCH-INGEST - Restricción de Ingesta
 Campos Class B en JSON entrante se ignoran sin excepción. Python los calcula en el siguiente run.
 ### 05.3 KERNEL:SCH-SOURCE - Fuente como Campo Especial
@@ -163,7 +163,7 @@ Resultados: PASS / PASS WITH ARCHITECTURAL FINDING / FAIL.
 Mapeo de vocabulario Prompts→Tracker: source_type "career_page" → Career Page Oficial; source_type "job_board" → Agregador; source_name → NO escribir (Class B); apply_url → URL; brand → Marca; title → Rol; holding → Holding (null → "Investigar").
 Entry Template — Campos Class A requeridos: Rol · Marca · URL · Source_Type · Status · Prioridad · JD · Holding. JOB_ID es Class A opcional: si falta o es generado, el hash de dedup usa fallback:{composite_key}.
 ### 05.8 KERNEL:SCH-NEXTACTION-VALUES - Valores Operativos — Next_Action (Tracker de Vacantes)
-Campo Class B, tipo select (migrado de rich_text en v9.14.2), escrito por layer_1_run.py/layer_1_run_dash.py con estructura {"select": {"name": VALUE}}.
+Campo Class B, tipo select (migrado de rich_text en v9.14.2), escrito por layer_1_orchestrator.py con estructura {"select": {"name": VALUE}}.
 | Valor | Condición de disparo |
 | --- | --- |
 | Optimizar | JD_Quality = "JD Completo" |
@@ -221,7 +221,7 @@ El Dashboard permite corregir campos Class A y re-validar con Python. El Dashboa
 ### 06.6 KERNEL:GATE-REJECTED - REJECTED (Post-Aplicación)
 REJECTED es Class B derivado de Status = "Rechazado" (Class A). Python traduce vía evaluate_rejection_status(). El operador nunca escribe Gate_Decision directamente.
 ### 06.7 KERNEL:GATE-ARCHIVE-MARK - Marcado Manual de Archivado
-Next_Action='Archivar' y/o Dedup_Flag='Posible duplicado' (ambos Class B) son señales de candidato a archivar — no disparan archivado automático. Sujeto al guard de 06.12.
+Next_Action='Archivar' y/o Dedup_Flag marcado (checkbox, ambos Class B) son señales de candidato a archivar — no disparan archivado automático. Sujeto al guard de 06.12.
 Mecanismo vigente: skill vantage-tidy-opportunities-tracker identifica candidatos vía Dedup_Flag/Next_Action, marca Archivar = True en el registro original tras DRY RUN + APROBAR_WRITE. La razón textual del candidato a archivo la escribe VL1 (06.13); este nodo cubre solo el marcado.
 El operador localiza visualmente los registros marcados y decide cuándo archivarlos manualmente.
 Fallo: auto_archive.py fue deprecado por decisión del operador (2026-08-01).
@@ -242,7 +242,7 @@ Invariantes: gate_logic() se invoca antes de gate(); todo write que fije Status=
 Protección estrecha: solo los valores listados arriba; cualquier otro Next_Action (Follow-up, Re-check, etc.) es recalculable — coherente con KERNEL:ACT-PY.
 Contratos relacionados: KERNEL:GATE-BLOCKED, KERNEL:GATE-REJECTED, KERNEL:GATE-LAYERS, KERNEL:ACT-PY.
 ### 06.11 KERNEL:GATE-TRANSITIONS - Matriz de Transición de Estados (Referencia Técnica)
-Vista tabular consolidada de las reglas Gate (06.1–06.13). Matiz (2026-08-17): "Dedup match en existente" se ajusta a Dedup_Flag='Posible duplicado' solo si el Status del existente no está en el guard de 06.12.
+Vista tabular consolidada de las reglas Gate (06.1–06.13). Matiz (2026-08-17): "Dedup match en existente" se ajusta a Dedup_Flag marcado (checkbox) solo si el Status del existente no está en el guard de 06.12.
 | Estado Origen | Evento/Trigger | Estado Destino | Efecto Class B |
 | --- | --- | --- | --- |
 | [ENTRY] | URL muerta OR Score<40 | BLOCKED | Gate_Decision=BLOCKED, Score=0 |
@@ -266,7 +266,7 @@ Alcance: gobierna la mutación de registros existentes durante la ingesta (feed_
 | Rechazado/Expirada/Archivar/Retirado | No | No |
 El inbound sigue entrando como REVIEW_NEEDED aunque el existente no se mute.
 ### 06.13 KERNEL:GATE-ARCHIVE-AUDIT - Auditoría de Archivado en Tiempo Real
-Función: generate_archive_notes(), invocada desde layer_1_run.py en tres puntos deterministas: URL Gate bloqueado (Fase 2), Misfit de perfil (Fase 3.5), NAD vencido.
+Función: generate_archive_notes(), definida e invocada en tracker_flow.py desde dos puntos: el gate de archivo consolidado, que une F2 (URL Gate bloqueado), F3.5 (Misfit de perfil) y F3.5.1 en una sola transición, y la ejecución de transiciones tras aprobación (G2).
 Contrato de escritura: el mensaje se escribe en Notas (Class A) — nunca sobrescribe, agrega (append) separado por línea vacía.
 Ownership: VL1 documenta la razón en el momento de la decisión. vantage-tidy-opportunities-tracker y vantage-housekeeping-archive no generan esta nota.
 ---
@@ -434,7 +434,8 @@ Reglas de Migración: toda referencia que use UUIDs hardcodeados o anclas planas
 Esquema: [PREFIX]:[KEY]. Alcance: todos los documentos fundacionales. Excepciones: IDs de Notion (UUIDs) en metadatos o URLs. Gobernanza: cambios requieren APROBAR_WRITE + entrada en Changelog. Estado actual: normalización completada, DT-015 CERRADO.
 ### 12.3 KERNEL:NAM-DOC-CONTRACT - Contrato de Prefijos Documentales del Lazy Loader
 Fuente de verdad de qué prefijos PREFIX:CLAVE están autorizados para resolución vía lazy_loader.py en el flujo documental (distinto del flujo de entidades del Runtime, 04.1). resolver_registry_v2.json → document_registry es el SSOT operativo.
-Prefijos autorizados: los 11 listados en 12.1 — ALIASES, ARCHIVEROS, BRIEF, CANON, CHANGELOG, CHANGELOG_ARCHIVO, KERNEL, MANUAL, SP, TRACKER, VANTAGE.
+Prefijos autorizados: los listados en 12.1 y en el document_registry de resolver_registry_v2.json — ALIASES, ARCHIVEROS, BRIEF, CANON, CHANGELOG, CHANGELOG_ARCHIVO, CHARTER, KERNEL, MANUAL, PROMPT_CANON, SP, TRACKER, VANTAGE.
+PROMPT_CANON es la autoridad de estado y provenance de los contratos de prompt de las fuentes L1 (LinkedIn · Aggregators · Career Sites · Gemini). A diferencia del resto de prefijos, su ausencia es FAIL de infraestructura en verify_versions.py, no warning: sin ella no existe forma de verificar estado canónico, y degradarla dejaría al pipeline declarar CANONICAL sin autoridad. No tiene fallback fijo. Verificado con verify_versions.py --prompt-canon (read-only, no participa de --sync). No se integra a generate_census.py: census descubre documentos vía DOCUMENTS hardcodeado y no depende del contrato de prefijos.
 lazy_loader._get_authorized_prefixes() carga este conjunto desde el Registry en tiempo de ejecución; fallback estático: {KERNEL, MANUAL, CANON, TRACKER}.
 Fallo: un prefijo no listado aquí ni en el Registry cae a modo legacy con warning.
 ### 12.4 KERNEL:NAM-OUTPUT - Convención de Nombres de Outputs
@@ -456,7 +457,7 @@ Relación con CANON:OUTPUT-CONTRACT: contratos distintos y complementarios.
 ## 13 KERNEL:LINK - Cross-Reference Hyperlinks
 El sistema convierte las menciones de IDs canónicos en hipervínculos reales hacia sus bloques de definición. El heading de definición no se autoenlaza; las menciones posteriores sí.
 ### 13.1 KERNEL:LINK-SYSTEM - Sistema de Cross-Reference Hyperlinks
-Propósito: convertir cada mención de un ID canónico (PREFIX:KEY) en los 7 documentos indexados por el Census en hipervínculo real al bloque de definición.
+Propósito: convertir cada mención de un ID canónico (PREFIX:KEY) en los documentos indexados por el Census (ALIASES, BRIEF, CANON, CHARTER, KERNEL, MANUAL, SP) en hipervínculo real al bloque de definición.
 Piezas:
 - generate_census.py: resuelve cada ID a su anchor de bloque real vía API, detecta huérfanos.
 - apply_hyperlinks_notion.py: PATCH puntual directo sobre bloques Notion (notion.blocks.update), preserva block-ID, no pasa por destroy/rebuild. Vía activa de escritura.
@@ -484,14 +485,14 @@ Integridad del Runtime: vantage.py status expone el estado del snapshot y el res
 Función: ruta de bajo costo para verificar y sincronizar la Versión de los documentos fundacionales sin pagar el costo de un fetch completo por documento.
 Modos: --sync (único modo de escritura real); --bootstrap (dump read-only); --scripts/--skills (gap report read-only); --length (sanity check estructural, read-only, exit code 1 si ATENCIÓN REQUERIDA); --update-baseline (requiere --length + confirmación explícita).
 Verificación de Integridad Estructural (Length Check):
-- Alcance: 11 documentos versionados (CHANGELOG, KERNEL, MANUAL, CANON, SP, ALIASES, CENSUS, BRIEF, VANTAGE, CHANGELOG_ARCHIVO y ARCHIVEROS).
+- Alcance: los documentos versionados de DOC_KEYS (CHANGELOG, KERNEL, MANUAL, CANON, SP, ALIASES, CENSUS, BRIEF, VANTAGE, CHANGELOG_ARCHIVO, ARCHIVEROS y CHARTER).
 - Métrica: conteo de bloques con texto extraíble no vacío.
 - Umbrales: ≥5.0% de caída (LENGTH_TRUNCATION_THRESHOLD_PCT) o ≥10 líneas de caída (LENGTH_TRUNCATION_THRESHOLD_ABS) vs. baseline.
 - Salida: veredicto por documento + veredicto final + exit code 1 si ATENCIÓN REQUERIDA.
 - Baseline: length_baseline.json almacena el conteo por documento y captured_at; si no existe, la primera ejecución de --length lo genera automáticamente.
 - --update-baseline: modo write explícito; requiere --length; sobrescribe el baseline solo si el veredicto final es PASS o el operador confirma explícitamente que las diferencias son intencionales.
 ### 14.4 KERNEL:OPS-CENSUS - ID Census
-El V-ID-CENSUS es el noveno documento fundacional, derivado — su fuente de verdad son los IDs reales de los otros ocho documentos.
+El V-ID-CENSUS es un documento fundacional derivado — su fuente de verdad son los IDs reales de los documentos que indexa (13.1).
 Reglas:
 1. [CENSUS-SYNC-R1]: ningún ticket que implique cambio de estado de un ID se marca Done sin Census regenerado; si no puede ejecutarse, el ticket queda Blocked-Census.
 1. generate_census.py detecta IDs huérfanos y los reporta antes de cerrar el ticket asociado.
@@ -560,5 +561,5 @@ Registro cerrado de desviaciones documentadas y acotadas al contrato normativo g
 | Bypass de URL | Source_Type ∈ {Inbound, Referencia, Networking} → CREATE automático | 06.1 |
 | Housekeeping sin APROBAR_WRITE | Solo Session Ledger y excepciones explícitas de skills de tidy | 14.5 |
 | Graph/Backlinks = 0 | Por diseño (SUSPENDED) — no es fallo | 04.1 |
-| ARCHIVEROS sin baseline de length | Por decisión del operador; exclusión de --length pendiente de ticket de código | 14.3 |
-| Resoluciones B-xx | Divergencias conocidas y su estado actual viven aquí, no en el cuerpo normativo | 05.1 |
+| ARCHIVEROS excluido del chequeo --length | Por decisión del operador; exclusión pendiente de ticket de código (T3.Cb) | 14.3 |
+| Resolución B-09 (2026-09-17) | Divergencia conocida: class_b_guard.py difiere de Notion en Prioridad_Auto. Sincronización manual hoy; verificación automática pendiente (verify_versions.py o g9_docsync_verify.py) | 05.1 |

@@ -60,8 +60,8 @@ Regla dura: ningún agente debe generar contenido de CV, QA, o cualquier otro en
 | vantage-cv-b | v10.2.1 | 2026-09-28 |
 | vantage-qa | v9.17.0 | 2026-08-19 |
 | vantage-session-open | v1.2.0 | 2026-09-24 |
-| vantage-session-close | v1.0.0 | 2026-09-05 |
-| vantage-present-handoff | v1.0.0 | 2026-09-05 |
+| vantage-session-close | v1.1.0 | 2026-09-11 |
+| vantage-present-handoff | v1.1.0 | 2026-09-11 |
 Mantenimiento: esta tabla se actualiza como parte obligatoria de cualquier cambio de versión a un skill de generación de contenido — el mismo turno que sube la versión del skill actualiza esta tabla, nunca en un paso separado posterior.
 ### 01.4 SP:BOOTLOADER-004 — Agente Principal y Gatekeeper del Charter
 Rol declarado. CLAUDE/MAIN es el agente principal de continuidad de
