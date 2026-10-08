@@ -1,9 +1,9 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "description": "Empleadores con bloqueo total de recontratación (KERNEL:CV-PIPELINE-001 / MANUAL:DATA-MANAGEMENT §10)",
   "hard_block_employers": [
     "l'oreal",
-    "loreal", 
+    "loreal",
     "l'oréal",
     "l'oreal mexico",
     "l'oreal méxico",
@@ -11,13 +11,15 @@
     "l'oreal group",
     "levi's",
     "levis",
-    "dockers",
     "palacio de hierro",
-    "el palacio de hierro"
+    "el palacio de hierro",
+    "levi strauss",
+    "levi strauss & co"
   ],
   "notes": [
     "Aéropostale NO es Hard Block (confirmado con el operador 2026-08-07)",
     "Mantener sincronizado manualmente con la fuente canónica (Career Canon / Manual §10)",
-    "Este archivo NO es la fuente de verdad — solo aplica la regla ya documentada"
+    "Fuente ejecutable única de Hard Blocks (decisión del operador 2026-10-07); Manual §10 es la redacción humana derivada",
+    "Levi's / Levi Strauss = misma compañía (alias: levi strauss, levi strauss & co, levis, levi's). Dockers fuera de Hard Blocks desde 2026-10-07 (decisión del operador); su historial laboral sigue siendo contenido válido de CV"
   ]
 }
