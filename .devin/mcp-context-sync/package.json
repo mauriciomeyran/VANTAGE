@@ -1,0 +1,12 @@
+{
+  "name": "vantage-context-sync",
+  "version": "1.0.0",
+  "description": "Local-first context memory for VANTAGE using Node.js native sqlite",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}

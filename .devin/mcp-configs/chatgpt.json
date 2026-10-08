@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "mem0-mcp": {
+      "command": "node",
+      "args": [
+        "/Users/mauriciomeyran/.npm-global/lib/node_modules/mem0-mcp/dist/bin/mem0-mcp.js"
+      ],
+      "env": {
+        "MEM0_STORE_PATH": "/Users/mauriciomeyran/.vantage/mem0",
+        "OLLAMA_BASE_URL": "http://127.0.0.1:11434",
+        "MEM0_EMBED_MODEL": "nomic-embed-text:latest",
+        "MEM0_OLLAMA_TIMEOUT_MS": "30000"
+      }
+    },
+    "vantage-context-sync": {
+      "command": "node",
+      "args": [
+        "/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/.devin/mcp-context-sync/index.js"
+      ]
+    }
+  }
+}

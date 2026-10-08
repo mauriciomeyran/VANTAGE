@@ -22,15 +22,19 @@ Entrypoint único. Uso:
     python3 vantage.py context TRACKER:H_93a9bae7f01e656e
     python3 vantage.py status
     python3 vantage.py sync
+    python3 vantage.py context-dump --project vantage --limit 5 --format markdown
 
   Python:
-    from vantage import ask, resolve, context, query, status, sync
+    from vantage import ask, resolve, context, query, status, sync, context_dump
 """
 
 from __future__ import annotations
 
-from dotenv import load_dotenv
-load_dotenv("../.env")
+try:
+    from dotenv import load_dotenv
+    load_dotenv("../.env")
+except ImportError:
+    pass  # dotenv not required for context_dump
 
 import json
 import os
@@ -112,6 +116,101 @@ def status() -> Dict[str, Any]:
 
     return result
 
+
+
+def context_dump(project_id: str = "vantage", limit: int = 5, format: str = "markdown") -> str:
+    """
+    Dump compact context from local MCP memory servers (mem0 + context-sync).
+    Returns a compact Markdown block (~150-250 tokens) for injection into non-MCP agents.
+
+    Args:
+        project_id: Project identifier for context-sync filtering
+        limit: Maximum number of memories to include from each source
+        format: Output format ('markdown' or 'json')
+
+    Returns:
+        Compact context string
+    """
+    import sqlite3
+    from pathlib import Path
+
+    mem0_db_path = Path.home() / ".vantage" / "mem0" / "memories.sqlite"
+    context_db_path = Path.home() / ".vantage" / "context-sync.db"
+
+    memories = []
+    sections = []
+
+    # Query Context Sync (project memory)
+    if context_db_path.exists():
+        try:
+            conn = sqlite3.connect(str(context_db_path))
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT key, content, category, updated_at FROM memories "
+                "WHERE project_id = ? OR project_id IS NULL "
+                "ORDER BY updated_at DESC LIMIT ?",
+                (project_id, limit)
+            )
+            context_memories = cursor.fetchall()
+            conn.close()
+
+            if context_memories:
+                sections.append("## Project Memory (Context Sync)")
+                for key, content, category, updated_at in context_memories:
+                    cat_str = f"[{category}] " if category else ""
+                    sections.append(f"- {cat_str}{key}: {content[:100]}{'...' if len(content) > 100 else ''}")
+        except Exception as e:
+            sections.append(f"[Context Sync error: {e}]")
+
+    # Query mem0 (semantic memory)
+    if mem0_db_path.exists():
+        try:
+            conn = sqlite3.connect(str(mem0_db_path))
+            cursor = conn.cursor()
+
+            # Check if memories table exists
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='memories'")
+            if cursor.fetchone():
+                # Query with scope filtering (scope is JSON)
+                cursor.execute(
+                    "SELECT id, kind, content, scope, created_at FROM memories "
+                    "ORDER BY created_at DESC LIMIT ?",
+                    (limit,)
+                )
+                mem0_memories = cursor.fetchall()
+                conn.close()
+
+                if mem0_memories:
+                    sections.append("## Semantic Memory (mem0)")
+                    for mem_id, kind, content, scope, created_at in mem0_memories:
+                        # Parse scope JSON to check if it matches project_id
+                        try:
+                            scope_data = json.loads(scope) if scope else {}
+                            scope_project = scope_data.get("project", "")
+                            # Include if project matches or if scope is empty
+                            if not scope_project or scope_project == project_id:
+                                content_preview = content[:100] + "..." if len(content) > 100 else content
+                                sections.append(f"- [{kind}] {content_preview}")
+                        except:
+                            # If scope parsing fails, include anyway
+                            content_preview = content[:100] + "..." if len(content) > 100 else content
+                            sections.append(f"- [{kind}] {content_preview}")
+            else:
+                conn.close()
+                sections.append("[mem0: no memories stored yet]")
+        except Exception as e:
+            sections.append(f"[mem0 error: {e}]")
+
+    if not sections:
+        return "# VANTAGE Context\n\nNo local memories found for this project."
+
+    if format == "json":
+        return json.dumps({"sections": sections, "project_id": project_id}, indent=2)
+
+    # Markdown format
+    output = "# VANTAGE Context\n\n"
+    output += "\n".join(sections)
+    return output
 
 
 def sync() -> dict:
@@ -261,7 +360,7 @@ def sync() -> dict:
     }
 
 __all__ = [
-    "ask", "resolve", "context", "query", "status", "sync",
+    "ask", "resolve", "context", "query", "status", "sync", "context_dump",
     "find_entity", "list_entities", "search_entities",
     "lookup_by_hash", "lookup_by_role",
     "clear_cache", "reset_metrics", "ResolverError",
@@ -305,6 +404,16 @@ def _main() -> None:
             result = status()
         elif cmd == "sync":
             result = sync()
+        elif cmd == "context-dump":
+            import argparse
+            parser = argparse.ArgumentParser(description="Dump context from local MCP memory servers")
+            parser.add_argument("--project", default="vantage", help="Project ID (default: vantage)")
+            parser.add_argument("--limit", type=int, default=5, help="Max memories per source (default: 5)")
+            parser.add_argument("--format", default="markdown", choices=["markdown", "json"], help="Output format")
+            args = parser.parse_args(rest)
+            result = context_dump(project_id=args.project, limit=args.limit, format=args.format)
+            print(result)
+            return
         else:
             print(__doc__)
             raise SystemExit(1)

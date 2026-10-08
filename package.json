@@ -1,0 +1,27 @@
+{
+  "name": "vantage",
+  "version": "1.0.0",
+  "description": "Sistema operativo personal para Discovery, evaluación determinista y producción documental de oportunidades profesionales.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mauriciomeyran/VANTAGE.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mauriciomeyran/VANTAGE/issues"
+  },
+  "homepage": "https://github.com/mauriciomeyran/VANTAGE#readme",
+  "dependencies": {
+    "mcp-memory-sqlite": "^0.0.4"
+  }
+}
