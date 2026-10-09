@@ -1244,6 +1244,12 @@ def archive_dryrun_notion(
     dryrun_path: Path,
     layer_cli: int,
 ) -> str | None:
+    # T3.N · Decisión B (2026-10-08): archivar el DRY RUN en Notion es opt-in.
+    # Por defecto solo queda el archivo local (write_dryrun_file).
+    import os as _os
+    if _os.environ.get("VANTAGE_ARCHIVE_DRYRUN_NOTION") != "1":
+        print(f"  ⏭️  Archivado DRY RUN en Notion omitido (opt-in): {dryrun_path.name}")
+        return None
     today = date.today()
     month_title = _month_page_title(today)
     dryrun_title = f"DRY RUN · {today.isoformat()} · Layer L{layer_cli}"
@@ -1308,7 +1314,19 @@ def main() -> None:
             "launchd) — antes, input() sin --yes abortaba con EOFError no capturado."
         ),
     )
+    parser.add_argument(
+        "--archive-notion",
+        action="store_true",
+        default=False,
+        help=(
+            "T3.N (Decisión B): archiva el DRY RUN en Notion. Opt-in: por defecto "
+            "el DRY RUN solo se guarda en local (feeds/<fecha>_dryrun.md)."
+        ),
+    )
     args = parser.parse_args()
+    if args.archive_notion:
+        import os as _os
+        _os.environ["VANTAGE_ARCHIVE_DRYRUN_NOTION"] = "1"
 
     feed_path = Path(args.file)
     if not feed_path.is_absolute():

@@ -53,9 +53,9 @@ GEMINI_MAX_BACKOFF = float(os.environ.get("GEMINI_MAX_BACKOFF_SEC", "15"))
 GEMINI_BODY_MAX  = int(os.environ.get("GEMINI_BODY_MAX_CHARS", "2000"))
 MAX_EMAILS_RUN = int(os.environ.get("GEMINI_MAX_EMAILS_PER_RUN", "5"))
 
-OLLAMA_HOST    = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
+OLLAMA_HOST    = os.environ.get("OLLAMA_HOST") or os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
 OLLAMA_MODEL   = os.environ.get("OLLAMA_MODEL", "qwen2.5:0.5b").strip()
-OLLAMA_TIMEOUT = float(os.environ.get("OLLAMA_TIMEOUT_SEC", "30"))
+OLLAMA_TIMEOUT = float(os.environ.get("OLLAMA_TIMEOUT_SEC", "60"))
 OLLAMA_MAX_RETRIES = int(os.environ.get("OLLAMA_MAX_RETRIES", "2"))
 
 if EXTRACTION_BACKEND not in ("ollama", "groq"):
@@ -136,15 +136,42 @@ JOB_BOARD_URL_RE = re.compile(
 # GMAIL — leer correos no leídos de .Jobs
 # ──────────────────────────────────────────
 def _connect_gmail():
-    mail = imaplib.IMAP4_SSL("imap.gmail.com")
+    """Conecta a Gmail IMAP con socket timeout para evitar hangs de 2+m."""
+    mail = imaplib.IMAP4_SSL("imap.gmail.com", timeout=60)
     mail.login(GMAIL_USER, GMAIL_APP_PASS)
     mail.select(f'"{GMAIL_LABEL}"')
     return mail
 
 
+def _ensure_mail(mail):
+    """Verifica que la conexión IMAP siga viva; reconecta si está stale.
+
+    Después de timeouts largos de Ollama (60s+), Gmail puede haber cerrado
+    la conexión por inactividad. Un NOOP detecta esto de inmediato y evita
+    que el siguiente _set_seen() crashee con ETIMEDOUT."""
+    try:
+        mail.noop()
+    except (imaplib.IMAP4.error, TimeoutError, ConnectionError, OSError):
+        print("  ↻ Reconectando a Gmail (conexión IMAP stale)...")
+        try:
+            mail.logout()
+        except Exception:
+            pass
+        return _connect_gmail()
+    return mail
+
+
 def _set_seen(mail, eid, seen: bool):
+    """Marca como leído/no-leído un correo. Nunca debe crashear el proceso:
+    si el IMAP falla (timeout, conexión cerrada), el correo queda como no
+    leído y se reprocesa en la siguiente corrida — es el comportamiento
+    seguro, no un dato inconsistente."""
     flag = "+FLAGS" if seen else "-FLAGS"
-    mail.store(eid, flag, "\\Seen")
+    try:
+        mail.store(eid, flag, "\\Seen")
+    except (imaplib.IMAP4.error, TimeoutError, ConnectionError, OSError) as e:
+        print(f"  ⚠️  IMAP _set_seen falló (eid={eid}): {type(e).__name__}: {e}")
+        print("  ↩️  Correo quedará como no leído para reintentar")
 
 
 def should_skip_groq(subject: str, body: str) -> tuple[bool, str]:
@@ -223,7 +250,10 @@ def fetch_unread_emails(mail):
         _, msg_data = mail.fetch(eid, "(RFC822)")
         msg = email.message_from_bytes(msg_data[0][1])
         subject = _decode_subject(msg)
-        sender = msg.get("From", "").lower()
+        # msg.get("From") puede devolver un objeto email.header.Header
+        # (no un str) cuando el header está RFC-2047 encoded; str() lo
+        # convierte de forma segura antes de .lower().
+        sender = str(msg.get("From", "")).lower()
 
         raw_source = "Other"
         for key, val in RAW_SOURCE_MAP.items():
@@ -438,11 +468,16 @@ def _call_ollama(clean_body, retries=None):
 
     last_err = None
     for attempt in range(retries):
+        # Timeout progresivo: el primer intento usa el timeout base, pero
+        # retries subsiguientes le dan más tiempo — llama3:8b puede estar
+        # haciendo unload/reload entre requests (OLLAMA_KEEP_ALIVE agotado)
+        # y el modelo tarda >30s en estar listo la segunda vez.
+        current_timeout = min(OLLAMA_TIMEOUT * (attempt + 1), 120)
         try:
             resp = requests.post(
                 f"{OLLAMA_HOST}/api/chat",
                 json=payload,
-                timeout=OLLAMA_TIMEOUT,
+                timeout=current_timeout,
             )
         except requests.exceptions.ConnectionError as err:
             # Sin conexión al puerto local → Ollama no está corriendo.
@@ -453,7 +488,7 @@ def _call_ollama(clean_body, retries=None):
             ) from err
         except requests.exceptions.Timeout as err:
             last_err = err
-            print(f"  ⏳ Ollama timeout ({attempt+1}/{retries}) tras {OLLAMA_TIMEOUT}s")
+            print(f"  ⏳ Ollama timeout ({attempt+1}/{retries}) tras {current_timeout}s")
             continue
 
         try:
@@ -960,6 +995,10 @@ def main():
     groq_failed   = 0
 
     for idx, em in enumerate(emails, 1):
+        # Verificar IMAP antes de cada correo: los timeouts de Ollama
+        # (60s+) pueden dejar la conexión IMAP stale; NOOP detecta y
+        # reconecta sin que el siguiente _set_seen() crashee.
+        mail = _ensure_mail(mail)
         print(f"\n📧 [{idx}/{len(emails)}] {em['subject'][:60]}")
 
         if SKIP_SUBJECT_RE.search(em["subject"]):

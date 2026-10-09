@@ -1,3 +1,4 @@
+import httpx
 # R-04 fix: faltaban estos dos imports — el resto del archivo usa os.environ,
 # os.path.* y sys.path directamente (l.21-32, 156-157) y producía NameError.
 import os
@@ -67,32 +68,25 @@ def fetch_notion_page(page_id: str) -> dict:
 
 
 def query_blocked_vacancies():
-    client = get_notion_client()
-
-    return client.data_sources.query(
-        data_source_id=DATABASE_ID,
-        filter={
-            'and': [
-                {
-                    'property': 'Gate_Decision',
-                    'select': {'equals': 'BLOCKED'},
-                },
-                {
-                    'property': 'Status',
-                    'select': {'does_not_equal': 'Expirada'},
-                },
-                {
-                    'property': 'Status',
-                    'select': {'does_not_equal': 'Retirado'},
-                },
-                {
-                    'property': 'Status',
-                    'select': {'does_not_equal': 'Rechazado'},
-                },
+    url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
+    headers = {
+        "Authorization": f"Bearer {NOTION_TOKEN}",
+        "Notion-Version": "2022-06-28",
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "filter": {
+            "and": [
+                {"property": "Gate_Decision", "select": {"equals": "BLOCKED"}},
+                {"property": "Status", "select": {"does_not_equal": "Expirada"}},
+                {"property": "Status", "select": {"does_not_equal": "Retirado"}},
+                {"property": "Status", "select": {"does_not_equal": "Rechazado"}},
             ]
-        },
-    )
-
+        }
+    }
+    response = httpx.post(url, headers=headers, json=payload)
+    response.raise_for_status()
+    return response.json()
 
 def write_patch_to_notion(page_id: str, patch: dict):
     client = get_notion_client()
