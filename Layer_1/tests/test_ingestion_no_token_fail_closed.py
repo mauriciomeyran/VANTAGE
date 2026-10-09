@@ -51,7 +51,7 @@ def _write_feed(tmp_path, payload=FEED):
 
 @pytest.fixture
 def no_token_env(monkeypatch, tmp_path):
-    """Entorno sin credenciales, import fresco y artefactos confinados a tmp_path."""
+    """Entorno sin credenciales; cualquier DRY RUN queda confinado a tmp_path."""
     import dotenv
 
     for key in ENV_KEYS:
@@ -59,11 +59,17 @@ def no_token_env(monkeypatch, tmp_path):
     monkeypatch.setattr(dotenv, "load_dotenv", lambda *a, **k: None)
     sys.modules.pop("feed_processor", None)
 
-    # Preimportamos con las mismas condiciones sin token que usará el orquestador,
-    # y confinamos el archivo DRY RUN temporal a tmp_path.
-    module = importlib.import_module("feed_processor")
-    monkeypatch.setattr(module, "_LAYER_1_ROOT", tmp_path)
-    yield module
+    # feed_processor escribe el informe diario bajo Layer_1/feeds. Redirigir
+    # solo ese artefacto evita tocar archivos reales del repositorio durante tests.
+    original_write_text = Path.write_text
+
+    def isolated_write_text(path, data, *args, **kwargs):
+        if path.name.endswith("_dryrun.md"):
+            path = tmp_path / path.name
+        return original_write_text(path, data, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", isolated_write_text)
+    yield
     sys.modules.pop("feed_processor", None)
 
 
