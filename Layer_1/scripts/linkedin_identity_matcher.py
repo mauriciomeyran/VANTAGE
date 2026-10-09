@@ -49,7 +49,6 @@ BLOCKED_EMPLOYERS: FrozenSet[str] = frozenset({
     "L'Oréal",
     "Levi Strauss",
     "Levi's",
-    "Dockers",
     "El Palacio de Hierro",
 })
 

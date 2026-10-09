@@ -58,10 +58,10 @@ def load_hard_blocks() -> list[str]:
             return config.get("hard_block_employers", [])
         else:
             logger.warning(f"Config de hard blocks no encontrado en {HARD_BLOCK_CONFIG_PATH}, usando fallback")
-            return ["l'oreal", "loreal", "levi's", "levis", "dockers", "palacio de hierro", "el palacio de hierro"]
+            return ["l'oreal", "loreal", "levi's", "levis", "palacio de hierro", "el palacio de hierro"]
     except Exception as e:
         logger.error(f"Error cargando config de hard blocks: {e}, usando fallback")
-        return ["l'oreal", "loreal", "levi's", "levis", "dockers", "palacio de hierro", "el palacio de hierro"]
+        return ["l'oreal", "loreal", "levi's", "levis", "palacio de hierro", "el palacio de hierro"]
 
 
 HARD_BLOCK_EMPLOYERS = load_hard_blocks()
@@ -186,7 +186,7 @@ def build_block_report(url: str, empresa: str, hits: list[str]) -> str:
 - Empleadores bloqueados detectados en el texto: {', '.join(hits)}
 
 Referencia: KERNEL:CV-PIPELINE-001 / MANUAL:DATA-MANAGEMENT §10 — Hard Blocks
-(L'Oreal todas las divisiones, Levi's/Dockers, El Palacio de Hierro).
+(L'Oreal todas las divisiones, Levi's, El Palacio de Hierro).
 
 Este empleador no recontrata. No se genero HANDOFF ni scaffold de analisis.
 Si el hit es un falso positivo (ej. mencion incidental de la marca en el

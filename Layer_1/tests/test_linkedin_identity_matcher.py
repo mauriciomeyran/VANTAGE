@@ -137,7 +137,7 @@ def test_m07_identity_variant_blocked():
         "L'Oréal Mexico S.A. de C.V.", "L'Oreal Mexico SA de CV",
         "L'Oréal Mexico S.A.S. de C.V.",
         "Levi Strauss & Co", "Levi Strauss", "Levi Strauss and Company",
-        "Levi's", "LEVI STRAUSS MEXICO", "Dockers", "DOCKERS",
+        "Levi's", "LEVI STRAUSS MEXICO",
         "El Palacio de Hierro", "Palacio de Hierro",
     ]
     for name in variants:
@@ -213,7 +213,7 @@ def test_m10_employer_takes_precedence_over_channel():
 def test_m10b_blocked_employer_wins_over_clean_channel():
     """Si el EMPLOYER es blocked, ningún canal limpio lo salva."""
     r = match_employer(EmployerIdentityInput(
-        observed_employer="Dockers",
+        observed_employer="Levi Strauss",
         observed_retail_channel="Liverpool"))
     assert r.match_status == MatchStatus.BLOCKED
     assert r.employer_match is True
@@ -281,9 +281,9 @@ def test_determinism_same_input_same_output():
 
 def test_determinism_order_independent():
     """El orden de blocked_employer_set no altera el veredicto."""
-    a = frozenset({"L'Oréal", "Levi Strauss", "Dockers"})
-    b = frozenset({"Dockers", "L'Oréal", "Levi Strauss"})
-    for name in ("L'Oréal", "Dockers", "Cartier"):
+    a = frozenset({"L'Oréal", "Levi Strauss"})
+    b = frozenset({"L'Oréal", "Levi Strauss"})
+    for name in ("L'Oréal", "Cartier"):
         r1 = match_employer(EmployerIdentityInput(observed_employer=name,
                                                    blocked_employer_set=a))
         r2 = match_employer(EmployerIdentityInput(observed_employer=name,

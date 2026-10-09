@@ -82,3 +82,4 @@ GPT.png
 config/*.env
 config/*.env.bak
 VANTAGE_digest.txt
+node_modules/
