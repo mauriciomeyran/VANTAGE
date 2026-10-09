@@ -1,0 +1,155 @@
+diff -ruN '--exclude=__pycache__' '--exclude=.pytest_cache' a/Layer_1/scripts/linkedin_identity_matcher.py b/Layer_1/scripts/linkedin_identity_matcher.py
+--- a/Layer_1/scripts/linkedin_identity_matcher.py	2026-10-09 08:13:14.701534723 +0000
++++ b/Layer_1/scripts/linkedin_identity_matcher.py	2026-10-09 08:13:32.085681839 +0000
+@@ -42,14 +42,17 @@
+ 
+ # --------------------------------------------------------------------------
+ # Set canónico de employers bloqueados.
+-# Fuente: LINKEDIN-RULES-002 §2 "Blocked employers". Se declara aquí como dato,
+-# no como lógica, y puede sobreescribirse vía parámetro para tests.
++# Fuente ejecutable única: Layer_1/config/hard_blocks.json v1.1 (decisión del
++# operador 2026-10-07; Dockers fuera desde esa fecha). LINKEDIN-RULES-002 §2
++# debe re-sincronizarse con esta decisión. Se declara aquí como dato, no como
++# lógica, y puede sobreescribirse vía parámetro para tests.
++# La paridad con hard_blocks.json está probada en
++# tests/test_matcher_hard_blocks_parity.py.
+ # --------------------------------------------------------------------------
+ BLOCKED_EMPLOYERS: FrozenSet[str] = frozenset({
+     "L'Oréal",
+     "Levi Strauss",
+     "Levi's",
+-    "Dockers",
+     "El Palacio de Hierro",
+ })
+ 
+diff -ruN '--exclude=__pycache__' '--exclude=.pytest_cache' a/Layer_1/tests/test_linkedin_identity_matcher.py b/Layer_1/tests/test_linkedin_identity_matcher.py
+--- a/Layer_1/tests/test_linkedin_identity_matcher.py	2026-10-09 08:13:14.701534723 +0000
++++ b/Layer_1/tests/test_linkedin_identity_matcher.py	2026-10-09 08:13:32.085681839 +0000
+@@ -137,8 +137,10 @@
+         "L'Oréal Mexico S.A. de C.V.", "L'Oreal Mexico SA de CV",
+         "L'Oréal Mexico S.A.S. de C.V.",
+         "Levi Strauss & Co", "Levi Strauss", "Levi Strauss and Company",
+-        "Levi's", "LEVI STRAUSS MEXICO", "Dockers", "DOCKERS",
++        "Levi's", "LEVI STRAUSS MEXICO",
+         "El Palacio de Hierro", "Palacio de Hierro",
++        # T3.I: "Dockers"/"DOCKERS" retirados — Dockers fuera del set bloqueado
++        # (decisión del operador 2026-10-07; hard_blocks.json v1.1).
+     ]
+     for name in variants:
+         r = match_employer(EmployerIdentityInput(observed_employer=name))
+@@ -212,8 +214,11 @@
+ 
+ def test_m10b_blocked_employer_wins_over_clean_channel():
+     """Si el EMPLOYER es blocked, ningún canal limpio lo salva."""
++    # T3.I: antes usaba employer="Dockers"; Dockers ya no está bloqueado
++    # (decisión del operador 2026-10-07). Se sustituye por otra identidad
++    # bloqueada vigente para preservar la intención de la prueba.
+     r = match_employer(EmployerIdentityInput(
+-        observed_employer="Dockers",
++        observed_employer="Levi's",
+         observed_retail_channel="Liverpool"))
+     assert r.match_status == MatchStatus.BLOCKED
+     assert r.employer_match is True
+diff -ruN '--exclude=__pycache__' '--exclude=.pytest_cache' a/Layer_1/tests/test_matcher_hard_blocks_parity.py b/Layer_1/tests/test_matcher_hard_blocks_parity.py
+--- a/Layer_1/tests/test_matcher_hard_blocks_parity.py	1970-01-01 00:00:00.000000000 +0000
++++ b/Layer_1/tests/test_matcher_hard_blocks_parity.py	2026-10-09 08:13:56.365887295 +0000
+@@ -0,0 +1,99 @@
++"""
++T3.I (propuesta) · Prueba de paridad matcher ↔ Layer_1/config/hard_blocks.json.
++
++hard_blocks.json v1.1 (decisión del operador 2026-10-07) es la fuente
++ejecutable única de Hard Blocks. El set BLOCKED_EMPLOYERS del matcher
++(linkedin_identity_matcher.py) debe ser consistente con ese conjunto
++(identidades canónicas + alias del JSON) y NO debe incluir Dockers.
++
++Nota de gobernanza: cualquier cambio a BLOCKED_EMPLOYERS altera el SHA de
++implementación ligado al contrato CANONICAL PromptA-v2.0+linkedin (f7fa0513…)
++y exige re-promoción del operador (nueva fila/versión en PROMPT_CANON).
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++_SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "scripts"
++if str(_SCRIPTS_DIR) not in sys.path:
++    sys.path.insert(0, str(_SCRIPTS_DIR))
++
++from linkedin_identity_matcher import BLOCKED_EMPLOYERS, normalize_identity
++
++_CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "hard_blocks.json"
++
++# Decisión del operador 2026-10-07 + notas de hard_blocks.json v1.1:
++# alias (minúsculas, tal cual en el JSON) → identidad canónica del matcher.
++CANONICAL_BY_ALIAS = {
++    "l'oreal": "L'Oréal",
++    "loreal": "L'Oréal",
++    "l'oréal": "L'Oréal",
++    "l'oreal mexico": "L'Oréal",
++    "l'oreal méxico": "L'Oréal",
++    "l'oreal luxury": "L'Oréal",
++    "l'oreal group": "L'Oréal",
++    "levi's": "Levi's",
++    "levis": "Levi's",
++    "levi strauss": "Levi Strauss",
++    "levi strauss & co": "Levi Strauss",
++    "palacio de hierro": "El Palacio de Hierro",
++    "el palacio de hierro": "El Palacio de Hierro",
++}
++
++
++def _load_hard_blocks() -> tuple[dict, set[str]]:
++    data = json.loads(_CONFIG_PATH.read_text(encoding="utf-8"))
++    aliases = {str(e).strip().lower() for e in data["hard_block_employers"]}
++    return data, aliases
++
++
++def test_dockers_absent_from_both_sources():
++    """Decisión 2026-10-07: Dockers NO es Hard Block en ninguna de las dos fuentes."""
++    data, aliases = _load_hard_blocks()
++    assert "dockers" not in aliases, (
++        "hard_blocks.json no debe incluir 'dockers' (decisión del operador 2026-10-07)"
++    )
++    matcher_norms = {normalize_identity(name) for name in BLOCKED_EMPLOYERS}
++    assert "dockers" not in matcher_norms, (
++        "BLOCKED_EMPLOYERS del matcher no debe incluir Dockers "
++        "(decisión del operador 2026-10-07)"
++    )
++
++
++def test_every_json_alias_is_covered_by_matcher():
++    """Cada alias del JSON debe resolver a una identidad del matcher."""
++    data, aliases = _load_hard_blocks()
++    matcher_norms = {normalize_identity(name) for name in BLOCKED_EMPLOYERS}
++    for alias in sorted(aliases):
++        canonical = CANONICAL_BY_ALIAS.get(alias)
++        assert canonical is not None, (
++            f"El alias '{alias}' de hard_blocks.json v{data.get('version')} no tiene "
++            "mapeo en CANONICAL_BY_ALIAS; actualiza esta prueba si el set cambió"
++        )
++        assert normalize_identity(canonical) in matcher_norms, (
++            f"hard_blocks.json incluye '{alias}' (canónico: '{canonical}') pero "
++            "BLOCKED_EMPLOYERS del matcher no lo cubre"
++        )
++
++
++def test_every_matcher_identity_appears_in_json():
++    """Cada identidad del matcher debe aparecer (normalizada) entre los alias del JSON."""
++    data, aliases = _load_hard_blocks()
++    for name in sorted(BLOCKED_EMPLOYERS):
++        norm = normalize_identity(name)
++        assert norm in aliases, (
++            f"La identidad '{name}' del matcher (normalizada: '{norm}') no aparece "
++            f"en hard_blocks.json v{data.get('version')}"
++        )
++
++
++def test_aeropostale_is_not_hard_block():
++    """Aéropostale NO es Hard Block (confirmado con el operador; notas del JSON)."""
++    data, aliases = _load_hard_blocks()
++    assert "aeropostale" not in aliases
++    assert "aéropostale" not in aliases
++    matcher_norms = {normalize_identity(name) for name in BLOCKED_EMPLOYERS}
++    assert "aeropostale" not in matcher_norms
