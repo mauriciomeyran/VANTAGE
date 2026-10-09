@@ -96,6 +96,119 @@ def sanitize_input(raw_text: str) -> str:
 
 
 # ──────────────────────────────────────────
+# T3.M · LinkedIn v2.0 (LINKEDIN-OUTPUT-SCHEMA-002)
+# Decisión del operador 2026-10-08 (A): de un envelope v2.0 se ingesta SOLO
+# accepted[]; reroute[] permanece en el feed fuente (pertenece a otra familia
+# de búsqueda, RULES-002 §9); rejected[] y not_evaluated[] NO se ingestan.
+# Solo se soporta el schema v2.0; el baseline v1.0 (top-level "jobs") sigue
+# rechazándose con ValueError.
+# employer_identity: se trata como string por decisión del operador
+# (2026-10-09, opción b); cualquier otra forma lanza ValueError citando el
+# job_id — nunca se produce una marca vacía en silencio.
+# ──────────────────────────────────────────
+_LINKEDIN_V2_ARRAYS = ("accepted", "reroute", "rejected", "not_evaluated")
+
+
+def is_linkedin_v2_envelope(json_data: Any) -> bool:
+    """Detección T3.M: dict con los cuatro arrays v2.0 como listas, más clave
+    "contract" o "schema". No altera las ramas existentes de normalize_envelope."""
+    if not isinstance(json_data, dict):
+        return False
+    if not all(isinstance(json_data.get(key), list) for key in _LINKEDIN_V2_ARRAYS):
+        return False
+    return "contract" in json_data or "schema" in json_data
+
+
+def _linkedin_v2_required_str(item: dict, field: str, job_id: str) -> str:
+    """Validación de campo requerido en accepted[]; falla citando el job_id."""
+    val = item.get(field)
+    if val is None or (isinstance(val, str) and not val.strip()):
+        raise ValueError(
+            f"LinkedIn v2.0: el item de accepted[] con job_id={job_id} no tiene "
+            f"el campo requerido '{field}'. No se ingesta parcialmente."
+        )
+    if not isinstance(val, str):
+        raise ValueError(
+            f"LinkedIn v2.0: el item de accepted[] con job_id={job_id} tiene "
+            f"'{field}' con forma inesperada ({type(val).__name__}); se esperaba "
+            f"un string. No se ingesta parcialmente."
+        )
+    return val.strip()
+
+
+def normalize_linkedin_v2_envelope(json_data: dict) -> list[dict]:
+    """Convierte SOLO accepted[] de un envelope LinkedIn v2.0 en records
+    compatibles con normalize_record_fields. El mapeo vive aquí (no en los
+    alias globales) para no afectar a las demás fuentes."""
+    counts = {key: len(json_data.get(key) or []) for key in _LINKEDIN_V2_ARRAYS}
+    print(
+        "   🔗 Envelope LinkedIn v2.0 detectado — "
+        f"accepted={counts['accepted']} · reroute={counts['reroute']} · "
+        f"rejected={counts['rejected']} · not_evaluated={counts['not_evaluated']}"
+    )
+    print(
+        "   ℹ️  T3.M (decisión A 2026-10-08): se ingesta solo accepted[]; "
+        "reroute[] queda en el feed fuente; rejected[] y not_evaluated[] no se ingestan."
+    )
+
+    records: list[dict] = []
+    for item in json_data["accepted"]:
+        if not isinstance(item, dict):
+            raise ValueError(
+                "LinkedIn v2.0: accepted[] contiene un item que no es dict "
+                f"({type(item).__name__}); se esperaba un Job Record v2.0. "
+                "No se ingesta parcialmente."
+            )
+        job_id = str(item.get("job_id") or "<sin job_id>")
+
+        status = item.get("status")
+        if status != "ACCEPTED":
+            raise ValueError(
+                f"LinkedIn v2.0: el item de accepted[] con job_id={job_id} tiene "
+                f"status={status!r}; se esperaba 'ACCEPTED' "
+                "(invariante de LINKEDIN-OUTPUT-SCHEMA-002). No se ingesta parcialmente."
+            )
+
+        url = _linkedin_v2_required_str(item, "url", job_id)
+        title = _linkedin_v2_required_str(item, "title", job_id)
+        employer_identity = _linkedin_v2_required_str(item, "employer_identity", job_id)
+
+        location_observed = item.get("location_observed")
+        if location_observed is None:
+            location_observed = ""
+        elif not isinstance(location_observed, str):
+            raise ValueError(
+                f"LinkedIn v2.0: el item de accepted[] con job_id={job_id} tiene "
+                f"'location_observed' con forma inesperada "
+                f"({type(location_observed).__name__}); se esperaba un string. "
+                "No se ingesta parcialmente."
+            )
+
+        jd = item.get("jd")
+        if not isinstance(jd, str):
+            jd = ""  # el schema v2.0 NO define campo jd → "" (decisión C: válido)
+
+        # Se conservan TODOS los campos v2.0 del Job Record (evidence_observed,
+        # *_provenance, warnings, career_family, etc.) y se añaden los puentes
+        # hacia el canónico de feed_processor.
+        record = dict(item)
+        record.update({
+            "company": employer_identity,            # → brand_raw (alias "company")
+            "location": location_observed.strip(),   # → location (alias "location")
+            "url": url,                              # → apply_url (alias "url")
+            "title": title,
+            "job_id": str(item.get("job_id") or ""),
+            # Convención de provenance del baseline v1.0
+            # (feeds/2026-10-04_linkedin.json: source="linkedin", source_type="linkedin")
+            "source": "linkedin",
+            "source_type": "linkedin",
+            "jd": jd,
+        })
+        records.append(record)
+    return records
+
+
+# ──────────────────────────────────────────
 # Paso 1: normalize_envelope
 # ──────────────────────────────────────────
 def normalize_envelope(json_data: dict, layer_cli: int) -> list[dict]:
@@ -149,10 +262,18 @@ def normalize_envelope(json_data: dict, layer_cli: int) -> list[dict]:
         records = list(json_data["consolidated_results"])
     elif isinstance(json_data, list):
         records = list(json_data)
+    elif is_linkedin_v2_envelope(json_data):
+        # T3.M · LinkedIn v2.0 (LINKEDIN-OUTPUT-SCHEMA-002): solo accepted[].
+        # Rama nueva; no altera las cuatro formas anteriores.
+        records = normalize_linkedin_v2_envelope(json_data)
     else:
         raise ValueError(
             ('Envelope no reconocido: se esperaba "results_by_source", '
-            '"listings", "consolidated_results" o una lista.')
+             '"listings", "consolidated_results" o una lista.')
+            + (' Para LinkedIn: el envelope v1.0 (top-level "jobs") ya no se '
+               'ingesta (decisión A 2026-10-08); un envelope v2.0 requiere las '
+               'listas "accepted", "reroute", "rejected" y "not_evaluated", más '
+               'la clave "contract" o "schema" (LINKEDIN-OUTPUT-SCHEMA-002).')
         )
 
     for record in records:

@@ -1,0 +1,178 @@
+{
+  "schema": "LINKEDIN-OUTPUT-SCHEMA-002",
+  "contract": "PromptA-v2.0+linkedin",
+  "prompt_version": "v2.0",
+  "rules_version": "LINKEDIN-RULES-002",
+  "query_set_version": "LINKEDIN-QUERYSET-002",
+  "run_metadata": {
+    "run_id": "SYNTHETIC-FIXTURE",
+    "executed_at": "2026-10-09T00:00:00-06:00",
+    "mode": "guest",
+    "agent_family": "ARENA",
+    "agent_instance": "DEFAULT",
+    "notes": "Fixture sintético para T3.M (decisión A 2026-10-08). NO proviene de una adquisición real de LinkedIn. No colocar en feeds/."
+  },
+  "search_execution": {
+    "queries_planned": 9,
+    "queries_executed": 0,
+    "live_acquisition": false
+  },
+  "summary": {
+    "accepted_count": 2,
+    "reroute_count": 1,
+    "rejected_count": 1,
+    "not_evaluated_count": 1
+  },
+  "accepted": [
+    {
+      "job_id": "SYN-ACC-0001",
+      "job_id_provenance": "synthetic_fixture",
+      "url": "https://www.linkedin.com/jobs/view/4000000001/",
+      "url_provenance": "synthetic_fixture",
+      "title": "Visual Merchandising Manager",
+      "title_provenance": "synthetic_fixture",
+      "employer_identity": "Benefit Cosmetics",
+      "employer_provenance": "synthetic_fixture",
+      "retail_channel": null,
+      "location_observed": "Ciudad de México, Mexico",
+      "location_provenance": "synthetic_fixture",
+      "posted_relative_observed": "hace 1 semana",
+      "posted_date_normalized": "2026-10-01",
+      "posted_date_provenance": "derived_from_relative",
+      "detail_status": "DETAIL_VALIDATED",
+      "status": "ACCEPTED",
+      "career_family": "PRIMARY",
+      "seniority": "manager",
+      "industry_fit": "PREFERRED",
+      "reason": "Rol VM en marca de belleza premium; detalle validado.",
+      "evidence_observed": [
+        "Título y empresa observados en la tarjeta sintética",
+        "Detalle validado en página de vacante sintética"
+      ],
+      "warnings": []
+    },
+    {
+      "job_id": "SYN-ACC-0002",
+      "job_id_provenance": "synthetic_fixture",
+      "url": "https://www.linkedin.com/jobs/view/4000000002/",
+      "url_provenance": "synthetic_fixture",
+      "title": "Retail Visual Merchandising Supervisor",
+      "title_provenance": "synthetic_fixture",
+      "employer_identity": "Cartier",
+      "employer_provenance": "synthetic_fixture",
+      "retail_channel": "boutique",
+      "location_observed": "Polanco, Ciudad de México",
+      "location_provenance": "synthetic_fixture",
+      "posted_relative_observed": "hace 3 días",
+      "posted_date_normalized": "2026-10-05",
+      "posted_date_provenance": "derived_from_relative",
+      "detail_status": "DETAIL_VALIDATED",
+      "status": "ACCEPTED",
+      "career_family": "PRIMARY",
+      "seniority": "supervisor",
+      "industry_fit": "PREFERRED",
+      "reason": "Rol VM retail en lujo; sin menciones de empleadores bloqueados.",
+      "evidence_observed": [
+        "Employer identity resuelta sin ambigüedad en fixture sintético"
+      ],
+      "warnings": []
+    }
+  ],
+  "reroute": [
+    {
+      "job_id": "SYN-RER-0001",
+      "job_id_provenance": "synthetic_fixture",
+      "url": "https://www.linkedin.com/jobs/view/4000000003/",
+      "url_provenance": "synthetic_fixture",
+      "title": "Visual Merchandising Coordinator (Latam Travel Retail)",
+      "title_provenance": "synthetic_fixture",
+      "employer_identity": "Puig",
+      "employer_provenance": "synthetic_fixture",
+      "retail_channel": "travel_retail",
+      "location_observed": "Miami, FL",
+      "location_provenance": "synthetic_fixture",
+      "posted_relative_observed": "hace 2 semanas",
+      "posted_date_normalized": "2026-09-24",
+      "posted_date_provenance": "derived_from_relative",
+      "detail_status": "DETAIL_VALIDATED",
+      "status": "REROUTE",
+      "career_family": "ADJACENT",
+      "seniority": "coordinator",
+      "industry_fit": "ADJACENT",
+      "reason": "Pertenece a otra familia de búsqueda (RULES-002 §9); queda en el feed para revisión.",
+      "evidence_observed": [
+        "Familia ADJACENT determinada en fixture sintético"
+      ],
+      "warnings": []
+    }
+  ],
+  "rejected": [
+    {
+      "job_id": "SYN-REJ-0001",
+      "job_id_provenance": "synthetic_fixture",
+      "url": "https://www.linkedin.com/jobs/view/4000000004/",
+      "url_provenance": "synthetic_fixture",
+      "title": "Stock Associate",
+      "title_provenance": "synthetic_fixture",
+      "employer_identity": "El Palacio de Hierro",
+      "employer_provenance": "synthetic_fixture",
+      "retail_channel": "department_store",
+      "location_observed": "CDMX",
+      "location_provenance": "synthetic_fixture",
+      "posted_relative_observed": "hace 5 días",
+      "posted_date_normalized": "2026-10-03",
+      "posted_date_provenance": "derived_from_relative",
+      "detail_status": "DETAIL_VALIDATED",
+      "status": "REJECTED",
+      "career_family": "NONE",
+      "seniority": "associate",
+      "industry_fit": "NONE",
+      "reason": "Empleador hard-blocked (hard_blocks.json v1.1).",
+      "evidence_observed": [
+        "Hard block determinado en fixture sintético"
+      ],
+      "warnings": []
+    }
+  ],
+  "not_evaluated": [
+    {
+      "job_id": "SYN-NEV-0001",
+      "job_id_provenance": "synthetic_fixture",
+      "url": "https://www.linkedin.com/jobs/view/4000000005/",
+      "url_provenance": "synthetic_fixture",
+      "title": "Beauty Advisor",
+      "title_provenance": "synthetic_fixture",
+      "employer_identity": "Sephora",
+      "employer_provenance": "synthetic_fixture",
+      "retail_channel": "store",
+      "location_observed": "CDMX",
+      "location_provenance": "synthetic_fixture",
+      "posted_relative_observed": null,
+      "posted_date_normalized": null,
+      "posted_date_provenance": "not_available",
+      "detail_status": "DETAIL_NOT_VALIDATED",
+      "status": "NOT_EVALUATED",
+      "career_family": null,
+      "seniority": null,
+      "industry_fit": null,
+      "reason": "Detalle no validado dentro del límite de la corrida sintética.",
+      "evidence_observed": [],
+      "warnings": []
+    }
+  ],
+  "audit_log": [
+    {
+      "event": "FIXTURE_CREATED",
+      "detail": "Fixture sintético creado para pruebas de T3.M; ninguna adquisición real."
+    }
+  ],
+  "warnings": [
+    "SYNTHETIC-FIXTURE: archivo sintético de prueba (T3.M). No representa una adquisición real de LinkedIn y no debe ingestarse como feed de producción ni colocarse en feeds/."
+  ],
+  "contract_integrity": {
+    "prompt_sha": null,
+    "rules_sha": null,
+    "query_set_sha": null,
+    "note": "SHAs omitidos a propósito: fixture sintético, no ejecutado bajo contrato CANONICAL."
+  }
+}
