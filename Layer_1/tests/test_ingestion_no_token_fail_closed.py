@@ -115,7 +115,7 @@ def test_no_token_apply_mode_is_refused(tmp_path, no_token_env):
     assert metrics["written"] == 0
 
 
-def test_import_restores_environment_even_if_dotenv_reinjects_token(monkeypatch):
+def test_run_ingestion_restores_environment_if_dotenv_reinjects_token(monkeypatch, tmp_path):
     import dotenv
 
     before = {key: os.environ.get(key) for key in ENV_KEYS}
@@ -128,9 +128,24 @@ def test_import_restores_environment_even_if_dotenv_reinjects_token(monkeypatch)
         os.environ["NOTION_ARCHIVE_PAGE_ID"] = "injected-archive"
 
     monkeypatch.setattr(dotenv, "load_dotenv", reinject)
+    original_write_text = Path.write_text
+
+    def isolated_write_text(path, data, *args, **kwargs):
+        if path.name.endswith("_dryrun.md"):
+            path = tmp_path / path.name
+        return original_write_text(path, data, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", isolated_write_text)
     sys.modules.pop("feed_processor", None)
     try:
-        importlib.import_module("feed_processor")
+        metrics = run_ingestion(_write_feed(tmp_path), layer=1, dry_run=True)
+        assert metrics.get("error") is None
+        assert metrics["clean"] == 0
+        assert metrics["blocked"] == 2
+        assert metrics["review_needed"] == 1
+        assert metrics["warning"] == "no_token_fail_closed_dryrun"
+        # El token reinyectado no puede convertir el proceso en autenticado
+        # ni sobrevivir al import lazy.
         assert os.environ.get("NOTION_TOKEN") is None
         assert os.environ.get("NOTION_DB_OPPORTUNITIES") is None
         assert os.environ.get("NOTION_ARCHIVE_PAGE_ID") is None
