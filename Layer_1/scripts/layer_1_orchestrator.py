@@ -1121,20 +1121,47 @@ def run_ingestion(
     Después de una ingesta exitosa el orquestador (F0+) calculará
     Score / Prioridad / Gate_Decision / Next_Action sobre las filas nuevas.
     """
-    # Import lazy para evitar side-effects de Client y path hacking de feed_processor
-    from feed_processor import (
-        sanitize_input,
-        normalize_envelope,
-        coerce_types,
-        process_record,
-        write_to_notion,
-        NotionSchema,
-        load_alias_map,
-        print_dryrun_summary,
-        write_dryrun_file,
-        archive_dryrun_notion,
-        ProcessedRecord,
-    )
+    # Capturar el token ANTES de importar feed_processor: ese módulo ejecuta
+    # load_dotenv(override=True), que no debe convertir un dry-run sin token
+    # en una ejecución autenticada.
+    notion_token = os.environ.get("NOTION_TOKEN")
+
+    # feed_processor requiere estas tres variables al importarse. Proveer
+    # placeholders solo durante el import y restaurar SIEMPRE el entorno
+    # original, incluso si load_dotenv(override=True) intenta reinyectarlas.
+    _env_keys = ("NOTION_TOKEN", "NOTION_DB_OPPORTUNITIES", "NOTION_ARCHIVE_PAGE_ID")
+    _env_before = {key: os.environ.get(key) for key in _env_keys}
+    _placeholders = {}
+    for _key in _env_keys:
+        if not os.environ.get(_key):
+            _placeholders[_key] = f"__ingest_placeholder__{_key}__"
+            os.environ[_key] = _placeholders[_key]
+    try:
+        from feed_processor import (
+            sanitize_input,
+            normalize_envelope,
+            coerce_types,
+            process_record,
+            write_to_notion,
+            NotionSchema,
+            load_alias_map,
+            print_dryrun_summary,
+            write_dryrun_file,
+            archive_dryrun_notion,
+            ProcessedRecord,
+            normalize_record_fields,
+            compute_dedup_hash,
+            resolve_alias,
+        )
+        from hard_block_gate import blocked_employer_term
+        from profile_fit import is_role_excluded
+    finally:
+        for _key, _original in _env_before.items():
+            if _original is None:
+                os.environ.pop(_key, None)
+            else:
+                os.environ[_key] = _original
+
     from notion_client import Client as NotionClient
 
     metrics: Dict[str, Any] = {
@@ -1174,7 +1201,6 @@ def run_ingestion(
     logger.info(f"INGESTA: {len(records)} registros en envelope")
 
     alias_data = load_alias_map()
-    notion_token = os.environ.get("NOTION_TOKEN")
     if not notion_token and not dry_run:
         logger.error("NOTION_TOKEN requerido para escritura de ingesta")
         metrics["error"] = "missing_token"
@@ -1183,21 +1209,49 @@ def run_ingestion(
     # Cliente real solo cuando vamos a escribir o a consultar schema/dedup
     notion_utils = NotionClient(auth=notion_token) if notion_token else None
     if notion_utils is None:
-        # Dry-run sin token: no podemos cargar schema ni hacer dedup real
-        logger.warning("Sin NOTION_TOKEN — dry-run de ingesta limitado (sin schema/dedup live)")
-        metrics["warning"] = "no_token_limited_dryrun"
-        # Aún así procesamos dispositions locales
+        # Fail-closed: sin schema/dedup remotos, CLEAN no puede asignarse.
+        logger.warning(
+            "Sin NOTION_TOKEN — dry-run fail-closed "
+            "(BLOCKED por reglas locales; resto REVIEW_NEEDED)"
+        )
+        metrics["warning"] = "no_token_fail_closed_dryrun"
         processed = []
         for r in records:
-            # process_record requiere client+schema; fallback mínimo
-            from feed_processor import normalize_record_fields, compute_dedup_hash
             norm = normalize_record_fields(r)
+            hash_key = compute_dedup_hash(norm)
+            brand_raw = norm.get("brand_raw", "") or ""
+            brand_out = brand_raw
+            disposition = "REVIEW_NEEDED"
+            notes = "no_token: schema/dedup remoto no ejecutables"
+
+            blocked_match = blocked_employer_term(brand_raw)
+            if blocked_match:
+                disposition = "BLOCKED"
+                notes = f"HARD_BLOCK: {blocked_match}"
+            else:
+                marca, holding, hard_block = resolve_alias(brand_raw, alias_data)
+                if hard_block is True:
+                    disposition = "BLOCKED"
+                    notes = f"hard_block alias: {brand_raw}"
+                    brand_out = marca or brand_raw
+                elif blocked_employer_term(marca or "", holding):
+                    disposition = "BLOCKED"
+                    notes = f"HARD_BLOCK: {marca or brand_raw}"
+                    brand_out = marca or brand_raw
+                else:
+                    excluded = is_role_excluded(norm.get("title") or "")
+                    if excluded:
+                        disposition = "BLOCKED"
+                        notes = f"exclude role: {excluded}"
+                    brand_out = marca or brand_raw
+
             processed.append(
                 ProcessedRecord(
                     record=norm,
-                    hash_key=compute_dedup_hash(norm),
-                    disposition="CLEAN",
-                    brand=norm.get("brand_raw") or norm.get("brand") or "",
+                    hash_key=hash_key,
+                    disposition=disposition,
+                    notes=notes,
+                    brand=brand_out,
                 )
             )
     else:
