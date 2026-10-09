@@ -52,7 +52,7 @@ BLOCKED_EMPLOYERS: FrozenSet[str] = frozenset({
     "El Palacio de Hierro",
 })
 
-# Sufijos y prefijos legal-firms: variantes de la MISMA identidad, no阻塞 nuevos.
+# Sufijos y prefijos legal-firms: variantes de la MISMA identidad, no bloqueos nuevos.
 _LEADING_ARTICLES = ("the ", "el ", "la ", "los ", "las ")
 _CORP_SUFFIXES = (
     "s.a.s", "s.a", "s de r.l.", "s de rl", "de c.v.", "de cv",
@@ -64,8 +64,8 @@ _CORP_SUFFIXES = (
 _LEGAL_CONNECTIVES = (" & co", " and co", " & company", " and company")
 
 # Variante geográfica/subsidiario: "L'Oréal Mexico", "Levi Strauss Mexico".
-# No es un designador legal sino una设计adora de la MISMA identidad. RULES §2
-# exige identidad canónica, así que lasucede identidad bloqueada debe
+# No es un designador legal sino una variante de la MISMA identidad. RULES §2
+# exige identidad canónica, así que una variante de identidad bloqueada debe
 # converger al bloqueado. No es substring matching: sólo se acepta cuando el
 # resto del nombre coincide EXACTAMENTE con la identidad bloqueada.
 _GEOGRAPHIC_VARIANTS = ("mexico", "méxico", "mx", "latam", "latin america",
@@ -134,7 +134,7 @@ class MatchResult:
         }
 
 
-#: Trazabilidad regla→implementación. Test層 verifica que cada entrada tiene
+#: Trazabilidad regla→implementación. Un test verifica que cada entrada tiene
 #: al menos un consumidor real (test_canonic_rule_map_is_executable).
 CANONICAL_RULE_MAP: Dict[str, str] = {
     "LINKEDIN-RULES-002 §2": "El blocking se determina sólo por el campo employer canónico; retail channel, store, client y distribution partner quedan excluidos del matching (MatchBasis.CHANNEL_FIELDS_EXCLUDED).",
@@ -251,7 +251,7 @@ def resolve_employer_identity(
 def _partial_overlaps(employer_norm: str, blocked_norm: str) -> bool:
     """Detecta solapamiento de marca sin concluyente para inferir BLOCKED.
 
-    Sólo词-boundary: el token inicial del employer empieza por el token inicial
+    Sólo word-boundary: el token inicial del employer empieza por el token inicial
     del blocked O el blocked aparece como token completo. No es substring
     arbitrario: usa límites de palabra y sólo alimenta AMBIGUOUS, nunca
     BLOCKED.
