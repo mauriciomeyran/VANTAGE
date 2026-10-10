@@ -354,7 +354,7 @@ Extrae vacantes con Groq y las escribe directamente en el Tracker.
 Ejecuta manualmente para procesar backlog de Gmail antes del siguiente ciclo automático. 
 vl3
 Para este momento, los siguientes filtros ya habrán sido aplicados sin consumir cuota: 
-Hard-blocked (L’Oréal · Levi’s/Dockers · El Palacio de Hierro — ver lista completa en MANUAL:DATA-MANAGEMENT)
+Hard-blocked (L’Oréal · Levi’s · El Palacio de Hierro — ver lista completa en MANUAL:DATA-MANAGEMENT)
 Asuntos de agradecimiento
 Newsletters
 Confirmaciones de cuenta.
@@ -618,7 +618,7 @@ Qué no hace: no gobierna quién marca el candidato — eso es vantage-tidy-oppo
 Hard Blocks
 Estas empresas o tipos de rol nunca entrarán al sistema. Se filtran en el origen (antes de que la vacante exista como registro en Notion) y no son recuperables bajo ninguna circunstancia, ni siquiera vía Dashboard:
 L’Oréal (todas las divisiones)
-Levi Strauss & Co. (Levi’s, Dockers)
+Levi Strauss & Co. (Levi’s)
 El Palacio de Hierro
 Roles store-level sin gestión estratégica
 Soft Blocks
