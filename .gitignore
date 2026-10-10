@@ -83,3 +83,6 @@ config/*.env
 config/*.env.bak
 VANTAGE_digest.txt
 node_modules/
+
+# Memoria local (no versionar)
+sqlite-memory.db*
