@@ -1,6 +1,46 @@
 # V | CHANGELOG
 
 Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=COPIILOT · agent.instance=DEFAULT; actualización documental ejecutada por COPIILOT bajo APROBAR_WRITE del operador.
+Fecha: 2026-10-10 00:11 CDMX (registro de esta escritura).
+Documento modificado: V | MANUAL — se retiró Dockers de las dos menciones activas: el resumen de filtros operativos VL3 y la lista de Hard Blocks de MANUAL:DATA-MANAGEMENT (§10). Se conservan las demás exclusiones y los roles store-level; no se modificó Career Canon ni historial laboral.
+Cambio: Dockers deja de aparecer como Hard Block operativo en el Manual, de acuerdo con la decisión del operador del 2026-10-07. La referencia de Levi Strauss & Co. queda como Levi’s únicamente.
+Verificación: re-fetch de V | MANUAL confirma que las dos menciones operativas ya no contienen Dockers.
+Versión: SIN bump; se conserva v9.22.36.
+Handoff de referencia: APROBAR_WRITE del operador para V | MANUAL y para esta nueva entrada del Change Log.
+Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=COPIILOT · agent.instance=DEFAULT; actualización documental ejecutada por COPIILOT bajo APROBAR_WRITE del operador recibido 2026-10-09 23:39 CDMX.
+Fecha: 2026-10-09 23:40 CDMX (registro de esta escritura).
+Documentos modificados: LINKEDIN-RULES-002 §2 (se eliminó Dockers de la lista de empleadores bloqueados) · TRACKER REWRITE MANUAL & KERNEL (fila T2.T, tablero y Reconciliation Log) · V | CHANGELOG (esta entrada).
+Cambio: la lista de empleadores bloqueados ahora conserva L'Oreal, Levi Strauss, Levi's y El Palacio de Hierro; Dockers queda explícitamente fuera de Hard Blocks según decisión del operador de 2026-10-07. Se conserva la regla de separación entre empleador directo y canal/tienda/cliente.
+Tipo de impacto: Documental + Operativo.
+IDs afectados: ninguno canónico; sin cambios a PROMPT_CANON, Registry, Census o ALIASES.
+Verificación: re-fetch de LINKEDIN-RULES-002 confirma que §2 ya no incluye Dockers. Fila T2.T continúa En progreso: aún faltan skills cv-a/qa, Manual §10 y Corpus Bloque 06; no se declara cerrada la cascada.
+Versión: SIN bump (no solicitado; se conserva v9.22.36).
+Handoff de referencia: APROBAR_WRITE del operador, 2026-10-09 23:39 CDMX.
+Tipo: [CODE] [TEST] [OPS]
+Identidad VANTAGE: cambio implementado por agent.family=COPIILOT · agent.instance=DEFAULT en la rama mauriciomeyran-hard-block-gate-alignment e integrado a main mediante PR #25. Esta entrada y la sincronización del Tracker las registra COPIILOT por solicitud explícita del operador.
+Fecha: 2026-10-09 23:19 CDMX (merge commit 3113d8e5a9bbc97d51538dde6549c128440678d8, timestamp verificado 2026-10-10T05:19:01Z).
+Documentos modificados: Layer_1/data/Contracts/CAREER-SITES-RULES-002.md · Layer_1/data/Contracts/Prompt_Career_Sites-v2.md · Layer_1/scripts/gate_logic.py · Layer_1/scripts/layer_1_orchestrator.py · Layer_1/tests/test_active_search_hard_blocks.py · Layer_1/tests/test_gate_logic.py · Layer_3/scripts/layer_3_mail.py · Layer_3/tests/test_layer_3_mail.py · skills/vantage-active-search-weekly/normalize_source_json.py · skills/vantage-active-search-weekly/orchestrator_prompt.md · skills/vantage-active-search-weekly/sources/aggregators.md · skills/vantage-active-search-weekly/sources/career_sites.md · skills/vantage-active-search-weekly/sources/linkedin.md.
+Cambio: (1) Scope Bajo devuelve BLOCKED aun si Role_Class=Pivote y el título contiene señal VM; se actualizó el orquestador y el helper legacy. (2) Dockers se retiró de los filtros activos de empleadores en búsqueda semanal y Layer 3, incluyendo la regla post-extracción; EXCLUDED_SENDERS no se modificó. (3) Los contratos Career Sites aclaran que una marca mencionada solo como canal/cliente no debe bloquear cuando el empleador directo es otro. Se preservan L'Oréal, Levi's/Levi Strauss y El Palacio de Hierro como Hard Blocks confirmados.
+Tipo de impacto: Técnico + Operativo + Contractual.
+IDs afectados: ninguno canónico; se registró avance en T3.I y T2.T del PLAN DE TRABAJO. Census, Registry, ALIASES y PROMPT_CANON sin cambios.
+Verificación: PR #25 cerrado y mergeado a main; pruebas reportadas en PR: pytest -q Layer_1/tests (321 passed) y pytest -q Layer_3/tests/test_layer_3_mail.py (10 passed). No se reejecutaron en esta actualización documental. Se registró evidencia en RECONCILIATION LOG y las tareas permanecen abiertas.
+Pendiente: T3.I continúa En progreso hasta resolver la discrepancia levis entre hard_blocks.json y linkedin_identity_matcher.py (el matcher retorna AMBIGUOUS) y completar el proceso autorizado de PROMPT_CANON. T2.T continúa En progreso: pendientes skills cv-a/qa, Manual §10, Corpus Bloque 06 y LINKEDIN-RULES-002/Notion. No se cambió EXCLUDED_SENDERS.
+Versión: SIN bump (no solicitado; se conserva v9.22.36).
+Handoff de referencia: PR #25 · commit 3113d8e.
+Tipo: [DOC] [OPS]
+Identidad VANTAGE: la edición del CAREER CANON la ejecutó CLAUDE/MP por APROBAR_WRITE del operador (HO-000089); la escritura de esta entrada en CHANGELOG la ejecuta CLAUDE/MM por APROBAR_WRITE del operador en este turno.
+Fecha: 2026-10-07 05:48 CDMX (confirmada por el operador).
+Documentos modificados: V | CAREER CANON (03.3 CANON:EXPERIENCE-003, C03 Levi Strauss (Dockers), ES y EN: +1 bullet al final de la lista, sin KPIs, sin tocar los 5 bullets existentes ni ningún figma_text_id) · V | CHANGELOG (esta entrada).
+Bullet agregado (ES): «Coordiné el montaje piloto de la nueva estrategia de VM y comunicación in-store en Dockers Tezontle (2019), con acompañamiento 1:1 del director global de VM; medí el desempeño contra tiendas con la estrategia anterior y desarrollé con Operaciones el plan de integración de la nueva estrategia.»
+Tipo de impacto: Operativo.
+IDs afectados: ninguno estructural; sin cambio de IDs en Census.
+Verificación: según HO-000089 (S4), re-fetch de la página del Canon con page_last_edited_at 2026-10-07T11:36:27Z y ambos bullets (ES y EN) presentes; la propiedad «Fecha de actualización» del Canon sigue en 2026-09-24 y Versión v9.22.30. Compatibilidad con CV-A / CV-B / QA evaluada por lectura, no ejecutada. En esta sesión no se re-fetcheó el Canon: la evidencia se adopta de HO-000089.
+Pendiente: vversions --sync en Terminal del operador.
+Versión: SIN bump (no instruido por el operador en este turno).
+Handoff de referencia: HO-000089.
+Tipo: [DOC] [OPS]
 Identidad VANTAGE: ejecutores DEVIN (CS-WORKDAY-01), HERMES (CS-L1-RUNTIME-02, CS-E2E-04), CHATGPT + Operador (CS-PROMOTION-03) · Escritura en CHANGELOG: MISTRAL (Vibe, MCP Notion) por APROBAR_WRITE del operador.
 Fecha: 2026-10-06 02:18 CST (declarada por el operador).
 Documentos modificados: V | CHANGELOG (esta entrada + bump). Sin escrituras adicionales en este turno — el report describe artefactos ya materializados en sesiones previas.
@@ -85,243 +125,6 @@ IDs a afectar (aún NO aplicados; CS-PPLX-07 pendiente): 24 renames + 2 headings
 Corrección [14:48 CDMX]: la línea "IDs afectados" describía el plan, no un estado aplicado (fetch KERNEL vivo: 0/24). Sin bump de Versión.
 Versión: SIN bump de Versión (decisión del operador) — se mantiene v9.22.30.
 Handoff de referencia: HO-000081.
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: agent.family=PERPLEXITY · agent.instance=DEFAULT. Ejecutor de las ediciones en Notion: PERPLEXITY (MCP Notion), por instrucción explícita del operador.
-Documentos modificados: V | CHANGELOG (esta entrada) · Tasks Tracker (ticket nuevo: 3ee938be-fc42-8126-a159-ed4afd6f1fd4).
-Documentos potencialmente afectados: V | PROJECT CHARTER (pendiente de aplicación por operador) · V | ID CENSUS (pendiente de sync en Fase 3).
-Tipo de impacto: Documental + Gobernanza — registra en el Change Log la creación del ticket que documenta el re-key semántico de IDs canónicos del KERNEL (v10.3) y la decisión estructural CHARTER:DECISIONS-012.
-Alcance:
-1. Creación de ticket en Tasks Tracker (): título [CHARTER] Actualizar citas KERNEL del Charter por re-key v10.3 + registrar decisión, Prioridad 3 ALTO, Componente Notion, Status Pendiente, Next_Action Decidir, Notas con el detalle completo del alcance (candidatas de reemplazo de cita, decisión estructural propuesta, pendientes no cubiertos).
-1. Decisión estructural propuesta (CHARTER:DECISIONS-012): re-key semántico de IDs canónicos del KERNEL (v10.3) — sustitución de KEYS opacos (DOCUMENTATION-nnn, SCHEMA-00n, GATE-DECISION-nnn…) por slugs semánticos con gramática KERNEL:NAM-ID-GRAMMAR; puente de alias de vigencia un ciclo de release. Razón: eliminar IDs opacos que causaron drift documental (ver CHARTER:DECISIONS-007). Descartado: mantener numeración legacy con alias permanente.
-1. Candidatas de reemplazo de cita declaradas en el ticket: KERNEL:GATE-DECISION-012 (STATUS) → KERNEL:GATE-MUTABILITY · KERNEL:DEDUP-LAYER-UPGRADE (STATUS) → KERNEL:GATE-MUTABILITY · KERNEL:CV-GOLDEN-RULES-002 (STATUS) → KERNEL:CVR-NOCLASSB · CHARTER:DECISIONS-011 (sin cambio de ID).
-1. Pendientes que este ticket NO cubre: alta de prefijo CHARTER: en registry/Census (Fase 3), pase NORM de Reconciliation Log y Bug Tracker (MEDIA), serial HO de esta operación (HANDOFF_SERIAL_UNAVAILABLE).
-Decisiones confirmadas: ninguna decisión de re-key fue aplicada en esta sesión — el ticket solo documenta y deja la aplicación exclusiva al operador (gatekeeper CLAUDE/MAIN, SP:BOOTLOADER-004).
-Decisiones no duplicadas: no se tocó el PROJECT CHARTER · no se ejecutó vcensus --sync-to-notion · no se modificó generate_census.py ni CENSUS_SPEC · no se crearon IDs canónicos nuevos en esta sesión.
-Validación: ticket creado y verificado vía notion-get-async-task (status: succeeded); página 3ee938be-fc42-8126-a159-ed4afd6f1fd4 accesible en Notion.
-Estado: WRITE aplicado en Notion (Tasks Tracker + CHANGELOG). Versión del Change Log bumpada a v9.22.30 (asumiendo que el bump existente corresponde a esta sesión). Pendientes: aplicación del re-key por CLAUDE/MAIN · sync de Census (Fase 3) · pase NORM de Reconciliation Log y Bug Tracker.
-IDs afectados: Ninguno nuevo en esta sesión (el ticket documenta un re-key futuro; no se crean ni eliminan IDs canónicos hoy, no dispara CENSUS-SYNC Regla 1).
-Handoff de referencia: HANDOFF_SERIAL_UNAVAILABLE (operador asignará serial si corresponde).
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MM. Redacción del registro: CLAUDE/MM, por instrucción explícita del operador (fecha y hora: Oct 3, 26 04:35). Ejecutor de las ediciones del Lote 5 en Notion: MISTRAL (Vibe, MCP Notion), bajo contrato CS-MISTRAL-05 con APROBAR_WRITE del operador.
-Documentos modificados por el Lote 5: TRACKER REWRITE MANUAL & KERNEL (Tablero: bloqueo Match, Próxima acción pto 2, Fase 3 en ambas tablas, Decisiones abiertas de Script Library) · PLAN DE TRABAJO (T2.H y T3.C, solo Notas) · RECONCILIATION LOG (2 filas Finding con nota de actualización + fila nueva CS-MISTRAL-05) · V | CHANGELOG (esta entrada + bump de Versión).
-Tipo de impacto: Documental — alinea el Tablero, el Plan y el Log con las 8 decisiones del operador aplicadas en el Lote 4 (CS-MISTRAL-04). Sin cambios de código, schema, Status ni IDs.
-Alcance:
-1. W1-W4: Tablero y Plan reescritos según las decisiones del operador del 2026-10-03 — Match no es campo (B-09 actualizado, bd46 sigue Abierto); f9bb bloquea --apply (T3.B sigue Pendiente); Script Library: 6 scripts registrados y fix_cvb_tags.sh Deprecado (el estado 'Retirado' no existe en el select; el operador aceptó 'Deprecado'); T3.C con verify_versions.py --sync PASS en v9.22.28 (salida del operador), pendientes vgit y la exclusión de ARCHIVEROS en --length.
-1. W5a/W5b: filas vversions y Match del Log con "Actualización 2026-10-03: ver CS-MISTRAL-04/05" (Estado sigue Abierto); fila nueva CS-MISTRAL-05 (Resuelto · Nota · Fase 3 · Agente MISTRAL · Handoff_Serial vacío).
-1. V1-V3 (solo lectura): cédula SP §03 con SCRIPT LIBRARY DB f3e42cf0… / COL ea914544… correcta; Change Log en v9.22.28 con B-09 registrado; SP, KERNEL, MANUAL, CHARTER y CENSUS en v9.22.28.
-Decisiones confirmadas: ninguna fue tomada por MISTRAL ni por CLAUDE/MM — todas provienen del operador (Lote 4). Status y Verificado_Por sin cambio en tickets y tareas del Plan.
-Verificación: re-fetch individual por MISTRAL, 9/9 ✅ (S4-EVIDENCE CS-MISTRAL-05) = autoverificación del ejecutor. Pendiente: verificación independiente por CLAUDE/MAIN de Lotes 4-5; hasta entonces Verificado_Por permanece vacío y bd46, f9bb y 4d08 siguen Abierto.
-Hallazgo cosmético: Notion renderiza nombres de archivo (p. ej. verify_versions.py) como autolinks; el texto almacenado no cambia.
-Estado: WRITE aplicado en Notion. Versión del Change Log bumpada a v9.22.29. Pendientes abiertos: verificación CLAUDE/MAIN de Lotes 4-5; vgit; ticket de código para excluir ARCHIVEROS de --length; cierre de bd46, f9bb y 4d08 con verificador distinto; T2.1 (KERNEL v10) como cuello de botella, con T2.2b/T2.3b en paralelo.
-IDs afectados: ninguno nuevo, ninguno eliminado ni renombrado en Census.
-Handoff de referencia: contratos CS-MISTRAL-04 y CS-MISTRAL-05 (CLAUDE/MM) · S4-EVIDENCE Lote 5 en la sesión MISTRAL 2026-10-03.
-Tipo: [DOC] [OPS] [FIX]
-Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT. Ejecutor de las ediciones en Notion: MISTRAL (Vibe, MCP Notion), bajo contratos CS-MISTRAL Tracker/Lotes 1-4 de CLAUDE/MP y CLAUDE/MM, con APROBAR_WRITE del operador por lote.
-Documentos modificados: TRACKER REWRITE MANUAL & KERNEL (Tablero: A1-A10 y correcciones T1-T5 del Lote 2; Fases 2-3 y Próxima acción) · PLAN DE TRABAJO (T2.E, T2.I, T2.J, T2.K, T2.M, T2.3a, T3.A, T3.B, T3.C, T3.E, T2.2b, T2.3b) · RECONCILIATION LOG (3 cambios de estado, 10 filas nuevas, 2 renombradas CS-PPLX-02-B/CS-PPLX-04-B) · V | SYSTEM PROMPT (SP:SKILL-VERSION-PIN: vantage-cv-b v10.2.0→v10.2.1, 2026-09-28; resto sin tocar) · V | KERNEL (Resolución B-09: Match y CV-A/CV-B/PDF/Figma salen de 'divergencias conocidas'; queda Prioridad_Auto — decisión del operador) · BUG TRACKER (Notas de bd46, f9bb, 4d08; Status sin cambio) · SCRIPT LIBRARY (6 filas nuevas: build_paquete_arena.sh, conftest.py, foundational_docs.py, reorder_census_spec.py, split_digest.py, vdoc_local_contingency.py; fix_cvb_tags.sh → Deprecado, no existe en disco) · V | CHANGELOG (esta entrada + bump de Versión).
-Tipo de impacto: Operativo + Documental — sincroniza el Tracker con el estado real del repo (HEAD b367c7b, pytest Layer_1 191 passed, PR #14 mergeado 93c548e) y registra decisiones del operador del 2026-10-03.
-Alcance:
-1. Lote 1 (verificación + escritura): V1-V5 con cita literal y fuente — Match ausente en Kernel vivo, Manual vivo y class_b_guard.py@main (V1; el adjunto de CS-PPLX-03/04 no corresponde al guard mergeado); Kernel dice L1>L2>L3 y coincide con código y decisión (V2); f9bb/7f49/27f6/a66e Resueltos con evidencia, 4d08/bd46/1e47/a07c Abiertos (V3); Change Log .23/.24/ARENA sin cadena 'v9.22.26' en el MD (V4, discrepancia reportada); suite tests/ de la raíz no colecta: L4_SCRIPTS vive en tests/conftest.py, colisión de nombre de módulo conftest (V5, hipótesis sin corrida). Escrituras: Tablero A1-A10, 10 filas del Plan, 3 cambios de estado y 8 filas nuevas del Log. Verificación post-escritura por re-fetch individual (quota SQL agotada; Business requerido).
-1. Lote 2 (correcciones CLAUDE/MP): etiquetas internas (E9) filtradas del Tablero/Plan/Log; Fase 3 reescrita en ambas tablas; T3.A Resuelto con evidencia; T2.E Notas cerradas; T3.B nota de desbloqueo condicionado; 4d08/bd46 notas de revisión sin cambiar Status.
-1. Lote 3 (CS-MISTRAL-03): pin de vantage-cv-b actualizado a v10.2.1 tras verificar skills/vantage-cv-b.md@main L9 y commit fc322d4 (2026-09-28 19:16 CDMX); Evidencia de T2.3a RETRACTADA (texto original conservado); fila CS-MISTRAL-03 en el Log.
-1. Lote 4 (CS-MISTRAL-04, 8 decisiones del operador): (1) Match no es campo — B-09 editada, bd46 nota; (2) f9bb bloquea --apply — T3.B y f9bb notas; (3) retirar test de backlinks junto con Graph — 4d08 nota; (4) excluir ARCHIVEROS de vversions --length — T3.C y Tablero; (5) renombrar CS-PPLX-02-B/CS-PPLX-04-B en el Log; (6) 6 scripts registrados en SCRIPT LIBRARY + fix_cvb_tags.sh Deprecado; (7) pin usa hora CDMX (fila en el Log); (8) T2.2b/T2.3b en paralelo a T2.1 (Tablero + Plan).
-Decisiones confirmadas: ninguna de las 8 decisiones fue tomada por MISTRAL — todas provienen del operador vía contrato. Estados Status/Verificado_Por sin cambio en tickets (cierre exige verificador distinto). Handoff_Serial vacío en filas nuevas (asignación: operador).
-Validación: re-fetch individual de cada página escrita tras cada lote (texto leído citado en S4-EVIDENCE por lote); fuentes crudas: raw.githubusercontent.com mauriciomeyran/VANTAGE main (class_b_guard.py, conftest.py ×3, pytest.ini, skills/vantage-cv-b.md, Change Log.md, tests/) + github_app get_commit fc322d4 + Notion MCP fetch (Kernel, Manual, SP, Charter, Bug Tracker, Script Library).
-Estado: WRITE aplicado en Notion. Versión del Change Log bumpada a v9.22.28. Pendientes abiertos declarados: verificación independiente CLAUDE/MAIN de Lotes 3-4; pytest tests -q desde la raíz (V5); cierre de bd46/4d08 (operador); ticket de código para excluir ARCHIVEROS de --length y para retirar test de backlinks; refresco de copias de cv-b del Project (T2.G, fuera de alcance).
-IDs afectados: ninguno nuevo, ninguno eliminado ni renombrado en Census (los renombrados CS-PPLX-02-B/04-B son Entradas del RECONCILIATION LOG, no IDs canónicos).
-Handoff de referencia: contratos CS-MISTRAL Tracker 2026-10-03, Lote 2 (CLAUDE/MP), CS-MISTRAL-03 y CS-MISTRAL-04 (CLAUDE/MM) · S4-EVIDENCE por lote en la sesión MISTRAL/DEFAULT 2026-10-03.
-Tipo: [FIX] [DOC]
-Identidad VANTAGE: agent.family=LITTLEBIRD · agent.instance=DEFAULT. Ejecutor de las ediciones en Notion: LITTLEBIRD (MCP Notion), por instrucción del operador.
-Documentos modificados: V | SYSTEM PROMPT (cédula: 2 UUIDs corregidos) · V | CHANGELOG (esta entrada + bump de Versión).
-Documentos potencialmente afectados: scripts y registros que consumen la cédula (document_registry, vload.py) — resuelven por UUID, sin cambio requerido · V | ID CENSUS, sin cambio.
-Tipo de impacto: Documental + Operativo — corrige 2 UUIDs erróneos en SP:DIGITAL-ID-CARD que no correspondían a los destinos declarados.
-Alcance:
-1. Verificación 1:1 de los 31 UUIDs de la cédula vía notion-fetch contra Notion live (2026-10-03): 28 OK · 2 discrepancias, todas en el bloque SCRIPT LIBRARY · ARCHIVO SCRIPT LIBRARY (DS) verificado correcto (39f938be-fc42-80ec-8f2e-000b16d736e2 sí es el data source de ARCHIVO SCRIPT LIBRARY).
-1. Corrección fila SCRIPT LIBRARY (DB): 39f938befc428016a9a9daa076ce5d63 → f3e42cf0347647368ac8076ea313d780 (el ID anterior resolvía a la base ARCHIVO SCRIPT LIBRARY, no a SCRIPT LIBRARY).
-1. Corrección fila SCRIPT LIBRARY (COL): f3e42cf0347647368ac8076ea313d780 → ea914544-338f-485e-ac1b-7f137a5c9cee (el ID anterior era la DB viva SCRIPT LIBRARY, no su data source; collection confirmada por fetch directo).
-1. Notas de verificación: nomenclatura menor sin cambio (cédula "VANTAGE CENTRAL HUB" / "NAVIGATION BRIEF" / "TECHNICAL KERNEL" vs títulos live "VANTAGE HUB" / "V | BRIEF" / "V | KERNEL" — mismos recursos); SESSION LEDGER tiene data source 8d736032-eef9-4e6e-a05a-df8b8079ebff no listado en la cédula (consistente: la cédula solo registra el DB); FIGMA SYNC es ruta de repo, no UUID — fuera de alcance.
-Decisiones no duplicadas: no se tocaron las propiedades Versión de otros documentos fundacionales (precedente v9.22.24) · no se editó ID CENSUS ni document_registry · no se ejecutó vdoc/vsync post-write.
-Validación: fetch directo pre-write de los 31 IDs (28 coincidencias exactas título/tipo/destino); re-fetch post-write de la cédula en SYSTEM PROMPT confirmó los 2 UUIDs nuevos en sus filas.
-Estado: WRITE aplicado en Notion. Versión del Change Log bumpada a v9.22.27. Sin DRY RUN presentado, por instrucción explícita del operador (APROBAR_WRITE + version bump en una sola pasada). Timestamp: Oct 3, 2026 04:07 CDMX — VERIFICADO vía reloj del sistema; el operador no provió fecha/hora en el mensaje y se declara aquí conforme a KERNEL:DOCUMENTATION-010.
-IDs afectados: Ninguno nuevo; mismo universo de IDs en Census — no dispara CENSUS-SYNC Regla 1.
-Handoff de referencia: ninguno (sin serial declarado en esta sesión).
-Tipo: [FIX] [CODE] [DOC]
-Identidad VANTAGE: agent.family=ARENA · agent.instance=AUDITOR (auditoría, PR #17, contrato Mistral, esta entrada) · agent.family=ARENA · agent.instance=01a0f395 (PR #18). Merges y aprobaciones: operador (MM).
-Documentos modificados: Layer_1/scripts/generate_census.py (PR #17 · PR #18) · handoffs/CONTRATO_MISTRAL_CHARTER_NODES.md (nuevo, PR #18) · V | CHANGELOG (esta entrada + bump de Versión).
-Documentos potencialmente afectados: V | ID CENSUS (spec 263 → 294; MD en main desde v9.22.24; sync a Notion pendiente) · V | PROJECT CHARTER (migrado en v9.22.23 conforme al contrato de esta sesión, sin cambio adicional).
-Tipo de impacto: Normativo + Operativo — habilita que los 31 sub-nodos del Charter sean IDs canónicos indexados en Census; restaura una capacidad rota del generador; corrige artefacto del merge de PR #16.
-Alcance:
-1. Auditoría de deploy (Census & Hyperlinks): los sub-nodos CHARTER:*-NNN existían solo inline en PROJECT_CHARTER.md, sin indexar en CENSUS_SPEC ni en el Census MD. Verificado por lectura de fuentes que vcensus, vdoc y vhyperlinks son entrypoints independientes (vdoc.py no invoca generate_census.py; flags de generate_census.py parseados a mano: --debug-id, --sync-to-notion, --yes, --no-sync-version).
-1. PR #17 (94873d6, mergeado a main) — (G-06) flag --auto-fix-orphans restaurado: la asignación estaba anidada dentro del bloque --debug-id (que termina en sys.exit(0)), por lo que auto_fix_orphans() era código muerto; (G-07) 31 sub-nodos CHARTER añadidos a CENSUS_SPEC (tabla PROJECT CHARTER 7→38 filas; spec 263→294); (G-08) eliminada copia espuria del bloque Charter dentro de find_census_spec_end() (L695-706), residuo del merge de PR #16. Es la precondición P1 de v9.22.23.
-1. Contrato handoffs/CONTRATO_MISTRAL_CHARTER_NODES.md emitido para la migración ejecutada en v9.22.23 (Position-One Rule, split heading/cuerpo, numeración del documento vivo, Fase A dry-run + APROBAR_WRITE).
-1. PR #18 (6cc6a54, mergeado a main como d34cd48 — el rebase citado en v9.22.24) — sección de los 31 sub-nodos en CENSUS_SPEC alineada con los headings vivos (05.x/06.x/02.x/04.x → 2.n/3.n/4.n/5.n); cierra el pendiente "alineación por Arena" de v9.22.23.
-Decisiones confirmadas: la convención de DEF es "<sección> <ID> — <título>", no ID en posición 0 (con ID al inicio, extract_live_section() captura "CHARTER" como sección; simulado contra el parser); la numeración que manda es la del documento vivo, el spec es fallback.
-Correcciones a entradas previas: (a) v9.22.23 y v9.22.24 declaran "IDs afectados: ninguno nuevo" — incorrecto: entre v9.22.21 (255 IDs) y v9.22.23 (294) entraron 31 IDs canónicos nuevos al Census vía PR #17; la CENSUS-SYNC Regla 1 se disparó y se declara en esta entrada. (b) v9.22.24 punto 1: el rango de CHARTER:MILESTONES es 001–005 (spec, MD y Notion coinciden), no 001–002. (c) v9.22.24 punto 3 "Fixed — resolución de ruta en subshell" contradice su "no se modificó generate_census.py" (la ruta del MD es absoluta en L1256): pendiente confirmar con git show b2c5b42 --stat; si tocó .py es cambio de código sin PR. (d) b2c5b42 se pusheó directo a origin/main sin PR; nota de gobernanza.
-Decisiones no duplicadas: no se migró el CLI a argparse ni se eliminaron rutas absolutas (deuda); no se tocaron los 8 REF-sin-DEF de inventario_huerfanos.md; no se creó CHARTER:FAILURES-006; no se resolvió el anchor divergente de KERNEL:CV-GOLDEN-RULES-002 en dry_run_hyperlinks.diff (#39e9… vs #3af9… en Census; se confirma en el próximo vhyperlinks dry); no se ejecutó --sync-to-notion, vhyperlinks ni vdoc desde Arena.
-Validación: (a) PR #17 — AST OK; CENSUS_SPEC evaluado aislado: 294 IDs, 0 duplicados; sin ejecución contra Notion (sandbox sin credenciales). (b) PR #18 — 31 sustituciones, 294 / 0 dup / 38 filas Charter, diff de exactamente 2 archivos, idéntico en magnitud (64/141 líneas, 173+/32−) al commit local original c6a9290. (c) Resultado operativo cerrado en v9.22.23: vcensus 294/0/0/0 post-migración.
-Estado: PR #17 y PR #18 MERGEADOS en main. Pendientes en orden: vcensus --sync-to-notion --yes (hereda v9.22.25) → vhyperlinks dry / --apply → vdoc charter + vdoc change_log → confirmar b2c5b42 --stat → rotación de tokens expuestos en chat (Notion, OpenRouter, Groq, Figma, Gmail) → limpiar la línea "¿Este formato y contenido son correctos…?" pegada al final de v9.22.21.
-IDs afectados: 31 IDs canónicos NUEVOS en Census — CHARTER:DECISIONS-001..011, CHARTER:FAILURES-001..005, CHARTER:NON-NEGOTIABLES-001..010, CHARTER:MILESTONES-001..005 — DISPARA CENSUS-SYNC Regla 1 (introducidos en PR #17; no declarados en v9.22.23/24). Ninguno eliminado ni renombrado.
-Deuda registrada: (T-01) test en tests/ que valide CENSUS_SPEC sin duplicados y flags parseados; (T-02) migrar parsing CLI de generate_census.py a argparse — flags desconocidos se ignoran en silencio; (T-03) rutas absolutas en generate_census.py L1256 y vdoc.py L34 → Path(file); (T-04) documentar flags de vcensus en Aliases §02.
-Handoff de referencia: sesiones Arena 01a0f35d y 01a0f395 · handoffs/CONTRATO_MISTRAL_CHARTER_NODES.md · PR #17 · PR #18.
-Tipo: [OPS] [DOC] [FIX]
-Identidad VANTAGE: agent.family=GEMINI · agent.instance=DEFAULT (emisor de la actualización). Redacción y aplicación de esta entrada en el formato del Log: MISTRAL/DEFAULT (Vibe, MCP Notion), por instrucción del operador.
-Documentos modificados: Layer_1/data/V_ID_CENSUS_PRODUCTION.md (mapeo granular de índices) · rama local main (rebase + stash pop) · CHANGELOG (esta entrada + bump de Versión).
-Documentos potencialmente afectados: V | ID CENSUS (Notion), sin sync en esta pasada · V | PROJECT CHARTER, sin cambio de contenido.
-Tipo de impacto: Operativo + Documental — incorpora el mapeo íntegro de sub-nodos del Charter al Census de producción tras el rebase de main, y corrige la resolución de rutas para ejecución en subshell.
-Alcance:
-1. Added — Mapeo granular de índices en Layer_1/data/V_ID_CENSUS_PRODUCTION.md para nodos del Charter: CHARTER:DECISIONS (001–011) · CHARTER:FAILURES (001–005) · CHARTER:NON-NEGOTIABLES (001–010) · CHARTER:MILESTONES (001–002, según el emisor).
-1. Changed — Rebase de la rama local main con origin/main, incorporando d34cd48 (CONTRATO_MISTRAL_CHARTER_NODES.md) · stash pop del staging local sin conflictos de merge.
-1. Fixed — Resolución de ruta de data/V_ID_CENSUS_PRODUCTION.md corregida para ejecución dentro de scope subshell (Layer_1/).
-Commits: b2c5b42 — docs(census): add granular charter nodes mapping to production census (pusheado a origin/main).
-Decisiones no duplicadas: no se ejecutó vcensus --sync-to-notion · no se modificó generate_census.py ni CENSUS_SPEC · no se tocaron documentos fundacionales en Notion.
-Validación: (a) Rebase y stash pop verificados por el emisor (sin conflictos); (b) commit b2c5b42 confirmado como pusheado a origin/main; (c) NOTA DE DISCREPANCIA: el Census verificado en v9.22.23 (corrida 12:18 CDMX) registra CHARTER:MILESTONES-001..005 — el emisor declara mapeo solo hasta 002; RESUELTA 2026-09-30 por verificación 1:1 del operador contra V_ID_CENSUS_PRODUCTION.md (commit b2c5b42): CHARTER:MILESTONES-001..005 completos (31/31 sub-nodos mapeados); la declaración "001–002" del emisor era incorrecta.
-Estado: WRITE aplicado en Notion. Versión del Change Log bumpada a v9.22.24. Sin DRY RUN de Changelog presentado, por instrucción explícita del operador (APROBAR_WRITE + version bump en una sola pasada).
-IDs afectados: Ninguno nuevo (mapeo de índices de IDs existentes); no dispara CENSUS-SYNC Regla 1.
-Handoff de referencia: ninguno (sin serial declarado en esta sesión).
-Tipo: [DOC] [FIX]
-Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT. Ejecutor de las ediciones en Notion: MISTRAL (Vibe, MCP Notion).
-Documentos modificados: V | PROJECT CHARTER (31 sub-nodos: CHARTER:DECISIONS-001..011, CHARTER:FAILURES-001..005, CHARTER:NON-NEGOTIABLES-001..010, CHARTER:MILESTONES-001..005) · V | CHANGELOG (esta entrada + bump de Versión).
-Documentos potencialmente afectados: Layer_1/data/V_ID_CENSUS_PRODUCTION.md (regenerado por el operador vía vcensus; no editado por el agente) · CENSUS_SPEC en generate_census.py, sin cambio (numeración provisional 05.x/06.x/02.x/04.x persiste hasta commit de alineación por Arena).
-Tipo de impacto: Documental + Gobernanza — convierte los 31 sub-nodos del Charter de párrafos/list items a bloques heading_3 con formato "N.n CHARTER:PREFIX-XXX — Título", habilitando que generate_census.py los resuelva como DEF con columna Sección tomada en vivo de Notion en lugar de hardcodeada del CENSUS_SPEC.
-Alcance:
-1. Pipeline REST (PATCH children + DELETE) no disponible vía MCP; conversión ejecutada vía notion_update_page con search-and-replace estructurado, 4 batches en orden de documento (DECISIONS → FAILURES → NON-NEGOTIABLES → MILESTONES), sin fallos intermedios.
-1. Split heading/párrafo por nodo: heading_3 con número de sección en posición 1 (Position-One Rule: extract_live_section captura ^([w.]+)) + ID canónico + título; cuerpo íntegro preservado en párrafo inmediato inferior, fechas antepuestas en los 11 DECISIONS.
-1. Numeración heredada del heading padre vivo: DECISIONS 2.1–2.11, FAILURES 3.1–3.5, NON-NEGOTIABLES 4.1–4.10, MILESTONES 5.1–5.5.
-1. Limpieza de auto-links residuales de Notion (run.py, duplicates.py, flow.is convertidos a inline code) en heading 2.4, heading 4.7 y cuerpo de FAILURES-005 — plain_text idéntico, sin pérdida de contenido.
-1. Fuera de alcance verificado intacto: CHARTER:PURPOSE, CHARTER:STATUS, CHARTER:CONTINUITY, headings padre, tabla de 10 preguntas de MILESTONES-001, párrafo huérfano post-FAILURES-005.
-Decisiones no duplicadas: no se editó generate_census.py ni CENSUS_SPEC (alineación de numeración es commit de seguimiento por Arena) · no se ejecutó vcensus --sync-to-notion, vhyperlinks --apply ni vdoc (pasos posteriores del operador) · no se asignó ID al párrafo huérfano "Discrepancia de versión no bloqueante…" (candidato a CHARTER:FAILURES-006 vía ticket tipo CHARTER a CLAUDE/MAIN) · tabla old_block_id → new_block_id no generable vía MCP (limitación declarada pre-write; los 31 bloques cambiaron de block_id) · no se tocaron los 8 huérfanos REF-sin-DEF de inventario_huerfanos.md.
-Validación: (a) Re-fetch 1:1 post-write por el agente: 31/31 heading_3 cumplen regex ^d+.d+ CHARTER:(DECISIONS|FAILURES|NON-NEGOTIABLES|MILESTONES)-d{3} — .+; 0 bloques con ID de sub-nodo fuera de heading; 0 auto-links residuales; (b) vcensus corrido por el operador (12:08 y 12:18 CDMX): 294 IDs en spec / 294 resueltos / 0 sin link / 0 huérfanos / 0 con Sección hardcodeada — baseline pre-migración verificada (31 hardcodeados, P1/P2/P3 confirmados); (c) V_ID_CENSUS_PRODUCTION.md regenerado con las 31 filas CHARTER:*-NNN con Sección 2.n/3.n/4.n/5.n, links a anchors nuevos y sin "⚠︎sin verificar en vivo".
-Estado: WRITE aplicado en Notion. Versión del Change Log bumpada a v9.22.23; propiedad Versión de otros documentos no modificada. Sin DRY RUN de Changelog presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens; fecha y hora CDMX provistas por el operador).
-IDs afectados: Ninguno nuevo; mismo universo de 294 IDs en spec — no dispara CENSUS-SYNC Regla 1.
-Handoff de referencia: ninguno (sin serial declarado en esta sesión).
-Tipo: [OPS] [DOC] [CODE] Identidad VANTAGE: agent.family=GROK · agent.instance=DEFAULT. Documentos modificados:
-- Layer_4/scripts/vsync_doc.py
-- Layer_4/scripts/vdoc.py
-- Layer_4/scripts/trigger_sync_after_mcp_write.py
-- Layer_4/scripts/notion_write_wrapper.py
-- Layer_4/scripts/MCP_SYNC_HOOK_README.md
-- tests/test_vdoc.py (o suit de tests equivalente en tests/)
-Documentos potencialmente afectados: V | PROJECT CHARTER (sin cambio de contenido; habilitada sincronización vía vsync/vdoc) · document_registry / health_check / verify_versions (cubiertos previamente en v9.22.21).
-Tipo de impacto: Operativo y Normativo — Habilita la sincronización bidireccional Notion  ACTIVE/ y la ejecución del trigger post-escritura en background para el Project Charter desde Layer_4, expandiendo el universo de documentos fundacionales. 
-Alcance:
-1. vsync_doc.py (v9.13.0): Registro de la clave canónica project_charter en la estructura DOCS con Notion UUID f87938be-fc42-8263-a305-819877d2245f, archivo local PROJECT_CHARTER.md y etiqueta PROJECT CHARTER.
-1. vdoc.py: Habilitación de la clave project_charter y el alias charter en el CLI; mapeo en DOC_ALIASES a la clave de vsync y actualización de la documentación interna (docstring).
-1. Hooks de Sincronización Asíncrona: Registro del UUID del Project Charter en la constante FOUNDATIONAL_DOCS de trigger_sync_after_mcp_write.py y notion_write_wrapper.py (incremento del inventario fundacional de 8 a 9 documentos).
-1. Documentación de Hook (MCP_SYNC_HOOK_README.md): Actualización del catálogo normativo de documentos fundacionales (8  9) e incorporación del registro del Project Charter en la tabla de mapeo de page_id.
-1. Harness de Pruebas e Infraestructura (tests/): Ajustes en la suite de pruebas unitarias (test_vdoc.py / test_vsync.py) para validar dinámicamente la presencia de los 9 documentos y verificar la resolución correcta del alias charter desde CLI.
-Decisiones confirmadas: Integración mínima bajo el patrón de diseño existente DOCS / FOUNDATIONAL_DOCS; alias corto charter restringido exclusivamente al orquestador CLI vdoc (mientras vsync_doc utiliza la clave canónica project_charter).
-Decisiones no duplicadas: No se alteró Layer_1 (completado en v9.22.21); el Charter no requiere propiedad propia de "Versión" independiente en esta fase; no se modificó ID Census ni documentos maestros de reglas.
-Validación:
-- Verificación de sintaxis: python3 -m py_compile ejecutado exitosamente en los 4 scripts de Layer_4.
-- Suite de pruebas unitarias: Ejecución de pytest en el directorio de pruebas validando assertions de 9 fundacionales sin regresiones.
-- Parche aplicado localmente y verificado vía git status / git diff.
-Estado: APLICADO en código local y reflejado en la propiedad Versión del Change Log en Notion.
-IDs afectados: Ninguno nuevo; no dispara CENSUS-SYNC Regla 1.
-Handoff de referencia: N/A
-Tipo: [FIX] [DOC]
-Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN (revisión, verificación y esta entrada). Ejecutor de las ediciones en Notion: CLAUDE/MAIN.
-Documentos modificados: Layer_1/scripts/generate_census.py · Layer_1/scripts/verify_versions.py · Layer_1/scripts/normalize_heading_ids.py · Layer_1/scripts/vantage_id_rules.py · Layer_1/scripts/health_check.py · Layer_1/data/resolver_registry_v2.json
-Documentos potencialmente afectados: V | KERNEL (referencias de nombres de secciones reconciliadas) · V | CHANGELOG (sincronización de versión desde CHANGELOG)
-Tipo de impacto: Normativo + Operativo — corrige drift en CENSUS_SPEC, mejora robustez de sync a Notion e integra Project Charter a supervisión de documentos.
-Alcance:
-1. generate_census.py — 5 correcciones: (G-01) typo c.ctrip() → c.strip() en línea 831; (G-02) reconciliación de 9 filas en CENSUS_SPEC con nombres del Kernel vivo (03.6 "Health Check", 03.7 "Verificación de Versión", 03.8 "ID Census", 03.9 "Session Ledger", 03.11 "Impact Assessment Contract", 03.12 "External Configuration Contract", 03.13 "Sistema de Cross-Reference Hyperlinks", 03.18 "Contrato de Prefijos Documentales del Lazy Loader", 03.19 "Contrato de Serial Global de Handoff"); (G-03) mejora en conversión de tablas a Notion: max_rows_per_table ajustado de 90 a 98 para respetar límite de 100 bloques (header + 98 filas = 99 bloques), mejor filtrado de separator lines; (G-04) agregado de flag --yes para auto-confirmar sync a Notion sin input interactivo; (G-05) integración de sincronización de versión desde CHANGELOG: funciones get_page_version(), update_page_version(), sync_page_version_from_changelog() importadas desde verify_versions.py, sync_to_notion() ahora sincroniza automáticamente la versión de la página Census con la versión del CHANGELOG, flag --no-sync-version para desactivar.
-1. verify_versions.py — 1 corrección: (V-01) agregado de CHARTER a DOC_KEYS (ahora 12 documentos), CHARTER_FALLBACK_ID declarado con ID f87938be-fc42-8263-a305-819877d2245f, fallback agregado en load_document_uuids().
-1. normalize_heading_ids.py — 2 correcciones: (N-01) agregado de CHARTER: a VALID_PREFIXES; (N-02) agregado de "Project Charter": "f87938be-fc42-8263-a305-819877d2245f" a DOCUMENTS.
-1. vantage_id_rules.py — 1 corrección: (I-01) agregado de CHARTER: a VALID_PREFIXES (módulo único de reglas de detección DEF/REF/heading).
-1. health_check.py — 1 corrección: (H-01) agregado de "V-CHARTER": ("f87938be-fc42-8263-a305-819877d2245f", "Project Charter.md") a DOCS_FUNDACIONALES.
-1. resolver_registry_v2.json — 1 corrección: (R-01) agregado de "CHARTER": "f87938be-fc42-8263-a305-819877d2245f" a document_registry, comentario actualizado (conteo de fundamentales pasa de 10→11).
-Decisiones confirmadas: drift en CENSUS_SPEC reportado por Mistral y Littlebird — reconciliación con Kernel vivo es la corrección correcta; límite de 100 bloques de Notion es estricto — ajuste a 98 filas evita HTTP 400; auto-confirmación (--yes) necesaria para automatización; sincronización de versión desde CHANGELOG asegura consistencia de versiones; Project Charter debe estar en supervisión como documento fundacional.
-Decisiones no duplicadas: no se implementó el fix durable de leer nombres desde Kernel vivo en tiempo de ejecución (requiere refactorización mayor de generate_census.py); no se tocó apply_hyperlinks_notion.py (reusa VALID_PREFIXES y DOCUMENTS de generate_census.py, ya cubierto indirectamente); no se tocó runtime_identity.py (usa registry dinámicamente, no requiere cambios directos).
-Impacto: Normativo + Operativo. Cierra finding 1 de Mistral completamente (drift en CENSUS_SPEC); mejora robustez de sync a Notion; asegura consistencia de versiones entre Census y CHANGELOG; integra Project Charter a supervisión completa de documentos.
-Validación: (a) vcensus ejecutado tras cada commit — 255 IDs en spec / 255 resueltos / 0 sin link / 0 huérfanos / 0 hardcoded fallbacks, idéntico en las 3 corridas de sync. (b) --sync-to-notion --yes ejecutado con éxito — sincronización de versión verificada: v9.22.19 en CHANGELOG y Census. (c) vgit ejecutado tras cada commit — 4 commits enviados a GitHub (eaee132, 0bde91e, 5848851, 9e4b206, a0c2185, 16fb4f8). (d) git log --oneline confirma la secuencia de cambios. (e) verify_versions.py --length no ejecutado (pendiente operador).
-Estado: WRITE aplicado en local (6 scripts + registry), commits realizados y push a GitHub. WRITE pendiente en Notion (Kernel, CHANGELOG, Census y demás documentos según corresponda). DRY RUN de Changelog presentado — awaiting APROBAR_WRITE del operador para proceder con version bump y escritura en Notion.
-IDs afectados: Ninguno (corrección de código y configuración; Census regenerado con nombres correctos pero sin crear ni eliminar IDs canónicos, no dispara CENSUS-SYNC Regla 1). Handoff de referencia: ninguno (sin serial declarado en esta sesión).
----
-¿Este formato y contenido son correctos para el dry run? ¿Necesitas alguna modificación?
-Tipo: [DOC] [FIX]
-Identidad VANTAGE: agent.family=LITTLEBIRD · agent.instance=DEFAULT.
-Documentos modificados: V | PROJECT CHARTER (sección 7) · V | CHANGELOG (esta entrada).
-Documentos potencialmente afectados: V | ID CENSUS evaluado, sin cambio · document_registry y registry_seed.json, sin cambio · auto_archive.py, pendiente de verificación independiente.
-Tipo de impacto: Documental + Gobernanza — corrige el estado de dos referencias verificadas sin convertir todavía el Charter en documento canónico versionado.
-Alcance:
-1. KERNEL:CV-GOLDEN-RULES-002 confirmado 1:1 contra V | KERNEL v9.22.19, sección 10.2, "Regla de Oro #2".
-1. BRIEF:CROSS-DEPENDENCIES-001 confirmado 1:1 contra V | BRIEF v9.22.19, sección 07.1, "Impact Assessment Contract".
-1. KERNEL:GATE-DECISION-012 conservado como referencia no operativa/huérfana: el Kernel vigente usa KERNEL:DEDUP-LAYER-UPGRADE en la sección 09.12. No se reactiva ni se agrega al Census.
-1. Se reemplazó únicamente el bloque de fact-check de la sección 7 del Charter. Se mantuvieron sin cambio las decisiones pendientes sobre nombre final, prefijo CHARTER:, registry, Census, convivencia con el Tablero, ciclo de versión y plantilla de contratos.
-1. La deprecación de auto_archive.py permanece pendiente y no se cita como hecho confirmado.
-Decisiones no duplicadas: no se asignó prefijo canónico al Charter · no se incorporó al ID Census · no se actualizó document_registry ni registry_seed.json · no se marcó el Charter como verificado · no se cambió su propiedad Versión ni su Fecha de actualización.
-Validación: el reemplazo se ejecutó sobre una coincidencia exacta del bloque existente; las dos fuentes primarias fueron fetcheadas en vivo antes de la escritura.
-Estado: WRITE aplicado en Notion. Pendientes: verificación real de auto_archive.py; decisión de canonización e integración del Charter; implementación del Anti-Drift Guard en generate_census.py por el agente con acceso a Terminal.
-IDs afectados: Ninguno nuevo; no dispara CENSUS-SYNC.
-Handoff: agent.family=LITTLEBIRD · agent.instance=DEFAULT.
-Tipo: [DOC] [FIX] [OPS]
-Identidad VANTAGE: agent.family=LITTLEBIRD · agent.instance=DEFAULT. Operador: Mauricio Meyrán.
-Documentos modificados: V | ID CENSUS (página Notion 394938befc4281e6a381e3869e60d89d) · V | CHANGELOG.
-Causa raíz: CENSUS_SPEC en generate_census.py mantenía nombres de secciones KERNEL hardcodeados y podía regenerar drift silencioso después de un rename en el Kernel vivo.
-Alcance ejecutado y verificado: (1) Census reconciliado contra KERNEL v9.22.19 en las filas 03.6, 03.7, 03.8, 03.9, 03.11, 03.12, 03.13, 03.14, 03.15, 03.16, 03.17, 03.18 y 03.19; (2) copias Notion y GitHub verificadas alineadas; (3) propiedad Versión de V | ID CENSUS bump a v9.22.20; (4) propiedad Fecha de actualización de V | ID CENSUS actualizada a 2026-09-30.
-Guard anti-drift: especificación aprobada para implementación fail-fast: resolver nombres desde el Kernel vivo y abortar con error si el fetch no está disponible o si la spec estática diverge; no se acepta fallback silencioso. La modificación del archivo de repo queda pendiente de ejecución en Terminal/GitHub, porque esta instancia no tiene una vía de escritura al repositorio.
-Impacto: Documental + Gobernanza. No se crean ni eliminan IDs canónicos; no dispara CENSUS-SYNC Regla 1.
-Validación: verificación independiente previa contra KERNEL vivo v9.22.19, V | ID CENSUS y GitHub. La escritura de Notion y el bump de versión se verifican después de esta operación.
-Estado: Notion WRITE aplicado. Guard de código: PENDIENTE DE REPO, no declarado como implementado.
-Handoff: no emitido.
-Tipo: [DOC] [OPS] [FIX]
-Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MM (revisión, verificación y esta entrada). Decisiones y contratos de sesión: CLAUDE/KM. Ejecutor de las ediciones en Notion: Perplexity (MCP Notion). Cambios de código y skill: Copilot coding agent, PR en draft, no mergeado.
-Documentos modificados: V | KERNEL (ítems 1, 2, 4, 5, 10, 11) · V | MANUAL (ítems 3, 6, 7, 8, 12, 13) · V | SYSTEM PROMPT (ítem 9) · Bug Tracker (schema de Componente + tickets) · Tasks Tracker (Notas de T2.1–T2.3).
-Documentos potencialmente afectados: Project Instructions (repiten la cita KERNEL:SESSION-LEDGER; las edita el operador a mano) · Career Canon sin cambio (no se tocó).
-Tipo de impacto: Normativo + Documental — alinea Kernel, Manual y System Prompt con las decisiones del operador y con el código verificado.
-Alcance:
-1. B4 — cierre del Bootstrap: BOOTLOADED: DOCUMENTOS CARGADOS pasa a BOOTLOADED. en Kernel (2 sitios) y Manual (1), igual que el SP y las Project Instructions. (ítems 1 a 3)
-1. Extra 11 — jerarquía de dedup unificada en L1 > L2 > L3, igual que feed_processor.py (DEDUP_PRIORITY): Kernel L326 y L371 corregidos; L315, L339 y L911 ya la decían. (ítems 4 y 5)
-1. B5 — pesos de Score: Manual L774 y L894 dejan de mandar a editar profile_config.yaml y declaran que los pesos viven fijos en calculate_score_v6 (layer_1_orchestrator.py), coherente con la entrada de vl1 profile. Sin valores numéricos en el Manual. (ítems 6 y 7)
-1. B6 — Session Ledger: se conserva KERNEL:DOCUMENTATION-009; el SP deja de citar KERNEL:SESSION-LEDGER (ID inexistente). Manual L256 apunta al data source 8d736032-eef9-4e6e-a05a-df8b8079ebff (el 38324240… es la base de datos, no el data source). (ítems 8 y 9)
-1. B1 — cifras de documentos: Kernel L146 y Manual L245 remiten a SP:SYNC-RULE; Kernel L234 nombra los 7 documentos que indexa el Census; Manual L810 pasa a "6 documentos fundacionales editables". Se dejan sin cambio las cifras que ya nombran su conjunto (Kernel L348, Manual L984, L1008, L1224). (ítems 10 a 13)
-1. Bug Tracker: select Componente con Documentación y Layer 4 (8 opciones, releído); ticket nuevo "Rewrite v10.1 de los parches T2.1-T2.3" (Documentación · 2 MEDIO · Documentar); 27f6 y a66e cerrados como Resuelto por decisión de diseño (basta el audit post-ingesta); RT-1 marcado Archivar (Status restaurado a Abierto, Solución y Fecha_Resolución vaciadas por ser un patrón de comportamiento, no un bug de código); nota P1–P4 en el ticket a07c (skill CV-B vs CANON:OUTPUT-CONTRACT-004).
-1. Tasks Tracker: T2.1, T2.2 y T2.3 siguen Pendiente con nota de que v9.22.17 y v9.22.18 fueron parches y el rewrite se reprograma a v10.1.
-Decisiones confirmadas (operador): B1 a B7 en A (B2: Hermes es el único ejecutor de L1; B3: L2 es solicitud directa del operador; B7: el operador es el único emisor de seriales, vía Terminal) · Extra 11 = B · footer de CV-B solo en el chat, nunca dentro del .md · Extra 5 = B · Extra 7: RT-1 a Archivar · Extra 10: 27f6 y a66e cierran como decisión de diseño · Log y cédula: opción A (backfill en el Log, cédula v5 como página en Notion).
-Decisiones no duplicadas: no se tocaron B2 ni B3 en el Manual (M63, M64, M343-346, Prompts B, C y E: reescritura de sección, entregable aparte) · no se tocaron Kernel L417, L446 y L692 (Extra 3, sin verificar) · no se crearon los tickets 16(a) verify_md.py ni 16(c) retiro de serve y /allocate: verificados ya corregidos en 7c862a5 · no se subió el pin de SP:SKILL-VERSION-PIN ni la Versión de ningún documento distinto del Change Log.
-Impacto: Documental + Normativo. Reduce contradicciones Kernel↔Manual↔SP; deja el código y el skill CV-B en un PR separado.
-Validación: (a) El operador ejecutó vdoc notion; CLAUDE/MM contrastó los .md exportados de Kernel, Manual y SP con los ítems: 1 a 7 y 9 a 13 presentes; ítem 8 no verificable en el export, que omite la URL del Manual L256, por lo que queda por confirmar contra la página viva. (b) El ticket "Rewrite v10.1" verificado por consulta directa al Bug Tracker (Abierto, Documentación, 2 MEDIO). (c) Los cierres de 27f6, a66e y RT-1 y las notas de a07c y T2.1–T2.3 provienen del reporte de Perplexity en la página TRACKER MANUAL & KERNEL; RT-1 se corrigió con la adenda A3 tras releer su página, y no se releyeron 27f6, a66e ni las páginas de Tasks. (d) python vversions --length: pendiente, a cargo del operador en Terminal.
-Estado: WRITE aplicado en Notion (Kernel, Manual y SP por Perplexity bajo contrato de CLAUDE/KM; Bug Tracker y Tasks Tracker por Perplexity; esta entrada y el version bump por CLAUDE/MM). Pendientes: PR draft de Copilot (D1 skill CV-B v10.2.1 y D4 Census y guard, rama mauriciomeyran-tracker-audit-2026-09-28, commits fc322d4 y 56459f4, revisados por clon independiente, sin merge) · Fase 2: pin vantage-cv-b a v10.2.1 en SP:SKILL-VERSION-PIN y reconciliación de pines de skills · cédula v5 y backfill del Reconciliation Log (faltan fecha y hora CDMX de las cédulas v1–v4 y de v9.22.17) · B2 y B3 en el Manual · vversions --sync y commit (vgit) sobre v9.22.19, con los tickets f9bb y 7f49 aún abiertos; no se verificó el estado del último --sync. Sin DRY RUN de Changelog presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens; fecha y hora CDMX provistas por el operador) — version bump y esta entrada ejecutados en una sola pasada.
-IDs afectados: Ninguno (corrección de texto en nodos existentes; no se crean ni eliminan IDs canónicos, no dispara CENSUS-SYNC Regla 1).
-Handoff de referencia: HO-000071 (CLAUDE/MAIN → CLAUDE/KM, recibido al inicio de la sesión de KM); HO-000072 solicitado, no emitido.
-Tipo: [DOC] [FIX]
-Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MP (contrato, revisión del DRY RUN y esta entrada). Ejecutor de las ediciones en Notion: Perplexity (MCP Notion).
-Documentos modificados: V | MANUAL (9 parches: A1, A2, A3, A5a, A5b, A5c, A5d, A6, A7) · V | KERNEL (0 — A4 omitido, ya satisfecho).
-Documentos potencialmente afectados: SP, Career Canon y Navigation Brief evaluados, sin cambio.
-Tipo de impacto: Normativo + Navegación — alinea el Manual con el Kernel en cinco puntos verificados contra el texto vivo.
-Alcance:
-1. L3 — Manual §12 (Troubleshooting): "hasta 10 correos" pasa a 5 por corrida, con referencia a GEMINI_MAX_EMAILS_PER_RUN. (A1)
-1. HANDOFF de CV-A — Manual §8.3: texto y bloque JSON pasan a 7 campos obligatorios más observaciones (opcional, texto libre), conforme a KERNEL:CV-PIPELINE-001. El bloque JSON del Kernel 12.1 ya contenía observaciones en Notion, por lo que A4 se omitió para evitar un campo duplicado. (A2, A3)
-1. Escalamiento de pendientes — Manual §6: las etiquetas de nivel quedan alineadas con KERNEL:GATE-DECISION-009 (Nivel 1 bajo esfuerzo · Nivel 2 alto esfuerzo sin fuente dura · Nivel 3 bloqueo confirmado); la referencia de re-clasificación deja de llevar etiqueta de nivel. (A5a a A5d)
-1. Class B — Manual §21: se agrega Class_B_Last_Run a la lista, como ya figuraba en KERNEL:SCHEMA-001. La entrada v9.22.17 (punto 1) enumera 10 campos Class B sin Class_B_Last_Run; con este parche el Manual lista 11, igual que el Kernel. (A6)
-1. VM_Scope — Manual §12 (Score = 0): "Core/Adjacent, no Off-Target" reemplazado por "campo binario: Alto o Bajo", con hipervínculo a KERNEL:SCHEMA-001. (A7)
-Decisiones confirmadas: parches de texto con old_str/new_str exactos; ejecución solo tras APROBAR_WRITE del operador; A4 omitido por bloqueo de texto divergente (ya aplicado).
-Decisiones no duplicadas: no se tocó ninguna de las 7 decisiones abiertas (B1 recuento de documentos fundacionales · B2 ejecutor de L1 · B3 definición de L2 · B4 literal de cierre del Bootstrap · B5 ubicación de pesos de Score · B6 ID del Session Ledger · B7 ruta del serial en las skills); no se reestructuraron Kernel ni Manual; no se tocaron skills, scripts ni Career Canon.
-Impacto: Documental + Normativo. Reduce contradicciones Kernel↔Manual; deja las decisiones de operación (B1–B7) como trabajo separado.
-Validación: Perplexity reportó write-back verification con texto verbatim en los 9 parches y sin cambio de IDs ni de niveles de heading; no hubo fetch propio de CLAUDE/MP tras la escritura. El cierre de Perplexity cuenta "8 aplicados + 1 omitido"; la tabla del propio reporte muestra 9 aplicados y 1 omitido. python vversions --length (A8): pendiente, a cargo del operador en Terminal.
-Estado: WRITE aplicado en Notion (Manual, por Perplexity bajo contrato de CLAUDE/MP; esta entrada y el version bump por CLAUDE/MP). vversions --sync y commit (vgit) pendientes sobre v9.22.18: el último --sync corrió sobre v9.22.16. Sin DRY RUN de Changelog presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens; hora CDMX provista por el operador) — version bump y esta entrada ejecutados en una sola pasada.
-IDs afectados: Ninguno (corrección de texto en nodos existentes; Census sin cambio, no dispara CENSUS-SYNC Regla 1).
-Handoff de referencia: ninguno (sin serial declarado en esta sesión).
-Tipo: [DOC] [FIX] [OPS]
-Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN (contrato, auditoría y cierre). Ejecutor de las ediciones en Notion: Perplexity (Sonnet 5 Thinking, MCP Notion).
-Documentos modificados: V | KERNEL (9 ediciones, K-01 a K-09) · V | MANUAL (22 ediciones, M-01 a M-22) · Bug Tracker (7 altas).
-Documentos potencialmente afectados: Ninguno adicional. Career Canon, System Prompt y Aliases no se tocaron.
-Tipo de impacto: Normativo + Documental — alinea Kernel y Manual con el código real (class_b_guard.py, feed_processor.py, layer_3_mail.py, vsync_doc.py, vsum.py, health_check.py).
-Alcance:
-1. Class A/B — Fetch y Fuente pasan a Class A; Class B queda en 10 campos (Score · Gate_Decision · VM_Scope · Role_Class · Match · Next_Action · Dedup_Flag · Score_Method · Last_Gate_Run · JD_Quality). JOB_ID documentado como Class A opcional (fallback a composite_key). Fuente_Manual retirado: no existe en código ni en Notion. Resolución B-09 reescrita: class_b_guard.py es espejo en código, la equivalencia campo por campo no está verificada. (K-01 a K-06, M-01 a M-04)
-1. Referencia huérfana KERNEL:GATE-DECISION-012 reemplazada por KERNEL:DEDUP-LAYER-UPGRADE en las 5 ocurrencias reales (3 en Kernel, 2 en Manual). (K-07 a K-09, M-05, M-06)
-1. Cifra de documentos — vdoc/vsync_doc y el chequeo de ACTIVE/ pasan de 6/7 a 8 (los 6 fundacionales editables + Navigation Brief + Changelog Archivo), conforme a DOCS en vsync_doc.py y DOCS_FUNDACIONALES en health_check.py. (M-09 a M-16)
-1. consolidate_duplicates.py marcado ARCHIVADO (2026-09-12) en el bloque de comando y en el glosario, sin borrar la entrada. (M-07, M-08)
-1. L3 — el límite de correos por run es GEMINI_MAX_EMAILS_PER_RUN, default 5 (nombre heredado, aplica a Ollama y Groq); GROQ_MAX_EMAILS_PER_RUN no existe en el código. Notas "RESUELTO 10" reescritas. (M-17 a M-19)
-1. vsum.py acepta solo rutas locales (no URL); --notion retirado del uso típico (flag vestigial). (M-20, M-21)
-1. Heading duplicado MANUAL:SCRIPT-GLOSSARY-L1 (§22.1) eliminado: el cascarón sin cuerpo. Único borrado del contrato. (M-22)
-Decisiones confirmadas: Fetch y Fuente son Class A (operador, 2026-09-27); vdoc local nunca se usa (operador único); los hallazgos de código y config van a tickets, no a v10; la tabla de flags de apply_hyperlinks_notion.py en el Manual conserva "7 documentos" porque ese script maneja 7.
-Decisiones no duplicadas: no se tocó el orden de §22 (quedó 22.2 antes de 22.1; se difiere a v10.1); no se tocó Kernel §10.2 (campos protegidos sin Score_Method ni Last_Gate_Run); no se tocaron las menciones de "6 documentos" en otros contextos (hyperlinks en Kernel, criterios de parche en Manual); no se tocó Career Canon.
-Tickets Bug Tracker (7, todos Abierto): (1) layer_3.env.example define GROQ_MAX_EMAILS_PER_RUN, variable muerta — 2 MEDIO / Patch; (2) vsync_doc.py --direction local omite tablas — 1 BAJO / Documentar; (3) comentario de verify_versions.py con cifra inconsistente — 1 BAJO / Documentar; (4) banner v9.13.0 en vsync_doc.py — 1 BAJO / Patch; (5) EXCLUDE_IDS vacío en apply_hyperlinks_notion.py — 3 ALTO / Patch; (6) docstring de health_check.py dice 5 archivos y son 8 — 1 BAJO / Documentar; (7) 4 ocurrencias preexistentes de ¶¶ en el Manual — 1 BAJO / Documentar.
-Impacto: Documental + Normativo. Cierra la Fase 2 de la reconciliación v10 sobre Kernel y Manual; deja los defectos de código como deuda separada y no bloqueante.
-Validación: auditoría 1:1 de las 31 ediciones contra Kernel.md (956 líneas) y Manual.md (1368 líneas) exportados tras la edición — 31/31 con el texto resultante presente, KERNEL:GATE-DECISION-012 = 0 en ambos, 0 IDs duplicados, un solo heading 22.1. Terminal del operador: vdoc notion 8/8 notion→local; vcensus 253 en spec / 252 resueltos / 1 sin link (MANUAL:WEEKLY-FLOW-006) / 3 huérfanos (CANON:UF-004/005/006), idéntico al estado previo; vversions --length PASS (11 documentos OK). Código leído directamente en layer_3_mail.py, vsync_doc.py, verify_versions.py, apply_hyperlinks_notion.py y health_check.py; de feed_processor.py, class_b_guard.py y vsum.py solo hay conteo de líneas y grep del operador, y el detalle de comportamiento proviene de la auditoría de Arena, no de lectura directa.
-Estado: WRITE aplicado en Notion (Kernel y Manual por Perplexity bajo contrato de CLAUDE/MAIN; Bug Tracker y esta entrada por CLAUDE/MAIN). vversions --sync y commit (vgit) pendientes sobre v9.22.17: el --sync de las 03:37 corrió sobre v9.22.16. Sin DRY RUN de Changelog presentado ni aprobación por turno adicional, por instrucción explícita del operador (optimización de tokens, 03:39 CDMX) — version bump y esta entrada ejecutados en una sola pasada.
-IDs afectados: Ninguno (corrección de nodos existentes; Census sin cambio, no dispara CENSUS-SYNC Regla 1).
-Handoff de referencia: HO-000068 (recibido al inicio de esta sesión de continuación).
 ---
 > El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
 ---

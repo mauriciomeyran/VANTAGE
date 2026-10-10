@@ -56,12 +56,14 @@ ES
 - Reduje en un 33% el tiempo de actualización de floorsets mediante la creación de manuales de Zoning & Mapping y herramientas digitales para field teams. [KPI04]
 - Lideré un equipo de 3 coordinadoras directas y 3 indirectas, garantizando el 100% de cobertura POP durante la contingencia COVID-19 mediante coordinación remota. [KPI05]
 - Coordiné Market Weeks y Press Days; fui ponente en Nissan Connect representando a Dockers.
+- Coordiné el montaje piloto de la nueva estrategia de VM y comunicación in-store en Dockers Tezontle (2019), con acompañamiento 1:1 del director global de VM; medí el desempeño contra tiendas con la estrategia anterior y desarrollé con Operaciones el plan de integración de la nueva estrategia.
 EN
 - Managed the visual strategy for 6 countries in LATAM and 270+ points of sale, ensuring regional brand standardization. [CF05]
 - Designed a local production strategy that generated 74% cost savings on national campaigns in Mexico. [KPI03]
 - Reduced floorset update time by 33% through the creation of Zoning & Mapping manuals and digital tools for field teams. [KPI04]
 - Led a team of 3 direct coordinators and 3 indirect reports, ensuring 100% POP coverage during the COVID-19 contingency through remote coordination. [KPI05]
 - Coordinated Market Weeks and Press Days; spoke at Nissan Connect representing Dockers.
+- Coordinated the pilot installation of the new VM and in-store communication strategy at Dockers Tezontle (2019), with 1:1 guidance from the global VM Director; benchmarked performance against stores running the previous strategy and developed the integration plan for the new strategy with Operations.
 ### 03.4 CANON:EXPERIENCE-004
 C04 · Aéropostale México
 Gerente de Visual Merchandising · [CF06: 21 reportes directos] · [CF07: 17 tiendas]
