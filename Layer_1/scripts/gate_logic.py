@@ -66,6 +66,8 @@ def gate_logic(entry: dict) -> str | None:
 
 def evaluate_gate(fetch: str, vm_scope: str, role_class: str) -> str:
     """Evalúa la regla del gate (helper legacy / smoke)."""
-    if fetch == "Accesible" and (vm_scope == "Alto" or role_class == "Pivote"):
+    if fetch == "Accesible" and vm_scope != "Bajo" and (
+        vm_scope == "Alto" or role_class == "Pivote"
+    ):
         return "CREATE"
     return "BLOCKED"

@@ -8,6 +8,7 @@ Fix: Detect synthetic Computrabajo URLs with pattern [rol]-[marca]-2024
 """
 
 import pytest
+import os
 import sys
 from pathlib import Path
 
@@ -16,8 +17,21 @@ _SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "scripts"
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
+# The unit-tested helpers do not access external services.
+for _name, _value in {
+    "GMAIL_USER": "test@example.com",
+    "GMAIL_APP_PASS": "test",
+    "NOTION_TOKEN": "test",
+    "NOTION_DB_ID": "test",
+}.items():
+    os.environ.setdefault(_name, _value)
+
 try:
-    from layer_3_mail import canonicalize_url, SYNTHETIC_CT_PATTERNS
+    from layer_3_mail import (
+        canonicalize_url,
+        is_vm_relevant,
+        SYNTHETIC_CT_PATTERNS,
+    )
     LAYER3_AVAILABLE = True
 except ImportError:
     LAYER3_AVAILABLE = False
@@ -108,6 +122,21 @@ class TestSyntheticURLDetection:
             canonical, reason = canonicalize_url(url)
             assert reason == "SYNTHETIC_AGGREGATOR_URL", \
                 f"Existing pattern should still detect {url} as synthetic, got: {reason}"
+
+
+def test_dockers_employer_is_not_hard_blocked_post_extraction():
+    relevant, reason = is_vm_relevant({
+        "rol": "Visual Merchandiser",
+        "marca": "Dockers",
+    })
+    assert relevant, reason
+
+    relevant, reason = is_vm_relevant({
+        "rol": "Visual Merchandiser",
+        "marca": "El Palacio de Hierro",
+    })
+    assert not relevant
+    assert reason.startswith("HARD_BLOCK_BRAND:")
 
 
 # ============================================================================

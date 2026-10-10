@@ -95,7 +95,6 @@ Búsqueda en páginas oficiales de carrera y ATS de marcas objetivo en los secto
 ## Marcas Bloqueadas (no buscar, no registrar)
 - L'Oréal (todas las divisiones)
 - Levi's
-- Dockers
 - El Palacio de Hierro
 
 ## Protocolo por Marca

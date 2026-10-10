@@ -113,7 +113,7 @@ Evaluar el título completo. Si contiene cualquier término excluido → rechaza
 
 ### Compañía
 Si la compañía está en la lista bloqueada → rechazar sin evaluar título.
-Lista bloqueada: L'Oréal, Levi's, Dockers, El Palacio de Hierro.
+Lista bloqueada: L'Oréal, Levi's, El Palacio de Hierro.
 
 ### Location
 - Aceptar: resultados en Ciudad de México / Área Metropolitana.

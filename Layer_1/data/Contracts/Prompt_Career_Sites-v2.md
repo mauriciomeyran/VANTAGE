@@ -126,8 +126,9 @@ Reject if COMPLETE TITLE contains:
 
 - L'Oréal (all divisions)
 - Levi's
-- Dockers
 - El Palacio de Hierro
+
+Dockers is not a blocked employer (operator decision 2026-10-07).
 
 ### 4.3 LOCATION EXCLUSION
 
