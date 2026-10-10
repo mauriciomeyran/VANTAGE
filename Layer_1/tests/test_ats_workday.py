@@ -536,7 +536,7 @@ def test_two_level_propagates_blocked_from_level1(monkeypatch):
 
 def test_adversarial_foreign_id_injected_into_facets_is_not_selected(monkeypatch):
     """P1: un ID foráneo en los facets NO debe ser seleccionado por el resolver."""
-    # El tenantチャBH declara México con el ID de AUSTRALIA de Nike y viceversa.
+    # El tenant declara México con el ID de AUSTRALIA de Nike y viceversa.
     poisoned = [
         {"facetParameter": "locationCountry", "descriptor": "Country", "values": [
             {"descriptor": "Mexico", "id": AU_CHANEL, "count": 19},  # ID de Australia
@@ -550,7 +550,7 @@ def test_adversarial_foreign_id_injected_into_facets_is_not_selected(monkeypatch
     assert selected[0].value_id == AU_CHANEL
     # La clave: verify_against() re-deriva los IDs desde los facets fuente.
     ok, bad = res.verify_against(poisoned, "cc", "ChanelCareers")
-    assert ok is True, "ambos IDs existen en los facets del tenant (con各自 descriptor)"
+    assert ok is True, "ambos IDs existen en los facets del tenant (con su propio descriptor)"
     assert bad == []
     # Ahora el ataque real: tomar el valor resuelto de México (que apunta al ID
     # de Australia) y validarlo contra los facets de OTRO tenant.
@@ -597,7 +597,7 @@ def test_adversarial_search_never_invents_ids(monkeypatch):
 
     client = make_client(monkeypatch, handler)
     client.search({"locationCountry": ["id-inventado-abc"]})
-    # search() no интерт合成 newIds: pasa el dict tal cual.
+    # search() no sintetiza newIds: pasa el dict tal cual.
     assert captured[0]["locationCountry"] == ["id-inventado-abc"]
     # La protección real: verify_no_foreign_ids detecta el mismatch de contexto.
     from_resolver = wd.resolve_location(chanel_facets(), "cc", "ChanelCareers")

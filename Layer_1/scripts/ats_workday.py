@@ -505,7 +505,7 @@ def _iter_facet_values(facets: List[Dict[str, Any]],
 
     Nike expone `locations` anidado dentro de `locationMainGroup` como
     sub-facet con su propio facetParameter (Fase 1B §4). El recorrido es
-    recursivo y匹配 por facetParameter, nunca por posición.
+    recursivo y hace match por facetParameter, nunca por posición.
     """
     found: List[Dict[str, Any]] = []
     stack = list(facets or [])
@@ -612,7 +612,7 @@ def workday_structured_search_2level(tenant: str, site: str, host: str,
 
     Motivado por la evidencia live de CHANEL: en el contexto global el facet
     `locations` expone cientos de ciudades de todo el mundo; los valores de
-    CDMX sólo aparecen con，秦 tras filtrar por `locationCountry=Mexico`.
+    CDMX sólo aparecen tras filtrar por `locationCountry=Mexico`.
     Resolver ambos niveles contra el contexto correcto evita contamination
     cross-context y reduce el set a la geografía real.
 
