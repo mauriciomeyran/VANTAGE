@@ -28,7 +28,7 @@ Store Manager, Director, VP, C-Level, Assistant, Asistente, Auxiliar, Jr., Inter
 - `Store Manager Regional` → Rechazar (contiene "Store Manager")
 
 ### Empresas bloqueadas (no buscar, no registrar bajo ningún circumstance)
-L'Oréal (todas las divisiones), Levi's, Dockers, El Palacio de Hierro.
+L'Oréal (todas las divisiones), Levi's, El Palacio de Hierro.
 
 ### Location
 Aceptar: CDMX + Área Metropolitana de CDMX.
@@ -162,7 +162,7 @@ Cada variante tiene: `name`, `keywords`, `location`, `geoId`, `f_TPR`.
    - Intentá URL alternativa si existe (ATS o LinkedIn Jobs para la marca).
    - Si ninguna funciona → dejar la marca como "no accesible", continuar con la siguiente.
 
-**Marcas bloqueadas:** L'Oréal, Levi's, Dockers, El Palacio de Hierro — no buscar. Si aparece una vacante de marca bloqueada, rechazar inmediatamente.
+**Marcas bloqueadas:** L'Oréal, Levi's, El Palacio de Hierro — no buscar. Si aparece una vacante de marca bloqueada, rechazar inmediatamente.
 
 **Output:** escribir `Layer_1/feeds/{HOY}_career_sites_raw.json` con formato similar al de LinkedIn.
 

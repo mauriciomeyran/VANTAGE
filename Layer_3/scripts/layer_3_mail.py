@@ -307,7 +307,7 @@ Ejemplo: "Visual Merchandising Jr. Coordinator" → excluir (contiene "Jr."). "S
 MARCAS BLOQUEADAS (ignorar todas sus vacantes, sin excepción):
 - El Palacio de Hierro (cualquier variante: Palacio de Hierro, palacio, PHierro)
 - L'Oréal (todas sus divisiones: Lancôme, Giorgio Armani Beauty, YSL Beauty, Kiehl's, etc.)
-- Levi's, Dockers
+- Levi's
 
 Para cada vacante relevante devuelve un objeto json con estos campos exactos:
 - rol: título ESPECÍFICO del puesto TAL COMO APARECE en el texto del correo
@@ -736,7 +736,7 @@ _VM_KEYWORDS = re.compile(
 )
 
 _HARD_BLOCK_BRANDS = re.compile(
-    r"palacio de hierro|palaciodehierro|l.?or.?al|loreal|levi.?s|dockers",
+    r"palacio de hierro|palaciodehierro|l.?or.?al|loreal|levi.?s",
     re.IGNORECASE,
 )
 

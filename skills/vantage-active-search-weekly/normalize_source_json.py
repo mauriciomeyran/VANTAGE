@@ -42,10 +42,11 @@ EXCLUDED_TITLES = [
 ]
 
 BLOCKED_COMPANIES = [
-    "l'oréal",
+    "l'oreal",
     "levi's",
     "levis",
-    "dockers",
+    "levi strauss",
+    "levi strauss & co",
     "el palacio de hierro",
     "palacio de hierro",
 ]

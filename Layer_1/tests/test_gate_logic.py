@@ -148,6 +148,11 @@ class TestEvaluateGate:
         result = evaluate_gate("Accesible", "Medio", "Pivote")
         assert result == "CREATE", \
             "Accesible + Role_Class Pivote should return CREATE"
+
+    def test_fetch_accesible_vm_scope_bajo_pivote_blocked(self):
+        """Scope Bajo must block even when Role_Class is Pivote."""
+        result = evaluate_gate("Accesible", "Bajo", "Pivote")
+        assert result == "BLOCKED"
     
     def test_fetch_bloqueado_blocked(self):
         """Test BLOCKED condition: Bloqueado fetch"""
@@ -214,6 +219,14 @@ class TestGateLayer1:
         # The actual behavior depends on profile_fit module
         assert result in ["CREATE", "BLOCKED"], \
             "Vacante + Accesible + Role_Class Pivote (score>=60) should return CREATE or BLOCKED depending on VM signal"
+
+    @pytest.mark.parametrize("rol", ["Visual Merchandiser", "Business Analyst"])
+    def test_vacante_scope_bajo_pivote_blocked_with_or_without_vm_signal(self, rol):
+        result = gate_layer1(
+            "Accesible", "Bajo", "Pivote", "Vacante",
+            score=100, rol=rol, marca="Nike",
+        )
+        assert result == "BLOCKED"
 
     def test_vacante_score_none_review_needed(self):
         """Score ausente (None, default) con scope_ok=True -> REVIEW_NEEDED, no CREATE ni BLOCKED"""

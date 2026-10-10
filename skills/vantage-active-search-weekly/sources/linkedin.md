@@ -83,7 +83,7 @@ Ejemplos:
 
 ### Compañía
 Si la compañía está en la lista bloqueada → rechazar sin evaluar título.
-Lista bloqueada: L'Oréal, Levi's, Dockers, El Palacio de Hierro.
+Lista bloqueada: L'Oréal, Levi's, El Palacio de Hierro.
 
 ### Location
 - Aceptar: "Ciudad de México", "Área metropolitana de Ciudad de México", colonias específicas de CDMX.

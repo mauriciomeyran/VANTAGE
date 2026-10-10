@@ -56,12 +56,13 @@ The employer identity is determined SOLELY by the explicit employer/company fiel
 **RULE CS-008:** Jobs from the following companies MUST be rejected:
 - L'Oréal (all divisions)
 - Levi's
-- Dockers
 - El Palacio de Hierro
 
 **IMPLEMENTATION:** hard_blocks.json + hard_block_gate.py (blocked_employer_term). Substring case-insensitive match.
 
-**RULE CS-009:** Blocked company detection MUST be identity-based, not substring-based. Partial overlap (e.g., "Dockers Heroico") MUST NOT trigger blocking.
+Dockers is not a blocked employer (operator decision 2026-10-07).
+
+**RULE CS-009:** Blocked company detection MUST be identity-based, not substring-based. A brand mentioned only as a retail channel or client MUST NOT trigger blocking when another company is the direct employer.
 
 ---
 
