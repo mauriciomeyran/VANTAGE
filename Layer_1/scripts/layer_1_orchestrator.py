@@ -279,10 +279,7 @@ def gate(
         return GateDecision.CREATE.value
     if source_type == SOURCE_TYPE_VACANTE:
         fetch_ok = fetch in (FetchResult.ACCESIBLE.value, FetchResult.PARCIAL.value)
-        scope_ok = fetch_ok and (
-            vm_scope == "Alto"
-            or (role_class == "Pivote" and has_vm_title_signal(rol))
-        )
+        scope_ok = fetch_ok and vm_scope == "Alto"
         if not scope_ok:
             return GateDecision.BLOCKED.value
         if score is None:
