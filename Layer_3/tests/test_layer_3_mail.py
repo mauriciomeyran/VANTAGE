@@ -187,3 +187,14 @@ class TestIncidentURLs:
         
         assert correct_count == len(incident_urls), \
             f"Expected {len(incident_urls)}/21 correct decisions, got {correct_count}/21"
+
+
+def test_dockers_sender_not_excluded_but_hard_blocks_remain():
+    from layer_3_mail import EXCLUDED_SENDERS
+
+    def blocked(sender):
+        return any(ex in sender.lower() for ex in EXCLUDED_SENDERS)
+
+    assert not blocked("Careers <talent@dockers.com>")
+    for s in ("recruiter@loreal.com", "jobs@levi.com", "rh@palaciodehierro.com.mx"):
+        assert blocked(s)

@@ -102,7 +102,7 @@ RAW_SOURCE_MAP = {
 }
 
 EXCLUDED_SENDERS = [
-    "loreal", "levi", "levis", "dockers",
+    "loreal", "levi", "levis",
     "palaciodehierro", "palacio de hierro"
 ]
 
