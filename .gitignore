@@ -86,3 +86,5 @@ node_modules/
 
 # Memoria local (no versionar)
 sqlite-memory.db*
+Dashboard/dashboard.db
+Dashboard/dashboard_instances.db
