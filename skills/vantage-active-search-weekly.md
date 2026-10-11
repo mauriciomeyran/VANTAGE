@@ -47,7 +47,7 @@ Los tres JSON se escriben en `Layer_1/feeds/{YYYY-MM-DD}_{source}.json` y luego 
 
 ## Exclusiones (Prompt A — no redefinir, solo referenciar)
 - Títulos excluidos: Store Manager, Director, VP, C-Level, Assistant, Asistente, Auxiliar, Jr., Internship, Intern, Entry Level, Pasantía, Sales Advisor, Vendedor, Asesor Comercial.
-- Empresas bloqueadas: L'Oréal (todas las divisiones), Levi's, Dockers, El Palacio de Hierro.
+- Empresas bloqueadas: L'Oréal (todas las divisiones), Levi's, El Palacio de Hierro.
 - Location: excluir remote fuera de México.
 - Título evaluado con string completo (ej: "Visual Merchandising Jr. Coordinator" → reject por "Jr.").
 
@@ -77,7 +77,7 @@ Ver `search_queries.json` para las 3 variantes de búsqueda de LinkedIn.
 - Protocolo por marca: navegar a URL de carrera → extraer listings → para cada listing, visitar detail page.
 - Si career page está detrás de Cloudflare/WAF/DNS fail/403/404: registrar en `audit_log`, no fabricar resultados.
 - ATS: Greenhouse, Lever, Workday, SmartRecruiters, Taleo, Ashby. Cada uno es infraestructura — no hay listings públicos en el homepage, solo las instances específicas de cada marca.
-- Marcas bloqueadas (L'Oréal, Levi's, Dockers, El Palacio de Hierro): no buscar, no registrar resultados.
+- Marcas bloqueadas (L'Oréal, Levi's, El Palacio de Hierro): no buscar, no registrar resultados.
 
 ### 3. Aggregators
 - Fuentes: OCC (occ.com.mx), Indeed (mx.indeed.com), Computrabajo (computrabajo.com.mx), Bumeran (bumeran.com.mx).
