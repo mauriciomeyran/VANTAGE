@@ -17,7 +17,7 @@ Versión de alineación: v9.17.0 (patch post-mortem 2026-08-19 — BUG_TICKET, v
 ## Regla Anti-Ambigüedad (nuevo, v9.17.0)
 
 Cada uno de los 7 ítems se evalúa en **una sola pasada** contra la lista canónica
-exacta (ej. Hard Blocks: L'Oréal, Levi's/Dockers, Palacio de Hierro — nombre
+exacta (ej. Hard Blocks: L'Oréal, Levi's, Palacio de Hierro — nombre
 literal, no interpretación laxa).
 
 - **Prohibido narrar reconsideración dentro del veredicto** — frases como "sin
@@ -68,7 +68,7 @@ Recorre los 7 ítems en orden. Para cada uno, documenta el resultado (PASS / FAI
 Si hay un HANDOFF de CV-A disponible para esta vacante, mapea las keywords estratégicas identificadas ahí (`JD_keywords_top6`) contra el texto del PDF. ¿Están presentes las que el HANDOFF marcó como matches directos? Revisa también si `observaciones` del HANDOFF señala algo que el CV-B debía reflejar y no lo hizo. Si no hay HANDOFF disponible, marca este ítem como N/A y anótalo en observaciones — no infieras cobertura sin el HANDOFF de referencia.
 
 ### 4. Hard Blocks — exclusiones de marcas protegidas
-Confirma que el CV no está siendo preparado para ni menciona como target actual a: **L'Oréal (todas las divisiones), Levi's/Dockers, El Palacio de Hierro** (Hard Blocks confirmados en `MANUAL:DATA-MANAGEMENT`), ni a roles store-level sin alcance estratégico o multi-tienda.
+Confirma que el CV no está siendo preparado para ni menciona como target actual a: **L'Oréal (todas las divisiones), Levi's, El Palacio de Hierro** (Hard Blocks confirmados en `MANUAL:DATA-MANAGEMENT`), ni a roles store-level sin alcance estratégico o multi-tienda.
 
 > Nota: Aéropostale NO es un Hard Block — confirmado con el operador 2026-08-07. Cualquier referencia previa que lo incluyera (memoria operativa u otros briefs) era un error; el historial en Aéropostale sigue siendo válido como contenido del CV (Experience Records C04) y las vacantes de esa empresa no se excluyen por este criterio.
 

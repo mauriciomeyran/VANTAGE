@@ -74,13 +74,13 @@ Compara los requisitos del JD contra el Career Canon (Experience Records, Skills
 
 ### 4. Validación de exclusiones
 
-Antes de continuar, verificar que la vacante no provenga de un empleador con bloqueo total de recontratación: **L'Oréal (todas las divisiones), Levi's/Dockers, El Palacio de Hierro**. Ninguno de los tres recontrata. Si la vacante es de alguno de estos, detener el análisis y reportarlo — no generar HANDOFF.
+Antes de continuar, verificar que la vacante no provenga de un empleador con bloqueo total de recontratación: **L'Oréal (todas las divisiones), Levi's, El Palacio de Hierro**. Ninguno de los tres recontrata. Si la vacante es de alguno de estos, detener el análisis y reportarlo — no generar HANDOFF.
 
 > **Aéropostale NO es un Hard Block** — confirmado con el operador 2026-08-07. El historial en Aéropostale sigue siendo válido como contenido del Canon (C04) y las vacantes de esa empresa no se excluyen por este criterio.
 
 También excluir roles store-level sin alcance estratégico o multi-tienda.
 
-> Referencia confirmada: `MANUAL:DATA-MANAGEMENT` (Manual, §10 — "Hard Blocks" / "Soft Blocks"). **Hard Blocks** (L'Oréal todas las divisiones, Levi's/Dockers, El Palacio de Hierro, roles store-level sin gestión estratégica) se filtran en el origen, antes de existir como registro en Notion, y no son recuperables bajo ninguna circunstancia. **Soft Blocks** (URL rota, JD parcial, Score insuficiente) sí son recuperables vía Dashboard — pero ese mecanismo no aplica a esta skill; CV-A solo verifica Hard Blocks.
+> Referencia confirmada: `MANUAL:DATA-MANAGEMENT` (Manual, §10 — "Hard Blocks" / "Soft Blocks"). **Hard Blocks** (L'Oréal todas las divisiones, Levi's, El Palacio de Hierro, roles store-level sin gestión estratégica) se filtran en el origen, antes de existir como registro en Notion, y no son recuperables bajo ninguna circunstancia. **Soft Blocks** (URL rota, JD parcial, Score insuficiente) sí son recuperables vía Dashboard — pero ese mecanismo no aplica a esta skill; CV-A solo verifica Hard Blocks.
 
 ## Output — Estructura del HANDOFF (8 campos)
 
