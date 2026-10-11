@@ -1,0 +1,91 @@
+# HANDOFF CV-A — Match Consulting
+
+## Metadata
+- URL vacante: https://mx.linkedin.com/jobs/view/especialista-de-contenido-y-comunicaci%C3%B3n-visual-marcas-de-lujo-at-match-consulting-4468808650
+- Fecha de analisis: 2026-09-18
+- Idioma detectado (ES/EN): ES
+- Positioning Mode seleccionado: [pendiente — Claude, N1-N4 o EMPATE]
+
+## Hard Block Check (determinista — cv_a_prep.py)
+- Empleador: Match Consulting — PASA (sin coincidencias en lista Hard Block)
+- Nota: este check es un primer filtro por string-match contra nombres de
+empleador. No sustituye la verificacion de alcance store-level (soft,
+requiere juicio) que hace Claude en el paso de Validacion de exclusiones.
+
+## JD crudo (input para Claude)
+About the job
+
+Casa creativa mexicana especializada en diseño floral, decoración y ambientación de eventos de alto nivel busca integrar a una persona creativa, estratégica y con una sensibilidad visual excepcional para fortalecer su comunicación y presencia digital. La posición requiere experiencia desarrollando contenido para marcas de lujo, premium o de alta imagen, así como capacidad para transformar proyectos, eventos y experiencias en historias visuales atractivas y coherentes con la identidad de la marca.
+
+
+Ubicación: Lomas de Reforma, Miguel Hidalgo, CDMX
+Modalidad: 100% presencial
+Horario: Lunes a viernes de 9:00 a 18:00 h
+Sueldo: $25,000 MXN netos mensuales
+Prestaciones: De ley
+
+
+Principales Responsabilidades: 
+• Desarrollar la estrategia y el calendario de contenido para redes sociales y canales digitales.
+• Conceptualizar campañas, narrativas y formatos alineados con la identidad visual y el posicionamiento de la marca.
+• Proponer ideas de contenido para proyectos, montajes, eventos, procesos creativos y experiencias de marca.
+• Crear, adaptar y supervisar contenido gráfico, fotográfico y audiovisual.
+• Redactar copys y mensajes manteniendo el tono y personalidad de la marca.
+• Planear y participar en sesiones fotográficas, shootings, grabaciones, montajes y eventos.
+• Elaborar briefs y coordinar fotógrafos, videógrafos, diseñadores, proveedores y colaboradores creativos.
+• Seleccionar materiales y supervisar su edición, calidad y consistencia visual antes de su publicación.
+• Administrar y programar contenido en redes sociales.
+• Dar seguimiento al desempeño de campañas, publicaciones, alcance, interacción y crecimiento.
+• Elaborar reportes y proponer mejoras con base en resultados.
+• Investigar tendencias de lujo, diseño, moda, arte, decoración, lifestyle y comunicación visual.
+• Utilizar herramientas de inteligencia artificial para conceptualización, referencias visuales y generación de materiales digitales.
+• Mantener organizado el archivo fotográfico, audiovisual y los materiales de marca.
+
+
+Requisitos: 
+• Licenciatura en Comunicación, Diseño, Publicidad, Marketing, Mercadotecnia o carrera afín.
+• Mínimo 3 años de experiencia en Content Marketing, Social Media, Comunicación Digital, Community Management o posiciones similares.
+• Experiencia comprobable creando contenido para marcas de lujo, premium, nicho o de alta imagen.
+• Experiencia en sectores como moda, belleza, lifestyle, diseño, decoración, interiorismo, arte, joyería, hospitalidad o eventos.
+• Experiencia práctica en conceptualización, producción y supervisión de contenido visual.
+• Capacidad para coordinar sesiones fotográficas, producciones y proveedores creativos.
+• Conocimientos de estrategia de contenido, storytelling, copywriting y métricas digitales.
+• Inglés avanzado indispensable.
+• Excelente redacción y ortografía.
+• Criterio estético, sensibilidad visual y atención al detalle.
+• Portafolio actualizado indispensable.
+• Disponibilidad para trabajar presencialmente en Lomas de Reforma.
+
+
+Softwares:
+• Meta Business Suite.
+• Instagram, Facebook, TikTok y Pinterest.
+• Canva.
+• Adobe Creative Suite, especialmente Photoshop e Illustrator.
+• CapCut, Adobe Premiere Pro o herramientas similares de edición de video.
+• Herramientas de programación y análisis de redes sociales.
+• Microsoft Office o Google Workspace.
+• Herramientas de inteligencia artificial para generación de ideas, imágenes, textos y referencias visuales.
+
+## Positioning Mode — Justificacion
+[PENDIENTE — Claude: mapear JD_keywords_top6 contra CANON:POSITIONING]
+
+## Gap Analysis
+### Matches directos
+- [PENDIENTE — Claude]
+
+### Matches parciales
+- [PENDIENTE — Claude]
+
+### Gaps (fit_gaps)
+- [PENDIENTE — Claude]
+
+## Validacion de exclusiones
+- Empleador: Match Consulting — PASA (Hard Block determinista, ver arriba)
+- Alcance del rol: [PENDIENTE — Claude, requiere juicio store-level vs estrategico]
+
+## Observaciones
+[PENDIENTE — Claude, opcional]
+
+## Proximo paso
+[PENDIENTE — Claude: Listo para CV-B, o BLOQUEADO — razon]
