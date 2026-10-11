@@ -1,5 +1,15 @@
 # V | CHANGELOG
 
+Tipo: [OPS] [CODE]
+Identidad VANTAGE: agent.family=COPILOT · agent.instance=DEFAULT; actualización del Change Log solicitada explícitamente por el operador, con bump de versión en una sola pasada y sin DRY RUN.
+Fecha: 2026-10-10 03:59 CDMX.
+Documentos modificados: V | CHANGELOG (esta entrada + bump de Versión). No se modificó el contenido de main ni se hizo push.
+Cambio: se retiraron de Documents/03 Projects las carpetas duplicadas VANTAGE-gate-align y VANTAGE-verify-arena.nosync; se mantuvo VANTAGE como copia canónica. Se eliminó la rama local cs-hard-blocks-gate-alignment, cuyo HEAD ya estaba integrado en main. Para no perder trabajo que todavía puede aportar: el commit arena 1e6ec75 quedó protegido en la rama local recovery/arena-1e6ec75; la corrección de Scope Bajo y su suite de regresión quedaron preservadas en recovery/scope-bajo-gate (commit b5a4d2e), sin merge ni push. Ambas referencias Git evitan conservar worktrees/carpeta adicionales.
+Criterio de poda: no se retuvo como documento activo el antiguo hallazgo «CLEAN silencioso sin NOTION_TOKEN», porque el orquestador vigente ya ejecuta fail-closed y etiqueta el dry-run; tampoco se mantuvo el reporte de verificación obsoleto. El contenido único de la suite de Scope Bajo se conserva con su cambio funcional en la rama local de recuperación.
+Verificación: las dos rutas duplicadas ya no existen; git worktree list dejó de incluir VANTAGE-gate-align; las referencias locales de recuperación existen y permanecen fuera de main. La suite preservada pasó: 47 passed, 1 skipped; test_gate_logic.py: 64 passed.
+Tipo de impacto: Operativo + Control de versiones. Sin altas ni bajas de IDs canónicos; Census, Registry, ALIASES y PROMPT_CANON sin cambios.
+Versión: v9.22.40 → v9.22.41 (bump solicitado por el operador en esta pasada).
+Handoff de referencia: solicitud del operador en esta sesión; ramas locales recovery/arena-1e6ec75 y recovery/scope-bajo-gate.
 Tipo: [DOC] [OPS]
 Identidad VANTAGE: agent.family=COPIILOT · agent.instance=DEFAULT; actualización documental ejecutada por COPIILOT bajo APROBAR_WRITE del operador.
 Fecha: 2026-10-10 00:11 CDMX (registro de esta escritura).
