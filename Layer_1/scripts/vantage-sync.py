@@ -149,6 +149,7 @@ def parse_json_input(raw: str) -> list[dict]:
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 DEFAULT_OLLAMA_TIMEOUT = 120  # seconds — qwen2.5:7b needs extra time on cold start
+OLLAMA_SEED = 42  # fixed seed for deterministic LLM extraction
 
 OLLAMA_SYSTEM_PROMPT = """
 You are a context extraction specialist for VANTAGE. Given a chat log, extract:
@@ -205,6 +206,10 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
         "prompt": OLLAMA_SYSTEM_PROMPT + "\n\n---CHAT LOG---\n" + truncated,
         "format": "json",
         "stream": False,
+        "options": {
+            "temperature": 0,
+            "seed": OLLAMA_SEED,
+        },
     }).encode("utf-8")
 
     try:
@@ -331,9 +336,32 @@ def retry_sqlite(fn, max_retries: int = 3, base_delay: float = 0.1):
     raise RuntimeError(f"Failed after {max_retries} retries: {last_error}")
 
 
+def normalize_content(content: str) -> str:
+    """Normalize extracted content for deterministic hashing.
+
+    Strips leading/trailing whitespace, collapses internal whitespace to
+    single spaces, and removes trailing punctuation. This ensures that
+    trivial variations (extra spaces, trailing periods) from LLM output
+    do not generate duplicate rows.
+
+    The original content is preserved as-is in the DB; only the hash key
+    uses the normalized form.
+    """
+    # Collapse whitespace (spaces, tabs, newlines) to single spaces
+    normalized = re.sub(r"\s+", " ", content.strip())
+    # Strip trailing punctuation that doesn't change meaning
+    normalized = normalized.rstrip(".,;:!?")
+    normalized = normalized.rstrip()  # also strip any remaining trailing whitespace
+    return normalized
+
+
 def gen_memory_key(category: str, content: str) -> str:
-    """Generate a deterministic, idempotent memory key for dedup."""
-    content_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()[:12]
+    """Generate a deterministic, idempotent memory key for dedup.
+
+    Uses normalize_content() so trivial variations don't create duplicates.
+    """
+    normalized = normalize_content(content)
+    content_hash = hashlib.sha256(normalized.encode("utf-8")).hexdigest()[:12]
     return f"{category}:{content_hash}"
 
 
@@ -428,10 +456,12 @@ def write_to_context_sync(db_path: str, items: list[dict],
 def gen_mem0_id(category: str, content: str) -> str:
     """Generate a deterministic mem0 row ID based on content hash.
 
-    Fix 4: Uses full SHA-256 hash instead of content[:12] to eliminate
-    collision risk from short prefixes.
+    Fix 4: Uses full SHA-256 hash of normalized content instead of
+    content[:12] to eliminate collision risk from short prefixes.
+    Normalization: strip, collapse whitespace, strip trailing punctuation.
     """
-    content_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
+    normalized = normalize_content(content)
+    content_hash = hashlib.sha256(normalized.encode("utf-8")).hexdigest()
     return f"{category}_{content_hash[:12]}"
 
 
@@ -493,14 +523,17 @@ def write_to_mem0(mem0_path: str, items: list[dict],
     try:
         for item in items:
             key = gen_memory_key(item["category"], item["content"])
-            # Fix 4: use full SHA-256 content hash as dedupe_key (not [:12])
+            # Fix 4: use normalized content for hash keys to prevent
+            # trivial LLM variations (trailing period, extra space) from
+            # generating duplicate rows. Original content stays as-is in DB.
+            normalized = normalize_content(item["content"])
             content_hash = hashlib.sha256(
-                item["content"].encode("utf-8")
+                normalized.encode("utf-8")
             ).hexdigest()
             mem0_id = f"{item['category']}_{content_hash[:12]}"
-            # dedupe_key: use the full 12-char SHA-256 hash (deterministic)
+            # dedupe_key: use the 12-char SHA-256 hash of normalized content
             dedupe_key = hashlib.sha256(
-                f"{item['category']}:{item['content']}".encode("utf-8")
+                f"{item['category']}:{normalized}".encode("utf-8")
             ).hexdigest()[:12]
             now = datetime.now(timezone.utc).isoformat()
             metadata = json.dumps({

@@ -521,3 +521,88 @@ class TestEndToEnd:
 
         assert primary_count == len(items)
         assert mem0_count == len(items)
+
+
+class TestOllamaOptions:
+    """Ollama payload must include temperature=0 and fixed seed for determinism."""
+
+    def test_ollama_payload_has_temperature_zero(self, vsync_module):
+        """The Ollama payload must include temperature=0."""
+        # Patch urlopen to capture the request body
+        captured = {}
+
+        class MockResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                # Return an LLM response with empty arrays to force regex fallback
+                return json.dumps({
+                    "response": '{"decisions": [], "tasks": [], "facts": []}'
+                }).encode("utf-8")
+
+        def capture_urlopen(req, timeout):
+            captured["body"] = json.loads(req.data.decode("utf-8"))
+            return MockResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=capture_urlopen):
+            vsync_module.extract_with_ollama("test prompt", model="qwen2.5:7b", timeout=5)
+
+        assert "options" in captured["body"]
+        assert captured["body"]["options"]["temperature"] == 0
+        assert captured["body"]["options"]["seed"] == 42
+
+    def test_ollama_payload_stream_false_and_json_format(self, vsync_module):
+        """The Ollama payload must have stream=False and format=json."""
+        captured = {}
+
+        class MockResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                return json.dumps({
+                    "response": '{"decisions": [], "tasks": [], "facts": []}'
+                }).encode("utf-8")
+
+        def capture_urlopen(req, timeout):
+            captured["body"] = json.loads(req.data.decode("utf-8"))
+            return MockResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=capture_urlopen):
+            vsync_module.extract_with_ollama("test", model="qwen2.5:7b", timeout=5)
+
+        assert captured["body"]["stream"] is False
+        assert captured["body"]["format"] == "json"
+
+
+class TestNormalizationDedup:
+    """Trivial LLM output variations should not generate duplicate rows."""
+
+    def test_normalize_content_collapses_whitespace(self, vsync_module):
+        """Multiple spaces/newlines should collapse to single space."""
+        raw = "TODO: fix the    bug\n\n  at the end"
+        result = vsync_module.normalize_content(raw)
+        assert result == "TODO: fix the bug at the end"
+
+    def test_normalize_content_strips_trailing_punctuation(self, vsync_module):
+        """Trailing period, comma, semicolon should be removed."""
+        assert vsync_module.normalize_content("Fix auth bug.") == "Fix auth bug"
+        assert vsync_module.normalize_content("Fix auth bug,") == "Fix auth bug"
+        assert vsync_module.normalize_content("Fix auth bug;!") == "Fix auth bug"
+
+    def test_normalized_key_same_for_trivial_variations(self, vsync_module):
+        """Same content with trailing period/extra whitespace should have same key."""
+        key1 = vsync_module.gen_memory_key("task", "Fix the auth bug")
+        key2 = vsync_module.gen_memory_key("task", "Fix the auth bug.")
+        key3 = vsync_module.gen_memory_key("task", "  Fix the auth bug  ")
+        key4 = vsync_module.gen_memory_key("task", "Fix the auth bug  .")
+        assert key1 == key2 == key3 == key4
+
+    def test_normalized_mem0_id_same_for_trivial_variations(self, vsync_module):
+        """gen_mem0_id should also be stable under normalization."""
+        id1 = vsync_module.gen_mem0_id("task", "Fix the auth bug")
+        id2 = vsync_module.gen_mem0_id("task", "Fix the auth bug.")
+        assert id1 == id2
