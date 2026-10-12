@@ -764,7 +764,7 @@ Examples:
 
     # Report
     print_report(input_source, items, args.project, args.dry_run,
-                 args.llm, primary_results, mem0_results)
+                 primary_results, mem0_results)
 
     if not args.dry_run:
         errors = [r for r in primary_results if r["status"] == "error"]
