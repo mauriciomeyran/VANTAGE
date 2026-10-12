@@ -1,6 +1,16 @@
 {
   "entities": [
     {
+      "entity_id": "TRACKER:H_e22e9370f2916dbc",
+      "canonical_id": "e22e9370f2916dbcb8f4e5f9471c12fb43a2df78bb03dbc27ddb29dcf66cbdb1",
+      "page_id": "3f6938be-fc42-81ff-8d53-eb2cdb0b9b6a",
+      "page_url": "https://app.notion.com/p/Visual-Merchandising-Trade-Coordinator-Parfums-Christian-Dior-3f6938befc4281ff8d53eb2cdb0b9b6a",
+      "hash": "e22e9370f2916dbcb8f4e5f9471c12fb43a2df78bb03dbc27ddb29dcf66cbdb1",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER",
+      "archived_from": null
+    },
+    {
       "entity_id": "TRACKER:U_3ed938befc4281cf9941ebaa1d07e6e2",
       "canonical_id": "H_3962136321d78d45",
       "page_id": "3ed938be-fc42-81cf-9941-ebaa1d07e6e2",
@@ -7332,8 +7342,8 @@
     }
   ],
   "metrics": {
-    "total_entities": 733,
-    "tracker_entities": 35,
+    "total_entities": 734,
+    "tracker_entities": 36,
     "archive_entities": 698,
     "hash_coverage": 100.0,
     "orphan_candidates": 0

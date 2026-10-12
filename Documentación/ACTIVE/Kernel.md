@@ -100,9 +100,9 @@ Métricas mínimas: correos procesados, vacantes extraídas, Class A poblado / C
 ### 04.5 KERNEL:ARC-L4 - L4 — Version Control & Infrastructure
 Función: infraestructura documental, no capa de búsqueda.
 Repo: github.com/mauriciomeyran/VANTAGE.
-Automatización vigente:
-- Auto-commit + push (alias vgit) en cambios de repo, 09:00/15:00/21:00.
-- Cron adicionales vía ruta directa al Python del venv (source .venv/bin/activate falla con "Operation not permitted" en entorno cron): vantage.py sync, notion_backup.py, vl3 — 00:00/08:00/16:00.
+Automatización (estado al 2026-10-11, tras la Opción A — sync git y cron deshabilitados):
+- Sync del repo: manual — commit + push bajo demanda vía alias vgit. El horario automático 09:00/15:00/21:00 (LaunchAgent com.vantage.gitsync) quedó deshabilitado el 2026-10-11 (Opción A; plist renombrado a *.disabled-20261011).
+- Cron adicionales (vantage.py sync, notion_backup.py, vl3 — 00:00/08:00/16:00): DESHABILITADOS el 2026-10-11 (Opción A); el crontab quedó vacío (backup: ~/vantage_crontab_backup_20261011.txt).
 - vsync_doc.py (alias vdoc, flags --direction notion|auto, --dry-run, --doc): sincroniza Notion→ACTIVE/ (ACTIVE local es read-only; local→Notion deshabilitado, contingencia en vdoc_local_contingency.py) para los documentos del diccionario DOCS: kernel, system_prompt, career_canon, manual, aliases, change_log, brief, change_log_archivo y project_charter.
 - git_sync.py regenera skills/index.json antes de git status en cada sync().
 - Política de versionado (H-6, confirmada): commit automático de todo el árbol no ignorado; .db de estado se versiona por trazabilidad histórica.

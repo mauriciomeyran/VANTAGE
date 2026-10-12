@@ -1,0 +1,36 @@
+[2026-10-11 07:47:05 CST]
+
+PROMPTING...
+
+SESSION CONTRACT: HERMES-VANTAGE-SYNC-CLI-001 (ADAPTADO — PROMPT MASTER)
+
+0. AGENT IDENTITY & SCOPE
+agent.family: HERMES
+agent.instance: DEFAULT
+
+1. CONTEXT & OBJECTIVE
+Objective: Develop vantage-sync.py CLI script.
+
+3. SCOPE OF DELIVERABLES
+Deliverable 1: Python CLI Script (Layer_1/scripts/vantage-sync.py)
+
+PHASE 1: Blueprint & Interface Design (Read-only)
+
+PHASE 2: Implementation & Safety Validation
+1. Write the script vantage-sync.py in the agreed path.
+2. Run unit tests passing a test file with simulated text from a collapsed session.
+3. Verify transaccional en la BD local SQLite.
+
+Binary Gate Rule: No modify files or write definitive code without APPROVED.
+
+2. NON-NEGOTIABLE CONSTRAINTS
+CHARTER:NON-NEGOTIABLE-001 (Inward-First & Local)
+CHARTER:NON-NEGOTIABLE-002 (Integrity & Safety)
+
+DECISION: Aproceed with Phase 2 implementation per blueprint.
+DECISION: mem0 failures are non-fatal — context-sync.db is primary.
+TODO: Create test fixture file
+FIXME: Verify retry logic handles SQLITE_BUSY correctly
+action item: Run dry-run test before real write
+result: context-sync.db should contain extracted items
+entregable: vantage-sync.py at Layer_1/scripts/vantage-sync.py

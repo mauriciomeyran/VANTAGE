@@ -63,7 +63,7 @@ El sistema se organiza en capas con responsabilidades separadas:
 - L1 - Active Recon: Búsqueda activa vía prompts ejecutados en motores de búsqueda (Perplexity, Comet).
 - L2 - Strategic Search: Búsqueda activa complementaria vía Gemini, Grok, you.com.
 - L3 - Passive Intake: Lectura automática de correos etiquetados en Gmail.
-- L4 - Documentation: mantiene sincronizados en background el repositorio de código (git) y los documentos fundacionales del sistema entre Notion y disco local.
+- L4 - Documentation: mantiene sincronizados el repositorio de código (git) y los documentos fundacionales del sistema entre Notion y disco local. Desde el 2026-10-11 la sincronización es manual (vgit para git, vdoc para documentos); los daemons programados (launchd/cron) fueron deshabilitados por decisión del operador (Opción A).
 Responsables
 - Python (Pipeline / Runtime): normaliza, deduplica, calcula Score y Gate_Decision, y expone comandos de consulta.
 - Agente IA (Claude): opera el Ciclo de Sesión (Open/Close), ejecuta CV-A/CV-B en el ciclo semanal (Miércoles), y mantiene documentos fundacionales y trackers vía parches — siempre bajo DRY RUN + APROBAR_WRITE, nunca escribe sin autorización explícita del operador.
@@ -388,7 +388,7 @@ Layer_4/wrappers/git_sync_wrapper.sh
 ~/Library/LaunchAgents/com.vantage.gitsync.plist
 Extensión reciente — Skills Distribution: además de vgit, el alias vtriggers (update_triggers_json.py) mantiene skills/triggers.json — el manifiesto SSOT que cruza cada skill contra su trigger, path y última modificación — y, al finalizar, ejecuta su propio commit+push automático sobre ese archivo (ver KERNEL:ARCHITECTURE-L4 para el detalle de escaneo y validación).
 Esto es lo que permite que Claude lea siempre la misma versión del manifiesto (vía web_fetch) y del contenido de cada skill (vía git clone --depth 1 local), sin paso de sincronización manual ni intermediario MCP.
-Automatización adicional vía cron: además de vgit, tres cron jobs corren en background — vantage.py sync y notion_backup.py (arreglados en v9.21.40 tras fallar con "Operation not permitted"; ahora usan ruta directa al Python del venv) y vl3, nuevo cron job a las 12am/8am/4pm para procesar backlog de Gmail sin correrlo manualmente.
+Automatización adicional vía cron: DESHABILITADA el 2026-10-11 por decisión del operador (Opción A). Los tres cron jobs (vantage.py sync, notion_backup.py y vl3 — este último procesaba backlog de Gmail a las 12am/8am/4pm) ya no corren en background; el crontab quedó vacío (backup en ~/vantage_crontab_backup_20261011.txt). Estas tareas se ejecutan manualmente bajo demanda, y el sync de git y documentos es manual vía vgit/vdoc.
 ¿Qué es vdoc?
 Sincroniza los 8 documentos (los 6 fundacionales editables — Kernel · System Prompt · Career Canon · Manual · Aliases · Change Log — más Navigation Brief y Change Log Archivo) entre Notion y ACTIVE/ en disco.
 Al terminar encadena un git_sync automático para que el commit quede reflejado en GitHub sin un paso adicional.

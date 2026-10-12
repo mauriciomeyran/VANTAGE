@@ -1,5 +1,25 @@
 # V | CHANGELOG
 
+Tipo: [CONSOLIDADO] [GIT] [OPS] [DOC] — registro retrospectivo de la migración Tablero→CHANGELOG.
+Identidad VANTAGE: agent.family=ARENA · agent.instance=DEFAULT; aprobado por el operador (APROBAR_WRITE) bajo handoff HO-000100. Transcrito de las bullets de sesión del Tablero (V | TRACKER) y del RECONCILIATION LOG; esta entrada no aplica cambios nuevos.
+Fecha: 2026-10-11 03:30 CDMX.
+Cambio consolidado (acciones ya aplicadas y verificadas en sus sesiones):
+1. (a) Oct 10, 26 18:58 · CLAUDE/MAIN — main = origin/main = 1718bf3; commits 8a8fe6c (SQLite y CSV fuera del índice) y efe8c3d (Dockers fuera de EXCLUDED_SENDERS, con test) en main. Layer_1 321 passed, Layer_3 11 passed, sin regresión frente a bf7b864. PLAN-3F-3 y T3.R → Resuelto; T3.S/T/U creadas.
+1. (b) Oct 10, 26 23:50 · GROK (HO-000099) — Dockers retirado manualmente por el operador de skills cv-a/qa; HEAD remoto avanzó a 9fb1a23 (vgit). 0 hits de Dockers/Aéropostale bajo skills/ en el repo público. Línea base Git verificada (7d2f876 → 9fb1a23). Propuesta de .gitignore retirada por instrucción del operador; lista de ramas a podar elaborada del lado agente para COPILOT.
+1. (c) Oct 11, 26 ~01:20 · CLAUDE/MAIN (HO-000098) — el operador ejecutó la poda de 5 ramas: Lote A (mauriciomeyran-integracion-charter, mauriciomeyran-tracker-audit-2026-09-28, mauriciomeyran-hard-block-gate-alignment, con worktree y rama local) y Lote B (pr/scout-dev-layer-1, arena/01a0f3b4-vantage, con tag archive/* igual al SHA). Sin tocar: #4 arena/01a00e43, #6 arena/01a0c6c6, #8–#12, recovery/* y arena/01a01a41; las no podadas conservan tag archive/* en origin. Filas T3.R–T3.U en PLAN y 10 entradas en LOG el mismo día.
+1. (d) Oct 11, 26 02:20–02:35 · ARENA/DEFAULT (HO-000100) — T2.T → Resuelto en PLAN DE TRABAJO con evidencia [V] completa; bloqueador Corpus Bloque 06 retirado por decisión del operador (Aéropostale conservado como experiencia válida). Opción A verificada [V]: LaunchAgents renombrados a *.disabled-20261011, crontab vacío con backup en ~/vantage_crontab_backup_20261011.txt, ramas recovery/* con push verificado a origin, un solo worktree activo, origin/main = 8c905d5. Redacción MANUAL §02 L4 ajustada a sync manual vgit/vdoc. (Los parches MANUAL §8.1 + KERNEL §04.5 ARC-L4 ya quedaron registrados en v9.22.42.)
+Documentos modificados: solo V | CHANGELOG (esta entrada). Nada nuevo en main ni en otros documentos de Notion.
+Tipo de impacto: solo documentación (migración). Sin altas ni bajas de IDs canónicos.
+Versión: v9.22.42 → v9.22.43.
+Handoff de referencia: HO-000100; fuentes: bullets del Tablero 3f6938be-fc42-81ff-90ea-d36b3e580291, 9cc39080-6e77-4ab0-9f61-5d283a178c15, 645925aa-116c-426d-9da0-2303f05bf2d0, f206c742-eb7d-44a1-8150-2ec00c88be59 + RECONCILIATION LOG (HO-000098/099/100).
+Tipo: [DOC]
+Identidad VANTAGE: agent.family=ARENA · agent.instance=DEFAULT; bajo handoff HO-000100 con APROBAR_WRITE del operador.
+Fecha: 2026-10-11 02:44 CDMX.
+Documentos modificados: V | MANUAL (párrafo de cron en §8.1) y V | KERNEL (§04.5 ARC-L4: bullets de vgit y de cron + lead «Automatización»). No se tocó main ni se hizo push; vdoc propagará Notion→local (Manual.md / Kernel.md) en la próxima corrida del operador.
+Cambio: el párrafo de cron del MANUAL ahora documenta la deshabilitación de los tres cron jobs (vantage.py sync, notion_backup.py, vl3) el 2026-10-11 — crontab vacío, backup en ~/vantage_crontab_backup_20261011.txt, ejecución manual bajo demanda. El KERNEL ahora documenta sync manual vía vgit bajo demanda (horario automático 09:00/15:00/21:00 deshabilitado) y cron adicionales deshabilitados.
+Tipo de impacto: solo documentación; el estado operativo (Opción A) ya había sido ejecutado por el operador. Sin altas ni bajas de IDs canónicos.
+Versión: v9.22.41 → v9.22.42.
+Handoff de referencia: HO-000100 (emisor CHATGPT/DEFAULT, destinatario ARENA/DEFAULT).
 Tipo: [OPS] [CODE]
 Identidad VANTAGE: agent.family=COPILOT · agent.instance=DEFAULT; actualización del Change Log solicitada explícitamente por el operador, con bump de versión en una sola pasada y sin DRY RUN.
 Fecha: 2026-10-10 03:59 CDMX.
