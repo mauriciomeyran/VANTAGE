@@ -251,8 +251,14 @@ def warmup_ollama(model: str = "qwen2.5:7b", timeout: int = DEFAULT_WARMUP_TIMEO
             headers={"Content-Type": "application/json"},
         )
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            # Warmup request succeeds if it doesn't timeout
-            _ = resp.read()
+            raw_bytes = resp.read()
+        raw = json.loads(raw_bytes.decode("utf-8"))
+        if not isinstance(raw, dict):
+            raise ValueError("Warmup response is not a JSON object")
+        if raw.get("error"):
+            raise RuntimeError(f"Ollama warmup error: {raw['error']}")
+        if "done" in raw and raw.get("done") is not True:
+            raise RuntimeError("Ollama warmup response indicates done != True")
         print("[info] Warmup complete", file=sys.stderr)
     except Exception as e:
         print(f"[info] Warmup failed ({e}) — treating as LLM failure", file=sys.stderr)
@@ -769,8 +775,8 @@ def print_report(input_source: str, items: list[dict],
     print(f"**Engine:** {engine}")
 
     # T2: Show chunk stats when in LLM mode
-    if source == "llm":
-        chunk_stats = globals().get("_chunk_stats", {"processed": 0, "failed": 0})
+    chunk_stats = globals().get("_chunk_stats", {"processed": 0, "failed": 0})
+    if source == "llm" or (source == "llm→regex" and (chunk_stats["processed"] + chunk_stats["failed"]) > 0):
         print(f"**Tramos:** {chunk_stats['processed']} procesados, {chunk_stats['failed']} fallidos")
 
     print()
@@ -905,6 +911,28 @@ Examples:
         for item in items:
             print(f"  [{item['category']}] {item['content'][:100]}")
 
+    global _last_extraction_source
+    chunk_stats = globals().get("_chunk_stats", {"processed": 0, "failed": 0})
+
+    # T2: All-or-nothing chunk failure enforcement in write mode
+    if args.llm and chunk_stats["failed"] > 0:
+        if not args.dry_run and not args.allow_regex_fallback:
+            print(
+                f"ERROR: {chunk_stats['failed']} chunk(s) failed during LLM extraction. "
+                "In write mode, this produces incomplete results. "
+                "Use --allow-regex-fallback to fall back to full-text regex, or re-run with --dry-run to preview.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        if args.allow_regex_fallback and _last_extraction_source != "llm→regex":
+            print(
+                f"[info] {chunk_stats['failed']} chunk(s) failed — "
+                "discarding partial LLM output and falling back to full-text regex",
+                file=sys.stderr,
+            )
+            _last_extraction_source = "llm→regex"
+            items = extract_items(raw_text)
+
     # T1: Fallback enforcement — abort on LLM→regex in write mode unless --allow-regex-fallback
     if args.llm and not args.dry_run and not args.allow_regex_fallback:
         source = globals().get("_last_extraction_source", "regex")
@@ -913,18 +941,6 @@ Examples:
                 "ERROR: LLM extraction failed and fell back to regex. "
                 "In write mode, this would write potentially unreliable regex output. "
                 "Use --allow-regex-fallback to permit this, or re-run with --dry-run to preview.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-
-    # T2: All-or-nothing chunk failure enforcement in write mode
-    if args.llm and not args.dry_run and not args.allow_regex_fallback:
-        chunk_stats = globals().get("_chunk_stats", {"processed": 0, "failed": 0})
-        if chunk_stats["failed"] > 0:
-            print(
-                f"ERROR: {chunk_stats['failed']} chunk(s) failed during LLM extraction. "
-                "In write mode, this produces incomplete results. "
-                "Use --allow-regex-fallback to permit partial results, or re-run with --dry-run to preview.",
                 file=sys.stderr,
             )
             sys.exit(1)

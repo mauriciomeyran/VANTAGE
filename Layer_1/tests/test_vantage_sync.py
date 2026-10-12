@@ -474,99 +474,121 @@ class TestLlmFallback:
 
 
 class TestT1FallbackEnforcement:
-    """T1: Fallback enforcement in write mode."""
+    """T1: Fallback enforcement in write mode via real main() execution."""
 
-    def test_llm_fallback_abort_in_write_mode(self, vsync_module, tmp_db, sample_chat_text):
+    def test_llm_fallback_abort_in_write_mode(self, vsync_module, tmp_db, tmp_mem0, sample_chat_text):
         """LLM failure → regex fallback in write mode (no flag) should exit != 0 and write 0 rows."""
-        # Mock urlopen to fail (simulate Ollama unavailable)
-        with patch.object(vsync_module.urllib.request, 'urlopen',
-                          side_effect=Exception("Connection refused")):
-            # Extract with LLM - should fall back to regex
-            items = vsync_module.extract_with_ollama(sample_chat_text, model="qwen2.5:7b", timeout=5)
-            assert len(items) > 0
-            # Verify _last_extraction_source is llm→regex
-            assert vsync_module._last_extraction_source == "llm→regex"
-
-        # Now test write enforcement - simulate main() logic
-        # In write mode with llm→regex and no flag, should abort
-        source = vsync_module._last_extraction_source
-        assert source == "llm→regex"
-
-        # Simulate the check in main()
-        llm_mode = True
-        dry_run = False
-        allow_flag = False
-
-        if llm_mode and not dry_run and not allow_flag:
-            if source == "llm→regex":
-                with pytest.raises(SystemExit) as exc_info:
-                    # This is what main() does
-                    print(
-                        "ERROR: LLM extraction failed and fell back to regex. "
-                        "In write mode, this would write potentially unreliable regex output. "
-                        "Use --allow-regex-fallback to permit this, or re-run with --dry-run to preview.",
-                        file=sys.stderr,
-                    )
-                    sys.exit(1)
-                assert exc_info.value.code == 1
-
-    def test_llm_fallback_allowed_with_flag(self, vsync_module, tmp_db, sample_chat_text):
-        """LLM failure → regex fallback with --allow-regex-fallback should write."""
-        # Mock urlopen to fail
-        with patch.object(vsync_module.urllib.request, 'urlopen',
-                          side_effect=Exception("Connection refused")):
-            items = vsync_module.extract_with_ollama(sample_chat_text, model="qwen2.5:7b", timeout=5)
-            assert vsync_module._last_extraction_source == "llm→regex"
-
-        # With flag, should write
-        source = vsync_module._last_extraction_source
-        llm_mode = True
-        dry_run = False
-        allow_flag = True
-
-        # Should NOT abort when flag is set
-        if llm_mode and not dry_run and not allow_flag:
-            if source == "llm→regex":
-                sys.exit(1)  # This path should NOT be taken
-
-        # Write should succeed
-        results = vsync_module.write_to_context_sync(tmp_db, items, "test-proj", dry_run=False)
-        assert all(r["status"] == "written" for r in results)
-
-        # Verify rows written
         conn = sqlite3.connect(tmp_db)
-        count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        before_primary = (
+            conn.execute("SELECT key, content, category, project_id FROM memories ORDER BY id").fetchall(),
+            conn.execute("SELECT id, name, root_path FROM projects ORDER BY id").fetchall(),
+        )
         conn.close()
-        assert count > 0
+        conn_m = sqlite3.connect(tmp_mem0)
+        before_mem0 = conn_m.execute("SELECT id, content FROM memories ORDER BY id").fetchall()
+        conn_m.close()
 
-    def test_dry_run_intact_with_fallback(self, vsync_module, tmp_db, sample_chat_text):
-        """--dry-run should show fallback without error."""
-        # Mock urlopen to fail
-        with patch.object(vsync_module.urllib.request, 'urlopen',
+        argv = [
+            "vantage-sync.py",
+            "--inline", sample_chat_text,
+            "--project", "test-proj",
+            "--llm",
+            "--timeout", "5",
+        ]
+        env_patch = {"VANTAGE_DB_PATH": tmp_db, "VANTAGE_MEM0_PATH": tmp_mem0}
+
+        with patch.dict(os.environ, env_patch, clear=False), \
+             patch.object(sys, "argv", argv), \
+             patch.object(vsync_module.urllib.request, "urlopen",
                           side_effect=Exception("Connection refused")):
-            items = vsync_module.extract_with_ollama(sample_chat_text, model="qwen2.5:7b", timeout=5)
-            assert vsync_module._last_extraction_source == "llm→regex"
+            with pytest.raises(SystemExit) as exc_info:
+                vsync_module.main()
+            assert exc_info.value.code == 1
 
-        # In dry-run, should not abort
-        source = vsync_module._last_extraction_source
-        llm_mode = True
-        dry_run = True
-        allow_flag = False
+        assert vsync_module._last_extraction_source == "llm→regex"
 
-        # Should NOT abort in dry-run
-        if llm_mode and not dry_run and not allow_flag:
-            if source == "llm→regex":
-                sys.exit(1)  # This path should NOT be taken
-
-        # Dry-run should return dry_run status
-        results = vsync_module.write_to_context_sync(tmp_db, items, "test-proj", dry_run=True)
-        assert all(r["status"] == "dry_run" for r in results)
-
-        # Verify no rows written
         conn = sqlite3.connect(tmp_db)
-        count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        after_primary = (
+            conn.execute("SELECT key, content, category, project_id FROM memories ORDER BY id").fetchall(),
+            conn.execute("SELECT id, name, root_path FROM projects ORDER BY id").fetchall(),
+        )
         conn.close()
-        assert count == 0
+        conn_m = sqlite3.connect(tmp_mem0)
+        after_mem0 = conn_m.execute("SELECT id, content FROM memories ORDER BY id").fetchall()
+        conn_m.close()
+
+        assert after_primary == before_primary == ([], [])
+        assert after_mem0 == before_mem0 == []
+
+    def test_llm_fallback_allowed_with_flag(self, vsync_module, tmp_db, tmp_mem0, sample_chat_text):
+        """LLM failure → regex fallback with --allow-regex-fallback should write via real main()."""
+        conn = sqlite3.connect(tmp_db)
+        before_count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn.close()
+        assert before_count == 0
+
+        argv = [
+            "vantage-sync.py",
+            "--inline", sample_chat_text,
+            "--project", "test-proj",
+            "--llm",
+            "--allow-regex-fallback",
+            "--timeout", "5",
+        ]
+        env_patch = {"VANTAGE_DB_PATH": tmp_db, "VANTAGE_MEM0_PATH": tmp_mem0}
+
+        with patch.dict(os.environ, env_patch, clear=False), \
+             patch.object(sys, "argv", argv), \
+             patch.object(vsync_module.urllib.request, "urlopen",
+                          side_effect=Exception("Connection refused")):
+            vsync_module.main()
+
+        assert vsync_module._last_extraction_source == "llm→regex"
+
+        conn = sqlite3.connect(tmp_db)
+        after_count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn.close()
+        conn_m = sqlite3.connect(tmp_mem0)
+        after_mem0_count = conn_m.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn_m.close()
+        assert after_count > 0
+        assert after_mem0_count == after_count
+
+    def test_dry_run_intact_with_fallback(self, vsync_module, tmp_db, tmp_mem0, sample_chat_text):
+        """--dry-run via real main() should show fallback without error and without writing."""
+        conn = sqlite3.connect(tmp_db)
+        before_primary = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn.close()
+        conn_m = sqlite3.connect(tmp_mem0)
+        before_mem0 = conn_m.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn_m.close()
+
+        argv = [
+            "vantage-sync.py",
+            "--inline", sample_chat_text,
+            "--project", "test-proj",
+            "--llm",
+            "--dry-run",
+            "--timeout", "5",
+        ]
+        env_patch = {"VANTAGE_DB_PATH": tmp_db, "VANTAGE_MEM0_PATH": tmp_mem0}
+
+        with patch.dict(os.environ, env_patch, clear=False), \
+             patch.object(sys, "argv", argv), \
+             patch.object(vsync_module.urllib.request, "urlopen",
+                          side_effect=Exception("Connection refused")):
+            vsync_module.main()
+
+        assert vsync_module._last_extraction_source == "llm→regex"
+
+        conn = sqlite3.connect(tmp_db)
+        after_primary = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn.close()
+        conn_m = sqlite3.connect(tmp_mem0)
+        after_mem0 = conn_m.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn_m.close()
+        assert after_primary == before_primary == 0
+        assert after_mem0 == before_mem0 == 0
 
     def test_report_shows_llm_to_regex_fallback(self, vsync_module, sample_chat_text):
         """Report should show 'llm→regex (fallback)' when LLM fails."""
@@ -686,9 +708,8 @@ class TestT2Chunking:
         assert len(items) == 1
         assert items[0]["content"] == "First decision."
 
-    def test_chunk_failure_all_or_nothing(self, vsync_module, tmp_db):
-        """If any chunk fails in write mode, should abort (T1 policy applies)."""
-        # Mock urlopen to fail on second chunk
+    def test_chunk_failure_all_or_nothing(self, vsync_module, tmp_db, tmp_mem0):
+        """If any chunk fails in write mode without fallback flag, real main() must abort before modifying DB."""
         call_count = [0]
 
         class MockResp:
@@ -712,49 +733,192 @@ class TestT2Chunking:
         def flaky_urlopen(req, timeout):
             call_count[0] += 1
             body = json.loads(req.data.decode("utf-8"))
-            # Warmup (call 1) succeeds
             if "keep_alive" in body and "prompt" not in body:
                 return MockResp(should_fail=False)
-            # Chunk 2 (call 3) fails - warmup is call 1, chunk 1 is call 2
             if call_count[0] == 3:
                 return MockResp(should_fail=True)
-            # Other chunks succeed
             return MockResp(should_fail=False)
 
-        # Large text to trigger multiple chunks
-        text = "x" * 12000
+        text = "DECISION: First decision\n" + ("x" * 6000) + "\nTODO: Second chunk task\n" + ("y" * 6000)
 
-        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=flaky_urlopen):
-            items = vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+        conn = sqlite3.connect(tmp_db)
+        before_primary = (
+            conn.execute("SELECT key, content, category, project_id FROM memories ORDER BY id").fetchall(),
+            conn.execute("SELECT id, name, root_path FROM projects ORDER BY id").fetchall(),
+        )
+        conn.close()
+        conn_m = sqlite3.connect(tmp_mem0)
+        before_mem0 = conn_m.execute("SELECT id, content FROM memories ORDER BY id").fetchall()
+        conn_m.close()
 
-        # Should have 2 processed, 1 failed (chunk 3 succeeds)
+        argv = [
+            "vantage-sync.py",
+            "--inline", text,
+            "--project", "test-proj",
+            "--llm",
+            "--timeout", "5",
+        ]
+        env_patch = {"VANTAGE_DB_PATH": tmp_db, "VANTAGE_MEM0_PATH": tmp_mem0}
+
+        with patch.dict(os.environ, env_patch, clear=False), \
+             patch.object(sys, "argv", argv), \
+             patch.object(vsync_module.urllib.request, "urlopen", side_effect=flaky_urlopen):
+            with pytest.raises(SystemExit) as exc_info:
+                vsync_module.main()
+            assert exc_info.value.code == 1
+
         assert vsync_module._chunk_stats["processed"] == 2
         assert vsync_module._chunk_stats["failed"] == 1
+        assert vsync_module._last_extraction_source == "llm"
 
-        # In write mode with failures, should abort (enforced by T2 policy)
-        source = vsync_module._last_extraction_source
-        # With items but chunk failures, source is still "llm" (not fallback to regex)
-        # But chunk_stats shows failure - the main() check should abort
-        assert source == "llm"  # Still llm mode, not regex fallback
-        assert vsync_module._chunk_stats["failed"] > 0
+        conn = sqlite3.connect(tmp_db)
+        after_primary = (
+            conn.execute("SELECT key, content, category, project_id FROM memories ORDER BY id").fetchall(),
+            conn.execute("SELECT id, name, root_path FROM projects ORDER BY id").fetchall(),
+        )
+        conn.close()
+        conn_m = sqlite3.connect(tmp_mem0)
+        after_mem0 = conn_m.execute("SELECT id, content FROM memories ORDER BY id").fetchall()
+        conn_m.close()
 
-        # Simulate the check in main()
-        llm_mode = True
-        dry_run = False
-        allow_flag = False
-        chunk_stats = vsync_module._chunk_stats
+        assert after_primary == before_primary == ([], [])
+        assert after_mem0 == before_mem0 == []
 
-        if llm_mode and not dry_run and not allow_flag:
-            if chunk_stats["failed"] > 0:
-                with pytest.raises(SystemExit) as exc_info:
-                    print(
-                        f"ERROR: {chunk_stats['failed']} chunk(s) failed during LLM extraction. "
-                        "In write mode, this produces incomplete results. "
-                        "Use --allow-regex-fallback to permit partial results, or re-run with --dry-run to preview.",
-                        file=sys.stderr,
-                    )
-                    sys.exit(1)
-                assert exc_info.value.code == 1
+    def test_chunk_failure_dry_run_no_writes(self, vsync_module, tmp_db, tmp_mem0):
+        """With --dry-run, partial chunk failure does not abort and does not modify DB."""
+        import io
+        from contextlib import redirect_stdout
+
+        call_count = [0]
+
+        class MockResp:
+            def __init__(self, should_fail=False):
+                self.should_fail = should_fail
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                if self.should_fail:
+                    raise Exception("Chunk 2 failed")
+                return json.dumps({
+                    "response": json.dumps({
+                        "decisions": [{"content": "First decision"}],
+                        "tasks": [],
+                        "facts": []
+                    })
+                }).encode("utf-8")
+
+        def flaky_urlopen(req, timeout):
+            call_count[0] += 1
+            body = json.loads(req.data.decode("utf-8"))
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp(should_fail=False)
+            if call_count[0] == 3:
+                return MockResp(should_fail=True)
+            return MockResp(should_fail=False)
+
+        text = "DECISION: First decision\n" + ("x" * 6000) + "\nTODO: Second chunk task\n" + ("y" * 6000)
+
+        conn = sqlite3.connect(tmp_db)
+        before_primary = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn.close()
+        conn_m = sqlite3.connect(tmp_mem0)
+        before_mem0 = conn_m.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn_m.close()
+
+        argv = [
+            "vantage-sync.py",
+            "--inline", text,
+            "--project", "test-proj",
+            "--llm",
+            "--dry-run",
+            "--timeout", "5",
+        ]
+        env_patch = {"VANTAGE_DB_PATH": tmp_db, "VANTAGE_MEM0_PATH": tmp_mem0}
+        out = io.StringIO()
+
+        with patch.dict(os.environ, env_patch, clear=False), \
+             patch.object(sys, "argv", argv), \
+             patch.object(vsync_module.urllib.request, "urlopen", side_effect=flaky_urlopen), \
+             redirect_stdout(out):
+            vsync_module.main()
+
+        report = out.getvalue()
+        assert "**Tramos:** 2 procesados, 1 fallidos" in report
+
+        conn = sqlite3.connect(tmp_db)
+        after_primary = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn.close()
+        conn_m = sqlite3.connect(tmp_mem0)
+        after_mem0 = conn_m.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn_m.close()
+        assert after_primary == before_primary == 0
+        assert after_mem0 == before_mem0 == 0
+
+    def test_chunk_failure_allow_regex_fallback_prevents_partial_write(self, vsync_module, tmp_db, tmp_mem0):
+        """With --allow-regex-fallback, chunk failure discards partial LLM output and falls back to full-text regex."""
+        call_count = [0]
+
+        class MockResp:
+            def __init__(self, should_fail=False):
+                self.should_fail = should_fail
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                if self.should_fail:
+                    raise Exception("Chunk 2 failed")
+                return json.dumps({
+                    "response": json.dumps({
+                        "decisions": [{"content": "Chunk 1 LLM decision"}],
+                        "tasks": [],
+                        "facts": []
+                    })
+                }).encode("utf-8")
+
+        def flaky_urlopen(req, timeout):
+            call_count[0] += 1
+            body = json.loads(req.data.decode("utf-8"))
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp(should_fail=False)
+            if call_count[0] == 3:
+                return MockResp(should_fail=True)
+            return MockResp(should_fail=False)
+
+        text = (
+            "DECISION: Chunk 1 decision\n"
+            + ("x" * 5200)
+            + "\nTODO: Chunk 2 task must not be lost\n"
+        )
+
+        argv = [
+            "vantage-sync.py",
+            "--inline", text,
+            "--project", "test-proj",
+            "--llm",
+            "--allow-regex-fallback",
+            "--timeout", "5",
+        ]
+        env_patch = {"VANTAGE_DB_PATH": tmp_db, "VANTAGE_MEM0_PATH": tmp_mem0}
+
+        with patch.dict(os.environ, env_patch, clear=False), \
+             patch.object(sys, "argv", argv), \
+             patch.object(vsync_module.urllib.request, "urlopen", side_effect=flaky_urlopen):
+            vsync_module.main()
+
+        assert vsync_module._chunk_stats["processed"] == 1
+        assert vsync_module._chunk_stats["failed"] == 1
+        assert vsync_module._last_extraction_source == "llm→regex"
+
+        conn = sqlite3.connect(tmp_db)
+        rows = conn.execute("SELECT category, content FROM memories ORDER BY category").fetchall()
+        conn.close()
+        contents = [r[1] for r in rows]
+        assert "Chunk 1 decision" in contents
+        assert "Chunk 2 task must not be lost" in contents
+        assert "Chunk 1 LLM decision" not in contents
 
 
 class TestEndToEnd:
@@ -988,6 +1152,50 @@ class TestT4Timeouts:
         # All chunk calls should use the chunk timeout
         chunk_timeouts = timeout_log[1:]
         assert all(t == 30 for t in chunk_timeouts)
+
+    def test_warmup_validates_api_response_contract(self, vsync_module):
+        """warmup_ollama must validate the JSON payload from /api/generate (error / done fields)."""
+        class MockWarmupResp:
+            def __init__(self, payload_bytes: bytes):
+                self.payload_bytes = payload_bytes
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                return self.payload_bytes
+
+        # 1. Valid Ollama preload response contract (done=True, done_reason="load")
+        valid_bytes = json.dumps({
+            "model": "qwen2.5:7b",
+            "created_at": "2026-10-12T00:00:00Z",
+            "response": "",
+            "done": True,
+            "done_reason": "load",
+        }).encode("utf-8")
+        with patch.object(vsync_module.urllib.request, "urlopen",
+                          return_value=MockWarmupResp(valid_bytes)):
+            vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
+
+        # 2. Ollama API error field in HTTP 200 JSON body must raise RuntimeError
+        err_bytes = json.dumps({"error": "model 'qwen2.5:7b' not found"}).encode("utf-8")
+        with patch.object(vsync_module.urllib.request, "urlopen",
+                          return_value=MockWarmupResp(err_bytes)):
+            with pytest.raises(RuntimeError, match="Ollama warmup error"):
+                vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
+
+        # 3. Incomplete warmup response (done=False) must raise RuntimeError
+        incomplete_bytes = json.dumps({"model": "qwen2.5:7b", "done": False}).encode("utf-8")
+        with patch.object(vsync_module.urllib.request, "urlopen",
+                          return_value=MockWarmupResp(incomplete_bytes)):
+            with pytest.raises(RuntimeError, match="done != True"):
+                vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
+
+        # 4. Non-JSON response must raise JSONDecodeError
+        with patch.object(vsync_module.urllib.request, "urlopen",
+                          return_value=MockWarmupResp(b"not-json")):
+            with pytest.raises(json.JSONDecodeError):
+                vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
 
 
 class TestNormalizationDedup:
