@@ -462,6 +462,7 @@ class TestLlmFallback:
         mock_resp.__enter__ = MagicMock(return_value=mock_resp)
         mock_resp.__exit__ = MagicMock(return_value=None)
         mock_resp.read.return_value = json.dumps({
+            "done": True,
             "response": '{"decisions": [], "tasks": [], "facts": []}'
         }).encode("utf-8")
 
@@ -684,9 +685,10 @@ class TestT2Chunking:
             def read(self):
                 call_count[0] += 1
                 if self.is_warmup:
-                    return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+                    return b'{"done": true, "response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
                 # Return same decision in both chunks
                 return json.dumps({
+                    "done": True,
                     "response": json.dumps({
                         "decisions": [{"content": "First decision."}],
                         "tasks": [],
@@ -723,6 +725,7 @@ class TestT2Chunking:
                 if self.should_fail:
                     raise Exception("Chunk 2 failed")
                 return json.dumps({
+                    "done": True,
                     "response": json.dumps({
                         "decisions": [{"content": "First decision"}],
                         "tasks": [],
@@ -802,6 +805,7 @@ class TestT2Chunking:
                 if self.should_fail:
                     raise Exception("Chunk 2 failed")
                 return json.dumps({
+                    "done": True,
                     "response": json.dumps({
                         "decisions": [{"content": "First decision"}],
                         "tasks": [],
@@ -871,6 +875,7 @@ class TestT2Chunking:
                 if self.should_fail:
                     raise Exception("Chunk 2 failed")
                 return json.dumps({
+                    "done": True,
                     "response": json.dumps({
                         "decisions": [{"content": "Chunk 1 LLM decision"}],
                         "tasks": [],
@@ -987,6 +992,7 @@ class TestOllamaOptions:
             def read(self):
                 # Return an LLM response with empty arrays to force regex fallback
                 return json.dumps({
+                    "done": True,
                     "response": '{"decisions": [], "tasks": [], "facts": []}'
                 }).encode("utf-8")
 
@@ -1012,6 +1018,7 @@ class TestOllamaOptions:
                 return False
             def read(self):
                 return json.dumps({
+                    "done": True,
                     "response": '{"decisions": [], "tasks": [], "facts": []}'
                 }).encode("utf-8")
 
@@ -1036,6 +1043,7 @@ class TestOllamaOptions:
                 return False
             def read(self):
                 return json.dumps({
+                    "done": True,
                     "response": '{"decisions": [], "tasks": [], "facts": []}'
                 }).encode("utf-8")
 
@@ -1067,7 +1075,7 @@ class TestT4Timeouts:
                 return False
             def read(self):
                 call_log.append("warmup" if self.is_warmup else "chunk")
-                return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+                return b'{"done": true, "response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
 
         def capture_urlopen(req, timeout):
             body = json.loads(req.data.decode("utf-8"))
@@ -1083,8 +1091,9 @@ class TestT4Timeouts:
         # Should have 1 warmup + 1 chunk call
         assert call_log == ["warmup", "chunk"]
 
-        # Verify warmup payload has num_ctx and keep_alive="5m"
+        # Verify warmup payload has stream=False, num_ctx, and keep_alive="5m"
         warmup_body = captured_bodies[0]
+        assert warmup_body["stream"] is False
         assert warmup_body["keep_alive"] == "5m"
         assert "options" in warmup_body
         assert warmup_body["options"]["num_ctx"] == 8192
@@ -1112,7 +1121,7 @@ class TestT4Timeouts:
             def __exit__(self, *a):
                 return False
             def read(self):
-                return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+                return b'{"done": true, "response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
 
         def capture_urlopen(req, timeout):
             timeout_log.append(timeout)
@@ -1135,7 +1144,7 @@ class TestT4Timeouts:
             def __exit__(self, *a):
                 return False
             def read(self):
-                return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+                return b'{"done": true, "response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
 
         def capture_urlopen(req, timeout):
             timeout_log.append(timeout)
@@ -1154,7 +1163,9 @@ class TestT4Timeouts:
         assert all(t == 30 for t in chunk_timeouts)
 
     def test_warmup_validates_api_response_contract(self, vsync_module):
-        """warmup_ollama must validate the JSON payload from /api/generate (error / done fields)."""
+        """warmup_ollama must enforce stream=False and validate the JSON payload from /api/generate."""
+        captured_requests = []
+
         class MockWarmupResp:
             def __init__(self, payload_bytes: bytes):
                 self.payload_bytes = payload_bytes
@@ -1165,7 +1176,13 @@ class TestT4Timeouts:
             def read(self):
                 return self.payload_bytes
 
-        # 1. Valid Ollama preload response contract (done=True, done_reason="load")
+        def make_urlopen(payload_bytes: bytes):
+            def _urlopen(req, timeout):
+                captured_requests.append(json.loads(req.data.decode("utf-8")))
+                return MockWarmupResp(payload_bytes)
+            return _urlopen
+
+        # 1. Valid Ollama preload response contract (done=True, done_reason="load") and stream=False request
         valid_bytes = json.dumps({
             "model": "qwen2.5:7b",
             "created_at": "2026-10-12T00:00:00Z",
@@ -1174,27 +1191,48 @@ class TestT4Timeouts:
             "done_reason": "load",
         }).encode("utf-8")
         with patch.object(vsync_module.urllib.request, "urlopen",
-                          return_value=MockWarmupResp(valid_bytes)):
+                          side_effect=make_urlopen(valid_bytes)):
             vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
+        assert captured_requests[-1]["stream"] is False
+        assert captured_requests[-1]["model"] == "qwen2.5:7b"
+        assert captured_requests[-1]["keep_alive"] == "5m"
+        assert captured_requests[-1]["options"]["num_ctx"] == 8192
 
-        # 2. Ollama API error field in HTTP 200 JSON body must raise RuntimeError
+        # 2. Malformed JSON response must raise JSONDecodeError (or ValueError if non-dict JSON)
+        with patch.object(vsync_module.urllib.request, "urlopen",
+                          side_effect=make_urlopen(b"not-json")):
+            with pytest.raises(json.JSONDecodeError):
+                vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
+
+        with patch.object(vsync_module.urllib.request, "urlopen",
+                          side_effect=make_urlopen(b"[]")):
+            with pytest.raises(ValueError, match="not a JSON object"):
+                vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
+
+        # 3. Incomplete warmup responses (done=False or missing 'done' field) must raise RuntimeError
+        incomplete_false = json.dumps({"model": "qwen2.5:7b", "done": False}).encode("utf-8")
+        with patch.object(vsync_module.urllib.request, "urlopen",
+                          side_effect=make_urlopen(incomplete_false)):
+            with pytest.raises(RuntimeError, match="missing done=True"):
+                vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
+
+        incomplete_missing_done = json.dumps({"model": "qwen2.5:7b", "response": ""}).encode("utf-8")
+        with patch.object(vsync_module.urllib.request, "urlopen",
+                          side_effect=make_urlopen(incomplete_missing_done)):
+            with pytest.raises(RuntimeError, match="missing done=True"):
+                vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
+
+        incomplete_empty_obj = b"{}"
+        with patch.object(vsync_module.urllib.request, "urlopen",
+                          side_effect=make_urlopen(incomplete_empty_obj)):
+            with pytest.raises(RuntimeError, match="missing done=True"):
+                vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
+
+        # 4. Explicit Ollama API error field in HTTP 200 JSON body must raise RuntimeError
         err_bytes = json.dumps({"error": "model 'qwen2.5:7b' not found"}).encode("utf-8")
         with patch.object(vsync_module.urllib.request, "urlopen",
-                          return_value=MockWarmupResp(err_bytes)):
+                          side_effect=make_urlopen(err_bytes)):
             with pytest.raises(RuntimeError, match="Ollama warmup error"):
-                vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
-
-        # 3. Incomplete warmup response (done=False) must raise RuntimeError
-        incomplete_bytes = json.dumps({"model": "qwen2.5:7b", "done": False}).encode("utf-8")
-        with patch.object(vsync_module.urllib.request, "urlopen",
-                          return_value=MockWarmupResp(incomplete_bytes)):
-            with pytest.raises(RuntimeError, match="done != True"):
-                vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
-
-        # 4. Non-JSON response must raise JSONDecodeError
-        with patch.object(vsync_module.urllib.request, "urlopen",
-                          return_value=MockWarmupResp(b"not-json")):
-            with pytest.raises(json.JSONDecodeError):
                 vsync_module.warmup_ollama("qwen2.5:7b", timeout=10)
 
 

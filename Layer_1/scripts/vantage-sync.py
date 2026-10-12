@@ -238,6 +238,7 @@ def warmup_ollama(model: str = "qwen2.5:7b", timeout: int = DEFAULT_WARMUP_TIMEO
 
     payload = json.dumps({
         "model": model,
+        "stream": False,
         "keep_alive": "5m",  # Keep model loaded for 5 minutes after warmup
         "options": {
             "num_ctx": OLLAMA_NUM_CTX,  # T4: same num_ctx as chunks
@@ -257,8 +258,8 @@ def warmup_ollama(model: str = "qwen2.5:7b", timeout: int = DEFAULT_WARMUP_TIMEO
             raise ValueError("Warmup response is not a JSON object")
         if raw.get("error"):
             raise RuntimeError(f"Ollama warmup error: {raw['error']}")
-        if "done" in raw and raw.get("done") is not True:
-            raise RuntimeError("Ollama warmup response indicates done != True")
+        if raw.get("done") is not True:
+            raise RuntimeError("Ollama warmup response missing done=True")
         print("[info] Warmup complete", file=sys.stderr)
     except Exception as e:
         print(f"[info] Warmup failed ({e}) — treating as LLM failure", file=sys.stderr)
