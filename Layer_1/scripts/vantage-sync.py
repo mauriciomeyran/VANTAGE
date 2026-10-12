@@ -40,6 +40,9 @@ LLM_TRUNCATE_LIMIT = 8000       # max chars to send to Ollama
 LLM_TAIL_LENGTH = 6000          # chars of the end to always preserve
 LLM_HEAD_LENGTH = 2000          # chars of the beginning to keep as context
 
+# Module-level tracker for extraction source (regex vs LLM vs LLM→regex fallback)
+_last_extraction_source: str = "regex"
+
 
 # ─── Regex extraction patterns ────────────────────────────────────────────────
 # Each entry: (category, compiled_regex, capture_group_index)
@@ -92,6 +95,8 @@ def extract_items(text: str) -> list[dict]:
 
 def parse_text_input(text: str) -> list[dict]:
     """Parse plain text chat dump via regex."""
+    global _last_extraction_source
+    _last_extraction_source = "regex"
     return extract_items(text)
 
 
@@ -134,6 +139,8 @@ def normalize_json_input(raw: str) -> str:
 
 def parse_json_input(raw: str) -> list[dict]:
     """Parse JSON-formatted chat dump, normalize to text, then extract via regex."""
+    global _last_extraction_source
+    _last_extraction_source = "regex"
     full_text = normalize_json_input(raw)
     return extract_items(full_text)
 
@@ -188,7 +195,9 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
 
     Makes a local-only POST to http://localhost:11434/api/generate.
     Returns items in the same shape as extract_items().
+    Sets _last_extraction_source to "llm" or "llm→regex (fallback)".
     """
+    global _last_extraction_source
     truncated = intelligent_truncate(text)
 
     payload = json.dumps({
@@ -221,14 +230,17 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
                     })
 
         if items:
+            _last_extraction_source = "llm"
             return items
 
         # LLM returned empty — fall back to regex
         print("[info] LLM returned no items — falling back to regex", file=sys.stderr)
+        _last_extraction_source = "llm→regex"
         return extract_items(text)
 
     except Exception as e:
         print(f"[info] LLM extraction failed ({e}) — falling back to regex", file=sys.stderr)
+        _last_extraction_source = "llm→regex"
         return extract_items(text)
 
 
@@ -264,6 +276,7 @@ def validate_db_file(db_path: str, required_tables: list[str]) -> sqlite3.Connec
     Returns an open connection if valid.
     Exits with code 1 if the DB is missing, 0 bytes, or missing tables
     — never returns None (exits before returning).
+    Uses retry_sqlite for lock resilience.
     """
     if not os.path.exists(db_path):
         print(f"ERROR: database file not found: {db_path}", file=sys.stderr)
@@ -277,12 +290,21 @@ def validate_db_file(db_path: str, required_tables: list[str]) -> sqlite3.Connec
         )
         sys.exit(1)
 
-    conn = connect_db(db_path)
-    if not validate_db_schema(conn, required_tables):
-        conn.close()
-        sys.exit(1)
+    def _connect_and_validate():
+        conn = connect_db(db_path)
+        if not validate_db_schema(conn, required_tables):
+            conn.close()
+            sys.exit(1)
+        return conn
 
-    return conn
+    try:
+        return retry_sqlite(_connect_and_validate)
+    except RuntimeError as e:
+        print(
+            f"ERROR: database at '{db_path}' is locked after retries: {e}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
 
 def retry_sqlite(fn, max_retries: int = 3, base_delay: float = 0.1):
@@ -420,9 +442,33 @@ def write_to_mem0(mem0_path: str, items: list[dict],
     Failures here are non-fatal — they surface as warnings in the report.
     Fix 4: dedupe_key uses full content hash (not content[:12] prefix).
 
-    mem0 schema:
-      id TEXT PRIMARY KEY, kind, content, scope, provenance, metadata,
-      embedding, dedupe_key, created_at, updated_at
+    Real mem0 schema (verified from ~/.vantage/mem0/memories.sqlite):
+      CREATE TABLE memories (
+          id TEXT PRIMARY KEY,
+          kind TEXT NOT NULL,
+          content TEXT NOT NULL,
+          scope TEXT NOT NULL,
+          provenance TEXT NOT NULL,
+          metadata TEXT NOT NULL,
+          embedding TEXT NOT NULL,
+          dedupe_key TEXT NOT NULL DEFAULT '',
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL
+      );
+      CREATE INDEX idx_memories_dedupe_key ON memories (dedupe_key);
+
+    PRAGMA table_info(memories):
+      0|id|TEXT|0||1
+      1|kind|TEXT|1||0
+      2|content|TEXT|1||0
+      3|scope|TEXT|1||0
+      4|provenance|TEXT|1||0
+      5|metadata|TEXT|1||0
+      6|embedding|TEXT|1||0
+      7|dedupe_key|TEXT|1|''|0
+      8|created_at|TEXT|1||0
+      9|updated_at|TEXT|1||0
+
     No unique constraint on dedupe_key — dedup is enforced by PK (id).
     """
     results: list[dict] = []
@@ -548,12 +594,25 @@ def write_to_mem0_safe(mem0_path: str, items: list[dict],
 # ─── Report ───────────────────────────────────────────────────────────────────
 
 def print_report(input_source: str, items: list[dict],
-                 project_id: str | None, dry_run: bool, llm_mode: bool,
+                 project_id: str | None, dry_run: bool,
                  primary_results: list[dict],
                  mem0_results: list[dict]) -> None:
-    """Print a clean Markdown execution report."""
+    """Print a clean Markdown execution report.
+
+    Engine reflects the actual extraction source:
+      - "regex" for default heuristic mode
+      - "llm (qwen2.5:7b)" for successful Ollama extraction
+      - "llm→regex (fallback)" when LLM failed and regex was used
+    """
     mode = "DRY RUN (no writes)" if dry_run else "WRITE"
-    engine = "Ollama LLM" if llm_mode else "regex"
+    # Determine engine label from module-level tracker
+    source = globals().get("_last_extraction_source", "regex")
+    if source == "llm":
+        engine = "llm (qwen2.5:7b)"
+    elif source == "llm→regex":
+        engine = "llm→regex (fallback)"
+    else:
+        engine = "regex"
     print()
     print("# vantage-sync.py — Execution Report")
     print()
