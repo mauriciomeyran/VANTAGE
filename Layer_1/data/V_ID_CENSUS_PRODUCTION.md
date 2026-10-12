@@ -15,19 +15,19 @@
 | [`CHARTER:DECISIONS-009`](https://app.notion.com/p/f87938befc428263a305819877d2245f#a2a688b0c9874f05990238b0c72b7a9b) | 2.9 | Blueprint de reescritura KERNEL/MANUAL v10 — adopción híbrida |
 | [`CHARTER:DECISIONS-010`](https://app.notion.com/p/f87938befc428263a305819877d2245f#60edda41d7ac4601b824838882d8d02e) | 2.10 | Creación de este Charter |
 | [`CHARTER:DECISIONS-011`](https://app.notion.com/p/f87938befc428263a305819877d2245f#55b26526efbb46b38e8666abf8877599) | 2.11 | CLAUDE/MAIN declarado gatekeeper exclusivo del Charter |
-| [`CHARTER:DECISIONS-012`](https://app.notion.com/p/f87938befc428263a305819877d2245f) | 2.12 | Re-key semántico de IDs canónicos del KERNEL (v10.3) |
-| [`CHARTER:DECISIONS-013`](https://app.notion.com/p/f87938befc428263a305819877d2245f) | 2.13 | (pendiente de nombre canónico) |
-| [`CHARTER:DECISIONS-014`](https://app.notion.com/p/f87938befc428263a305819877d2245f) | 2.14 | (pendiente de nombre canónico) |
-| [`CHARTER:DECISIONS-015`](https://app.notion.com/p/f87938befc428263a305819877d2245f) | 2.15 | (pendiente de nombre canónico) |
-| [`CHARTER:DECISIONS-016`](https://app.notion.com/p/f87938befc428263a305819877d2245f) | 2.16 | (pendiente de nombre canónico) |
-| [`CHARTER:DECISIONS-017`](https://app.notion.com/p/f87938befc428263a305819877d2245f) | 2.17 | (pendiente de nombre canónico) |
+| [`CHARTER:DECISIONS-012`](https://app.notion.com/p/f87938befc428263a305819877d2245f#37b32cb9a26649a9b23632086ef1f471) | 2.12 | Re-key semántico de IDs canónicos del KERNEL (v10.3) |
+| [`CHARTER:DECISIONS-013`](https://app.notion.com/p/f87938befc428263a305819877d2245f#f96b968f7ef54ecdb84a4fa13dd5e954) | 2.13 | hard_blocks.json es la fuente ejecutable única de Hard Blocks; Dockers sale |
+| [`CHARTER:DECISIONS-014`](https://app.notion.com/p/f87938befc428263a305819877d2245f#0963d7a85fd54172a971c5c64bfec2f6) | 2.14 | Automatización programada deshabilitada: ejecución manual bajo demanda |
+| [`CHARTER:DECISIONS-015`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d4d87fc71b304ce598bb1765e353b5f5) | 2.15 | Acceso a skills por adjunto |
+| [`CHARTER:DECISIONS-016`](https://app.notion.com/p/f87938befc428263a305819877d2245f#6b16488ebc5a470ea645f4b313de1ea2) | 2.16 | Repositorio sin ramas vestigiales |
+| [`CHARTER:DECISIONS-017`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d74f91c5ae8940d99149e8f23b5cf1d5) | 2.17 | Roles de tienda bloqueados en la ingesta L1 |
 | [`CHARTER:FAILURES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428075b83ec234ef46eed3) | 03 | Registro de Fallos |
 | [`CHARTER:FAILURES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42805f9285f417aa359826) | 3.1 | Reaparición de Hard Blocks ya corregidos |
 | [`CHARTER:FAILURES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280f29959f58b132ac9cb) | 3.2 | Patrón de reporte optimista (ticket RT-1) |
 | [`CHARTER:FAILURES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280998c78cf5f4df4689d) | 3.3 | Cédula de Reconciliación fabricada |
 | [`CHARTER:FAILURES-004`](https://app.notion.com/p/f87938befc428263a305819877d2245f#119fab7b2a2340ab86a346cbd20b5a54) | 3.4 | Loop de auto-rechazo QA↔CV-B |
 | [`CHARTER:FAILURES-005`](https://app.notion.com/p/f87938befc428263a305819877d2245f#78ae3afe77e949b3a25941edc42e0d86) | 3.5 | Documentación que describe código ya retirado |
-| [`CHARTER:FAILURES-006`](https://app.notion.com/p/f87938befc428263a305819877d2245f) | 3.6 | (pendiente de nombre canónico) |
+| [`CHARTER:FAILURES-006`](https://app.notion.com/p/f87938befc428263a305819877d2245f#59eca0f7a2884b1c8bbe53f0083ee43f) | 3.6 | CANONICAL declarado sin fila de registro (Career Sites v2.0) |
 | [`CHARTER:NON-NEGOTIABLES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280d0b67de66fad8199c8) | 04 | Principios No Negociables |
 | [`CHARTER:NON-NEGOTIABLES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280499cb9f08227656612) | 4.1 | Python es dueño exclusivo de los campos Class B |
 | [`CHARTER:NON-NEGOTIABLES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428061a047e730d71fe71c) | 4.2 | APROBAR_WRITE obligatorio antes de cualquier escritura |
@@ -39,27 +39,17 @@
 | [`CHARTER:NON-NEGOTIABLES-008`](https://app.notion.com/p/f87938befc428263a305819877d2245f#b9ca36b00b124df9be3db39c0a629e3d) | 4.8 | Graph/Backlinks son artefactos derivados, nunca capa de autoridad |
 | [`CHARTER:NON-NEGOTIABLES-009`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d756328198ed4ea4bb7f39f7bb6027b7) | 4.9 | VM_Scope es binario (Alto/Bajo) |
 | [`CHARTER:NON-NEGOTIABLES-010`](https://app.notion.com/p/f87938befc428263a305819877d2245f#6cd49fcd84bd4a0eba084b1b0ab10ca1) | 4.10 | Hard Blocks reales se consultan siempre en la fuente |
-| [`CHARTER:NON-NEGOTIABLES-011`](https://app.notion.com/p/f87938befc428263a305819877d2245f) | 4.11 | (pendiente de nombre canónico) |
+| [`CHARTER:NON-NEGOTIABLES-011`](https://app.notion.com/p/f87938befc428263a305819877d2245f#e62afacac72a4864906afe31fc91ce65) | 4.11 | Sin ubicaciones improvisadas |
 | [`CHARTER:MILESTONES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280dc8598dadd5e8c050f) | 05 | Hitos y Milestones |
 | [`CHARTER:MILESTONES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280eb9ad8ce382d23dd35) | 5.1 | Hito 1 — Track Beta (código) cerrado |
 | [`CHARTER:MILESTONES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280c0bf5dc992ed50be72) | 5.2 | Hito 2 — T2.1 KERNEL v10 en paralelo a Track Beta |
 | [`CHARTER:MILESTONES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280658fd9d6c19954a7ea) | 5.3 | Hito 3 — MANUAL v10 en paralelo a KERNEL v10 |
 | [`CHARTER:MILESTONES-004`](https://app.notion.com/p/f87938befc428263a305819877d2245f#01cf0330464a4dbc97d1584d4176dd41) | 5.4 | Hito 4 — Fase 3 sync + verificación cruzada |
 | [`CHARTER:MILESTONES-005`](https://app.notion.com/p/f87938befc428263a305819877d2245f#301a87b2a0f841ce8917c35189fbb99a) | 5.5 | Hito 5 — Charter actualizado en cada decisión estructural |
-| [`CHARTER:MILESTONES-006`](https://app.notion.com/p/f87938befc428263a305819877d2245f) | 5.6 | (pendiente de nombre canónico) |
-| [`CHARTER:MILESTONES-007`](https://app.notion.com/p/f87938befc428263a305819877d2245f) | 5.7 | (pendiente de nombre canónico) |
+| [`CHARTER:MILESTONES-006`](https://app.notion.com/p/f87938befc428263a305819877d2245f#7d468b37faf1450c9290417d44a1aab6) | 5.6 | Hito 6 — Repositorio consolidado en main |
+| [`CHARTER:MILESTONES-007`](https://app.notion.com/p/f87938befc428263a305819877d2245f#b3b881967fb846f5999ea79b8c174d7a) | 5.7 | Hito 7 — Primera producción controlada de Workday |
 | [`CHARTER:CONTINUITY`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42803e9c24f2d6e9bced1e) | 06 | Continuidad Operativa |
 | [`CHARTER:STATUS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280ebb77fef32858e73c4) | 07 | Estatus del Proyecto |
-| [`CHARTER:DECISIONS-012`](https://app.notion.com/p/f87938befc428263a305819877d2245f#37b32cb9a26649a9b23632086ef1f471) | 2.12 | Subsección 012 de CHARTER:DECISIONS-012 |
-| [`CHARTER:DECISIONS-013`](https://app.notion.com/p/f87938befc428263a305819877d2245f#f96b968f7ef54ecdb84a4fa13dd5e954) | 2.13 | Subsección 013 de CHARTER:DECISIONS-013 |
-| [`CHARTER:DECISIONS-014`](https://app.notion.com/p/f87938befc428263a305819877d2245f#0963d7a85fd54172a971c5c64bfec2f6) | 2.14 | Subsección 014 de CHARTER:DECISIONS-014 |
-| [`CHARTER:DECISIONS-015`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d4d87fc71b304ce598bb1765e353b5f5) | 2.15 | Subsección 015 de CHARTER:DECISIONS-015 |
-| [`CHARTER:DECISIONS-016`](https://app.notion.com/p/f87938befc428263a305819877d2245f#6b16488ebc5a470ea645f4b313de1ea2) | 2.16 | Subsección 016 de CHARTER:DECISIONS-016 |
-| [`CHARTER:DECISIONS-017`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d74f91c5ae8940d99149e8f23b5cf1d5) | 2.17 | Subsección 017 de CHARTER:DECISIONS-017 |
-| [`CHARTER:FAILURES-006`](https://app.notion.com/p/f87938befc428263a305819877d2245f#59eca0f7a2884b1c8bbe53f0083ee43f) | 3.6 | Subsección 006 de CHARTER:FAILURES-006 |
-| [`CHARTER:MILESTONES-006`](https://app.notion.com/p/f87938befc428263a305819877d2245f#7d468b37faf1450c9290417d44a1aab6) | 5.6 | Subsección 006 de CHARTER:MILESTONES-006 |
-| [`CHARTER:MILESTONES-007`](https://app.notion.com/p/f87938befc428263a305819877d2245f#b3b881967fb846f5999ea79b8c174d7a) | 5.7 | Subsección 007 de CHARTER:MILESTONES-007 |
-| [`CHARTER:NON-NEGOTIABLES-011`](https://app.notion.com/p/f87938befc428263a305819877d2245f#e62afacac72a4864906afe31fc91ce65) | 4.11 | Subsección 011 de CHARTER:NON-NEGOTIABLES-011 |
 
 ---
 
@@ -253,6 +243,7 @@
 | [`CANON:KPI-006`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281f2894af47b285e5577) | 06.6 | KPI06 — Rebranding Coverage 100% (Levi's/Dockers) |
 | [`CANON:KPI-007`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281ff8348d7c6ac673cef) | 06.7 | KPI07 — Adidas Punch List Count (17) |
 | [`CANON:KPI-008`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281a1968ecac8f9a3ee83) | 06.8 | KPI08 — Years Experience (10+ Canonical) |
+| [`CANON:KPI-009`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#fb04d072ea334442965aae362967988b) | 06.9 | KPI09 — Rebranding Savings >10% vs estimated budget |
 | [`CANON:FACTS`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281aeaccde75fb76faff3) | 07 | Canonical Facts |
 | [`CANON:FACT-001`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42818ab960d88946e68d80) | 07.1 | Fact — ALDO Certification Year |
 | [`CANON:FACT-002`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc428191b95adafec2663efc) | 07.2 | Fact — ALDO Employment Period |
@@ -268,6 +259,8 @@
 | [`CANON:UF-004`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#c38756ec5a374a4087b7c29df7d6cae9) | 07.12 | Unique Factor — Contact Block |
 | [`CANON:UF-005`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#9f4880b2b4654caca518c3105f4b5f76) | 07.13 | Unique Factor — LinkedIn URL |
 | [`CANON:UF-006`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#4e2a3313ebd34163a8a1da998e82f1b2) | 07.14 | Unique Factor — Portfolio URLs |
+| [`CANON:FACT-009`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#fe0bda55c2864a32b39b542396785402) | 07.15 | Fact — Aéropostale Overstock Refresh |
+| [`CANON:FACT-010`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#a1bf826d08484bac8e45149668ef195e) | 07.16 | Fact — Dockers México Scope |
 | [`CANON:EDUCATION`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42819cbf71ca4a708f6502) | 08 | Education (reintegrada v9.11.0) |
 | [`CANON:EDUCATION-001`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281ee8fbce635d829722c) | 08.1 | ED01 — Licenciatura en Artes Visuales |
 | [`CANON:EDUCATION-002`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc4281fd87a3f4d4bbeff061) | 08.2 | ED02 — Diplomado en Museos y Exposiciones |
@@ -291,9 +284,6 @@
 | [`CANON:OUTPUT-CONTRACT-004`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc428116bf15ed3965ba124f) | 12.4 | Output Contract — Positioning Modes (Aplicación) |
 | [`CANON:OUTPUT-CONTRACT-005`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc428104854bf2d1c481e193) | 12.5 | Output Contract — Positioning Modes (Aplicación en Output) |
 | [`CANON:DERIVED-OUTPUTS-ARCHIVE`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42815f9cd2c2f9c2410bfc) | 13 | Derived Outputs Archive (reintegrada v9.11.0) |
-| [`CANON:FACT-009`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#fe0bda55c2864a32b39b542396785402) | 07.15 | Subsección 009 de CANON:FACT-009 |
-| [`CANON:FACT-010`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#a1bf826d08484bac8e45149668ef195e) | 07.16 | Subsección 010 de CANON:FACT-010 |
-| [`CANON:KPI-009`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#fb04d072ea334442965aae362967988b) | 06.9 | Subsección 009 de CANON:KPI-009 |
 
 ---
 

@@ -167,30 +167,6 @@ verificada).
 ### 2.17 CHARTER:DECISIONS-017 — Roles de tienda bloqueados en la ingesta L1
 [2026-10-11] Los roles de tienda sin alcance estratégico o multi-tienda se bloquean en la ingesta de Layer 1. Evidencia: dry-run Workday/Chanel del 2026-10-11 (10 CLEAN y 1 BLOCKED en la fase de ingesta, con roles de tienda entre los CLEAN; inferencia por título, no verificada contra el código). Antes: gate como en el PR #25, sin el delta de recovery/scope-bajo-gate (decisión D4 del operador). Estado: implementación pendiente; esta entrada registra la decisión, no su aplicación.
 ---
-### 2.12 CHARTER:DECISIONS-012 — Re-key semántico de IDs canónicos del KERNEL (v10.3)
-
-_Cuerpo canónico en Notion — espejo pendiente de sync (alta local T13, 2026-10-12, sin ejecutar contra Notion). Resumen documentado en Changelog Archivo.md: re-key semántico de IDs canónicos (KERNEL:NAM-ID-GRAMMAR) sustituyendo KEYS opacos._
-
-### 2.13 CHARTER:DECISIONS-013 — (pendiente de nombre canónico)
-
-_Cuerpo canónico en Notion — espejo pendiente de sync (alta local T13, 2026-10-12, sin ejecutar contra Notion)._
-
-### 2.14 CHARTER:DECISIONS-014 — (pendiente de nombre canónico)
-
-_Cuerpo canónico en Notion — espejo pendiente de sync (alta local T13, 2026-10-12, sin ejecutar contra Notion)._
-
-### 2.15 CHARTER:DECISIONS-015 — (pendiente de nombre canónico)
-
-_Cuerpo canónico en Notion — espejo pendiente de sync (alta local T13, 2026-10-12, sin ejecutar contra Notion)._
-
-### 2.16 CHARTER:DECISIONS-016 — (pendiente de nombre canónico)
-
-_Cuerpo canónico en Notion — espejo pendiente de sync (alta local T13, 2026-10-12, sin ejecutar contra Notion)._
-
-### 2.17 CHARTER:DECISIONS-017 — (pendiente de nombre canónico)
-
-_Cuerpo canónico en Notion — espejo pendiente de sync (alta local T13, 2026-10-12, sin ejecutar contra Notion)._
-
 ## 3. CHARTER:FAILURES — Fracasos conocidos (para no repetir)
 > Si estás a punto de proponer algo que se parece a uno de estos, revisa primero
 por qué no funcionó.
@@ -242,10 +218,6 @@ automática.
 ### 3.6 CHARTER:FAILURES-006 — CANONICAL declarado sin fila de registro (Career Sites v2.0)
 Un release del Change Log (2026-10-06) declaró CANONICAL el contrato PromptA-v2.0+careersites. La verificación del 2026-10-07 encontró la página en CANDIDATE y sin fila en el Prompt Contract Registry, y el operador confirmó que no había promovido nada; el Acta y el brief de Workday repetían el CANONICAL. Causa raíz: los ejecutores reportaron la promoción y el Change Log la registró sin auditarla. Mitigación: solo el operador promueve; una promoción existe únicamente si hay fila con los 11 campos obligatorios y un SHA ligado a su ruta, verificable en git; un Change Log registra, no prueba estado.
 ---
-### 3.6 CHARTER:FAILURES-006 — (pendiente de nombre canónico)
-
-_Cuerpo canónico en Notion — espejo pendiente de sync (alta local T13, 2026-10-12, sin ejecutar contra Notion)._
-
 ## 4. CHARTER:NON-NEGOTIABLES — Reglas no negociables (consolidadas)
 > Estas reglas ya existen dispersas en KERNEL, MANUAL, System Prompt y
 ways-of-working. Se consolidan aquí con su razón de ser — la fuente normativa
@@ -279,10 +251,6 @@ Hard Blocks reales (empleadores que no recontratan) se consultan siempre contra 
 ### 4.11 CHARTER:NON-NEGOTIABLES-011 — Sin ubicaciones improvisadas
 Los agentes no crean carpetas, ramas ni rutas fuera de la estructura canónica del proyecto. Los entregables de sesión van en el chat o en ubicaciones que ya existen; si hace falta una nueva, se pide al operador antes de crearla. Por qué: la acumulación de carpetas y ramas ad hoc es el mismo patrón de drift que este proyecto corrige (ver DECISIONS-016).
 ---
-### 4.11 CHARTER:NON-NEGOTIABLES-011 — (pendiente de nombre canónico)
-
-_Cuerpo canónico en Notion — espejo pendiente de sync (alta local T13, 2026-10-12, sin ejecutar contra Notion)._
-
 ## 5. CHARTER:MILESTONES — Trayectoria esperada — hitos de fase, no lista de tareas
 > Esta sección no duplica el Plan de Trabajo (Notion) — ese vive de tareas que
 cambian de estado todos los días. Aquí van los hitos que casi nunca
@@ -333,14 +301,6 @@ Definición de hecho: main es la única rama (local y remota) y el historial de 
 ### 5.7 CHARTER:MILESTONES-007 — Hito 7 — Primera producción controlada de Workday
 Definición de hecho: (a) dry-run E2E de Workday/Chanel con feed real y sin escrituras a Notion (✅ 2026-10-11: 11 registros, 10 CLEAN y 1 BLOCKED en la fase de ingesta, 0 escrituras); (b) bloqueo de roles de tienda aplicado en la ingesta (DECISIONS-017); (c) un primer --apply acotado, con re-fetch en Notion que confirme los registros creados. LinkedIn queda fuera de este hito: su adquisición corre en el host del agente (ajuste de navegador de la app), no desde el repo.
 ---
-### 5.6 CHARTER:MILESTONES-006 — (pendiente de nombre canónico)
-
-_Cuerpo canónico en Notion — espejo pendiente de sync (alta local T13, 2026-10-12, sin ejecutar contra Notion)._
-
-### 5.7 CHARTER:MILESTONES-007 — (pendiente de nombre canónico)
-
-_Cuerpo canónico en Notion — espejo pendiente de sync (alta local T13, 2026-10-12, sin ejecutar contra Notion)._
-
 ## 6. CHARTER:CONTINUITY — Protocolo de continuidad entre agentes y sesiones
 Gatekeeping de cambios al propio Charter (decisión 2026-09-30 — ver sección
 2 y SP:BOOTLOADER-002). Ningún agente, bajo ninguna vía, escribe
