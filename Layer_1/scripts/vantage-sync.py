@@ -230,7 +230,7 @@ def split_into_chunks(text: str, size: int = 5000, overlap: int = 500) -> list[s
 def warmup_ollama(model: str = "qwen2.5:7b", timeout: int = DEFAULT_WARMUP_TIMEOUT) -> None:
     """Warmup Ollama by loading the model before actual extraction.
 
-    T4: POST to /api/generate with keep_alive only (no prompt).
+    T4: POST to /api/generate with keep_alive and options (num_ctx).
     This loads the model into memory so first chunk is faster.
     Warmup failure is treated as LLM failure.
     """
@@ -238,7 +238,10 @@ def warmup_ollama(model: str = "qwen2.5:7b", timeout: int = DEFAULT_WARMUP_TIMEO
 
     payload = json.dumps({
         "model": model,
-        "keep_alive": -1,  # Keep model loaded after warmup
+        "keep_alive": "5m",  # Keep model loaded for 5 minutes after warmup
+        "options": {
+            "num_ctx": OLLAMA_NUM_CTX,  # T4: same num_ctx as chunks
+        },
     }).encode("utf-8")
 
     try:
@@ -304,6 +307,7 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
             },
         }).encode("utf-8")
 
+        chunk_start = time.time()
         try:
             req = urllib.request.Request(
                 OLLAMA_URL,
@@ -313,6 +317,9 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 raw = json.loads(resp.read().decode("utf-8"))
             llm_output = json.loads(raw["response"])
+
+            chunk_duration = time.time() - chunk_start
+            print(f"[info] Chunk {chunk_num}/{len(chunks)} ok in {chunk_duration:.1f}s", file=sys.stderr)
 
             _chunk_stats["processed"] += 1
 
@@ -333,8 +340,9 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
                             })
 
         except Exception as e:
+            chunk_duration = time.time() - chunk_start
             _chunk_stats["failed"] += 1
-            print(f"[info] Chunk {chunk_num} failed ({e})", file=sys.stderr)
+            print(f"[info] Chunk {chunk_num}/{len(chunks)} failed after {chunk_duration:.1f}s ({e})", file=sys.stderr)
             # Continue to next chunk - all-or-nothing is enforced at write time
 
     if _chunk_stats["failed"] > 0:

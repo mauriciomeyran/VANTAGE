@@ -892,6 +892,7 @@ class TestT4Timeouts:
     def test_warmup_called_before_chunks(self, vsync_module):
         """Warmup should be called once before processing chunks."""
         call_log = []
+        captured_bodies = []
 
         class MockResp:
             def __init__(self, is_warmup=False):
@@ -906,6 +907,7 @@ class TestT4Timeouts:
 
         def capture_urlopen(req, timeout):
             body = json.loads(req.data.decode("utf-8"))
+            captured_bodies.append(body)
             # Warmup has keep_alive but no prompt
             if "keep_alive" in body and "prompt" not in body:
                 return MockResp(is_warmup=True)
@@ -916,6 +918,12 @@ class TestT4Timeouts:
 
         # Should have 1 warmup + 1 chunk call
         assert call_log == ["warmup", "chunk"]
+
+        # Verify warmup payload has num_ctx and keep_alive="5m"
+        warmup_body = captured_bodies[0]
+        assert warmup_body["keep_alive"] == "5m"
+        assert "options" in warmup_body
+        assert warmup_body["options"]["num_ctx"] == 8192
 
     def test_warmup_failure_triggers_regex_fallback(self, vsync_module):
         """If warmup fails, should fall back to regex."""
