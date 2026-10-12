@@ -65,7 +65,7 @@ que deben ser reproducibles y auditables. Se descartó el modelo alternativo de
 "la IA sugiere, Python valida después" porque permitía que una sugerencia mal
 calibrada de la IA se colara como escritura antes de la validación.
 ### 2.2 CHARTER:DECISIONS-002 — Aéropostale removido de Hard Blocks
-[2026-08-07] Confirmado con el operador que Aéropostale, a diferencia de L'Oréal/Levi's-Dockers/Palacio de Hierro, sí
+[2026-08-07] Confirmado con el operador que Aéropostale, a diferencia de L'Oréal/Levi's/Palacio de Hierro (Dockers dejó de ser Hard Block después: ver DECISIONS-013), sí
 recontrata y no debía excluirse de vacantes nuevas. Cualquier referencia previa
 que lo incluyera como Hard Block era un error, no una versión histórica válida.
 Este error reapareció después en al menos un brief operativo — ver sección 3,
@@ -82,6 +82,7 @@ de la introducción de S4-EVIDENCE (comando + output crudo) y la Regla de
 Adopción: una instancia que recibe evidencia completa la adopta sin re-ejecutar
 verificación, salvo contradicción explícita o inconsistencia interna de la
 evidencia misma.
+Aclaración 2026-10-11 (operador): el operador emite cada serial él mismo, en el momento en que se requiere, y es operador único: no existe riesgo operativo de seriales repetidos y un agente no lo reporta como tal. El contador GLOBAL_VANTAGE_COUNTER (state/vantage_handoff_counter.sqlite3, valor 101 el 2026-10-11) es registro, no autoridad.
 ### 2.4 CHARTER:DECISIONS-004 — Retiro de layer_1_run.py / consolidate_duplicates.py (G6)
 [2026-09-12, commit 7ce685ee] Consolidación del pipeline Layer 1 en layer_1_orchestrator.py como único activo;
 los scripts anteriores se archivaron formalmente en Archive/Legacy_Scripts/ con
@@ -153,6 +154,18 @@ expuesto al mismo patrón de drift que existe para corregir (ver el caso
 Littlebird/v9.22.20 como ejemplo de edición externa bien ejecutada, pero que
 motivó la pregunta de qué pasa cuando una edición no está tan bien
 verificada).
+### 2.12 CHARTER:DECISIONS-012 — Re-key semántico de IDs canónicos del KERNEL (v10.3)
+[2026-10-03] Los KEYS opacos del KERNEL (DOCUMENTATION-nnn, SCHEMA-00n, GATE-DECISION-nnn…) se sustituyen por slugs semánticos con la gramática KERNEL:NAM-ID-GRAMMAR; los alias de puente rigen un ciclo de release. Decisión in-session del operador (ticket T2.CHARTER). Razón: eliminar IDs opacos que causaron drift documental (ver DECISIONS-007). Se descartó mantener la numeración legacy con alias permanente porque perpetúa la ambigüedad.
+### 2.13 CHARTER:DECISIONS-013 — hard_blocks.json es la fuente ejecutable única de Hard Blocks; Dockers sale
+[2026-10-07, aplicada del 2026-10-09 al 2026-10-11] Layer_1/config/hard_blocks.json (Git) es la fuente ejecutable única de los Hard Blocks; el Manual §10 queda como redacción humana derivada. Set vigente: L'Oréal (todas las variantes), Levi's / Levi Strauss (alias levi strauss, levi strauss & co, levis, levi's) y El Palacio de Hierro. Dockers sale (vendida a otro holding en México, según el operador); Aéropostale tampoco es Hard Block (ver 2.2). Razón: cadena circular de autoridad Charter → KERNEL → JSON → Manual, donde el propio JSON se declaraba no-fuente (verificada 2026-10-06/07). Se descartó dejar la autoridad repartida entre los cuatro documentos porque perpetúa la circularidad. Propagación verificada: PR #25, hard_blocks.json v1.1 con test de paridad contra el matcher, LINKEDIN-RULES-002 §2, Manual §10 y las skills cv-a/qa del repo (9fb1a23). Residuales conocidos: el Corpus Bloque 06 del operador (fuera del repo) y la línea 21 de las notas del JSON, que aún remite a otra fuente canónica. El historial laboral en Levi's/Dockers sigue siendo válido para CV (ticket T2.R).
+### 2.14 CHARTER:DECISIONS-014 — Automatización programada deshabilitada: ejecución manual bajo demanda
+[2026-10-11, HO-000100] Los tres cron jobs (vantage.py sync, notion_backup.py y vl3) se deshabilitaron (Opción A): LaunchAgents renombrados a *.disabled-20261011 y crontab vacío con respaldo. Sync, backup y vl3 pasan a ejecución manual bajo demanda (MANUAL §8.1, KERNEL §04.5). Ejecutado por el operador y verificado por ARENA según el Change Log (entrada del 2026-10-11, 02:20); MAIN no lo re-verificó. Razón: no consta en las fuentes consultadas para esta actualización.
+### 2.15 CHARTER:DECISIONS-015 — Acceso a skills por adjunto
+[2026-10-11] No existe un sistema que homologue, sin fricción, el acceso a skills para todos los agentes. El operador adjunta el .md vigente de cada skill en el turno en que se usa, y esa copia rige. Las copias residentes en Projects o agentes no son fuente de verdad y su desfase no se trata como riesgo operativo. Razón: ausencia de un mecanismo común de acceso. Se descartó sincronizar copias por agente por no existir una vía que lo haga sin fricción.
+### 2.16 CHARTER:DECISIONS-016 — Repositorio sin ramas vestigiales
+[2026-10-11] Objetivo declarado por el operador: un repositorio sin ramas vestigiales, no un repositorio sin histórico. main es la única rama; el historial de una rama retirada se conserva como tag archive/<rama>, que se crea y se verifica en remoto antes de borrar. Se borra una rama remota cuando su material ya está en main o el operador lo descarta. Ejecutado el 2026-10-11: 9 ramas archivadas y borradas, con git branch -a mostrando solo main y origin/main (declarado por el operador); antes se había registrado una poda previa en T3.S del Plan de Trabajo. Recuperación: git show archive/<rama>:<ruta>. Razón: las ramas recovery, arena y devin acumuladas dejaban ambiguo cuál era el estado vigente en cada auditoría.
+### 2.17 CHARTER:DECISIONS-017 — Roles de tienda bloqueados en la ingesta L1
+[2026-10-11] Los roles de tienda sin alcance estratégico o multi-tienda se bloquean en la ingesta de Layer 1. Evidencia: dry-run Workday/Chanel del 2026-10-11 (10 CLEAN y 1 BLOCKED en la fase de ingesta, con roles de tienda entre los CLEAN; inferencia por título, no verificada contra el código). Antes: gate como en el PR #25, sin el delta de recovery/scope-bajo-gate (decisión D4 del operador). Estado: implementación pendiente; esta entrada registra la decisión, no su aplicación.
 ---
 ## 3. CHARTER:FAILURES — Fracasos conocidos (para no repetir)
 > Si estás a punto de proponer algo que se parece a uno de estos, revisa primero
@@ -202,6 +215,8 @@ escritura nueva o no. Mitigación parcial: SP:SYNC-RULE establece que la
 propiedad Versión del Change Log es la referencia oficial — pero la disciplina
 de verificarla antes de cualquier sesión de escritura normativa sigue sin ser
 automática.
+### 3.6 CHARTER:FAILURES-006 — CANONICAL declarado sin fila de registro (Career Sites v2.0)
+Un release del Change Log (2026-10-06) declaró CANONICAL el contrato PromptA-v2.0+careersites. La verificación del 2026-10-07 encontró la página en CANDIDATE y sin fila en el Prompt Contract Registry, y el operador confirmó que no había promovido nada; el Acta y el brief de Workday repetían el CANONICAL. Causa raíz: los ejecutores reportaron la promoción y el Change Log la registró sin auditarla. Mitigación: solo el operador promueve; una promoción existe únicamente si hay fila con los 11 campos obligatorios y un SHA ligado a su ruta, verificable en git; un Change Log registra, no prueba estado.
 ---
 ## 4. CHARTER:NON-NEGOTIABLES — Reglas no negociables (consolidadas)
 > Estas reglas ya existen dispersas en KERNEL, MANUAL, System Prompt y
@@ -231,8 +246,10 @@ tracker_flow.is_mutable() es la única fuente de verdad sobre mutabilidad de un 
 Graph/Backlinks son artefactos de observabilidad derivados, nunca una capa operativa de resolución o archivado. Por qué: decisión de producto explícita (sección 2) — VANTAGE archiva por movimiento de fila, no por grafo.
 ### 4.9 CHARTER:NON-NEGOTIABLES-009 — VM_Scope binario (Alto/Bajo), sin "Medio"
 VM_Scope es binario (Alto/Bajo) — no existe, ni debe reintroducirse, un valor "Medio" ni terminología de escaparatismo.
-### 4.10 CHARTER:NON-NEGOTIABLES-010 — Hard Blocks se consultan contra el KERNEL vigente
-Hard Blocks reales (empleadores que no recontratan) se consultan siempre contra el KERNEL vigente, nunca se re-derivan de un brief o auditoría histórica. Por qué: fracaso conocido de reaparición de Aéropostale (sección 3).
+### 4.10 CHARTER:NON-NEGOTIABLES-010 — Hard Blocks se consultan contra hard_blocks.json vigente
+Hard Blocks reales (empleadores que no recontratan) se consultan siempre contra Layer_1/config/hard_blocks.json vigente (fuente ejecutable única, ver DECISIONS-013); el Manual §10 es su redacción derivada. Nunca se re-derivan de un brief, auditoría o conversación histórica. Por qué: fracaso conocido de reaparición de Aéropostale (sección 3) y cadena circular de autoridad Charter → KERNEL → JSON → Manual, verificada el 2026-10-06/07.
+### 4.11 CHARTER:NON-NEGOTIABLES-011 — Sin ubicaciones improvisadas
+Los agentes no crean carpetas, ramas ni rutas fuera de la estructura canónica del proyecto. Los entregables de sesión van en el chat o en ubicaciones que ya existen; si hace falta una nueva, se pide al operador antes de crearla. Por qué: la acumulación de carpetas y ramas ad hoc es el mismo patrón de drift que este proyecto corrige (ver DECISIONS-016).
 ---
 ## 5. CHARTER:MILESTONES — Trayectoria esperada — hitos de fase, no lista de tareas
 > Esta sección no duplica el Plan de Trabajo (Notion) — ese vive de tareas que
@@ -279,6 +296,10 @@ parche puntual requería su propio ciclo de vversions --sync / vgit.
 ### 5.5 CHARTER:MILESTONES-005 — Hito 5 — Este Charter se actualiza en cada decisión estructural mayor
 No solo en checkpoints de fase. Ver sección 2 para el criterio de qué
 califica como "estructural mayor" vs. "fix, no anotar aquí".
+### 5.6 CHARTER:MILESTONES-006 — Hito 6 — Repositorio consolidado en main
+Definición de hecho: main es la única rama (local y remota) y el historial de las ramas retiradas vive en tags archive/<rama>; la suite de Layer_1 pasa completa; el trabajo de consolidación de Arena (T3, T5 y T6) está fusionado; y ningún documento describe una rama, un script o una carpeta ya retirados (ver DECISIONS-016). El estado de las tareas vive en el Plan de Trabajo, no aquí.
+### 5.7 CHARTER:MILESTONES-007 — Hito 7 — Primera producción controlada de Workday
+Definición de hecho: (a) dry-run E2E de Workday/Chanel con feed real y sin escrituras a Notion (✅ 2026-10-11: 11 registros, 10 CLEAN y 1 BLOCKED en la fase de ingesta, 0 escrituras); (b) bloqueo de roles de tienda aplicado en la ingesta (DECISIONS-017); (c) un primer --apply acotado, con re-fetch en Notion que confirme los registros creados. LinkedIn queda fuera de este hito: su adquisición corre en el host del agente (ajuste de navegador de la app), no desde el repo.
 ---
 ## 6. CHARTER:CONTINUITY — Protocolo de continuidad entre agentes y sesiones
 Gatekeeping de cambios al propio Charter (decisión 2026-09-30 — ver sección
@@ -333,6 +354,8 @@ fallback real para el Charter es que el operador lo adjunte manualmente como
 archivo en la sesión. Cualquier agente que reporte no poder fetchear el
 Charter vía MCP debe recibir instrucción de pedir el archivo directamente,
 no un comando vload que aún no resuelve a nada.
+Actualización 2026-10-11: el prefijo CHARTER ya está dado de alta en resolver_registry_v2.json (línea 54, verificado por MAIN con git grep); registry_seed.json no es un registry documental (pertenece al flujo de CV/Figma) y no recibe el alta (Arena, T9). Que vload --route CHARTER:... resuelva está reportado por Arena y MAIN no lo re-ejecutó: confirmarlo con una corrida antes de ofrecerlo como fallback; mientras tanto, el fallback real sigue siendo que el operador adjunte el archivo.
+Acceso a skills. Rige la copia del .md de la skill que el operador adjunta en el turno en que se usa (ver DECISIONS-015); ningún agente asume que su copia residente está al día ni lo reporta como riesgo.
 Qué hace un agente delegado al recibir este Charter. Lo trata como
 contexto de lectura obligatoria, no como fuente a re-verificar línea por
 línea en cada sesión — pero sí puede y debe señalar si alguna instrucción
@@ -348,15 +371,14 @@ para las secciones 1-4; ese fact-check citó varios IDs canónicos sin
 verificación independiente en el momento. Estado de esos IDs, actualizado
 2026-09-30 v9.22.20 por LITTLEBIRD/DEFAULT (WRITE aplicado directo en
 Notion, no en este sandbox — ver Change Log para el registro completo):
-- KERNEL:CV-GOLDEN-RULES-002 — ✅ confirmado 1:1 contra KERNEL v9.22.19,
-sección 10.2 ("Regla de Oro #2"). Citable hacia adelante.
+- KERNEL:CVR-NOCLASSB — ✅ confirmado 1:1 contra KERNEL v9.22.19,
+sección 10.2 ("Regla de Oro #2"). Citable hacia adelante. Actualización 2026-10-12: tras el re-key v10.3 el ID vigente es KERNEL:CVR-NOCLASSB (heading 11.2 del KERNEL vivo, verificado por título; la equivalencia de contenido con la regla de v9.22.19 no se re-verificó línea a línea). El enlace anterior apuntaba a la página del Manual.
 - BRIEF:CROSS-DEPENDENCIES-001 — ✅ confirmado 1:1 contra BRIEF v9.22.19,
 sección 07.1 ("Impact Assessment Contract"). Citable hacia adelante.
 - KERNEL:GATE-DECISION-012 — conservado explícitamente como referencia no
 operativa/huérfana (el Kernel vigente usa KERNEL:DEDUP-LAYER-UPGRADE en
 09.12). No se reactiva, no se cita como válido, no entra al Census.
-- Deprecación de auto_archive.py — sigue pendiente, no se cita como
-hecho confirmado.
+- Deprecación de auto_archive.py — deprecado desde 2026-08-01 por decisión del operador (KERNEL:GATE-DECISION-007, según el Change Log del archivo citado por Arena) y conservado en Archive/Legacy_Scripts/ sin importaciones ni invocaciones (Arena, T8, evidencia S4 adoptada el 2026-10-11).
 Esta corrección fue puntual (solo esos dos IDs) y no convirtió al Charter en
 documento canónico versionado: sin prefijo asignado, sin alta en Census,
 sin cambio de propiedad Versión/Fecha de actualización — todas las
@@ -364,8 +386,8 @@ decisiones de gobernanza de la lista de abajo siguen abiertas.
 Numeración de nodos e IDs (propuesta de Mistral, 2026-09-30) — aplicada en
 este documento, alta en Census pendiente. El prefijo CHARTER: y los IDs
 insertados en cada sección/subsección de este documento (CHARTER:PURPOSE,
-CHARTER:DECISIONS-001..011, CHARTER:FAILURES-001..005,
-CHARTER:NON-NEGOTIABLES-001..010, CHARTER:MILESTONES-001..005,
+CHARTER:DECISIONS-001..017, CHARTER:FAILURES-001..006,
+CHARTER:NON-NEGOTIABLES-001..011, CHARTER:MILESTONES-001..005,
 CHARTER:CONTINUITY, CHARTER:STATUS) siguen la estructura que Mistral
 propuso, con dos ajustes: (a) la cronología corrió de 9 a 11 entradas
 (sumando la creación del propio Charter y la decisión de gatekeeping
@@ -395,3 +417,11 @@ independiente.
 - Actualización de la plantilla de contrato de sesión estándar para incluir
 una línea de "lee primero V | PROJECT CHARTER" en todo contrato futuro
 (sección 6).
+Actualización 2026-10-12 (CLAUDE/MAIN, aplicada con APROBAR_WRITE del operador; unifica los tickets T2.CHARTER y T2.R). Cambios: DECISIONS-012 a 017, FAILURES-006, NON-NEGOTIABLES-010 (literal reescrito) y 011, MILESTONES-006 y 007, y ajustes en 2.2, 2.3, sección 6 y esta sección. Las propiedades Versión y Fecha de actualización no se tocaron. Pendiente tras esta actualización:
+- Alta de los IDs nuevos en ID Census (CENSUS-SYNC): generate_census.py lista los IDs CHARTER: a mano.
+- Reemplazo de las citas KERNEL:GATE-DECISION-012 y KERNEL:DEDUP-LAYER-UPGRADE por KERNEL:GATE-MUTABILITY (T2.CHARTER): no se aplicó porque no pudo confirmarse ese heading en el KERNEL vivo.
+- FAILURES-001 aún dice que los Hard Blocks se declaran en el KERNEL vigente; ajustar a hard_blocks.json (DECISIONS-013).
+- La fila 3b del Hito 1 (wrapper vdoc.py con 9 etiquetas) cambia cuando se fusione la rama de Arena.
+- El Corpus Bloque 06 del operador sigue listando Dockers y Aéropostale como bloqueados.
+- La línea 21 de las notas de hard_blocks.json aún remite a otra fuente canónica, en contradicción con DECISIONS-013.
+- La resolución de vload --route CHARTER:... sigue sin re-ejecutarse (sección 6).

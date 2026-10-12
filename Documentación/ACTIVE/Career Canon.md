@@ -71,10 +71,12 @@ ES
 - Construí el área de VM desde cero, gestionando a 17 subgerentes de VM y 4 supervisores de zona (21 reportes directos en total). [CF06]
 - Contribuí directamente a un incremento de +43% en tráfico y +18% en conversión en las 17 tiendas bajo mi supervisión estratégica. [KPI01] · [KPI02] · [CF07]
 - Estandaricé los planogramas de categorías clave (Denim & Lifestyle), alineando la exhibición con los objetivos de ventas mensuales.
+- Lideré el refresh de 17 tiendas con 25 semanas de inventario obsoleto (≈20,000 unidades por tienda) mediante curaduría de colecciones, con el equipo de 21 reportes directos. [CF09] · [CF07] · [CF06]
 EN
 - Built the VM department from scratch, managing 17 VM Assistant Managers and 4 Zone Supervisors (21 direct reports in total). [CF06]
 - Contributed directly to a +43% increase in traffic and +18% in conversion across the 17 stores under strategic supervision. [KPI01] · [KPI02] · [CF07]
 - Standardized planograms for key categories (Denim & Lifestyle), aligning display with monthly sales objectives.
+- Led the refresh of 17 stores carrying 25 weeks of obsolete inventory (approx. 20,000 units per store) through collection curation, with the team of 21 direct reports. [CF09] · [CF07] · [CF06]
 ### 03.5 CANON:EXPERIENCE-005
 C05 · El Palacio de Hierro (ALDO) · [CF02: 2012–2017]
 Asesor de Visual Merchandising · 2012–2014
@@ -150,6 +152,9 @@ Compañía: C02 · Contexto: Adidas Brand Center Madero · CF03 · CF04
 ### 06.8 CANON:KPI-008
 KPI08 · Years Experience (14+ Canonical)
 Compañía: — · Contexto: Canónico
+### 06.9 CANON:KPI-009
+KPI09 · Rebranding Savings >10% vs estimated budget
+Compañía: C03 · Contexto: Levi's/Dockers · rebranding México 2018 · completado en un año
 ---
 ## 07 CANON:FACTS
 Canonical Facts
@@ -181,6 +186,10 @@ UF04 · Contact Block = Ubicación: Miguel Hidalgo, CDMX · Teléfono: +52 56 43
 UF05 · LinkedIn URL = https://www.linkedin.com/in/mauriciomeyran
 ### 07.14 CANON:UF-006
 UF06 · Portfolio URLs = https://mmeyranesp.myportfolio.com (CV en español) · https://mmeyraneng.myportfolio.com (CV en inglés) — confirmado por operador, 2026-09-24 12:19 CDMX
+### 07.15 CANON:FACT-009
+CF09 · Aéropostale Overstock Refresh = 25 weeks of obsolete inventory · approx. 20,000 units per store · collection curation · 17 stores
+### 07.16 CANON:FACT-010
+CF10 · Dockers México Scope = 270 wholesale doors + 22 retail stores (Mexico only). LATAM team counted separately (see CF05)
 ---
 ## 08 CANON:EDUCATION
 Education
