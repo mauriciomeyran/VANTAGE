@@ -34,6 +34,8 @@ try:
         evaluate_application_status,
         evaluate_rejection_status,
         get_application_next_action,
+        get_role_class,
+        get_vm_scope,
     )
     from tracker_flow import txt
     from url_gate import validate_url_pre_ingestion
@@ -425,6 +427,54 @@ def test_excluded_role_blocked_before_score_check(mock_excluded):
     # Guarda dura de exclusión/alias precede a cualquier lógica de Score.
     with patch("profile_fit.resolve_alias_flags", return_value=(False, None)):
         assert gate_layer1("Accesible", "Alto", "VM", "Vacante", score=100, rol="L'Oréal Manager") == "BLOCKED"
+
+
+# ============================================================================
+# T11 (decisión del operador 2026-10-11) — Flujo de roles de tienda
+# (Stock Associate, Beauty Advisor, Embajador de marca/ventas, Fashion
+# Tailor): ¿el gate posterior de Scope Bajo (regla PR #25) ya los bloquea al
+# calcular? Estos tests SIN mocks usan is_role_excluded real y documentan la
+# respuesta: Vacante → sí (vm_scope=Bajo → BLOCKED); Inbound/Referencia/
+# Networking (SOURCE_TYPE_BYPASS) → NO — hueco que cierra la exclusión de
+# ingesta agregada en T11.
+# ============================================================================
+
+STORE_ROLE_TITLES_T11 = (
+    "Stock Associate",
+    "Beauty Advisor",
+    "Embajador de marca/ventas",
+    "Fashion Tailor",
+)
+
+
+class TestStoreRoleScopeBajoFlow:
+    """T11: verificación de flujo real (sin mocks de profile_fit)."""
+
+    def test_store_roles_are_scope_bajo_therefore_blocked_on_vacante(self):
+        for title in STORE_ROLE_TITLES_T11:
+            vm_scope = get_vm_scope(title)
+            role_class = get_role_class(title)
+            assert vm_scope == "Bajo", title
+            assert role_class == "Otro", title
+            assert evaluate_gate("Accesible", vm_scope, role_class) == "BLOCKED", title
+            assert gate_layer1("Accesible", vm_scope, role_class, "Vacante", score=100, rol=title) == "BLOCKED", title
+
+    def test_intake_exclusion_closes_bypass_source_hole(self):
+        # SOURCE_TYPE_BYPASS (Inbound/Referencia/Networking) salta el gate de
+        # scope: sin la exclusión de ingesta, un rol de tienda sería CREATE.
+        assert gate_layer1("Accesible", "Bajo", "Otro", "Inbound", score=50, rol="") == "CREATE"
+        for title in STORE_ROLE_TITLES_T11:
+            for source in ("Inbound", "Referencia", "Networking"):
+                assert gate_layer1("Accesible", "Bajo", "Otro", source, score=50, rol=title) == "BLOCKED", (title, source)
+
+    def test_vm_direction_roles_still_create_on_vacante(self):
+        # Sin falsos positivos: roles VM de dirección no son bloqueados por la
+        # exclusión de T11 y siguen pasando el gate (Alto + score).
+        for title in ("Visual Merchandising Director", "VM Manager"):
+            vm_scope = get_vm_scope(title)
+            role_class = get_role_class(title)
+            assert vm_scope == "Alto", title
+            assert gate_layer1("Accesible", vm_scope, role_class, "Vacante", score=60, rol=title) == "CREATE", title
 
 
 class TestTerminalProtectionScoring:

@@ -328,16 +328,19 @@ def test_census_spec_separa_career_canon_y_no_tiene_duplicados(census_module):
         "ALIASES",
     ]
     all_ids = [r["id"] for s in spec for r in s["rows"]]
-    # 301 = total tras retirar las 84 filas del KERNEL legacy (re-key v10.3).
+    # 314 = 301 (tras retirar las 84 filas del KERNEL legacy, re-key v10.3)
+    # + 10 IDs CHARTER nuevos (T13) + 3 IDs CANON nuevos curados en T13b
+    # (CANON:KPI-009, CANON:FACT-009/010; su contenido real entró en main vía
+    # auto-sync 7a2fa3f con filas basura "Subsección NNN de …" que T13b curó).
     # El invariante real (spec ↔ documentos vivos) se verifica en
     # test_cada_fila_del_spec_esta_anclada_en_documentacion_active.
-    assert len(all_ids) == 301
+    assert len(all_ids) == 314
     assert len(all_ids) == len(set(all_ids)), "CENSUS_SPEC no debe tener IDs duplicados"
 
     by_name = {s["name"]: s["rows"] for s in spec}
     assert len(by_name["MANUAL"]) == 54
     assert all(not r["id"].startswith(("CANON:", "CAREER_CANON:")) for r in by_name["MANUAL"])
-    assert len(by_name["CAREER CANON"]) == 59
+    assert len(by_name["CAREER CANON"]) == 62  # 59 + 3 curados en T13b (KPI-009, FACT-009/010)
     assert all(r["id"].startswith(("CANON:", "CAREER_CANON:")) for r in by_name["CAREER CANON"])
 
 
@@ -354,7 +357,7 @@ def test_changelog_y_changelog_archivo_fuera_del_census_por_diseno(census_module
 
 def test_reorder_census_spec_sigue_orden_real_de_active_y_es_idempotente(reorder_module, census_module):
     new_spec, stats = reorder_module.reorder_spec(census_module.CENSUS_SPEC)
-    assert stats["total_rows"] == 301
+    assert stats["total_rows"] == 314
     assert stats["relocated"] == 0
     assert stats["seccion_synced"] == 0
     assert stats["duplicates_removed"] == 0
@@ -544,4 +547,58 @@ def test_v_id_census_production_md_coincide_con_census_spec(reorder_module, cens
 
     spec_rows = [(r["id"], r["seccion"]) for s in census_module.CENSUS_SPEC for r in s["rows"]]
     assert md_rows == spec_rows
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# T13 (decisión del operador 2026-10-12) — IDs CHARTER nuevos en CENSUS_SPEC:
+# DECISIONS-012..017, FAILURES-006, NON-NEGOTIABLES-011, MILESTONES-006 y 007.
+# Registro local (generate_census.py lista a mano los IDs CHARTER:) sin
+# ejecutar nada contra Notion; nombres canónicos del Charter vivo aplicados en
+# T13b (cuerpos/#block-anchors siguen pendientes de sync).
+# ─────────────────────────────────────────────────────────────────────────────
+
+T13_NEW_CHARTER_IDS = [
+    ("CHARTER:DECISIONS-012", "2.12", "Re-key semántico de IDs canónicos del KERNEL (v10.3)"),
+    ("CHARTER:DECISIONS-013", "2.13", "hard_blocks.json es la fuente ejecutable única de Hard Blocks; Dockers sale"),
+    ("CHARTER:DECISIONS-014", "2.14", "Automatización programada deshabilitada: ejecución manual bajo demanda"),
+    ("CHARTER:DECISIONS-015", "2.15", "Acceso a skills por adjunto"),
+    ("CHARTER:DECISIONS-016", "2.16", "Repositorio sin ramas vestigiales"),
+    ("CHARTER:DECISIONS-017", "2.17", "Roles de tienda bloqueados en la ingesta L1"),
+    ("CHARTER:FAILURES-006", "3.6", "CANONICAL declarado sin fila de registro (Career Sites v2.0)"),
+    ("CHARTER:NON-NEGOTIABLES-011", "4.11", "Sin ubicaciones improvisadas"),
+    ("CHARTER:MILESTONES-006", "5.6", "Hito 6 — Repositorio consolidado en main"),
+    ("CHARTER:MILESTONES-007", "5.7", "Hito 7 — Primera producción controlada de Workday"),
+]
+
+
+def _charter_rows(census_module):
+    charter = next(s for s in census_module.CENSUS_SPEC if s["name"] == "PROJECT CHARTER")
+    return charter["rows"]
+
+
+def test_t13_charter_ids_nuevos_registrados_en_census_spec(census_module):
+    # T13b: nombres canónicos del Charter vivo (operador 2026-10-12),
+    # fijados aquí en lugar de "(pendiente de nombre canónico)".
+    rows = {r["id"]: r for r in _charter_rows(census_module)}
+    for cid, seccion, nombre in T13_NEW_CHARTER_IDS:
+        assert cid in rows, f"falta {cid} en CENSUS_SPEC"
+        assert rows[cid]["seccion"] == seccion, cid
+        assert rows[cid]["nombre"] == nombre, cid
+
+
+def test_t13_charter_ids_nuevos_en_orden_tras_su_predecesor(census_module):
+    ids = [r["id"] for r in _charter_rows(census_module)]
+    pares = [
+        ("CHARTER:DECISIONS-011", "CHARTER:DECISIONS-012"),
+        ("CHARTER:DECISIONS-016", "CHARTER:DECISIONS-017"),
+        ("CHARTER:DECISIONS-017", "CHARTER:FAILURES"),
+        ("CHARTER:FAILURES-005", "CHARTER:FAILURES-006"),
+        ("CHARTER:FAILURES-006", "CHARTER:NON-NEGOTIABLES"),
+        ("CHARTER:NON-NEGOTIABLES-010", "CHARTER:NON-NEGOTIABLES-011"),
+        ("CHARTER:NON-NEGOTIABLES-011", "CHARTER:MILESTONES"),
+        ("CHARTER:MILESTONES-005", "CHARTER:MILESTONES-006"),
+        ("CHARTER:MILESTONES-006", "CHARTER:MILESTONES-007"),
+    ]
+    for antes, despues in pares:
+        assert ids.index(antes) < ids.index(despues), (antes, despues)
 

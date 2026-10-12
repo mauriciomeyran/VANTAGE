@@ -46,7 +46,7 @@ VGIT  = PROJECT / "Layer_4/scripts/git_sync.py"
 # Nota (CENSUS-SYNC-R1): ID Census queda fuera de este set a propósito — se
 # genera vía generate-census y se sube directo a Notion; no tiene contraparte
 # en ACTIVE/ ni tiene sentido respaldarlo por este flujo.
-DOCS = {"kernel", "system_prompt", "career_canon", "manual", "aliases", "change_log", "Navigation_Brief", "change_log_archivo", "project_charter", "charter"}
+DOCS = {"kernel", "system_prompt", "career_canon", "manual", "aliases", "change_log", "brief", "change_log_archivo", "project_charter"}
 # Alias → key canónica en vsync_doc.DOCS
 DOC_ALIASES = {
     "charter": "project_charter",
@@ -95,7 +95,7 @@ def main() -> int:
                 print(f"Dirección duplicada/ambigua: '{direction}' y '{a}'")
                 return 1
             direction = a
-        elif a in DOCS:
+        elif a in DOCS or a in DOC_ALIASES:
             if doc is not None:
                 print(f"Doc duplicado/ambiguo: '{doc}' y '{a}'")
                 return 1
