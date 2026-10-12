@@ -41,6 +41,15 @@ _EXCLUDE_ROLE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"marketing\s+coordinator(?!.*visual)", "marketing_coordinator"),
     (r"merchandising\s+coordinator(?!.*visual)", "merchandising_coordinator"),
     (r"coordinador\s+de\s+merchandising(?!.*visual)", "coordinador_merchandising"),
+    # T11 (decisión del operador 2026-10-11): roles de tienda sin alcance
+    # estratégico, bloqueados en la fase de ingesta (dry-run Workday/Chanel:
+    # Stock Associate, Beauty Advisor, Embajador de marca/ventas, Fashion
+    # Tailor quedaban CLEAN). Sin gate nuevo — mismo mecanismo que
+    # marketing_coordinator. No aplican a roles VM de dirección.
+    (r"stock\s+associate", "stock_associate"),
+    (r"beauty\s+advisor", "beauty_advisor"),
+    (r"embajador|brand\s+ambassador", "embajador_marca"),
+    (r"\btailor\b|\bsastre\b", "fashion_tailor"),
 )
 
 _VM_TITLE_SIGNALS = (
