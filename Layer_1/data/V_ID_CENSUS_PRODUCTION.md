@@ -40,6 +40,16 @@
 | [`CHARTER:MILESTONES-005`](https://app.notion.com/p/f87938befc428263a305819877d2245f#301a87b2a0f841ce8917c35189fbb99a) | 5.5 | Hito 5 — Charter actualizado en cada decisión estructural |
 | [`CHARTER:CONTINUITY`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42803e9c24f2d6e9bced1e) | 06 | Continuidad Operativa |
 | [`CHARTER:STATUS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280ebb77fef32858e73c4) | 07 | Estatus del Proyecto |
+| [`CHARTER:DECISIONS-012`](https://app.notion.com/p/f87938befc428263a305819877d2245f#37b32cb9a26649a9b23632086ef1f471) | 2.12 | Subsección 012 de CHARTER:DECISIONS-012 |
+| [`CHARTER:DECISIONS-013`](https://app.notion.com/p/f87938befc428263a305819877d2245f#f96b968f7ef54ecdb84a4fa13dd5e954) | 2.13 | Subsección 013 de CHARTER:DECISIONS-013 |
+| [`CHARTER:DECISIONS-014`](https://app.notion.com/p/f87938befc428263a305819877d2245f#0963d7a85fd54172a971c5c64bfec2f6) | 2.14 | Subsección 014 de CHARTER:DECISIONS-014 |
+| [`CHARTER:DECISIONS-015`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d4d87fc71b304ce598bb1765e353b5f5) | 2.15 | Subsección 015 de CHARTER:DECISIONS-015 |
+| [`CHARTER:DECISIONS-016`](https://app.notion.com/p/f87938befc428263a305819877d2245f#6b16488ebc5a470ea645f4b313de1ea2) | 2.16 | Subsección 016 de CHARTER:DECISIONS-016 |
+| [`CHARTER:DECISIONS-017`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d74f91c5ae8940d99149e8f23b5cf1d5) | 2.17 | Subsección 017 de CHARTER:DECISIONS-017 |
+| [`CHARTER:FAILURES-006`](https://app.notion.com/p/f87938befc428263a305819877d2245f#59eca0f7a2884b1c8bbe53f0083ee43f) | 3.6 | Subsección 006 de CHARTER:FAILURES-006 |
+| [`CHARTER:MILESTONES-006`](https://app.notion.com/p/f87938befc428263a305819877d2245f#7d468b37faf1450c9290417d44a1aab6) | 5.6 | Subsección 006 de CHARTER:MILESTONES-006 |
+| [`CHARTER:MILESTONES-007`](https://app.notion.com/p/f87938befc428263a305819877d2245f#b3b881967fb846f5999ea79b8c174d7a) | 5.7 | Subsección 007 de CHARTER:MILESTONES-007 |
+| [`CHARTER:NON-NEGOTIABLES-011`](https://app.notion.com/p/f87938befc428263a305819877d2245f#e62afacac72a4864906afe31fc91ce65) | 4.11 | Subsección 011 de CHARTER:NON-NEGOTIABLES-011 |
 
 ---
 
@@ -271,6 +281,9 @@
 | [`CANON:OUTPUT-CONTRACT-004`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc428116bf15ed3965ba124f) | 12.4 | Output Contract — Positioning Modes (Aplicación) |
 | [`CANON:OUTPUT-CONTRACT-005`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc428104854bf2d1c481e193) | 12.5 | Output Contract — Positioning Modes (Aplicación en Output) |
 | [`CANON:DERIVED-OUTPUTS-ARCHIVE`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#3af938befc42815f9cd2c2f9c2410bfc) | 13 | Derived Outputs Archive (reintegrada v9.11.0) |
+| [`CANON:FACT-009`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#fe0bda55c2864a32b39b542396785402) | 07.15 | Subsección 009 de CANON:FACT-009 |
+| [`CANON:FACT-010`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#a1bf826d08484bac8e45149668ef195e) | 07.16 | Subsección 010 de CANON:FACT-010 |
+| [`CANON:KPI-009`](https://app.notion.com/p/377938befc42808993f2f52dbd2dec6c#fb04d072ea334442965aae362967988b) | 06.9 | Subsección 009 de CANON:KPI-009 |
 
 ---
 
