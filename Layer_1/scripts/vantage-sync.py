@@ -3,16 +3,18 @@
 vantage-sync.py — Local-first context sync CLI for VANTAGE.
 
 Processes a collapsed chat dump (text or JSON), extracts key context
-(items: tasks, decisions, stack changes, deliverables), and writes them
+(tasks, decisions, stack changes, deliverables), and writes them
 transitionally to the local SQLite context stores with deterministic
 deduplication.
 
 Non-negotiable constraints:
-  - Pure stdlib Python. No external API calls.
+  - Pure stdlib Python. No external API calls in regex mode.
+  - LLM mode (--llm) uses local Ollama (http://localhost:11434) only.
   - Parameterized queries only.
   - context-sync.db is primary; mem0 is secondary and non-fatal.
   - Binary Gate: --dry-run never touches SQLite.
   - Deterministic SHA-256 keys prevent duplicates on re-runs.
+  - Regex mode is default; --llm is optional semantic mode with regex fallback.
 """
 
 import argparse
@@ -23,49 +25,53 @@ import re
 import sqlite3
 import sys
 import time
+import urllib.request
+import urllib.error
 from datetime import datetime, timezone
 
 
-# ── Default paths ────────────────────────────────────────────────────────────
+# ─── Default paths ────────────────────────────────────────────────────────────
 
 DEFAULT_DB_PATH = os.path.expanduser("~/.vantage/context-sync.db")
 DEFAULT_MEM0_PATH = os.path.expanduser("~/.vantage/mem0/memories.sqlite")
 
 
-# ── Extraction patterns ──────────────────────────────────────────────────────
-# Each pattern: (category, regex, extract_group)
-# extract_group: index of the capture group containing the content text.
+# ─── Regex extraction patterns ────────────────────────────────────────────────
+# Each pattern: (category, compiled_regex, capture_group_index)
 
-EXTRACTION_PATTERNS = [
-    # Tasks — TODO, fixme, action items
+EXTRACTION_PATTERNS: list[tuple[str, re.Pattern, int]] = [
+    # Tasks
     ("task", re.compile(
         r"(?:TODO|FIXME|action\s*item|task)\s*:?\s*(.+?)(?:\n|$)",
-        re.IGNORECASE
+        re.IGNORECASE,
     ), 1),
-
-    # Decisions — DECISION:, DECIDED:, resolution:
+    # Decisions
     ("decision", re.compile(
         r"(?:DECISION|DECIDED|resolution)\s*:?\s*(.+?)(?:\n|$)",
-        re.IGNORECASE
+        re.IGNORECASE,
     ), 1),
-
     # Stack changes — git operations, path/file references
     ("pattern", re.compile(
-        r"(?:git\s+(?:checkout|switch|merge|add|commit)\S*|moved\s+to\s+\S+|path:\s*\S+|file:\s*\S+)",
-        re.IGNORECASE
+        r"(?:git\s+(?:checkout|switch|merge|add|commit)\S*"
+        r"|moved\s+to\s+\S+"
+        r"|path:\s*\S+"
+        r"|file:\s*\S+)",
+        re.IGNORECASE,
     ), 0),
-
-    # Deliverables — entregable, output:, result:
+    # Facts / deliverables
     ("fact", re.compile(
         r"(?:entregable|deliverable|output|result)\s*:?\s*(.+?)(?:\n|$)",
-        re.IGNORECASE
+        re.IGNORECASE,
     ), 1),
 ]
 
 
 def extract_items(text: str) -> list[dict]:
-    """Extract categorized items from raw text using heuristic patterns."""
-    items = []
+    """Extract categorized items from raw text using regex heuristics.
+
+    Returns list of dicts: {category, content, source_line}
+    """
+    items: list[dict] = []
     for category, pattern, group in EXTRACTION_PATTERNS:
         for match in pattern.finditer(text):
             content = match.group(group) if group > 0 else match.group(0)
@@ -74,13 +80,13 @@ def extract_items(text: str) -> list[dict]:
                 items.append({
                     "category": category,
                     "content": content,
-                    "source_line": text[:200],  # first 200 chars for attribution
+                    "source_line": text[:200],
                 })
     return items
 
 
 def parse_text_input(text: str) -> list[dict]:
-    """Parse plain text chat dump."""
+    """Parse plain text chat dump via regex."""
     return extract_items(text)
 
 
@@ -98,7 +104,6 @@ def parse_json_input(raw: str) -> list[dict]:
         print(f"ERROR: --format json but input is not valid JSON: {e}", file=sys.stderr)
         sys.exit(1)
 
-    # Normalize to a list of message dicts
     if isinstance(data, dict) and "conversation" in data:
         messages = data["conversation"]
     elif isinstance(data, list):
@@ -106,15 +111,13 @@ def parse_json_input(raw: str) -> list[dict]:
     else:
         messages = [data]
 
-    # Concatenate all content fields
-    text_parts = []
+    text_parts: list[str] = []
     for msg in messages:
         if isinstance(msg, dict) and "content" in msg:
             content = msg["content"]
             if isinstance(content, str):
                 text_parts.append(content)
             elif isinstance(content, list):
-                # Some formats use content as list of blocks
                 for block in content:
                     if isinstance(block, dict) and "text" in block:
                         text_parts.append(block["text"])
@@ -123,7 +126,72 @@ def parse_json_input(raw: str) -> list[dict]:
     return extract_items(full_text)
 
 
-# ── SQLite helpers ───────────────────────────────────────────────────────────
+# ─── Ollama LLM extraction (optional, local-only) ─────────────────────────────
+
+OLLAMA_URL = "http://localhost:11434/api/generate"
+DEFAULT_OLLAMA_TIMEOUT = 120  # seconds — qwen2.5:7b needs extra time on cold start
+
+OLLAMA_SYSTEM_PROMPT = """
+You are a context extraction specialist for VANTAGE. Given a chat log, extract:
+1. decisions: explicit decisions, conclusions, or resolutions stated
+2. tasks: actionable TODOs, action items, or next steps
+3. facts: key factual statements, deliverables, or outcomes
+
+Return STRICT JSON only — no prose, no markdown. Example:
+{"decisions": [{"content": "..."}], "tasks": [{"content": "..."}], "facts": [{"content": "..."}]}
+Each array contains objects with a single "content" field containing the extracted text.
+"""
+
+
+def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
+                        timeout: int = DEFAULT_OLLAMA_TIMEOUT) -> list[dict]:
+    """Extract items via Ollama LLM with regex fallback on any failure.
+
+    Makes a local-only POST to http://localhost:11434/api/generate.
+    Returns items in the same shape as extract_items().
+    """
+    payload = json.dumps({
+        "model": model,
+        "prompt": OLLAMA_SYSTEM_PROMPT + "\n\n---CHAT LOG---\n" + text[:8000],
+        "format": "json",
+        "stream": False,
+    }).encode("utf-8")
+
+    try:
+        req = urllib.request.Request(
+            OLLAMA_URL,
+            data=payload,
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            raw = json.loads(resp.read().decode("utf-8"))
+        llm_output = json.loads(raw["response"])
+
+        items: list[dict] = []
+        for cat in ("decision", "task", "fact"):
+            key = cat + "s"  # JSON keys: decisions, tasks, facts
+            for entry in llm_output.get(key, []):
+                content = entry.get("content", "").strip()
+                if content and len(content) < 2000:
+                    items.append({
+                        "category": cat,
+                        "content": content,
+                        "source_line": text[:200],
+                    })
+
+        if items:
+            return items
+
+        # LLM returned empty — fall back to regex
+        print("[info] LLM returned no items — falling back to regex", file=sys.stderr)
+        return extract_items(text)
+
+    except Exception as e:
+        print(f"[info] LLM extraction failed ({e}) — falling back to regex", file=sys.stderr)
+        return extract_items(text)
+
+
+# ─── SQLite helpers ───────────────────────────────────────────────────────────
 
 def connect_db(db_path: str, timeout: int = 5000) -> sqlite3.Connection:
     """Open a SQLite connection with busy timeout for lock resilience."""
@@ -133,8 +201,12 @@ def connect_db(db_path: str, timeout: int = 5000) -> sqlite3.Connection:
 
 
 def retry_sqlite(fn, max_retries: int = 3, base_delay: float = 0.1):
-    """Execute a DB operation with exponential backoff on SQLITE_BUSY."""
-    last_error = None
+    """Execute a DB operation with exponential backoff on SQLITE_BUSY.
+
+    Non-locking OperationalErrors are re-raised immediately.
+    SQLITE_BUSY errors are retried with exponential backoff.
+    """
+    last_error: Exception | None = None
     for attempt in range(max_retries):
         try:
             return fn()
@@ -147,9 +219,7 @@ def retry_sqlite(fn, max_retries: int = 3, base_delay: float = 0.1):
                 time.sleep(delay)
             else:
                 raise
-    # Unreachable: the else branch above raises non-locked errors immediately,
-    # and locked errors set last_error before retrying. If all retries are
-    # exhausted, last_error is guaranteed to be non-None.
+    # If we exhausted all retries on locked errors, last_error is guaranteed set
     assert last_error is not None
     raise RuntimeError(f"Failed after {max_retries} retries: {last_error}")
 
@@ -171,8 +241,7 @@ def ensure_project(conn: sqlite3.Connection, project_id: str | None,
     if existing is None:
         conn.execute(
             "INSERT OR REPLACE INTO projects (id, name, root_path) VALUES (?, ?, ?)",
-            (project_id, project_name or project_id,
-             os.getcwd())
+            (project_id, project_name or project_id, os.getcwd()),
         )
         conn.commit()
 
@@ -183,9 +252,8 @@ def write_to_context_sync(db_path: str, items: list[dict],
 
     Returns list of {key, category, status, error} dicts for reporting.
     """
-    results = []
+    results: list[dict] = []
     if dry_run:
-        # Dry-run: skip all DB access, just compute keys + statuses
         for item in items:
             key = gen_memory_key(item["category"], item["content"])
             results.append({
@@ -203,7 +271,7 @@ def write_to_context_sync(db_path: str, items: list[dict],
         for item in items:
             key = gen_memory_key(item["category"], item["content"])
             status = "written"
-            error = None
+            error: str | None = None
 
             def do_upsert():
                 conn.execute(
@@ -214,7 +282,7 @@ def write_to_context_sync(db_path: str, items: list[dict],
                     "category = excluded.category, "
                     "project_id = excluded.project_id, "
                     "updated_at = CURRENT_TIMESTAMP",
-                    (key, item["content"], item["category"], project_id)
+                    (key, item["content"], item["category"], project_id),
                 )
                 conn.commit()
 
@@ -233,8 +301,7 @@ def write_to_context_sync(db_path: str, items: list[dict],
             })
 
     finally:
-        if conn:
-            conn.close()
+        conn.close()
 
     return results
 
@@ -245,15 +312,17 @@ def write_to_mem0(mem0_path: str, items: list[dict],
 
     Failures here are non-fatal — they surface as warnings in the report.
     """
-    results = []
+    results: list[dict] = []
     if dry_run:
-        return [{"key": gen_memory_key(i["category"], i["content"]),
-                 "status": "dry_run", "error": None} for i in items]
+        return [
+            {"key": gen_memory_key(i["category"], i["content"]),
+             "status": "dry_run", "error": None}
+            for i in items
+        ]
 
     try:
         conn = connect_db(mem0_path)
     except sqlite3.Error as e:
-        # mem0 DB not available — report all as skipped (non-fatal)
         for item in items:
             results.append({
                 "key": gen_memory_key(item["category"], item["content"]),
@@ -285,7 +354,7 @@ def write_to_mem0(mem0_path: str, items: list[dict],
                      project_id or "default", "vantage-sync.py",
                      metadata, "",  # embedding left empty
                      item["content"][:12],  # dedupe_key
-                     now, now)
+                     now, now),
                 )
                 conn.commit()
 
@@ -301,7 +370,7 @@ def write_to_mem0(mem0_path: str, items: list[dict],
     return results
 
 
-# ── Report ───────────────────────────────────────────────────────────────────
+# ─── Report ───────────────────────────────────────────────────────────────────
 
 def print_report(input_source: str, items: list[dict],
                  project_id: str | None, dry_run: bool,
@@ -319,7 +388,7 @@ def print_report(input_source: str, items: list[dict],
 
     # Extraction summary
     print("## Extraction Summary")
-    cat_counts = {}
+    cat_counts: dict[str, int] = {}
     for item in items:
         cat_counts[item["category"]] = cat_counts.get(item["category"], 0) + 1
     if cat_counts:
@@ -338,7 +407,6 @@ def print_report(input_source: str, items: list[dict],
             print(f"| {r['key']} | {r['category']} | {r['status'].upper()} |")
         print()
 
-        # mem0 secondary
         if mem0_results:
             warnings = [r for r in mem0_results if r["status"] != "written"]
             if warnings:
@@ -361,26 +429,33 @@ def print_report(input_source: str, items: list[dict],
     print()
 
 
-# ── CLI ──────────────────────────────────────────────────────────────────────
+# ─── CLI ──────────────────────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser(
-        description="VANTAGE context sync CLI — extract context from collapsed chat dumps into local SQLite memory stores.",
+        description="VANTAGE context sync CLI — extract context from collapsed chat dumps "
+                    "into local SQLite memory stores.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""\
 Examples:
-  # Dry-run preview
+  # Dry-run preview (regex mode — default)
   python3 vantage-sync.py --input chat_dump.txt --dry-run
 
-  # Write to primary store
+  # Write to primary store (regex mode — default)
   python3 vantage-sync.py --input chat_dump.txt --project vantage
+
+  # LLM semantic extraction (local Ollama qwen2.5:7b, 120s timeout default)
+  python3 vantage-sync.py --input chat_dump.txt --project vantage --llm --dry-run
+
+  # LLM with custom model and timeout
+  python3 vantage-sync.py --input chat_dump.txt --llm --model qwen2.5:7b --timeout 180
 
   # From inline text
   python3 vantage-sync.py --inline "TODO: fix the OAuth redirect" --project vantage
 
   # JSON format
   python3 vantage-sync.py --input session_export.json --format json --project vantage
-"""
+""",
     )
 
     group = parser.add_mutually_exclusive_group(required=True)
@@ -395,6 +470,13 @@ Examples:
                         help="Input format (default: text)")
     parser.add_argument("--dry-run", action="store_true",
                         help="Preview only — no SQLite writes")
+    parser.add_argument("--llm", action="store_true",
+                        help="Use Ollama LLM for semantic extraction "
+                             "(qwen2.5:7b local)")
+    parser.add_argument("--model", default="qwen2.5:7b",
+                        help="Ollama model name (default: qwen2.5:7b)")
+    parser.add_argument("--timeout", type=int, default=DEFAULT_OLLAMA_TIMEOUT,
+                        help=f"Ollama request timeout in seconds (default: {DEFAULT_OLLAMA_TIMEOUT})")
     parser.add_argument("--verbose", action="store_true",
                         help="Detailed extraction log")
 
@@ -412,8 +494,10 @@ Examples:
             raw_text = f.read()
         input_source = args.input
 
-    # Parse
-    if args.format == "json":
+    # Parse — LLM mode takes priority over format
+    if args.llm:
+        items = extract_with_ollama(raw_text, args.model, args.timeout)
+    elif args.format == "json":
         items = parse_json_input(raw_text)
     else:
         items = parse_text_input(raw_text)
@@ -433,14 +517,17 @@ Examples:
     )
 
     # Write to secondary (mem0) — non-fatal
-    mem0_results = []
+    mem0_results: list[dict] = []
     if items and not args.dry_run:
         mem0_results = write_to_mem0(
             mem0_path, items, args.project, args.dry_run
         )
     elif items and args.dry_run:
-        mem0_results = [{"key": gen_memory_key(i["category"], i["content"]),
-                         "status": "dry_run", "error": None} for i in items]
+        mem0_results = [
+            {"key": gen_memory_key(i["category"], i["content"]),
+             "status": "dry_run", "error": None}
+            for i in items
+        ]
 
     # Report
     print_report(input_source, items, args.project, args.dry_run,
