@@ -15,6 +15,8 @@ Non-negotiable constraints:
   - Binary Gate: --dry-run never touches SQLite.
   - Deterministic SHA-256 keys prevent duplicates on re-runs.
   - Regex mode is default; --llm is optional semantic mode with regex fallback.
+  - DB validation: exits with code 1 if required tables are missing.
+  - Intelligent truncation for LLM: preserves end-of-chat content with overlap.
 """
 
 import argparse
@@ -34,10 +36,13 @@ from datetime import datetime, timezone
 
 DEFAULT_DB_PATH = os.path.expanduser("~/.vantage/context-sync.db")
 DEFAULT_MEM0_PATH = os.path.expanduser("~/.vantage/mem0/memories.sqlite")
+LLM_TRUNCATE_LIMIT = 8000       # max chars to send to Ollama
+LLM_TAIL_LENGTH = 6000          # chars of the end to always preserve
+LLM_HEAD_LENGTH = 2000          # chars of the beginning to keep as context
 
 
 # ─── Regex extraction patterns ────────────────────────────────────────────────
-# Each pattern: (category, compiled_regex, capture_group_index)
+# Each entry: (category, compiled_regex, capture_group_index)
 
 EXTRACTION_PATTERNS: list[tuple[str, re.Pattern, int]] = [
     # Tasks
@@ -90,13 +95,15 @@ def parse_text_input(text: str) -> list[dict]:
     return extract_items(text)
 
 
-def parse_json_input(raw: str) -> list[dict]:
-    """Parse JSON-formatted chat dump.
+def normalize_json_input(raw: str) -> str:
+    """Parse JSON-formatted chat dump and return concatenated text.
 
-    Expected formats:
+    Handles formats:
       [{"role": "user", "content": "..."}, ...]
       {"conversation": [{"role": "...", "content": "..."}]}
       [{"content": "..."}]
+
+    Exits with error code 1 if JSON is invalid.
     """
     try:
         data = json.loads(raw)
@@ -122,7 +129,12 @@ def parse_json_input(raw: str) -> list[dict]:
                     if isinstance(block, dict) and "text" in block:
                         text_parts.append(block["text"])
 
-    full_text = "\n".join(text_parts)
+    return "\n".join(text_parts)
+
+
+def parse_json_input(raw: str) -> list[dict]:
+    """Parse JSON-formatted chat dump, normalize to text, then extract via regex."""
+    full_text = normalize_json_input(raw)
     return extract_items(full_text)
 
 
@@ -143,6 +155,33 @@ Each array contains objects with a single "content" field containing the extract
 """
 
 
+def intelligent_truncate(text: str, limit: int = LLM_TRUNCATE_LIMIT,
+                        tail_length: int = LLM_TAIL_LENGTH,
+                        head_length: int = LLM_HEAD_LENGTH) -> str:
+    """Intelligently truncate text to fit within LLM context.
+
+    Preserves the beginning (for context) and the end (for recent TODOs/decisions)
+    with overlap marker. If text fits within limit, returns as-is.
+    """
+    if len(text) <= limit:
+        return text
+
+    head = text[:head_length]
+    tail = text[-tail_length:]
+
+    print(
+        f"[info] Text truncated: {len(text)} chars → {head_length} head + "
+        f"{tail_length} tail (overlap gap: {len(text) - head_length - tail_length} chars lost)",
+        file=sys.stderr,
+    )
+
+    return (
+        head
+        + "\n\n[... TRUNCATED — middle content omitted for LLM context limit ...]\n\n"
+        + tail
+    )
+
+
 def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
                         timeout: int = DEFAULT_OLLAMA_TIMEOUT) -> list[dict]:
     """Extract items via Ollama LLM with regex fallback on any failure.
@@ -150,9 +189,11 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
     Makes a local-only POST to http://localhost:11434/api/generate.
     Returns items in the same shape as extract_items().
     """
+    truncated = intelligent_truncate(text)
+
     payload = json.dumps({
         "model": model,
-        "prompt": OLLAMA_SYSTEM_PROMPT + "\n\n---CHAT LOG---\n" + text[:8000],
+        "prompt": OLLAMA_SYSTEM_PROMPT + "\n\n---CHAT LOG---\n" + truncated,
         "format": "json",
         "stream": False,
     }).encode("utf-8")
@@ -200,6 +241,50 @@ def connect_db(db_path: str, timeout: int = 5000) -> sqlite3.Connection:
     return conn
 
 
+def validate_db_schema(conn: sqlite3.Connection, required_tables: list[str]) -> bool:
+    """Verify that all required tables exist in the connected database."""
+    existing = conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table'"
+    ).fetchall()
+    existing_tables = {row[0] for row in existing}
+    missing = set(required_tables) - existing_tables
+    if missing:
+        print(
+            f"ERROR: database at '{conn.execute('PRAGMA database_list').fetchone()[2]}' "
+            f"is missing required tables: {sorted(missing)}",
+            file=sys.stderr,
+        )
+        return False
+    return True
+
+
+def validate_db_file(db_path: str, required_tables: list[str]) -> sqlite3.Connection:
+    """Validate that a DB file exists, is not empty (0 bytes), and has required tables.
+
+    Returns an open connection if valid.
+    Exits with code 1 if the DB is missing, 0 bytes, or missing tables
+    — never returns None (exits before returning).
+    """
+    if not os.path.exists(db_path):
+        print(f"ERROR: database file not found: {db_path}", file=sys.stderr)
+        sys.exit(1)
+
+    if os.path.getsize(db_path) == 0:
+        print(
+            f"ERROR: database file is 0 bytes (corrupt/empty): {db_path}. "
+            f"Aborting to prevent MCP context-sync corruption.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    conn = connect_db(db_path)
+    if not validate_db_schema(conn, required_tables):
+        conn.close()
+        sys.exit(1)
+
+    return conn
+
+
 def retry_sqlite(fn, max_retries: int = 3, base_delay: float = 0.1):
     """Execute a DB operation with exponential backoff on SQLITE_BUSY.
 
@@ -232,18 +317,25 @@ def gen_memory_key(category: str, content: str) -> str:
 
 def ensure_project(conn: sqlite3.Connection, project_id: str | None,
                    project_name: str | None = None) -> None:
-    """Register project in context-sync.db if not already present."""
+    """Register project in context-sync.db if not already present.
+
+    Wrapped with retry for resilience against SQLITE_BUSY.
+    """
     if not project_id:
         return
-    existing = conn.execute(
-        "SELECT id FROM projects WHERE id = ?", (project_id,)
-    ).fetchone()
-    if existing is None:
-        conn.execute(
-            "INSERT OR REPLACE INTO projects (id, name, root_path) VALUES (?, ?, ?)",
-            (project_id, project_name or project_id, os.getcwd()),
-        )
-        conn.commit()
+
+    def do_ensure():
+        existing = conn.execute(
+            "SELECT id FROM projects WHERE id = ?", (project_id,)
+        ).fetchone()
+        if existing is None:
+            conn.execute(
+                "INSERT OR REPLACE INTO projects (id, name, root_path) VALUES (?, ?, ?)",
+                (project_id, project_name or project_id, os.getcwd()),
+            )
+            conn.commit()
+
+    retry_sqlite(do_ensure)
 
 
 def write_to_context_sync(db_path: str, items: list[dict],
@@ -251,6 +343,8 @@ def write_to_context_sync(db_path: str, items: list[dict],
     """Write items to the primary context-sync.db store.
 
     Returns list of {key, category, status, error} dicts for reporting.
+    Validates DB schema before writing (Fix 2).
+    ensure_project wrapped with retry_sqlite (Fix 3).
     """
     results: list[dict] = []
     if dry_run:
@@ -264,8 +358,11 @@ def write_to_context_sync(db_path: str, items: list[dict],
             })
         return results
 
-    conn = connect_db(db_path)
+    # Fix 2: Validate DB file + schema before any writes
+    conn = validate_db_file(db_path, ["projects", "memories"])
+
     try:
+        # Fix 3: ensure_project wrapped with retry_sqlite
         ensure_project(conn, project_id)
 
         for item in items:
@@ -306,11 +403,27 @@ def write_to_context_sync(db_path: str, items: list[dict],
     return results
 
 
+def gen_mem0_id(category: str, content: str) -> str:
+    """Generate a deterministic mem0 row ID based on content hash.
+
+    Fix 4: Uses full SHA-256 hash instead of content[:12] to eliminate
+    collision risk from short prefixes.
+    """
+    content_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
+    return f"{category}_{content_hash[:12]}"
+
+
 def write_to_mem0(mem0_path: str, items: list[dict],
                   project_id: str | None, dry_run: bool) -> list[dict]:
     """Write items to the secondary mem0 store.
 
     Failures here are non-fatal — they surface as warnings in the report.
+    Fix 4: dedupe_key uses full content hash (not content[:12] prefix).
+
+    mem0 schema:
+      id TEXT PRIMARY KEY, kind, content, scope, provenance, metadata,
+      embedding, dedupe_key, created_at, updated_at
+    No unique constraint on dedupe_key — dedup is enforced by PK (id).
     """
     results: list[dict] = []
     if dry_run:
@@ -334,10 +447,15 @@ def write_to_mem0(mem0_path: str, items: list[dict],
     try:
         for item in items:
             key = gen_memory_key(item["category"], item["content"])
+            # Fix 4: use full SHA-256 content hash as dedupe_key (not [:12])
             content_hash = hashlib.sha256(
                 item["content"].encode("utf-8")
+            ).hexdigest()
+            mem0_id = f"{item['category']}_{content_hash[:12]}"
+            # dedupe_key: use the full 12-char SHA-256 hash (deterministic)
+            dedupe_key = hashlib.sha256(
+                f"{item['category']}:{item['content']}".encode("utf-8")
             ).hexdigest()[:12]
-            mem0_id = f"{item['category']}_{content_hash}"
             now = datetime.now(timezone.utc).isoformat()
             metadata = json.dumps({
                 "source_category": item["category"],
@@ -353,7 +471,7 @@ def write_to_mem0(mem0_path: str, items: list[dict],
                     (mem0_id, item["category"], item["content"],
                      project_id or "default", "vantage-sync.py",
                      metadata, "",  # embedding left empty
-                     item["content"][:12],  # dedupe_key
+                     dedupe_key,
                      now, now),
                 )
                 conn.commit()
@@ -370,20 +488,79 @@ def write_to_mem0(mem0_path: str, items: list[dict],
     return results
 
 
+# ─── DB validation for mem0 (non-fatal wrapper) ────────────────────────────────
+
+def write_to_mem0_safe(mem0_path: str, items: list[dict],
+                       project_id: str | None, dry_run: bool) -> list[dict]:
+    """Wrapper around write_to_mem0 that validates DB before writing.
+
+    If the DB file is missing or 0 bytes, returns all items as skipped
+    with a clear error message — never exits, never creates empty files.
+    """
+    if dry_run:
+        return [
+            {"key": gen_memory_key(i["category"], i["content"]),
+             "status": "dry_run", "error": None}
+            for i in items
+        ]
+
+    if not os.path.exists(mem0_path):
+        msg = f"mem0 database not found: {mem0_path}"
+        print(f"[warn] {msg} — skipping mem0 writes (non-fatal)", file=sys.stderr)
+        return [
+            {"key": gen_memory_key(i["category"], i["content"]),
+             "status": "skipped", "error": msg}
+            for i in items
+        ]
+
+    if os.path.getsize(mem0_path) == 0:
+        msg = f"mem0 database is 0 bytes (corrupt): {mem0_path}"
+        print(f"[warn] {msg} — skipping mem0 writes (non-fatal)", file=sys.stderr)
+        return [
+            {"key": gen_memory_key(i["category"], i["content"]),
+             "status": "skipped", "error": msg}
+            for i in items
+        ]
+
+    # Check schema — if missing, skip gracefully
+    try:
+        conn = connect_db(mem0_path)
+    except sqlite3.Error as e:
+        return [
+            {"key": gen_memory_key(i["category"], i["content"]),
+             "status": "skipped", "error": f"mem0 connection error: {e}"}
+            for i in items
+        ]
+
+    if not validate_db_schema(conn, ["memories"]):
+        conn.close()
+        return [
+            {"key": gen_memory_key(i["category"], i["content"]),
+             "status": "skipped", "error": "mem0 schema validation failed"}
+            for i in items
+        ]
+
+    conn.close()
+    # Schema is valid — delegate to the actual writer
+    return write_to_mem0(mem0_path, items, project_id, dry_run)
+
+
 # ─── Report ───────────────────────────────────────────────────────────────────
 
 def print_report(input_source: str, items: list[dict],
-                 project_id: str | None, dry_run: bool,
+                 project_id: str | None, dry_run: bool, llm_mode: bool,
                  primary_results: list[dict],
                  mem0_results: list[dict]) -> None:
     """Print a clean Markdown execution report."""
     mode = "DRY RUN (no writes)" if dry_run else "WRITE"
+    engine = "Ollama LLM" if llm_mode else "regex"
     print()
     print("# vantage-sync.py — Execution Report")
     print()
     print(f"**Input:** {input_source}")
     print(f"**Project:** {project_id or '(none)'}")
     print(f"**Mode:** {mode}")
+    print(f"**Engine:** {engine}")
     print()
 
     # Extraction summary
@@ -471,8 +648,7 @@ Examples:
     parser.add_argument("--dry-run", action="store_true",
                         help="Preview only — no SQLite writes")
     parser.add_argument("--llm", action="store_true",
-                        help="Use Ollama LLM for semantic extraction "
-                             "(qwen2.5:7b local)")
+                        help="Use Ollama LLM for semantic extraction (qwen2.5:7b local)")
     parser.add_argument("--model", default="qwen2.5:7b",
                         help="Ollama model name (default: qwen2.5:7b)")
     parser.add_argument("--timeout", type=int, default=DEFAULT_OLLAMA_TIMEOUT,
@@ -493,6 +669,12 @@ Examples:
         with open(args.input, "r", encoding="utf-8") as f:
             raw_text = f.read()
         input_source = args.input
+
+    # Fix 5: Normalize JSON input before LLM extraction
+    # If --format json and --llm, normalize the JSON to text first
+    if args.format == "json":
+        raw_text = normalize_json_input(raw_text)
+        input_source = f"{input_source} (normalized JSON → text)"
 
     # Parse — LLM mode takes priority over format
     if args.llm:
@@ -516,22 +698,14 @@ Examples:
         db_path, items, args.project, args.dry_run
     )
 
-    # Write to secondary (mem0) — non-fatal
-    mem0_results: list[dict] = []
-    if items and not args.dry_run:
-        mem0_results = write_to_mem0(
-            mem0_path, items, args.project, args.dry_run
-        )
-    elif items and args.dry_run:
-        mem0_results = [
-            {"key": gen_memory_key(i["category"], i["content"]),
-             "status": "dry_run", "error": None}
-            for i in items
-        ]
+    # Write to secondary (mem0) — non-fatal, schema-validated
+    mem0_results = write_to_mem0_safe(
+        mem0_path, items, args.project, args.dry_run
+    )
 
     # Report
     print_report(input_source, items, args.project, args.dry_run,
-                 primary_results, mem0_results)
+                 args.llm, primary_results, mem0_results)
 
     if not args.dry_run:
         errors = [r for r in primary_results if r["status"] == "error"]

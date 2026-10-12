@@ -486,5 +486,9 @@
   "Layer_4/scripts/vdoc_local_contingency.py": {
     "hash": "4451022531e7982eabffe4834888ef3f5b7ee1366f386822c792193da5e2d99a",
     "captured_at": "2026-10-04T02:26:21.713501+00:00"
+  },
+  "Layer_1/scripts/vantage-sync.py": {
+    "hash": "7f73c8756486c20e408f981c94e7129e59004b39a8ccc5bb5bed740d711ee983",
+    "captured_at": "2026-10-12T12:38:00.000000+00:00"
   }
 }
