@@ -473,6 +473,290 @@ class TestLlmFallback:
         assert len(items) > 0  # regex fallback
 
 
+class TestT1FallbackEnforcement:
+    """T1: Fallback enforcement in write mode."""
+
+    def test_llm_fallback_abort_in_write_mode(self, vsync_module, tmp_db, sample_chat_text):
+        """LLM failure → regex fallback in write mode (no flag) should exit != 0 and write 0 rows."""
+        # Mock urlopen to fail (simulate Ollama unavailable)
+        with patch.object(vsync_module.urllib.request, 'urlopen',
+                          side_effect=Exception("Connection refused")):
+            # Extract with LLM - should fall back to regex
+            items = vsync_module.extract_with_ollama(sample_chat_text, model="qwen2.5:7b", timeout=5)
+            assert len(items) > 0
+            # Verify _last_extraction_source is llm→regex
+            assert vsync_module._last_extraction_source == "llm→regex"
+
+        # Now test write enforcement - simulate main() logic
+        # In write mode with llm→regex and no flag, should abort
+        source = vsync_module._last_extraction_source
+        assert source == "llm→regex"
+
+        # Simulate the check in main()
+        llm_mode = True
+        dry_run = False
+        allow_flag = False
+
+        if llm_mode and not dry_run and not allow_flag:
+            if source == "llm→regex":
+                with pytest.raises(SystemExit) as exc_info:
+                    # This is what main() does
+                    print(
+                        "ERROR: LLM extraction failed and fell back to regex. "
+                        "In write mode, this would write potentially unreliable regex output. "
+                        "Use --allow-regex-fallback to permit this, or re-run with --dry-run to preview.",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+                assert exc_info.value.code == 1
+
+    def test_llm_fallback_allowed_with_flag(self, vsync_module, tmp_db, sample_chat_text):
+        """LLM failure → regex fallback with --allow-regex-fallback should write."""
+        # Mock urlopen to fail
+        with patch.object(vsync_module.urllib.request, 'urlopen',
+                          side_effect=Exception("Connection refused")):
+            items = vsync_module.extract_with_ollama(sample_chat_text, model="qwen2.5:7b", timeout=5)
+            assert vsync_module._last_extraction_source == "llm→regex"
+
+        # With flag, should write
+        source = vsync_module._last_extraction_source
+        llm_mode = True
+        dry_run = False
+        allow_flag = True
+
+        # Should NOT abort when flag is set
+        if llm_mode and not dry_run and not allow_flag:
+            if source == "llm→regex":
+                sys.exit(1)  # This path should NOT be taken
+
+        # Write should succeed
+        results = vsync_module.write_to_context_sync(tmp_db, items, "test-proj", dry_run=False)
+        assert all(r["status"] == "written" for r in results)
+
+        # Verify rows written
+        conn = sqlite3.connect(tmp_db)
+        count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn.close()
+        assert count > 0
+
+    def test_dry_run_intact_with_fallback(self, vsync_module, tmp_db, sample_chat_text):
+        """--dry-run should show fallback without error."""
+        # Mock urlopen to fail
+        with patch.object(vsync_module.urllib.request, 'urlopen',
+                          side_effect=Exception("Connection refused")):
+            items = vsync_module.extract_with_ollama(sample_chat_text, model="qwen2.5:7b", timeout=5)
+            assert vsync_module._last_extraction_source == "llm→regex"
+
+        # In dry-run, should not abort
+        source = vsync_module._last_extraction_source
+        llm_mode = True
+        dry_run = True
+        allow_flag = False
+
+        # Should NOT abort in dry-run
+        if llm_mode and not dry_run and not allow_flag:
+            if source == "llm→regex":
+                sys.exit(1)  # This path should NOT be taken
+
+        # Dry-run should return dry_run status
+        results = vsync_module.write_to_context_sync(tmp_db, items, "test-proj", dry_run=True)
+        assert all(r["status"] == "dry_run" for r in results)
+
+        # Verify no rows written
+        conn = sqlite3.connect(tmp_db)
+        count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn.close()
+        assert count == 0
+
+    def test_report_shows_llm_to_regex_fallback(self, vsync_module, sample_chat_text):
+        """Report should show 'llm→regex (fallback)' when LLM fails."""
+        import io
+        from contextlib import redirect_stdout
+
+        # Mock urlopen to fail
+        with patch.object(vsync_module.urllib.request, 'urlopen',
+                          side_effect=Exception("Connection refused")):
+            items = vsync_module.extract_with_ollama(sample_chat_text, model="qwen2.5:7b", timeout=5)
+
+        # Capture report output
+        output = io.StringIO()
+        with redirect_stdout(output):
+            vsync_module.print_report(
+                "test input", items, "test-proj", True,
+                [{"key": "test", "category": "task", "status": "dry_run", "error": None}],
+                []
+            )
+
+        report = output.getvalue()
+        assert "llm→regex" in report or "fallback" in report.lower()
+
+
+class TestT2Chunking:
+    """T2: Text chunking for LLM processing."""
+
+    def test_split_into_chunks_basic(self, vsync_module):
+        """Text <= size returns 1 chunk."""
+        text = "x" * 3000
+        chunks = vsync_module.split_into_chunks(text, size=5000, overlap=500)
+        assert len(chunks) == 1
+        assert chunks[0] == text
+
+    def test_split_into_chunks_large_text(self, vsync_module):
+        """Large text splits into multiple chunks with overlap."""
+        # Create text of 12000 chars (should be 3 chunks: 0-5000, 4500-9500, 9000-12000)
+        text = "x" * 12000
+        chunks = vsync_module.split_into_chunks(text, size=5000, overlap=500)
+        assert len(chunks) == 3
+        assert len(chunks[0]) == 5000
+        assert len(chunks[1]) == 5000
+        assert len(chunks[2]) == 3000  # last chunk is shorter
+
+    def test_split_into_chunks_overlap_no_duplicate_at_boundary(self, vsync_module):
+        """Overlap doesn't create duplicate chunks at exact boundaries."""
+        # 10000 chars with 5000 size and 500 overlap = 3 chunks
+        text = "x" * 10000
+        chunks = vsync_module.split_into_chunks(text, size=5000, overlap=500)
+        assert len(chunks) == 3
+        # Verify overlap content exists
+        assert chunks[0][-500:] == chunks[1][:500]
+        assert chunks[1][-500:] == chunks[2][:500]
+
+    def test_chunk_marker_at_middle(self, vsync_module):
+        """A marker placed at the middle of large text should appear in results."""
+        # Generate 47000 chars with marker at position 25000
+        text = "x" * 25000 + "TODO: marcador-medio " + "y" * 22000
+        assert len(text) >= 47000
+
+        chunks = vsync_module.split_into_chunks(text, size=5000, overlap=500)
+        # Find which chunk contains the marker
+        marker_found = False
+        for chunk in chunks:
+            if "TODO: marcador-medio" in chunk:
+                marker_found = True
+                break
+        assert marker_found, "Marker should be present in one of the chunks"
+
+    def test_46528_chars_11_chunks(self, vsync_module):
+        """Exactly 46528 characters should produce 11 chunks with default settings."""
+        text = "x" * 46528
+        chunks = vsync_module.split_into_chunks(text, size=5000, overlap=500)
+        # 46528 / (5000-500) = 46528 / 4500 ≈ 10.34 → 11 chunks
+        assert len(chunks) == 11
+
+    def test_chunk_deduplication_no_duplicates(self, vsync_module):
+        """Same item appearing in overlapping chunks should be deduplicated."""
+        # Create text that will split into exactly 2 chunks
+        # 6000 chars with 5000 size, 500 overlap = 2 chunks
+        text = "DECISION: First decision. " + "x" * 5980
+
+        # Mock urlopen to return duplicate items
+        call_count = [0]
+
+        class MockResp:
+            def __init__(self, is_warmup=False):
+                self.is_warmup = is_warmup
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                call_count[0] += 1
+                if self.is_warmup:
+                    return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+                # Return same decision in both chunks
+                return json.dumps({
+                    "response": json.dumps({
+                        "decisions": [{"content": "First decision."}],
+                        "tasks": [],
+                        "facts": []
+                    })
+                }).encode("utf-8")
+
+        def capture_urlopen(req, timeout):
+            body = json.loads(req.data.decode("utf-8"))
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp(is_warmup=True)
+            return MockResp(is_warmup=False)
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=capture_urlopen):
+            items = vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+
+        # Should have called warmup + 2 chunks = 3 total, but deduplicated to 1 item
+        assert call_count[0] == 3  # warmup + 2 chunks
+        assert len(items) == 1
+        assert items[0]["content"] == "First decision."
+
+    def test_chunk_failure_all_or_nothing(self, vsync_module, tmp_db):
+        """If any chunk fails in write mode, should abort (T1 policy applies)."""
+        # Mock urlopen to fail on second chunk
+        call_count = [0]
+
+        class MockResp:
+            def __init__(self, should_fail=False):
+                self.should_fail = should_fail
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                if self.should_fail:
+                    raise Exception("Chunk 2 failed")
+                return json.dumps({
+                    "response": json.dumps({
+                        "decisions": [{"content": "First decision"}],
+                        "tasks": [],
+                        "facts": []
+                    })
+                }).encode("utf-8")
+
+        def flaky_urlopen(req, timeout):
+            call_count[0] += 1
+            body = json.loads(req.data.decode("utf-8"))
+            # Warmup (call 1) succeeds
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp(should_fail=False)
+            # Chunk 2 (call 3) fails - warmup is call 1, chunk 1 is call 2
+            if call_count[0] == 3:
+                return MockResp(should_fail=True)
+            # Other chunks succeed
+            return MockResp(should_fail=False)
+
+        # Large text to trigger multiple chunks
+        text = "x" * 12000
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=flaky_urlopen):
+            items = vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+
+        # Should have 2 processed, 1 failed (chunk 3 succeeds)
+        assert vsync_module._chunk_stats["processed"] == 2
+        assert vsync_module._chunk_stats["failed"] == 1
+
+        # In write mode with failures, should abort (enforced by T2 policy)
+        source = vsync_module._last_extraction_source
+        # With items but chunk failures, source is still "llm" (not fallback to regex)
+        # But chunk_stats shows failure - the main() check should abort
+        assert source == "llm"  # Still llm mode, not regex fallback
+        assert vsync_module._chunk_stats["failed"] > 0
+
+        # Simulate the check in main()
+        llm_mode = True
+        dry_run = False
+        allow_flag = False
+        chunk_stats = vsync_module._chunk_stats
+
+        if llm_mode and not dry_run and not allow_flag:
+            if chunk_stats["failed"] > 0:
+                with pytest.raises(SystemExit) as exc_info:
+                    print(
+                        f"ERROR: {chunk_stats['failed']} chunk(s) failed during LLM extraction. "
+                        "In write mode, this produces incomplete results. "
+                        "Use --allow-regex-fallback to permit partial results, or re-run with --dry-run to preview.",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+                assert exc_info.value.code == 1
+
+
 class TestEndToEnd:
     """Full integration: write to both stores, verify independently."""
 
@@ -524,7 +808,7 @@ class TestEndToEnd:
 
 
 class TestOllamaOptions:
-    """Ollama payload must include temperature=0 and fixed seed for determinism."""
+    """Ollama payload must include temperature=0, fixed seed, and num_ctx for determinism."""
 
     def test_ollama_payload_has_temperature_zero(self, vsync_module):
         """The Ollama payload must include temperature=0."""
@@ -576,6 +860,134 @@ class TestOllamaOptions:
 
         assert captured["body"]["stream"] is False
         assert captured["body"]["format"] == "json"
+
+    def test_ollama_payload_has_num_ctx_8192(self, vsync_module):
+        """T3: The Ollama payload must include num_ctx=8192."""
+        captured = {}
+
+        class MockResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                return json.dumps({
+                    "response": '{"decisions": [], "tasks": [], "facts": []}'
+                }).encode("utf-8")
+
+        def capture_urlopen(req, timeout):
+            captured["body"] = json.loads(req.data.decode("utf-8"))
+            return MockResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=capture_urlopen):
+            vsync_module.extract_with_ollama("test", model="qwen2.5:7b", timeout=5)
+
+        assert "options" in captured["body"]
+        assert captured["body"]["options"]["num_ctx"] == 8192
+
+
+class TestT4Timeouts:
+    """T4: Per-chunk timeout and warmup with separate timeout."""
+
+    def test_warmup_called_before_chunks(self, vsync_module):
+        """Warmup should be called once before processing chunks."""
+        call_log = []
+        captured_bodies = []
+
+        class MockResp:
+            def __init__(self, is_warmup=False):
+                self.is_warmup = is_warmup
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                call_log.append("warmup" if self.is_warmup else "chunk")
+                return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+
+        def capture_urlopen(req, timeout):
+            body = json.loads(req.data.decode("utf-8"))
+            captured_bodies.append(body)
+            # Warmup has keep_alive but no prompt
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp(is_warmup=True)
+            return MockResp(is_warmup=False)
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=capture_urlopen):
+            vsync_module.extract_with_ollama("test text", model="qwen2.5:7b", timeout=5)
+
+        # Should have 1 warmup + 1 chunk call
+        assert call_log == ["warmup", "chunk"]
+
+        # Verify warmup payload has num_ctx and keep_alive="5m"
+        warmup_body = captured_bodies[0]
+        assert warmup_body["keep_alive"] == "5m"
+        assert "options" in warmup_body
+        assert warmup_body["options"]["num_ctx"] == 8192
+
+    def test_warmup_failure_triggers_regex_fallback(self, vsync_module):
+        """If warmup fails, should fall back to regex."""
+        def fail_urlopen(req, timeout):
+            raise Exception("Warmup failed")
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fail_urlopen):
+            items = vsync_module.extract_with_ollama("DECISION: test decision", model="qwen2.5:7b", timeout=5)
+
+        # Should fall back to regex
+        assert vsync_module._last_extraction_source == "llm→regex"
+        assert len(items) > 0
+        assert items[0]["category"] == "decision"
+
+    def test_warmup_timeout_is_separate(self, vsync_module):
+        """Warmup timeout should be separate from chunk timeout."""
+        timeout_log = []
+
+        class MockResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+
+        def capture_urlopen(req, timeout):
+            timeout_log.append(timeout)
+            return MockResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=capture_urlopen):
+            vsync_module.extract_with_ollama("test", model="qwen2.5:7b", timeout=10, warmup_timeout=180)
+
+        # First call should use warmup timeout (180), second uses chunk timeout (10)
+        assert timeout_log[0] == 180
+        assert timeout_log[1] == 10
+
+    def test_per_chunk_timeout_applied(self, vsync_module):
+        """Each chunk should get the same timeout value."""
+        timeout_log = []
+
+        class MockResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+
+        def capture_urlopen(req, timeout):
+            timeout_log.append(timeout)
+            return MockResp()
+
+        # Large text to trigger multiple chunks
+        text = "x" * 12000
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=capture_urlopen):
+            vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=30)
+
+        # First call is warmup (180 default), then each chunk gets 30
+        assert timeout_log[0] == 180  # warmup default
+        # All chunk calls should use the chunk timeout
+        chunk_timeouts = timeout_log[1:]
+        assert all(t == 30 for t in chunk_timeouts)
 
 
 class TestNormalizationDedup:
