@@ -148,8 +148,15 @@ def parse_json_input(raw: str) -> list[dict]:
 # ─── Ollama LLM extraction (optional, local-only) ─────────────────────────────
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-DEFAULT_OLLAMA_TIMEOUT = 120  # seconds — qwen2.5:7b needs extra time on cold start
+DEFAULT_OLLAMA_TIMEOUT = 120  # seconds — T4: now PER CHUNK (default)
+DEFAULT_WARMUP_TIMEOUT = 180  # seconds — T4: warmup timeout (default)
 OLLAMA_SEED = 42  # fixed seed for deterministic LLM extraction
+DEFAULT_CHUNK_SIZE = 5000  # characters per chunk
+DEFAULT_CHUNK_OVERLAP = 500  # overlap between chunks
+OLLAMA_NUM_CTX = 8192  # T3: explicit context window size
+
+# Module-level tracker for chunk status
+_chunk_stats: dict[str, int] = {"processed": 0, "failed": 0}
 
 OLLAMA_SYSTEM_PROMPT = """
 You are a context extraction specialist for VANTAGE. Given a chat log, extract:
@@ -190,26 +197,48 @@ def intelligent_truncate(text: str, limit: int = LLM_TRUNCATE_LIMIT,
     )
 
 
-def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
-                        timeout: int = DEFAULT_OLLAMA_TIMEOUT) -> list[dict]:
-    """Extract items via Ollama LLM with regex fallback on any failure.
+def split_into_chunks(text: str, size: int = 5000, overlap: int = 500) -> list[str]:
+    """Split text into overlapping chunks for LLM processing.
 
-    Makes a local-only POST to http://localhost:11434/api/generate.
-    Returns items in the same shape as extract_items().
-    Sets _last_extraction_source to "llm" or "llm→regex (fallback)".
+    Args:
+        text: Input text to split
+        size: Target chunk size in characters (default 5000)
+        overlap: Overlap between consecutive chunks (default 500)
+
+    Returns:
+        List of text chunks. Text <= size returns 1 chunk.
     """
-    global _last_extraction_source
-    truncated = intelligent_truncate(text)
+    if len(text) <= size:
+        return [text]
+
+    chunks: list[str] = []
+    start = 0
+
+    while start < len(text):
+        end = start + size
+        chunk = text[start:end]
+        chunks.append(chunk)
+
+        # Move start with overlap, but stop if we've reached the end
+        if end >= len(text):
+            break
+        start += size - overlap
+
+    return chunks
+
+
+def warmup_ollama(model: str = "qwen2.5:7b", timeout: int = DEFAULT_WARMUP_TIMEOUT) -> None:
+    """Warmup Ollama by loading the model before actual extraction.
+
+    T4: POST to /api/generate with keep_alive only (no prompt).
+    This loads the model into memory so first chunk is faster.
+    Warmup failure is treated as LLM failure.
+    """
+    print(f"[info] Warming up Ollama model {model}...", file=sys.stderr)
 
     payload = json.dumps({
         "model": model,
-        "prompt": OLLAMA_SYSTEM_PROMPT + "\n\n---CHAT LOG---\n" + truncated,
-        "format": "json",
-        "stream": False,
-        "options": {
-            "temperature": 0,
-            "seed": OLLAMA_SEED,
-        },
+        "keep_alive": -1,  # Keep model loaded after warmup
     }).encode("utf-8")
 
     try:
@@ -219,34 +248,109 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
             headers={"Content-Type": "application/json"},
         )
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            raw = json.loads(resp.read().decode("utf-8"))
-        llm_output = json.loads(raw["response"])
-
-        items: list[dict] = []
-        for cat in ("decision", "task", "fact"):
-            key = cat + "s"  # JSON keys: decisions, tasks, facts
-            for entry in llm_output.get(key, []):
-                content = entry.get("content", "").strip()
-                if content and len(content) < 2000:
-                    items.append({
-                        "category": cat,
-                        "content": content,
-                        "source_line": text[:200],
-                    })
-
-        if items:
-            _last_extraction_source = "llm"
-            return items
-
-        # LLM returned empty — fall back to regex
-        print("[info] LLM returned no items — falling back to regex", file=sys.stderr)
-        _last_extraction_source = "llm→regex"
-        return extract_items(text)
-
+            # Warmup request succeeds if it doesn't timeout
+            _ = resp.read()
+        print("[info] Warmup complete", file=sys.stderr)
     except Exception as e:
-        print(f"[info] LLM extraction failed ({e}) — falling back to regex", file=sys.stderr)
+        print(f"[info] Warmup failed ({e}) — treating as LLM failure", file=sys.stderr)
+        raise
+
+
+def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
+                        timeout: int = DEFAULT_OLLAMA_TIMEOUT,
+                        warmup_timeout: int = DEFAULT_WARMUP_TIMEOUT) -> list[dict]:
+    """Extract items via Ollama LLM with regex fallback on any failure.
+
+    Makes a local-only POST to http://localhost:11434/api/generate.
+    Returns items in the same shape as extract_items().
+    Sets _last_extraction_source to "llm" or "llm→regex (fallback)".
+
+    T2: Processes text in chunks with overlap, combines and deduplicates results.
+    T4: Warmup call before chunks, per-chunk timeout, separate warmup timeout.
+    Tracks chunk status in _chunk_stats for reporting.
+    """
+    global _last_extraction_source, _chunk_stats
+    _chunk_stats = {"processed": 0, "failed": 0}
+
+    # T4: Warmup before chunking
+    try:
+        warmup_ollama(model, timeout=warmup_timeout)
+    except Exception:
+        # Warmup failure = LLM failure, fall back to regex
+        print("[info] Warmup failed — falling back to regex", file=sys.stderr)
         _last_extraction_source = "llm→regex"
         return extract_items(text)
+
+    # Split into chunks
+    chunks = split_into_chunks(text, size=DEFAULT_CHUNK_SIZE, overlap=DEFAULT_CHUNK_OVERLAP)
+    print(f"[info] Processing {len(text)} chars in {len(chunks)} chunk(s)", file=sys.stderr)
+
+    all_items: list[dict] = []
+    seen_keys: set[str] = set()
+
+    for i, chunk in enumerate(chunks):
+        chunk_num = i + 1
+        print(f"[info] Processing chunk {chunk_num}/{len(chunks)} ({len(chunk)} chars)", file=sys.stderr)
+
+        payload = json.dumps({
+            "model": model,
+            "prompt": OLLAMA_SYSTEM_PROMPT + "\n\n---CHAT LOG CHUNK---\n" + chunk,
+            "format": "json",
+            "stream": False,
+            "options": {
+                "temperature": 0,
+                "seed": OLLAMA_SEED,
+                "num_ctx": OLLAMA_NUM_CTX,  # T3: explicit context window
+            },
+        }).encode("utf-8")
+
+        try:
+            req = urllib.request.Request(
+                OLLAMA_URL,
+                data=payload,
+                headers={"Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                raw = json.loads(resp.read().decode("utf-8"))
+            llm_output = json.loads(raw["response"])
+
+            _chunk_stats["processed"] += 1
+
+            # Extract items from this chunk
+            for cat in ("decision", "task", "fact"):
+                key = cat + "s"  # JSON keys: decisions, tasks, facts
+                for entry in llm_output.get(key, []):
+                    content = entry.get("content", "").strip()
+                    if content and len(content) < 2000:
+                        # Deduplicate using gen_memory_key
+                        mem_key = gen_memory_key(cat, content)
+                        if mem_key not in seen_keys:
+                            seen_keys.add(mem_key)
+                            all_items.append({
+                                "category": cat,
+                                "content": content,
+                                "source_line": chunk[:200],
+                            })
+
+        except Exception as e:
+            _chunk_stats["failed"] += 1
+            print(f"[info] Chunk {chunk_num} failed ({e})", file=sys.stderr)
+            # Continue to next chunk - all-or-nothing is enforced at write time
+
+    if _chunk_stats["failed"] > 0:
+        print(
+            f"[info] {_chunk_stats['failed']} chunk(s) failed out of {len(chunks)} total",
+            file=sys.stderr,
+        )
+
+    if all_items:
+        _last_extraction_source = "llm"
+        return all_items
+
+    # LLM returned no items (or all chunks failed) — fall back to regex
+    print("[info] LLM returned no items — falling back to regex", file=sys.stderr)
+    _last_extraction_source = "llm→regex"
+    return extract_items(text)
 
 
 # ─── SQLite helpers ───────────────────────────────────────────────────────────
@@ -636,6 +740,8 @@ def print_report(input_source: str, items: list[dict],
       - "regex" for default heuristic mode
       - "llm (qwen2.5:7b)" for successful Ollama extraction
       - "llm→regex (fallback)" when LLM failed and regex was used
+
+    T2: Shows chunk stats when LLM mode is used.
     """
     mode = "DRY RUN (no writes)" if dry_run else "WRITE"
     # Determine engine label from module-level tracker
@@ -653,6 +759,12 @@ def print_report(input_source: str, items: list[dict],
     print(f"**Project:** {project_id or '(none)'}")
     print(f"**Mode:** {mode}")
     print(f"**Engine:** {engine}")
+
+    # T2: Show chunk stats when in LLM mode
+    if source == "llm":
+        chunk_stats = globals().get("_chunk_stats", {"processed": 0, "failed": 0})
+        print(f"**Tramos:** {chunk_stats['processed']} procesados, {chunk_stats['failed']} fallidos")
+
     print()
 
     # Extraction summary
@@ -744,7 +856,11 @@ Examples:
     parser.add_argument("--model", default="qwen2.5:7b",
                         help="Ollama model name (default: qwen2.5:7b)")
     parser.add_argument("--timeout", type=int, default=DEFAULT_OLLAMA_TIMEOUT,
-                        help=f"Ollama request timeout in seconds (default: {DEFAULT_OLLAMA_TIMEOUT})")
+                        help=f"Ollama request timeout in seconds per chunk (default: {DEFAULT_OLLAMA_TIMEOUT})")
+    parser.add_argument("--warmup-timeout", type=int, default=DEFAULT_WARMUP_TIMEOUT,
+                        help=f"Ollama warmup timeout in seconds (default: {DEFAULT_WARMUP_TIMEOUT})")
+    parser.add_argument("--allow-regex-fallback", action="store_true",
+                        help="Allow regex fallback when LLM fails (default: abort on LLM failure in write mode)")
     parser.add_argument("--verbose", action="store_true",
                         help="Detailed extraction log")
 
@@ -770,7 +886,7 @@ Examples:
 
     # Parse — LLM mode takes priority over format
     if args.llm:
-        items = extract_with_ollama(raw_text, args.model, args.timeout)
+        items = extract_with_ollama(raw_text, args.model, args.timeout, args.warmup_timeout)
     elif args.format == "json":
         items = parse_json_input(raw_text)
     else:
@@ -780,6 +896,30 @@ Examples:
         print(f"[verbose] Extracted {len(items)} items from input")
         for item in items:
             print(f"  [{item['category']}] {item['content'][:100]}")
+
+    # T1: Fallback enforcement — abort on LLM→regex in write mode unless --allow-regex-fallback
+    if args.llm and not args.dry_run and not args.allow_regex_fallback:
+        source = globals().get("_last_extraction_source", "regex")
+        if source == "llm→regex":
+            print(
+                "ERROR: LLM extraction failed and fell back to regex. "
+                "In write mode, this would write potentially unreliable regex output. "
+                "Use --allow-regex-fallback to permit this, or re-run with --dry-run to preview.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+    # T2: All-or-nothing chunk failure enforcement in write mode
+    if args.llm and not args.dry_run and not args.allow_regex_fallback:
+        chunk_stats = globals().get("_chunk_stats", {"processed": 0, "failed": 0})
+        if chunk_stats["failed"] > 0:
+            print(
+                f"ERROR: {chunk_stats['failed']} chunk(s) failed during LLM extraction. "
+                "In write mode, this produces incomplete results. "
+                "Use --allow-regex-fallback to permit partial results, or re-run with --dry-run to preview.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
     # Determine DB paths
     db_path = os.environ.get("VANTAGE_DB_PATH", DEFAULT_DB_PATH)
