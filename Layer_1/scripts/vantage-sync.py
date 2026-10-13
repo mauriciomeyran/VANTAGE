@@ -85,7 +85,6 @@ def extract_items(text: str) -> list[dict]:
             content = match.group(group) if group > 0 else match.group(0)
             content = content.strip()
             if content and len(content) < 2000:
-                # Source line = the actual line containing the match (not whole-doc prefix)
                 line_start = text.rfind("\n", 0, match.start()) + 1
                 line_end = text.find("\n", match.start())
                 if line_end < 0:
@@ -154,8 +153,17 @@ def parse_json_input(raw: str) -> list[dict]:
 # ─── Ollama LLM extraction (optional, local-only) ─────────────────────────────
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-DEFAULT_OLLAMA_TIMEOUT = 120  # seconds — qwen2.5:7b needs extra time on cold start
+DEFAULT_OLLAMA_TIMEOUT = 120  # seconds — T4: now PER CHUNK (default)
+DEFAULT_WARMUP_TIMEOUT = 180  # seconds — T4: warmup timeout (default)
 OLLAMA_SEED = 42  # fixed seed for deterministic LLM extraction
+DEFAULT_CHUNK_SIZE = 5000  # characters per chunk
+DEFAULT_CHUNK_OVERLAP = 500  # overlap between chunks
+OLLAMA_NUM_CTX = 8192  # T3: explicit context window size
+
+# Module-level tracker for chunk status
+_chunk_stats: dict[str, int] = {"processed": 0, "failed": 0}
+# T4-B: tracker for consecutive timeouts
+_consecutive_timeouts: int = 0
 
 OLLAMA_SYSTEM_PROMPT = """
 You are a context extraction specialist for VANTAGE. Given a chat log, extract:
@@ -181,9 +189,7 @@ def intelligent_truncate(text: str, limit: int = LLM_TRUNCATE_LIMIT,
         return text
 
     marker = "\n\n[... TRUNCATED — middle content omitted for LLM context limit ...]\n\n"
-    marker_len = len(marker)
-    available = max(0, limit - marker_len)
-    # Prefer preserving the configured tail; clamp so result never exceeds limit
+    available = max(0, limit - len(marker))
     tail_len = min(tail_length, available)
     head_len = min(head_length, max(0, available - tail_len))
     head = text[:head_len]
@@ -196,98 +202,316 @@ def intelligent_truncate(text: str, limit: int = LLM_TRUNCATE_LIMIT,
     )
 
     result = head + marker + tail
-    # Hard guarantee: never exceed the configured limit
-    if len(result) > limit:
-        result = result[:limit]
-    return result
+    return result[:limit]
+
+
+def split_into_chunks(text: str, size: int = 5000, overlap: int = 500) -> list[str]:
+    """Split text into overlapping chunks for LLM processing.
+
+    Args:
+        text: Input text to split
+        size: Target chunk size in characters (default 5000)
+        overlap: Overlap between consecutive chunks (default 500)
+
+    Returns:
+        List of text chunks. Text <= size returns 1 chunk.
+    """
+    if len(text) <= size:
+        return [text]
+
+    chunks: list[str] = []
+    start = 0
+
+    while start < len(text):
+        end = start + size
+        chunk = text[start:end]
+        chunks.append(chunk)
+
+        # Move start with overlap, but stop if we've reached the end
+        if end >= len(text):
+            break
+        start += size - overlap
+
+    return chunks
+
+
+def warmup_ollama(model: str = "qwen2.5:7b", timeout: int = DEFAULT_WARMUP_TIMEOUT) -> None:
+    """Warmup Ollama by loading the model before actual extraction.
+
+    T4: POST to /api/generate with keep_alive and options (num_ctx).
+    This loads the model into memory so first chunk is faster.
+    Warmup failure is treated as LLM failure.
+    """
+    print(f"[info] Warming up Ollama model {model}...", file=sys.stderr)
+
+    payload = json.dumps({
+        "model": model,
+        "keep_alive": "5m",  # Keep model loaded for 5 minutes after warmup
+        "stream": False,
+        "options": {
+            "num_ctx": OLLAMA_NUM_CTX,  # T4: same num_ctx as chunks
+        },
+    }).encode("utf-8")
+
+    try:
+        req = urllib.request.Request(
+            OLLAMA_URL,
+            data=payload,
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            raw = json.loads(resp.read().decode("utf-8"))
+        if not isinstance(raw, dict) or raw.get("done") is not True:
+            raise ValueError("Ollama warmup response must be a JSON object with done=true")
+        print("[info] Warmup complete", file=sys.stderr)
+    except Exception as e:
+        print(f"[info] Warmup failed ({e}) — treating as LLM failure", file=sys.stderr)
+        raise
 
 
 def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
-                        timeout: int = DEFAULT_OLLAMA_TIMEOUT) -> list[dict]:
+                        timeout: int = DEFAULT_OLLAMA_TIMEOUT,
+                        warmup_timeout: int = DEFAULT_WARMUP_TIMEOUT,
+                        fallback_to_regex: bool = True) -> list[dict]:
     """Extract items via Ollama LLM with regex fallback on any failure.
 
     Makes a local-only POST to http://localhost:11434/api/generate.
     Returns items in the same shape as extract_items().
     Sets _last_extraction_source to "llm" or "llm→regex (fallback)".
+
+    T2: Processes text in chunks with overlap, combines and deduplicates results.
+    T4: Warmup call before chunks, per-chunk timeout, separate warmup timeout.
+    T4-B: Aborts after 2 consecutive timeouts to prevent resource waste.
+    Set fallback_to_regex=False to raise instead of using regex on LLM failure.
+    Tracks chunk status in _chunk_stats for reporting.
     """
-    global _last_extraction_source
-    truncated = intelligent_truncate(text)
+    global _last_extraction_source, _chunk_stats, _consecutive_timeouts
+    _chunk_stats = {"processed": 0, "failed": 0}
+    _consecutive_timeouts = 0
 
-    payload = {
-        "model": model,
-        "prompt": truncated,
-        "system": OLLAMA_SYSTEM_PROMPT,
-        "stream": False,
-        "format": "json",
-        "options": {
-            "temperature": 0,
-            "seed": OLLAMA_SEED,
-        },
-    }
-
+    # T4: Warmup before chunking
     try:
-        data = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(
-            OLLAMA_URL,
-            data=data,
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            raw = json.loads(resp.read().decode("utf-8"))
-        llm_output = json.loads(raw["response"])
-
-        items: list[dict] = []
-        for cat in ("decision", "task", "fact"):
-            key = cat + "s"  # JSON keys: decisions, tasks, facts
-            for entry in llm_output.get(key, []):
-                content = entry.get("content", "").strip()
-                if content and len(content) < 2000:
-                    items.append({
-                        "category": cat,
-                        "content": content,
-                        "source_line": "(llm extraction)",
-                    })
-
-        if items:
-            _last_extraction_source = "llm"
-            return items
-
-        # LLM returned empty — fall back to regex
-        print("[info] LLM returned no items — falling back to regex", file=sys.stderr)
-        _last_extraction_source = "llm→regex"
-        return extract_items(text)
-
+        warmup_ollama(model, timeout=warmup_timeout)
     except Exception as e:
-        print(f"[info] LLM extraction failed ({e}) — falling back to regex", file=sys.stderr)
+        if not fallback_to_regex:
+            raise RuntimeError(f"Ollama warmup failed and fallback is disabled: {e}") from e
+        print("[info] Warmup failed — falling back to regex", file=sys.stderr)
         _last_extraction_source = "llm→regex"
         return extract_items(text)
+
+    # Split into chunks
+    chunks = split_into_chunks(text, size=DEFAULT_CHUNK_SIZE, overlap=DEFAULT_CHUNK_OVERLAP)
+    print(f"[info] Processing {len(text)} chars in {len(chunks)} chunk(s)", file=sys.stderr)
+
+    all_items: list[dict] = []
+    seen_keys: set[str] = set()
+
+    for i, chunk in enumerate(chunks):
+        chunk_num = i + 1
+        print(f"[info] Processing chunk {chunk_num}/{len(chunks)} ({len(chunk)} chars)", file=sys.stderr)
+
+        payload = json.dumps({
+            "model": model,
+            "prompt": OLLAMA_SYSTEM_PROMPT + "\n\n---CHAT LOG CHUNK---\n" + chunk,
+            "format": "json",
+            "stream": False,
+            "options": {
+                "temperature": 0,
+                "seed": OLLAMA_SEED,
+                "num_ctx": OLLAMA_NUM_CTX,  # T3: explicit context window
+            },
+        }).encode("utf-8")
+
+        chunk_start = time.time()
+        try:
+            req = urllib.request.Request(
+                OLLAMA_URL,
+                data=payload,
+                headers={"Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                raw = json.loads(resp.read().decode("utf-8"))
+            llm_output = json.loads(raw["response"])
+
+            chunk_duration = time.time() - chunk_start
+            print(f"[info] Chunk {chunk_num}/{len(chunks)} ok in {chunk_duration:.1f}s", file=sys.stderr)
+
+            _chunk_stats["processed"] += 1
+            _consecutive_timeouts = 0  # Reset counter on success
+
+            # Extract items from this chunk
+            for cat in ("decision", "task", "fact"):
+                key = cat + "s"  # JSON keys: decisions, tasks, facts
+                for entry in llm_output.get(key, []):
+                    content = entry.get("content", "").strip()
+                    if content and len(content) < 2000:
+                        # Deduplicate using gen_memory_key
+                        mem_key = gen_memory_key(cat, content)
+                        if mem_key not in seen_keys:
+                            seen_keys.add(mem_key)
+                            all_items.append({
+                                "category": cat,
+                                "content": content,
+                                "source_line": "(llm extraction)",
+                            })
+
+        except (urllib.error.URLError, TimeoutError) as e:
+            chunk_duration = time.time() - chunk_start
+            # T4-B: Detect both direct timeouts and URLError-wrapped timeouts.
+            reason = getattr(e, "reason", None)
+            if isinstance(e, TimeoutError) or isinstance(reason, TimeoutError) or "timed out" in str(e).lower():
+                _consecutive_timeouts += 1
+                _chunk_stats["failed"] += 1
+                print(f"[info] Chunk {chunk_num}/{len(chunks)} timed out after {chunk_duration:.1f}s "
+                      f"(consecutive timeouts: {_consecutive_timeouts})", file=sys.stderr)
+
+                # T4-B: Abort after 2 consecutive timeouts
+                if _consecutive_timeouts >= 2:
+                    print(
+                        f"[info] Aborting extraction after {_consecutive_timeouts} consecutive timeouts. "
+                        f"This indicates persistent LLM unresponsiveness.",
+                        file=sys.stderr,
+                    )
+                    raise RuntimeError(
+                        f"Aborted after {_consecutive_timeouts} consecutive chunk timeouts"
+                    ) from e
+            else:
+                # Non-timeout URLError - treat as regular failure
+                _chunk_stats["failed"] += 1
+                _consecutive_timeouts = 0  # Reset on non-timeout errors
+                print(f"[info] Chunk {chunk_num}/{len(chunks)} failed after {chunk_duration:.1f}s ({e})", file=sys.stderr)
+
+        except Exception as e:
+            chunk_duration = time.time() - chunk_start
+            _chunk_stats["failed"] += 1
+            _consecutive_timeouts = 0  # Reset on other exceptions
+            print(f"[info] Chunk {chunk_num}/{len(chunks)} failed after {chunk_duration:.1f}s ({e})", file=sys.stderr)
+
+    if _chunk_stats["failed"] > 0:
+        print(
+            f"[info] {_chunk_stats['failed']} chunk(s) failed out of {len(chunks)} total",
+            file=sys.stderr,
+        )
+        if not fallback_to_regex:
+            raise RuntimeError("LLM chunk extraction failed and fallback is disabled")
+        print("[info] Discarding partial LLM results and falling back to regex on full text", file=sys.stderr)
+        _last_extraction_source = "llm→regex"
+        return extract_items(text)
+
+    if all_items:
+        _last_extraction_source = "llm"
+        return all_items
+
+    # LLM returned no items — fall back to regex on the full text
+    if not fallback_to_regex:
+        raise RuntimeError("LLM returned no usable extraction and fallback is disabled")
+    print("[info] LLM returned no items — falling back to regex", file=sys.stderr)
+    _last_extraction_source = "llm→regex"
+    return extract_items(text)
 
 
 # ─── SQLite helpers ───────────────────────────────────────────────────────────
 
-def retry_sqlite(fn, max_retries: int = 5, base_delay: float = 0.1):
-    """Retry a callable on SQLITE_BUSY / locked errors with exponential backoff."""
-    last_error = None
+def connect_db(db_path: str, timeout: int = 5000) -> sqlite3.Connection:
+    """Open a SQLite connection with busy timeout for lock resilience."""
+    conn = sqlite3.connect(db_path)
+    conn.execute(f"PRAGMA busy_timeout = {timeout}")
+    return conn
+
+
+def validate_db_schema(conn: sqlite3.Connection, required_tables: list[str]) -> bool:
+    """Verify that all required tables exist in the connected database."""
+    existing = conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table'"
+    ).fetchall()
+    existing_tables = {row[0] for row in existing}
+    missing = set(required_tables) - existing_tables
+    if missing:
+        print(
+            f"ERROR: database at '{conn.execute('PRAGMA database_list').fetchone()[2]}' "
+            f"is missing required tables: {sorted(missing)}",
+            file=sys.stderr,
+        )
+        return False
+    return True
+
+
+def validate_db_file(db_path: str, required_tables: list[str]) -> sqlite3.Connection:
+    """Validate that a DB file exists, is not empty (0 bytes), and has required tables.
+
+    Returns an open connection if valid.
+    Exits with code 1 if the DB is missing, 0 bytes, or missing tables
+    — never returns None (exits before returning).
+    Uses retry_sqlite for lock resilience.
+    """
+    if not os.path.exists(db_path):
+        print(f"ERROR: database file not found: {db_path}", file=sys.stderr)
+        sys.exit(1)
+
+    if os.path.getsize(db_path) == 0:
+        print(
+            f"ERROR: database file is 0 bytes (corrupt/empty): {db_path}. "
+            f"Aborting to prevent MCP context-sync corruption.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    def _connect_and_validate():
+        conn = connect_db(db_path)
+        if not validate_db_schema(conn, required_tables):
+            conn.close()
+            sys.exit(1)
+        return conn
+
+    try:
+        return retry_sqlite(_connect_and_validate)
+    except RuntimeError as e:
+        print(
+            f"ERROR: database at '{db_path}' is locked after retries: {e}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+
+def retry_sqlite(fn, max_retries: int = 3, base_delay: float = 0.1):
+    """Execute a DB operation with exponential backoff on SQLITE_BUSY.
+
+    Non-locking OperationalErrors are re-raised immediately.
+    SQLITE_BUSY errors are retried with exponential backoff.
+    """
+    last_error: Exception | None = None
     for attempt in range(max_retries):
         try:
             return fn()
         except sqlite3.OperationalError as e:
-            last_error = e
-            if "locked" in str(e).lower() or "busy" in str(e).lower():
-                time.sleep(base_delay * (2 ** attempt))
-                continue
-            raise
+            if "database is locked" in str(e) or "locked" in str(e).lower():
+                last_error = e
+                delay = base_delay * (2 ** attempt)
+                print(f"  [retry {attempt+1}/{max_retries}] DB locked, waiting {delay:.2f}s...",
+                      file=sys.stderr)
+                time.sleep(delay)
+            else:
+                raise
     # If we exhausted all retries on locked errors, last_error is guaranteed set
-    raise last_error  # type: ignore[misc]
+    assert last_error is not None
+    raise RuntimeError(f"Failed after {max_retries} retries: {last_error}")
 
 
 def normalize_content(content: str) -> str:
-    """Normalize content for stable hashing / deduplication."""
+    """Normalize extracted content for deterministic hashing.
+
+    Strips leading/trailing whitespace, collapses internal whitespace to
+    single spaces, and removes trailing punctuation. This ensures that
+    trivial variations (extra spaces, trailing periods) from LLM output
+    do not generate duplicate rows.
+
+    The original content is preserved as-is in the DB; only the hash key
+    uses the normalized form.
+    """
     # Collapse whitespace (spaces, tabs, newlines) to single spaces
     normalized = re.sub(r"\s+", " ", content.strip())
     # Strip trailing punctuation that doesn't change meaning
-    normalized = normalized.rstrip(". ,;:!?")
+    normalized = normalized.rstrip(".,;:!?")
     normalized = normalized.rstrip()  # also strip any remaining trailing whitespace
     return normalized
 
@@ -355,27 +579,35 @@ def write_to_context_sync(db_path: str, items: list[dict],
         for item in items:
             key = gen_memory_key(item["category"], item["content"])
             status = "written"
-            error = None
-            try:
-                def do_write():
-                    conn.execute(
-                        "INSERT OR REPLACE INTO memories "
-                        "(key, content, category, project_id, updated_at) "
-                        "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)",
-                        (key, item["content"], item["category"], project_id),
-                    )
-                    conn.commit()
+            error: str | None = None
 
-                retry_sqlite(do_write)
+            def do_upsert():
+                conn.execute(
+                    "INSERT INTO memories (key, content, category, project_id) "
+                    "VALUES (?, ?, ?, ?) "
+                    "ON CONFLICT(key) DO UPDATE SET "
+                    "content = excluded.content, "
+                    "category = excluded.category, "
+                    "project_id = excluded.project_id, "
+                    "updated_at = CURRENT_TIMESTAMP",
+                    (key, item["content"], item["category"], project_id),
+                )
+                conn.commit()
+
+            try:
+                retry_sqlite(do_upsert)
+                status = "written"
             except Exception as e:
                 status = "error"
                 error = str(e)
+
             results.append({
                 "key": key,
                 "category": item["category"],
                 "status": status,
                 "error": error,
             })
+
     finally:
         conn.close()
 
@@ -383,11 +615,11 @@ def write_to_context_sync(db_path: str, items: list[dict],
 
 
 def gen_mem0_id(category: str, content: str) -> str:
-    """Generate mem0 row id.
+    """Generate a deterministic mem0 row ID based on content hash.
 
     Fix 4: Uses full SHA-256 hash of normalized content instead of
     content[:12] to eliminate collision risk from short prefixes.
-    Returns first 12 hex chars of the hash (48 bits) with category prefix.
+    Normalization: strip, collapse whitespace, strip trailing punctuation.
     """
     normalized = normalize_content(content)
     content_hash = hashlib.sha256(normalized.encode("utf-8")).hexdigest()
@@ -398,25 +630,52 @@ def write_to_mem0(mem0_path: str, items: list[dict],
                   project_id: str | None, dry_run: bool) -> list[dict]:
     """Write items to the secondary mem0 store.
 
+    Failures here are non-fatal — they surface as warnings in the report.
     Fix 4: dedupe_key uses full content hash (not content[:12] prefix).
-    Failures are non-fatal — caller should treat as secondary.
+
+    Real mem0 schema (verified from ~/.vantage/mem0/memories.sqlite):
+      CREATE TABLE memories (
+          id TEXT PRIMARY KEY,
+          kind TEXT NOT NULL,
+          content TEXT NOT NULL,
+          scope TEXT NOT NULL,
+          provenance TEXT NOT NULL,
+          metadata TEXT NOT NULL,
+          embedding TEXT NOT NULL,
+          dedupe_key TEXT NOT NULL DEFAULT '',
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL
+      );
+      CREATE INDEX idx_memories_dedupe_key ON memories (dedupe_key);
+
+    PRAGMA table_info(memories):
+      0|id|TEXT|0||1
+      1|kind|TEXT|1||0
+      2|content|TEXT|1||0
+      3|scope|TEXT|1||0
+      4|provenance|TEXT|1||0
+      5|metadata|TEXT|1||0
+      6|embedding|TEXT|1||0
+      7|dedupe_key|TEXT|1|''|0
+      8|created_at|TEXT|1||0
+      9|updated_at|TEXT|1||0
+
+    No unique constraint on dedupe_key — dedup is enforced by PK (id).
     """
     results: list[dict] = []
     if dry_run:
-        for item in items:
-            key = gen_memory_key(item["category"], item["content"])
-            results.append({
-                "key": key, "category": item["category"],
-                "status": "dry_run", "error": None})
-        return results
+        return [
+            {"key": gen_memory_key(i["category"], i["content"]),
+             "status": "dry_run", "error": None}
+            for i in items
+        ]
 
     try:
-        conn = sqlite3.connect(mem0_path, timeout=5.0)
-    except Exception as e:
+        conn = connect_db(mem0_path)
+    except sqlite3.Error as e:
         for item in items:
-            key = gen_memory_key(item["category"], item["content"])
             results.append({
-                "key": key, "category": item["category"],
+                "key": gen_memory_key(item["category"], item["content"]),
                 "status": "skipped",
                 "error": f"mem0 unavailable: {e}",
             })
@@ -481,88 +740,49 @@ def write_to_mem0_safe(mem0_path: str, items: list[dict],
     if dry_run:
         return [
             {"key": gen_memory_key(i["category"], i["content"]),
-             "category": i["category"],
              "status": "dry_run", "error": None}
             for i in items
         ]
 
-    if not os.path.exists(mem0_path) or os.path.getsize(mem0_path) == 0:
+    if not os.path.exists(mem0_path):
+        msg = f"mem0 database not found: {mem0_path}"
+        print(f"[warn] {msg} — skipping mem0 writes (non-fatal)", file=sys.stderr)
         return [
             {"key": gen_memory_key(i["category"], i["content"]),
-             "category": i["category"],
-             "status": "skipped",
-             "error": f"mem0 DB missing or empty: {mem0_path}"}
+             "status": "skipped", "error": msg}
             for i in items
         ]
 
-    # Lightweight schema check — non-fatal
+    if os.path.getsize(mem0_path) == 0:
+        msg = f"mem0 database is 0 bytes (corrupt): {mem0_path}"
+        print(f"[warn] {msg} — skipping mem0 writes (non-fatal)", file=sys.stderr)
+        return [
+            {"key": gen_memory_key(i["category"], i["content"]),
+             "status": "skipped", "error": msg}
+            for i in items
+        ]
+
+    # Check schema — if missing, skip gracefully
     try:
-        conn = sqlite3.connect(mem0_path, timeout=5.0)
-        tables = {
-            r[0] for r in conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table'"
-            ).fetchall()
-        }
-        if "memories" not in tables:
-            conn.close()
-            return [
-                {"key": gen_memory_key(i["category"], i["content"]),
-                 "category": i["category"],
-                 "status": "skipped",
-                 "error": "mem0 missing memories table"}
-                for i in items
-            ]
-        conn.close()
-    except Exception as e:
+        conn = connect_db(mem0_path)
+    except sqlite3.Error as e:
         return [
             {"key": gen_memory_key(i["category"], i["content"]),
-             "category": i["category"],
-             "status": "skipped",
-             "error": f"mem0 schema check failed: {e}"}
+             "status": "skipped", "error": f"mem0 connection error: {e}"}
             for i in items
         ]
 
+    if not validate_db_schema(conn, ["memories"]):
+        conn.close()
+        return [
+            {"key": gen_memory_key(i["category"], i["content"]),
+             "status": "skipped", "error": "mem0 schema validation failed"}
+            for i in items
+        ]
+
+    conn.close()
+    # Schema is valid — delegate to the actual writer
     return write_to_mem0(mem0_path, items, project_id, dry_run)
-
-
-def validate_db_file(db_path: str, required_tables: list[str]) -> sqlite3.Connection:
-    """Validate that DB exists, is non-empty, and has required tables.
-
-    Exits with code 1 on failure. Returns an open connection on success.
-    """
-    if not os.path.exists(db_path):
-        print(f"ERROR: primary DB does not exist: {db_path}", file=sys.stderr)
-        sys.exit(1)
-    if os.path.getsize(db_path) == 0:
-        print(f"ERROR: primary DB is empty (0 bytes): {db_path}", file=sys.stderr)
-        sys.exit(1)
-
-    try:
-        conn = sqlite3.connect(db_path, timeout=5.0)
-    except Exception as e:
-        print(f"ERROR: cannot open primary DB {db_path}: {e}", file=sys.stderr)
-        sys.exit(1)
-
-    try:
-        tables = {
-            r[0] for r in conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table'"
-            ).fetchall()
-        }
-        missing = [t for t in required_tables if t not in tables]
-        if missing:
-            print(
-                f"ERROR: primary DB missing required tables: {missing}",
-                file=sys.stderr,
-            )
-            conn.close()
-            sys.exit(1)
-    except Exception as e:
-        print(f"ERROR: schema validation failed: {e}", file=sys.stderr)
-        conn.close()
-        sys.exit(1)
-
-    return conn
 
 
 # ─── Report ───────────────────────────────────────────────────────────────────
@@ -577,6 +797,8 @@ def print_report(input_source: str, items: list[dict],
       - "regex" for default heuristic mode
       - "llm (qwen2.5:7b)" for successful Ollama extraction
       - "llm→regex (fallback)" when LLM failed and regex was used
+
+    T2: Shows chunk stats when LLM mode is used.
     """
     mode = "DRY RUN (no writes)" if dry_run else "WRITE"
     # Determine engine label from module-level tracker
@@ -594,6 +816,12 @@ def print_report(input_source: str, items: list[dict],
     print(f"**Project:** {project_id or '(none)'}")
     print(f"**Mode:** {mode}")
     print(f"**Engine:** {engine}")
+
+    # T2: Show chunk stats when in LLM mode
+    if source == "llm":
+        chunk_stats = globals().get("_chunk_stats", {"processed": 0, "failed": 0})
+        print(f"**Tramos:** {chunk_stats['processed']} procesados, {chunk_stats['failed']} fallidos")
+
     print()
 
     # Extraction summary
@@ -639,39 +867,69 @@ def print_report(input_source: str, items: list[dict],
     print()
 
 
+# ─── CLI ──────────────────────────────────────────────────────────────────────
+
 def main():
     parser = argparse.ArgumentParser(
-        description="vantage-sync.py — Local-first context sync for VANTAGE",
+        description="VANTAGE context sync CLI — extract context from collapsed chat dumps "
+                    "into local SQLite memory stores.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
+        epilog="""\
 Examples:
-  python3 vantage-sync.py --input session.txt --project vantage
+  # Dry-run preview (regex mode — default)
+  python3 vantage-sync.py --input chat_dump.txt --dry-run
+
+  # Write to primary store (regex mode — default)
+  python3 vantage-sync.py --input chat_dump.txt --project vantage
+
+  # LLM semantic extraction (local Ollama qwen2.5:7b, 120s timeout default)
+  python3 vantage-sync.py --input chat_dump.txt --project vantage --llm --dry-run
+
+  # LLM with custom model and timeout
+  python3 vantage-sync.py --input chat_dump.txt --llm --model qwen2.5:7b --timeout 180
+
+  # From inline text
+  python3 vantage-sync.py --inline "TODO: fix the OAuth redirect" --project vantage
+
+  # JSON format
   python3 vantage-sync.py --input session_export.json --format json --project vantage
-  python3 vantage-sync.py --input session.txt --llm --dry-run
 """,
     )
-    parser.add_argument("--input", "-i", required=True,
-                        help="Path to chat dump (text or JSON) or - for stdin")
+
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--input", "-i",
+                       help="Path to chat dump file (text or JSON)")
+    group.add_argument("--inline",
+                       help="Raw text string (mutually exclusive with --input)")
+
+    parser.add_argument("--project", "-p",
+                        help="Project ID for context association")
     parser.add_argument("--format", choices=["text", "json"], default="text",
                         help="Input format (default: text)")
-    parser.add_argument("--project", "-p", default=None,
-                        help="Project id to associate memories with")
-    parser.add_argument("--llm", action="store_true",
-                        help="Use local Ollama for semantic extraction")
-    parser.add_argument("--model", default="qwen2.5:7b",
-                        help="Ollama model (default: qwen2.5:7b)")
-    parser.add_argument("--timeout", type=int, default=DEFAULT_OLLAMA_TIMEOUT,
-                        help="Ollama request timeout seconds")
     parser.add_argument("--dry-run", action="store_true",
-                        help="Extract and report without writing to any DB")
-    parser.add_argument("--verbose", "-v", action="store_true",
-                        help="Verbose extraction logging")
+                        help="Preview only — no SQLite writes")
+    parser.add_argument("--llm", action="store_true",
+                        help="Use Ollama LLM for semantic extraction (qwen2.5:7b local)")
+    parser.add_argument("--model", default="qwen2.5:7b",
+                        help="Ollama model name (default: qwen2.5:7b)")
+    parser.add_argument("--timeout", type=int, default=DEFAULT_OLLAMA_TIMEOUT,
+                        help=f"Ollama request timeout in seconds per chunk (default: {DEFAULT_OLLAMA_TIMEOUT})")
+    parser.add_argument("--warmup-timeout", type=int, default=DEFAULT_WARMUP_TIMEOUT,
+                        help=f"Ollama warmup timeout in seconds (default: {DEFAULT_WARMUP_TIMEOUT})")
+    fallback_group = parser.add_mutually_exclusive_group()
+    fallback_group.add_argument("--no-fallback", action="store_true",
+                                help="Abort instead of falling back to regex when LLM extraction fails")
+    fallback_group.add_argument("--allow-regex-fallback", action="store_true",
+                                help="Allow regex fallback in write mode when LLM extraction fails")
+    parser.add_argument("--verbose", action="store_true",
+                        help="Detailed extraction log")
+
     args = parser.parse_args()
 
-    # Read input
-    if args.input == "-":
-        raw_text = sys.stdin.read()
-        input_source = "stdin"
+    # Resolve input content
+    if args.inline:
+        raw_text = args.inline
+        input_source = "inline string"
     else:
         if not os.path.exists(args.input):
             print(f"ERROR: input file not found: {args.input}", file=sys.stderr)
@@ -680,17 +938,44 @@ Examples:
             raw_text = f.read()
         input_source = args.input
 
-    # Normalize JSON once to plain text when --format json (used by both regex and LLM paths).
-    # Avoids the previous double-normalize bug: main() called normalize, then parse_json_input()
-    # called it again on already-normalized text and failed with JSONDecodeError.
+    # Fix 5: Normalize JSON input before LLM extraction
+    # If --format json and --llm, normalize the JSON to text first
     if args.format == "json":
         raw_text = normalize_json_input(raw_text)
         input_source = f"{input_source} (normalized JSON → text)"
 
-    # Parse — LLM mode takes priority over format.
-    # After JSON normalization the payload is plain text, so use parse_text_input / extract_items.
+    # Parse — LLM mode takes priority over format
     if args.llm:
-        items = extract_with_ollama(raw_text, args.model, args.timeout)
+        try:
+            items = extract_with_ollama(
+                raw_text, args.model, args.timeout, args.warmup_timeout,
+                fallback_to_regex=not args.no_fallback,
+            )
+        except RuntimeError as e:
+            # T4-B: Handle consecutive timeout abort
+            if "consecutive chunk timeouts" in str(e):
+                # In dry-run: report failure and terminate
+                if args.dry_run:
+                    print(
+                        f"ERROR: {e}. In dry-run mode, no writes were attempted.",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+                # In write mode: abort without partial writes
+                print(
+                    f"ERROR: {e}. In write mode, this prevents partial writes. "
+                    f"Re-run with --dry-run to preview, or investigate Ollama health.",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+            elif args.no_fallback:
+                print(
+                    f"ERROR: LLM extraction failed and fallback is disabled: {e}",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+            else:
+                raise
     else:
         items = parse_text_input(raw_text)
 
@@ -698,6 +983,30 @@ Examples:
         print(f"[verbose] Extracted {len(items)} items from input")
         for item in items:
             print(f"  [{item['category']}] {item['content'][:100]}")
+
+    # T1: Fallback enforcement — abort on LLM→regex in write mode unless --allow-regex-fallback
+    if args.llm and not args.dry_run and not args.allow_regex_fallback:
+        source = globals().get("_last_extraction_source", "regex")
+        if source == "llm→regex":
+            print(
+                "ERROR: LLM extraction failed and fell back to regex. "
+                "In write mode, this would write potentially unreliable regex output. "
+                "Use --allow-regex-fallback to permit this, or re-run with --dry-run to preview.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+    # T2: All-or-nothing chunk failure enforcement in write mode
+    if args.llm and not args.dry_run and not args.allow_regex_fallback:
+        chunk_stats = globals().get("_chunk_stats", {"processed": 0, "failed": 0})
+        if chunk_stats["failed"] > 0:
+            print(
+                f"ERROR: {chunk_stats['failed']} chunk(s) failed during LLM extraction. "
+                "In write mode, this produces incomplete results. "
+                "Use --allow-regex-fallback to permit regex fallback, or re-run with --dry-run to preview.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
     # Determine DB paths
     db_path = os.environ.get("VANTAGE_DB_PATH", DEFAULT_DB_PATH)
