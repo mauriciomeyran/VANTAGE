@@ -566,6 +566,11 @@ def check_auto_link_corruption():
     # 2. Auto-links donde el texto coincide con la URL completa [texto](http://texto)
     auto_link_pattern = re.compile(r'\[([^\]]+)\]\(http[s]?://\1\)')
     
+    # Archivos a excluir del escaneo (documentación legítima con patrones sospechosos)
+    excluded_files = {
+        "vantage-sync-script-library.md",  # Documenta el bug de auto-link, contiene ejemplos de _http://
+    }
+    
     # Directorios a escanear (archivos markdown)
     scan_dirs = [ACTIVE_DIR, REPO_ROOT / "skills"]
     
@@ -574,6 +579,10 @@ def check_auto_link_corruption():
             continue
             
         for md_file in scan_dir.glob("*.md"):
+            # Saltar archivos excluidos
+            if md_file.name in excluded_files:
+                continue
+            
             files_checked += 1
             try:
                 content = md_file.read_text(encoding='utf-8')
@@ -658,16 +667,16 @@ def main():
     checks = [
         ("version", check_system_version),
         ("env", check_env),
-        ("git", check_git),
-        ("vgit", check_vgit_last),
         ("notion", check_notion_reachable),
         ("docs_sync", check_docs_sync),
         ("vdoc", check_vdoc_last),
         ("index_age", check_index_age),
         ("layer3", check_layer3_heartbeat),
         ("census_age", check_census_age),
-        ("pending_tickets", check_pending_tickets),
         ("auto_link", check_auto_link_corruption),
+        ("vgit", check_vgit_last),
+        ("git", check_git),
+        ("pending_tickets", check_pending_tickets),
     ]
 
     results = {}
