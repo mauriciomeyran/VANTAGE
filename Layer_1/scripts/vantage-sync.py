@@ -157,6 +157,8 @@ OLLAMA_NUM_CTX = 8192  # T3: explicit context window size
 
 # Module-level tracker for chunk status
 _chunk_stats: dict[str, int] = {"processed": 0, "failed": 0}
+# T4-B: tracker for consecutive timeouts
+_consecutive_timeouts: int = 0
 
 OLLAMA_SYSTEM_PROMPT = """
 You are a context extraction specialist for VANTAGE. Given a chat log, extract:
@@ -270,10 +272,12 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
 
     T2: Processes text in chunks with overlap, combines and deduplicates results.
     T4: Warmup call before chunks, per-chunk timeout, separate warmup timeout.
+    T4-B: Aborts after 2 consecutive timeouts to prevent resource waste.
     Tracks chunk status in _chunk_stats for reporting.
     """
-    global _last_extraction_source, _chunk_stats
+    global _last_extraction_source, _chunk_stats, _consecutive_timeouts
     _chunk_stats = {"processed": 0, "failed": 0}
+    _consecutive_timeouts = 0
 
     # T4: Warmup before chunking
     try:
@@ -308,6 +312,7 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
         }).encode("utf-8")
 
         chunk_start = time.time()
+        is_timeout = False
         try:
             req = urllib.request.Request(
                 OLLAMA_URL,
@@ -322,6 +327,7 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
             print(f"[info] Chunk {chunk_num}/{len(chunks)} ok in {chunk_duration:.1f}s", file=sys.stderr)
 
             _chunk_stats["processed"] += 1
+            _consecutive_timeouts = 0  # Reset counter on success
 
             # Extract items from this chunk
             for cat in ("decision", "task", "fact"):
@@ -339,11 +345,37 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
                                 "source_line": chunk[:200],
                             })
 
+        except urllib.error.URLError as e:
+            chunk_duration = time.time() - chunk_start
+            # T4-B: Detect timeout (URLError with timeout in message)
+            if "timed out" in str(e).lower() or isinstance(e.reason, TimeoutError):
+                is_timeout = True
+                _consecutive_timeouts += 1
+                _chunk_stats["failed"] += 1
+                print(f"[info] Chunk {chunk_num}/{len(chunks)} timed out after {chunk_duration:.1f}s "
+                      f"(consecutive timeouts: {_consecutive_timeouts})", file=sys.stderr)
+
+                # T4-B: Abort after 2 consecutive timeouts
+                if _consecutive_timeouts >= 2:
+                    print(
+                        f"[info] Aborting extraction after {_consecutive_timeouts} consecutive timeouts. "
+                        f"This indicates persistent LLM unresponsiveness.",
+                        file=sys.stderr,
+                    )
+                    raise RuntimeError(
+                        f"Aborted after {_consecutive_timeouts} consecutive chunk timeouts"
+                    ) from e
+            else:
+                # Non-timeout URLError - treat as regular failure
+                _chunk_stats["failed"] += 1
+                _consecutive_timeouts = 0  # Reset on non-timeout errors
+                print(f"[info] Chunk {chunk_num}/{len(chunks)} failed after {chunk_duration:.1f}s ({e})", file=sys.stderr)
+
         except Exception as e:
             chunk_duration = time.time() - chunk_start
             _chunk_stats["failed"] += 1
+            _consecutive_timeouts = 0  # Reset on other exceptions
             print(f"[info] Chunk {chunk_num}/{len(chunks)} failed after {chunk_duration:.1f}s ({e})", file=sys.stderr)
-            # Continue to next chunk - all-or-nothing is enforced at write time
 
     if _chunk_stats["failed"] > 0:
         print(
@@ -894,7 +926,28 @@ Examples:
 
     # Parse — LLM mode takes priority over format
     if args.llm:
-        items = extract_with_ollama(raw_text, args.model, args.timeout, args.warmup_timeout)
+        try:
+            items = extract_with_ollama(raw_text, args.model, args.timeout, args.warmup_timeout)
+        except RuntimeError as e:
+            # T4-B: Handle consecutive timeout abort
+            if "consecutive chunk timeouts" in str(e):
+                # In dry-run: report failure and terminate
+                if args.dry_run:
+                    print(
+                        f"ERROR: {e}. In dry-run mode, no writes were attempted.",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+                # In write mode: abort without partial writes
+                print(
+                    f"ERROR: {e}. In write mode, this prevents partial writes. "
+                    f"Re-run with --dry-run to preview, or investigate Ollama health.",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+            else:
+                # Other RuntimeError - re-raise
+                raise
     elif args.format == "json":
         items = parse_json_input(raw_text)
     else:

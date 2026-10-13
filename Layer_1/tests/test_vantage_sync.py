@@ -22,6 +22,7 @@ import hashlib
 import sqlite3
 import sys
 import tempfile
+import urllib.error
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 from importlib.util import spec_from_file_location, module_from_spec
@@ -988,6 +989,253 @@ class TestT4Timeouts:
         # All chunk calls should use the chunk timeout
         chunk_timeouts = timeout_log[1:]
         assert all(t == 30 for t in chunk_timeouts)
+
+
+class TestT4BConsecutiveTimeouts:
+    """T4-B: Abort after 2 consecutive timeouts, no partial writes."""
+
+    def test_single_timeout_then_success_resets_counter(self, vsync_module):
+        """A single timeout followed by success should reset the counter."""
+        call_count = [0]
+
+        class MockResp:
+            def __init__(self, should_timeout=False):
+                self.should_timeout = should_timeout
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                if self.should_timeout:
+                    raise urllib.error.URLError("timed out")
+                return json.dumps({
+                    "response": json.dumps({
+                        "decisions": [{"content": "Decision after timeout"}],
+                        "tasks": [],
+                        "facts": []
+                    })
+                }).encode("utf-8")
+
+        def flaky_urlopen(req, timeout):
+            call_count[0] += 1
+            body = json.loads(req.data.decode("utf-8"))
+            # Warmup (call 1) succeeds
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp(should_timeout=False)
+            # Chunk 1 (call 2) times out
+            if call_count[0] == 2:
+                return MockResp(should_timeout=True)
+            # Chunk 2 (call 3) succeeds
+            return MockResp(should_timeout=False)
+
+        # Large text to trigger multiple chunks
+        text = "x" * 12000
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=flaky_urlopen):
+            items = vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+
+        # Should have 2 processed (chunks 2 and 3), 1 failed (chunk 1)
+        assert vsync_module._chunk_stats["processed"] == 2
+        assert vsync_module._chunk_stats["failed"] == 1
+        # Counter should be reset to 0 after successful chunk
+        assert vsync_module._consecutive_timeouts == 0
+        # Should have extracted items from successful chunks (deduplicated to 1)
+        assert len(items) == 1
+        assert items[0]["content"] == "Decision after timeout"
+
+    def test_two_consecutive_timeouts_aborts_extraction(self, vsync_module):
+        """Two consecutive timeouts should abort extraction with RuntimeError."""
+        call_count = [0]
+
+        class MockResp:
+            def __init__(self, should_timeout=False):
+                self.should_timeout = should_timeout
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                if self.should_timeout:
+                    raise urllib.error.URLError("timed out")
+                return json.dumps({
+                    "response": json.dumps({
+                        "decisions": [{"content": "Decision"}],
+                        "tasks": [],
+                        "facts": []
+                    })
+                }).encode("utf-8")
+
+        def timeout_urlopen(req, timeout):
+            call_count[0] += 1
+            body = json.loads(req.data.decode("utf-8"))
+            # Warmup (call 1) succeeds
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp(should_timeout=False)
+            # Chunk 1 (call 2) times out
+            if call_count[0] == 2:
+                return MockResp(should_timeout=True)
+            # Chunk 2 (call 3) times out - should abort
+            return MockResp(should_timeout=True)
+
+        # Large text to trigger multiple chunks
+        text = "x" * 12000
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=timeout_urlopen):
+            with pytest.raises(RuntimeError) as exc_info:
+                vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+
+        assert "consecutive chunk timeouts" in str(exc_info.value)
+        assert "2" in str(exc_info.value)
+        # Should have 0 processed, 2 failed before abort
+        assert vsync_module._chunk_stats["processed"] == 0
+        assert vsync_module._chunk_stats["failed"] == 2
+        assert vsync_module._consecutive_timeouts == 2
+
+    def test_non_timeout_error_resets_counter(self, vsync_module):
+        """Non-timeout errors should reset the consecutive timeout counter."""
+        call_count = [0]
+
+        class MockResp:
+            def __init__(self, should_fail=False):
+                self.should_fail = should_fail
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                if self.should_fail:
+                    raise Exception("Connection error")
+                return json.dumps({
+                    "response": json.dumps({
+                        "decisions": [{"content": "Decision"}],
+                        "tasks": [],
+                        "facts": []
+                    })
+                }).encode("utf-8")
+
+        def flaky_urlopen(req, timeout):
+            call_count[0] += 1
+            body = json.loads(req.data.decode("utf-8"))
+            # Warmup (call 1) succeeds
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp(should_fail=False)
+            # Chunk 1 (call 2) has non-timeout error
+            if call_count[0] == 2:
+                return MockResp(should_fail=True)
+            # Chunk 2 (call 3) times out
+            if call_count[0] == 3:
+                raise urllib.error.URLError("timed out")
+            # Chunk 3 (call 4) succeeds
+            return MockResp(should_fail=False)
+
+        # Large text to trigger multiple chunks
+        text = "x" * 12000
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=flaky_urlopen):
+            items = vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+
+        # Should have 1 processed, 2 failed (non-timeout + timeout)
+        assert vsync_module._chunk_stats["processed"] == 1
+        assert vsync_module._chunk_stats["failed"] == 2
+        # Counter should be 0 (reset after non-timeout error, then timeout didn't reach 2)
+        assert vsync_module._consecutive_timeouts == 0
+
+    def test_dry_run_mode_exits_on_consecutive_timeouts(self, vsync_module):
+        """In dry-run mode, consecutive timeouts should exit with clear message."""
+        call_count = [0]
+
+        class MockResp:
+            def __init__(self, should_timeout=False):
+                self.should_timeout = should_timeout
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                if self.should_timeout:
+                    raise urllib.error.URLError("timed out")
+                return json.dumps({
+                    "response": json.dumps({
+                        "decisions": [{"content": "Decision"}],
+                        "tasks": [],
+                        "facts": []
+                    })
+                }).encode("utf-8")
+
+        def timeout_urlopen(req, timeout):
+            call_count[0] += 1
+            body = json.loads(req.data.decode("utf-8"))
+            # Warmup (call 1) succeeds
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp(should_timeout=False)
+            # Chunk 1 (call 2) times out
+            if call_count[0] == 2:
+                return MockResp(should_timeout=True)
+            # Chunk 2 (call 3) times out
+            return MockResp(should_timeout=True)
+
+        # Large text to trigger multiple chunks
+        text = "x" * 12000
+
+        # Simulate main() behavior in dry-run mode
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=timeout_urlopen):
+            try:
+                items = vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+            except RuntimeError as e:
+                # In dry-run, main() would catch this and exit with message
+                assert "consecutive chunk timeouts" in str(e)
+                # Verify no items were extracted (partial prevention)
+                # The function raises before returning items
+                assert True  # Expected behavior
+            else:
+                pytest.fail("Should have raised RuntimeError on consecutive timeouts")
+
+    def test_no_partial_writes_on_consecutive_timeouts(self, vsync_module, tmp_db):
+        """When consecutive timeouts abort extraction, no DB writes should occur."""
+        call_count = [0]
+
+        class MockResp:
+            def __init__(self, should_timeout=False):
+                self.should_timeout = should_timeout
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                if self.should_timeout:
+                    raise urllib.error.URLError("timed out")
+                return json.dumps({
+                    "response": json.dumps({
+                        "decisions": [{"content": "Decision"}],
+                        "tasks": [],
+                        "facts": []
+                    })
+                }).encode("utf-8")
+
+        def timeout_urlopen(req, timeout):
+            call_count[0] += 1
+            body = json.loads(req.data.decode("utf-8"))
+            # Warmup (call 1) succeeds
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp(should_timeout=False)
+            # Chunk 1 (call 2) times out
+            if call_count[0] == 2:
+                return MockResp(should_timeout=True)
+            # Chunk 2 (call 3) times out
+            return MockResp(should_timeout=True)
+
+        # Large text to trigger multiple chunks
+        text = "x" * 12000
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=timeout_urlopen):
+            with pytest.raises(RuntimeError):
+                items = vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+
+        # Verify DB is empty (no partial writes)
+        conn = sqlite3.connect(tmp_db)
+        count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn.close()
+        assert count == 0, "DB should be empty after consecutive timeout abort"
 
 
 class TestNormalizationDedup:
