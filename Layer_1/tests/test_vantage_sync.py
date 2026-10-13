@@ -1264,3 +1264,203 @@ class TestNormalizationDedup:
         id1 = vsync_module.gen_mem0_id("task", "Fix the auth bug")
         id2 = vsync_module.gen_mem0_id("task", "Fix the auth bug.")
         assert id1 == id2
+
+
+class TestBugHunterRegression:
+    """Regression suite for Bug Hunter evaluation findings (VH-01 through VH-10)."""
+
+    def test_vh01_dry_run_never_creates_or_alters_sqlite(
+        self, vsync_module, tmp_path, tmp_db, tmp_mem0, sample_chat_text
+    ):
+        """VH-01: --dry-run must neither create missing DBs nor alter size/hash/rows of existing DBs."""
+        # Case A: Non-existent SQLite paths
+        missing_db = str(tmp_path / "never_created.db")
+        missing_mem0 = str(tmp_path / "never_created_mem0.sqlite")
+        argv = [
+            "vantage-sync.py",
+            "--inline", sample_chat_text,
+            "--project", "vh01-proj",
+            "--dry-run",
+        ]
+        with patch.dict(os.environ, {"VANTAGE_DB_PATH": missing_db, "VANTAGE_MEM0_PATH": missing_mem0}, clear=False), \
+             patch.object(sys, "argv", argv):
+            vsync_module.main()
+        assert not os.path.exists(missing_db)
+        assert not os.path.exists(missing_mem0)
+
+        # Case B: Pre-existing SQLite files — size, SHA-256 hash, and rows must stay identical
+        before_db_bytes = Path(tmp_db).read_bytes()
+        before_mem0_bytes = Path(tmp_mem0).read_bytes()
+        before_db_hash = hashlib.sha256(before_db_bytes).hexdigest()
+        before_mem0_hash = hashlib.sha256(before_mem0_bytes).hexdigest()
+
+        with patch.dict(os.environ, {"VANTAGE_DB_PATH": tmp_db, "VANTAGE_MEM0_PATH": tmp_mem0}, clear=False), \
+             patch.object(sys, "argv", argv):
+            vsync_module.main()
+
+        after_db_bytes = Path(tmp_db).read_bytes()
+        after_mem0_bytes = Path(tmp_mem0).read_bytes()
+        assert len(after_db_bytes) == len(before_db_bytes)
+        assert len(after_mem0_bytes) == len(before_mem0_bytes)
+        assert hashlib.sha256(after_db_bytes).hexdigest() == before_db_hash
+        assert hashlib.sha256(after_mem0_bytes).hexdigest() == before_mem0_hash
+
+    def test_vh02_extract_items_records_actual_source_line(self, vsync_module):
+        """VH-02: extract_items must record the specific line of each match, not text[:200]."""
+        filler = "\n".join(f"Line {i}: ordinary discussion text without keywords" for i in range(1, 30))
+        text = f"DECISION: Initial architecture choice\n{filler}\nTODO: Implement line-level traceability"
+        items = vsync_module.extract_items(text)
+        by_cat = {item["category"]: item for item in items}
+        assert by_cat["decision"]["source_line"] == "DECISION: Initial architecture choice"
+        assert by_cat["task"]["source_line"] == "TODO: Implement line-level traceability"
+        assert by_cat["task"]["source_line"] != text[:200]
+
+    def test_vh04_json_format_regex_mode_via_main_single_normalization(
+        self, vsync_module, tmp_db, tmp_mem0, sample_chat_json
+    ):
+        """VH-04 (P0): --format json without --llm in main() must not double-normalize or fail."""
+        argv = [
+            "vantage-sync.py",
+            "--inline", sample_chat_json,
+            "--format", "json",
+            "--project", "vh04-proj",
+        ]
+        env_patch = {"VANTAGE_DB_PATH": tmp_db, "VANTAGE_MEM0_PATH": tmp_mem0}
+        with patch.dict(os.environ, env_patch, clear=False), \
+             patch.object(sys, "argv", argv):
+            vsync_module.main()
+
+        assert vsync_module._last_extraction_source == "regex"
+        conn = sqlite3.connect(tmp_db)
+        rows = conn.execute("SELECT category, content FROM memories").fetchall()
+        conn.close()
+        assert len(rows) >= 3
+        conn_m = sqlite3.connect(tmp_mem0)
+        mem0_count = conn_m.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn_m.close()
+        assert mem0_count == len(rows)
+
+    def test_vh05_ensure_project_respects_project_name_and_preserves_existing(
+        self, vsync_module, tmp_db, sample_chat_text
+    ):
+        """VH-05: write_to_context_sync forwards project_name and ensure_project does not replace existing row."""
+        items = vsync_module.parse_text_input(sample_chat_text)
+        vsync_module.write_to_context_sync(
+            tmp_db, items, "proj-vh05", dry_run=False, project_name="VANTAGE Custom Name"
+        )
+        conn = sqlite3.connect(tmp_db)
+        row = conn.execute("SELECT id, name FROM projects WHERE id = 'proj-vh05'").fetchone()
+        assert row == ("proj-vh05", "VANTAGE Custom Name")
+
+        # Re-running ensure_project with a different name must not replace the existing project row
+        vsync_module.ensure_project(conn, "proj-vh05", project_name="Should Not Overwrite")
+        row_after = conn.execute("SELECT id, name FROM projects WHERE id = 'proj-vh05'").fetchone()
+        conn.close()
+        assert row_after == ("proj-vh05", "VANTAGE Custom Name")
+
+    def test_vh07_ollama_chunk_schema_validation_rejects_invalid_structures(self, vsync_module):
+        """VH-07: Unexpected LLM JSON structures must fail validation without incrementing processed count."""
+        invalid_payloads = [
+            json.dumps({"done": True, "response": json.dumps({"unexpected": "object"})}),
+            json.dumps({"done": True, "response": json.dumps({"decisions": "not-a-list"})}),
+            json.dumps({"done": True, "response": json.dumps({"decisions": ["not-a-dict"]})}),
+            json.dumps({"done": True, "response": json.dumps({"decisions": [{"content": 123}]})}),
+            json.dumps({"done": True, "response": "[]"}),
+        ]
+
+        for bad_raw in invalid_payloads:
+            with pytest.raises((ValueError, RuntimeError)):
+                vsync_module.validate_ollama_chunk_response(json.loads(bad_raw))
+
+        # Verify in extract_with_ollama that a malformed chunk structure is counted only in failed, not processed
+        class MockResp:
+            def __init__(self, is_warmup=False):
+                self.is_warmup = is_warmup
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                if self.is_warmup:
+                    return b'{"done": true, "response": ""}'
+                return b'{"done": true, "response": "{\\"decisions\\": [{\\"content\\": 999}]}"}'
+
+        def mock_urlopen(req, timeout):
+            body = json.loads(req.data.decode("utf-8"))
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp(is_warmup=True)
+            return MockResp(is_warmup=False)
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=mock_urlopen):
+            items = vsync_module.extract_with_ollama("DECISION: Fallback works", model="qwen2.5:7b", timeout=5)
+
+        assert vsync_module._chunk_stats == {"processed": 0, "failed": 1}
+        assert vsync_module._last_extraction_source == "llm→regex"
+        assert len(items) == 1
+
+    def test_vh08_intelligent_truncate_respects_limit_including_marker(self, vsync_module):
+        """VH-08: intelligent_truncate output length (head + marker + tail) must never exceed limit."""
+        text = "H" * 5000 + "M" * 10000 + "T" * 5000 + "TODO: end marker"
+        result_default = vsync_module.intelligent_truncate(text)
+        assert len(result_default) <= vsync_module.LLM_TRUNCATE_LIMIT
+        assert "TRUNCATED" in result_default
+        assert result_default.startswith("H" * 100)
+        assert result_default.endswith("TODO: end marker")
+
+        # Custom smaller limit without overriding head_length/tail_length defaults
+        result_custom = vsync_module.intelligent_truncate(text, limit=500)
+        assert len(result_custom) <= 500
+        assert "TRUNCATED" in result_custom
+        assert result_custom.startswith("H" * 20)
+        assert result_custom.endswith("TODO: end marker")
+
+    def test_vh09_mem0_id_consistency_and_non_fatal_secondary_store(
+        self, vsync_module, tmp_db, tmp_mem0, tmp_path, sample_chat_text
+    ):
+        """VH-09 & P2.5/P2.6: write_to_mem0 uses gen_mem0_id, and mem0 failure does not fail primary write."""
+        items = vsync_module.parse_text_input(sample_chat_text)
+        vsync_module.write_to_mem0(tmp_mem0, items, "proj-vh09", dry_run=False)
+        conn_m = sqlite3.connect(tmp_mem0)
+        stored_ids = {r[0] for r in conn_m.execute("SELECT id FROM memories").fetchall()}
+        conn_m.close()
+        expected_ids = {vsync_module.gen_mem0_id(i["category"], i["content"]) for i in items}
+        assert stored_ids == expected_ids
+
+        # Secondary store failure (missing mem0 DB) must not invalidate primary store write in main()
+        missing_mem0 = str(tmp_path / "nonexistent_mem0.sqlite")
+        argv = [
+            "vantage-sync.py",
+            "--inline", sample_chat_text,
+            "--project", "proj-vh09",
+        ]
+        with patch.dict(os.environ, {"VANTAGE_DB_PATH": tmp_db, "VANTAGE_MEM0_PATH": missing_mem0}, clear=False), \
+             patch.object(sys, "argv", argv):
+            vsync_module.main()
+
+        conn = sqlite3.connect(tmp_db)
+        primary_count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        conn.close()
+        assert primary_count == len(items)
+
+    def test_vh10_markdown_report_escapes_pipes_and_newlines(self, vsync_module):
+        """VH-10: print_report must escape pipe characters and newlines inside Markdown table cells."""
+        import io
+        from contextlib import redirect_stdout
+
+        items = [{
+            "category": "decision",
+            "content": "Use option A | option B\nwith second line",
+            "source_line": "DECISION: Use option A | option B",
+        }]
+        out = io.StringIO()
+        with redirect_stdout(out):
+            vsync_module.print_report(
+                "inline", items, "proj-vh10", True,
+                [{"key": "decision:123", "category": "decision", "status": "dry_run", "error": None}],
+                [],
+            )
+        report = out.getvalue()
+        table_lines = [line for line in report.splitlines() if line.startswith("| decision:")]
+        assert len(table_lines) == 1
+        assert r"Use option A \| option B with second line" in table_lines[0]
+

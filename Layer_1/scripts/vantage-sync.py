@@ -85,10 +85,15 @@ def extract_items(text: str) -> list[dict]:
             content = match.group(group) if group > 0 else match.group(0)
             content = content.strip()
             if content and len(content) < 2000:
+                line_start = text.rfind("\n", 0, match.start()) + 1
+                line_end = text.find("\n", match.start())
+                if line_end == -1:
+                    line_end = len(text)
+                source_line = text[line_start:line_end].strip()[:200]
                 items.append({
                     "category": category,
                     "content": content,
-                    "source_line": text[:200],
+                    "source_line": source_line,
                 })
     return items
 
@@ -181,20 +186,30 @@ def intelligent_truncate(text: str, limit: int = LLM_TRUNCATE_LIMIT,
     if len(text) <= limit:
         return text
 
-    head = text[:head_length]
-    tail = text[-tail_length:]
+    marker = "\n\n[... TRUNCATED — middle content omitted for LLM context limit ...]\n\n"
+    if limit <= 0:
+        return ""
+    if limit <= len(marker):
+        return text[-limit:]
+
+    budget = limit - len(marker)
+    eff_head = max(0, head_length)
+    eff_tail = max(0, tail_length)
+    if eff_head + eff_tail > budget:
+        total_req = eff_head + eff_tail
+        eff_tail = min(eff_tail, max(1, (budget * eff_tail) // total_req))
+        eff_head = max(0, budget - eff_tail)
+
+    head = text[:eff_head] if eff_head > 0 else ""
+    tail = text[-eff_tail:] if eff_tail > 0 else ""
 
     print(
-        f"[info] Text truncated: {len(text)} chars → {head_length} head + "
-        f"{tail_length} tail (overlap gap: {len(text) - head_length - tail_length} chars lost)",
+        f"[info] Text truncated: {len(text)} chars → {len(head)} head + "
+        f"{len(tail)} tail (overlap gap: {len(text) - len(head) - len(tail)} chars lost)",
         file=sys.stderr,
     )
 
-    return (
-        head
-        + "\n\n[... TRUNCATED — middle content omitted for LLM context limit ...]\n\n"
-        + tail
-    )
+    return head + marker + tail
 
 
 def split_into_chunks(text: str, size: int = 5000, overlap: int = 500) -> list[str]:
@@ -266,6 +281,39 @@ def warmup_ollama(model: str = "qwen2.5:7b", timeout: int = DEFAULT_WARMUP_TIMEO
         raise
 
 
+def validate_ollama_chunk_response(raw: object) -> dict[str, list[dict]]:
+    """Validate outer Ollama /api/generate JSON and inner structured LLM JSON."""
+    if not isinstance(raw, dict):
+        raise ValueError("Ollama chunk response is not a JSON object")
+    if raw.get("error"):
+        raise RuntimeError(f"Ollama chunk error: {raw['error']}")
+    if "done" in raw and raw.get("done") is not True:
+        raise RuntimeError("Ollama chunk response indicates done != True")
+    response_text = raw.get("response")
+    if not isinstance(response_text, str):
+        raise ValueError("Ollama chunk response missing string 'response' field")
+
+    llm_output = json.loads(response_text)
+    if not isinstance(llm_output, dict):
+        raise ValueError("LLM output in 'response' is not a JSON object")
+
+    expected_keys = ("decisions", "tasks", "facts")
+    if not any(k in llm_output for k in expected_keys):
+        raise ValueError("LLM output missing expected category keys (decisions/tasks/facts)")
+
+    for key in expected_keys:
+        if key not in llm_output:
+            continue
+        entries = llm_output[key]
+        if not isinstance(entries, list):
+            raise ValueError(f"LLM output key '{key}' must be a list")
+        for entry in entries:
+            if not isinstance(entry, dict) or not isinstance(entry.get("content"), str):
+                raise ValueError(f"Invalid entry in '{key}': expected object with string 'content'")
+
+    return llm_output
+
+
 def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
                         timeout: int = DEFAULT_OLLAMA_TIMEOUT,
                         warmup_timeout: int = DEFAULT_WARMUP_TIMEOUT) -> list[dict]:
@@ -323,28 +371,30 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
             )
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 raw = json.loads(resp.read().decode("utf-8"))
-            llm_output = json.loads(raw["response"])
+            llm_output = validate_ollama_chunk_response(raw)
+
+            chunk_items: list[tuple[str, dict]] = []
+            # Extract items from this chunk
+            for cat in ("decision", "task", "fact"):
+                key = cat + "s"  # JSON keys: decisions, tasks, facts
+                for entry in llm_output.get(key, []):
+                    content = entry["content"].strip()
+                    if content and len(content) < 2000:
+                        mem_key = gen_memory_key(cat, content)
+                        chunk_items.append((mem_key, {
+                            "category": cat,
+                            "content": content,
+                            "source_line": chunk[:200],
+                        }))
 
             chunk_duration = time.time() - chunk_start
             print(f"[info] Chunk {chunk_num}/{len(chunks)} ok in {chunk_duration:.1f}s", file=sys.stderr)
 
             _chunk_stats["processed"] += 1
-
-            # Extract items from this chunk
-            for cat in ("decision", "task", "fact"):
-                key = cat + "s"  # JSON keys: decisions, tasks, facts
-                for entry in llm_output.get(key, []):
-                    content = entry.get("content", "").strip()
-                    if content and len(content) < 2000:
-                        # Deduplicate using gen_memory_key
-                        mem_key = gen_memory_key(cat, content)
-                        if mem_key not in seen_keys:
-                            seen_keys.add(mem_key)
-                            all_items.append({
-                                "category": cat,
-                                "content": content,
-                                "source_line": chunk[:200],
-                            })
+            for mem_key, item_dict in chunk_items:
+                if mem_key not in seen_keys:
+                    seen_keys.add(mem_key)
+                    all_items.append(item_dict)
 
         except Exception as e:
             chunk_duration = time.time() - chunk_start
@@ -499,7 +549,7 @@ def ensure_project(conn: sqlite3.Connection, project_id: str | None,
         ).fetchone()
         if existing is None:
             conn.execute(
-                "INSERT OR REPLACE INTO projects (id, name, root_path) VALUES (?, ?, ?)",
+                "INSERT INTO projects (id, name, root_path) VALUES (?, ?, ?)",
                 (project_id, project_name or project_id, os.getcwd()),
             )
             conn.commit()
@@ -508,7 +558,8 @@ def ensure_project(conn: sqlite3.Connection, project_id: str | None,
 
 
 def write_to_context_sync(db_path: str, items: list[dict],
-                          project_id: str | None, dry_run: bool) -> list[dict]:
+                          project_id: str | None, dry_run: bool,
+                          project_name: str | None = None) -> list[dict]:
     """Write items to the primary context-sync.db store.
 
     Returns list of {key, category, status, error} dicts for reporting.
@@ -532,7 +583,7 @@ def write_to_context_sync(db_path: str, items: list[dict],
 
     try:
         # Fix 3: ensure_project wrapped with retry_sqlite
-        ensure_project(conn, project_id)
+        ensure_project(conn, project_id, project_name=project_name)
 
         for item in items:
             key = gen_memory_key(item["category"], item["content"])
@@ -575,8 +626,8 @@ def write_to_context_sync(db_path: str, items: list[dict],
 def gen_mem0_id(category: str, content: str) -> str:
     """Generate a deterministic mem0 row ID based on content hash.
 
-    Fix 4: Uses full SHA-256 hash of normalized content instead of
-    content[:12] to eliminate collision risk from short prefixes.
+    Fix 4: Hashes the full normalized content with SHA-256 (instead of
+    slicing raw content[:12]) and uses the 12-char hex digest prefix.
     Normalization: strip, collapse whitespace, strip trailing punctuation.
     """
     normalized = normalize_content(content)
@@ -589,7 +640,8 @@ def write_to_mem0(mem0_path: str, items: list[dict],
     """Write items to the secondary mem0 store.
 
     Failures here are non-fatal — they surface as warnings in the report.
-    Fix 4: dedupe_key uses full content hash (not content[:12] prefix).
+    Fix 4: mem0_id and dedupe_key use 12-char SHA-256 hex digest prefixes
+    computed over the full normalized content (not raw content[:12]).
 
     Real mem0 schema (verified from ~/.vantage/mem0/memories.sqlite):
       CREATE TABLE memories (
@@ -646,11 +698,8 @@ def write_to_mem0(mem0_path: str, items: list[dict],
             # trivial LLM variations (trailing period, extra space) from
             # generating duplicate rows. Original content stays as-is in DB.
             normalized = normalize_content(item["content"])
-            content_hash = hashlib.sha256(
-                normalized.encode("utf-8")
-            ).hexdigest()
-            mem0_id = f"{item['category']}_{content_hash[:12]}"
-            # dedupe_key: use the 12-char SHA-256 hash of normalized content
+            mem0_id = gen_mem0_id(item["category"], item["content"])
+            # dedupe_key: use the 12-char SHA-256 hash of category + normalized content
             dedupe_key = hashlib.sha256(
                 f"{item['category']}:{normalized}".encode("utf-8")
             ).hexdigest()[:12]
@@ -745,6 +794,12 @@ def write_to_mem0_safe(mem0_path: str, items: list[dict],
 
 # ─── Report ───────────────────────────────────────────────────────────────────
 
+def escape_markdown_cell(value: str) -> str:
+    """Escape pipe delimiters and collapse line breaks for Markdown table cells."""
+    cleaned = re.sub(r"[\r\n]+", " ", value)
+    return cleaned.replace("|", r"\|")
+
+
 def print_report(input_source: str, items: list[dict],
                  project_id: str | None, dry_run: bool,
                  primary_results: list[dict],
@@ -817,8 +872,8 @@ def print_report(input_source: str, items: list[dict],
         print("|-----|----------|---------------------|")
         for item in items:
             key = gen_memory_key(item["category"], item["content"])
-            content_preview = item["content"][:80]
-            print(f"| {key} | {item['category']} | {content_preview} |")
+            content_preview = escape_markdown_cell(item["content"][:80])
+            print(f"| {escape_markdown_cell(key)} | {escape_markdown_cell(item['category'])} | {content_preview} |")
         print()
 
     print("**Done.**")
@@ -893,17 +948,14 @@ Examples:
             raw_text = f.read()
         input_source = args.input
 
-    # Fix 5: Normalize JSON input before LLM extraction
-    # If --format json and --llm, normalize the JSON to text first
+    # Fix 5: Normalize JSON input once before extraction (both --llm and regex)
     if args.format == "json":
         raw_text = normalize_json_input(raw_text)
         input_source = f"{input_source} (normalized JSON → text)"
 
-    # Parse — LLM mode takes priority over format
+    # Parse — raw_text is already normalized plain text when --format json
     if args.llm:
         items = extract_with_ollama(raw_text, args.model, args.timeout, args.warmup_timeout)
-    elif args.format == "json":
-        items = parse_json_input(raw_text)
     else:
         items = parse_text_input(raw_text)
 
