@@ -601,6 +601,35 @@ Notebook Gemini — Triaje de Consultas Documentales
 Antes de que Claude ejecute un plan que dependa de un dato duro del corpus fundacional (ancla exacta, discrepancia entre documentos, versión vigente de un nodo), puede resultar más eficiente delegar la verificación a Notebook Gemini en vez de que Claude haga fetch estructural — mismo principio de economía de tokens que ya aplica a vversions/vcensus (9.1). No es un alias de Terminal: la consulta se hace manualmente, fuera del pipeline de scripts.
 Qué resuelve: dudas de gobernanza documental con ancla verificable (PREFIX:KEY), detección de drift entre documentos.
 Qué no resuelve: evaluación de fit, cálculo de Score/Class B, redacción de CV, creación de reglas de negocio — fuera de su contrato de solo-lectura (ver KERNEL:DOCUMENTATION-012).
+### 9.6 MANUAL:RUNTIME-INTERVIEW-SIMULATOR
+Interview Simulator
+El Interview Simulator es una herramienta privada para preparar entrevistas a partir de vacantes seleccionables y sesiones independientes. No sustituye al TRACKER ni al Career Canon.
+Preparación de la sesión
+1. Abre el Artifact del Interview Simulator.
+1. Selecciona la vacante correspondiente.
+1. Inicia o continúa una sesión conforme a las opciones disponibles en la interfaz.
+1. Revisa las preguntas y respuestas generadas antes de reutilizar cualquier información fuera del simulador.
+Vacantes y sesiones
+Las vacantes y las sesiones utilizan contratos de datos diferentes:
+- vsp-vac-0.1: vacantes.
+- vsp-0.3: sesiones.
+La existencia de estos contratos no garantiza por sí sola que una importación o exportación sea válida. Ante un error de estructura, no des por recuperada una sesión hasta comprobar que los datos se cargaron correctamente.
+Módulo de voz y transcripts
+El módulo de voz y el análisis de transcripts dependen de las capacidades efectivamente disponibles en la implementación. No se debe asumir que el audio se procesa localmente ni que una llamada a IA externa se ejecuta sin transmitir datos.
+Antes de introducir información sensible, considera el contenido que podría enviarse a servicios externos.
+Exportación e importación
+El JSON exportado debe tratarse como una copia de datos del simulador, no como una fuente canónica de VANTAGE.
+Antes de importar un archivo:
+- confirma que corresponde al contrato esperado;
+- verifica que la vacante y la sesión sean las correctas;
+- no asumas que los datos importados son confiables;
+- comprueba el resultado de la operación antes de continuar.
+Privacidad
+No introduzcas información sensible innecesaria. La expectativa económica y otros datos personales deben considerarse potencialmente persistentes hasta que se verifique lo contrario en la sesión, el almacenamiento local y los archivos exportados.
+La ausencia de un transcript visible en la interfaz no demuestra que el contenido no se haya guardado en otro lugar.
+Límites de uso
+El simulador es una herramienta de preparación. Sus resultados no actualizan automáticamente el TRACKER, el Career Canon, el repositorio ni Notion. Los datos que deban incorporarse a VANTAGE deben pasar por el flujo canónico correspondiente.
+Las funciones no verificadas deben tratarse como pendientes de validación, no como capacidades confirmadas.
 ---
 ## 10 MANUAL:DATA-MANAGEMENT
 Matriz de Guard de Mutación (PR #10):
@@ -954,6 +983,20 @@ Flags:
 ---
 ### 22.1 MANUAL:SCRIPT-GLOSSARY-L1
 Layer 1 — Active Recon & Core Pipeline
+vantage-sync.pyQué hace: Extrae tareas, decisiones, cambios de stack y hechos desde chats en texto o JSON y los sincroniza a SQLite local. Regex es el modo predeterminado; --llm usa Ollama local. Si falla la extracción LLM, el fallback regex analiza el texto completo; con --no-fallback aborta antes de escribir. Warmup Ollama requiere stream=False y done=True.
+Flags:
+| Flag | Caso de uso |
+| --- | --- |
+| --input, -i | Tienes un chat dump guardado en archivo; indica su ruta para procesarlo. |
+| --inline | Quieres procesar un fragmento breve directamente desde la terminal, sin crear un archivo. |
+| --project, -p | Quieres asociar los recuerdos extraídos a un proyecto para consultarlos después. |
+| --format text/json | El archivo de entrada es un export JSON; usa json para normalizar su contenido antes de extraer. |
+| --dry-run | Necesitas revisar qué se extraería sin escribir en SQLite. |
+| --llm | El texto requiere extracción semántica con Ollama local en lugar de las reglas regex predeterminadas. |
+| --no-fallback | Estás validando extracción LLM y prefieres abortar ante cualquier fallo antes que usar regex. Solo aplica junto a --llm. |
+| --model | Necesitas usar un modelo Ollama local distinto de qwen2.5:7b. |
+| --timeout | El modelo tarda más que el límite predeterminado de 120 segundos en responder. |
+| --verbose | Necesitas inspeccionar en terminal los elementos extraídos antes de revisar el reporte. |
 layer_1_run.py
 Variables de entorno (tuning silencioso):
 | Variable | Default | Caso de uso |

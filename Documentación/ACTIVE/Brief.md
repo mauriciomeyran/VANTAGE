@@ -194,6 +194,7 @@ Una dependencia indica que un cambio en el documento de origen puede afectar la 
 | Bootstrap / System Prompt | Navigation Brief | Validar estrategia de recuperación |
 | Estructura documental | Master Index | Actualizar inventario |
 | LENGTH-BASELINE | vversions | Verificar length_baseline.json (Archivo Config/State, Sí) |
+| Interview Simulator y sus contratos de datos | Kernel, Manual, Career Canon, Tracker Schema, Change Log e ID Census, según el alcance del cambio | Verificar límites de autoridad, compatibilidad de datos, privacidad, persistencia, navegación y sincronización de IDs cuando corresponda |
 ### 07.1 BRIEF:CROSS-DEPENDENCIES-001
 Impact Assessment Contract
 Toda modificación que afecte un documento con dependencias registradas deberá generar una Evaluación de Impacto (Impact Assessment) antes del cierre de la operación.
@@ -204,6 +205,7 @@ Como mínimo, la evaluación responderá:
 - ¿Debe regenerarse algún artefacto de Runtime?
 - ¿Debe ejecutarse una validación adicional?
 - ¿Se requiere sincronización (vsync_doc, vversions, vcensus)?
+Cuando un cambio afecte al Interview Simulator, la Evaluación de Impacto identificará, según corresponda, los contratos de vacantes y sesiones implicados, los documentos canónicos afectados y las validaciones necesarias para importación, exportación, persistencia y privacidad. La evaluación distinguirá los comportamientos verificados de los pendientes de comprobación.
 ### 07.2 BRIEF:CROSS-DEPENDENCIES-002
 Mandatory Change Reporting
 Cuando una evaluación de impacto determine que existe afectación sobre otro documento o artefacto del sistema, será obligatorio registrar dicha afectación en el Change Log.
@@ -213,10 +215,12 @@ El registro deberá incluir, como mínimo:
 - Tipo de impacto (Normativo, Operativo, Runtime o Navegación).
 - Acción correctiva ejecutada.
 - Estado final de la validación.
+Cuando una modificación afecte al Interview Simulator o a sus contratos de datos, el Change Log identificará el artefacto y los documentos potencialmente afectados, las validaciones ejecutadas y las dependencias que permanezcan pendientes. No se registrará como verificada una capacidad que solo esté descrita en la interfaz o en el brief técnico.
 ### 07.3 BRIEF:CROSS-DEPENDENCIES-003
 Closure Gate
 Una modificación estructural no podrá considerarse cerrada hasta que se cumplan todas las acciones derivadas de su evaluación de impacto.
 Si alguna dependencia permanece pendiente de validación, la operación conservará el estado Pending Validation y no deberá marcarse como completamente sincronizada.
+Si el cambio afecta al Interview Simulator, la operación permanecerá en Pending Validation mientras existan dependencias materiales sin verificar, incluidas las relativas a integridad de datos, persistencia o privacidad cuando sean pertinentes. La disponibilidad aparente de una función no sustituye la evidencia de su validación.
 ---
 ## 08 BRIEF:MAINTENANCE-CONTRACT
 Contrato de Mantenimiento
