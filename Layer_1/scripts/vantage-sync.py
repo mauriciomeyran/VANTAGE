@@ -190,8 +190,63 @@ def intelligent_truncate(text: str, limit: int = LLM_TRUNCATE_LIMIT,
     )
 
 
+def warmup_ollama(model: str = "qwen2.5:7b",
+                  timeout: int = DEFAULT_OLLAMA_TIMEOUT) -> dict:
+    """Warm the local Ollama endpoint before a real extraction request.
+
+    The warmup request must explicitly disable streaming and only succeed when the
+    server marks the request as fully complete with done=True. Invalid JSON,
+    non-object payloads, missing done flags, and explicit Ollama failures raise
+    exceptions so callers can decide whether to fall back to regex mode.
+    """
+    payload = json.dumps({
+        "model": model,
+        "prompt": "warmup",
+        "format": "json",
+        "stream": False,
+        "options": {
+            "temperature": 0,
+            "seed": OLLAMA_SEED,
+        },
+    }).encode("utf-8")
+
+    req = urllib.request.Request(
+        OLLAMA_URL,
+        data=payload,
+        headers={"Content-Type": "application/json"},
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            body = resp.read().decode("utf-8")
+    except Exception as exc:
+        raise RuntimeError(f"Ollama warmup error: {exc}") from exc
+
+    try:
+        result = json.loads(body)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Ollama warmup response is not valid JSON: {exc}") from exc
+
+    if not isinstance(result, dict):
+        raise ValueError("Ollama warmup response must be a JSON object")
+
+    if "error" in result and result["error"]:
+        raise RuntimeError(f"Ollama warmup error: {result['error']}")
+
+    if "done" not in result:
+        raise ValueError("Ollama warmup response is missing required 'done' flag")
+
+    if result.get("done") is not True:
+        raise ValueError(
+            f"Ollama warmup response did not finish cleanly: done={result.get('done')!r}"
+        )
+
+    return result
+
+
 def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
-                        timeout: int = DEFAULT_OLLAMA_TIMEOUT) -> list[dict]:
+                        timeout: int = DEFAULT_OLLAMA_TIMEOUT,
+                        fallback_to_regex: bool = True) -> list[dict]:
     """Extract items via Ollama LLM with regex fallback on any failure.
 
     Makes a local-only POST to http://localhost:11434/api/generate.
@@ -199,6 +254,16 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
     Sets _last_extraction_source to "llm" or "llm→regex (fallback)".
     """
     global _last_extraction_source
+
+    try:
+        warmup_ollama(model=model, timeout=timeout)
+    except Exception as exc:
+        if not fallback_to_regex:
+            raise RuntimeError(f"Ollama warmup failed and fallback is disabled: {exc}") from exc
+        print(f"[info] LLM warmup failed ({exc}) — falling back to regex", file=sys.stderr)
+        _last_extraction_source = "llm→regex"
+        return extract_items(text)
+
     truncated = intelligent_truncate(text)
 
     payload = json.dumps({
@@ -220,6 +285,21 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
         )
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             raw = json.loads(resp.read().decode("utf-8"))
+
+        if not isinstance(raw, dict):
+            raise ValueError("Ollama response is not a JSON object")
+
+        if "error" in raw and raw["error"]:
+            raise RuntimeError(f"Ollama error: {raw['error']}")
+
+        if "done" not in raw:
+            raise ValueError("Ollama response is missing required 'done' flag")
+
+        if raw.get("done") is not True:
+            raise ValueError(
+                f"Ollama response did not finish cleanly: done={raw.get('done')!r}"
+            )
+
         llm_output = json.loads(raw["response"])
 
         items: list[dict] = []
@@ -239,11 +319,16 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
             return items
 
         # LLM returned empty — fall back to regex
+        if not fallback_to_regex:
+            raise ValueError("LLM returned no usable extraction and fallback is disabled")
+
         print("[info] LLM returned no items — falling back to regex", file=sys.stderr)
         _last_extraction_source = "llm→regex"
         return extract_items(text)
 
     except Exception as e:
+        if not fallback_to_regex:
+            raise RuntimeError(f"LLM extraction failed and fallback is disabled: {e}") from e
         print(f"[info] LLM extraction failed ({e}) — falling back to regex", file=sys.stderr)
         _last_extraction_source = "llm→regex"
         return extract_items(text)
@@ -741,6 +826,8 @@ Examples:
                         help="Preview only — no SQLite writes")
     parser.add_argument("--llm", action="store_true",
                         help="Use Ollama LLM for semantic extraction (qwen2.5:7b local)")
+    parser.add_argument("--no-fallback", action="store_true",
+                        help="Abort instead of falling back to regex when LLM validation fails")
     parser.add_argument("--model", default="qwen2.5:7b",
                         help="Ollama model name (default: qwen2.5:7b)")
     parser.add_argument("--timeout", type=int, default=DEFAULT_OLLAMA_TIMEOUT,
@@ -770,7 +857,16 @@ Examples:
 
     # Parse — LLM mode takes priority over format
     if args.llm:
-        items = extract_with_ollama(raw_text, args.model, args.timeout)
+        try:
+            items = extract_with_ollama(
+                raw_text,
+                args.model,
+                args.timeout,
+                fallback_to_regex=not args.no_fallback,
+            )
+        except Exception as exc:
+            print(f"ERROR: LLM extraction failed and fallback is disabled: {exc}", file=sys.stderr)
+            sys.exit(1)
     elif args.format == "json":
         items = parse_json_input(raw_text)
     else:

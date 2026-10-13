@@ -523,6 +523,92 @@ class TestEndToEnd:
         assert mem0_count == len(items)
 
 
+class TestWarmupOllama:
+    """Warmup must only succeed when Ollama confirms the request is done."""
+
+    def test_warmup_request_has_stream_false_and_done_flag(self, vsync_module):
+        captured = {}
+
+        class MockResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                return json.dumps({"done": True, "response": "ok"}).encode("utf-8")
+
+        def capture_urlopen(req, timeout):
+            captured["body"] = json.loads(req.data.decode("utf-8"))
+            return MockResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=capture_urlopen):
+            result = vsync_module.warmup_ollama(model="qwen2.5:7b", timeout=5)
+
+        assert captured["body"]["stream"] is False
+        assert captured["body"]["format"] == "json"
+        assert result["done"] is True
+
+    def test_warmup_rejects_malformed_json(self, vsync_module):
+        def fake_urlopen(req, timeout):
+            class MockResp:
+                def __enter__(self):
+                    return self
+                def __exit__(self, *a):
+                    return False
+                def read(self):
+                    return b"{not-json}"
+            return MockResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_urlopen):
+            with pytest.raises(ValueError, match="valid JSON"):
+                vsync_module.warmup_ollama(model="qwen2.5:7b", timeout=5)
+
+    def test_warmup_rejects_done_false(self, vsync_module):
+        def fake_urlopen(req, timeout):
+            class MockResp:
+                def __enter__(self):
+                    return self
+                def __exit__(self, *a):
+                    return False
+                def read(self):
+                    return json.dumps({"done": False, "response": "still processing"}).encode("utf-8")
+            return MockResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_urlopen):
+            with pytest.raises(ValueError, match="done"):
+                vsync_module.warmup_ollama(model="qwen2.5:7b", timeout=5)
+
+    def test_warmup_requires_done_field(self, vsync_module):
+        def fake_urlopen(req, timeout):
+            class MockResp:
+                def __enter__(self):
+                    return self
+                def __exit__(self, *a):
+                    return False
+                def read(self):
+                    return json.dumps({"response": "ok"}).encode("utf-8")
+            return MockResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_urlopen):
+            with pytest.raises(ValueError, match="done"):
+                vsync_module.warmup_ollama(model="qwen2.5:7b", timeout=5)
+
+    def test_warmup_raises_for_explicit_ollama_error(self, vsync_module):
+        def fake_urlopen(req, timeout):
+            class MockResp:
+                def __enter__(self):
+                    return self
+                def __exit__(self, *a):
+                    return False
+                def read(self):
+                    return json.dumps({"error": "model not found"}).encode("utf-8")
+            return MockResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_urlopen):
+            with pytest.raises(RuntimeError, match="Ollama warmup error"):
+                vsync_module.warmup_ollama(model="qwen2.5:7b", timeout=5)
+
+
 class TestOllamaOptions:
     """Ollama payload must include temperature=0 and fixed seed for determinism."""
 
@@ -539,6 +625,7 @@ class TestOllamaOptions:
             def read(self):
                 # Return an LLM response with empty arrays to force regex fallback
                 return json.dumps({
+                    "done": True,
                     "response": '{"decisions": [], "tasks": [], "facts": []}'
                 }).encode("utf-8")
 
@@ -564,6 +651,7 @@ class TestOllamaOptions:
                 return False
             def read(self):
                 return json.dumps({
+                    "done": True,
                     "response": '{"decisions": [], "tasks": [], "facts": []}'
                 }).encode("utf-8")
 
