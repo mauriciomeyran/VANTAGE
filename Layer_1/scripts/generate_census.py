@@ -220,6 +220,7 @@ CENSUS_SPEC = [
             {"id": "KERNEL:EVO-POLICY", "seccion": "15.1", "nombre": "KERNEL:EVO POLICY"},
             {"id": "KERNEL:EVO-CHANGELOG", "seccion": "15.2", "nombre": "KERNEL:EVO CHANGELOG"},
             {"id": "KERNEL:EXCEPTIONS", "seccion": "16", "nombre": "KERNEL:EXCEPTIONS"},
+            {"id": "KERNEL:OPS-INTERVIEW-SIMULATOR", "seccion": "", "nombre": "KERNEL:OPS INTERVIEW SIMULATOR"},
         ],
     },
     {
@@ -279,6 +280,7 @@ CENSUS_SPEC = [
             {"id": "MANUAL:SKILL-GLOSSARY-AUDIT", "seccion": "23.3", "nombre": "Auditoría y Continuidad"},
             {"id": "MANUAL:SKILL-GLOSSARY-STYLE", "seccion": "23.4", "nombre": "Estilos de Escritura y Generación"},
             {"id": "MANUAL:SKILL-GLOSSARY-XREF", "seccion": "23.5", "nombre": "Gaps Abiertos"},
+            {"id": "MANUAL:RUNTIME-INTERVIEW-SIMULATOR", "seccion": "", "nombre": "MANUAL:RUNTIME INTERVIEW SIMULATOR"},
         ],
     },
     {
