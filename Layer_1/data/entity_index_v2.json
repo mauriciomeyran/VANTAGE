@@ -1,21 +1,21 @@
 {
   "entities": [
     {
-      "entity_id": "TRACKER:H_e22e9370f2916dbc",
-      "canonical_id": "e22e9370f2916dbcb8f4e5f9471c12fb43a2df78bb03dbc27ddb29dcf66cbdb1",
-      "page_id": "3f6938be-fc42-81ff-8d53-eb2cdb0b9b6a",
-      "page_url": "https://app.notion.com/p/Visual-Merchandising-Trade-Coordinator-Parfums-Christian-Dior-3f6938befc4281ff8d53eb2cdb0b9b6a",
-      "hash": "e22e9370f2916dbcb8f4e5f9471c12fb43a2df78bb03dbc27ddb29dcf66cbdb1",
+      "entity_id": "TRACKER:U_3f7938befc4281789bddf3fb63272abb",
+      "canonical_id": "H_19a4acc39374cfe4",
+      "page_id": "3f7938be-fc42-8178-9bdd-f3fb63272abb",
+      "page_url": "https://app.notion.com/p/Visual-Merchandising-Coordinator-Benefit-Cosmetics-3f7938befc4281789bddf3fb63272abb",
+      "hash": "H_19a4acc39374cfe4",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER",
       "archived_from": null
     },
     {
-      "entity_id": "TRACKER:U_3ed938befc4281cf9941ebaa1d07e6e2",
-      "canonical_id": "H_3962136321d78d45",
-      "page_id": "3ed938be-fc42-81cf-9941-ebaa1d07e6e2",
-      "page_url": "https://app.notion.com/p/Coordinador-de-Visual-Merchandising-L-Or-al-Luxe-M-xico-Grupo-Axo-3ed938befc4281cf9941ebaa1d07e6e2",
-      "hash": "H_3962136321d78d45",
+      "entity_id": "TRACKER:H_e22e9370f2916dbc",
+      "canonical_id": "e22e9370f2916dbcb8f4e5f9471c12fb43a2df78bb03dbc27ddb29dcf66cbdb1",
+      "page_id": "3f6938be-fc42-81ff-8d53-eb2cdb0b9b6a",
+      "page_url": "https://app.notion.com/p/Visual-Merchandising-Trade-Coordinator-Parfums-Christian-Dior-3f6938befc4281ff8d53eb2cdb0b9b6a",
+      "hash": "e22e9370f2916dbcb8f4e5f9471c12fb43a2df78bb03dbc27ddb29dcf66cbdb1",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER",
       "archived_from": null
@@ -34,7 +34,7 @@
       "entity_id": "TRACKER:U_3df938befc4281f8a2a2c02f40dc995a",
       "canonical_id": "H_cf52a8f0384d1214",
       "page_id": "3df938be-fc42-81f8-a2a2-c02f40dc995a",
-      "page_url": "https://app.notion.com/p/Gerente-Visual-Merchandising-3df938befc4281f8a2a2c02f40dc995a",
+      "page_url": "https://app.notion.com/p/Coordinador-de-Visual-Merchandising-L-Or-al-Luxe-M-xico-Grupo-Axo-3df938befc4281f8a2a2c02f40dc995a",
       "hash": "H_cf52a8f0384d1214",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER",
@@ -91,26 +91,6 @@
       "archived_from": null
     },
     {
-      "entity_id": "TRACKER:U_3dc938befc4281e1af25f9bb08b083ce",
-      "canonical_id": "H_724f0632d9da5cb0",
-      "page_id": "3dc938be-fc42-81e1-af25-f9bb08b083ce",
-      "page_url": "https://app.notion.com/p/Coordinador-a-de-Display-Visual-Merchandising-3dc938befc4281e1af25f9bb08b083ce",
-      "hash": "H_724f0632d9da5cb0",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_677f5f706c701588",
-      "canonical_id": "677f5f706c701588b772825fec1aa90d400f900f3c76854669862f24a5786b9b",
-      "page_id": "3dc938be-fc42-8160-84b5-fefaad5f6cb3",
-      "page_url": "https://app.notion.com/p/Visual-Merchandising-por-Proyecto-3dc938befc42816084b5fefaad5f6cb3",
-      "hash": "677f5f706c701588b772825fec1aa90d400f900f3c76854669862f24a5786b9b",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
       "entity_id": "TRACKER:H_62df2b95ef70dbd8",
       "canonical_id": "62df2b95ef70dbd8329d48f99608d467853ad715dd63da15b0a170bbf9b7afbd",
       "page_id": "3dc938be-fc42-81aa-b0c6-e2d669b069be",
@@ -151,16 +131,6 @@
       "archived_from": null
     },
     {
-      "entity_id": "TRACKER:H_70c342a18bc76df4",
-      "canonical_id": "70c342a18bc76df414a7f1ca323e74dfe4db6752e36e75ee04e7087caa5a91c0",
-      "page_id": "3dc938be-fc42-8115-9423-cadaff1e9352",
-      "page_url": "https://app.notion.com/p/Retail-Activation-Coordinator-3dc938befc4281159423cadaff1e9352",
-      "hash": "70c342a18bc76df414a7f1ca323e74dfe4db6752e36e75ee04e7087caa5a91c0",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
       "entity_id": "TRACKER:H_ee532f37268a319b",
       "canonical_id": "ee532f37268a319bee0a1267c52e5383b04931695bc9bed256691b461982a77d",
       "page_id": "3dc938be-fc42-819e-ba44-cbded6dfe697",
@@ -176,16 +146,6 @@
       "page_id": "3dc938be-fc42-8145-9f30-f063b118ff87",
       "page_url": "https://app.notion.com/p/RIT-VISUAL-MERCHANDISING-3dc938befc4281459f30f063b118ff87",
       "hash": "6a3d2939fa6a4d49444de5686c4f60899946e5260a9a10857a8c01cff5d5ec1d",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_3ed3bb106ec4d106",
-      "canonical_id": "3ed3bb106ec4d106399a06989f5244a5853a70c84b2e78b42dc307030a1b10ad",
-      "page_id": "3dc938be-fc42-81ed-9d41-ce10dc330196",
-      "page_url": "https://app.notion.com/p/Brand-Activation-Coordinator-3dc938befc4281ed9d41ce10dc330196",
-      "hash": "3ed3bb106ec4d106399a06989f5244a5853a70c84b2e78b42dc307030a1b10ad",
       "entity_type": "tracker",
       "source_db": "VANTAGE_TRACKER",
       "archived_from": null
@@ -231,136 +191,6 @@
       "archived_from": null
     },
     {
-      "entity_id": "TRACKER:H_1fd046aecc24c13b",
-      "canonical_id": "1fd046aecc24c13bc080a12d74101d93bbd1ddf37aa6b98858c567cd94ebc644",
-      "page_id": "3dc938be-fc42-814f-9a1a-c8db4c54db2f",
-      "page_url": "https://app.notion.com/p/Coordinador-de-Experiencias-en-Tienda-Retailtainment-3dc938befc42814f9a1ac8db4c54db2f",
-      "hash": "1fd046aecc24c13bc080a12d74101d93bbd1ddf37aa6b98858c567cd94ebc644",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_5b6dee0536c6bcf7",
-      "canonical_id": "5b6dee0536c6bcf79b0f14097c93a0b7822872d23a9151608939474b831d68c1",
-      "page_id": "3dc938be-fc42-81e0-b5e2-e29a016da869",
-      "page_url": "https://app.notion.com/p/Visual-merchandiser-3dc938befc4281e0b5e2e29a016da869",
-      "hash": "5b6dee0536c6bcf79b0f14097c93a0b7822872d23a9151608939474b831d68c1",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_852c7d5393b66822",
-      "canonical_id": "852c7d5393b668227147acddf2c8e50e940e19f9130b9c6f5e4f66bb9ab2f761",
-      "page_id": "3dc938be-fc42-810a-b1cf-cf0eedf5370f",
-      "page_url": "https://app.notion.com/p/Responsable-de-Visual-Merchandiser-boutiques-3dc938befc42810ab1cfcf0eedf5370f",
-      "hash": "852c7d5393b668227147acddf2c8e50e940e19f9130b9c6f5e4f66bb9ab2f761",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_e79b1e08a1cb96ed",
-      "canonical_id": "e79b1e08a1cb96ed629ae1da678bc32c8c7608ff5788fcdbfbc4b5ac28cb60b9",
-      "page_id": "3dc938be-fc42-810a-8375-ed47eeba8347",
-      "page_url": "https://app.notion.com/p/Gerente-Marketing-Visual-Merchandising-PDV-Retail-BELLEZA-3dc938befc42810a8375ed47eeba8347",
-      "hash": "e79b1e08a1cb96ed629ae1da678bc32c8c7608ff5788fcdbfbc4b5ac28cb60b9",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_2763bd54feb8d995",
-      "canonical_id": "2763bd54feb8d995c86cf3ef1a58721c09e1f77870919e7e92a695b5b78e2904",
-      "page_id": "3dc938be-fc42-81b6-8f0d-e4a2c880d868",
-      "page_url": "https://app.notion.com/p/Auxiliar-de-Experiencia-y-Visual-Merchandising-3dc938befc4281b68f0de4a2c880d868",
-      "hash": "2763bd54feb8d995c86cf3ef1a58721c09e1f77870919e7e92a695b5b78e2904",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_1977ee872221bcee",
-      "canonical_id": "1977ee872221bcee355590f89addc8587c909be800f8a00e58c497d48d59555a",
-      "page_id": "3dc938be-fc42-8162-86ac-df49dae99901",
-      "page_url": "https://app.notion.com/p/Visual-Merchandising-Coordinator-3dc938befc42816286acdf49dae99901",
-      "hash": "1977ee872221bcee355590f89addc8587c909be800f8a00e58c497d48d59555a",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_ac28957f4af64243",
-      "canonical_id": "ac28957f4af64243781c2073cc8fc3ef2bf1a832f9cf78080c0342c96967a448",
-      "page_id": "3dc938be-fc42-816f-a5ef-e2ca398cf87a",
-      "page_url": "https://app.notion.com/p/GLOBAL-RETAIL-EXPERIENCE-VM-MANAGER-3dc938befc42816fa5efe2ca398cf87a",
-      "hash": "ac28957f4af64243781c2073cc8fc3ef2bf1a832f9cf78080c0342c96967a448",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_abd9e957b6c55010",
-      "canonical_id": "abd9e957b6c55010cb49f83d68f940f2696208d87bc16a42629655fb0d5857a6",
-      "page_id": "3dc938be-fc42-8190-b5c8-f0be1564952b",
-      "page_url": "https://app.notion.com/p/Lead-Account-Marketing-Innova-Culto-LATAM-3dc938befc428190b5c8f0be1564952b",
-      "hash": "abd9e957b6c55010cb49f83d68f940f2696208d87bc16a42629655fb0d5857a6",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_a1dd483a74c0d60e",
-      "canonical_id": "a1dd483a74c0d60eb9e12c62164f51af4a2b94da988b8f1cff3a8099588139bb",
-      "page_id": "3dc938be-fc42-8186-bfe5-fdfef337e195",
-      "page_url": "https://app.notion.com/p/Visual-Merchandising-Trade-Coordinator-3dc938befc428186bfe5fdfef337e195",
-      "hash": "a1dd483a74c0d60eb9e12c62164f51af4a2b94da988b8f1cff3a8099588139bb",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_50f4d245c96cff11",
-      "canonical_id": "50f4d245c96cff1190e4124b39c28fc3533f8f8e36e046430cedfbef287b28af",
-      "page_id": "3dc938be-fc42-81fe-a3d5-ca7f6632eca5",
-      "page_url": "https://app.notion.com/p/ANALISTA-DE-DISE-O-MODULAR-PLANOGRAMAS-3dc938befc4281fea3d5ca7f6632eca5",
-      "hash": "50f4d245c96cff1190e4124b39c28fc3533f8f8e36e046430cedfbef287b28af",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_6e1fa9e1b1615a4a",
-      "canonical_id": "6e1fa9e1b1615a4a9508109ca937eea778792608a0cef66983028ede50663340",
-      "page_id": "3dc938be-fc42-8171-b447-e95777c934f4",
-      "page_url": "https://app.notion.com/p/Visual-Merchandiser-3dc938befc428171b447e95777c934f4",
-      "hash": "6e1fa9e1b1615a4a9508109ca937eea778792608a0cef66983028ede50663340",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_65d9fef5657d5bfd",
-      "canonical_id": "65d9fef5657d5bfd18f37e890b1e914b88582d50340d95177962ac51759676f4",
-      "page_id": "3dc938be-fc42-815c-9b5c-ff41e0a7b955",
-      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Retail-Skincare-3dc938befc42815c9b5cff41e0a7b955",
-      "hash": "65d9fef5657d5bfd18f37e890b1e914b88582d50340d95177962ac51759676f4",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
-      "entity_id": "TRACKER:H_2de0778f4359d300",
-      "canonical_id": "2de0778f4359d30016f96d71aa16844fbd7b2a43d4b9afd6fabaca7d75b96a53",
-      "page_id": "3dc938be-fc42-81fe-a20b-e8b3d713c52d",
-      "page_url": "https://app.notion.com/p/Gerente-de-Visual-Merchandising-y-Desarrollo-de-Tienda-3dc938befc4281fea20be8b3d713c52d",
-      "hash": "2de0778f4359d30016f96d71aa16844fbd7b2a43d4b9afd6fabaca7d75b96a53",
-      "entity_type": "tracker",
-      "source_db": "VANTAGE_TRACKER",
-      "archived_from": null
-    },
-    {
       "entity_id": "ARCHIVO:H_2a826a82719c1841",
       "canonical_id": "2a826a82719c184190649422afa91c274fd9a7a0b872eb9d57a5ab35a20d3d71",
       "page_id": "3e5938be-fc42-812c-89de-ccc9f5e03d49",
@@ -376,6 +206,26 @@
       "page_id": "3e5938be-fc42-8177-bdbf-cd1a052ec2fb",
       "page_url": "https://app.notion.com/p/Visual-Merchandiser-Fashion-Retail-Zona-Sur-CDMX-3e5938befc428177bdbfcd1a052ec2fb",
       "hash": "7d54c1197f29f637335b759ad1993a18f6b087ef9a4853df3a3d0951dc87a389",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:U_3dc938befc4281e1af25f9bb08b083ce",
+      "canonical_id": "H_eca9084c4c535430",
+      "page_id": "3dc938be-fc42-81e1-af25-f9bb08b083ce",
+      "page_url": "https://app.notion.com/p/Coordinador-a-de-Display-Visual-Merchandising-3dc938befc4281e1af25f9bb08b083ce",
+      "hash": "H_eca9084c4c535430",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_677f5f706c701588",
+      "canonical_id": "677f5f706c701588b772825fec1aa90d400f900f3c76854669862f24a5786b9b",
+      "page_id": "3dc938be-fc42-8160-84b5-fefaad5f6cb3",
+      "page_url": "https://app.notion.com/p/Visual-Merchandising-por-Proyecto-3dc938befc42816084b5fefaad5f6cb3",
+      "hash": "677f5f706c701588b772825fec1aa90d400f900f3c76854669862f24a5786b9b",
       "entity_type": "archive",
       "source_db": "ARCHIVO_TRACKER",
       "archived_from": null
@@ -431,6 +281,16 @@
       "archived_from": null
     },
     {
+      "entity_id": "ARCHIVO:H_70c342a18bc76df4",
+      "canonical_id": "70c342a18bc76df414a7f1ca323e74dfe4db6752e36e75ee04e7087caa5a91c0",
+      "page_id": "3dc938be-fc42-8115-9423-cadaff1e9352",
+      "page_url": "https://app.notion.com/p/Retail-Activation-Coordinator-3dc938befc4281159423cadaff1e9352",
+      "hash": "70c342a18bc76df414a7f1ca323e74dfe4db6752e36e75ee04e7087caa5a91c0",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
       "entity_id": "ARCHIVO:H_9140459e2c14f385",
       "canonical_id": "9140459e2c14f3856bec08afee739ea21a722d263daa96cb396b43ee7a099d64",
       "page_id": "3dc938be-fc42-81a3-b245-dd0801fdcceb",
@@ -461,6 +321,16 @@
       "archived_from": null
     },
     {
+      "entity_id": "ARCHIVO:H_3ed3bb106ec4d106",
+      "canonical_id": "3ed3bb106ec4d106399a06989f5244a5853a70c84b2e78b42dc307030a1b10ad",
+      "page_id": "3dc938be-fc42-81ed-9d41-ce10dc330196",
+      "page_url": "https://app.notion.com/p/Brand-Activation-Coordinator-3dc938befc4281ed9d41ce10dc330196",
+      "hash": "3ed3bb106ec4d106399a06989f5244a5853a70c84b2e78b42dc307030a1b10ad",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
       "entity_id": "ARCHIVO:H_94e370dfbf090b85",
       "canonical_id": "94e370dfbf090b8545d2b3246acff3cc6d445f11bbe46889700cbd5ef4519877",
       "page_id": "3dc938be-fc42-8189-8c5b-d139017de593",
@@ -486,6 +356,136 @@
       "page_id": "3dc938be-fc42-81be-95df-e6d73ee1e1d2",
       "page_url": "https://app.notion.com/p/Creative-Brand-Guardian-3dc938befc4281be95dfe6d73ee1e1d2",
       "hash": "259b51e24cf9ebaf713542c058187d892472c9d3683cf4d6a2a839f565b1b678",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_1fd046aecc24c13b",
+      "canonical_id": "1fd046aecc24c13bc080a12d74101d93bbd1ddf37aa6b98858c567cd94ebc644",
+      "page_id": "3dc938be-fc42-814f-9a1a-c8db4c54db2f",
+      "page_url": "https://app.notion.com/p/Coordinador-de-Experiencias-en-Tienda-Retailtainment-3dc938befc42814f9a1ac8db4c54db2f",
+      "hash": "1fd046aecc24c13bc080a12d74101d93bbd1ddf37aa6b98858c567cd94ebc644",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_5b6dee0536c6bcf7",
+      "canonical_id": "5b6dee0536c6bcf79b0f14097c93a0b7822872d23a9151608939474b831d68c1",
+      "page_id": "3dc938be-fc42-81e0-b5e2-e29a016da869",
+      "page_url": "https://app.notion.com/p/Visual-merchandiser-3dc938befc4281e0b5e2e29a016da869",
+      "hash": "5b6dee0536c6bcf79b0f14097c93a0b7822872d23a9151608939474b831d68c1",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_852c7d5393b66822",
+      "canonical_id": "852c7d5393b668227147acddf2c8e50e940e19f9130b9c6f5e4f66bb9ab2f761",
+      "page_id": "3dc938be-fc42-810a-b1cf-cf0eedf5370f",
+      "page_url": "https://app.notion.com/p/Responsable-de-Visual-Merchandiser-boutiques-3dc938befc42810ab1cfcf0eedf5370f",
+      "hash": "852c7d5393b668227147acddf2c8e50e940e19f9130b9c6f5e4f66bb9ab2f761",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_e79b1e08a1cb96ed",
+      "canonical_id": "e79b1e08a1cb96ed629ae1da678bc32c8c7608ff5788fcdbfbc4b5ac28cb60b9",
+      "page_id": "3dc938be-fc42-810a-8375-ed47eeba8347",
+      "page_url": "https://app.notion.com/p/Gerente-Marketing-Visual-Merchandising-PDV-Retail-BELLEZA-3dc938befc42810a8375ed47eeba8347",
+      "hash": "e79b1e08a1cb96ed629ae1da678bc32c8c7608ff5788fcdbfbc4b5ac28cb60b9",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_2763bd54feb8d995",
+      "canonical_id": "2763bd54feb8d995c86cf3ef1a58721c09e1f77870919e7e92a695b5b78e2904",
+      "page_id": "3dc938be-fc42-81b6-8f0d-e4a2c880d868",
+      "page_url": "https://app.notion.com/p/Auxiliar-de-Experiencia-y-Visual-Merchandising-3dc938befc4281b68f0de4a2c880d868",
+      "hash": "2763bd54feb8d995c86cf3ef1a58721c09e1f77870919e7e92a695b5b78e2904",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_1977ee872221bcee",
+      "canonical_id": "1977ee872221bcee355590f89addc8587c909be800f8a00e58c497d48d59555a",
+      "page_id": "3dc938be-fc42-8162-86ac-df49dae99901",
+      "page_url": "https://app.notion.com/p/Visual-Merchandising-Coordinator-3dc938befc42816286acdf49dae99901",
+      "hash": "1977ee872221bcee355590f89addc8587c909be800f8a00e58c497d48d59555a",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_ac28957f4af64243",
+      "canonical_id": "ac28957f4af64243781c2073cc8fc3ef2bf1a832f9cf78080c0342c96967a448",
+      "page_id": "3dc938be-fc42-816f-a5ef-e2ca398cf87a",
+      "page_url": "https://app.notion.com/p/GLOBAL-RETAIL-EXPERIENCE-VM-MANAGER-3dc938befc42816fa5efe2ca398cf87a",
+      "hash": "ac28957f4af64243781c2073cc8fc3ef2bf1a832f9cf78080c0342c96967a448",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_abd9e957b6c55010",
+      "canonical_id": "abd9e957b6c55010cb49f83d68f940f2696208d87bc16a42629655fb0d5857a6",
+      "page_id": "3dc938be-fc42-8190-b5c8-f0be1564952b",
+      "page_url": "https://app.notion.com/p/Lead-Account-Marketing-Innova-Culto-LATAM-3dc938befc428190b5c8f0be1564952b",
+      "hash": "abd9e957b6c55010cb49f83d68f940f2696208d87bc16a42629655fb0d5857a6",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_a1dd483a74c0d60e",
+      "canonical_id": "a1dd483a74c0d60eb9e12c62164f51af4a2b94da988b8f1cff3a8099588139bb",
+      "page_id": "3dc938be-fc42-8186-bfe5-fdfef337e195",
+      "page_url": "https://app.notion.com/p/Visual-Merchandising-Trade-Coordinator-3dc938befc428186bfe5fdfef337e195",
+      "hash": "a1dd483a74c0d60eb9e12c62164f51af4a2b94da988b8f1cff3a8099588139bb",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_50f4d245c96cff11",
+      "canonical_id": "50f4d245c96cff1190e4124b39c28fc3533f8f8e36e046430cedfbef287b28af",
+      "page_id": "3dc938be-fc42-81fe-a3d5-ca7f6632eca5",
+      "page_url": "https://app.notion.com/p/ANALISTA-DE-DISE-O-MODULAR-PLANOGRAMAS-3dc938befc4281fea3d5ca7f6632eca5",
+      "hash": "50f4d245c96cff1190e4124b39c28fc3533f8f8e36e046430cedfbef287b28af",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_6e1fa9e1b1615a4a",
+      "canonical_id": "6e1fa9e1b1615a4a9508109ca937eea778792608a0cef66983028ede50663340",
+      "page_id": "3dc938be-fc42-8171-b447-e95777c934f4",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-3dc938befc428171b447e95777c934f4",
+      "hash": "6e1fa9e1b1615a4a9508109ca937eea778792608a0cef66983028ede50663340",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_65d9fef5657d5bfd",
+      "canonical_id": "65d9fef5657d5bfd18f37e890b1e914b88582d50340d95177962ac51759676f4",
+      "page_id": "3dc938be-fc42-815c-9b5c-ff41e0a7b955",
+      "page_url": "https://app.notion.com/p/Visual-Merchandiser-Retail-Skincare-3dc938befc42815c9b5cff41e0a7b955",
+      "hash": "65d9fef5657d5bfd18f37e890b1e914b88582d50340d95177962ac51759676f4",
+      "entity_type": "archive",
+      "source_db": "ARCHIVO_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "ARCHIVO:H_2de0778f4359d300",
+      "canonical_id": "2de0778f4359d30016f96d71aa16844fbd7b2a43d4b9afd6fabaca7d75b96a53",
+      "page_id": "3dc938be-fc42-81fe-a20b-e8b3d713c52d",
+      "page_url": "https://app.notion.com/p/Gerente-de-Visual-Merchandising-y-Desarrollo-de-Tienda-3dc938befc4281fea20be8b3d713c52d",
+      "hash": "2de0778f4359d30016f96d71aa16844fbd7b2a43d4b9afd6fabaca7d75b96a53",
       "entity_type": "archive",
       "source_db": "ARCHIVO_TRACKER",
       "archived_from": null
@@ -7343,8 +7343,8 @@
   ],
   "metrics": {
     "total_entities": 734,
-    "tracker_entities": 36,
-    "archive_entities": 698,
+    "tracker_entities": 19,
+    "archive_entities": 715,
     "hash_coverage": 100.0,
     "orphan_candidates": 0
   }
