@@ -463,6 +463,7 @@ class TestLlmFallback:
         mock_resp.__enter__ = MagicMock(return_value=mock_resp)
         mock_resp.__exit__ = MagicMock(return_value=None)
         mock_resp.read.return_value = json.dumps({
+            "done": True,
             "response": '{"decisions": [], "tasks": [], "facts": []}'
         }).encode("utf-8")
 
@@ -474,8 +475,190 @@ class TestLlmFallback:
         assert len(items) > 0  # regex fallback
 
 
+class TestVhRegressions:
+    def test_source_line_is_the_line_containing_the_match(self, vsync_module):
+        text = "introductory context\n" + "x" * 220 + "\nTODO: preserve the actual source line"
+        item = next(i for i in vsync_module.extract_items(text) if i["category"] == "task")
+        assert item["source_line"] == "TODO: preserve the actual source line"
+
+    def test_llm_source_line_uses_explicit_marker(self, vsync_module):
+        class MockResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def read(self):
+                return json.dumps({
+                    "done": True,
+                    "response": json.dumps({
+                        "decisions": [{"content": "Keep source traceability"}],
+                        "tasks": [],
+                        "facts": [],
+                    }),
+                }).encode("utf-8")
+
+        with patch.object(vsync_module.urllib.request, "urlopen", return_value=MockResp()):
+            items = vsync_module.extract_with_ollama("large preamble " * 50)
+        assert items[0]["source_line"] == "(llm extraction)"
+
+    def test_json_cli_normalizes_once_before_regex_extraction(
+        self, vsync_module, tmp_db, tmp_mem0, monkeypatch
+    ):
+        payload = json.dumps([
+            {"role": "user", "content": "TODO: VH-04 single normalization"},
+            {"role": "assistant", "content": "DECISION: use normalized text"},
+        ])
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("VANTAGE_MEM0_PATH", tmp_mem0)
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", payload, "--format", "json",
+            "--project", "vh04-test",
+        ])
+
+        vsync_module.main()
+
+        with sqlite3.connect(tmp_db) as conn:
+            contents = {row[0] for row in conn.execute("SELECT content FROM memories")}
+        assert "VH-04 single normalization" in contents
+        assert "use normalized text" in contents
+
+    def test_truncation_never_exceeds_default_or_custom_limit(self, vsync_module):
+        default = vsync_module.intelligent_truncate("A" * 20000)
+        assert len(default) <= vsync_module.LLM_TRUNCATE_LIMIT
+
+        result = vsync_module.intelligent_truncate(
+            "x" * 15000, limit=1000, head_length=800, tail_length=800
+        )
+        assert len(result) <= 1000
+        assert "TRUNCATED" in result
+
+    def test_ensure_project_preserves_existing_record(self, vsync_module, tmp_db):
+        with sqlite3.connect(tmp_db) as conn:
+            vsync_module.ensure_project(conn, "vh05-project", "Canonical name")
+            vsync_module.ensure_project(conn, "vh05-project", "Do not replace")
+            row = conn.execute(
+                "SELECT name FROM projects WHERE id = ?", ("vh05-project",)
+            ).fetchone()
+        assert row == ("Canonical name",)
+
+
 class TestT1FallbackEnforcement:
     """T1: Fallback enforcement in write mode."""
+
+    def test_no_fallback_aborts_on_warmup_failure_even_in_dry_run(
+        self, vsync_module, tmp_db, tmp_mem0, monkeypatch, capsys
+    ):
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("VANTAGE_MEM0_PATH", tmp_mem0)
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", "TODO: do not fallback",
+            "--llm", "--dry-run", "--no-fallback",
+        ])
+        with patch.object(
+            vsync_module.urllib.request, "urlopen",
+            side_effect=Exception("Ollama unavailable"),
+        ):
+            with pytest.raises(SystemExit) as exc_info:
+                vsync_module.main()
+        assert exc_info.value.code == 1
+        assert "fallback is disabled" in capsys.readouterr().err
+        with sqlite3.connect(tmp_db) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0] == 0
+
+    def test_fallback_flags_are_mutually_exclusive(self, vsync_module, monkeypatch):
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", "text", "--llm",
+            "--no-fallback", "--allow-regex-fallback",
+        ])
+        with pytest.raises(SystemExit) as exc_info:
+            vsync_module.main()
+        assert exc_info.value.code == 2
+
+    def test_no_fallback_aborts_when_llm_returns_no_items(self, vsync_module):
+        class MockResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def read(self):
+                return json.dumps({
+                    "done": True,
+                    "response": json.dumps({
+                        "decisions": [], "tasks": [], "facts": [],
+                    }),
+                }).encode("utf-8")
+
+        with patch.object(vsync_module.urllib.request, "urlopen", return_value=MockResp()):
+            with pytest.raises(RuntimeError, match="fallback is disabled"):
+                vsync_module.extract_with_ollama("TODO: no extraction", fallback_to_regex=False)
+
+    @pytest.mark.parametrize("allow_fallback", [False, True])
+    def test_main_enforces_fallback_flag(
+        self, vsync_module, tmp_db, tmp_mem0, monkeypatch, allow_fallback
+    ):
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("VANTAGE_MEM0_PATH", tmp_mem0)
+        argv = [
+            "vantage-sync.py", "--inline", "TODO: fallback flag end-to-end",
+            "--llm", "--project", "fallback-test",
+        ]
+        if allow_fallback:
+            argv.append("--allow-regex-fallback")
+        monkeypatch.setattr(sys, "argv", argv)
+
+        with patch.object(
+            vsync_module.urllib.request, "urlopen",
+            side_effect=Exception("Ollama unavailable"),
+        ):
+            if allow_fallback:
+                vsync_module.main()
+            else:
+                with pytest.raises(SystemExit) as exc_info:
+                    vsync_module.main()
+                assert exc_info.value.code == 1
+
+        with sqlite3.connect(tmp_db) as conn:
+            count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        assert count > 0 if allow_fallback else count == 0
+
+    def test_chunk_failure_uses_full_text_regex_not_partial_llm(
+        self, vsync_module
+    ):
+        calls = [0]
+
+        class MockResp:
+            def __init__(self, body):
+                self.body = body
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def read(self):
+                return json.dumps(self.body).encode("utf-8")
+
+        def flaky_urlopen(req, timeout):
+            calls[0] += 1
+            body = json.loads(req.data.decode("utf-8"))
+            if "keep_alive" in body:
+                return MockResp({"done": True})
+            if calls[0] == 2:
+                return MockResp({
+                    "done": True,
+                    "response": json.dumps({
+                        "decisions": [],
+                        "tasks": [{"content": "partial LLM result"}],
+                        "facts": [],
+                    }),
+                })
+            raise urllib.error.URLError("connection reset")
+
+        text = "x" * 5100 + "\nTODO: full-text regex fallback"
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=flaky_urlopen):
+            items = vsync_module.extract_with_ollama(text, timeout=5)
+
+        assert vsync_module._last_extraction_source == "llm→regex"
+        assert [item["content"] for item in items] == ["full-text regex fallback"]
+        assert all(item["content"] != "partial LLM result" for item in items)
 
     def test_llm_fallback_abort_in_write_mode(self, vsync_module, tmp_db, sample_chat_text):
         """LLM failure → regex fallback in write mode (no flag) should exit != 0 and write 0 rows."""
@@ -663,9 +846,10 @@ class TestT2Chunking:
             def read(self):
                 call_count[0] += 1
                 if self.is_warmup:
-                    return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+                    return b'{"done": true, "response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
                 # Return same decision in both chunks
                 return json.dumps({
+                    "done": True,
                     "response": json.dumps({
                         "decisions": [{"content": "First decision."}],
                         "tasks": [],
@@ -703,6 +887,7 @@ class TestT2Chunking:
                 if self.should_fail:
                     raise Exception("Chunk 2 failed")
                 return json.dumps({
+                    "done": True,
                     "response": json.dumps({
                         "decisions": [{"content": "First decision"}],
                         "tasks": [],
@@ -732,11 +917,9 @@ class TestT2Chunking:
         assert vsync_module._chunk_stats["processed"] == 2
         assert vsync_module._chunk_stats["failed"] == 1
 
-        # In write mode with failures, should abort (enforced by T2 policy)
-        source = vsync_module._last_extraction_source
-        # With items but chunk failures, source is still "llm" (not fallback to regex)
-        # But chunk_stats shows failure - the main() check should abort
-        assert source == "llm"  # Still llm mode, not regex fallback
+        # Any failed chunk discards successful partial results and falls back on full input.
+        assert items == []
+        assert vsync_module._last_extraction_source == "llm→regex"
         assert vsync_module._chunk_stats["failed"] > 0
 
         # Simulate the check in main()
@@ -751,7 +934,7 @@ class TestT2Chunking:
                     print(
                         f"ERROR: {chunk_stats['failed']} chunk(s) failed during LLM extraction. "
                         "In write mode, this produces incomplete results. "
-                        "Use --allow-regex-fallback to permit partial results, or re-run with --dry-run to preview.",
+                        "Use --allow-regex-fallback to permit regex fallback, or re-run with --dry-run to preview.",
                         file=sys.stderr,
                     )
                     sys.exit(1)
@@ -824,6 +1007,7 @@ class TestOllamaOptions:
             def read(self):
                 # Return an LLM response with empty arrays to force regex fallback
                 return json.dumps({
+                    "done": True,
                     "response": '{"decisions": [], "tasks": [], "facts": []}'
                 }).encode("utf-8")
 
@@ -849,6 +1033,7 @@ class TestOllamaOptions:
                 return False
             def read(self):
                 return json.dumps({
+                    "done": True,
                     "response": '{"decisions": [], "tasks": [], "facts": []}'
                 }).encode("utf-8")
 
@@ -873,6 +1058,7 @@ class TestOllamaOptions:
                 return False
             def read(self):
                 return json.dumps({
+                    "done": True,
                     "response": '{"decisions": [], "tasks": [], "facts": []}'
                 }).encode("utf-8")
 
@@ -904,7 +1090,7 @@ class TestT4Timeouts:
                 return False
             def read(self):
                 call_log.append("warmup" if self.is_warmup else "chunk")
-                return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+                return b'{"done": true, "response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
 
         def capture_urlopen(req, timeout):
             body = json.loads(req.data.decode("utf-8"))
@@ -925,6 +1111,21 @@ class TestT4Timeouts:
         assert warmup_body["keep_alive"] == "5m"
         assert "options" in warmup_body
         assert warmup_body["options"]["num_ctx"] == 8192
+        assert warmup_body["stream"] is False
+
+    @pytest.mark.parametrize("raw", [b"{", b"[]", b'{"done": false}', b"{}"])
+    def test_warmup_rejects_invalid_or_incomplete_response(self, vsync_module, raw):
+        class MockResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def read(self):
+                return raw
+
+        with patch.object(vsync_module.urllib.request, "urlopen", return_value=MockResp()):
+            with pytest.raises((json.JSONDecodeError, ValueError)):
+                vsync_module.warmup_ollama(timeout=5)
 
     def test_warmup_failure_triggers_regex_fallback(self, vsync_module):
         """If warmup fails, should fall back to regex."""
@@ -949,7 +1150,7 @@ class TestT4Timeouts:
             def __exit__(self, *a):
                 return False
             def read(self):
-                return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+                return b'{"done": true, "response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
 
         def capture_urlopen(req, timeout):
             timeout_log.append(timeout)
@@ -972,7 +1173,7 @@ class TestT4Timeouts:
             def __exit__(self, *a):
                 return False
             def read(self):
-                return b'{"response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+                return b'{"done": true, "response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
 
         def capture_urlopen(req, timeout):
             timeout_log.append(timeout)
@@ -1009,6 +1210,7 @@ class TestT4BConsecutiveTimeouts:
                 if self.should_timeout:
                     raise urllib.error.URLError("timed out")
                 return json.dumps({
+                    "done": True,
                     "response": json.dumps({
                         "decisions": [{"content": "Decision after timeout"}],
                         "tasks": [],
@@ -1039,9 +1241,9 @@ class TestT4BConsecutiveTimeouts:
         assert vsync_module._chunk_stats["failed"] == 1
         # Counter should be reset to 0 after successful chunk
         assert vsync_module._consecutive_timeouts == 0
-        # Should have extracted items from successful chunks (deduplicated to 1)
-        assert len(items) == 1
-        assert items[0]["content"] == "Decision after timeout"
+        # A failed chunk discards all partial LLM output and falls back on the full text.
+        assert items == []
+        assert vsync_module._last_extraction_source == "llm→regex"
 
     def test_two_consecutive_timeouts_aborts_extraction(self, vsync_module):
         """Two consecutive timeouts should abort extraction with RuntimeError."""
@@ -1058,6 +1260,7 @@ class TestT4BConsecutiveTimeouts:
                 if self.should_timeout:
                     raise urllib.error.URLError("timed out")
                 return json.dumps({
+                    "done": True,
                     "response": json.dumps({
                         "decisions": [{"content": "Decision"}],
                         "tasks": [],
@@ -1091,21 +1294,46 @@ class TestT4BConsecutiveTimeouts:
         assert vsync_module._chunk_stats["failed"] == 2
         assert vsync_module._consecutive_timeouts == 2
 
-    def test_non_timeout_error_resets_counter(self, vsync_module):
-        """Non-timeout errors should reset the consecutive timeout counter."""
+    def test_direct_timeout_error_counts_toward_abort(self, vsync_module):
+        """A direct TimeoutError and a wrapped timeout both count consecutively."""
         call_count = [0]
 
         class MockResp:
-            def __init__(self, should_fail=False):
-                self.should_fail = should_fail
             def __enter__(self):
                 return self
             def __exit__(self, *a):
                 return False
             def read(self):
-                if self.should_fail:
-                    raise Exception("Connection error")
+                return b'{"done": true, "response": "{\\"decisions\\": [], \\"tasks\\": [], \\"facts\\": []}"}'
+
+        def timeout_urlopen(req, timeout):
+            call_count[0] += 1
+            body = json.loads(req.data.decode("utf-8"))
+            if "keep_alive" in body and "prompt" not in body:
+                return MockResp()
+            if call_count[0] == 2:
+                raise TimeoutError("timed out")
+            raise urllib.error.URLError(TimeoutError("timed out"))
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=timeout_urlopen):
+            with pytest.raises(RuntimeError, match="2 consecutive chunk timeouts"):
+                vsync_module.extract_with_ollama("x" * 12000, model="qwen2.5:7b", timeout=5)
+
+        assert vsync_module._chunk_stats["failed"] == 2
+        assert vsync_module._consecutive_timeouts == 2
+
+    def test_non_timeout_error_resets_counter(self, vsync_module):
+        """An unrelated error between timeouts resets the consecutive timeout counter."""
+        call_count = [0]
+
+        class MockResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
                 return json.dumps({
+                    "done": True,
                     "response": json.dumps({
                         "decisions": [{"content": "Decision"}],
                         "tasks": [],
@@ -1118,30 +1346,28 @@ class TestT4BConsecutiveTimeouts:
             body = json.loads(req.data.decode("utf-8"))
             # Warmup (call 1) succeeds
             if "keep_alive" in body and "prompt" not in body:
-                return MockResp(should_fail=False)
-            # Chunk 1 (call 2) has non-timeout error
+                return MockResp()
+            # Chunk 1 times out.
             if call_count[0] == 2:
-                return MockResp(should_fail=True)
-            # Chunk 2 (call 3) times out
+                raise urllib.error.URLError(TimeoutError("timed out"))
+            # Chunk 2 has an unrelated error, resetting the timeout counter.
             if call_count[0] == 3:
-                raise urllib.error.URLError("timed out")
-            # Chunk 3 (call 4) succeeds
-            return MockResp(should_fail=False)
+                raise urllib.error.URLError("connection reset")
+            # Chunk 3 times out; this is only one consecutive timeout.
+            raise TimeoutError("timed out")
 
-        # Large text to trigger multiple chunks
         text = "x" * 12000
 
         with patch.object(vsync_module.urllib.request, "urlopen", side_effect=flaky_urlopen):
             items = vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
 
-        # Should have 1 processed, 2 failed (non-timeout + timeout)
-        assert vsync_module._chunk_stats["processed"] == 1
-        assert vsync_module._chunk_stats["failed"] == 2
-        # Counter should be 0 (reset after non-timeout error, then timeout didn't reach 2)
-        assert vsync_module._consecutive_timeouts == 0
+        assert items == []
+        assert vsync_module._chunk_stats["processed"] == 0
+        assert vsync_module._chunk_stats["failed"] == 3
+        assert vsync_module._consecutive_timeouts == 1
 
-    def test_dry_run_mode_exits_on_consecutive_timeouts(self, vsync_module):
-        """In dry-run mode, consecutive timeouts should exit with clear message."""
+    def test_dry_run_mode_exits_on_consecutive_timeouts(self, vsync_module, tmp_db, tmp_mem0, monkeypatch, capsys):
+        """The real CLI exits on consecutive timeouts before attempting either write."""
         call_count = [0]
 
         class MockResp:
@@ -1155,6 +1381,7 @@ class TestT4BConsecutiveTimeouts:
                 if self.should_timeout:
                     raise urllib.error.URLError("timed out")
                 return json.dumps({
+                    "done": True,
                     "response": json.dumps({
                         "decisions": [{"content": "Decision"}],
                         "tasks": [],
@@ -1174,24 +1401,26 @@ class TestT4BConsecutiveTimeouts:
             # Chunk 2 (call 3) times out
             return MockResp(should_timeout=True)
 
-        # Large text to trigger multiple chunks
-        text = "x" * 12000
-
-        # Simulate main() behavior in dry-run mode
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("VANTAGE_MEM0_PATH", tmp_mem0)
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", "TODO: preserve existing rows " + "x" * 12000,
+            "--llm", "--dry-run", "--project", "t4b-test",
+        ])
         with patch.object(vsync_module.urllib.request, "urlopen", side_effect=timeout_urlopen):
-            try:
-                items = vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
-            except RuntimeError as e:
-                # In dry-run, main() would catch this and exit with message
-                assert "consecutive chunk timeouts" in str(e)
-                # Verify no items were extracted (partial prevention)
-                # The function raises before returning items
-                assert True  # Expected behavior
-            else:
-                pytest.fail("Should have raised RuntimeError on consecutive timeouts")
+            with pytest.raises(SystemExit) as exc_info:
+                vsync_module.main()
 
-    def test_no_partial_writes_on_consecutive_timeouts(self, vsync_module, tmp_db):
-        """When consecutive timeouts abort extraction, no DB writes should occur."""
+        assert exc_info.value.code == 1
+        assert "In dry-run mode, no writes were attempted." in capsys.readouterr().err
+        with sqlite3.connect(tmp_db) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0] == 0
+            assert conn.execute("SELECT COUNT(*) FROM projects").fetchone()[0] == 0
+        with sqlite3.connect(tmp_mem0) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0] == 0
+
+    def test_no_partial_writes_on_consecutive_timeouts(self, vsync_module, tmp_db, tmp_mem0, monkeypatch, capsys):
+        """The real write-mode CLI aborts before either SQLite store is touched."""
         call_count = [0]
 
         class MockResp:
@@ -1205,6 +1434,7 @@ class TestT4BConsecutiveTimeouts:
                 if self.should_timeout:
                     raise urllib.error.URLError("timed out")
                 return json.dumps({
+                    "done": True,
                     "response": json.dumps({
                         "decisions": [{"content": "Decision"}],
                         "tasks": [],
@@ -1224,18 +1454,41 @@ class TestT4BConsecutiveTimeouts:
             # Chunk 2 (call 3) times out
             return MockResp(should_timeout=True)
 
-        # Large text to trigger multiple chunks
-        text = "x" * 12000
+        with sqlite3.connect(tmp_db) as conn:
+            conn.execute(
+                "INSERT INTO memories (key, content, category) VALUES (?, ?, ?)",
+                ("existing", "preserve this row", "fact"),
+            )
+        with sqlite3.connect(tmp_mem0) as conn:
+            conn.execute(
+                "INSERT INTO memories "
+                "(id, kind, content, scope, provenance, metadata, embedding, dedupe_key, created_at, updated_at) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                ("existing", "fact", "preserve this row", "default", "test", "{}", "", "existing", "now", "now"),
+            )
+
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("VANTAGE_MEM0_PATH", tmp_mem0)
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", "TODO: do not write partial results " + "x" * 12000,
+            "--llm", "--project", "t4b-test",
+        ])
 
         with patch.object(vsync_module.urllib.request, "urlopen", side_effect=timeout_urlopen):
-            with pytest.raises(RuntimeError):
-                items = vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+            with pytest.raises(SystemExit) as exc_info:
+                vsync_module.main()
 
-        # Verify DB is empty (no partial writes)
-        conn = sqlite3.connect(tmp_db)
-        count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
-        conn.close()
-        assert count == 0, "DB should be empty after consecutive timeout abort"
+        assert exc_info.value.code == 1
+        assert "prevents partial writes" in capsys.readouterr().err
+        with sqlite3.connect(tmp_db) as conn:
+            assert conn.execute("SELECT key, content FROM memories").fetchall() == [
+                ("existing", "preserve this row")
+            ]
+            assert conn.execute("SELECT COUNT(*) FROM projects").fetchone()[0] == 0
+        with sqlite3.connect(tmp_mem0) as conn:
+            assert conn.execute("SELECT id, content FROM memories").fetchall() == [
+                ("existing", "preserve this row")
+            ]
 
 
 class TestNormalizationDedup:
