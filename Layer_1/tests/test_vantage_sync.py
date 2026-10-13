@@ -1161,6 +1161,7 @@ class TestT4Timeouts:
         # All chunk calls should use the chunk timeout
         chunk_timeouts = timeout_log[1:]
         assert all(t == 30 for t in chunk_timeouts)
+        assert vsync_module.DEFAULT_OLLAMA_TIMEOUT == 300
 
     def test_warmup_validates_api_response_contract(self, vsync_module):
         """warmup_ollama must enforce stream=False and validate the JSON payload from /api/generate."""
