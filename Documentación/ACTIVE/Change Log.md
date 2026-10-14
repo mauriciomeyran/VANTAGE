@@ -1,5 +1,59 @@
 # V | CHANGELOG
 
+Tipo: [OPS] [GIT] [CODE]
+Identidad VANTAGE: agent.family=CHATGPT · agent.instance=DEFAULT. Registro retrospectivo de acciones realizadas con apoyo de Devin, Copilot y ChatGPT; no implica que esta entrada modifique código.
+Fecha: 2026-10-13 11:18 CDMX (hora indicada por el operador).
+Documentos modificados: V | CHANGELOG (esta entrada + bump de Versión). No se modificaron archivos del repositorio en esta pasada.
+Cambio:
+1. Devin: se inspeccionó la consolidación de VANTAGE Sync y el PR #27; el checkout canónico quedó en el merge commit 23e1e1e de origin/main. Se revisaron las referencias locales/remotas y los commits exclusivos antes de borrar ramas.
+1. Copilot: se conservó la rama local mauriciomeyran/copilot-vantage-sync-warmup-validation en 5a37139 como preservación de las pruebas de warmup; no se integró ni eliminó.
+1. ChatGPT/operador: se resolvió el acceso Git cambiando origin a HTTPS mediante gh auth; git fetch funcionó y origin/main quedó identificado en 23e1e1e. git status --short --branch mostró el checkout limpio y git rev-list --left-right --count HEAD...origin/main devolvió 0 0.
+1. Se confirmó que el worktree canónico estaba en detached HEAD sobre origin/main. Se inspeccionaron los commits exclusivos de main y devin/vantage-sync-r4; no se integraron automáticamente los commits divergentes ni se borraron referencias remotas.
+1. Por instrucción del operador, se eliminaron únicamente las ramas locales main (7552499) y devin/vantage-sync-r4 (c0443fd). Permanecen intactas origin/main, las referencias remotas y la rama de preservación Copilot.
+1. Verificación de pruebas previa: Layer_1/tests/test_vantage_sync.py pasó con 65 tests. No se ejecutó una nueva suite tras la limpieza de ramas, porque no se modificó el árbol de trabajo.
+Tipo de impacto: Operativo + control de versiones. No se modificaron IDs canónicos, Kernel, Manual, Census, Registry ni ALIASES.
+Estado final: checkout limpio en 23e1e1e (origin/main), sin ahead/behind; dos ramas locales divergentes eliminadas; preservación Copilot mantenida. Consolidación de los commits exclusivos de ramas alternativas no realizada.
+Versión: v9.22.46 → v9.22.47 (bump de la propiedad Versión de esta página). Las propiedades de versión de otros documentos no se modificaron.
+Handoff de referencia: ninguno emitido.
+Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT; parches aplicados por APROBAR_WRITE del operador en una sola pasada, sobre el DRY RUN «RESUMING DOCUMENTATION — IMPLEMENTATION PHASE» (SSOT operativa: vantage-documentacion-transversal-implementacion.skill).
+Fecha: 2026-10-13 00:51 CDMX (APROXIMADO — reloj de sesión, sin fetch web).
+Documentos modificados: V | KERNEL (§14.13 KERNEL:OPS-INTERVIEW-SIMULATOR insertado entre OPS-SERIAL y EVOLUTION) · V | MANUAL (§9.6 MANUAL:RUNTIME-INTERVIEW-SIMULATOR insertado tras RUNTIME-005) · V | BRIEF (§07: fila nueva en la matriz de dependencias; añadidos específicos del simulador al final de CROSS-DEPENDENCIES-001, -002 y -003) · V | CHANGELOG (esta entrada + bump).
+Cambio:
+1. Contrato operativo del Interview Simulator en el Kernel: límites de autoridad (writes_to_notion=false, writes_to_repo=false, is_source_of_truth=false), contratos vsp-vac-0.1 / vsp-0.3, datos no confiables, procedencia [D], privacidad como requisito de validación (no garantía), alcance de validación.
+1. Guía de uso en el Manual (§9.6), remitiendo al Kernel las restricciones normativas.
+1. Navigation Brief: fila de dependencias del simulador y precisión de los contratos de impacto, reporte y cierre aplicada al simulador.
+1. ID Census: NO editado manualmente. Altas canónicas nuevas: KERNEL:OPS-INTERVIEW-SIMULATOR y MANUAL:RUNTIME-INTERVIEW-SIMULATOR (candidatas a sync vía vcensus/KERNEL:CENSUS-SYNC en Terminal del operador). CHARTER:DECISIONS-018 NO dado de alta: borrador pendiente de evaluación exclusiva de CLAUDE/MAIN.
+Estado de los nodos del mapeo: aplicados Kernel 14.13, Manual 9.6, Brief §07 y 07.1-07.3. NO aplicados por diseño del propio DRY RUN: Charter DECISIONS-018 (evaluación exclusiva CLAUDE/MAIN), ownership de Interview/Interview_Date/Contacto/Notas en KERNEL:SCH-OWNERSHIP (sin resolución normativa), tabla Class A/B de MANUAL §21 (derivada de esa resolución) y skill opcional vantage-interview-simulator-vacancy-from-jd (no solicitada). La implementación documental queda con dependencias abiertas: no se declara completa.
+Tipo de impacto: Documental + Gobernanza. 2 IDs canónicos nuevos en Kernel y Manual pendientes de Census sync; Census, registry y ALIASES no sincronizados en esta pasada.
+Verificación: re-fetch posterior a las escrituras (presencia de los nodos 14.13, 9.6, fila del Brief y añadidos 07.1-07.3). Verificación independiente pendiente (verificador distinto del ejecutor). Persistencia/privacidad del simulador sin verificar: sigue siendo requisito abierto, no garantía.
+Pendiente: vversions --sync (discrepancia de versiones preexistente: Changelog v9.22.45 vs Kernel/Brief/Census v9.22.43, SP:CONSISTENCY); vcensus para las 2 altas; evaluación CLAUDE/MAIN del borrador DECISIONS-018; resolución de ownership de los 4 campos.
+Versión: v9.22.45 → v9.22.46 (bump de la propiedad Versión de esta página; las propiedades Versión de KERNEL, MANUAL y BRIEF no se tocaron — quedan para vversions --sync).
+Handoff de referencia: ninguno emitido (contador global de handoffs no tocado).
+Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT; escrituras por APROBAR_WRITE del operador en una sola pasada, sin DRY RUN, por instrucción explícita en este turno.
+Fecha: 2026-10-13 00:34 CDMX (dada por el operador; APROXIMADO).
+Documentos modificados: TRACKER REWRITE MANUAL & KERNEL (Tablero al estado del 2026-10-12: tabla Fase/Estado, ÚLTIMA ACCIÓN, PRÓXIMA ACCIÓN, RESUELTOS +2026-10-11/12, BLOQUEOS ACTIVOS, DECISIONES ABIERTAS, CERRADAS y Fecha de actualización) · PLAN DE TRABAJO (4 filas nuevas: T3.W, T3.X, T3.Y, T3.Z; 17 filas actualizadas en Estado/Evidencia/Notas/Verificado_Por según CSV) · RECONCILIATION LOG (20 filas nuevas del 2026-10-11/12; 2 filas con Descripción actualizada) · V | CHANGELOG (esta entrada + bump de Versión).
+Cambio: sincronización del Tracker vivo con los tres adjuntos ACTUALIZADO_2026-10-12 (Tablero .md, PLAN CSV, LOG CSV) entregados por el operador como fuente de verdad de esta pasada. Altas y actualizaciones calculadas por diff de títulos contra las bases vivas; los artefactos de copia http:// de los CSV se retiraron al escribir (p. ej. feed_processor.py, Kernel.md, ats_adapter.py). Selects fuera de catálogo: ninguno. Filas vivas ausentes del CSV: ninguna en PLAN ni en LOG.
+Tipo de impacto: Documental + Gobernanza. Sin altas ni bajas de IDs canónicos; Census, registry y ALIASES sin cambio.
+Verificación: re-fetch posterior a las escrituras (Tablero y conteos de filas de PLAN y LOG). Verificación independiente pendiente (regla del Tablero: verificador distinto del ejecutor).
+Pendiente / límites: rotación del CHANGELOG vivo al ARCHIVO no ejecutada (sigue por arriba del límite de 10 entradas); vversions --sync pendiente en Terminal del operador; las escrituras de la sesión CLAUDE/MAIN del 2026-10-11→12 quedan registradas fila por fila en el RECONCILIATION LOG y su entrada formal de CHANGELOG sigue pendiente de redactar.
+Versión: v9.22.44 → v9.22.45 (bump de la propiedad Versión de esta página; las propiedades Versión de los demás documentos no se tocaron).
+Handoff de referencia: ninguno emitido (contador global de handoffs no tocado).
+Tipo: [DOC] [OPS] [CODE]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MM; esta entrada la escribe CLAUDE/MM por APROBAR_WRITE del operador en una sola pasada, sin DRY RUN, por instrucción explícita en este turno. Es un registro retrospectivo de cambios del día: el Canon se escribió con APROBAR_WRITE tras DRY RUN y la unificación de filas del TRACKER con «yep» tras DRY RUN (variante aceptada en KERNEL §05.6 SCH-APPROVE).
+Fecha: 2026-10-12 21:27 CDMX (dada por el operador).
+Documentos modificados: V | CAREER CANON (CF09, CF10, KPI09 y bullet de C04) · TRACKER V2 (dos filas de Grupo Axo) · V | CHANGELOG (esta entrada + bump de Versión).
+Cambio:
+1. Career Canon vivo: CF09 (07.15 CANON:FACT-009: Aéropostale, 25 semanas de inventario obsoleto, unas 20,000 unidades por tienda, curaduría de colecciones, 17 tiendas), CF10 (07.16 CANON:FACT-010: Dockers México = 270 puertas wholesale + 22 retail, solo México; el equipo LATAM se cuenta aparte, ver CF05), KPI09 (06.9 CANON:KPI-009: ahorro del rebranding de Dockers México por arriba del 10% frente al presupuesto estimado) y un bullet ES/EN en C04 (refresh de 17 tiendas con 25 semanas de inventario obsoleto, con el equipo de 21 reportes directos). CF05 sin cambios. El operador corrió vcensus y vgit después de la escritura.
+1. TRACKER: unificación de «Gerente Visual Merchandising» (postulación 2026-09-18, página 3df938be…) y «Coordinador de Visual Merchandising · L'Oréal Luxe México (Grupo Axo)» (inbound 2026-09-30, página 3ed938be…) por decisión del operador. Sobrevive la primera con Rol y Marca del Coordinador, Interview=Sí, Interview_Date 2026-10-12 12:30 (declarada por el operador, no verificada con la TA), Contacto con LinkedIn, Notas y JD combinados (JD del Coordinador primero, el del Gerente debajo) y cuerpo con Timeline, Origen y Pendientes. La segunda no se archivó ni se borró: lleva una nota de «unificada» al inicio de su cuerpo. No se tocaron Score, Prioridad, Gate_Decision, Next_Action ni CVs.
+1. Interview Simulator (Artifact privado; sin carpeta ni rama nueva en el repo): MVP aceptado por el operador el 2026-10-12; pestaña Voz; vacantes intercambiables (formato vsp-vac-0.1, con Commando y Axo integradas; sesiones vsp-0.3 por vacante); correcciones tras una auditoría estática externa (XSS al importar sesión, anclaje de cifras por contexto, regex de vacantes importadas); Artifact en la versión 9. El simulador no escribe en Notion ni en el repo y no es fuente de verdad. Brief técnico v2 entregado al operador.
+Tipo de impacto: Documental (Canon) + Operativo (TRACKER) + Herramienta (simulador).
+IDs afectados: 3 altas en el Canon (CF09, CF10, KPI09; Census sincronizado por el operador); sin bajas ni renombres.
+Verificación: Canon: re-fetch posterior a la escritura (906 caracteres añadidos, resto intacto), y Census y espejo de main verificados tras vcensus y vgit. TRACKER: re-fetch de ambas páginas posterior a la escritura confirmó campos y cuerpo. Simulador: pruebas locales en Chromium (evaluación, banderas, cambio de vacante, importar y exportar, entradas maliciosas en importación, voz, ancho de 390 px); no probados desde esta sesión: Ruta B (sample), guardado de archivo (downloads) e importación por archivo dentro del visor del Artifact. Esta entrada registra, no audita otras fuentes.
+Pendiente / límites: clasificar en KERNEL §05.1 y MANUAL §21 los campos Interview, Interview_Date, Contacto y Notas (no figuran en las listas Class A/B y SCH-APPROVE autoriza Class A únicamente; se escribieron en la fila de Axo); re-score por pipeline y Positioning_Mode de esa fila; JD completo de Axo pendiente; aclaración opcional de CF05; el Artifact anterior solo de Axo quedó redundante y no se borró.
+Versión: v9.22.43 → v9.22.44 (bump solicitado por el operador en esta pasada). La propiedad Versión de los demás documentos no se modificó.
+Handoff de referencia: ninguno emitido (contador global de handoffs no tocado).
 Tipo: [CONSOLIDADO] [GIT] [OPS] [DOC] — registro retrospectivo de la migración Tablero→CHANGELOG.
 Identidad VANTAGE: agent.family=ARENA · agent.instance=DEFAULT; aprobado por el operador (APROBAR_WRITE) bajo handoff HO-000100. Transcrito de las bullets de sesión del Tablero (V | TRACKER) y del RECONCILIATION LOG; esta entrada no aplica cambios nuevos.
 Fecha: 2026-10-11 03:30 CDMX.
