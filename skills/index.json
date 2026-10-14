@@ -109,6 +109,12 @@
       "mimeType": "application/octet-stream"
     },
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-handoff",
+      "name": "vantage-session-handoff",
+      "description": "VANTAGE Skill: vantage-session-handoff",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/vantage-session-open",
       "name": "vantage-session-open",
       "description": "Protocolo de apertura de sesión VANTAGE",

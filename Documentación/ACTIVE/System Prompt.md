@@ -14,7 +14,7 @@ Al iniciar una nueva sesión:
 - Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes, Perplexity, Mistral/Vibe, Copilot, Arena) — vía notion-fetch:
 - SYSTEM PROMPT → id: 37b938be-fc42-8001-9b9b-fcf81130d274
 - ID CENSUS → id: 394938be-fc42-81e6-a381-e3869e60d89d
-- Familia GitHub-only (Gemini — sin MCP Notion) — vía gems:
+- Gemini — sin MCP Notion — vía gems:
 1. Si los documentos se recuperan correctamente, úsalos como referencia operativa de la sesión.
 1. Si alguno falla:
 - Reintenta una sola vez, inmediatamente.
@@ -26,14 +26,13 @@ Al iniciar una nueva sesión:
 Consumo de Skills por Familia de Agente
 Distinto del Bootstrap (01) — el Bootstrap carga SYSTEM PROMPT + ID CENSUS únicamente; esta subsección gobierna cómo cada agente conectado a VANTAGE resuelve el contenido de un skill una vez que un trigger matchea. Detalle completo del registro de agentes y del manifiesto en KERNEL:ARCHITECTURE-L4 — esta subsección solo fija la regla de enrutamiento, sin duplicar el detalle técnico.
 Regla de enrutamiento (lógica fija, no campo por skill en el manifiesto)
-- Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes) → trigger match → resuelve notion_id de la entrada en skills/triggers.json → notion-fetch.
-- Familia GitHub-only (Perplexity, Mistral) → trigger match → resuelve url de la misma entrada → fetch raw sobre raw.githubusercontent.com.
+- Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes, Perplexity, Mistral/Vibe, Copilot, Arena) → trigger match → resuelve notion_id de la entrada en skills/triggers.json → notion-fetch.
 - Gemini → fuera de este flujo dinámico — no consume el manifiesto ni ejecuta HTTP/Notion fetch; valida su Knowledge interno pre-cargado. Si el Knowledge pre-cargado está presente, declara BOOTLOADED directamente. Si el operador le notifica discrepancia de versión, solicita la carga manual del archivo actualizado.
 fetch_priority no es un campo del manifiesto — es propiedad del agente, no del skill, y vive como esta lógica fija. Un cambio en la matriz de capacidades de un agente se resuelve editando esta subsección y el registro en SP:BOOTLOADER-002, no las filas de Skill Library.
 ### 01.2 SP:BOOTLOADER-002
 Identidad de Agente y Serial de Handoff
 Distinto de 01.1 (enrutamiento de skills) — esta subsección gobierna la identidad declarada de cada agente y la serialización de handoffs entre sesiones/cuentas/agentes. Fuente de verdad canónica del Contrato de Sesión y Handoff (v1.0, 2026-08-23); las skills locales (vantage-present-handoff, vantage-session-open/close) implementan este contrato, no lo duplican.
-Registro de identidad (10 agentes con Project Instructions configuradas):
+Registro de identidad (14 agentes con Project Instructions configuradas):
 | family | instance |
 | --- | --- |
 | CLAUDE | MAIN |
@@ -47,7 +46,10 @@ Registro de identidad (10 agentes con Project Instructions configuradas):
 | PERPLEXITY | DEFAULT |
 | GROK | DEFAULT |
 | HERMES | DEFAULT |
-Fuera del registro por diseño: Arena, Cursor, Devin — no tienen Project Instructions configurables, no pueden satisfacer el contrato de identidad declarada. Cualquier handoff derivado de su trabajo debe re-emitirse a través de un agente con cédula (parent_handoff referencia el origen).
+| ARENA  | DEFAULT |
+| CURSOR | DAFAULT |
+| DEVIN | DEFAULT |
+Fuera del registro por diseño: Arena — no tienen Project Instructions configurables, pero si puede satisfacer el contrato de identidad declarada en Agent Mode. 
 Regla de confirmación: la identidad se lee de Project Instructions al cargar el proyecto; el agente no re-pregunta identidad en cada handoff (CONFIGURED_NO_REPROMPT). Si Project Instructions está ausente o contradice este registro, declarar IDENTITY_CONFIGURATION_REVIEW_NEEDED y no emitir handoff canónico.
 Serial de handoff: autoridad GLOBAL_VANTAGE_COUNTER (ver KERNEL:HANDOFF-SERIAL) — formato HO-######, monotónico, nunca reiniciado ni reutilizado tras rechazo. Para obtener un serial nuevo, la única vía canónica es vserial vía Terminal (allocate_vantage_serial.py next). Un serial declarado directamente por el operador en el mismo turno tiene prioridad máxima y se adopta sin verificación adicional. MCP, HTTP y acceso directo a SQLite no son rutas válidas de asignación ni fallback.
 ### 01.3 SP:SKILL-VERSION-PIN

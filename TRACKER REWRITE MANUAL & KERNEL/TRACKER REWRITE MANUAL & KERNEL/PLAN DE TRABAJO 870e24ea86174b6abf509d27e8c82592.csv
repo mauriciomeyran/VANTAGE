@@ -1,75 +1,531 @@
-﻿Orden,Fase,Estado,Track,Tarea,Responsable,Depende_De,Paralelizable_Con,Evidencia,Handoff_Serial,Ticket,Notas,Verificado_Por
-1,Fase 0,Resuelto,,T0.1 — Versión real vigente (6 fundacionales),CLAUDE/KM,,,,,,Verificado v9.22.15 en todos los fundacionales vía MCP directo.,GROK (2026-10-03: re-fetch Change Log + SP + vversions --sync del operador → todos v9.22.29 PASS)
-2,Fase 0,Resuelto,,T0.2 — Schema real Tracker DB (Dedup_Flag y campos),CLAUDE/KM,,"T0.1, T0.3, T0.4",,,,"Dedup_Flag=checkbox, Class_B_Last_Run/Fetch/Fuente confirmados. Drift detectado (ver T1.1).",
-3,Fase 0,Resuelto,,"T0.3 — Scripts y GitHub (listado, vsync_doc.py, commits)",CLAUDE/KM,,"T0.1, T0.2, T0.4",,,,"Listado de scripts, scope vsync_doc.py (8 docs, no 6), commits dedup — todo verificado byte a byte vía clon del repo.",
-4,Fase 0,Resuelto,,T0.4 — Estado Graph/Backlinks,CLAUDE/KM,,"T0.1, T0.2, T0.3",,,,Cita exacta confirmada contra KERNEL vigente.,
-5,Fase 1,Resuelto,Alpha (normativo),T1.1 — Levantar texto literal actual de KERNEL:SCHEMA-001 y KERNEL:ARCHITECTURE-L4,PERPLEXITY,,"T1.4, T1.5",,,,"Entregado por Perplexity, verificado 1:1 contra fetch directo al KERNEL — cita exacta. Hallazgo colateral: el ancla real del drift de Dedup_Flag es KERNEL:GATE-DECISION-011 (09.11), no SCHEMA-001 como se había ubicado originalmente.",
-6,Fase 1,Resuelto,Alpha (normativo),T1.2 — Aprobar y escribir corrección: Dedup_Flag select→checkbox,CLAUDE/MP,T1.1,,,,,"Ancla correcta: KERNEL:GATE-DECISION-011 (09.11), fila 'Dedup match en existente' — no SCHEMA-001. APROBAR_WRITE recibido de Mau (""yep ambas"") y escrito por CLAUDE/MP — el select Responsable aún no tiene esa opción, se deja nota manual. Ver Reconciliation Log.",
-7,Fase 1,Resuelto,Alpha (normativo),T1.3 — Aprobar y escribir corrección: scope vsync_doc.py (8 docs),CLAUDE/MP,T1.1,,,,,"Aplicado sobre KERNEL:ARCHITECTURE-L4 (04.4). APROBAR_WRITE recibido de Mau (""yep ambas"") y escrito por CLAUDE/MP — el select Responsable aún no tiene esa opción, se deja nota manual. Ver Reconciliation Log.",
-8,Fase 1,Resuelto,Beta (código),T1.4 — Confirmar script activo real de Layer_1 (Terminal),MAU,,"T1.1, T1.5",,,,"Resuelto vía documentación: KERNEL:ARCHITECTURE-L4 (04.4) ya declara el reemplazo layer_1_run.py → layer_1_orchestrator.py (v9.22.0), cruzado contra la presencia real del archivo en el repo (T0.3). No requirió Terminal.",
-9,Fase 1,Resuelto,Beta (código),"T1.5 — Ejecutar suite de tests real y confirmar resultado (pytest, g8/g9/g10)",MAU,,"T1.1, T1.4",,,,"Cédula fabricada (v9.21.40) reportó PASS sin ejecución real. Requiere Terminal local — no delegable. RESUELTO 2026-09-25 (sesión CLAUDE/MM): ejecutado en Terminal real. G8/G9/G10 offline: 37/37, 20/20, 12/12 — todos PASS. pytest tests/ -q: 178 passed, 13 failed, 0 errores de colección (reproducible idéntico en 2 corridas). Fallos agrupados en 3 tickets de Bug Tracker: Cluster B (protección estado terminal/en-proceso, 9 tests) → Protección de estado terminal/en-proceso no bloquea mutación (13 tests fallando) (https://app.notion.com/p/Protecci-n-de-estado-terminal-en-proceso-no-bloquea-mutaci-n-13-tests-fallando-3e6938befc4281fca350d3a1ead1f9bb?pvs=21) ; Cluster C (test de backlinks vs. graph subsystem suspendido) → Graph subsystem suspendido pero test de backlinks sigue activo y falla (https://app.notion.com/p/Graph-subsystem-suspendido-pero-test-de-backlinks-sigue-activo-y-falla-3e6938befc4281c1b073c12998ac4d08?pvs=21) ; Cluster D (override de prioridad por deadline) → Override de prioridad por deadline no dispara deadline_jd (https://app.notion.com/p/Override-de-prioridad-por-deadline-no-dispara-deadline_jd-3e6938befc428181ad16f170eba27f49?pvs=21) . 1 fallo restante (test_writes_on_target) es deuda de test post-T1.2 (select→checkbox), no bug nuevo. Drift #3 (Manual cita 5 nombres de test inexistentes) documentado aparte, no bloqueante.",
-10,Fase 2,En progreso,,T2.1 — Redacción KERNEL v10,Por asignar,"T1.2, T1.3, T1.4, T1.5","T2.2b, T2.3b",2026-10-03 HO-000081: Kernel.md 95 H/0 dup/3 refs colgantes; Kernel_updated 97 H/0 dup/0 colgantes (script sobre adjuntos del operador).,,,"Se verificó feed_processor.py adjunto. Evidencia literal: DEDUP_PRIORITY = {""L1"": 1, ""L2"": 2, ""L3"": 3}; comentario: ""Jerarquía de dedup cross-layer (v8.0): L1 > L2 > L3"". dedup_cross_layer() usa incoming_layer = record.get(""layer"", ""L3""); _upgrade_layer_if_needed() compara prioridades y actualiza solo si incoming_priority < existing_priority. Además, normalize_envelope() advierte que la jerarquía L1 > L2 puede no haberse aplicado si el payload mixto carece de consolidated_by_l0. Conclusión: precedencia real del código = L1 > L2 > L3. [Superado por T2.E: L1 > L2 > L3 confirmada 2026-10-03.] 2026-10-03 (CLAUDE/MAIN, CS-HERMES-01/02): Kernel v10.3 + re-key v10.4 ya está vivo en Notion y exportado a ACTIVE/Kernel.md (564 líneas, 97 headings = 97 IDs KERNEL en CENSUS_SPEC). Lo que falta no es redactar: es verificación independiente del vivo (Bloque B CS-VERIFY-01c) y el pase único T2.O.",
-11,Fase 2,Resuelto,,"T2.2a — Nota de alineación puntual en T2.1-T2.3 (lote Perplexity 28-sep, 14 reemplazos B4/B5/B6/B1 parcial)",Por asignar,"T1.2, T1.3, T1.4, T1.5",T2.1,"Decisión del operador (2026-09-28 20:48 CDMX): conservar L1 > L2 > L3 (lo que dice el código). feed_processor.py: DEDUP_PRIORITY = {""L1"": 1, ""L2"": 2, ""L3"": 3}; comentario ""Jerarquía de dedup cross-layer (v8.0): L1 > L2 > L3""; _upgrade_layer_if_needed() actualiza solo si incoming_priority < existing_priority.",,,"Esta fila SOLO cubre la nota puntual del lote 28-sep (Log CS-PPLX-* 2026-09-29 01:49:18Z, sin bump de versión), NO la redacción v10 completa del MANUAL. Ver T2.2b para el trabajo real pendiente. Corregido 2026-10-02 por CLAUDE/MAIN.",GROK (2026-10-03: decisión L1>L2>L3 reconfirmada; evidencia de código y Kernel ya alineados)
-,Fase 2,Pendiente,,"T2.2b — Redacción MANUAL v10 real (blueprint 10 secciones, ChatGPT)",,"T1.1-T1.5, Cédula de Reconciliación",,,,,Trabajo real diferido a v10.1 — ver TABLERO. No confundir con T2.2a (nota puntual ya aplicada). Creado 2026-10-02 por CLAUDE/MAIN al separar la contradicción Plan vs. Tablero. Decisión del operador 2026-10-03: T2.2b arranca en paralelo a T2.1.,
-12,Fase 2,Resuelto,,T2.3a — Nota de alineación puntual (mismo lote 28-sep),Por asignar,"T2.1, T2.2",,"RETRACTADA 2026-10-03 (V1): el estado citado no corresponde a los docs vivos ni al guard mergeado. Ver LOG 'Match: adjunto de CS-PPLX-03/04 ≠ guard mergeado'. Texto original conservado abajo:
-Kernel 377938be: Match agregado a Class B en KERNEL:SCHEMA-001 (L417), KERNEL:CV-GOLDEN-RULES-002 (L446), KERNEL:OWNERSHIP-002 (L692). Manual 372938be: Match agregado a Class B en MANUAL:SCHEMA-FIELD-REF (L890).",,,Esta fila SOLO cubre la nota puntual del lote 28-sep (mismo lote que T2.2a). NO cubre la extracción real de Script/Skill Glossary. Ver T2.3b para el trabajo real pendiente. Corregido 2026-10-02 por CLAUDE/MAIN. Evidencia citada (Match en Class B) bajo revisión por V1: V1-2026-10-03 encuentra Match ausente de Kernel/Manual vivos y de guard@main — el adjunto citado no corresponde al guard mergeado.,GROK (2026-10-03: evidencia retractada confirmada; Match ausente en docs vivos y guard@main — estado Resuelto correcto)
-,Fase 2,Pendiente,,T2.3b — Extracción real de Script/Skill Glossary a Script Reference / Skill Reference,,"Ninguna (paralelo a T2.1 y T2.2b, decisión del operador 2026-10-03)",,,,,Trabajo real diferido a v10.1 — ver TABLERO. No confundir con T2.3a (nota puntual ya aplicada). Creado 2026-10-02 por CLAUDE/MAIN al separar la contradicción Plan vs. Tablero. Decisión del operador 2026-10-03: T2.3b arranca en paralelo a T2.1.,
-13,Fase 3,En progreso,,"T3.1 — Census, registry y ALIASES en una sola pasada (Terminal)",Por asignar,"T2.1, T2.2b, T2.3b, T2.O",T3.2,,,,"2026-10-03: el Census en Notion ya refleja los 26 IDs del re-key (V_ID_CENSUS_PRODUCTION.md 20:40 CDMX; CENSUS_SPEC 301 IDs, Charter 38, Kernel 97). Pendiente: registry (resolver_registry_v2.json), ALIASES y migración de citas KERNEL:* legacy (Manual 68, System Prompt 11, Charter 3, Canon 1, Aliases 1; 23 skills; 19 scripts) antes del vsync real (CHARTER:MILESTONES-004). Fuente: CS-HERMES-01/02.",
-14,Fase 3,Pendiente,,T3.2 — Verificación cruzada final,MAU,"T2.1, T2.2b, T2.3b",T3.1,,,,verify_versions.py --scripts --skills sobre el estado final.,
-15,Fase 2,Resuelto,Alpha (normativo),"T2.A — Parches Kernel/Manual v9.22.17 (31 ediciones K-01..K-09, M-01..M-22)",PERPLEXITY,,,Changelog v9.22.17; auditoría 31/31 contra Kernel.md y Manual.md,HO-000068,,Ejecutó Perplexity bajo contrato de CLAUDE/MAIN.,CLAUDE/MAIN (greps sobre archivos vdoc 28-sep)
-16,Fase 2,Resuelto,Alpha (normativo),"T2.B — Parches Manual v9.22.18 (A1, A2, A3, A5a-d, A6, A7)",PERPLEXITY,,,"Changelog v9.22.18; Manual L283-285, L473-491, L773, L890, L1309",,,A4 omitido (ya aplicado).,CLAUDE/MAIN (5 puntos en archivos 28-sep)
-17,Fase 2,En progreso,Alpha (normativo),"T2.C — Lote 1 Perplexity 28-sep 18:05-18:56 (14 reemplazos: B4, B5, B6, B1 parcial, jerarquía dedup)",PERPLEXITY,,,"Reporte Perplexity 28-sep; Kernel.md, Manual.md, System_Prompt.md vdoc 19:35",,,"Verificado: B4 (0 'DOCUMENTOS CARGADOS'), B6 (0 citas SESSION-LEDGER; DOCUMENTATION-009 en Kernel L184). Parcial: B5 (Manual L553 y L1187 aún mencionan profile_config). Abierto: B1.",CLAUDE/MAIN
-18,Fase 2,Pendiente,Alpha (normativo),"T2.D — B1: fijar cifra de documentos (nombrar conjuntos: editables, Census, DOCS de vsync_doc, vversions)",CLAUDE/KM,T2.C,,,,"324f, 138d, f6f6, 068f","Decisiones de Mau: B2 Hermes exclusivo, B3 L2 = solicitud directa. Discrepancia 2026-10-03: Tablero marca cifra de documentos Resuelta; SP:SYNC-RULE lista 10, KERNEL 12.3 lista 11 prefijos, Manual 9/8/7. Sin cambio de Estado; requiere decisión del operador. 2026-10-03: decidida B1=A (2026-09-28: conjuntos nombrados, sin cifra suelta); falta aplicar. Membresía (CS-HERMES-02, HEAD d3e3083): vsync_doc.DOCS=9 (kernel, system_prompt, career_canon, manual, aliases, change_log, brief, change_log_archivo, project_charter); verify_versions.DOC_KEYS=12 (los 9 + CENSUS, VANTAGE, ARCHIVEROS); Census indexa 7 prefijos (ALIASES, BRIEF, CANON, CHARTER, KERNEL, MANUAL, SP); vdoc.py 10 etiquetas + 2 alias. Cifras a corregir: Kernel 04.5 (8), 14.3 (11), 14.4 (noveno), 12.3 (""los 11 de 12.1"", 12.1 tiene 9 filas); 13.1 (7) coincide con Census; SP:SYNC-RULE (10); Manual 9/8/7. Se aplica en T2.O.",
-19,Fase 2,Resuelto,Alpha (normativo),T2.E — Jerarquía de dedup: confirmar L2>L1>L3 (decisión) vs L1>L2>L3 (Kernel y código),MAU,,,"Decisión del operador 2026-09-28 y 2026-10-03: L1>L2>L3. Código en HEAD b367c7b: feed_processor.py L65, L540–541 (+ comentario L64 verificado en 5c8bf6a). Kernel: V2 — ARCHITECTURE-L1/L2/L3-002 y ARCHITECTURE-L4 citan literal ""L1 > L2 > L3"" (fetch 2026-10-03).",,,Cerrada 2026-10-03 (ver Evidencia).,MAU (decisión) + CLAUDE/MP (HEAD vía terminal) + MISTRAL (V2 contra Kernel vivo)
-20,Fase 2,Pendiente,Alpha (normativo),T2.F — B2/B3: alinear Manual L64 y L343-346 al Kernel (L1 = Hermes exclusivo; L2 = solicitud directa del operador),CLAUDE/KM,,,,,,"Decisiones de Mau: B2 Hermes exclusivo, B3 L2 = solicitud directa. 2026-10-03 (CS-HERMES-01): Manual L63-64 sigue con L1=Perplexity/Comet y L2=Gemini/Grok/you.com; B5 parcial (profile_config L553 y L1187). Se ejecuta junto con T2.2b.",
-21,Fase 2,Pendiente,Beta (código),T2.G — B7: skills present-handoff y session-close a solo Terminal; actualizar SP:SKILL-VERSION-PIN; refrescar copias del Project,CLAUDE/KM,,,,,"1e2e, 7f6a","No existe servidor de seriales; Terminal única vía. Evidencia 2026-10-03: vantage-session-close y vantage-present-handoff (copias del Project) aún listan MCP allocate_vantage_serial como vía 1, contradice SP:BOOTLOADER-002; copia vantage-cv-b del Project declara v10.0.0 vs pin v10.2.1 (SKILL_VERSION_UNVERIFIED). 2026-10-03: repo ya Terminal-only (3e26e4d; close y present-handoff v1.1.0). SP:SKILL-VERSION-PIN es versión mínima (SP 01.3): subir close/present-handoff de v1.0.0 a v1.1.0. session-open: v1.2.0 consta en Skill Library de Notion (Changelog Archivo L143, L435-447); el repo trae el contenido de P-B (36450e4) pero su encabezado dice v1.1.0. Pendiente: fetch de la Skill Library para fijar la versión real de las 3 skills de sesión y refrescar copias del Project. [ACT 2026-10-12 CLAUDE/MAIN] CHARTER:DECISIONS-015: el operador adjunta el .md vigente de cada skill en el turno; las copias residentes en Projects o agentes no son fuente de verdad y su desfase no se trata como riesgo. Sigue vigente solo el cambio de contenido de las skills fuente (solo Terminal); sin verificar en el repo.",
-22,Fase 2,Pendiente,Alpha (normativo),"T2.H — Match: retirar de Kernel (L417, L446, L692) y Manual L890 tras merge del PR #14",CLAUDE/KM,T2.L,,,,bd46,Desbloqueada: T2.L Resuelto. Ejecutar solo tras V1. V1-2026-10-03: el trabajo ya no es retirar Match (ya ausente en docs vivas). B-09 actualizado 2026-10-03 (CS-MISTRAL-04 W1a); bd46 Abierto pendiente de cierre con verificador distinto.,
-23,Fase 2,En progreso,Beta (código),"T2.I — Guard: CV-A, CV-B, PDF, Figma a CLASS_A_FIELDS; Match fuera de CLASS_B_FIELDS",Por asignar,,,Reporte Copilot; PR #14 head 2ed43ce (git ls-remote),,"1e47, bd46",Implementado por Copilot en PR #14 (commit 56459f4). Prioridad_Auto sin alta: sin dueño. PR #14 mergeado (93c548e). Contenido sin verificar por actor distinto del ejecutor.,CLAUDE/MAIN (solo existencia de refs)
-24,Fase 2,Resuelto,Beta (código),T2.J — Census: quitar MANUAL:WEEKLY-FLOW-006; alta CANON:UF-004/005/006,Por asignar,,,Reporte Copilot; commit 56459f4,,,"PR #14 mergeado. Census vivo: UF-004/005/006 presentes, WEEKLY-FLOW-006 ausente, 0 huérfanos (fetch CLAUDE/MP 2026-10-03). Spec 255 en v9.22.21 → 294 en v9.22.23 (+31 CHARTER, PR #17/#18). Conteo numérico no verificado por MP.",CLAUDE/MP (re-fetch ID CENSUS)
-25,Fase 2,En progreso,Beta (código),T2.K — a07c: skill CV-B alineada a CANON:OUTPUT-CONTRACT-004 v1.1.0,Por asignar,,,Reporte Copilot; nota ADENDA A2 en el ticket,,a07c,Skill v10.2.1 en PR #14 (commit fc322d4). Gana el Canon. PR #14 mergeado (93c548e). Contenido sin verificar por actor distinto del ejecutor.,
-,Fase 2,En progreso,Beta (código),T2.K2 — Triage y cierre de tickets del Bug Tracker (complemento T2.K),Por asignar,,,"Fila LOG 3ea938be-fc42-815a-aee3-c39d3a9a7a63; fetches en vivo 2026-09-29: Bug Tracker 45 filas, Kernel vivo (91,111 chars), Manual vivo (170,968 chars)",,,CS-MISTRAL-01. Responsable real: MISTRAL (el select no tiene la opción; se deja nota manual). Escrituras ejecutadas tras APROBAR_WRITE del operador por lote.,
-26,Fase 2,Resuelto,Beta (código),T2.L — Merge PR #14 (draft) tras pytest comparado con la base 178/13,MAU,"T2.I, T2.J, T2.K",,"93c548e Merge pull request #14 en git log origin/main (2026-09-29 00:51 CDMX); pytest en main: 191 passed in 0.48s, árbol limpio; LOG: 'Verificación: PR #14 mergeado en main' y 'Verificación: pytest en main'",,,"Merge declarado 2026-09-28 20:35 CDMX; verificado 2026-09-29 00:51 CDMX. Confirmado 2026-10-02 vía git log real (commit 93c548e, merge pull request #14) — el Tablero fechado 28-sep quedó desactualizado en este punto, no esta fila.",CLAUDE/MAIN (git log y pytest pegados por MAU; el merge lo ejecutó MAU)
-27,Fase 2,Resuelto,Beta (código),T2.M — Dedup 27f6 y a66e: decisión de diseño (basta audit post-ingesta),PERPLEXITY,,,"Reporte Perplexity 28-sep. V3-2026-10-03: 27f6 y a66e Resueltos 2026-09-28, Solución = ""Decisión de diseño: basta el audit post-ingesta; no se implementa dedup difuso en tiempo real."" (Bug Tracker, re-fetch).",,"27f6, a66e",,MISTRAL (V3)
-28,Fase 3,Resuelto,Beta (código),T3.A — Protección de estados terminales (13 tests): corregir hasta verde; prerequisito de todo --apply,Por asignar,,,"pytest Layer_1: 191 passed, 0 failed (HEAD b367c7b, árbol limpio, 2026-10-03, terminal del operador); cef2de7 en main. V3: f9bb y 7f49 Resueltos con evidencia (verificador MISTRAL). 4d08 sigue Abierto, pero test_graph_layer pasa hoy; ticket por revisar, no cerrado. No incluye la suite tests/ de la raíz (ver LOG).",,"f9bb, 7f49, 4d08",Alcance cerrado: 13 tests verdes. Pendiente aparte: ticket reserva de f9bb (Next_Action='Archivar' sin cobertura de protección) y 4d08.,MISTRAL (V3) + CLAUDE/MP (salida de pytest del operador)
-29,Fase 3,Pendiente,Beta (código),T3.B — Seguridad operativa: pausar Raycast hyperlinks-apply y versions-sync; copiar 27 IDs a EXCLUDE_IDS,MAU,,,,HO-000097,"e4d5, 94b7","Aliases vl1 con --apply en .zshrc L72-83 hasta cerrar T3.A. T3.A Resuelto 2026-10-03; el operador decide si se levanta la pausa (ticket reserva de f9bb abierto). Decisión del operador 2026-10-03: f9bb bloquea --apply; la pausa de Raycast y aliases vl1 sigue hasta cubrir Next_Action=Archivar. Decisión del operador (acta 2026-10-03): quitar --apply de los 6 aliases vl1 (dry-run por defecto). EXCLUDE_IDS sigue vacío (apply_hyperlinks_http://notion.py L100) y f9bb abierto. Los scripts Raycast citados no aparecen en el grep de CS-HERMES-02: pendiente ls Raycast/ (21 scripts). Actualización 2026-10-10 (CLAUDE/MP, repo efe8c3d): Raycast/ rastrea 20 scripts, incluidos http://vantage-hyperlinks-apply.sh y http://vantage-versions-sync.sh; el ls local del operador da 20 (no 21). EXCLUDE_IDS sigue vacío (set() en L100). T3.B sigue Pendiente. [ACT 2026-10-12 CLAUDE/MAIN] El operador respondió 'Ok' a desbloquear --apply para el primer apply acotado de Workday (T3.L), condicionado a token ntn_ rotado, main actualizado y dry-run 6 BLOCKED / 5 limpio. No se ha ejecutado ningún --apply. No se evaluó el efecto sobre los aliases vl1 ni la pausa de Raycast.",
-30,Fase 3,Resuelto,Beta (código),T3.Ca — Sync v9.22.x: vversions --sync + vgit,MAU,,,"vversions --sync PASS (maestro v9.22.29, todos los fundacionales) + vgit (operador 2026-10-03). Quedan pendientes: exclusión ARCHIVEROS de --length (ticket de código) y drift residual de scripts/skills.",,,Cierre parcial 2026-10-03. Sync y vgit completados. ARCHIVEROS --length y registro de scripts pendientes de ticket/código.,GROK (sync re-fetch) + MAU (vgit)
-31,Fase 3,Pendiente,Beta (código),T3.D — Regla de uso del tracker: session-open lee el Tablero; session-close exige delta del tracker en S4,CLAUDE/KM,,,,,,Cambio de skills en el repo.,
-32,Fase 3,En progreso,,"T3.E — Reestructura del tracker: Tablero, columnas del Plan, backfill Plan y Log, cierre de tickets vencidos",CLAUDE/KM,,,Changelog v9.22.19 (2026-09-28 19:42 CDMX),HO-000074,,"2026-10-03 (CLAUDE/MAIN): corregidos Fase vacía, Orden duplicado, T3.1, T2.3b, T3.2 y T2.D; añadidas T2.O, T2.Q, T3.G y T3.H. Pendiente de verificación independiente.",Pendiente de verificación independiente
-,Fase 3,Pendiente,Beta (código),T3.Cb — Ticket código: excluir ARCHIVEROS de vversions --length + drift residual scripts/skills,Por asignar,T3.Ca,,,,,Creado 2026-10-03 HO-000081 al dividir T3.C (Estado Resuelto contradecía Tablero 'parcial'). 2026-10-03 (CS-HERMES-01): length_baseline.json tiene CENSUS lines=0 (captured_at 2026-10-04T02:35:13Z) y ARCHIVEROS=CHANGELOG_ARCHIVO=2198; ARCHIVEROS sigue en DOC_KEYS (12) y en --length; umbral 5% / 10 líneas. Con baseline 0 la regla de truncamiento no dispara para CENSUS.,
-,Fase 2,En progreso,Alpha (normativo),T2.N — Congelar mapa de re-key KERNEL v10.4 y aplicarlo en un solo pase,MISTRAL,T2.1,,,HO-000081,,"Mapa: 24 renames de subsección; capítulos CVP/CVR/CANON-UPDATE revertidos; +2 headings (03.1 ACT-ROLES, 08.1 FLOW-CONTRACT); 3 refs ARC-*-002 corregidas. Estado previo observado (fetch CLAUDE/KM 2026-10-03 18:41 UTC): 0/24 renames aplicados, 95 headings, 3 refs colgantes presentes. Ejecutado 2026-10-03 por MISTRAL (CS-REKEY-08; cambio de ejecutor vs. HO-000081 decisión 4; Responsable actualizado a MISTRAL). Resultado reportado: 97 H/0 dup/0 colgantes. Verificación: A1 PERPLEXITY; Bloque B PERPLEXITY según CLAUDE/KM (Entrega 01c no revisada por CLAUDE/MP); A2–A9 CLAUDE/KM (diff mecánico sobre Kernel.md/Kernel_updated.md; Kernel.md = vivo, vdoc notion del operador 2026-10-03, confirmado por el operador). Evidencia adicional CLAUDE/MP: vcensus del operador (2026-10-03 15:34) lista exactamente 26 huérfanos KERNEL (24 renombrados + ACT-ROLES + FLOW-CONTRACT) con anchors en el Kernel exportado. Estado y Verificado_Por sin tocar.",CLAUDE/MAIN (parcial 2026-10-03: 97 headings del Kernel vivo = 97 IDs KERNEL en CENSUS_SPEC; 0 refs KERNEL:ARC-L*-002; Bloque B CS-VERIFY-01c sin revisar)
-,Fase 2,Pendiente,Alpha (normativo),T2.CHARTER — Evaluar y aplicar re-key semántico de citas KERNEL en PROJECT CHARTER,Por asignar,T2.1,"T2.2b, T2.3b",Ticket Tasks Tracker 3ee938be-fc42-8126-a159-ed4afd6f1fd4; CHANGELOG v9.22.30 [ACT 2026-10-12 CLAUDE/MAIN] Aplicado parcialmente en el Charter el 2026-10-12 (re-fetch verificado por MAIN). Ticket 3ee938be…1fd4: Solución escrita como PARCIAL.,HO-000079,3ee938be-fc42-8126-a159-ed4afd6f1fd4,"El ticket documenta la propuesta, pero no autoriza la edición directa del Charter. MAIN debe cruzar las citas contra el Charter completo y decidir si registra CHARTER:DECISIONS-012. DICTAMEN CLAUDE/MAIN 2026-10-03: PROCEDE con condiciones. (1) §7 L351: alias entre paréntesis KERNEL:CVR-NOCLASSB (11.2). (2) §7 L355-356: reescribir ""el Kernel vigente usa DEDUP-LAYER-UPGRADE en 09.12"" como ""usa GATE-MUTABILITY en 06.12 (antes DEDUP-LAYER-UPGRADE, 09.12)""; el literal GATE-DECISION-012 NO se reemplaza. (3) DECISIONS-011 no menciona GATE-DECISION-012 (corrige el ticket). (4) DECISIONS-012 requiere que el operador confirme la razón y el descarte de v10.1/v10.2. (5) Refresco de §6/§7 va en T2.Q. Aplica solo el operador con DRY RUN + APROBAR_WRITE. [ACT 2026-10-12 CLAUDE/MAIN] Hecho: DECISIONS-012 registrada; cita KERNEL:CV-GOLDEN-RULES-002 reemplazada por KERNEL:CVR-NOCLASSB (heading 11.2 del Kernel vivo, verificado por título). Pendiente: GATE-DECISION-012 y DEDUP-LAYER-UPGRADE -> KERNEL:GATE-MUTABILITY (heading no confirmado en el Kernel vivo). Numeración: el Charter usa DECISIONS-013 para hard_blocks.json; la reserva de «DECISIONS-013 (retiro de Graph)» pasa a DECISIONS-018. La confirmación explícita del descarte de v10.1/v10.2 no consta en el texto registrado de DECISIONS-012.",
-,Fase 2,Pendiente,Alpha (normativo),"T2.O — Pase único del Kernel (04.5 matriz de familias, 06.7/06.11 Dedup_Flag, 16 EXCEPTIONS, cifras T2.D, layer_1_run.py, referencias numéricas NORM)",Por asignar,T2.N,"T2.2b, T2.3b",,,,"Residuos verificados en el Kernel vivo (export 564 líneas): Dedup_Flag=Posible duplicado en 06.7 (L224) y 06.11 (L245); Resolución B-09 en 05.1 (L150) mientras 16 dice que las B-xx viven en EXCEPTIONS; fila ARCHIVEROS de 16 vs 14.3 (L487, 11 documentos); 04.5 L106 (8 documentos) y L113-114 (Perplexity/Mistral solo GitHub); layer_1_run.py como activo en L57, L166, L269 (L110 lo da por reemplazado). Un solo pase, no parches sueltos. Decisiones del operador (acta 2026-10-03): Perplexity y Mistral = MCP-Notion con fallback GitHub; auto_archive.py deprecado (06.7 no cambia). DRY RUN + APROBAR_WRITE.",
-,Fase 2,En progreso,Alpha (normativo),"T2.Q — Ticket CHARTER nuevo: refrescar §6/§7 (prefijo CHARTER, Census, vigilancia de versión) y estado de auto_archive.py",Por asignar,T2.CHARTER,,,,,"Destinatario único: CLAUDE/MAIN. Decisión del operador (acta 2026-10-03): auto_http://archive.py deprecado (Archive/Legacy_Scripts/auto_http://archive.py; Kernel 06.7). §6/§7 obsoletos: el prefijo CHARTER ya está en resolver_registry_v2.json y en el Census (38 IDs); CHARTER ya está en vsync_http://doc.DOCS y en DOC_KEYS. §5.1: anotación fechada (evidencia al commit cef2de7), no reescritura. [ACT 2026-10-12 CLAUDE/MAIN] §6 actualizado (prefijo CHARTER en resolver_registry_v2.json:54, verificado; registry_seed.json no es un registry documental; vload --route CHARTER: reportado por ARENA, sin re-ejecutar) y §7 con párrafo de actualización. Census: los 10 IDs nuevos del Charter (DECISIONS-012 a 017, FAILURES-006, NON-NEGOTIABLES-011, MILESTONES-006 y 007) están en CENSUS_SPEC y en los espejos locales (T-13/T-13b, en main). Falta el sync con Notion: nombres canónicos, orden y block-anchor de cada fila.",
-,Fase 3,Pendiente,Beta (código),"T3.G — Retiro del subsistema Graph (código, tests, artefactos) y DECISIONS-013 tras el merge",Por asignar,T3.A,,,,4d08,"Decisión del operador 2026-10-03: retirar TODO el código del subsistema Graph. Inventario CS-HERMES-02: graph_layer.py; consumidores agent_api.py, status_report.py, vantage.py sync, generate_entity_index_v2.py (build_graph, --skip-graph), health_check.py (INDEX_FILES); tests test_graph_layer.py y 7 en test_status_report.py; artefactos graph_v2.json y backlinks_v2.json (vacíos); docs: Kernel L63/L70/L71/L480/L562, Manual ~23 líneas, Charter §2.5 y §4.8, 2 nombres en generate_census.py. OJO: vantage.py sync también escribe entity_index_v2.json (operativo: query, resolver, context, health): el PR debe separar Graph del entity index. Pasa de SUSPENDED (DECISIONS-005) a retirado: registrar DECISIONS-013 y editar docs solo DESPUÉS de mergear y verificar el PR (CHARTER:FAILURES-005). Por definir: carga de graph_layer.py (_DIR).",
-,Fase 3,Resuelto,Beta (código),T3.H — Housekeeping de repo: commit del Kernel v9 movido a Archive/ y ls Raycast/,MAU,,,"Commit 114f107 (2026-10-04, 'refactor(docs): relocate http://Kernel.md to Archive'): Archive/Documentación/http://Kernel.md está en main y el Kernel activo vive en Documentación/ACTIVE/http://Kernel.md (verificado por CLAUDE/MP en el repo público). ls Raycast/ local reportado por el operador el 2026-10-10: 20 scripts, igual que los 20 rastreados en main (la cifra de 21 en las Notas era errónea). Sin verificación independiente del ls local.",HO-000097,,"git status (CS-HERMES-02, HEAD d3e3083): D Documentación/http://Kernel.md, ?? Archive/Documentación/http://Kernel.md, M state/vantage_handoff_counter.sqlite3. Sin referencias a la ruta antigua en scripts, skills, docs ni .zshrc. Actualización 2026-10-10: commit hecho (114f107) y ls Raycast/ = 20; el cierre de T3.B sigue su propio camino.",
-,Fase 2,En progreso,Alpha (normativo),T2.R — Charter NON-NEGOTIABLES-010: reapuntar a hard_blocks.json (ticket CHARTER),Por asignar,T2.CHARTER,T2.Q,"[ACT 2026-10-12 CLAUDE/MAIN] Charter actualizado el 2026-10-12 con APROBAR_WRITE del operador y re-fetch verificado por MAIN: NON-NEGOTIABLES-010 reescrito (apunta a Layer_1/config/hard_blocks.json), DECISIONS-013 registrada y 2.2 corregido (Dockers fuera). Ticket 3f2938be…f183: Solución escrita; Status sin cambiar (opciones Hecho/Completado, el operador elige).",,3f2938be-fc42-81fb-9b4e-ca756a7bf183,"Destinatario único: CLAUDE/MAIN (gatekeeper). Aplica solo el operador con DRY RUN + APROBAR_WRITE. Ticket aparte de DECISIONS-012 pero misma ventana de escritura que T2.CHARTER. Decisión D1 (2026-10-07): hard_blocks.json (Git) es la fuente ejecutable única. [ACT 2026-10-12 CLAUDE/MAIN] Falta verificación de un actor distinto del ejecutor (MAIN). Residual cerrado: la contradicción de la línea 21 de hard_blocks.json se corrigió en main (T-12, 7df7579, PR #26).",
-,Fase 3,En progreso,Beta (código),"T3.L — Preparación plug & play L1→Gate Keeper: ingesta E2E dry-run de ambos feeds, decisión sobre f9bb/-apply, adquisición LinkedIn v2.0",MAU,"T3.J, T3.K, T3.M",,,,,"Bloqueadores conocidos: (1) la validación de ingesta fue por lectura de campos, no por corrida; (2) f9bb mantiene bloqueado --apply por decisión del operador; (3) las 9 queries v2.0 de LinkedIn no se han ejecutado (browser Hermes sin Chromium por defecto); (4) listings Workday con jd vacío; (5) ningún tenant Workday distinto de Chanel probado. ACTUALIZACIÓN 2026-10-08 (corrida real, venv, dry-run): (1) ahora es parcial. Workday/Chanel: ingesta OK (10 registros, 9 CLEAN + 1 BLOCKED por exclude role, escritos al Tracker = 0), pero la fase de cálculo procesó 0 filas, así que Score/Gate/Next_Action no se ejercitaron con el feed real. LinkedIn baseline: falla en feed_processor.normalize_envelope (envelope no soportado; ver T3.M y Finding del LOG). Pendiente además: aliases vl1backfill, vl1batch, vl1dedup, vl1feed, vl1recovery y vl1run siguen con --apply (T3.B). [ACT 2026-10-12 CLAUDE/MAIN] Dry-run E2E Workday/Chanel (--ats workday --tenant cc --site ChanelCareers --host http://cc.wd3.myworkdayjobs.com --brand Chanel --dry-run): 11 registros live; la ingesta en dry-run no hizo POST/PATCH a páginas (solo consultas) y el archivado a Notion se omitió [V: archivo del operador, 2026-10-11 20:59 CST]. Antes de T11: 10 CLEAN / 1 BLOCKED. Con --require-city la oferta de Monterrey sigue pasando. Con T11 en main (PR #26, 7ec67bb): 6 BLOCKED / 5 limpio / 0 REVIEW_NEEDED [V: Terminal del operador]. El primer --apply acotado está autorizado por el operador (respuesta 'Ok', 2026-10-12) y NO se ha ejecutado. Condiciones previas: token ntn_ rotado (T3.X), main actualizado (verificado: main = origin/main = 7ec67bb) y re-fetch en Notion de los 5 registros esperados.",
-,Fase 3,En progreso,N/A,"T3.K — Regenerar Acta + Brief Workday + Brief LinkedIn (CLAUDE/MAIN) y verificación independiente (CHATGPT, CS-VERIFY-L1-01)",Por asignar,T2.S,,,,,"Ejecuta CLAUDE/MAIN con los hechos reconciliados (batch 2026-10-06, Kernel, PROMPT CANON); verifica CHATGPT (ejecutor distinto del verificador). Career Sites se declara CANDIDATE / READY_FOR_AUDIT; LinkedIn CANONICAL bajo PromptA-v2.0+linkedin. Cifras de evidencia solo en el Acta, con fecha y commit.",
-,Fase 3,Pendiente,Beta (código),T3.J — Career Sites v2.0: requisitos de promoción CANDIDATE→CANONICAL (decide el operador),MAU,,,,,3f2938be-fc42-8159-abfd-fe34bf0edccd,"Hoy CANDIDATE y sin fila en el registry. Falta suite de tests registrada (campo Tests obligatorio), verificación independiente del evidence report e ingesta E2E en dry-run con el feed real de Chanel. [ACT 2026-10-12 CLAUDE/MAIN] Evidencia nueva: (1) test_ats_http://workday.py 41 passed (-k ats_workday, Terminal 2026-10-11); (2) ats_http://adapter.py sin cambios desde 9109cf9; ats_http://workday.py cambió solo por 318300a (2026-10-09, texto corrupto), por lo que el SHA debe re-anclarse a un commit >= 318300a; (3) dry-run E2E con feed real de Chanel ejecutado (ver T3.L). Faltan: fila en el Registry con los 11 campos, verificación independiente del evidence report (ChatGPT descartado como verificador por el operador; candidato: Arena) y la decisión del operador. Según CHARTER:FAILURES-006, sin fila de registro no existe promoción.",
-,Fase 2,Pendiente,Alpha (normativo),"T2.O-c — Insumos L1 al pase único del Kernel: ARC-L1 ruta Career Sites, ref. cuatro modos (08.2), Hard Blocks 05/14.7",Por asignar,T2.O,,,,,"Se absorbe en el DRY RUN de T2.O (no es una edición suelta; T2.O sigue sin verificación independiente). Insumos: (1) ARC-L1 no menciona la adquisición Python de Career Sites (ats_http://adapter.py, orquestador --ats) ni --file para LinkedIn; (2) referencia a cuatro modos del orquestador en 04.5 apunta a 08.2, que solo define tres niveles de riesgo; el código rotula 3 modos (APPLY, DRY RUN LIVE, DRY RUN) más selectores --file/--ats; (3) acotar redacción de dedupe (intra-fuente vs contra Tracker) y retry (transporte vs evidencia insuficiente); (4) 05 y 14.7 de Hard Blocks alineados con T2.R. Regla T2.D: sin cifras sueltas en normativos.",
-,Fase 2,Resuelto,Alpha (normativo),"T2.T — Cascada Dockers: skills cv-a/qa, Manual §10, Corpus Bloque 06, LINKEDIN-RULES-002",Por asignar,T2.S,,"PR #25 mergeado 2026-10-09 (commit 3113d8e5a9bbc97d51538dde6549c128440678d8): https://github.com/mauriciomeyran/VANTAGE/pull/25. LINKEDIN-RULES-002 §2 verificado 2026-10-09 23:40 CDMX; V | MANUAL §10 verificado mediante Change Log v9.22.40, 2026-10-10 00:11 CDMX. Ambos retiran Dockers como empleador Hard Block, preservando la separación entre empleador directo y canal/marca. Validación de PR: pytest -q Layer_1/tests (321 passed); pytest -q Layer_3/tests/test_layer_3_http://mail.py (10 passed). Pendientes: skills cv-a/qa y Corpus Bloque 06; no marcar Resuelto todavía. 2026-10-10: Layer_3 pasa a 11 passed con efe8c3d. Siguen pendientes los http://skill.md/ de cv-a/qa (aún listan Levi's/Dockers como Hard Block) y el Corpus Bloque 06 (aún lista Aéropostale). No marcar Resuelto. || Cierre 2026-10-11 02:20 CDMX (ARENA/DEFAULT, HO-000100): verificado en remoto HEAD 8c905d5 — skills cv-a/qa sin Dockers (9fb1a23); skill weekly limpia (corrección manual del operador, 8c905d5); Manual §10 y LINKEDIN-RULES-002 sin Dockers; hard_blocks.json v1.1 + test_matcher_hard_blocks_http://parity.py confirman ausencia en JSON y matcher; PR #25 (3113d8e) ancestro de main; Layer_3 con 11 tests en main; Corpus Bloque 06 inexistente en el repo → bloqueante retirado por decisión del operador; Aéropostale conservado (C04). Criterios cumplidos → Resuelto.",HO-000097,3f2938be-fc42-8190-b2d7-f0d93d623bec,"Cada texto con su propio DRY RUN + APROBAR_WRITE. Incluye quitar Aéropostale del Corpus Bloque 06 (ya no es Hard Block desde 2026-08-07). Respeta SP:SKILL-VERSION-PIN al cambiar skills.
+﻿# V | PLAN DE TRABAJO — Reconciliación v10 (propuesta de reestructuración, ARENA/DEFAULT, 2026-10-13)
+Estado de este documento: PROPUESTA. Nada aplicado. Aplicación = CG-09 (DRY RUN → APROBAR_WRITE → verificador ≠ ejecutor).
 
-Actualización 2026-10-09/10: PR #25 mergeado a main retiró Dockers de filtros activos de búsqueda semanal, prompt/sources y filtro post-extracción de Layer 3, y actualizó los contratos Career Sites. LINKEDIN-RULES-002 §2 se actualizó 2026-10-09 23:40 CDMX; V | MANUAL §10 se actualizó 2026-10-10 00:11 CDMX. Sigue parcial: faltan skills cv-a/qa y Corpus Bloque 06. T2.T permanece En progreso hasta cerrar las fuentes pendientes.
+## Convenciones
+- Se conservan las 13 columnas y sus opciones de select (Fase 0–3; Pendiente/En progreso/Resuelto; Alpha/Beta/N/A). Ningún cambio de Estado es automático: donde se propone, va como "→ propuesta:" y requiere APROBAR_WRITE.
+- Campos nuevos de esta propuesta (Proyecto, Grupo CG, Checkpoint CP, Hito, Prioridad, Objetivo, Criterio, Riesgo, Decisión) van al INICIO de Notas como [PRJ:..][CG:..][CP:..][PRIO:..] mientras DEC-11 no apruebe columnas. No son IDs canónicos.
+- Línea META de cada ficha = valores ACTUALES de la fila (Fase · Estado · Track · Orden · Responsable · Handoff_Serial · Ticket · Verificado_Por). Depende_De: "declarado" = valor actual; "real" = propuesta.
+- Prioridad: P0 desbloqueador inmediato (≤1 sesión) · P1 ruta crítica de un checkpoint · P2 necesario para cerrar fase/CP · P3 diferible.
+- Procedencia: [V: ...] verificado por el actor indicado · [D: ...] declarado sin verificación independiente · [V: espejo 16:17] leído por ARENA en el checkout ce21153 / digest, sin ejecutar nada.
+- Responsable "Por asignar" o vacío se mantiene; "propuesta:" nombra candidato sujeto a DEC-01/DEC-10. PENDIENTE_DE_DEFINIR = no hay base documental para fijarlo.
+- IDs, títulos, tickets y seriales: copiados tal cual del PLAN. T2.O-b y las filas PR-0x no tienen fila/ID: ver sección C.
 
-Cierre 2026-10-11 02:20 CDMX (ARENA/DEFAULT, HO-000100): skills cv-a/qa verificados limpios en remoto (commit 9fb1a23); skill weekly corregida manualmente por el operador (commit 8c905d5); Corpus Bloque 06 inexistente en el repo → retirado como bloqueante por decisión del operador (HO-000100 §4.1). Todos los criterios de aceptación cumplidos → Resuelto.",ARENA/DEFAULT (2026-10-11 02:20 CDMX)
-,Fase 3,En progreso,Beta (código),T3.I — Paridad Hard Blocks matcher↔JSON y semántica del gate (substring),Por asignar,T2.S,,"PR #25, mergeado 2026-10-09 23:19 CDMX: https://github.com/mauriciomeyran/VANTAGE/pull/25 · commit 3113d8e5a9bbc97d51538dde6549c128440678d8. Validación reportada en PR: `pytest -q Layer_1/tests` (321 passed); `pytest -q Layer_3/tests/test_layer_3_mail.py` (10 passed). No se repitió la suite durante esta sincronización.",,"3f2938be-fc42-8133-af7f-f27478763f78, 3f2938be-fc42-8109-b3a1-e0f5b6cdef78","Cambiar el matcher cambia el Implementation SHA de PromptA-v2.0+linkedin (CANONICAL, f7fa0513…): exige nueva fila o versión en PROMPT_CANON, promoción solo del operador. La semántica del gate (D4) estaba diferida al crear esta tarea; PR #25 cierra el subalcance de Scope Bajo, pero la fila permanece En progreso por la paridad matcher↔JSON. Actualización 2026-10-09: PR #25 mergeado a main (3113d8e) implementa la regla de Scope Bajo → BLOCKED incluso para Pivote + señal VM en el orquestador y helper legacy. Permanece abierta la paridad matcher↔JSON: levis sigue bloqueado por hard_blocks.json, pero el matcher LinkedIn lo clasifica AMBIGUOUS. PROMPT_CANON no se modificó y cualquier promoción requiere al operador. [ACT 2026-10-12 CLAUDE/MAIN] K2: tras la promoción de LinkedIn (2026-10-05, SHA f7fa0513) el matcher cambió con 7c4a170 (política Dockers) y 5ee2c5b (limpieza), ambos 2026-10-09; SHA vigente del matcher 5ee2c5bb. Cualquier solución que cambie el matcher mueve el SHA: recomendación, re-promover una sola vez tras T3.I. Tests del matcher: 31 passed (27 + 4) [V: Terminal 2026-10-12].",
-,Fase 2,Resuelto,Beta (código),"T2.S — hard_blocks.json v1.1: alias Levi Strauss, sin Dockers (parche entregado)",MAU,,,"Salida de patch_hard_blocks_v1_http://1.sh pegada por el operador (2026-10-07): 11/11 pruebas del gate en PASS. Commit 5b8e245 (auto-sync 2026-10-08 14:57 CDMX) contiene hard_blocks.json. grep del JSON (2026-10-08): version 1.1; terminos levi's, levis, levi strauss, levi strauss & co; 'dockers' solo aparece en la nota (L23). El .bak-20261007 esta ignorado por .gitignore:45 (.bak). CS-VERIFY-L1-01 (CHATGPT, 2026-10-08): confirma v1.1 con alias Levi Strauss y sin Dockers.",,,Parche entregado por CLAUDE/MAIN el 2026-10-07 (script con backup y prueba del gate); lo ejecuta el operador. Pasa a Resuelto con la salida de la prueba pegada y verificación de un actor distinto del ejecutor. Divergencia temporal con el matcher LinkedIn (aún incluye Dockers) hasta T3.I. 2026-10-08: cerrado (ver Evidencia y Verificado_Por). La divergencia con el matcher sigue abierta en T3.I.,"CHATGPT (CS-VERIFY-L1-01, 2026-10-08); ejecutor: MAU con script de CLAUDE/MAIN"
-,Fase 3,En progreso,Beta (código),T3.M — Ticket código: normalizador del envelope de LinkedIn en feed_processor (--file) + decisión de arrays ingestables,Por asignar,,T3.I,"normalize_envelope ingesta solo accepted[] de LinkedIn v2.0 en Layer_1/scripts/feed_http://processor.py (commit e3a3348, verificado por CLAUDE/MP en main, repo público). Tests y fixture en main (test_feed_processor_linkedin_http://v2.py, linkedin_v2_synthetic.json). Pendiente: corrida real sobre feeds/2026-10-04_linkedin.json (T3.L); sin ella no se cierra.",HO-000097,3f3938be-fc42-8188-b3e4-c1d39b52a047,"Corrida real 2026-10-08: layer_1_http://orchestrator.py --file feeds/2026-10-04_linkedin.json falla en normalize_envelope (feed_http://processor.py L153). Solo se aceptan results_by_source, listings, consolidated_results o lista. Baseline v1.0 usa jobs/rejected_jobs/not_evaluated; contrato v2.0 usa accepted[]/reroute[]/rejected[]/not_evaluated[]. Requiere primero decisión del operador sobre qué arrays ingestan. No tocar el matcher (T3.I). Bloquea el cierre de T3.L. [ACT 2026-10-12 CLAUDE/MAIN] Integrado byte-idéntico en main (Acta HO-000101, H2). Los 2 documentos únicos de recovery/arena-1e6ec75 quedan solo en el tag archive/recovery/arena-1e6ec75 (sin pérdida).",
-,Fase 3,Pendiente,Beta (código),T3.P — Workday: location del listing vs ubicación real del puesto,Por asignar,,,,,3f4938be-fc42-8121-86cb-f76d107060a2,"Verificar si location se llena con la etiqueta de la faceta. Afecta la confianza en el filtro CDMX. [ACT 2026-10-12 CLAUDE/MAIN] Dry-run con --require-city: «Embajador de Ventas CHANEL Monterrey» (ubicación 'Zona Centro') sigue pasando el filtro de ciudad; hoy cae por el patrón embajador de T11, no por ubicación. El defecto de ubicación sigue sin resolver [V: Terminal del operador].",
-,Fase 3,En progreso,Beta (código),T3.O — Exclusión de roles store-level en ingesta vs Manual §10,Por asignar,,,,,3f4938be-fc42-8167-972d-c718a2b7f7c4,"Decidir si la exclusión store-level vive en la ingesta o en el Gate. La fase de cálculo no corrió con datos reales, así que no hay evidencia de que el Gate la cubra. [ACT 2026-10-12 CLAUDE/MAIN] Decisión del operador (CHARTER:DECISIONS-017): bloquear roles de tienda en la ingesta L1. Implementado por ARENA (T-11, commit 988c07a, PR #26): 4 patrones en _EXCLUDE_ROLE_PATTERNS (stock_associate, beauty_advisor, embajador|brand ambassador, tailor|sastre) y 6 tests, sin gate nuevo. Hallazgo de flujo (ARENA, S4): el gate posterior de Scope Bajo bloquea en Vacante, pero las fuentes Inbound/Referencia/Networking salen CREATE antes del check de scope; de ahí el bloqueo en ingesta. Verificado: dry-run con T11 en main = 6 BLOCKED / 5 limpio [V: Terminal del operador]. Falta: alinear el texto del Manual §10 si difiere y la verificación independiente del ejecutor.","CLAUDE/MAIN (lectura del diff de T11 y del dry-run, 2026-10-12); operador (Terminal). Alcance: código y dry-run; no incluye Manual §10."
-,Fase 3,En progreso,Beta (código),"T3.N — Dry-run sin escrituras en Notion: archivo local, Notion opt-in",Por asignar,,T3.M,"El commit e3a3348 añade test_archive_dryrun_notion_http://optin.py y la validación opt-in de Notion en feed_http://processor.py (verificado por CLAUDE/MP en main, repo público). Pendiente: dry-run que demuestre cero escrituras a Notion; sin él no se cierra.",HO-000097,3f4938be-fc42-81d0-a2af-d1b6403fb27a,"Decisión del operador 2026-10-08: el dry-run archiva solo en local; Notion pasa a opt-in. Paralelizable con T3.M. Patch pendiente de extraer el código de archivado del orquestador. [ACT 2026-10-12 CLAUDE/MAIN] Integrado byte-idéntico en main (Acta HO-000101, H2). Los 2 documentos únicos de recovery/arena-1e6ec75 quedan solo en el tag archive/recovery/arena-1e6ec75 (sin pérdida).",
-,Fase 3,Pendiente,N/A,T3.Q — Verificación delta CS-VERIFY-L1-02 (ChatGPT) de Acta y briefs rev3,Por asignar,T3.K,,,,,Contrato delta CS-VERIFY-L1-02 sobre los documentos rev3. Reglas del contrato: cualquier FAIL implica REJECTED; NO_SOURCE sin FAIL implica VERIFIED_WITH_FINDINGS; un PASS con evidencia indirecta se marca PASS_INDIRECT.,
-,Fase 1,Resuelto,Alpha (normativo),PLAN-3F-1 — Completar cascada documental Dockers (T2.T),COPILOT,,,PR #25 mergeado 2026-10-09; Change Log V | CHANGELOG v9.22.39 (LINKEDIN-RULES-002) y v9.22.40 (Manual §10). Ver T2.T.,,T2.T · 3f2938be-fc42-81cc-a619-f4a88d9c9c23,"Fase 1/3. Hito coordinador; la ejecución detallada sigue en la fila T2.T (no duplica esa tarea). LINKEDIN-RULES-002 §2 y V | MANUAL §10 ya reflejan Dockers fuera de los empleadores Hard Block. Quedan skills cv-a/qa y Corpus Bloque 06; cerrar solo con sus DRY RUN, pruebas y verificaciones.",
-,Fase 2,Pendiente,Beta (código),PLAN-3F-2 — Resolver discrepancia levis matcher↔JSON (T3.I),Por asignar,,,T3.I · 3f2938be-fc42-81cf-a9fe-fe2ab705b0b6; se mantiene sin cambios la decisión pendiente.,,T3.I · 3f2938be-fc42-81cf-a9fe-fe2ab705b0b6,"Fase 2/3. Hito coordinador; la ejecución detallada sigue en T3.I (no duplica esa tarea). Resolver la discrepancia levis entre hard_blocks.json y linkedin_identity_matcher. Si cambia el matcher, recalcular Implementation SHA y solicitar nueva promoción PROMPT_CANON al operador. No cambiar levis ni PROMPT_CANON sin decisión expresa. [ACT 2026-10-12 CLAUDE/MAIN] K2: tras la promoción de LinkedIn (2026-10-05, SHA f7fa0513) el matcher cambió con 7c4a170 (política Dockers) y 5ee2c5b (limpieza), ambos 2026-10-09; SHA vigente del matcher 5ee2c5bb. Cualquier solución que cambie el matcher mueve el SHA: recomendación, re-promover una sola vez tras T3.I. Tests del matcher: 31 passed (27 + 4) [V: Terminal 2026-10-12].",
-,Fase 3,Resuelto,Alpha (normativo),PLAN-3F-3 — Decidir Dockers en EXCLUDED_SENDERS,Por asignar,,,"Decisión del operador 2026-10-10: sacar Dockers de EXCLUDED_SENDERS. Commit efe8c3d en origin/main (verificado como ancestro de main por CLAUDE/MP en el repo público). Quita 'dockers' de layer_3_http://mail.py L105 y añade test_dockers_sender_not_excluded_but_hard_blocks_remain. Clon público: Layer_1 321 passed, Layer_3 11 passed (según S4-EVIDENCE de HO-000097, no re-ejecutado por MP). Un remitente con 'levi' sigue bloqueado. Re-verificado 2026-10-10 por CLAUDE/MAIN con Terminal del operador en 1718bf3: efe8c3d toca layer_3_http://mail.py (1 línea) y el test (+11); EXCLUDED_SENDERS vigente = loreal, levi, levis, palaciodehierro, palacio de hierro; Layer_3 11 passed. Limitación [I]: el test replica la lógica any(ex in sender ...) en un helper en vez de ejercitar layer_3_http://mail.py L264, y 'levi' es subcadena. Verificación independiente CLAUDE/KM, 2026-10-10 noche (salidas de Terminal del operador, HEAD 1718bf3): git show --stat efe8c3d → autor mauriciomeyran, 2026-10-10 05:55:57 -0600, «fix(layer3): quita dockers de EXCLUDED_SENDERS; añade prueba»; layer_3_http://mail.py 1 línea (1 inserción, 1 borrado) y test_layer_3_http://mail.py +11; pytest Layer_3: 11 passed. El autor Git es la identidad del operador y no distingue ejecución manual de ejecución por un agente [I].",HO-000097,,Decisión ejecutada 2026-10-10 (commit efe8c3d). Mantiene la separación entre Hard Block de empleador y filtro de remitente. Sin cambios en PROMPT_CANON.,"CLAUDE/MAIN (2026-10-10: git show --stat efe8c3d, ancestría en main, pytest Layer_3, salidas de Terminal del operador). · CLAUDE/KM (2026-10-10 noche; verificación independiente: git show --stat efe8c3d y pytest Layer_3 sobre salidas de Terminal del operador, HEAD 1718bf3). El ejecutor de efe8c3d sigue sin confirmarse [I]; con KM ya hay un verificador distinto de CLAUDE/MAIN."
-,Fase 3,Pendiente,Beta (código),"T3.T — Invocación canónica de pytest: tres http://conftest.py colisionan, sin pytest.ini ni CI",Por asignar,T3.R,,"Terminal del operador 2026-10-10 18:50-18:58 CDMX, HEAD 1718bf3.",,,"Desde la raíz: 4 errores de colección (CENSUS_SRC y L4_SCRIPTS se importan del conftest equivocado, Layer_1/scripts/http://conftest.py; feed_processor en Archive/Legacy_Scripts/test_content_http://fingerprint.py). Por directorio: Layer_1 321 passed; Layer_3 11 passed; tests/ necesita PYTHONPATH=Layer_1/scripts para test_ats_http://workday.py (41 passed); Layer_4 sin tests. Conftest en tests/, Layer_1/tests/ y Layer_1/scripts/. No hay pytest.ini, pyproject.toml ni .github/workflows, y el auto-sync mueve main sin verificación. La cifra «321 passed» del handoff cubre solo Layer_1 [I]. Pendiente: definir el comando canónico y un gate mínimo (decisión del operador). [ACT 2026-10-12 CLAUDE/MAIN] ARENA T5 (PR #26): comando de una línea para correr la suite desde cero, como comentario en Layer_1/requirements.txt (python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && .venv/bin/python -m pytest tests/ -q, desde Layer_1/). Layer_1: 351 passed en la rama de Arena [V: Terminal 2026-10-12]. La colisión de conftest desde la raíz sigue abierta.",
-,Fase 3,Resuelto,Beta (código),T3.R — Higiene Git P0: dejar de rastrear sqlite-memory.db/-wal/-shm y retirar matriz_reconciliacion_pre_carga.csv (D2/D3),MAU,,,"8a8fe6c (commit manual de mauriciomeyran, 2026-10-10 05:55 -0600; ancestro de main 1718bf3 [V]): .gitignore +3, CSV −56 líneas, sqlite-memory.db/-shm/-wal eliminados del árbol. git status limpio; sqlite-memory.db* ya en .gitignore:88. Copia recuperada de 8a8fe6c^ en ~/VANTAGE_sqlite_recovery_20261010_185054 (SHA256 db da63a52b…, shm 83a85302…, wal a40c4d43…); con el trío completo entities/observations/relations = 0 filas.",HO-000098,,"D2 pedía preservar los archivos locales; el commit los eliminó también del disco [I] (no existen en el árbol de trabajo). Sin pérdida de contenido operativo (0 filas). mem0-mcp (PID 49885, cwd=/) no tiene .db abiertos y ni claude_desktop_config.json, ~/.claude.json ni ~/.cursor/mcp.json mencionan mcp-memory-sqlite (búsqueda no exhaustiva). El snapshot sigue en ae25caf (historial público): esquema sin filas; fragmentos de WAL no examinados. Sin reescritura de historia (D1/D2). Actualización 2026-10-11 (CLAUDE/KM, Terminal del operador, HEAD 927de90): Dashboard/dashboard.db y Dashboard/dashboard_instances.db ya no están rastreados; state/vantage_handoff_counter.sqlite3 sigue rastreado por decisión (ver T3.S).","CLAUDE/MAIN (2026-10-10, salidas de Terminal del operador)"
-,Fase 3,Pendiente,Beta (código),T3.U — Deuda en tests/ (Layer 4): 15 fallos preexistentes y un test sensible a la ruta,Por asignar,T3.T,,Comparación en /tmp con git archive de bf7b864 y 1718bf3: mismos 15 fallos en ambos (comm vacío en los dos sentidos).,,,"tests/ sin test_ats_http://workday.py: 101 passed, 16 failed en el repo real; 15 en /tmp. Causas vistas (top 10 de la salida): 13 AttributeError por get_notebooklm_client ausente en Layer_4/scripts/vdoc_http://nblm.py; 1 AssertionError de is_safe_source («Lectura prohibida»); el resto no se recogió. El fallo extra, test_vdoc_nblm_usa_documentacion_active (test_layer4_http://scripts.py L365-370), exige que «/Users/mauriciomeyran» no esté en PROJECT_ROOT: falla en cualquier checkout bajo el home del operador, no es regresión. Sin ticket abierto en el Bug Tracker; pendiente de abrir. [ACT 2026-10-12 CLAUDE/MAIN] ARENA reporta 101 passed + 16 failed en tests/ raíz (baseline 2026-10-12), mismos fallos preexistentes (get_notebooklm_client); PR #26 no los cambia.",
-,Fase 3,Pendiente,Beta (código),"T3.S — Línea base de repo: inventario y decisión sobre ramas, worktrees y binarios rastreados",CLAUDE/KM,T3.R,,"Terminal del operador 2026-10-10 18:58 y 2026-10-11 ~01:20 CDMX, origin/main = 8c905d5. Revisión de COPILOT (veredicto por rama, solo lectura) contra 8c905d5. Respaldo de SHAs: ~/VANTAGE_poda_shas_.txt. Actualización CLAUDE/KM 2026-10-11 21:10 CDMX (Terminal del operador): HEAD = origin/main = 927de90 (auto-sync 21:09, 13 archivos); git status --short vacío; git ls-files solo lista state/vantage_handoff_counter.sqlite3 entre los .db/.sqlite. Poda de 9 ramas remotas con tag archive/<rama>: git branch -a = solo main y origin/main (declarado por el operador, resumen de la salida; KM no vio la salida cruda). Cierre 2026-10-12 (Terminal del operador): git worktree list = solo «/Users/mauriciomeyran/Documents/03 Projects/VANTAGE 7033b27 [main]»; no existen otros worktrees. REAPERTURA 2026-10-12 18:14 CST (Terminal del operador; propuesta de KM, pendiente de APROBAR_WRITE): la evidencia «git branch -a = solo main» y «git worktree list = solo el árbol principal» vale solo hasta el cierre previo de ese día. Remoto leído por HTTPS (MAIN): main (7ec67bb), devin/vantage-sync-r4 (5946bf6), devin/vantage-sync-r4-clean (ffb840b; PR #27 abierto) y arena/d352bc18-vantage (fd85468); 21 tags archive/ + v2.4.0. Ramas locales: main, devin/vantage-sync-r4 (c0443fd, un commit sin subir), devin/vantage-sync-r4-clean, mauriciomeyran-vantage-bootstrap, mauriciomeyran-vantage-sync-fix. Worktrees: principal; copilot-prewarm-fantastic-doodle (5575a46 detached, limpio); mauriciomeyran-crispy-lamp (rama mauriciomeyran-vantage-sync-fix @ 7ec67bb, 3 archivos modificados sin commit: http://Manual.md, http://vantage-sync.py, test_vantage_http://sync.py, +200/-2); mauriciomeyran-special-journey (5575a46, limpio).",HO-000098,,"PODA EJECUTADA POR EL OPERADOR 2026-10-11, autorizada por él tras revisión de COPILOT. Lote A (ancestros de main, cherry vacío): borradas en origin mauriciomeyran-integracion-charter (b0660ae), mauriciomeyran-tracker-audit-2026-09-28 (2ed43ce) y mauriciomeyran-hard-block-gate-alignment (c76f10c); retirados su worktree mauriciomeyran-improved-giggle y la rama local. Lote B (con tag archive/ verificado igual al SHA de la rama): borradas pr/scout-dev-layer-1 (9e171d2, commit vacío) y arena/01a0f3b4-vantage (5018696; fixes absorbidos en 61d289b según COPILOT). Los tags archive/ de ambas siguen en origin. hard-block-gate-alignment no tiene tag, pero c76f10c es ancestro de main. Sin tocar: #4 arena/01a00e43 y #6 arena/01a0c6c6 (COPILOT: RECHAZADA, decisión del operador pendiente), #8-#12, recovery/, arena/01a01a41 (excluida por instrucción). Todas las no podadas tienen tag archive/* en origin, igual a la punta reportada por COPILOT. ACTUALIZACIÓN POSTERIOR 2026-10-11/12 (lo declarado «sin tocar» arriba quedó superado): el operador archivó con tag archive/<rama> y borró en remoto 9 ramas — recovery/arena-1e6ec75, recovery/scope-bajo-gate, arena/01a01a41, arena/01a00e43, arena/019ffb49, arena/01a0c6c6, arena/01a0f420, arena/01a01310 y devin/contrato-consolidado-2026-09-12. Evidencia declarada por el operador: git branch -a = solo main y origin/main. #4 y #6 RESUELTOS. El contrato de poda para Copilot se retira. RESUELTO (CLAUDE/KM, Terminal del operador): binarios rastreados (2026-10-11 21:10 CDMX) — dashboard.db y dashboard_instances.db dejaron de rastrearse (dashboard_instances.db sigue en disco, 225280 B; respaldo con sha256 coincidente en ~/VANTAGE_dashboard_backup_20261010_200820); state/vantage_handoff_counter.sqlite3 sigue rastreado por decisión (commit d7004e9 «contador al 98»; vale 101 en HEAD y en disco). Worktrees (2026-10-12) — git worktree list = solo el árbol principal en 7033b27 [main]; congenial-robot, shiny-chainsaw, copilot-prewarm-automatic-engine y los worktrees de recover-arena-commit, silver-goggles y solid-broccoli ya no figuran (inventario parcial de KM del 2026-10-10 19:10 CDMX, HEAD 1718bf3: copilot-prewarm-automatic-engine 318300a, recover-arena-commit 3113d8e, silver-goggles efe8c3d y solid-broccoli a67d5fa estaban limpios y sin commits propios frente a main). Indicador del prompt [I]: lectura a mitad de sync (el 2026-10-11 21:10 marcaba +13 !10 ?3 con git status --short vacío y el auto-sync 927de90, de 13 archivos, un minuto antes); no se investigó más. Sin pendientes. [ACT 2026-10-12 CLAUDE/MAIN] Reabierto: las ramas de agentes y los worktrees reaparecen en cada sesión (git_http://sync.py empuja la rama activa como HEAD:refs/heads/<rama>, líneas ~190-220). Consolidación del 2026-10-11: 9 ramas archivadas con tag y borradas (#4 y #6 incluidas; recovery/scope-bajo-gate archivada y sin integrar). Riesgo de pérdida de trabajo: crispy-lamp (+200/-2 solo en disco) y c0443fd (commit local sin subir) no están cubiertos por tags archive/. Un hábito de poda tras cada sesión, si DECISIONS-016 lo requiere, va por ticket CHARTER a MAIN. COPILOT quedó congelado en crispy-lamp y sin crear worktrees ni ramas remotas nuevos.","CLAUDE/MAIN (2026-10-11, sobre salidas pegadas por el operador) · CLAUDE/KM (2026-10-12; alcance: binarios rastreados y git worktree list; la poda de ramas es declarada por el operador, KM no vio la salida cruda de git branch -a)."
-,Fase 3,Pendiente,Beta (código),"T3.Y — SSH: el agente no tiene identidades; origin por SSH, gh por HTTPS",MAU,,,"[V: Terminal del operador, 2026-10-12] ssh -T mailto:git@github.com: Permission denied (publickey); ssh-add -l: «The agent has no identities»; ~/.ssh sin llaves privadas visibles (solo agent y authorized_keys; los .pub no se listaron); origin = mailto:git@github.com:mauriciomeyran/VANTAGE.git; gh auth status OK (protocolo https).",,,"Opciones: cargar la llave en el agente, o cambiar origin a HTTPS con gh auth setup-git. Mientras falle, git fetch --prune falla en silencio (las ramas origin/* locales quedan obsoletas) y vgit no puede empujar. Decisión del operador; MAIN no ha cambiado ninguna configuración.",
-,Fase 3,Pendiente,Beta (código),T3.Z — Limpieza de la raíz de main y de Archive/ (decisión del operador por grupo),MAU,,,"[V: MAIN, clon del repo público, 2026-10-12] raíz con 14 archivos sueltos (http://Devin.md, http://hermes.md, «Sep 28, http://26.md», NOTES_schema_http://order.md, VANTAGE_digest_part_1.txt y part_2, add_portfolio_http://links.py, mail_analysis_http://v2.py, mail_metadata_http://analysis.py, simulacion_archivo_http://notas.py, simulacion_resultados.json, reingest_failed_2.json, paquete_arena_extractos.txt, charter_integration.patch); Archive/ de unos 386 MB rastreados (incluye los .indd de los CVs, 2 mp4 y un mp3); 4 archivos de estado de runtime rastreados (entity_index_v2.json, last_sync_result.json, last_class_b_snapshot.json, last_successful_run.json); 10 candidatos de limpieza que ARENA no borró por tener referencias (6 .patch en Layer_1/scripts, charter_integration.patch, 3 en handoffs/arena).",,,"Mismo tipo de vestigio que las ramas, pero en archivos. Con el repo público (D1), Archive/ deja descargables los CVs. El operador decide por grupo antes de abrir un contrato para ARENA. Los 4 archivos de estado explican los cambios locales y los commits auto-sync. El contador SQLite sigue rastreado por decisión.",
-,Fase 3,Pendiente,Beta (código),"T3.W — Frente vantage-sync (Ollama: warmup, fallback por tramos, timeouts): elegir una sola implementación",MAU,,,"[V: git, MAIN, 2026-10-12] PR #27 abierto (Devin, FASE A T1-T4: 61031c2 y ffb840b en devin/vantage-sync-r4-clean; devin/vantage-sync-r4 añade 5946bf6 con auto-sync de 4 archivos de estado y feeds/2026-10-12_http://dryrun.md). arena/d352bc18-vantage contiene ffb840b y 3 commits más (fd85468; +866/-43 en 3 archivos). WIP de COPILOT sin commit en el worktree mauriciomeyran-crispy-lamp (3 archivos, +200/-2, incluye http://Manual.md).",,,"Tres implementaciones paralelas del mismo arreglo sobre http://vantage-sync.py y test_vantage_http://sync.py. COPILOT congelado (2026-10-12). Propuesta provisional de MAIN, sin revisar el código: tomar la rama de Arena como base y cerrar el PR #27 como superado, tras una revisión de código corta. La entrada de glosario de http://vantage-sync.py redactada por COPILOT queda como insumo de K1 hasta decidir el código final. La rama devin/vantage-sync-r4 (remota) es redundante respecto a -clean: archivar con tag (incluir el commit local c0443fd) y borrar.",
-,Fase 3,Pendiente,Beta (código),T3.X — Rotar el token de Notion expuesto en Dashboard/archive/legacy_express_node/server.js (línea 13) y retirar el archivo de main,MAU,,,"[V: MAIN, git grep sobre clon del repo público, 2026-10-12] cadena con formato ntn_ en esa línea; el valor no se registra aquí. No se probó si sigue vigente. Terminal del operador 2026-10-12 18:14: la línea sigue presente.",,,"Prioridad ALTA. Rotar primero (regenerar el secreto de la integración en Notion y actualizar el .env local); el historial conserva la cadena y no se propone reescribirlo (22 tags, repo público D1). Después, retirar server.js de main (tarea corta para ARENA). Bloquea el primer --apply (T3.L).",
-1,Fase 3,Pendiente,Beta (código),HO-000104.P1 — Resolver destino de commits exclusivos de ramas locales eliminadas,MAU,,,"git log --oneline --left-right origin/main...main mostró auto-sync commits 7552499, 544b87f, bb49ca7; devin/vantage-sync-r4 tenía c0443fd y 8163ae3 únicos frente a origin/main. Ramas locales main y devin/vantage-sync-r4 ya eliminadas; revisar reflog/objetos o refs remotas antes de decidir recuperación. No asumir que los commits deben integrarse.",HO-000104,HO-000104,"Pendiente de decisión explícita: rescatar selectivamente o descartar. No hacer reset, merge ni borrado remoto sin evidencia.",
-2,Fase 3,Pendiente,Beta (código),HO-000104.P2 — Verificar CI del merge PR #27,MAU,,,Checkout canónico origin/main = 23e1e1e. En esta sesión no se confirmó el estado de CI post-merge.,HO-000104,HO-000104,Consultar checks/status del commit 23e1e1e y registrar evidencia verificable.,
-3,Fase 3,Pendiente,Beta (código),HO-000104.P3 — Repetir suite desde origin/main,MAU,,,Ejecución previa Layer_1/tests/test_vantage_sync.py: 65 passed. No se volvió a ejecutar tras la limpieza de ramas.,HO-000104,HO-000104,Repetir desde checkout canónico si se requiere cierre de validación con evidencia posterior al merge.,
+## A · FILAS ABIERTAS (44) — ordenadas por grupo de consolidación y secuencia de ejecución
+
+### CG-06a · Seguridad + línea base mínima (1 sesión de Terminal del operador) — prerrequisito de CP-1a
+
+**T3.X — Rotar el token de Notion expuesto en Dashboard/archive/legacy_express_node/server.js (línea 13) y retirar el archivo**
+META: Fase 3 · Pendiente · Beta · Orden — · R: MAU · HO — · Ticket — · V —
+PRJ: REPO + WORKDAY · CG: CG-06a (rotar) / CG-06b (retirar server.js) · CP: CP-1a (condición), CP-5 · Hito: 006, 007(c) · PRIO: P0
+- Objetivo: ningún secreto vigente en main; levantar la condición que el operador puso al primer --apply.
+- Acción: (1) regenerar el secreto de la integración en Notion y actualizar .env local; (2) revocar el anterior; (3) en CG-06b retirar server.js de main (sin reescribir historial: 22 tags, repo público D1). Verificación de vigencia del token viejo: 1 llamada fallida tras revocar.
+- Depende: declarado — · real: ninguna.
+- Bloqueos: ninguno (es el bloqueo de otros).
+- Criterio: integración con secreto nuevo funcional (vgit/vcensus corren); secreto viejo devuelve 401; `git grep -n ntn_` en main = 0 tras CG-06b; fila LOG #97 → Resuelto.
+- Evidencia: [V: MAIN git grep 2026-10-12] cadena ntn_ en esa línea; [V: espejo 16:17] la línea 13 sigue conteniendo la cadena (valor no registrado).
+- Riesgo: token vivo + repo público; Raycast/scripts con el secreto viejo fallan tras rotar (actualizar .env antes de correr nada).
+- Decisión: ninguna; ejecución directa del operador.
+
+**HO-000104.P3 — Repetir suite desde origin/main**
+META: Fase 3 · Pendiente · Beta · Orden 3 · R: MAU · HO HO-000104 · Ticket HO-000104 · V —
+PRJ: REPO + WORKDAY · CG: CG-06a · CP: CP-1a, CP-5 · Hito: 006 · PRIO: P0
+- Objetivo: evidencia propia de que main (23e1e1e o posterior, hoy ce21153 [V: espejo]) pasa la suite L1 tras el merge de PR #27.
+- Acción: en Terminal, sobre main recreado (ver T3.S): invocación documentada en Layer_1/requirements.txt línea 1 (venv desde Layer_1/, `python -m pytest tests/ -q`) [V: espejo]; registrar N passed + commit en LOG.
+- Depende: declarado — · real: T3.S (main local recreado).
+- Bloqueos: ninguno.
+- Criterio: fila LOG con "pytest Layer_1: N passed / M failed @ <sha>" y comparación contra 321 (#95) y 351 (#104); 0 failed o fallos clasificados.
+- Evidencia: ninguna aún. test_vantage_sync.py en main tiene 61 funciones de test [V: espejo].
+- Riesgo: colisión de conftest si se invoca desde la raíz (T3.T) → invocar desde Layer_1/.
+- Decisión: ninguna.
+
+**HO-000104.P2 — Verificar CI del merge PR #27**
+META: Fase 3 · Pendiente · Beta · Orden 2 · R: MAU · HO HO-000104 · Ticket HO-000104 · V —
+PRJ: REPO · CG: CG-06a · CP: CP-5 · Hito: 006 · PRIO: P0 (reformulación administrativa)
+- Objetivo: cerrar una tarea no verificable tal como está escrita.
+- Acción: → propuesta: Estado Resuelto "por reformulación" con Notas "no existe .github/workflows en main [V: espejo 16:17]; la verificación es la suite local = HO-000104.P3". Si el operador quiere CI, abrir ticket aparte (DEC-15), no reutilizar esta fila.
+- Depende: declarado — · real: confirmación del operador.
+- Bloqueos: ninguno.
+- Criterio: Notas actualizadas; P3 cerrada.
+- Evidencia: ausencia de .github/ [V: espejo 16:17]; digest sin entradas .github/workflows [V: digest].
+- Riesgo: mantener una tarea imposible como "pendiente" perpetuo.
+- Decisión: DEC-05 (incluye esta reformulación), DEC-15.
+
+**T3.S — Línea base de repo: inventario y decisión sobre ramas, worktrees y binarios rastreados**
+META: Fase 3 · Pendiente (reabierta 2026-10-12) · Beta · Orden — · R: CLAUDE/KM · HO HO-000098 · Ticket — · V: CLAUDE/MAIN (2026-10-12, parcial)
+PRJ: REPO · CG: CG-06a (main local) + CG-06b (inventario final) · CP: CP-5 · Hito: 006 · PRIO: P0 / P1
+- Objetivo: worktree canónico en `main` rastreando origin/main; inventario único y cerrado de ramas/worktrees/deltas.
+- Acción: (CG-06a) `git switch -c main origin/main` o equivalente desde el detached HEAD declarado [D: CL.47]; confirmar `git status -sb` = `## main...origin/main` sin ahead/behind. (CG-06b) inventario final: remotas (al 2026-10-12: main, devin/vantage-sync-r4 5946bf6, devin/vantage-sync-r4-clean ffb840b, arena/d352bc18-vantage fd85468; 21 tags archive/ + v2.4.0 [V: MAIN]); locales (Copilot mauriciomeyran/copilot-vantage-sync-warmup-validation 5a37139 [D: CL.47]; mauriciomeyran-vantage-bootstrap; mauriciomeyran-vantage-sync-fix @ crispy-lamp con +200/-2 sin commit [V: MAIN 2026-10-12]); decisión por rama (DEC-04). Causa raíz documentada: git_sync.py empuja `HEAD:refs/heads/<rama activa>` (L219-220 [V: espejo]) → cualquier agente en rama propia la publica; propuesta de hábito de poda va por ticket CHARTER (DECISIONS-016).
+- Depende: declarado T3.R (✓) · real: ninguna para la parte CG-06a; DEC-04 para CG-06b.
+- Bloqueos: B-R5.
+- Criterio: `git branch -a` = main + origin/main (+ tags); `git worktree list` = 1; cada delta con tag archive/ o descarte registrado; LOG #106 → Resuelto.
+- Evidencia: Notas de la fila (poda 2026-10-11, 9 ramas con tag; worktrees 2026-10-12); [D: CL.47] detached HEAD, main local 7552499 y devin/vantage-sync-r4 c0443fd borradas sin integrar.
+- Riesgo: vgit desde detached HEAD publica una ref inesperada o falla; pérdida de crispy-lamp/c0443fd/7552499 (sin tag).
+- Decisión: DEC-04.
+
+**T3.Y — SSH: el agente no tiene identidades; origin por SSH, gh por HTTPS**
+META: Fase 3 · Pendiente · Beta · Orden — · R: MAU · HO — · Ticket — · V —
+PRJ: REPO · CG: CG-06a · CP: CP-5 · PRIO: P0 (cierre administrativo)
+- Objetivo: una sola vía de acceso Git documentada.
+- Acción: → propuesta: Estado Resuelto "por decisión (origin en HTTPS vía gh auth)" si el operador confirma lo declarado en CHANGELOG v9.22.47; Notas: "SSH sin identidades aceptado; no se cargan llaves". Si el operador prefiere SSH, la fila sigue Pendiente con acción "cargar identidad".
+- Depende: — · real: confirmación del operador (1 línea de Terminal: `git remote -v`).
+- Bloqueos: ninguno.
+- Criterio: `git remote -v` = https y `git fetch` OK registrado en LOG #92 → Resuelto.
+- Evidencia: [D: CHATGPT, CL.47] fetch OK por HTTPS, `rev-list --left-right --count HEAD...origin/main` = 0 0.
+- Riesgo: nulo.
+- Decisión: DEC-05.
+
+**T3.B — Seguridad operativa: pausar Raycast hyperlinks-apply y versions-sync; copiar 27 IDs a EXCLUDE_IDS**
+META: Fase 3 · Pendiente · Beta · Orden — · R: MAU · HO HO-000097 · Ticket e4d5, 94b7 · V —
+PRJ: GOV + DOCS · CG: CG-06a · CP: CP-4a (protege los pases de escritura) · PRIO: P0
+- Objetivo: que ningún automatismo reescriba hipervínculos/versiones mientras corren CG-01/02/03.
+- Acción: pausar Raycast/vantage-hyperlinks-apply.sh (existe [V: espejo]) y el script de versions-sync que la fila nombra (no identificado en Raycast/ por lectura: PENDIENTE_DE_DEFINIR cuál es); copiar la lista de 27 IDs a `EXCLUDE_IDS` de apply_hyperlinks_notion.py (hoy `set()` vacío, L100 [V: espejo]) en un commit.
+- Depende: — · real: fuente de la lista de 27 IDs (¿ticket e4d5?) — PENDIENTE_DE_DEFINIR.
+- Bloqueos: ninguno.
+- Criterio: commit con EXCLUDE_IDS = 27 IDs; declaración del operador de scripts pausados; tickets e4d5/94b7 cerrados.
+- Evidencia: ninguna de ejecución.
+- Riesgo: hyperlinks-apply sobre Kernel/Charter recién editados → refs rotas.
+- Decisión: ninguna (ejecución); origen de la lista a confirmar (P-03).
+
+### CG-04 · Confirmación CP-3 (Gate) + primer --apply controlado (CP-1a) — 1 sesión de Terminal tras CG-06a
+
+**T3.I — Paridad Hard Blocks matcher↔JSON y semántica del gate (substring)**
+META: Fase 3 · En progreso · Beta · Orden — · R: Por asignar · HO — · Ticket 3f2938be-fc42-8133-af7f-f27478… · V —
+PRJ: GATE · CG: CG-04 (verificación) · CP: CP-3 · Hito: 007(b), DECISIONS-013 · PRIO: P1
+- Objetivo: el gate bloquea exactamente lo que hard_blocks.json v1.1 dice (L'Oréal, Levi's/Levi Strauss y alias, El Palacio de Hierro) y nada más.
+- Acción: lectura dirigida hard_block_gate.py ↔ hard_blocks.json + ejecución de los tests de gate en main; añadir caso de prueba si falta alias "levi strauss"/"levis"; documentar semántica substring en Kernel 05/14.7 (va en CG-01). Absorbe PLAN-3F-2.
+- Depende: declarado T2.S (✓) · real: ninguna.
+- Bloqueos: ninguno.
+- Criterio: tests de alias pasan en main; Dockers/Aéropostale = CLEAN en test; ticket 3f2938be…8133 cerrado; PLAN-3F-2 cerrada como duplicada.
+- Evidencia: hard_blocks.json v1.1 con nota de alias y Dockers fuera (L23) [V: espejo]; dry-run T11 6 BLOCKED/5 limpio (#100).
+- Riesgo: falso negativo en --apply si un alias no está cubierto.
+- Decisión: responsable (DEC-01/DEC-10; propuesta: verificación por lectura + tests = quien ejecute CG-04).
+
+**PLAN-3F-2 — Resolver discrepancia levis matcher↔JSON (T3.I)**
+META: Fase 2 · Pendiente · Beta · Orden — · R: Por asignar · HO — · Ticket T3.I · 3f2938be-fc42-81cf-a9fe… · V —
+PRJ: GATE · CG: CG-04 · CP: CP-3 · PRIO: P2 (administrativo)
+- Objetivo: eliminar el duplicado sin perder la referencia al ticket 3f2938be…81cf.
+- Acción: → propuesta: Estado Resuelto con Notas "consolidada en T3.I (misma discrepancia, mismo ticket); sin acción propia". Alternativa si el operador prefiere no cerrar duplicados: dejar Pendiente con "ver T3.I".
+- Depende: real: T3.I.
+- Criterio: T3.I verificada; ticket 3f2938be…81cf cerrado desde T3.I.
+- Riesgo: nulo. Decisión: confirmación en el DRY RUN de CG-09.
+
+**T3.O — Exclusión de roles store-level en ingesta vs Manual §10**
+META: Fase 3 · En progreso · Beta · Orden — · R: Por asignar · HO — · Ticket 3f4938be-fc42-8167-972d-c718a2… · V: CLAUDE/MAIN (lectura)
+PRJ: GATE + DOCS · CG: CG-04 (código) + CG-02a (Manual §10) + CG-01 (Kernel 05) · CP: CP-3 · Hito: 007(b), DECISIONS-017 · PRIO: P1 (código) / P2 (doc)
+- Objetivo: la exclusión de roles de tienda que corre en L1 es la misma que el Manual describe.
+- Acción: confirmar en main `_EXCLUDE_ROLE_PATTERNS` de profile_fit.py (incluye T11: stock associate, beauty advisor, embajador/brand ambassador, tailor/sastre [V: espejo L46-52]); alinear Manual §10 (lista = patrones o referencia al archivo) en CG-02a; mención normativa en Kernel 05 en CG-01.
+- Depende: — · real: ninguna (código ya en main).
+- Criterio: dry-run reconfirmado en CG-04 reproduce 6 BLOCKED/5 limpio; Manual §10 sin divergencia; ticket cerrado.
+- Evidencia: #100; [V: espejo] patrones presentes.
+- Riesgo: exclusión demasiado amplia (p.ej. "planner" sin "visual") oculta vacantes válidas → revisión manual de los 5 registros del --apply.
+- Decisión: ninguna.
+
+**T3.L — Preparación plug & play L1→Gate Keeper: ingesta E2E dry-run de ambos feeds, decisión sobre f9bb/-apply, adquisición…**
+META: Fase 3 · En progreso · Beta · Orden — · R: MAU · HO — · Ticket — · V —
+PRJ: WORKDAY + GATE · CG: CG-04 · CP: CP-1a · Hito: 007(c) · PRIO: P1 (P0 al terminar CG-06a)
+- Objetivo: primer --apply acotado de Workday con re-fetch que confirme los registros creados (definición de hecho MILESTONES-007c).
+- Acción (una sesión): (1) verificar CG-06a cerrado (token rotado, main local, suite verde); (2) dry-run Workday/Chanel en main y comparar con 6 BLOCKED/5 limpio; (3) decisión f9bb registrada (levantar bloqueo de --apply); (4) --apply acotado a los 5 limpios; (5) re-fetch de los 5 registros en el Tracker: campos Class B escritos por Python, Class A intactos; (6) fila LOG + insumo para Acta (CG-08) + entrada CHANGELOG.
+- Depende: declarado T3.J, T3.K, T3.M · real (propuesta, DEC-03): T3.X, HO-000104.P3, T3.S (main local), T3.I, T3.O. T3.J/T3.K/T3.M NO condicionan el primer --apply (promoción y Acta van después; LinkedIn es otro feed).
+- Bloqueos: B-R1 (token); f9bb por decisión del operador (LOG #102).
+- Criterio: 5 registros visibles por re-fetch con Gate_Decision/VM_Scope escritos por Python; 0 escrituras fuera de Class B; 0 escrituras en páginas no previstas; suite verde antes y después; LOG #102 → Resuelto.
+- Evidencia: dry-run 2026-10-08 (10 reg, 9 CLEAN+1 BLOCKED), 2026-10-11 (11 reg, 10/1; Charter 007a ✅), 2026-10-12 T11 (6/5, #100); --apply autorizado 2026-10-12 (#102).
+- Riesgo: tenant único (Chanel), jd vacío en listings, defecto de location (T3.P) → aceptar como limitaciones documentadas en el Acta; mitigación: revisión manual de los 5 antes de --apply.
+- Decisión: DEC-03 (orden CP-3→CP-1a y dependencias reales).
+
+### CG-03 · Ventana CHARTER única (dictamen CLAUDE/MAIN → aplicación operador → verificación de actor distinto)
+
+**T2.CHARTER — Evaluar y aplicar re-key semántico de citas KERNEL en PROJECT CHARTER**
+META: Fase 2 · Pendiente · Alpha · Orden — · R: Por asignar · HO HO-000079 · Ticket 3ee938be-fc42-8126-a159-ed4afd6f1fd4 · V —
+PRJ: DOCS + GOV · CG: CG-03 · CP: CP-4a · Hito: 005 · PRIO: P1
+- Objetivo: cerrar el ticket de re-key del Charter con texto final de DECISIONS-012 y verificación independiente.
+- Acción: en el dictamen único de CG-03: (a) confirmar o corregir el descarte v10.1/v10.2 en DECISIONS-012 (#107); (b) dejar explícito que GATE-DECISION-012 literal no se reemplaza; (c) listar citas restantes; operador aplica en un solo APROBAR_WRITE; verificador ≠ MAIN re-fetch.
+- Depende: declarado T2.1 · real: ninguna (el re-key v10.4 ya está en el Kernel vivo [D: MISTRAL]); DEC-06.
+- Bloqueos: B-R3.
+- Criterio: ticket 3ee938be… cerrado; LOG #55 → Resuelto; Verificado_Por ≠ CLAUDE/MAIN.
+- Evidencia: CHANGELOG v9.22.30; aplicado parcialmente 2026-10-12 (re-fetch MAIN) [PLAN]; LOG #105/#108.
+- Riesgo: Charter con dos redacciones de la misma decisión si se aplica en dos tandas.
+- Decisión: el Estado "Pendiente" con aplicación parcial es contradictorio → P-02 (¿En progreso o Pendiente hasta verificación?).
+
+**T2.Q — Ticket CHARTER nuevo: refrescar §6/§7 (prefijo CHARTER, Census, vigilancia de versión) y estado de auto_archive.py**
+META: Fase 2 · En progreso · Alpha · Orden — · R: Por asignar · HO — · Ticket — · V —
+PRJ: DOCS + GOV · CG: CG-03 · CP: CP-4a · Hito: 005 · PRIO: P1
+- Objetivo: §6/§7 del Charter describen el estado real (prefijo CHARTER en registry y Census; auto_archive.py deprecado; vigilancia de versión).
+- Acción: residual al dictamen CG-03: confirmar §7 y la anotación fechada de §5.1; verificación por actor ≠ MAIN.
+- Depende: declarado T2.CHARTER · real: misma ventana.
+- Criterio: re-fetch por verificador distinto; `CHARTER` en resolver_registry_v2.json L54 [V: espejo] citado correctamente; Estado → Resuelto.
+- Evidencia: [ACT 2026-10-12 MAIN] §6 actualizado y verificado por MAIN [PLAN].
+- Riesgo: bajo. Decisión: DEC-10 (quién verifica).
+
+**T2.R — Charter NON-NEGOTIABLES-010: reapuntar a hard_blocks.json (ticket CHARTER)**
+META: Fase 2 · En progreso · Alpha · Orden — · R: Por asignar · HO — · Ticket 3f2938be-fc42-81fb-9b4e-ca756a… · V —
+PRJ: DOCS + GATE · CG: CG-03 (solo verificación) · CP: CP-4a · Hito: 005, DECISIONS-013 · PRIO: P1 (barato)
+- Objetivo: cierre formal con verificador distinto del ejecutor.
+- Acción: verificador ≠ MAIN re-fetch NON-NEGOTIABLES-010 (debe citar Layer_1/config/hard_blocks.json); registrar en Verificado_Por; cerrar ticket.
+- Depende: declarado T2.CHARTER · real: ninguna.
+- Criterio: Verificado_Por lleno; Estado → Resuelto; ticket cerrado.
+- Evidencia: Charter actualizado 2026-10-12 con APROBAR_WRITE, re-fetch por MAIN [PLAN]; línea de hard_blocks.json con nota Dockers fuera (hoy L23) [V: espejo].
+- Riesgo: nulo. Decisión: DEC-10.
+
+**T3.G — Retiro del subsistema Graph (código, tests, artefactos) y DECISIONS-013 tras el merge**
+META: Fase 3 · Pendiente · Beta · Orden — · R: Por asignar · HO — · Ticket 4d08 · V —
+PRJ: REPO + GOV · CG: CG-03 (decisión) → CG-06b (código) · CP: CP-5 · Hito: 006; toca NON-NEGOTIABLES-008 · PRIO: P3
+- Objetivo: decisión formal go/no-go y, si go, retiro en un solo PR.
+- Acción: (CG-03) MAIN asigna número de decisión (el "-013" de esta fila colisiona: DECISIONS-013 ya es hard_blocks.json) y evalúa el efecto sobre NON-NEGOTIABLES-008 (Graph/Backlinks observabilidad); (CG-06b) si go: retirar graph_layer.py, tests/test_graph_layer.py, data/graph_v2.json [V: espejo existen] + refs en docs (DECISIONS-016).
+- Depende: declarado T3.A (✓) · real: DEC-06, DEC-18.
+- Criterio: decisión numerada por MAIN y aplicada por el operador; si go: suite verde sin Graph, 0 refs en Kernel/Manual/Brief, ticket 4d08 cerrado; LOG #56 → Resuelto.
+- Evidencia: ninguna de ejecución.
+- Riesgo: retirar código citado por un no-negociable sin tocar el Charter.
+- Decisión: DEC-06, DEC-18. Corrección de texto propuesta: Notas "la numeración DECISIONS la asigna CLAUDE/MAIN; -013 en el título es un error de referencia".
+
+### CG-01 · Pase único del KERNEL v10.4 (DRY RUN → APROBAR_WRITE → verificación)
+
+**T2.1 — Redacción KERNEL v10**
+META: Fase 2 · En progreso · (Track vacío) · Orden 10 · R: Por asignar · HO — · Ticket — · V —
+PRJ: DOCS · CG: CG-01 (fila paraguas) · CP: CP-4a · Hito: 002 · PRIO: P1
+- Objetivo: Kernel v10.4 = estructura re-key (T2.N) + contenido sin residuos (T2.O/T2.O-c) + cifras (T2.D) + retiro de Match (T2.H) + exclusiones/Hard Blocks (T3.O/T3.I) + §14.13 preservado + SCH-OWNERSHIP (si DEC-07 resuelta).
+- Acción: no redactar un "v10" aparte; T2.1 se cierra cuando CG-01 esté verificado. Primer paso del DRY RUN: grep de residuos sobre el export vivo (resuelve C1/P-01).
+- Depende: declarado T1.2, T1.3, T1.4, T1.5 (✓) · real: DEC-01, DEC-07, P-01.
+- Bloqueos: B-R2, B-R4.
+- Criterio: export vivo con 97 H / 0 duplicados / 0 refs colgantes; grep de los residuos de T2.O = 0; entrada CHANGELOG; Verificado_Por ≠ ejecutor.
+- Evidencia: HO-000081 (2026-10-03, estructura); CS-REKEY-08 aplicado [D: MISTRAL]; Kernel vivo modificado 2026-10-13 (§14.13) [D: MISTRAL CL.46] — el espejo local Kernel.md NO lo contiene [V: espejo].
+- Riesgo: trabajar sobre export/espejo desactualizado; dos agentes editando el Kernel la misma semana.
+- Decisión: DEC-01, DEC-07.
+
+**T2.O — Pase único del Kernel (04.5 matriz de familias, 06.7/06.11 Dedup_Flag, 16 EXCEPTIONS, cifras T2.D, layer_1_run.py…)**
+META: Fase 2 · Pendiente · Alpha · Orden — · R: Por asignar · HO — · Ticket — · V —
+PRJ: DOCS · CG: CG-01 · CP: CP-4a · Hito: 002 · PRIO: P1
+- Objetivo: eliminar los residuos verificados: Dedup_Flag=Posible duplicado (06.7, 06.11); B-09 en 05.1 vs 16 EXCEPTIONS; ARCHIVEROS 16 vs 14.3; 04.5 cifra "8 documentos" y "Perplexity/Mistral solo GitHub"; layer_1_run.py como activo (3 lugares); excepción de archivado del dry-run (#63).
+- Acción: un DRY RUN con tabla residuo→texto nuevo; decisiones ya tomadas (acta 2026-10-03: Perplexity y Mistral = MCP-Notion con fallback; B1=A conjuntos nombrados).
+- Depende: declarado T2.N · real: P-01 (si el Tablero tiene razón y ya se aplicó, el DRY RUN se reduce a verificación).
+- Criterio: grep en export vivo: "Posible duplicado" (como valor de Dedup_Flag) = 0; "B-09" solo en 16; "layer_1_run.py" = 0 como activo; cifras por conjunto nombrado; verificador ≠ ejecutor.
+- Evidencia: residuos verificados en export de 564 líneas [PLAN]; Tablero "aplicado 2026-10-04 E1–E13" [TABLERO] — contradicción C1.
+- Riesgo: parches sueltos en vez de pase (patrón ya sufrido: cada parche → vversions/vgit).
+- Decisión: P-01.
+
+**T2.O-c — Insumos L1 al pase único del Kernel: ARC-L1 ruta Career Sites, ref. cuatro modos (08.2), Hard Blocks 05/14.7…**
+META: Fase 2 · Pendiente · Alpha · Orden — · R: Por asignar · HO — · Ticket — · V —
+PRJ: DOCS + WORKDAY + GATE · CG: CG-01 · CP: CP-4a · PRIO: P1
+- Objetivo: que el Kernel describa L1 como es: adquisición Python de Career Sites (ats_adapter.py, orquestador --ats), --file para LinkedIn, 3 modos del orquestador (APPLY, DRY RUN LIVE, DRY RUN) + selectores, dedupe intra-fuente vs contra Tracker, retry de transporte, Hard Blocks desde hard_blocks.json, exclusiones DECISIONS-017.
+- Acción: insumo del mismo DRY RUN (no edición suelta). Se cierra con T2.O.
+- Depende: declarado T2.O · real: misma pasada.
+- Criterio: ARC-L1 menciona ats_adapter/--ats/--file; 04.5 no remite a "cuatro modos" en 08.2; 05/14.7 citan hard_blocks.json; verificador ≠ ejecutor.
+- Riesgo: describir código que CG-06b va a mover (server.js, Graph) → redactar después de DEC-18 o con cláusula.
+- Decisión: ninguna propia (hereda DEC-01, DEC-18).
+
+**T2.D — B1: fijar cifra de documentos (nombrar conjuntos: editables, Census, DOCS de vsync_doc, vversions)**
+META: Fase 2 · Pendiente · Alpha · Orden 18 · R: CLAUDE/KM · HO — · Ticket 324f, 138d, f6f6, 068f · V —
+PRJ: DOCS · CG: CG-01 (Kernel 04.5/14.3) + CG-02a (Manual) + CG-05 (SP:SYNC-RULE, misma ventana que los pins) · CP: CP-4a · PRIO: P1
+- Objetivo: una convención (decisión B1=A, 2026-09-28/10-03): conjuntos nombrados, nunca cifra suelta.
+- Acción: aplicar en cada pase con los conjuntos reales: vsync_doc.DOCS = 9 claves (kernel, system_prompt, career_canon, manual, aliases, change_log, brief, change_log_archivo, project_charter — coincide con .vsync_manifest.json [V: espejo]); verify_versions.DOC_KEYS = 13 [V: espejo L35]; resolver_registry: 12 fundamentales con PROMPT_CANON [V: espejo]; Census: documentos de CENSUS_SPEC. Cerrar tickets 324f/138d/f6f6/068f en CG-09.
+- Depende: declarado T2.C · real: ninguna (decisión tomada).
+- Criterio: en Kernel/Manual/SP no queda cifra suelta sin conjunto nombrado; 4 tickets cerrados.
+- Evidencia: decisión B1=A [PLAN notas]; conteos [V: espejo].
+- Riesgo: tres conteos distintos (9/12/13) seguirán existiendo: por eso se nombran, no se unifican.
+- Decisión: ninguna.
+
+**T2.H — Match: retirar de Kernel (L417, L446, L692) y Manual L890 tras merge del PR #14**
+META: Fase 2 · Pendiente · Alpha · Orden 22 · R: CLAUDE/KM · HO — · Ticket bd46 · V —
+PRJ: DOCS · CG: CG-01 (Kernel) + CG-02a (Manual) · CP: CP-4a · PRIO: P1
+- Objetivo: ninguna mención operativa de Match (campo retirado) en Kernel/Manual.
+- Acción: grep "Match" en export vivo de ambos; reemplazar/retirar en cada pase. Nota de contradicción: LOG #28 (Resuelto) declara "Match retirado" y LOG #40 (Abierto) matiza; PLAN sigue Pendiente → el grep decide.
+- Depende: declarado T2.L (✓ PR #14 mergeado) · real: ninguna.
+- Criterio: grep "Match" = 0 menciones operativas (históricas permitidas con fecha); ticket bd46 cerrado; LOG #40 → Resuelto.
+- Riesgo: números de línea (L417…) ya desplazados → localizar por sección.
+- Decisión: ninguna.
+
+**T2.N — Congelar mapa de re-key KERNEL v10.4 y aplicarlo en un solo pase**
+META: Fase 2 · En progreso · Alpha · Orden — · R: MISTRAL · HO HO-000081 · Ticket — · V: CLAUDE/MAIN (parcial)
+PRJ: DOCS · CG: CG-01 (verificación residual) · CP: CP-4a · Hito: 002 · PRIO: P2
+- Objetivo: cierre formal del re-key: 24 renames + 2 headings nuevos (03.1 ACT-ROLES, 08.1 FLOW-CONTRACT) + 3 refs ARC-*-002 corregidas, verificados por actor ≠ MISTRAL.
+- Acción: el verificador de CG-01 cuenta headings y renames en el mismo export; Estado → Resuelto; LOG #48/#50 → Resuelto.
+- Depende: declarado T2.1 · real: ninguna (ya aplicado [D: MISTRAL CS-REKEY-08]).
+- Criterio: 97 H/0 dup/0 colgantes confirmados por verificador distinto; Bloque B verificado.
+- Evidencia: resultado reportado 97/0/0 [D: MISTRAL]; A1 verificado por PERPLEXITY [PLAN].
+- Riesgo: bajo. Decisión: DEC-10.
+
+**T2.C — Lote 1 Perplexity 28-sep 18:05-18:56 (14 reemplazos: B4, B5, B6, B1 parcial, jerarquía dedup)**
+META: Fase 2 · En progreso · Alpha · Orden 17 · R: PERPLEXITY · HO — · Ticket — · V: CLAUDE/MAIN
+PRJ: DOCS · CG: CG-01 (cierre administrativo) · CP: CP-4a · PRIO: P2
+- Objetivo: cerrar el lote; sus residuos ya viven en T2.D (B1), T2.F (B2/B3), T2.G (B7), T2.H.
+- Acción: → propuesta: Estado Resuelto con Notas "residuos trasladados a T2.D/T2.F/T2.G/T2.H"; LOG #30 → Resuelto por sustitución.
+- Depende: — · Criterio: Notas actualizadas; Verificado_Por ya lleno (CLAUDE/MAIN).
+- Riesgo: nulo (trazabilidad en LOG #29/#30). Decisión: confirmación en DRY RUN CG-09.
+
+### CG-07 · LinkedIn E2E (host del agente) — CP-2
+
+**T3.M — Ticket código: normalizador del envelope de LinkedIn en feed_processor (--file) + decisión de arrays ingestables**
+META: Fase 3 · En progreso · Beta · Orden — · R: Por asignar · HO HO-000097 · Ticket 3f3938be-fc42-8188-b3e4-c1d39b… · V —
+PRJ: LINKEDIN · CG: CG-07 · CP: CP-2 · PRIO: P1
+- Objetivo: ingesta real de un envelope LinkedIn v2.0 por --file con la decisión A (solo accepted[], LOG #66).
+- Acción: el código ya está en main: normalización de accepted[] con validación por job_id y conteos por array (feed_processor.py L101-167 [V: espejo]); falta la corrida con envelope real (el que falló el 2026-10-08, #61, sirve como primer caso) y cerrar el ticket.
+- Depende: — · real: ninguna para la corrida con envelope existente; B-R6 para envelope nuevo.
+- Criterio: dry-run --file imprime accepted=N / reroute / rejected / not_evaluated y crea N registros válidos; 0 errores; ticket cerrado; LOG #61 → Resuelto.
+- Evidencia: [V: espejo] código; [LOG #62] fallo 2026-10-08 previo al normalizador.
+- Riesgo: envelope de prueba desactualizado respecto a las 9 queries nuevas.
+- Decisión: DEC-19 (criterio CP-2).
+
+**T3.N — Dry-run sin escrituras en Notion: archivo local, Notion opt-in**
+META: Fase 3 · En progreso · Beta · Orden — · R: Por asignar · HO HO-000097 · Ticket 3f4938be-fc42-81d0-a2af-d1b640… · V —
+PRJ: LINKEDIN + WORKDAY + DOCS · CG: CG-07 (corrida) + CG-01 (excepción en Kernel, #63) · CP: CP-2, CP-3 · PRIO: P1
+- Objetivo: ningún dry-run escribe en Notion salvo opt-in explícito.
+- Acción: confirmar en corrida que sin `--archive-notion` solo se produce archivo local (código: L1368-1372 y flag L1439 [V: espejo]); registrar que `NOTION_ARCHIVE_PAGE_ID` sigue siendo obligatorio al importar (L57 [V: espejo]) — decidir si eso es aceptable o se relaja (ticket código); Kernel: excepción explícita (#63) en CG-01.
+- Depende: — · Criterio: re-fetch de la página de archivo = sin páginas nuevas tras el dry-run; archivo local presente; Kernel con la excepción; ticket cerrado.
+- Riesgo: variable de entorno ausente aborta el dry-run (hipótesis por lectura).
+- Decisión: ninguna.
+
+### CG-02 · Pase único del MANUAL (2a alineación normativa → 2b Manual v10 real + extracción de referencias)
+
+**T2.2b — Redacción MANUAL v10 real (blueprint 10 secciones, ChatGPT)**
+META: Fase 2 · Pendiente · (Track vacío) · Orden — · R: (vacío) · HO — · Ticket — · V —
+PRJ: DOCS · CG: CG-02b · CP: CP-4a · Hito: 003 · PRIO: P2
+- Objetivo: Manual v10 completo sobre hechos verificados (Cédula + Track Beta cerrado).
+- Acción: pase 2b después de CG-01 (citas Kernel estables) y de CG-02a si DEC-02 = dos pases; DRY RUN por secciones del blueprint.
+- Depende: declarado T1.1–T1.5, Cédula de Reconciliación · real: CG-01, DEC-01, DEC-02.
+- Bloqueos: B-R2 (sin responsable: el título menciona ChatGPT, el campo está vacío).
+- Criterio: 10 secciones en export vivo; 0 citas KERNEL:* legacy; verificador ≠ ejecutor; CHANGELOG.
+- Evidencia: ninguna. Riesgo: redactar sobre estados que CG-04/CG-06b cambian (MILESTONES-003).
+- Decisión: DEC-01, DEC-02.
+
+**T2.3b — Extracción real de Script/Skill Glossary a Script Reference / Skill Reference**
+META: Fase 2 · Pendiente · (Track vacío) · Orden — · R: (vacío) · HO — · Ticket — · V —
+PRJ: DOCS · CG: CG-02b (antes de CG-05) · CP: CP-4a/4b · Hito: 003 · PRIO: P2
+- Objetivo: glosarios fuera del Manual, en documentos de referencia con IDs propios.
+- Acción: mover contenido + alta de IDs nuevos en CENSUS_SPEC (generate_census.py) en la misma pasada; vcensus después (CG-05).
+- Depende: declarado ninguna · real: DEC-02, DEC-01.
+- Criterio: Manual sin bloques MANUAL:SCRIPT-GLOSSARY-*/SKILL-GLOSSARY-* duplicados; Census 0 huérfanos tras CG-05; skills vantage-sync-script-glossary/skill-glossary [V: espejo existen] actualizadas por adjunto.
+- Riesgo: drift de sección en CENSUS_SPEC (ya ocurrió en el bloque SCRIPT-GLOSSARY, Changelog histórico).
+- Decisión: DEC-01, DEC-02.
+
+**T2.F — B2/B3: alinear Manual L64 y L343-346 al Kernel (L1 = Hermes exclusivo; L2 = solicitud directa del operador)**
+META: Fase 2 · Pendiente · Alpha · Orden 20 · R: CLAUDE/KM · HO — · Ticket — · V —
+PRJ: DOCS · CG: CG-02a · CP: CP-4a · PRIO: P2
+- Objetivo: Manual = Kernel en definición de L1/L2 (decisiones B2/B3 de Mau).
+- Acción: dentro de CG-02a; localizar por sección (líneas desplazadas).
+- Depende: — · Criterio: texto corregido en export vivo; verificador ≠ ejecutor.
+- Riesgo: bajo. Decisión: ninguna.
+
+**T2.G — B7: skills present-handoff y session-close a solo Terminal; actualizar SP:SKILL-VERSION-PIN; refrescar copias del…**
+META: Fase 2 · Pendiente · Beta · Orden 21 · R: CLAUDE/KM · HO — · Ticket 1e2e, 7f6a · V —
+PRJ: DOCS + GOV · CG: CG-02a (texto Manual) + CG-05 (pin SP) + skills por adjunto (DECISIONS-015) · CP: CP-4a · PRIO: P2
+- Objetivo: skills y pins coherentes con "solo Terminal".
+- Acción: decidir si "solo Terminal" implica bump de vantage-session-close/present-handoff (entonces nuevo pin) o solo texto; hoy pins SP (close 1.1.0, handoff 1.1.0, open 1.2.0) = versiones en skills/ [V: espejo] → no hay repin pendiente.
+- Depende: — · real: T3.D (misma edición de skills).
+- Criterio: pins SP == versiones en skills/ tras el cambio; tickets 1e2e/7f6a cerrados; LOG #39 → Resuelto.
+- Riesgo: tocar SP fuera de la ventana de sync → vversions FAIL.
+- Decisión: ninguna nueva (va con T3.D).
+
+**T3.D — Regla de uso del tracker: session-open lee el Tablero; session-close exige delta del tracker en S4**
+META: Fase 3 · Pendiente · Beta · Orden 31 · R: CLAUDE/KM · HO — · Ticket — · V —
+PRJ: GOV + DOCS · CG: CG-02a (Manual) + CG-05 (pins) + skills por adjunto · CP: CP-4a · PRIO: P2
+- Objetivo: el tracker es insumo obligatorio de apertura y salida obligatoria de cierre.
+- Acción: nueva versión de vantage-session-open (hoy v1.2.0) y vantage-session-close (v1.1.0) [V: espejo]; repin en SP junto con T2.G; texto en Manual (sesiones) en CG-02a; la regla ya está escrita en §0 del Documento 1.
+- Depende: — · real: CG-09 aplicado (para que el Tablero sea legible).
+- Criterio: una session-close real posterior registra delta en S4 y en el PLAN; pins actualizados en la misma ventana.
+- Riesgo: cambiar skills a mitad de sesiones abiertas. Decisión: ninguna.
+
+### CG-08 · Acta + Briefs rev3 y verificación independiente (después de CG-04 y CG-07) — CP-1b
+
+**T3.K — Regenerar Acta + Brief Workday + Brief LinkedIn (CLAUDE/MAIN) y verificación independiente (CHATGPT, CS-VERIFY-L1-02…)**
+META: Fase 3 · En progreso · N/A · Orden — · R: Por asignar · HO — · Ticket — · V —
+PRJ: WORKDAY + LINKEDIN · CG: CG-08 · CP: CP-1b, CP-2 · PRIO: P2
+- Objetivo: una sola regeneración con cifras de CG-04 (--apply) y CG-07 (LinkedIn), fecha y commit; Career Sites CANDIDATE/READY_FOR_AUDIT; LinkedIn CANONICAL bajo PromptA-v2.0+linkedin.
+- Acción: ejecuta CLAUDE/MAIN (según Notas; el campo dice Por asignar → propuesta: fijar CLAUDE/MAIN, DEC-10); verifica CHATGPT (T3.Q).
+- Depende: declarado T2.S (✓) · real: CG-04, CG-07 terminados.
+- Criterio: Acta rev3 con cifras+commit; briefs regenerados; CS-VERIFY-L1-02 emitido; LOG #58/#59 → Resuelto.
+- Riesgo: regenerar antes de tener ambas corridas → tercera revisión.
+- Decisión: DEC-10.
+
+**T3.Q — Verificación delta CS-VERIFY-L1-02 (ChatGPT) de Acta y briefs rev3**
+META: Fase 3 · Pendiente · N/A · Orden — · R: Por asignar · HO — · Ticket — · V —
+PRJ: WORKDAY + LINKEDIN · CG: CG-08 · CP: CP-1b, CP-2 · PRIO: P2
+- Objetivo: verificación por actor distinto del ejecutor (NON-NEGOTIABLES-003).
+- Acción: CHATGPT re-fetch de Acta/briefs; dictamen con discrepancias = 0 o listadas.
+- Depende: declarado T3.K · real: igual. Criterio: dictamen registrado en LOG; Verificado_Por = CHATGPT en T3.K.
+- Riesgo: bajo. Decisión: DEC-10 (confirmar CHATGPT como verificador).
+
+**T3.J — Career Sites v2.0: requisitos de promoción CANDIDATE→CANONICAL (decide el operador)**
+META: Fase 3 · Pendiente · Beta · Orden — · R: MAU · HO — · Ticket 3f2938be-fc42-8159-abfd-fe34bf… · V —
+PRJ: WORKDAY · CG: CG-08 · CP: CP-1b · PRIO: P2
+- Objetivo: criterios explícitos y cumplidos para promover Career Sites en PROMPT_CANON.
+- Acción: operador fija requisitos; en CG-08 se crea la fila del registry (campo Tests), se re-ancla el SHA a un commit ≥ 318300a, y un actor distinto verifica el evidence report.
+- Depende: — · real: CG-04 (primer --apply como evidencia).
+- Criterio: fila registry con Tests; SHA ≥ 318300a; evidence report verificado; PROMPT_CANON = CANONICAL; ticket cerrado.
+- Evidencia: test_ats_workday.py 41 passed (2026-10-11, Terminal); ats_adapter.py sin cambios desde 9109cf9; ats_workday.py cambió en 318300a [PLAN].
+- Riesgo: promover con un solo tenant (Chanel). Decisión: requisitos (operador) — se registra como parte de DEC-03 o nueva decisión al llegar a CG-08.
+
+**T3.P — Workday: location del listing vs ubicación real del puesto**
+META: Fase 3 · Pendiente · Beta · Orden — · R: Por asignar · HO — · Ticket 3f4938be-fc42-8121-86cb-f76d10… · V —
+PRJ: WORKDAY · CG: CG-08 (o ticket código si se decide fix) · CP: CP-1b · PRIO: P2
+- Objetivo: confianza en el filtro de ciudad.
+- Acción: diagnóstico dirigido en el adaptador (¿location = etiqueta de faceta?) y decisión: fix (ticket código) o limitación documentada en Acta/Brief.
+- Depende: — · Criterio: el caso «Embajador de Ventas CHANEL Monterrey» queda filtrado por ubicación, o la limitación consta en el Acta rev3 y en el Brief.
+- Evidencia: 2026-10-12 --require-city deja pasar ese caso; hoy cae por T11 [PLAN].
+- Riesgo: falsos positivos CDMX en --apply → revisión manual de los 5 (CG-04).
+- Decisión: ninguna hasta el diagnóstico.
+
+### CG-06b · Repo línea base — decisiones por grupo, un PR/commit por grupo (tras CG-04) — CP-5
+
+**T3.W — Frente vantage-sync (Ollama: warmup, fallback por tramos, timeouts): elegir una sola implementación**
+META: Fase 3 · Pendiente · Beta · Orden — · R: MAU · HO — · Ticket — · V —
+PRJ: REPO · CG: CG-06b · CP: CP-5 · Hito: 006 · PRIO: P1
+- Objetivo: una implementación en main y los deltas archivados o integrados por decisión.
+- Acción: → propuesta: la "elección" quedó hecha de facto: PR #27 (Devin, T1–T4) está en main [D: CL.47 merge 23e1e1e; V: espejo 16:17 warmup_ollama, timeouts por chunk, num_ctx 8192, tracker de timeouts consecutivos]. Resta decidir (DEC-04): (a) arena/d352bc18-vantage (fd85468: ffb840b + 3 commits, +866/-43 en 3 archivos): revisar delta → integrar por PR o tag archive/; (b) Copilot 5a37139 / WIP crispy-lamp (+200/-2, incluye Manual.md): rescatar la entrada de glosario de vantage-sync.py como insumo documental y archivar con tag; (c) devin/vantage-sync-r4 remota (5946bf6) y c0443fd local: tag archive/ y borrar (ya propuesto en Notas). Cerrar LOG #103.
+- Depende: — · real: DEC-04; T3.S inventario.
+- Criterio: `git branch -r` sin devin/*, arena/d352bc18-vantage ni Copilot salvo decisión de integrar; tags archive/ presentes; suite verde; LOG #103 → Resuelto.
+- Evidencia: PLAN (2026-10-12) + CL.47 + espejo.
+- Riesgo: perder los +866/-43 de Arena o el WIP de Copilot sin revisarlos.
+- Decisión: DEC-04.
+
+**HO-000104.P1 — Resolver destino de commits exclusivos de ramas locales eliminadas**
+META: Fase 3 · Pendiente · Beta · Orden 1 · R: MAU · HO HO-000104 · Ticket HO-000104 · V —
+PRJ: REPO · CG: CG-06b · CP: CP-5 · Hito: 006 · PRIO: P1
+- Objetivo: ningún commit exclusivo sin destino explícito (tag archive/ o descarte registrado).
+- Acción: para main local 7552499 (incluye auto-syncs) y devin/vantage-sync-r4 c0443fd [D: CL.47 "inspeccionados, no integrados"]: `git tag archive/<nombre>` sobre el SHA si aún es alcanzable en reflog/objetos; si no, registrar pérdida. Misma sesión que T3.W.
+- Depende: — · real: DEC-04.
+- Criterio: tabla SHA→destino en LOG; tags en origin; LOG #110 → Resuelto.
+- Riesgo: gc borra objetos no referenciados → hacerlo pronto (por eso P1).
+- Decisión: DEC-04.
+
+**T3.Z — Limpieza de la raíz de main y de Archive/ (decisión del operador por grupo)**
+META: Fase 3 · Pendiente · Beta · Orden — · R: MAU · HO — · Ticket — · V —
+PRJ: REPO · CG: CG-06b · CP: CP-5 · Hito: 006 · PRIO: P2 (P1 para el grupo de secretos/CVs)
+- Objetivo: raíz y Archive/ sin vestigios; nada descargable que no deba serlo en un repo público (D1).
+- Acción: decisión por grupo (DEC-14): G1 archivos sueltos de raíz (hoy 17 incl. charter_integration.patch, digests, scripts mail_*/simulacion_*, paquete_arena_extractos.txt, reingest_failed_2.json [V: espejo]); G2 Archive/ 386 MB (8 .indd, 4 mp4/mp3 [V: espejo]) → mover fuera del repo o git-lfs/privado; G3 4 archivos de estado de runtime rastreados; G4 10 candidatos con referencias (6 .patch en Layer_1/scripts, 3 en handoffs/arena); G5 Dashboard/archive/legacy_express_node/server.js (con T3.X). Un commit por grupo; docs sin rutas retiradas (DECISIONS-016).
+- Depende: — · real: DEC-14; T3.X antes de G5.
+- Criterio: listado de raíz = decidido; `du -sh Archive` según decisión; LOG #101 → Resuelto; README/Manual sin rutas retiradas.
+- Riesgo: CVs personales descargables mientras tanto (privacidad); borrar algo referenciado por scripts.
+- Decisión: DEC-14.
+
+**T3.T — Invocación canónica de pytest: tres conftest.py colisionan, sin pytest.ini ni CI**
+META: Fase 3 · Pendiente · Beta · Orden — · R: Por asignar · HO — · Ticket — · V —
+PRJ: REPO · CG: CG-06b · CP: CP-5 · Hito: 006 · PRIO: P2
+- Objetivo: una invocación documentada y reproducible.
+- Acción: hoy conftest.py en Layer_1/scripts, Layer_1/tests y tests/ y sin pytest.ini/pyproject [V: espejo]; la convención viva está en Layer_1/requirements.txt L1 (desde Layer_1/). Decidir: pytest.ini mínimo en raíz con testpaths, o documentar "solo desde Layer_1/"; CI sí/no (DEC-15).
+- Depende: declarado T3.R (✓) · Criterio: comando único en README/Manual y, si se elige, pytest.ini en main; LOG #36 → Resuelto.
+- Riesgo: suites comparadas con conteos no comparables (178/191/321/351) por invocación distinta.
+- Decisión: DEC-15.
+
+**T3.U — Deuda en tests/ (Layer 4): 15 fallos preexistentes y un test sensible a la ruta**
+META: Fase 3 · Pendiente · Beta · Orden — · R: Por asignar · HO — · Ticket — · V —
+PRJ: REPO · CG: CG-06b · CP: CP-5 · PRIO: P3
+- Objetivo: tests/ de raíz verde o fallos clasificados como deuda aceptada.
+- Acción: tras T3.T; corregir o marcar xfail con motivo. Depende: declarado T3.T.
+- Criterio: `pytest tests/` sin fallos no clasificados. Riesgo: bajo. Decisión: ninguna.
+
+**T2.I — Guard: CV-A, CV-B, PDF, Figma a CLASS_A_FIELDS; Match fuera de CLASS_B_FIELDS**
+META: Fase 2 · En progreso · Beta · Orden 23 · R: Por asignar · HO — · Ticket 1e47, bd46 · V: CLAUDE/MAIN (solo lectura, según campo truncado)
+PRJ: GATE · CG: CG-06b (verificación de código) · CP: CP-3 · Hito: DECISIONS-001 (Class A/B) · PRIO: P2
+- Objetivo: class_b_guard.py refleja la clasificación vigente.
+- Acción: lectura dirigida de CLASS_A_FIELDS/CLASS_B_FIELDS en main (no pude confirmarlo por grep simple; PENDIENTE lectura) + tests del guard; si DEC-07 añade Interview/Interview_Date/Contacto/Notas, misma edición.
+- Depende: — · real: DEC-07 (para no tocar el guard dos veces).
+- Criterio: CV-A, CV-B, PDF, Figma en CLASS_A_FIELDS; Match ausente de CLASS_B_FIELDS; tests verdes; tickets 1e47/bd46 cerrados.
+- Riesgo: Python escribiendo un campo reclasificado (NON-NEGOTIABLES-001).
+- Decisión: DEC-07.
+
+### CG-05 · Sync fundacional único (Terminal) — CP-4b (tras CG-01/02/03; o sync de mantenimiento mínimo ahora si DEC-09 lo permite)
+
+**T3.1 — Census, registry y ALIASES en una sola pasada (Terminal)**
+META: Fase 3 · En progreso · (Track vacío) · Orden 13 · R: Por asignar · HO — · Ticket — · V —
+PRJ: DOCS + GOV · CG: CG-05 · CP: CP-4b · Hito: 004 · PRIO: P1 (cuando llegue su turno)
+- Objetivo: vcensus + resolver_registry_v2.json + ALIASES + migración de citas KERNEL:* legacy (Manual 68, SP 11, Charter 3, Canon 1, Aliases 1; 23 skills; 19 scripts [PLAN]) + altas KERNEL:OPS-INTERVIEW-SIMULATOR / MANUAL:RUNTIME-INTERVIEW-SIMULATOR [D: CL.46] + vversions --sync + vgit, una sola vez.
+- Acción: secuencia: pull de espejos (Kernel.md local sin §14.13 [V: espejo]) → vcensus → registry/ALIASES → citas legacy (skills por adjunto; scripts por commit) → vversions --sync → vgit → rotación CHANGELOG (PR-02) → T3.2.
+- Depende: declarado T2.1, T2.2b, T2.3b, T2.O · real: + CG-03; o DEC-09 para un sync de mantenimiento previo.
+- Bloqueos: ninguno técnico; MILESTONES-004 (política).
+- Criterio: vcensus 0 huérfanos sobre espejo actualizado; vversions sin FAIL; grep de IDs legacy = 0; LOG #47 → Resuelto.
+- Evidencia: Census regenerado 2026-10-13 01:56 CDMX sin los 2 IDs [Notion hoy + espejo].
+- Riesgo: syncs parciales repetidos; Census "0 huérfanos" falso por espejo viejo.
+- Decisión: DEC-09.
+
+**T3.2 — Verificación cruzada final**
+META: Fase 3 · Pendiente · (Track vacío) · Orden 14 · R: MAU · HO — · Ticket — · V —
+PRJ: DOCS + GOV · CG: CG-05 · CP: CP-4b · Hito: 004 · PRIO: P1 (al final)
+- Objetivo: tres fuentes coinciden: Notion vivo, espejo en main, Census/registry.
+- Acción: tras CG-05: vversions, vcensus, sha256 del .vsync_manifest.json vs Notion, grep de cifras/IDs legacy; verificador ≠ quien corrió el sync.
+- Depende: declarado T2.1, T2.2b, T2.3b · real: CG-05.
+- Criterio: informe con 0 discrepancias o lista cerrada; entrada CHANGELOG; Fase 3 (docs) candidata a cierre.
+- Riesgo: bajo. Decisión: DEC-10 (verificador).
+
+**T3.Cb — Ticket código: excluir ARCHIVEROS de vversions --length + drift residual scripts/skills**
+META: Fase 3 · Pendiente · Beta · Orden — · R: Por asignar · HO — · Ticket — · V —
+PRJ: GOV + REPO · CG: CG-05 (post-validación) con el cambio de código en CG-06b · CP: CP-4b · PRIO: P2
+- Objetivo: vversions --length sin falsos positivos por ARCHIVEROS; drift residual cerrado.
+- Acción: ticket código sobre verify_versions.py (DOC_KEYS incluye ARCHIVEROS [V: espejo L35]; exclusión no confirmada por lectura) + length_baseline.json; drift residual de scripts/skills en la misma pasada de citas legacy.
+- Depende: declarado T3.Ca (✓).
+- Criterio: `vversions --length` limpio; LOG #35 → Resuelto. Riesgo: bajo. Decisión: ninguna.
+
+### CG-09 · Tracker y gobernanza (continuo; primera corrida = aplicar esta propuesta)
+
+**T3.E — Reestructura del tracker: Tablero, columnas del Plan, backfill Plan y Log, cierre de tickets vencidos**
+META: Fase 3 · En progreso · (Track vacío) · Orden 32 · R: CLAUDE/KM · HO HO-000074 · Ticket — · V: Pendiente de verificación
+PRJ: GOV · CG: CG-09 · CP: — · Hito: 005 · PRIO: P1
+- Objetivo: tracker aplicado según Documentos 1–3 de esta propuesta, con verificación independiente.
+- Acción: DRY RUN (conteo de filas/estados antes-después) → APROBAR_WRITE → re-fetch por actor ≠ ejecutor; incluye cierres de LOG (Parte 3), Verificado_Por histórico (DEC-13), Orden (DEC-12), typo COPIILOT (DEC-11), verificación pendiente del sync de MISTRAL v9.22.45.
+- Depende: — · real: esta propuesta aprobada.
+- Criterio: 69 filas conservadas (+ las aprobadas de la sección C); 0 IDs nuevos sin decisión; LOG #20 → Resuelto; Verificado_Por de T3.E lleno.
+- Riesgo: un cuarto agente escribiendo sin pase común.
+- Decisión: aprobación de esta propuesta (global).
+
+**T2.K — a07c: skill CV-B alineada a CANON:OUTPUT-CONTRACT-004 v1.1.0**
+META: Fase 2 · En progreso · Beta · Orden 25 · R: Por asignar · HO — · Ticket a07c · V —
+PRJ: GOV + DOCS · CG: CG-09 (cierre de ticket) · PRIO: P2
+- Objetivo: cerrar a07c con evidencia.
+- Acción: skills/vantage-cv-b.md declara "Versión de alineación: v10.2.1 (2026-09-28)" [V: espejo] = pin SP; confirmar que el contrato CANON:OUTPUT-CONTRACT-004 v1.1.0 está cubierto (lectura dirigida) y cerrar ticket.
+- Criterio: ticket a07c cerrado con referencia a la línea de la skill; Estado → Resuelto. Riesgo: nulo. Decisión: ninguna.
+
+**T2.K2 — Triage y cierre de tickets del Bug Tracker (complemento T2.K)**
+META: Fase 2 · En progreso · Beta · Orden — · R: Por asignar · HO — · Ticket — · V —
+PRJ: GOV · CG: CG-09 · PRIO: P2
+- Objetivo: Bug Tracker sin tickets ya resueltos por Fase 2/3 (triage MISTRAL #25: 7 corroborados).
+- Acción: una pasada de cierre con APROBAR_WRITE citando la fila/commit que resuelve cada ticket (324f, 138d, f6f6, 068f, 1e2e, 7f6a, bd46, 1e47, a07c, 27f6, a66e, f9bb, 7f49, 4d08, e4d5, 94b7 y los 3f2938be…/3f3938be…/3f4938be… según avance). Pase NORM del Bug Tracker = T2.O-b (sección C).
+- Criterio: cada ticket cerrado tiene cita; LOG #25 → Resuelto. Riesgo: cerrar un ticket cuyo fix no está en main. Decisión: ninguna.
+
+## B · FILAS RESUELTAS (25) — sin acción salvo la indicada; se conservan íntegras
+| ID — Tarea | Fase | R / Verificado_Por | PRJ | Acción propuesta |
+|---|---|---|---|---|
+| T0.1 — Versión real vigente (6 fundacionales) | 0 | CLAUDE/KM / GROK 2026-10-03 | GOV | Ninguna |
+| T0.2 — Schema real Tracker DB | 0 | CLAUDE/KM / — | GOV | DEC-13: "cierre histórico" en Verificado_Por o asignar verificador |
+| T0.3 — Scripts y GitHub | 0 | CLAUDE/KM / — | REPO | DEC-13 |
+| T0.4 — Estado Graph/Backlinks | 0 | CLAUDE/KM / — | REPO | DEC-13 |
+| T1.1 — Texto literal SCHEMA-001 y ARCHITECTURE-L4 | 1 | PERPLEXITY / — | DOCS | DEC-13 |
+| T1.2 — Dedup_Flag select→checkbox | 1 | CLAUDE/MP / — | DOCS | DEC-13 |
+| T1.3 — scope vsync_doc.py (8 docs) | 1 | CLAUDE/MP / — | DOCS | DEC-13; nota: la cifra "8" quedó superada por B1=A (T2.D) |
+| T1.4 — Script activo real de Layer_1 | 1 | MAU / — | WORKDAY | DEC-13 |
+| T1.5 — Suite de tests real (178/13) | 1 | MAU / — | REPO | DEC-13 |
+| PLAN-3F-1 — Completar cascada documental Dockers (T2.T) | 1 | COPILOT / — | DOCS | Duplicado de T2.T (verificada por ARENA/DEFAULT): Notas "consolidada en T2.T"; Verificado_Por = el de T2.T |
+| T2.2a — Nota de alineación puntual | 2 | Por asignar / GROK | DOCS | Ninguna |
+| T2.3a — Nota de alineación puntual (mismo lote) | 2 | Por asignar / GROK | DOCS | Ninguna |
+| T2.A — Parches Kernel/Manual v9.22.17 (HO-000068) | 2 | PERPLEXITY / CLAUDE/MAIN | DOCS | Ninguna |
+| T2.B — Parches Manual v9.22.18 | 2 | PERPLEXITY / CLAUDE/MAIN | DOCS | Ninguna |
+| T2.E — Jerarquía de dedup L1>L2>L3 | 2 | MAU / MAU + C… | DOCS | Ninguna (decisión del operador; LOG #41) |
+| T2.J — Census: quitar WEEKLY-FLOW-006; alta UF-004/005/006 | 2 | Por asignar / CLAUDE/MP | DOCS | Ninguna |
+| T2.L — Merge PR #14 | 2 | MAU / CLAUDE/MAIN | REPO | Ninguna |
+| T2.M — Dedup 27f6 y a66e: decisión de diseño | 2 | PERPLEXITY / MISTRAL (V3) | GATE | Cerrar tickets 27f6/a66e en CG-09 si siguen abiertos |
+| T2.S — hard_blocks.json v1.1 | 2 | MAU / CHATGPT (CS-VERIFY) | GATE | Ninguna |
+| T2.T — Cascada Dockers (HO-000097) | 2 | Por asignar / ARENA/DEFAULT | DOCS | Ninguna |
+| T3.A — Protección de estados terminales (13 tests) | 3 | Por asignar / MISTRAL (V3) + CLA… | GATE | Ninguna; prerrequisito de CP-3 cumplido |
+| T3.Ca — Sync v9.22.x: vversions --sync + vgit | 3 | MAU / GROK | GOV | Ninguna (la deriva .47/.46 actual es nueva → CG-05/PR-06) |
+| T3.H — Housekeeping: Kernel v9 a Archive/ y ls Raycast/ | 3 | MAU / — | REPO | DEC-13 |
+| T3.R — Higiene Git P0: sqlite y matriz CSV | 3 | MAU / CLAUDE/MAIN | REPO | Ninguna |
+| PLAN-3F-3 — Decidir Dockers en EXCLUDED_SENDERS | 3 | Por asignar / CLAUDE/MAIN | GATE | Ninguna (decisión registrada, LOG #72) |
+
+## C · FILAS PROPUESTAS SIN ID (6) — se crean solo con APROBAR_WRITE; etiquetas PR-0x provisionales, no IDs
+**PR-01 (ID existente en TABLERO: "T2.O-b") — Pase NORM de Reconciliation Log y Bug Tracker**
+PRJ GOV · CG-09 · Fase 2 · Estado propuesto Pendiente · R: Por asignar · PRIO P2 · Objetivo: aplicar a ambas DBs la normalización de referencias (IDs re-key, prefijo CHARTER, agente COPIILOT→COPILOT) en una pasada · Criterio: 0 referencias legacy en Entrada/Descripción; verificador ≠ ejecutor · Decisión: DEC-11 (opciones de select).
+**PR-02 — Higiene del CHANGELOG: rotación a V | CHANGELOG — ARCHIVO (16 → ≤10 entradas) + entrada faltante de la sesión CLAUDE/MAIN 2026-10-11→12 (LOG #99)**
+PRJ GOV · CG-05 o CG-09 · Fase 3 · Pendiente · R: Por asignar · PRIO P2 · Criterio: CHANGELOG con ≤10 entradas, ARCHIVO con las rotadas íntegras (sha/espejo Changelog Archivo.md actualizado), entrada 10-11→12 escrita por CLAUDE/MAIN · Decisión: DEC-16 (mecanismo: script o manual).
+**PR-03 — Verificación independiente de escrituras sin verificador: sync del Tracker v9.22.45 (MISTRAL), Charter DECISIONS-012–017 (#105/#107), T2.R, T2.N residual, T3.E**
+PRJ GOV · CG-03 + CG-09 · Fase 3 · Pendiente · R: Por asignar (≠ MISTRAL, ≠ CLAUDE/MAIN según el ítem) · PRIO P1 · Criterio: re-fetch por actor distinto, campo Verificado_Por lleno en cada fila afectada · Decisión: DEC-10.
+**PR-04 — Ownership normativo de Interview / Interview_Date / Contacto / Notas (KERNEL:SCH-OWNERSHIP + tabla Class A/B MANUAL §21 + class_b_guard.py si aplica)**
+PRJ ISIM + DOCS + GATE · insumo de CG-01, CG-02a, T2.I · Fase 2 · Pendiente · R: decisión del operador, redacción por el ejecutor de CG-01 · PRIO P1 · Criterio: los 4 campos aparecen en una clase; SCH-APPROVE autoriza o no su escritura; guard alineado · Decisión: DEC-07.
+**PR-05 — Interview Simulator: registro de gobernanza (alta del frente en el Tracker o decisión de no registrarlo) + Census de los 2 IDs (vía CG-05) + pendientes operativos declarados [D: CL.44]: re-score por pipeline y Positioning_Mode de la fila Axo, JD completo de Axo, Artifact anterior redundante, aclaración opcional CF05**
+PRJ ISIM · CG-10 · Fase: "Fase 4" no existe en el select → operador decide · Pendiente · R: MAU · PRIO P2 · Criterio: decisión registrada; si se registra, filas con IDs asignados por el operador · Decisión: DEC-08.
+**PR-06 — Sync de mantenimiento mínimo (solo si DEC-09 = sí): pull de espejos (Kernel/Manual/Brief/Change Log), vversions --sync (.47 vs .46), vcensus con los 2 IDs nuevos, vgit**
+PRJ GOV · CG-05 (anticipo) · Fase 3 · Pendiente · R: MAU (Terminal) · PRIO P1 si se aprueba · Criterio: vversions sin FAIL; Census 0 huérfanos real; espejo Change Log.md = v9.22.47 · Decisión: DEC-09.
+
+## D · Resumen de cambios propuestos al PLAN (para el DRY RUN de CG-09)
+- Filas: 69 conservadas; 0 eliminadas; 6 propuestas (crear solo las aprobadas).
+- Estados propuestos (todos sujetos a APROBAR_WRITE): → Resuelto: HO-000104.P2 (reformulación), T3.Y (decisión HTTPS), PLAN-3F-2 (duplicada de T3.I), T2.C (residuos trasladados). Ningún otro cambio de Estado sin su criterio cumplido.
+- Responsable: sin cambios automáticos; candidatos marcados "propuesta:" (T3.K → CLAUDE/MAIN; verificadores por DEC-10).
+- Depende_De: cambios propuestos solo en T3.L (DEC-03); el resto se anota como "real:" en Notas sin tocar la columna hasta aprobación.
+- Orden: sin cambios (DEC-12). Track: sin cambios. Notas: prefijo [PRJ][CG][CP][PRIO] en las 44 abiertas.
+- Verificado_Por: 10 filas históricas vacías → DEC-13.

@@ -1,5 +1,18 @@
 # V | CHANGELOG
 
+Tipo: [OPS] [DOCS]
+Identidad VANTAGE: agent.family=ARENA · agent.instance=DEFAULT. Agente fuera del registro de identidad (SP:BOOTLOADER-002): escribe solo bajo APROBAR_WRITE del operador; el handoff canónico lo re-emite un agente registrado con parent_handoff (fila T3.AG).
+Fecha: 2026-10-14 12:03–13:12 CDMX (pase 1 con DRY RUN v1/v2 aprobado; pase 2 sin DRY RUN por instrucción expresa del operador).
+Documentos modificados: PLAN DE TRABAJO (870e24ea…), RECONCILIATION LOG (087d7551…), TRACKER REWRITE MANUAL & KERNEL (3e5938be…) + subpágina nueva «Tracker — Histórico (hasta 2026-10-14)», V | CHANGELOG (esta entrada + bump de Versión v9.22.47 → v9.22.48). Sin cambios en Kernel, Manual, System Prompt, Charter, Census, Registry, ALIASES ni en el repositorio.
+Cambio:
+1. PLAN (pase 1, 46 update_page): prefijo [PRJ][CG][CP][P] + [ACT 2026-10-14 ARENA · CG-09] en las 44 filas abiertas; Estado → Resuelto por acta del operador (LOG #111): T3.Y (DEC-05), HO-000104.P2 (DEC-15), PLAN-3F-2 (DEC-08a, duplicado de T3.I), T2.C (D-POOL); → En progreso: T2.CHARTER, T2.O, T2.H; T3.L Depende_De ampliado (DEC-03a); Responsable: T2.1 → MISTRAL, T2.2b/T2.3b → CHATGPT, T3.K → CLAUDE/MAIN (DEC-01/DEC-10).
+1. PLAN: alta de la serie T3.AA–T3.AJ (10 filas, Fase 3, Pendiente; D-SERIE): AA ventana CHARTER única (DEC-06); AB/AC verificación post-pase Kernel/Manual; AD rotación del CHANGELOG; AE backup Notion (DEC-22); AF git_sync.py timeout y política de rama; AG re-emisión del handoff; AH ventana única de decisiones del operador; AI CI mínima opcional (DEC-15); AJ espejos ISIM Kernel §14.13 / Manual §9.6.
+1. PLAN (pase 2): compactación de Notas en las 40 filas abiertas preexistentes; se conservan prefijo, estado/qué falta, criterio de cierre verificable y el último [ACT]; se retira la narrativa histórica. Texto íntegro previo: export del operador 2026-10-12 e historial de página de Notion. Filas Resueltas y serie nueva sin cambios; Depende_De, Evidencia, Ticket, Handoff_Serial y Verificado_Por intactos.
+1. LOG: 6 cierres (#30, #34, #39, #65, #79, #92), 6 anotaciones [ACT] (#28, #61, #85, #103, #105, #107), altas #111 (acta de decisiones 2026-10-13/14), #112 (escritura pase 1) y #113 (escritura pase 2). Nada borrado. Total 113 filas.
+1. Página del tracker: PLAN (párrafo + bloque de código), Tablero, ÚLTIMA ACCIÓN, Backlog consolidado (11 ítems), Cerrados y PRÓXIMA ACCIÓN (11 ítems) reescritos; subpágina «Tracker — Histórico (hasta 2026-10-14)» creada como destino de CONTEXTO, RESUELTOS, BLOQUEOS ACTIVOS, DECISIONES ABIERTAS/CERRADAS, NOTA DE GOBERNANZA y KERNEL V10. La API no mueve bloques: el traslado de los tres rangos y la vista por defecto «Abierto» del LOG quedan como acción manual del operador (PRÓXIMA ACCIÓN, último ítem). Ningún bloque borrado.
+1. Conteos declarados tras la escritura (pendientes de re-fetch independiente): PLAN 79 filas = 32 Pendiente / 18 En progreso / 29 Resuelto; LOG 113 filas = 27 Abierto / 86 Resuelto.
+Tipo de impacto: operativo (plan de trabajo y trazabilidad). Sin cambio de IDs canónicos, normativos ni código.
+Estado final: escrito, no verificado. Pendientes: re-fetch de GROK (DEC-10; cierra LOG #20, #112, #113 y T3.E); re-emisión del handoff (T3.AG); rotación del CHANGELOG al ARCHIVO (T3.AD; 18 entradas visibles frente a la regla de 10); el espejo local Change Log.md del repo (termina en v9.22.43) queda fuera del alcance de esta sesión.
 Tipo: [OPS] [GIT] [CODE]
 Identidad VANTAGE: agent.family=CHATGPT · agent.instance=DEFAULT. Registro retrospectivo de acciones realizadas con apoyo de Devin, Copilot y ChatGPT; no implica que esta entrada modifique código.
 Fecha: 2026-10-13 11:18 CDMX (hora indicada por el operador).
