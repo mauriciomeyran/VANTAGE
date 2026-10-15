@@ -166,14 +166,14 @@ La app debe reproducir esa información en una ventana nativa, con la lista comp
 
 ### 4.4 Tiempos: qué puede prometer la UI
 
-Medido en este equipo el 2026-10-14:
+Medido en este equipo (2026-10-15):
 
-- **Búsqueda en régimen normal: 14–15 s**, de los cuales **1,2–1,4 s** son la extracción con el LLM.
-- **La primera búsqueda tras arrancar Ollama puede tardar hasta ~45 s** (medido: 43 s): el modelo
-  (4,7 GB) tiene que cargarse en memoria. Esto solo pasa la primera vez.
-- El factor que domina el tiempo normal es el **timeout de 15 s de MagnetDL**, un índice que hoy
-  está caído y que cada búsqueda sigue esperando. Tiene arreglo y conviene resolverlo antes de
-  construir la app: ver la decisión abierta nº 6.
+- **Primera búsqueda tras arrancar Ollama: hasta ~45 s** (medido: 43 s): el modelo (4,7 GB) se
+  carga en memoria. Solo ocurre la primera vez.
+- **Régimen normal mientras un índice caído aún se intenta: ~14 s.** De ellos, 1,2–1,4 s son la
+  extracción con el LLM y ~12 s el timeout de MagnetDL.
+- **Cuando el backend ya apartó ese índice: ~2,5 s** (medido: 2 140–2 562 ms). Es el estado
+  habitual tras las primeras búsquedas, y ocurre solo: la UI **no** debe asumir 15 s.
 - El backend **no emite progreso incremental**: entrega un único JSON al final. Por tanto:
   - Mostrar un **indicador indeterminado** con **tiempo transcurrido** y un texto de fase ("interpretando tu búsqueda…", "consultando índices…").
   - **No** prometer barra de progreso porcentual.
@@ -241,7 +241,7 @@ el backend (decisión 6), así que la app no necesita llevar ninguna cuenta. Un 
 | Estado | Qué se ve |
 | --- | --- |
 | Inicial (sin búsqueda) | Buscador centrado, con ejemplos; sin lista |
-| Buscando | Indicador indeterminado + tiempo transcurrido + Cancelar; la lista anterior permanece atenuada. La primera búsqueda tras arrancar el modelo puede llegar a ~45 s: mostrarlo como normal, no como error |
+| Buscando | Indicador indeterminado + tiempo transcurrido + Cancelar; la lista anterior permanece atenuada. La primera búsqueda tras arrancar el modelo puede llegar a ~45 s, y ~14 s mientras se sigue intentando un índice caído: mostrarlo como normal, no como error. Cuando el backend ya lo apartó, la búsqueda baja a ~2-3 s |
 | Con resultados | Lista + panel de diagnóstico |
 | Sin resultados | Mensaje claro + causa real (sección 4.3, código 2) + sugerencias accionables: bajar el mínimo de semillas, quitar `--sin-relevancia`, probar el título en inglés |
 | Ollama caído | Aviso con instrucciones y botón Reintentar (código 3) |

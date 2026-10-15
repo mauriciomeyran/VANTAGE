@@ -30,12 +30,18 @@ ollama list && curl -s http://localhost:11434/api/tags >/dev/null && echo "Ollam
 **3. Da contexto al agente.** Si el repo está en GitHub, conecta la integración de GitHub
 y dile al agente que lea `Bittorrent_Search/README.md`. Si no, adjunta `BRIEF_UI_GLAZE.md`.
 
-**4. Ten paciencia con los tiempos.** Una búsqueda tarda **14–15 s** en régimen normal, y la
-**primera** tras arrancar Ollama puede llegar a **~45 s** (el modelo se carga en memoria).
-No es que la app se haya colgado: es el backend. **Casi todo ese tiempo es el timeout de
-MagnetDL**, un índice caído: con `--sin-motores MagnetDL` la búsqueda baja a **~2,3 s**.
+**4. Ten paciencia con los tiempos.** La **primera** búsqueda tras arrancar Ollama puede
+llegar a **~45 s** (el modelo de 4,7 GB se carga en memoria); a partir de ahí, **~14 s**
+mientras el backend siga intentando un índice caído, y **~2,5 s** en cuanto ese índice queda
+apartado (ocurre solo, tras dos fallos: ver el punto 5). No es que la app se haya colgado.
 
-**5. Empieza en Plan mode** para la Fase 0 y la Fase 1 (hay un proceso externo de por medio),
+**5. Los índices caídos se gestionan solos.** El backend guarda un historial persistente:
+tras **dos fallos consecutivos** deja de consultar ese índice durante 30 minutos (el
+diagnóstico lo reporta con `saltado_por_salud: true`) y luego lo reintenta con un timeout
+corto, así que se recupera sin intervención. **La app no tiene que recordar nada**: no hace
+falta desmarcar índices ni pasar `--sin-motores`. Eso es solo preferencia del usuario.
+
+**6. Empieza en Plan mode** para la Fase 0 y la Fase 1 (hay un proceso externo de por medio),
 y sigue en Build mode para los ajustes.
 
 ---
@@ -150,10 +156,15 @@ relevance filtering ("diagnostico.descartados_por_relevancia"), and the IMDb id 
 If "diagnostico.consulta_efectiva" differs from "diagnostico.consulta_original", show the
 effective query as "Buscando: <efectiva>".
 
+In the diagnostics panel, an index with "saltado_por_salud": true must appear as "saltado"
+together with its "motivo_salud", and must not be counted as a failure of this search: the
+backend set it aside after two failures and will retry it on its own.
+
 While the command runs: indeterminate spinner, elapsed time, and a Cancel button. Never show
-"no results" before the process finishes. Keep the previous list visible but dimmed. Expect
-about 15 seconds per search, and up to 45 seconds on the first search after the local model
-loads into memory: present that as normal, not as an error.
+"no results" before the process finishes. Keep the previous list visible but dimmed. Expect up
+to 45 seconds on the first search after the local model loads into memory, around 15 seconds
+while a dead index is still being attempted, and around 2-3 seconds once the backend has set
+that index aside: present all of that as normal, not as an error.
 
 Requirements:
 - Always use "--json" and parse stdout as JSON. Never parse the text output, and never treat
@@ -212,8 +223,9 @@ En el panel de diagnóstico, un índice con "saltado_por_salud": true debe mostr
 
 Mientras corre el comando: indicador indeterminado, tiempo transcurrido y botón Cancelar.
 No muestres nunca "sin resultados" antes de que termine el proceso. Mantén la lista anterior
-visible pero atenuada. Cuenta con unos 15 segundos por búsqueda, y hasta 45 segundos en la
-primera tras cargar el modelo local en memoria: preséntalo como normal, no como error.
+visible pero atenuada. Cuenta con hasta 45 segundos en la primera búsqueda tras cargar el
+modelo local en memoria, unos 15 segundos mientras aún se intenta un índice caído, y unos
+2-3 segundos cuando el backend ya lo ha apartado: preséntalo todo como normal, no como error.
 
 Requisitos:
 - Usa siempre "--json" y parsea stdout como JSON. No parsees la salida de texto y no trates

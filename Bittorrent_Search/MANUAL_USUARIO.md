@@ -563,19 +563,22 @@ python3 main.py "Severance" --salud off      # ignora el historial en esta búsq
 python3 main.py "Severance" --salud reset    # borra el historial
 ```
 
-### Forzar los índices a mano
+### Forzar los índices a mano (opcional)
 
-Si el verificador te dice que un índice lleva días en `[FALLO]`, exclúyelo para no
-esperar su timeout en cada búsqueda:
+Normalmente **no necesitas esto**: de los índices caídos se encarga el historial automático
+que acabas de leer. Estos comandos sirven para excluir un índice por preferencia propia
+(por ejemplo, si nunca quieres anime) o para forzar una comparación:
 
 ```bash
 python3 main.py "Severance" --sin-motores MagnetDL
 python3 main.py "Dune" --motores LimeTorrents,EZTV
+python3 main.py "Dune" --motores LimeTorrents,EZTV,nyaa.si
 ```
 
 Acepta los nombres (`YTS`, `LimeTorrents`, `MagnetDL`, `EZTV`, `Nyaa`) o sus dominios
-(`yts.gg`, `nyaa.si`). Medido el 2026-10-14: la misma búsqueda pasó de **15 s a 2,3 s**,
-con los mismos resultados.
+(`yts.gg`, `nyaa.si`), sin distinguir mayúsculas ni acentos, y sin importar el orden.
+Excluir un índice a mano consigue el mismo efecto que ya hace el historial automático
+(~14 s → ~2,5 s), pero solo para esa ejecución.
 
 ### Verificar que no rompiste nada
 
