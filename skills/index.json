@@ -1,6 +1,18 @@
 {
   "resources": [
     {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/Bug Hunter",
+      "name": "Bug Hunter",
+      "description": "VANTAGE Skill: Bug Hunter",
+      "mimeType": "application/octet-stream"
+    },
+    {
+      "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/Prompt Master Regular",
+      "name": "Prompt Master Regular",
+      "description": "VANTAGE Skill: Prompt Master Regular",
+      "mimeType": "application/octet-stream"
+    },
+    {
       "uri": "https://mauriciomeyran.github.io/VANTAGE/skills/corporate-communication-style",
       "name": "corporate-communication-style",
       "description": "VANTAGE Skill: corporate-communication-style",
