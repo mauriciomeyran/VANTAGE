@@ -8,7 +8,11 @@ Ejecutar con::
 
 from __future__ import annotations
 
+import importlib
 import json
+import os
+import subprocess
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import pytest
@@ -16,11 +20,14 @@ import requests
 
 import engines
 import main as modulo_main
+import salud
+import salud_motores
 import scraper
 from ai_agent import extraer_json, procesar_peticion_usuario
-from conftest import ClienteLLMFalso, RespuestaFalsa, SesionFalsa, cargar_json
+from conftest import RAIZ, ClienteLLMFalso, RespuestaFalsa, SesionFalsa, cargar_json
 from ai_agent import MODELO_POR_DEFECTO
 from engines import (
+    MOTORES_POR_DEFECTO,
     AgregadorTorrents,
     ErrorEstructura,
     ErrorFuenteNoDisponible,
@@ -36,6 +43,7 @@ from engines import (
     extraer_categoria_lime,
     formatear_bytes,
 )
+from engines import motores_desde_texto, nombres_disponibles, seleccionar_motores
 from resolver import (
     TIPOS_PELICULA,
     TIPOS_TV,
@@ -691,6 +699,356 @@ class TestUtilidades:
     def test_construir_magnet_sin_hash(self) -> None:
         with pytest.raises(ValueError):
             construir_magnet("")
+
+
+class TestSeleccionMotores:
+    def test_por_nombre_y_por_dominio(self) -> None:
+        assert [m.nombre for m in seleccionar_motores(["yts.gg", "nyaa"])] == ["YTS", "Nyaa"]
+        assert [m.nombre for m in seleccionar_motores(["LIMETORRENTS.FUN"])] == ["LimeTorrents"]
+        assert [m.nombre for m in seleccionar_motores(["eztv.re"])] == ["EZTV"]
+
+    def test_respeta_el_orden_del_catalogo(self) -> None:
+        """Se piden al revés y deben devolverse en el orden del catálogo."""
+        assert [m.nombre for m in seleccionar_motores(["nyaa", "yts"])] == ["YTS", "Nyaa"]
+
+    def test_excluir_motores(self) -> None:
+        sin_magnetdl = [m.nombre for m in seleccionar_motores(None, ["magnetdl"])]
+        assert "MagnetDL" not in sin_magnetdl and len(sin_magnetdl) == len(MOTORES_POR_DEFECTO) - 1
+        assert [m.nombre for m in seleccionar_motores(["yts", "nyaa"], ["nyaa"])] == ["YTS"]
+
+    def test_motor_desconocido_da_la_lista_de_validos(self) -> None:
+        with pytest.raises(ValueError) as error:
+            seleccionar_motores(["noexiste"])
+        mensaje = str(error.value)
+        assert "noexiste" in mensaje
+        assert "YTS" in mensaje and "Nyaa" in mensaje
+
+    def test_seleccion_vacia_es_error(self) -> None:
+        with pytest.raises(ValueError):
+            seleccionar_motores(["yts"], ["yts"])
+
+    def test_nombres_disponibles(self) -> None:
+        assert nombres_disponibles() == ["YTS", "LimeTorrents", "MagnetDL", "EZTV", "Nyaa"]
+
+    @pytest.mark.parametrize(
+        ("entrada", "esperado"),
+        [
+            ("yts, nyaa.si", ["yts", "nyaa.si"]),
+            ("  yts  ", ["yts"]),
+            ("yts,,nyaa", ["yts", "nyaa"]),
+            ("", None),
+            (None, None),
+            (" , ", None),
+        ],
+    )
+    def test_motores_desde_texto(self, entrada: Optional[str], esperado: Optional[List[str]]) -> None:
+        assert motores_desde_texto(entrada) == esperado
+
+
+class TestSalud:
+    def test_ollama_y_modelo_disponibles(self) -> None:
+        sesion = SesionTexto('{"models": [{"name": "qwen2.5:7b"}, {"name": "nomic-embed-text:latest"}]}')
+        comprobaciones = salud.comprobar_ollama("http://localhost:11434", "qwen2.5:7b", session=sesion)
+        assert [c["ok"] for c in comprobaciones] == [True, True]
+
+    def test_modelo_sin_descargar(self) -> None:
+        sesion = SesionTexto('{"models": [{"name": "otro:1b"}]}')
+        comprobaciones = salud.comprobar_ollama(modelo="qwen2.5:7b", session=sesion)
+        assert comprobaciones[0]["ok"] is True
+        assert comprobaciones[1]["ok"] is False
+        assert "ollama pull" in comprobaciones[1]["detalle"]
+
+    def test_servicio_caido(self) -> None:
+        comprobaciones = salud.comprobar_ollama(session=SesionFalsa(fallos=["11434"]))
+        assert comprobaciones[0]["ok"] is False
+        assert "ollama serve" in comprobaciones[0]["detalle"]
+        assert comprobaciones[1]["ok"] is False
+
+    def test_dependencias_faltantes(self) -> None:
+        def importador(nombre: str) -> Any:
+            if nombre == "bs4":
+                raise ImportError("simulado")
+            return importlib.import_module(nombre)
+
+        comprobacion = salud.comprobar_dependencias(importador)
+        assert comprobacion["ok"] is False
+        assert "bs4" in comprobacion["detalle"]
+
+    def test_informe_completo_y_formato(self) -> None:
+        sesion = SesionTexto('{"models": [{"name": "qwen2.5:7b"}]}')
+        datos = salud.informe(session=sesion)
+        assert datos["ok"] is True
+        assert len(datos["checks"]) == 5
+        assert "OK" in salud.formatear(datos)
+
+    def test_main_sale_con_65_si_algo_falla(self, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+        monkeypatch.setattr(
+            salud, "informe",
+            lambda **_: {"ok": False, "raiz": ".", "host": "h", "modelo": "m",
+                         "checks": [{"nombre": "ollama", "ok": False, "detalle": "caído"}]},
+        )
+        assert salud.main(["--json"]) == salud.EXIT_FALLO
+        assert json.loads(capsys.readouterr().out)["ok"] is False
+
+
+class TestWrapperVantageSearch:
+    """El wrapper es el punto de entrada que usará la app de escritorio."""
+
+    @staticmethod
+    def _ruta() -> Path:
+        ruta = RAIZ / "scripts" / "vantage-search"
+        if not ruta.exists():
+            pytest.skip("wrapper no desplegado")
+        return ruta
+
+    def test_ayuda(self) -> None:
+        proceso = subprocess.run([str(self._ruta()), "--help"], capture_output=True, text=True, timeout=30)
+        assert proceso.returncode == 0
+        assert "vantage-search" in proceso.stdout
+
+    def test_interprete_ausente_devuelve_65_con_json(self) -> None:
+        entorno = {**os.environ, "VANTAGE_PYTHON": "/ruta/que/no/existe/python"}
+        proceso = subprocess.run(
+            [str(self._ruta()), "Dune", "--json"],
+            capture_output=True, text=True, env=entorno, timeout=60,
+        )
+        assert proceso.returncode == 65
+        datos = json.loads(proceso.stdout)
+        assert datos["error"]["tipo"] == "interprete_ausente"
+        assert "venv" in datos["error"]["mensaje"]
+
+
+class TestMotoresEnLaCLI:
+    def test_motores_llegan_al_agregador(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        capturado: Dict[str, Any] = {}
+
+        class Capturador(AgregadorFalso):
+            def __init__(self, *args: Any, **kwargs: Any) -> None:
+                capturado.update(kwargs)
+                super().__init__(*args, **kwargs)
+
+        AgregadorFalso.items = [ITEM_EJEMPLO]
+        AgregadorFalso.resumen = _resumen()
+        monkeypatch.setattr(modulo_main, "conectar_llm", lambda host: ClienteLLMFalso(RESPUESTA_LLM))
+        monkeypatch.setattr(modulo_main, "AgregadorTorrents", Capturador)
+
+        codigo = modulo_main.main(["Oppenheimer 2023", "--sin-motores", "MagnetDL, eztv.re"])
+
+        assert codigo == modulo_main.EXIT_OK
+        assert [motor.nombre for motor in capturado["motores"]] == ["YTS", "LimeTorrents", "Nyaa"]
+
+    def test_motor_invalido_falla_antes_de_llamar_al_llm(
+        self, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+    ) -> None:
+        llamado = {"llm": False}
+
+        def conectar(host: str) -> Any:
+            llamado["llm"] = True
+            return ClienteLLMFalso(RESPUESTA_LLM)
+
+        monkeypatch.setattr(modulo_main, "conectar_llm", conectar)
+
+        codigo = modulo_main.main(["Dune", "--motores", "noexiste"])
+
+        assert codigo == modulo_main.EXIT_USO
+        assert llamado["llm"] is False, "no debe gastar una llamada al LLM si los motores son inválidos"
+        assert "noexiste" in capsys.readouterr().err
+
+    def test_error_de_uso_no_usa_el_codigo_2(self) -> None:
+        """El código 2 significa 'sin resultados': un flag mal escrito no puede confundirse."""
+        with pytest.raises(SystemExit) as salida:
+            modulo_main.main(["Dune", "--all", "0"])
+        assert salida.value.code == modulo_main.EXIT_USO
+
+
+class TestSaludMotores:
+    """Política de la salud persistente, con reloj controlado."""
+
+    @staticmethod
+    def _salud(tmp_path: Path, reloj, **kwargs: Any) -> Any:
+        parametros = {"fallos_para_degradar": 2, "ttl": 1800.0, "timeout_degradado": 3.0}
+        parametros.update(kwargs)
+        return salud_motores.SaludMotores(tmp_path / "estado.json", reloj=reloj, **parametros)
+
+    def test_archivo_ausente_es_estado_vacio(self, tmp_path: Path) -> None:
+        salud = self._salud(tmp_path, lambda: 1000.0)
+        assert salud.resumen() == []
+        assert salud.decision("YTS").saltar is False
+
+    def test_dos_fallos_degradan_y_el_exito_limpia(self, tmp_path: Path) -> None:
+        momento = [1000.0]
+        salud = self._salud(tmp_path, lambda: momento[0])
+
+        salud.registrar("MagnetDL", exito=False, error="HTTP 522")
+        assert salud.decision("MagnetDL").saltar is False, "un fallo aislado no debe bastar"
+
+        salud.registrar("MagnetDL", exito=False, error="HTTP 522")
+        decision = salud.decision("MagnetDL")
+        assert decision.saltar is True
+        assert "degradado" in (decision.motivo or "")
+
+        salud.registrar("MagnetDL", exito=True)
+        assert salud.decision("MagnetDL").saltar is False
+        assert salud.decision("MagnetDL").motivo is None
+
+    def test_ttl_vencido_reintenta_con_timeout_reducido(self, tmp_path: Path) -> None:
+        momento = [1000.0]
+        salud = self._salud(tmp_path, lambda: momento[0])
+        salud.registrar("MagnetDL", exito=False)
+        salud.registrar("MagnetDL", exito=False)
+        assert salud.decision("MagnetDL").saltar is True
+
+        momento[0] += 1801  # pasado el TTL
+        decision = salud.decision("MagnetDL")
+        assert decision.saltar is False
+        assert decision.timeout == 3.0
+        assert "sondeo" in (decision.motivo or "")
+
+    def test_archivo_corrupto_no_rompe(self, tmp_path: Path) -> None:
+        ruta = tmp_path / "estado.json"
+        ruta.write_text("{esto no es json", encoding="utf-8")
+        salud = salud_motores.SaludMotores(ruta)
+        assert salud.resumen() == []
+        assert salud.decision("YTS").saltar is False
+
+    def test_escritura_atomica_genera_json_valido(self, tmp_path: Path) -> None:
+        ruta = tmp_path / "estado.json"
+        salud = salud_motores.SaludMotores(ruta)
+        salud.registrar("Nyaa", exito=False, error="timeout")
+        datos = json.loads(ruta.read_text(encoding="utf-8"))
+        assert datos["motores"]["Nyaa"]["fallos_consecutivos"] == 1
+        assert list(tmp_path.glob("*.tmp")) == [], "no deben quedar temporales"
+
+    def test_desactivada_no_escribe(self, tmp_path: Path) -> None:
+        ruta = tmp_path / "estado.json"
+        salud = salud_motores.SaludMotores(ruta, activa=False)
+        salud.registrar("Nyaa", exito=False)
+        assert not ruta.exists()
+        assert salud.decision("Nyaa").saltar is False
+
+    def test_reiniciar_borra_el_historial(self, tmp_path: Path) -> None:
+        ruta = tmp_path / "estado.json"
+        salud = salud_motores.SaludMotores(ruta)
+        salud.registrar("Nyaa", exito=False)
+        salud.registrar("Nyaa", exito=False)
+        assert salud.decision("Nyaa").saltar is True
+
+        salud.reiniciar()
+        assert not ruta.exists()
+        assert salud.decision("Nyaa").saltar is False
+
+
+class TestSaludEnElAgregador:
+    """Integración: un motor caído deja de costar su timeout."""
+
+    @staticmethod
+    def _agregador(tmp_path: Path, sesion: SesionFalsa, reloj):
+        """Agregador con solo Nyaa y LimeTorrents: únicamente Nyaa puede fallar."""
+        motores = seleccionar_motores(["nyaa", "limetorrents"])
+        agregador = AgregadorTorrents(motores=motores, paralelo=False)
+        agregador.session = sesion
+        agregador.salud = salud_motores.SaludMotores(
+            tmp_path / "estado.json", reloj=reloj, fallos_para_degradar=2, ttl=1800.0, timeout_degradado=3.0
+        )
+        return agregador
+
+    @staticmethod
+    def _llamadas_a(sesion: SesionFalsa, fragmento: str) -> int:
+        return sum(1 for llamada in sesion.llamadas if fragmento in llamada["url"])
+
+    def test_motor_caido_se_salta_tras_dos_busquedas(self, tmp_path: Path) -> None:
+        momento = [1000.0]
+        sesion = SesionFalsa(reglas=[("limetorrents", "limetorrents_search.html")])
+        agregador = self._agregador(tmp_path, sesion, lambda: momento[0])
+
+        # Las dos primeras búsquedas lo intentan y fallan (aún no está degradado).
+        for intento in (1, 2):
+            agregador.buscar_con_diagnostico("oppenheimer", "movies", 5)
+            estado = next(e for e in agregador.ultimo_resumen.estados if e.nombre == "Nyaa")
+            assert estado.saltado_por_salud is False, f"no debe saltarse en el intento {intento}"
+            assert estado.ok is False
+
+        llamadas_nyaa = self._llamadas_a(sesion, "nyaa.si")
+        agregador.buscar_con_diagnostico("oppenheimer", "movies", 5)
+        estado = next(e for e in agregador.ultimo_resumen.estados if e.nombre == "Nyaa")
+
+        assert estado.saltado_por_salud is True
+        assert "degradado" in (estado.motivo_salud or "")
+        assert estado.milisegundos == 0
+        assert self._llamadas_a(sesion, "nyaa.si") == llamadas_nyaa, "no debe pedirse nada al motor saltado"
+        # El motor sano sigue consultándose en la misma búsqueda.
+        assert self._llamadas_a(sesion, "limetorrents") > 0
+
+    def test_ttl_vencido_sondea_con_timeout_reducido_y_se_recupera(self, tmp_path: Path) -> None:
+        momento = [1000.0]
+        sesion = SesionFalsa(reglas=[("limetorrents", "limetorrents_search.html")])
+        agregador = self._agregador(tmp_path, sesion, lambda: momento[0])
+
+        for _ in range(3):
+            agregador.buscar_con_diagnostico("oppenheimer", "movies", 5)
+        assert next(e for e in agregador.ultimo_resumen.estados if e.nombre == "Nyaa").saltado_por_salud
+
+        # Pasado el TTL, se reintenta con timeout reducido; el índice ya responde.
+        momento[0] += 1801
+        sesion.reglas.append(("nyaa.si", "nyaa_search.html"))
+        agregador.buscar_con_diagnostico("dune", "movies", 5)
+        estado = next(e for e in agregador.ultimo_resumen.estados if e.nombre == "Nyaa")
+
+        assert estado.saltado_por_salud is False
+        assert estado.timeout_segundos == 3.0, "el sondeo debe usar el timeout reducido"
+        assert estado.ok is True and estado.resultados > 0
+
+        # Tras el éxito vuelve a la normalidad: sin salto y con el timeout habitual.
+        agregador.buscar_con_diagnostico("dune", "movies", 5)
+        estado = next(e for e in agregador.ultimo_resumen.estados if e.nombre == "Nyaa")
+        assert estado.saltado_por_salud is False
+        assert estado.timeout_segundos is None
+        assert estado.ok is True
+
+    def test_un_fallo_de_imdb_no_degrada_eztv(self, tmp_path: Path) -> None:
+        """Sin IMDb no hay resultados, pero el índice no tiene la culpa."""
+        momento = [1000.0]
+        sesion = SesionFalsa(reglas=[("limetorrents", "limetorrents_search.html")])
+        motores = seleccionar_motores(["eztv", "limetorrents"])
+        agregador = AgregadorTorrents(motores=motores, paralelo=False)
+        agregador.session = sesion
+        agregador.salud = salud_motores.SaludMotores(
+            tmp_path / "estado.json", reloj=lambda: momento[0], fallos_para_degradar=2
+        )
+
+        for _ in range(3):
+            agregador.buscar_con_diagnostico("severance", "tv", 5, resolver_imdb=False)
+            estado = next(e for e in agregador.ultimo_resumen.estados if e.nombre == "EZTV")
+            assert estado.saltado_por_salud is False
+            assert "ErrorResolucion" in (estado.error or "")
+
+        assert all(fila["nombre"] != "EZTV" for fila in agregador.salud.resumen())
+
+
+class TestSaludEnLaCLI:
+    def test_reset_borra_el_historial(self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+        ruta = tmp_path / "estado.json"
+        monkeypatch.setattr(salud_motores, "ARCHIVO_POR_DEFECTO", ruta)
+        salud_motores.SaludMotores(ruta).registrar("Nyaa", exito=False)
+
+        AgregadorFalso.items = [ITEM_EJEMPLO]
+        AgregadorFalso.resumen = _resumen()
+        monkeypatch.setattr(modulo_main, "conectar_llm", lambda host: ClienteLLMFalso(RESPUESTA_LLM))
+        monkeypatch.setattr(modulo_main, "AgregadorTorrents", AgregadorFalso)
+
+        assert modulo_main.main(["Oppenheimer 2023", "--salud", "reset"]) == modulo_main.EXIT_OK
+        assert not ruta.exists()
+
+    def test_off_no_escribe_estado(self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+        ruta = tmp_path / "estado.json"
+        monkeypatch.setattr(salud_motores, "ARCHIVO_POR_DEFECTO", ruta)
+        AgregadorFalso.items = [ITEM_EJEMPLO]
+        AgregadorFalso.resumen = _resumen()
+        monkeypatch.setattr(modulo_main, "conectar_llm", lambda host: ClienteLLMFalso(RESPUESTA_LLM))
+        monkeypatch.setattr(modulo_main, "AgregadorTorrents", AgregadorFalso)
+
+        assert modulo_main.main(["Oppenheimer 2023", "--salud", "off"]) == modulo_main.EXIT_OK
+        assert not ruta.exists()
 
 
 class TestLimpiarConsulta:

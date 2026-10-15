@@ -9,13 +9,14 @@ Cuando una búsqueda no devuelve nada, el diagnóstico por motor se imprime en
 
 Códigos de salida
 -----------------
-====  ============================================
-0     resultado encontrado (o ayuda mostrada)
-2     ningún item superó los filtros
-3     fallo del LLM (conexión o parseo)
-4     todos los motores fallaron
-130   interrupción por teclado
-====  ============================================
+=====  ============================================
+0      resultado encontrado (o ayuda mostrada)
+2      ningún item superó los filtros
+3      fallo del LLM (conexión o parseo)
+4      todos los motores fallaron
+64     argumentos inválidos (uso incorrecto)
+130    interrupción por teclado
+=====  ============================================
 """
 
 from __future__ import annotations
@@ -27,7 +28,14 @@ import sys
 from typing import Any, Dict, List, Optional, Sequence
 
 from ai_agent import MODELO_POR_DEFECTO, procesar_peticion_usuario
-from engines import AgregadorTorrents, ResumenBusqueda
+from salud_motores import SaludMotores
+from engines import (
+    AgregadorTorrents,
+    ResumenBusqueda,
+    motores_desde_texto,
+    nombres_disponibles,
+    seleccionar_motores,
+)
 
 HOST_OLLAMA_POR_DEFECTO = "http://localhost:11434"
 SEEDERS_MINIMOS_POR_DEFECTO = 5
@@ -36,12 +44,27 @@ EXIT_OK = 0
 EXIT_SIN_RESULTADOS = 2
 EXIT_ERROR_LLM = 3
 EXIT_MOTORES_CAIDOS = 4
+EXIT_USO = 64
 EXIT_INTERRUMPIDO = 130
+
+
+class ParserVantage(argparse.ArgumentParser):
+    """ArgumentParser que sale con el código 64 en vez de 2.
+
+    argparse usa 2 para los errores de uso y en esta CLI 2 significa "sin
+    resultados": un cliente (por ejemplo la app de escritorio) no podría
+    distinguir un flag mal escrito de una búsqueda vacía.
+    """
+
+    def error(self, message: str) -> None:  # pragma: no cover - termina el proceso
+        self.print_usage(sys.stderr)
+        print(f"{self.prog}: error: {message}", file=sys.stderr)
+        raise SystemExit(EXIT_USO)
 
 
 def construir_parser() -> argparse.ArgumentParser:
     """Define la interfaz de línea de comandos."""
-    parser = argparse.ArgumentParser(
+    parser = ParserVantage(
         prog="main.py",
         description="Búsqueda de metadatos BitTorrent en lenguaje natural (VANTAGE).",
         epilog='Ejemplo: python3 main.py "Busca la película Oppenheimer 2023" --verbose',
@@ -65,6 +88,15 @@ def construir_parser() -> argparse.ArgumentParser:
                         help="No resuelve IMDb por red (desactiva EZTV si no hay id)")
     parser.add_argument("--secuencial", action="store_true",
                         help="Consulta los motores en serie con pausas (más lento, más conservador)")
+    parser.add_argument("--motores", metavar="LISTA", default=None,
+                        help="Consulta solo estos motores, separados por comas "
+                             f"({', '.join(nombres_disponibles())})")
+    parser.add_argument("--sin-motores", metavar="LISTA", default=None,
+                        help="No consulta estos motores, separados por comas "
+                             "(util para saltar indices caidos que solo anaden espera)")
+    parser.add_argument("--salud", choices=("auto", "off", "reset"), default="auto",
+                        help="Salud persistente de los motores: 'auto' no vuelve a esperar a un "
+                             "índice caído, 'off' la desactiva, 'reset' borra el historial")
     parser.add_argument("--debug", action="store_true", help="Registro de depuración en stderr")
     return parser
 
@@ -123,6 +155,7 @@ def _payload_json(
         "mejor": items[0] if items else None,
         "diagnostico": {
             "consulta_efectiva": resumen.consulta,
+            "motores_consultados": [estado.nombre for estado in resumen.estados],
             "consulta_original": resumen.consulta_original,
             "categoria": resumen.categoria,
             "imdb_id": resumen.imdb_id,
@@ -140,6 +173,9 @@ def _payload_json(
                     "error": estado.error,
                     "ms": estado.milisegundos,
                     "imdb_id": estado.imdb_id,
+                    "saltado_por_salud": estado.saltado_por_salud,
+                    "motivo_salud": estado.motivo_salud,
+                    "timeout_segundos": estado.timeout_segundos,
                 }
                 for estado in resumen.estados
             ],
@@ -155,6 +191,14 @@ def ejecutar(args: argparse.Namespace) -> int:
     consulta = " ".join(args.consulta).strip()
 
     try:
+        motores = seleccionar_motores(
+            motores_desde_texto(args.motores), motores_desde_texto(args.sin_motores)
+        )
+    except ValueError as error:
+        print(f"Selección de motores inválida: {error}", file=sys.stderr)
+        return EXIT_USO
+
+    try:
         cliente_llm = conectar_llm(args.host)
     except ConnectionError as error:
         print(f"Error de conexión con Ollama: {error}", file=sys.stderr)
@@ -166,7 +210,15 @@ def ejecutar(args: argparse.Namespace) -> int:
         print(f"Fallo en el procesamiento del LLM: {error}", file=sys.stderr)
         return EXIT_ERROR_LLM
 
-    agregador = AgregadorTorrents(paralelo=not args.secuencial, pausa=(0.2, 0.6))
+    salud = SaludMotores(activa=args.salud != "off")
+    if args.salud == "reset":
+        salud.reiniciar()
+        if args.verbose:
+            print("Historial de salud de motores borrado.")
+
+    agregador = AgregadorTorrents(
+        motores=motores, paralelo=not args.secuencial, pausa=(0.2, 0.6), salud=salud
+    )
     items, resumen = agregador.buscar_con_diagnostico(
         extraido["query"],
         extraido["categoria"],

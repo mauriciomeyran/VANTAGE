@@ -146,6 +146,21 @@ class ClienteLLMFalso:
         return {"message": {"content": self.contenido or ""}}
 
 
+
+
+@pytest.fixture(autouse=True)
+def salud_aislada(tmp_path, monkeypatch):
+    """Redirige el estado de salud a un temporal: las pruebas no deben ensuciar el real.
+
+    Sin esto, cada motor que falle en una prueba (por ejemplo, por no tener ruta simulada)
+    quedaría anotado en `.estado_motores.json` y podría degradar un índice de verdad.
+    """
+    import salud_motores
+
+    monkeypatch.setattr(salud_motores, "ARCHIVO_POR_DEFECTO", tmp_path / ".estado_motores.json")
+    return tmp_path / ".estado_motores.json"
+
+
 @pytest.fixture
 def sesion_falsa() -> SesionFalsa:
     """Sesión simulada con todas las rutas de fixture."""

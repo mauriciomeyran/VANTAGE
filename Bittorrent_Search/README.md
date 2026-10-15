@@ -60,8 +60,11 @@ cada mirror; para la de series: `python3 scripts/verificar_engines.py -q Severan
 | `engines.py` | Los 5 motores + `AgregadorTorrents` (paralelo, dedup, relevancia, diagnóstico) |
 | `scraper.py` | Shim de compatibilidad con la firma histórica `buscar_torrents` (delega en Nyaa) |
 | `main.py` | CLI: extracción → búsqueda → salida + códigos de salida |
+| `salud.py` | Verificación del backend (intérprete, dependencias, Ollama, modelo) |
+| `salud_motores.py` | Historial persistente de fallos por motor y política de reintentos |
+| `scripts/vantage-search` | Punto de entrada estable para clientes externos |
 | `scripts/verificar_engines.py` | Verificación en vivo de mirrors y motores, informe markdown |
-| `tests/vantage/` | 99 pruebas offline con fixtures HTML/JSON reales |
+| `tests/vantage/` | 134 pruebas offline con fixtures HTML/JSON reales |
 
 ## Instalación
 
@@ -117,6 +120,9 @@ Resultado #1:
 | `--sin-relevancia` | No filtra por coincidencia de título con la consulta |
 | `--no-imdb` | No resuelve IMDb por red (desactiva EZTV si no hay id) |
 | `--secuencial` | Consulta los motores en serie con pausas |
+| `--motores LISTA` | Consulta solo esos motores: `YTS`, `LimeTorrents`, `MagnetDL`, `EZTV`, `Nyaa` (o sus dominios) |
+| `--sin-motores LISTA` | No consulta esos motores (override manual de la salud automática) |
+| `--salud {auto,off,reset}` | `auto` (por defecto) no vuelve a esperar a un índice degradado; `off` ignora el historial; `reset` lo borra |
 | `--debug` | Registro de depuración en stderr |
 
 ### Códigos de salida
@@ -127,7 +133,72 @@ Resultado #1:
 | 2 | Ningún item superó los filtros |
 | 3 | Fallo del LLM (conexión o parseo) |
 | 4 | Todos los motores fallaron |
+| 64 | Argumentos inválidos (uso incorrecto). Antes argparse usaba 2, que aquí significa "sin resultados" |
+| 65 | Solo `vantage-search`: backend ausente o intérprete no encontrado (devuelve `{"error": ...}`) |
 | 130 | Interrupción por teclado |
+
+## Cliente externo: `scripts/vantage-search`
+
+Para que otros programas (la app de escritorio, Raycast, scripts propios) no dependan de
+las rutas internas del `venv`, el proyecto expone un punto de entrada estable:
+
+```bash
+scripts/vantage-search "Busca la serie Severance" --json
+scripts/vantage-search --doctor          # estado del backend, en JSON
+```
+
+- Pasa cualquier opción de `main.py` tal cual (`-n`, `-s`, `--motores`, `--sin-motores`...).
+- `--doctor` comprueba intérprete, `main.py`, dependencias, Ollama y modelo descargado, y
+  devuelve `{"ok": true|false, "checks": [...]}`. Es lo que usa el botón "Comprobar
+  conexión" de la app.
+- Si el backend no está (`venv` ausente), imprime en stdout
+  `{"error": {"tipo": "interprete_ausente", ...}}` y sale con **65**, para que el cliente
+  muestre el motivo sin interpretar texto libre.
+- Se puede apuntar a otro intérprete con `VANTAGE_PYTHON=/ruta/python scripts/vantage-search ...`.
+
+La interfaz estable es ese script: cambiar el backend por dentro no obliga a tocar la app.
+
+---
+
+## Salud de los motores: no volver a esperar a un índice caído
+
+Un índice caído cuesta su timeout en **cada** búsqueda. Como el CLI lanza un proceso por
+búsqueda, `salud_motores.py` guarda el historial en disco (`.estado_motores.json`) y aplica
+esta política:
+
+- **Dos fallos consecutivos** marcan un motor como degradado; cualquier éxito lo limpia.
+- Degradado y con el último intento **dentro del TTL** (30 min): no se consulta (coste cero)
+  y el diagnóstico lo declara como `[SALTADO]`.
+- Degradado y TTL vencido: se reintenta con **timeout reducido** (3 s en vez de 12). Ese
+  intento *es* el sondeo: si el índice revivió, vuelve a aportar solo.
+- Solo cuentan los fallos **de fuente** (red, HTTP, estructura). Un fallo de resolución de
+  IMDb no degrada EZTV: eso es un problema de la consulta, no del índice.
+
+Medido con MagnetDL caído (2026-10-15), siempre con los mismos 47 resultados:
+
+| Búsqueda | Comportamiento | Tiempo |
+| --- | --- | --- |
+| 1.ª | primer fallo | 33 911 ms |
+| 2.ª | segundo fallo → degradado | 13 840 ms |
+| 3.ª | **lo salta** | 2 140 ms |
+| 4.ª (TTL vencido) | re-sondeo con timeout de 3 s | 4 800 ms |
+| 5.ª | el sondeo falló → vuelve a saltarlo | 2 046 ms |
+| cualquiera con `--salud off` | ignora el historial | 13 693 ms |
+
+Control desde la CLI:
+
+```bash
+python3 main.py "Severance"                  # 'auto' por defecto
+python3 main.py "Severance" --salud off      # ignora el historial (útil para comparar)
+python3 main.py "Severance" --salud reset    # borra el historial y continúa
+python3 scripts/vantage-search --doctor      # muestra la tabla de salud
+```
+
+El archivo `.estado_motores.json` es un JSON legible y se escribe de forma atómica; se puede
+borrar a mano en cualquier momento. La salud **no** altera los resultados: solo decide
+cuánto se espera a un índice que ya falló.
+
+---
 
 ## Diagnóstico: por qué una búsqueda queda vacía
 
@@ -232,10 +303,20 @@ consulta='Oppenheimer' categoria=movies min_seeders=5 (peticion original='pelíc
    y los artículos iniciales; si al limpiar no queda nada significativo devuelve la
    consulta original (para no romper títulos como *The Game*). El reporte muestra
    `consulta=` (la efectiva) y `peticion original=` cuando difieren.
+8. **No esperar a un índice caído, y no depender de que el cliente lo recuerde.**
+   Medido: una búsqueda con todos los motores tardaba **15 s**, y **~12 s de esos eran
+   el timeout de MagnetDL** (caído desde el 2026-10-14). Resolverlo solo en el cliente
+   tenía dos problemas: los resultados por defecto seguían siendo lentos y, el día que
+   el índice reviviera, alguien tendría que acordarse de volver a habilitarlo (y
+   reconstruir la app). Por eso la política vive en el backend (`salud_motores.py`):
+   degrada tras dos fallos, salta el motor dentro del TTL y lo re-sondea con timeout
+   reducido cuando vence. La búsqueda baja a **~2,1 s** con los mismos resultados y se
+   auto-cura sin intervención. `--motores`/`--sin-motores` y `--salud` quedan como
+   overrides explícitos del usuario.
 
 ## Pruebas
 
-99 pruebas offline (sin red): sirven respuestas reales guardadas en
+134 pruebas offline (sin red): sirven respuestas reales guardadas en
 `tests/vantage/fixtures/`.
 
 ```bash
@@ -246,7 +327,9 @@ pytest tests/vantage -v
 Cubren: normalización y relevancia, saneado de la consulta, recuperación de JSON del
 LLM, parseo de cada motor, rotación de mirrors, detección de estructura rota, magnet
 desde info-hash, deduplicación, filtro de categoría en cliente, resolución de IMDb,
-diagnóstico por motor, paridad paralelo/secuencial y los códigos de salida de la CLI.
+selección de motores (`--motores`/`--sin-motores`), verificación de salud, el wrapper
+`vantage-search`, diagnóstico por motor, paridad paralelo/secuencial y los códigos de
+salida de la CLI.
 
 ## Verificación en vivo
 

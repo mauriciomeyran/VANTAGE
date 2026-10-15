@@ -1,0 +1,11 @@
+# Estado de salud de los motores (se regenera solo)
+.estado_motores.json
+
+# Entorno y cachés
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Basura de macOS
+.DS_Store

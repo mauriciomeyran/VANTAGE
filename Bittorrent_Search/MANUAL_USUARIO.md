@@ -173,6 +173,9 @@ Puedes añadir opciones al final del comando:
 | `--sin-relevancia` | No filtra por coincidencia con tu búsqueda (ver más abajo) | `buscar_con_diagnostico(exigir_coincidencia=False)` |
 | `--host http://...` | Usa otro servidor de Ollama (por defecto `http://localhost:11434`) | `main.HOST_OLLAMA_POR_DEFECTO` → `main.conectar_llm()` |
 | `--debug` | Muestra información técnica de depuración | `logging.basicConfig(level=DEBUG)` en `main.ejecutar()` |
+| `--motores LISTA` | Consulta solo los índices que le digas (ej. `--motores LimeTorrents,EZTV`) | `seleccionar_motores()` en `engines.py` |
+| `--sin-motores LISTA` | **No** consulta los índices que le digas (override manual) | `seleccionar_motores()` en `engines.py` |
+| `--salud auto\|off\|reset` | Controla el historial de índices caídos: `auto` (por defecto), `off` lo ignora, `reset` lo borra | `SaludMotores` en `salud_motores.py` |
 
 **Ejemplo con varias opciones:**
 
@@ -236,6 +239,19 @@ verificado el **2026-10-14**:
 `buscar_torrents_limetorrents`, `buscar_torrents_nyaa`, `buscar_torrents_eztv`,
 `buscar_torrents_magnetdl`) con su lista de mirrors `BASE_URLS_*`. La descripción y
 las notas de cada motor se declaran en `MOTORES_POR_DEFECTO`.
+
+**Automático:** si un índice falla dos veces seguidas, VANTAGE deja de esperarlo
+durante 30 minutos y aparece como `[SALTADO]` en el diagnóstico. Pasado ese tiempo lo
+reintenta con un timeout corto, así que si el índice vuelve, se recupera solo. La
+primera búsqueda tras dos fallos pasa de ~14 s a ~2 s.
+
+Si quieres forzarlo a mano, o comparar con y sin historial:
+
+```bash
+python3 main.py "Severance" --salud off      # ignora el historial
+python3 main.py "Severance" --salud reset    # borra el historial
+python3 main.py "Severance" --sin-motores MagnetDL
+```
 
 ---
 
@@ -394,6 +410,9 @@ con su propio entorno de Python instalado dentro (`venv/`).
 - `resolver.py` - Identifica series y películas en IMDb (necesario para EZTV)
 - `texto.py` - Limpieza de texto, categorías, saneado de tu frase y comparación de títulos
 - `scraper.py` - Compatibilidad con la versión anterior (solo Nyaa)
+- `salud.py` - Comprueba que todo esté en su sitio (Python, dependencias, Ollama, modelo)
+- `salud_motores.py` - Recuerda qué índices están fallando para no esperarlos
+- `scripts/vantage-search` - Punto de entrada para la app de escritorio y otros programas
 - `scripts/verificar_engines.py` - Comprueba qué índices están vivos hoy
 - `tests/vantage/` - Pruebas automatizadas que no necesitan internet
 - `requirements.txt` / `requirements-dev.txt` - Dependencias de ejecución y de pruebas
@@ -419,6 +438,9 @@ con su propio entorno de Python instalado dentro (`venv/`).
 | Buscar en MagnetDL | `buscar_torrents_magnetdl()`, `BASE_URLS_MAGNETDL` | `engines.py` |
 | Identificar serie o película en IMDb | `resolver_imdb_id()`, `TIPOS_TV`, `TIPOS_PELICULA` | `resolver.py` |
 | Decidir qué motores se consultan | `Motor.soporta()`, `MOTORES_POR_DEFECTO` | `engines.py` |
+| Saltarse un índice caído | `seleccionar_motores()`, `ALIAS_MOTORES` | `engines.py` |
+| Comprobar que todo está listo | `informe()`, `comprobar_ollama()` | `salud.py` |
+| No volver a esperar a un índice caído | `SaludMotores.decision()`, `registrar()` | `salud_motores.py` |
 | Ejecutar la búsqueda (en paralelo) | `buscar_con_diagnostico()`, `AgregadorTorrents` | `engines.py` |
 | Deduplicar y ordenar por semillas | `deduplicar()`, `_ordenar_por_estabilidad()` | `engines.py` |
 | Construir un magnet desde un hash | `construir_magnet()`, `TRACKERS_POR_DEFECTO` | `engines.py` |
@@ -526,6 +548,34 @@ usa `TIPOS_TV` para no confundir una serie con una película con el mismo nombre
 
 `TIMEOUT_POR_DEFECTO` en `engines.py` (12 s) y en `resolver.py` (10 s). Con MagnetDL
 caído, ese timeout es lo que más alarga una búsqueda.
+
+### Índices caídos: qué hace VANTAGE solo
+
+No hace falta que hagas nada. Tras **dos fallos seguidos** de un índice, VANTAGE deja
+de consultarlo durante 30 minutos (verás `[SALTADO]` en el diagnóstico en vez de
+`[FALLO]`) y lo reintenta con un timeout corto cuando vence ese plazo. Si vuelve a
+funcionar, se recupera sin que toques nada.
+
+El historial vive en `.estado_motores.json` (borrable a mano) y puedes controlarlo:
+
+```bash
+python3 main.py "Severance" --salud off      # ignora el historial en esta búsqueda
+python3 main.py "Severance" --salud reset    # borra el historial
+```
+
+### Forzar los índices a mano
+
+Si el verificador te dice que un índice lleva días en `[FALLO]`, exclúyelo para no
+esperar su timeout en cada búsqueda:
+
+```bash
+python3 main.py "Severance" --sin-motores MagnetDL
+python3 main.py "Dune" --motores LimeTorrents,EZTV
+```
+
+Acepta los nombres (`YTS`, `LimeTorrents`, `MagnetDL`, `EZTV`, `Nyaa`) o sus dominios
+(`yts.gg`, `nyaa.si`). Medido el 2026-10-14: la misma búsqueda pasó de **15 s a 2,3 s**,
+con los mismos resultados.
 
 ### Verificar que no rompiste nada
 

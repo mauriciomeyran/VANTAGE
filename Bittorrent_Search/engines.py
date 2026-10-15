@@ -57,6 +57,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from resolver import ErrorResolucion, TIPOS_PELICULA, TIPOS_PREFERIDOS, TIPOS_TV, resolver_imdb_id
+from salud_motores import Decision, SaludMotores
 from texto import (
     deduplicar_preservando_orden,
     es_imdb_id,
@@ -851,16 +852,26 @@ class EstadoMotor:
     omitido: bool = False
     milisegundos: int = 0
     imdb_id: Optional[str] = None
+    #: ``True`` si no se consultó por estar degradado (salud persistente).
+    saltado_por_salud: bool = False
+    #: Motivo de la salud (degradado, sondeo, TTL...).
+    motivo_salud: Optional[str] = None
+    #: Timeout efectivamente aplicado a este motor, en segundos.
+    timeout_segundos: Optional[float] = None
 
     def linea(self) -> str:
         """Línea de reporte para terminal."""
         if self.omitido:
             return f"[OMITIDO] {self.nombre:<14} {self.error or 'no aplica a la categoría'}"
+        if self.saltado_por_salud:
+            return f"[SALTADO] {self.nombre:<14} {self.motivo_salud}"
         if not self.ok:
             return f"[FALLO]   {self.nombre:<14} {self.error}"
         detalle = f"{self.resultados} resultado(s)"
         if self.imdb_id:
             detalle += f", imdb={self.imdb_id}"
+        if self.motivo_salud:
+            detalle += f" [{self.motivo_salud}]"
         return f"[OK]      {self.nombre:<14} {detalle} ({self.milisegundos} ms)"
 
 
@@ -967,6 +978,7 @@ class AgregadorTorrents:
         timeout: float = TIMEOUT_POR_DEFECTO,
         max_workers: int = MAX_WORKERS_POR_DEFECTO,
         pausa: Tuple[float, float] = (0.0, 0.0),
+        salud: Optional[SaludMotores] = None,
     ) -> None:
         """
         Args:
@@ -976,12 +988,16 @@ class AgregadorTorrents:
             timeout: Timeout por petición.
             max_workers: Hilos máximos en modo paralelo.
             pausa: Rango de espera aleatoria entre motores en modo secuencial.
+            salud: Registro persistente de salud de los motores. Si es ``None`` se usa el
+                archivo por defecto (``.estado_motores.json``); pasar
+                ``SaludMotores(activa=False)`` lo desactiva.
         """
         self.motores: Tuple[Motor, ...] = tuple(motores) if motores else MOTORES_POR_DEFECTO
         self.paralelo = paralelo
         self.timeout = timeout
         self.max_workers = max_workers
         self.pausa = pausa
+        self.salud = salud if salud is not None else SaludMotores()
         self.session = requests.Session()
         self.ultimo_resumen: Optional[ResumenBusqueda] = None
 
@@ -992,12 +1008,13 @@ class AgregadorTorrents:
         *,
         imdb_id: Optional[str],
         resolver: bool,
+        timeout: Optional[float] = None,
     ) -> Dict[str, Any]:
         """Pasa sólo los argumentos opcionales que la firma del motor acepta."""
         parametros = inspect.signature(motor.funcion).parameters
         kwargs: Dict[str, Any] = {}
         if "timeout" in parametros:
-            kwargs["timeout"] = self.timeout
+            kwargs["timeout"] = self.timeout if timeout is None else timeout
         if "session" in parametros:
             kwargs["session"] = self.session
         if "imdb_id" in parametros:
@@ -1005,6 +1022,18 @@ class AgregadorTorrents:
         if "resolver" in parametros:
             kwargs["resolver"] = resolver
         return kwargs
+
+    @staticmethod
+    def _cuenta_como_fallo(error: BaseException) -> bool:
+        """``True`` si el error indica que la fuente falla (y no la consulta).
+
+        Un fallo de resolución de IMDb (``ErrorResolucion``) es un problema de la
+        búsqueda, no del índice: si contara, dos consultas sin resultados en IMDb
+        dejarían EZTV degradado media hora sin motivo.
+        """
+        if isinstance(error, ErrorResolucion):
+            return False
+        return isinstance(error, (requests.RequestException, ErrorMotor, ValueError))
 
     def _resolver_imdb(
         self, query: str, motores: Sequence[Motor], activo: bool
@@ -1081,33 +1110,50 @@ class AgregadorTorrents:
         estados_por_nombre: Dict[str, EstadoMotor] = {}
         resultados: List[Dict[str, Any]] = []
 
-        def ejecutar(motor: Motor) -> Tuple[Motor, List[Dict[str, Any]], Optional[str], int]:
+        def ejecutar(
+            motor: Motor,
+        ) -> Tuple[Motor, List[Dict[str, Any]], Optional[str], int, Decision]:
+            decision = self.salud.decision(motor.nombre, timeout_normal=self.timeout)
+            if decision.saltar:
+                logger.debug("motor %s saltado por salud: %s", motor.nombre, decision.motivo)
+                return motor, [], None, 0, decision
+
             inicio = time.monotonic()
             try:
                 items = motor.funcion(
                     query,
                     categoria_canonica,
                     min_seeders,
-                    **self._kwargs_motor(motor, imdb_id=imdb_id, resolver=False if imdb_id else resolver_imdb),
+                    **self._kwargs_motor(
+                        motor,
+                        imdb_id=imdb_id,
+                        resolver=False if imdb_id else resolver_imdb,
+                        timeout=decision.timeout,
+                    ),
                 )
-                return motor, list(items or []), None, int((time.monotonic() - inicio) * 1000)
+                self.salud.registrar(motor.nombre, exito=True)
+                return motor, list(items or []), None, int((time.monotonic() - inicio) * 1000), decision
             except Exception as error:  # se reporta, nunca se silencia
                 mensaje = f"{type(error).__name__}: {str(error).replace(chr(10), ' ')[:200]}"
-                return motor, [], mensaje, int((time.monotonic() - inicio) * 1000)
+                if self._cuenta_como_fallo(error):
+                    self.salud.registrar(motor.nombre, exito=False, error=mensaje)
+                return motor, [], mensaje, int((time.monotonic() - inicio) * 1000), decision
 
         if self.paralelo and len(aplicables) > 1:
             with ThreadPoolExecutor(max_workers=min(self.max_workers, len(aplicables))) as pool:
                 futuros = [pool.submit(ejecutar, motor) for motor in aplicables]
                 for futuro in as_completed(futuros):
-                    motor, items, error, ms = futuro.result()
-                    estados_por_nombre[motor.nombre] = self._estado(motor, items, error, ms, imdb_id)
+                    motor, items, error, ms, decision = futuro.result()
+                    estados_por_nombre[motor.nombre] = self._estado(
+                        motor, items, error, ms, imdb_id, decision
+                    )
                     resultados.extend(items)
         else:
             for indice, motor in enumerate(aplicables):
                 if indice and self.pausa[1] > 0:
                     time.sleep(random.uniform(*self.pausa))
-                _, items, error, ms = ejecutar(motor)
-                estados_por_nombre[motor.nombre] = self._estado(motor, items, error, ms, imdb_id)
+                _, items, error, ms, decision = ejecutar(motor)
+                estados_por_nombre[motor.nombre] = self._estado(motor, items, error, ms, imdb_id, decision)
                 resultados.extend(items)
 
         # El reporte conserva el orden declarado en self.motores (paralelo incluido).
@@ -1149,7 +1195,9 @@ class AgregadorTorrents:
         error: Optional[str],
         milisegundos: int,
         imdb_id: Optional[str],
+        decision: Optional[Decision] = None,
     ) -> EstadoMotor:
+        decision = decision or Decision()
         return EstadoMotor(
             nombre=motor.nombre,
             ok=error is None,
@@ -1157,6 +1205,9 @@ class AgregadorTorrents:
             error=error,
             milisegundos=milisegundos,
             imdb_id=imdb_id if motor.requiere_imdb else None,
+            saltado_por_salud=decision.saltar,
+            motivo_salud=decision.motivo,
+            timeout_segundos=decision.timeout,
         )
 
     def buscar_en_cascada(
@@ -1228,3 +1279,94 @@ class AgregadorTorrents:
 
 #: Alias retrocompatible con el nombre usado por versiones anteriores del proyecto.
 Agregador = AgregadorTorrents
+
+
+#: Alias aceptados en ``--motores``/``--sin-motores`` (nombres de dominio incluidos).
+ALIAS_MOTORES: Dict[str, str] = {
+    "yts.gg": "yts",
+    "yts.mx": "yts",
+    "yts.lt": "yts",
+    "yts.am": "yts",
+    "limetorrents.fun": "limetorrents",
+    "limetorrents.lol": "limetorrents",
+    "magnetdl.com": "magnetdl",
+    "eztv.re": "eztv",
+    "eztvx.to": "eztv",
+    "nyaa.si": "nyaa",
+}
+
+
+def _clave_motor(nombre: str) -> str:
+    """Normaliza un nombre de motor para compararlo (sin acentos, espacios ni puntos)."""
+    return normalizar(nombre).replace(" ", "")
+
+
+def nombres_disponibles(motores: Sequence[Motor] = MOTORES_POR_DEFECTO) -> List[str]:
+    """Nombres de motor aceptados, para mensajes de ayuda y validaciones."""
+    return [motor.nombre for motor in motores]
+
+
+def seleccionar_motores(
+    incluidos: Optional[Sequence[str]] = None,
+    excluidos: Optional[Sequence[str]] = None,
+    disponibles: Sequence[Motor] = MOTORES_POR_DEFECTO,
+) -> Tuple[Motor, ...]:
+    """Filtra la lista de motores por nombre, para no consultar índices que no interesan.
+
+    Acepta los nombres canónicos o los dominios (``YTS``, ``yts.gg``, ``nyaa.si``) y no
+    distingue mayúsculas ni acentos. Excluir un motor caído evita esperar su timeout: es
+    la diferencia entre una búsqueda de ~15 s y una de ~2-3 s.
+
+    Args:
+        incluidos: Si se indica, solo se usan estos motores.
+        excluidos: Motores que no deben consultarse.
+        disponibles: Catálogo de motores sobre el que filtrar.
+
+    Returns:
+        Tupla de motores en el orden original del catálogo.
+
+    Raises:
+        ValueError: Si un nombre no corresponde a ningún motor o si no queda ninguno.
+
+    Ejemplo:
+        >>> [m.nombre for m in seleccionar_motores(["yts.gg", "nyaa"])]
+        ['YTS', 'Nyaa']
+        >>> [m.nombre for m in seleccionar_motores(None, ["magnetdl"])]
+        ['YTS', 'LimeTorrents', 'EZTV', 'Nyaa']
+    """
+    indice: Dict[str, Motor] = {_clave_motor(motor.nombre): motor for motor in disponibles}
+    for alias, clave in ALIAS_MOTORES.items():
+        if clave in indice:
+            indice[_clave_motor(alias)] = indice[clave]
+
+    def resolver(nombre: str) -> Motor:
+        motor = indice.get(_clave_motor(nombre))
+        if motor is None:
+            raise ValueError(
+                f"motor desconocido: '{nombre}'. Válidos: {', '.join(nombres_disponibles(disponibles))}"
+            )
+        return motor
+
+    seleccionados: List[Motor] = list(disponibles)
+
+    if incluidos:
+        # Se compara por nombre: Motor es un dataclass con eq y por tanto no es hashable.
+        resueltos = {resolver(nombre).nombre for nombre in incluidos}
+        # Se respeta el orden del catálogo, no el orden en que se escribieron.
+        seleccionados = [motor for motor in disponibles if motor.nombre in resueltos]
+
+    if excluidos:
+        fuera = {resolver(nombre).nombre for nombre in excluidos}
+        seleccionados = [motor for motor in seleccionados if motor.nombre not in fuera]
+
+    if not seleccionados:
+        raise ValueError("la selección de motores quedó vacía: revisa --motores/--sin-motores")
+
+    return tuple(seleccionados)
+
+
+def motores_desde_texto(texto: Optional[str]) -> Optional[List[str]]:
+    """Convierte ``"yts, nyaa.si"`` en ``["yts", "nyaa.si"]``; ``None`` si está vacío."""
+    if not texto:
+        return None
+    return [parte.strip() for parte in texto.split(",") if parte.strip()] or None

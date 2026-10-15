@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# Punto de entrada estable del backend de VANTAGE para clientes externos (la app de
+# escritorio, Raycast, scripts propios): encapsula la ruta del intérprete del venv y la
+# del script, de manera que cambiar el backend no obligue a tocar los clientes.
+#
+# Uso:
+#   scripts/vantage-search "Busca la serie Severance" --json
+#   scripts/vantage-search --doctor          # estado del backend en JSON
+#
+# Códigos de salida:
+#   0-4, 64, 130  los del propio backend (ver `main.py --help`)
+#   65            fallo del wrapper: backend ausente o intérprete no encontrado.
+#                 En ese caso imprime en stdout {"error": {...}} para que el cliente
+#                 pueda mostrar el motivo sin interpretar texto libre.
+set -uo pipefail
+
+RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PYTHON="${VANTAGE_PYTHON:-$RAIZ/venv/bin/python}"
+ENTRADA="$RAIZ/main.py"
+SALUD="$RAIZ/salud.py"
+
+# Error del wrapper: JSON en stdout (para el cliente) y mensaje en stderr (para humanos).
+error_wrapper() {
+  local tipo="$1" mensaje="$2"
+  printf '{\n  "error": {\n    "tipo": "%s",\n    "mensaje": "%s",\n    "raiz": "%s"\n  }\n}\n' \
+    "$tipo" "$mensaje" "$RAIZ"
+  printf 'vantage-search: %s\n' "$mensaje" >&2
+  exit 65
+}
+
+comprobar_backend() {
+  [ -x "$PYTHON" ] || error_wrapper "interprete_ausente" \
+    "No se encontró el intérprete del backend en '$PYTHON'. Ejecuta: python3 -m venv venv && venv/bin/pip install -r requirements.txt"
+  [ -f "$ENTRADA" ] || error_wrapper "backend_ausente" \
+    "No se encontró main.py en '$RAIZ'."
+}
+
+case "${1:-}" in
+  --doctor|--estado)
+    comprobar_backend
+    exec "$PYTHON" "$SALUD" --json
+    ;;
+  --help|-h)
+    cat <<'AYUDA'
+vantage-search — buscador de metadatos BitTorrent (envoltorio del backend VANTAGE)
+
+Uso:
+  vantage-search "<consulta en lenguaje natural>" [opciones del backend]
+  vantage-search --doctor        Estado del backend y de Ollama (JSON)
+
+Opciones propias:
+  --doctor, --estado   Comprueba intérprete, dependencias, Ollama y modelo
+  -h, --help           Esta ayuda
+
+Todas las demás opciones se pasan tal cual a main.py:
+  -n N                 Muestra los N mejores resultados
+  -s N                 Sembradores mínimos (por defecto 5)
+  --motores LISTA      Consulta solo estos motores (ej: "LimeTorrents,EZTV")
+  --sin-motores LISTA  No consulta estos motores (útil si alguno está caído)
+  --json               Salida JSON (lo que consumen los clientes)
+  --verbose            Diagnóstico por motor
+  -v --help            Ayuda completa:  scripts/vantage-search --help-backend
+
+Variables de entorno:
+  VANTAGE_PYTHON       Intérprete alternativo (por defecto: venv/bin/python)
+AYUDA
+    exit 0
+    ;;
+  --help-backend)
+    comprobar_backend
+    exec "$PYTHON" "$ENTRADA" --help
+    ;;
+esac
+
+comprobar_backend
+exec "$PYTHON" "$ENTRADA" "$@"

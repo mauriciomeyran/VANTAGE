@@ -114,7 +114,46 @@ items: 0 brutos, 0 únicos, 0 descartados por relevancia
 
 `pytest tests/vantage -q` → **99 passed**.
 
-## 4. Cómo reproducirlo
+## 4. Rendimiento: no esperar a un índice caído (añadido después)
+
+Medido con el backend real: una búsqueda con todos los motores tarda **15 025 ms** y
+**~12 s de esos son el timeout de MagnetDL** (caído desde el 2026-10-14). Se añadió:
+
+- `--motores LISTA` / `--sin-motores LISTA` (`engines.seleccionar_motores()`, acepta
+  nombres o dominios, sin distinguir acentos ni mayúsculas).
+- `salud.py`: comprobación de intérprete, dependencias, Ollama y modelo, con salida JSON
+  (`--doctor`). Es lo que usará el botón "Comprobar conexión" de la futura app.
+- `scripts/vantage-search`: punto de entrada estable para clientes externos; encapsula la
+  ruta del `venv` y devuelve `{"error": ...}` con código **65** si falta el backend.
+- Los errores de uso de la CLI ahora salen con **64** en vez de 2 (que significa "sin
+  resultados" y confundiría a un cliente).
+
+Resultado medido: **15 025 ms → 2 265 ms** con los mismos 47 resultados.
+
+### Salud persistente (segunda iteración)
+
+Excluir el índice a mano resolvía la latencia pero no la **caducidad**: el día que
+MagnetDL vuelva, alguien tendría que acordarse de rehabilitarlo (y reconstruir la app de
+Glaze). Se añadió `salud_motores.py`, que persiste el historial en `.estado_motores.json`:
+
+- Dos fallos consecutivos degradan el motor; un éxito lo limpia.
+- Dentro del TTL (30 min) no se consulta: `[SALTADO]` en el diagnóstico, coste cero.
+- TTL vencido: re-sondeo con timeout de 3 s (no 12). Si revive, se recupera solo.
+- Solo cuentan los fallos de fuente: `ErrorResolucion` (IMDb) no degrada EZTV.
+- Overrides: `--salud auto|off|reset`, más `--motores`/`--sin-motores`.
+
+Medido en vivo, siempre con los mismos 47 resultados: 1.º fallo 33 911 ms → 2.º fallo
+13 840 ms → **3.º saltado 2 140 ms** → TTL vencido 4 800 ms (sondeo) → saltado otra vez
+2 046 ms → `--salud off` 13 693 ms.
+
+**Trampa encontrada y corregida:** los tests usaban el `.estado_motores.json` real y lo
+ensuciaban con fallos simulados (habrían degradado YTS/Nyaa sin motivo). Ahora hay una
+fixture autouse que redirige el estado a un temporal, y se comprueba que la suite no
+recrea el archivo real. Suite: **134 pruebas**.
+
+Suite de pruebas: **122** (antes 99).
+
+## 5. Cómo reproducirlo
 
 ```bash
 cd ~/Documents/03\ Projects/VANTAGE/Bittorrent_Search
@@ -128,6 +167,7 @@ python3 main.py "Busca la serie Severance" -v
 
 1. **MagnetDL** (HTTP 522) sigue caído: cuando vuelva, verificar los selectores
    `table.download` con `scripts/verificar_engines.py` (no se pudo validar contra HTML real).
+   Mientras tanto, el cliente puede saltarlo con `--sin-motores MagnetDL` (15 s → 2,3 s).
 2. **LimeTorrents**: el filtro de categoría es local y solo mira la primera página; una
    paginación real requeriría seguir `/search/.../seeds/2/`.
 3. **Sin paginación** en YTS (50 items) ni EZTV (100); añadir `--paginas` si hace falta.
