@@ -9,6 +9,7 @@ Ejecutar con::
 from __future__ import annotations
 
 import importlib
+import importlib.util
 import json
 import os
 import subprocess
@@ -24,7 +25,7 @@ import salud
 import salud_motores
 import scraper
 from ai_agent import extraer_json, procesar_peticion_usuario
-from conftest import RAIZ, ClienteLLMFalso, RespuestaFalsa, SesionFalsa, cargar_json
+from conftest import RAIZ, ClienteLLMFalso, RespuestaFalsa, SesionFalsa, cargar_json, cargar_texto
 from ai_agent import MODELO_POR_DEFECTO
 from engines import (
     MOTORES_POR_DEFECTO,
@@ -52,6 +53,7 @@ from resolver import (
     seleccionar_candidato,
 )
 from texto import (
+    _prefijo_con_diferencia_corta,
     coincide_titulo,
     es_imdb_id,
     imdb_numerico,
@@ -565,6 +567,10 @@ class AgregadorFalso:
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.__class__.llamadas.append({"args": args, "kwargs": kwargs})
+
+    def cerrar(self) -> None:
+        """El orquestador cierra el agregador al terminar (BH-017); aquí no hay nada que cerrar."""
+        return None
 
     def buscar_con_diagnostico(self, query: str, categoria=None, min_seeders: int = 5, **kwargs: Any):
         self.__class__.llamadas.append({"query": query, "categoria": categoria, "min_seeders": min_seeders, **kwargs})
@@ -1087,3 +1093,274 @@ class TestLimpiarConsulta:
         assert items
         assert all("oppenheimer" in normalizar(item["title"]) for item in items)
         assert "peticion original='película Oppenheimer'" in resumen.formatear()
+
+
+class SesionConEstados(SesionFalsa):
+    """Devuelve respuestas prefijadas en orden (para probar reintentos)."""
+
+    def __init__(self, respuestas: List[Any], **kwargs: Any) -> None:
+        super().__init__(reglas=[], **kwargs)
+        self.pendientes = list(respuestas)
+
+    def get(self, url, headers=None, params=None, timeout=None) -> RespuestaFalsa:
+        self.llamadas.append({"url": url, "params": dict(params or {}), "timeout": timeout})
+        if self.pendientes:
+            item = self.pendientes.pop(0)
+            if isinstance(item, Exception):
+                raise item
+            estado, cuerpo = item
+            return RespuestaFalsa(cuerpo, url, status_code=estado)
+        return RespuestaFalsa(cargar_texto("yts_response.json"), url)
+
+
+class SesionQueFalla(SesionFalsa):
+    """Falla siempre con la excepción indicada."""
+
+    def __init__(self, error: Exception) -> None:
+        super().__init__(reglas=[])
+        self.error = error
+
+    def get(self, url, headers=None, params=None, timeout=None) -> RespuestaFalsa:
+        self.llamadas.append({"url": url, "params": dict(params or {}), "timeout": timeout})
+        raise self.error
+
+
+HTML_LIME_CON_AVISO = (
+    '<html><body><div class="aviso">No results found for your search</div>'
+    '<table class="table2"><tr><th>Name</th></tr><tr>'
+    '<td class="tdleft"><div class="tt-name">'
+    '<a href="http://itorrents.net/torrent/' + "a" * 40 + '.torrent" class="csprite_dl14"></a>'
+    '<a href="/Oppenheimer-torrent-1.html">Oppenheimer 2023 1080p BluRay</a></div></td>'
+    '<td class="tdnormal">1 Year+ - in Movies</td><td class="tdnormal">2.0 GB</td>'
+    '<td class="tdseed">900</td><td class="tdleech">12</td><td class="tdright"></td>'
+    "</tr></table></body></html>"
+)
+
+
+def _cargar_verificador() -> Any:
+    """Carga scripts/verificar_engines.py, que no es un paquete importable."""
+    ruta = RAIZ / "scripts" / "verificar_engines.py"
+    especificacion = importlib.util.spec_from_file_location("verificar_engines_bh", ruta)
+    modulo = importlib.util.module_from_spec(especificacion)
+    especificacion.loader.exec_module(modulo)
+    return modulo
+
+
+class TestReintentosAlcanzables:
+    """BH-001: el presupuesto de reintentos debe usarse de verdad, sin castigar timeouts."""
+
+    def test_reintenta_un_503_y_acaba_bien(self) -> None:
+        sesion = SesionConEstados([(503, "sin servicio"), (200, cargar_texto("yts_response.json"))])
+        items = buscar_torrents_yts("Oppenheimer", min_seeders=5, session=sesion)
+        assert items, "el segundo intento debía devolver resultados"
+        assert len(sesion.llamadas) == 2
+
+    def test_no_reintenta_un_timeout(self) -> None:
+        """Un índice muerto cuesta su timeout: insistir duplicaría el peor caso."""
+        sesion = SesionQueFalla(requests.Timeout("read timeout"))
+        with pytest.raises(ErrorFuenteNoDisponible):
+            buscar_torrents_nyaa("dune", session=sesion)
+        assert len(sesion.llamadas) == 1, "un timeout no debe reintentarse"
+
+    def test_no_reintenta_un_404(self) -> None:
+        sesion = SesionConEstados([(404, "no existe")])
+        with pytest.raises(ErrorFuenteNoDisponible):
+            buscar_torrents_nyaa("dune", session=sesion)
+        assert len(sesion.llamadas) == 1, "un 4xx no reintentable debe fallar de inmediato"
+
+
+class TestRelevanciaSinFalsosPositivos:
+    """BH-002: los prefijos de 4 letras ya no cuelan títulos ajenos."""
+
+    @pytest.mark.parametrize(
+        ("titulo", "token", "esperado"),
+        [
+            ("Barb Wire 1996 1080p", "barbie", False),
+            ("Severance S02E10 1080p", "severe", False),
+            ("Oppenheimer 2023 1080p", "oppenheimer", True),
+            ("Spider Man No Way Home 2021", "spiderman", True),
+            ("Dune 2021 1080p", "dune", True),
+            ("The Unfathomable Sand Dunes FLAC", "dune", False),
+        ],
+    )
+    def test_coincide_titulo(self, titulo: str, token: str, esperado: bool) -> None:
+        assert coincide_titulo(titulo, [token]) is esperado
+
+    @pytest.mark.parametrize(
+        ("a", "b", "esperado"),
+        [
+            ("oppenheimer", "oppenheimers", True),
+            ("avengers", "avenger", True),
+            ("barbie", "barb", False),
+            ("severance", "severe", False),
+            # "dune"/"dunes" sí entra aquí; el caso de Dune lo protege el guardia
+            # len(token) >= 6 de coincide_titulo, no este helper.
+            ("dune", "dunes", True),
+        ],
+    )
+    def test_prefijo_con_diferencia_corta(self, a: str, b: str, esperado: bool) -> None:
+        assert _prefijo_con_diferencia_corta(a, b) is esperado
+
+
+class TestPaginaVaciaNoPisaResultados:
+    """BH-003: con tabla presente, un aviso de "no results" no debe vaciar la búsqueda."""
+
+    def test_limetorrents_con_tabla_y_aviso(self) -> None:
+        sesion = SesionTexto(HTML_LIME_CON_AVISO)
+        items = buscar_torrents_limetorrents("oppenheimer", min_seeders=5, session=sesion)
+        assert len(items) == 1
+        assert items[0]["seeders"] == 900
+        assert "a" * 40 in items[0]["magnet"]
+
+    def test_limetorrents_sin_tabla_y_con_aviso_sigue_devolviendo_vacio(self) -> None:
+        sesion = SesionTexto("<html><body><div>No results found</div></body></html>")
+        assert buscar_torrents_limetorrents("oppenheimer", session=sesion) == []
+
+    def test_limetorrents_sin_tabla_ni_aviso_es_error_de_estructura(self) -> None:
+        sesion = SesionTexto("<html><body><p>otra cosa</p></body></html>")
+        with pytest.raises(ErrorEstructura):
+            buscar_torrents_limetorrents("oppenheimer", session=sesion)
+
+
+class TestGenerosYTS:
+    """BH-004: las claves del mapa de géneros deben normalizarse como la consulta."""
+
+    def test_genero_con_guion_llega_al_parametro(self, sesion_falsa: SesionFalsa) -> None:
+        buscar_torrents_yts("Dune", "sci-fi", session=sesion_falsa)
+        assert sesion_falsa.llamadas[-1]["params"].get("genre") == "Sci-Fi"
+
+    def test_genero_en_espanol_no_se_traduce(self, sesion_falsa: SesionFalsa) -> None:
+        """La tabla usa los nombres de género de la API (en inglés); otro valor no rompe."""
+        buscar_torrents_yts("Amelie", "Animación", session=sesion_falsa)
+        assert "genre" not in sesion_falsa.llamadas[-1]["params"]
+
+    def test_movies_no_envia_genero(self, sesion_falsa: SesionFalsa) -> None:
+        buscar_torrents_yts("Dune", "movies", session=sesion_falsa)
+        assert "genre" not in sesion_falsa.llamadas[-1]["params"]
+
+
+class TestContratoDeInterfaz:
+    """BH-007, BH-008, BH-009: guardas de escritura, validación de host y códigos de salida."""
+
+    def test_salida_rechaza_extension_de_codigo(self, tmp_path: Path) -> None:
+        modulo = _cargar_verificador()
+        with pytest.raises(SystemExit):
+            modulo._escribir_informe(tmp_path / "engines.py", "informe")
+        assert not (tmp_path / "engines.py").exists()
+
+    def test_salida_acepta_markdown(self, tmp_path: Path) -> None:
+        modulo = _cargar_verificador()
+        destino = tmp_path / "informe.md"
+        modulo._escribir_informe(destino, "informe")
+        assert destino.read_text(encoding="utf-8").startswith("informe")
+
+    def test_salida_forzada_permite_otra_extension(self, tmp_path: Path) -> None:
+        modulo = _cargar_verificador()
+        destino = tmp_path / "informe.rst"
+        modulo._escribir_informe(destino, "informe", forzar=True)
+        assert destino.exists()
+
+    def test_verificador_sale_0_si_los_motores_dieron_algo(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        modulo = _cargar_verificador()
+        monkeypatch.setattr(modulo, "sondear_todo", lambda: [])
+        resumen = ResumenBusqueda(
+            consulta="dune", categoria="all", min_seeders=5, brutos=3, unicos=0, descartados_relevancia=3
+        )
+        monkeypatch.setattr(modulo, "probar_motores", lambda *a, **k: ([], resumen))
+        assert modulo.main(["--sin-sondeo", "-q", "dune"]) == 0
+
+    def test_verificador_sale_1_si_ningun_motor_respondio(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        modulo = _cargar_verificador()
+        monkeypatch.setattr(modulo, "sondear_todo", lambda: [])
+        resumen = ResumenBusqueda(consulta="dune", categoria="all", min_seeders=5, brutos=0)
+        monkeypatch.setattr(modulo, "probar_motores", lambda *a, **k: ([], resumen))
+        assert modulo.main(["--sin-sondeo", "-q", "dune"]) == 1
+
+    def test_shim_rechaza_host_que_solo_contiene_nyaa(self) -> None:
+        with pytest.raises(NotImplementedError):
+            scraper.buscar_torrents("dune", base_url="https://not-nyaa.example")
+
+    def test_shim_acepta_el_host_de_nyaa(self) -> None:
+        assert scraper._es_host_de_nyaa("https://nyaa.si") is True
+        assert scraper._es_host_de_nyaa("nyaa.si") is True
+        assert scraper._es_host_de_nyaa("https://nyaa.si.example.com") is False
+        assert scraper._es_host_de_nyaa("https://1337x.to") is False
+
+
+class TestHigieneDelAgregador:
+    """BH-012, BH-013, BH-014, BH-017."""
+
+    @staticmethod
+    def _agregador(tmp_path: Path, sesion: SesionFalsa) -> Any:
+        agregador = AgregadorTorrents(paralelo=False)
+        agregador.session = sesion
+        agregador.salud = salud_motores.SaludMotores(tmp_path / "estado.json")
+        return agregador
+
+    def test_no_repite_la_resolucion_imdb(self, tmp_path: Path) -> None:
+        """BH-012: si el agregador ya falló resolviendo, el motor no reintenta."""
+        sesion = SesionFalsa(reglas=[("limetorrents", "limetorrents_search.html")])
+        agregador = self._agregador(tmp_path, sesion)
+
+        _, resumen = agregador.buscar_con_diagnostico("severance", "tv", 5)
+
+        llamadas_imdb = [llamada for llamada in sesion.llamadas if "media-imdb" in llamada["url"]]
+        assert len(llamadas_imdb) == 1, "no debe intentarse la resolución dos veces"
+        assert resumen.error_imdb
+
+    def test_motores_vacios_es_error(self) -> None:
+        with pytest.raises(ValueError):
+            AgregadorTorrents(motores=[])
+
+    def test_nombres_duplicados_es_error(self) -> None:
+        duplicado = [Motor("X", buscar_torrents_nyaa), Motor("X", buscar_torrents_nyaa)]
+        with pytest.raises(ValueError) as error:
+            AgregadorTorrents(motores=duplicado)
+        assert "duplicados" in str(error.value)
+
+    def test_cerrar_cierra_la_sesion(self, tmp_path: Path) -> None:
+        sesion = SesionFalsa(reglas=[("limetorrents", "limetorrents_search.html")])
+        agregador = self._agregador(tmp_path, sesion)
+        assert sesion.cerrada is False
+        agregador.cerrar()
+        assert sesion.cerrada is True
+
+    def test_es_gestor_de_contexto(self, tmp_path: Path) -> None:
+        sesion = SesionFalsa(reglas=[])
+        with AgregadorTorrents(paralelo=False) as agregador:
+            agregador.session = sesion
+        assert sesion.cerrada is True
+
+
+class TestNotaDelCatalogoYTypeError:
+    """BH-015 y BH-018."""
+
+    def test_el_informe_de_salud_incluye_la_nota(self, tmp_path: Path) -> None:
+        ruta = tmp_path / "estado.json"
+        salud_motores.SaludMotores(ruta).registrar("MagnetDL", exito=False, error="timeout")
+        sesion = SesionTexto('{"models": [{"name": "qwen2.5:7b"}]}')
+
+        datos = salud.informe(salud=salud_motores.SaludMotores(ruta), session=sesion)
+
+        fila = next(m for m in datos["motores"] if m["nombre"] == "MagnetDL")
+        assert fila["nota"], "Motor.nota debe llegar al informe"
+        assert "MagnetDL" in fila["nombre"]
+
+    def test_typeerror_interno_no_se_silencia(self) -> None:
+        class ClienteRoto:
+            def __init__(self) -> None:
+                self.llamadas = 0
+
+            def chat(self, **kwargs: Any) -> Any:
+                self.llamadas += 1
+                raise TypeError("un fallo interno del cliente")
+
+        cliente = ClienteRoto()
+        with pytest.raises(ConnectionError):
+            procesar_peticion_usuario("Dune", cliente)
+        assert cliente.llamadas == 1, "no debe reintentarse un TypeError ajeno"
+
+    def test_typeerror_por_format_si_se_repliega(self) -> None:
+        cliente = ClienteLLMFalso('{"query": "Dune", "categoria": "movies"}', soporta_format=False)
+        assert procesar_peticion_usuario("Dune", cliente)["query"] == "Dune"
+        assert len(cliente.llamadas) == 2

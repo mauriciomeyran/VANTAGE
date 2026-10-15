@@ -99,7 +99,11 @@ def _llamar_chat(cliente_llm: Any, model: str, mensajes: list[dict[str, str]]) -
     """
     try:
         return cliente_llm.chat(model=model, messages=mensajes, stream=False, format="json")
-    except TypeError:
+    except TypeError as error:
+        # Solo se repliega si el TypeError es por el parámetro no soportado: un
+        # TypeError interno del cliente debe propagarse, no silenciarse.
+        if "format" not in str(error):
+            raise
         logger.debug("el cliente LLM no acepta format='json'; se reintenta sin restricción")
         return cliente_llm.chat(model=model, messages=mensajes, stream=False)
 

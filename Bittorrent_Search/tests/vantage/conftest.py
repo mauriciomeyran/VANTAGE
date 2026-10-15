@@ -96,6 +96,7 @@ class SesionFalsa:
         self.reglas = list(reglas) if reglas is not None else list(REGLAS_POR_DEFECTO)
         self.fallos = list(fallos or [])
         self.llamadas: List[Dict[str, Any]] = []
+        self.cerrada = False
 
     def get(
         self,
@@ -113,7 +114,7 @@ class SesionFalsa:
         raise requests.ConnectionError(f"sin ruta simulada para {url}")
 
     def close(self) -> None:  # compatibilidad con requests.Session
-        return None
+        self.cerrada = True
 
 
 class ClienteLLMFalso:
@@ -155,9 +156,12 @@ def salud_aislada(tmp_path, monkeypatch):
     Sin esto, cada motor que falle en una prueba (por ejemplo, por no tener ruta simulada)
     quedaría anotado en `.estado_motores.json` y podría degradar un índice de verdad.
     """
+    import engines
     import salud_motores
 
     monkeypatch.setattr(salud_motores, "ARCHIVO_POR_DEFECTO", tmp_path / ".estado_motores.json")
+    # Sin backoff real: los motores simulados como caídos no deben costar 0.5 s por reintento.
+    monkeypatch.setattr(engines, "PAUSA_REINTENTO", 0.0)
     return tmp_path / ".estado_motores.json"
 
 

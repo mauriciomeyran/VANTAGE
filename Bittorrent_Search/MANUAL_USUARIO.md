@@ -233,7 +233,7 @@ verificado el **2026-10-14**:
 | LimeTorrents | Funciona | Generalista. Es el que suele dar los resultados con más semillas |
 | Nyaa | Funciona | Solo anime y contenido asiático: para películas occidentales devuelve vacío |
 | EZTV | Funciona | Solo series, y necesita identificar la serie en IMDb (lo hace solo) |
-| MagnetDL | **Caído** | Devuelve HTTP 522. El motor sigue activo: si vuelve, funcionará sin cambios |
+| MagnetDL | **Caído** | No responde (timeout en `.com`, DNS en `.mx`). El motor sigue activo: si vuelve, funcionará sin cambios |
 
 **En el código:** cada fila es una función de `engines.py` (`buscar_torrents_yts`,
 `buscar_torrents_limetorrents`, `buscar_torrents_nyaa`, `buscar_torrents_eztv`,
@@ -373,6 +373,19 @@ búsqueda, por ejemplo: `python3 main.py "tt11280740"`.
 
 **En el código:** `resolver_imdb_id()` con la preferencia `TIPOS_TV`, que evita
 confundir una serie con una película homónima.
+
+### Un resultado no tiene nada que ver con lo que pedí
+
+**Causa:** algún índice, cuando no encuentra coincidencias reales, devuelve una lista
+genérica (se ha visto en LimeTorrents con títulos poco comunes). El filtro de relevancia
+quita casi todo, pero un título que contenga tu palabra por casualidad puede colarse.
+
+**Solución:** prueba con el título original (a menudo en inglés) o excluye ese índice en
+esa búsqueda:
+
+```bash
+python3 main.py "Amélie" --sin-motores LimeTorrents
+```
 
 ### Un índice aparece como [FALLO] todos los días
 

@@ -25,7 +25,7 @@ cd ~/Documents/03\ Projects/VANTAGE/Bittorrent_Search
 source venv/bin/activate
 ```
 
-Vive aparte de la raíz del repo VANTAGE a propósito, para no mezclarlo con el
+Vive en su propia carpeta **dentro** del repo VANTAGE (no en la raíz), para no mezclarlo con el
 resto del sistema (Layer_1, Dashboard, handoffs generales). El `handoffs/` de esta
 carpeta guarda solo los handoffs de este subsistema.
 
@@ -37,7 +37,7 @@ carpeta guarda solo los handoffs de este subsistema.
 | LimeTorrents (general) | `https://www.limetorrents.lol` → `.fun` | 200 OK — 38 items |
 | Nyaa (anime/asiático) | `https://nyaa.si` | 200 OK — 0 items para "Oppenheimer" (no es su catálogo) |
 | EZTV (series) | `https://eztv.re` → `eztvx.to` | 200 OK — 79 items para "Severance" (con IMDb `tt11280740`) |
-| MagnetDL (general) | `https://www.magnetdl.com` | **HTTP 522 / read timeout**: origen caído. El motor sigue activo y se degrada de forma visible |
+| MagnetDL (general) | `https://www.magnetdl.com` | **Sin respuesta**: read timeout en `.com`, DNS sin resolver en `.mx` (un HTTP 522 apareció en una comprobación previa). El motor sigue activo y se degrada de forma visible |
 
 Resultados de la verificación en vivo (`scripts/verificar_engines.py`):
 
@@ -64,7 +64,7 @@ cada mirror; para la de series: `python3 scripts/verificar_engines.py -q Severan
 | `salud_motores.py` | Historial persistente de fallos por motor y política de reintentos |
 | `scripts/vantage-search` | Punto de entrada estable para clientes externos |
 | `scripts/verificar_engines.py` | Verificación en vivo de mirrors y motores, informe markdown |
-| `tests/vantage/` | 134 pruebas offline con fixtures HTML/JSON reales |
+| `tests/vantage/` | 169 pruebas offline con fixtures HTML/JSON reales |
 
 ## Instalación
 
@@ -242,8 +242,12 @@ consulta='Oppenheimer' categoria=movies min_seeders=5 (peticion original='pelíc
   Un mirror que devuelve HTML con HTTP 200 se descarta mediante un validador de
   JSON, no se confunde con resultados.
 - El magnet se construye desde el info-hash que ya entrega la API.
-- Categoría: solo `movies`; los géneros (`action`, `sci-fi`, ...) se mapean al
-  parámetro `genre` y `all`/`movies` no envían filtro de género.
+- Categoría: solo `movies`; `all`/`movies` no envían filtro de género.
+- Los géneros (`action`, `sci-fi`, ...) se mapean al parámetro `genre`, pero **solo sirven
+  para llamadas directas**: el agregador pasa siempre la categoría canónica, que no lleva
+  género, así que desde la CLI ese parámetro nunca se envía. Las claves del mapa se
+  normalizan (`Sci-Fi` -> `sci fi`), que era el motivo de que ni siquiera en llamada
+  directa funcionaran.
 
 ### LimeTorrents — generalista (HTML)
 - Mirrors: `limetorrents.fun` (verificado) y `limetorrents.lol` (redirige al anterior).
@@ -272,7 +276,8 @@ consulta='Oppenheimer' categoria=movies min_seeders=5 (peticion original='pelíc
 
 ### MagnetDL — generalista (HTML)
 - Ruta `/<inicial>/<slug>/`, selectores `table.download`, `td.m a`, `td.n a`, `td.s`, `td.l`.
-- Verificado caído (HTTP 522 / read timeout). No se desactiva: si vuelve, funciona;
+- Verificado sin respuesta (read timeout en `.com`, DNS en `.mx`). No se desactiva: si
+  vuelve, funciona;
   mientras tanto aparece como `[FALLO]` en el diagnóstico en lugar de romper la búsqueda.
 
 ## Decisiones de diseño
@@ -303,7 +308,12 @@ consulta='Oppenheimer' categoria=movies min_seeders=5 (peticion original='pelíc
    y los artículos iniciales; si al limpiar no queda nada significativo devuelve la
    consulta original (para no romper títulos como *The Game*). El reporte muestra
    `consulta=` (la efectiva) y `peticion original=` cuando difieren.
-8. **No esperar a un índice caído, y no depender de que el cliente lo recuerde.**
+8. **Reintentos acotados por coste.** Cada petición se reintenta **solo** cuando el fallo
+   es barato: 429/5xx y errores de conexión (DNS, conexión rechazada). Un **timeout no se
+   reintenta** ni un 4xx no reintentable: un índice muerto cuesta su timeout completo en
+   cada intento, así que insistir duplicaría el peor caso (12 s -> 24 s) justo lo que
+   evita la salud de motores. La pausa del backoff es `PAUSA_REINTENTO`.
+9. **No esperar a un índice caído, y no depender de que el cliente lo recuerde.**
    Medido: una búsqueda con todos los motores tardaba **15 s**, y **~12 s de esos eran
    el timeout de MagnetDL** (caído desde el 2026-10-14). Resolverlo solo en el cliente
    tenía dos problemas: los resultados por defecto seguían siendo lentos y, el día que
@@ -316,7 +326,7 @@ consulta='Oppenheimer' categoria=movies min_seeders=5 (peticion original='pelíc
 
 ## Pruebas
 
-134 pruebas offline (sin red): sirven respuestas reales guardadas en
+169 pruebas offline (sin red): sirven respuestas reales guardadas en
 `tests/vantage/fixtures/`.
 
 ```bash
@@ -355,6 +365,13 @@ devuelve cada motor. Devuelve 0 si al menos un motor respondió con resultados.
 - El pipeline depende de HTML de terceros: si un índice cambia su marcado, el motor
   afectado responde `ErrorEstructura` (visible en el diagnóstico) en lugar de
   devolver basura.
+- **Verificado en vivo (2026-10-15)**: cuando el mirror de LimeTorrents no encuentra
+  coincidencias reales para una consulta, devuelve una lista genérica de ~40 filas de
+  categorías mezcladas (mayoría «Other»). El filtro de relevancia descarta casi todo,
+  pero puede colarse algún título que contenga el término por casualidad. Ejemplo real:
+  "Amélie" devolvió como primer resultado *X Art 2013 11 15 Undress Me Amelie*. Mitigación
+  disponible hoy: `--sin-motores LimeTorrents` o `--motores` explícito. Una solución fina
+  (puntuación de relevancia o lista de categorías) es una decisión de producto pendiente.
 
 ## Nota legal
 

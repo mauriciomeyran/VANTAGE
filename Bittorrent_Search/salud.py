@@ -148,8 +148,23 @@ def informe(
         "host": host,
         "modelo": modelo,
         "checks": comprobaciones,
-        "motores": (salud or SaludMotores()).resumen(),
+        "motores": _con_notas((salud or SaludMotores()).resumen()),
     }
+
+
+def _con_notas(filas: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Añade a cada motor la descripción declarada en el catálogo.
+
+    ``Motor.nota`` se escribía pero no se renderizaba en ningún sitio; el informe de
+    salud es su lugar natural (lo consume el botón "Comprobar conexión" de la app).
+    """
+    try:
+        from engines import MOTORES_POR_DEFECTO
+
+        notas = {motor.nombre: motor.nota for motor in MOTORES_POR_DEFECTO}
+    except Exception:  # pragma: no cover - catálogo no disponible
+        notas = {}
+    return [{**fila, "nota": notas.get(fila["nombre"], "")} for fila in filas]
 
 
 def formatear(datos: Dict[str, Any]) -> str:

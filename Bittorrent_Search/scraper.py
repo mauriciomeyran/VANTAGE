@@ -16,12 +16,16 @@ from __future__ import annotations
 
 import logging
 from typing import Any, Dict, List, Optional
+from urllib.parse import urlparse
 
 from engines import BASE_URLS_NYAA, buscar_torrents_nyaa
 
 logger = logging.getLogger(__name__)
 
 DEFAULT_BASE_URL = BASE_URLS_NYAA[0]
+
+#: Hosts aceptados por el shim.
+HOSTS_NYAA = {"nyaa.si", "www.nyaa.si"}
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
 
 #: Categoría -> código de categoría de Nyaa (compatibilidad con versiones previas).
@@ -32,6 +36,20 @@ CATEGORY_MAPPING: Dict[str, str] = {
     "applications": "6_0",
     "tv": "4_0",
 }
+
+
+def _es_host_de_nyaa(base_url: str) -> bool:
+    """``True`` solo si el host es de Nyaa (comparación por host, no por subcadena).
+
+    Comprobar ``\"nyaa\" in base_url`` aceptaba hosts arbitrarios como
+    ``https://not-nyaa.example``, que la docstring promete rechazar.
+    """
+    try:
+        host = urlparse(base_url if "//" in base_url else f"//{base_url}").netloc.lower()
+    except ValueError:
+        return False
+    host = host.split("@")[-1].split(":")[0]
+    return host in HOSTS_NYAA or host.endswith(".nyaa.si")
 
 
 def buscar_torrents(
@@ -57,7 +75,7 @@ def buscar_torrents(
         NotImplementedError: Si ``base_url`` apunta a un índice no soportado.
         requests.RequestException: Si la petición falla.
     """
-    if base_url and "nyaa" not in base_url.lower():
+    if base_url and not _es_host_de_nyaa(base_url):
         raise NotImplementedError(
             f"el shim scraper.py solo sirve Nyaa; para '{base_url}' usa engines.py "
             "(AgregadorTorrents o el motor específico)"

@@ -219,13 +219,16 @@ def ejecutar(args: argparse.Namespace) -> int:
     agregador = AgregadorTorrents(
         motores=motores, paralelo=not args.secuencial, pausa=(0.2, 0.6), salud=salud
     )
-    items, resumen = agregador.buscar_con_diagnostico(
-        extraido["query"],
-        extraido["categoria"],
-        args.min_seeders,
-        exigir_coincidencia=not args.sin_relevancia,
-        resolver_imdb=not args.no_imdb,
-    )
+    try:
+        items, resumen = agregador.buscar_con_diagnostico(
+            extraido["query"],
+            extraido["categoria"],
+            args.min_seeders,
+            exigir_coincidencia=not args.sin_relevancia,
+            resolver_imdb=not args.no_imdb,
+        )
+    finally:
+        agregador.cerrar()
 
     if args.salida_json:
         print(json.dumps(_payload_json(extraido, items, resumen), ensure_ascii=False, indent=2))

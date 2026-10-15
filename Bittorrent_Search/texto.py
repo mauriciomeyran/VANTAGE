@@ -204,7 +204,10 @@ def coincide_titulo(titulo: Optional[str], tokens: Sequence[str]) -> bool:
     1. Coincidencia exacta con una palabra del título.
     2. Coincidencia con dos palabras contiguas concatenadas
        (``"spiderman"`` ~ ``"Spider Man"``).
-    3. Token largo (>= 6) que sea prefijo de una palabra del título o viceversa.
+    3. Token largo (>= 6) que sea prefijo de una palabra del título **con diferencia de
+       longitud pequeña** (hasta ~20%). Antes bastaba con que una palabra de 4 letras fuera
+       prefijo, y así "Barbie" casaba con *Barb Wire* y "Severance" con *severe*; los
+       compuestos legítimos (*spiderman* ~ *Spider Man*) ya los cubre la regla 2.
 
     Sin tokens (consulta vacía o solo palabras vacías) siempre coincide.
     """
@@ -221,13 +224,32 @@ def coincide_titulo(titulo: Optional[str], tokens: Sequence[str]) -> bool:
         if token in palabras or token in bigramas:
             continue
         if len(token) >= 6 and any(
-            palabra.startswith(token) or token.startswith(palabra)
-            for palabra in palabras
-            if len(palabra) >= 4
+            _prefijo_con_diferencia_corta(token, palabra) for palabra in palabras if len(palabra) >= 4
         ):
             continue
         return False
     return True
+
+
+def _prefijo_con_diferencia_corta(a: str, b: str) -> bool:
+    """``True`` si una palabra es prefijo de la otra con una diferencia de longitud pequeña.
+
+    La diferencia admitida es ``max(1, 20 % de la palabra larga)``. Así
+    ``oppenheimer``/``oppenheimers`` (1 letra) pasa, mientras que ``barbie``/``barb``
+    (2 letras sobre 6) y ``severance``/``severe`` (3 sobre 9) se rechazan.
+
+    Ejemplo:
+        >>> _prefijo_con_diferencia_corta("oppenheimer", "oppenheimers")
+        True
+        >>> _prefijo_con_diferencia_corta("barbie", "barb")
+        False
+    """
+    if a == b:
+        return True
+    largo, corto = (a, b) if len(a) >= len(b) else (b, a)
+    if not largo.startswith(corto):
+        return False
+    return len(largo) - len(corto) <= max(1, int(0.2 * len(largo)))
 
 
 def deduplicar_preservando_orden(valores: Iterable[str]) -> List[str]:

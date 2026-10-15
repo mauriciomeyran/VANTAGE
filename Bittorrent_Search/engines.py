@@ -74,6 +74,9 @@ logger = logging.getLogger(__name__)
 
 TIMEOUT_POR_DEFECTO = 12.0
 REINTENTOS_POR_DEFECTO = 2
+#: Pausa base del backoff entre reintentos, en segundos. Las pruebas la ponen a 0
+#: para no dormir 0.5 s por cada motor simulado como caído.
+PAUSA_REINTENTO = 0.5
 MAX_WORKERS_POR_DEFECTO = 5
 
 AGENTE_NAVEGADOR = (
@@ -197,14 +200,20 @@ def _pedir(
         try:
             respuesta = agente.get(url, headers=headers, params=params, timeout=timeout)
             if respuesta.status_code in (429, 500, 502, 503, 504) and intento < reintentos:
-                time.sleep(0.5 * intento)
+                time.sleep(PAUSA_REINTENTO * intento)
                 continue
             respuesta.raise_for_status()
             return respuesta
         except requests.RequestException as error:
             ultimo_error = error
+            # No se reintenta un timeout ni un error HTTP: un índice muerto cuesta su
+            # timeout completo en cada intento, así que insistir duplicaría el peor caso
+            # (12 s -> 24 s). Los fallos baratos (DNS, conexión rechazada) y los códigos
+            # 429/5xx, que se gestionan arriba, sí se reintentan.
+            if isinstance(error, (requests.Timeout, requests.HTTPError)):
+                break  # no reintentable: insistir solo añadiría latencia
             if intento < reintentos:
-                time.sleep(0.5 * intento)
+                time.sleep(PAUSA_REINTENTO * intento)
 
     raise requests.RequestException(
         f"GET {url} falló tras {max(1, reintentos)} intento(s): {ultimo_error}"
@@ -220,7 +229,7 @@ def _pedir_con_mirrors(
     timeout: float = TIMEOUT_POR_DEFECTO,
     session: Optional[requests.Session] = None,
     validador: Optional[Callable[[requests.Response], None]] = None,
-    reintentos: int = 1,
+    reintentos: int = REINTENTOS_POR_DEFECTO,
 ) -> Tuple[requests.Response, str]:
     """Prueba cada mirror hasta que uno responda y pase ``validador``.
 
@@ -293,6 +302,12 @@ BASE_URLS_YTS: Tuple[str, ...] = (
 RUTA_YTS = "/api/v2/list_movies.json"
 
 #: Categoría canónica -> género de la API de YTS (``None`` = sin filtro de género).
+#: Categoría canónica -> género de la API de YTS (``None`` = sin filtro de género).
+#:
+#: Alcance real: solo sirve para llamadas directas a :func:`buscar_torrents_yts`. El
+#: agregador pasa siempre la categoría canónica (``movies``/``all``), que no lleva género,
+#: así que desde la CLI el parámetro ``genre`` nunca se envía. Se conserva porque la API de
+#: YTS lo admite y una llamada directa puede aprovecharlo.
 GENEROS_YTS: Dict[str, Optional[str]] = {
     "all": None,
     "movies": None,
@@ -316,6 +331,13 @@ GENEROS_YTS: Dict[str, Optional[str]] = {
     "thriller": "Thriller",
     "war": "War",
     "western": "Western",
+}
+
+#: Índice de búsqueda de :data:`GENEROS_YTS` con las claves normalizadas. Sin esto, la
+#: consulta normalizaba la entrada ("Sci-Fi" -> "sci fi") pero no las claves, así que los
+#: géneros con guion o acento no coincidían nunca.
+GENEROS_YTS_NORMALIZADO: Dict[str, Optional[str]] = {
+    normalizar(clave): valor for clave, valor in GENEROS_YTS.items()
 }
 
 
@@ -354,7 +376,7 @@ def buscar_torrents_yts(
         ErrorFuenteNoDisponible: si ningún mirror entrega JSON válido.
         requests.RequestException: si la petición falla.
     """
-    genero = GENEROS_YTS.get(normalizar(categoria) if categoria else "all", None)
+    genero = GENEROS_YTS_NORMALIZADO.get(normalizar(categoria) if categoria else "all")
     parametros: Dict[str, Any] = {
         "query_term": query,
         "limit": 50,
@@ -495,11 +517,14 @@ def buscar_torrents_limetorrents(
     )
 
     sopa = BeautifulSoup(respuesta.text, "html.parser")
-    if _pagina_vacia(respuesta.text, sopa):
-        return []
 
+    # La tabla se busca primero: si existe, la página tiene resultados aunque el HTML
+    # mencione "no results" en un aviso, una plantilla o un script. Al revés se perdían
+    # resultados en silencio y se reportaban como "[OK] 0 resultado(s)".
     tabla = sopa.find("table", class_="table2")
     if tabla is None:
+        if _pagina_vacia(respuesta.text, sopa):
+            return []
         raise ErrorEstructura(
             f"{respuesta.url}: no se encontró 'table.table2' (¿cambió el HTML o hay bloqueo anti-bot?)"
         )
@@ -578,8 +603,9 @@ BASE_URLS_MAGNETDL: Tuple[str, ...] = (
     "https://www.magnetdl.com.mx",
 )
 NOTAS_MAGNETDL = (
-    "HTTP 522 (origen Cloudflare caído) verificado el 2026-10-14; el motor queda "
-    "activo pero se degrada de forma visible en el reporte de diagnóstico."
+    "Sin respuesta verificado el 2026-10-14/15: read timeout en .com y DNS sin resolver en "
+    ".mx (el HTTP 522 apareció en una comprobación previa). El motor queda activo y, si "
+    "vuelve, funciona sin cambios."
 )
 
 
@@ -594,7 +620,8 @@ def buscar_torrents_magnetdl(
     """Busca en MagnetDL (HTML, ruta ``/<inicial>/<slug>/``).
 
     Raises:
-        ErrorFuenteNoDisponible: si ningún mirror responde (hoy lo habitual: HTTP 522).
+        ErrorFuenteNoDisponible: si ningún mirror responde (hoy lo habitual: read timeout en
+            ``.com`` y DNS sin resolver en ``.mx``).
     """
     slug = query.strip().lower().replace(" ", "-")
     inicial = slug[0] if slug and slug[0].isalnum() else "a"
@@ -609,11 +636,12 @@ def buscar_torrents_magnetdl(
     )
 
     sopa = BeautifulSoup(respuesta.text, "html.parser")
-    if _pagina_vacia(respuesta.text, sopa):
-        return []
 
+    # Mismo orden que en LimeTorrents: primero la tabla, después el aviso de "sin resultados".
     tabla = sopa.find("table", class_="download")
     if tabla is None:
+        if _pagina_vacia(respuesta.text, sopa):
+            return []
         raise ErrorEstructura(f"{respuesta.url}: no se encontró 'table.download'")
 
     resultados: List[Dict[str, Any]] = []
@@ -992,7 +1020,20 @@ class AgregadorTorrents:
                 archivo por defecto (``.estado_motores.json``); pasar
                 ``SaludMotores(activa=False)`` lo desactiva.
         """
-        self.motores: Tuple[Motor, ...] = tuple(motores) if motores else MOTORES_POR_DEFECTO
+        if motores is not None and not tuple(motores):
+            raise ValueError(
+                "la lista de motores está vacía: usa MOTORES_POR_DEFECTO u omite el parámetro"
+            )
+        self.motores: Tuple[Motor, ...] = (
+            tuple(motores) if motores is not None else MOTORES_POR_DEFECTO
+        )
+        nombres = [motor.nombre for motor in self.motores]
+        duplicados = sorted({nombre for nombre in nombres if nombres.count(nombre) > 1})
+        if duplicados:
+            raise ValueError(
+                f"nombres de motor duplicados: {', '.join(duplicados)}. El diagnóstico indexa "
+                "por nombre y colapsaría las filas."
+            )
         self.paralelo = paralelo
         self.timeout = timeout
         self.max_workers = max_workers
@@ -1000,6 +1041,19 @@ class AgregadorTorrents:
         self.salud = salud if salud is not None else SaludMotores()
         self.session = requests.Session()
         self.ultimo_resumen: Optional[ResumenBusqueda] = None
+
+    def cerrar(self) -> None:
+        """Cierra la sesión HTTP compartida. Idempotente."""
+        try:
+            self.session.close()
+        except Exception:  # nunca debe tumbar el cierre por un fallo de red
+            logger.debug("fallo al cerrar la sesión HTTP", exc_info=True)
+
+    def __enter__(self) -> "AgregadorTorrents":
+        return self
+
+    def __exit__(self, *_: Any) -> None:
+        self.cerrar()
 
     # -- infraestructura ---------------------------------------------------
     def _kwargs_motor(
@@ -1038,7 +1092,12 @@ class AgregadorTorrents:
     def _resolver_imdb(
         self, query: str, motores: Sequence[Motor], activo: bool
     ) -> Tuple[Optional[str], Optional[str]]:
-        """Resuelve el IMDb id una sola vez si algún motor lo necesita."""
+        """Resuelve el IMDb id una sola vez si algún motor lo necesita.
+
+        Con ``categoria="all"`` se usa la preferencia del único motor que exige IMDb (EZTV,
+        solo series): una serie se resuelve bien y una película da 0 resultados en EZTV de
+        cualquier forma, así que la preferencia TV no pierde nada y gana el caso de series.
+        """
         exigentes = [motor for motor in motores if motor.requiere_imdb]
         if not activo or not exigentes:
             return None, None
@@ -1127,7 +1186,9 @@ class AgregadorTorrents:
                     **self._kwargs_motor(
                         motor,
                         imdb_id=imdb_id,
-                        resolver=False if imdb_id else resolver_imdb,
+                        # Si el agregador ya intentó resolver y falló, el motor no repite la
+                        # petición: el motivo real queda en ``resumen.error_imdb``.
+                        resolver=False if (imdb_id or error_imdb) else resolver_imdb,
                         timeout=decision.timeout,
                     ),
                 )

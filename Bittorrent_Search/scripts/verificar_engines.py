@@ -198,13 +198,28 @@ def formatear_informe(
     return "\n".join(lineas)
 
 
+def _escribir_informe(destino: Path, informe: str, *, forzar: bool = False) -> None:
+    """Escribe el informe, negándose a pisar archivos que no sean informes.
+
+    ``--salida engines.py`` destruía el motor sin avisar: la herramienta se documenta
+    como sondeo, no como escritor destructivo.
+    """
+    if destino.suffix.lower() not in (".md", ".txt") and not forzar:
+        raise SystemExit(
+            f"«{destino}» no parece un informe (.md o .txt). Usa --forzar si es intencional."
+        )
+    destino.write_text(informe + "\n", encoding="utf-8")
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     """Punto de entrada del verificador."""
     parser = argparse.ArgumentParser(description="Verifica en vivo los motores de VANTAGE.")
     parser.add_argument("-q", "--query", default="Oppenheimer 2023", help="Consulta de prueba")
     parser.add_argument("-c", "--categoria", default="movies", help="Categoría canónica")
     parser.add_argument("-s", "--min-seeders", type=int, default=5, help="Sembradores mínimos")
-    parser.add_argument("--salida", help="Ruta donde guardar el informe en markdown")
+    parser.add_argument("--salida", help="Ruta donde guardar el informe en markdown (.md o .txt)")
+    parser.add_argument("--forzar", action="store_true",
+                        help="Permite escribir el informe en un archivo con otra extensión")
     parser.add_argument("--json", action="store_true", dest="salida_json", help="Imprime JSON en lugar del informe")
     parser.add_argument("--sin-sondeo", action="store_true", help="Omite el sondeo de mirrors")
     args = parser.parse_args(argv)
@@ -228,10 +243,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         informe = formatear_informe(args.query, args.categoria, args.min_seeders, sondas, items, resumen)
         print(informe)
         if args.salida:
-            Path(args.salida).write_text(informe + "\n", encoding="utf-8")
-            print(f"\nInforme guardado en {args.salida}", file=sys.stderr)
+            _escribir_informe(Path(args.salida), informe, forzar=args.forzar)
+            print(f"\nInforme guardado en {Path(args.salida).resolve()}", file=sys.stderr)
 
-    return 0 if items else 1
+    # Criterio documentado: 0 si algún motor devolvió resultados. ``items`` ya pasó el
+    # filtro de relevancia, así que puede quedar vacío con motores que sí respondieron.
+    return 0 if resumen.brutos else 1
 
 
 if __name__ == "__main__":

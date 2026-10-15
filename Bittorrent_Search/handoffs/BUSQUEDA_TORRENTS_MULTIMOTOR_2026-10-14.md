@@ -153,7 +153,31 @@ recrea el archivo real. Suite: **134 pruebas**.
 
 Suite de pruebas: **122** (antes 99).
 
-## 5. Cómo reproducirlo
+## 5. Ronda de auditoría (bug-hunter, 2026-10-15)
+
+Auditoría estática de 18 hallazgos sobre una instantánea anterior a la salud de motores.
+Triaje contra el código actual: **13 corregidos**, **1 ya estaba corregido** (el código de
+salida 2 colisionando con argparse -> `EXIT_USO = 64`), **2 verificados en vivo como no
+reproducibles o por diseño** y **2 sin cambios por decisión**.
+
+Corregidos: reintentos inalcanzables (ahora 2 intentos, pero **nunca** para timeouts ni
+4xx no reintentables: `break`, que además fue un bug propio detectado por las pruebas);
+prefijo de 4 letras en la relevancia ("Barbie" casaba con *Barb Wire*); orden de las
+guardas de "página vacía" en LimeTorrents y MagnetDL (perdían resultados en silencio);
+claves de `GENEROS_YTS` sin normalizar; doble resolución de IMDb; `motores=[]` y nombres
+duplicados; `Motor.nota` sin renderizar; textos del 522; sesión HTTP sin cerrar;
+`--salida` del verificador (podía sobrescribir `engines.py`); código de salida del
+verificador; guarda de host del shim; y el `TypeError` genérico de `format="json"`.
+
+**Hallazgo nuevo (no estaba en la auditoría)**, verificado en vivo: cuando el mirror de
+LimeTorrents no encuentra coincidencias reales devuelve una lista genérica de ~40 filas
+de categorías mezcladas; con "Amélie" el primer resultado fue contenido para adultos.
+El filtro de relevancia no lo detecta porque el título contiene el término. Mitigación
+disponible: `--sin-motores LimeTorrents`. Documentado en las limitaciones del README.
+
+Suite: **169 pruebas** (antes 134).
+
+## 6. Cómo reproducirlo
 
 ```bash
 cd ~/Documents/03\ Projects/VANTAGE/Bittorrent_Search
