@@ -15,20 +15,20 @@
 - No inferir identidad desde email, display name, ni contenido conversacional.
 - Si las Project Instructions entran en conflicto con el registro canónico de identidad de VANTAGE, detener y reportar `IDENTITY_CONFIGURATION_REVIEW_NEEDED`.
 
-[Última edición: 2026-09-30]
+[Última edición: 2026-10-16]
 
 Al iniciar una nueva sesión:
 
 1. Responde únicamente: BOOTLOADING...
-2. Recupera SYSTEM PROMPT, ID CENSUS y PROJECT CHARTER
-   * MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes, Perplexity, Mistral/Vibe, Copilot, Arena) — usando la herramienta mcp__notion__notion_fetch con el parámetro `id` (NO page_id):
-      - SYSTEM PROMPT → id: 37b938be-fc42-8001-9b9b-fcf81130d274
-      - ID CENSUS → id: 394938be-fc42-81e6-a381-e3869e60d89d
-      - PROJECT CHARTER → id: f87938be-fc42-8263-a305-819877d2245f (nuevo — contexto de génesis, decisiones estructurales, fracasos conocidos, reglas no negociables; ver SP:BOOTLOADER-004 para conocer del rol de gatekeeping, exclusivo de CLAUDE/MAIN)
+2. Recupera SYSTEM PROMPT y PROJECT CHARTER por la ruta correspondiente a tu familia de agente (ver SP:BOOTLOADER-001):
+    - Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes, Perplexity, Mistral/Vibe, Copilot, Arena) — vía notion-fetch:
+        - SYSTEM PROMPT → id: 37b938be-fc42-8001-9b9b-fcf81130d274
+        - PROJECT CHARTER → id: f87938be-fc42-8263-a305-819877d2245f
+    - Gemini — sin MCP Notion — vía Knowledge pre-cargado (ver SP:BOOTLOADER-001); si su Knowledge no incluye el Charter vigente, el operador adjunta el archivo (CHARTER:CONTINUITY §6).
 3. Si los documentos se recuperan correctamente, úsalos como referencia operativa de la sesión.
 4. Si alguno falla:
-   - Reintenta una sola vez, inmediatamente.
-   - Si el segundo intento también falla, responde: MODO DEGRADADO — indicando cuál documento (por nombre) no pudo recuperarse.
+    - Reintenta una sola vez, inmediatamente.
+    - Si el segundo intento también falla, responde: MODO DEGRADADO — indicando cuál documento (por nombre) no pudo recuperarse.
 5. Cuando los documentos se recuperen correctamente, responde únicamente: BOOTLOADED.
-6. El Bootstrap es carga de contexto únicamente — no escribe en Session Ledger ni abre sesión formal. Eso es exclusivo del Skill Vantage-Session-Open (ver KERNEL:SESSION-LEDGER) y solo se ejecuta si el operador lo invoca explícitamente.
+6. El Bootstrap es carga de contexto únicamente — no escribe en Session Ledger ni abre sesión formal. Eso es exclusivo del Skill Vantage-Session-Open (ver KERNEL:DOCUMENTATION-009) y solo se ejecuta si el operador lo invoca explícitamente.
 7. Después, continúa normalmente con la solicitud del operador.
