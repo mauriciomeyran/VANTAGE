@@ -27,6 +27,7 @@ import json
 import logging
 import os
 import tempfile
+import threading
 import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -125,10 +126,17 @@ class SaludMotores:
         self.timeout_degradado = timeout_degradado
         self.reloj = reloj
         self._estado: Optional[Dict[str, EstadoMotorSalud]] = None
+        # Reentrante: ``guardar()`` llama a ``cargar()`` con el candado tomado. El
+        # agregador usa esta clase desde varios hilos cuando busca en paralelo.
+        self._candado = threading.RLock()
 
     # -- persistencia ------------------------------------------------------
     def cargar(self) -> Dict[str, EstadoMotorSalud]:
         """Lee el estado del disco; un archivo ausente o ilegible equivale a vacío."""
+        with self._candado:
+            return self._cargar_sin_candado()
+
+    def _cargar_sin_candado(self) -> Dict[str, EstadoMotorSalud]:
         if self._estado is not None:
             return self._estado
 
@@ -154,28 +162,37 @@ class SaludMotores:
         return estado
 
     def guardar(self) -> None:
-        """Escribe el estado de forma atómica (temporal + rename)."""
+        """Escribe el estado de forma atómica (temporal + rename).
+
+        Itera sobre una **instantánea**: con búsquedas en paralelo, otro hilo puede
+        insertar la clave de un motor mientras se recorre el diccionario, y eso lanzaba
+        ``RuntimeError: dictionary changed size during iteration``.
+        """
         if not self.activa:
             return
-        datos = {
-            "version": 1,
-            "actualizado": _a_iso(self.reloj()),
-            "motores": {nombre: motor.como_dict() for nombre, motor in self.cargar().items()},
-        }
-        try:
-            self.ruta.parent.mkdir(parents=True, exist_ok=True)
-            with tempfile.NamedTemporaryFile(
-                "w", encoding="utf-8", dir=self.ruta.parent, prefix=self.ruta.name, suffix=".tmp", delete=False
-            ) as temporal:
-                json.dump(datos, temporal, ensure_ascii=False, indent=2)
-                ruta_temporal = Path(temporal.name)
-            os.replace(ruta_temporal, self.ruta)
-        except OSError as error:
-            logger.warning("no se pudo guardar el estado de salud en %s: %s", self.ruta, error)
+        with self._candado:
+            datos = {
+                "version": 1,
+                "actualizado": _a_iso(self.reloj()),
+                "motores": {
+                    nombre: motor.como_dict() for nombre, motor in dict(self.cargar()).items()
+                },
+            }
+            try:
+                self.ruta.parent.mkdir(parents=True, exist_ok=True)
+                with tempfile.NamedTemporaryFile(
+                    "w", encoding="utf-8", dir=self.ruta.parent, prefix=self.ruta.name, suffix=".tmp", delete=False
+                ) as temporal:
+                    json.dump(datos, temporal, ensure_ascii=False, indent=2)
+                    ruta_temporal = Path(temporal.name)
+                os.replace(ruta_temporal, self.ruta)
+            except Exception as error:  # persistir es una optimización, nunca un riesgo
+                logger.warning("no se pudo guardar el estado de salud en %s: %s", self.ruta, error)
 
     def reiniciar(self) -> None:
         """Borra el estado en memoria y en disco."""
-        self._estado = {}
+        with self._candado:
+            self._estado = {}
         try:
             self.ruta.unlink(missing_ok=True)
         except OSError as error:
@@ -224,21 +241,24 @@ class SaludMotores:
         if not self.activa:
             return
 
-        ahora = self.reloj()
-        motor = self.cargar().get(nombre) or EstadoMotorSalud(nombre=nombre)
-        motor.ultimo_intento = ahora
+        # Mutar y persistir dentro del candado: en paralelo, dos motores que terminan a
+        # la vez insertaban claves mientras otro hilo iteraba el estado.
+        with self._candado:
+            ahora = self.reloj()
+            motor = self._cargar_sin_candado().get(nombre) or EstadoMotorSalud(nombre=nombre)
+            motor.ultimo_intento = ahora
 
-        if exito:
-            motor.fallos_consecutivos = 0
-            motor.ultimo_exito = ahora
-            motor.ultimo_error = None
-        else:
-            motor.fallos_consecutivos += 1
-            motor.ultimo_fallo = ahora
-            motor.ultimo_error = (error or "error desconocido")[:200]
+            if exito:
+                motor.fallos_consecutivos = 0
+                motor.ultimo_exito = ahora
+                motor.ultimo_error = None
+            else:
+                motor.fallos_consecutivos += 1
+                motor.ultimo_fallo = ahora
+                motor.ultimo_error = (error or "error desconocido")[:200]
 
-        self.cargar()[nombre] = motor
-        self.guardar()
+            self._cargar_sin_candado()[nombre] = motor
+            self.guardar()
 
     def resumen(self) -> List[Dict[str, Any]]:
         """Estado legible de todos los motores conocidos, para diagnóstico."""

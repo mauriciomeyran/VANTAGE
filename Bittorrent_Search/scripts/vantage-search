@@ -38,6 +38,7 @@ comprobar_backend() {
 case "${1:-}" in
   --doctor|--estado)
     comprobar_backend
+    [ -f "$SALUD" ] || error_wrapper "backend_ausente" "No se encontró salud.py en '$RAIZ'."
     exec "$PYTHON" "$SALUD" --json
     ;;
   --help|-h)
@@ -58,8 +59,9 @@ Todas las demás opciones se pasan tal cual a main.py:
   --motores LISTA      Consulta solo estos motores (ej: "LimeTorrents,EZTV")
   --sin-motores LISTA  No consulta estos motores (útil si alguno está caído)
   --json               Salida JSON (lo que consumen los clientes)
-  --verbose            Diagnóstico por motor
-  -v --help            Ayuda completa:  scripts/vantage-search --help-backend
+  --verbose            Diagnóstico por motor (lo imprime el backend)
+  --salud MODO         auto | off | reset (historial de índices caídos)
+  --help-backend       Ayuda completa del backend (main.py --help)
 
 Variables de entorno:
   VANTAGE_PYTHON       Intérprete alternativo (por defecto: venv/bin/python)

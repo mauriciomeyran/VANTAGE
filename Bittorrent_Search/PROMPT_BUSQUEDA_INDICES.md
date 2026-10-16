@@ -2,7 +2,8 @@
 
 > **Estado (2026-10-14): esta investigación ya se ejecutó.** Índices que responden
 > hoy: YTS (`yts.gg`), LimeTorrents (`limetorrents.fun`), Nyaa (`nyaa.si`) y EZTV
-> (`eztv.re`). MagnetDL está caído (HTTP 522). 1337x devolvía 403 y TorrentGalaxy ya
+> (`eztv.re`). MagnetDL no responde (read timeout en `.com`, DNS en `.mx`; se observó un
+> HTTP 522 en una comprobación previa). 1337x devolvía 403 y TorrentGalaxy ya
 > no resuelve, así que quedaron descartados. El detalle con latencias y motivos está
 > en `VERIFICACION_ENGINES.md`, y la implementación final en `engines.py`. Este
 > documento se conserva como el prompt de investigación original.

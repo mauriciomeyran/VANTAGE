@@ -155,7 +155,13 @@ def _payload_json(
         "mejor": items[0] if items else None,
         "diagnostico": {
             "consulta_efectiva": resumen.consulta,
-            "motores_consultados": [estado.nombre for estado in resumen.estados],
+            # Solo los que se consultaron de verdad: ni los omitidos por categoría ni los
+            # saltados por salud (que cuestan cero y no se tocaron).
+            "motores_consultados": [
+                estado.nombre
+                for estado in resumen.estados
+                if not estado.omitido and not estado.saltado_por_salud
+            ],
             "consulta_original": resumen.consulta_original,
             "categoria": resumen.categoria,
             "imdb_id": resumen.imdb_id,

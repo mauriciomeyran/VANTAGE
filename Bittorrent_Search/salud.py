@@ -10,7 +10,12 @@ Uso::
     python3 salud.py            # informe legible
     python3 salud.py --json     # JSON para la app
 
-Códigos de salida: 0 si todo está correcto, 65 si alguna comprobación falla.
+Códigos de salida: 0 si todo está correcto, **66** si alguna comprobación falla.
+
+El 65 se reserva para el wrapper (``scripts/vantage-search``) cuando no encuentra el
+backend, de modo que un cliente distinga "falta el backend" de "el backend está pero
+algo no responde": con el mismo código y dos formatos distintos, el botón de
+comprobación no podría decidir qué está leyendo.
 """
 
 from __future__ import annotations
@@ -29,7 +34,7 @@ HOST_OLLAMA_POR_DEFECTO = "http://localhost:11434"
 MODELO_POR_DEFECTO = "qwen2.5:7b"
 TIMEOUT_OLLAMA = 4.0
 EXIT_OK = 0
-EXIT_FALLO = 65
+EXIT_FALLO = 66
 
 
 def comprobar_interprete(ruta: Optional[str] = None) -> Dict[str, Any]:

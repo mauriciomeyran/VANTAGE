@@ -210,8 +210,14 @@ def _pedir(
             # timeout completo en cada intento, así que insistir duplicaría el peor caso
             # (12 s -> 24 s). Los fallos baratos (DNS, conexión rechazada) y los códigos
             # 429/5xx, que se gestionan arriba, sí se reintentan.
-            if isinstance(error, (requests.Timeout, requests.HTTPError)):
-                break  # no reintentable: insistir solo añadiría latencia
+            # ``ConnectTimeout`` hereda de ``ConnectionError`` **y** de ``Timeout``: es un
+            # fallo de conexión barato (acotado por el timeout de conexión), así que se
+            # reintenta, a diferencia de un ``ReadTimeout`` que cuesta el timeout completo.
+            no_reintentable = isinstance(error, (requests.Timeout, requests.HTTPError)) and not isinstance(
+                error, requests.ConnectTimeout
+            )
+            if no_reintentable:
+                break
             if intento < reintentos:
                 time.sleep(PAUSA_REINTENTO * intento)
 
@@ -1089,6 +1095,18 @@ class AgregadorTorrents:
             return False
         return isinstance(error, (requests.RequestException, ErrorMotor, ValueError))
 
+    def _anotar_salud(self, nombre: str, *, exito: bool, error: Optional[str] = None) -> None:
+        """Anota salud sin poder tumbar la búsqueda.
+
+        El registro es una optimización: si falla (por ejemplo por una carrera interna),
+        no debe descartar resultados ya obtenidos ni propagarse. Convertir un problema de
+        contabilidad en pérdida de datos es justo lo que pasaba antes de BH2-001.
+        """
+        try:
+            self.salud.registrar(nombre, exito=exito, error=error)
+        except Exception:
+            logger.warning("no se pudo anotar la salud de %s; la búsqueda continúa", nombre, exc_info=True)
+
     def _resolver_imdb(
         self, query: str, motores: Sequence[Motor], activo: bool
     ) -> Tuple[Optional[str], Optional[str]]:
@@ -1192,12 +1210,12 @@ class AgregadorTorrents:
                         timeout=decision.timeout,
                     ),
                 )
-                self.salud.registrar(motor.nombre, exito=True)
+                self._anotar_salud(motor.nombre, exito=True)
                 return motor, list(items or []), None, int((time.monotonic() - inicio) * 1000), decision
             except Exception as error:  # se reporta, nunca se silencia
                 mensaje = f"{type(error).__name__}: {str(error).replace(chr(10), ' ')[:200]}"
                 if self._cuenta_como_fallo(error):
-                    self.salud.registrar(motor.nombre, exito=False, error=mensaje)
+                    self._anotar_salud(motor.nombre, exito=False, error=mensaje)
                 return motor, [], mensaje, int((time.monotonic() - inicio) * 1000), decision
 
         if self.paralelo and len(aplicables) > 1:

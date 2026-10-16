@@ -12,7 +12,9 @@ import importlib
 import importlib.util
 import json
 import os
+import re
 import subprocess
+import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -1168,6 +1170,20 @@ class TestReintentosAlcanzables:
             buscar_torrents_nyaa("dune", session=sesion)
         assert len(sesion.llamadas) == 1, "un 4xx no reintentable debe fallar de inmediato"
 
+    def test_si_reintenta_un_connect_timeout(self) -> None:
+        """BH2-006: `ConnectTimeout` también hereda de `ConnectionError`: es barato."""
+        sesion = SesionQueFalla(requests.ConnectTimeout("no se pudo conectar"))
+        with pytest.raises(ErrorFuenteNoDisponible):
+            buscar_torrents_nyaa("dune", session=sesion)
+        assert len(sesion.llamadas) == 2, "un fallo de conexión sí debe reintentarse"
+
+    def test_read_timeout_no_se_reintenta(self) -> None:
+        """El `ReadTimeout` cuesta el timeout completo: no se insiste."""
+        sesion = SesionQueFalla(requests.ReadTimeout("el servidor no responde"))
+        with pytest.raises(ErrorFuenteNoDisponible):
+            buscar_torrents_nyaa("dune", session=sesion)
+        assert len(sesion.llamadas) == 1
+
 
 class TestRelevanciaSinFalsosPositivos:
     """BH-002: los prefijos de 4 letras ya no cuelan títulos ajenos."""
@@ -1364,3 +1380,152 @@ class TestNotaDelCatalogoYTypeError:
         cliente = ClienteLLMFalso('{"query": "Dune", "categoria": "movies"}', soporta_format=False)
         assert procesar_peticion_usuario("Dune", cliente)["query"] == "Dune"
         assert len(cliente.llamadas) == 2
+
+
+class TestSaludThreadSafe:
+    """BH2-001: la salud se usa desde varios hilos y no puede perder resultados.
+
+    Reproducido antes del arreglo: se descartaban los 40 resultados de un índice que sí
+    había respondido (reportado como `ok=False` con un `RuntimeError`) y, si fallaba también
+    el registro del `except`, la búsqueda completa se caía.
+    """
+
+    class _DiccionarioQueCambia(dict):
+        """Inserta una clave mientras se itera, como haría otro hilo."""
+
+        def items(self):
+            for indice, (clave, valor) in enumerate(super().items()):
+                if indice == 1:
+                    super().__setitem__(
+                        "intruso", salud_motores.EstadoMotorSalud(nombre="intruso")
+                    )
+                yield clave, valor
+
+    def test_guardar_itera_una_instantanea(self, tmp_path: Path) -> None:
+        salud = salud_motores.SaludMotores(tmp_path / "estado.json")
+        salud._estado = self._DiccionarioQueCambia(
+            A=salud_motores.EstadoMotorSalud(nombre="A"),
+            B=salud_motores.EstadoMotorSalud(nombre="B"),
+        )
+        salud.guardar()  # antes: RuntimeError: dictionary changed size during iteration
+        datos = json.loads((tmp_path / "estado.json").read_text(encoding="utf-8"))
+        assert datos["motores"]["A"]["nombre"] == "A"
+
+    def test_registros_concurrentes_no_pierden_motores(self, tmp_path: Path) -> None:
+        salud = salud_motores.SaludMotores(tmp_path / "estado.json")
+        errores: List[BaseException] = []
+
+        def anotar(nombre: str) -> None:
+            try:
+                for _ in range(5):
+                    salud.registrar(nombre, exito=False, error="simulado")
+            except BaseException as error:  # noqa: BLE001 - se reporta en la aserción
+                errores.append(error)
+
+        hilos = [threading.Thread(target=anotar, args=(f"M{indice}",)) for indice in range(6)]
+        for hilo in hilos:
+            hilo.start()
+        for hilo in hilos:
+            hilo.join()
+
+        assert not errores, f"fallos concurrentes: {errores[:2]}"
+        assert len(salud.resumen()) == 6
+
+    @staticmethod
+    def _agregador_con_salud_rota(tmp_path: Path, sesion: SesionFalsa, *, falla_el_exito: bool):
+        agregador = AgregadorTorrents(motores=seleccionar_motores(["limetorrents"]), paralelo=False)
+        agregador.session = sesion
+        salud = salud_motores.SaludMotores(tmp_path / "estado.json")
+
+        def registrar_roto(nombre, *, exito, error=None):
+            if exito == falla_el_exito:
+                raise RuntimeError("dictionary changed size during iteration")
+
+        salud.registrar = registrar_roto
+        agregador.salud = salud
+        return agregador
+
+    def test_un_fallo_al_anotar_exito_no_pierde_resultados(self, tmp_path: Path) -> None:
+        sesion = SesionFalsa(reglas=[("limetorrents", "limetorrents_search.html")])
+        agregador = self._agregador_con_salud_rota(tmp_path, sesion, falla_el_exito=True)
+
+        items, resumen = agregador.buscar_con_diagnostico("oppenheimer", "movies", 5)
+
+        estado = resumen.estados[0]
+        assert items, "los resultados ya obtenidos no pueden descartarse por contabilidad"
+        assert estado.ok is True and estado.resultados > 0
+
+    def test_un_fallo_al_anotar_error_no_aborta_la_busqueda(self, tmp_path: Path) -> None:
+        sesion = SesionFalsa(reglas=[("limetorrents", "limetorrents_search.html")])
+        agregador = self._agregador_con_salud_rota(tmp_path, sesion, falla_el_exito=False)
+        sesion.fallos = ["nyaa"]  # fuerza un fallo de motor para pasar por el except
+
+        items, _ = agregador.buscar_con_diagnostico("oppenheimer", "movies", 5)
+
+        assert items, "un fallo de salud no debe propagarse y tumbar la búsqueda"
+
+    def test_paralelo_con_salud(self, tmp_path: Path) -> None:
+        """Combinación que ninguna prueba cubría: la ruta por defecto es paralela.
+
+        Los motores sin ruta simulada fallan legítimamente; lo que se comprueba es que
+        ninguno falle por una carrera interna de la salud y que los resultados lleguen.
+        """
+        reglas = [("limetorrents", "limetorrents_search.html"), ("nyaa.si", "nyaa_search.html")]
+        agregador = AgregadorTorrents(paralelo=True, max_workers=4)
+        agregador.session = SesionFalsa(reglas=reglas)
+        agregador.salud = salud_motores.SaludMotores(tmp_path / "estado.json")
+
+        items, resumen = agregador.buscar_con_diagnostico("oppenheimer", "all", 5)
+
+        assert items, "la búsqueda en paralelo debe devolver los resultados del motor que respondió"
+        assert all(
+            "RuntimeError" not in (estado.error or "") for estado in resumen.estados
+        ), "una carrera de la salud no debe aparecer como fallo de motor"
+        assert any(estado.nombre == "LimeTorrents" and estado.ok for estado in resumen.estados)
+
+
+class TestMotoresConsultados:
+    """BH2-002: el campo solo debe listar los índices que se consultaron de verdad."""
+
+    def test_excluye_omitidos_y_saltados(self, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+        resumen = ResumenBusqueda(
+            consulta="severance",
+            categoria="tv",
+            min_seeders=5,
+            estados=[
+                EstadoMotor(nombre="YTS", ok=True, omitido=True, error="no soporta categoria='tv'"),
+                EstadoMotor(nombre="LimeTorrents", ok=True, resultados=40),
+                EstadoMotor(nombre="MagnetDL", ok=True, saltado_por_salud=True, motivo_salud="degradado"),
+                EstadoMotor(nombre="EZTV", ok=True, resultados=75),
+            ],
+        )
+        AgregadorFalso.items = [ITEM_EJEMPLO]
+        AgregadorFalso.resumen = resumen
+        monkeypatch.setattr(modulo_main, "conectar_llm", lambda host: ClienteLLMFalso(RESPUESTA_LLM))
+        monkeypatch.setattr(modulo_main, "AgregadorTorrents", AgregadorFalso)
+
+        modulo_main.main(["Severance", "--json"])
+        datos = json.loads(capsys.readouterr().out)
+
+        assert datos["diagnostico"]["motores_consultados"] == ["LimeTorrents", "EZTV"]
+
+
+class TestCifraDocumentada:
+    """La cifra de pruebas del README es un dato verificado, no una promesa.
+
+    Se quedó obsoleta tres veces durante el desarrollo (86 -> 99 -> 134 -> 169 -> 177), así
+    que ahora hay una prueba que la compara con la colección real de pytest.
+    """
+
+    def test_el_readme_dice_la_cifra_real(self, request: pytest.FixtureRequest) -> None:
+        # ``session.items`` solo trae lo seleccionado: en una ejecución filtrada (-k/-m) el
+        # total no es comparable, así que ahí se salta en vez de dar un falso positivo.
+        if request.config.option.keyword or getattr(request.config.option, "markexpr", None):
+            pytest.skip("ejecución filtrada: el total de la suite no es comparable")
+        total = len(request.session.items)
+        texto = (RAIZ / "README.md").read_text(encoding="utf-8")
+        cifras = {int(cifra) for cifra in re.findall(r"(\d+) pruebas offline", texto)}
+        assert cifras, "el README debe declarar el número de pruebas"
+        assert cifras == {total}, (
+            f"el README dice {sorted(cifras)} pruebas y la suite tiene {total}: actualiza las cifras"
+        )

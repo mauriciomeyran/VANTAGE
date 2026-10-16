@@ -76,7 +76,7 @@ Unfathomable Sand Dunes"*.
   rechaza explícitamente otros `base_url`.
 
 ### Pruebas y verificación
-- `tests/vantage/` — **99 pruebas offline** sobre fixtures HTML/JSON reales capturadas
+- `tests/vantage/` — **178 pruebas offline** sobre fixtures HTML/JSON reales capturadas
   el 2026-10-14 (sin red en la suite).
 - `scripts/verificar_engines.py` — sondeo en vivo de mirrors (HTTP, latencia, causa) y
   de motores; genera informe markdown. Salida real en `VERIFICACION_ENGINES.md`.
@@ -148,8 +148,9 @@ Medido en vivo, siempre con los mismos 47 resultados: 1.º fallo 33 911 ms → 2
 
 **Trampa encontrada y corregida:** los tests usaban el `.estado_motores.json` real y lo
 ensuciaban con fallos simulados (habrían degradado YTS/Nyaa sin motivo). Ahora hay una
-fixture autouse que redirige el estado a un temporal, y se comprueba que la suite no
-recrea el archivo real. Suite: **134 pruebas**.
+fixture autouse que redirige el estado a un temporal y que, además, **compara la huella
+(mtime y tamaño) del archivo real antes y después de cada prueba**: si algún camino lo
+tocara, la suite falla en vez de corromper el historial. Suite: **178 pruebas**.
 
 Suite de pruebas: **122** (antes 99).
 
@@ -175,14 +176,64 @@ de categorías mezcladas; con "Amélie" el primer resultado fue contenido para a
 El filtro de relevancia no lo detecta porque el título contiene el término. Mitigación
 disponible: `--sin-motores LimeTorrents`. Documentado en las limitaciones del README.
 
-Suite: **169 pruebas** (antes 134).
+Suite: **169 pruebas** en esa ronda; **178** tras la segunda auditoría (BH2-001 a BH2-009, más los
+casos de `ConnectTimeout`/`ReadTimeout`).
 
-## 6. Cómo reproducirlo
+## 6. Segunda auditoría (bug-hunter, 2026-10-15, sobre `2f7b923`)
+
+La segunda pasada confirmó 16 de los 18 hallazgos como corregidos y abrió **9 nuevos**.
+Triaje: **8 corregidos** y **1 parcialmente** (BH2-009, redacción).
+
+### BH2-001 (el grave): carrera en la salud persistente bajo búsqueda paralela
+
+`SaludMotores` se usa desde los hilos de `ThreadPoolExecutor` sin bloqueo. Dos motores que
+terminan a la vez insertan una clave nueva mientras otro hilo itera el diccionario en
+`guardar()`, que solo capturaba `OSError`:
+
+- **Pérdida de resultados**: el `except Exception` de `ejecutar` trataba el
+  `RuntimeError: dictionary changed size during iteration` como fallo del motor y
+  descartaba los items ya obtenidos. Reproducido: LimeTorrents respondía con 40 filas y
+  se reportaba `ok=False` con 0 resultados, más un fallo de salud falso (dos de esos
+  degradan un índice sano 30 min).
+- **Caída de la búsqueda**: si también fallaba el registro del `except`, la excepción
+  escapaba de `ejecutar` y `futuro.result()` abortaba la búsqueda completa. Reproducido.
+
+Corregido en dos capas: (1) causa raíz: `threading.RLock` en `registrar`/`guardar`/`cargar`
+e instantánea (`dict(...)`) al persistir; (2) defensa en profundidad: `_anotar_salud()`
+envuelve el registro, así que **la contabilidad nunca puede destruir resultados**.
+
+Pruebas nuevas: instantánea con diccionario que muta, 6 hilos registrando a la vez,
+fallo de salud que no pierde resultados, fallo de salud que no aborta, y **paralelo con
+salud** (la combinación que ninguna prueba cubría).
+
+### Resto
+
+- **BH2-002**: `motores_consultados` listaba omitidos y saltados. Verificado en vivo: la
+  3.ª búsqueda ya devuelve `['LimeTorrents', 'EZTV', 'Nyaa']` sin MagnetDL (saltado).
+- **BH2-003**: el 65 tenía dos significados (wrapper vs doctor). El doctor pasa a **66**;
+  verificado: 0 correcto, 66 con modelo ausente, 65 sin intérprete.
+- **BH2-004/005**: ejemplo del BRIEF regenerado (con `motores_consultados` y filas
+  homogéneas), forma real del doctor y tercera rama del estado vacío ("los apartó el
+  historial de salud", no "reformula la búsqueda").
+- **BH2-006**: `ConnectTimeout` hereda de `ConnectionError` y de `Timeout`, así que el
+  `break` lo excluía contra lo que decía el comentario. Ahora se reintenta (es barato) y
+  hay prueba propia, más otra para `ReadTimeout`.
+- **BH2-007**: el wrapper valida `salud.py` antes de `--doctor` y su ayuda ya no mezcla
+  `-v` con `--help-backend`.
+- **BH2-008**: el handoff afirmaba "se comprueba que la suite no recrea el archivo real"
+  **sin que existiera la comprobación**. Ahora la fixture autouse compara la huella
+  (mtime + tamaño) del archivo real antes y después de cada prueba; validado con una
+  prueba negativa que escribe el estado real a propósito y hace fallar la suite.
+- **BH2-009**: los dos sitios que seguían afirmando un 522 en presente.
+
+Suite: **178 pruebas**.
+
+## 7. Cómo reproducirlo
 
 ```bash
 cd ~/Documents/03\ Projects/VANTAGE/Bittorrent_Search
 source venv/bin/activate
-pytest tests/vantage -q                      # 99 pruebas, sin red
+pytest tests/vantage -q                      # 178 pruebas, sin red
 python3 scripts/verificar_engines.py         # salud real de los índices
 python3 main.py "Busca la serie Severance" -v
 ```

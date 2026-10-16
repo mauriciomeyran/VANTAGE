@@ -84,9 +84,23 @@ La app debe reproducir esa información en una ventana nativa, con la lista comp
 - El wrapper puede fallar **antes** de llegar al backend: en ese caso escribe en stdout
   `{"error": {"tipo": ..., "mensaje": ...}}` y sale con **65**. La app debe leer
   `.error.mensaje` y mostrarlo (es el caso "falta el backend").
-- Para el botón **Comprobar conexión**, ejecutar `scripts/vantage-search --doctor`:
-  devuelve `{"ok": true|false, "checks": [...]}` con intérprete, dependencias, Ollama y
-  modelo. Sale con 0 si todo está bien y con 65 si algo falla.
+- Para el botón **Comprobar conexión**, ejecutar `scripts/vantage-search --doctor`. Devuelve
+  el informe completo del backend:
+
+  ```json
+  { "ok": true, "raiz": "<carpeta>", "host": "http://localhost:11434",
+    "modelo": "qwen2.5:7b",
+    "checks": [ { "nombre": "ollama", "ok": true, "detalle": "..." }, ... ],
+    "motores": [ { "nombre": "MagnetDL", "degradado": true, "fallos_consecutivos": 3,
+                   "ultimo_exito": null, "ultimo_fallo": "2026-10-15 16:47:19",
+                   "ultimo_error": "ErrorFuenteNoDisponible: ...",
+                   "nota": "Sin respuesta verificado el 2026-10-14/15: ..." } ] }
+  ```
+
+  **Códigos de salida: 0 si todo está bien, 66 si alguna comprobación falla.** El 65 está
+  reservado para el wrapper cuando no encuentra el backend, así que un cliente distingue
+  los dos casos por el código: si el JSON trae `.error` es el wrapper; si trae `.ok` y
+  `.checks` es el informe del doctor.
 - La consulta del usuario se pasa **como un único argumento** entre comillas.
 - `--json` en stdout es la **única** fuente de datos: la app **no debe** parsear la salida en modo texto.
 - `stderr` puede traer mensajes de diagnóstico o de error: guardarlos para mostrarlos si algo falla.
@@ -118,12 +132,13 @@ La app debe reproducir esa información en una ventana nativa, con la lista comp
     "items_brutos": 119,
     "items_unicos": 98,
     "descartados_por_relevancia": 0,
+    "motores_consultados": ["LimeTorrents", "EZTV", "Nyaa"],
     "motores": [
       { "nombre": "YTS", "ok": true, "omitido": true, "resultados": 0, "error": "no soporta categoria='tv'", "ms": 0, "imdb_id": null, "saltado_por_salud": false, "motivo_salud": null, "timeout_segundos": null },
       { "nombre": "LimeTorrents", "ok": true, "omitido": false, "resultados": 40, "error": null, "ms": 659, "imdb_id": null, "saltado_por_salud": false, "motivo_salud": null, "timeout_segundos": null },
       { "nombre": "MagnetDL", "ok": false, "omitido": false, "resultados": 0, "error": "ErrorFuenteNoDisponible: ...", "ms": 15284, "imdb_id": null, "saltado_por_salud": false, "motivo_salud": null, "timeout_segundos": null },
-      { "nombre": "EZTV", "ok": true, "omitido": false, "resultados": 79, "error": null, "ms": 1129, "imdb_id": "tt11280740" },
-      { "nombre": "Nyaa", "ok": true, "omitido": false, "resultados": 0, "error": null, "ms": 426, "imdb_id": null }
+      { "nombre": "EZTV", "ok": true, "omitido": false, "resultados": 79, "error": null, "ms": 1129, "imdb_id": "tt11280740", "saltado_por_salud": false, "motivo_salud": null, "timeout_segundos": null },
+      { "nombre": "Nyaa", "ok": true, "omitido": false, "resultados": 0, "error": null, "ms": 426, "imdb_id": null, "saltado_por_salud": false, "motivo_salud": null, "timeout_segundos": null }
     ]
   }
 }
@@ -146,7 +161,7 @@ La app debe reproducir esa información en una ventana nativa, con la lista comp
 | `diagnostico.imdb_id` | texto o `null` | Identificador usado para series |
 | `diagnostico.items_brutos` / `items_unicos` | entero | Antes y después de deduplicar |
 | `diagnostico.descartados_por_relevancia` | entero | Cuántos se cayeron por no coincidir con la búsqueda |
-| `diagnostico.motores_consultados` | lista | Nombres de los índices consultados en esta búsqueda |
+| `diagnostico.motores_consultados` | lista | Nombres de los índices **realmente consultados**: excluye los omitidos por categoría y los saltados por salud |
 | `diagnostico.motores[]` | lista | Estado de cada índice: `ok`, `omitido`, `resultados`, `error`, `ms`, `imdb_id`, más los campos de salud `saltado_por_salud`, `motivo_salud` y `timeout_segundos` |
 
 > Las cifras del ejemplo salen de una ejecución real y **cambian en cada búsqueda** (los índices se mueven minuto a minuto): sirven para conocer los nombres y los tipos de los campos, no como valores esperados.
@@ -156,11 +171,12 @@ La app debe reproducir esa información en una ventana nativa, con la lista comp
 | Código | Significado | Respuesta de la UI |
 | --- | --- | --- |
 | `0` | Búsqueda con resultados | Mostrar lista y panel de diagnóstico |
-| `2` | Ningún resultado pasó los filtros | Estado vacío **con la causa real**: leer `diagnostico.motores`. Si todos están `ok` con 0 resultados → sugerir menos palabras o el título en inglés; si alguno tiene `ok: false` → indicar que ese índice está caído |
+| `2` | Ningún resultado pasó los filtros | Estado vacío **con la causa real**, leyendo `diagnostico.motores` en este orden: (1) si hay filas con `saltado_por_salud: true` y ninguna consulta efectiva (`motores_consultados` vacío o sin resultados), explicar que el historial de salud apartó los índices y ofrecer `--salud reset` — **no** sugerir reformular la búsqueda; (2) si todos los consultados están `ok` con 0 resultados → sugerir menos palabras o el título en inglés; (3) si alguno tiene `ok: false` → indicar que ese índice está caído |
 | `3` | Falló el LLM (Ollama) | Aviso claro "Ollama no responde", botón **Reintentar**, e indicar que hace falta `ollama serve` con el modelo configurado |
 | `4` | Todos los índices fallaron | Aviso de red/bloqueo, y enlace a la sección de índices del `MANUAL_USUARIO.md` |
 | `64` | Argumentos inválidos | No debería pasar (la app construye los flags): mostrar los detalles |
 | `65` | El wrapper no encontró el backend | Leer `.error.mensaje` del JSON de stdout y ofrecer configuración de la ruta |
+| `66` | Solo `--doctor`: alguna comprobación del backend falló | Pintar `checks[]` (cada uno trae `nombre`, `ok` y `detalle`) |
 | `130` | Cancelado por el usuario | Volver al estado inicial sin error |
 | otro | Fallo inesperado | Mostrar el texto de `stderr` en un desplegable "detalles" |
 

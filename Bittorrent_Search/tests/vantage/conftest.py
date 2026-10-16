@@ -33,6 +33,14 @@ if str(RAIZ) not in sys.path:
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 
+
+def _huella(ruta: Path):
+    """Huella barata de un archivo: ``None`` si no existe."""
+    if not ruta.exists():
+        return None
+    datos = ruta.stat()
+    return (datos.st_mtime_ns, datos.st_size)
+
 #: ``(fragmento de URL, archivo de fixture)`` evaluado en orden.
 REGLAS_POR_DEFECTO: List[Tuple[str, str]] = [
     ("yts", "yts_response.json"),
@@ -159,10 +167,21 @@ def salud_aislada(tmp_path, monkeypatch):
     import engines
     import salud_motores
 
+    real = salud_motores.ARCHIVO_POR_DEFECTO
+    huella_antes = _huella(real)
+
     monkeypatch.setattr(salud_motores, "ARCHIVO_POR_DEFECTO", tmp_path / ".estado_motores.json")
     # Sin backoff real: los motores simulados como caídos no deben costar 0.5 s por reintento.
     monkeypatch.setattr(engines, "PAUSA_REINTENTO", 0.0)
-    return tmp_path / ".estado_motores.json"
+
+    yield tmp_path / ".estado_motores.json"
+
+    # La suite no puede tocar el historial real: sin esta comprobación, un motor simulado
+    # como caído se anotaría de verdad y degradaría un índice sano (ver BH2-008).
+    assert _huella(real) == huella_antes, (
+        f"la suite ha modificado el estado de salud real ({real}); revisa que todo use "
+        "ARCHIVO_POR_DEFECTO o un SaludMotores inyectado"
+    )
 
 
 @pytest.fixture

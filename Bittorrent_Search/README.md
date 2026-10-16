@@ -64,7 +64,7 @@ cada mirror; para la de series: `python3 scripts/verificar_engines.py -q Severan
 | `salud_motores.py` | Historial persistente de fallos por motor y política de reintentos |
 | `scripts/vantage-search` | Punto de entrada estable para clientes externos |
 | `scripts/verificar_engines.py` | Verificación en vivo de mirrors y motores, informe markdown |
-| `tests/vantage/` | 169 pruebas offline con fixtures HTML/JSON reales |
+| `tests/vantage/` | 178 pruebas offline con fixtures HTML/JSON reales |
 
 ## Instalación
 
@@ -326,7 +326,7 @@ consulta='Oppenheimer' categoria=movies min_seeders=5 (peticion original='pelíc
 
 ## Pruebas
 
-169 pruebas offline (sin red): sirven respuestas reales guardadas en
+178 pruebas offline (sin red): sirven respuestas reales guardadas en
 `tests/vantage/fixtures/`.
 
 ```bash
@@ -354,7 +354,7 @@ devuelve cada motor. Devuelve 0 si al menos un motor respondió con resultados.
 
 ## Limitaciones conocidas
 
-- **MagnetDL** está caído (522); su latencia (15 s de timeout) es el peor caso del
+- **MagnetDL** no responde (timeout en `.com`, DNS en `.mx`); su timeout es el peor caso del
   pipeline en paralelo.
 - **LimeTorrents** no filtra por categoría en servidor: el filtro es local sobre la
   primera página de resultados.
