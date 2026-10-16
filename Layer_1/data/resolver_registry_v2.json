@@ -1,8 +1,7 @@
 {
   "version": "2.0",
-  "generated_at": "2026-06-14T00:00:00Z",
+  "generated_at": "2026-10-16T17:22:39Z",
   "status": "LIVE — Resolver Layer operativo desde 2026-06-15. Este archivo documenta el contrato de resolución y el índice de fuentes; ejecuta resolución en vivo vía resolver_layer_v1.py.",
-
   "data_sources": {
     "VANTAGE_TRACKER": {
       "database_id": "596938befc42836baea7814a1491bd47",
@@ -37,44 +36,45 @@
       "ownership": "Componente mapea a pseudo-nodos layer:L1/L2/L3"
     }
   },
-
   "document_registry": {
-    "_comment": "SSOT para prefijos documentales (KERNEL:DOC-CONTRACT). Namespace separado de data_sources — este mapea PREFIX -> UUID de página fundacional, no entity_prefix de filas de tracker. Consumido por lazy_loader.py._get_authorized_prefixes(). Agregado v9.0.5 — cierra el pendiente registrado en Change Log v9.0.4. Actualizado (CENSUS-SYNC-R1): conteo de fundamentales pasa de 7→9 — se incorporan BRIEF y VANTAGE, previamente cubiertos solo por fallback fijo en verify_versions.py. CENSUS permanece fuera de este namespace: no tiene prefijo propio en KERNEL:DOC-CONTRACT (sus IDs internos usan KERNEL:/SP:/MANUAL:/CANON:/BRIEF:), por lo que verify_versions.py sigue resolviéndolo vía CENSUS_FALLBACK_ID. Actualizado (ARCHIVEROS): conteo de fundamentales pasa de 9→10 — se incorpora ARCHIVEROS al document_registry. Actualizado (CHARTER): conteo de fundamentales pasa de 10→11 — se incorpora CHARTER al document_registry. Actualizado (PROMPT_CANON): conteo de fundamentales pasa de 11→12 — se incorpora PROMPT_CANON al document_registry. PROMPT_CANON es la autoridad de estado y provenance de los contratos de prompt L1; su ausencia es FAIL de infraestructura en verify_versions.py, no warning, porque sin ella no existe forma de verificar estado canónico. No tiene fallback fijo por diseño. No se integra a generate_census.py: census descubre documentos vía DOCUMENTS hardcodeado y no depende del contrato de prefijos.",
-    "KERNEL":    "377938be-fc42-805e-a408-c9ae518d4fe7",
-    "MANUAL":    "372938be-fc42-8050-9a67-e40857d7806e",
-    "CANON":     "377938be-fc42-8089-93f2-f52dbd2dec6c",
-    "TRACKER":   "596938be-fc42-836b-aea7-814a1491bd47",
-    "SP":        "37b938be-fc42-8001-9b9b-fcf81130d274",
-    "ALIASES":   "37c938be-fc42-80d4-b9ae-f5969830331b",
+    "_comment": "SSOT para prefijos documentales (KERNEL:DOC-CONTRACT). Namespace separado de data_sources: este mapea PREFIX -> UUID de página fundacional, no entity_prefix de filas de tracker. Consumido por lazy_loader.py._get_authorized_prefixes(). Agregado v9.0.5: cierra el pendiente registrado en Change Log v9.0.4. Actualizado (CENSUS-SYNC-R1): conteo de fundamentales pasa de 7 a 9; se incorporan BRIEF y VANTAGE, previamente cubiertos solo por fallback fijo en verify_versions.py. CENSUS permanece fuera de este namespace: no tiene prefijo propio en KERNEL:DOC-CONTRACT (sus IDs internos usan KERNEL:/SP:/MANUAL:/CANON:/BRIEF:), por lo que verify_versions.py sigue resolviéndolo vía CENSUS_FALLBACK_ID. Actualizado (ARCHIVEROS): conteo de fundamentales pasa de 9 a 10; se incorpora ARCHIVEROS al document_registry. Actualizado (CHARTER): conteo de fundamentales pasa de 10 a 11; se incorpora CHARTER al document_registry. Actualizado (PROMPT_CANON): conteo de fundamentales pasa de 11 a 12; se incorpora PROMPT_CANON al document_registry. PROMPT_CANON es la autoridad de estado y provenance de los contratos de prompt L1; su ausencia es FAIL de infraestructura en verify_versions.py, no warning, porque sin ella no existe forma de verificar estado canónico. No tiene fallback fijo por diseño. No se integra a generate_census.py: census descubre documentos vía DOCUMENTS hardcodeado y no depende del contrato de prefijos. Actualizado (CHARTER-LOG): conteo de fundamentales pasa de 12 a 13; se incorpora CHARTER_LOG al document_registry como partición del Charter (2026-10-15). Sus IDs usan el prefijo CHARTER-LOG: DECISIONS migradas + ORIGIN/MILESTONES/UPDATES. CHARTER conserva FAILURES, NON-NEGOTIABLES, MILESTONES abiertos, CONTINUITY y STATUS.",
+    "KERNEL": "377938be-fc42-805e-a408-c9ae518d4fe7",
+    "MANUAL": "372938be-fc42-8050-9a67-e40857d7806e",
+    "CANON": "377938be-fc42-8089-93f2-f52dbd2dec6c",
+    "TRACKER": "596938be-fc42-836b-aea7-814a1491bd47",
+    "SP": "37b938be-fc42-8001-9b9b-fcf81130d274",
+    "ALIASES": "37c938be-fc42-80d4-b9ae-f5969830331b",
     "CHANGELOG": "390938be-fc42-80e7-b429-d7d730339353",
     "CHANGELOG_ARCHIVO": "3ba938be-fc42-8011-8947-fb4fa5d1f63f",
-    "BRIEF":     "3a3938be-fc42-8008-9e90-ec435c01f50d",
-    "VANTAGE":   "36e938be-fc42-81d6-bf40-dfe7dee782a5",
+    "BRIEF": "3a3938be-fc42-8008-9e90-ec435c01f50d",
+    "VANTAGE": "36e938be-fc42-81d6-bf40-dfe7dee782a5",
     "ARCHIVEROS": "3bb938befc4280cd8ea3fc8ba78f570c",
-    "CHARTER":   "f87938be-fc42-8263-a305-819877d2245f",
-    "PROMPT_CANON": "3f0938be-fc42-813a-9215-c6a1a716c3b7"
+    "CHARTER": "f87938be-fc42-8263-a305-819877d2245f",
+    "PROMPT_CANON": "3f0938be-fc42-813a-9215-c6a1a716c3b7",
+    "CHARTER_LOG": "3fb938be-fc42-81f5-8a3d-fd21ef6b9c76"
   },
-
   "known_pitfalls": {
-    "VANTAGE_TRACKER": ["Source_Type tiene espacio final ('Source_Type ')"],
+    "VANTAGE_TRACKER": [
+      "Source_Type tiene espacio final ('Source_Type ')"
+    ],
     "ARCHIVO_TRACKER": [
       "Source_Type sin espacio final (distinto de VANTAGE_TRACKER)",
       "hash frecuentemente vacío en filas legacy",
       "Status le faltan opciones 'Blocked' y 'Nueva' vs VANTAGE_TRACKER"
     ],
-    "ARCHIVO_DRY_RUN": ["Etiquetas multi_select sin opciones definidas; relaciones dependen de contenido de página, no de properties"],
+    "ARCHIVO_DRY_RUN": [
+      "Etiquetas multi_select sin opciones definidas; relaciones dependen de contenido de página, no de properties"
+    ],
     "general": [
-      "databases/{id}/query roto para DBs multi-source migradas — usar data_sources/{id}/query",
+      "databases/{id}/query roto para DBs multi-source migradas; usar data_sources/{id}/query",
       "notion-fetch trunca páginas largas / no resuelve bien column layouts"
     ]
   },
-
   "resolution_contract": {
     "input": "entity_id (formato PREFIX:H_xxxx o PREFIX:U_xxxx) o canonical_id",
     "lookup_path": "entity_index_v2.entities[entity_id].page_url",
     "live_resolution": "notion-fetch(page_url) → estado actual (IMPLEMENTADO — resolver_layer_v1.py, live desde 2026-06-15)",
     "fallback_on_miss": "reportar entity_id como 'unresolvable', no inferir estado"
   },
-
-  "future_resolver_notes": "Cuando se implemente, Resolver Layer consume este archivo solo para obtener data_source_id + page_url; no requiere cambios de schema en entity_index_v2, graph_v2 ni backlinks_v2. document_registry es un namespace independiente, de solo lectura para lazy_loader.py — no participa en la resolución de entity_id de Runtime Build."
+  "future_resolver_notes": "Cuando se implemente, Resolver Layer consume este archivo solo para obtener data_source_id + page_url; no requiere cambios de schema en entity_index_v2, graph_v2 ni backlinks_v2. document_registry es un namespace independiente, de solo lectura para lazy_loader.py; no participa en la resolución de entity_id de Runtime Build."
 }

@@ -1,0 +1,44 @@
+  {
+    "consolidated_results": [
+    {
+    "brand": "Benefit Cosmetics",
+    "title": "Visual Merchandising Coordinator",
+    "location": "Ciudad de México, México",
+    "apply_url": "https://www.lvmh.com/join-us/our-job-offers/BEFI101531",
+    "posted_date": "2026-10-01",
+    "priority": "2 MEDIO",
+    "source_type": "LinkedIn",
+    "fetch_status": "success"
+    },
+    {
+    "brand": "El Puerto de Liverpool",
+    "title": "Diseñador Sr BTL",
+    "location": "Cuajimalpa de Morelos, Ciudad de México, México",
+    "apply_url": "https://login.airavirtual.com/postula/ACXDjOrswkBEi372oIcA",
+    "posted_date": "2026-10-03",
+    "priority": "2 MEDIO",
+    "source_type": "LinkedIn",
+    "fetch_status": "success"
+    },
+    {
+    "brand": "Bvlgari",
+    "title": "Sr. Manager, Marketing and Communications",
+    "location": "Ciudad de México, México",
+    "apply_url": "https://www.linkedin.com/jobs/view/sr-manager-marketing-and-communications-at-bvlgari-4454545886",
+    "posted_date": "2026-09-30",
+    "priority": "1 BAJO",
+    "source_type": "LinkedIn",
+    "fetch_status": "success"
+    }
+    ],
+    "conflict_log": [],
+    "status_report": {
+    "total_input_records": 3,
+    "total_consolidated_records": 3,
+    "duplicates_removed": 0,
+    "conflicts_resolved": 0,
+    "status": "COMPLETED"
+    },
+    "data_quality_warnings": [],
+    "reroute_candidates_history": []
+}

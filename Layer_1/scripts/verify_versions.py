@@ -32,7 +32,7 @@ REGISTRY_NAME = "resolver_registry_v2.json"
 # mismo veredicto PASS/FAIL que el resto.
 # ARCHIVEROS (página de archiveros) también participa en --sync del mismo modo.
 # CHARTER (Project Charter) también participa en --sync del mismo modo.
-DOC_KEYS = ["CHANGELOG", "KERNEL", "MANUAL", "CANON", "SP", "ALIASES", "CENSUS", "BRIEF", "VANTAGE", "CHANGELOG_ARCHIVO", "ARCHIVEROS", "CHARTER", "PROMPT_CANON"]
+DOC_KEYS = ["CHANGELOG", "KERNEL", "MANUAL", "CANON", "SP", "ALIASES", "CENSUS", "BRIEF", "VANTAGE", "CHANGELOG_ARCHIVO", "ARCHIVEROS", "CHARTER", "PROMPT_CANON", "CHARTER_LOG",]
 
 # CENSUS no vive en resolver_registry_v2.json: no tiene prefijo propio en
 # KERNEL:DOC-CONTRACT (sus IDs internos usan KERNEL:/SP:/MANUAL:/CANON:/BRIEF:),
@@ -1194,6 +1194,12 @@ def main():
                     read_version = get_page_version(client, page_id, headers)
                     results.append((doc, master_version, read_version, "SKIP (solo lectura, sin propiedad Version)"))
                     continue
+
+                if doc == "CHARTER_LOG":
+                    read_version = get_page_version(client, page_id, headers)
+                    results.append((doc, master_version, read_version, "SKIP (solo lectura, sin escritura de versión)"))
+                    continue
+
 
                 prop_name = "Versión " if doc == "VANTAGE" else "Versión"
                 write_ok = update_page_version(client, page_id, master_version, headers, prop_name=prop_name)
