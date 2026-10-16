@@ -4,7 +4,7 @@
 **Versión:** 1.0 — 2026-10-14
 **Backend existente:** `~/Documents/03 Projects/VANTAGE/Bittorrent_Search` (Python, ya funciona)
 
-> Este brief describe **qué debe hacer** la app, **con qué datos trabaja** y **cómo se ve**. No prescribe framework ni estructura de archivos: eso lo decide el agente de Glaze. Lo que sí es obligatorio es el contrato de integración de la sección 4.
+> Este brief describe **qué debe hacer** la app, **con qué datos trabaja** y **cómo se ve**. No prescribe framework ni estructura de archivos: eso lo decide el agente de Glaze. Lo que sí es obligatorio es el contrato de integración de la sección 4 y la copia visible del **Anexo A** (integrada desde `MANUAL_USUARIO.md`).
 
 ---
 
@@ -274,6 +274,21 @@ el backend (decisión 6), así que la app no necesita llevar ninguna cuenta. Un 
 
 ---
 
+### 5.7 Ayuda dentro de la app
+
+Una pantalla de ayuda (ventana aparte o sección propia) con el contenido del
+`MANUAL_USUARIO.md`, en este orden y con estas palabras: qué es VANTAGE, ejemplos de
+búsqueda, interpretación de los resultados, problemas frecuentes y consejos de uso. El
+detalle de los textos está en el **Anexo A**, que es copia literal del manual.
+
+- Un botón **"Ver el manual completo"** que abra `MANUAL_USUARIO.md` en el visor del sistema.
+- Los **problemas frecuentes** de la ayuda deben incluir los siete casos del manual (Anexo A.4),
+  no una selección.
+- Si una comprobación falla, el aviso debe enlazar con el caso correspondiente de la ayuda
+  (por ejemplo, dependencias ausentes → el caso de `ModuleNotFoundError`).
+
+---
+
 ## 6. Reglas y casos límite que hay que respetar
 
 1. **Rutas con espacios**: la carpeta del backend contiene `03 Projects`. Citar siempre rutas y argumentos; no concatenar comandos con `&&` sin citar.
@@ -316,6 +331,8 @@ el backend (decisión 6), así que la app no necesita llevar ninguna cuenta. Un 
 - [ ] Desmarcar MagnetDL como índice baja el tiempo de búsqueda de ~15 s a ~2-3 s, con los mismos resultados.
 - [ ] Tras dos búsquedas con un índice caído, la tercera lo muestra como `SALTADO` (no como `FALLO`) y tarda ~2 s, sin haber hecho la petición.
 - [ ] El botón "Comprobar conexión" refleja el estado real (verde con Ollama arriba, rojo si se detiene).
+- [ ] Los textos visibles coinciden con el Anexo A (etiquetas de A.2, ejemplos de A.3, mensajes de A.4).
+- [ ] La ayuda de la app cubre los **siete** casos de A.4, no una selección, y abre `MANUAL_USUARIO.md` con su botón.
 
 ---
 
@@ -363,4 +380,120 @@ el backend (decisión 6), así que la app no necesita llevar ninguna cuenta. Un 
 - Si el repositorio está en **GitHub**, conectar la integración de GitHub para que el agente pueda leer `README.md`, `MANUAL_USUARIO.md` y `main.py`: eso le da el contrato exacto sin que haya que copiarlo en cada prompt.
 - Si no, adjuntar como referencia **este brief** y el `README.md` de la carpeta.
 - Usar **Plan mode** para la Fase 1 (es una app con varios elementos: proceso externo, lista, detalle, estados de error) y Build mode para los ajustes.
-- El `MANUAL_USUARIO.md` sirve como fuente de los textos de ayuda y de los mensajes de error en español.
+- El `MANUAL_USUARIO.md` es la **fuente de verdad de la copia visible** y está integrado en el
+  **Anexo A** de este brief (etiquetas, ejemplos, mensajes de error, consejos y el orden de la
+  pantalla de ayuda). Adjúntalo al proyecto.
+
+
+---
+
+## Anexo A — Textos de la interfaz, integrados desde `MANUAL_USUARIO.md`
+
+Este anexo es **copia literal** del manual de uso: es la fuente de verdad de todo lo que lee
+el usuario final. Si un texto de la app cambia, cambia primero aquí y en el manual.
+
+### A.1 Regla de sincronización
+
+1. `MANUAL_USUARIO.md` manda sobre la copia visible: etiquetas, mensajes, ayuda y ejemplos.
+2. `BRIEF_UI_GLAZE.md` (este anexo) es la versión que consume el agente: no inventes textos
+   que no estén aquí o en el manual.
+3. Al añadir un estado nuevo a la app, añade su texto al manual **y** a A.4.
+4. Hay una prueba automática que comprueba que los siete casos de A.4 siguen existiendo como
+   secciones en el manual (`tests/vantage/test_busqueda_torrents.py`).
+
+### A.2 Etiquetas de los campos del resultado
+
+Salen del manual («Paso 4: Interpretar los resultados») y son también las etiquetas que
+imprime el CLI, así que la app debe usar **las mismas palabras**:
+
+| Etiqueta en la UI | Texto del manual (ayuda emergente o glosario) |
+| --- | --- |
+| `Title` | "El nombre del torrent (incluye calidad y fuente)" |
+| `Magnet` | "El enlace magnético que puedes copiar y pegar en tu cliente de torrents (Transmission, qBittorrent, etc.)" |
+| `Seeders` | "Cantidad de personas compartiendo el archivo (más es mejor)" |
+| `Leechers` | "Cantidad de personas descargando el archivo" |
+| `Size` | "Tamaño del archivo" |
+| `Source` | "Índice de origen (YTS, LimeTorrents, Nyaa, EZTV o MagnetDL)" |
+
+### A.3 Ejemplos de búsqueda (placeholder y sugerencias)
+
+Del manual («Ejemplos de Búsqueda»), sin el `python3 main.py`:
+
+- "Busca la serie Severance"
+- "Quiero la película Dune 2021"
+- "Busca la película Oppenheimer 2023"
+- "Necesito Adobe Photoshop"
+- "anime Frieren"
+
+Placeholder de la barra: `Busca la serie Severance, Oppenheimer 2023, anime Frieren...`
+
+Además, el manual explica («Cómo interpreta tu búsqueda») que se puede escribir con
+naturalidad porque el backend separa el título de palabras como "película" o "serie": eso debe
+quedar dicho en la ayuda, porque si no el usuario ve que su frase se ha acortado y no entiende
+por qué.
+
+### A.4 Estados de error y vacío, con los textos del manual
+
+Cada fila es una sección de «Solución de Problemas» del manual. La app debe mostrar el
+titular y la causa, y ofrecer la solución.
+
+| Caso (sección del manual) | Lo que muestra la app | Solución que ofrece |
+| --- | --- | --- |
+| `Error: "Error de conexión con Ollama"` | "El servicio de IA local no responde" + "Ollama no está corriendo" | Botón **Reintentar** y el comando `ollama serve` (código 3) |
+| `Mensaje: "No results found matching criteria"` | El texto literal del CLI y, debajo, el diagnóstico por motor | Las tres ramas de §4.3: historial de salud, términos más amplios o título en inglés, o el índice concreto que falla |
+| `Error: "ModuleNotFoundError: No module named 'ollama'"` | Aviso de dependencias ausentes (viene del doctor: `checks` con `dependencias` en falso, o del wrapper con código 65) | `source venv/bin/activate` y `pip install -r requirements.txt` |
+| `Error: "Fallo en el procesamiento del LLM"` | Ese titular, tal cual | `ollama pull qwen2.5:7b` y `ollama serve` (código 3) |
+| `Las series no devuelven nada` | Explicación de que EZTV necesita identificar la serie en IMDb | "No uses `--no-imdb`" o buscar por IMDb id (`tt11280740`) |
+| `Un resultado no tiene nada que ver con lo que pedí` | Explicación de que un índice puede devolver una lista genérica cuando no encuentra coincidencias reales | Probar el título original (a menudo en inglés) o excluir ese índice (`--sin-motores LimeTorrents`) |
+| `Un índice aparece como [FALLO] todos los días` | Explicación de que los índices cambian de dominio | Ejecutar `scripts/verificar_engines.py` |
+
+### A.5 Consejos de uso (para la ayuda)
+
+Del manual («Consejos de Uso»), literales:
+
+1. **Sé específico:** "Película Oppenheimer 2023" funciona mejor que solo "Oppenheimer"
+2. **Idioma:** Puedes escribir en español o inglés, el sistema entiende ambos
+3. **Categorías:** El sistema detecta la categoría solo; si la mencionas ("película", "serie", "música", "juego", "aplicación", "libro") se respeta esa intención
+4. **Seeders:** VANTAGE prioriza los torrents con más semillas para asegurar descargas más rápidas y estables
+5. **Anime:** para anime, Nyaa suele dar mejores resultados que los índices generalistas
+
+### A.6 Estado de los índices (tabla informativa)
+
+Del manual («Estado de los índices»), que la app puede mostrar en el panel de diagnóstico:
+
+| Índice | Estado | Notas |
+| --- | --- | --- |
+| YTS | Funciona | Solo películas. Se usa el dominio `yts.gg` porque `yts.mx` no resuelve |
+| LimeTorrents | Funciona | Generalista. Es el que suele dar los resultados con más semillas |
+| Nyaa | Funciona | Solo anime y contenido asiático: para películas occidentales devuelve vacío |
+| EZTV | Funciona | Solo series, y necesita identificar la serie en IMDb (lo hace solo) |
+| MagnetDL | **Caído** | No responde (timeout en `.com`, DNS en `.mx`). El motor sigue activo: si vuelve, funcionará sin cambios |
+
+### A.7 Correspondencia manual → app
+
+Para que nada del manual se quede sin sitio y sea fácil mantenerlos juntos:
+
+| Sección del manual | Dónde aparece en la app |
+| --- | --- |
+| ¿Qué es VANTAGE? | Pantalla de ayuda, primer bloque |
+| Requisitos previos / Instalación | Ayuda → "Primeros pasos" (o enlace al manual) |
+| Uso de VANTAGE (pasos 1-4) | Flujo principal + ayuda |
+| Interpretar los resultados | Glosario de A.2 (etiquetas y ayuda emergente) |
+| Opciones disponibles | Panel de ajustes avanzados (§5.4) |
+| Ejemplos de búsqueda | Placeholder y sugerencias (A.3) |
+| Estado de los índices | Panel de diagnóstico (§5.3) y A.6 |
+| Cómo interpreta tu búsqueda | Ayuda, bloque de comportamiento |
+| Filtro de relevancia | Ayuda + ajuste `--sin-relevancia` |
+| Solución de problemas | A.4 y pantalla de ayuda |
+| Consejos de uso | Ayuda, bloque final (A.5) |
+| Estructura del proyecto / Mapa del código / Recetas | No van en la app: son para quien mantiene el código |
+| Nota legal | Ayuda, al pie |
+
+### A.8 Orden de la pantalla de ayuda
+
+1. Qué es VANTAGE (dos líneas).
+2. Cómo buscar: los cinco ejemplos (A.3) y la nota de que se puede escribir con naturalidad.
+3. Cómo leer los resultados: el glosario (A.2).
+4. Qué hacer si algo falla: los siete casos (A.4).
+5. Consejos (A.5) y estado de los índices (A.6).
+6. Botón "Ver el manual completo" y la nota legal.

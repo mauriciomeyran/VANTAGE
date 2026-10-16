@@ -76,7 +76,7 @@ Unfathomable Sand Dunes"*.
   rechaza explícitamente otros `base_url`.
 
 ### Pruebas y verificación
-- `tests/vantage/` — **178 pruebas offline** sobre fixtures HTML/JSON reales capturadas
+- `tests/vantage/` — **185 pruebas offline** sobre fixtures HTML/JSON reales capturadas
   el 2026-10-14 (sin red en la suite).
 - `scripts/verificar_engines.py` — sondeo en vivo de mirrors (HTTP, latencia, causa) y
   de motores; genera informe markdown. Salida real en `VERIFICACION_ENGINES.md`.
@@ -150,7 +150,7 @@ Medido en vivo, siempre con los mismos 47 resultados: 1.º fallo 33 911 ms → 2
 ensuciaban con fallos simulados (habrían degradado YTS/Nyaa sin motivo). Ahora hay una
 fixture autouse que redirige el estado a un temporal y que, además, **compara la huella
 (mtime y tamaño) del archivo real antes y después de cada prueba**: si algún camino lo
-tocara, la suite falla en vez de corromper el historial. Suite: **178 pruebas**.
+tocara, la suite falla en vez de corromper el historial. Suite: **185 pruebas**.
 
 Suite de pruebas: **122** (antes 99).
 
@@ -176,7 +176,7 @@ de categorías mezcladas; con "Amélie" el primer resultado fue contenido para a
 El filtro de relevancia no lo detecta porque el título contiene el término. Mitigación
 disponible: `--sin-motores LimeTorrents`. Documentado en las limitaciones del README.
 
-Suite: **169 pruebas** en esa ronda; **178** tras la segunda auditoría (BH2-001 a BH2-009, más los
+Suite: **169 pruebas** en esa ronda; **185** tras la segunda auditoría (BH2-001 a BH2-009, más los
 casos de `ConnectTimeout`/`ReadTimeout`).
 
 ## 6. Segunda auditoría (bug-hunter, 2026-10-15, sobre `2f7b923`)
@@ -226,14 +226,14 @@ salud** (la combinación que ninguna prueba cubría).
   prueba negativa que escribe el estado real a propósito y hace fallar la suite.
 - **BH2-009**: los dos sitios que seguían afirmando un 522 en presente.
 
-Suite: **178 pruebas**.
+Suite: **185 pruebas**.
 
 ## 7. Cómo reproducirlo
 
 ```bash
 cd ~/Documents/03\ Projects/VANTAGE/Bittorrent_Search
 source venv/bin/activate
-pytest tests/vantage -q                      # 178 pruebas, sin red
+pytest tests/vantage -q                      # 185 pruebas, sin red
 python3 scripts/verificar_engines.py         # salud real de los índices
 python3 main.py "Busca la serie Severance" -v
 ```

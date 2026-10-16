@@ -52,9 +52,13 @@ Build a minimal single-window test app with the following specs:
    - When "Comprobar backend" is clicked, run:
      "/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Bittorrent_Search/scripts/vantage-search" --doctor
      and display the returned JSON diagnostic report (Python, dependencies, Ollama status).
+     Exit code 0 means everything is fine; **exit code 66** means some check failed, so show
+     the failing `checks[]` entries (`nombre` + `detalle`). Note the wrapper uses **65** when
+     it cannot find the backend at all, and then stdout carries `{"error": ...}` instead. The
+     two shapes are distinguishable: `.error` = wrapper, `.ok`/`.checks` = doctor report.
 
 3. Constraints & Edge Cases:
-   - Non-blocking execution: The CLI tool can take up to 45 seconds on cold start (loading local 4.7GB Ollama model) and ~15s on warm runs. The UI MUST remain fully responsive throughout execution.
+   - Non-blocking execution: The CLI tool can take up to 45 seconds on cold start (loading local 4.7GB Ollama model) and ~15s on warm runs. The UI MUST remain fully responsive (100%) throughout execution.
    - If exit code != 0, display stderr in an error alert box.
    - All user-facing labels must be in Spanish (es-MX).
 
@@ -82,6 +86,11 @@ Construye una app de prueba mínima con una sola ventana que haga lo siguiente:
    - Al hacer clic en "Comprobar backend", ejecuta:
      "/Users/mauriciomeyran/Documents/03 Projects/VANTAGE/Bittorrent_Search/scripts/vantage-search" --doctor
      y muestra el reporte JSON devuelto (estado de Python, dependencias y Ollama).
+     El código de salida 0 significa que todo está bien; el **66** significa que alguna
+     comprobación falló, así que muestra las entradas `checks[]` que fallen (`nombre` +
+     `detalle`). Ojo: el wrapper usa **65** cuando no encuentra el backend, y en ese caso
+     stdout trae `{"error": ...}`. Las dos formas se distinguen solas: `.error` = wrapper,
+     `.ok`/`.checks` = informe del doctor.
 
 3. Restricciones y casos límite:
    - Ejecución no bloqueante: Puede tardar hasta 45s en cold start (cargando modelo de 4.7GB) y ~15s en warm runs. La interfaz DEBE mantenerse 100% responsiva.
@@ -111,6 +120,8 @@ Structure: Single window divided into 3 distinct sections:
      - `diagnostico.descartados_por_relevancia` ("X descartados por relevancia")
      - IMDb ID if present in JSON.
      - Effective query badge if `consulta_efectiva` != `consulta_original`: "Buscando: <consulta_efectiva>".
+     - `diagnostico.motores_consultados` (e.g., "Consultados: LimeTorrents, EZTV, Nyaa"): it
+       lists only the indexes actually queried, excluding category-omitted and health-skipped ones.
 
 2. Main Results Area (Scrollable List):
    - Render items from the JSON array `resultados`.
@@ -127,18 +138,32 @@ Structure: Single window divided into 3 distinct sections:
 
 4. Exit Code & Error Handling:
    - Exit 0: Render results list normally.
-   - Exit 2 (No results): Read `diagnostico.motores`. If all engines `ok: true` with 0 items, suggest broader terms or English titles. If any engine `ok: false`, highlight the failed engine and show its `error` field.
+   - Exit 2 (No results): Read `diagnostico.motores` and pick the real cause, in this order:
+     (1) if any engine has `saltado_por_salud: true` and `motores_consultados` is empty or
+     returned nothing, explain that the health history set those indexes aside (offer
+     "--salud reset") — do NOT suggest rephrasing the search;
+     (2) if every consulted engine is `ok: true` with 0 items, suggest broader terms or English titles;
+     (3) if any engine has `ok: false`, highlight it and show its `error` field.
    - Exit 3 (Ollama Down): Show error state: "El servicio de IA local no responde." Include command "ollama serve" and a "Reintentar" button.
    - Exit 4 (Network/Blocked): Display "Error de conexión o bloqueo de índices".
    - Any other code: Show generic error message with stderr inside a collapsible "Detalles" disclosure.
+   - Codes 64 (invalid arguments), 65 (the wrapper could not find the backend; stdout carries
+     `{"error": ...}`) and 66 (a doctor check failed; stdout carries `.ok`/`.checks`): show the
+     matching message and, for 65 and 66, the actionable detail from the JSON rather than stderr.
    - `saltado_por_salud: true`: Display as "saltado" with its `motivo_salud` in diagnostics; do NOT treat as a search failure.
 
 5. Execution Constraints:
    - Always parse stdout using `--json`. Never parse plain text or treat stderr as JSON.
-   - Keep UI responsive during command runs (up to 45s cold start, 15s warm start).
+   - Keep UI responsive during command runs (up to 45s on cold start, ~15s while a dead index is
+     still being retried, ~2-3s once the backend has set it aside).
    - Show indeterminate loading spinner with timer and a "Cancelar" button. Keep previous results list visible but dimmed during fresh searches.
    - Do not re-filter or re-deduplicate results: the CLI backend handles deduplication and relevance filtering.
-   - All user-facing UI text in Spanish (es-MX).
+   - Quote the backend paths: the folder contains a space ("03 Projects"). Pass the command as a single
+     quoted argument list; never assemble it with unquoted concatenation, and never modify the backend folder.
+   - Non-goals: the app does NOT download torrents and does NOT open a torrent client; it only searches
+     metadata and copies magnets. No analytics or telemetry of any kind.
+   - All user-facing UI text in Spanish (es-MX), taken **verbatim from Annex A of the brief**
+     (`MANUAL_USUARIO.md`): the labels, examples and error messages are copy to reproduce, not inspiration.
 ```
 
 #### 🇪🇸 Español
@@ -156,12 +181,15 @@ Estructura: Una sola ventana dividida en 3 partes:
      - `diagnostico.descartados_por_relevancia` ("X descartados por relevancia")
      - ID de IMDb si existe en el JSON.
      - Badge de consulta efectiva si `consulta_efectiva` != `consulta_original`: "Buscando: <consulta_efectiva>".
+     - `diagnostico.motores_consultados` (ej. "Consultados: LimeTorrents, EZTV, Nyaa"): lista solo
+       los índices consultados de verdad, sin los omitidos por categoría ni los saltados por salud.
 
 2. Área Principal de Resultados (Lista desplazable):
    - Renderiza elementos del array JSON `resultados`.
    - Mostrar por fila: Título, Semillas (Seeders), Descargadores (Leechers), Tamaño y Origen (Source) como badge de color.
    - Conservar orden predeterminado (semillas de mayor a menor); permitir reordenar por tamaño o nombre.
    - La primera fila debe destacarse visualmente como la opción recomendada.
+   - Desplazamiento fluido con más de 100 ítems (virtualiza la lista si hace falta).
 
 3. Panel de Detalle Derecho (Elemento seleccionado):
    - Título completo, Semillas, Descargadores, Tamaño, Origen.
@@ -171,16 +199,32 @@ Estructura: Una sola ventana dividida en 3 partes:
 
 4. Manejo de Errores y Códigos de Salida:
    - Código 0: Muestra la lista de resultados normalmente.
-   - Código 2 (Sin resultados): Lee `diagnostico.motores`. Si todos tienen `ok: true` y 0 ítems, sugiere menos palabras o títulos en inglés. Si alguno tiene `ok: false`, nómbralo y muestra su error.
+   - Código 2 (Sin resultados): Lee `diagnostico.motores` y elige la causa real, en este orden:
+     (1) si algún motor trae `saltado_por_salud: true` y `motores_consultados` está vacío o no
+     devolvió nada, explica que el historial de salud apartó esos índices (ofrece
+     "--salud reset") — NO sugieras reformular la búsqueda;
+     (2) si todos los motores consultados tienen `ok: true` con 0 ítems, sugiere menos palabras o títulos en inglés;
+     (3) si alguno tiene `ok: false`, nómbralo y muestra su `error`.
    - Código 3 (Ollama inaccesible): Muestra mensaje "El servicio de IA local no responde", comando "ollama serve" y botón "Reintentar".
    - Código 4 (Bloqueo de red): Muestra "Error de conexión o bloqueo de índices".
    - Otro código: Mensaje breve con stderr dentro de un desplegable "Detalles".
+   - Códigos 64 (argumentos inválidos), 65 (el wrapper no encontró el backend; stdout trae
+     `{"error": ...}`) y 66 (falló una comprobación del doctor; stdout trae `.ok`/`.checks`):
+     muestra el mensaje correspondiente y, en 65 y 66, el detalle accionable del JSON, no el stderr.
    - `saltado_por_salud: true`: Mostrar como "saltado" con su `motivo_salud`; no contar como fallo.
 
 5. Restricciones:
    - Usar siempre `--json` y parsear stdout. Nunca tratar stderr como datos.
-   - Mantener UI responsiva durante la ejecución. Spinner con cronómetro y botón "Cancelar".
-   - Todos los textos visibles en español (es-MX).
+   - Mantener la UI responsiva durante la ejecución (hasta 45s en arranque frío, ~15s mientras aún se
+     reintenta un índice caído, ~2-3s cuando el backend ya lo ha apartado). Spinner con cronómetro y
+     botón "Cancelar".
+   - Citar las rutas del backend: la carpeta contiene un espacio ("03 Projects"). Pasa el comando como
+     una lista de argumentos citada; nunca lo armes por concatenación sin comillas, y no modifiques la
+     carpeta del backend.
+   - No-objetivos: la app NO descarga torrents ni abre un cliente de torrents; solo busca metadatos y
+     copia magnets. Sin analítica ni telemetría de ningún tipo.
+   - Todos los textos visibles en español (es-MX), **copiados literalmente del Anexo A del brief**
+     (`MANUAL_USUARIO.md`): las etiquetas, los ejemplos y los mensajes de error se reproducen, no se inventan.
 ```
 
 ---
@@ -194,8 +238,13 @@ Add three enhancements to the search app while preserving all existing functiona
 
 1. Collapsible Diagnostics Panel (Bottom Section):
    - Collapsed by default below the results table; remains accessible even when results are empty.
-   - Summary line: Raw results count, unique items, discarded by relevance, IMDb ID.
-   - Table of engines from `diagnostico.motores`: Engine Name, Status (OK / FALLO if ok=false / OMITIDO if omitido=true), item count, execution latency (ms), and error text if present.
+   - Summary line: Raw results count, unique items, discarded by relevance, IMDb ID, and
+     `motores_consultados` (the indexes actually queried).
+   - Table of engines from `diagnostico.motores`: Engine Name, Status (OK / FALLO if ok=false /
+     OMITIDO if omitido=true / **SALTADO** if saltado_por_salud=true), item count, execution latency
+     (ms), and error text if present.
+   - For a SALTADO engine, show its `motivo_salud` instead of an error, and when `timeout_segundos` is
+     present, say that it is a reduced-timeout probe ("sondeo").
 
 2. Quality Indicators & Badges:
    - If title contains CAM, TS, HDCAM, or HDTS: add warning badge "calidad de cámara" with tooltip explaining cinema/screener source.
@@ -214,7 +263,69 @@ Add three enhancements to the search app while preserving all existing functiona
    - Backend path indicator (read-only) + Ollama status indicator light with a "Comprobar conexión" ping button to http://localhost:11434.
    - "Restaurar valores por defecto" button.
 
-All UI text in Spanish (es-MX).
+4. Help Screen (in-app):
+   - Separate window or section that reproduces `MANUAL_USUARIO.md`, in this exact order: what VANTAGE
+     is; how to search (the five examples); how to read the results (field glossary); what to do when
+     something fails (the **seven** cases below); usage tips; and the index status table.
+   - The seven cases come from Annex A.4 of the brief and are: Ollama connection error; "No results
+     found matching criteria"; `ModuleNotFoundError: No module named 'ollama'`; "Fallo en el
+     procesamiento del LLM"; series returning nothing (EZTV needs IMDb); an unrelated result (an index
+     returned a generic list); and an index stuck on [FALLO]. Cover all seven, not a selection.
+   - Ground the field labels with the Annex A.2 wordings as tooltips, and close with the legal note.
+   - A "Ver el manual completo" button that opens `MANUAL_USUARIO.md` in the system viewer.
+
+All UI text in Spanish (es-MX), reproduced verbatim from Annex A of the brief (`MANUAL_USUARIO.md`).
+```
+
+#### 🇪🇸 Español
+```markdown
+Añade tres mejoras a la app de búsqueda sin romper nada de lo que ya funciona:
+
+1. Panel de Diagnóstico Plegable (parte inferior):
+   - Plegado por defecto bajo la tabla de resultados; accesible incluso cuando no hay resultados.
+   - Línea de resumen: resultados brutos, ítems únicos, descartados por relevancia, ID de IMDb y
+     `motores_consultados` (los índices realmente consultados).
+   - Tabla de motores desde `diagnostico.motores`: nombre del motor, estado (OK / FALLO si ok=false /
+     OMITIDO si omitido=true / **SALTADO** si saltado_por_salud=true), número de ítems, latencia (ms)
+     y el texto de error si lo hay.
+   - Para un motor SALTADO, muestra su `motivo_salud` en lugar de un error y, cuando venga
+     `timeout_segundos`, indica que es un re-sondeo con timeout reducido ("sondeo").
+
+2. Indicadores de Calidad y Badges:
+   - Si el título contiene CAM, TS, HDCAM o HDTS: badge de aviso "calidad de cámara" con una ayuda
+     emergente que explique que es una grabación de cine o screener.
+   - Si el título contiene BluRay, WEB-DL o WEBRip: badge discreto "buena calidad".
+   - NO alteres el orden: las semillas siguen siendo el criterio principal.
+
+3. Ventana de Ajustes Avanzados (modal o vista aparte):
+   - Campo de semillas mínimas (por defecto 5) -> añade `-s <n>`
+   - Interruptor "No descartar resultados por relevancia" (por defecto, apagado) -> añade `--sin-relevancia`
+   - Interruptor "No consultar IMDb" (apagado) -> añade `--no-imdb`
+   - Interruptor "Buscar índices secuencialmente" (apagado) -> añade `--secuencial`
+   - Modelo de Ollama (por defecto "qwen2.5:7b") -> añade `-m <modelo>`
+   - URL del host de Ollama (por defecto "http://localhost:11434") -> añade `--host <url>`
+   - Casillas de selección de índices (YTS, LimeTorrents, MagnetDL, EZTV, Nyaa) -> añade
+     `--sin-motores <los desmarcados>`
+   - Selector del historial de salud (auto, off, reset) -> añade `--salud <opción>`
+   - Indicador de la ruta del backend (solo lectura) + semáforo del estado de Ollama con un botón
+     "Comprobar conexión" que hace ping a http://localhost:11434.
+   - Botón "Restaurar valores por defecto".
+
+4. Pantalla de Ayuda (dentro de la app):
+   - Ventana o sección aparte que reproduce el `MANUAL_USUARIO.md`, en este orden exacto: qué es
+     VANTAGE; cómo buscar (los cinco ejemplos); cómo leer los resultados (glosario de campos); qué
+     hacer si algo falla (los **siete** casos de abajo); consejos de uso; y la tabla de estado de los
+     índices.
+   - Los siete casos salen del Anexo A.4 del brief y son: error de conexión con Ollama; "No results
+     found matching criteria"; `ModuleNotFoundError: No module named 'ollama'`; "Fallo en el
+     procesamiento del LLM"; series que no devuelven nada (EZTV necesita IMDb); un resultado que no
+     tiene que ver (un índice devolvió una lista genérica); y un índice atascado en [FALLO]. Cubre los
+     siete, no una selección.
+   - Usa los textos del Anexo A.2 como ayuda emergente de las etiquetas, y cierra con la nota legal.
+   - Botón "Ver el manual completo" que abra `MANUAL_USUARIO.md` en el visor del sistema.
+
+Todos los textos visibles en español (es-MX), copiados literalmente del Anexo A del brief
+(`MANUAL_USUARIO.md`).
 ```
 
 ---
@@ -241,6 +352,30 @@ Implement three productivity features:
    - Global keyboard shortcut (e.g., Cmd+Shift+F) to bring the main window to focus and highlight the search bar.
 
 All user-facing copy in Spanish (es-MX).
+```
+
+#### 🇪🇸 Español
+```markdown
+Implementa tres funciones de comodidad:
+
+1. Historial de Búsquedas Local:
+   - Guarda en disco las últimas 50 búsquedas.
+   - Almacena: la frase escrita, la consulta efectiva, la fecha y el número de resultados.
+   - Ofrece una barra lateral o vista "Historial" que permita reabrir con un clic los resultados de
+     una búsqueda pasada, sin volver a ejecutar el comando del CLI.
+   - Opciones para borrar entradas sueltas o vaciar todo el historial.
+
+2. Integración con la Barra de Menú de macOS:
+   - Icono en la barra de menú con un campo de búsqueda rápida.
+   - Al enviar una consulta, se ejecuta la búsqueda y se abre o se trae al frente la ventana principal
+     con los resultados.
+
+3. Exportación de Datos y Atajo Global:
+   - Botón "Exportar" con formatos CSV y JSON mediante el diálogo de guardado nativo de macOS.
+   - Atajo de teclado global (por ejemplo, Cmd+Shift+F) que traiga la ventana principal al frente y
+     enfoque la barra de búsqueda.
+
+Todos los textos visibles en español (es-MX).
 ```
 
 ---

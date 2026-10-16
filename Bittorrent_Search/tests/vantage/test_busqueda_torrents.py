@@ -1529,3 +1529,48 @@ class TestCifraDocumentada:
         assert cifras == {total}, (
             f"el README dice {sorted(cifras)} pruebas y la suite tiene {total}: actualiza las cifras"
         )
+
+
+class TestBriefIntegradoConElManual:
+    """El Anexo A del brief cita el manual de uso y no puede quedarse atrás.
+
+    Comprueba dos cosas: que los casos de «Solución de Problemas» del manual estén todos en el
+    anexo (estructura, robusto ante reescrituras) y que las citas literales coincidan en los
+    dos documentos (si alguien reescribe el manual sin tocar el brief, falla aquí).
+    """
+
+    @staticmethod
+    def _casos_de_problemas() -> List[str]:
+        manual = (RAIZ / "MANUAL_USUARIO.md").read_text(encoding="utf-8")
+        bloque = manual.split("## Solución de Problemas", 1)[1].split("\n## ", 1)[0]
+        return re.findall(r"^### (.+)$", bloque, re.M)
+
+    def test_los_casos_del_manual_estan_todos_en_el_anexo(self) -> None:
+        brief = (RAIZ / "BRIEF_UI_GLAZE.md").read_text(encoding="utf-8")
+        casos = self._casos_de_problemas()
+
+        assert len(casos) >= 7, f"se esperaban al menos 7 casos en el manual, hay {len(casos)}"
+        faltan = [caso for caso in casos if caso not in brief]
+        assert not faltan, (
+            f"el Anexo A del brief no cubre estos casos del manual: {faltan}. "
+            "Añádelos a la tabla A.4 y al orden de A.8."
+        )
+
+    @pytest.mark.parametrize(
+        "cita",
+        [
+            "El nombre del torrent (incluye calidad y fuente)",
+            "El enlace magnético que puedes copiar y pegar en tu cliente de torrents (Transmission, qBittorrent, etc.)",
+            "Índice de origen (YTS, LimeTorrents, Nyaa, EZTV o MagnetDL)",
+            '**Sé específico:** "Película Oppenheimer 2023" funciona mejor que solo "Oppenheimer"',
+            "**Anime:** para anime, Nyaa suele dar mejores resultados que los índices generalistas",
+            "No responde (timeout en `.com`, DNS en `.mx`)",
+        ],
+    )
+    def test_las_citas_literales_coinciden(self, cita: str) -> None:
+        manual = (RAIZ / "MANUAL_USUARIO.md").read_text(encoding="utf-8")
+        brief = (RAIZ / "BRIEF_UI_GLAZE.md").read_text(encoding="utf-8")
+
+        assert cita in manual or cita in brief, f"la cita ya no está en ninguno: {cita!r}"
+        assert cita in manual, f"el manual ya no dice {cita!r}: actualiza el Anexo A"
+        assert cita in brief, f"el Anexo A no dice {cita!r}: resincronízalo con el manual"
