@@ -1,27 +1,32 @@
-# Manual de Instalación y Uso - VANTAGE
+# Manual de uso de BitPuller
 
-## ¿Qué es VANTAGE?
-
-VANTAGE es un sistema que te permite buscar torrents usando lenguaje natural. En lugar de tener que saber cómo funcionan los buscadores de torrents, simplemente le escribes lo que quieres en español (o inglés) y el sistema se encarga de todo.
-
-**Ejemplo:** Escribes "Busca la serie Severance" y VANTAGE consulta varios índices a la vez y te devuelve el resultado con más semillas.
-
-**Características avanzadas:**
-- Búsqueda multi-motor: YTS (películas), LimeTorrents (general), Nyaa (anime), EZTV (series) y MagnetDL (general)
-- Deduplicación automática por hash: si dos índices tienen el mismo torrent, se queda la copia con más semillas
-- Filtrado por semillas mínimas y ordenación por estabilidad (más semillas primero)
-- **Diagnóstico por motor:** si algo falla, te dice qué índice falló y por qué
-- **Filtro de relevancia:** evita resultados que no tienen que ver con lo que pediste
-- Salida en texto o JSON, y opción de ver los N mejores resultados
-
-> **Este manual es para usar VANTAGE, no para programarlo.** Aun así, cada sección
-> indica el módulo, la función o la constante responsable, para que puedas pasar del
-> comportamiento que ves al código que lo produce. Las referencias son por **nombre**
-> (no por número de línea), así que siguen siendo válidas aunque el código cambie.
+> Esta es la guía para usar la **app de escritorio**. Si prefieres la terminal, salta al
+> final: [«Uso por terminal (avanzado)»](#uso-por-terminal-avanzado).
 
 ---
 
-## Requisitos Previos
+## ¿Qué es BitPuller?
+
+BitPuller es la app de escritorio para macOS que pone **interfaz gráfica** al buscador de
+metadatos BitTorrent de VANTAGE. Escribes lo que quieres en lenguaje natural y la app consulta
+varios índices públicos a la vez, te muestra los resultados ordenados por semillas y te deja
+copiar el magnet del que más conviene.
+
+**Ejemplo:** escribes «Busca la serie Severance» y obtienes la lista de resultados, con el mejor
+destacado arriba y su magnet a un clic.
+
+La app **no busca por sí misma**: llama al backend que ya vive en la carpeta del proyecto, que es
+quien consulta los índices y usa un modelo de IA local (Ollama) para entender tu frase. Ese
+backend se puede seguir usando por terminal, y está documentado al final en
+[«Uso por terminal»](#uso-por-terminal-avanzado).
+
+**Lo que la app no hace**, por diseño: no descarga torrents, no abre ningún cliente de torrents,
+no guarda nada fuera de tu equipo y no envía datos a ningún servicio. Solo busca metadatos y
+copia magnets.
+
+---
+
+## Requisitos
 
 Antes de empezar, necesitas tener instalado:
 
@@ -58,7 +63,9 @@ Esto descargará aproximadamente 4.7 GB. Espera a que termine.
 
 ---
 
-## Instalación de VANTAGE
+---
+
+## Instalación
 
 ### Paso 1: Ir a la carpeta del proyecto
 
@@ -110,115 +117,189 @@ pip install -r requirements-dev.txt
 
 ---
 
-## Uso de VANTAGE
+### Paso 5: Abrir BitPuller
 
-### Paso 1: Asegúrate de que Ollama esté corriendo
+Con el backend instalado, abre **BitPuller** desde el Finder o desde Launchpad. La app usa la
+carpeta del backend que acabas de preparar; no trae su propio Python.
 
-Ollama debe estar ejecutándose en segundo plano. Generalmente se inicia automáticamente cuando lo instalas. Si no, ejecuta:
+### Paso 6: Comprobar que todo está listo
 
-```bash
-ollama serve
-```
-
-(Déjalo corriendo en una terminal separada)
-
-### Paso 2: Activa el entorno virtual (si no lo está)
-
-```bash
-source venv/bin/activate
-```
-
-### Paso 3: Ejecuta VANTAGE con tu búsqueda
-
-```bash
-python3 main.py "Busca la película Oppenheimer"
-```
-
-### Paso 4: Interpretar los resultados
-
-VANTAGE te mostrará algo como:
-
-```
-Resultado óptimo:
-  Title:    Oppenheimer (2023) [1080p] [BluRay] [5 1]
-  Magnet:   magnet:?xt=urn:btih:...&dn=Oppenheimer...&tr=udp%3A%2F%2F...
-  Seeders:  571
-  Leechers: 77
-  Size:     3.33 GB
-  Source:   LimeTorrents
-```
-
-- **Title:** El nombre del torrent (incluye calidad y fuente)
-- **Magnet:** El enlace magnético que puedes copiar y pegar en tu cliente de torrents (Transmission, qBittorrent, etc.)
-- **Seeders:** Cantidad de personas compartiendo el archivo (más es mejor)
-- **Leechers:** Cantidad de personas descargando el archivo
-- **Size:** Tamaño del archivo
-- **Source:** Índice de origen (YTS, LimeTorrents, Nyaa, EZTV o MagnetDL)
+En la app, pulsa **Comprobar backend**. Debe salir todo en verde: intérprete, `main.py`,
+dependencias, Ollama y el modelo. Si algo falla, ahí mismo verás cuál es el problema.
 
 ---
 
-## Opciones disponibles
+## La interfaz
 
-Puedes añadir opciones al final del comando:
+La ventana principal tiene tres zonas: el **buscador** arriba, la **lista de resultados** en el
+centro y el **panel de detalle** a la derecha. El panel de **diagnóstico** se despliega debajo de
+la lista.
 
-| Opción | Para qué sirve | En el código |
+### Buscador y barra de resumen
+
+- Campo de búsqueda con el texto de ayuda *"Busca la serie Severance, Oppenheimer 2023, anime
+  Frieren…"*. Se puede lanzar con **Enter** o con el botón **Buscar**.
+- Mientras busca verás un **cronómetro** y el botón **Cancelar** (ver más abajo).
+- Debajo aparece la barra de resumen con: cuántos resultados hay, cuántos se **descartaron por
+  relevancia**, el identificador de IMDb si se usó, la consulta efectiva (*"Buscando: …"*) cuando
+  difiere de lo que escribiste, y los índices realmente consultados
+  (*"Consultados: LimeTorrents, EZTV, Nyaa"*).
+
+### Lista de resultados
+
+- Columnas: **Título**, **Semillas**, **Descargadores**, **Tamaño** y **Origen**.
+- El orden de llegada es por semillas, de mayor a menor. Puedes reordenar haciendo clic en los
+  encabezados, pero el orden por semillas es el recomendado: más semillas es más estable.
+- La primera fila queda destacada como la opción recomendada.
+- La lista se despliega por tramos, así que se mantiene fluida con cientos de resultados.
+- Junto al título pueden aparecer dos insignias:
+  - **calidad de cámara** — el título contiene CAM, TS, HDCAM o HDTS: es una grabación de cine o
+    de pantalla, con calidad muy inferior.
+  - **buena calidad** — el título contiene BluRay, WEB-DL o WEBRip.
+  Las insignias solo informan: **no cambian el orden**.
+
+### Panel de detalle
+
+Al seleccionar un resultado:
+
+- Título completo, semillas, descargadores, tamaño y origen.
+- El **magnet completo**, en un recuadro desplazable. Se muestra acortado para que quepa, pero el
+  valor que se copia es el íntegro.
+- **Copiar magnet** y **Copiar título**, con la confirmación «¡Copiado!».
+
+### Panel de diagnóstico
+
+Un panel plegable con una fila por índice. Muestra **Resultados**, **Latencia (ms)** y el error
+literal cuando algo falla. Los estados posibles son:
+
+| Estado | Qué significa |
+| --- | --- |
+| **OK** | El índice respondió. |
+| **Fallo** | El índice no respondió; debajo aparece el motivo. |
+| **Omitido** | No aplica a esa categoría (por ejemplo, EZTV en una búsqueda de películas). |
+| **Saltado** | El backend lo apartó tras dos fallos seguidos y ya no lo espera. Se reintenta solo pasado un rato; si vuelve a responder, se recupera sin que hagas nada. |
+| **sondeo (timeout Ns)** | Es el reintento de un índice saltado, con un tiempo de espera reducido. |
+
+### Ajustes avanzados
+
+Se abren desde el botón de **Configuración** en la barra superior y se aplican a la **siguiente
+búsqueda**:
+
+| Ajuste | Para qué sirve |
+| --- | --- |
+| **Seeders mínimos** | Descarta resultados por debajo de ese número de semillas (por defecto 5). |
+| **No descartar por relevancia** | Conserva todo lo que devuelvan los índices, aunque no coincida con tu frase. |
+| **No consultar IMDb** | Evita la consulta a IMDb; puede dejar a EZTV sin resultados. |
+| **Buscar índices secuencialmente** | Uno por uno en lugar de en paralelo: más lento, más conservador. |
+| **Modelo de Ollama** | Qué modelo local usar para entender tu frase (por defecto `qwen2.5:7b`). |
+| **Host de Ollama** | Dónde escucha Ollama (por defecto `http://localhost:11434`). |
+| **Índices** | Casillas para elegir en cuáles buscar. Desmarcar los que estén caídos acorta mucho la búsqueda. |
+| **Historial de salud** | `auto` (recomendado), `off` para ignorar el historial en una búsqueda, o `reset` para borrarlo. |
+
+Incluye **Restaurar valores por defecto**, la ruta del backend (de solo lectura) y el estado de
+Ollama.
+
+### Ayuda
+
+El botón **Ayuda** abre una ventana con este mismo manual, resumido: qué es, cómo buscar, cómo
+leer los resultados, qué hacer cuando algo falla y consejos. El botón **Ver el manual completo**
+abre este archivo en el visor del sistema.
+
+### Historial
+
+Una barra lateral con las **últimas 50 búsquedas**. Al hacer clic en una se recuperan sus
+resultados **sin volver a consultar los índices**, así que es instantáneo. Cada entrada se puede
+borrar por separado, y hay un botón para vaciar todo el historial.
+
+### Menú bar y atajo global
+
+- Un icono en la **barra de menú**: al pulsarlo se abre un campo de búsqueda rápida. Escribes,
+  pulsas Enter y la ventana principal se abre con los resultados. Con el botón derecho hay además
+  *Buscar…*, *Mostrar ventana* y *Salir*.
+- El atajo **⌘⇧F** trae la ventana al frente y deja el cursor en el buscador.
+
+### Exportar
+
+El botón **Exportar** guarda los resultados de la búsqueda actual con el diálogo nativo de macOS,
+en **CSV** (columnas: Título, Seeders, Leechers, Tamaño, Fuente, Magnet) o en **JSON**, que
+incluye además el diagnóstico completo.
+
+### Cancelar una búsqueda
+
+Junto al cronómetro hay un botón **Cancelar** disponible durante toda la búsqueda, incluido el
+primer arranque en frío del modelo, que puede tardar bastante. Cancelar detiene el proceso de
+verdad y devuelve la ventana al estado anterior, sin mensaje de error.
+
+---
+
+## Cómo interpreta tu búsqueda
+
+Puedes escribir con toda naturalidad: VANTAGE separa lo que quieres buscar de las
+palabras que solo indican de qué tipo es el contenido.
+
+- `"Busca la película Oppenheimer"` → busca **Oppenheimer**
+- `"Quiero descargar Dune 2021"` → busca **Dune 2021**
+- `"The Game"` → busca **The Game**: si quitar una palabra dejaría la búsqueda
+  vacía, no se toca nada
+
+Cuando el sistema tiene que limpiar tu frase, el diagnóstico lo deja claro:
+
+```
+consulta='Oppenheimer' categoria=movies min_seeders=5 (peticion original='película Oppenheimer')
+```
+
+La categoría también se detecta sola: si dices "serie" se consulta EZTV, si dices
+"película" se consulta YTS, y si pides música o juegos no se pierde tiempo en
+índices que no tienen ese contenido.
+
+**En el código:** el saneado lo hace `texto.limpiar_consulta()` con las listas
+`PALABRAS_INTENCION` y `ARTICULOS_INICIALES`, y se aplica al principio de
+`AgregadorTorrents.buscar_con_diagnostico()`. La categoría la normaliza
+`normalizar_categoria()` con la tabla `ALIAS_CATEGORIAS` (categorías canónicas:
+`movies`, `tv`, `anime`, `music`, `games`, `applications`, `books`, `all`).
+
+---
+
+---
+
+## Filtro de relevancia
+
+VANTAGE compara las palabras de tu búsqueda con el título de cada resultado y
+descarta los que no coinciden. Por ejemplo, buscando `"Dune"` ya no aparece
+*"Genshin Impact - The Unfathomable Sand Dunes"*, que es una banda sonora y no la
+película.
+
+Si alguna vez quieres ver **todo** lo que devuelven los índices, sin ese filtro:
+
+```bash
+python3 main.py "Dune" --sin-relevancia
+```
+
+**En el código:** la comparación está en `coincide_titulo()` (compara por palabra,
+no por subcadena) y la aplica `buscar_con_diagnostico()` cuando
+`exigir_coincidencia=True`, que es el valor por defecto. Las palabras que se
+ignoran al comparar están en `PALABRAS_VACIAS`.
+
+---
+
+---
+
+## Estados y errores de la app
+
+| Lo que ves | Qué significa | Qué hacer |
 | --- | --- | --- |
-| `-n 5` | Muestra los 5 mejores resultados en lugar de solo el mejor | `main.construir_parser()` (`--all`) y el recorte en `main.ejecutar()` |
-| `-s 20` | Sube el mínimo de semillas a 20 (por defecto son 5) | `main.SEEDERS_MINIMOS_POR_DEFECTO` → `AgregadorTorrents.buscar_con_diagnostico(min_seeders=...)` |
-| `-v` | Muestra el detalle de cada motor: resultados, tiempos y errores | `ResumenBusqueda.formatear()` y `EstadoMotor.linea()` |
-| `--json` | Devuelve la respuesta en formato JSON (útil para otros programas) | `main._payload_json()` |
-| `-m mistral` | Usa otro modelo de Ollama | `ai_agent.MODELO_POR_DEFECTO` → `procesar_peticion_usuario(model=...)` |
-| `--no-imdb` | No consulta IMDb (puede dejar sin resultados a las series) | `buscar_con_diagnostico(resolver_imdb=False)` |
-| `--secuencial` | Consulta los motores uno por uno, con pausas (más lento) | `AgregadorTorrents(paralelo=False)` |
-| `--sin-relevancia` | No filtra por coincidencia con tu búsqueda (ver más abajo) | `buscar_con_diagnostico(exigir_coincidencia=False)` |
-| `--host http://...` | Usa otro servidor de Ollama (por defecto `http://localhost:11434`) | `main.HOST_OLLAMA_POR_DEFECTO` → `main.conectar_llm()` |
-| `--debug` | Muestra información técnica de depuración | `logging.basicConfig(level=DEBUG)` en `main.ejecutar()` |
-| `--motores LISTA` | Consulta solo los índices que le digas (ej. `--motores LimeTorrents,EZTV`) | `seleccionar_motores()` en `engines.py` |
-| `--sin-motores LISTA` | **No** consulta los índices que le digas (override manual) | `seleccionar_motores()` en `engines.py` |
-| `--salud auto\|off\|reset` | Controla el historial de índices caídos: `auto` (por defecto), `off` lo ignora, `reset` lo borra | `SaludMotores` en `salud_motores.py` |
+| **Buscando…** con cronómetro | La consulta está en marcha. | Esperar, o pulsar **Cancelar**. |
+| **Lista de resultados** | Todo correcto. | Usar **Copiar magnet** en el que elijas. |
+| **Sin resultados** | Tres causas posibles, y la app te dice cuál: (1) el historial de salud había apartado los índices, y ofrece restablecerlo; (2) los índices respondieron pero nada coincidía; (3) algún índice falló. | Sigue la indicación que aparezca. Si es la (1), pulsa **Restablecer historial de salud**. |
+| **El servicio de IA local no responde** | Ollama está apagado. | Abre Ollama y pulsa **Reintentar**. |
+| **Error de conexión o bloqueo de índices** | Ningún índice respondió. | Revisa tu conexión y reintenta más tarde. |
+| **Backend no encontrado en la ruta especificada** | La app no encuentra el backend (o su entorno de Python). | Comprueba la instalación (ver «Instalación») y usa **Comprobar backend**. |
+| **La búsqueda excedió el tiempo límite** | Pasaron más de dos minutos sin respuesta. | Reintenta; si se repite, revisa Ollama con **Comprobar backend**. |
+| **Cancelada** | La detuviste tú. | Nada: vuelve a buscar cuando quieras. |
 
-**Ejemplo con varias opciones:**
-
-```bash
-python3 main.py "Busca la serie Severance" -n 3 -v
-```
-
-Salida (resumida):
-
-```
-Extracción LLM: query='Severance' categoria='tv'
-consulta='Severance' categoria=tv min_seeders=5
-imdb_id=tt11280740
-items: 119 brutos, 98 únicos, 0 descartados por relevancia
-[OMITIDO] YTS            no soporta categoria='tv'
-[OK]      LimeTorrents   40 resultado(s) (659 ms)
-[FALLO]   MagnetDL       ErrorFuenteNoDisponible: ningún mirror respondió: ...
-[OK]      EZTV           79 resultado(s), imdb=tt11280740 (1129 ms)
-[OK]      Nyaa           0 resultado(s) (426 ms)
-
-Resultado #1:
-  Title:    Severance S02E10 1080p WEB H264-SuccessfulCrab
-  ...
-```
-
-Ese bloque `[OK] / [FALLO] / [OMITIDO]` es el **diagnóstico**: te dice exactamente qué motor
-respondió, cuántos resultados dio, cuánto tardó y, si falló, el motivo.
-
----
-
-## Ejemplos de Búsqueda
-
-Puedes escribir tus búsquedas en lenguaje natural:
-
-- `python3 main.py "Busca la serie Severance"`
-- `python3 main.py "Quiero la película Dune 2021"`
-- `python3 main.py "Busca la película Oppenheimer 2023" -n 5`
-- `python3 main.py "Necesito Adobe Photoshop"`
-- `python3 main.py "anime Frieren"`
-
-El sistema detecta automáticamente la categoría (películas, series, anime, música,
-juegos, aplicaciones o libros) y busca en los índices que sirven esa categoría. Por
-ejemplo, si pides música, no perderá tiempo consultando EZTV (que solo tiene series).
+Los detalles técnicos de cada fallo quedan en un desplegable **Detalles**, y el botón
+**Comprobar backend** comprueba de una vez el intérprete, las dependencias, Ollama, el modelo
+descargado y el historial de salud de los índices.
 
 ---
 
@@ -255,51 +336,42 @@ python3 main.py "Severance" --sin-motores MagnetDL
 
 ---
 
-## Cómo interpreta tu búsqueda
+---
 
-Puedes escribir con toda naturalidad: VANTAGE separa lo que quieres buscar de las
-palabras que solo indican de qué tipo es el contenido.
+## Cómo leer los resultados
 
-- `"Busca la película Oppenheimer"` → busca **Oppenheimer**
-- `"Quiero descargar Dune 2021"` → busca **Dune 2021**
-- `"The Game"` → busca **The Game**: si quitar una palabra dejaría la búsqueda
-  vacía, no se toca nada
-
-Cuando el sistema tiene que limpiar tu frase, el diagnóstico lo deja claro:
+VANTAGE te mostrará algo como:
 
 ```
-consulta='Oppenheimer' categoria=movies min_seeders=5 (peticion original='película Oppenheimer')
+Resultado óptimo:
+  Title:    Oppenheimer (2023) [1080p] [BluRay] [5 1]
+  Magnet:   magnet:?xt=urn:btih:...&dn=Oppenheimer...&tr=udp%3A%2F%2F...
+  Seeders:  571
+  Leechers: 77
+  Size:     3.33 GB
+  Source:   LimeTorrents
 ```
 
-La categoría también se detecta sola: si dices "serie" se consulta EZTV, si dices
-"película" se consulta YTS, y si pides música o juegos no se pierde tiempo en
-índices que no tienen ese contenido.
-
-**En el código:** el saneado lo hace `texto.limpiar_consulta()` con las listas
-`PALABRAS_INTENCION` y `ARTICULOS_INICIALES`, y se aplica al principio de
-`AgregadorTorrents.buscar_con_diagnostico()`. La categoría la normaliza
-`normalizar_categoria()` con la tabla `ALIAS_CATEGORIAS` (categorías canónicas:
-`movies`, `tv`, `anime`, `music`, `games`, `applications`, `books`, `all`).
+- **Title:** El nombre del torrent (incluye calidad y fuente)
+- **Magnet:** El enlace magnético que puedes copiar y pegar en tu cliente de torrents (Transmission, qBittorrent, etc.)
+- **Seeders:** Cantidad de personas compartiendo el archivo (más es mejor)
+- **Leechers:** Cantidad de personas descargando el archivo
+- **Size:** Tamaño del archivo
+- **Source:** Índice de origen (YTS, LimeTorrents, Nyaa, EZTV o MagnetDL)
 
 ---
 
-## Filtro de relevancia
+---
 
-VANTAGE compara las palabras de tu búsqueda con el título de cada resultado y
-descarta los que no coinciden. Por ejemplo, buscando `"Dune"` ya no aparece
-*"Genshin Impact - The Unfathomable Sand Dunes"*, que es una banda sonora y no la
-película.
+## Consejos de Uso
 
-Si alguna vez quieres ver **todo** lo que devuelven los índices, sin ese filtro:
+1. **Sé específico:** "Película Oppenheimer 2023" funciona mejor que solo "Oppenheimer"
+2. **Idioma:** Puedes escribir en español o inglés, el sistema entiende ambos
+3. **Categorías:** El sistema detecta la categoría solo; si la mencionas ("película", "serie", "música", "juego", "aplicación", "libro") se respeta esa intención
+4. **Seeders:** VANTAGE prioriza los torrents con más semillas para asegurar descargas más rápidas y estables
+5. **Anime:** para anime, Nyaa suele dar mejores resultados que los índices generalistas
 
-```bash
-python3 main.py "Dune" --sin-relevancia
-```
-
-**En el código:** la comparación está en `coincide_titulo()` (compara por palabra,
-no por subcadena) y la aplica `buscar_con_diagnostico()` cuando
-`exigir_coincidencia=True`, que es el valor por defecto. Las palabras que se
-ignoran al comparar están en `PALABRAS_VACIAS`.
+---
 
 ---
 
@@ -402,20 +474,137 @@ python3 scripts/verificar_engines.py
 
 ---
 
-## Consejos de Uso
+---
 
-1. **Sé específico:** "Película Oppenheimer 2023" funciona mejor que solo "Oppenheimer"
-2. **Idioma:** Puedes escribir en español o inglés, el sistema entiende ambos
-3. **Categorías:** El sistema detecta la categoría solo; si la mencionas ("película", "serie", "música", "juego", "aplicación", "libro") se respeta esa intención
-4. **Seeders:** VANTAGE prioriza los torrents con más semillas para asegurar descargas más rápidas y estables
-5. **Anime:** para anime, Nyaa suele dar mejores resultados que los índices generalistas
+## Uso por terminal (avanzado)
+
+Todo lo que hace la app por debajo se puede hacer a mano desde la terminal. Sirve para
+automatizar, para depurar y para saber exactamente qué se está ejecutando. Nada de esta sección
+es necesario para usar la app.
+
+### Qué hace el backend
+
+VANTAGE es un sistema que te permite buscar torrents usando lenguaje natural. En lugar de tener que saber cómo funcionan los buscadores de torrents, simplemente le escribes lo que quieres en español (o inglés) y el sistema se encarga de todo.
+
+**Ejemplo:** Escribes "Busca la serie Severance" y VANTAGE consulta varios índices a la vez y te devuelve el resultado con más semillas.
+
+**Características avanzadas:**
+- Búsqueda multi-motor: YTS (películas), LimeTorrents (general), Nyaa (anime), EZTV (series) y MagnetDL (general)
+- Deduplicación automática por hash: si dos índices tienen el mismo torrent, se queda la copia con más semillas
+- Filtrado por semillas mínimas y ordenación por estabilidad (más semillas primero)
+- **Diagnóstico por motor:** si algo falla, te dice qué índice falló y por qué
+- **Filtro de relevancia:** evita resultados que no tienen que ver con lo que pediste
+- Salida en texto o JSON, y opción de ver los N mejores resultados
+
+> **Este manual es para usar VANTAGE, no para programarlo.** Aun así, cada sección
+> indica el módulo, la función o la constante responsable, para que puedas pasar del
+> comportamiento que ves al código que lo produce. Las referencias son por **nombre**
+> (no por número de línea), así que siguen siendo válidas aunque el código cambie.
+
+---
+
+### Uso del CLI
+
+
+#### Paso 1: Asegúrate de que Ollama esté corriendo
+
+
+Ollama debe estar ejecutándose en segundo plano. Generalmente se inicia automáticamente cuando lo instalas. Si no, ejecuta:
+
+```bash
+ollama serve
+```
+
+(Déjalo corriendo en una terminal separada)
+
+#### Paso 2: Activa el entorno virtual (si no lo está)
+
+
+```bash
+source venv/bin/activate
+```
+
+#### Paso 3: Ejecuta VANTAGE con tu búsqueda
+
+
+```bash
+python3 main.py "Busca la película Oppenheimer"
+```
+
+### Opciones de la línea de comandos
+
+Puedes añadir opciones al final del comando:
+
+| Opción | Para qué sirve | En el código |
+| --- | --- | --- |
+| `-n 5` | Muestra los 5 mejores resultados en lugar de solo el mejor | `main.construir_parser()` (`--all`) y el recorte en `main.ejecutar()` |
+| `-s 20` | Sube el mínimo de semillas a 20 (por defecto son 5) | `main.SEEDERS_MINIMOS_POR_DEFECTO` → `AgregadorTorrents.buscar_con_diagnostico(min_seeders=...)` |
+| `-v` | Muestra el detalle de cada motor: resultados, tiempos y errores | `ResumenBusqueda.formatear()` y `EstadoMotor.linea()` |
+| `--json` | Devuelve la respuesta en formato JSON (útil para otros programas) | `main._payload_json()` |
+| `-m mistral` | Usa otro modelo de Ollama | `ai_agent.MODELO_POR_DEFECTO` → `procesar_peticion_usuario(model=...)` |
+| `--no-imdb` | No consulta IMDb (puede dejar sin resultados a las series) | `buscar_con_diagnostico(resolver_imdb=False)` |
+| `--secuencial` | Consulta los motores uno por uno, con pausas (más lento) | `AgregadorTorrents(paralelo=False)` |
+| `--sin-relevancia` | No filtra por coincidencia con tu búsqueda (ver más abajo) | `buscar_con_diagnostico(exigir_coincidencia=False)` |
+| `--host http://...` | Usa otro servidor de Ollama (por defecto `http://localhost:11434`) | `main.HOST_OLLAMA_POR_DEFECTO` → `main.conectar_llm()` |
+| `--debug` | Muestra información técnica de depuración | `logging.basicConfig(level=DEBUG)` en `main.ejecutar()` |
+| `--motores LISTA` | Consulta solo los índices que le digas (ej. `--motores LimeTorrents,EZTV`) | `seleccionar_motores()` en `engines.py` |
+| `--sin-motores LISTA` | **No** consulta los índices que le digas (override manual) | `seleccionar_motores()` en `engines.py` |
+| `--salud auto\|off\|reset` | Controla el historial de índices caídos: `auto` (por defecto), `off` lo ignora, `reset` lo borra | `SaludMotores` en `salud_motores.py` |
+
+**Ejemplo con varias opciones:**
+
+```bash
+python3 main.py "Busca la serie Severance" -n 3 -v
+```
+
+Salida (resumida):
+
+```
+Extracción LLM: query='Severance' categoria='tv'
+consulta='Severance' categoria=tv min_seeders=5
+imdb_id=tt11280740
+items: 119 brutos, 98 únicos, 0 descartados por relevancia
+[OMITIDO] YTS            no soporta categoria='tv'
+[OK]      LimeTorrents   40 resultado(s) (659 ms)
+[FALLO]   MagnetDL       ErrorFuenteNoDisponible: ningún mirror respondió: ...
+[OK]      EZTV           79 resultado(s), imdb=tt11280740 (1129 ms)
+[OK]      Nyaa           0 resultado(s) (426 ms)
+
+Resultado #1:
+  Title:    Severance S02E10 1080p WEB H264-SuccessfulCrab
+  ...
+```
+
+Ese bloque `[OK] / [FALLO] / [OMITIDO]` es el **diagnóstico**: te dice exactamente qué motor
+respondió, cuántos resultados dio, cuánto tardó y, si falló, el motivo.
+
+---
+
+### Más ejemplos por terminal
+
+Puedes escribir tus búsquedas en lenguaje natural:
+
+- `python3 main.py "Busca la serie Severance"`
+- `python3 main.py "Quiero la película Dune 2021"`
+- `python3 main.py "Busca la película Oppenheimer 2023" -n 5`
+- `python3 main.py "Necesito Adobe Photoshop"`
+- `python3 main.py "anime Frieren"`
+
+El sistema detecta automáticamente la categoría (películas, series, anime, música,
+juegos, aplicaciones o libros) y busca en los índices que sirven esa categoría. Por
+ejemplo, si pides música, no perderá tiempo consultando EZTV (que solo tiene series).
+
+---
 
 ---
 
 ## Estructura del Proyecto
 
-Todo vive en una sola carpeta, `~/Documents/03 Projects/VANTAGE/Bittorrent_Search`,
-con su propio entorno de Python instalado dentro (`venv/`).
+La **app** (BitPuller) es la interfaz y se instala aparte, en `/Applications/Glaze/BitPuller.app`;
+su código vive en `~/Glaze/Vantage Search/sources/`, y la app llama al backend por su ruta.
+
+El **backend** vive en `~/Documents/03 Projects/VANTAGE/Bittorrent_Search`, con su propio
+entorno de Python instalado dentro (`venv/`). Estos son sus archivos:
 
 - `main.py` - Programa principal que une todo (línea de comandos)
 - `ai_agent.py` - Módulo que usa IA para entender tu búsqueda
@@ -433,6 +622,8 @@ con su propio entorno de Python instalado dentro (`venv/`).
 - `VERIFICACION_ENGINES.md` - Informe de qué índices respondieron y con qué latencia
 - `handoffs/` - Notas de traspaso de este subsistema
 - `README.md` - Documentación técnica para desarrolladores
+
+---
 
 ---
 
@@ -462,6 +653,8 @@ con su propio entorno de Python instalado dentro (`venv/`).
 | Códigos de salida 0 / 2 / 3 / 4 | `EXIT_OK`, `EXIT_SIN_RESULTADOS`, `EXIT_ERROR_LLM`, `EXIT_MOTORES_CAIDOS` | `main.py` |
 | Saber qué índices están vivos | `sondear_todo()`, `probar_motores()`, `SONDAS` | `scripts/verificar_engines.py` |
 | Pruebas que no tocan red | `test_busqueda_torrents.py`, `conftest.py` | `tests/vantage/` |
+
+---
 
 ---
 
@@ -603,6 +796,8 @@ python3 scripts/verificar_engines.py
 
 ---
 
+---
+
 ## ¿Qué sigue?
 
 Las recetas de la sección anterior cubren los cambios más habituales (modelo de IA,
@@ -615,6 +810,8 @@ source venv/bin/activate
 pytest tests/vantage -q
 python3 scripts/verificar_engines.py
 ```
+
+---
 
 ---
 

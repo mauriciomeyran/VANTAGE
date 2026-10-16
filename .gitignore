@@ -88,3 +88,6 @@ node_modules/
 sqlite-memory.db*
 Dashboard/dashboard.db
 Dashboard/dashboard_instances.db
+
+Mail Organizers/credentials.json
+Mail Organizers/token.json

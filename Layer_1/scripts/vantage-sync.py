@@ -153,7 +153,7 @@ def parse_json_input(raw: str) -> list[dict]:
 # ─── Ollama LLM extraction (optional, local-only) ─────────────────────────────
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-DEFAULT_OLLAMA_TIMEOUT = 120  # seconds — T4: now PER CHUNK (default)
+DEFAULT_OLLAMA_TIMEOUT = 300  # seconds — T4: per chunk default (~2.3x max measured)
 DEFAULT_WARMUP_TIMEOUT = 180  # seconds — T4: warmup timeout (default)
 OLLAMA_SEED = 42  # fixed seed for deterministic LLM extraction
 DEFAULT_CHUNK_SIZE = 5000  # characters per chunk
@@ -882,7 +882,7 @@ Examples:
   # Write to primary store (regex mode — default)
   python3 vantage-sync.py --input chat_dump.txt --project vantage
 
-  # LLM semantic extraction (local Ollama qwen2.5:7b, 120s timeout default)
+  # LLM semantic extraction (local Ollama qwen2.5:7b, 300s timeout default)
   python3 vantage-sync.py --input chat_dump.txt --project vantage --llm --dry-run
 
   # LLM with custom model and timeout

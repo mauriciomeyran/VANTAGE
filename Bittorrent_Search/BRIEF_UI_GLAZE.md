@@ -473,19 +473,31 @@ Del manual («Estado de los índices»), que la app puede mostrar en el panel de
 
 Para que nada del manual se quede sin sitio y sea fácil mantenerlos juntos:
 
+El manual está escrito **con la app primero** y el terminal como apéndice, así que este mapeo
+sigue ese orden.
+
 | Sección del manual | Dónde aparece en la app |
 | --- | --- |
-| ¿Qué es VANTAGE? | Pantalla de ayuda, primer bloque |
-| Requisitos previos / Instalación | Ayuda → "Primeros pasos" (o enlace al manual) |
-| Uso de VANTAGE (pasos 1-4) | Flujo principal + ayuda |
-| Interpretar los resultados | Glosario de A.2 (etiquetas y ayuda emergente) |
-| Opciones disponibles | Panel de ajustes avanzados (§5.4) |
-| Ejemplos de búsqueda | Placeholder y sugerencias (A.3) |
-| Estado de los índices | Panel de diagnóstico (§5.3) y A.6 |
+| ¿Qué es BitPuller? | Ayuda, primer bloque |
+| Requisitos / Instalación | Ajustes → ruta del backend y "Comprobar conexión"; el resto, en el manual |
+| La interfaz → Buscador y barra de resumen | Barra de búsqueda y línea de resumen (§5.1) |
+| La interfaz → Lista de resultados | Tabla de resultados, insignias de calidad y orden (§5.1, §5.2) |
+| La interfaz → Panel de detalle | Inspector derecho, "Copiar magnet" (§5.2) |
+| La interfaz → Panel de diagnóstico | Panel plegable con estados, latencia y `motivo_salud` (§5.3) |
+| La interfaz → Ajustes avanzados | Diálogo de ajustes: los ocho controles (§5.4) |
+| La interfaz → Ayuda | El propio diálogo de ayuda, que reproduce estas secciones |
+| La interfaz → Historial | Barra lateral de historial (§5.6) |
+| La interfaz → Menú bar y atajo global | Icono de barra de menú, popover y ⌘⇧F (§5.6) |
+| La interfaz → Exportar | Botón "Exportar" (§5.6) |
+| La interfaz → Cancelar una búsqueda | Botón "Cancelar" junto al cronómetro (§4.4, §5.5) |
+| Cómo leer los resultados | Glosario de A.2 (etiquetas y ayudas emergentes) |
 | Cómo interpreta tu búsqueda | Ayuda, bloque de comportamiento |
-| Filtro de relevancia | Ayuda + ajuste `--sin-relevancia` |
-| Solución de problemas | A.4 y pantalla de ayuda |
+| Filtro de relevancia | Ayuda + ajuste "No descartar por relevancia" |
+| Estados y errores de la app | Los estados de error por código de salida (§4.3) y A.4 |
+| Estado de los índices | Panel de diagnóstico (§5.3) y A.6 |
+| Solución de Problemas | A.4 y pantalla de ayuda (los siete casos) |
 | Consejos de uso | Ayuda, bloque final (A.5) |
+| Uso por terminal (apéndice) | No va en la app: es la vía avanzada del mismo backend |
 | Estructura del proyecto / Mapa del código / Recetas | No van en la app: son para quien mantiene el código |
 | Nota legal | Ayuda, al pie |
 

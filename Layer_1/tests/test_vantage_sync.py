@@ -1190,6 +1190,7 @@ class TestT4Timeouts:
         # All chunk calls should use the chunk timeout
         chunk_timeouts = timeout_log[1:]
         assert all(t == 30 for t in chunk_timeouts)
+        assert vsync_module.DEFAULT_OLLAMA_TIMEOUT == 300
 
 
 class TestT4BConsecutiveTimeouts:
