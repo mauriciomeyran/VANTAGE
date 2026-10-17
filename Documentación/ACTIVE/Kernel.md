@@ -157,7 +157,7 @@ PREFIX:H_<hash16> / PREFIX:U_<UUID>. Prefixes válidos: TRACKER, ARCHIVO, DRYRUN
 ### 05.5 KERNEL:SCH-RESOLUTION - Contrato de Resolución: 4 Pasos
 Lookup → Registry Mapping → Notion Query → Validation. Contraparte de datos del Runtime descrito en 04.1.
 ### 05.6 KERNEL:SCH-APPROVE - APROBAR_WRITE: Alcance
-Autoriza escritura de campos Class A únicamente. Variantes aceptadas: APROBAR_WRITE · APROBAR · SÍ · sí · YEP · yep. Eliminados (RAI-03): Ok · Go · YES · yes.
+Autoriza escritura de campos Class A únicamente. El vocabulario de tokens (válidos y eliminados) y la regla de emisión viven en CHARTER:NON-NEGOTIABLES-002; este nodo define solo el alcance.
 ### 05.7 KERNEL:SCH-ACCEPTANCE - Acceptance Audit
 Resultados: PASS / PASS WITH ARCHITECTURAL FINDING / FAIL.
 Mapeo de vocabulario Prompts→Tracker: source_type "career_page" → Career Page Oficial; source_type "job_board" → Agregador; source_name → NO escribir (Class B); apply_url → URL; brand → Marca; title → Rol; holding → Holding (null → "Investigar").
@@ -290,8 +290,8 @@ VL1 backfill: catch-up de Class A faltante (layer, hash, Prioridad). Prioridad =
 VL1 batch: modifica Status (Class A) en batch. Guardia: ausencia de execute hace el comando read-only permanentemente; nunca usa input() interactivo.
 VL1 archivado: escribe simultáneamente la nota determinista en Notas vía generate_archive_notes() (06.13).
 ### 07.3 KERNEL:TRG-QA - QA
-Función: validación de formato de CV exportado. No evalúa fit, oportunidad, score ni conveniencia de aplicar.
-Checklist canónico de 7 ítems (fuente de verdad: skill vantage-qa, v9.16.0+): invarianza estructural, orden cronológico (C01→C05), cobertura JD, Hard Blocks, no-inferencia/Canon, formato y completitud, diferenciación de contenido (anti-cloning).
+Función: validar el entregable final del CV: formato, fidelidad al Career Canon, cobertura de los elementos declarados en el HANDOFF y legibilidad. QA no evalúa fit, oportunidad, score ni conveniencia de aplicar.
+Checklist canónico de 8 ítems (fuente de verdad: skill vantage-qa, v9.18.0). El ítem 3 incorpora la verificación de los tres primeros matches directos de JD_keywords_top6 contra sus hechos canónicos, cifras y resultados registrados. La comprobación explícita del posicionamiento utiliza exclusivamente tagline y perfil.
 Output: GO/NO-GO por ítem; cualquier FAIL → NO-GO final.
 ### 07.4 KERNEL:TRG-DRYRUN - DRY RUN
 Función: preview obligatorio de escritura. No hay escritura sin DRY RUN previo.
@@ -358,6 +358,7 @@ Input: HANDOFF completo + Career Canon activo.
 Restricción de Lote (Single-Item Processing): CV-B procesa exactamente UN HANDOFF por invocación. Ante batch: (1) tomar el primer HANDOFF y procesarlo completo; (2) detenerse y esperar invocación explícita separada. Razón: degradación de densidad y esfuerzo narrativo observada empíricamente en procesamiento secuencial de lote (post-mortem v9.16.0, 13 CV-B en una sesión) — es un fallo de ejecución bajo carga repetitiva, no un gap documental; el contrato formal (IDs, Anti-cloning Guard, secuencia C01–C05) no lo previene.
 Validation: verificar los 7 campos del HANDOFF.
 Canon check: empresa, rol, bullets y KPIs derivados del Canon — no inventados. Prohibido reutilizar bullets pre-redactados verbatim entre vacantes distintas.
+Gates mecánicos de entrega: fuente de verdad: skill vantage-cv-b v10.3.0.
 Auditoría de Estructura: COUNT(figma_text_id)_SKELETON = COUNT(figma_text_id)_OUTPUT. Si no coincide, abortar y re-mapear.
 Auditoría de Registry Membership: cada figma_text_id del output debe pertenecer literalmente al registry_seed.json vigente y cada ID del registry debe aparecer una sola vez en el output.
 Auditoría de Secuencia: los slots deben aparecer en secuencia canónica estricta C01→C05.

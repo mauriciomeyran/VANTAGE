@@ -511,7 +511,7 @@ Si el plugin reporta "Keys sin resolver" o "0 nodos actualizados", ver MANUAL:FI
 Riesgo de Batch-Cloning (v9.16.0): al inyectar un CV-B proveniente de un batch, si el lienzo muestra viñetas dobles ("• •") o el operador reconoce bullets idénticos a los de otra vacante del mismo Positioning Mode, rechazar el archivo y solicitar su regeneración antes de continuar con la inyección.
 QA
 QA [adjunta el PDF exportado]
-Claude revisa formato y completitud con checklist de 7 ítems (ver KERNEL:TRIGGER-003 / skill vantage-qa) y entrega go/no-go. QA no evalúa fit — evalúa que el documento esté correcto como entregable.
+Claude revisa formato y completitud con checklist de 8 ítems (ver KERNEL:TRG-QA / skill vantage-qa v9.18.0) y entrega GO/NO-GO. QA valida el entregable; no evalúa fit de la vacante.
 Si QA aprueba, cambia Status a Postulado en Notion y corre:
 ~/vantage_pipeline.sh
 Python detecta el Status y asigna Gate_Decision = APPLIED. La vacante sale de Ready-to-Apply automáticamente.

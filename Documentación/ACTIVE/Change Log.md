@@ -1,5 +1,134 @@
 # V | CHANGELOG
 
+Tipo: [OPS] [GIT]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN. APROBAR_WRITE del operador (YEP, tras la salida de Terminal de las 23:39), una sola pasada, sin DRY RUN, por instrucción explícita.
+Fecha: 2026-10-16 23:39 CDMX (APROXIMADA: tomada del prompt de Terminal pegado por el operador; el operador no escribió la hora en este turno).
+Documentos modificados: PLAN DE TRABAJO (T3.W: Estado y Notas) · RECONCILIATION LOG (fila de 23:34: Descripción) · V | CHANGELOG (esta entrada + bump de Versión). Sin cambios de código.
+Cambio:
+1. El operador ejecutó git branch -D mauriciomeyran/copilot-vantage-sync-warmup-validation (Terminal: «was 5a37139», igual al tag archive/copilot-vantage-sync-warmup-validation en origin). git branch -a posterior: main, origin/HEAD y origin/main.
+1. T3.W (PLAN) Pendiente → Resuelto. Criterio de cierre cumplido: tags verificados en origin y git branch -a limpio; git worktree list mostró solo el árbol principal en la Terminal de las 23:27. mauriciomeyran-vantage-sync-fix no existe como rama ni en el reflog, sin evidencia para taguear.
+1. Fila del LOG de las 23:34 actualizada para reflejar el cierre.
+Abiertos (sin cambio): Layer_1/data/entity_index_v2.json y last_sync_result.json modificados sin evaluar (el git diff --stat -- Layer_1/data de las 23:39 se corrió desde Layer_1 con ruta equivocada y no devolvió nada); cambio de modo de vantage-sync.py en stage sin commit; VH-02, 04, 05, 08 y 09 solo en archive/arena/d352bc18-vantage; corrida real contra Ollama y --apply a Notion no verificados; vversions --sync pendiente; rotación al ARCHIVO (15 entradas visibles frente a la regla de 10, T3.AD).
+Tipo de impacto: operativo + trazabilidad (CG-06a). Sin altas ni bajas de IDs canónicos.
+Verificación: salida de Terminal del operador; escrituras sin re-fetch posterior; verificación independiente pendiente.
+Versión: v9.22.55 → v9.22.56 (propiedad Versión de V | CHANGELOG).
+Handoff de referencia: ninguno emitido.
+Tipo: [OPS] [GIT]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN. APROBAR_WRITE del operador (YEP, 2026-10-16 23:34) para las escrituras de PLAN, RECONCILIATION LOG y esta entrada, sin DRY RUN, por instrucción explícita.
+Fecha: 2026-10-16 23:34 CDMX (hora indicada por el operador).
+Documentos modificados: PLAN DE TRABAJO (filas HO-000104.P3, HO-000104.P1 y T3.W) · RECONCILIATION LOG (fila nueva, Fase 3, Nota, Resuelto) · V | CHANGELOG (esta entrada + bump de Versión). Sin cambios de código ni de Kernel, Manual o Charter.
+Cambio:
+1. HO-000104.P3 → Resuelto. Evidencia (Terminal del operador, ~23:32 CDMX): cd Layer_1 && pytest -q sobre HEAD = origin/main = ad815bb = 400 passed in 4.72 s (400 recopilados; Python 3.14.8, pytest 9.1.1). Corrió en el árbol de trabajo del operador con 2 archivos de estado modificados, no en clone limpio. Referencia previa: 321 passed (2026-10-11).
+1. HO-000104.P1 → Resuelto. El operador creó y empujó archive/main-local-7552499 → 755249994727b2295c607cd5e4697c2334065a15 y archive/devin/vantage-sync-r4-local-c0443fd → c0443fd8d11ca817e372a7817dbe3c2ebe54ae36 (salida de git ls-remote --tags origin). El commit 5946bf6 ya estaba cubierto por archive/devin/vantage-sync-r4. Antes del push, 7552499 y c0443fd solo existían en el .git local (verificado por MAIN en clone: no resolvían en remoto).
+1. T3.W: sigue Pendiente (solo Notas actualizadas). Tags verificados en origin; falta borrar la rama local mauriciomeyran/copilot-vantage-sync-warmup-validation (tip 5a37139f, igual al tag) y confirmar git branch -a. mauriciomeyran-vantage-sync-fix no existe como rama ni en el reflog.
+1. Baseline: sin edición de script_hash_baseline.json (hash de HEAD = hash declarado, ver v9.22.54).
+Abiertos: cambio de modo de vantage-sync.py en stage, sin commit (el alias vctx usa python3, así que el bit ejecutable no es requisito); Layer_1/data/entity_index_v2.json y Layer_1/data/last_sync_result.json modificados, sin evaluar (el intento de respaldo y git checkout falló por ruta relativa errónea y no cambió nada; no se sabe si los tests escriben en rutas rastreadas); VH-02, 04, 05, 08 y 09 solo existen en archive/arena/d352bc18-vantage.
+Tipo de impacto: operativo + trazabilidad (CG-06a). Sin altas ni bajas de IDs canónicos.
+Verificación: tags y SHAs por salida del operador y git ls-remote de MAIN; escrituras de PLAN, LOG y esta entrada sin re-fetch posterior; verificación independiente pendiente.
+Pendiente (fuera de esta pasada): borrar la rama de Copilot y cerrar T3.W; decidir qué hacer con los 2 archivos de Layer_1/data; vversions --sync no ejecutado; rotación al ARCHIVO (14 entradas visibles frente a la regla de 10, T3.AD).
+Versión: v9.22.54 → v9.22.55 (propiedad Versión de V | CHANGELOG).
+Handoff de referencia: ninguno emitido.
+Tipo: [OPS] [CODE] [GIT]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN. APROBAR_WRITE del operador en una sola pasada, sin DRY RUN, por instrucción explícita (2026-10-16).
+Fecha: 2026-10-16 23:23 CDMX (hora indicada por el operador).
+Documentos modificados: V | CHANGELOG (esta entrada + bump de Versión). Código: ninguno modificado por esta pasada; ad815bb lo generó vgit del operador.
+Cambio:
+1. Commit ad815bb (auto-sync 2026-10-16 23:14, vgit del operador, 2 archivos: Layer_1/scripts/vantage-sync.py y Layer_1/tests/test_vantage_sync.py, 106 inserciones y 3 eliminaciones). HEAD = origin/main = ad815bb (git rev-parse del operador); git ls-remote --heads de MAIN muestra solo main en ad815bb. En HEAD el script ya contiene la validación de forma de la respuesta de Ollama (objeto JSON; decisions, tasks y facts como listas) y md_cell para escapar Markdown en el reporte: los residuales VH-07 y VH-10 de v9.22.53 ya están en main. Alcance de los tests añadidos no revisado línea por línea.
+1. Suite Layer_1/tests/test_vantage_sync.py: 69 passed en ad815bb (Terminal del operador, ~23:15 CDMX, Python 3.14.8, pytest 9.1.1). Verificación independiente de MAIN sobre clone de ad815bb (Python 3.12.3): 67 passed y 2 skipped (ambos tests específicos de la máquina del operador, .zshrc ausente), 69 recopilados. Sustituye la cifra de 65 de v9.22.53, que correspondía a fbeab3c (65 passed en clone limpio de fbeab3c según reporte de Hermes, no re-ejecutado por MAIN).
+1. Baseline: Layer_1/scripts/script_hash_baseline.json declara para Layer_1/scripts/vantage-sync.py el hash 838f9c0d8c0742a47e3ba1e77f1ba6a19cbab7fc3a68d47f3f6106c368b4d36f (captured_at 2026-10-12T19:58:05Z). El hash de HEAD:Layer_1/scripts/vantage-sync.py en ad815bb es idéntico (salida del operador y clone independiente). El drift de v9.22.53 queda cerrado sin editar el JSON; el 7d4aeaeb… observado por Hermes correspondía al HEAD anterior (fbeab3c). Corrige el residual (b) de v9.22.53.
+1. Tags en origin (git ls-remote --tags origin 'archive/*', MAIN): archive/copilot-vantage-sync-warmup-validation → 5a37139, archive/devin/vantage-sync-r4 → 5946bf6, archive/arena/d352bc18-vantage → 1b731396. El PLAN (T3.W, DEC-04a) esperaba fd85468 para Arena: fd85468 es ancestro de 1b731396 (verificado), así que el tag lo contiene. Ese tag incluye 8c30263 (VH-02, 04, 05, 07, 08, 09, 10 con tests de regresión) y 1b73139 (timeout 300 s); ninguno de los dos es ancestro de main, de modo que VH-02, 04, 05, 08 y 09 solo viven en el tag (preservado por DEC-04a; relevancia no evaluada).
+Hallazgos / residuales:
+(a) ad815bb cambió el modo de vantage-sync.py de 100755 a 100644 (pierde el bit ejecutable); el hash por contenido no lo detecta. No se verificó si algún invocador (p. ej. Raycast/vantage-sync.sh) lo ejecuta directamente.
+(b) No aparecen en origin los tags archive/main-local-7552499 (HO-000104.P1) ni uno para mauriciomeyran-vantage-sync-fix (T3.W / T3.S); el PLAN nombra archive/devin-vantage-sync-r4 y el tag real es archive/devin/vantage-sync-r4.
+(c) La suite verificada es solo test_vantage_sync.py; la suite completa de Layer_1 no se repitió (última conocida: 321 passed, 2026-10-11).
+(d) test_vantage_sync.py:1554 emite SyntaxWarning por secuencia de escape \| inválida (conviene cadena raw).
+(e) Tras el commit, git status -sb del operador (23:20) mostró modificados data/entity_index_v2.json y data/last_sync_result.json, sin evaluar.
+Tipo de impacto: operativo + trazabilidad del frente vantage-sync (CG-06a). Sin cambio normativo de Kernel, Manual ni Charter; sin altas ni bajas de IDs canónicos.
+Operabilidad de vantage-sync.py: verificada a nivel de suite unitaria sobre ad815bb. No verificada: corrida real contra Ollama ni --apply a Notion.
+Verificación: suite y hash contrastados por el operador y por MAIN sobre clone independiente de ad815bb; tags y heads vía git ls-remote de MAIN. Escritura de esta entrada y del bump: re-fetch posterior no ejecutado en esta pasada; verificación independiente pendiente.
+Pendiente (fuera de esta pasada): filas HO-000104.P3 y T3.W del PLAN sin actualizar (P3 exige la suite completa; T3.W exige inventario local git branch -a / git worktree list y los tags de (b)); restaurar el bit ejecutable si aplica; vversions --sync no ejecutado (los demás documentos conservan su Versión anterior); rotación al ARCHIVO (con esta entrada quedan 13 entradas visibles frente a la regla de 10, T3.AD).
+Versión: v9.22.53 → v9.22.54 (propiedad Versión de V | CHANGELOG).
+Handoff de referencia: ninguno emitido.
+Tipo: [OPS] [CODE] [GIT]
+Identidad VANTAGE: agent.family=GROK · agent.instance=DEFAULT. APROBAR_WRITE del operador en una sola pasada, sin DRY RUN, por instrucción explícita (2026-10-16).
+Fecha: 2026-10-16 22:40 CDMX (hora indicada por el operador).
+Documentos modificados: V | CHANGELOG (esta entrada + bump de Versión). Código: trabajo de sesión sobre Layer_1/scripts/vantage-sync.py / tests / baseline (parte ya en main por commits del operador; residuales documentados abajo).
+Cambio:
+1. Credencial temporal /tmp/git-credentials-vantage eliminada por el operador (P0 higiene).
+1. Tag remoto archive/copilot-vantage-sync-warmup-validation → SHA 5a37139 creado y empujado (DEC-04a / T3.W / HO-000104).
+1. Suite local Layer_1/tests/test_vantage_sync.py: 65 passed (2026-10-16 ~22:33 CDMX, Terminal del operador, origin/main). Cierra la laguna de evidencia de HO-000104.P3 respecto a «suite no repetida tras limpieza».
+1. Estado verificado de main: DEFAULT_OLLAMA_TIMEOUT = 300, T4-B (2 timeouts consecutivos), source_line por línea del match, INSERT (no OR REPLACE) en projects; tags archive/arena/d352bc18-vantage y archive/devin/vantage-sync-r4 presentes.
+1. Residuales abiertos (no bloquean uso): (a) VH-07 validador de forma de respuesta Ollama y VH-10 escape Markdown en reporte — parche preparado en sesión GROK, aún no en HEAD de main (no hay md_cell; conteo de tests 65, no 67+); (b) drift de script_hash_baseline.json: la entrada de Layer_1/scripts/vantage-sync.py declara hash 838f9c0d… pero el archivo en HEAD hashea distinto — requiere re-hash solo de esa fila.
+Tipo de impacto: operativo + trazabilidad del frente vantage-sync (CG-06a). Sin cambio normativo de Kernel/Manual/Charter.
+Verificación: suite del operador 65 passed; tags listados vía git ls-remote; hash de archivo vs baseline contrastado en clon público. Verificación independiente de esta entrada de Changelog pendiente.
+Pendiente: re-hash baseline al archivo real; (opcional) integrar VH-07/VH-10 + tests de regresión; cierre formal T3.W tras inventario local de ramas/worktrees; vversions --sync no ejecutado en esta pasada.
+Versión: v9.22.52 → v9.22.53 (propiedad Versión de V | CHANGELOG).
+Handoff de referencia: HO-000106 (GEMINI→GROK) adoptado; parent de continuidad de sesión.
+Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MP. Registro de cambios ejecutados por CHATGPT/DEFAULT, según el operador, sobre el DRY RUN que CLAUDE/MP presentó en el chat. Esta entrada se escribe por APROBAR_WRITE del operador en una sola pasada, sin DRY RUN, por instrucción explícita en este turno.
+Fecha: 2026-10-16 13:11 CDMX (hora indicada por el operador).
+Origen: Protocolo de optimización del bootstrap, Fase 1 (documento v6). Decisiones del operador: el bootstrap carga SYSTEM PROMPT + CHARTER; ID CENSUS sale de la carga inicial y se recupera bajo demanda.
+Documentos modificados: V | SYSTEM PROMPT (SP:BOOTLOADER: alcance, paso 2, -001 y -004) · V | CHANGELOG (esta entrada + bump de Versión).
+Cambio:
+1. Alcance de SP:BOOTLOADER: el Bootloader recupera SYSTEM PROMPT y PROJECT CHARTER; ID CENSUS se recupera bajo demanda.
+1. Paso 2: lista SYSTEM PROMPT y PROJECT CHARTER (id f87938be-fc42-8263-a305-819877d2245f) y retira ID CENSUS del bootstrap. Gemini: Knowledge pre-cargado, con adjunto del operador si su Knowledge no incluye el Charter vigente (CHARTER:CONTINUITY §6).
+1. SP:BOOTLOADER-001: la introducción dice SYSTEM PROMPT + PROJECT CHARTER.
+1. SP:BOOTLOADER-004: precondición reescrita (CLAUDE/MAIN fetchea el Charter y el Charter Log completos antes de evaluar; el bootstrap carga el Charter y el Log se recupera bajo demanda); se elimina la remisión al «Bootstrap Universal», inexistente en el SP.
+Tickets CHARTER derivados (redactados por CLAUDE/MP para evaluación de CLAUDE/MAIN): (1) CONTINUITY §6 cita SP:BOOTLOADER-002 donde el rol de gatekeeper vive en -004; (2) CHARTER-LOG:DECISIONS-011 conserva un título de enlace pegado dentro del texto y menciona el «Bootstrap Universal»; (3) nota de fecha en la última viñeta de §7. Según el operador, los tres se crearon como tickets en el Task Tracker. Los cambios al Charter los evalúa únicamente CLAUDE/MAIN y los aplica el operador, así que el Charter sigue sin cambios hasta entonces; no es una discrepancia.
+Tipo de impacto: Normativo (procedimiento de bootstrap). Sin alta, baja ni cambio de IDs canónicos; Census, registry y ALIASES no sincronizados.
+Verificación: re-fetch del System Prompt por CLAUDE/MP el 2026-10-16 (19:10Z). Las cinco ediciones están presentes con el texto del DRY RUN. Las propiedades Versión (v9.22.51) y Fecha de actualización (2026-10-03) y la línea «Última edición: 2026-09-28» del SP no se tocaron. Verificador (CLAUDE/MP) distinto del ejecutor (CHATGPT/DEFAULT). Escritura de esta entrada y del bump: re-fetch posterior no ejecutado en esta pasada.
+Pendiente (fuera de esta pasada): edición manual de Project Instructions para retirar ID CENSUS (operador); revisión de KERNEL:OPS-BOOT, la matriz de ruteo 04.5, KERNEL:OPS-CENSUS, MANUAL:COLD-START y ALIASES:SESSION-CYCLE (no leídos); alta del prefijo CHARTER-LOG: y regeneración del Census (ver entrada v9.22.50); la viñeta de §7 del Charter «Actualizar SP:BOOTLOADER…» queda desactualizada por este cambio; vversions --sync; rotación al ARCHIVO (con esta entrada quedan 11 entradas visibles frente a la regla de 10).
+Versión: v9.22.51 → v9.22.52 (propiedad Versión de V | CHANGELOG). Las propiedades Versión y Fecha de actualización del System Prompt y de los demás documentos no se tocaron; quedan para vversions --sync posterior.
+Handoff de referencia: ninguno emitido.
+Tipo: [FIX] [OPS] [CODE]
+Identidad VANTAGE: agent.family=CHATGPT · agent.instance=DEFAULT.
+Fecha: 2026-10-16 11:36 CDMX (hora indicada por el operador).
+Documentos modificados: V | CHANGELOG (esta entrada + bump de Versión) · V | CHANGELOG — ARCHIVO (rotación de 12 entradas) · archivo local Layer_1/scripts/verify_versions.py (sin commit declarado).
+Cambio:
+1. Se añadió en el bucle --sync, inmediatamente después de la excepción de CHANGELOG_ARCHIVO, una rama para CHARTER_LOG que lee la versión con get_page_version(...), registra SKIP (solo lectura, sin escritura de versión) y continúa sin llamar a update_page_version.
+1. Validación local reportada por el operador: backup verify_versions.py.20261016-113444.bak; compilación sintáctica PASS.
+1. vversions --sync antes del bump: 12 documentos PASS, incluido CHANGELOG como maestro; CHANGELOG_ARCHIVO SKIP por ausencia de propiedad Version; CHARTER_LOG leído en v9.22.49 frente al maestro v9.22.50, SKIP sin escritura; veredicto global PASS. El estado de CHARTER_LOG queda intencionalmente sin sincronizar.
+1. Housekeeping: se trasladaron íntegramente al Archivo las 12 entradas más antiguas del Change Log activo (v9.22.42 a v9.22.31), preservando su orden y contenido; el activo conserva las 9 entradas anteriores más esta entrada, 10 en total.
+Impacto: corrección operativa de solo lectura para CHARTER_LOG; sin alta, baja ni cambio de estado de IDs canónicos. Census: no aplica en esta pasada.
+Verificación: escritura de Change Log y Archivo ejecutada; re-fetch de verificación posterior pendiente.
+Versión: v9.22.50 → v9.22.51 (propiedad Versión de V | CHANGELOG). La propagación a las demás propiedades queda para vversions --sync posterior.
+Handoff de referencia: ninguno emitido.
+Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN; escrituras por APROBAR_WRITE del operador ("Yep a todo en una sola pasada y sin detenerte"; "APROBAR_WRITE para W1, W2, W3 y el Changelog"). El DRY RUN de W1 a W3 se presentó en el chat; esta entrada de Changelog se escribe sin DRY RUN por instrucción explícita del operador.
+Fecha: 2026-10-16 04:43 CDMX (APROXIMADA: derivada del timestamp de fetch de Notion 2026-10-16T10:43Z; el operador no dio hora en este turno).
+Documentos modificados: V | CHARTER LOG (nuevo; id 3fb938be-fc42-81f5-8a3d-fd21ef6b9c76) · V | PROJECT CHARTER (partición) · V | KERNEL (§05.6 KERNEL:SCH-APPROVE) · V | CHANGELOG (esta entrada).
+Cambio:
+1. Charter Log creado: decisiones 2.1 a 2.17 movidas sin reescribir (salvo saltos de línea, prefijo de IDs y referencias cruzadas), MILESTONES-001 con su tabla, y el relato fechado de actualizaciones del Charter; altas de DECISIONS-018 (Interview Simulator) y DECISIONS-017 actualizada a "implementado en main" (T11, profile_fit.py, commit 622b4f5; cableado a ingesta según Mistral, no verificado por MAIN). DECISIONS-019 (retiro de Graph) queda solo como número reservado.
+1. Charter: §2 sustituido por un puntero al Log; regla de mantenimiento reescrita (decisiones nuevas al Log); MILESTONES-001 reducido a un puntero de una línea; §7 reescrito (estado vigente, pendientes abiertos); FAILURES-001 ajustada a hard_blocks.json; referencias cruzadas a los IDs CHARTER-LOG: o CHARTER: (NON-NEGOTIABLES-003, -004, -005, -008, -010, -011, CONTINUITY, MILESTONES-005, -006, -007, FAILURES-003); CONTINUITY exige fetch del Charter y del Charter Log completos antes de evaluar un ticket CHARTER; MILESTONES-007 (b) con su evidencia; citas KERNEL:GATE-DECISION-012 y KERNEL:DEDUP-LAYER-UPGRADE reemplazadas por KERNEL:GATE-MUTABILITY (06.12, heading confirmado en el Kernel vivo).
+1. NON-NEGOTIABLES-002 enumera los tokens de autorización (válidos: APROBAR_WRITE, APROBAR, SÍ con acento, YEP, mayúsculas indistintas; eliminados RAI-03: OK, GO, YES). La lista del Charter es ahora la referencia de vocabulario.
+1. Kernel 05.6: la lista de variantes se reemplaza por una remisión a CHARTER:NON-NEGOTIABLES-002; el nodo conserva el alcance (campos Class A).
+Tickets relacionados (Status no actualizado en esta pasada): "Bootstrap: ID CENSUS bajo demanda; partición del Charter" (CLAUDE/KM), T2.CHARTER, T2.R, "Evaluar DECISIONS-018" y "Tokens canónicos de autorización".
+Tipo de impacto: Normativo + Documental.
+IDs afectados: 19 IDs migran de CHARTER: a CHARTER-LOG: (DECISIONS, DECISIONS-001 a 017 y MILESTONES-001) y 4 son nuevos (ORIGIN, MILESTONES, DECISIONS-018, UPDATES). Census, registry y ALIASES NO sincronizados.
+Verificación: re-fetch del Charter posterior a las escrituras (estructura y textos nuevos presentes; la propiedad Versión del Charter aparece en v9.22.50, bump ajeno a esta pasada). Charter Log y Kernel 05.6: la herramienta devolvió OK; sin re-fetch posterior en esta sesión. Verificación independiente pendiente.
+Pendiente: alta del prefijo CHARTER-LOG: en resolver_registry_v2.json, generate_census.py, verify_versions.py (DOC_KEYS) y vsync_doc.py (DOCS); regenerar Census; vversions --length marcará ATENCIÓN REQUERIDA en el Charter por la caída esperada de bloques (verificar y --update-baseline); correcciones de SP:BOOTLOADER y Project Instructions según el protocolo de bootstrap, luego KERNEL:OPS-BOOT y la matriz 04.5.
+Versión: SIN bump (no instruido por el operador en este turno); la página permanece en v9.22.50.
+Handoff de referencia: ninguno emitido.
+- Tipo: [DOC]
+- Fecha: 2026-10-16 02:20 CDMX (dada por el operador)
+- Identidad: agent.family=LITTLEBIRD · agent.instance=DEFAULT · serial_authority=GLOBAL_VANTAGE_COUNTER
+- Cambios: skill vantage-cv-b v10.2.1→v10.3.0 (Gates 11a/11b/12, Gate 8 con pregunta de cierre, footer de 12 gates, separador de tagline | alineado al Canon) y skill vantage-qa v9.17.0→v9.18.0 (checklist 7→8 ítems; ítem 3 con cobertura por ID canónico + resultado registrado; ítem 5 con frases vacías; ítem 8 prueba del desconocido).
+- Documentos sincronizados: SP:SKILL-VERSION-PIN (v10.3.0 / v9.18.0, fecha 2026-10-15), KERNEL:TRG-QA (8 ítems, resultados registrados, sin cambio de alcance fit), KERNEL:CVP-CVB (línea de gates mecánicos), MANUAL:WEEKLY-FLOW-003 (bloque QA + fix de ID legacy KERNEL:TRIGGER-003→KERNEL:TRG-QA).
+- Origen: post de LinkedIn con 6 prompts anti-relleno; criterio de reparto: patrón sobre texto→CV-B, juicio de lector→QA. Prompt 5 descartado por el operador.
+- Validación: write-back verification por re-fetch de cada página modificada. Sin alta/baja/renombre de IDs canónicos — sin impacto en Census.
+- Pendientes (tickets en Tasks Tracker): ampliar verify_md.py (bloqueado sin fuente), reconciliación 1:1 de IDs KERNEL:DOCUMENTATION-*/KERNEL:GATE-DECISION-*, actualización conjunta Kernel/Manual, decisión de null-fill del Canon (CANON:OUTPUT-CONTRACT-001 vs skill).
+Tipo: [OPS]
+Identidad VANTAGE: agent.family=ARENA · agent.instance=DEFAULT. En el registro de identidad de SP:BOOTLOADER-002 desde la corrección del operador (2026-10-14 15:52 CDMX, verificada por re-fetch en Notion); handoff HO-000105 con serial declarado por el operador (Prioridad 0).
+Fecha: 2026-10-14 16:10 CDMX (DRY RUN en chat + APROBAR_WRITE del operador).
+Documentos modificados: PLAN DE TRABAJO, RECONCILIATION LOG, TRACKER REWRITE MANUAL & KERNEL, V | CHANGELOG (bump v9.22.48 → v9.22.49). Sin cambios en Kernel, Manual, Charter, Census ni repositorio. El System Prompt lo editó el operador directamente (SP:BOOTLOADER-002; propiedad Versión del SP sigue en v9.22.46; sin entrada propia en este CHANGELOG).
+Cambio:
+1. T3.X (rotar token ntn_ / retirar server.js de main) → Resuelto sin ejecutar por decisión del operador; Finding del token (LOG, Oct 12) → Resuelto; condición «token rotado» retirada de T3.L (Notas y Depende_De) y del Pendiente «Primer --apply de Workday» (sigue Abierto con main actualizado + dry-run 6 BLOCKED / 5 limpio).
+1. T3.AG (re-emisión del handoff de CG-09) → Resuelto, Handoff_Serial HO-000105: SP:BOOTLOADER-002 corregido por el operador (ARENA/DEFAULT en el registro; sin requisito de re-emisión). Supersede la parte «handoff re-emitido» de D-POOL (LOG #111).
+1. LOG #114 (Tipo Handoff, HO-000105, ARENA/DEFAULT → CLAUDE/MAIN) creada; T3.E actualizada con los conteos vigentes.
+1. Página del tracker: Tablero Fase 3 (32 abiertas), ÚLTIMA ACCIÓN, Backlog «CG-06a» y «Cierre de CG-09», PRÓXIMA ACCIÓN ítems «Operador (CG-06a)» y «GROK» reescritos; ítem «Agente registrado» eliminado (único bloque borrado en CG-09); anotación fechada en los dos bullets del token/f9bb de la lista histórica BLOQUEOS ACTIVOS.
+1. Conteos declarados tras la escritura (pendientes de re-fetch independiente): PLAN 79 = 30 Pendiente / 18 En progreso / 31 Resuelto (48 abiertas: 16 Fase 2 + 32 Fase 3); LOG 114 = 27 Abierto / 87 Resuelto.
+Tipo de impacto: operativo (plan de trabajo y trazabilidad); registra dos decisiones del operador. Sin cambio normativo ni de código.
+Estado final: escrito, no verificado. Pendientes: re-fetch de GROK (DEC-10; cierra LOG #20, #112, #113, #114 y T3.E); rotación del CHANGELOG al ARCHIVO (T3.AD; 19 entradas visibles frente a la regla de 10); traslado manual de bloques y vista por defecto del LOG (operador, UI).
 Tipo: [OPS] [DOCS]
 Identidad VANTAGE: agent.family=ARENA · agent.instance=DEFAULT. Agente fuera del registro de identidad (SP:BOOTLOADER-002): escribe solo bajo APROBAR_WRITE del operador; el handoff canónico lo re-emite un agente registrado con parent_handoff (fila T3.AG).
 Fecha: 2026-10-14 12:03–13:12 CDMX (pase 1 con DRY RUN v1/v2 aprobado; pase 2 sin DRY RUN por instrucción expresa del operador).
@@ -79,149 +208,3 @@ Documentos modificados: solo V | CHANGELOG (esta entrada). Nada nuevo en main ni
 Tipo de impacto: solo documentación (migración). Sin altas ni bajas de IDs canónicos.
 Versión: v9.22.42 → v9.22.43.
 Handoff de referencia: HO-000100; fuentes: bullets del Tablero 3f6938be-fc42-81ff-90ea-d36b3e580291, 9cc39080-6e77-4ab0-9f61-5d283a178c15, 645925aa-116c-426d-9da0-2303f05bf2d0, f206c742-eb7d-44a1-8150-2ec00c88be59 + RECONCILIATION LOG (HO-000098/099/100).
-Tipo: [DOC]
-Identidad VANTAGE: agent.family=ARENA · agent.instance=DEFAULT; bajo handoff HO-000100 con APROBAR_WRITE del operador.
-Fecha: 2026-10-11 02:44 CDMX.
-Documentos modificados: V | MANUAL (párrafo de cron en §8.1) y V | KERNEL (§04.5 ARC-L4: bullets de vgit y de cron + lead «Automatización»). No se tocó main ni se hizo push; vdoc propagará Notion→local (Manual.md / Kernel.md) en la próxima corrida del operador.
-Cambio: el párrafo de cron del MANUAL ahora documenta la deshabilitación de los tres cron jobs (vantage.py sync, notion_backup.py, vl3) el 2026-10-11 — crontab vacío, backup en ~/vantage_crontab_backup_20261011.txt, ejecución manual bajo demanda. El KERNEL ahora documenta sync manual vía vgit bajo demanda (horario automático 09:00/15:00/21:00 deshabilitado) y cron adicionales deshabilitados.
-Tipo de impacto: solo documentación; el estado operativo (Opción A) ya había sido ejecutado por el operador. Sin altas ni bajas de IDs canónicos.
-Versión: v9.22.41 → v9.22.42.
-Handoff de referencia: HO-000100 (emisor CHATGPT/DEFAULT, destinatario ARENA/DEFAULT).
-Tipo: [OPS] [CODE]
-Identidad VANTAGE: agent.family=COPILOT · agent.instance=DEFAULT; actualización del Change Log solicitada explícitamente por el operador, con bump de versión en una sola pasada y sin DRY RUN.
-Fecha: 2026-10-10 03:59 CDMX.
-Documentos modificados: V | CHANGELOG (esta entrada + bump de Versión). No se modificó el contenido de main ni se hizo push.
-Cambio: se retiraron de Documents/03 Projects las carpetas duplicadas VANTAGE-gate-align y VANTAGE-verify-arena.nosync; se mantuvo VANTAGE como copia canónica. Se eliminó la rama local cs-hard-blocks-gate-alignment, cuyo HEAD ya estaba integrado en main. Para no perder trabajo que todavía puede aportar: el commit arena 1e6ec75 quedó protegido en la rama local recovery/arena-1e6ec75; la corrección de Scope Bajo y su suite de regresión quedaron preservadas en recovery/scope-bajo-gate (commit b5a4d2e), sin merge ni push. Ambas referencias Git evitan conservar worktrees/carpeta adicionales.
-Criterio de poda: no se retuvo como documento activo el antiguo hallazgo «CLEAN silencioso sin NOTION_TOKEN», porque el orquestador vigente ya ejecuta fail-closed y etiqueta el dry-run; tampoco se mantuvo el reporte de verificación obsoleto. El contenido único de la suite de Scope Bajo se conserva con su cambio funcional en la rama local de recuperación.
-Verificación: las dos rutas duplicadas ya no existen; git worktree list dejó de incluir VANTAGE-gate-align; las referencias locales de recuperación existen y permanecen fuera de main. La suite preservada pasó: 47 passed, 1 skipped; test_gate_logic.py: 64 passed.
-Tipo de impacto: Operativo + Control de versiones. Sin altas ni bajas de IDs canónicos; Census, Registry, ALIASES y PROMPT_CANON sin cambios.
-Versión: v9.22.40 → v9.22.41 (bump solicitado por el operador en esta pasada).
-Handoff de referencia: solicitud del operador en esta sesión; ramas locales recovery/arena-1e6ec75 y recovery/scope-bajo-gate.
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: agent.family=COPIILOT · agent.instance=DEFAULT; actualización documental ejecutada por COPIILOT bajo APROBAR_WRITE del operador.
-Fecha: 2026-10-10 00:11 CDMX (registro de esta escritura).
-Documento modificado: V | MANUAL — se retiró Dockers de las dos menciones activas: el resumen de filtros operativos VL3 y la lista de Hard Blocks de MANUAL:DATA-MANAGEMENT (§10). Se conservan las demás exclusiones y los roles store-level; no se modificó Career Canon ni historial laboral.
-Cambio: Dockers deja de aparecer como Hard Block operativo en el Manual, de acuerdo con la decisión del operador del 2026-10-07. La referencia de Levi Strauss & Co. queda como Levi’s únicamente.
-Verificación: re-fetch de V | MANUAL confirma que las dos menciones operativas ya no contienen Dockers.
-Versión: SIN bump; se conserva v9.22.36.
-Handoff de referencia: APROBAR_WRITE del operador para V | MANUAL y para esta nueva entrada del Change Log.
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: agent.family=COPIILOT · agent.instance=DEFAULT; actualización documental ejecutada por COPIILOT bajo APROBAR_WRITE del operador recibido 2026-10-09 23:39 CDMX.
-Fecha: 2026-10-09 23:40 CDMX (registro de esta escritura).
-Documentos modificados: LINKEDIN-RULES-002 §2 (se eliminó Dockers de la lista de empleadores bloqueados) · TRACKER REWRITE MANUAL & KERNEL (fila T2.T, tablero y Reconciliation Log) · V | CHANGELOG (esta entrada).
-Cambio: la lista de empleadores bloqueados ahora conserva L'Oreal, Levi Strauss, Levi's y El Palacio de Hierro; Dockers queda explícitamente fuera de Hard Blocks según decisión del operador de 2026-10-07. Se conserva la regla de separación entre empleador directo y canal/tienda/cliente.
-Tipo de impacto: Documental + Operativo.
-IDs afectados: ninguno canónico; sin cambios a PROMPT_CANON, Registry, Census o ALIASES.
-Verificación: re-fetch de LINKEDIN-RULES-002 confirma que §2 ya no incluye Dockers. Fila T2.T continúa En progreso: aún faltan skills cv-a/qa, Manual §10 y Corpus Bloque 06; no se declara cerrada la cascada.
-Versión: SIN bump (no solicitado; se conserva v9.22.36).
-Handoff de referencia: APROBAR_WRITE del operador, 2026-10-09 23:39 CDMX.
-Tipo: [CODE] [TEST] [OPS]
-Identidad VANTAGE: cambio implementado por agent.family=COPIILOT · agent.instance=DEFAULT en la rama mauriciomeyran-hard-block-gate-alignment e integrado a main mediante PR #25. Esta entrada y la sincronización del Tracker las registra COPIILOT por solicitud explícita del operador.
-Fecha: 2026-10-09 23:19 CDMX (merge commit 3113d8e5a9bbc97d51538dde6549c128440678d8, timestamp verificado 2026-10-10T05:19:01Z).
-Documentos modificados: Layer_1/data/Contracts/CAREER-SITES-RULES-002.md · Layer_1/data/Contracts/Prompt_Career_Sites-v2.md · Layer_1/scripts/gate_logic.py · Layer_1/scripts/layer_1_orchestrator.py · Layer_1/tests/test_active_search_hard_blocks.py · Layer_1/tests/test_gate_logic.py · Layer_3/scripts/layer_3_mail.py · Layer_3/tests/test_layer_3_mail.py · skills/vantage-active-search-weekly/normalize_source_json.py · skills/vantage-active-search-weekly/orchestrator_prompt.md · skills/vantage-active-search-weekly/sources/aggregators.md · skills/vantage-active-search-weekly/sources/career_sites.md · skills/vantage-active-search-weekly/sources/linkedin.md.
-Cambio: (1) Scope Bajo devuelve BLOCKED aun si Role_Class=Pivote y el título contiene señal VM; se actualizó el orquestador y el helper legacy. (2) Dockers se retiró de los filtros activos de empleadores en búsqueda semanal y Layer 3, incluyendo la regla post-extracción; EXCLUDED_SENDERS no se modificó. (3) Los contratos Career Sites aclaran que una marca mencionada solo como canal/cliente no debe bloquear cuando el empleador directo es otro. Se preservan L'Oréal, Levi's/Levi Strauss y El Palacio de Hierro como Hard Blocks confirmados.
-Tipo de impacto: Técnico + Operativo + Contractual.
-IDs afectados: ninguno canónico; se registró avance en T3.I y T2.T del PLAN DE TRABAJO. Census, Registry, ALIASES y PROMPT_CANON sin cambios.
-Verificación: PR #25 cerrado y mergeado a main; pruebas reportadas en PR: pytest -q Layer_1/tests (321 passed) y pytest -q Layer_3/tests/test_layer_3_mail.py (10 passed). No se reejecutaron en esta actualización documental. Se registró evidencia en RECONCILIATION LOG y las tareas permanecen abiertas.
-Pendiente: T3.I continúa En progreso hasta resolver la discrepancia levis entre hard_blocks.json y linkedin_identity_matcher.py (el matcher retorna AMBIGUOUS) y completar el proceso autorizado de PROMPT_CANON. T2.T continúa En progreso: pendientes skills cv-a/qa, Manual §10, Corpus Bloque 06 y LINKEDIN-RULES-002/Notion. No se cambió EXCLUDED_SENDERS.
-Versión: SIN bump (no solicitado; se conserva v9.22.36).
-Handoff de referencia: PR #25 · commit 3113d8e.
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: la edición del CAREER CANON la ejecutó CLAUDE/MP por APROBAR_WRITE del operador (HO-000089); la escritura de esta entrada en CHANGELOG la ejecuta CLAUDE/MM por APROBAR_WRITE del operador en este turno.
-Fecha: 2026-10-07 05:48 CDMX (confirmada por el operador).
-Documentos modificados: V | CAREER CANON (03.3 CANON:EXPERIENCE-003, C03 Levi Strauss (Dockers), ES y EN: +1 bullet al final de la lista, sin KPIs, sin tocar los 5 bullets existentes ni ningún figma_text_id) · V | CHANGELOG (esta entrada).
-Bullet agregado (ES): «Coordiné el montaje piloto de la nueva estrategia de VM y comunicación in-store en Dockers Tezontle (2019), con acompañamiento 1:1 del director global de VM; medí el desempeño contra tiendas con la estrategia anterior y desarrollé con Operaciones el plan de integración de la nueva estrategia.»
-Tipo de impacto: Operativo.
-IDs afectados: ninguno estructural; sin cambio de IDs en Census.
-Verificación: según HO-000089 (S4), re-fetch de la página del Canon con page_last_edited_at 2026-10-07T11:36:27Z y ambos bullets (ES y EN) presentes; la propiedad «Fecha de actualización» del Canon sigue en 2026-09-24 y Versión v9.22.30. Compatibilidad con CV-A / CV-B / QA evaluada por lectura, no ejecutada. En esta sesión no se re-fetcheó el Canon: la evidencia se adopta de HO-000089.
-Pendiente: vversions --sync en Terminal del operador.
-Versión: SIN bump (no instruido por el operador en este turno).
-Handoff de referencia: HO-000089.
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: ejecutores DEVIN (CS-WORKDAY-01), HERMES (CS-L1-RUNTIME-02, CS-E2E-04), CHATGPT + Operador (CS-PROMOTION-03) · Escritura en CHANGELOG: MISTRAL (Vibe, MCP Notion) por APROBAR_WRITE del operador.
-Fecha: 2026-10-06 02:18 CST (declarada por el operador).
-Documentos modificados: V | CHANGELOG (esta entrada + bump). Sin escrituras adicionales en este turno — el report describe artefactos ya materializados en sesiones previas.
-Contenido del release (secciones 1–10 del report de cierre):
-1. Career Sites / Workday v2.0. Se completó la construcción, integración, validación y canonicalización del contrato PromptA-v2.0+careersites. Artefactos contractuales consolidados: Prompt_Career_Sites-v2.md · CAREER-SITES-RULES-002.md · CAREER-SITES-QUERYSET-002.md · CAREER-SITES-OUTPUT-SCHEMA-002.md. Implementación: Layer_1/scripts/ats_workday.py, integrada mediante Layer_1/scripts/layer_1_orchestrator.py, adapter Workday mediante ats_adapter.py, normalización posterior mediante feed_processor.py. Estado final: CANDIDATE → CANONICAL. SHA de implementación: 9109cf9019187a6caedbf30b9dc9e19bc63ba8ea — la existencia del SHA por sí sola no se consideró suficiente: la procedencia quedó validada contra el path de implementación correspondiente (SHA → Layer_1/scripts/ats_workday.py). Registro PROMPT_CANON / Registry actualizado con: Contract PromptA-v2.0+careersites · Version v2.0 · Status CANONICAL · Implementation Path Layer_1/scripts/ats_workday.py · Implementation SHA 9109cf9019187a6caedbf30b9dc9e19bc63ba8ea · Output Schema CAREER-SITES-OUTPUT-SCHEMA-002 · Rules CAREER-SITES-RULES-002 · Query Set CAREER-SITES-QUERYSET-002. Promoción registrada el 2026-10-06.
-2. Runtime Career Sites / Workday. Validación operacional del flujo Workday sobre Chanel Careers: tenant cc · site ChanelCareers · host cc.wd3.myworkdayjobs.com · scope final CDMX · país Mexico · Nivel 1 locationCountry=Mexico · Nivel 2 facets de ubicación CDMX / Zona Centro / Ciudad de México · 10 resultados finales · 10 registros únicos · JOBREQ IDs únicos · sin truncamiento · sin wraparound · sin errores DNS · sin timeout · sin retries operacionales · provenance completa · fetch_status=career_page · source_type=career_page · source=ats_adapter.workday. La validación confirmó la separación entre descubrimiento ATS, resolución geográfica, deduplicación, provenance y salida estructurada.
-3. LinkedIn. Pipeline consolidado con linkedin_identity_matcher.py, feed estructurado, integración con feed_processor.py, identity matching de empleadores, blocked employer set y estados BLOCKED / NOT_BLOCKED / AMBIGUOUS / UNRESOLVED. Matcher validado: 27/27 tests PASS. Conjunto de empleadores bloqueados alineado entre canales: L'Oréal · Levi Strauss · Levi's · Dockers · El Palacio de Hierro. Verificado el caso Benefit Cosmetics: una mención de El Palacio de Hierro como canal no provocó bloqueo incorrecto de la vacante. El pipeline LinkedIn permanece CANONICAL, con una limitación operacional de cobertura derivada del acceso/browser backend, no del matcher ni del contrato de identidad.
-4. Contratos de ejecución utilizados para el cierre. CS-WORKDAY-01 (Ejecutor: Devin — cierre técnico de Career Sites / Workday, validación de implementación, integración, tests, contratos y consistencia documental; resultado READY_FOR_RUNTIME_VALIDATION) · CS-L1-RUNTIME-02 (Ejecutor: Hermes — validación operacional conjunta de Career Sites y LinkedIn; Career Sites PASS, LinkedIn PASS_WITH_COVERAGE_LIMITATION por imposibilidad de inicializar el browser backend requerido para cobertura web completa; matcher 27/27 PASS) · CS-PROMOTION-03 (Ejecutores: ChatGPT + Operador — auditoría de evidencia, procedencia Git, consistencia Registry/PROMPT_CANON y promoción; resultado CANDIDATE → CANONICAL) · CS-E2E-04 (Ejecutor: Hermes, supervisión ChatGPT — validar coexistencia de Career Sites / Workday y LinkedIn dentro del pipeline integrado; resultado READY_FOR_PRODUCTION).
-5. Integración E2E. Confirmado el flujo Orquestador → Adapter/Feed → Normalization → Deduplication → Provenance → Output. Career Sites / Workday y LinkedIn convergen en la capa común de normalización sin perder identidad de fuente. Verificado: coexistencia de ambos canales · aislamiento de provenance · dedupe · schema compatibility · estados · blocked employers · manejo de errores · aislamiento de tenant en Workday · identity matching independiente en LinkedIn · ausencia de contaminación cruzada. Los dos canales mantienen mecanismos de adquisición diferentes pero comparten la infraestructura común de ingestión y normalización.
-6. Dedupe y provenance. Career Sites implementa dedupe interno mediante identificadores estables de Workday, incluyendo jobReqId / externalPath. LinkedIn utiliza jobId y el wrapper correspondiente. La capa de pipeline conserva la jerarquía de deduplicación existente y permite resolver registros entre fuentes sin mezclar su provenance. La salida mantiene diferenciación entre LinkedIn y Career Page Oficial / ATS.
-7. Exclusiones y hard blocks. Career Sites y LinkedIn alineados respecto al conjunto de empleadores excluidos. Career Sites utiliza hard_block_gate.py, hard_blocks.json y CAREER-SITES-RULES-002. LinkedIn utiliza linkedin_identity_matcher.py, identity matching y estados explícitos de resolución. Esto evita que una coincidencia textual parcial provoque bloqueos incorrectos en LinkedIn y mantiene el hard block contractual en Career Sites.
-8. Resultado de cierre. CAREER SITES / WORKDAY: CANONICAL v2.0 · LINKEDIN: CANONICAL · JOINT E2E: READY_FOR_PRODUCTION. No quedan pendientes técnicos que bloqueen la operación conjunta de ambos canales. Las limitaciones de cobertura de LinkedIn quedan registradas como limitación operacional del mecanismo de adquisición web, no como fallo contractual, de matching o de integración.
-9. Documentación y governance. El cierre actualiza la cadena de autoridad PROMPT_CANON → Registry → Git Implementation → Runtime Evidence. Se preserva la separación de responsabilidades: PROMPT_CANON (autoridad de estado/provenance) · PROMPT_LIBRARY (autoridad del texto del prompt) · Registry / resolver (autoridad de resolución) · Git (autoridad del código materializado) · verify_versions.py (verificación de consistencia) · Hermes (ejecución/verificación) · Operador (autoridad de promoción). No se modificó la semántica contractual durante la validación E2E.
-10. Release impact. Este release completa la primera integración operacional de los dos canales principales de adquisición de vacantes: LinkedIn + Career Sites / Workday. La arquitectura queda preparada para evolucionar hacia una ejecución unificada y posteriormente programada, manteniendo contratos, provenance, dedupe y reglas de exclusión independientes por fuente.
-Tipo de impacto: Técnico + Contrato (canonización de subsistema; sin cambios normativos KERNEL/MANUAL en este turno).
-IDs afectados: Registry / PROMPT_CANON (fila PromptA-v2.0+careersites → CANONICAL, ya aplicada en sesión previa). Census, registry de documentos y ALIASES sin cambio.
-Verificación: report de cierre generado por los ejecutores citados; SHA y promoción declarados por CS-PROMOTION-03 (ChatGPT + Operador). Sin re-verificación independiente en este turno — esta entrada registra, no audita (declaración de límite explícita).
-Versión: v9.22.35 → v9.22.36 (bump por instrucción del operador; rationale: cierre de release funcional que canoniza Career Sites / Workday v2.0, consolida LinkedIn y completa E2E conjunto).
-Handoff de referencia: contratos CS-WORKDAY-01 / CS-L1-RUNTIME-02 / CS-PROMOTION-03 / CS-E2E-04.
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MP (redacción de esta entrada y escritura en Notion por APROBAR_WRITE del operador, con hora CDMX dada por el operador; opción A condicionada a que no hubiera evidencia en contra).
-Fecha: 2026-10-05 02:22 CDMX.
-Documentos modificados: V | SYSTEM PROMPT (§01.3 SP:SKILL-VERSION-PIN: vantage-session-close y vantage-present-handoff pasan de v1.0.0 a v1.1.0, última actualización 2026-09-11, fecha de la versión según el encabezado de cada skill; vantage-session-open se deja en v1.2.0 sin cambio) · V | CHANGELOG (esta entrada).
-Tipo de impacto: Documental (tabla de versión mínima aceptable de skills de sesión; sin cambios normativos).
-IDs afectados: ninguno. Sin altas ni bajas de ID canónico.
-Verificación: fetch en vivo de la página vantage-session-open.skill en Skill Library (Última edición 2026-09-24T06:07Z) muestra encabezado v1.2.0 con cuerpo idéntico a la copia local, incluido el paso 10 de staleness check; por eso no se bajó el pin de session-open (la opción A original lo habría bajado a v1.1.0). Close y present-handoff: copias locales en v1.1.0 (S4-EVIDENCE, Regla de Adopción, Prioridad 0) y bodies de Notion reemplazados 1:1 contra main/skills (entrada de HO-000082, re-fetch 6/6). La escritura en el SP devolvió OK; no se hizo re-fetch posterior en esta sesión, queda para el verificador.
-Pendiente reportado (fuera de alcance, sin tocar): el encabezado de vantage-session-open en el repo y en disco local sigue en v1.1.0 mientras Notion declara v1.2.0 con el mismo cuerpo; hay que alinear la etiqueta en el repo (archivo corregido entregado al operador). Las tres skills de sesión siguen citando KERNEL:SESSION-LEDGER y KERNEL:HANDOFF-SERIAL como ID canónico (migración en T3.1). El pin de vantage-cv-b (v10.2.1) ya coincide con disco. La propiedad Versión del SP y la del CHANGE LOG no se tocaron.
-Versión: SIN bump (no instruido por el operador en este turno).
-Handoff de referencia: ninguno emitido en esta sesión; HO-000085 sigue sin usar.
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: redacción de esta entrada CHATGPT/DEFAULT · Ejecutor de la escritura en Tasks Tracker y CHANGELOG: MISTRAL (Vibe, MCP Notion), por APROBAR_WRITE del operador en este turno (una sola pasada, por instrucción explícita).
-Fecha: 2026-10-05 01:07 CDMX (declarada por el operador).
-Documentos modificados: TASKS TRACKER (fila nueva: Task «Diseñar y ejecutar el patrón de integración continua para ATS estructurados en Layer 1 después de Workday»; Componente Layer 1; Prioridad 1 BAJO; Status Pendiente; Next_Action Definir; Fecha_Creación 2026-10-05; Archivar NO; Mantener NO; Notas con contexto HO-20261005-01 VANTAGE v1.1.0, patrón arquitectónico de 10 puntos, restricciones heredadas, resultado esperado y evidencia de referencia) · V | CHANGELOG (esta entrada).
-Tipo de impacto: Documental + Arquitectura (trabajo proactivo pendiente; no bloquea el flujo punta a punta vigente — Workday operativo con 41/41 y 232/232 en verde, no re-verificar salvo contradicción de S4).
-IDs afectados: ninguno canónico (ticket nuevo en Tasks Tracker; Census, registry y ALIASES sin cambio).
-Verificación: S4-EVIDENCE — re-fetch inmediato de la fila (página 3f0938be-fc42-812c-a1ae-cc841345e198, Creado 2026-10-05T07:02:29Z): Task, Fecha_Creación, Componente, Prioridad, Status, Next_Action, Archivar, Mantener confirmados 1:1 contra el Dry Run; Fecha_Cierre, Solución y URL vacíos. Artifact conocido declarado: Notion auto-linkeó nombres de archivo en Notas (ats_workday.py → http://workday.py, mismo patrón de inyección ya registrado), texto fuente correcto.
-Versión: SIN bump de Versión — se mantiene v9.22.31.
-Handoff de referencia: HO-20261005-01.
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: agent.family=CLAUDE · agent.instance=KM (continuación del chat de CLAUDE/MAIN; ejecutor de las ediciones de esta entrada, por APROBAR_WRITE del operador en una sola pasada, sin DRY RUN por instrucción explícita; el DRY RUN de T2.O lo redactó CLAUDE/MAIN).
-Fecha: 2026-10-04 21:02 CDMX (dada por el operador).
-Documentos modificados: V | KERNEL (5 ediciones de texto, sin cambio de headings ni IDs: 12.3 prefijos autorizados con CHARTER y sin "los 11" (E7) · 03.4, 05.8, 04.5 mecanismo 2 de dedup y 06.13 (E13: layer_1_run.py → layer_1_orchestrator.py en 03.4, 05.8 y 04.5; 06.13 pasa a "definida e invocada en tracker_flow.py desde dos puntos: el gate de archivo consolidado y la ejecución de transiciones tras aprobación (G2)", se retira "NAD vencido" por falta de evidencia)) · TRACKER REWRITE MANUAL & KERNEL (TABLERO, tabla Fase/Estado previa al Plan y encabezado del punto 6 del hilo) · V | CHANGELOG (esta entrada + bump de Versión).
-Documentos potencialmente afectados: V | KERNEL 12.1 (tabla de prefijos sin CHARTER y con "V | KERNEL" partido por el pipe) y 04.5 (cifra "8 auditados"), ambos fuera de este pase (T2.O-b) · V | SYSTEM PROMPT y MANUAL (cifras T2.D) · PLAN DE TRABAJO y RECONCILIATION LOG (cambios entregados por CSV para importar).
-Tipo de impacto: Documental + Normativo (texto del Kernel; sin IDs nuevos ni renombrados).
-Alcance:
-1. E1–E6 y E8–E12 del DRY RUN de CLAUDE/MAIN ya estaban presentes en el Kernel vivo al abrir esta sesión; KM las contrastó contra el texto "Después" del DRY RUN (idénticas) y no las escribió. El autor de esa escritura no consta en esta sesión: el chat de CLAUDE/MAIN termina tras el APROBAR_WRITE del operador.
-1. E7: la lista de prefijos viene de la salida del operador en Terminal sobre Layer_1/data/resolver_registry_v2.json (document_registry: ALIASES, ARCHIVEROS, BRIEF, CANON, CHANGELOG, CHANGELOG_ARCHIVO, CHARTER, KERNEL, MANUAL, SP, TRACKER, VANTAGE, más _comment).
-1. E13: grep del operador sobre layer_1_orchestrator.py (ENABLE_DEDUP_AUDIT en L73 y L1507; generate_archive_notes sin ocurrencias) y grep -rn de generate_archive_notes (definida en scripts/tracker_flow.py L1140; sed del operador: L852 y L926 son llamadas, L919 pertenece a un docstring).
-Correcciones: 06.13 se escribió primero con "tres puntos" (se contó L919, que es docstring) y se corrigió en la misma sesión a dos puntos.
-Decisiones no duplicadas: no se tocó 12.1, la cifra "8 auditados" de 04.5 ni el pase NORM de referencias numéricas (T2.O-b, requiere DRY RUN propio) · no se confirmó que F3.5.1 sea NAD vencido · no se ejecutó vdoc, vcensus ni vversions.
-Verificación: re-fetch de V | KERNEL por KM al inicio (antes de las 5 ediciones propias); las 5 ediciones devolvieron OK sin re-fetch posterior. Verificación independiente pendiente: la hace un actor distinto de CLAUDE/MAIN y CLAUDE/KM (propuesta del chat: ChatGPT, secundario Mistral) con re-fetch de V | KERNEL y vdoc notion.
-Estado: WRITE aplicado en Notion (Kernel, Tracker y esta entrada). Pendientes: vversions --sync (los demás documentos fundacionales siguen en v9.22.30), vdoc notion, restaurar baseline de length (CENSUS=0), importar los CSV del Plan y del Log, T2.O-b, DECISIONS-012.
-IDs afectados: ninguno (corrección de texto; no dispara CENSUS-SYNC Regla 1).
-Versión: v9.22.31 → v9.22.32 (bump por instrucción del operador en este turno). La propiedad Versión de los demás documentos no se modificó.
-Handoff de referencia: HO-000087.
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT (ejecutor de lecturas y escrituras por APROBAR_WRITE global del operador, una sola pasada sin DRY RUN por instrucción explícita).
-Fecha: 2026-10-03 21:20 CDMX (APROXIMADO — derivado del reloj de la sesión, consistente con timestamps de escritura Notion 2026-10-04T03:19 UTC; sin fetch web de hora en esta pasada).
-Documentos modificados: SKILL LIBRARY — 6 bodies reemplazados 1:1 contra main/skills/ (fetch en vivo 2026-10-04 UTC): vantage-cv-b (v10.2.0→v10.2.1: footer de metadata de Entrega en chat como excepción de la invariante, vías Google Drive/adjunto para registry_seed, regla de llenado nulo pasa de [PENDING DATA] a slot en un solo carácter espacio, Gates 8–9 reformulados) · vantage-qa (SIN bump de versión: slot vacío BASELINE v1.1.0 — nunca [PENDING DATA]; lectura en vivo del Golden Skeleton desde el Career Canon con FAIL si no está accesible; Descripción actualizada al frontmatter de disco) · vantage-create-bug-task (Tasks Tracker como  con nota anti-confusión vs DB ID; campos reales Task/Fecha_Creación; sección "Corrección (sesión 2026-09-25)" eliminada porque no existe en disco; Descripción actualizada) · vantage-present-handoff (Paso 2: Prioridad 1 = allocate_vantage_serial.py por Terminal; disco en v1.1.0) · vantage-session-close (mismo cambio de Prioridad 1; disco en v1.1.0) · vantage-hyperlink-loop (Paso 3: vdoc notion en lugar de vdoc local + validación del espejo en Documentación/ACTIVE/) · V | CHANGELOG (esta entrada + bump de Versión).
-Tipo de impacto: Documental (skills de generación de contenido; sin cambios normativos en KERNEL/MANUAL).
-IDs afectados: ninguno canónico (bodies de skills; Census, registry y ALIASES sin cambio).
-Verificación: S4-EVIDENCE en la misma sesión — re-fetch 6/6 páginas con Última edición 2026-10-04T03:19 UTC; marcadores nuevos presentes y marcadores viejos ausentes en cada página; 0 ocurrencias de http:// en Skill, Ruta, Descripción y bodies. Artifact conocido y declarado: Notion renumera la lista ordenada de hyperlink-loop ("0. ANNOUNCE" → "1."), limitación de formato, sin pérdida de contenido. SHA de commit no obtenible vía raw fetch — fuente declarada: fetch de main del 2026-10-04 (UTC).
-Pendiente reportado (fuera de alcance, sin tocar): SP:SKILL-VERSION-PIN lista vantage-cv-b en v10.2.0 y vantage-present-handoff / vantage-session-close en v1.0.0, mientras disco está en v10.2.1 y v1.1.0 respectivamente; vantage-session-open quedó fuera de alcance (Notion v1.2.0 va adelante).
-Versión: v9.22.30 → v9.22.31 (bump por instrucción del operador en este turno).
-Handoff de referencia: HO-000082.
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MP (redacción de esta entrada y escrituras D2–D7 en Notion, por APROBAR_WRITE del operador, "Yep", con hora CDMX dada por el operador) · Ejecutor del re-key en V | KERNEL: MISTRAL (CS-REKEY-08; cambio de ejecutor respecto a HO-000081 decisión 4, antes PERPLEXITY/CS-PPLX-07).
-Fecha: 2026-10-03 15:25 CDMX.
-Documentos modificados: V | KERNEL (por MISTRAL: 24 renombrados de subsección + 2 headings nuevos 03.1 ACT-ROLES y 08.1 FLOW-CONTRACT; 3 refs ARC-L1/L2/L3-002 corregidas; capítulos CVP/CVR/CANON-UPDATE conservan su ID original por diseño) · PLAN DE TRABAJO (T2.N: solo Notas) · TRACKER REWRITE MANUAL & KERNEL, TABLERO (Decisiones abiertas re-key, Próxima acción, línea de versión fundacional) · RECONCILIATION LOG (fila nueva) · V | CHANGELOG (esta entrada).
-Tipo de impacto: Documental + Normativo.
-IDs afectados: 24 renombrados + 2 nuevos en KERNEL. Census, registry y ALIASES NO sincronizados (T3.1, Fase 3).
-Verificación: resultado reportado por el ejecutor 97 headings / 0 duplicados / 0 refs colgantes. A1 (lista de headings del vivo, 97/97) PERPLEXITY y CLAUDE/KM. A2–A9 CLAUDE/KM: diff mecánico entre Kernel.md y Kernel_updated.md (idénticos salvo los 3 capítulos revertidos; 97 headings, 0 duplicados, 0 IDs viejos como heading, 0 refs ARC-L*-002). Origen de Kernel.md: vdoc notion ejecutado por el operador el 2026-10-03, confirmado por el operador. CLAUDE/MP no re-fetcheó el KERNEL vivo ni revisó la Entrega CS-VERIFY-01c de Perplexity (Bloque B). Verificación parcial: Verificado_Por de T2.N sin tocar.
-Pendiente de schema: la opción MISTRAL no existe en el select Responsable del PLAN DE TRABAJO; T2.N conserva Responsable=PERPLEXITY hasta que el operador decida.
-Versión: SIN bump de Versión (decisión del operador). El Tablero pasa de v9.22.29 a v9.22.30 solo para igualar la versión fundacional ya vigente.
-Handoff de referencia: HO-000081.
-Tipo: [DOC] [OPS]
-Identidad VANTAGE: redacción CLAUDE/MAIN · Ejecutor de las escrituras W1–W8: MISTRAL (Vibe, MCP Notion), por APROBAR_WRITE del operador en este contrato · Ejecutor del re-key: PERPLEXITY (CS-PPLX-07).
-Fecha: 2026-10-03 13:10 CDMX.
-Documentos modificados: PLAN DE TRABAJO (W1–W5: T3.C→T3.Ca + fila T3.Cb; fila T2.N; Evidencia T2.1; Notas T2.G y T2.D) · RECONCILIATION LOG (W6: filas nuevas Finding ARC-L1/L2/L3-002 y Skills legacy; fila Decisión re-key v10.4 ABORTADA por select Tipo sin esa opción) · TRACKER REWRITE MANUAL & KERNEL, TABLERO (W7: encabezado HO-000081, Próxima acción punto 0, Decisiones abiertas re-key v10.4 / DECISIONS-012 en HOLD) · V | CHANGELOG (esta entrada) (+ V | KERNEL tras CS-PPLX-07).
-Tipo de impacto: Documental + Gobernanza.
-IDs a afectar (aún NO aplicados; CS-PPLX-07 pendiente): 24 renames + 2 headings nuevos en KERNEL (Census NO sincronizado; T3.1).
-Corrección [14:48 CDMX]: la línea "IDs afectados" describía el plan, no un estado aplicado (fetch KERNEL vivo: 0/24). Sin bump de Versión.
-Versión: SIN bump de Versión (decisión del operador) — se mantiene v9.22.30.
-Handoff de referencia: HO-000081.
----
-> El histórico completo del CHANGELOG lo podrás encontrar en ARCHIVO CHANGELOG, en esta pagina de consulta continua solo encontrarás las últimas diez entradas para garantizar la operación y referencia del sistema.
----

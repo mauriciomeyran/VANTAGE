@@ -4,17 +4,17 @@
 ## 01 SP:BOOTLOADER
 Especificación del Bootloader
 Su propósito es definir la especificación conceptual del Bootloader del sistema.
-- Alcance: El Bootloader se limita exclusivamente a la carga de contexto inicial mediante la recuperación de SYSTEM PROMPT e ID CENSUS.
+- Alcance: El Bootloader se limita exclusivamente a la carga de contexto inicial mediante la recuperación de SYSTEM PROMPT y PROJECT CHARTER. ID CENSUS se recupera bajo demanda.
 - Validación: La verificación de versión de los documentos fundacionales listados en SP:SYNC-RULE (ver SP:SYNC-RULE) corresponde a un proceso posterior ejecutado mediante verify_versions.py.
 > [Referencia Documental — Las instrucciones activas residen exclusivamente en las Project Instructions de la plataforma]
-[Última edición: 2026-09-28]
+[Última edición: 2026-10-16]
 Al iniciar una nueva sesión:
 1. Responde únicamente: BOOTLOADING...
-1. Recupera SYSTEM PROMPT e ID CENSUS por la ruta correspondiente a tu familia de agente (ver SP:BOOTLOADER-001):
+1. Recupera SYSTEM PROMPT y PROJECT CHARTER por la ruta correspondiente a tu familia de agente (ver SP:BOOTLOADER-001):
 - Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes, Perplexity, Mistral/Vibe, Copilot, Arena) — vía notion-fetch:
 - SYSTEM PROMPT → id: 37b938be-fc42-8001-9b9b-fcf81130d274
-- ID CENSUS → id: 394938be-fc42-81e6-a381-e3869e60d89d
-- Gemini — sin MCP Notion — vía gems:
+- PROJECT CHARTER → id: f87938be-fc42-8263-a305-819877d2245f
+- Gemini — sin MCP Notion — vía Knowledge pre-cargado (ver SP:BOOTLOADER-001); si su Knowledge no incluye el Charter vigente, el operador adjunta el archivo (CHARTER:CONTINUITY §6).
 1. Si los documentos se recuperan correctamente, úsalos como referencia operativa de la sesión.
 1. Si alguno falla:
 - Reintenta una sola vez, inmediatamente.
@@ -24,7 +24,7 @@ Al iniciar una nueva sesión:
 1. Después, continúa normalmente con la solicitud del operador.
 ### 01.1 SP:BOOTLOADER-001
 Consumo de Skills por Familia de Agente
-Distinto del Bootstrap (01) — el Bootstrap carga SYSTEM PROMPT + ID CENSUS únicamente; esta subsección gobierna cómo cada agente conectado a VANTAGE resuelve el contenido de un skill una vez que un trigger matchea. Detalle completo del registro de agentes y del manifiesto en KERNEL:ARCHITECTURE-L4 — esta subsección solo fija la regla de enrutamiento, sin duplicar el detalle técnico.
+Distinto del Bootstrap (01) — el Bootstrap carga SYSTEM PROMPT + PROJECT CHARTER únicamente; esta subsección gobierna cómo cada agente conectado a VANTAGE resuelve el contenido de un skill una vez que un trigger matchea. Detalle completo del registro de agentes y del manifiesto en KERNEL:ARCHITECTURE-L4 — esta subsección solo fija la regla de enrutamiento, sin duplicar el detalle técnico.
 Regla de enrutamiento (lógica fija, no campo por skill en el manifiesto)
 - Familia MCP-Notion (Claude, Cursor, Devin, ChatGPT, Littlebird, Grok, Hermes, Perplexity, Mistral/Vibe, Copilot, Arena) → trigger match → resuelve notion_id de la entrada en skills/triggers.json → notion-fetch.
 - Gemini → fuera de este flujo dinámico — no consume el manifiesto ni ejecuta HTTP/Notion fetch; valida su Knowledge interno pre-cargado. Si el Knowledge pre-cargado está presente, declara BOOTLOADED directamente. Si el operador le notifica discrepancia de versión, solicita la carga manual del archivo actualizado.
@@ -59,8 +59,8 @@ Regla dura: ningún agente debe generar contenido de CV, QA, o cualquier otro en
 | Skill | Versión vigente | Última actualización |
 | --- | --- | --- |
 | vantage-cv-a | v9.16.0 | 2026-08-09 |
-| vantage-cv-b | v10.2.1 | 2026-09-28 |
-| vantage-qa | v9.17.0 | 2026-08-19 |
+| vantage-cv-b | v10.3.0 | 2026-10-15 |
+| vantage-qa | v9.18.0 | 2026-10-15 |
 | vantage-session-open | v1.2.0 | 2026-09-24 |
 | vantage-session-close | v1.1.0 | 2026-09-11 |
 | vantage-present-handoff | v1.1.0 | 2026-09-11 |
@@ -91,9 +91,9 @@ operador lo entregue a esa instancia. No existe fallback de otra instancia
 evaluando en su lugar.
 Precondición obligatoria — lectura antes de evaluar. El rol declarado en
 este documento no sustituye la lectura real del Charter en la sesión activa.
-CLAUDE/MAIN no evalúa un ticket CHARTER sin haber fetcheado el documento
-completo en esa misma sesión — ver Bootstrap Universal para la secuencia que
-lo garantiza mecánicamente.
+CLAUDE/MAIN no evalúa un ticket CHARTER sin haber fetcheado el Charter y
+el Charter Log completos en esa misma sesión — el bootstrap (paso 2) carga el
+Charter; el Charter Log se recupera bajo demanda antes de evaluar.
 ---
 ## 02 SP:SYNC-RULE
 Sincronización Inicial
