@@ -1,5 +1,19 @@
 # V | CHANGELOG
 
+Tipo: [DOC] — documentación transversal
+Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT. Ejecución con APROBAR_WRITE del operador, una sola pasada, tras DRY RUN v3.1 (consolidación de MISTRAL/DEFAULT sobre el DRY RUN v2 de CLAUDE/MM, con correcciones de CLAUDE/MAIN y brief de CLAUDE/MP).
+Fecha: 2026-10-17 12:13 CDMX (declarada por el operador).
+Documentos modificados: V | MANUAL (§11: bloque nuevo de flujo de uso; §22.1: entrada vantage-sync.py reescrita) · V | SCRIPT LIBRARY (fila vantage-sync.py: Descripción) · V | CHANGELOG (esta entrada + bump de versión).
+Cambio:
+1. §11: nuevo bloque "Memoria de Conversaciones: vantage-sync.py" (cuándo correrlo, dry-run primero, dos motores con tiempos medidos, reglas de fallo, prevención de invenciones con entrada vacía).
+1. §22.1: entrada ampliada con stores, motores, tramos, reglas de fallo (incluido el comportamiento desde ad815bb: respuesta no-objeto o listas inválidas = tramo fallido), reporte stdout, códigos de salida, flags completos (--warmup-timeout y --allow-regex-fallback añadidos) y limitaciones; --timeout corregido de 120 a 300 s; "cambios de stack" corregido a "patrones".
+1. SCRIPT LIBRARY: Descripción de la fila vantage-sync.py alineada al mismo texto ([MANUAL:SCRIPT-GLOSSARY-XREF]).
+Fuentes: Brief de CLAUDE/MP (2026-10-16) · DRY RUN v2 de CLAUDE/MM · correcciones de CLAUDE/MAIN (2026-10-17) · código contrastado por MISTRAL/DEFAULT contra origin/main = 572b662 (script idéntico en ad815bb, c448463 y 572b662; sha256 838f9c0d…).
+Tracker del frente: T3.W (PLAN DE TRABAJO) · RECONCILIATION LOG (filas de las 22:40 y 23:34 del 2026-10-16).
+Tipo de impacto: Documental; sin altas, bajas ni renombres de ID (CENSUS-SYNC R1 no aplica).
+Verificación: Re-fetch dirigido de MANUAL, SCRIPT LIBRARY y CHANGELOG tras la escritura (fetch en vivo, sin fuentes intermedias).
+Pendiente: Fila vctx en ALIASES (requiere salida de type vctx del operador, con desambiguación vs vcontext de L0) · ticket en Task Tracker para disponer la página "Plan vantage-sync" (3fc938be-fc42-80a4-a1c6-c5706ad1051b), que sostiene un baseline drift ya cerrado en v9.22.54 · T6 y T7 tocarán ambos bloques del Manual al aterrizar · en Terminal: vversions --sync, vversions --length, vversions --scripts, vdoc notion (opcional).
+Versión: v9.22.56 → v9.22.57.
 Tipo: [OPS] [GIT]
 Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN. APROBAR_WRITE del operador (YEP, tras la salida de Terminal de las 23:39), una sola pasada, sin DRY RUN, por instrucción explícita.
 Fecha: 2026-10-16 23:39 CDMX (APROXIMADA: tomada del prompt de Terminal pegado por el operador; el operador no escribió la hora en este turno).

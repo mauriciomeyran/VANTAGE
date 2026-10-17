@@ -734,6 +734,18 @@ vantage-tidy-bug-task-tracker — archiva tickets ya resueltos (confirmación di
 - vantage-tidy-changelog — mantiene el Change Log con las últimas 10 entradas visibles, moviendo el exceso al Archivo Changelog histórico. Úsala cuando el Change Log activo supera 10 entradas o para housekeeping documental puntual.
 - vantage-present-handoff — genera el snapshot de contexto de sesión para continuidad en un chat nuevo. Es independiente y se puede invocar en cualquier momento; no requiere que la sesión esté cerrando (ver también MANUAL:SESSION-CYCLE, Cierre, donde vantage-session-close la invoca automáticamente como parte de su secuencia normal).
 Cada una declara su propio verbo de apertura/cierre (KERNEL:SKILL-ANNOUNCE-CONVENTION) — nunca el lenguaje de Bootstrap ni de Session Ledger.
+Memoria de Conversaciones: vantage-sync.py
+Las skills anteriores mantienen lo que vive en Notion; lo que se decide dentro de los chats de trabajo no llega ahí solo. vantage-sync.py lo recupera: lee un chat dump (texto o JSON), extrae decisiones, tareas, hechos y patrones, y los guarda en dos SQLite locales (~/.vantage/context-sync.db, primario, y ~/.vantage/mem0/memories.sqlite, secundario). No escribe en Notion y su única red es localhost:11434; no sustituye al Cierre de Sesión (MANUAL:SESSION-CYCLE).
+Cuándo correrlo: tras una sesión con decisiones o tareas que quieras recuperar en otro chat.
+Siempre primero en dry-run, que muestra qué se extraería sin escribir:
+```bash
+cd Layer_1/scripts
+python3 vantage-sync.py --input chat.txt --project vantage --dry-run
+```
+Con la vista previa conforme, quita --dry-run para escribir. Si el chat es un export JSON, agrega --format json.
+Dos motores. Regex (predeterminado) busca marcas literales (TODO, DECISION, entregable…) y no requiere Ollama ni red. --llm usa Ollama local (qwen2.5:7b) para extracción semántica y procesa por tramos de 5000 caracteres: en promedio unos 75 s por tramo, con máximo medido de ~131 s; un archivo grande puede tardar decenas de minutos. Antes de lanzarlo con un archivo grande, valida con un fragmento.
+Si el LLM falla (calentamiento, un tramo o cero items), el script descarta lo parcial y corre regex sobre todo el texto (el reporte marca el motor como llm→regex). En dry-run es solo un aviso. En escritura aborta con exit 1, para que no se guarde una extracción degradada sin que lo decidas; --allow-regex-fallback autoriza ese guardado y --no-fallback aborta siempre. Dos timeouts consecutivos abortan en cualquier modo.
+⚠️ Revisa la vista previa antes de escribir: con entrada vacía el modelo inventa items verosímiles, y no está obligado a citar texto literal del chat. Referencia completa de flags: [MANUAL:SCRIPT-GLOSSARY-L1].
 ---
 ## 12 MANUAL:TROUBLESHOOTING
 Problemas Comunes y Soluciones
@@ -983,20 +995,27 @@ Flags:
 ---
 ### 22.1 MANUAL:SCRIPT-GLOSSARY-L1
 Layer 1 — Active Recon & Core Pipeline
-vantage-sync.pyQué hace: Extrae tareas, decisiones, cambios de stack y hechos desde chats en texto o JSON y los sincroniza a SQLite local. Regex es el modo predeterminado; --llm usa Ollama local. Si falla la extracción LLM, el fallback regex analiza el texto completo; con --no-fallback aborta antes de escribir. Warmup Ollama requiere stream=False y done=True.
+vantage-sync.pyQué hace: Extrae decisiones, tareas, hechos y patrones de un chat dump (texto o JSON) y los escribe en dos SQLite locales: ~/.vantage/context-sync.db (primario; un error de escritura termina con exit 1) y ~/.vantage/mem0/memories.sqlite (secundario, no fatal). Rutas reemplazables con VANTAGE_DB_PATH y VANTAGE_MEM0_PATH. No escribe en Notion; su única red es localhost:11434. Flujo de uso: [MANUAL:MONITOR].
+Motores: regex (predeterminado; categorías task, decision, pattern, fact) y --llm (Ollama qwen2.5:7b; solo decision, task y fact; tramos de 5000 caracteres con solape de 500). Cada item se identifica como categoría: + hash de 12 hex del contenido normalizado y se deduplica dentro de la corrida y contra la tabla.
+Reglas de fallo del modo LLM: si falla el warmup o cualquier tramo, se descartan los resultados parciales y regex corre sobre el texto completo (el reporte marca el motor como llm→regex); si el LLM no devuelve ningún item, también cae a regex. Desde ad815bb, una respuesta del modelo que no sea objeto JSON, o cuyas decisions, tasks o facts no sean listas, cuenta como tramo fallido. En escritura, llm→regex o un tramo fallido termina con exit 1, salvo --allow-regex-fallback. T4-B: 2 timeouts consecutivos abortan con exit 1, en dry-run y en escritura. El warmup requiere stream=False y respuesta con done=True.
+Reporte (stdout): cabecera con Input, Project, Mode y Engine; línea de tramos procesados/fallidos solo cuando el motor es llm puro (no en llm→regex); resumen por categoría; en --dry-run, tabla de vista previa (clave, categoría, contenido a 80 caracteres).
+Códigos de salida: 0 correcto; 1 aborto controlado; 2 argumentos inválidos (argparse).
 Flags:
 | Flag | Caso de uso |
 | --- | --- |
 | --input, -i | Tienes un chat dump guardado en archivo; indica su ruta para procesarlo. |
-| --inline | Quieres procesar un fragmento breve directamente desde la terminal, sin crear un archivo. |
+| --inline | Quieres procesar un fragmento breve directamente desde la terminal, sin crear un archivo. (Excluyente con --input; uno es obligatorio.) |
 | --project, -p | Quieres asociar los recuerdos extraídos a un proyecto para consultarlos después. |
-| --format text/json | El archivo de entrada es un export JSON; usa json para normalizar su contenido antes de extraer. |
+| --format text/json | El archivo de entrada es un export JSON; usa json para normalizar su contenido antes de extraer. Describe el formato de la entrada, no de la salida. |
 | --dry-run | Necesitas revisar qué se extraería sin escribir en SQLite. |
 | --llm | El texto requiere extracción semántica con Ollama local en lugar de las reglas regex predeterminadas. |
-| --no-fallback | Estás validando extracción LLM y prefieres abortar ante cualquier fallo antes que usar regex. Solo aplica junto a --llm. |
 | --model | Necesitas usar un modelo Ollama local distinto de qwen2.5:7b. |
-| --timeout | El modelo tarda más que el límite predeterminado de 120 segundos en responder. |
+| --timeout | El modelo tarda más que el límite predeterminado de 300 segundos por tramo. |
+| --warmup-timeout | La carga inicial del modelo tarda más que el límite predeterminado de 180 segundos. |
+| --no-fallback | Estás validando extracción LLM y prefieres abortar con exit 1 ante cualquier fallo, también en dry-run, antes que usar regex. Sin --llm no tiene efecto. |
+| --allow-regex-fallback | Quieres que, si el LLM falla, se escriba el resultado de regex en lugar de abortar. Excluyente con --no-fallback. |
 | --verbose | Necesitas inspeccionar en terminal los elementos extraídos antes de revisar el reporte. |
+⚠️ Limitaciones conocidas: con entrada vacía el modelo inventa items verosímiles (sin guarda de entrada vacía); el LLM no está obligado a citar texto literal del tramo (alcance de T6); las entradas malformadas del modelo se saltan sin aviso; los items de 2000 o más caracteres se descartan en silencio; el nombre del proyecto es siempre su ID. No existen --allow-partial ni --apply. El determinismo se midió solo en un tramo (2 corridas idénticas), no sobre el archivo completo.
 layer_1_run.py
 Variables de entorno (tuning silencioso):
 | Variable | Default | Caso de uso |
