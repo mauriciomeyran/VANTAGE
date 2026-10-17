@@ -1520,3 +1520,84 @@ class TestNormalizationDedup:
         id1 = vsync_module.gen_mem0_id("task", "Fix the auth bug")
         id2 = vsync_module.gen_mem0_id("task", "Fix the auth bug.")
         assert id1 == id2
+
+
+class TestVh07Vh10ReportAndSchema:
+    """Regression for residual BUG HUNTER items VH-07 and VH-10."""
+
+    def test_md_cell_escapes_pipe_and_newlines(self, vsync_module):
+        assert vsync_module.md_cell("a|b") == r"a\|b"
+        assert vsync_module.md_cell("line1\nline2") == "line1 line2"
+        assert vsync_module.md_cell(None) == ""
+
+    def test_print_report_dry_run_survives_pipe_in_content(self, vsync_module, capsys):
+        items = [{
+            "category": "task",
+            "content": "Do A | B\nand more",
+            "source_line": "TODO: Do A | B",
+        }]
+        vsync_module.print_report(
+            input_source="test",
+            items=items,
+            project_id=None,
+            dry_run=True,
+            primary_results=[],
+            mem0_results=[],
+        )
+        out = capsys.readouterr().out
+        data_rows = [
+            ln for ln in out.splitlines()
+            if ln.startswith("| ") and "Key" not in ln and "---" not in ln
+        ]
+        assert len(data_rows) == 1
+        assert "\n" not in data_rows[0]
+        assert "Do A \|" in data_rows[0] or "Do A \\|" in data_rows[0]
+
+    def test_llm_non_object_response_counts_as_chunk_failure(self, vsync_module, monkeypatch):
+        class FakeResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                return b'{"response": "[1,2,3]"}'
+
+        def fake_urlopen(req, timeout=None):
+            return FakeResp()
+
+        monkeypatch.setattr(vsync_module.urllib.request, "urlopen", fake_urlopen)
+        monkeypatch.setattr(vsync_module, "warmup_ollama", lambda *a, **k: None)
+
+        items = vsync_module.extract_with_ollama(
+            "TODO: something important to extract",
+            fallback_to_regex=True,
+        )
+        assert isinstance(items, list)
+        assert vsync_module._chunk_stats["failed"] >= 1
+        assert vsync_module._last_extraction_source == "llm\u2192regex"
+
+    def test_llm_malformed_field_triggers_chunk_failure(self, vsync_module, monkeypatch):
+        import json
+        payload = {
+            "decisions": ["not-a-dict", {"content": "Real decision"}],
+            "tasks": [{"content": 123}, {"content": "Real task"}],
+            "facts": {"wrong": "shape"},
+        }
+
+        class FakeResp:
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+            def read(self):
+                return json.dumps({"response": json.dumps(payload)}).encode()
+
+        def fake_urlopen(req, timeout=None):
+            return FakeResp()
+
+        monkeypatch.setattr(vsync_module.urllib.request, "urlopen", fake_urlopen)
+        monkeypatch.setattr(vsync_module, "warmup_ollama", lambda *a, **k: None)
+
+        items = vsync_module.extract_with_ollama("TODO: x", fallback_to_regex=True)
+        assert isinstance(items, list)
+        assert vsync_module._last_extraction_source == "llm\u2192regex"

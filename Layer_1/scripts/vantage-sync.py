@@ -332,6 +332,11 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 raw = json.loads(resp.read().decode("utf-8"))
             llm_output = json.loads(raw["response"])
+            if not isinstance(llm_output, dict):
+                raise ValueError("Ollama response JSON must be an object")
+            for req_key in ("decisions", "tasks", "facts"):
+                if req_key in llm_output and not isinstance(llm_output[req_key], list):
+                    raise ValueError(f"Ollama response field '{req_key}' must be a list")
 
             chunk_duration = time.time() - chunk_start
             print(f"[info] Chunk {chunk_num}/{len(chunks)} ok in {chunk_duration:.1f}s", file=sys.stderr)
@@ -343,7 +348,12 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
             for cat in ("decision", "task", "fact"):
                 key = cat + "s"  # JSON keys: decisions, tasks, facts
                 for entry in llm_output.get(key, []):
-                    content = entry.get("content", "").strip()
+                    if not isinstance(entry, dict):
+                        continue
+                    content = entry.get("content", "")
+                    if not isinstance(content, str):
+                        continue
+                    content = content.strip()
                     if content and len(content) < 2000:
                         # Deduplicate using gen_memory_key
                         mem_key = gen_memory_key(cat, content)
@@ -787,6 +797,18 @@ def write_to_mem0_safe(mem0_path: str, items: list[dict],
 
 # ─── Report ───────────────────────────────────────────────────────────────────
 
+
+def md_cell(value: object) -> str:
+    """Escape a value for safe insertion into a Markdown table cell.
+
+    Replaces pipe characters and collapses newlines so table rows stay intact.
+    """
+    s = "" if value is None else str(value)
+    s = s.replace("|", "\\|")
+    s = s.replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
+    return s.strip()
+
+
 def print_report(input_source: str, items: list[dict],
                  project_id: str | None, dry_run: bool,
                  primary_results: list[dict],
@@ -842,7 +864,7 @@ def print_report(input_source: str, items: list[dict],
         print("| Key | Category | Status |")
         print("|-----|----------|--------|")
         for r in primary_results:
-            print(f"| {r['key']} | {r['category']} | {r['status'].upper()} |")
+            print(f"| {md_cell(r['key'])} | {md_cell(r['category'])} | {md_cell(r['status'].upper())} |")
         print()
 
         if mem0_results:
@@ -860,7 +882,7 @@ def print_report(input_source: str, items: list[dict],
         for item in items:
             key = gen_memory_key(item["category"], item["content"])
             content_preview = item["content"][:80]
-            print(f"| {key} | {item['category']} | {content_preview} |")
+            print(f"| {md_cell(key)} | {md_cell(item['category'])} | {md_cell(content_preview)} |")
         print()
 
     print("**Done.**")
