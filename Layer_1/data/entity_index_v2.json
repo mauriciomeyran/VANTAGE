@@ -1,6 +1,76 @@
 {
   "entities": [
     {
+      "entity_id": "TRACKER:H_bb374df197473a92",
+      "canonical_id": "bb374df197473a920c2367fea3578da027cacdcef9c91ea3468046844610e8d1",
+      "page_id": "3fb938be-fc42-817a-b3ff-eeae0dce0b30",
+      "page_url": "https://app.notion.com/p/Sr-Manager-Marketing-and-Communications-3fb938befc42817ab3ffeeae0dce0b30",
+      "hash": "bb374df197473a920c2367fea3578da027cacdcef9c91ea3468046844610e8d1",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "TRACKER:H_25c63b6097a37175",
+      "canonical_id": "25c63b6097a371754e46ef8486e9cfccae15b040fa2e7e73d8df9e3bc9080f90",
+      "page_id": "3fb938be-fc42-815a-86ee-e4c28573b0f2",
+      "page_url": "https://app.notion.com/p/Dise-ador-Sr-BTL-3fb938befc42815a86eee4c28573b0f2",
+      "hash": "25c63b6097a371754e46ef8486e9cfccae15b040fa2e7e73d8df9e3bc9080f90",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "TRACKER:H_6c5b23b89526a6d6",
+      "canonical_id": "6c5b23b89526a6d6e7e1c2469e7e4f94ade1d076bce7a77e702e3999e1a78be4",
+      "page_id": "3fb938be-fc42-811c-ac85-fe0e541d374c",
+      "page_url": "https://app.notion.com/p/Brand-Activation-Coordinator-3fb938befc42811cac85fe0e541d374c",
+      "hash": "6c5b23b89526a6d6e7e1c2469e7e4f94ade1d076bce7a77e702e3999e1a78be4",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "TRACKER:H_f5475c06bc4edf44",
+      "canonical_id": "f5475c06bc4edf442d30008f81a02182cf61a613d207c07abb0b67b52ac787ff",
+      "page_id": "3fb938be-fc42-81cd-b273-d57b2aa7ced8",
+      "page_url": "https://app.notion.com/p/Marketing-Brand-Experience-Coordinator-3fb938befc4281cdb273d57b2aa7ced8",
+      "hash": "f5475c06bc4edf442d30008f81a02182cf61a613d207c07abb0b67b52ac787ff",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "TRACKER:H_02d568c71b34ecb7",
+      "canonical_id": "02d568c71b34ecb79faffc8d3ad28760c86adabcdbe32d5a0ca0ca4be08578eb",
+      "page_id": "3fb938be-fc42-81a8-a9c7-d1cb1222a9df",
+      "page_url": "https://app.notion.com/p/Dise-ador-Industrial-Retail-Design-Mobiliario-Comercial-H-brido-3fb938befc4281a8a9c7d1cb1222a9df",
+      "hash": "02d568c71b34ecb79faffc8d3ad28760c86adabcdbe32d5a0ca0ca4be08578eb",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "TRACKER:H_1b8bd470059c14ab",
+      "canonical_id": "1b8bd470059c14abeeb90ba4915e7f477721c52eab3d6834a28eaf8ed07753cb",
+      "page_id": "3fb938be-fc42-8137-a7c1-c4b3850cd69a",
+      "page_url": "https://app.notion.com/p/Store-Design-and-Merchandising-Manager-Americas-3fb938befc428137a7c1c4b3850cd69a",
+      "hash": "1b8bd470059c14abeeb90ba4915e7f477721c52eab3d6834a28eaf8ed07753cb",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER",
+      "archived_from": null
+    },
+    {
+      "entity_id": "TRACKER:H_7530498fdb5937f4",
+      "canonical_id": "7530498fdb5937f4b6bd41094e7d2c3688d6b65bc7b7742fa596dde3fdd9f7b0",
+      "page_id": "3fb938be-fc42-8114-a53c-e2ab75b688ea",
+      "page_url": "https://app.notion.com/p/Visual-merchandiser-3fb938befc428114a53ce2ab75b688ea",
+      "hash": "7530498fdb5937f4b6bd41094e7d2c3688d6b65bc7b7742fa596dde3fdd9f7b0",
+      "entity_type": "tracker",
+      "source_db": "VANTAGE_TRACKER",
+      "archived_from": null
+    },
+    {
       "entity_id": "TRACKER:U_3f7938befc4281789bddf3fb63272abb",
       "canonical_id": "H_19a4acc39374cfe4",
       "page_id": "3f7938be-fc42-8178-9bdd-f3fb63272abb",
@@ -7342,8 +7412,8 @@
     }
   ],
   "metrics": {
-    "total_entities": 734,
-    "tracker_entities": 19,
+    "total_entities": 741,
+    "tracker_entities": 26,
     "archive_entities": 715,
     "hash_coverage": 100.0,
     "orphan_candidates": 0
