@@ -1601,3 +1601,60 @@ class TestVh07Vh10ReportAndSchema:
         items = vsync_module.extract_with_ollama("TODO: x", fallback_to_regex=True)
         assert isinstance(items, list)
         assert vsync_module._last_extraction_source == "llm\u2192regex"
+
+
+# ─── Empty-input guard (P0 patch: LLM hallucination on empty text) ────────────
+
+class TestEmptyInputGuard:
+    """Empty/whitespace input must abort with exit 1 before any extraction or write."""
+
+    @pytest.mark.parametrize("argv_input", [
+        ["--inline", ""],
+        ["--inline", "   \n\t  "],
+    ])
+    @pytest.mark.parametrize("extra", [[], ["--dry-run"], ["--llm"], ["--llm", "--dry-run"]])
+    def test_empty_inline_exits_1_without_extraction(
+        self, vsync_module, tmp_db, tmp_mem0, monkeypatch, argv_input, extra
+    ):
+        def boom(*a, **k):
+            raise AssertionError("extraction/Ollama must not run on empty input")
+        monkeypatch.setattr(vsync_module, "extract_with_ollama", boom)
+        monkeypatch.setattr(vsync_module, "warmup_ollama", boom)
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("VANTAGE_MEM0_PATH", tmp_mem0)
+        monkeypatch.setattr(sys, "argv", ["vantage-sync.py", *argv_input, *extra])
+
+        with pytest.raises(SystemExit) as exc:
+            vsync_module.main()
+        assert exc.value.code == 1
+        with sqlite3.connect(tmp_db) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0] == 0
+
+    def test_empty_file_exits_1(self, vsync_module, tmp_db, tmp_mem0, tmp_path, monkeypatch):
+        f = tmp_path / "empty.txt"
+        f.write_text("", encoding="utf-8")
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("VANTAGE_MEM0_PATH", tmp_mem0)
+        monkeypatch.setattr(sys, "argv", ["vantage-sync.py", "--input", str(f)])
+        with pytest.raises(SystemExit) as exc:
+            vsync_module.main()
+        assert exc.value.code == 1
+
+    def test_json_without_text_exits_1(self, vsync_module, tmp_db, tmp_mem0, monkeypatch):
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("VANTAGE_MEM0_PATH", tmp_mem0)
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", json.dumps([{"role": "user", "content": ""}]),
+            "--format", "json",
+        ])
+        with pytest.raises(SystemExit) as exc:
+            vsync_module.main()
+        assert exc.value.code == 1
+
+    def test_nonempty_inline_still_works(self, vsync_module, tmp_db, tmp_mem0, monkeypatch):
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("VANTAGE_MEM0_PATH", tmp_mem0)
+        monkeypatch.setattr(sys, "argv", ["vantage-sync.py", "--inline", "TODO: still works"])
+        vsync_module.main()
+        with sqlite3.connect(tmp_db) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0] == 1

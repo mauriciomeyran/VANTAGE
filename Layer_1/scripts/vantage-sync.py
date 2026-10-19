@@ -949,7 +949,9 @@ Examples:
     args = parser.parse_args()
 
     # Resolve input content
-    if args.inline:
+    # `is not None` (not truthiness): --inline "" must reach the empty-input guard
+    # below instead of falling into the --input branch with args.input=None.
+    if args.inline is not None:
         raw_text = args.inline
         input_source = "inline string"
     else:
@@ -965,6 +967,15 @@ Examples:
     if args.format == "json":
         raw_text = normalize_json_input(raw_text)
         input_source = f"{input_source} (normalized JSON → text)"
+
+    # Empty-input guard: with no text the LLM invents plausible items and write
+    # mode would persist them. Applies to every mode, after JSON normalization.
+    if not raw_text.strip():
+        print(
+            "ERROR: input is empty or whitespace-only — nothing to extract.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     # Parse — LLM mode takes priority over format
     if args.llm:
