@@ -1551,7 +1551,7 @@ class TestVh07Vh10ReportAndSchema:
         ]
         assert len(data_rows) == 1
         assert "\n" not in data_rows[0]
-        assert "Do A \|" in data_rows[0] or "Do A \\|" in data_rows[0]
+        assert r"Do A \|" in data_rows[0] or "Do A \\|" in data_rows[0]
 
     def test_llm_non_object_response_counts_as_chunk_failure(self, vsync_module, monkeypatch):
         class FakeResp:
