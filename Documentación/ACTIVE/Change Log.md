@@ -1,5 +1,21 @@
 # V | CHANGELOG
 
+Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN. APROBAR_WRITE del operador dado por adelantado para el registro en el Charter, y para esta entrada y el bump en una sola pasada, sin DRY RUN, por instrucción explícita. El operador dispensó el ticket CHARTER (gatekeeping de CHARTER:CONTINUITY / CHARTER-LOG:DECISIONS-011): excepción declarada por el operador en este turno, con el precedente del 2026-10-15 (MAIN escribió el Charter bajo APROBAR_WRITE).
+Fecha: 2026-10-17 13:01 CDMX (declarada por el operador).
+Documentos modificados: V | PROJECT CHARTER (§6 y §7; propiedades Versión y Fecha de actualización sin tocar) · V | CHANGELOG (esta entrada + bump de Versión).
+Cambio:
+1. Charter §6, fallback, paso 2: el ejemplo vload --route PREFIX:CLAVE se sustituyó por una referencia a MANUAL:LAZY-LOAD, porque esa forma falla con el alias actual (ver punto 3).
+1. Charter §6: párrafo nuevo «Herramientas de lectura quirúrgica — conocimiento obligatorio»: todo agente conoce y ofrece por default el Lazy Loader (lazy_loader.py + wrapper vload.py) y el Runtime L0, entrega el comando exacto de Terminal antes de pedir un adjunto o hacer un fetch completo, y no promete como funcional una vía no re-ejecutada. Sin flags ni sintaxis en el Charter: remite a MANUAL:LAZY-LOAD, MANUAL:RUNTIME, KERNEL:NAM-DOC-CONTRACT, KERNEL:FLOW-CONTEXT-ECONOMY y KERNEL:ARC-L0.
+1. Hallazgo (Terminal del operador, 2026-10-17 12:30): el alias vload invoca lazy_loader.py y exige --page; vload --route ALIASES:L4-VERSION-CONTROL y vload --route MANUAL:SCRIPT-GLOSSARY-L1 fallaron con «the following arguments are required: --page». La resolución automática de UUID está en Layer_1/scripts/vload.py, que no está cableado al alias. vload.py y vantage.py subidos por el operador son idénticos a origin/main (cmp); vload.py no se ejecutó.
+1. Charter §7: el pendiente de vload --route CHARTER:... / CHARTER-LOG:... recoge el hallazgo y la falta de entrada en CHARTER-LOG:DECISIONS.
+1. type vctx (operador): «vctx is an alias for cd $LAYER_1_DIR && python3 scripts/vantage-sync.py». Confirma el alias para el parche 3 pendiente de v9.22.57.
+Verificación de IDs citados: MANUAL:LAZY-LOAD (cap. 14) y MANUAL:RUNTIME (cap. 09) en el export del Manual del operador; KERNEL:ARC-L0 (04.1), KERNEL:NAM-DOC-CONTRACT (12.3) y KERNEL:FLOW-CONTEXT-ECONOMY (08.3) en generate_census.py del repo (no contra el Kernel vivo).
+Abiertos: repuntar el alias vload a Layer_1/scripts/vload.py y re-ejecutar --list y --route (el operador); entrada en CHARTER-LOG:DECISIONS (no se fetcheó el Log; número sin asignar, el 019 sigue reservado); fila vctx de ALIASES (parche 3: falta la sección ALIASES, hora y APROBAR_WRITE); verificaciones en vivo de §22.1 (nombre de la entrada fusionado, caracteres ¶) no ejecutadas porque vload falló; vversions --sync pendiente; rotación al ARCHIVO (16 entradas visibles frente a la regla de 10, T3.AD).
+Tipo de impacto: documental + operativo. Sin altas ni bajas de IDs canónicos.
+Verificación: salidas de Terminal del operador, cmp y grep de MAIN sobre clone de origin/main; escrituras en Charter y Changelog sin re-fetch posterior; verificación independiente pendiente.
+Versión: v9.22.57 → v9.22.58 (propiedad Versión de V | CHANGELOG; la del Charter marca v9.22.57 en el fetch previo a la escritura).
+Handoff de referencia: ninguno emitido.
 Tipo: [DOC] — documentación transversal
 Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT. Ejecución con APROBAR_WRITE del operador, una sola pasada, tras DRY RUN v3.1 (consolidación de MISTRAL/DEFAULT sobre el DRY RUN v2 de CLAUDE/MM, con correcciones de CLAUDE/MAIN y brief de CLAUDE/MP).
 Fecha: 2026-10-17 12:13 CDMX (declarada por el operador).

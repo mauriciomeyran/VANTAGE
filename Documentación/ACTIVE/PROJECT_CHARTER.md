@@ -202,7 +202,7 @@ por qué no pudo fetchearlo) — nunca continúa silenciosamente con una
 versión de memoria o inferida.
 1. El agente entrega al operador el comando específico que el operador
 puede correr en su propia Terminal para resolver el fetch con el menor
-costo de tokens posible (ej. vload --route PREFIX:CLAVE para un
+costo de tokens posible (la sintaxis vigente está en MANUAL:LAZY-LOAD; para un
 documento fundacional ya dado de alta en el registry documental).
 1. El operador corre el comando, procesa el resultado, y se lo entrega de
 vuelta al agente en el chat.
@@ -217,6 +217,7 @@ archivo en la sesión. Cualquier agente que reporte no poder fetchear el
 Charter vía MCP debe recibir instrucción de pedir el archivo directamente,
 no un comando vload que aún no resuelve a nada.
 Actualización 2026-10-11: el prefijo CHARTER ya está dado de alta en resolver_registry_v2.json (línea 54, verificado por MAIN con git grep); registry_seed.json no es un registry documental (pertenece al flujo de CV/Figma) y no recibe el alta (Arena, T9). Que vload --route CHARTER:... resuelva está reportado por Arena y MAIN no lo re-ejecutó: confirmarlo con una corrida antes de ofrecerlo como fallback; mientras tanto, el fallback real sigue siendo que el operador adjunte el archivo.
+Herramientas de lectura quirúrgica — conocimiento obligatorio (decisión del operador, 2026-10-17). Todo agente que opere sobre VANTAGE conoce y ofrece por default, sin esperar a que el operador las mencione, el acceso de solo lectura del Runtime L0 (KERNEL:ARC-L0), que tiene dos rutas no intercambiables: (1) documental: vload --route PREFIX:CLAVE trae un bloque (~150 tokens) en lugar del documento completo y vload --list muestra los prefijos autorizados; vload.py es la interfaz preferente y lazy_loader.py su implementación interna (MANUAL:LAZY-LOAD, KERNEL:NAM-DOC-CONTRACT); (2) entidades: vantage.py (resolve, context, ask, sync, status) opera sobre entity_index_v2.json y el Resolver (MANUAL:RUNTIME). La regla de elección de vía (Terminal o MCP) está en MANUAL:LAZY-LOAD. Antes de pedir un adjunto o de hacer un fetch completo de un documento fundacional, el agente entrega al operador el comando exacto de Terminal. Estado verificado el 2026-10-17: el alias vload del operador invocaba lazy_loader.py y exigía --page <UUID>, de modo que --route sin --page fallaba (Terminal del operador, 12:30 CDMX). Con vload.py (idéntico a origin/main) --list y la resolución de UUID funcionan (Terminal del operador, 13:07), pero la lectura falla con «NOTION_TOKEN no encontrado» porque vload.py no carga config/layer_1.env (solo lo hace el __main__ de lazy_loader.py; lectura de código). Mientras no se re-ejecute con éxito la lectura completa, el agente propone el comando y pide la salida, sin prometerla como funcional.
 Acceso a skills. Rige la copia del .md de la skill que el operador adjunta en el turno en que se usa (ver CHARTER-LOG:DECISIONS-015); ningún agente asume que su copia residente está al día ni lo reporta como riesgo.
 Qué hace un agente delegado al recibir este Charter. Lo trata como
 contexto de lectura obligatoria, no como fuente a re-verificar línea por
@@ -244,5 +245,5 @@ Pendientes abiertos tras la actualización del 2026-10-15:
 - Actualizar SP:BOOTLOADER (alcance, paso 2, -001 y -004) y Project Instructions según el protocolo de optimización del bootstrap; después, KERNEL:OPS-BOOT y la matriz de ruteo 04.5.
 - La fila 3b del Hito 1 (wrapper vdoc.py con 9 etiquetas, en el Log) cambia cuando se fusione la rama de Arena.
 - El Corpus Bloque 06 del operador sigue listando Dockers y Aéropostale como bloqueados.
-- La resolución de vload --route CHARTER:... y CHARTER-LOG:... sigue sin re-ejecutarse (sección 6).
+- La resolución de vload --route CHARTER:... y CHARTER-LOG:... sigue sin re-ejecutarse (sección 6); con el alias anterior de vload (→ lazy_loader.py) la forma sin --page fallaba (Terminal del operador, 2026-10-17 12:30); con vload.py (13:07) --list y la resolución de UUID funcionan y la lectura falla por NOTION_TOKEN (vload.py no carga config/layer_1.env): cargar el entorno en el alias o en vload.py (cambio de código, lo decide el operador) y re-ejecutar. La clave del registry es CHARTER_LOG (guión bajo) y los IDs del Log usan CHARTER-LOG:; _parse_route compara exacto tras upper(), así que la forma con guión no resolvería (lectura de código, sin ejecutar). Falta además la entrada en CHARTER-LOG:DECISIONS de la regla de herramientas de lectura quirúrgica (sección 6, 2026-10-17).
 - Siguen apareciendo commits auto-sync en main posteriores a CHARTER-LOG:DECISIONS-014; el proceso que los genera no está identificado (reporte de Hermes del 2026-10-16, no verificado por MAIN).
