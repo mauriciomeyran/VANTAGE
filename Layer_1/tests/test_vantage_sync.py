@@ -1658,3 +1658,212 @@ class TestEmptyInputGuard:
         vsync_module.main()
         with sqlite3.connect(tmp_db) as conn:
             assert conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0] == 1
+
+
+# ─── Adaptive chunking, --allow-partial, model flags, report (contract CS-DEVIN) ─
+
+def _resp(payload):
+    class R:
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+        def read(self): return payload
+    return R()
+
+
+def _ok_payload(content):
+    return json.dumps({
+        "done": True,
+        "response": json.dumps({"decisions": [{"content": content}], "tasks": [], "facts": []}),
+    }).encode("utf-8")
+
+
+def _scripted_urlopen(outcomes):
+    """Return (urlopen_fn, calls). outcomes[i] drives chunk i+1: 'ok', 'fail' or 'timeout'.
+
+    Warmup (body without 'prompt') always succeeds and is not counted as a chunk."""
+    calls = {"chunks": 0, "total": 0}
+
+    def fn(req, timeout):
+        calls["total"] += 1
+        body = json.loads(req.data.decode("utf-8"))
+        if "prompt" not in body:
+            return _resp(json.dumps({"done": True}).encode("utf-8"))
+        idx = calls["chunks"]
+        calls["chunks"] += 1
+        outcome = outcomes[idx] if idx < len(outcomes) else outcomes[-1]
+        if outcome == "timeout":
+            raise urllib.error.URLError("timed out")
+        if outcome == "fail":
+            return _resp(b"not json")
+        return _resp(_ok_payload(f"Decision from chunk {idx + 1}"))
+    return fn, calls
+
+
+class TestAdaptiveChunking:
+    @pytest.mark.parametrize("length,expected", [
+        (0, 5000), (19999, 5000), (20000, 10000), (83220, 10000),
+    ])
+    def test_adaptive_chunk_size_boundaries(self, vsync_module, length, expected):
+        assert vsync_module.get_adaptive_chunk_size(length) == expected
+
+    def test_extraction_uses_adaptive_chunk_size(self, vsync_module):
+        text = "x" * 25000
+        fn, calls = _scripted_urlopen(["ok"])
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fn):
+            vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+        expected = len(vsync_module.split_into_chunks(text, size=10000, overlap=500))
+        old = len(vsync_module.split_into_chunks(text, size=5000, overlap=500))
+        assert expected != old
+        assert calls["chunks"] == expected
+
+    def test_small_text_keeps_5000_chunks(self, vsync_module):
+        text = "x" * 12000
+        fn, calls = _scripted_urlopen(["ok"])
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fn):
+            vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+        assert calls["chunks"] == len(vsync_module.split_into_chunks(text, size=5000, overlap=500))
+
+
+class TestAllowPartial:
+    TEXT = "x" * 25000  # 3 chunks of up to 10000 chars
+
+    def test_default_is_all_or_nothing(self, vsync_module):
+        fn, _ = _scripted_urlopen(["ok", "fail", "ok"])
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fn):
+            vsync_module.extract_with_ollama(self.TEXT, model="qwen2.5:7b", timeout=5)
+        assert vsync_module._last_extraction_source == "llm→regex"
+
+    def test_allow_partial_keeps_good_chunks(self, vsync_module):
+        fn, _ = _scripted_urlopen(["ok", "fail", "ok"])
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fn):
+            items = vsync_module.extract_with_ollama(
+                self.TEXT, model="qwen2.5:7b", timeout=5, allow_partial=True)
+        assert vsync_module._last_extraction_source == "llm"
+        assert vsync_module._chunk_stats == {"processed": 2, "failed": 1}
+        assert sorted(i["content"] for i in items) == ["Decision from chunk 1", "Decision from chunk 3"]
+
+    def test_allow_partial_with_no_fallback_does_not_raise(self, vsync_module):
+        fn, _ = _scripted_urlopen(["ok", "fail", "ok"])
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fn):
+            items = vsync_module.extract_with_ollama(
+                self.TEXT, model="qwen2.5:7b", timeout=5,
+                fallback_to_regex=False, allow_partial=True)
+        assert len(items) == 2
+
+    def test_allow_partial_zero_successes_falls_back(self, vsync_module):
+        fn, _ = _scripted_urlopen(["fail"])
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fn):
+            vsync_module.extract_with_ollama(
+                self.TEXT, model="qwen2.5:7b", timeout=5, allow_partial=True)
+        assert vsync_module._last_extraction_source == "llm→regex"
+
+    def test_allow_partial_zero_successes_no_fallback_raises(self, vsync_module):
+        fn, _ = _scripted_urlopen(["fail"])
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fn):
+            with pytest.raises(RuntimeError):
+                vsync_module.extract_with_ollama(
+                    self.TEXT, model="qwen2.5:7b", timeout=5,
+                    fallback_to_regex=False, allow_partial=True)
+
+    def test_t4b_still_aborts_with_allow_partial(self, vsync_module):
+        fn, _ = _scripted_urlopen(["ok", "timeout", "timeout"])
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fn):
+            with pytest.raises(RuntimeError, match="consecutive chunk timeouts"):
+                vsync_module.extract_with_ollama(
+                    self.TEXT, model="qwen2.5:7b", timeout=5, allow_partial=True)
+
+    def test_t4b_abort_counts_each_failure_once_and_stops_calls(self, vsync_module):
+        text = "x" * 70000  # 8 chunks of up to 10000
+        fn, calls = _scripted_urlopen(["timeout"])
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fn):
+            with pytest.raises(RuntimeError, match="consecutive chunk timeouts"):
+                vsync_module.extract_with_ollama(text, model="qwen2.5:7b", timeout=5)
+        assert vsync_module._chunk_stats["failed"] == 2
+        assert calls["chunks"] == 2
+
+
+class TestMainPartialAndModelFlags:
+    @pytest.fixture
+    def env(self, vsync_module, tmp_db, tmp_mem0, monkeypatch):
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("VANTAGE_MEM0_PATH", tmp_mem0)
+        return tmp_db
+
+    def _fake_extract(self, vsync_module, monkeypatch, processed, failed, source="llm"):
+        seen = {}
+        def fake(raw_text, model, *a, **k):
+            seen["model"] = model
+            seen["allow_partial"] = k.get("allow_partial")
+            vsync_module._chunk_stats = {"processed": processed, "failed": failed}
+            vsync_module._last_extraction_source = source
+            return [{"category": "decision", "content": "Partial decision", "source_line": "(llm extraction)"}]
+        monkeypatch.setattr(vsync_module, "extract_with_ollama", fake)
+        monkeypatch.setattr(vsync_module, "_chunk_stats", {"processed": 0, "failed": 0})
+        monkeypatch.setattr(vsync_module, "_last_extraction_source", "regex")
+        return seen
+
+    def _run(self, vsync_module, monkeypatch, *args):
+        monkeypatch.setattr(sys, "argv", ["vantage-sync.py", "--inline", "texto", *args])
+        vsync_module.main()
+
+    def _rows(self, db):
+        with sqlite3.connect(db) as conn:
+            return conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+
+    def test_write_partial_without_flag_exits_1(self, vsync_module, env, monkeypatch):
+        self._fake_extract(vsync_module, monkeypatch, 2, 1)
+        with pytest.raises(SystemExit) as exc:
+            self._run(vsync_module, monkeypatch, "--llm")
+        assert exc.value.code == 1
+        assert self._rows(env) == 0
+
+    def test_write_partial_with_flag_writes(self, vsync_module, env, monkeypatch):
+        seen = self._fake_extract(vsync_module, monkeypatch, 2, 1)
+        self._run(vsync_module, monkeypatch, "--llm", "--allow-partial")
+        assert seen["allow_partial"] is True
+        assert self._rows(env) == 1
+
+    def test_report_marks_partial(self, vsync_module, env, monkeypatch, capsys):
+        self._fake_extract(vsync_module, monkeypatch, 2, 1)
+        self._run(vsync_module, monkeypatch, "--llm", "--allow-partial", "--dry-run")
+        out = capsys.readouterr().out
+        assert "**Tramos:** 2 procesados, 1 fallidos — PARCIAL (resultados de los tramos exitosos)" in out
+
+    def test_report_no_partial_marker_without_failures(self, vsync_module, env, monkeypatch, capsys):
+        self._fake_extract(vsync_module, monkeypatch, 3, 0)
+        self._run(vsync_module, monkeypatch, "--llm", "--dry-run")
+        out = capsys.readouterr().out
+        assert "**Tramos:** 3 procesados, 0 fallidos" in out
+        assert "PARCIAL" not in out
+        assert "Chunks:" not in out
+
+    def test_default_model_is_7b(self, vsync_module, env, monkeypatch):
+        seen = self._fake_extract(vsync_module, monkeypatch, 1, 0)
+        self._run(vsync_module, monkeypatch, "--llm", "--dry-run")
+        assert seen["model"] == "qwen2.5:7b"
+
+    def test_qwen253_flag(self, vsync_module, env, monkeypatch):
+        seen = self._fake_extract(vsync_module, monkeypatch, 1, 0)
+        self._run(vsync_module, monkeypatch, "--llm", "--qwen253", "--dry-run")
+        assert seen["model"] == "qwen2.5:3b"
+
+    def test_qwen257_flag(self, vsync_module, env, monkeypatch):
+        seen = self._fake_extract(vsync_module, monkeypatch, 1, 0)
+        self._run(vsync_module, monkeypatch, "--llm", "--qwen257", "--dry-run")
+        assert seen["model"] == "qwen2.5:7b"
+
+    def test_qwen_flag_overrides_model(self, vsync_module, env, monkeypatch):
+        seen = self._fake_extract(vsync_module, monkeypatch, 1, 0)
+        self._run(vsync_module, monkeypatch, "--llm", "--model", "otro:1b", "--qwen253", "--dry-run")
+        assert seen["model"] == "qwen2.5:3b"
+
+    def test_qwen_flags_mutually_exclusive(self, vsync_module, env, monkeypatch):
+        self._fake_extract(vsync_module, monkeypatch, 1, 0)
+        with pytest.raises(SystemExit) as exc:
+            self._run(vsync_module, monkeypatch, "--llm", "--qwen253", "--qwen257", "--dry-run")
+        assert exc.value.code == 2
+
+    def test_engine_label_uses_actual_model(self, vsync_module, env, monkeypatch, capsys):
+        self._fake_extract(vsync_module, monkeypatch, 1, 0)
+        self._run(vsync_module, monkeypatch, "--llm", "--qwen253", "--dry-run")
+        assert "**Engine:** llm (qwen2.5:3b)" in capsys.readouterr().out

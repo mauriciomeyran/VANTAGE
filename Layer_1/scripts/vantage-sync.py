@@ -156,7 +156,7 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 DEFAULT_OLLAMA_TIMEOUT = 300  # seconds — T4: per chunk default (~2.3x max measured)
 DEFAULT_WARMUP_TIMEOUT = 180  # seconds — T4: warmup timeout (default)
 OLLAMA_SEED = 42  # fixed seed for deterministic LLM extraction
-DEFAULT_CHUNK_SIZE = 5000  # characters per chunk
+DEFAULT_CHUNK_SIZE = 5000  # characters per chunk (base, adaptive chunking adjusts this)
 DEFAULT_CHUNK_OVERLAP = 500  # overlap between chunks
 OLLAMA_NUM_CTX = 8192  # T3: explicit context window size
 
@@ -235,6 +235,19 @@ def split_into_chunks(text: str, size: int = 5000, overlap: int = 500) -> list[s
     return chunks
 
 
+def get_adaptive_chunk_size(text_len: int) -> int:
+    """Calculate adaptive chunk size based on total text length.
+
+    Larger files get larger chunks to reduce total LLM requests.
+    - < 20,000 chars: 5,000 chars/chunk
+    - ≥ 20,000 chars: 10,000 chars/chunk
+    """
+    if text_len < 20000:
+        return 5000
+    else:
+        return 10000
+
+
 def warmup_ollama(model: str = "qwen2.5:7b", timeout: int = DEFAULT_WARMUP_TIMEOUT) -> None:
     """Warmup Ollama by loading the model before actual extraction.
 
@@ -272,7 +285,8 @@ def warmup_ollama(model: str = "qwen2.5:7b", timeout: int = DEFAULT_WARMUP_TIMEO
 def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
                         timeout: int = DEFAULT_OLLAMA_TIMEOUT,
                         warmup_timeout: int = DEFAULT_WARMUP_TIMEOUT,
-                        fallback_to_regex: bool = True) -> list[dict]:
+                        fallback_to_regex: bool = True,
+                        allow_partial: bool = False) -> list[dict]:
     """Extract items via Ollama LLM with regex fallback on any failure.
 
     Makes a local-only POST to http://localhost:11434/api/generate.
@@ -282,6 +296,9 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
     T2: Processes text in chunks with overlap, combines and deduplicates results.
     T4: Warmup call before chunks, per-chunk timeout, separate warmup timeout.
     T4-B: Aborts after 2 consecutive timeouts to prevent resource waste.
+    All-or-nothing by default (any chunk failure → regex fallback).
+    --allow-partial opt-in to keep successful chunk results.
+    Adaptive chunking based on text length.
     Set fallback_to_regex=False to raise instead of using regex on LLM failure.
     Tracks chunk status in _chunk_stats for reporting.
     """
@@ -299,8 +316,12 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
         _last_extraction_source = "llm→regex"
         return extract_items(text)
 
+    # Adaptive chunking
+    adaptive_chunk_size = get_adaptive_chunk_size(len(text))
+    print(f"[info] Adaptive chunk size: {adaptive_chunk_size} chars (text length: {len(text)} chars)", file=sys.stderr)
+
     # Split into chunks
-    chunks = split_into_chunks(text, size=DEFAULT_CHUNK_SIZE, overlap=DEFAULT_CHUNK_OVERLAP)
+    chunks = split_into_chunks(text, size=adaptive_chunk_size, overlap=DEFAULT_CHUNK_OVERLAP)
     print(f"[info] Processing {len(text)} chars in {len(chunks)} chunk(s)", file=sys.stderr)
 
     all_items: list[dict] = []
@@ -375,7 +396,7 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
                 print(f"[info] Chunk {chunk_num}/{len(chunks)} timed out after {chunk_duration:.1f}s "
                       f"(consecutive timeouts: {_consecutive_timeouts})", file=sys.stderr)
 
-                # T4-B: Abort after 2 consecutive timeouts
+                # T4-B: abort after 2 consecutive timeouts
                 if _consecutive_timeouts >= 2:
                     print(
                         f"[info] Aborting extraction after {_consecutive_timeouts} consecutive timeouts. "
@@ -397,11 +418,20 @@ def extract_with_ollama(text: str, model: str = "qwen2.5:7b",
             _consecutive_timeouts = 0  # Reset on other exceptions
             print(f"[info] Chunk {chunk_num}/{len(chunks)} failed after {chunk_duration:.1f}s ({e})", file=sys.stderr)
 
+    # Handle chunk failures
     if _chunk_stats["failed"] > 0:
         print(
             f"[info] {_chunk_stats['failed']} chunk(s) failed out of {len(chunks)} total",
             file=sys.stderr,
         )
+
+        # If allow_partial and at least one chunk succeeded, return partial results
+        if allow_partial and _chunk_stats["processed"] > 0:
+            print("[info] Partial success: keeping results from successful chunks (--allow-partial)", file=sys.stderr)
+            _last_extraction_source = "llm"
+            return all_items
+
+        # Default behavior - discard partial and fall back to regex
         if not fallback_to_regex:
             raise RuntimeError("LLM chunk extraction failed and fallback is disabled")
         print("[info] Discarding partial LLM results and falling back to regex on full text", file=sys.stderr)
@@ -812,21 +842,25 @@ def md_cell(value: object) -> str:
 def print_report(input_source: str, items: list[dict],
                  project_id: str | None, dry_run: bool,
                  primary_results: list[dict],
-                 mem0_results: list[dict]) -> None:
+                 mem0_results: list[dict],
+                 model_used: str | None = None) -> None:
     """Print a clean Markdown execution report.
 
     Engine reflects the actual extraction source:
       - "regex" for default heuristic mode
-      - "llm (qwen2.5:7b)" for successful Ollama extraction
+      - "llm (<model>)" for successful Ollama extraction
       - "llm→regex (fallback)" when LLM failed and regex was used
 
     T2: Shows chunk stats when LLM mode is used.
+    Engine label uses actual model used.
+    Report in Spanish with partial success indicator.
     """
     mode = "DRY RUN (no writes)" if dry_run else "WRITE"
     # Determine engine label from module-level tracker
     source = globals().get("_last_extraction_source", "regex")
     if source == "llm":
-        engine = "llm (qwen2.5:7b)"
+        # Use actual model if provided
+        engine = f"llm ({model_used or 'qwen2.5:7b'})"
     elif source == "llm→regex":
         engine = "llm→regex (fallback)"
     else:
@@ -842,7 +876,11 @@ def print_report(input_source: str, items: list[dict],
     # T2: Show chunk stats when in LLM mode
     if source == "llm":
         chunk_stats = globals().get("_chunk_stats", {"processed": 0, "failed": 0})
-        print(f"**Tramos:** {chunk_stats['processed']} procesados, {chunk_stats['failed']} fallidos")
+        tramos_line = f"**Tramos:** {chunk_stats['processed']} procesados, {chunk_stats['failed']} fallidos"
+        # Add partial indicator if applicable
+        if chunk_stats["failed"] > 0 and chunk_stats["processed"] > 0:
+            tramos_line += " — PARCIAL (resultados de los tramos exitosos)"
+        print(tramos_line)
 
     print()
 
@@ -904,11 +942,14 @@ Examples:
   # Write to primary store (regex mode — default)
   python3 vantage-sync.py --input chat_dump.txt --project vantage
 
-  # LLM semantic extraction (local Ollama qwen2.5:7b, 300s timeout default)
+  # LLM semantic extraction with qwen2.5:7b (default)
   python3 vantage-sync.py --input chat_dump.txt --project vantage --llm --dry-run
 
-  # LLM with custom model and timeout
-  python3 vantage-sync.py --input chat_dump.txt --llm --model qwen2.5:7b --timeout 180
+  # LLM with qwen2.5:3b (faster)
+  python3 vantage-sync.py --input chat_dump.txt --project vantage --llm --qwen253 --dry-run
+
+  # LLM with partial success tolerance
+  python3 vantage-sync.py --input chat_dump.txt --project vantage --llm --allow-partial --dry-run
 
   # From inline text
   python3 vantage-sync.py --inline "TODO: fix the OAuth redirect" --project vantage
@@ -932,12 +973,19 @@ Examples:
                         help="Preview only — no SQLite writes")
     parser.add_argument("--llm", action="store_true",
                         help="Use Ollama LLM for semantic extraction (qwen2.5:7b local)")
+    model_group = parser.add_mutually_exclusive_group()
+    model_group.add_argument("--qwen253", action="store_true",
+                             help="Use qwen2.5:3b model (faster, smaller)")
+    model_group.add_argument("--qwen257", action="store_true",
+                             help="Use qwen2.5:7b model (slower, better quality)")
     parser.add_argument("--model", default="qwen2.5:7b",
                         help="Ollama model name (default: qwen2.5:7b)")
     parser.add_argument("--timeout", type=int, default=DEFAULT_OLLAMA_TIMEOUT,
                         help=f"Ollama request timeout in seconds per chunk (default: {DEFAULT_OLLAMA_TIMEOUT})")
     parser.add_argument("--warmup-timeout", type=int, default=DEFAULT_WARMUP_TIMEOUT,
                         help=f"Ollama warmup timeout in seconds (default: {DEFAULT_WARMUP_TIMEOUT})")
+    parser.add_argument("--allow-partial", action="store_true",
+                        help="With --llm, keep the items from successful chunks even if some chunks failed (write mode accepts the partial extraction)")
     fallback_group = parser.add_mutually_exclusive_group()
     fallback_group.add_argument("--no-fallback", action="store_true",
                                 help="Abort instead of falling back to regex when LLM extraction fails")
@@ -947,6 +995,12 @@ Examples:
                         help="Detailed extraction log")
 
     args = parser.parse_args()
+
+    # Handle model shortcut flags
+    if args.qwen253:
+        args.model = "qwen2.5:3b"
+    elif args.qwen257:
+        args.model = "qwen2.5:7b"
 
     # Resolve input content
     # `is not None` (not truthiness): --inline "" must reach the empty-input guard
@@ -983,9 +1037,10 @@ Examples:
             items = extract_with_ollama(
                 raw_text, args.model, args.timeout, args.warmup_timeout,
                 fallback_to_regex=not args.no_fallback,
+                allow_partial=args.allow_partial,
             )
         except RuntimeError as e:
-            # T4-B: Handle consecutive timeout abort
+            # T4-B Handle consecutive timeout abort
             if "consecutive chunk timeouts" in str(e):
                 # In dry-run: report failure and terminate
                 if args.dry_run:
@@ -1018,6 +1073,7 @@ Examples:
             print(f"  [{item['category']}] {item['content'][:100]}")
 
     # T1: Fallback enforcement — abort on LLM→regex in write mode unless --allow-regex-fallback
+    # Partial success via --allow-partial is not a fallback, so it's allowed
     if args.llm and not args.dry_run and not args.allow_regex_fallback:
         source = globals().get("_last_extraction_source", "regex")
         if source == "llm→regex":
@@ -1029,14 +1085,14 @@ Examples:
             )
             sys.exit(1)
 
-    # T2: All-or-nothing chunk failure enforcement in write mode
-    if args.llm and not args.dry_run and not args.allow_regex_fallback:
+    # All-or-nothing chunk failure enforcement in write mode (unless --allow-partial)
+    if args.llm and not args.dry_run and not args.allow_regex_fallback and not args.allow_partial:
         chunk_stats = globals().get("_chunk_stats", {"processed": 0, "failed": 0})
         if chunk_stats["failed"] > 0:
             print(
                 f"ERROR: {chunk_stats['failed']} chunk(s) failed during LLM extraction. "
                 "In write mode, this produces incomplete results. "
-                "Use --allow-regex-fallback to permit regex fallback, or re-run with --dry-run to preview.",
+                "Use --allow-partial to accept partial results, or re-run with --dry-run to preview.",
                 file=sys.stderr,
             )
             sys.exit(1)
@@ -1057,7 +1113,7 @@ Examples:
 
     # Report
     print_report(input_source, items, args.project, args.dry_run,
-                 primary_results, mem0_results)
+                 primary_results, mem0_results, args.model if args.llm else None)
 
     if not args.dry_run:
         errors = [r for r in primary_results if r["status"] == "error"]
