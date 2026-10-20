@@ -93,6 +93,7 @@ SKILL_LIBRARY_DATA_SOURCE_ID = "2f1938be-fc42-83c8-8972-07300201136d"
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
 
 SCRIPT_GLOSSARY_PATH = PROJECT_ROOT / "Documentación" / "ACTIVE" / "Manual.md"
+SKILL_GLOSSARY_PATH = SCRIPT_GLOSSARY_PATH
 
 # Directorios excluidos del escaneo de "scripts committeados" — código retirado,
 # de prueba, o de respaldo no cuenta como script en uso activo.

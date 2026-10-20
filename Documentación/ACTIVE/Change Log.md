@@ -1,5 +1,21 @@
 # V | CHANGELOG
 
+Tipo: [DOC] [OPS] [CODE]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN. APROBAR_WRITE del operador: YEP (2026-10-19 21:19 CDMX), tras DRY RUN en el chat.
+Fecha: 2026-10-19 21:19 CDMX (declarada por el operador).
+Documentos modificados: Layer_1/scripts/vantage-sync.py · Layer_1/tests/test_vantage_sync.py · Layer_1/scripts/script_hash_baseline.json (script y tests en commit 991b799; baseline en commit 1a76de2 de vgit, 12 archivos; ambos en origin/main) · V | MANUAL (§11, §22.1) · V | CHANGELOG.
+Cambio:
+1. Guarda de entrada vacía con exit 1 (también --inline "") — commit f23aee7.
+1. Contrato CS-DEVIN: tras una modificación sin commitear (paralelismo, éxito parcial por defecto, default 3b, timeout 600, T4-B en riesgo) se rehízo sobre f23aee7: --allow-partial opt-in (todo-o-nada sigue siendo el default), tramo adaptativo 5000/10 000 con solape 500, default qwen2.5:7b con --qwen253/--qwen257, etiqueta del motor con el modelo usado, reporte «Tramos … PARCIAL». Sin paralelismo (R4 no implementado). Devin cambió num_ctx a 16384 y dos tests; se revirtió.
+1. Tests: 23 nuevos (103 en el archivo); 16 fallan contra la base (red-green). Terminal del operador: 103 passed y suite completa 434 passed sobre e8bcf0a (HEAD desacoplado) y de nuevo tras el cherry-pick a main (2026-10-20 00:51 CDMX; archivo en venv temporal, suite completa en Layer_1/.venv).
+1. Corridas reales con qwen2.5:7b (dry-run, 90 152 caracteres, 10 tramos): sin flag, el tramo 1 falló con HTTP 500 y se descartó todo (18 min 45 s, caída a regex); con --allow-partial, 9/10 tramos, 34 decisiones, 75 facts, 42 tasks. El 500 del tramo 1 se repite y su causa no está diagnosticada.
+1. Baseline: entrada de vantage-sync.py → 1401c5ea…41897 (captured_at 2026-10-20T03:12Z). Integración: cherry-pick de e8bcf0a sobre main (991b799 local) desde HEAD desacoplado; respaldo en la rama rescate-e8bcf0a.
+1. Manual: §11 y §22.1 actualizados (M5–M11, incluidas las correcciones de dedup/upsert, reglas de DB y entrada vacía aplicadas antes).
+Tipo de impacto: operativo + documental. Sin altas ni bajas de IDs canónicos.
+Verificación: suite y shasum en Terminal del operador; Manual y esta entrada por re-fetch de CLAUDE/MAIN el 2026-10-19 21:21 CDMX (propiedades y texto presentes).
+Pendiente: upsert de project_id (decisión del operador); dedup en regex; T7; T6; diagnóstico del HTTP 500 del tramo 1; brief; fila vctx en ALIASES; escritura real acotada con respaldo; rotación al ARCHIVO (T3.AD); vversions --sync tras el bump.
+Versión: v9.22.58 → v9.22.59 (propiedad Versión de V | CHANGELOG).
+Handoff de referencia: HO-000107.
 Tipo: [DOC] [OPS]
 Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN. APROBAR_WRITE del operador dado por adelantado para el registro en el Charter, y para esta entrada y el bump en una sola pasada, sin DRY RUN, por instrucción explícita. El operador dispensó el ticket CHARTER (gatekeeping de CHARTER:CONTINUITY / CHARTER-LOG:DECISIONS-011): excepción declarada por el operador en este turno, con el precedente del 2026-10-15 (MAIN escribió el Charter bajo APROBAR_WRITE).
 Fecha: 2026-10-17 13:01 CDMX (declarada por el operador).

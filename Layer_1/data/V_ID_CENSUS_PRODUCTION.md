@@ -3,24 +3,24 @@
 | ID | Sección | Nombre |
 |---|---|---|
 | [`CHARTER:PURPOSE`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280cfa758eec00c6b4bd3) | 01 | Propósito del Proyecto |
-| [`CHARTER:DECISIONS`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42809ba6ffc94a0d10b714) | 02 | Registro de Decisiones |
-| [`CHARTER:DECISIONS-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280229697f961aefc5ceb) | 2.1 | Separación Class A / Class B |
-| [`CHARTER:DECISIONS-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280edbfdef81c9d544217) | 2.2 | Aéropostale removido de Hard Blocks |
-| [`CHARTER:DECISIONS-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280a5b8b2ea05b3b675f0) | 2.3 | Serial Authority v2 — operador como Prioridad 0 |
-| [`CHARTER:DECISIONS-004`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428027a260f02f48639a3c) | 2.4 | Retiro de layer_1_run.py / consolidate_duplicates.py (G6) |
-| [`CHARTER:DECISIONS-005`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428050882de943cdab7c31) | 2.5 | Cierre E2E de Runtime/Lazy Loader — Graph declarado SUSPENDED |
-| [`CHARTER:DECISIONS-006`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280f78858f4ff46434c05) | 2.6 | Detección de fabricación en auditoría externa |
-| [`CHARTER:DECISIONS-007`](https://app.notion.com/p/f87938befc428263a305819877d2245f#9107d5660b9f4417b9e10b35e17f89f8) | 2.7 | Dedup_Flag migrado de select a checkbox |
-| [`CHARTER:DECISIONS-008`](https://app.notion.com/p/f87938befc428263a305819877d2245f#e71d4525c5e74c73aa77d7db4033b28d) | 2.8 | Reconciliación v10 — modelo de tracks paralelos |
-| [`CHARTER:DECISIONS-009`](https://app.notion.com/p/f87938befc428263a305819877d2245f#a2a688b0c9874f05990238b0c72b7a9b) | 2.9 | Blueprint de reescritura KERNEL/MANUAL v10 — adopción híbrida |
-| [`CHARTER:DECISIONS-010`](https://app.notion.com/p/f87938befc428263a305819877d2245f#60edda41d7ac4601b824838882d8d02e) | 2.10 | Creación de este Charter |
-| [`CHARTER:DECISIONS-011`](https://app.notion.com/p/f87938befc428263a305819877d2245f#55b26526efbb46b38e8666abf8877599) | 2.11 | CLAUDE/MAIN declarado gatekeeper exclusivo del Charter |
-| [`CHARTER:DECISIONS-012`](https://app.notion.com/p/f87938befc428263a305819877d2245f#37b32cb9a26649a9b23632086ef1f471) | 2.12 | Re-key semántico de IDs canónicos del KERNEL (v10.3) |
-| [`CHARTER:DECISIONS-013`](https://app.notion.com/p/f87938befc428263a305819877d2245f#f96b968f7ef54ecdb84a4fa13dd5e954) | 2.13 | hard_blocks.json es la fuente ejecutable única de Hard Blocks; Dockers sale |
-| [`CHARTER:DECISIONS-014`](https://app.notion.com/p/f87938befc428263a305819877d2245f#0963d7a85fd54172a971c5c64bfec2f6) | 2.14 | Automatización programada deshabilitada: ejecución manual bajo demanda |
-| [`CHARTER:DECISIONS-015`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d4d87fc71b304ce598bb1765e353b5f5) | 2.15 | Acceso a skills por adjunto |
-| [`CHARTER:DECISIONS-016`](https://app.notion.com/p/f87938befc428263a305819877d2245f#6b16488ebc5a470ea645f4b313de1ea2) | 2.16 | Repositorio sin ramas vestigiales |
-| [`CHARTER:DECISIONS-017`](https://app.notion.com/p/f87938befc428263a305819877d2245f#d74f91c5ae8940d99149e8f23b5cf1d5) | 2.17 | Roles de tienda bloqueados en la ingesta L1 |
+| `CHARTER:DECISIONS` | 02 | Registro de Decisiones |
+| `CHARTER:DECISIONS-001` | 2.1 | Separación Class A / Class B |
+| `CHARTER:DECISIONS-002` | 2.2 | Aéropostale removido de Hard Blocks |
+| `CHARTER:DECISIONS-003` | 2.3 | Serial Authority v2 — operador como Prioridad 0 |
+| `CHARTER:DECISIONS-004` | 2.4 | Retiro de layer_1_run.py / consolidate_duplicates.py (G6) |
+| `CHARTER:DECISIONS-005` | 2.5 | Cierre E2E de Runtime/Lazy Loader — Graph declarado SUSPENDED |
+| `CHARTER:DECISIONS-006` | 2.6 | Detección de fabricación en auditoría externa |
+| `CHARTER:DECISIONS-007` | 2.7 | Dedup_Flag migrado de select a checkbox |
+| `CHARTER:DECISIONS-008` | 2.8 | Reconciliación v10 — modelo de tracks paralelos |
+| `CHARTER:DECISIONS-009` | 2.9 | Blueprint de reescritura KERNEL/MANUAL v10 — adopción híbrida |
+| `CHARTER:DECISIONS-010` | 2.10 | Creación de este Charter |
+| `CHARTER:DECISIONS-011` | 2.11 | CLAUDE/MAIN declarado gatekeeper exclusivo del Charter |
+| `CHARTER:DECISIONS-012` | 2.12 | Re-key semántico de IDs canónicos del KERNEL (v10.3) |
+| `CHARTER:DECISIONS-013` | 2.13 | hard_blocks.json es la fuente ejecutable única de Hard Blocks; Dockers sale |
+| `CHARTER:DECISIONS-014` | 2.14 | Automatización programada deshabilitada: ejecución manual bajo demanda |
+| `CHARTER:DECISIONS-015` | 2.15 | Acceso a skills por adjunto |
+| `CHARTER:DECISIONS-016` | 2.16 | Repositorio sin ramas vestigiales |
+| `CHARTER:DECISIONS-017` | 2.17 | Roles de tienda bloqueados en la ingesta L1 |
 | [`CHARTER:FAILURES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc428075b83ec234ef46eed3) | 03 | Registro de Fallos |
 | [`CHARTER:FAILURES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc42805f9285f417aa359826) | 3.1 | Reaparición de Hard Blocks ya corregidos |
 | [`CHARTER:FAILURES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280f29959f58b132ac9cb) | 3.2 | Patrón de reporte optimista (ticket RT-1) |
@@ -41,7 +41,7 @@
 | [`CHARTER:NON-NEGOTIABLES-010`](https://app.notion.com/p/f87938befc428263a305819877d2245f#6cd49fcd84bd4a0eba084b1b0ab10ca1) | 4.10 | Hard Blocks reales se consultan siempre en la fuente |
 | [`CHARTER:NON-NEGOTIABLES-011`](https://app.notion.com/p/f87938befc428263a305819877d2245f#e62afacac72a4864906afe31fc91ce65) | 4.11 | Sin ubicaciones improvisadas |
 | [`CHARTER:MILESTONES`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280dc8598dadd5e8c050f) | 05 | Hitos y Milestones |
-| [`CHARTER:MILESTONES-001`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280eb9ad8ce382d23dd35) | 5.1 | Hito 1 — Track Beta (código) cerrado |
+| `CHARTER:MILESTONES-001` | 5.1 | Hito 1 — Track Beta (código) cerrado |
 | [`CHARTER:MILESTONES-002`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280c0bf5dc992ed50be72) | 5.2 | Hito 2 — T2.1 KERNEL v10 en paralelo a Track Beta |
 | [`CHARTER:MILESTONES-003`](https://app.notion.com/p/f87938befc428263a305819877d2245f#3eb938befc4280658fd9d6c19954a7ea) | 5.3 | Hito 3 — MANUAL v10 en paralelo a KERNEL v10 |
 | [`CHARTER:MILESTONES-004`](https://app.notion.com/p/f87938befc428263a305819877d2245f#01cf0330464a4dbc97d1584d4176dd41) | 5.4 | Hito 4 — Fase 3 sync + verificación cruzada |
@@ -150,6 +150,7 @@
 | [`KERNEL:OPS-ANNOUNCE`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc42812f8117d0ab6011fae5) | 14.10 | KERNEL:OPS ANNOUNCE |
 | [`KERNEL:OPS-DOCPROTOCOL`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281ca88f8e6513d3b6829) | 14.11 | KERNEL:OPS DOCPROTOCOL |
 | [`KERNEL:OPS-SERIAL`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281e79e22c8c59fc410c0) | 14.12 | KERNEL:OPS SERIAL |
+| [`KERNEL:OPS-INTERVIEW-SIMULATOR`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#8702cf5f4270412eabb45d183ecee6a4) | 14.13 | KERNEL:OPS INTERVIEW SIMULATOR |
 | [`KERNEL:EVOLUTION`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc428178bb0ada5f47c02e6a) | 15 | Evolución del Sistema |
 | [`KERNEL:EVO-POLICY`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#3af938befc4281418d50e83e5a6d1098) | 15.1 | KERNEL:EVO POLICY |
 | [`KERNEL:EVO-CHANGELOG`](https://app.notion.com/p/377938befc42805ea408c9ae518d4fe7#2b23364ce8074f57b20043529839b48c) | 15.2 | KERNEL:EVO CHANGELOG |
@@ -180,6 +181,7 @@
 | [`MANUAL:RUNTIME-003`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281dbbb2ae5338a1d2f85) | 9.3 | Cuándo Correr Sync |
 | [`MANUAL:RUNTIME-004`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281998641d184b08c7f9b) | 9.4 | Runtime Build |
 | [`MANUAL:RUNTIME-005`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#340ca4f2fad44035bd64f487f4af10f5) | 9.5 | Notebook Gemini — Triaje de Consultas Documentales |
+| [`MANUAL:RUNTIME-INTERVIEW-SIMULATOR`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#87987b9869f14c49aef44dd75e5d51b9) | 9.6 | Interview Simulator |
 | [`MANUAL:DATA-MANAGEMENT`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc4281b7846ffb025d561130) | 10 | Gestión de Datos |
 | [`MANUAL:DATA-MANAGEMENT-001`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#2ccaaf3922a74e8f8447a6a174b0df28) | 10.1 | Gestión de Datos — Subsección 001 |
 | [`MANUAL:MONITOR`](https://app.notion.com/p/372938befc4280509a67e40857d7806e#3af938befc428154adfeea50d386ac78) | 11 | Health Check |
