@@ -724,6 +724,69 @@ class TestMainCLI:
         assert args.min_seeders == 5
         assert args.model == MODELO_POR_DEFECTO
         assert args.consulta == ["Oppenheimer"]
+        assert args.limetorrents_paginas == 1
+
+    def test_limetorrents_paginas_valor_explicito(self) -> None:
+        args = modulo_main.construir_parser().parse_args(["Oppenheimer", "--limetorrents-paginas", "3"])
+        assert args.limetorrents_paginas == 3
+
+    def test_limetorrents_paginas_valor_invalido(self) -> None:
+        with pytest.raises(SystemExit) as salida:
+            modulo_main.main(["Oppenheimer", "--limetorrents-paginas", "0"])
+        assert salida.value.code == modulo_main.EXIT_USO
+
+    def test_limetorrents_paginas_llega_al_agregador(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        capturado: Dict[str, Any] = {}
+
+        class Capturador(AgregadorFalso):
+            def __init__(self, *args: Any, **kwargs: Any) -> None:
+                capturado.update(kwargs)
+                super().__init__(*args, **kwargs)
+
+        AgregadorFalso.items = [ITEM_EJEMPLO]
+        AgregadorFalso.resumen = _resumen()
+        monkeypatch.setattr(modulo_main, "conectar_llm", lambda host: ClienteLLMFalso(RESPUESTA_LLM))
+        monkeypatch.setattr(modulo_main, "AgregadorTorrents", Capturador)
+
+        modulo_main.main(["Oppenheimer 2023", "--limetorrents-paginas", "5"])
+
+        assert capturado["limetorrents_paginas"] == 5
+
+    def test_limetorrents_paginas_llega_al_motor(self, sesion_falsa: SesionFalsa, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Verifica que el valor de paginas llega al motor LimeTorrents."""
+        kwargs_capturados = []
+
+        def mock_buscar(query, categoria=None, min_seeders=5, paginas=1, **kwargs):
+            kwargs_capturados.append({"paginas": paginas, "other_kwargs": kwargs})
+            return []
+
+        # Crear un motor falso que use el mock, soportando todas las categorías
+        motor_falso = Motor("LimeTorrents", mock_buscar, ("all", "movies", "tv", "anime", "music", "games", "applications", "books"))
+
+        agregador = AgregadorTorrents(motores=[motor_falso], limetorrents_paginas=3)
+        agregador.session = sesion_falsa
+        agregador.buscar_con_diagnostico("oppenheimer", "movies", 5)
+
+        assert len(kwargs_capturados) > 0
+        assert kwargs_capturados[0]["paginas"] == 3
+
+    def test_limetorrents_paginas_no_afecta_otros_motores(self, sesion_falsa: SesionFalsa) -> None:
+        """Verifica que los demás motores no reciben el parámetro paginas."""
+        llamadas_yts = []
+
+        def mock_yts(query, categoria=None, min_seeders=5, **kwargs):
+            llamadas_yts.append(kwargs)
+            return []
+
+        # Crear un motor YTS falso
+        motor_yts = Motor("YTS", mock_yts, ("movies",))
+
+        agregador = AgregadorTorrents(motores=[motor_yts], limetorrents_paginas=5)
+        agregador.session = sesion_falsa
+        agregador.buscar_con_diagnostico("oppenheimer", "movies", 5)
+
+        assert len(llamadas_yts) > 0
+        assert "paginas" not in llamadas_yts[0], "YTS no debe recibir el parámetro paginas"
 
     def test_flujo_completo_offline(self, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
         AgregadorFalso.items = [ITEM_EJEMPLO]
@@ -940,6 +1003,15 @@ class TestWrapperVantageSearch:
         datos = json.loads(proceso.stdout)
         assert datos["error"]["tipo"] == "interprete_ausente"
         assert "venv" in datos["error"]["mensaje"]
+
+    def test_wrapper_transmite_limetorrents_paginas(self) -> None:
+        """Verifica que el wrapper transmite --limetorrents-paginas al backend."""
+        proceso = subprocess.run(
+            [str(self._ruta()), "--help-backend"],
+            capture_output=True, text=True, timeout=30,
+        )
+        assert proceso.returncode == 0
+        assert "--limetorrents-paginas" in proceso.stdout
 
 
 class TestMotoresEnLaCLI:

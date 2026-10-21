@@ -1065,6 +1065,7 @@ class AgregadorTorrents:
         max_workers: int = MAX_WORKERS_POR_DEFECTO,
         pausa: Tuple[float, float] = (0.0, 0.0),
         salud: Optional[SaludMotores] = None,
+        limetorrents_paginas: int = 1,
     ) -> None:
         """
         Args:
@@ -1077,6 +1078,7 @@ class AgregadorTorrents:
             salud: Registro persistente de salud de los motores. Si es ``None`` se usa el
                 archivo por defecto (``.estado_motores.json``); pasar
                 ``SaludMotores(activa=False)`` lo desactiva.
+            limetorrents_paginas: Páginas a consultar en LimeTorrents (por defecto 1).
         """
         if motores is not None and not tuple(motores):
             raise ValueError(
@@ -1097,6 +1099,7 @@ class AgregadorTorrents:
         self.max_workers = max_workers
         self.pausa = pausa
         self.salud = salud if salud is not None else SaludMotores()
+        self.limetorrents_paginas = limetorrents_paginas
         self.session = requests.Session()
         self.ultimo_resumen: Optional[ResumenBusqueda] = None
 
@@ -1133,6 +1136,8 @@ class AgregadorTorrents:
             kwargs["imdb_id"] = imdb_id
         if "resolver" in parametros:
             kwargs["resolver"] = resolver
+        if "paginas" in parametros:
+            kwargs["paginas"] = self.limetorrents_paginas
         return kwargs
 
     @staticmethod

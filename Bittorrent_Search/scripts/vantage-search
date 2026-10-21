@@ -58,6 +58,7 @@ Todas las demás opciones se pasan tal cual a main.py:
   -s N                 Sembradores mínimos (por defecto 5)
   --motores LISTA      Consulta solo estos motores (ej: "LimeTorrents,EZTV")
   --sin-motores LISTA  No consulta estos motores (útil si alguno está caído)
+  --limetorrents-paginas N  Páginas a consultar en LimeTorrents (por defecto 1)
   --json               Salida JSON (lo que consumen los clientes)
   --verbose            Diagnóstico por motor (lo imprime el backend)
   --salud MODO         auto | off | reset (historial de índices caídos)

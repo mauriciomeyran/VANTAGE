@@ -97,6 +97,8 @@ def construir_parser() -> argparse.ArgumentParser:
     parser.add_argument("--salud", choices=("auto", "off", "reset"), default="auto",
                         help="Salud persistente de los motores: 'auto' no vuelve a esperar a un "
                              "índice caído, 'off' la desactiva, 'reset' borra el historial")
+    parser.add_argument("--limetorrents-paginas", type=int, default=1, metavar="N",
+                        help="Páginas a consultar en LimeTorrents (por defecto 1)")
     parser.add_argument("--debug", action="store_true", help="Registro de depuración en stderr")
     return parser
 
@@ -223,7 +225,11 @@ def ejecutar(args: argparse.Namespace) -> int:
             print("Historial de salud de motores borrado.")
 
     agregador = AgregadorTorrents(
-        motores=motores, paralelo=not args.secuencial, pausa=(0.2, 0.6), salud=salud
+        motores=motores,
+        paralelo=not args.secuencial,
+        pausa=(0.2, 0.6),
+        salud=salud,
+        limetorrents_paginas=args.limetorrents_paginas,
     )
     try:
         items, resumen = agregador.buscar_con_diagnostico(
@@ -269,6 +275,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         parser.error("--all debe ser >= 1")
     if args.min_seeders < 0:
         parser.error("--min-seeders debe ser >= 0")
+    if args.limetorrents_paginas < 1:
+        parser.error("--limetorrents-paginas debe ser >= 1")
     try:
         return ejecutar(args)
     except KeyboardInterrupt:
