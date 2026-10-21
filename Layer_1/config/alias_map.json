@@ -57,17 +57,17 @@
     },
     "dolce gabbana": {
       "marca": "Dolce & Gabbana",
-      "holding": "Independent",
+      "holding": "Dolce & Gabbana S.r.l.",
       "hard_block": false
     },
     "dolce & gabbana": {
       "marca": "Dolce & Gabbana",
-      "holding": "Independent",
+      "holding": "Dolce & Gabbana S.r.l.",
       "hard_block": false
     },
     "d&g": {
       "marca": "Dolce & Gabbana",
-      "holding": "Independent",
+      "holding": "Dolce & Gabbana S.r.l.",
       "hard_block": false
     },
     "nike": {
@@ -97,7 +97,7 @@
     },
     "chanel": {
       "marca": "Chanel",
-      "holding": "Independent",
+      "holding": "Chanel Limited",
       "hard_block": false
     },
     "prada": {
@@ -112,7 +112,7 @@
     },
     "burberry": {
       "marca": "Burberry",
-      "holding": "Independent",
+      "holding": "Burberry Group plc",
       "hard_block": false
     },
     "versace": {
@@ -257,12 +257,12 @@
     },
     "adolfo domínguez": {
       "marca": "Adolfo Domínguez",
-      "holding": "Independiente",
+      "holding": "Adolfo Domínguez, S.A.",
       "hard_block": false
     },
     "adolfo dominguez": {
       "marca": "Adolfo Domínguez",
-      "holding": "Independiente",
+      "holding": "Adolfo Domínguez, S.A.",
       "hard_block": false
     },
     "lg electronics": {
@@ -282,12 +282,12 @@
     },
     "kärcher": {
       "marca": "Kärcher",
-      "holding": "Alfred Kärcher",
+      "holding": "Alfred Kärcher SE & Co. KG",
       "hard_block": false
     },
     "karcher": {
       "marca": "Kärcher",
-      "holding": "Alfred Kärcher",
+      "holding": "Alfred Kärcher SE & Co. KG",
       "hard_block": false
     },
     "juguetron": {
@@ -317,7 +317,7 @@
     },
     "aplazo": {
       "marca": "Aplazo",
-      "holding": "Independiente",
+      "holding": "Aplazo",
       "hard_block": false
     },
     "commando retail": {
@@ -359,18 +359,614 @@
       "marca": "Eurokor",
       "holding": "Independiente",
       "hard_block": false
+    },
+    "adecco": {
+      "marca": "Adecco",
+      "holding": "Adecco Group",
+      "hard_block": false
+    },
+    "american eagle outfitters": {
+      "marca": "American Eagle Outfitters",
+      "holding": "American Eagle Outfitters, Inc.",
+      "hard_block": false
+    },
+    "american express": {
+      "marca": "American Express",
+      "holding": "American Express Company",
+      "hard_block": false
+    },
+    "aruma": {
+      "marca": "ARUMA",
+      "holding": "ARUMA",
+      "hard_block": false
+    },
+    "authentic brands group": {
+      "marca": "Authentic Brands Group",
+      "holding": "Authentic Brands Group",
+      "hard_block": false
+    },
+    "banana republic": {
+      "marca": "Banana Republic",
+      "holding": "Gap Inc.",
+      "hard_block": false
+    },
+    "benefit cosmetics": {
+      "marca": "Benefit Cosmetics",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "bershka": {
+      "marca": "Bershka",
+      "holding": "Inditex",
+      "hard_block": false
+    },
+    "bimba y lola": {
+      "marca": "BIMBA Y LOLA",
+      "holding": "BIMBA Y LOLA",
+      "hard_block": false
+    },
+    "bodega aurrerá": {
+      "marca": "Bodega Aurrerá",
+      "holding": "Walmart de México y Centroamérica",
+      "hard_block": false
+    },
+    "brunello cucinelli": {
+      "marca": "Brunello Cucinelli",
+      "holding": "Brunello Cucinelli S.p.A.",
+      "hard_block": false
+    },
+    "byd méxico": {
+      "marca": "BYD México",
+      "holding": "BYD México",
+      "hard_block": false
+    },
+    "c&a méxico": {
+      "marca": "C&A México",
+      "holding": "Grupo Alfar",
+      "hard_block": false
+    },
+    "calzedonia": {
+      "marca": "Calzedonia",
+      "holding": "Oniverse",
+      "hard_block": false
+    },
+    "carter's": {
+      "marca": "Carter's",
+      "holding": "Carter's, Inc.",
+      "hard_block": false
+    },
+    "carter's brands": {
+      "marca": "Carter's",
+      "holding": "Carter's, Inc.",
+      "hard_block": false
+    },
+    "cartier": {
+      "marca": "Cartier",
+      "holding": "Richemont",
+      "hard_block": false
+    },
+    "coca-cola femsa": {
+      "marca": "Coca-Cola FEMSA",
+      "holding": "Coca-Cola FEMSA",
+      "hard_block": false
+    },
+    "cuidado con el perro": {
+      "marca": "Cuidado con el Perro",
+      "holding": "Grupo Alfar",
+      "hard_block": false
+    },
+    "decathlon": {
+      "marca": "Decathlon",
+      "holding": "Decathlon",
+      "hard_block": false
+    },
+    "doordash": {
+      "marca": "DoorDash",
+      "holding": "DoorDash, Inc.",
+      "hard_block": false
+    },
+    "el palacio de hierro": {
+      "marca": "El Palacio de Hierro",
+      "holding": "Grupo BAL",
+      "hard_block": false
+    },
+    "energizer holdings": {
+      "marca": "Energizer Holdings",
+      "holding": "Energizer Holdings, Inc.",
+      "hard_block": false
+    },
+    "ermenegildo zegna": {
+      "marca": "Ermenegildo Zegna",
+      "holding": "Zegna Group",
+      "hard_block": false
+    },
+    "essity": {
+      "marca": "Essity",
+      "holding": "Essity AB",
+      "hard_block": false
+    },
+    "estée lauder": {
+      "marca": "Estée Lauder",
+      "holding": "The Estée Lauder Companies",
+      "hard_block": false
+    },
+    "fendi": {
+      "marca": "Fendi",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "fenty beauty": {
+      "marca": "Fenty Beauty",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "forever 21": {
+      "marca": "Forever 21",
+      "holding": "Authentic Brands Group",
+      "hard_block": false
+    },
+    "fox corporation": {
+      "marca": "Fox Corporation",
+      "holding": "Fox Corporation",
+      "hard_block": false
+    },
+    "frieslandcampina": {
+      "marca": "FrieslandCampina",
+      "holding": "FrieslandCampina",
+      "hard_block": false
+    },
+    "gaia design": {
+      "marca": "GAIA Design",
+      "holding": "GAIA",
+      "hard_block": false
+    },
+    "galerías": {
+      "marca": "Galerías",
+      "holding": "Galerías",
+      "hard_block": false
+    },
+    "ge aerospace": {
+      "marca": "GE Aerospace",
+      "holding": "GE Aerospace",
+      "hard_block": false
+    },
+    "gensler": {
+      "marca": "Gensler",
+      "holding": "Gensler",
+      "hard_block": false
+    },
+    "google": {
+      "marca": "Google",
+      "holding": "Alphabet Inc.",
+      "hard_block": false
+    },
+    "grupo axo": {
+      "marca": "Grupo Axo",
+      "holding": "Grupo Axo",
+      "hard_block": false
+    },
+    "guess": {
+      "marca": "Guess",
+      "holding": "Grupo Axo",
+      "hard_block": false
+    },
+    "havoc": {
+      "marca": "HAVOC",
+      "holding": "Personal Brands Group",
+      "hard_block": false
+    },
+    "heineken international": {
+      "marca": "Heineken International",
+      "holding": "HEINEKEN",
+      "hard_block": false
+    },
+    "holcim apasco": {
+      "marca": "Holcim Apasco",
+      "holding": "Holcim México",
+      "hard_block": false
+    },
+    "hugo boss": {
+      "marca": "Hugo Boss",
+      "holding": "HUGO BOSS AG",
+      "hard_block": false
+    },
+    "indeed": {
+      "marca": "Indeed",
+      "holding": "Indeed / Recruit Holdings",
+      "hard_block": false
+    },
+    "intimissimi": {
+      "marca": "Intimissimi",
+      "holding": "Oniverse",
+      "hard_block": false
+    },
+    "kavak.com": {
+      "marca": "Kavak.com",
+      "holding": "Kavak",
+      "hard_block": false
+    },
+    "kenvue": {
+      "marca": "Kenvue",
+      "holding": "Kenvue Inc.",
+      "hard_block": false
+    },
+    "keurig dr pepper": {
+      "marca": "Keurig Dr Pepper",
+      "holding": "Keurig Dr Pepper Inc.",
+      "hard_block": false
+    },
+    "l'oréal": {
+      "marca": "L'Oréal",
+      "holding": "L'Oréal",
+      "hard_block": false
+    },
+    "la comer": {
+      "marca": "La Comer",
+      "holding": "La Comer, S.A.B. de C.V.",
+      "hard_block": false
+    },
+    "lacoste": {
+      "marca": "Lacoste",
+      "holding": "Lacoste / MF Brands Group",
+      "hard_block": false
+    },
+    "larousse": {
+      "marca": "Larousse",
+      "holding": "Grupo Editorial Larousse",
+      "hard_block": false
+    },
+    "le creuset": {
+      "marca": "Le Creuset",
+      "holding": "Le Creuset",
+      "hard_block": false
+    },
+    "levi strauss & co.": {
+      "marca": "Levi Strauss & Co.",
+      "holding": "Levi Strauss & Co.",
+      "hard_block": false
+    },
+    "linkedin": {
+      "marca": "LinkedIn",
+      "holding": "Microsoft",
+      "hard_block": false
+    },
+    "manpowergroup": {
+      "marca": "ManpowerGroup",
+      "holding": "ManpowerGroup",
+      "hard_block": false
+    },
+    "massimo dutti": {
+      "marca": "Massimo Dutti",
+      "holding": "Inditex",
+      "hard_block": false
+    },
+    "megacable": {
+      "marca": "Megacable",
+      "holding": "Megacable Holdings",
+      "hard_block": false
+    },
+    "monster energy": {
+      "marca": "Monster Energy",
+      "holding": "Monster Beverage Corporation",
+      "hard_block": false
+    },
+    "montblanc": {
+      "marca": "Montblanc",
+      "holding": "Richemont",
+      "hard_block": false
+    },
+    "moët hennessy": {
+      "marca": "Moët Hennessy",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "nbcuniversal": {
+      "marca": "NBCUniversal",
+      "holding": "Comcast",
+      "hard_block": false
+    },
+    "nestlé": {
+      "marca": "Nestlé",
+      "holding": "Nestlé S.A.",
+      "hard_block": false
+    },
+    "netflix": {
+      "marca": "Netflix",
+      "holding": "Netflix, Inc.",
+      "hard_block": false
+    },
+    "paco rabanne": {
+      "marca": "Paco Rabanne",
+      "holding": "Puig",
+      "hard_block": false
+    },
+    "pepsico": {
+      "marca": "PepsiCo",
+      "holding": "PepsiCo, Inc.",
+      "hard_block": false
+    },
+    "petco": {
+      "marca": "Petco",
+      "holding": "Petco Health and Wellness Company",
+      "hard_block": false
+    },
+    "pfizer": {
+      "marca": "Pfizer",
+      "holding": "Pfizer Inc.",
+      "hard_block": false
+    },
+    "philip morris international": {
+      "marca": "Philip Morris International",
+      "holding": "Philip Morris International",
+      "hard_block": false
+    },
+    "publicis groupe": {
+      "marca": "Publicis Groupe",
+      "holding": "Publicis Groupe",
+      "hard_block": false
+    },
+    "pull&bear": {
+      "marca": "Pull&Bear",
+      "holding": "Inditex",
+      "hard_block": false
+    },
+    "qualcomm": {
+      "marca": "Qualcomm",
+      "holding": "Qualcomm Incorporated",
+      "hard_block": false
+    },
+    "sanborns": {
+      "marca": "Sanborns",
+      "holding": "Grupo Sanborns",
+      "hard_block": false
+    },
+    "sc johnson": {
+      "marca": "SC Johnson",
+      "holding": "SC Johnson",
+      "hard_block": false
+    },
+    "scappino": {
+      "marca": "Scappino",
+      "holding": "Scappino",
+      "hard_block": false
+    },
+    "sears méxico": {
+      "marca": "Sears México",
+      "holding": "Grupo Sanborns",
+      "hard_block": false
+    },
+    "sephora": {
+      "marca": "Sephora",
+      "holding": "LVMH",
+      "hard_block": false
+    },
+    "stanley black & decker": {
+      "marca": "Stanley Black & Decker",
+      "holding": "Stanley Black & Decker, Inc.",
+      "hard_block": false
+    },
+    "stellantis": {
+      "marca": "Stellantis",
+      "holding": "Stellantis N.V.",
+      "hard_block": false
+    },
+    "stradivarius": {
+      "marca": "Stradivarius",
+      "holding": "Inditex",
+      "hard_block": false
+    },
+    "suntory global spirits": {
+      "marca": "Suntory Global Spirits",
+      "holding": "Suntory Holdings",
+      "hard_block": false
+    },
+    "swarovski": {
+      "marca": "Swarovski",
+      "holding": "Swarovski",
+      "hard_block": false
+    },
+    "tane méxico 1942": {
+      "marca": "TANE México 1942",
+      "holding": "Grupo BAL",
+      "hard_block": false
+    },
+    "the orchard": {
+      "marca": "The Orchard",
+      "holding": "Sony Music Entertainment",
+      "hard_block": false
+    },
+    "tiktok": {
+      "marca": "TikTok",
+      "holding": "ByteDance",
+      "hard_block": false
+    },
+    "tupperware": {
+      "marca": "Tupperware",
+      "holding": "Party Products LLC",
+      "hard_block": false
+    },
+    "tv azteca": {
+      "marca": "TV Azteca",
+      "holding": "Grupo Salinas",
+      "hard_block": false
+    },
+    "uniqlo": {
+      "marca": "Uniqlo",
+      "holding": "Fast Retailing",
+      "hard_block": false
+    },
+    "victoria's secret": {
+      "marca": "Victoria's Secret",
+      "holding": "Grupo Axo",
+      "hard_block": false
     }
   },
   "holding_map": {
-    "lvmh": [
-      "Dior",
-      "Louis Vuitton",
-      "Givenchy",
-      "Bulgari",
-      "Celine",
-      "Loewe",
-      "Marc Jacobs",
-      "Fendi"
+    "adecco group": [
+      "Adecco"
+    ],
+    "adidas ag": [
+      "Adidas",
+      "Reebok"
+    ],
+    "adolfo domínguez, s.a.": [
+      "Adolfo Domínguez"
+    ],
+    "alfred kärcher se & co. kg": [
+      "Kärcher"
+    ],
+    "alphabet inc.": [
+      "Google"
+    ],
+    "american eagle outfitters, inc.": [
+      "American Eagle Outfitters"
+    ],
+    "american express company": [
+      "American Express"
+    ],
+    "aplazo": [
+      "Aplazo"
+    ],
+    "aruma": [
+      "ARUMA"
+    ],
+    "authentic brands group": [
+      "Authentic Brands Group",
+      "Forever 21"
+    ],
+    "bimba y lola": [
+      "BIMBA Y LOLA"
+    ],
+    "brunello cucinelli s.p.a.": [
+      "Brunello Cucinelli"
+    ],
+    "burberry group plc": [
+      "Burberry"
+    ],
+    "byd méxico": [
+      "BYD México"
+    ],
+    "bytedance": [
+      "TikTok"
+    ],
+    "capri holdings": [
+      "Versace",
+      "Michael Kors",
+      "Jimmy Choo"
+    ],
+    "carter's, inc.": [
+      "Carter's"
+    ],
+    "chanel limited": [
+      "Chanel"
+    ],
+    "coca-cola femsa": [
+      "Coca-Cola FEMSA"
+    ],
+    "comcast": [
+      "NBCUniversal"
+    ],
+    "decathlon": [
+      "Decathlon"
+    ],
+    "dolce & gabbana s.r.l.": [
+      "Dolce & Gabbana"
+    ],
+    "doordash, inc.": [
+      "DoorDash"
+    ],
+    "el puerto de liverpool": [
+      "Liverpool"
+    ],
+    "energizer holdings, inc.": [
+      "Energizer Holdings"
+    ],
+    "essity ab": [
+      "Essity"
+    ],
+    "fast retailing": [
+      "Uniqlo"
+    ],
+    "fox corporation": [
+      "Fox Corporation"
+    ],
+    "frieslandcampina": [
+      "FrieslandCampina"
+    ],
+    "gaia": [
+      "GAIA Design"
+    ],
+    "galerías": [
+      "Galerías"
+    ],
+    "gap inc.": [
+      "Banana Republic"
+    ],
+    "ge aerospace": [
+      "GE Aerospace"
+    ],
+    "gensler": [
+      "Gensler"
+    ],
+    "grupo alfar": [
+      "C&A México",
+      "Cuidado con el Perro"
+    ],
+    "grupo axo": [
+      "Grupo Axo",
+      "Guess",
+      "Victoria's Secret"
+    ],
+    "grupo bal": [
+      "El Palacio de Hierro",
+      "TANE México 1942"
+    ],
+    "grupo editorial larousse": [
+      "Larousse"
+    ],
+    "grupo salinas": [
+      "TV Azteca"
+    ],
+    "grupo sanborns": [
+      "Sanborns",
+      "Sears México"
+    ],
+    "h&m group": [
+      "H&M",
+      "COS",
+      "& Other Stories",
+      "Arket",
+      "Monki"
+    ],
+    "heineken": [
+      "Heineken International"
+    ],
+    "holcim méxico": [
+      "Holcim Apasco"
+    ],
+    "hugo boss ag": [
+      "Hugo Boss"
+    ],
+    "ikea": [
+      "IKEA"
+    ],
+    "indeed / recruit holdings": [
+      "Indeed"
+    ],
+    "inditex": [
+      "Zara",
+      "Massimo Dutti",
+      "Pull&Bear",
+      "Bershka",
+      "Stradivarius",
+      "Oysho",
+      "Inditex"
+    ],
+    "kavak": [
+      "Kavak.com"
+    ],
+    "kenvue inc.": [
+      "Kenvue"
     ],
     "kering": [
       "Gucci",
@@ -380,44 +976,149 @@
       "Alexander McQueen",
       "Brioni"
     ],
-    "inditex": [
-      "Zara",
-      "Massimo Dutti",
-      "Pull&Bear",
-      "Bershka",
-      "Stradivarius",
-      "Oysho"
+    "keurig dr pepper inc.": [
+      "Keurig Dr Pepper"
     ],
-    "capri holdings": [
-      "Versace",
-      "Michael Kors",
-      "Jimmy Choo"
+    "l'oréal": [
+      "L'Oréal",
+      "Armani"
     ],
-    "tapestry": [
-      "Coach",
-      "Kate Spade",
-      "Stuart Weitzman"
+    "la comer, s.a.b. de c.v.": [
+      "La Comer"
     ],
-    "prada group": [
-      "Prada",
-      "Miu Miu",
-      "Church's"
+    "lacoste / mf brands group": [
+      "Lacoste"
     ],
-    "h&m group": [
-      "H&M",
-      "COS",
-      "& Other Stories",
-      "Arket",
-      "Monki"
+    "le creuset": [
+      "Le Creuset"
+    ],
+    "levi strauss & co.": [
+      "Levi Strauss & Co."
+    ],
+    "lg electronics": [
+      "LG"
+    ],
+    "lululemon athletica": [
+      "Lululemon"
+    ],
+    "lvmh": [
+      "Dior",
+      "Louis Vuitton",
+      "Givenchy",
+      "Bulgari",
+      "Celine",
+      "Loewe",
+      "Marc Jacobs",
+      "Fendi",
+      "Benefit Cosmetics",
+      "Fenty Beauty",
+      "Moët Hennessy",
+      "Sephora",
+      "Tiffany & Co."
+    ],
+    "manpowergroup": [
+      "ManpowerGroup"
+    ],
+    "megacable holdings": [
+      "Megacable"
+    ],
+    "microsoft": [
+      "LinkedIn"
+    ],
+    "monster beverage corporation": [
+      "Monster Energy"
+    ],
+    "nestlé s.a.": [
+      "Nestlé"
+    ],
+    "netflix, inc.": [
+      "Netflix"
     ],
     "nike inc.": [
       "Nike",
       "Jordan",
       "Converse"
     ],
-    "adidas ag": [
-      "Adidas",
-      "Reebok"
+    "oniverse": [
+      "Calzedonia",
+      "Intimissimi"
+    ],
+    "party products llc": [
+      "Tupperware"
+    ],
+    "pepsico, inc.": [
+      "PepsiCo"
+    ],
+    "personal brands group": [
+      "HAVOC"
+    ],
+    "petco health and wellness company": [
+      "Petco"
+    ],
+    "pfizer inc.": [
+      "Pfizer"
+    ],
+    "philip morris international": [
+      "Philip Morris International"
+    ],
+    "prada group": [
+      "Prada",
+      "Miu Miu",
+      "Church's"
+    ],
+    "publicis groupe": [
+      "Publicis Groupe"
+    ],
+    "puig": [
+      "Paco Rabanne"
+    ],
+    "qualcomm incorporated": [
+      "Qualcomm"
+    ],
+    "richemont": [
+      "Cartier",
+      "Montblanc"
+    ],
+    "sc johnson": [
+      "SC Johnson"
+    ],
+    "scappino": [
+      "Scappino"
+    ],
+    "sony music entertainment": [
+      "The Orchard"
+    ],
+    "stanley black & decker, inc.": [
+      "Stanley Black & Decker"
+    ],
+    "stellantis n.v.": [
+      "Stellantis"
+    ],
+    "suntory holdings": [
+      "Suntory Global Spirits"
+    ],
+    "swarovski": [
+      "Swarovski"
+    ],
+    "tapestry": [
+      "Coach",
+      "Kate Spade",
+      "Stuart Weitzman"
+    ],
+    "tendam": [
+      "Tendam"
+    ],
+    "the estée lauder companies": [
+      "Estée Lauder"
+    ],
+    "walmart de méxico y centroamérica": [
+      "Bodega Aurrerá"
+    ],
+    "walmart inc.": [
+      "Walmart"
+    ],
+    "zegna group": [
+      "Ermenegildo Zegna"
     ]
   }
 }
