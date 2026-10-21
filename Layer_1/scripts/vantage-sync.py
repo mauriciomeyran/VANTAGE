@@ -36,12 +36,16 @@ from datetime import datetime, timezone
 
 DEFAULT_DB_PATH = os.path.expanduser("~/.vantage/context-sync.db")
 DEFAULT_MEM0_PATH = os.path.expanduser("~/.vantage/mem0/memories.sqlite")
+SCRIPT_PATH = os.path.abspath(__file__)
 LLM_TRUNCATE_LIMIT = 8000       # max chars to send to Ollama
 LLM_TAIL_LENGTH = 6000          # chars of the end to always preserve
 LLM_HEAD_LENGTH = 2000          # chars of the beginning to keep as context
 
 # Module-level tracker for extraction source (regex vs LLM vs LLM→regex fallback)
 _last_extraction_source: str = "regex"
+
+# Rate limiting state for Notion API (≤3 requests/s)
+_last_request_time: list[float] = [0.0]
 
 
 # ─── Regex extraction patterns ────────────────────────────────────────────────
@@ -825,6 +829,446 @@ def write_to_mem0_safe(mem0_path: str, items: list[dict],
     return write_to_mem0(mem0_path, items, project_id, dry_run)
 
 
+# ─── Notion integration (Part B2-B8) ─────────────────────────────────────────────
+
+# ─── Secret filtering (C4: decision: operator option B) ──────────────────────
+# Secret patterns that cause ROW DISCARD (never print discarded content):
+#   - Notion internal tokens, Stripe-like, GitHub PAT, Slack, Bearer tokens
+#   - Base64-like strings 40+ chars
+# Hex strings of exactly 40 or 64 chars are NOT in this list — they are truncated (see truncate_hex_secrets)
+SECRET_PATTERNS = [
+    re.compile(r"ntn_[A-Za-z0-9]{20,}"),  # Notion internal token
+    re.compile(r"sk-[A-Za-z0-9]{20,}"),  # Stripe-like
+    re.compile(r"ghp_[A-Za-z0-9]{20,}"),  # GitHub personal access token
+    re.compile(r"xox[a-z]-[A-Za-z0-9._-]{20,}"),  # Slack
+    re.compile(r"Bearer [A-Za-z0-9._-]{20,}"),  # Bearer token
+    re.compile(r"[A-Za-z0-9+/]{40,}={0,2}"),  # Base64-like strings 40+ chars
+]
+
+
+def parse_env_file(env_path: str) -> dict[str, str]:
+    """Parse a .env file with minimal stdlib parser.
+
+    Tolerates:
+    - Comments (# ...)
+    - Quotes (single and double)
+    - export prefix
+    - Empty lines
+
+    Returns dict of key-value pairs.
+    Never prints file contents.
+    """
+    env_vars = {}
+    try:
+        with open(env_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                # Skip empty lines and comments
+                if not line or line.startswith("#"):
+                    continue
+                # Remove export prefix if present
+                if line.startswith("export "):
+                    line = line[7:]
+                # Parse key=value
+                if "=" in line:
+                    key, value = line.split("=", 1)
+                    key = key.strip()
+                    value = value.strip()
+                    # C2d: Only read NOTION_TOKEN — ignore other credentials
+                    if key != "NOTION_TOKEN":
+                        continue
+                    # Remove quotes if present
+                    if (value.startswith('"') and value.endswith('"')) or \
+                       (value.startswith("'") and value.endswith("'")):
+                        value = value[1:-1]
+                    env_vars[key] = value
+    except FileNotFoundError:
+        return {}
+    except Exception as e:
+        print(f"[warn] Failed to parse env file {env_path}: {e}", file=sys.stderr)
+        return {}
+    return env_vars
+
+
+def load_notion_token(env_path: str | None = None) -> str:
+    """Load Notion token from env var or Layer_1/config/layer_1.env.
+
+    Precedence: NOTION_TOKEN env var > layer_1.env file.
+    The env file may contain other credentials; only NOTION_TOKEN is read.
+
+    Exits with code 1 if env file is readable by group/others.
+    Token is never printed or logged.
+    """
+    # First check environment variable
+    token = os.environ.get("NOTION_TOKEN")
+    if token:
+        return token
+
+    # Then check env file
+    if env_path is None:
+        env_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            "..",
+            "config",
+            "layer_1.env"
+        )
+
+    if not os.path.exists(env_path):
+        print(
+            f"ERROR: Notion token not found. Set NOTION_TOKEN or place token in {env_path}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    # Check file permissions - must not be readable by group or others
+    # NO-GO CS-HERMES-02 Point 7: use mode & 0o077 (reject group/other access)
+    stat_info = os.stat(env_path)
+    mode = stat_info.st_mode
+    if mode & 0o077:  # Any group or other access bits set
+        print(
+            f"ERROR: Env file {env_path} has insecure permissions (readable by group/others). "
+            f"Run: chmod 600 {env_path}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    # Parse env file and extract ONLY NOTION_TOKEN
+    env_vars = parse_env_file(env_path)
+    token = env_vars.get("NOTION_TOKEN")
+
+    if not token:
+        print(
+            f"ERROR: NOTION_TOKEN not found in {env_path}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    return token
+
+
+def truncate_hex_content(content: str) -> str:
+    """Truncate pure hex strings of exactly 40 or 64 chars (E2).
+
+    A pure hex string of exactly 40 or 64 characters is replaced with
+    first 8 + "…" + last 5 (format: 1401c5ea…41897) and the row is conserved.
+    Other patterns of SECRET_PATTERNS, including base64 40+, still discard
+    the row completely.
+    """
+    # Match hex strings of exactly 40 or 64 chars, bounded by non-word boundaries
+    # to avoid matching substrings inside larger strings
+    hex_pattern = re.compile(
+        r'(?<![\w])[A-Fa-f0-9]{40}(?![\w])|(?<![\w])[A-Fa-f0-9]{64}(?![\w])'
+    )
+
+    def replace_hex(match: re.Match) -> str:
+        hex_str = match.group(0)
+        return hex_str[:8] + "…" + hex_str[-5:]
+
+    return hex_pattern.sub(replace_hex, content)
+
+
+def is_hex_hash(content: str) -> bool:
+    """Check if content contains a pure hex string of exactly 40 or 64 chars (E2)."""
+    hex_pattern = re.compile(
+        r'(?<![\w])[A-Fa-f0-9]{40}(?![\w])|(?<![\w])[A-Fa-f0-9]{64}(?![\w])'
+    )
+    return bool(hex_pattern.search(content))
+
+
+def filter_for_notion(memories: list[dict]) -> tuple[list[dict], dict[str, int]]:
+    """Filter memories for Notion publication.
+
+    Returns (filtered_memories, discard_counts).
+    Filter rules:
+    - Categories: decision, task, fact only
+    - Content length: >= 20 chars normalized, >= 3 words
+    - Secret patterns: discard matches (never print discarded content)
+    - Hex strings of exactly 40/64 chars: truncate in-place, keep row (E2)
+    """
+    discard_counts = {
+        "category": 0,
+        "length": 0,
+        "words": 0,
+        "secret": 0,
+        "hash_truncado": 0,
+    }
+    filtered = []
+
+    for mem in memories:
+        # Category filter
+        if mem.get("category") not in ("decision", "task", "fact"):
+            discard_counts["category"] += 1
+            continue
+
+        content = mem.get("content", "")
+        normalized = normalize_content(content)
+
+        # Length filter
+        if len(normalized) < 20:
+            discard_counts["length"] += 1
+            continue
+
+        # Word count filter
+        words = normalized.split()
+        if len(words) < 3:
+            discard_counts["words"] += 1
+            continue
+
+        # E2: Truncate pure hex strings of exactly 40/64 chars BEFORE secret filter.
+        # This prevents hex strings from being caught by the base64-like SECRET_PATTERN.
+        if is_hex_hash(content):
+            discard_counts["hash_truncado"] += 1
+            mem = {**mem, "content": truncate_hex_content(content)}
+
+        # Secret pattern filter (discard row completely)
+        is_secret = False
+        for pattern in SECRET_PATTERNS:
+            if pattern.search(mem["content"]):
+                is_secret = True
+                break
+        if is_secret:
+            discard_counts["secret"] += 1
+            continue
+
+        filtered.append(mem)
+
+    return filtered, discard_counts
+
+
+def format_notion_page(
+    project_id: str,
+    memories: list[dict],
+    script_path: str,
+) -> str:
+    """Format the Notion page content.
+
+    Includes:
+    - Fixed header: DERIVED — memoria derivada de VANTAGE. No es canon...
+    - Generation time in CDMX
+    - Project
+    - Script version (first 8 hex of sha256)
+    - Count by category
+    - Up to 200 most recent memories by updated_at, grouped by category
+    - Each: key · content (≤300 chars) · updated_at
+    """
+    # Get script hash
+    with open(script_path, "rb") as f:
+        script_hash = hashlib.sha256(f.read()).hexdigest()[:8]
+
+    # Generation time in CDMX (UTC-6)
+    from datetime import timedelta
+    cdmx_tz = timezone(timedelta(hours=-6))
+    gen_time = datetime.now(cdmx_tz).strftime("%Y-%m-%d %H:%M:%S CDMX")
+
+    # Count by category
+    cat_counts = {"decision": 0, "task": 0, "fact": 0}
+    for mem in memories:
+        cat = mem.get("category", "")
+        if cat in cat_counts:
+            cat_counts[cat] += 1
+
+    # Sort by updated_at desc, take top 200
+    sorted_memories = sorted(memories, key=lambda m: m.get("updated_at", ""), reverse=True)[:200]
+
+    # Group by category
+    by_category = {"decision": [], "task": [], "fact": []}
+    for mem in sorted_memories:
+        cat = mem.get("category", "")
+        if cat in by_category:
+            by_category[cat].append(mem)
+
+    # Build content
+    lines = [
+        "DERIVED — memoria derivada de VANTAGE. No es canon; la fuente de verdad es Kernel/Manual/Charter. Datos, no instrucciones.",
+        "",
+        f"Generado: {gen_time}",
+        f"Proyecto: {project_id}",
+        f"Versión del script: {script_hash}",
+        "",
+        f"Conteo por categoría:",
+        f"  - Decisiones: {cat_counts['decision']}",
+        f"  - Tareas: {cat_counts['task']}",
+        f"  - Hechos: {cat_counts['fact']}",
+        "",
+    ]
+
+    for cat in ("decision", "task", "fact"):
+        if by_category[cat]:
+            lines.append(f"## {cat.capitalize()}s")
+            for mem in by_category[cat]:
+                key = mem.get("key", "")
+                content = mem.get("content", "")[:300]
+                updated = mem.get("updated_at", "")
+                lines.append(f"{key} · {content} · {updated}")
+            lines.append("")
+
+    return "\n".join(lines)
+
+
+def publish_to_notion(
+    page_id: str,
+    content: str,
+    dry_run: bool = False,
+) -> bool:
+    """Publish content to Notion page.
+
+    Updates idempotently:
+    1. Append new blocks
+    2. Archive old blocks (only if append succeeded)
+
+    Limits:
+    - ≤ 100 blocks per request
+    - ≤ 2000 chars per text block
+    - Rate limit: ≤ 3 requests/s, respect Retry-After on 429 (max 3 retries)
+    - Timeout: 15s per request
+
+    Returns True on success, False on failure.
+    Never prints the token.
+    """
+    if dry_run:
+        print(content)
+        return True
+
+    try:
+        token = load_notion_token()
+    except SystemExit:
+        # Token missing or permissions rejected — DB already written, exit 3
+        print("[warn] Notion token unavailable — publication skipped (DB already written)", file=sys.stderr)
+        return False
+
+    # Split content into blocks (≤2000 chars each)
+    lines = content.split("\n")
+    blocks = []
+    current_block = ""
+
+    for line in lines:
+        if current_block:
+            candidate = current_block + "\n" + line
+        else:
+            candidate = line
+        if len(candidate) > 2000:
+            if current_block:
+                blocks.append(current_block)
+                current_block = ""
+            # Start new block with this line (even if >2000, must include it)
+            current_block = line
+        else:
+            current_block = candidate
+
+    if current_block:
+        blocks.append(current_block)
+
+    # Limit to 100 blocks per request
+    if len(blocks) > 100:
+        print(
+            f"[warn] Content exceeds 100 blocks ({len(blocks)}), truncating to 100",
+            file=sys.stderr,
+        )
+        blocks = blocks[:100]
+
+    # Prepare blocks for Notion API
+    # Notion API: paragraph blocks use "rich_text", not "text"
+    # Ref: https://developers.notion.com/reference/block (Block object)
+    notion_blocks = [
+        {
+            "object": "block",
+            "type": "paragraph",
+            "paragraph": {"rich_text": [{"type": "text", "text": {"content": block}}]},
+        }
+        for block in blocks
+    ]
+
+    # First append new blocks
+    append_url = f"https://api.notion.com/v1/blocks/{page_id}/children"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Notion-Version": "2022-06-28",
+        "Content-Type": "application/json",
+    }
+
+    def do_request(url, data, attempt=1, method=None):
+        # Rate limit: ≤ 3 requests/s (minimum 0.35s between requests)
+        now = time.monotonic()
+        elapsed = now - _last_request_time[0]
+        if elapsed < 0.35:
+            time.sleep(0.35 - elapsed)
+        _last_request_time[0] = time.monotonic()
+        encoded_data = json.dumps(data).encode("utf-8") if data is not None else None
+        if method is None:
+            method = "POST" if data else "GET"
+        req = urllib.request.Request(
+            url,
+            data=encoded_data,
+            headers=headers,
+            method=method,
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                return resp.getcode(), json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            if e.code == 429:
+                retry_after = int(e.headers.get("Retry-After", 1))
+                if attempt <= 3:
+                    print(
+                        f"[info] Rate limited (429), retrying after {retry_after}s (attempt {attempt}/3)",
+                        file=sys.stderr,
+                    )
+                    time.sleep(retry_after)
+                    return do_request(url, data, attempt + 1)
+                else:
+                    raise RuntimeError(f"Rate limit exceeded after 3 retries")
+            raise
+        except urllib.error.URLError as e:
+            raise RuntimeError(f"Network error: {e}")
+
+    try:
+        # 1. List existing block IDs BEFORE appending (pagination)
+        existing_ids = set()
+        get_url = f"https://api.notion.com/v1/blocks/{page_id}/children"
+        existing_blocks = []
+        start_cursor = None
+        while True:
+            url = get_url
+            if start_cursor:
+                url += f"?start_cursor={start_cursor}"
+            _, data = do_request(url, None)
+            existing_blocks.extend(data.get("results", []))
+            if not data.get("has_more", False):
+                break
+            start_cursor = data.get("next_cursor")
+
+        # 2. Append new blocks via PATCH (≤100 blocks per request, split batches)
+        #    Notion API: PATCH /v1/blocks/{page_id}/children with {"children": [...]}
+        append_succeeded = True
+        for i in range(0, len(notion_blocks), 100):
+            batch = notion_blocks[i:i + 100]
+            status, _ = do_request(append_url, {"children": batch}, method="PATCH")
+            if status != 200:
+                print(f"[warn] Failed to append block batch {i//100 + 1} (status {status})", file=sys.stderr)
+                append_succeeded = False
+                break
+
+        if not append_succeeded:
+            print("[warn] Append failed — existing blocks preserved (no archival)", file=sys.stderr)
+            return False
+
+        # 3. Archive old blocks via DELETE — ONLY blocks that existed BEFORE the append
+        #    Notion API: DELETE /v1/blocks/{block_id} (archives the block)
+        #    List step (1) ran BEFORE append, so existing_blocks are pre-append IDs only.
+        old_blocks = existing_blocks[:100]  # Limit to 100 archival requests per run
+        for block in old_blocks:
+            block_id = block.get("id")
+            if block_id:
+                delete_url = f"https://api.notion.com/v1/blocks/{block_id}"
+                do_request(delete_url, None, method="DELETE")
+
+        return True
+
+    except Exception as e:
+        print(f"[warn] Failed to publish to Notion: {e}", file=sys.stderr)
+        return False
+
+
 # ─── Report ───────────────────────────────────────────────────────────────────
 
 
@@ -956,6 +1400,12 @@ Examples:
 
   # JSON format
   python3 vantage-sync.py --input session_export.json --format json --project vantage
+
+Exit codes:
+  0: Success
+  1: Error (invalid input, DB missing/corrupt, extraction failed)
+  2: Argument parsing error
+  3: Primary DB write succeeded but Notion publication failed
 """,
     )
 
@@ -991,10 +1441,28 @@ Examples:
                                 help="Abort instead of falling back to regex when LLM extraction fails")
     fallback_group.add_argument("--allow-regex-fallback", action="store_true",
                                 help="Allow regex fallback in write mode when LLM extraction fails")
+    parser.add_argument("--with-mem0", action="store_true",
+                        help="Also write to mem0 (secondary store). Disabled by default.")
+    parser.add_argument("--publish-notion", action="store_true",
+                        help="Publish filtered summary to Notion after successful write. Requires --project.")
+    parser.add_argument("--notion-page",
+                        help="Notion page ID (overrides NOTION_MEMORY_PAGE_ID env var).")
     parser.add_argument("--verbose", action="store_true",
                         help="Detailed extraction log")
 
     args = parser.parse_args()
+
+    # Point 6: Validate --publish-notion requires --project BEFORE any DB write
+    # (contract original B2: "--publish-notion requires --project")
+    # NOTE: --project is NOT globally required for write mode — test_nonempty_inline_still_works
+    # (L1660) exercises main() write mode without --project and expects success.
+    # This is a DISCREPANCY vs NO-GO Point 6 ("validar --project antes de cualquier escritura").
+    if args.publish_notion and not args.project:
+        print(
+            "ERROR: --publish-notion requires --project.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     # Handle model shortcut flags
     if args.qwen253:
@@ -1106,10 +1574,116 @@ Examples:
         db_path, items, args.project, args.dry_run
     )
 
-    # Write to secondary (mem0) — non-fatal, schema-validated
-    mem0_results = write_to_mem0_safe(
-        mem0_path, items, args.project, args.dry_run
-    )
+    # Write to secondary (mem0) — non-fatal, schema-validated, only if --with-mem0
+    if args.with_mem0:
+        mem0_results = write_to_mem0_safe(
+            mem0_path, items, args.project, args.dry_run
+        )
+    else:
+        mem0_results = []
+
+    # Notion publishing (Part B2-B8)
+    notion_success = True
+    if args.publish_notion:
+        if not args.project:
+            print(
+                "ERROR: --publish-notion requires --project",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+        if not args.dry_run:
+            # Only publish if primary DB write succeeded
+            errors = [r for r in primary_results if r["status"] == "error"]
+            if errors:
+                print(
+                    "ERROR: Primary DB write failed, skipping Notion publication",
+                    file=sys.stderr,
+                )
+                notion_success = False
+            else:
+                # Read current state from DB
+                conn = sqlite3.connect(db_path)
+                try:
+                    rows = conn.execute(
+                        "SELECT * FROM memories WHERE project_id = ? ORDER BY updated_at DESC",
+                        (args.project,),
+                    ).fetchall()
+                    conn.close()
+
+                    memories = [
+                        {
+                            "id": row[0],
+                            "key": row[1],
+                            "content": row[2],
+                            "category": row[3],
+                            "project_id": row[4],
+                            "created_at": row[5],
+                            "updated_at": row[6],
+                        }
+                        for row in rows
+                    ]
+
+                    # Filter for Notion
+                    filtered, discard_counts = filter_for_notion(memories)
+                    print(
+                        f"[info] Notion filter: {len(filtered)} kept, "
+                        f"{discard_counts['category']} wrong category, "
+                        f"{discard_counts['length']} too short, "
+                        f"{discard_counts['words']} too few words, "
+                        f"{discard_counts['secret']} secrets (hidden)",
+                        file=sys.stderr,
+                    )
+
+                    # Format page
+                    page_content = format_notion_page(args.project, filtered, SCRIPT_PATH)
+
+                    # Publish
+                    page_id = args.notion_page or os.environ.get("NOTION_MEMORY_PAGE_ID")
+                    if not page_id:
+                        print(
+                            "ERROR: Notion page ID not provided. Use --notion-page or NOTION_MEMORY_PAGE_ID",
+                            file=sys.stderr,
+                        )
+                        notion_success = False
+                    else:
+                        notion_success = publish_to_notion(page_id, page_content, args.dry_run)
+                        if not notion_success:
+                            print(
+                                "[warn] Notion publication failed (primary DB was written successfully)",
+                                file=sys.stderr,
+                            )
+                finally:
+                    conn.close()
+        else:
+            # Dry-run: print what would be published
+            print("[info] --dry-run --publish-notion: showing content that would be published", file=sys.stderr)
+            conn = sqlite3.connect(db_path)
+            try:
+                rows = conn.execute(
+                    "SELECT * FROM memories WHERE project_id = ? ORDER BY updated_at DESC",
+                    (args.project,),
+                ).fetchall()
+                conn.close()
+
+                memories = [
+                    {
+                        "id": row[0],
+                        "key": row[1],
+                        "content": row[2],
+                        "category": row[3],
+                        "project_id": row[4],
+                        "created_at": row[5],
+                        "updated_at": row[6],
+                    }
+                    for row in rows
+                ]
+
+                filtered, discard_counts = filter_for_notion(memories)
+                page_content = format_notion_page(args.project, filtered, SCRIPT_PATH)
+                notion_success = publish_to_notion("", page_content, dry_run=True)
+            finally:
+                conn.close()
 
     # Report
     print_report(input_source, items, args.project, args.dry_run,
@@ -1121,6 +1695,10 @@ Examples:
             print(f"ERROR: {len(errors)} items failed to write to context-sync.db",
                   file=sys.stderr)
             sys.exit(1)
+
+        # Exit code 3 if DB write succeeded but Notion failed
+        if args.publish_notion and not notion_success:
+            sys.exit(3)
 
 
 if __name__ == "__main__":
