@@ -292,6 +292,122 @@ class TestMotorLimeTorrents:
         with pytest.raises(ErrorEstructura):
             buscar_torrents_limetorrents("oppenheimer", session=sesion)
 
+    def test_paginacion_por_defecto_compatible(self, sesion_falsa: SesionFalsa) -> None:
+        """paginas=1 (por defecto) debe conservar el comportamiento actual."""
+        items = buscar_torrents_limetorrents("oppenheimer", min_seeders=5, session=sesion_falsa)
+        assert len(items) >= 30
+        assert all(item["seeders"] >= 5 for item in items)
+
+    def test_paginacion_varias_paginas(self) -> None:
+        """paginas=3 debe consultar páginas 1, 2 y 3, combinar resultados con hashes distintos y deduplicar."""
+        fixture_base = cargar_texto("limetorrents_search.html")
+        # Cambiar hashes para simular resultados distintos en cada página
+        fixture_pag2 = fixture_base.replace("D6E78B95225B76E200A9DB223EEDB7E1C8AD6E45", "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        fixture_pag3 = fixture_base.replace("D6E78B95225B76E200A9DB223EEDB7E1C8AD6E45", "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+
+        rutas_consultadas = []
+
+        def mock_paginas(url, headers=None, params=None, timeout=None):
+            rutas_consultadas.append(url)
+            if "/seeds/1/" in url:
+                return RespuestaFalsa(fixture_base, url)
+            elif "/seeds/2/" in url:
+                return RespuestaFalsa(fixture_pag2, url)
+            elif "/seeds/3/" in url:
+                return RespuestaFalsa(fixture_pag3, url)
+            return RespuestaFalsa("<html><body>No results</body></html>", url)
+
+        sesion = SesionFalsa(reglas=[])
+        sesion.get = mock_paginas
+
+        items = buscar_torrents_limetorrents("oppenheimer", paginas=3, session=sesion)
+
+        # Verificar que se consultaron las 3 rutas correctas
+        assert len(rutas_consultadas) == 3
+        assert any("/seeds/1/" in r for r in rutas_consultadas)
+        assert any("/seeds/2/" in r for r in rutas_consultadas)
+        assert any("/seeds/3/" in r for r in rutas_consultadas)
+
+        # Verificar que los resultados incluyen magnets de las 3 páginas
+        magnets = [item["magnet"] for item in items]
+        assert any("d6e78b95225b76e200a9db223eedb7e1c8ad6e45" in m for m in magnets), "debe incluir hash de página 1"
+        assert any("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" in m for m in magnets), "debe incluir hash de página 2"
+        assert any("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" in m for m in magnets), "debe incluir hash de página 3"
+
+        # Verificar que no hay duplicados
+        assert len(magnets) == len(set(magnets)), "los magnets deben ser únicos"
+
+    def test_paginacion_deduplica_magnets(self) -> None:
+        """Los magnets repetidos entre páginas deben deduplicarse."""
+        fixture = cargar_texto("limetorrents_search.html")
+
+        def pagina_repetida(url, headers=None, params=None, timeout=None):
+            return RespuestaFalsa(fixture, url)
+
+        sesion = SesionFalsa(reglas=[])
+        sesion.get = pagina_repetida
+
+        items = buscar_torrents_limetorrents("oppenheimer", paginas=2, session=sesion)
+        magnets = [item["magnet"] for item in items]
+        assert len(magnets) == len(set(magnets)), "los magnets deben ser únicos"
+
+    def test_paginacion_termina_en_pagina_vacia(self) -> None:
+        """Si una página posterior está vacía, debe terminar y devolver resultados acumulados."""
+        contador = {"paginas": 0}
+
+        def paginas_con_vacia(url, headers=None, params=None, timeout=None):
+            contador["paginas"] += 1
+            if "/seeds/1/" in url:
+                return RespuestaFalsa(cargar_texto("limetorrents_search.html"), url)
+            elif "/seeds/2/" in url:
+                return RespuestaFalsa("<html><body>No results found</body></html>", url)
+            return RespuestaFalsa("<html><body>No results</body></html>", url)
+
+        sesion = SesionFalsa(reglas=[])
+        sesion.get = paginas_con_vacia
+
+        items = buscar_torrents_limetorrents("oppenheimer", paginas=5, session=sesion)
+        assert contador["paginas"] == 2, "debe detenerse en la página 2 (vacía)"
+        assert len(items) >= 30, "debe devolver resultados de la página 1"
+
+    def test_paginacion_primera_pagina_vacia(self) -> None:
+        """Si la primera página está vacía, debe devolver lista vacía."""
+        sesion = SesionTexto("<html><body>No results found</body></html>")
+        items = buscar_torrents_limetorrents("oppenheimer", paginas=3, session=sesion)
+        assert items == []
+
+    def test_paginacion_rechaza_cero(self) -> None:
+        with pytest.raises(ValueError, match="entero positivo"):
+            buscar_torrents_limetorrents("oppenheimer", paginas=0)
+
+    def test_paginacion_rechaza_negativo(self) -> None:
+        with pytest.raises(ValueError, match="entero positivo"):
+            buscar_torrents_limetorrents("oppenheimer", paginas=-1)
+
+    def test_paginacion_rechaza_booleano(self) -> None:
+        with pytest.raises(ValueError, match="entero positivo"):
+            buscar_torrents_limetorrents("oppenheimer", paginas=True)
+        with pytest.raises(ValueError, match="entero positivo"):
+            buscar_torrents_limetorrents("oppenheimer", paginas=False)
+
+    def test_paginacion_rechaza_no_entero(self) -> None:
+        with pytest.raises(ValueError, match="entero positivo"):
+            buscar_torrents_limetorrents("oppenheimer", paginas="3")
+        with pytest.raises(ValueError, match="entero positivo"):
+            buscar_torrents_limetorrents("oppenheimer", paginas=3.5)
+
+    def test_paginacion_propaga_error_estructura(self) -> None:
+        """Los errores de estructura deben propagarse, no ocultarse."""
+        sesion = SesionFalsa(reglas=[("limetorrents", "yts_response.json")])
+        with pytest.raises(ErrorEstructura):
+            buscar_torrents_limetorrents("oppenheimer", paginas=2, session=sesion)
+
+    def test_paginacion_propaga_error_fuente(self) -> None:
+        """Los errores de fuente no disponible deben propagarse."""
+        sesion = SesionFalsa(fallos=["limetorrents"])
+        with pytest.raises(ErrorFuenteNoDisponible):
+            buscar_torrents_limetorrents("oppenheimer", paginas=2, session=sesion)
+
 
 class TestMotorYTS:
     def test_items_y_orden(self, sesion_falsa: SesionFalsa) -> None:

@@ -64,7 +64,7 @@ cada mirror; para la de series: `python3 scripts/verificar_engines.py -q Severan
 | `salud_motores.py` | Historial persistente de fallos por motor y política de reintentos |
 | `scripts/vantage-search` | Punto de entrada estable para clientes externos |
 | `scripts/verificar_engines.py` | Verificación en vivo de mirrors y motores, informe markdown |
-| `tests/vantage/` | 185 pruebas offline con fixtures HTML/JSON reales |
+| `tests/vantage/` | 196 pruebas offline con fixtures HTML/JSON reales |
 
 ## Instalación
 
@@ -326,7 +326,7 @@ consulta='Oppenheimer' categoria=movies min_seeders=5 (peticion original='pelíc
 
 ## Pruebas
 
-185 pruebas offline (sin red): sirven respuestas reales guardadas en
+196 pruebas offline (sin red): sirven respuestas reales guardadas en
 `tests/vantage/fixtures/`.
 
 ```bash

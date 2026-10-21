@@ -486,47 +486,26 @@ def extraer_categoria_lime(texto_fila: str) -> str:
     return ETIQUETAS_LIME.get(normalizar(coincidencia.group(1)), CATEGORIA_DESCONOCIDA)
 
 
-def buscar_torrents_limetorrents(
-    query: str,
-    categoria: Optional[str] = None,
-    min_seeders: int = 5,
-    *,
-    timeout: float = TIMEOUT_POR_DEFECTO,
-    session: Optional[requests.Session] = None,
+def _parsear_pagina_limetorrents(
+    respuesta: requests.Response,
+    categoria_canonica: str,
+    min_seeders: int,
 ) -> List[Dict[str, Any]]:
-    """Busca en LimeTorrents construyendo el magnet desde el info-hash de la fila.
+    """Parsea una página de resultados de LimeTorrents y devuelve los items válidos.
 
-    La página de búsqueda **no** publica enlaces magnet: cada fila trae un enlace
-    ``itorrents.net/torrent/<hash>.torrent`` del que se deriva el info-hash. Ese
-    hash se convierte en magnet con :func:`construir_magnet`, evitando una
-    petición extra por resultado.
+    Args:
+        respuesta: Respuesta HTTP de LimeTorrents.
+        categoria_canonica: Categoría canónica para filtrar en cliente.
+        min_seeders: Umbral mínimo de sembradores.
 
-    El mirror verificado ignora el segmento de categoría de la URL, por lo que el
-    filtro de categoría se aplica en cliente usando la etiqueta ``in <categoría>``
-    de cada fila.
+    Returns:
+        Lista de items válidos de esta página.
 
     Raises:
-        ErrorFuenteNoDisponible: si ningún mirror responde.
-        ErrorEstructura: si la página no trae la tabla de resultados esperada.
+        ErrorEstructura: Si la página no tiene la estructura esperada.
     """
-    categoria_canonica = normalizar_categoria(categoria) if categoria else "all"
-    segmento = CATEGORIAS_LIME.get(categoria_canonica, "all")
-    slug = urllib.parse.quote(query.strip().lower().replace(" ", "-"), safe="")
-    ruta = f"/search/{segmento}/{slug}/seeds/1/"
-
-    respuesta, _ = _pedir_con_mirrors(
-        BASE_URLS_LIME,
-        ruta,
-        headers=CABECERAS_NAVEGADOR,
-        timeout=timeout,
-        session=session,
-    )
-
     sopa = BeautifulSoup(respuesta.text, "html.parser")
 
-    # La tabla se busca primero: si existe, la página tiene resultados aunque el HTML
-    # mencione "no results" en un aviso, una plantilla o un script. Al revés se perdían
-    # resultados en silencio y se reportaban como "[OK] 0 resultado(s)".
     tabla = sopa.find("table", class_="table2")
     if tabla is None:
         if _pagina_vacia(respuesta.text, sopa):
@@ -598,7 +577,80 @@ def buscar_torrents_limetorrents(
     if fuera_de_categoria:
         logger.debug("LimeTorrents: %s fila(s) descartadas por categoría", fuera_de_categoria)
 
-    return _ordenar_por_estabilidad(resultados)
+    return resultados
+
+
+def buscar_torrents_limetorrents(
+    query: str,
+    categoria: Optional[str] = None,
+    min_seeders: int = 5,
+    *,
+    paginas: int = 1,
+    timeout: float = TIMEOUT_POR_DEFECTO,
+    session: Optional[requests.Session] = None,
+) -> List[Dict[str, Any]]:
+    """Busca en LimeTorrents construyendo el magnet desde el info-hash de la fila.
+
+    La página de búsqueda **no** publica enlaces magnet: cada fila trae un enlace
+    ``itorrents.net/torrent/<hash>.torrent`` del que se deriva el info-hash. Ese
+    hash se convierte en magnet con :func:`construir_magnet`, evitando una
+    petición extra por resultado.
+
+    El mirror verificado ignora el segmento de categoría de la URL, por lo que el
+    filtro de categoría se aplica en cliente usando la etiqueta ``in <categoría>``
+    de cada fila.
+
+    Args:
+        query: Término de búsqueda.
+        categoria: Categoría canónica para filtrar en cliente.
+        min_seeders: Umbral mínimo de sembradores.
+        paginas: Número de páginas a consultar (por defecto 1).
+        timeout: Timeout por petición.
+        session: Sesión ``requests`` reutilizable.
+
+    Returns:
+        Items ordenados por sembradores descendente, deduplicados por magnet.
+
+    Raises:
+        ValueError: Si ``paginas`` no es un entero positivo.
+        ErrorFuenteNoDisponible: Si ningún mirror responde.
+        ErrorEstructura: Si la página no trae la tabla de resultados esperada.
+    """
+    if not isinstance(paginas, int) or isinstance(paginas, bool) or paginas < 1:
+        raise ValueError("paginas debe ser un entero positivo")
+
+    categoria_canonica = normalizar_categoria(categoria) if categoria else "all"
+    segmento = CATEGORIAS_LIME.get(categoria_canonica, "all")
+    slug = urllib.parse.quote(query.strip().lower().replace(" ", "-"), safe="")
+
+    resultados_completos: List[Dict[str, Any]] = []
+    magnets_vistos: set[str] = set()
+
+    for numero_pagina in range(1, paginas + 1):
+        ruta = f"/search/{segmento}/{slug}/seeds/{numero_pagina}/"
+
+        respuesta, _ = _pedir_con_mirrors(
+            BASE_URLS_LIME,
+            ruta,
+            headers=CABECERAS_NAVEGADOR,
+            timeout=timeout,
+            session=session,
+        )
+
+        items_pagina = _parsear_pagina_limetorrents(respuesta, categoria_canonica, min_seeders)
+
+        if not items_pagina:
+            if numero_pagina == 1:
+                return []
+            break
+
+        for item in items_pagina:
+            magnet = item["magnet"]
+            if magnet not in magnets_vistos:
+                magnets_vistos.add(magnet)
+                resultados_completos.append(item)
+
+    return _ordenar_por_estabilidad(resultados_completos)
 
 
 # ---------------------------------------------------------------------------
