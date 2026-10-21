@@ -44,6 +44,7 @@ if str(_SCRIPTS_DIR) not in sys.path:
 # URL gate compartido (url_gate.py) — cero dependencia de layer_1_run (vocab §3)
 from url_gate import is_agregador, validate_url_pre_ingestion
 from profile_fit import is_role_excluded, should_annotate_existing
+from alias_resolver import resolve_alias_entry
 # Status canónico (tracker_flow) — Target ya migrado a Objetivo (Q-2)
 from tracker_flow import Status
 
@@ -905,21 +906,9 @@ def load_alias_map() -> dict:
 
 
 def resolve_alias(brand_raw: str, alias_data: dict) -> tuple[str | None, str | None, bool | None]:
-    """
-    Retorna (marca_canónica, holding, hard_block).
-    hard_block=None → alias no encontrado.
-    """
-    if not brand_raw:
-        return None, None, None
-    key = brand_raw.strip().lower()
-    aliases = alias_data.get("aliases", {})
-    entry = aliases.get(key)
-    if not entry:
-        for alias_key, alias_val in aliases.items():
-            if alias_key in key or key in alias_key:
-                entry = alias_val
-                break
-    if not entry:
+    """Retorna (marca, holding, hard_block); None si no hay resolución única."""
+    entry = resolve_alias_entry(brand_raw, alias_data)
+    if entry is None:
         return None, None, None
     return entry.get("marca"), entry.get("holding"), entry.get("hard_block", False)
 

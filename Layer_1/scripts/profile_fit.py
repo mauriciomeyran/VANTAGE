@@ -14,6 +14,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from vantage_status import is_protected_status
+from alias_resolver import resolve_alias_entry
 
 _EXCLUDE_ROLE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"\bvendedor", "vendedor"),
@@ -66,17 +67,8 @@ def _alias_data() -> dict:
 
 
 def resolve_alias_flags(marca: str) -> tuple[bool, str | None]:
-    if not marca:
-        return False, None
-    key = marca.strip().lower()
-    aliases = _alias_data().get("aliases", {})
-    entry = aliases.get(key)
-    if not entry:
-        for alias_key, alias_val in aliases.items():
-            if alias_key in key or key in alias_key:
-                entry = alias_val
-                break
-    if not entry:
+    entry = resolve_alias_entry(marca, _alias_data())
+    if entry is None:
         return False, None
     return bool(entry.get("hard_block", False)), entry.get("marca")
 
