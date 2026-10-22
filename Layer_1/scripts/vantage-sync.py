@@ -1137,7 +1137,16 @@ def publish_to_notion(
         return False
 
     # Split content into blocks (≤2000 chars each)
-    lines = content.split("\n")
+    raw_lines = content.split("\n")
+    # If any single line exceeds 2000 characters, chunk it so no segment exceeds 2000
+    lines = []
+    for line in raw_lines:
+        if len(line) <= 2000:
+            lines.append(line)
+        else:
+            for i in range(0, len(line), 2000):
+                lines.append(line[i:i + 2000])
+
     blocks = []
     current_block = ""
 
@@ -1149,22 +1158,12 @@ def publish_to_notion(
         if len(candidate) > 2000:
             if current_block:
                 blocks.append(current_block)
-                current_block = ""
-            # Start new block with this line (even if >2000, must include it)
             current_block = line
         else:
             current_block = candidate
 
     if current_block:
         blocks.append(current_block)
-
-    # Limit to 100 blocks per request
-    if len(blocks) > 100:
-        print(
-            f"[warn] Content exceeds 100 blocks ({len(blocks)}), truncating to 100",
-            file=sys.stderr,
-        )
-        blocks = blocks[:100]
 
     # Prepare blocks for Notion API
     # Notion API: paragraph blocks use "rich_text", not "text"
@@ -1214,10 +1213,11 @@ def publish_to_notion(
                         file=sys.stderr,
                     )
                     time.sleep(retry_after)
-                    return do_request(url, data, attempt + 1)
+                    return do_request(url, data, attempt + 1, method=method)
                 else:
                     raise RuntimeError(f"Rate limit exceeded after 3 retries")
-            raise
+            else:
+                raise
         except urllib.error.URLError as e:
             raise RuntimeError(f"Network error: {e}")
 
@@ -1255,17 +1255,41 @@ def publish_to_notion(
         # 3. Archive old blocks via DELETE — ONLY blocks that existed BEFORE the append
         #    Notion API: DELETE /v1/blocks/{block_id} (archives the block)
         #    List step (1) ran BEFORE append, so existing_blocks are pre-append IDs only.
-        old_blocks = existing_blocks[:100]  # Limit to 100 archival requests per run
-        for block in old_blocks:
-            block_id = block.get("id")
-            if block_id:
-                delete_url = f"https://api.notion.com/v1/blocks/{block_id}"
-                do_request(delete_url, None, method="DELETE")
+        #    R8: Never archive child_page or child_database blocks to protect subpages/databases.
+        skipped_children_count = 0
+        try:
+            for block in existing_blocks:
+                btype = block.get("type")
+                if btype in ("child_page", "child_database"):
+                    skipped_children_count += 1
+                    continue
+                block_id = block.get("id")
+                if block_id:
+                    delete_url = f"https://api.notion.com/v1/blocks/{block_id}"
+                    do_request(delete_url, None, method="DELETE")
+        except Exception as e:
+            err_msg = str(e)
+            if "token" in locals() and token and token in err_msg:
+                err_msg = err_msg.replace(token, "[REDACTED]")
+            print(
+                f"[warn] Partial Notion publication failure: new content was already appended (ya se anexó), but old blocks remain (quedan bloques viejos): {err_msg}",
+                file=sys.stderr,
+            )
+            return False
+
+        if skipped_children_count > 0:
+            print(
+                f"[info] Skipped archiving {skipped_children_count} child page/database blocks to prevent data loss",
+                file=sys.stderr,
+            )
 
         return True
 
     except Exception as e:
-        print(f"[warn] Failed to publish to Notion: {e}", file=sys.stderr)
+        err_msg = str(e)
+        if "token" in locals() and token and token in err_msg:
+            err_msg = err_msg.replace(token, "[REDACTED]")
+        print(f"[warn] Failed to publish to Notion: {err_msg}", file=sys.stderr)
         return False
 
 

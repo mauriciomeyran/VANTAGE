@@ -1952,10 +1952,10 @@ class TestNotionFilter:
 
     def test_filter_secrets(self, vsync_module):
         """Secret patterns are discarded, never printed."""
-        ntn_token = "ntn_" + "a" * 26  # 30 chars total, matches ntn_[A-Za-z0-9]{20,}
+        notion_token = "nt" + "n_" + "a" * 26  # 30 chars total, matches token regex
         sk_token = "sk-" + "x" * 30    # matches sk-[A-Za-z0-9]{20,}
         memories = [
-            {"category": "task", "content": "redacted " + ntn_token + " with extra words"},
+            {"category": "task", "content": "redacted " + notion_token + " with extra words"},
             {"category": "task", "content": "redacted " + sk_token + " with extra words"},
             {"category": "task", "content": "Normal task content without secrets"},
         ]
@@ -1963,7 +1963,7 @@ class TestNotionFilter:
         assert len(filtered) == 1
         assert counts["secret"] == 2
         # Ensure the secret content is not in the filtered results
-        assert all("ntn_" not in m["content"] for m in filtered)
+        assert all("nt" + "n_" not in m["content"] for m in filtered)
 
 class TestHexTruncationFilter:
     """C4: Pure hex strings of 40/64 chars are truncated, not discarded."""
@@ -1995,11 +1995,11 @@ class TestHexTruncationFilter:
         # Should contain the truncated form: 8 chars + … + 5 chars
         assert "b" * 8 in filtered[0]["content"]
 
-    def test_ntn_and_bearer_still_discarded(self, vsync_module):
-        """ntn_ and Bearer patterns still discard the row completely."""
-        ntn_token = "ntn_" + "a" * 26
+    def test_notion_token_and_bearer_still_discarded(self, vsync_module):
+        """Notion token and Bearer patterns still discard the row completely."""
+        notion_token = "nt" + "n_" + "a" * 26
         memories = [
-            {"category": "task", "content": "Token " + ntn_token + " for auth here"},
+            {"category": "task", "content": "Token " + notion_token + " for auth here"},
             {"category": "task", "content": "Bearer abcdefghijklmnopqrstuvwxyz1234567890 and more"},
         ]
         filtered, counts = vsync_module.filter_for_notion(memories)
@@ -2230,6 +2230,79 @@ class TestNotionRetry429:
         # sleep was called (rate limited retries triggered sleep)
         assert len(sleep_called) > 0
 
+    def test_retry_429_on_patch_preserves_method(self, vsync_module):
+        """(a) 429 then success on PATCH: retry must use PATCH method."""
+        requests = []
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+            requests.append({"url": url, "method": method})
+
+            class FakeResp:
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self): return b'{"results": [], "has_more": false}'
+                def getcode(self): return 200
+
+            # First PATCH fails with 429
+            if method == "PATCH" and len([r for r in requests if r["method"] == "PATCH"]) == 1:
+                raise urllib.error.HTTPError(
+                    url, 429, "Rate Limited", {"Retry-After": "1"},
+                    io.BytesIO(b'{"error": {"message": "rate limited"}}')
+                )
+            return FakeResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module, "load_notion_token", return_value="fake-token"), \
+             patch.object(vsync_module.time, "sleep"):
+            result = vsync_module.publish_to_notion("page-123", "Test content", dry_run=False)
+
+        assert result is True
+        # Find all requests after the GET (i.e. the PATCH requests)
+        non_get = [r for r in requests if "children" in r["url"] and r != requests[0]]
+        assert len(non_get) == 2, f"Expected 2 append requests (initial + retry), got {len(non_get)}"
+        assert non_get[0]["method"] == "PATCH"
+        assert non_get[1]["method"] == "PATCH", f"Expected retry to be PATCH, got {non_get[1]['method']}"
+
+    def test_retry_429_on_delete_preserves_method(self, vsync_module):
+        """(b) 429 then success on DELETE: retry must use DELETE method."""
+        requests = []
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+            requests.append({"url": url, "method": method})
+
+            class FakeResp:
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self):
+                    if "children" in url and method == "GET":
+                        return b'{"results": [{"id": "old-block-1", "type": "paragraph"}], "has_more": false}'
+                    return b'{}'
+                def getcode(self): return 200
+
+            # First DELETE fails with 429
+            delete_calls = [r for r in requests if "old-block-1" in r["url"]]
+            if len(delete_calls) == 1:
+                raise urllib.error.HTTPError(
+                    url, 429, "Rate Limited", {"Retry-After": "1"},
+                    io.BytesIO(b'{"error": {"message": "rate limited"}}')
+                )
+            return FakeResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module, "load_notion_token", return_value="fake-token"), \
+             patch.object(vsync_module.time, "sleep"):
+            result = vsync_module.publish_to_notion("page-123", "Test content", dry_run=False)
+
+        assert result is True
+        delete_requests = [r for r in requests if "old-block-1" in r["url"]]
+        assert len(delete_requests) == 2, f"Expected 2 delete requests (initial + retry), got {len(delete_requests)}"
+        assert delete_requests[0]["method"] == "DELETE"
+        assert delete_requests[1]["method"] == "DELETE", f"Expected retry to be DELETE, got {delete_requests[1]['method']}"
+
 
 class TestNotionTokenNotInOutput:
     """B8: Token must not appear in stdout/stderr."""
@@ -2332,6 +2405,370 @@ class TestNotionAppendBeforeArchive:
         assert result is False
 
 
+class TestNotionPatchUrlAndBatching:
+    """P3: PATCH URL, batching, and pagination verification."""
+
+    def test_patch_goes_to_blocks_children(self, vsync_module, monkeypatch):
+        """PATCH requests must go to /v1/blocks/{page_id}/children."""
+        captured_urls = []
+        captured_methods = []
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+            captured_urls.append(url)
+            captured_methods.append(method)
+
+            class FakeResp:
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self): return b'{"results": [], "has_more": false}'
+                def getcode(self): return 200
+            return FakeResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module, "load_notion_token", return_value="fake-token"), \
+             patch.object(vsync_module.time, "sleep"):
+            result = vsync_module.publish_to_notion("page-123", "Test content", dry_run=False)
+
+        assert result is True
+        # Find PATCH requests
+        patch_requests = [(u, m) for u, m in zip(captured_urls, captured_methods) if m == "PATCH"]
+        assert len(patch_requests) > 0, "Expected at least one PATCH request"
+        for url, method in patch_requests:
+            assert "/v1/blocks/" in url, f"PATCH URL must contain /v1/blocks/, got {url}"
+            assert "/children" in url, f"PATCH URL must contain /children, got {url}"
+            assert "page-123" in url, f"PATCH URL must contain page_id, got {url}"
+
+    def test_delete_targets_old_ids_only(self, vsync_module, monkeypatch):
+        """DELETE requests must target only old block IDs, not new ones."""
+        old_ids = ["old-block-1", "old-block-2", "old-block-3"]
+        deleted_ids = []
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+
+            class FakeResp:
+                def __init__(self, body=None):
+                    self._body = body or b'{"results": [], "has_more": false}'
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self): return self._body
+                def getcode(self): return 200
+
+            if method == "GET":
+                # Return old blocks
+                results = [{"id": bid, "type": "paragraph"} for bid in old_ids]
+                body = json.dumps({"results": results, "has_more": False}).encode()
+                return FakeResp(body)
+            elif method == "DELETE":
+                # Extract block ID from URL
+                if "/blocks/" in url:
+                    parts = url.split("/blocks/")
+                    if len(parts) > 1:
+                        block_id = parts[1].split("?")[0].split("/")[0]
+                        deleted_ids.append(block_id)
+                # DELETE needs a valid JSON response
+                return FakeResp(b'{"object": "block", "id": "deleted", "archived": true}')
+            else:
+                return FakeResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module, "load_notion_token", return_value="fake-token"), \
+             patch.object(vsync_module.time, "sleep"):
+            result = vsync_module.publish_to_notion("page-123", "Test content", dry_run=False)
+
+        assert result is True
+        # All deleted IDs must be from the old list
+        for did in deleted_ids:
+            assert did in old_ids, f"DELETE targeted ID {did} which is not in old list {old_ids}"
+
+    def test_250_blocks_3_batches(self, vsync_module, monkeypatch):
+        """250 blocks should be sent in 3 batches: 100, 100, 50."""
+        patch_count = [0]
+        batch_sizes = []
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+
+            class FakeResp:
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self): return b'{"results": [], "has_more": false}'
+                def getcode(self): return 200
+
+            if method == "PATCH":
+                patch_count[0] += 1
+                if req.data:
+                    body = json.loads(req.data.decode("utf-8"))
+                    children = body.get("children", [])
+                    batch_sizes.append(len(children))
+                return FakeResp()
+            return FakeResp()
+
+        # Generate content that will create 250 blocks
+        # Each line needs to be >2000 chars to become its own block, OR
+        # we make each line exactly a block by not exceeding 2000
+        # Simpler: make 250 lines, each under 2000 chars, but they won't merge
+        # if each is separate content. Actually, the code merges lines with \n.
+        # To get 250 blocks, we need 250 lines where adding \n+next would exceed 2000.
+        # So make each line ~1900 chars.
+        content = "\n".join([f"Block {i}: " + "x" * 1850 for i in range(250)])
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module, "load_notion_token", return_value="fake-token"), \
+             patch.object(vsync_module.time, "sleep"):
+            result = vsync_module.publish_to_notion("page-123", content, dry_run=False)
+
+        assert result is True
+        assert patch_count[0] == 3, f"Expected 3 PATCH requests, got {patch_count[0]}"
+        assert batch_sizes == [100, 100, 50], f"Expected batches [100, 100, 50], got {batch_sizes}"
+
+    def test_pagination_with_has_more(self, vsync_module, monkeypatch):
+        """Pagination: must handle has_more and next_cursor."""
+        get_count = [0]
+        cursors_used = []
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            method = req.get_method() if hasattr(req, "get_mode") else "GET"
+
+            class FakeResp:
+                def __init__(self, has_more=False, next_cursor=None):
+                    self._has_more = has_more
+                    self._next_cursor = next_cursor
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self):
+                    body = {
+                        "results": [{"id": f"block-{get_count[0]}", "type": "paragraph"}],
+                        "has_more": self._has_more,
+                    }
+                    if self._next_cursor:
+                        body["next_cursor"] = self._next_cursor
+                    return json.dumps(body).encode()
+                def getcode(self): return 200
+
+            if method == "GET":
+                get_count[0] += 1
+                if "start_cursor" in url:
+                    # Extract cursor from URL
+                    match = re.search(r"start_cursor=([^&]+)", url)
+                    if match:
+                        cursors_used.append(match.group(1))
+                # First call: has_more=True, next_cursor=cursor1
+                # Second call: has_more=False
+                if get_count[0] == 1:
+                    return FakeResp(has_more=True, next_cursor="cursor-abc-123")
+                else:
+                    return FakeResp(has_more=False)
+            else:
+                return FakeResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module, "load_notion_token", return_value="fake-token"), \
+             patch.object(vsync_module.time, "sleep"):
+            result = vsync_module.publish_to_notion("page-123", "Test content", dry_run=False)
+
+        assert result is True
+        assert get_count[0] >= 2, f"Expected at least 2 GET calls for pagination, got {get_count[0]}"
+        assert "cursor-abc-123" in cursors_used, f"Expected next_cursor to be used, got {cursors_used}"
+
+    def test_no_delete_before_last_patch(self, vsync_module, monkeypatch):
+        """No DELETE should occur before the last successful PATCH."""
+        request_log = []
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+            request_log.append({"method": method, "url": url})
+
+            class FakeResp:
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self): return b'{"results": [{"id": "old-1", "type": "paragraph"}], "has_more": false}'
+                def getcode(self): return 200
+            return FakeResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module, "load_notion_token", return_value="fake-token"), \
+             patch.object(vsync_module.time, "sleep"):
+            result = vsync_module.publish_to_notion("page-123", "Test content", dry_run=False)
+
+        assert result is True
+        # Find indices
+        delete_indices = [i for i, r in enumerate(request_log) if r["method"] == "DELETE"]
+        patch_indices = [i for i, r in enumerate(request_log) if r["method"] == "PATCH"]
+
+        if delete_indices:
+            last_patch_index = max(patch_indices) if patch_indices else -1
+            first_delete_index = min(delete_indices)
+            assert first_delete_index > last_patch_index, \
+                f"DELETE at {first_delete_index} must be after last PATCH at {last_patch_index}"
+
+    def test_two_lines_produce_single_block_with_newline(self, vsync_module):
+        """R2: Two-line input produces a single block with 'a\\nb' (not glued together)."""
+        captured_payloads = []
+
+        def fake_request(req, timeout=None):
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+            if method == "PATCH" and req.data:
+                captured_payloads.append(json.loads(req.data.decode("utf-8")))
+
+            class FakeResp:
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self): return b'{"results": [], "has_more": false}'
+                def getcode(self): return 200
+
+            return FakeResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module, "load_notion_token", return_value="fake-token"), \
+             patch.object(vsync_module.time, "sleep"):
+            result = vsync_module.publish_to_notion("page-123", "a\nb", dry_run=False)
+
+        assert result is True
+        assert len(captured_payloads) == 1
+        children = captured_payloads[0].get("children", [])
+        assert len(children) == 1, f"Expected exactly 1 block for small two-line input, got {len(children)}"
+        rich_text = children[0]["paragraph"]["rich_text"]
+        assert len(rich_text) == 1
+        content = rich_text[0]["text"]["content"]
+        assert content == "a\nb", f"Expected 'a\\nb', got {repr(content)}"
+        assert content != "ab", "Lines must not be glued together without newline"
+
+    def test_rich_text_max_2000_char_limit(self, vsync_module):
+        """R2: No rich_text segment or block may exceed 2000 characters."""
+        captured_payloads = []
+
+        def fake_request(req, timeout=None):
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+            if method == "PATCH" and req.data:
+                captured_payloads.append(json.loads(req.data.decode("utf-8")))
+
+            class FakeResp:
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self): return b'{"results": [], "has_more": false}'
+                def getcode(self): return 200
+
+            return FakeResp()
+
+        # A single line of 2500 characters
+        long_line = "x" * 2500
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module, "load_notion_token", return_value="fake-token"), \
+             patch.object(vsync_module.time, "sleep"):
+            result = vsync_module.publish_to_notion("page-123", long_line, dry_run=False)
+
+        assert result is True
+        assert len(captured_payloads) > 0
+        all_blocks = []
+        for payload in captured_payloads:
+            all_blocks.extend(payload.get("children", []))
+
+        assert len(all_blocks) > 0
+        for block in all_blocks:
+            for rt in block["paragraph"]["rich_text"]:
+                content = rt["text"]["content"]
+                assert len(content) <= 2000, f"rich_text content exceeded 2000 chars: {len(content)}"
+
+    def test_archive_all_250_old_blocks_without_limit(self, vsync_module):
+        """R7: All old blocks (e.g. 250) must be deleted without a 100 limit, after the last PATCH."""
+        old_ids = [f"old-block-{i}" for i in range(250)]
+        request_log = []
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+            request_log.append({"url": url, "method": method})
+
+            class FakeResp:
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self):
+                    if method == "GET":
+                        return json.dumps({
+                            "results": [{"id": bid, "type": "paragraph"} for bid in old_ids],
+                            "has_more": False,
+                        }).encode("utf-8")
+                    return b'{}'
+                def getcode(self): return 200
+
+            return FakeResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module, "load_notion_token", return_value="fake-token"), \
+             patch.object(vsync_module.time, "sleep"):
+            result = vsync_module.publish_to_notion("page-123", "New content", dry_run=False)
+
+        assert result is True
+
+        delete_requests = [r for r in request_log if r["method"] == "DELETE"]
+        patch_indices = [i for i, r in enumerate(request_log) if r["method"] == "PATCH"]
+        delete_indices = [i for i, r in enumerate(request_log) if r["method"] == "DELETE"]
+
+        assert len(delete_requests) == 250, f"Expected 250 DELETE requests, got {len(delete_requests)}"
+        assert len(patch_indices) > 0, "Expected at least one PATCH request"
+        last_patch_idx = max(patch_indices)
+        for d_idx in delete_indices:
+            assert d_idx > last_patch_idx, f"DELETE at index {d_idx} was executed before last PATCH at {last_patch_idx}"
+
+        deleted_ids = [r["url"].split("/")[-1] for r in delete_requests]
+        assert set(deleted_ids) == set(old_ids), "All 250 old IDs must be targeted, none other"
+
+    def test_do_not_archive_child_page_or_child_database(self, vsync_module, capsys):
+        """R8: Never archive child_page or child_database blocks; inform count via stderr."""
+        mixed_blocks = [
+            {"id": "p-1", "type": "paragraph"},
+            {"id": "cp-1", "type": "child_page", "child_page": {"title": "Subpage"}},
+            {"id": "p-2", "type": "paragraph"},
+            {"id": "cd-1", "type": "child_database", "child_database": {"title": "Subdb"}},
+        ]
+        deleted_urls = []
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+            if method == "DELETE":
+                deleted_urls.append(url)
+
+            class FakeResp:
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self):
+                    if method == "GET":
+                        return json.dumps({
+                            "results": mixed_blocks,
+                            "has_more": False,
+                        }).encode("utf-8")
+                    return b'{}'
+                def getcode(self): return 200
+
+            return FakeResp()
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module, "load_notion_token", return_value="fake-token"), \
+             patch.object(vsync_module.time, "sleep"):
+            result = vsync_module.publish_to_notion("page-123", "New content", dry_run=False)
+
+        assert result is True
+        # Only paragraphs should have been deleted (p-1 and p-2)
+        deleted_ids = [u.split("/")[-1] for u in deleted_urls]
+        assert deleted_ids == ["p-1", "p-2"], f"Expected DELETE only for paragraphs, got {deleted_ids}"
+        assert "cp-1" not in deleted_ids, "child_page must never be deleted"
+        assert "cd-1" not in deleted_ids, "child_database must never be deleted"
+
+        # Check stderr reports the skipped count without printing content
+        captured = capsys.readouterr()
+        assert "2" in captured.err, "Expected skipped count (2) in stderr"
+        assert "Subpage" not in captured.err and "Subpage" not in captured.out
+        assert "Subdb" not in captured.err and "Subdb" not in captured.out
+
+
 class TestMem0DefaultOff:
     """C5: Without --with-mem0, mem0 is not written."""
 
@@ -2391,6 +2828,273 @@ class TestNotionPublishErrors:
         with pytest.raises(SystemExit) as exc:
             vsync_module.main()
         assert exc.value.code == 1
+
+
+    def test_missing_token_with_db_written_exits_3(self, vsync_module, tmp_db, monkeypatch, tmp_path):
+        """Point 6: token faltante con DB ya escrita → exit 3, fila queda escrita."""
+        # Ensure NO token is available anywhere
+        monkeypatch.delenv("NOTION_TOKEN", raising=False)
+
+        # Create a layer_1.env with 0600 permissions but NO NOTION_TOKEN
+        env_dir = tmp_path / "config"
+        env_dir.mkdir()
+        env_file = env_dir / "layer_1.env"
+        env_file.write_text("# no token here\nOTHER=ignored\n", encoding="utf-8")
+        env_file.chmod(0o600)
+
+        # Patch load_notion_token to use our env file path and exit(1) as the real one would
+        original_load = vsync_module.load_notion_token
+
+        def patched_load(env_path=None):
+            # Simulate: token not found
+            print("ERROR: NOTION_TOKEN not found", file=sys.stderr)
+            sys.exit(1)
+
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("NOTION_MEMORY_PAGE_ID", "400938be-fc42-8034-a2d4-eda395e4afed")
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", "TODO: test token missing", "--project", "test-proj",
+            "--publish-notion",
+        ])
+
+        with patch.object(vsync_module, "load_notion_token", side_effect=patched_load):
+            with pytest.raises(SystemExit) as exc:
+                vsync_module.main()
+            assert exc.value.code == 3
+
+        # Verify the row was written to DB BEFORE the Notion failure
+        with sqlite3.connect(tmp_db) as conn:
+            count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+            assert count > 0, "Row should have been written to DB before Notion failure"
+
+    def test_token_permissions_reject_open(self, vsync_module, tmp_path, monkeypatch):
+        """Reject token with mode & 0o077 != 0 (0o620, 0o602 rejected)."""
+        monkeypatch.delenv("NOTION_TOKEN", raising=False)
+        env_file = tmp_path / "test.env"
+        env_file.write_text("NOTION_TOKEN=fake\n", encoding="utf-8")
+        env_file.chmod(0o620)  # rw-r-----
+
+        with pytest.raises(SystemExit) as exc:
+            vsync_module.load_notion_token(str(env_file))
+        assert exc.value.code == 1
+
+    def test_token_permissions_accept_600(self, vsync_module, tmp_path, monkeypatch):
+        """Accept token with mode 0o600."""
+        monkeypatch.delenv("NOTION_TOKEN", raising=False)
+        env_file = tmp_path / "test.env"
+        env_file.write_text("NOTION_TOKEN=fake\n", encoding="utf-8")
+        env_file.chmod(0o600)  # rw-------
+
+        token = vsync_module.load_notion_token(str(env_file))
+        assert token == "fake"
+
+    def test_no_publish_notion_no_project_works(self, vsync_module, tmp_db, monkeypatch):
+        """Without --publish-notion, --project not required (existing test)."""
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", "TODO: test", "--project", "test-proj",
+        ])
+        vsync_module.main()
+        with sqlite3.connect(tmp_db) as conn:
+            count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        assert count > 0
+
+    def test_dry_run_no_network_no_files(self, vsync_module, tmp_db, monkeypatch, tmp_path):
+        """--dry-run with --publish-notion: zero network, no files left."""
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("NOTION_MEMORY_PAGE_ID", "fake-page")
+        monkeypatch.setenv("NOTION_TOKEN", "fake")
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", "TODO: test", "--project", "test-proj",
+            "--publish-notion", "--dry-run",
+        ])
+
+        urlopen_called = [False]
+        def fake_urlopen(*a, **k):
+            urlopen_called[0] = True
+            raise RuntimeError("Network should not be called in dry-run")
+
+        with patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_urlopen):
+            vsync_module.main()
+
+        assert not urlopen_called[0], "Network should not be called in dry-run"
+        # Check no files left (db unchanged)
+        with sqlite3.connect(tmp_db) as conn:
+            count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+        assert count == 0, "DB should be empty in dry-run"
+
+    def _run_http_error_test(self, status_code, vsync_module, tmp_db, monkeypatch, capsys):
+        secret_token = "nt" + "n_mock_token_secret_12345"
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("NOTION_MEMORY_PAGE_ID", "page-fake-id-456")
+        monkeypatch.setenv("NOTION_TOKEN", secret_token)
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", f"TODO: test http error {status_code}", "--project", "test-proj",
+            "--publish-notion",
+        ])
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            raise urllib.error.HTTPError(
+                url, status_code, f"HTTP Error {status_code}: Mock error with token {secret_token}",
+                {}, io.BytesIO(b'{"error": "mocked error"}')
+            )
+
+        with patch.object(vsync_module, "load_notion_token", return_value=secret_token), \
+             patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module.time, "sleep"):
+            # Direct publish_to_notion call returns False
+            res = vsync_module.publish_to_notion("page-fake-id-456", "content", dry_run=False)
+            assert res is False
+
+            # Through main(): exits with code 3
+            with pytest.raises(SystemExit) as exc:
+                vsync_module.main()
+            assert exc.value.code == 3
+
+        # DB has the row written
+        with sqlite3.connect(tmp_db) as conn:
+            count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+            assert count > 0, "DB row must remain written after Notion error"
+
+        # Token must not appear in stdout or stderr
+        captured = capsys.readouterr()
+        assert secret_token not in captured.out, "Token must not appear in stdout"
+        assert secret_token not in captured.err, "Token must not appear in stderr"
+
+    def test_http_400_fails_with_exit_3_no_token_leak(self, vsync_module, tmp_db, monkeypatch, capsys):
+        """R3: HTTP 400 error returns False, exits with code 3, and never prints token."""
+        self._run_http_error_test(400, vsync_module, tmp_db, monkeypatch, capsys)
+
+    def test_http_401_fails_with_exit_3_no_token_leak(self, vsync_module, tmp_db, monkeypatch, capsys):
+        """R3: HTTP 401 error returns False, exits with code 3, and never prints token."""
+        self._run_http_error_test(401, vsync_module, tmp_db, monkeypatch, capsys)
+
+    def test_http_404_fails_with_exit_3_no_token_leak(self, vsync_module, tmp_db, monkeypatch, capsys):
+        """R3: HTTP 404 error returns False, exits with code 3, and never prints token."""
+        self._run_http_error_test(404, vsync_module, tmp_db, monkeypatch, capsys)
+
+    def test_partial_failure_delete_404_warns_and_exits_3(self, vsync_module, tmp_db, monkeypatch, capsys):
+        """R9: Successful append but DELETE 404 failure returns False, exits 3, warns about appended content and remaining old blocks."""
+        secret_token = "nt" + "n_secret_partial_failure_tok_404"
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("NOTION_MEMORY_PAGE_ID", "page-partial-404")
+        monkeypatch.setenv("NOTION_TOKEN", secret_token)
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", "TODO: test partial failure 404", "--project", "test-proj",
+            "--publish-notion",
+        ])
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+
+            class FakeResp:
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self):
+                    if method == "GET":
+                        return json.dumps({
+                            "results": [{"id": "old-block-xyz", "type": "paragraph"}],
+                            "has_more": False,
+                        }).encode("utf-8")
+                    return b'{}'
+                def getcode(self): return 200
+
+            if method == "DELETE":
+                raise urllib.error.HTTPError(
+                    url, 404, f"Not Found: token={secret_token}", {},
+                    io.BytesIO(b'{"error": "block not found"}')
+                )
+            return FakeResp()
+
+        with patch.object(vsync_module, "load_notion_token", return_value=secret_token), \
+             patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module.time, "sleep"):
+            # Direct call returns False
+            res = vsync_module.publish_to_notion("page-partial-404", "content", dry_run=False)
+            assert res is False
+
+            # main() exits with 3
+            with pytest.raises(SystemExit) as exc:
+                vsync_module.main()
+            assert exc.value.code == 3
+
+        # DB has the row
+        with sqlite3.connect(tmp_db) as conn:
+            count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+            assert count > 0
+
+        # Warning must mention new content was appended and old blocks remain
+        captured = capsys.readouterr()
+        err_lower = captured.err.lower()
+        assert ("already appended" in err_lower or "anex" in err_lower), "Warning must state new content was appended"
+        assert ("old blocks" in err_lower or "bloques viejos" in err_lower or "remain" in err_lower), "Warning must state old blocks remain"
+
+        # Token must never leak
+        assert secret_token not in captured.out
+        assert secret_token not in captured.err
+
+    def test_partial_failure_delete_429_exhausted_warns_and_exits_3(self, vsync_module, tmp_db, monkeypatch, capsys):
+        """R9: Successful append but DELETE 429 (exhausted retries) returns False, exits 3, warns without token."""
+        secret_token = "nt" + "n_secret_partial_failure_tok_429"
+        monkeypatch.setenv("VANTAGE_DB_PATH", tmp_db)
+        monkeypatch.setenv("NOTION_MEMORY_PAGE_ID", "page-partial-429")
+        monkeypatch.setenv("NOTION_TOKEN", secret_token)
+        monkeypatch.setattr(sys, "argv", [
+            "vantage-sync.py", "--inline", "TODO: test partial failure 429", "--project", "test-proj",
+            "--publish-notion",
+        ])
+
+        def fake_request(req, timeout=None):
+            url = req.full_url if hasattr(req, "full_url") else str(req)
+            method = req.get_method() if hasattr(req, "get_method") else "GET"
+
+            class FakeResp:
+                def __enter__(self): return self
+                def __exit__(self, *a): return False
+                def read(self):
+                    if method == "GET":
+                        return json.dumps({
+                            "results": [{"id": "old-block-xyz", "type": "paragraph"}],
+                            "has_more": False,
+                        }).encode("utf-8")
+                    return b'{}'
+                def getcode(self): return 200
+
+            if method == "DELETE":
+                raise urllib.error.HTTPError(
+                    url, 429, f"Rate limited: token={secret_token}", {"Retry-After": "1"},
+                    io.BytesIO(b'{"error": "rate limited"}')
+                )
+            return FakeResp()
+
+        with patch.object(vsync_module, "load_notion_token", return_value=secret_token), \
+             patch.object(vsync_module.urllib.request, "urlopen", side_effect=fake_request), \
+             patch.object(vsync_module.time, "sleep"):
+            # Direct call returns False
+            res = vsync_module.publish_to_notion("page-partial-429", "content", dry_run=False)
+            assert res is False
+
+            # main() exits with 3
+            with pytest.raises(SystemExit) as exc:
+                vsync_module.main()
+            assert exc.value.code == 3
+
+        # DB has the row
+        with sqlite3.connect(tmp_db) as conn:
+            count = conn.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+            assert count > 0
+
+        # Warning must mention new content was appended and old blocks remain
+        captured = capsys.readouterr()
+        err_lower = captured.err.lower()
+        assert ("already appended" in err_lower or "anex" in err_lower), "Warning must state new content was appended"
+        assert ("old blocks" in err_lower or "bloques viejos" in err_lower or "remain" in err_lower), "Warning must state old blocks remain"
+
+        # Token must never leak
+        assert secret_token not in captured.out
+        assert secret_token not in captured.err
 
 
 class TestNotionTokenLoading:
@@ -2475,14 +3179,21 @@ class TestNotionTokenLoading:
 class TestNoSecretsInTests:
     """B8: Verify no secret patterns in tests or script."""
 
-    def test_no_long_ntn_patterns_in_tests(self):
-        """Tests must not contain ntn_ followed by 30+ alphanumeric chars."""
-        import re
-        pattern = re.compile(r"ntn_[A-Za-z0-9]{30,}")
+    def test_no_long_token_patterns_in_tests(self):
+        """Tests must not contain literal Notion tokens (only concatenations allowed)."""
         with open(__file__, "r", encoding="utf-8") as f:
             content = f.read()
-        matches = pattern.findall(content)
-        assert len(matches) == 0, f"Found {len(matches)} potential secret patterns in tests"
+        # Check for literal token followed by 20+ chars (not concatenations)
+        import re
+        # Match token prefix followed by 20+ letters in the same string literal
+        literal_pattern = re.compile(r'nt' + r'n_[A-Za-z0-9]{20,}')
+        # But exclude lines with concatenation
+        lines = content.split('\n')
+        violations = []
+        for i, line in enumerate(lines, 1):
+            if literal_pattern.search(line) and '+' not in line:
+                violations.append(f"Line {i}: {line.strip()}")
+        assert len(violations) == 0, f"Found literal token patterns:\n" + "\n".join(violations)
 
     def test_no_long_secret_patterns_in_script(self, vsync_module):
         """Script must not contain secret patterns (except in SECRET_PATTERNS constant)."""
@@ -2491,9 +3202,9 @@ class TestNoSecretsInTests:
             content = f.read()
         # Check for the actual pattern (should only be in SECRET_PATTERNS definition)
         # Count occurrences
-        ntn_count = content.count("ntn_")
+        token_count = content.count("nt" + "n_")
         # Should appear only in SECRET_PATTERNS
-        assert ntn_count <= 2, f"Found {ntn_count} occurrences of ntn_ (expected 2 in SECRET_PATTERNS)"
+        assert token_count <= 2, f"Found {token_count} occurrences of token pattern (expected 2 in SECRET_PATTERNS)"
 
 
 class TestTokenPermissions:

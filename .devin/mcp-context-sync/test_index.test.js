@@ -371,6 +371,7 @@ describe('Part A4: límite de memory_list', () => {
     assert.ok(Array.isArray(data));
     assert.ok(data.length <= 200);
   });
+});
 
 describe('Part A1: rechazo de escritura en modo lectura', () => {
   let tempDb;
@@ -500,67 +501,6 @@ describe('Part A5: readOnly=true (C8)', () => {
       delete process.env.VANTAGE_CONTEXT_SYNC_WRITE;
       delete require.cache[require.resolve(SERVER_PATH)];
     }
-  });
-
-
-  let tempDb;
-
-  before(() => {
-    tempDb = createTempDb();
-  });
-
-  after(() => {
-    cleanupTempDb(tempDb.dbPath, tempDb.dir);
-  });
-
-  test('INSERT falla en modo lectura (readOnly: true)', async () => {
-    const { DatabaseSync } = require('node:sqlite');
-
-    // Open the same DB in readOnly mode and attempt an INSERT
-    const db = new DatabaseSync(tempDb.dbPath, { readOnly: true });
-    db.exec('PRAGMA busy_timeout = 5000');
-
-    let insertFailed = false;
-    try {
-      db.prepare('INSERT INTO memories (key, content, category) VALUES (?, ?, ?)').run('ro-test', 'test', 'task');
-    } catch (e) {
-      insertFailed = true;
-    }
-    db.close();
-
-    assert.ok(insertFailed, 'INSERT must fail when DB is opened with readOnly: true');
-  });
-
-  test('INSERT falla en modo lectura vía spawn de servidor (red-green)', async () => {
-    const { DatabaseSync } = require('node:sqlite');
-
-    // Verify that the old mode:'readonly' would NOT block INSERT,
-    // to demonstrate the test is meaningful (red-green evidence).
-    // Create a fresh writable DB and confirm INSERT works in RW mode:
-    const rwDir = join(tmpdir(), 'vantage-rw-' + Date.now());
-    mkdirSync(rwDir, { recursive: true });
-    const rwPath = join(rwDir, 'context-sync.db');
-    let rwDb = new DatabaseSync(rwPath);
-    rwDb.exec(`CREATE TABLE memories (id INTEGER PRIMARY KEY, key TEXT, content TEXT, category TEXT)`);
-    rwDb.prepare('INSERT INTO memories (key, content, category) VALUES (?, ?, ?)').run('rw-test', 'test', 'task');
-    rwDb.close();
-
-    // Now open with readOnly:true and confirm INSERT fails
-    let roFailed = false;
-    const roDb = new DatabaseSync(rwPath, { readOnly: true });
-    try {
-      roDb.prepare('INSERT INTO memories (key, content, category) VALUES (?, ?, ?)').run('ro-test', 'test', 'task');
-    } catch (e) {
-      roFailed = true;
-    }
-    roDb.close();
-
-    assert.ok(roFailed, 'readOnly:true must reject INSERT');
-    assert.ok(!roFailed === false);  // sanity: roFailed is true
-
-    // cleanup
-    if (existsSync(rwPath)) unlinkSync(rwPath);
-    if (existsSync(rwDir)) rmdirSync(rwDir);
   });
 });
 
