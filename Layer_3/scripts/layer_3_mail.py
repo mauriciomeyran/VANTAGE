@@ -54,7 +54,7 @@ GEMINI_BODY_MAX  = int(os.environ.get("GEMINI_BODY_MAX_CHARS", "2000"))
 MAX_EMAILS_RUN = int(os.environ.get("GEMINI_MAX_EMAILS_PER_RUN", "5"))
 
 OLLAMA_HOST    = os.environ.get("OLLAMA_HOST") or os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
-OLLAMA_MODEL   = os.environ.get("OLLAMA_MODEL", "qwen2.5:0.5b").strip()
+OLLAMA_MODEL   = os.environ.get("OLLAMA_MODEL", "qwen2.5-coder:7b").strip()
 OLLAMA_TIMEOUT = float(os.environ.get("OLLAMA_TIMEOUT_SEC", "60"))
 OLLAMA_MAX_RETRIES = int(os.environ.get("OLLAMA_MAX_RETRIES", "2"))
 
@@ -777,7 +777,7 @@ def is_url_valid(job: dict, source_body: str) -> tuple[bool, str]:
     """
     Tercera línea de defensa: valida que la URL exista y sea LITERAL del
     correo original — no basta con que el modelo la haya devuelto.
-    Sin esto, un modelo chico (ej. qwen2.5:3b) puede devolver la vacante
+    Sin esto, un modelo chico (ej. qwen2.5-coder:1.5b) puede devolver la vacante
     con url:'' en vez de omitirla del todo (regla del prompt: sin URL
     literal, la vacante entera se descarta), y eso llegaría al tracker.
     """

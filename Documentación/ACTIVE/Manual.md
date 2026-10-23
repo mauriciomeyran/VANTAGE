@@ -1214,6 +1214,38 @@ Variables de entorno (todas ajustables sin tocar código):
 | GROQ_MAX_RETRIES | 8 | Ajusta si tu conexión es inestable. |
 | GROQ_BODY_MAX_CHARS | 3500 | Si tus alertas de correo traen JDs muy largos y se están truncando antes de lo útil, súbelo (cuidado con costo de tokens de Groq). |
 | GEMINI_MAX_EMAILS_PER_RUN | 5 | Si tuviste una semana sin correr L3 y hay backlog, súbelo temporalmente para procesar todo de un jalón. Nombre heredado; aplica a ambos backends (Ollama/Groq). GROQ_MAX_EMAILS_PER_RUN no existe en el código. |
+ats_workday.py
+Qué hace: Extractor del ATS Workday (Career Sites, fuente L1 #3) — búsqueda estructurada por facets + appliedFacets contra la API CXS de Workday, con geografía estructurada. Clasifica cada corrida en 6 estados (QueryState): verified_results, verified_empty, blocked, dns_failure, timeout, unknown. Regla fundamental del contrato: un HTTP 200 con cero postings NO es verified_empty. WORKDAY_MAX_LIMIT = 20 (la CXS rechaza limit superior a 20 con HTTP 400) y tope anti-wraparound en offset (Workday envuelve circularmente al pasarse del final). También es módulo: ats_adapter.py consume workday_structured_search(). Tests: test_ats_workday.py (41). Commit ab7b3b1.
+Flags:
+| Flag | Caso de uso |
+| --- | --- |
+| host (posicional, requerido) | Tenant Workday objetivo, formato tenant.wdN.myworkdayjobs.com. |
+⚠️ Flags restantes del CLI pendientes de verificación contra código — no se documentan aquí para no inventar.
+ats_adapter.py
+Qué hace: Adapter de discovery para ATS estructurados — envuelve ats_workday.py vía workday_structured_search() y expone run_workday_discovery() como corrida de discovery lista para el orquestador de Career Sites. El CLI verificado del orquestador es --ats workday (no --target-ats; discrepancia del brief registrada como TD-003).
+Flags: ⚠️ Argparse propio confirmado ("VANTAGE ATS Adapter — Workday discovery", L286); tabla de flags pendiente de verificación contra código.
+context-dump.py
+Qué hace: Extractor standalone de alto rendimiento para generar cargas de contexto compactas (150–250 tokens aprox.) sin dependencias externas — capa de entrada del Memory Layer multi-agente (Terminal Clipboard). Uso documentado para agentes CLI: python3 Layer_1/scripts/context-dump.py.
+Flags: pendientes de verificación contra código.
+export_tracker_snapshot.py
+Qué hace: Dry-read del Tracker vía data_sources.query → JSON + sidecar .sha256, con resumen Status/Next_Action/Gate. G8 PASO 1. En modo --fixture corre con cero red y cero writes (CI-safe).
+Flags:
+| Flag | Caso de uso |
+| --- | --- |
+| --out <ruta> (requerido) | Ruta del snapshot JSON de salida. |
+| --fixture | Corrida cero-red contra fixture en vez del Tracker vivo. |
+| --data-source-id | Data source del Tracker (default 442938be…). |
+| --env-file | Archivo .env alternativo para el token. |
+vload.py
+Qué hace: Fetch quirúrgico de Notion con resolución automática de UUID desde document_registry en resolver_registry_v2.json (PREFIX:CLAVE → UUID) — wrapper sobre lazy_loader.fetch_lazy_section. Interfaz preferente del operador (MANUAL:LAZY-LOAD; lazy_loader.py es su implementación interna, KERNEL:NAM-DOC-CONTRACT).
+Flags:
+| Flag | Caso de uso |
+| --- | --- |
+| --page <UUID> | Fetch directo por page ID. |
+| --route PREFIX:CLAVE | Fetch por ruta canónica; resuelve el UUID desde el registry. |
+| --list | Lista las rutas/UUIDs disponibles del registry. |
+| --registry | Inspección del registry. |
+Nota real: la resolución automática de UUID vive aquí — los alias que invocan otros CLIs sin cablear vload fallan con «the following arguments are required: --page» (hallazgo v9.22.58).
 ---
 ### 22.1a MANUAL:SCRIPT-GLOSSARY-L1-MODULES
 Módulos Compartidos (sin CLI propia — se importan, no se ejecutan solos)
@@ -1238,6 +1270,20 @@ Quién lo consume: generate_entity_index_v2.py, lazy_loader.py.
 Por qué te sirve saberlo: si ves un error de "prefijo ausente en Registry" en vez de un ID mal formado silencioso, es este contrato funcionando como debe — es una falla intencional, no un bug.
 vantage_id_rules.pyQué hace: Módulo único de reglas de detección DEF/REF/heading/boundary para todo el ecosistema de IDs PREFIX:KEY — consolida lógica que antes vivía duplicada (y desincronizada) en 4 scripts distintos (generate_census.py, generate_id_inventory.py, apply_hyperlinks_notion.py, normalize_heading_ids.py).
 Por qué te sirve saberlo: antes de esta consolidación (sesión 2026-07-25), cada script tenía su propia noción de "qué es una definición válida" — eso producía falsos huérfanos en el census. Si ves comportamiento inconsistente entre esos 4 scripts hoy, sería regresión de este contrato compartido.
+hard_block_gate.pyQué hace: Gate de Hard Blocks — lee hard_blocks.json (dato que existía sin consumidor) y lo conecta a feed_processor.py antes de cualquier CREATE, cerrando el circuito que company_is_blocked() (regex correctos) dejaba vivo solo en tests: dos filas se llegaron a crear pese al bloqueo total declarado porque ningún script de producción invocaba la función.
+Quién lo consume: feed_processor.py (import previo a CREATE).
+Por qué te sirve saberlo: si una vacante de un empleador bloqueado vuelve a colarse en el Tracker, este gate (o su invocación) es el punto de falla — la detección ya era correcta antes de que existiera el gate.
+tracker_flow.pyQué hace: Flujo de estados del Tracker — define los 11 estados del ciclo de vida de una vacante y las reglas que el pipeline consulta al operar sobre ellos.
+Quién lo consume: layer_1_orchestrator.py (superficie crítica L1); dedup_opportunities.py declara proteger solo 2 de sus 11 estados.
+Por qué te sirve saberlo: si un script auxiliar escribe sobre el Tracker, verifica contra este flujo qué estados respeta — la protección entre estados no es uniforme.
+conftest.pyQué hace: Fixture de pytest (_isolate_vantage_state_dir, autouse) que aísla el state file real (state/last_successful_run.json) de la suite de tests — cada corrida opera sobre una copia temporal, no sobre el estado de producción (Fase 1 fix).
+Quién lo consume: toda la suite de pytest de Layer_1, cargada automáticamente por directorio.
+Por qué te sirve saberlo: desde la raíz chocan 3 conftest (tests/, Layer_1/tests/, Layer_1/scripts/ — sin pytest.ini ni pyproject.toml): invoca por directorio hasta que exista el comando canónico (ticket T3.T).
+linkedin_identity_matcher.pyQué hace: Matcher de identidad de empleadores LinkedIn (Phase 3C) — normalize_identity(), match_employer(), resolve_employer_identity(). Cero red (verificado por test_no_network_access_in_matcher), determinista (3 corridas idénticas), 27/27 tests. Es el Implementation Path del contrato LinkedIn (PROMPT_CANON, SHA f7fa051).
+Quién lo consume: binding de verify_versions.py (V6′, git show SHA:path) y su suite de tests.
+Por qué te sirve saberlo: es el componente real detrás de la identidad de empleadores del feed LinkedIn — los artefactos que el brief afirmaba sin existir se resuelven aquí.
+vantage_status.pyQué hace: Capa de compatibilidad legacy sobre tracker_flow — LEGACY_STATUS_MAP explícito (Archivar→Expirada, Target→Objetivo, etc.), normalize_status, is_terminal_status, is_protected_status, is_mutable_status, gate_protected_value (reemplaza gate_logic en estos casos). Cubre 98 registros legacy (12% de la base); None en el mapa = legacy sin mapeo, flaggeado y no asumido. Normalización lazy, sin writes.
+Por qué te sirve saberlo: si ves un Status en inglés viejo o no canónico en registros antiguos, este módulo define cómo se mapea — mientras exista ese 12% legacy, no lo borres.
 ---
 ### 22.1b MANUAL:SCRIPT-GLOSSARY-L1-TOOLS
 Utilidades y Herramientas de Sesión
@@ -1269,6 +1315,15 @@ normalize_tracker_values.py
 Script G7 idempotente: normaliza Next_Action/Gate_Decision legacy EN→ES canónico (Seguimiento, Preparación Entrevista, Revisión); dry-run por defecto, reanudable, conteos pre/post.
 batch_operations.py
 RETIRADO (G6 / Q-10) Script archivado en Archive/Legacy_Scripts/batch_operations.py. Case Target→Exploratorio ya aplicado en prod (Target=0); nada que migrar (Q-10).
+build_paquete_arena.shQué hace: Genera paquete_arena_extractos.txt — paquete de extractos en modo solo lectura (no modifica el repo).
+Uso: bash build_paquete_arena.sh desde cualquier carpeta dentro del repo VANTAGE — sin flags.
+Caso de uso: armar el paquete de extractos para una sesión de trabajo en ARENA sin tocar el árbol.
+verify_md.pyQué hace: Linter markdown de CV-B — detecta trailing whitespace, bold con espacio final, nodo de periodo mal formado (pipe-asterisco huérfano), nodo vacío '' vs ' ', y [PENDING DATA] prohibido. Acoplado al formato ###### figma_text_id de CV-B.
+Uso: python3 verify_md.py <ruta> — un argumento posicional (sys.argv[1]), sin flags. 41 líneas.
+Caso de uso: pasada rápida de calidad de nodos antes de mandar el CV-B a Figma.
+reorder_census_spec.pyQué hace: Reordena CENSUS_SPEC (el literal dentro de generate_census.py) según el orden real de los documentos en Documentación/ACTIVE/ — herramienta determinista offline: sin red ni NOTION_TOKEN.
+Uso: invocación directa; flags pendientes de verificación contra código.
+Caso de uso: tras reordenar documentos fundacionales, realinear el spec al orden real de ACTIVE/ sin editar a mano.
 ---
 ### 22.3 MANUAL:SCRIPT-GLOSSARY-L4
 Layer 4 — Version Control & Sync Documental
@@ -1301,6 +1356,30 @@ Flags:
 | -o/--output <ruta> | Si quieres guardar el resumen en vez de verlo en pantalla — útil para encadenar con otro proceso. |
 | -m/--model {groq,gemini} | Si Groq está teniendo rate limits, cambia manualmente a Gemini con este flag en vez de esperar el fallback automático. |
 | --notion | ⚠️ Flag vestigial — se parsea pero no tiene ningún efecto en el código actual. No lo uses esperando que cree una página en Notion. |
+foundational_docs.pyQué hace: Fuente única (SSOT) del mapeo page_id → key de los 8 documentos fundacionales para vsync_doc.py — el mapeo antes vivía duplicado (hallazgo B11) en notion_write_wrapper.py y trigger_sync_after_mcp_write.py.
+Quién lo consume: vsync_doc.py y los hooks de sync L4.
+Por qué te sirve saberlo: si un hook de sync no reconoce un doc fundacional, este literal es el punto de revisión — la duplicación fue la causa raíz de un bug documentado.
+trigger_sync_after_mcp_write.pyQué hace: Hook post-write MCP — dispara vsync_doc.py --direction notion --doc <key> en background vía Popen no-bloqueante si el page_id es uno de los 8 docs fundacionales (IDs hardcodeados correctos). No espera resultado; log warning si falla. Endurecido en commit 405ef8f (no-bloqueante + 8 docs) tras el hallazgo B1 (PIPE sin lector mataba el sync lanzado).
+Uso: invocado por wrappers con <page_id> posicional.
+Por qué te sirve saberlo: es el mecanismo que mantiene los mirrors de ACTIVE/ al día tras una escritura por MCP.
+notion_write_wrapper.pyQué hace: Wrapper central de escrituras Notion con trigger de auto-sync si el page_id es fundacional (8 docs). ⚠️ Estado real: stub — write_to_notion_page() devuelve write_success=True hardcodeado sin escribir a Notion (hallazgo B10, TODO pendiente en el código). Declarado experimental en README; Estado «En desarrollo» en Script Library.
+Uso: módulo, no CLI.
+Por qué te sirve saberlo: no confíes en un «success» que venga de esta vía hasta implementarse el TODO — riesgo documentado de falsa sensación de escritura.
+mcp_sync_wrapper.shQué hace: Wrapper bash de 27 líneas (delegación simple) que orquesta writes MCP + sync automático llamando a trigger_sync_after_mcp_write.py <page_id> — hook de infraestructura L4 para mantener los mirrors de ACTIVE/ actualizados.
+Uso: mcp_sync_wrapper.sh <page_id> — invocación manual (el MCP server vive fuera del repo; limitación aceptada y documentada).
+Por qué te sirve saberlo: es la vía manual canónica para disparar el sync post-MCP cuando el hook automático no corre.
+split_digest.pyQué hace: Divide VANTAGE_digest.md en archivos de menos de 500,000 palabras, cortando en líneas para mantener la estructura.
+Uso: invocación directa; flags pendientes de verificación contra código.
+Caso de uso: cuando el digest completo excede el límite de la herramienta de consumo y necesitas partirlo sin romper la estructura.
+vdoc_local_contingency.pyQué hace: Contingencia aislada local→Notion, fuera del CLI vdoc — herramienta de emergencia para empujar UN SOLO documento desde Documentación/ACTIVE/.
+Uso: emergencia puntual; no reemplaza el ciclo vdoc/vsync_doc.
+Por qué te sirve saberlo: cuando vdoc esté roto o arriesgado y necesites subir exactamente un documento, esta vía toca solo ese doc — el resto del ciclo queda intacto.
+vdoc_nblm.pyQué hace: Variante NotebookLM de vdoc — sube documentos del árbol documental hacia NotebookLM como fuente de consulta. ⚠️ Hallazgo B8 (2026-10-02): ACTIVE_DIR incorrecto (rutas hardcodeadas L8–9) → no sube ningún documento y falla sin avisar; estado del fix no verificado en esta pasada.
+Uso: material delgado — confirmar alcance y flags actuales contra código antes de depender de él.
+Por qué te sirve saberlo: es la conexión L4 con el triaje por NotebookLM (§9.5); si no sube nada silenciosamente, revisa las rutas primero.
+vantage-mcp-tunnel.shQué hace: Orquestador de túneles HTTPS (cloudflared) del Memory Layer multi-agente — captura dinámicamente los hostnames .trycloudflare.com y maneja un apagado limpio estricto (graceful shutdown). Parte del stack de entrada remota (mcp-sse-bridge, port 8080) que expone los procesos stdio MCP locales a agentes externos vía HTTPS.
+Uso: invocación directa; flags pendientes de verificación contra código.
+Por qué te sirve saberlo: es la puerta de entrada remota para agentes sin acceso directo a tu máquina — si agentes externos pierden conexión con los tools MCP, este túnel y su hostname dinámico es lo primero que revisar.
 ---
 ### 22.4 MANUAL:SCRIPT-GLOSSARY-DASHBOARD
 Dashboard — Servidor Local de Visualización
@@ -1346,6 +1425,8 @@ Raycast — Atajos de Un Click
 | vantage-status.sh | status_report.py | Sin flags. |
 | vantage-sync.sh | (revisar contenido — probablemente alias de vdoc.py auto o vsync_doc.py) | Pendiente de confirmación directa si se usa activamente. |
 | clean-caches-raycast.sh | clean_caches.sh | Limpieza de cachés de apps (Chrome, Figma, Notion, etc.) — no toca sesión/login, solo caché regenerable. |
+| open-figma-template.sh | — (abre template de Figma; no invoca un script VANTAGE) | Utilidad de escritorio Raycast (capa Dashboard). |
+| vantage-vl1sync.sh | vl1_sync.py | Atajo al sidecar T6 (Outcome→Status; --dry-run por defecto, --apply gateado, alias vl1s). Flags reenviados pendientes de confirmar contra el contenido del wrapper. |
 ---
 ### 22.6 MANUAL:SCRIPT-GLOSSARY-XREF
 Matriz de Transición de Estados — Ciclo de Vida del Script
@@ -1389,6 +1470,17 @@ Pipeline CV y Ciclo de Sesión
 | vantage-cv-b | Construye CV final con Figma Tags desde HANDOFF | CV-B [HANDOFF] | ✅ | No especificado (gap, ver 23.5) |
 | vantage-qa | Audita PDF de CV final, veredicto GO/NO-GO | QA [PDF] | ❌ | No especificado (gap, ver 23.5) |
 | vantage-present-handoff | Handoff compacto de sesión para continuidad | Fin de sesión / cambio de chat | ❌ | HANDING OFF… / HANDOFF DELIVERED |
+vantage-active-search-weekly
+Qué hace: Ciclo semanal de búsqueda activa — orquesta el discovery activo de vacantes y normaliza las fuentes JSON del paso de recopilación (usa normalize_source_json.py, que vive dentro de su carpeta de skill).
+Cuándo se activa: en la ventana semanal de búsqueda activa / invocación explícita.
+Por qué te sirve saberlo: es el complemento activo del feed pasivo de L1 — cuando la semana exige ir a buscar vacantes en vez de esperarlas, este es el skill del ciclo.
+Depende de: normalize_source_json.py.
+⚠️ Material delgado: la descripción de Skill Library es stub («Búsqueda activa semanal») — confirmar alcance real contra el SKILL.md en disco.
+vantage-session-handoff
+Qué hace: Procesa una conversación completa entregada en .md y genera un handoff de sesión exhaustivo y listo para producción — analiza todo el historial, extrae las 9 dimensiones clave de contexto, identifica el estado exacto del proyecto/tarea y produce un bloque copiable que transfiere el 100% del contexto a un nuevo LLM/agente sin fetches redundantes. ID canónico KERNEL:HANDOFF-GENERATOR · v1.2.0 (rigor de Prompt Master + estructura S0–S5).
+Cuándo se activa: invocación explícita cuando el operador solicita generar un handoff a partir de un volcado .md de conversación.
+Por qué te sirve saberlo: a diferencia de vantage-present-handoff (handoff Lite de emisión inmediata), este reconstruye el contexto completo desde el historial — úsalo cuando el Lite no capture el estado profundo de la sesión. Reglas duras: cero suposición (todo anclado en evidencia del .md), cero tokens desperdiciados, anclaje de evidencia post-ejecución (S4-EVIDENCE).
+Anuncio: HANDING OFF... / HANDOFF DELIVERED.
 ---
 ### 23.2 MANUAL:SKILL-GLOSSARY-HOUSEKEEPING
 Sincronización y Mantenimiento Documental
@@ -1408,6 +1500,11 @@ Sincronización y Mantenimiento Documental
 | vantage-tidy-changelog | Recorta Change Log a últimas 10 entradas | Exceso >10 entradas / housekeeping | ✅ | TIDYING CHANGELOG… / CHANGELOG TIDIED |
 | vantage-documentacion-transversal-propuesta | Mapea nodos fundacionales afectados, sin escribir | "propuesta de documentación transversal" / gap estructural | ❌ | BEGINNING DOCUMENTATION MAPPING… / cierre no especificado (gap, ver 23.5) |
 | vantage-documentacion-transversal-implementacion | Ejecuta escritura de documentación ya autorizada | Post-APROBAR_WRITE de propuesta | ✅ | RESUMING DOCUMENTATION — IMPLEMENTATION PHASE… / DOCUMENTATION FINISHED |
+vantage-sync-skill-glossary
+Qué hace: Sincroniza el Skill Glossary (§23) contra el árbol de disco activo usando el gap report LOCAL de verify_versions.py --new-skills (no --skills, que compara contra Notion). No aplica a Skill Library (ver vantage-sync-skill-library), Script Glossary (vantage-sync-script-glossary) ni CENSUS_SPEC (vantage-sync-census-spec).
+Cuándo se activa: «sincronizar Skill Glossary» / gap report --new-skills.
+Por qué te sirve saberlo: es la mitad local del par de sincronización de skills — si una skill nueva en disco no aparece en §23 pero sí en Skill Library, este es el skill que falta correr. Gate: ✅ APROBAR_WRITE.
+Depende de: verify_versions.py --new-skills.
 ---
 ### 23.3 MANUAL:SKILL-GLOSSARY-AUDIT
 Auditoría y Continuidad
@@ -1416,7 +1513,11 @@ Auditoría y Continuidad
 | vantage-audit-navigation-brief | [DEPRECATED] Funcionalidad integrada en vantage-documentacion-transversal-propuesta | N/A — usar vantage-documentacion-transversal-propuesta | ❌ (solo lectura, nunca escribe Notion) | No aplica (deprecada) |
 | extract-learnings | [DEPRECATED] Actividad post-mortem esporádica, no skill operativa recurrente | Post-fumble evitable o creación de skill nueva | ❌ | No aplica (housekeeping interno) |
 | vantage-skill-updater | Evalúa compliance de skills contra KERNEL requirements, propone actualizaciones | "actualizar skills con requisitos VANTAGE" / "evaluar compliance de skills" | ✅ | BEGINNING SKILL EVALUATION… / SKILL EVALUATION COMPLETE |
----
+Bug Hunter
+Qué hace: Audita código de forma estática y no destructiva para identificar bugs, vulnerabilidades y problemas de mantenibilidad — hallazgos accionables, reproducibles cuando es posible y respaldados por evidencia concreta. Estructura de trabajo: bug-hunter/ (hunt.sh como punto de entrada, analyzer.py para análisis estático y clasificación, template.html para el dashboard HTML autónomo).
+Cuándo se activa: invocación explícita con un target (archivo, conjunto de archivos, directorio o repositorio completo).
+Por qué te sirve saberlo: sustituye la revisión manual ad-hoc con un ciclo auditable de evidencias. ⚠️ Nota de provenance: su SKILL.md es una reconstrucción desde historial de conversación, no una recuperación literal — la existencia actual de hunt.sh/analyzer.py/template.html no se ha verificado contra el repo.
+Gate: no destructivo / solo lectura sobre el código auditado.
 ### 23.4 MANUAL:SKILL-GLOSSARY-STYLE
 Estilos de Escritura y Generación (activación por invocación explícita, no por trigger operativo)
 | Skill | Propósito | Trigger |
@@ -1427,6 +1528,10 @@ Estilos de Escritura y Generación (activación por invocación explícita, no p
 | corporate-communication-style | Cartas de recomendación formales | Invocación exacta por nombre |
 | prompt-master | Genera prompts optimizados para otras IAs | Pedido explícito de prompt para IA/Cursor/Midjourney/etc. |
 | tailored-resume-generator | Genera CVs adaptados a una vacante específica | Solicitud de CV a medida + JD |
+Prompt Master Regular
+Qué hace: Genera prompts optimizados para herramientas de IA (LLM, Cursor, Midjourney, imagen, video, coding agents) — toma la idea bruta, identifica la herramienta destino, extrae el intent real y produce un único prompt listo para producción sin tokens desperdiciados (v1.8.2, name interno prompt-master). No discute teoría de prompting ni muestra frameworks en el output; pide la herramienta destino antes de emitir si hay ambigüedad.
+Cuándo se activa: solo ante pedido explícito de escribir/arreglar/mejorar/adaptar un prompt para una herramienta específica — no se activa en conversación general, tareas de código o redacción de documentos.
+Por qué te sirve saberlo: convive con la fila prompt-master de la tabla superior (misma descripción en ambas filas de Skill Library) — confirmar si son el mismo skill con doble fila antes del próximo sync. vantage-session-handoff hereda su rigor.
 ---
 ### 23.5 MANUAL:SKILL-GLOSSARY-XREF
 Gaps Abiertos (hallazgos, no corregidos en esta pasada)

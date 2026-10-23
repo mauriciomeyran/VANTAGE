@@ -47,7 +47,7 @@ if _ENV.exists():
         line = line.strip()
         if line and not line.startswith("#") and "=" in line:
             k, _, v = line.partition("=")
-            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+            os.environ[k.strip()] = v.strip().strip('"').strip("'")
 
 TOKEN = os.environ.get("NOTION_API_KEY") or os.environ.get("NOTION_TOKEN")
 if not TOKEN:

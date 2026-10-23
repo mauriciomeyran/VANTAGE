@@ -168,6 +168,9 @@ Tabla documental vs. operacional — qué resuelve cada vía:
 vload.py es documental (resuelve referencias PREFIX:CLAVE dentro de los 9 documentos fundacionales); lazy_loader.py/vantage.py es operacional (resuelve entidades del Tracker/Archivo vía Runtime). No son intercambiables — un PREFIX:CLAVE nunca se resuelve vía Runtime, y una entidad TRACKER:H_xxx nunca se resuelve vía vload.
 Tabla de triaje completa (lectura puntual vs. MCP vs. extracción masiva): ver MANUAL:LAZY-LOAD (§14).
 Consultar en KERNEL:CONTEXT-INFRASTRUCTURE.
+### 04.1 SP:CONTEXT-INFRASTRUCTURE-001
+Convención de bloques de Terminal
+Todo bloque de comandos que un agente entregue para la Terminal del operador (macOS/zsh) se envuelve en { ...; } 2>&1 | tee >(pbcopy), de modo que la salida se muestra y se copia al portapapeles para pegarla en el chat. Excepción: comandos interactivos o que dependan de detectar TTY. No sustituye DRY RUN ni APROBAR_WRITE.
 ---
 ## 05 SP:DATA-FLOW
 Flujo de Datos

@@ -1,5 +1,123 @@
 # V | CHANGELOG
 
+### Oct 22, 26 23:21 — v9.22.66 — MISTRAL/DEFAULT: ejecución de CS-MISTRAL-SYNC-01 — proyecto SYNC volcado a ROADMAP & IMPLEMENTATION REPORT
+Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT.
+Fecha: 2026-10-22 23:21 CDMX (reloj de sistema, VERIFICADO).
+Autorización: APROBAR_WRITE del operador para las escrituras de la página destino (Fase 4 del contrato, 2026-10-22); para esta entrada: APROBAR_WRITE del operador en este turno; pasada única sin DRY RUN, changelog + bump de Versión en una sola pasada, por instrucción expresa (optimización de tokens).
+Contrato: CS-MISTRAL-SYNC-01 (emite CLAUDE/MAIN; ejecuta MISTRAL/DEFAULT; verificación independiente por agente distinto — PENDIENTE, DEC-10).
+Documentos modificados: 🗺️ ROADMAP & IMPLEMENTATION REPORT: VANTAGE MULTI-AGENT MEMORY LAYER (id 3f2938be-fc42-803e-b6e2-ee3132c15554) — operaciones W0–W6 · V | CHANGELOG (esta entrada + bump de Versión).
+Cambio:
+1. Fase 4 del contrato ejecutada contra la página ROADMAP: W0 nota de encabezado + W1–W5 notas de reconciliación antepuestas a las cinco secciones existentes (5 A RECONCILIAR + 1 OBSOLETA en Verification & Security Audit Matrix); contenido previo conservado íntegro como histórico del despliegue 2026-10-07. La página pasa a ser la página del proyecto SYNC (Opción A, Fase 2 del contrato).
+1. W6: bloque «🧠 PROYECTO SYNC — SEGUIMIENTO (página del proyecto · desde 2026-10-22)» anexado, §0–§8: 17 filas volcadas (PLAN 5, LOG 9, Tablero/CONTEXTO 3) con 14 enlaces a filas del tracker; ~15 filas excluidas por la regla de desambiguación de "sync" (vsync_doc, vversions --sync, git_sync/vgit, ingesta L1 T3.M/T3.N, higiene T3.S, entre otras).
+1. Re-fetch de verificación (2026-10-23T04:28Z = 22:28 CDMX): IGUAL — todas las operaciones verificadas, contenido previo íntegro; única diferencia cosmética: auto-linkificación de nombres de archivo .py por Notion. Reporte final §8 del contrato emitido en sesión.
+1. Fuera de alcance del contrato (sin ejecutar): fila-puntero en el hub (requiere APROBAR_WRITE aparte), propiedades de la página destino (Versión/Status sin llenar), serial HO sin asignar (vserial al cierre), vsync_doc / vversions --sync / git_sync / ingesta L1 / higiene general del repo.
+Tipo de impacto: documental (consolidación del seguimiento del proyecto SYNC en su propia página). Sin altas ni bajas de IDs canónicos; Census y Registry sin cambios.
+Verificación: re-fetch posterior a las escrituras W0–W6 (22:28 CDMX): conforme, sin warnings. Verificación independiente del contrato: PENDIENTE (CHATGPT o GROK, DEC-10).
+Pendiente: vversions --sync (Fecha de actualización de este documento y Versión de los demás) · rotación al ARCHIVO (con esta entrada, 25 visibles frente a la regla de 10, T3.AD) · fila-puntero «SYNC → ver ROADMAP & IMPLEMENTATION» en el hub · serial HO sin asignar (vserial al cierre) · verificación independiente DEC-10.
+Versión: v9.22.65 → v9.22.66, únicamente en la propiedad Versión de V | CHANGELOG (referencia oficial, SP:SYNC-RULE). Fecha de actualización sin tocar (queda para vversions --sync).
+Handoff de referencia: ninguno emitido.
+### Oct 22, 26 03:16 — v9.22.65 — MISTRAL/DEFAULT: alta de SP:CONTEXT-INFRASTRUCTURE-001 — convención de bloques de Terminal (macOS/zsh)
+Tipo: [DOC] [OPS]
+Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT.
+Fecha: 2026-10-22 03:16 CDMX (declarada por el operador).
+Autorización: APROBAR_WRITE del operador en este turno; pasada única sin DRY RUN, con changelog + bump de Versión en una sola pasada, por instrucción expresa (optimización de tokens).
+Documentos modificados: V | SYSTEM PROMPT (alta del bloque 04.1 SP:CONTEXT-INFRASTRUCTURE-001) · V | CHANGELOG (esta entrada + bump de Versión).
+Cambio:
+1. SYSTEM PROMPT: alta de la subsección 04.1 SP:CONTEXT-INFRASTRUCTURE-001 («Convención de bloques de Terminal»), insertada al cierre de 04 SP:CONTEXT-INFRASTRUCTURE, antes de 05 SP:DATA-FLOW. Regla: todo bloque de comandos que un agente entregue para la Terminal del operador (macOS/zsh) se envuelve en { ...; } 2>&1 | tee >(pbcopy), de modo que la salida se muestra y se copia al portapapeles para pegarla en el chat. Excepción: comandos interactivos o que dependan de detectar TTY. No sustituye DRY RUN ni APROBAR_WRITE.
+1. Propiedades Versión y Fecha de actualización del SYSTEM PROMPT sin tocar (quedan para vversions --sync).
+Tipo de impacto: normativo-documental (convención de entrega de comandos de Terminal aplicable a todos los agentes). Sin altas ni bajas de IDs canónicos; Census y Registry sin cambios.
+Verificación: escrituras en pasada única; re-fetch posterior no ejecutado por optimización de tokens; verificación independiente pendiente.
+Pendiente: vversions --sync (los demás documentos conservan su Versión); rotación al ARCHIVO (con esta entrada, 24 visibles frente a la regla de 10, T3.AD).
+Versión: v9.22.64 → v9.22.65, únicamente en la propiedad Versión de V | CHANGELOG (referencia oficial, SP:SYNC-RULE).
+Handoff de referencia: ninguno emitido.
+### Oct 21, 26 21:47 — v9.22.64 — CLAUDE/KM: cierre CS-DEVIN-04 de vantage-sync.py — validación funcional de --publish-notion, commit 3d9eb03 y Acta HO-000115
+Tipo: [OPS] [CODE] [TEST] [GIT]
+Identidad VANTAGE: agent.family=CLAUDE · agent.instance=KM.
+Fecha: 2026-10-21 21:47 CDMX (declarada por el operador).
+Autorización: instrucción expresa del operador en este turno: actualizar CHANGELOG y bump de Versión en una sola pasada, sin presentar DRY RUN y con APROBAR_WRITE dado en el mismo turno.
+Alcance: registro retrospectivo del cierre de CS-HERMES / CS-DEVIN-04 sobre vantage-sync.py y su publicador a Notion, tal como se validó en este chat. Esta operación documental modifica solo V | CHANGELOG (esta entrada y la propiedad Versión). Código: ninguno modificado por esta pasada; los cambios de código son del contrato CS-DEVIN-04 (ejecutor delegado) y los commiteó el operador.
+Cambio:
+1. Contrato CS-DEVIN-04 (R1–R10; adenda R7–R10 emitida por CLAUDE/MAIN tras revisar publish_to_notion). Puntos relevantes: R1 los reintentos por 429 conservan el método (PATCH/DELETE); R2 dos líneas producen un solo bloque con salto de línea; R3 HTTP 400/401/404 terminan en exit 3 sin filtrar el token; R7 se archivan TODOS los bloques previos listados antes de anexar (sin el tope de 100); R8 child_page y child_database se omiten y se cuentan por stderr; R9 si el anexado funcionó y un DELETE falla (404 o 429 agotado) retorna exit 3 con advertencia de que el contenido nuevo ya se anexó y quedan bloques viejos, sin token. CLAUDE/MAIN emitió el veredicto R1–R10 cumplidos sobre el código en la USB (/Volumes/Time Machine/CS-DEVIN-03). Atribución del ejecutor sin resolver: el chat de MAIN lo refiere como Antigravity (reporte R1–R6) y como Devin (veredicto).
+1. Integración al repo real: respaldo previo fuera del repo en ~/.devin/scratch/cs-devin-03-pre-merge/; copia de 4 archivos desde la USB con sha256 verificado contra el manifiesto: vantage-sync.py f8ec9c87ba1b…, test_vantage_sync.py 54e99721fda4…, index.js 71c0200fcf48… (sin cambios respecto al repo), test_index.test.js 20e882525c09…. Commit local 3d9eb03 en wip/cs-hermes-02 con 3 archivos de código; state/ quedó fuera (C7); sin push (origin/wip/cs-hermes-02 sigue en e29aa54).
+1. Pruebas (Terminal del operador, Darwin, 2026-10-21): test_vantage_sync.py 160 passed; Node 20 de 20; suite completa de Layer_1 512 passed, 0 failed. pytest --collect-only: HEAD 491 y repo real 512 (+21); el 491 que MAIN esperaba era el total del HEAD y no el posterior al cambio. Copia limpia del HEAD vía git archive: 1 failed y 300 passed con -x (FAIL_DATA frente a PASS), causa sin diagnosticar; no se usó como evidencia.
+1. Mutaciones en copia temporal (USB): M1, M2, M3, M4, M6, M8, M9, R1, R2, R7b y R8 en rojo con tests nombrados; control 160/160 y 20/20. R7a sin coincidencias (la forma ya no existe, la cubre R7b); sin mutación específica para R3. M5 (archivar antes de anexar) y M7 (validar --project después de escribir) solo con registro del ejecutor sobre archivos anteriores (156 pruebas, sha 61d1f5a0 y ee343a97): no verificadas sobre el código final.
+1. Prueba funcional contra Notion real en página desechable PRUEBA (id 401938be-fc42-80bd-b9c3-e040eb66d6d7, con subpágina «Prueba hija»): dos corridas con --project prueba-cs04 --publish-notion, exit 0 ambas. Re-fetch de CLAUDE/KM (2026-10-21 21:33 CDMX): un solo bloque DERIVED (Generado 21:33:43, versión del script f8ec9c87, 2 tareas), contenido de la corrida 1 archivado, subpágina intacta; stderr con el aviso de child page omitida. Incidente contenido: el primer enlace entregado como página de prueba tenía el id de V-SYNC real (400938be-fc42-8034-a2d4-eda395e4afed); se advirtió antes de ejecutar y ningún comando se corrió contra ese id.
+1. Acta ACTA_DE_OPERABILIDAD_Y_VALIDACION_FUNCIONAL emitida en chat por CLAUDE/KM (serial HO-000115 declarado por el operador y adoptado según CHARTER:NON-NEGOTIABLE-004; 2026-10-21 21:37 CDMX). Veredicto: operable y validado en entorno de prueba; LIVE (escritura real a V-SYNC) no autorizado hasta cumplir los gates G1 a G6. El operador aclaró que los seriales intermedios los emitió y descartó en continuo; sin acción pendiente sobre el contador.
+Tipo de impacto: operativo + trazabilidad del frente vantage-sync. Sin cambio normativo; sin altas ni bajas de IDs canónicos; Census y Registry sin cambios.
+Operabilidad de vantage-sync.py: verificada a nivel de suite (160 y 512), mutaciones y una prueba funcional contra Notion real en página desechable. No verificada: escritura real a V-SYNC; fallo parcial, reintento por 429 y lotes de más de 100 bloques contra la API real (solo mocks); --llm, --with-mem0; plataformas distintas de Darwin.
+Verificación: salidas de Terminal del operador (sha256, pytest, node, git, mutaciones) y re-fetch de Notion de CLAUDE/KM para la página PRUEBA; M5 y M7 y la atribución del ejecutor son reportes de terceros no re-verificados. Escritura de esta entrada y del bump sin re-fetch posterior; verificación independiente pendiente.
+Pendiente: G1 limpiar las 2 filas de prueba-cs04 en context-sync.db con respaldo previo; G2 duplicar V-SYNC en Notion antes de escribir; G3 fijar el --project de la corrida real; G4 token cargado y V-SYNC compartida con la integración; G5 autorización del operador para escribir en V-SYNC; G6 GO LIVE de CLAUDE/MAIN. Baseline: la entrada de vantage-sync.py en script_hash_baseline.json (1401c5ea…41897 desde v9.22.59) quedó desactualizada frente a f8ec9c87…; requiere validación del operador antes de actualizarla. Push o PR de wip/cs-hermes-02 con squash (el historial incluye 02854bb «NO-GO, sin verificar» y e29aa54 auto-sync). Decidir cómo excluir state/ de vgit (C7). Commits auto-sync sin proceso identificado. Cierre documental, cada uno con APROBAR_WRITE: fila vctx de ALIASES, Manual §11 y §22.1, corrección del SHA en la entrada v9.22.59. M5 y M7 sobre el código final. vversions --sync (los demás documentos conservan su Versión anterior). Rotación al ARCHIVO (23 entradas visibles frente a la regla de 10, T3.AD).
+Versión: v9.22.63 → v9.22.64, únicamente en la propiedad Versión de V | CHANGELOG, siguiendo el alcance de las entradas previas. Sincronización transversal pendiente; no se declara ejecutada.
+Handoff de referencia: HO-000115 (Acta de operabilidad emitida en chat; sin registro en Session Ledger).
+Tipo: [CODE] [TEST] [TRK]
+Identidad VANTAGE: agent.family=CHATGPT · agent.instance=DEFAULT.
+Fecha: 2026-10-21T11:33:00.000-06:00 (declarada por el operador).
+Autorización: actualización de CHANGELOG y bump solicitados por el operador en una sola pasada, sin presentar DRY RUN ni solicitar nueva aprobación.
+Alcance: registrar los cambios de esta sesión en alias_map.json, sus dos consumidores y únicamente las celdas vacías de Holding del Tracker. Esta operación documental modifica solo V | CHANGELOG.
+Cambios:
+1. Conciliación de alias_map.json: 160 alias (72 originales y 88 incorporaciones); 18 claves en cuarentena. Esquema y orden de los alias originales preservados. Los tres hard_block=true originales de Armani permanecen; todas las incorporaciones llevan false. hard_blocks.json no se modificó y sigue como fuente ejecutable única de bloqueos. Publicado en commit 8adc7e0; blob verificado 2fada4f7b8783bbf261348d5c1ad789f487cd9df.
+2. Resolver compartido alias_resolver.py integrado en feed_processor.py y profile_fit.py: exacta primero, fallback por frases completas, sin subcadena inversa; claves de hasta cuatro caracteres alfanuméricos y etiquetas genéricas solo por exacta; prioriza frases contenidas más específicas y rechaza identidades ambiguas. Publicado en commit 7719e76; los cuatro archivos publicados se verificaron contra la propuesta.
+3. Pruebas: el operador ejecutó pytest sobre test_alias_resolver.py, test_profile_fit.py y test_matcher_hard_blocks_parity.py: 33 passed. Se preservaron las 160 resoluciones exactas del mapa aprobado. Esta suite no certifica ausencia de todo falso positivo semántico.
+4. Tracker: con APROBAR_WRITE explícito en Terminal, el operador aplicó vantage_fill_holding.py. Solo se rellenó Holding vacío, sin sobrescribir valores existentes ni modificar otras columnas. Salida del script: 32 filas, 19 ya pobladas, 8 propuestas aplicadas y verificadas por relectura; quedan 27/32 con Holding.
+Valores completados: Energizer Holdings → Energizer Holdings, Inc.; Benefit Cosmetics → LVMH; ManpowerGroup → ManpowerGroup; Gensler → Gensler; Monster Energy → Monster Beverage Corporation; SC Johnson → SC Johnson; Suntory Global Spirits → Suntory Holdings; Sanborns → Grupo Sanborns.
+Pendientes: Holding permanece vacío para Grupo GOU, Confidential Careers, EDGExecution, Match Consulting y VEMO, sin resolución en el mapa aprobado. Las 18 claves en cuarentena no se reincorporaron. El script de relleno es temporal en /tmp, no un artefacto publicado en GitHub.
+Evidencia: re-fetch independiente de GitHub para JSON y cuatro archivos del fallback; resultados de pytest y ocho escrituras con relectura según salida de Terminal proporcionada por el operador.
+IDs canónicos: sin altas ni bajas; sin cambios a Census o Registry. Handoff: ninguno emitido.
+Versión: v9.22.62 → v9.22.63, únicamente en la propiedad Versión de V | CHANGELOG, siguiendo el alcance de las entradas previas. Sincronización transversal de versiones pendiente; no se declara ejecutada.
+Tipo: [TRK]
+Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT. APROBAR_WRITE del operador: Oct 20, 26 21:58 CDMX, pasada única sin DRY RUN (optimización de tokens por instrucción expresa del operador).
+Fecha: 2026-10-20 21:58 CDMX (declarada por el operador).
+Scope: 16 filas del PLAN DE TRABAJO (T1.1–T1.5, T0.2–T0.4, T3.H, T3.W, T3.Y, T3.AG, PLAN-3F-1, HO-000104.P1/P2/P3) + esta entrada + bump de Versión. Exclusiones: PLAN-3F-2 (discrepancia abierta) y toda fila no Resuelta.
+Documentos modificados: PLAN DE TRABAJO (16 filas) · V | CHANGELOG.
+Cambio:
+1. Verificación 1:1 de las 17 filas Resueltas sin verificador contra fuente primaria (re-fetch GitHub main 9ef8685 + Notion vivo): 16 verificadas OK; PLAN-3F-2 sin firma por discrepancia (NN-006).
+1. PLAN (16 update_page): Verificado_Por = MISTRAL/DEFAULT (2026-10-20 21:51 CDMX) + acta append en Notas de cada fila con evidencia específica del re-fetch [V]. Actas con alcance acotado en T1.5 y HO-000104.P3: OK en artefactos durables; ejecución local queda [V] operador.
+1. Verificación post-escritura por re-fetch página por página: 16/16 con firma y acta presentes; PLAN-3F-2 intacta [V]. Nota: cuota de Query Data Source del workspace agotada durante la verificación; completada vía fetch directo por página.
+1. Discrepancias reportadas, no resueltas: (a) PLAN-3F-2 declara que el cierre vive en T3.I y T3.I sigue En progreso; (b) drift vivo vsync_doc.py DOCS=9 vs KERNEL 04.5 (8) — ya documentado en T2.D; (c) fila vacía sin Estado en el PLAN (candidata a housekeeping).
+1. Versión: v9.22.61 → v9.22.62. Bump solo en la propiedad Versión de V | CHANGELOG (referencia oficial, SP:SYNC-RULE); sincronización del resto de documentos vía vversions --sync pendiente de corrida.
+Handoff de referencia: ninguno emitido.
+Tipo: [TRK]
+Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT. APROBAR_WRITE del operador: Oct 20, 26 21:38 CDMX, pasada única; DRY RUN de las 4 filas presentado y aprobado en el turno previo.
+Fecha: 2026-10-20 21:38 CDMX (declarada por el operador).
+Scope: 4 filas del Tracker + esta entrada + bump de Versión. Exclusiones: HO-000105, nuevas entradas numeradas del LOG, escrituras de MAIN con serial.
+Documentos modificados: PLAN DE TRABAJO (T3.X, T3.L) · RECONCILIATION LOG (Finding #97, «Primer --apply de Workday») · V | CHANGELOG.
+Cambio:
+1. Token de integración de Notion rotado por el operador; el nuevo valor no se registra en ninguna parte [D].
+1. Dashboard/archive/legacy_express_node/server.js retirado de main por el operador: commit 9ef8685 (1 archivo, 200 líneas, delete). Verificación independiente MISTRAL/DEFAULT: re-fetch del path en origin/main = 404 [V]. El valor del historial queda como secreto muerto; no se reescribe historial.
+1. Actas de remediación agregadas — solo append, sin sustituciones — en las 4 filas: T3.X (Evidencia, Notas, Verificado_Por = MISTRAL) · Finding #97 (Descripción) · «Primer --apply de Workday» (Descripción; main actualizado = 9ef8685 reemplaza la referencia 7ec67bb) · T3.L (Notas).
+1. El cierre «sin ejecutar» de T3.X (2026-10-14, LOG #114) queda revertido de facto; el historial de esa decisión se conserva en las filas.
+1. Versión: v9.22.60 → v9.22.61. Bump solo en la propiedad Versión de V | CHANGELOG (referencia oficial, SP:SYNC-RULE); sincronización del resto de documentos vía vversions --sync pendiente de corrida.
+Handoff de referencia: ninguno emitido.
+Tipo: [DOC]
+Identidad VANTAGE: agent.family=MISTRAL · agent.instance=DEFAULT. APROBAR_WRITE del operador: Oct 20, 26 02:00 CDMX (Contrato B), tras DRY RUN; contratos A y C ejecutados por sus instancias con sus propios APROBAR_WRITE (regla de oro: no se fusionan).
+Fecha: 2026-10-20 02:00 CDMX (declarada por el operador).
+Meta-skill: vantage-sync-assets. Scope: Libraries → Glossaries → Census Spec → Hyperlinks. Exclusiones: los 3 one-shots anteriores.
+Documentos modificados: V | MANUAL (§22.1, §22.1a, §22.1b, §22.3, §22.5, §23.1, §23.2, §23.3, §23.4) · V | CHANGELOG · V | SCRIPT LIBRARY y V | SKILL LIBRARY (Contrato A, ChatGPT) · Layer_1/scripts/generate_census.py (Contrato C, Grok).
+Cambio:
+1. Contrato A (ChatGPT): +5 filas en SCRIPT LIBRARY (ats_adapter.py, ats_workday.py, context-dump.py, linkedin_identity_matcher.py, vantage-mcp-tunnel.sh) y +3 en SKILL LIBRARY (Bug Hunter.skill, Prompt Master Regular.skill, vantage-session-handoff.skill). Las 8 filas verificadas en vivo por MISTRAL/DEFAULT (títulos exactos).
+1. Contrato B (Mistral): Manual §22 — 23 entradas narrativas nuevas: §22.1 ×4 (ats_adapter.py, ats_workday.py, context-dump.py, vload.py) · §22.1a ×5 (conftest.py, hard_block_gate.py, linkedin_identity_matcher.py, tracker_flow.py, vantage_status.py) · §22.1b ×3 (build_paquete_arena.sh, reorder_census_spec.py, verify_md.py) · §22.3 ×9 (export_tracker_snapshot.py, foundational_docs.py, mcp_sync_wrapper.sh, notion_write_wrapper.py, split_digest.py, trigger_sync_after_mcp_write.py, vantage-mcp-tunnel.sh, vdoc_local_contingency.py, vdoc_nblm.py) · §22.5 ×2 filas Raycast (open-figma-template.sh, vantage-vl1sync.sh). Manual §23 — 5 entradas narrativas nuevas (shape: Qué hace / Cuándo se activa / Por qué te sirve saberlo): §23.1 (vantage-active-search-weekly, vantage-session-handoff) · §23.2 (vantage-sync-skill-glossary) · §23.3 (Bug Hunter) · §23.4 (Prompt Master Regular). Diff mínimo: 9 ops update_content, sin reescritura de subsecciones.
+1. Contrato C (Grok): 2 huérfanos de Census Spec inyectados (KERNEL:OPS-INTERVIEW-SIMULATOR, MANUAL:RUNTIME-INTERVIEW-SIMULATOR) en generate_census.py y ciclo hyperlinks ejecutado (vunlock → vhyperlinks dry/apply → vlock → vdoc notion → vversions --sync), según reporte del operador. Cierre verificado por LITTLEBIRD/DEFAULT (2026-10-20 02:07-02:45 CDMX, Terminal del operador): py_compile OK, census regenerado (huérfanos fuera de spec: 0), vhyperlinks --apply con 151 bloques patched y 0 errores en 7 documentos (Kernel 16 · SP 11 · Manual 100 · Canon 8 · Aliases 3 · Brief 1 · Charter 12), vversions --sync con [VEREDICTO FINAL] PASS (12 PASS, 2 SKIP de solo lectura).
+1. Cierre consolidado ASSETS SYNCED:
+```javascript
+ASSETS SYNCED
+┌────────────────────────────┬────────┬──────────────┬──────────────────────┐
+│ Dominio                    │ Altas  │ Correcciones │ Huérfanos pendientes │
+├────────────────────────────┼────────┼──────────────┼──────────────────────┤
+│ Script Library             │   5    │      0       │          0           │
+│ Skill Library              │   3    │      0       │          0           │
+│ Script Glossary (§22)      │   23   │      0       │    1 (diferido)       │
+│ Skill Glossary (§23)       │   5    │      0       │          0           │
+│ Census Spec                │   2    │      0       │          0           │
+│ Hyperlinks                 │   —    │      —       │ 19 CHARTER:DECISIONS │
+└────────────────────────────┴────────┴──────────────┴──────────────────────┘
+```
+Fuentes: filas de SCRIPT LIBRARY (ea914544-338f-485e-ac1b-7f137a5c9cee) y SKILL LIBRARY (2f1938be-fc42-83c8-8972-07300201136d) · AUDIT DEVIN & COPILOT · Hermes · Validación L4 (hallazgos B1/B8/B10/B11) · ROADMAP Memory Layer · AUDITORÍA REPOSITORIO · ticket T3.T · CHANGELOG v9.22.58 · Shapes A/B/C clasificados contra evidencia de código (argparse propio en ats_adapter.py L286 y ats_workday.py L959).
+Pendiente: normalize_source_json.py (entrada §22 diferida a otro contrato por decisión del operador) · 13 scripts del diff sin entrada propia (reportados, Alcance Cerrado: status_report.py, resolver_layer_v1.py, url_gate.py, update_triggers_json.py, diagnose_agent_run.py, compile_skills.py, backfill_class_a.py, dedup_audit.sh, vantage-assign.sh, vantage-vdoc-auto.sh, layer_1_wrapper.sh, layer_1_pipeline.sh, git_sync_wrapper.sh) · dobles filas prompt-master / Prompt Master Regular en SKILL LIBRARY · flags marcados ⚠️ en las entradas nuevas (pendientes de verificación contra código) · auto-links espurios palabra.ext en entradas nuevas (mismo fenómeno que v9.22.58) · gates de Contrato C (py_compile + vcensus) responsabilidad de su instancia — RESUELTOS, verificados por LITTLEBIRD/DEFAULT (2026-10-20 02:45 CDMX) · extender apply_hyperlinks_notion para indexar el Charter Log y resolver los 19 CHARTER:DECISIONS/MILESTONES sin link (causa raíz documentada: la herramienta indexa 7 docs y el Log no está entre ellos).
+Tipo de impacto: documental. Sin altas ni bajas de IDs canónicos.
+Verificación: re-fetch dirigido de las 9 subsecciones del Manual (23+5 entradas presentes, nesting correcto, ¶ preexistentes sin cambio) + esta entrada. Cierre de Contrato C verificado por LITTLEBIRD/DEFAULT (re-fetch del 2026-10-20 02:45 CDMX): vhyperlinks --apply 151/0 errores, census sin huérfanos, vversions --sync PASS 02:07 CDMX.
+Versión: v9.22.59 → v9.22.60 (propiedad Versión de V | CHANGELOG y V | MANUAL).
+Handoff de referencia: ninguno emitido.
 Tipo: [DOC] [OPS] [CODE]
 Identidad VANTAGE: agent.family=CLAUDE · agent.instance=MAIN. APROBAR_WRITE del operador: YEP (2026-10-19 21:19 CDMX), tras DRY RUN en el chat.
 Fecha: 2026-10-19 21:19 CDMX (declarada por el operador).
